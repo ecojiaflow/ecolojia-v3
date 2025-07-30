@@ -1,0 +1,53 @@
+{
+  "common": {
+    "searchPlaceholder": "Rechercher des produits écoresponsables...",
+    "searchInProgress": "Recherche en cours...",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "noResults": "Aucun résultat trouvé",
+    "tryAgain": "Réessayer",
+    "viewProduct": "Voir le produit",
+    "addToCart": "Ajouter au panier",
+    "price": "Prix",
+    "currency": "€",
+    "verified": "Vérifié",
+    "confidence": "Confiance IA",
+    "ecoScore": "Score écologique"
+  },
+  "home": {
+    "heroTitle": "Découvrez les produits écoresponsables",
+    "heroSubtitle": "Trouvez facilement des alternatives durables grâce à notre intelligence artificielle",
+    "feature1": "Recherche intelligente",
+    "feature2": "Scores écologiques",
+    "feature3": "Produits vérifiés",
+    "searchResults": "résultats trouvés",
+    "searchTime": "en",
+    "filters": "Filtres",
+    "gridView": "Grille",
+    "listView": "Liste"
+  },
+  "product": {
+    "title": "Détails du produit",
+    "description": "Description",
+    "brand": "Marque",
+    "category": "Catégorie",
+    "tags": "Étiquettes",
+    "zones": "Zones disponibles",
+    "affiliateLink": "Lien d'achat",
+    "backToSearch": "Retour à la recherche",
+    "notFound": "Produit non trouvé",
+    "aiSummary": "Résumé IA",
+    "ethicalScore": "Score éthique",
+    "confidence": "Niveau de confiance",
+    "verificationStatus": "Statut de vérification"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "language": "Langue"
+  }
+}

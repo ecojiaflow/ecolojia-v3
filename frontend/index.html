@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ecolojia - Moteur de recherche écoresponsable</title>
+    
+    <!-- PWA Meta tags ESSENTIELS (sans manifest problématique) -->
+    <meta name="theme-color" content="#7DDE4A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ECOLOJIA">
+    
+    <!-- Apple Touch Icons pour installation iOS -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SEO Meta -->
+    <meta name="description" content="Scanner produits écoresponsables avec IA - Alternative éthique à Yuka">
+    <meta name="keywords" content="scanner, produits bio, écologie, développement durable, IA">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="ECOLOJIA - Scanner produits écoresponsables">
+    <meta property="og:description" content="Découvrez des produits éthiques avec des scores vérifiés par IA">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/icons/icon-512x512.png">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- PWA Simple - Instructions installation sans Service Worker -->
+    <script>
+      console.log('📱 ECOLOJIA PWA Simple - Prêt pour installation manuelle');
+      
+      // Message d'accueil PWA
+      if ('serviceWorker' in navigator) {
+        console.log('🌱 ECOLOJIA chargé - Scanner mobile disponible');
+      }
+      
+      // Détecter si déjà installé comme PWA
+      window.addEventListener('load', () => {
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            window.navigator.standalone) {
+          console.log('🎉 ECOLOJIA PWA installée et lancée !');
+          document.body.classList.add('pwa-standalone');
+        }
+      });
+      
+      // Améliorer l'UX en mode standalone
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        // Cacher les éléments de navigation browser
+        document.documentElement.style.setProperty('--pwa-mode', '1');
+      }
+    </script>
+    
+    <!-- Styles PWA additionnels -->
+    <style>
+      /* Améliorer l'expérience PWA */
+      @media (display-mode: standalone) {
+        body {
+          padding-top: env(safe-area-inset-top);
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Optimiser pour les écrans notchés */
+        .navbar {
+          padding-top: calc(env(safe-area-inset-top) + 1rem);
+        }
+      }
+      
+      /* Animation slide-up pour banner */
+      @keyframes slide-up {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      .animate-slide-up {
+        animation: slide-up 0.3s ease-out;
+      }
+      
+      /* Loading state amélioré */
+      #root:empty::before {
+        content: "🌱 Chargement ECOLOJIA...";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Inter, sans-serif;
+        color: #7DDE4A;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+    </style>
+  </body>
+</html>

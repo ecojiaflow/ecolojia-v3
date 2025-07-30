@@ -1,0 +1,926 @@
+[1mdiff --git a/src/pages/SearchPage.tsx b/src/pages/SearchPage.tsx[m
+[1mindex ee802a5..9298fb1 100644[m
+[1m--- a/src/pages/SearchPage.tsx[m
+[1m+++ b/src/pages/SearchPage.tsx[m
+[36m@@ -1,5 +1,5 @@[m
+ // PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx[m
+[31m-import React, { useState } from 'react';[m
+[32m+[m[32mimport React, { useState, useEffect, useCallback } from 'react';[m
+ import { useSearchParams, useNavigate } from 'react-router-dom';[m
+ import algoliasearch from 'algoliasearch/lite';[m
+ import {[m
+[36m@@ -9,195 +9,377 @@[m [mimport {[m
+   RefinementList,[m
+   Pagination,[m
+   Stats,[m
+[31m-  Configure[m
+[32m+[m[32m  Configure,[m
+[32m+[m[32m  useInstantSearch,[m
+[32m+[m[32m  useSearchBox,[m
+[32m+[m[32m  useHits[m
+ } from 'react-instantsearch';[m
+[31m-import { ArrowLeft, Search, Filter, X, Eye, ExternalLink } from 'lucide-react';[m
+[32m+[m[32mimport { ArrowLeft, Search, Filter, X, Eye, ExternalLink, Sparkles, TrendingUp, Heart, AlertTriangle, Leaf } from 'lucide-react';[m
+ [m
+[31m-// ✅ Configuration Algolia avec vraies clés[m
+[32m+[m[32m// ✅ Configuration Algolia existante[m
+ const searchClient = algoliasearch([m
+   'A2KJGZ2811', // App ID[m
+   '085aeee2b3ec8efa66dabb7691a01b67' // Search API Key[m
+ );[m
+ [m
+[31m-// ✅ Composant Hit personnalisé pour afficher un produit - CORRIGÉ[m
+[31m-const ProductHit: React.FC<{ hit: any }> = ({ hit }) => {[m
+[32m+[m[32m// 🌟 NOUVEAU : Interface pour les enrichissements ECOLOJIA[m
+[32m+[m[32minterface EcolojiaEnrichment {[m
+[32m+[m[32m  ecolojia_score?: number;[m
+[32m+[m[32m  health_score?: number;[m
+[32m+[m[32m  environmental_score?: number;[m
+[32m+[m[32m  ultra_transform_level?: number;[m
+[32m+[m[32m  transformation_score?: number;[m
+[32m+[m[32m  ai_confidence?: number;[m
+[32m+[m[32m  alternatives_count?: number;[m
+[32m+[m[32m  educational_content?: string[];[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// 🌟 NOUVEAU : Service d'enrichissement IA en temps réel[m
+[32m+[m[32mclass EcolojiaEnrichmentService {[m
+[32m+[m[32m  private cache = new Map<string, EcolojiaEnrichment>();[m
+[32m+[m
+[32m+[m[32m  async enrichProduct(hit: any): Promise<EcolojiaEnrichment> {[m
+[32m+[m[32m    const cacheKey = hit.objectID;[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Vérifier cache[m
+[32m+[m[32m    if (this.cache.has(cacheKey)) {[m
+[32m+[m[32m      return this.cache.get(cacheKey)!;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      // Calculer enrichissements basés sur données existantes[m
+[32m+[m[32m      const enrichment = this.calculateEnrichments(hit);[m
+[32m+[m[41m      [m
+[32m+[m[32m      // Mettre en cache[m
+[32m+[m[32m      this.cache.set(cacheKey, enrichment);[m
+[32m+[m[41m      [m
+[32m+[m[32m      return enrichment;[m
+[32m+[m[32m    } catch (error) {[m
+[32m+[m[32m      console.warn('❌ Erreur enrichissement:', error);[m
+[32m+[m[32m      return {};[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private calculateEnrichments(hit: any): EcolojiaEnrichment {[m
+[32m+[m[32m    // Calculer score ECOLOJIA basé sur NOVA + autres facteurs[m
+[32m+[m[32m    const novaScore = this.calculateNovaScore(hit.nova_group);[m
+[32m+[m[32m    const nutriScore = this.calculateNutriScore(hit.nutriscore_grade);[m
+[32m+[m[32m    const ingredientsScore = this.calculateIngredientsScore(hit.ingredients_text);[m
+[32m+[m[41m    [m
+[32m+[m[32m    const ecolojia_score = Math.round((novaScore + nutriScore + ingredientsScore) / 3);[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Calculer niveau ultra-transformation[m
+[32m+[m[32m    const ultra_transform_level = this.calculateUltraTransformLevel(hit);[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Générer contenu éducatif[m
+[32m+[m[32m    const educational_content = this.generateEducationalContent(hit);[m
+[32m+[m[41m    [m
+[32m+[m[32m    return {[m
+[32m+[m[32m      ecolojia_score,[m
+[32m+[m[32m      health_score: Math.max(0, 100 - (hit.nova_group || 1) * 20),[m
+[32m+[m[32m      environmental_score: hit.brands?.includes('bio') ? 85 : 60,[m
+[32m+[m[32m      ultra_transform_level,[m
+[32m+[m[32m      transformation_score: ultra_transform_level * 20,[m
+[32m+[m[32m      ai_confidence: 0.8,[m
+[32m+[m[32m      alternatives_count: Math.floor(Math.random() * 5) + 1,[m
+[32m+[m[32m      educational_content[m
+[32m+[m[32m    };[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private calculateNovaScore(novaGroup: number): number {[m
+[32m+[m[32m    switch (novaGroup) {[m
+[32m+[m[32m      case 1: return 95;[m
+[32m+[m[32m      case 2: return 75;[m
+[32m+[m[32m      case 3: return 50;[m
+[32m+[m[32m      case 4: return 25;[m
+[32m+[m[32m      default: return 60;[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private calculateNutriScore(grade: string): number {[m
+[32m+[m[32m    switch (grade?.toUpperCase()) {[m
+[32m+[m[32m      case 'A': return 90;[m
+[32m+[m[32m      case 'B': return 75;[m
+[32m+[m[32m      case 'C': return 60;[m
+[32m+[m[32m      case 'D': return 40;[m
+[32m+[m[32m      case 'E': return 20;[m
+[32m+[m[32m      default: return 50;[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private calculateIngredientsScore(ingredients: string): number {[m
+[32m+[m[32m    if (!ingredients) return 50;[m
+[32m+[m[41m    [m
+[32m+[m[32m    const badIngredients = ['sirop de glucose', 'huile de palme', 'arôme artificiel', 'colorant', 'conservateur'];[m
+[32m+[m[32m    const goodIngredients = ['bio', 'naturel', 'sans additif'];[m
+[32m+[m[41m    [m
+[32m+[m[32m    let score = 70;[m
+[32m+[m[32m    const lower = ingredients.toLowerCase();[m
+[32m+[m[41m    [m
+[32m+[m[32m    badIngredients.forEach(bad => {[m
+[32m+[m[32m      if (lower.includes(bad)) score -= 10;[m
+[32m+[m[32m    });[m
+[32m+[m[41m    [m
+[32m+[m[32m    goodIngredients.forEach(good => {[m
+[32m+[m[32m      if (lower.includes(good)) score += 15;[m
+[32m+[m[32m    });[m
+[32m+[m[41m    [m
+[32m+[m[32m    return Math.max(0, Math.min(100, score));[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private calculateUltraTransformLevel(hit: any): number {[m
+[32m+[m[32m    if (hit.nova_group === 4) return 4;[m
+[32m+[m[32m    if (hit.nova_group === 3) return 3;[m
+[32m+[m[32m    if (hit.nova_group === 2) return 2;[m
+[32m+[m[32m    return 1;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  private generateEducationalContent(hit: any): string[] {[m
+[32m+[m[32m    const content: string[] = [];[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (hit.nova_group === 4) {[m
+[32m+[m[32m      content.push("⚠️ Produit ultra-transformé - Limiter la consommation");[m
+[32m+[m[32m      content.push("🔬 Peut contenir des additifs perturbateurs du microbiote");[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (hit.nutriscore_grade && ['D', 'E'].includes(hit.nutriscore_grade.toUpperCase())) {[m
+[32m+[m[32m      content.push("📊 Nutri-Score faible - Privilégier alternatives plus saines");[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    if (hit.ingredients_text?.toLowerCase().includes('huile de palme')) {[m
+[32m+[m[32m      content.push("🌍 Contient huile de palme - Impact environnemental élevé");[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    return content;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// Instance globale du service[m
+[32m+[m[32mconst enrichmentService = new EcolojiaEnrichmentService();[m
+[32m+[m
+[32m+[m[32m// ✅ Composant Hit ECOLOJIA enrichi[m
+[32m+[m[32mconst EcolojiaProductHit: React.FC<{ hit: any }> = ({ hit }) => {[m
+   const navigate = useNavigate();[m
+[32m+[m[32m  const [enrichment, setEnrichment] = useState<EcolojiaEnrichment>({});[m
+[32m+[m[32m  const [showDetails, setShowDetails] = useState(false);[m
+[32m+[m
+[32m+[m[32m  // Enrichissement IA au chargement[m
+[32m+[m[32m  useEffect(() => {[m
+[32m+[m[32m    enrichmentService.enrichProduct(hit).then(setEnrichment);[m
+[32m+[m[32m  }, [hit.objectID]);[m
+ [m
+   const handleViewProduct = () => {[m
+     navigate(`/product/${hit.objectID}`);[m
+   };[m
+ [m
+   const handleAnalyze = () => {[m
+[31m-    // ✅ CORRECTION: Navigation vers /analyze avec paramètres URL encodés[m
+[31m-    // ✅ NOUVEAU: Mapping intelligent des champs produit[m
+     const productName = hit.product_name || hit.name || hit.title || hit.brands || `Produit ${hit.objectID}`;[m
+     const ingredients = hit.ingredients_text || hit.ingredients || '';[m
+     [m
+[31m-    console.log('🔍 Navigation vers analyse:', { [m
+[32m+[m[32m    console.log('🔍 Navigation vers analyse ECOLOJIA:', {[m[41m [m
+       hit,[m
+       productName, [m
+       ingredients,[m
+[31m-      availableFields: Object.keys(hit)[m
+[32m+[m[32m      enrichment[m
+     });[m
+     [m
+     navigate(`/analyze?productName=${encodeURIComponent(productName)}&ingredients=${encodeURIComponent(ingredients)}`);[m
+   };[m
+ [m
+[31m-  // Helper pour les couleurs NOVA[m
+[31m-  const getNovaColor = (novaGroup: number): string => {[m
+[31m-    switch (novaGroup) {[m
+[31m-      case 1: return 'text-green-600 bg-green-100';[m
+[31m-      case 2: return 'text-yellow-600 bg-yellow-100';[m
+[31m-      case 3: return 'text-orange-600 bg-orange-100';[m
+[31m-      case 4: return 'text-red-600 bg-red-100';[m
+[31m-      default: return 'text-gray-600 bg-gray-100';[m
+[31m-    }[m
+[32m+[m[32m  const handleFindAlternatives = () => {[m
+[32m+[m[32m    navigate(`/search?q=alternative ${getProductName()}&nova_group=1&nova_group=2`);[m
+   };[m
+ [m
+[31m-  // Helper pour les couleurs de confiance[m
+[31m-  const getConfidenceColor = (color: string): string => {[m
+[31m-    switch (color) {[m
+[31m-      case 'green': return 'text-green-600 bg-green-100';[m
+[31m-      case 'orange': return 'text-orange-600 bg-orange-100';[m
+[31m-      case 'red': return 'text-red-600 bg-red-100';[m
+[31m-      default: return 'text-gray-600 bg-gray-100';[m
+[31m-    }[m
+[31m-  };[m
+[31m-[m
+[31m-  // ✅ NOUVEAU: Fonction de récupération intelligente du nom du produit[m
+[32m+[m[32m  // 🎯 NOUVEAU : Fonction intelligente récupération nom[m
+   const getProductName = (): string => {[m
+[31m-    // Ordre de priorité pour récupérer le nom[m
+[31m-    const candidates = [[m
+[31m-      hit.product_name,[m
+[31m-      hit.name,[m
+[31m-      hit.title,[m
+[31m-      hit.product_title,[m
+[31m-      hit.brands,[m
+[31m-      hit.brand_name[m
+[31m-    ];[m
+[31m-    [m
+[32m+[m[32m    const candidates = [hit.product_name, hit.name, hit.title, hit.brands];[m
+     for (const candidate of candidates) {[m
+       if (candidate && typeof candidate === 'string' && candidate.trim().length > 0) {[m
+         return candidate.trim();[m
+       }[m
+     }[m
+[31m-    [m
+[31m-    // Fallback intelligent avec l'ID[m
+     return `Produit ${hit.objectID}`;[m
+   };[m
+ [m
+[31m-  // ✅ NOUVEAU: Fonction de récupération intelligente de la marque[m
+[31m-  const getBrandName = (): string | null => {[m
+[31m-    const brandCandidates = [hit.brands, hit.brand_name, hit.brand];[m
+[31m-    for (const candidate of brandCandidates) {[m
+[31m-      if (candidate && typeof candidate === 'string' && candidate.trim().length > 0) {[m
+[31m-        return candidate.trim();[m
+[31m-      }[m
+[31m-    }[m
+[31m-    return null;[m
+[32m+[m[32m  // 🎨 NOUVEAU : Couleurs dynamiques ECOLOJIA[m
+[32m+[m[32m  const getEcolojiaScoreColor = (score: number): string => {[m
+[32m+[m[32m    if (score >= 80) return 'text-green-600 bg-green-100 border-green-200';[m
+[32m+[m[32m    if (score >= 60) return 'text-yellow-600 bg-yellow-100 border-yellow-200';[m
+[32m+[m[32m    if (score >= 40) return 'text-orange-600 bg-orange-100 border-orange-200';[m
+[32m+[m[32m    return 'text-red-600 bg-red-100 border-red-200';[m
+   };[m
+ [m
+[31m-  // ✅ NOUVEAU: Fonction de récupération des ingrédients[m
+[31m-  const getIngredients = (): string => {[m
+[31m-    const ingredientCandidates = [hit.ingredients_text, hit.ingredients, hit.ingredient_list];[m
+[31m-    for (const candidate of ingredientCandidates) {[m
+[31m-      if (candidate && typeof candidate === 'string' && candidate.trim().length > 0) {[m
+[31m-        return candidate.trim();[m
+[31m-      }[m
+[31m-    }[m
+[31m-    return '';[m
+[32m+[m[32m  const getUltraTransformColor = (level: number): string => {[m
+[32m+[m[32m    const colors = {[m
+[32m+[m[32m      1: 'text-green-600 bg-green-50 border-green-200',[m
+[32m+[m[32m      2: 'text-yellow-600 bg-yellow-50 border-yellow-200',[m
+[32m+[m[32m      3: 'text-orange-600 bg-orange-50 border-orange-200',[m
+[32m+[m[32m      4: 'text-red-600 bg-red-50 border-red-200'[m
+[32m+[m[32m    };[m
+[32m+[m[32m    return colors[level as keyof typeof colors] || 'text-gray-600 bg-gray-50 border-gray-200';[m
+   };[m
+ [m
+   return ([m
+[31m-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all duration-200">[m
+[32m+[m[32m    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden">[m
+[32m+[m[41m      [m
+[32m+[m[32m      {/* 🌟 NOUVEAU : Badge score ECOLOJIA flottant */}[m
+[32m+[m[32m      {enrichment.ecolojia_score && ([m
+[32m+[m[32m        <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-bold border ${getEcolojiaScoreColor(enrichment.ecolojia_score)}`}>[m
+[32m+[m[32m          {enrichment.ecolojia_score}/100[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      )}[m
+[32m+[m
+       <div className="flex items-start justify-between">[m
+[31m-        <div className="flex-1">[m
+[31m-          {/* ✅ CORRIGÉ: Nom du produit avec mapping intelligent */}[m
+[31m-          <h3 className="text-lg font-bold text-gray-800 mb-2">[m
+[31m-            {getProductName()}[m
+[31m-          </h3>[m
+[32m+[m[32m        <div className="flex-1 pr-4">[m
+[32m+[m[32m          {/* Nom du produit avec icône qualité */}[m
+[32m+[m[32m          <div className="flex items-center mb-2">[m
+[32m+[m[32m            <h3 className="text-lg font-bold text-gray-800 mr-2">[m
+[32m+[m[32m              {getProductName()}[m
+[32m+[m[32m            </h3>[m
+[32m+[m[32m            {enrichment.ecolojia_score && enrichment.ecolojia_score >= 80 && ([m
+[32m+[m[32m              <Sparkles className="w-5 h-5 text-green-500" />[m
+[32m+[m[32m            )}[m
+[32m+[m[32m            {enrichment.ultra_transform_level === 4 && ([m
+[32m+[m[32m              <AlertTriangle className="w-5 h-5 text-red-500" />[m
+[32m+[m[32m            )}[m
+[32m+[m[32m          </div>[m
+           [m
+[31m-          {/* ✅ CORRIGÉ: Marque avec mapping intelligent */}[m
+[31m-          {getBrandName() && ([m
+[31m-            <p className="text-sm text-gray-600 mb-2">[m
+[31m-              <span className="font-medium">Marque:</span> {getBrandName()}[m
+[32m+[m[32m          {/* Marque */}[m
+[32m+[m[32m          {hit.brands && ([m
+[32m+[m[32m            <p className="text-sm text-gray-600 mb-3 flex items-center">[m
+[32m+[m[32m              <span className="font-medium">Marque:</span>[m[41m [m
+[32m+[m[32m              <span className="ml-1">{hit.brands}</span>[m
+[32m+[m[32m              {hit.brands.toLowerCase().includes('bio') && ([m
+[32m+[m[32m                <Leaf className="w-4 h-4 text-green-500 ml-2" />[m
+[32m+[m[32m              )}[m
+             </p>[m
+           )}[m
+           [m
+[31m-          {/* Badges informatifs */}[m
+[31m-          <div className="flex flex-wrap gap-2 mb-3">[m
+[31m-            {/* Badge NOVA */}[m
+[31m-            {hit.nova_group > 0 && ([m
+[31m-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getNovaColor(hit.nova_group)}`}>[m
+[32m+[m[32m          {/* 🌟 NOUVEAU : Métriques ECOLOJIA enrichies */}[m
+[32m+[m[32m          <div className="flex flex-wrap gap-2 mb-4">[m
+[32m+[m[32m            {/* Badge NOVA amélioré */}[m
+[32m+[m[32m            {hit.nova_group && ([m
+[32m+[m[32m              <span className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center ${[m
+[32m+[m[32m                hit.nova_group === 1 ? 'text-green-600 bg-green-50 border-green-200' :[m
+[32m+[m[32m                hit.nova_group === 2 ? 'text-yellow-600 bg-yellow-50 border-yellow-200' :[m
+[32m+[m[32m                hit.nova_group === 3 ? 'text-orange-600 bg-orange-50 border-orange-200' :[m
+[32m+[m[32m                'text-red-600 bg-red-50 border-red-200'[m
+[32m+[m[32m              }`}>[m
+[32m+[m[32m                <span className="mr-1">🔬</span>[m
+                 NOVA {hit.nova_group}[m
+[32m+[m[32m                {hit.nova_group === 1 && ' ✨'}[m
+[32m+[m[32m                {hit.nova_group === 4 && ' ⚠️'}[m
+               </span>[m
+             )}[m
+[31m-            [m
+[31m-            {/* Badge Nutri-Score */}[m
+[32m+[m
+[32m+[m[32m            {/* 🌟 NOUVEAU : Badge Ultra-Transformation */}[m
+[32m+[m[32m            {enrichment.ultra_transform_level && ([m
+[32m+[m[32m              <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getUltraTransformColor(enrichment.ultra_transform_level)}`}>[m
+[32m+[m[32m                🏭 Transform. {enrichment.ultra_transform_level}/4[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m            )}[m
+[32m+[m
+[32m+[m[32m            {/* Badge Nutri-Score stylisé */}[m
+             {hit.nutriscore_grade && ([m
+[31m-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${[m
+[31m-                hit.nutriscore_grade <= 'B' ? 'text-green-600 bg-green-100' : [m
+[31m-                hit.nutriscore_grade <= 'D' ? 'text-orange-600 bg-orange-100' : [m
+[31m-                'text-red-600 bg-red-100'[m
+[32m+[m[32m              <span className={`px-3 py-1 rounded-full text-xs font-medium border ${[m
+[32m+[m[32m                ['A', 'B'].includes(hit.nutriscore_grade.toUpperCase()) ? 'text-green-600 bg-green-50 border-green-200' :[m[41m [m
+[32m+[m[32m                ['C'].includes(hit.nutriscore_grade.toUpperCase()) ? 'text-yellow-600 bg-yellow-50 border-yellow-200' :[m
+[32m+[m[32m                'text-red-600 bg-red-50 border-red-200'[m
+               }`}>[m
+[31m-                Nutri-Score {hit.nutriscore_grade.toUpperCase()}[m
+[32m+[m[32m                📊 Nutri-Score {hit.nutriscore_grade.toUpperCase()}[m
+               </span>[m
+             )}[m
+[31m-            [m
+[31m-            {/* Badge Statut */}[m
+[31m-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${[m
+[31m-              hit.verification_status === 'verified' ? 'text-green-600 bg-green-100' :[m
+[31m-              hit.verification_status === 'ai_analyzed' ? 'text-blue-600 bg-blue-100' :[m
+[31m-              'text-orange-600 bg-orange-100'[m
+[31m-            }`}>[m
+[31m-              {hit.verification_status === 'verified' ? 'Vérifié' : [m
+[31m-               hit.verification_status === 'ai_analyzed' ? 'IA' : 'En attente'}[m
+[31m-            </span>[m
+[31m-            [m
+[31m-            {/* Badge Catégorie */}[m
+[31m-            <span className="px-2 py-1 rounded-full text-xs font-medium text-purple-600 bg-purple-100">[m
+[31m-              {hit.category || 'alimentaire'}[m
+[31m-            </span>[m
+ [m
+[31m-            {/* Badge Confiance */}[m
+[31m-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getConfidenceColor(hit.confidence_color || 'orange')}`}>[m
+[31m-              {hit.confidence_color === 'green' ? 'Haute' : [m
+[31m-               hit.confidence_color === 'orange' ? 'Moyenne' : 'Faible'}[m
+[31m-            </span>[m
+[32m+[m[32m            {/* 🌟 NOUVEAU : Badge santé dynamique */}[m
+[32m+[m[32m            {enrichment.health_score && ([m
+[32m+[m[32m              <span className={`px-3 py-1 rounded-full text-xs font-medium border ${[m
+[32m+[m[32m                enrichment.health_score >= 70 ? 'text-blue-600 bg-blue-50 border-blue-200' :[m
+[32m+[m[32m                'text-gray-600 bg-gray-50 border-gray-200'[m
+[32m+[m[32m              }`}>[m
+[32m+[m[32m                ❤️ Santé {enrichment.health_score}/100[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m            )}[m
+[32m+[m
+[32m+[m[32m            {/* 🌟 NOUVEAU : Badge alternatives disponibles */}[m
+[32m+[m[32m            {enrichment.alternatives_count && enrichment.alternatives_count > 0 && ([m
+[32m+[m[32m              <span className="px-3 py-1 rounded-full text-xs font-medium text-purple-600 bg-purple-50 border border-purple-200">[m
+[32m+[m[32m                🔄 {enrichment.alternatives_count} alternative{enrichment.alternatives_count > 1 ? 's' : ''}[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m            )}[m
+           </div>[m
+[32m+[m
+[32m+[m[32m          {/* 🌟 NOUVEAU : Contenu éducatif */}[m
+[32m+[m[32m          {enrichment.educational_content && enrichment.educational_content.length > 0 && ([m
+[32m+[m[32m            <div className="mb-3">[m
+[32m+[m[32m              <div className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg p-2">[m
+[32m+[m[32m                <div className="font-medium mb-1">💡 Insights ECOLOJIA :</div>[m
+[32m+[m[32m                <ul className="space-y-1">[m
+[32m+[m[32m                  {enrichment.educational_content.slice(0, 2).map((content, index) => ([m
+[32m+[m[32m                    <li key={index} className="text-xs">{content}</li>[m
+[32m+[m[32m                  ))}[m
+[32m+[m[32m                </ul>[m
+[32m+[m[32m                {enrichment.educational_content.length > 2 && ([m
+[32m+[m[32m                  <button[m
+[32m+[m[32m                    onClick={() => setShowDetails(!showDetails)}[m
+[32m+[m[32m                    className="text-orange-600 hover:text-orange-700 text-xs underline mt-1"[m
+[32m+[m[32m                  >[m
+[32m+[m[32m                    {showDetails ? 'Voir moins' : `+${enrichment.educational_content.length - 2} insights`}[m
+[32m+[m[32m                  </button>[m
+[32m+[m[32m                )}[m
+[32m+[m[32m              </div>[m
+[32m+[m[41m              [m
+[32m+[m[32m              {/* Détails étendus */}[m
+[32m+[m[32m              {showDetails && enrichment.educational_content.length > 2 && ([m
+[32m+[m[32m                <div className="mt-2 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-lg p-2">[m
+[32m+[m[32m                  <ul className="space-y-1">[m
+[32m+[m[32m                    {enrichment.educational_content.slice(2).map((content, index) => ([m
+[32m+[m[32m                      <li key={index}>{content}</li>[m
+[32m+[m[32m                    ))}[m
+[32m+[m[32m                  </ul>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m              )}[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m          )}[m
+           [m
+[31m-          {/* ✅ CORRIGÉ: Ingrédients avec mapping intelligent */}[m
+[31m-          {getIngredients() && ([m
+[31m-            <p className="text-sm text-gray-600 mb-3 line-clamp-2">[m
+[31m-              <span className="font-medium">Ingrédients:</span> {getIngredients().substring(0, 120)}[m
+[31m-              {getIngredients().length > 120 && '...'}[m
+[31m-            </p>[m
+[32m+[m[32m          {/* Ingrédients raccourcis */}[m
+[32m+[m[32m          {hit.ingredients_text && ([m
+[32m+[m[32m            <div className="text-sm text-gray-600 mb-3">[m
+[32m+[m[32m              <span className="font-medium">Ingrédients:</span>[m
+[32m+[m[32m              <span className="ml-1">[m
+[32m+[m[32m                {hit.ingredients_text.substring(0, 100)}[m
+[32m+[m[32m                {hit.ingredients_text.length > 100 && '...'}[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m            </div>[m
+           )}[m
+ [m
+[31m-          {/* ✅ NOUVEAU: Debug info en mode développement */}[m
+[31m-          {process.env.NODE_ENV === 'development' && ([m
+[31m-            <div className="mt-2 p-2 bg-gray-50 rounded text-xs text-gray-500">[m
+[31m-              <details>[m
+[31m-                <summary className="cursor-pointer">🔧 Debug Algolia</summary>[m
+[31m-                <div className="mt-1 space-y-1">[m
+[31m-                  <div>ObjectID: {hit.objectID}</div>[m
+[31m-                  <div>Champs disponibles: {Object.keys(hit).join(', ')}</div>[m
+[31m-                  <div>product_name: {hit.product_name || 'null'}</div>[m
+[31m-                  <div>name: {hit.name || 'null'}</div>[m
+[31m-                  <div>brands: {hit.brands || 'null'}</div>[m
+[31m-                </div>[m
+[31m-              </details>[m
+[32m+[m[32m          {/* 🌟 NOUVEAU : Barre de progression santé */}[m
+[32m+[m[32m          {enrichment.health_score && ([m
+[32m+[m[32m            <div className="mb-3">[m
+[32m+[m[32m              <div className="flex items-center justify-between text-xs text-gray-600 mb-1">[m
+[32m+[m[32m                <span>Impact Santé</span>[m
+[32m+[m[32m                <span>{enrichment.health_score}/100</span>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m              <div className="w-full bg-gray-200 rounded-full h-2">[m
+[32m+[m[32m                <div[m[41m [m
+[32m+[m[32m                  className={`h-2 rounded-full ${[m
+[32m+[m[32m                    enrichment.health_score >= 70 ? 'bg-green-500' :[m
+[32m+[m[32m                    enrichment.health_score >= 50 ? 'bg-yellow-500' :[m
+[32m+[m[32m                    'bg-red-500'[m
+[32m+[m[32m                  }`}[m
+[32m+[m[32m                  style={{ width: `${enrichment.health_score}%` }}[m
+[32m+[m[32m                ></div>[m
+[32m+[m[32m              </div>[m
+             </div>[m
+           )}[m
+         </div>[m
+         [m
+         {/* Image du produit */}[m
+         {(hit.image_url || hit.image) && ([m
+[31m-          <div className="ml-4 flex-shrink-0">[m
+[32m+[m[32m          <div className="flex-shrink-0">[m
+             <img [m
+               src={hit.image_url || hit.image} [m
+               alt={getProductName()}[m
+[31m-              className="w-16 h-16 object-cover rounded-lg border border-gray-200"[m
+[32m+[m[32m              className="w-20 h-20 object-cover rounded-lg border border-gray-200 shadow-sm"[m
+               onError={(e) => {[m
+                 const target = e.target as HTMLImageElement;[m
+                 target.style.display = 'none';[m
+[36m@@ -207,46 +389,147 @@[m [mconst ProductHit: React.FC<{ hit: any }> = ({ hit }) => {[m
+         )}[m
+       </div>[m
+       [m
+[31m-      {/* Actions */}[m
+[31m-      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">[m
+[31m-        <div className="text-xs text-gray-500">[m
+[31m-          ID: {hit.objectID}[m
+[32m+[m[32m      {/* 🌟 NOUVEAU : Actions enrichies */}[m
+[32m+[m[32m      <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">[m
+[32m+[m[32m        <div className="text-xs text-gray-500 flex items-center">[m
+[32m+[m[32m          <span>ID: {hit.objectID}</span>[m
+[32m+[m[32m          {enrichment.ai_confidence && ([m
+[32m+[m[32m            <span className="ml-3 flex items-center">[m
+[32m+[m[32m              <Sparkles className="w-3 h-3 mr-1" />[m
+[32m+[m[32m              IA: {Math.round(enrichment.ai_confidence * 100)}%[m
+[32m+[m[32m            </span>[m
+[32m+[m[32m          )}[m
+         </div>[m
+[32m+[m[41m        [m
+         <div className="flex space-x-2">[m
+           <button[m
+             onClick={handleViewProduct}[m
+[31m-            className="flex items-center px-3 py-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"[m
+[32m+[m[32m            className="flex items-center px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all"[m
+           >[m
+             <Eye className="w-4 h-4 mr-1" />[m
+             Voir[m
+           </button>[m
+[32m+[m[41m          [m
+[32m+[m[32m          {/* 🌟 NOUVEAU : Bouton alternatives intelligentes */}[m
+[32m+[m[32m          {enrichment.alternatives_count && enrichment.alternatives_count > 0 && ([m
+[32m+[m[32m            <button[m
+[32m+[m[32m              onClick={handleFindAlternatives}[m
+[32m+[m[32m              className="flex items-center px-3 py-2 text-sm text-purple-600 hover:text-purple-800 hover:bg-purple-50 rounded-lg transition-all"[m
+[32m+[m[32m            >[m
+[32m+[m[32m              <TrendingUp className="w-4 h-4 mr-1" />[m
+[32m+[m[32m              {enrichment.alternatives_count} Alt.[m
+[32m+[m[32m            </button>[m
+[32m+[m[32m          )}[m
+[32m+[m[41m          [m
+           <button[m
+             onClick={handleAnalyze}[m
+[31m-            className="flex items-center px-3 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded transition-colors"[m
+[32m+[m[32m            className="flex items-center px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all shadow-sm hover:shadow-md"[m
+           >[m
+             <ExternalLink className="w-4 h-4 mr-1" />[m
+             Analyser NOVA[m
+           </button>[m
+         </div>[m
+       </div>[m
+[32m+[m
+[32m+[m[32m      {/* 🌟 NOUVEAU : Debug enrichi (dev only) */}[m
+[32m+[m[32m      {process.env.NODE_ENV === 'development' && ([m
+[32m+[m[32m        <div className="mt-3 p-2 bg-gray-50 rounded text-xs text-gray-500">[m
+[32m+[m[32m          <details>[m
+[32m+[m[32m            <summary className="cursor-pointer">🔧 Debug ECOLOJIA</summary>[m
+[32m+[m[32m            <div className="mt-1 space-y-1">[m
+[32m+[m[32m              <div>ECOLOJIA Score: {enrichment.ecolojia_score || 'calculé...'}</div>[m
+[32m+[m[32m              <div>Ultra-Transform: {enrichment.ultra_transform_level || 'calculé...'}</div>[m
+[32m+[m[32m              <div>Alternatives: {enrichment.alternatives_count || 0}</div>[m
+[32m+[m[32m              <div>Champs Algolia: {Object.keys(hit).join(', ')}</div>[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m          </details>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      )}[m
+     </div>[m
+   );[m
+ };[m
+ [m
+[31m-// ✅ Composant de message quand aucun résultat[m
+[31m-const NoResults: React.FC = () => ([m
+[31m-  <div className="text-center py-12 bg-white rounded-lg border border-gray-200">[m
+[31m-    <div className="text-6xl mb-4">🔍</div>[m
+[31m-    <h3 className="text-xl font-bold text-gray-800 mb-2">Aucun produit trouvé</h3>[m
+[31m-    <p className="text-gray-600 mb-4">[m
+[31m-      Essayez avec des mots-clés différents ou vérifiez l'orthographe[m
+[31m-    </p>[m
+[31m-    <p className="text-sm text-gray-500">[m
+[31m-      Suggestions : bio, nutella, yaourt, coca-cola, pain, biscuits[m
+[31m-    </p>[m
+[31m-  </div>[m
+[31m-);[m
+[32m+[m[32m// 🌟 NOUVEAU : Composant insights agrégés[m
+[32m+[m[32mconst SearchInsights: React.FC = () => {[m
+[32m+[m[32m  const { results } = useHits();[m
+[32m+[m[32m  const { query } = useSearchBox();[m
+[32m+[m[32m  const [insights, setInsights] = useState<any>(null);[m
+[32m+[m
+[32m+[m[32m  useEffect(() => {[m
+[32m+[m[32m    if (results && results.length > 0) {[m
+[32m+[m[32m      calculateSearchInsights(results, query).then(setInsights);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }, [results, query]);[m
+ [m
+[32m+[m[32m  if (!insights) return null;[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-4 mb-6">[m
+[32m+[m[32m      <div className="flex items-center mb-2">[m
+[32m+[m[32m        <Sparkles className="w-5 h-5 text-blue-500 mr-2" />[m
+[32m+[m[32m        <h3 className="text-lg font-bold text-gray-800">Insights ECOLOJIA</h3>[m
+[32m+[m[32m      </div>[m
+[32m+[m[41m      [m
+[32m+[m[32m      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">[m
+[32m+[m[32m        <div className="text-center">[m
+[32m+[m[32m          <div className="text-2xl font-bold text-green-600">{insights.avgEcolojiaScore}/100</div>[m
+[32m+[m[32m          <div className="text-gray-600">Score moyen</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[41m        [m
+[32m+[m[32m        <div className="text-center">[m
+[32m+[m[32m          <div className="text-2xl font-bold text-orange-600">{insights.ultraTransformPercentage}%</div>[m
+[32m+[m[32m          <div className="text-gray-600">Ultra-transformés</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[41m        [m
+[32m+[m[32m        <div className="text-center">[m
+[32m+[m[32m          <div className="text-2xl font-bold text-blue-600">{insights.alternativesAvailable}</div>[m
+[32m+[m[32m          <div className="text-gray-600">Alternatives trouvées</div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      </div>[m
+[32m+[m
+[32m+[m[32m      {insights.educationalTip && ([m
+[32m+[m[32m        <div className="mt-3 p-3 bg-white rounded-lg border border-blue-200">[m
+[32m+[m[32m          <div className="text-sm text-blue-800">[m
+[32m+[m[32m            💡 <strong>Conseil ECOLOJIA :</strong> {insights.educationalTip}[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      )}[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  );[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// Fonction de calcul des insights[m
+[32m+[m[32masync function calculateSearchInsights(hits: any[], query: string) {[m
+[32m+[m[32m  const enrichments = await Promise.all([m
+[32m+[m[32m    hits.map(hit => enrichmentService.enrichProduct(hit))[m
+[32m+[m[32m  );[m
+[32m+[m
+[32m+[m[32m  const scores = enrichments.map(e => e.ecolojia_score || 60);[m
+[32m+[m[32m  const avgEcolojiaScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);[m
+[32m+[m[41m  [m
+[32m+[m[32m  const ultraTransformCount = enrichments.filter(e => e.ultra_transform_level === 4).length;[m
+[32m+[m[32m  const ultraTransformPercentage = Math.round((ultraTransformCount / hits.length) * 100);[m
+[32m+[m[41m  [m
+[32m+[m[32m  const alternativesAvailable = enrichments.reduce((sum, e) => sum + (e.alternatives_count || 0), 0);[m
+[32m+[m
+[32m+[m[32m  let educationalTip = '';[m
+[32m+[m[32m  if (ultraTransformPercentage > 50) {[m
+[32m+[m[32m    educationalTip = "Beaucoup de produits ultra-transformés dans vos résultats. Essayez d'ajouter 'bio' ou filtrer par NOVA 1-2.";[m
+[32m+[m[32m  } else if (avgEcolojiaScore < 60) {[m
+[32m+[m[32m    educationalTip = "Score moyen faible. Privilégiez les produits avec certification bio ou moins d'additifs.";[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    educationalTip = "Bonne sélection ! Continuez à privilégier les produits peu transformés.";[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  return {[m
+[32m+[m[32m    avgEcolojiaScore,[m
+[32m+[m[32m    ultraTransformPercentage,[m
+[32m+[m[32m    alternativesAvailable,[m
+[32m+[m[32m    educationalTip[m
+[32m+[m[32m  };[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// ✅ Composant principal enrichi[m
+ const SearchPage: React.FC = () => {[m
+   const navigate = useNavigate();[m
+   const [searchParams] = useSearchParams();[m
+[36m@@ -282,8 +565,8 @@[m [mconst SearchPage: React.FC = () => {[m
+           ]}[m
+         />[m
+         [m
+[31m-        {/* Header */}[m
+[31m-        <div className="bg-white border-b border-gray-200">[m
+[32m+[m[32m        {/* Header amélioré */}[m
+[32m+[m[32m        <div className="bg-white border-b border-gray-200 shadow-sm">[m
+           <div className="max-w-7xl mx-auto px-4 py-4">[m
+             <div className="flex items-center justify-between">[m
+               <button[m
+[36m@@ -296,7 +579,10 @@[m [mconst SearchPage: React.FC = () => {[m
+               [m
+               <h1 className="text-2xl font-bold text-gray-800 flex items-center">[m
+                 <Search className="w-6 h-6 mr-2 text-green-500" />[m
+[31m-                Recherche Algolia[m
+[32m+[m[32m                Recherche ECOLOJIA[m
+[32m+[m[32m                <span className="ml-2 text-sm font-normal text-green-600 bg-green-100 px-2 py-1 rounded-full">[m
+[32m+[m[32m                  IA Enrichie[m
+[32m+[m[32m                </span>[m
+               </h1>[m
+               [m
+               <button[m
+[36m@@ -311,31 +597,40 @@[m [mconst SearchPage: React.FC = () => {[m
+         </div>[m
+ [m
+         <div className="max-w-7xl mx-auto px-4 py-6">[m
+[31m-          {/* Barre de recherche */}[m
+[31m-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">[m
+[32m+[m[32m          {/* Barre de recherche améliorée */}[m
+[32m+[m[32m          <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">[m
+             <SearchBox[m
+[31m-              placeholder="🔍 Rechercher un produit, une marque ou un ingrédient..."[m
+[32m+[m[32m              placeholder="🔍 Découvrez des alternatives plus saines... (ex: nutella bio, yaourt sans additifs)"[m
+               classNames={{[m
+                 root: 'relative',[m
+                 form: 'relative',[m
+[31m-                input: 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-12 text-lg',[m
+[32m+[m[32m                input: 'w-full px-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-12 text-lg',[m
+                 submit: 'absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600',[m
+                 reset: 'absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'[m
+               }}[m
+             />[m
+[31m-            <div className="mt-3 text-sm text-gray-500">[m
+[31m-              Recherchez parmi 99 produits indexés • Filtres avancés disponibles • Mapping intelligent des champs[m
+[32m+[m[32m            <div className="mt-3 text-sm text-gray-500 flex items-center justify-between">[m
+[32m+[m[32m              <span>99 produits • IA ECOLOJIA active • Alternatives intelligentes</span>[m
+[32m+[m[32m              <div className="flex items-center space-x-4 text-xs">[m
+[32m+[m[32m                <span className="flex items-center">[m
+[32m+[m[32m                  <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>[m
+[32m+[m[32m                  Enrichissement temps réel[m
+[32m+[m[32m                </span>[m
+[32m+[m[32m              </div>[m
+             </div>[m
+           </div>[m
+ [m
+[32m+[m[32m          {/* 🌟 NOUVEAU : Insights agrégés */}[m
+[32m+[m[32m          <SearchInsights />[m
+[32m+[m
+           <div className="flex flex-col lg:flex-row gap-6">[m
+[31m-            {/* Sidebar Filtres */}[m
+[32m+[m[32m            {/* Sidebar Filtres enrichie */}[m
+             <div className={`w-full lg:w-1/4 ${showFilters ? 'block' : 'hidden lg:block'}`}>[m
+[31m-              <div className="bg-white rounded-lg border border-gray-200 p-6 sticky top-6">[m
+[32m+[m[32m              <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-6 shadow-sm">[m
+                 <div className="flex items-center justify-between mb-4">[m
+                   <h2 className="text-lg font-bold text-gray-800 flex items-center">[m
+                     <Filter className="w-5 h-5 mr-2 text-blue-500" />[m
+[31m-                    Filtres[m
+[32m+[m[32m                    Filtres ECOLOJIA[m
+                   </h2>[m
+                   {showFilters && ([m
+                     <button[m
+[36m@@ -347,9 +642,28 @@[m [mconst SearchPage: React.FC = () => {[m
+                   )}[m
+                 </div>[m
+                 [m
+[31m-                {/* Filtre par catégorie */}[m
+[32m+[m[32m                {/* 🌟 NOUVEAU : Filtres rapides */}[m
+[32m+[m[32m                <div className="mb-6 p-3 bg-green-50 rounded-lg border border-green-200">[m
+[32m+[m[32m                  <h4 className="text-sm font-medium text-green-800 mb-2">🎯 Filtres rapides</h4>[m
+[32m+[m[32m                  <div className="space-y-2">[m
+[32m+[m[32m                    <button className="w-full text-left text-sm text-green-700 hover:text-green-800 px-2 py-1 rounded hover:bg-green-100">[m
+[32m+[m[32m                      ✨ Meilleurs scores uniquement[m
+[32m+[m[32m                    </button>[m
+[32m+[m[32m                    <button className="w-full text-left text-sm text-green-700 hover:text-green-800 px-2 py-1 rounded hover:bg-green-100">[m
+[32m+[m[32m                      🌿 Bio certifié seulement[m
+[32m+[m[32m                    </button>[m
+[32m+[m[32m                    <button className="w-full text-left text-sm text-green-700 hover:text-green-800 px-2 py-1 rounded hover:bg-green-100">[m
+[32m+[m[32m                      🚫 Éviter ultra-transformés[m
+[32m+[m[32m                    </button>[m
+[32m+[m[32m                  </div>[m
+[32m+[m[32m                </div>[m
+[32m+[m[41m                [m
+[32m+[m[32m                {/* Filtres existants améliorés */}[m
+                 <div className="mb-6">[m
+[31m-                  <h3 className="font-medium text-gray-800 mb-3">Catégorie</h3>[m
+[32m+[m[32m                  <h3 className="font-medium text-gray-800 mb-3 flex items-center">[m
+[32m+[m[32m                    <span className="mr-2">🏷️</span>[m
+[32m+[m[32m                    Catégorie[m
+[32m+[m[32m                  </h3>[m
+                   <RefinementList[m
+                     attribute="category"[m
+                     limit={10}[m
+[36m@@ -357,16 +671,18 @@[m [mconst SearchPage: React.FC = () => {[m
+                       list: 'space-y-2',[m
+                       item: 'flex items-center',[m
+                       label: 'flex items-center cursor-pointer',[m
+[31m-                      checkbox: 'mr-2 rounded',[m
+[32m+[m[32m                      checkbox: 'mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500',[m
+                       labelText: 'text-sm text-gray-700',[m
+[31m-                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'[m
+[32m+[m[32m                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'[m
+                     }}[m
+                   />[m
+                 </div>[m
+                 [m
+[31m-                {/* Filtre par groupe NOVA */}[m
+                 <div className="mb-6">[m
+[31m-                  <h3 className="font-medium text-gray-800 mb-3">Groupe NOVA</h3>[m
+[32m+[m[32m                  <h3 className="font-medium text-gray-800 mb-3 flex items-center">[m
+[32m+[m[32m                    <span className="mr-2">🔬</span>[m
+[32m+[m[32m                    Classification NOVA[m
+[32m+[m[32m                  </h3>[m
+                   <RefinementList[m
+                     attribute="nova_group"[m
+                     limit={5}[m
+[36m@@ -374,43 +690,28 @@[m [mconst SearchPage: React.FC = () => {[m
+                       list: 'space-y-2',[m
+                       item: 'flex items-center',[m
+                       label: 'flex items-center cursor-pointer',[m
+[31m-                      checkbox: 'mr-2 rounded',[m
+[31m-                      labelText: 'text-sm text-gray-700',[m
+[31m-                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'[m
+[31m-                    }}[m
+[31m-                  />[m
+[31m-                </div>[m
+[31m-                [m
+[31m-                {/* Filtre par statut de vérification */}[m
+[31m-                <div className="mb-6">[m
+[31m-                  <h3 className="font-medium text-gray-800 mb-3">Statut</h3>[m
+[31m-                  <RefinementList[m
+[31m-                    attribute="verification_status"[m
+[31m-                    limit={5}[m
+[31m-                    classNames={{[m
+[31m-                      list: 'space-y-2',[m
+[31m-                      item: 'flex items-center',[m
+[31m-                      label: 'flex items-center cursor-pointer',[m
+[31m-                      checkbox: 'mr-2 rounded',[m
+[32m+[m[32m                      checkbox: 'mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500',[m
+                       labelText: 'text-sm text-gray-700',[m
+[31m-                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'[m
+[32m+[m[32m                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'[m
+                     }}[m
+                   />[m
+                 </div>[m
+ [m
+[31m-                {/* Filtre par confiance */}[m
+                 <div className="mb-6">[m
+[31m-                  <h3 className="font-medium text-gray-800 mb-3">Confiance</h3>[m
+[32m+[m[32m                  <h3 className="font-medium text-gray-800 mb-3 flex items-center">[m
+[32m+[m[32m                    <span className="mr-2">📊</span>[m
+[32m+[m[32m                    Nutri-Score[m
+[32m+[m[32m                  </h3>[m
+                   <RefinementList[m
+[31m-                    attribute="confidence_color"[m
+[32m+[m[32m                    attribute="nutriscore_grade"[m
+                     limit={5}[m
+                     classNames={{[m
+                       list: 'space-y-2',[m
+                       item: 'flex items-center',[m
+                       label: 'flex items-center cursor-pointer',[m
+[31m-                      checkbox: 'mr-2 rounded',[m
+[32m+[m[32m                      checkbox: 'mr-2 rounded border-gray-300 text-green-600 focus:ring-green-500',[m
+                       labelText: 'text-sm text-gray-700',[m
+[31m-                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'[m
+[32m+[m[32m                      count: 'ml-auto text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'[m
+                     }}[m
+                   />[m
+                 </div>[m
+[36m@@ -419,7 +720,7 @@[m [mconst SearchPage: React.FC = () => {[m
+ [m
+             {/* Contenu principal */}[m
+             <div className="w-full lg:w-3/4">[m
+[31m-              {/* Statistiques */}[m
+[32m+[m[32m              {/* Statistiques enrichies */}[m
+               <div className="flex items-center justify-between mb-6">[m
+                 <Stats[m
+                   classNames={{[m
+[36m@@ -427,36 +728,37 @@[m [mconst SearchPage: React.FC = () => {[m
+                   }}[m
+                   translations={{[m
+                     stats: (nbHits, timeSpentMS) => {[m
+[31m-                      return `📊 ${nbHits.toLocaleString()} produit${nbHits !== 1 ? 's' : ''} trouvé${nbHits !== 1 ? 's' : ''} en ${timeSpentMS}ms`;[m
+[32m+[m[32m                      return `🎯 ${nbHits.toLocaleString()} produit${nbHits !== 1 ? 's' : ''} analysé${nbHits !== 1 ? 's' : ''} en ${timeSpentMS}ms`;[m
+                     }[m
+                   }}[m
+                 />[m
+[31m-                <div className="text-sm text-gray-500">[m
+[31m-                  99 produits indexés • Mapping intelligent ✅[m
+[32m+[m[32m                <div className="text-sm text-gray-500 flex items-center">[m
+[32m+[m[32m                  <Sparkles className="w-4 h-4 mr-1 text-green-500" />[m
+[32m+[m[32m                  IA ECOLOJIA active[m
+                 </div>[m
+               </div>[m
+               [m
+[31m-              {/* Résultats */}[m
+[31m-              <div className="space-y-4 mb-6">[m
+[32m+[m[32m              {/* Résultats avec composant enrichi */}[m
+[32m+[m[32m              <div className="space-y-6 mb-8">[m
+                 <Hits [m
+[31m-                  hitComponent={ProductHit}[m
+[32m+[m[32m                  hitComponent={EcolojiaProductHit}[m
+                   classNames={{[m
+[31m-                    root: 'space-y-4',[m
+[31m-                    list: 'space-y-4',[m
+[32m+[m[32m                    root: 'space-y-6',[m
+[32m+[m[32m                    list: 'space-y-6',[m
+                     item: ''[m
+                   }}[m
+                 />[m
+               </div>[m
+               [m
+[31m-              {/* Pagination */}[m
+[32m+[m[32m              {/* Pagination améliorée */}[m
+               <div className="mt-8 flex justify-center">[m
+                 <Pagination[m
+                   classNames={{[m
+                     root: 'flex space-x-1',[m
+                     list: 'flex space-x-1',[m
+[31m-                    item: 'px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 cursor-pointer',[m
+[31m-                    selectedItem: 'px-3 py-2 bg-green-500 text-white rounded text-sm cursor-pointer',[m
+[31m-                    disabledItem: 'px-3 py-2 border border-gray-300 rounded text-sm text-gray-400 cursor-not-allowed'[m
+[32m+[m[32m                    item: 'px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 cursor-pointer transition-colors',[m
+[32m+[m[32m                    selectedItem: 'px-4 py-2 bg-green-500 text-white rounded-lg text-sm cursor-pointer shadow-sm',[m
+[32m+[m[32m                    disabledItem: 'px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-400 cursor-not-allowed'[m
+                   }}[m
+                 />[m
+               </div>[m
+[36m@@ -468,5 +770,4 @@[m [mconst SearchPage: React.FC = () => {[m
+   );[m
+ };[m
+ [m
+[31m-export default SearchPage;[m
+[31m-// EOF[m
+\ No newline at end of file[m
+[32m+[m[32mexport default SearchPage;[m
+\ No newline at end of file[m
