@@ -1,13 +1,20 @@
 // backend/src/server.js
+// FICHIER COMPLET AVEC ROUTES AUTH INTÉGRÉES
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const redis = require('redis');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Initialisation Express
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+// Configuration JWT
+const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
 
 // Configuration CORS
 const corsOptions = {
@@ -40,56 +47,267 @@ const logger = {
   warn: (...args) => console.warn('[WARN]', new Date().toISOString(), ...args)
 };
 
-// Connexion MongoDB
-async function connectMongoDB() {
+// Variables globales
+let redisClient;
+
+// ========== ROUTES AUTH DIRECTES ==========
+// GET /api/auth/test
+app.get('/api/auth/test', (req, res) => {
+  console.log('🧪 Auth test route appelée');
+  res.json({
+    success: true,
+    message: 'Auth routes fonctionnent parfaitement !',
+    timestamp: new Date()
+  });
+});
+
+// POST /api/auth/register
+app.post('/api/auth/register', async (req, res) => {
   try {
-    const uri = process.env.MONGODB_URI;
-    
-    if (!uri) {
-      throw new Error('MONGODB_URI not configured');
+    console.log('📝 Register appelé:', req.body);
+    const { email, password, firstName, lastName } = req.body;
+
+    // Validation basique
+    if (!email || !password || !firstName || !lastName) {
+      return res.status(400).json({
+        success: false,
+        error: 'Tous les champs sont requis'
+      });
     }
 
-    await mongoose.connect(uri, {
-      maxPoolSize: 20,
-      serverSelectionTimeoutMS: 10000
+    // Vérifier la connexion MongoDB
+    if (mongoose.connection.readyState !== 1) {
+      // Si MongoDB n'est pas connecté, retourner une réponse de test
+      const fakeToken = jwt.sign(
+        { email, firstName, lastName },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      return res.json({
+        success: true,
+        message: 'Mode test - MongoDB non connecté',
+        user: { email, firstName, lastName },
+        token: fakeToken,
+        accessToken: fakeToken,
+        refreshToken: fakeToken
+      });
+    }
+
+    // Si MongoDB est connecté, utiliser le modèle User
+    const User = require('./models/User');
+    
+    // Vérifier si l'utilisateur existe
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        error: 'Cet email est déjà utilisé'
+      });
+    }
+
+    // Hasher le mot de passe
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Créer l'utilisateur
+    const user = new User({
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      name: `${firstName} ${lastName}`,
+      profile: { firstName, lastName },
+      tier: 'free',
+      status: 'active',
+      quotas: {
+        scansRemaining: 30,
+        scansResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        aiChatsRemaining: 5,
+        aiChatsResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      }
     });
 
-    logger.info('✅ MongoDB Atlas connected successfully');
-    
-    // Log des collections disponibles
-    const collections = await mongoose.connection.db.listCollections().toArray();
-    logger.info(`📦 Collections disponibles: ${collections.map(c => c.name).join(', ')}`);
-    
-    return true;
-  } catch (error) {
-    logger.error('MongoDB connection failed:', error.message);
-    throw error;
-  }
-}
+    await user.save();
 
-// Connexion Redis (optionnel)
-let redisClient;
-async function connectRedis() {
+    // Générer le token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, tier: user.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Retourner la réponse
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(201).json({
+      success: true,
+      user: userResponse,
+      token,
+      accessToken: token,
+      refreshToken: token
+    });
+
+  } catch (error) {
+    console.error('❌ Register error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Erreur lors de l\'inscription'
+    });
+  }
+});
+
+// POST /api/auth/login
+app.post('/api/auth/login', async (req, res) => {
   try {
-    if (process.env.REDIS_URL) {
-      redisClient = redis.createClient({
-        url: process.env.REDIS_URL
-      });
-      
-      redisClient.on('error', (err) => logger.error('Redis error:', err));
-      
-      await redisClient.connect();
-      logger.info('✅ Redis connected successfully');
-    } else {
-      logger.info('ℹ️ Redis not configured, skipping...');
-    }
-  } catch (error) {
-    logger.warn('Redis connection failed:', error.message);
-    // Continue sans Redis
-  }
-}
+    console.log('🔑 Login appelé:', req.body.email);
+    const { email, password } = req.body;
 
-// Health check endpoint
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email et mot de passe requis'
+      });
+    }
+
+    // Vérifier la connexion MongoDB
+    if (mongoose.connection.readyState !== 1) {
+      // Mode test
+      if (email === 'test@example.com' && password === 'password123') {
+        const fakeToken = jwt.sign(
+          { email, tier: 'free' },
+          JWT_SECRET,
+          { expiresIn: '7d' }
+        );
+
+        return res.json({
+          success: true,
+          message: 'Mode test - Login simulé',
+          user: { email, tier: 'free' },
+          token: fakeToken,
+          accessToken: fakeToken,
+          refreshToken: fakeToken
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          error: 'Identifiants incorrects (test mode)'
+        });
+      }
+    }
+
+    // Si MongoDB est connecté
+    const User = require('./models/User');
+    
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        error: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    // Mettre à jour la dernière connexion
+    user.lastLoginAt = new Date();
+    await user.save();
+
+    // Générer le token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, tier: user.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.json({
+      success: true,
+      user: userResponse,
+      token,
+      accessToken: token,
+      refreshToken: token
+    });
+
+  } catch (error) {
+    console.error('❌ Login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la connexion'
+    });
+  }
+});
+
+// GET /api/auth/profile
+app.get('/api/auth/profile', (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      success: false,
+      error: 'Token non fourni'
+    });
+  }
+
+  try {
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    res.json({
+      success: true,
+      user: decoded
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      error: 'Token invalide'
+    });
+  }
+});
+
+// POST /api/auth/refresh
+app.post('/api/auth/refresh', (req, res) => {
+  const { refreshToken } = req.body;
+  
+  if (!refreshToken) {
+    return res.status(400).json({
+      success: false,
+      error: 'Token requis'
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+    const newToken = jwt.sign(
+      { email: decoded.email, tier: decoded.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      accessToken: newToken,
+      refreshToken: newToken
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      error: 'Token invalide ou expiré'
+    });
+  }
+});
+
+logger.info('✅ Routes auth directes chargées');
+// ========== FIN ROUTES AUTH DIRECTES ==========
+
+// Routes statiques
 app.get('/health', (req, res) => {
   const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   const redisStatus = redisClient?.isReady ? 'connected' : 'disconnected';
@@ -107,7 +325,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Test endpoint
 app.get('/api/test', (req, res) => {
   res.json({
     success: true,
@@ -121,15 +338,6 @@ app.get('/api/test', (req, res) => {
       algolia: !!process.env.ALGOLIA_APP_ID,
       lemonSqueezy: !!process.env.LEMONSQUEEZY_API_KEY
     }
-  });
-});
-
-// Test direct partner route
-app.get('/api/partner/test', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Direct partner route works!',
-    timestamp: new Date().toISOString()
   });
 });
 
@@ -155,166 +363,54 @@ const AFFILIATE_PARTNERS = {
   }
 };
 
-// Route info partenaires
-app.get('/api/partner/info', (req, res) => {
-  res.json({
-    success: true,
-    partners: Object.entries(AFFILIATE_PARTNERS).map(([id, config]) => ({
-      id,
-      name: id.charAt(0).toUpperCase() + id.slice(1),
-      baseUrl: config.baseUrl,
-      categories: config.categories
-    })),
-    endpoints: {
-      test: 'GET /api/partner/test',
-      info: 'GET /api/partner/info',
-      track: 'GET /api/partner/track/:productId?partner=xxx',
-      stats: 'GET /api/partner/stats?partner=xxx'
-    }
-  });
-});
-
-// Route pour récupérer les produits de test
-app.get('/api/test/products', async (req, res) => {
+// Connexion MongoDB
+async function connectMongoDB() {
   try {
-    const Product = require('./models/Product');
-    const products = await Product.find().limit(5).select('_id name brand barcode category');
-    res.json({
-      success: true,
-      count: products.length,
-      products: products
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Route de tracking affilié
-app.get('/api/partner/track/:id', async (req, res) => {
-  try {
-    const Product = require('./models/Product');
-    const AffiliateClick = require('./models/AffiliateClick');
+    const uri = process.env.MONGODB_URI;
     
-    const { id: productId } = req.params;
-    const { partner, source = 'product_page', campaign = 'organic' } = req.query;
-
-    if (!partner || !AFFILIATE_PARTNERS[partner]) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid or missing partner parameter'
-      });
+    if (!uri) {
+      throw new Error('MONGODB_URI not configured');
     }
 
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        error: 'Product not found'
+    await mongoose.connect(uri, {
+      maxPoolSize: 20,
+      serverSelectionTimeoutMS: 10000
+    });
+
+    logger.info('✅ MongoDB Atlas connected successfully');
+    
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    logger.info(`📦 Collections disponibles: ${collections.map(c => c.name).join(', ')}`);
+    
+    return true;
+  } catch (error) {
+    logger.error('MongoDB connection failed:', error.message);
+    throw error;
+  }
+}
+
+// Connexion Redis
+async function connectRedis() {
+  try {
+    if (process.env.REDIS_URL) {
+      redisClient = redis.createClient({
+        url: process.env.REDIS_URL
       });
+      
+      redisClient.on('error', (err) => logger.error('Redis error:', err));
+      
+      await redisClient.connect();
+      logger.info('✅ Redis connected successfully');
+    } else {
+      logger.info('ℹ️ Redis not configured, skipping...');
     }
-
-    const userId = '507f1f77bcf86cd799439011'; // TODO: Get from auth
-    const partnerConfig = AFFILIATE_PARTNERS[partner];
-    const originalUrl = `${partnerConfig.baseUrl}/search?q=${encodeURIComponent(product.name)}`;
-
-    const click = await AffiliateClick.createClick({
-      userId,
-      productId,
-      partner,
-      originalUrl,
-      affiliateUrl: originalUrl,
-      campaign,
-      source,
-      userAgent: req.headers['user-agent'],
-      ipAddress: req.ip
-    });
-
-    const url = new URL(originalUrl);
-    url.searchParams.set(partnerConfig.trackingParam, partnerConfig.affiliateId);
-    url.searchParams.set('utm_source', 'ecolojia');
-    url.searchParams.set('click_id', click.clickId);
-
-    const affiliateUrl = url.toString();
-    click.affiliateUrl = affiliateUrl;
-    await click.save();
-
-    logger.info(`[Affiliate] Click tracked: ${click.clickId} -> ${partner}`);
-
-    res.redirect(302, affiliateUrl);
-
   } catch (error) {
-    logger.error('[Affiliate] Error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
+    logger.warn('Redis connection failed:', error.message);
   }
-});
+}
 
-// Route des statistiques
-app.get('/api/partner/stats', async (req, res) => {
-  try {
-    const AffiliateClick = require('./models/AffiliateClick');
-    const { partner, period = 30 } = req.query;
-
-    if (!partner || !AFFILIATE_PARTNERS[partner]) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid partner parameter'
-      });
-    }
-
-    const stats = await AffiliateClick.getPartnerStats(partner, Number(period));
-
-    res.json({
-      success: true,
-      data: {
-        partner,
-        period: Number(period),
-        stats
-      }
-    });
-
-  } catch (error) {
-    logger.error('[Affiliate] Stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-});
-
-// Route pour récupérer les produits de test
-app.get('/api/test/products', async (req, res) => {
-  try {
-    const products = await Product.find().limit(5).select('_id name brand barcode category');
-    res.json({
-      success: true,
-      count: products.length,
-      products: products
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// Import et configuration des routes
-function setupRoutes() {
-  // Auth routes
-  try {
-    const authRoutes = require('./routes/auth');
-    app.use('/api/auth', authRoutes);
-    logger.info('✅ Auth routes loaded');
-  } catch (error) {
-    logger.warn('Auth routes not found:', error.message);
-  }
-
+// Fonction pour charger les autres routes
+function setupOtherRoutes() {
   // Dashboard routes
   try {
     const dashboardRoutes = require('./routes/dashboard');
@@ -342,27 +438,13 @@ function setupRoutes() {
     logger.warn('Analysis routes not found:', error.message);
   }
 
-  // Partner/Affiliate routes
+  // Partner routes
   try {
-    // Essayer d'abord le .ts compilé, puis le .js
-    let partnerRoutes;
-    try {
-      partnerRoutes = require('./routes/partner.routes.js');
-    } catch (e) {
-      partnerRoutes = require('./routes/partner.routes');
-    }
+    const partnerRoutes = require('./routes/partner.routes');
     app.use('/api/partner', partnerRoutes);
     logger.info('✅ Partner routes loaded');
   } catch (error) {
     logger.warn('Partner routes not found:', error.message);
-    // Créer une route temporaire
-    app.use('/api/partner', (req, res) => {
-      res.json({ 
-        success: false, 
-        message: 'Partner routes not implemented yet',
-        hint: 'Create partner.routes.js in routes folder'
-      });
-    });
   }
 
   // AI routes
@@ -391,6 +473,15 @@ function setupRoutes() {
   } catch (error) {
     logger.warn('Algolia routes not found:', error.message);
   }
+
+  // Analyze routes
+  try {
+    const analyzeRoutes = require('./routes/analyze.routes');
+    app.use('/api/analyze', analyzeRoutes);
+    logger.info('✅ Analyze routes loaded');
+  } catch (error) {
+    logger.warn('Analyze routes not found:', error.message);
+  }
 }
 
 // Route 404
@@ -403,14 +494,19 @@ app.use((req, res) => {
     availableRoutes: [
       '/health',
       '/api/test',
-      '/api/auth/*',
+      '/api/auth/test',
+      '/api/auth/register',
+      '/api/auth/login',
+      '/api/auth/profile',
+      '/api/auth/refresh',
       '/api/dashboard/*',
       '/api/products/*',
       '/api/analysis/*',
       '/api/partner/*',
       '/api/ai/*',
       '/api/payment/*',
-      '/api/algolia/*'
+      '/api/algolia/*',
+      '/api/analyze/*'
     ]
   });
 });
@@ -428,14 +524,14 @@ app.use((err, req, res, next) => {
 // Démarrage du serveur
 async function startServer() {
   try {
-    // Connexion MongoDB (obligatoire)
+    // Connexion MongoDB
     await connectMongoDB();
     
-    // Connexion Redis (optionnel)
+    // Connexion Redis
     await connectRedis();
     
-    // Charger les routes
-    setupRoutes();
+    // Charger les autres routes (après connexion DB)
+    setupOtherRoutes();
     
     // Démarrer le serveur
     app.listen(PORT, () => {
@@ -447,6 +543,14 @@ async function startServer() {
       logger.info(`🔍 Algolia: ${process.env.ALGOLIA_APP_ID ? 'Configured' : 'Not configured'}`);
       logger.info(`💳 LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? 'Configured' : 'Not configured'}`);
       logger.info(`🤖 DeepSeek AI: ${process.env.DEEPSEEK_API_KEY ? 'Configured' : 'Not configured'}`);
+      logger.info('\n📌 Auth endpoints disponibles:');
+      logger.info('  - GET  /api/auth/test');
+      logger.info('  - POST /api/auth/register');
+      logger.info('  - POST /api/auth/login');
+      logger.info('  - GET  /api/auth/profile (protégé)');
+      logger.info('  - POST /api/auth/refresh');
+      logger.info('  - GET  /health');
+      logger.info('  - GET  /api/test\n');
     });
     
   } catch (error) {
