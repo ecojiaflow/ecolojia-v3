@@ -1,5 +1,5 @@
 // backend/src/server.js
-// FICHIER COMPLET AVEC ROUTES AUTH INTÉGRÉES
+// FICHIER COMPLET AVEC ROUTES AUTH INTÉGRÉES - VERSION CORRIGÉE
 
 require('dotenv').config();
 const express = require('express');
@@ -8,6 +8,9 @@ const mongoose = require('mongoose');
 const redis = require('redis');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 
 // Initialisation Express
 const app = express();
@@ -15,6 +18,32 @@ const PORT = process.env.PORT || 5001;
 
 // Configuration JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
+
+// Variables globales
+let redisClient;
+
+// Logger unifié
+const logger = {
+  info: (...args) => console.log(`[${new Date().toISOString()}] [INFO]`, ...args),
+  error: (...args) => console.error(`[${new Date().toISOString()}] [ERROR]`, ...args),
+  warn: (...args) => console.warn(`[${new Date().toISOString()}] [WARN]`, ...args),
+  debug: (...args) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${new Date().toISOString()}] [DEBUG]`, ...args);
+    }
+  }
+};
+
+// Fonction de validation email
+const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};
+
+// Gestionnaire d'erreurs async
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
 
 // Configuration CORS
 const corsOptions = {
@@ -35,25 +64,94 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-// Middlewares
+// ========== MIDDLEWARES ==========
+
+// Sécurité
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.algolia.com", "https://api.deepseek.com"]
+    }
+  }
+}));
+
+// CORS
 app.use(cors(corsOptions));
+
+// Compression
+app.use(compression());
+
+// Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logger
-const logger = {
-  info: (...args) => console.log('[INFO]', new Date().toISOString(), ...args),
-  error: (...args) => console.error('[ERROR]', new Date().toISOString(), ...args),
-  warn: (...args) => console.warn('[WARN]', new Date().toISOString(), ...args)
+// Rate limiting global
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // 100 requêtes par IP
+  message: 'Trop de requêtes, veuillez réessayer plus tard'
+});
+app.use('/api/', globalLimiter);
+
+// Rate limiting strict pour auth
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // 5 tentatives max
+  message: 'Trop de tentatives de connexion',
+  skipSuccessfulRequests: true
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
+
+// Middleware d'authentification
+const authMiddleware = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Token non fourni'
+      });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Si MongoDB est connecté, récupérer l'utilisateur
+    if (mongoose.connection.readyState === 1) {
+      const User = require('./models/User');
+      const user = await User.findById(decoded.userId).select('-password');
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Utilisateur non trouvé'
+        });
+      }
+      req.user = user;
+    } else {
+      // Mode test
+      req.user = decoded;
+    }
+    
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      error: 'Token invalide ou expiré'
+    });
+  }
 };
 
-// Variables globales
-let redisClient;
+// ========== ROUTES AUTH ==========
 
-// ========== ROUTES AUTH DIRECTES ==========
 // GET /api/auth/test
 app.get('/api/auth/test', (req, res) => {
-  console.log('🧪 Auth test route appelée');
+  logger.info('🧪 Auth test route appelée');
   res.json({
     success: true,
     message: 'Auth routes fonctionnent parfaitement !',
@@ -62,212 +160,238 @@ app.get('/api/auth/test', (req, res) => {
 });
 
 // POST /api/auth/register
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    console.log('📝 Register appelé:', req.body);
-    const { email, password, firstName, lastName } = req.body;
+app.post('/api/auth/register', asyncHandler(async (req, res) => {
+  logger.info('📝 Register appelé:', req.body.email);
+  const { email, password, firstName, lastName } = req.body;
 
-    // Validation basique
-    if (!email || !password || !firstName || !lastName) {
-      return res.status(400).json({
-        success: false,
-        error: 'Tous les champs sont requis'
-      });
+  // Validation basique
+  if (!email || !password || !firstName || !lastName) {
+    return res.status(400).json({
+      success: false,
+      error: 'Tous les champs sont requis'
+    });
+  }
+
+  // Validation email
+  if (!validateEmail(email)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Email invalide'
+    });
+  }
+
+  // Validation mot de passe
+  if (password.length < 6) {
+    return res.status(400).json({
+      success: false,
+      error: 'Le mot de passe doit contenir au moins 6 caractères'
+    });
+  }
+
+  // Vérifier la connexion MongoDB
+  if (mongoose.connection.readyState !== 1) {
+    // Si MongoDB n'est pas connecté, retourner une réponse de test
+    const fakeToken = jwt.sign(
+      { email, firstName, lastName, tier: 'free' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.json({
+      success: true,
+      message: 'Mode test - MongoDB non connecté',
+      user: { email, firstName, lastName, tier: 'free' },
+      token: fakeToken,
+      accessToken: fakeToken,
+      refreshToken: fakeToken
+    });
+  }
+
+  // Si MongoDB est connecté, utiliser le modèle User
+  const User = require('./models/User');
+  
+  // Vérifier si l'utilisateur existe
+  const existingUser = await User.findOne({ email: email.toLowerCase() });
+  if (existingUser) {
+    return res.status(409).json({
+      success: false,
+      error: 'Cet email est déjà utilisé'
+    });
+  }
+
+  // Hasher le mot de passe
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  // Créer l'utilisateur
+  const user = new User({
+    email: email.toLowerCase(),
+    password: hashedPassword,
+    name: `${firstName} ${lastName}`,
+    profile: { firstName, lastName },
+    tier: 'free',
+    status: 'active',
+    quotas: {
+      scansRemaining: 30,
+      scansResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      aiChatsRemaining: 5,
+      aiChatsResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     }
+  });
 
-    // Vérifier la connexion MongoDB
-    if (mongoose.connection.readyState !== 1) {
-      // Si MongoDB n'est pas connecté, retourner une réponse de test
+  await user.save();
+
+  // Générer le token
+  const token = jwt.sign(
+    { userId: user._id, email: user.email, tier: user.tier },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  // Retourner la réponse
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  res.status(201).json({
+    success: true,
+    user: userResponse,
+    token,
+    accessToken: token,
+    refreshToken: token
+  });
+}));
+
+// POST /api/auth/login
+app.post('/api/auth/login', asyncHandler(async (req, res) => {
+  logger.info('🔑 Login appelé:', req.body.email);
+  const { email, password } = req.body;
+
+  // Validation
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      error: 'Email et mot de passe requis'
+    });
+  }
+
+  // Vérifier la connexion MongoDB
+  if (mongoose.connection.readyState !== 1) {
+    // Mode test
+    if (email === 'test@example.com' && password === 'password123') {
       const fakeToken = jwt.sign(
-        { email, firstName, lastName },
+        { email, tier: 'free', userId: 'test-user-id' },
         JWT_SECRET,
         { expiresIn: '7d' }
       );
 
       return res.json({
         success: true,
-        message: 'Mode test - MongoDB non connecté',
-        user: { email, firstName, lastName },
+        message: 'Mode test - Login simulé',
+        user: { email, tier: 'free' },
         token: fakeToken,
         accessToken: fakeToken,
         refreshToken: fakeToken
       });
-    }
-
-    // Si MongoDB est connecté, utiliser le modèle User
-    const User = require('./models/User');
-    
-    // Vérifier si l'utilisateur existe
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        error: 'Cet email est déjà utilisé'
-      });
-    }
-
-    // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Créer l'utilisateur
-    const user = new User({
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      name: `${firstName} ${lastName}`,
-      profile: { firstName, lastName },
-      tier: 'free',
-      status: 'active',
-      quotas: {
-        scansRemaining: 30,
-        scansResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        aiChatsRemaining: 5,
-        aiChatsResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      }
-    });
-
-    await user.save();
-
-    // Générer le token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, tier: user.tier },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // Retourner la réponse
-    const userResponse = user.toObject();
-    delete userResponse.password;
-
-    res.status(201).json({
-      success: true,
-      user: userResponse,
-      token,
-      accessToken: token,
-      refreshToken: token
-    });
-
-  } catch (error) {
-    console.error('❌ Register error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Erreur lors de l\'inscription'
-    });
-  }
-});
-
-// POST /api/auth/login
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    console.log('🔑 Login appelé:', req.body.email);
-    const { email, password } = req.body;
-
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email et mot de passe requis'
-      });
-    }
-
-    // Vérifier la connexion MongoDB
-    if (mongoose.connection.readyState !== 1) {
-      // Mode test
-      if (email === 'test@example.com' && password === 'password123') {
-        const fakeToken = jwt.sign(
-          { email, tier: 'free' },
-          JWT_SECRET,
-          { expiresIn: '7d' }
-        );
-
-        return res.json({
-          success: true,
-          message: 'Mode test - Login simulé',
-          user: { email, tier: 'free' },
-          token: fakeToken,
-          accessToken: fakeToken,
-          refreshToken: fakeToken
-        });
-      } else {
-        return res.status(401).json({
-          success: false,
-          error: 'Identifiants incorrects (test mode)'
-        });
-      }
-    }
-
-    // Si MongoDB est connecté
-    const User = require('./models/User');
-    
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
+    } else {
       return res.status(401).json({
         success: false,
-        error: 'Email ou mot de passe incorrect'
+        error: 'Identifiants incorrects (test mode)'
       });
     }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return res.status(401).json({
-        success: false,
-        error: 'Email ou mot de passe incorrect'
-      });
-    }
-
-    // Mettre à jour la dernière connexion
-    user.lastLoginAt = new Date();
-    await user.save();
-
-    // Générer le token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, tier: user.tier },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    const userResponse = user.toObject();
-    delete userResponse.password;
-
-    res.json({
-      success: true,
-      user: userResponse,
-      token,
-      accessToken: token,
-      refreshToken: token
-    });
-
-  } catch (error) {
-    console.error('❌ Login error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la connexion'
-    });
   }
-});
 
-// GET /api/auth/profile
-app.get('/api/auth/profile', (req, res) => {
-  const authHeader = req.headers.authorization;
+  // Si MongoDB est connecté
+  const User = require('./models/User');
   
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) {
     return res.status(401).json({
       success: false,
-      error: 'Token non fourni'
+      error: 'Email ou mot de passe incorrect'
     });
   }
 
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
+    return res.status(401).json({
+      success: false,
+      error: 'Email ou mot de passe incorrect'
+    });
+  }
+
+  // Mettre à jour la dernière connexion
+  user.lastLoginAt = new Date();
+  await user.save();
+
+  // Générer le token
+  const token = jwt.sign(
+    { userId: user._id, email: user.email, tier: user.tier },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  res.json({
+    success: true,
+    user: userResponse,
+    token,
+    accessToken: token,
+    refreshToken: token
+  });
+}));
+
+// GET /api/auth/profile (avec nouveau middleware)
+app.get('/api/auth/profile', authMiddleware, async (req, res) => {
   try {
-    const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({
+      success: true,
+      user: req.user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la récupération du profil'
+    });
+  }
+});
+
+// POST /api/auth/logout
+app.post('/api/auth/logout', authMiddleware, (req, res) => {
+  // Dans une vraie app, on invaliderait le token dans Redis
+  res.json({
+    success: true,
+    message: 'Déconnexion réussie'
+  });
+});
+
+// GET /api/auth/me
+app.get('/api/auth/me', authMiddleware, async (req, res) => {
+  try {
+    const user = req.user;
     
     res.json({
       success: true,
-      user: decoded
+      data: {
+        user: {
+          id: user._id || user.userId,
+          email: user.email,
+          name: user.name,
+          tier: user.tier || 'free',
+          profile: user.profile,
+          preferences: user.preferences,
+          quotas: user.quotas || {
+            scansRemaining: 30,
+            aiChatsRemaining: 5
+          },
+          createdAt: user.createdAt
+        }
+      }
     });
   } catch (error) {
-    res.status(401).json({
+    res.status(500).json({
       success: false,
-      error: 'Token invalide'
+      error: 'Erreur lors de la récupération du profil'
     });
   }
 });
@@ -286,7 +410,7 @@ app.post('/api/auth/refresh', (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, JWT_SECRET);
     const newToken = jwt.sign(
-      { email: decoded.email, tier: decoded.tier },
+      { userId: decoded.userId, email: decoded.email, tier: decoded.tier },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -305,26 +429,37 @@ app.post('/api/auth/refresh', (req, res) => {
 });
 
 logger.info('✅ Routes auth directes chargées');
-// ========== FIN ROUTES AUTH DIRECTES ==========
 
-// Routes statiques
-app.get('/health', (req, res) => {
-  const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  const redisStatus = redisClient?.isReady ? 'connected' : 'disconnected';
-  
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    database: {
-      mongodb: mongoStatus,
-      redis: redisStatus
-    },
+// ========== ROUTES HEALTH & TEST ==========
+
+// GET /health (amélioré)
+app.get('/health', async (req, res) => {
+  const checks = {
     uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
-    version: '3.0.0'
-  });
+    services: {
+      api: 'operational',
+      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      redis: redisClient?.isReady ? 'connected' : 'disconnected'
+    }
+  };
+
+  // Vérifier que MongoDB répond
+  if (mongoose.connection.readyState === 1) {
+    try {
+      await mongoose.connection.db.admin().ping();
+      checks.services.mongodb = 'healthy';
+    } catch (error) {
+      checks.services.mongodb = 'unhealthy';
+    }
+  }
+
+  const isHealthy = checks.services.mongodb !== 'unhealthy';
+  res.status(isHealthy ? 200 : 503).json(checks);
 });
 
+// GET /api/test
 app.get('/api/test', (req, res) => {
   res.json({
     success: true,
@@ -340,6 +475,8 @@ app.get('/api/test', (req, res) => {
     }
   });
 });
+
+// ========== CONFIGURATION ==========
 
 // Configuration des partenaires
 const AFFILIATE_PARTNERS = {
@@ -362,6 +499,8 @@ const AFFILIATE_PARTNERS = {
     categories: ['eco-responsable', 'bio']
   }
 };
+
+// ========== CONNEXIONS DB ==========
 
 // Connexion MongoDB
 async function connectMongoDB() {
@@ -408,6 +547,8 @@ async function connectRedis() {
     logger.warn('Redis connection failed:', error.message);
   }
 }
+
+// ========== SETUP ROUTES ==========
 
 // Fonction pour charger les autres routes
 function setupOtherRoutes() {
@@ -474,6 +615,24 @@ function setupOtherRoutes() {
     logger.warn('Algolia routes not found:', error.message);
   }
 
+  // Cosmetic routes
+  try {
+    const cosmeticRoutes = require('./routes/cosmetic.routes');
+    app.use('/api/cosmetic', cosmeticRoutes);
+    logger.info('✅ Cosmetic routes loaded');
+  } catch (error) {
+    logger.warn('Cosmetic routes not found:', error.message);
+  }
+
+  // Detergent routes
+  try {
+    const detergentRoutes = require('./routes/detergent.routes');
+    app.use('/api/detergent', detergentRoutes);
+    logger.info('✅ Detergent routes loaded');
+  } catch (error) {
+    logger.warn('Detergent routes not found:', error.message);
+  }
+
   // Analyze routes
   try {
     const analyzeRoutes = require('./routes/analyze.routes');
@@ -483,6 +642,8 @@ function setupOtherRoutes() {
     logger.warn('Analyze routes not found:', error.message);
   }
 }
+
+// ========== ERROR HANDLING ==========
 
 // Route 404
 app.use((req, res) => {
@@ -498,6 +659,8 @@ app.use((req, res) => {
       '/api/auth/register',
       '/api/auth/login',
       '/api/auth/profile',
+      '/api/auth/logout',
+      '/api/auth/me',
       '/api/auth/refresh',
       '/api/dashboard/*',
       '/api/products/*',
@@ -506,6 +669,8 @@ app.use((req, res) => {
       '/api/ai/*',
       '/api/payment/*',
       '/api/algolia/*',
+      '/api/cosmetic/*',
+      '/api/detergent/*',
       '/api/analyze/*'
     ]
   });
@@ -520,6 +685,8 @@ app.use((err, req, res, next) => {
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });
+
+// ========== DÉMARRAGE SERVEUR ==========
 
 // Démarrage du serveur
 async function startServer() {
@@ -548,6 +715,8 @@ async function startServer() {
       logger.info('  - POST /api/auth/register');
       logger.info('  - POST /api/auth/login');
       logger.info('  - GET  /api/auth/profile (protégé)');
+      logger.info('  - POST /api/auth/logout (protégé)');
+      logger.info('  - GET  /api/auth/me (protégé)');
       logger.info('  - POST /api/auth/refresh');
       logger.info('  - GET  /health');
       logger.info('  - GET  /api/test\n');
@@ -558,6 +727,8 @@ async function startServer() {
     process.exit(1);
   }
 }
+
+// ========== GESTION ARRÊT ==========
 
 // Gestion gracieuse de l'arrêt
 process.on('SIGTERM', async () => {

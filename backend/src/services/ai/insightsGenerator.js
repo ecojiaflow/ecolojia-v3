@@ -1,23 +1,7 @@
-// PATH: backend/src/services/ai/insightsGenerator.ts
-import { Logger } from '../../utils/Logger';
+// PATH: backend/src/services/ai/insightsGenerator.js
+const { Logger } = require('../../utils/logger');
 
-const log = new Logger('InsightsGenerator');
-const debug = (...a: unknown[]) => process.env.NODE_ENV !== 'production' && log.info(...a);
-
-/* ───── Types ───── */
-export interface InsightRequest {
-  product: string;
-  score: number;
-  category: 'food' | 'cosmetics' | 'detergents';
-  analysis: any;
-}
-
-export interface InsightResult {
-  insights: string[];
-  recommendations: string[];
-  tips: string[];
-  warnings: string[];
-}
+const logger = new Logger('InsightsGenerator');
 
 /* ───── Templates d'insights ───── */
 const TEMPLATES = {
@@ -70,70 +54,73 @@ const TEMPLATES = {
 };
 
 /* ───── Générateur optimisé ───── */
-export class InsightsGenerator {
-  async generate(req: InsightRequest): Promise<InsightResult> {
-    debug(`Insights pour ${req.product}`);
+class InsightsGenerator {
+  async generate(req) {
+    logger.info(`Generating insights for ${req.product}`);
     
-    const ins: string[] = [];
-    const reco: string[] = [];
-    const tips: string[] = [];
-    const warn: string[] = [];
+    const insights = [];
+    const recommendations = [];
+    const tips = [];
+    const warnings = [];
     
     // Insights par catégorie
     switch (req.category) {
       case 'food':
-        this.genFood(req, ins, reco, tips, warn);
+        this.genFood(req, insights, recommendations, tips, warnings);
         break;
       case 'cosmetics':
-        this.genCos(req, ins, reco, tips, warn);
+        this.genCos(req, insights, recommendations, tips, warnings);
         break;
       case 'detergents':
-        this.genDet(req, ins, reco, tips, warn);
+        this.genDet(req, insights, recommendations, tips, warnings);
         break;
     }
     
     // Insights score
-    this.genScore(req.score, ins, reco);
+    this.genScore(req.score, insights, recommendations);
     
     // Motivation
     if (req.score < 60) {
-      reco.push('💪 Chaque changement compte');
-      reco.push('🌍 Impact positif possible');
+      recommendations.push('💪 Chaque changement compte');
+      recommendations.push('🌍 Impact positif possible');
     }
     
     return {
-      insights: [...new Set(ins)],
-      recommendations: [...new Set(reco)],
+      insights: [...new Set(insights)],
+      recommendations: [...new Set(recommendations)],
       tips: [...new Set(tips)],
-      warnings: [...new Set(warn)]
+      warnings: [...new Set(warnings)]
     };
   }
   
-  private genFood(req: InsightRequest, i: string[], r: string[], t: string[], w: string[]) {
-    const a = req.analysis;
+  genFood(req, i, r, t, w) {
+    const a = req.analysis || {};
     
     // NOVA
     if (a.nova) {
-      i.push(...TEMPLATES.food.nova[a.nova.group as keyof typeof TEMPLATES.food.nova]);
+      const novaInsights = TEMPLATES.food.nova[a.nova.group];
+      if (novaInsights) {
+        i.push(...novaInsights);
+      }
       if (a.nova.group >= 3) {
         r.push(...TEMPLATES.food.reco.bad);
       }
-      if (a.nova.additives?.some((ad: any) => ad.riskLevel === 'high')) {
+      if (a.nova.additives && a.nova.additives.some(ad => ad.riskLevel === 'high')) {
         w.push('🚨 Additifs à risque élevé');
       }
     }
     
     // Ultra-transform
-    if (a.ultra?.score > 7) {
+    if (a.ultra && a.ultra.score > 7) {
       i.push(...TEMPLATES.food.ultra.high);
       w.push('📈 Risque maladies chroniques');
       t.push('💡 Perturbation signaux satiété');
-    } else if (a.ultra?.score > 4) {
+    } else if (a.ultra && a.ultra.score > 4) {
       i.push(...TEMPLATES.food.ultra.med);
     }
     
     // Marqueurs spécifiques
-    if (a.ultra?.markers?.some((m: string) => /hydrogén/i.test(m))) {
+    if (a.ultra && a.ultra.markers && a.ultra.markers.some(m => /hydrogén/i.test(m))) {
       w.push('🚫 Acides gras trans');
       i.push('❤️ Risque cardiovasculaire');
     }
@@ -146,18 +133,18 @@ export class InsightsGenerator {
     }
   }
   
-  private genCos(req: InsightRequest, i: string[], r: string[], t: string[], w: string[]) {
-    const a = req.analysis;
+  genCos(req, i, r, t, w) {
+    const a = req.analysis || {};
     
     if (a.cosmeticsHazard) {
       if (a.cosmeticsHazard.score >= 2) {
         i.push(...TEMPLATES.cosmetics.hazard.high);
       }
-      if (a.cosmeticsHazard.endocrineDisruptors?.length) {
+      if (a.cosmeticsHazard.endocrineDisruptors && a.cosmeticsHazard.endocrineDisruptors.length) {
         w.push(...TEMPLATES.cosmetics.hazard.pe);
         r.push('🔄 Alternatives sans PE');
       }
-      if (a.cosmeticsHazard.allergens?.length) {
+      if (a.cosmeticsHazard.allergens && a.cosmeticsHazard.allergens.length) {
         i.push(...TEMPLATES.cosmetics.hazard.allerg);
         r.push('🔍 Surveillez réactions');
       }
@@ -173,8 +160,8 @@ export class InsightsGenerator {
     r.push(...(req.score >= 50 ? TEMPLATES.cosmetics.reco.good : TEMPLATES.cosmetics.reco.bad));
   }
   
-  private genDet(req: InsightRequest, i: string[], r: string[], t: string[], w: string[]) {
-    const a = req.analysis;
+  genDet(req, i, r, t, w) {
+    const a = req.analysis || {};
     
     if (a.detergentImpact) {
       if (a.detergentImpact.aquaticToxicity >= 7) {
@@ -203,14 +190,68 @@ export class InsightsGenerator {
     r.push(...(req.score >= 50 ? TEMPLATES.detergents.reco.good : TEMPLATES.detergents.reco.bad));
   }
   
-  private genScore(score: number, i: string[], r: string[]) {
-    const t = score >= 80 ? 80 : score >= 60 ? 60 : score >= 40 ? 40 : 0;
-    i.push(...TEMPLATES.general.score[t as keyof typeof TEMPLATES.general.score]);
+  genScore(score, i, r) {
+    const threshold = score >= 80 ? 80 : score >= 60 ? 60 : score >= 40 ? 40 : 0;
+    i.push(...TEMPLATES.general.score[threshold]);
     
     if (score < 60) {
       r.push('🔍 Comparez options');
     }
   }
+
+  // Méthode principale pour compatibilité avec foodScorer
+  async getInsightsForProduct(productData, userProfile = {}) {
+    try {
+      logger.info('Getting insights for product:', { name: productData.name });
+      
+      const req = {
+        product: productData.name || 'Unknown Product',
+        score: productData.score || 50,
+        category: productData.category || 'food',
+        analysis: productData.analysis || {}
+      };
+      
+      const result = await this.generate(req);
+      
+      // Transformer en format attendu par foodScorer
+      const formattedInsights = [];
+      
+      // Ajouter les insights
+      result.insights.forEach((insight, index) => {
+        formattedInsights.push({
+          type: 'info',
+          icon: insight.substring(0, 2), // Extraire l'emoji
+          title: insight.substring(3), // Le reste du texte
+          priority: index === 0 ? 'high' : 'medium'
+        });
+      });
+      
+      // Ajouter les warnings
+      result.warnings.forEach(warning => {
+        formattedInsights.push({
+          type: 'warning',
+          icon: warning.substring(0, 2),
+          title: warning.substring(3),
+          priority: 'high'
+        });
+      });
+      
+      // Limiter à 3 insights
+      return formattedInsights.slice(0, 3);
+      
+    } catch (error) {
+      logger.error('Error generating insights:', error);
+      return [{
+        type: 'info',
+        icon: '💡',
+        title: 'Analyse en cours',
+        priority: 'medium'
+      }];
+    }
+  }
 }
 
-export const insightsGenerator = new InsightsGenerator();
+// Export singleton
+const insightsGenerator = new InsightsGenerator();
+
+module.exports = insightsGenerator;

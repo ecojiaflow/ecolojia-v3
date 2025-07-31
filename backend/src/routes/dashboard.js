@@ -1,15 +1,21 @@
-// backend/src/routes/dashboard.js
+// PATH: backend/src/routes/dashboard.js
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
 // Middleware auth - avec fallback si n'existe pas
-let auth;
+let authMiddleware;
 try {
-  auth = require('../middleware/auth');
+  const authModule = require('../middleware/auth');
+  // Gérer les différents exports possibles
+  authMiddleware = authModule.authenticateUser || authModule.auth || authModule;
+  // Si c'est toujours un objet, créer un middleware par défaut
+  if (typeof authMiddleware !== 'function') {
+    throw new Error('Auth middleware is not a function');
+  }
 } catch (error) {
-  console.log('Auth middleware not found, using fallback');
-  auth = (req, res, next) => {
+  console.log('Auth middleware not found or invalid, using fallback');
+  authMiddleware = (req, res, next) => {
     // Pour les tests, on simule un userId
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -26,7 +32,7 @@ const User = require('../models/User');
 const Analysis = require('../models/Analysis');
 
 // ✅ GET /api/dashboard/stats - Route principale du dashboard
-router.get('/stats', auth, async (req, res) => {
+router.get('/stats', authMiddleware, async (req, res) => {
   try {
     const userId = req.userId;
     const { range = 'month' } = req.query;
@@ -317,7 +323,7 @@ router.get('/stats', auth, async (req, res) => {
 });
 
 // ✅ GET /api/dashboard/export - Export des données
-router.get('/export', auth, async (req, res) => {
+router.get('/export', authMiddleware, async (req, res) => {
   try {
     const userId = req.userId;
     const { format = 'csv' } = req.query;

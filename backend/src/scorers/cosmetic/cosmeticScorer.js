@@ -1,9 +1,11 @@
+// PATH: backend/src/scorers/cosmetic/cosmeticScorer.js
 /**
  * ECOLOJIA - Cosmetic Scorer v1.0 SIMPLE
  * Analyse scientifique des produits cosmétiques basée sur la base INCI
  */
 
-const { logger } = require('../../logger');
+const { Logger } = require('../../utils/logger');
+const logger = new Logger('CosmeticScorer');
 
 class CosmeticScorer {
   constructor() {

@@ -5,7 +5,8 @@
  * Base : Règlement REACH, ECHA 2024, ECOCERT, Nordic Swan
  */
 
-const { logger } = require('../../logger');
+const { Logger } = require('../../utils/logger');
+const logger = new Logger('DetergentScorer');
 
 class DetergentScorer {
   constructor() {

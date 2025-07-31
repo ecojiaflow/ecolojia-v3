@@ -1,73 +1,154 @@
 // backend/src/utils/errors.js
 
-// Classe de base pour toutes les erreurs custom
+/**
+ * Classe de base pour toutes les erreurs custom
+ */
 class AppError extends Error {
-  constructor(message, statusCode = 500, code = 'INTERNAL_ERROR') {
+  constructor(message, statusCode, code, isOperational = true, details = null) {
     super(message);
     this.statusCode = statusCode;
     this.code = code;
-    this.isOperational = true;
+    this.isOperational = isOperational;
+    this.details = details;
+    this.timestamp = new Date();
+
     Error.captureStackTrace(this, this.constructor);
   }
+
+  toJSON() {
+    return {
+      error: this.code,
+      message: this.message,
+      statusCode: this.statusCode,
+      details: this.details,
+      timestamp: this.timestamp,
+      ...(process.env.NODE_ENV === 'development' && { stack: this.stack })
+    };
+  }
 }
 
-// Erreur de validation (400)
+/**
+ * Erreurs de validation (400)
+ */
 class ValidationError extends AppError {
-  constructor(message, errors = []) {
-    super(message, 400, 'VALIDATION_ERROR');
-    this.errors = errors;
+  constructor(message, details = null) {
+    super(message, 400, 'VALIDATION_ERROR', true, details);
   }
 }
 
-// Erreur d'authentification (401)
+/**
+ * Erreurs d'authentification (401)
+ */
 class AuthenticationError extends AppError {
-  constructor(message = 'Authentification requise') {
-    super(message, 401, 'AUTHENTICATION_ERROR');
+  constructor(message = 'Authentication required') {
+    super(message, 401, 'AUTHENTICATION_ERROR', true);
   }
 }
 
-// Erreur d'autorisation (403)
+class InvalidTokenError extends AuthenticationError {
+  constructor(message = 'Invalid or expired token') {
+    super(message);
+    this.code = 'INVALID_TOKEN';
+  }
+}
+
+/**
+ * Erreurs d'autorisation (403)
+ */
 class AuthorizationError extends AppError {
-  constructor(message = 'Accès non autorisé') {
-    super(message, 403, 'AUTHORIZATION_ERROR');
+  constructor(message = 'Insufficient permissions') {
+    super(message, 403, 'AUTHORIZATION_ERROR', true);
   }
 }
 
-// Ressource non trouvée (404)
+class QuotaExceededError extends AuthorizationError {
+  constructor(quotaType, limit, usage) {
+    super(`Quota exceeded for ${quotaType}`);
+    this.code = 'QUOTA_EXCEEDED';
+    this.details = { quotaType, limit, usage };
+  }
+}
+
+/**
+ * Erreurs de ressource non trouvée (404)
+ */
 class NotFoundError extends AppError {
-  constructor(message = 'Ressource non trouvée') {
-    super(message, 404, 'NOT_FOUND');
+  constructor(resource, id = null) {
+    const message = id 
+      ? `${resource} with id '${id}' not found`
+      : `${resource} not found`;
+    super(message, 404, 'NOT_FOUND', true, { resource, id });
   }
 }
 
-// Conflit (409)
-class ConflictError extends AppError {
-  constructor(message = 'Conflit de ressource') {
-    super(message, 409, 'CONFLICT');
+/**
+ * Erreurs serveur (500+)
+ */
+class InternalServerError extends AppError {
+  constructor(message = 'Internal server error', details = null) {
+    super(message, 500, 'INTERNAL_ERROR', false, details);
   }
 }
 
-// Trop de requêtes (429)
-class RateLimitError extends AppError {
-  constructor(message = 'Trop de requêtes') {
-    super(message, 429, 'RATE_LIMIT_EXCEEDED');
+class DatabaseError extends InternalServerError {
+  constructor(operation, error) {
+    super(`Database error during ${operation}`);
+    this.code = 'DATABASE_ERROR';
+    this.details = { 
+      operation,
+      message: error.message 
+    };
   }
 }
 
-// Erreur serveur (500)
-class ServerError extends AppError {
-  constructor(message = 'Erreur serveur interne') {
-    super(message, 500, 'SERVER_ERROR');
+/**
+ * Helper pour vérifier si une erreur est opérationnelle
+ */
+const isOperationalError = (error) => {
+  if (error instanceof AppError) {
+    return error.isOperational;
   }
-}
+  return false;
+};
+
+/**
+ * Helper pour convertir une erreur native en AppError
+ */
+const normalizeError = (error) => {
+  if (error instanceof AppError) {
+    return error;
+  }
+
+  // Erreurs JWT
+  if (error.name === 'JsonWebTokenError') {
+    return new InvalidTokenError(error.message);
+  }
+
+  // Erreur générique
+  return new InternalServerError(error.message || 'Unknown error', {
+    originalError: error.toString(),
+    stack: error.stack
+  });
+};
+
+/**
+ * Wrapper pour les fonctions async dans les controllers
+ */
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
 
 module.exports = {
   AppError,
   ValidationError,
   AuthenticationError,
+  InvalidTokenError,
   AuthorizationError,
+  QuotaExceededError,
   NotFoundError,
-  ConflictError,
-  RateLimitError,
-  ServerError
+  InternalServerError,
+  DatabaseError,
+  isOperationalError,
+  normalizeError,
+  asyncHandler
 };

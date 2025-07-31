@@ -1,4 +1,6 @@
-// backend/src/utils/logger.js
+// PATH: backend/src/utils/logger.js
+// Logger de production ECOLOJIA V3 - Sans dépendances circulaires
+
 const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
@@ -20,14 +22,16 @@ const logLevels = {
     warn: 1,
     info: 2,
     http: 3,
-    debug: 4
+    debug: 4,
+    perf: 5
   },
   colors: {
     error: 'red',
     warn: 'yellow',
     info: 'green',
     http: 'magenta',
-    debug: 'blue'
+    debug: 'blue',
+    perf: 'cyan'
   }
 };
 
@@ -40,13 +44,13 @@ const consoleFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.printf((info) => {
     const { timestamp, level, message, context, ...extra } = info;
-    let log = `${timestamp} [${level}]`;
+    let log = `[${timestamp}] [${level.toUpperCase()}]`;
     if (context) log += ` [${context}]`;
     log += ` ${message}`;
     
     // Ajouter les métadonnées supplémentaires si présentes
-    if (Object.keys(extra).length > 0) {
-      log += ` ${JSON.stringify(extra)}`;
+    if (Object.keys(extra).length > 0 && process.env.LOG_METADATA === 'true') {
+      log += ` ${JSON.stringify(extra, null, 2)}`;
     }
     
     return log;
@@ -61,13 +65,14 @@ const fileFormat = winston.format.combine(
 );
 
 // ═══════════════════════════════════════════════════════════════════════
-// WINSTON LOGGER
+// WINSTON LOGGER INSTANCE
 // ═══════════════════════════════════════════════════════════════════════
 
 const winstonLogger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   levels: logLevels.levels,
   format: fileFormat,
+  defaultMeta: { service: 'ecolojia-backend' },
   transports: [
     // Fichier pour toutes les logs
     new winston.transports.File({
@@ -80,14 +85,6 @@ const winstonLogger = winston.createLogger({
     new winston.transports.File({
       filename: path.join(logsDir, 'error.log'),
       level: 'error',
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-      tailable: true
-    }),
-    // Fichier pour les requêtes HTTP
-    new winston.transports.File({
-      filename: path.join(logsDir, 'http.log'),
-      level: 'http',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
       tailable: true
@@ -121,7 +118,7 @@ if (process.env.NODE_ENV !== 'production' || process.env.LOG_TO_CONSOLE === 'tru
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// CLASSE LOGGER (Compatible avec votre code existant)
+// CLASSE LOGGER
 // ═══════════════════════════════════════════════════════════════════════
 
 class Logger {
@@ -133,10 +130,7 @@ class Logger {
    * Log d'information générale
    */
   info(...args) {
-    const message = this.formatMessage(args);
-    const metadata = this.extractMetadata(args);
-    
-    console.log(`[INFO] [${this.context}]`, new Date().toISOString(), ...args);
+    const { message, metadata } = this._parseArgs(args);
     winstonLogger.info(message, { context: this.context, ...metadata });
   }
 
@@ -144,10 +138,7 @@ class Logger {
    * Log d'avertissement
    */
   warn(...args) {
-    const message = this.formatMessage(args);
-    const metadata = this.extractMetadata(args);
-    
-    console.warn(`[WARN] [${this.context}]`, new Date().toISOString(), ...args);
+    const { message, metadata } = this._parseArgs(args);
     winstonLogger.warn(message, { context: this.context, ...metadata });
   }
 
@@ -155,32 +146,27 @@ class Logger {
    * Log d'erreur
    */
   error(...args) {
-    const message = this.formatMessage(args);
-    const metadata = this.extractMetadata(args);
-    const errorObj = args.find(arg => arg instanceof Error);
+    const { message, metadata, error } = this._parseArgs(args);
     
-    console.error(`[ERROR] [${this.context}]`, new Date().toISOString(), ...args);
-    
-    winstonLogger.error(message, { 
-      context: this.context,
-      ...metadata,
-      ...(errorObj && {
-        errorName: errorObj.name,
-        errorMessage: errorObj.message,
-        errorStack: errorObj.stack
-      })
-    });
+    if (error instanceof Error) {
+      winstonLogger.error(message, { 
+        context: this.context,
+        ...metadata,
+        errorName: error.name,
+        errorMessage: error.message,
+        errorStack: error.stack
+      });
+    } else {
+      winstonLogger.error(message, { context: this.context, ...metadata });
+    }
   }
 
   /**
-   * Log de debug (seulement en développement)
+   * Log de debug
    */
   debug(...args) {
     if (process.env.NODE_ENV === 'development' || process.env.DEBUG === 'true') {
-      const message = this.formatMessage(args);
-      const metadata = this.extractMetadata(args);
-      
-      console.debug(`[DEBUG] [${this.context}]`, new Date().toISOString(), ...args);
+      const { message, metadata } = this._parseArgs(args);
       winstonLogger.debug(message, { context: this.context, ...metadata });
     }
   }
@@ -188,7 +174,8 @@ class Logger {
   /**
    * Log HTTP (requêtes)
    */
-  http(message, metadata = {}) {
+  http(...args) {
+    const { message, metadata } = this._parseArgs(args);
     winstonLogger.http(message, { context: this.context, ...metadata });
   }
 
@@ -197,7 +184,12 @@ class Logger {
    */
   perf(operation, duration, metadata = {}) {
     const message = `Performance: ${operation} took ${duration}ms`;
-    this.info(message, { operation, duration, ...metadata });
+    winstonLogger.log('perf', message, { 
+      context: this.context, 
+      operation, 
+      duration, 
+      ...metadata 
+    });
   }
 
   /**
@@ -230,26 +222,26 @@ class Logger {
   }
 
   /**
-   * Helper pour formater les messages
+   * Parser les arguments du logger
+   * @private
    */
-  formatMessage(args) {
-    return args
-      .filter(arg => !(arg instanceof Error) && typeof arg !== 'object')
-      .map(arg => String(arg))
-      .join(' ');
-  }
+  _parseArgs(args) {
+    let message = '';
+    let metadata = {};
+    let error = null;
 
-  /**
-   * Helper pour extraire les métadonnées
-   */
-  extractMetadata(args) {
-    const metadata = {};
     args.forEach(arg => {
-      if (typeof arg === 'object' && !(arg instanceof Error) && arg !== null) {
+      if (typeof arg === 'string' || typeof arg === 'number') {
+        message += (message ? ' ' : '') + arg;
+      } else if (arg instanceof Error) {
+        error = arg;
+        message += (message ? ' ' : '') + arg.message;
+      } else if (typeof arg === 'object' && arg !== null) {
         Object.assign(metadata, arg);
       }
     });
-    return metadata;
+
+    return { message: message || 'No message', metadata, error };
   }
 
   /**
@@ -261,34 +253,23 @@ class Logger {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// INSTANCES ET HELPERS
+// MIDDLEWARE EXPRESS
 // ═══════════════════════════════════════════════════════════════════════
 
-// Logger par défaut
-const logger = new Logger('Ecolojia');
-
-// Factory pour créer des loggers avec contexte
-const createLogger = (context) => new Logger(context);
-
-// Stream pour Morgan (logging HTTP)
-const morganStream = {
-  write: (message) => {
-    logger.http(message.trim());
-  }
-};
-
-// Middleware Express pour logger les requêtes
+/**
+ * Middleware pour logger les requêtes HTTP
+ */
 const httpLogger = (req, res, next) => {
   const start = Date.now();
-  const originalSend = res.send;
-  let responseBody;
+  const logger = new Logger('HTTP');
 
-  // Intercepter la réponse
-  res.send = function(data) {
-    responseBody = data;
-    return originalSend.apply(res, arguments);
-  };
+  // Log de la requête entrante
+  logger.http(`${req.method} ${req.url}`, {
+    ip: req.ip || req.connection.remoteAddress,
+    userAgent: req.get('user-agent')
+  });
 
+  // Intercepter la fin de la requête
   res.on('finish', () => {
     const duration = Date.now() - start;
     const logData = {
@@ -297,8 +278,7 @@ const httpLogger = (req, res, next) => {
       status: res.statusCode,
       duration: `${duration}ms`,
       ip: req.ip || req.connection.remoteAddress,
-      userAgent: req.get('user-agent'),
-      userId: req.user?.id || 'anonymous'
+      userId: req.userId || 'anonymous'
     };
 
     // Log différent selon le status
@@ -312,15 +292,32 @@ const httpLogger = (req, res, next) => {
 
     // Log de performance pour les requêtes lentes
     if (duration > 1000) {
-      logger.warn(`Slow request detected: ${req.method} ${req.url} took ${duration}ms`);
+      logger.perf(`${req.method} ${req.url}`, duration, { slow: true });
     }
   });
 
   next();
 };
 
-// Fonction pour logger le démarrage de l'application
+/**
+ * Stream pour Morgan
+ */
+const morganStream = {
+  write: (message) => {
+    const logger = new Logger('Morgan');
+    logger.http(message.trim());
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════
+// FONCTIONS UTILITAIRES
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * Logger le démarrage de l'application
+ */
 const logStartup = () => {
+  const logger = new Logger('Startup');
   logger.info('════════════════════════════════════════════════════');
   logger.info('🚀 ECOLOJIA Backend Starting...');
   logger.info(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -329,17 +326,22 @@ const logStartup = () => {
   logger.info('════════════════════════════════════════════════════');
 };
 
-// Fonction pour logger l'arrêt de l'application
+/**
+ * Logger l'arrêt de l'application
+ */
 const logShutdown = () => {
+  const logger = new Logger('Shutdown');
   logger.info('════════════════════════════════════════════════════');
   logger.info('🛑 ECOLOJIA Backend Shutting down...');
   logger.info('════════════════════════════════════════════════════');
 };
 
-// Fonction pour obtenir les statistiques de logs
+/**
+ * Obtenir les statistiques de logs
+ */
 const getLogStats = async () => {
   const stats = {};
-  const logFiles = ['combined.log', 'error.log', 'http.log'];
+  const logFiles = ['combined.log', 'error.log', 'exceptions.log', 'rejections.log'];
   
   for (const file of logFiles) {
     const filePath = path.join(logsDir, file);
@@ -347,12 +349,51 @@ const getLogStats = async () => {
       const stat = fs.statSync(filePath);
       stats[file] = {
         size: `${(stat.size / 1024 / 1024).toFixed(2)} MB`,
-        modified: stat.mtime
+        modified: stat.mtime,
+        exists: true
       };
+    } else {
+      stats[file] = { exists: false };
     }
   }
   
+  stats.logsDirectory = logsDir;
+  stats.logLevel = process.env.LOG_LEVEL || 'info';
+  
   return stats;
+};
+
+/**
+ * Nettoyer les vieux logs
+ */
+const cleanOldLogs = (daysToKeep = 30) => {
+  const logger = new Logger('LogCleaner');
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+  
+  fs.readdir(logsDir, (err, files) => {
+    if (err) {
+      logger.error('Error reading logs directory:', err);
+      return;
+    }
+    
+    files.forEach(file => {
+      const filePath = path.join(logsDir, file);
+      fs.stat(filePath, (err, stats) => {
+        if (err) return;
+        
+        if (stats.mtime < cutoffDate && file.endsWith('.log')) {
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              logger.error(`Error deleting old log file ${file}:`, err);
+            } else {
+              logger.info(`Deleted old log file: ${file}`);
+            }
+          });
+        }
+      });
+    });
+  });
 };
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -360,23 +401,22 @@ const getLogStats = async () => {
 // ═══════════════════════════════════════════════════════════════════════
 
 module.exports = {
-  // Classes et instances
+  // Classe Logger pour usage normal
   Logger,
-  logger,
-  createLogger,
   
-  // Middleware et helpers
-  morganStream,
+  // Instance par défaut
+  logger: new Logger('Default'),
+  
+  // Middleware Express
   httpLogger,
+  morganStream,
   
   // Fonctions utilitaires
   logStartup,
   logShutdown,
   getLogStats,
+  cleanOldLogs,
   
-  // Winston pour usage avancé
-  winstonLogger,
-  
-  // Export par défaut
-  default: logger
+  // Winston pour usage avancé (éviter si possible)
+  winstonLogger
 };
