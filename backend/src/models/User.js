@@ -1,5 +1,5 @@
 // backend/src/models/User.js
-// FICHIER COMPLET CORRIGÉ
+// FICHIER COMPLET CORRIGÉ - Sans index dupliqués
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -194,11 +194,13 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Index pour les performances
-userSchema.index({ email: 1 });
+// Index pour les performances - SANS DOUBLONS
+// Commenté car 'unique: true' crée déjà un index sur email
+// userSchema.index({ email: 1 });
 userSchema.index({ tier: 1 });
 userSchema.index({ 'subscription.status': 1 });
-userSchema.index({ referralCode: 1 });
+// Commenté car 'unique: true' crée déjà un index sur referralCode
+// userSchema.index({ referralCode: 1 });
 userSchema.index({ createdAt: -1 });
 
 // Virtuals
@@ -246,6 +248,33 @@ userSchema.methods.resetQuotas = function() {
   this.quotas.scansResetDate = thirtyDaysFromNow;
   this.quotas.aiChatsResetDate = thirtyDaysFromNow;
   this.quotas.exportsResetDate = thirtyDaysFromNow;
+};
+
+// Méthode pour vérifier les quotas (ajoutée pour compatibilité avec products.js)
+userSchema.methods.checkQuota = function(type) {
+  if (this.tier === 'premium') return true;
+  
+  const quotaField = type === 'analyses' ? 'scansRemaining' : 
+                     type === 'chat' ? 'aiChatsRemaining' :
+                     type === 'export' ? 'exportsRemaining' : null;
+  
+  if (!quotaField) return false;
+  
+  return this.quotas[quotaField] > 0;
+};
+
+// Méthode pour incrémenter l'usage (ajoutée pour compatibilité avec products.js)
+userSchema.methods.incrementUsage = async function(type) {
+  const quotaField = type === 'analyses' ? 'scansRemaining' : 
+                     type === 'chat' ? 'aiChatsRemaining' :
+                     type === 'export' ? 'exportsRemaining' : null;
+  
+  if (!quotaField) return;
+  
+  if (this.tier !== 'premium') {
+    this.quotas[quotaField] = Math.max(0, this.quotas[quotaField] - 1);
+    await this.save();
+  }
 };
 
 // Méthodes statiques

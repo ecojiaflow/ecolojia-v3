@@ -1,4 +1,6 @@
 // backend/src/models/AffiliateClick.js
+// FICHIER CORRIGÉ - Sans index dupliqués
+
 const mongoose = require('mongoose');
 
 const affiliateClickSchema = new mongoose.Schema({
@@ -88,7 +90,8 @@ const affiliateClickSchema = new mongoose.Schema({
 // Index composés pour analytics
 affiliateClickSchema.index({ partner: 1, createdAt: -1 });
 affiliateClickSchema.index({ userId: 1, partner: 1, createdAt: -1 });
-affiliateClickSchema.index({ clickId: 1 }, { unique: true });
+// Commenté car 'unique: true' crée déjà un index sur clickId
+// affiliateClickSchema.index({ clickId: 1 }, { unique: true });
 affiliateClickSchema.index({ converted: 1, partner: 1 });
 
 // Méthodes statiques

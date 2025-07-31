@@ -240,6 +240,9 @@ const checkQuota = (quotaType) => {
         resetDate: quotas[resetField]
       };
 
+      // IMPORTANT : Ajouter quotaRemaining pour compatibilité avec analyze.routes.js
+      req.quotaRemaining = remaining - 1;
+
       // Fonction pour décrémenter le quota (à appeler après succès)
       req.decrementQuota = async () => {
         try {
@@ -300,7 +303,7 @@ const requireAdmin = async (req, res, next) => {
 };
 
 // ═══════════════════════════════════════════════════════════════════════
-// EXPORTS
+// EXPORTS - AVEC TOUS LES ALIAS POUR COMPATIBILITÉ
 // ═══════════════════════════════════════════════════════════════════════
 
 module.exports = {
@@ -311,7 +314,11 @@ module.exports = {
   checkQuota,
   requireAdmin,
   
-  // Alias pour compatibilité
+  // Alias pour compatibilité avec l'ancien code
   authMiddleware: auth,
-  authOptionalMiddleware: authOptional
+  authOptionalMiddleware: authOptional,
+  
+  // ALIAS IMPORTANTS pour products.js et analyze.routes.js
+  authenticateUser: auth,  // Pour compatibilité avec products.js ligne 4
+  checkPremium: requirePremium  // Pour compatibilité avec products.js ligne 4
 };
