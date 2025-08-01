@@ -16,6 +16,9 @@ const compression = require('compression');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// IMPORTANT: Configurer trust proxy pour Render.com
+app.set('trust proxy', true);
+
 // Configuration JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
 
@@ -51,7 +54,9 @@ const corsOptions = {
     const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
       'http://localhost:3000',
       'http://localhost:3001',
-      'http://localhost:5173'
+      'http://localhost:5173',
+      'https://frontendvf.netlify.app',
+      'https://app.ecolojia.app'
     ];
     
     if (!origin || allowedOrigins.includes(origin)) {
@@ -61,7 +66,9 @@ const corsOptions = {
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // ========== MIDDLEWARES ==========
@@ -93,7 +100,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 100 requêtes par IP
-  message: 'Trop de requêtes, veuillez réessayer plus tard'
+  message: 'Trop de requêtes, veuillez réessayer plus tard',
+  trustProxy: true,
+  standardHeaders: true,
+  legacyHeaders: false
 });
 app.use('/api/', globalLimiter);
 
@@ -102,7 +112,10 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5, // 5 tentatives max
   message: 'Trop de tentatives de connexion',
-  skipSuccessfulRequests: true
+  skipSuccessfulRequests: true,
+  trustProxy: true,
+  standardHeaders: true,
+  legacyHeaders: false
 });
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
@@ -146,6 +159,70 @@ const authMiddleware = async (req, res, next) => {
     });
   }
 };
+
+// ========== ROUTES HEALTH & TEST ==========
+
+// GET /api/health
+app.get('/api/health', async (req, res) => {
+  const checks = {
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    services: {
+      api: 'operational',
+      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      redis: redisClient?.isReady ? 'connected' : 'disconnected'
+    }
+  };
+
+  // Vérifier que MongoDB répond
+  if (mongoose.connection.readyState === 1) {
+    try {
+      await mongoose.connection.db.admin().ping();
+      checks.services.mongodb = 'healthy';
+    } catch (error) {
+      checks.services.mongodb = 'unhealthy';
+    }
+  }
+
+  const isHealthy = checks.services.mongodb !== 'unhealthy';
+  res.status(isHealthy ? 200 : 503).json(checks);
+});
+
+// GET /health (legacy)
+app.get('/health', async (req, res) => {
+  const checks = {
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    services: {
+      api: 'operational',
+      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      redis: redisClient?.isReady ? 'connected' : 'disconnected'
+    }
+  };
+
+  const isHealthy = checks.services.mongodb !== 'unhealthy';
+  res.status(isHealthy ? 200 : 503).json(checks);
+});
+
+// GET /api/test
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'ECOLOJIA Backend V3 is running!',
+    version: '3.0.0',
+    timestamp: new Date().toISOString(),
+    services: {
+      mongodb: mongoose.connection.readyState === 1,
+      redis: redisClient?.isReady || false,
+      deepseek: !!process.env.DEEPSEEK_API_KEY,
+      algolia: !!process.env.ALGOLIA_APP_ID,
+      lemonSqueezy: !!process.env.LEMONSQUEEZY_API_KEY
+    }
+  });
+});
 
 // ========== ROUTES AUTH ==========
 
@@ -430,52 +507,6 @@ app.post('/api/auth/refresh', (req, res) => {
 
 logger.info('✅ Routes auth directes chargées');
 
-// ========== ROUTES HEALTH & TEST ==========
-
-// GET /health (amélioré)
-app.get('/health', async (req, res) => {
-  const checks = {
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    services: {
-      api: 'operational',
-      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-      redis: redisClient?.isReady ? 'connected' : 'disconnected'
-    }
-  };
-
-  // Vérifier que MongoDB répond
-  if (mongoose.connection.readyState === 1) {
-    try {
-      await mongoose.connection.db.admin().ping();
-      checks.services.mongodb = 'healthy';
-    } catch (error) {
-      checks.services.mongodb = 'unhealthy';
-    }
-  }
-
-  const isHealthy = checks.services.mongodb !== 'unhealthy';
-  res.status(isHealthy ? 200 : 503).json(checks);
-});
-
-// GET /api/test
-app.get('/api/test', (req, res) => {
-  res.json({
-    success: true,
-    message: 'ECOLOJIA Backend V3 is running!',
-    version: '3.0.0',
-    timestamp: new Date().toISOString(),
-    services: {
-      mongodb: mongoose.connection.readyState === 1,
-      redis: redisClient?.isReady || false,
-      deepseek: !!process.env.DEEPSEEK_API_KEY,
-      algolia: !!process.env.ALGOLIA_APP_ID,
-      lemonSqueezy: !!process.env.LEMONSQUEEZY_API_KEY
-    }
-  });
-});
-
 // ========== CONFIGURATION ==========
 
 // Configuration des partenaires
@@ -654,6 +685,7 @@ app.use((req, res) => {
     method: req.method,
     availableRoutes: [
       '/health',
+      '/api/health',
       '/api/test',
       '/api/auth/test',
       '/api/auth/register',
@@ -718,6 +750,7 @@ async function startServer() {
       logger.info('  - POST /api/auth/logout (protégé)');
       logger.info('  - GET  /api/auth/me (protégé)');
       logger.info('  - POST /api/auth/refresh');
+      logger.info('  - GET  /api/health');
       logger.info('  - GET  /health');
       logger.info('  - GET  /api/test\n');
     });
