@@ -4,424 +4,376 @@ const router = express.Router();
 const { authenticateUser, checkPremium } = require('../middleware/auth');
 const Product = require('../models/Product');
 const Analysis = require('../models/Analysis');
-const { asyncHandler } = require('../utils/errors');
-const { Logger } = require('../utils/logger');
-const logger = new Logger('ProductRoutes');
 
-// Routes dans l'ordre pour éviter les conflits
-// GET /api/products/trending doit être AVANT /api/products/:id
+// Logger simple
+const logger = {
+  info: (...args) => console.log('[ProductRoutes]', ...args),
+  error: (...args) => console.error('[ProductRoutes ERROR]', ...args),
+  warn: (...args) => console.warn('[ProductRoutes WARN]', ...args)
+};
 
 // GET /api/products/search - Recherche de produits
-router.get('/search', asyncHandler(async (req, res) => {
-  const { q, category, page = 1, limit = 20 } = req.query;
-  
-  if (!q || q.trim().length < 2) {
-    return res.status(400).json({
-      success: false,
-      error: 'Query must be at least 2 characters'
-    });
-  }
-  
-  logger.info('Product search', { query: q, category });
-  
-  // Recherche dans la base MongoDB avec regex
-  const searchQuery = {
-    $or: [
-      { name: { $regex: q, $options: 'i' } },
-      { brand: { $regex: q, $options: 'i' } },
-      { barcode: q }
-    ]
-  };
-  
-  if (category) {
-    searchQuery.category = category;
-  }
-  
-  const skip = (parseInt(page) - 1) * parseInt(limit);
-  
-  const [products, total] = await Promise.all([
-    Product.find(searchQuery)
-      .select('name brand barcode imageUrl category analysisData.healthScore')
-      .skip(skip)
-      .limit(parseInt(limit)),
-    Product.countDocuments(searchQuery)
-  ]);
-  
-  res.json({
-    success: true,
-    products,
-    pagination: {
-      total,
-      page: parseInt(page),
-      pages: Math.ceil(total / parseInt(limit)),
-      hasNext: parseInt(page) * parseInt(limit) < total,
-      hasPrev: parseInt(page) > 1
-    }
-  });
-}));
-
-// GET /api/products/trending - Produits populaires
-router.get('/trending', asyncHandler(async (req, res) => {
-  const { category, limit = 10 } = req.query;
-  
-  logger.info('Getting trending products', { category, limit });
-  
-  const query = {};
-  if (category) {
-    query.category = category;
-  }
-  
-  const trendingProducts = await Product.find(query)
-    .select('name brand imageUrl category analysisData.healthScore viewCount scanCount')
-    .sort({ scanCount: -1, viewCount: -1 })
-    .limit(parseInt(limit));
-  
-  res.json({
-    success: true,
-    products: trendingProducts
-  });
-}));
-
-// GET /api/products/barcode/:barcode - Recherche par code-barres
-router.get('/barcode/:barcode', asyncHandler(async (req, res) => {
-  const { barcode } = req.params;
-  
-  logger.info('Barcode lookup', { barcode });
-  
-  // Chercher dans la base locale
-  let product = await Product.findOne({ barcode });
-  
-  if (!product) {
-    // Si pas trouvé localement, essayer OpenFoodFacts
-    logger.info('Product not found locally, checking OpenFoodFacts', { barcode });
-    
-    try {
-      // Import dynamique pour éviter l'erreur au démarrage
-      const { OpenFoodFactsService } = require('../services/external/openFoodFactsService');
-      const offProduct = await OpenFoodFactsService.getProduct(barcode);
-      
-      if (offProduct && offProduct.found) {
-        // Créer le produit dans notre base
-        product = await Product.create({
-          barcode: offProduct.barcode,
-          name: offProduct.name,
-          brand: offProduct.brand,
-          category: 'food',
-          imageUrl: offProduct.image_url,
-          foodData: {
-            ingredients: offProduct.composition ? [{ text: offProduct.composition }] : [],
-            nutritionalInfo: {},
-            novaScore: null,
-            nutriScore: null
-          }
-        });
-        
-        logger.info('Product imported from OpenFoodFacts', { barcode, name: product.name });
-      }
-    } catch (error) {
-      logger.error('OpenFoodFacts search failed', { barcode, error: error.message });
-      // Continuer même si OpenFoodFacts échoue
-    }
-  }
-  
-  if (!product) {
-    return res.status(404).json({
-      success: false,
-      error: 'Product not found'
-    });
-  }
-  
-  // Incrémenter le compteur de vues
-  product.viewCount = (product.viewCount || 0) + 1;
-  await product.save();
-  
-  res.json({
-    success: true,
-    product: product.toObject()
-  });
-}));
-
-// POST /api/products/analyze - Analyser un produit
-router.post('/analyze', authenticateUser, asyncHandler(async (req, res) => {
-  const userId = req.userId;
-  const { productId, barcode, manualData, category = 'food' } = req.body;
-  
-  logger.info('Product analysis request', { userId, productId, barcode, category });
-  
-  // Vérifier les quotas
-  const user = req.user;
-  if (!user.checkQuota('analyses')) {
-    return res.status(403).json({
-      success: false,
-      error: 'Quota exceeded',
-      quotas: user.quotas,
-      usage: user.usage
-    });
-  }
-  
-  let product;
-  
-  // 1. Recherche du produit
-  if (productId) {
-    product = await Product.findById(productId);
-  } else if (barcode) {
-    product = await Product.findOne({ barcode });
-    
-    // Si pas trouvé, essayer OpenFoodFacts
-    if (!product) {
-      try {
-        const { OpenFoodFactsService } = require('../services/external/openFoodFactsService');
-        const offProduct = await OpenFoodFactsService.getProduct(barcode);
-        
-        if (offProduct && offProduct.found) {
-          product = await Product.create({
-            barcode: offProduct.barcode,
-            name: offProduct.name,
-            brand: offProduct.brand,
-            category: category || 'food',
-            imageUrl: offProduct.image_url,
-            foodData: {
-              ingredients: offProduct.composition ? [{ text: offProduct.composition }] : []
-            }
-          });
-        }
-      } catch (error) {
-        logger.error('Failed to import from OpenFoodFacts', { error: error.message });
-      }
-    }
-  } else if (manualData) {
-    // Création manuelle du produit
-    product = await Product.create({
-      name: manualData.name,
-      brand: manualData.brand,
-      category,
-      [`${category}Data`]: manualData.specificData || {}
-    });
-  }
-  
-  if (!product) {
-    return res.status(404).json({
-      success: false,
-      error: 'Product not found or could not be created'
-    });
-  }
-  
-  // 2. Analyser le produit
-  let analysisResult;
+router.get('/search', async (req, res) => {
   try {
-    // Essayer d'utiliser le service d'analyse s'il existe
-    const { analyzeProduct } = require('../services/productAnalysisService');
-    analysisResult = await analyzeProduct(product, {
-      userId,
-      useAI: user.tier === 'premium',
-      category
-    });
-  } catch (error) {
-    logger.warn('Product analysis service not available, using basic analysis', { error: error.message });
+    const { q, category, page = 1, limit = 20 } = req.query;
     
-    // Analyse basique si le service n'est pas disponible
-    analysisResult = {
-      healthScore: Math.floor(Math.random() * 40) + 60, // Score entre 60-100
-      environmentScore: Math.floor(Math.random() * 40) + 60,
-      socialScore: Math.floor(Math.random() * 40) + 60,
-      concerns: [],
-      benefits: ['Produit analysé avec succès'],
-      recommendations: ['Analyse complète disponible avec le service premium'],
-      confidence: 0.7
-    };
-  }
-  
-  // 3. Sauvegarder l'analyse
-  const analysis = await Analysis.create({
-    userId,
-    productId: product._id,
-    productSnapshot: {
-      name: product.name,
-      brand: product.brand,
-      barcode: product.barcode,
-      imageUrl: product.imageUrl,
-      category: product.category
-    },
-    analysisType: barcode ? 'barcode_scan' : 'manual_entry',
-    results: analysisResult,
-    metadata: {
-      appVersion: '3.0',
-      platform: 'web',
-      aiModel: user.tier === 'premium' ? 'deepseek' : 'internal'
-    }
-  });
-  
-  // 4. Incrémenter l'usage
-  await user.incrementUsage('analyses');
-  
-  // 5. Mettre à jour le produit avec les résultats
-  product.analysisData = {
-    healthScore: analysisResult.healthScore,
-    environmentScore: analysisResult.environmentScore,
-    socialScore: analysisResult.socialScore,
-    lastAnalyzedAt: new Date(),
-    version: '3.0',
-    confidence: analysisResult.confidence || 0.8
-  };
-  product.scanCount = (product.scanCount || 0) + 1;
-  await product.save();
-  
-  logger.info('Product analyzed successfully', { 
-    userId, 
-    productId: product._id,
-    healthScore: analysisResult.healthScore 
-  });
-  
-  res.json({
-    success: true,
-    product: product.toObject(),
-    analysis: {
-      id: analysis._id,
-      results: analysisResult,
-      createdAt: analysis.createdAt
-    }
-  });
-}));
-
-// GET /api/products/:id - Détails d'un produit
-router.get('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  
-  if (!product) {
-    return res.status(404).json({
-      success: false,
-      error: 'Product not found'
-    });
-  }
-  
-  // Incrémenter le compteur de vues
-  product.viewCount = (product.viewCount || 0) + 1;
-  await product.save();
-  
-  res.json({
-    success: true,
-    product: product.toObject()
-  });
-}));
-
-// POST /api/products/:id/report - Signaler un problème sur un produit
-router.post('/:id/report', authenticateUser, asyncHandler(async (req, res) => {
-  const { reason, description } = req.body;
-  const productId = req.params.id;
-  const userId = req.userId;
-  
-  if (!reason) {
-    return res.status(400).json({
-      success: false,
-      error: 'Report reason is required'
-    });
-  }
-  
-  logger.info('Product reported', { productId, userId, reason });
-  
-  // TODO: Implémenter le système de signalement complet
-  // Pour l'instant, on log juste
-  
-  res.json({
-    success: true,
-    message: 'Report submitted successfully'
-  });
-}));
-
-// GET /api/products/:id/alternatives - Alternatives plus saines
-router.get('/:id/alternatives', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  
-  if (!product) {
-    return res.status(404).json({
-      success: false,
-      error: 'Product not found'
-    });
-  }
-  
-  // Chercher des alternatives dans la même catégorie avec un meilleur score
-  const alternatives = await Product.find({
-    category: product.category,
-    'analysisData.healthScore': { $gt: product.analysisData?.healthScore || 0 },
-    _id: { $ne: product._id }
-  })
-    .select('name brand imageUrl analysisData.healthScore')
-    .sort({ 'analysisData.healthScore': -1 })
-    .limit(5);
-  
-  res.json({
-    success: true,
-    currentProduct: {
-      id: product._id,
-      name: product.name,
-      healthScore: product.analysisData?.healthScore || 0
-    },
-    alternatives: alternatives.map(alt => ({
-      id: alt._id,
-      name: alt.name,
-      brand: alt.brand,
-      imageUrl: alt.imageUrl,
-      healthScore: alt.analysisData?.healthScore || 0,
-      improvement: (alt.analysisData?.healthScore || 0) - (product.analysisData?.healthScore || 0)
-    }))
-  });
-}));
-
-// POST /api/products - Créer un produit manuellement (admin ou premium)
-router.post('/', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
-  const { name, brand, category, barcode, specificData } = req.body;
-  
-  // Validation
-  if (!name || !category) {
-    return res.status(400).json({
-      success: false,
-      error: 'Name and category are required'
-    });
-  }
-  
-  if (!['food', 'cosmetics', 'detergents'].includes(category)) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid category. Must be: food, cosmetics, or detergents'
-    });
-  }
-  
-  // Vérifier si le code-barres existe déjà
-  if (barcode) {
-    const existing = await Product.findOne({ barcode });
-    if (existing) {
-      return res.status(409).json({
+    if (!q || q.trim().length < 2) {
+      return res.status(400).json({
         success: false,
-        error: 'Product with this barcode already exists',
-        product: existing
+        error: 'Query must be at least 2 characters'
       });
     }
+    
+    logger.info('Product search', { query: q, category });
+    
+    // Pour l'instant, retourner des données mockées
+    // TODO: Implémenter la vraie recherche quand MongoDB sera configuré
+    const mockProducts = [
+      {
+        _id: '1',
+        name: 'Nutella',
+        brand: 'Ferrero',
+        barcode: '3017620422003',
+        category: 'food',
+        imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
+        analysisData: {
+          healthScore: 25
+        }
+      }
+    ];
+    
+    res.json({
+      success: true,
+      products: mockProducts,
+      pagination: {
+        total: 1,
+        page: parseInt(page),
+        pages: 1,
+        hasNext: false,
+        hasPrev: false
+      }
+    });
+  } catch (error) {
+    logger.error('Search error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
   }
-  
-  // Créer le produit
-  const productData = {
-    name,
-    brand,
-    category,
-    barcode,
-    viewCount: 0,
-    scanCount: 0,
-    [`${category}Data`]: specificData || {}
-  };
-  
-  const product = await Product.create(productData);
-  
-  logger.info('Product created manually', { 
-    productId: product._id, 
-    name, 
-    category,
-    userId: req.userId 
-  });
-  
-  res.status(201).json({
-    success: true,
-    product: product.toObject()
-  });
-}));
+});
+
+// GET /api/products/trending - Produits populaires
+router.get('/trending', async (req, res) => {
+  try {
+    const { category, limit = 10 } = req.query;
+    
+    logger.info('Getting trending products', { category, limit });
+    
+    // Données mockées pour l'instant
+    const trendingProducts = [
+      {
+        _id: '1',
+        name: 'Nutella',
+        brand: 'Ferrero',
+        imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
+        category: 'food',
+        analysisData: { healthScore: 25 },
+        viewCount: 150,
+        scanCount: 45
+      },
+      {
+        _id: '2',
+        name: 'Coca-Cola',
+        brand: 'The Coca-Cola Company',
+        imageUrl: 'https://images.openfoodfacts.org/images/products/544/900/000/0996/front_fr.4.400.jpg',
+        category: 'food',
+        analysisData: { healthScore: 15 },
+        viewCount: 200,
+        scanCount: 80
+      }
+    ];
+    
+    res.json({
+      success: true,
+      products: trendingProducts
+    });
+  } catch (error) {
+    logger.error('Trending error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// GET /api/products/barcode/:barcode - Recherche par code-barres
+router.get('/barcode/:barcode', async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    
+    logger.info('Barcode lookup', { barcode });
+    
+    // Mock pour Nutella
+    if (barcode === '3017620422003') {
+      const product = {
+        _id: '1',
+        barcode: '3017620422003',
+        name: 'Nutella',
+        brand: 'Ferrero',
+        category: 'food',
+        imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
+        viewCount: 150,
+        scanCount: 45,
+        analysisData: {
+          healthScore: 25,
+          environmentScore: 30,
+          socialScore: 40
+        }
+      };
+      
+      return res.json({
+        success: true,
+        product
+      });
+    }
+    
+    // Produit non trouvé
+    return res.status(404).json({
+      success: false,
+      error: 'Product not found'
+    });
+  } catch (error) {
+    logger.error('Barcode lookup error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// POST /api/products/analyze - Analyser un produit
+router.post('/analyze', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.userId || req.user?._id;
+    const { productId, barcode, manualData, category = 'food' } = req.body;
+    
+    logger.info('Product analysis request', { userId, productId, barcode, category });
+    
+    // Vérifier les quotas basiques
+    const user = req.user;
+    if (user && user.quotas && user.quotas.scansRemaining <= 0) {
+      return res.status(403).json({
+        success: false,
+        error: 'Quota exceeded',
+        quotas: user.quotas
+      });
+    }
+    
+    // Analyse mockée
+    const analysisResult = {
+      healthScore: Math.floor(Math.random() * 40) + 60,
+      environmentScore: Math.floor(Math.random() * 40) + 60,
+      socialScore: Math.floor(Math.random() * 40) + 60,
+      concerns: ['Sucre élevé', 'Additifs'],
+      benefits: ['Source d\'énergie'],
+      recommendations: ['Consommer avec modération'],
+      confidence: 0.85
+    };
+    
+    // Créer une analyse mockée
+    const analysis = {
+      _id: new Date().getTime().toString(),
+      userId,
+      productId: productId || '1',
+      results: analysisResult,
+      createdAt: new Date()
+    };
+    
+    res.json({
+      success: true,
+      product: {
+        _id: productId || '1',
+        name: 'Produit analysé',
+        analysisData: analysisResult
+      },
+      analysis: {
+        id: analysis._id,
+        results: analysisResult,
+        createdAt: analysis.createdAt
+      }
+    });
+  } catch (error) {
+    logger.error('Analysis error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// GET /api/products/:id - Détails d'un produit
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Mock data
+    if (id === '1') {
+      const product = {
+        _id: '1',
+        name: 'Nutella',
+        brand: 'Ferrero',
+        barcode: '3017620422003',
+        category: 'food',
+        imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
+        viewCount: 151,
+        analysisData: {
+          healthScore: 25,
+          environmentScore: 30,
+          socialScore: 40
+        }
+      };
+      
+      return res.json({
+        success: true,
+        product
+      });
+    }
+    
+    return res.status(404).json({
+      success: false,
+      error: 'Product not found'
+    });
+  } catch (error) {
+    logger.error('Get product error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// POST /api/products/:id/report - Signaler un problème sur un produit
+router.post('/:id/report', authenticateUser, async (req, res) => {
+  try {
+    const { reason, description } = req.body;
+    const productId = req.params.id;
+    const userId = req.userId || req.user?._id;
+    
+    if (!reason) {
+      return res.status(400).json({
+        success: false,
+        error: 'Report reason is required'
+      });
+    }
+    
+    logger.info('Product reported', { productId, userId, reason });
+    
+    res.json({
+      success: true,
+      message: 'Report submitted successfully'
+    });
+  } catch (error) {
+    logger.error('Report error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// GET /api/products/:id/alternatives - Alternatives plus saines
+router.get('/:id/alternatives', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    
+    // Mock alternatives
+    const alternatives = [
+      {
+        id: '2',
+        name: 'Pâte à tartiner bio sans huile de palme',
+        brand: 'Bio Nature',
+        imageUrl: 'https://via.placeholder.com/150',
+        healthScore: 65,
+        improvement: 40
+      },
+      {
+        id: '3',
+        name: 'Purée d\'amandes complètes',
+        brand: 'Jean Hervé',
+        imageUrl: 'https://via.placeholder.com/150',
+        healthScore: 85,
+        improvement: 60
+      }
+    ];
+    
+    res.json({
+      success: true,
+      currentProduct: {
+        id: productId,
+        name: 'Nutella',
+        healthScore: 25
+      },
+      alternatives
+    });
+  } catch (error) {
+    logger.error('Alternatives error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// POST /api/products - Créer un produit manuellement (premium)
+router.post('/', authenticateUser, checkPremium, async (req, res) => {
+  try {
+    const { name, brand, category, barcode, specificData } = req.body;
+    
+    // Validation
+    if (!name || !category) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name and category are required'
+      });
+    }
+    
+    if (!['food', 'cosmetics', 'detergents'].includes(category)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid category. Must be: food, cosmetics, or detergents'
+      });
+    }
+    
+    // Créer un produit mocké
+    const product = {
+      _id: new Date().getTime().toString(),
+      name,
+      brand,
+      category,
+      barcode,
+      viewCount: 0,
+      scanCount: 0,
+      createdAt: new Date()
+    };
+    
+    logger.info('Product created manually', { 
+      productId: product._id, 
+      name, 
+      category,
+      userId: req.userId 
+    });
+    
+    res.status(201).json({
+      success: true,
+      product
+    });
+  } catch (error) {
+    logger.error('Create product error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
 
 module.exports = router;
