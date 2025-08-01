@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // IMPORTANT: Configurer trust proxy pour Render.com
-app.set('trust proxy', true);
+app.set('trust proxy', 'loopback, linklocal, uniquelocal');
 
 // Configuration JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
@@ -96,41 +96,39 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// ET modifier les rate limiters (lignes ~95-102) :
 // Rate limiting global
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 100 requêtes par IP
   message: 'Trop de requêtes, veuillez réessayer plus tard',
-  trustProxy: true,
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  // Supprimer trustProxy: true car on utilise app.set('trust proxy')
+  // Ajouter un keyGenerator personnalisé pour Render
+  keyGenerator: (req) => {
+    // Sur Render, l'IP réelle est dans x-forwarded-for
+    return req.headers['x-forwarded-for']?.split(',')[0] || 
+           req.socket.remoteAddress || 
+           'unknown';
+  }
 });
-app.use('/api/', globalLimiter);
 
-// Rate limiting strict pour auth
+// Rate limiting strict pour auth (lignes ~105-115)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5, // 5 tentatives max
   message: 'Trop de tentatives de connexion',
   skipSuccessfulRequests: true,
-  trustProxy: true,
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  // Même keyGenerator
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for']?.split(',')[0] || 
+           req.socket.remoteAddress || 
+           'unknown';
+  }
 });
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
-
-// Middleware d'authentification
-const authMiddleware = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        error: 'Token non fourni'
-      });
-    }
 
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -582,6 +580,9 @@ async function connectRedis() {
 // ========== SETUP ROUTES ==========
 
 // Fonction pour charger les autres routes
+// Remplacez la fonction setupOtherRoutes() dans server.js (vers ligne 650)
+// par cette version corrigée :
+
 function setupOtherRoutes() {
   // Dashboard routes
   try {
@@ -589,7 +590,15 @@ function setupOtherRoutes() {
     app.use('/api/dashboard', dashboardRoutes);
     logger.info('✅ Dashboard routes loaded');
   } catch (error) {
-    logger.warn('Dashboard routes not found:', error.message);
+    logger.error('❌ Dashboard routes error:', error.message);
+    // Essayer avec un chemin différent si le premier échoue
+    try {
+      const dashboardRoutes = require('../routes/dashboard');
+      app.use('/api/dashboard', dashboardRoutes);
+      logger.info('✅ Dashboard routes loaded (alternative path)');
+    } catch (err2) {
+      logger.warn('Dashboard routes not found');
+    }
   }
 
   // Product routes
@@ -598,16 +607,24 @@ function setupOtherRoutes() {
     app.use('/api/products', productRoutes);
     logger.info('✅ Product routes loaded');
   } catch (error) {
-    logger.warn('Product routes not found:', error.message);
+    logger.error('❌ Product routes error:', error.message);
+    // Essayer avec un chemin différent
+    try {
+      const productRoutes = require('../routes/products');
+      app.use('/api/products', productRoutes);
+      logger.info('✅ Product routes loaded (alternative path)');
+    } catch (err2) {
+      logger.warn('Product routes not found');
+    }
   }
 
-  // Analysis routes
+  // Analyze routes
   try {
-    const analysisRoutes = require('./routes/analysis');
-    app.use('/api/analysis', analysisRoutes);
-    logger.info('✅ Analysis routes loaded');
+    const analyzeRoutes = require('./routes/analyze.routes');
+    app.use('/api/analyze', analyzeRoutes);
+    logger.info('✅ Analyze routes loaded');
   } catch (error) {
-    logger.warn('Analysis routes not found:', error.message);
+    logger.warn('Analyze routes not found:', error.message);
   }
 
   // Partner routes
@@ -645,6 +662,7 @@ function setupOtherRoutes() {
   } catch (error) {
     logger.warn('Algolia routes not found:', error.message);
   }
+}
 
   // Cosmetic routes
   try {
