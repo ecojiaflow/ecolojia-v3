@@ -115,20 +115,48 @@ const globalLimiter = rateLimit({
 });
 
 // Rate limiting strict pour auth (lignes ~105-115)
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5, // 5 tentatives max
-  message: 'Trop de tentatives de connexion',
-  skipSuccessfulRequests: true,
-  standardHeaders: true,
-  legacyHeaders: false,
-  // Même keyGenerator
-  keyGenerator: (req) => {
-    return req.headers['x-forwarded-for']?.split(',')[0] || 
-           req.socket.remoteAddress || 
-           'unknown';
+/ Remplacez la fonction authMiddleware dans server.js (vers ligne 120-150)
+// par cette version corrigée :
+
+// Middleware d'authentification
+const authMiddleware = async (req, res, next) => {  // ✅ ASYNC ajouté ici
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Token d\'authentification requis'
+      });
+    }
+    
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Si MongoDB est connecté, récupérer l'utilisateur
+    if (mongoose.connection.readyState === 1) {
+      const User = require('./models/User');
+      const user = await User.findById(decoded.userId).select('-password');
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Utilisateur non trouvé'
+        });
+      }
+      req.user = user;
+    } else {
+      // Mode test
+      req.user = decoded;
+    }
+    
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      error: 'Token invalide ou expiré'
+    });
   }
-});
+};
 
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, JWT_SECRET);
