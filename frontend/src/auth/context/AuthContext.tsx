@@ -1,11 +1,25 @@
-﻿// frontend/src/auth/context/AuthContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+﻿// PATH: frontend/src/auth/context/AuthContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback
+} from 'react';
 import { authService } from '../services/authService';
-import { User, AuthContextType, LoginRequest, RegisterRequest } from '../types/AuthTypes';
+import {
+  User,
+  AuthContextType,
+  LoginRequest,
+  RegisterRequest
+} from '../types/AuthTypes';
 import { demoService } from '../../services/demoService';
 
 // Création du contexte
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 // Interface pour le provider
 interface AuthProviderProps {
@@ -38,12 +52,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const initializeAuth = async () => {
       try {
         setIsLoading(true);
-        
-        // ✅ PRIORITÉ 1: Vérifier mode démo d'abord
+
+        // ✅ PRIORITÉ 1 : Vérifier mode démo d'abord
         if (demoService.isDemoActive()) {
           console.log('🎭 Mode démo détecté');
           const demoSession = demoService.getCurrentSession();
-          
+
           if (demoSession) {
             setUser(demoSession.user);
             setIsAuthenticated(true);
@@ -55,10 +69,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             clearDemoData();
           }
         }
-        
-        // ✅ PRIORITÉ 2: Authentification réelle si pas en mode démo
+
+        // ✅ PRIORITÉ 2 : Authentification réelle si pas en mode démo
         const realToken = authService.getToken();
-        
+
         if (realToken && !authService.isTokenExpired()) {
           console.log('🔐 Token réel détecté - Récupération profil utilisateur');
           try {
@@ -68,7 +82,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsDemoMode(false);
             console.log('✅ Utilisateur réel connecté:', userData.name);
           } catch (profileError) {
-            console.warn('⚠️ Erreur récupération profil - Token probablement invalide');
+            console.warn(
+              '⚠️ Erreur récupération profil - Token probablement invalide'
+            );
             authService.clearTokens();
             setUser(null);
             setIsAuthenticated(false);
@@ -84,7 +100,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsAuthenticated(false);
           setIsDemoMode(false);
         }
-        
       } catch (err) {
         console.error('❌ Erreur initialisation auth:', err);
         // En cas d'erreur, reset complet
@@ -102,66 +117,72 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [clearDemoData]);
 
   // Fonction de connexion (authentification réelle uniquement)
-  const login = useCallback(async (credentials: LoginRequest): Promise<void> => {
-    try {
-      setError(null);
-      setIsLoading(true);
+  const login = useCallback(
+    async (credentials: LoginRequest): Promise<void> => {
+      try {
+        setError(null);
+        setIsLoading(true);
 
-      // Si en mode démo, forcer sortie avant connexion réelle
-      if (isDemoMode) {
-        console.log('🚪 Sortie mode démo pour connexion réelle');
-        demoService.endDemoSession();
-        setIsDemoMode(false);
-      }
+        // Si en mode démo, forcer sortie avant connexion réelle
+        if (isDemoMode) {
+          console.log('🚪 Sortie mode démo pour connexion réelle');
+          demoService.endDemoSession();
+          setIsDemoMode(false);
+        }
 
-      console.log('🔐 Tentative connexion:', credentials.email);
-      const response = await authService.login(credentials);
-      
-      if (response.user) {
-        setUser(response.user);
-        setIsAuthenticated(true);
-        setIsDemoMode(false);
-        console.log('✅ Connexion réussie:', response.user.name);
+        console.log('🔐 Tentative connexion:', credentials.email);
+        const response = await authService.login(credentials);
+
+        if (response.user) {
+          setUser(response.user);
+          setIsAuthenticated(true);
+          setIsDemoMode(false);
+          console.log('✅ Connexion réussie:', response.user.name);
+        }
+      } catch (err: any) {
+        console.error('❌ Erreur connexion:', err);
+        setError(err.message || 'Erreur de connexion');
+        throw err;
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err: any) {
-      console.error('❌ Erreur connexion:', err);
-      setError(err.message || 'Erreur de connexion');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isDemoMode]);
+    },
+    [isDemoMode]
+  );
 
   // Fonction d'inscription (authentification réelle uniquement)
-  const register = useCallback(async (userData: RegisterRequest): Promise<void> => {
-    try {
-      setError(null);
-      setIsLoading(true);
+  const register = useCallback(
+    async (userData: RegisterRequest): Promise<void> => {
+      try {
+        setError(null);
+        setIsLoading(true);
 
-      // Si en mode démo, forcer sortie avant inscription réelle
-      if (isDemoMode) {
-        console.log('🚪 Sortie mode démo pour inscription réelle');
-        demoService.endDemoSession();
-        setIsDemoMode(false);
+        // Si en mode démo, forcer sortie avant inscription réelle
+        if (isDemoMode) {
+          console.log('🚪 Sortie mode démo pour inscription réelle');
+          demoService.endDemoSession();
+          setIsDemoMode(false);
+        }
+
+        console.log('📝 Tentative inscription:', userData.email);
+        await authService.register(userData);
+        console.log('✅ Inscription réussie pour:', userData.email);
+      } catch (err: any) {
+        console.error('❌ Erreur inscription:', err);
+        setError(err.message || "Erreur lors de l'inscription");
+        throw err;
+      } finally {
+        setIsLoading(false);
       }
-
-      console.log('📝 Tentative inscription:', userData.email);
-      await authService.register(userData);
-      console.log('✅ Inscription réussie pour:', userData.email);
-    } catch (err: any) {
-      console.error('❌ Erreur inscription:', err);
-      setError(err.message || 'Erreur lors de l\'inscription');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isDemoMode]);
+    },
+    [isDemoMode]
+  );
 
   // Fonction de déconnexion (mode démo ET réel)
   const logout = useCallback(async (): Promise<void> => {
     try {
       setIsLoading(true);
-      
+
       if (isDemoMode) {
         console.log('🚪 Déconnexion mode démo');
         demoService.endDemoSession();
@@ -185,31 +206,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [isDemoMode]);
 
-  // ✅ NOUVELLE MÉTHODE DÉMARER SESSION DÉMO
-  const startDemoSession = useCallback(async (tier: 'free' | 'premium' = 'premium'): Promise<void> => {
-    try {
-      console.log(`🎭 Démarrage session démo ${tier}`);
-      
-      // Si déjà connecté (réel), déconnecter d'abord
-      if (isAuthenticated && !isDemoMode) {
-        authService.clearTokens();
+  // ✅ NOUVELLE MÉTHODE démarrer session démo
+  const startDemoSession = useCallback(
+    async (tier: 'free' | 'premium' = 'premium'): Promise<void> => {
+      try {
+        console.log(`🎭 Démarrage session démo ${tier}`);
+
+        // Si déjà connecté (réel), déconnecter d'abord
+        if (isAuthenticated && !isDemoMode) {
+          authService.clearTokens();
+        }
+
+        // Créer session démo
+        const demoSession = demoService.startDemoSession(tier);
+
+        // Mettre à jour état
+        setUser(demoSession.user);
+        setIsAuthenticated(true);
+        setIsDemoMode(true);
+        setError(null);
+
+        console.log('✅ Session démo démarrée:', demoSession.user.name);
+      } catch (error) {
+        console.error('❌ Erreur démarrage session démo:', error);
+        throw new Error('Impossible de démarrer le mode démo');
       }
-      
-      // Créer session démo
-      const demoSession = demoService.startDemoSession(tier);
-      
-      // Mettre à jour état
-      setUser(demoSession.user);
-      setIsAuthenticated(true);
-      setIsDemoMode(true);
-      setError(null);
-      
-      console.log('✅ Session démo démarrée:', demoSession.user.name);
-    } catch (error) {
-      console.error('❌ Erreur démarrage session démo:', error);
-      throw new Error('Impossible de démarrer le mode démo');
-    }
-  }, [isAuthenticated, isDemoMode]);
+    },
+    [isAuthenticated, isDemoMode]
+  );
 
   // Actualiser les données utilisateur
   const refreshUser = useCallback(async (): Promise<void> => {
@@ -223,7 +247,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         return;
       }
-      
+
       if (isAuthenticated && authService.getToken()) {
         console.log('🔄 Refresh données utilisateur réel');
         const userData = await authService.getProfile();
@@ -243,15 +267,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   // Vérifier les permissions
-  const hasPermission = useCallback((permission: string): boolean => {
-    if (!user) {
-      console.log('❌ Pas d\'utilisateur pour vérifier permission:', permission);
-      return false;
-    }
-    
-    // En mode démo, permissions selon tier
-    if (isDemoMode) {
-      console.log(`🎭 Mode démo ${user.tier} - Permission ${permission}`);
+  const hasPermission = useCallback(
+    (permission: string): boolean => {
+      if (!user) {
+        console.log(
+          "❌ Pas d'utilisateur pour vérifier permission:",
+          permission
+        );
+        return false;
+      }
+
+      // En mode démo, permissions selon tier
+      if (isDemoMode) {
+        console.log(`🎭 Mode démo ${user.tier} - Permission ${permission}`);
+        switch (permission) {
+          case 'unlimited_scans':
+          case 'ai_chat':
+          case 'export_data':
+          case 'advanced_analytics':
+          case 'api_access':
+            return user.tier === 'premium';
+          case 'basic_analysis':
+            return true;
+          default:
+            return false;
+        }
+      }
+
+      // Logique permissions pour utilisateurs réels
       switch (permission) {
         case 'unlimited_scans':
         case 'ai_chat':
@@ -262,25 +305,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         case 'basic_analysis':
           return true;
         default:
+          console.warn('⚠️ Permission inconnue:', permission);
           return false;
       }
-    }
-    
-    // Logique permissions pour utilisateurs réels
-    switch (permission) {
-      case 'unlimited_scans':
-      case 'ai_chat':
-      case 'export_data':
-      case 'advanced_analytics':
-      case 'api_access':
-        return user.tier === 'premium';
-      case 'basic_analysis':
-        return true;
-      default:
-        console.warn('⚠️ Permission inconnue:', permission);
-        return false;
-    }
-  }, [user, isDemoMode]);
+    },
+    [user, isDemoMode]
+  );
 
   // Vérifications tier
   const isFreeTier = useCallback((): boolean => {
@@ -294,51 +324,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [user]);
 
   // Utilitaires quotas
-  const getRemainingQuota = useCallback((type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls'): number => {
-    if (!user) return 0;
-    
-    if (isDemoMode) {
-      const demoSession = demoService.getCurrentSession();
-      if (demoSession) {
-        const quota = demoSession.quotas[type];
-        if (quota.limit === -1) return -1; // Illimité
-        return Math.max(0, quota.limit - quota.used);
-      }
-      return 0;
-    }
-    
-    // Logique quotas réels
-    const quota = user.quotas[`${type}PerMonth`] || user.quotas[`${type}PerDay`] || 0;
-    const used = user.currentUsage[
-      type === 'aiQuestions' ? 'aiQuestionsToday' : 
-      type === 'scans' ? 'scansThisMonth' :
-      type === 'exports' ? 'exportsThisMonth' : 
-      'apiCallsThisMonth'
-    ] || 0;
-    
-    if (quota === -1) return -1; // Illimité
-    return Math.max(0, quota - used);
-  }, [user, isDemoMode]);
+  const getRemainingQuota = useCallback(
+    (
+      type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls'
+    ): number => {
+      if (!user) return 0;
 
-  const canPerformAction = useCallback((action: 'scan' | 'aiQuestion' | 'export' | 'apiCall'): boolean => {
-    const remaining = getRemainingQuota(
-      action === 'scan' ? 'scans' :
-      action === 'aiQuestion' ? 'aiQuestions' :
-      action === 'export' ? 'exports' : 'apiCalls'
-    );
-    
-    return remaining === -1 || remaining > 0;
-  }, [getRemainingQuota]);
+      if (isDemoMode) {
+        const demoSession = demoService.getCurrentSession();
+        if (demoSession) {
+          const quota = demoSession.quotas[type];
+          if (quota.limit === -1) return -1; // Illimité
+          return Math.max(0, quota.limit - quota.used);
+        }
+        return 0;
+      }
+
+      // Logique quotas réels
+      const quota =
+        user.quotas[`${type}PerMonth`] ||
+        user.quotas[`${type}PerDay`] ||
+        0;
+      const used =
+        user.currentUsage[
+          type === 'aiQuestions'
+            ? 'aiQuestionsToday'
+            : type === 'scans'
+            ? 'scansThisMonth'
+            : type === 'exports'
+            ? 'exportsThisMonth'
+            : 'apiCallsThisMonth'
+        ] || 0;
+
+      if (quota === -1) return -1; // Illimité
+      return Math.max(0, quota - used);
+    },
+    [user, isDemoMode]
+  );
+
+  const canPerformAction = useCallback(
+    (action: 'scan' | 'aiQuestion' | 'export' | 'apiCall'): boolean => {
+      const remaining = getRemainingQuota(
+        action === 'scan'
+          ? 'scans'
+          : action === 'aiQuestion'
+          ? 'aiQuestions'
+          : action === 'export'
+          ? 'exports'
+          : 'apiCalls'
+      );
+
+      return remaining === -1 || remaining > 0;
+    },
+    [getRemainingQuota]
+  );
 
   // Méthodes de debugging
-  const getAuthState = useCallback(() => ({
-    isAuthenticated,
-    isDemoMode,
-    userTier: user?.tier || 'none',
-    userName: user?.name || 'none',
-    hasToken: isDemoMode ? 'demo-token' : !!authService.getToken(),
-    tokenExpired: isDemoMode ? false : authService.isTokenExpired()
-  }), [isAuthenticated, isDemoMode, user]);
+  const getAuthState = useCallback(
+    () => ({
+      isAuthenticated,
+      isDemoMode,
+      userTier: user?.tier || 'none',
+      userName: user?.name || 'none',
+      hasToken: isDemoMode ? 'demo-token' : !!authService.getToken(),
+      tokenExpired: isDemoMode ? false : authService.isTokenExpired()
+    }),
+    [isAuthenticated, isDemoMode, user]
+  );
 
   const debugAuth = useCallback((): void => {
     console.log('🔍 État authentification:', getAuthState());
@@ -351,29 +403,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated,
     isLoading,
     error,
-    
+
     // État mode démo
     isDemoMode,
-    
+
     // Actions authentification
     login,
     register,
     logout,
     clearError,
     refreshUser,
-    
+
     // Actions mode démo
     startDemoSession,
-    
+
     // Utilitaires permissions
     hasPermission,
     isFreeTier,
     isPremiumTier,
-    
+
     // Utilitaires quotas
     getRemainingQuota,
     canPerformAction,
-    
+
     // Debug
     debugAuth,
     getAuthState
@@ -389,16 +441,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // ✅ EXPORT HOOK personnalisé
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
     throw new Error(
-      'useAuth doit être utilisé à l\'intérieur d\'un AuthProvider. ' +
-      'Assurez-vous que votre composant est wrappé dans <AuthProvider>.'
+      "useAuth doit être utilisé à l'intérieur d'un AuthProvider. " +
+        'Assurez-vous que votre composant est wrappé dans <AuthProvider>.'
     );
   }
-  
+
   return context;
 };
 
 // ✅ EXPORT du contexte par défaut
 export default AuthContext;
+// EOF

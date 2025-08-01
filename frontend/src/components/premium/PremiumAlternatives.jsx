@@ -1,8 +1,8 @@
-// frontend/src/components/premium/PremiumAlternatives.jsx
-
 import React, { useState } from 'react';
 
-const PremiumAlternatives = ({ alternatives, currentScore }) => {
+// Remplacer dans : frontend/src/components/premium/PremiumAlternatives.jsx
+
+const PremiumAlternatives = ({ alternatives = [], currentScore = 0 }) => {
   const [selectedAlternative, setSelectedAlternative] = useState(null);
 
   if (!alternatives || alternatives.length === 0) {
@@ -23,7 +23,7 @@ const PremiumAlternatives = ({ alternatives, currentScore }) => {
 
   const getScoreImprovement = (altScore) => {
     const improvement = altScore - currentScore;
-    return improvement > 0 ? `+${improvement}` : improvement;
+    return improvement > 0 ? `+${improvement}` : improvement.toString();
   };
 
   const getScoreColor = (score) => {

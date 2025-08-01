@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/App.tsx
+// PATH: frontend/ecolojiaFrontV3/src/App.tsx
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { 

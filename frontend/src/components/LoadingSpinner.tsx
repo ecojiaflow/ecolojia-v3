@@ -1,35 +1,31 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react';
 
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  text?: string;
-  fullScreen?: boolean;
+  size?: 'small' | 'medium' | 'large';
+  color?: string;
+  message?: string;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'md', 
-  text = 'Chargement...', 
-  fullScreen = false 
+  size = 'medium', 
+  color = 'green',
+  message 
 }) => {
   const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+    small: 'h-8 w-8',
+    medium: 'h-12 w-12',
+    large: 'h-16 w-16'
   };
 
-  const containerClasses = fullScreen
-    ? 'min-h-screen bg-gray-50 flex items-center justify-center'
-    : 'flex items-center justify-center p-8';
-
   return (
-    <div className={containerClasses}>
-      <div className="text-center">
-        <Loader2 className={`${sizeClasses[size]} animate-spin text-green-600 mx-auto`} />
-        {text && (
-          <p className="mt-3 text-gray-600 text-sm font-medium">{text}</p>
-        )}
+    <div className="flex flex-col items-center justify-center">
+      <div className={`${sizeClasses[size]} relative`}>
+        <div className={`absolute inset-0 border-4 border-gray-200 rounded-full`}></div>
+        <div className={`absolute inset-0 border-4 border-${color}-500 rounded-full border-t-transparent animate-spin`}></div>
       </div>
+      {message && (
+        <p className="mt-4 text-gray-600 text-sm">{message}</p>
+      )}
     </div>
   );
 };
