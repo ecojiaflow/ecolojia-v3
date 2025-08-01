@@ -1,5 +1,5 @@
 // backend/src/server.js
-// FICHIER COMPLET AVEC ROUTES AUTH INTÉGRÉES - VERSION CORRIGÉE
+// VERSION CORRIGÉE - SANS ERREURS DE SYNTAXE
 
 require('dotenv').config();
 const express = require('express');
@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // IMPORTANT: Configurer trust proxy pour Render.com
-app.set('trust proxy', 'loopback, linklocal, uniquelocal');
+app.set('trust proxy', 1);
 
 // Configuration JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
@@ -96,30 +96,40 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ET modifier les rate limiters (lignes ~95-102) :
 // Rate limiting global
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requêtes par IP
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Trop de requêtes, veuillez réessayer plus tard',
   standardHeaders: true,
   legacyHeaders: false,
-  // Supprimer trustProxy: true car on utilise app.set('trust proxy')
-  // Ajouter un keyGenerator personnalisé pour Render
   keyGenerator: (req) => {
-    // Sur Render, l'IP réelle est dans x-forwarded-for
     return req.headers['x-forwarded-for']?.split(',')[0] || 
            req.socket.remoteAddress || 
            'unknown';
   }
 });
 
-// Rate limiting strict pour auth (lignes ~105-115)
-/ Remplacez la fonction authMiddleware dans server.js (vers ligne 120-150)
-// par cette version corrigée :
+// Rate limiting strict pour auth
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Trop de tentatives de connexion',
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for']?.split(',')[0] || 
+           req.socket.remoteAddress || 
+           'unknown';
+  }
+});
+
+app.use(globalLimiter);
+app.use('/api/auth', authLimiter);
 
 // Middleware d'authentification
-const authMiddleware = async (req, res, next) => {  // ✅ ASYNC ajouté ici
+const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     
@@ -144,37 +154,11 @@ const authMiddleware = async (req, res, next) => {  // ✅ ASYNC ajouté ici
         });
       }
       req.user = user;
+      req.userId = user._id;
     } else {
       // Mode test
       req.user = decoded;
-    }
-    
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      error: 'Token invalide ou expiré'
-    });
-  }
-};
-
-    const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
-    // Si MongoDB est connecté, récupérer l'utilisateur
-    if (mongoose.connection.readyState === 1) {
-      const User = require('./models/User');
-      const user = await User.findById(decoded.userId).select('-password');
-      if (!user) {
-        return res.status(401).json({
-          success: false,
-          error: 'Utilisateur non trouvé'
-        });
-      }
-      req.user = user;
-    } else {
-      // Mode test
-      req.user = decoded;
+      req.userId = decoded.userId;
     }
     
     next();
@@ -533,30 +517,6 @@ app.post('/api/auth/refresh', (req, res) => {
 
 logger.info('✅ Routes auth directes chargées');
 
-// ========== CONFIGURATION ==========
-
-// Configuration des partenaires
-const AFFILIATE_PARTNERS = {
-  lafourche: {
-    baseUrl: 'https://www.lafourche.fr',
-    affiliateId: process.env.AFFILIATE_LAFOURCHE_ID || 'ecolojia-001',
-    trackingParam: 'aff',
-    categories: ['bio', 'vrac', 'zero-dechet']
-  },
-  kazidomi: {
-    baseUrl: 'https://www.kazidomi.com',
-    affiliateId: process.env.AFFILIATE_KAZIDOMI_ID || 'ECO2025',
-    trackingParam: 'partner',
-    categories: ['bio', 'vegan', 'sans-gluten']
-  },
-  greenweez: {
-    baseUrl: 'https://www.greenweez.com',
-    affiliateId: process.env.AFFILIATE_GREENWEEZ_ID || 'partner-ecolojia',
-    trackingParam: 'utm_source',
-    categories: ['eco-responsable', 'bio']
-  }
-};
-
 // ========== CONNEXIONS DB ==========
 
 // Connexion MongoDB
@@ -608,9 +568,6 @@ async function connectRedis() {
 // ========== SETUP ROUTES ==========
 
 // Fonction pour charger les autres routes
-// Remplacez la fonction setupOtherRoutes() dans server.js (vers ligne 650)
-// par cette version corrigée :
-
 function setupOtherRoutes() {
   // Dashboard routes
   try {
@@ -618,15 +575,7 @@ function setupOtherRoutes() {
     app.use('/api/dashboard', dashboardRoutes);
     logger.info('✅ Dashboard routes loaded');
   } catch (error) {
-    logger.error('❌ Dashboard routes error:', error.message);
-    // Essayer avec un chemin différent si le premier échoue
-    try {
-      const dashboardRoutes = require('../routes/dashboard');
-      app.use('/api/dashboard', dashboardRoutes);
-      logger.info('✅ Dashboard routes loaded (alternative path)');
-    } catch (err2) {
-      logger.warn('Dashboard routes not found');
-    }
+    logger.warn('Dashboard routes not found:', error.message);
   }
 
   // Product routes
@@ -635,24 +584,16 @@ function setupOtherRoutes() {
     app.use('/api/products', productRoutes);
     logger.info('✅ Product routes loaded');
   } catch (error) {
-    logger.error('❌ Product routes error:', error.message);
-    // Essayer avec un chemin différent
-    try {
-      const productRoutes = require('../routes/products');
-      app.use('/api/products', productRoutes);
-      logger.info('✅ Product routes loaded (alternative path)');
-    } catch (err2) {
-      logger.warn('Product routes not found');
-    }
+    logger.warn('Product routes not found:', error.message);
   }
 
-  // Analyze routes
+  // Analysis routes
   try {
-    const analyzeRoutes = require('./routes/analyze.routes');
-    app.use('/api/analyze', analyzeRoutes);
-    logger.info('✅ Analyze routes loaded');
+    const analysisRoutes = require('./routes/analysis');
+    app.use('/api/analysis', analysisRoutes);
+    logger.info('✅ Analysis routes loaded');
   } catch (error) {
-    logger.warn('Analyze routes not found:', error.message);
+    logger.warn('Analysis routes not found:', error.message);
   }
 
   // Partner routes
@@ -690,7 +631,6 @@ function setupOtherRoutes() {
   } catch (error) {
     logger.warn('Algolia routes not found:', error.message);
   }
-}
 
   // Cosmetic routes
   try {
