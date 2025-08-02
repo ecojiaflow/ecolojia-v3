@@ -1,18 +1,22 @@
 ﻿// PATH: frontend/src/hooks/useAuth.ts
-import { useContext } from 'react';
-import { AuthContext } from '../auth/context/AuthContext';
-import { AuthContextType } from '../auth/types/AuthTypes';
+// Hook unifié qui utilise le contexte existant
 
-// ✅ Hook principal
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
+export { useAuth } from '../auth/context/AuthContext';
+export { AuthContext } from '../auth/context/AuthContext';
+export type { AuthContextType } from '../auth/types/AuthTypes';
+
+// Pour la compatibilité avec les anciens imports
+export { usePermission } from '../auth/hooks/usePermission';
+
+// Si tu as besoin d'un hook supplémentaire pour les quotas
+export const useQuotas = () => {
+  const { user, getRemainingQuota, canPerformAction } = useAuth();
   
-  if (!context) {
-    throw new Error('useAuth doit être utilisé dans un AuthProvider');
-  }
-
-  return context;
+  return {
+    scansRemaining: getRemainingQuota('scans'),
+    aiQuestionsRemaining: getRemainingQuota('aiQuestions'),
+    canScan: canPerformAction('scan'),
+    canAskAI: canPerformAction('aiQuestion'),
+    isPremium: user?.tier === 'premium'
+  };
 };
-
-// ✅ Export optionnel des utilitaires si besoin plus tard
-export { AuthContext };

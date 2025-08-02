@@ -2,7 +2,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // ===== CONFIGURATION =====
-const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 // Instance axios configurée
 const api = axios.create({
@@ -13,7 +13,7 @@ const api = axios.create({
   timeout: 30000, // 30 secondes
 });
 
-// ===== TYPES =====
+// ===== TYPES UNIFIÉS =====
 export interface ApiError {
   message: string;
   code?: string;
@@ -24,6 +24,7 @@ export interface AuthResponse {
   token: string;
   refreshToken: string;
   user: User;
+  success?: boolean;
 }
 
 export interface User {
@@ -33,37 +34,67 @@ export interface User {
   profile: {
     firstName: string;
     lastName: string;
+    language?: string;
+    theme?: string;
+    avatarUrl?: string;
   };
   tier: 'free' | 'premium';
   status: 'active' | 'suspended' | 'deleted';
+  // Compatibilité avec les deux structures
   quotas: {
-    scansRemaining: number;
-    scansResetDate: Date;
-    aiChatsRemaining: number;
-    aiChatsResetDate: Date;
+    scansPerMonth: number;
+    aiQuestionsPerDay: number;
+    exportsPerMonth: number;
+    scansRemaining?: number;
+    scansResetDate?: Date;
+    aiChatsRemaining?: number;
+    aiChatsResetDate?: Date;
   };
-  usage: {
+  currentUsage: {
+    scansThisMonth: number;
+    aiQuestionsToday: number;
+    exportsThisMonth: number;
+  };
+  usage?: {
     totalScans: number;
     totalChats: number;
     lastScanAt?: Date;
     lastChatAt?: Date;
   };
   subscription?: {
-    lemonSqueezyCustomerId: string;
-    lemonSqueezySubscriptionId: string;
-    currentPeriodEnd: Date;
-    status: string;
+    lemonSqueezyCustomerId?: string;
+    lemonSqueezySubscriptionId?: string;
+    currentPeriodEnd?: Date;
+    status?: string;
+    plan?: string;
   };
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Product {
   _id: string;
   barcode?: string;
   name: string;
+  name_fr?: string;
+  name_en?: string;
   brand?: string;
   category: 'food' | 'cosmetics' | 'detergents';
+  subCategory?: string;
   imageUrl?: string;
-  categories: string[];
+  images?: {
+    front?: string;
+    ingredients?: string;
+    nutrition?: string;
+  };
+  categories?: string[];
+  scores?: {
+    nova?: number;
+    nutriscore?: string;
+    ecoscore?: string;
+    healthScore?: number;
+    environmentScore?: number;
+  };
   analysisData?: {
     healthScore: number;
     environmentScore: number;
@@ -71,23 +102,37 @@ export interface Product {
     lastAnalyzedAt: Date;
     confidence: number;
   };
-  viewCount: number;
-  scanCount: number;
+  nutrition?: any;
+  allergens?: string[];
+  ingredients?: any[];
+  certifications?: string[];
+  viewCount?: number;
+  scanCount?: number;
 }
 
 export interface Analysis {
   _id: string;
   userId: string;
-  productId: string;
-  productSnapshot: {
+  productId?: string;
+  product?: Product;
+  productSnapshot?: {
     name: string;
     brand?: string;
     barcode?: string;
     imageUrl?: string;
     category: string;
   };
-  analysisType: 'barcode_scan' | 'manual_entry' | 'photo_analysis';
-  results: {
+  analysisType?: 'barcode_scan' | 'manual_entry' | 'photo_analysis';
+  analysis?: {
+    healthScore: number;
+    environmentScore: number;
+    category: string;
+    recommendations: string[];
+    concerns: string[];
+    benefits: string[];
+    alternatives?: any[];
+  };
+  results?: {
     healthScore: number;
     environmentScore: number;
     socialScore: number;
@@ -103,16 +148,18 @@ export interface Analysis {
       improvement: number;
     }>;
   };
-  metadata: {
+  metadata?: {
     aiModel: string;
     confidence: number;
     processingTimeMs: number;
   };
-  createdAt: Date;
+  timestamp?: Date;
+  createdAt?: Date;
 }
 
 export interface DashboardStats {
-  overview: {
+  // Structure existante
+  overview?: {
     totalAnalyses: number;
     avgHealthScore: number;
     minHealthScore: number;
@@ -123,64 +170,72 @@ export interface DashboardStats {
       detergents: number;
     };
   };
-  trends: {
-    healthScoreImprovement: number;
-    comparedToLastMonth: number;
-    currentStreak: number;
-    bestStreak: number;
+  // Structure alternative
+  totalScans?: number;
+  healthScoreAverage?: number;
+  averageHealthScore?: number;
+  improvementRate?: number;
+  currentStreak?: number;
+  categoryBreakdown?: {
+    food: number;
+    cosmetics: number;
+    detergents: number;
   };
-  recommendations: Array<{
-    id: string;
-    type: 'health' | 'diversity' | 'premium' | 'welcome';
-    title: string;
-    description: string;
-    impact: 'high' | 'medium' | 'low';
-    icon: string;
-    cta: string;
-  }>;
-  recentAnalyses: Array<{
-    id: string;
-    productName: string;
-    category: string;
-    healthScore: number;
-    date: string;
-    trend: 'up' | 'down' | 'stable';
-    alternatives: number;
-  }>;
-  achievements: Array<{
-    id: string;
-    title: string;
-    description: string;
-    icon: string;
-    unlockedAt: Date | null;
-    progress: number;
-    maxProgress: number;
-  }>;
-  community: {
-    averageScore: number;
-    userRank: number;
-    totalUsers: number;
-    topCategory: string;
+  categoriesBreakdown?: {
+    food: number;
+    cosmetics: number;
+    detergents: number;
   };
-  weeklyDigest: {
-    scansCount: number;
+  recentAnalyses?: any[];
+  weeklyTrend?: Array<{
+    day: string;
+    scans: number;
+  }>;
+  monthlyProgress?: Array<{
+    month: string;
+    scans: number;
     avgScore: number;
-    bestProduct: { name: string; score: number };
-    worstProduct: { name: string; score: number };
-    discoveries: number;
-    alternatives: number;
-  };
+  }>;
+  [key: string]: any; // Pour la flexibilité
 }
 
-// ===== INTERCEPTEURS =====
+// ===== GESTION DES TOKENS =====
+const TOKEN_KEY = 'token';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
-// Intercepteur pour ajouter le token JWT
+// Fonction pour obtenir le token (compatible avec les deux systèmes)
+const getToken = (): string | null => {
+  return localStorage.getItem(TOKEN_KEY) || localStorage.getItem('ecolojia_token');
+};
+
+const setTokens = (token: string, refreshToken: string) => {
+  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  // Compatibilité avec l'ancien système
+  localStorage.setItem('ecolojia_token', token);
+  localStorage.setItem('ecolojia_refresh_token', refreshToken);
+};
+
+const clearTokens = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem('ecolojia_token');
+  localStorage.removeItem('ecolojia_refresh_token');
+};
+
+// ===== INTERCEPTEURS =====
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Log en mode debug
+    if (import.meta.env.VITE_DEBUG === 'true') {
+      console.log(`🌐 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    }
+    
     return config;
   },
   (error) => {
@@ -188,23 +243,33 @@ api.interceptors.request.use(
   }
 );
 
-// Intercepteur pour gérer les erreurs et le refresh token
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Log en mode debug
+    if (import.meta.env.VITE_DEBUG === 'true') {
+      console.log(`✅ API Response:`, response.data);
+    }
+    return response;
+  },
   async (error: AxiosError<any>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    // Log des erreurs
+    if (import.meta.env.VITE_DEBUG === 'true') {
+      console.error(`❌ API Error:`, error.response?.status, error.response?.data);
+    }
 
     // Si erreur 401 et pas déjà tenté de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY) || localStorage.getItem('ecolojia_refresh_token');
         if (refreshToken) {
           const response = await axios.post(`${API_URL}/auth/refresh`, { refreshToken });
-          const { token } = response.data;
+          const { token, refreshToken: newRefreshToken } = response.data;
           
-          localStorage.setItem('token', token);
+          setTokens(token, newRefreshToken || refreshToken);
           
           // Retry la requête originale avec le nouveau token
           if (originalRequest.headers) {
@@ -214,16 +279,15 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // Échec du refresh, rediriger vers login
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/login';
+        clearTokens();
+        window.location.href = '/auth';
         return Promise.reject(refreshError);
       }
     }
 
     // Formater l'erreur
     const apiError: ApiError = {
-      message: error.response?.data?.error || error.message || 'Une erreur est survenue',
+      message: error.response?.data?.message || error.response?.data?.error || error.message || 'Une erreur est survenue',
       code: error.response?.data?.code,
       status: error.response?.status,
     };
@@ -246,8 +310,7 @@ export const authService = {
     const authData = response.data;
     
     // Sauvegarder les tokens
-    localStorage.setItem('token', authData.token);
-    localStorage.setItem('refreshToken', authData.refreshToken);
+    setTokens(authData.token, authData.refreshToken);
     
     return authData;
   },
@@ -260,8 +323,7 @@ export const authService = {
     const authData = response.data;
     
     // Sauvegarder les tokens
-    localStorage.setItem('token', authData.token);
-    localStorage.setItem('refreshToken', authData.refreshToken);
+    setTokens(authData.token, authData.refreshToken);
     
     return authData;
   },
@@ -270,48 +332,72 @@ export const authService = {
     try {
       await api.post('/auth/logout');
     } finally {
-      // Nettoyer le localStorage dans tous les cas
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
+      clearTokens();
     }
   },
 
   getProfile: async (): Promise<User> => {
     const response = await api.get('/auth/profile');
-    return response.data;
+    return response.data.user || response.data;
   },
 
   getMe: async (): Promise<User> => {
     const response = await api.get('/auth/me');
-    return response.data;
+    return response.data.user || response.data;
   },
 
-  refresh: async (refreshToken: string): Promise<{ token: string }> => {
+  refresh: async (refreshToken: string): Promise<{ token: string; refreshToken?: string }> => {
     const response = await api.post('/auth/refresh', { refreshToken });
     return response.data;
   },
+
+  // Méthodes utilitaires
+  getToken,
+  isTokenExpired: (): boolean => {
+    const token = getToken();
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  },
+  clearTokens,
+  isAuthenticated: (): boolean => {
+    return !!getToken() && !authService.isTokenExpired();
+  }
 };
 
 // Service des produits
 export const productService = {
-  search: async (query: string): Promise<Product[]> => {
-    const response = await api.get('/products/search', { params: { q: query } });
+  search: async (query: string, filters?: any): Promise<{ products: Product[]; total: number }> => {
+    const response = await api.get('/products/search', { params: { q: query, ...filters } });
+    return {
+      products: response.data.products || response.data,
+      total: response.data.total || response.data.length || 0
+    };
+  },
+
+  getTrending: async (limit: number = 10): Promise<Product[]> => {
+    const response = await api.get('/products/trending', { params: { limit } });
     return response.data.products || response.data;
   },
 
-  getTrending: async (): Promise<Product[]> => {
-    const response = await api.get('/products/trending');
-    return response.data.products || response.data;
-  },
-
-  getByBarcode: async (barcode: string): Promise<Product> => {
-    const response = await api.get(`/products/barcode/${barcode}`);
-    return response.data;
+  getByBarcode: async (barcode: string): Promise<Product | null> => {
+    try {
+      const response = await api.get(`/products/barcode/${barcode}`);
+      return response.data.product || response.data;
+    } catch (error: any) {
+      if (error.status === 404) return null;
+      throw error;
+    }
   },
 
   getById: async (id: string): Promise<Product> => {
     const response = await api.get(`/products/${id}`);
-    return response.data;
+    return response.data.product || response.data;
   },
 
   analyze: async (data: {
@@ -319,6 +405,7 @@ export const productService = {
     name?: string;
     brand?: string;
     category?: string;
+    ingredients?: string;
   }): Promise<Analysis> => {
     const response = await api.post('/products/analyze', data);
     return response.data;
@@ -329,8 +416,8 @@ export const productService = {
     return response.data.alternatives || response.data;
   },
 
-  report: async (productId: string, reason: string): Promise<void> => {
-    await api.post(`/products/${productId}/report`, { reason });
+  report: async (productId: string, reason: string, details?: string): Promise<void> => {
+    await api.post(`/products/${productId}/report`, { reason, details });
   },
 };
 
@@ -338,12 +425,19 @@ export const productService = {
 export const analysisService = {
   autoAnalyze: async (data: {
     barcode?: string;
+    productId?: string;
     name?: string;
     brand?: string;
     imageUrl?: string;
+    ingredients?: string;
+    category?: string;
   }): Promise<Analysis> => {
     const response = await api.post('/analyze/auto', data);
     return response.data;
+  },
+
+  analyzeAuto: async (data: any): Promise<Analysis> => {
+    return analysisService.autoAnalyze(data);
   },
 
   analyzeFood: async (data: any): Promise<Analysis> => {
@@ -361,29 +455,32 @@ export const analysisService = {
     return response.data;
   },
 
-  getHistory: async (params?: {
-    page?: number;
-    limit?: number;
-    category?: string;
-  }): Promise<{
-    analyses: Analysis[];
-    total: number;
-    page: number;
-    totalPages: number;
-  }> => {
-    const response = await api.get('/analyze/history', { params });
-    return response.data;
+  getHistory: async (limit: number = 50): Promise<Analysis[]> => {
+    const response = await api.get('/analyze/history', { params: { limit } });
+    return response.data.analyses || response.data;
   },
 };
 
 // Service du dashboard
 export const dashboardService = {
-  getStats: async (range: 'week' | 'month' | 'year' = 'month'): Promise<DashboardStats> => {
-    const response = await api.get('/dashboard/stats', { params: { range } });
-    return response.data;
+  getStats: async (period: 'week' | 'month' | 'year' = 'month'): Promise<DashboardStats> => {
+    const response = await api.get('/dashboard/stats', { params: { range: period } });
+    const data = response.data;
+    
+    // Normaliser les données pour la compatibilité
+    return {
+      ...data,
+      totalScans: data.totalScans || data.overview?.totalAnalyses || 0,
+      healthScoreAverage: data.healthScoreAverage || data.averageHealthScore || data.overview?.avgHealthScore || 0,
+      averageHealthScore: data.averageHealthScore || data.healthScoreAverage || data.overview?.avgHealthScore || 0,
+      categoryBreakdown: data.categoryBreakdown || data.categoriesBreakdown || data.overview?.categories,
+      categoriesBreakdown: data.categoriesBreakdown || data.categoryBreakdown || data.overview?.categories,
+      improvementRate: data.improvementRate || data.trends?.healthScoreImprovement || 0,
+      currentStreak: data.currentStreak || data.trends?.currentStreak || 0,
+    };
   },
 
-  exportData: async (format: 'csv' | 'json' = 'json'): Promise<Blob> => {
+  exportData: async (format: 'csv' | 'json' | 'pdf' = 'json'): Promise<Blob> => {
     const response = await api.get('/dashboard/export', {
       params: { format },
       responseType: 'blob',
@@ -394,9 +491,12 @@ export const dashboardService = {
 
 // Service de paiement
 export const paymentService = {
-  createCheckout: async (plan: 'monthly' | 'annual'): Promise<{ url: string }> => {
+  createCheckout: async (plan: 'monthly' | 'annual'): Promise<{ url: string; checkoutUrl?: string }> => {
     const response = await api.post('/payment/create-checkout', { plan });
-    return response.data;
+    return {
+      url: response.data.url || response.data.checkoutUrl,
+      checkoutUrl: response.data.checkoutUrl || response.data.url
+    };
   },
 
   getSubscription: async (): Promise<{
@@ -443,5 +543,22 @@ export const searchService = {
   },
 };
 
+// Service d'affiliation
+export const partnerService = {
+  getAffiliateLink: async (productId: string, partner: string): Promise<{ url: string }> => {
+    const response = await api.get('/partner/affiliate-link', {
+      params: { productId, partner }
+    });
+    return response.data;
+  },
+
+  trackClick: async (productId: string, partner: string): Promise<void> => {
+    await api.post('/partner/track-click', { productId, partner });
+  },
+};
+
 // Export de l'instance API pour usage personnalisé si nécessaire
 export default api;
+
+// Service Algolia (alias pour compatibilité)
+export const algoliaService = searchService;

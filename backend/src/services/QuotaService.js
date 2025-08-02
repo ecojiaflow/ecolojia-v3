@@ -1,472 +1,367 @@
-// backend/src/services/QuotaService.js
-
-const mongoose = require('mongoose');
-
-// ✅ CONFIGURATION QUOTAS 4.99€ OPTIMISÉE
-const QUOTA_CONFIG = {
-  free: {
-    scansPerMonth: 25,
-    aiQuestionsPerDay: 3,
-    aiQuestionsPerMonth: 15,
-    exportsPerMonth: 2,
-    historyDays: 21,
-    alternatives: 3, // Max alternatives suggérées
-    features: {
-      deepSeekAI: false,
-      advancedAnalytics: false,
-      apiAccess: false,
-      coaching: false
-    }
-  },
-  premium: {
-    scansPerMonth: -1, // Illimité
-    aiQuestionsPerDay: -1, // Illimité
-    aiQuestionsPerMonth: -1, // Illimité
-    exportsPerMonth: 50,
-    historyDays: -1, // Illimité
-    alternatives: -1, // Illimité
-    features: {
-      deepSeekAI: true,
-      advancedAnalytics: true,
-      apiAccess: true,
-      coaching: true
-    }
-  }
-};
-
-// Schema MongoDB pour usage utilisateur
-const UserUsageSchema = new mongoose.Schema({
-  userId: { type: String, required: true, unique: true },
-  tier: { type: String, enum: ['free', 'premium'], default: 'free' },
-  
-  // Compteurs période actuelle
-  currentPeriod: {
-    month: { type: Number, required: true }, // 1-12
-    year: { type: Number, required: true },
-    scansUsed: { type: Number, default: 0 },
-    aiQuestionsUsed: { type: Number, default: 0 },
-    exportsUsed: { type: Number, default: 0 }
-  },
-  
-  // Compteurs journaliers (pour IA)
-  dailyUsage: {
-    date: { type: Date, default: Date.now },
-    aiQuestionsUsed: { type: Number, default: 0 }
-  },
-  
-  // Métadonnées
-  lastResetDate: { type: Date, default: Date.now },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
-
-const UserUsage = mongoose.model('UserUsage', UserUsageSchema);
+// backend/src/services/quotaService.js
+const redis = require('redis');
+const User = require('../models/User');
 
 class QuotaService {
-  
-  // ✅ VÉRIFIER QUOTA AVANT ACTION
-  async checkQuota(userId, action, tier = 'free') {
-    try {
-      const usage = await this.getUserUsage(userId, tier);
-      const config = QUOTA_CONFIG[tier];
-      const currentDate = new Date();
-      
-      switch (action) {
-        case 'scan':
-          if (config.scansPerMonth === -1) return { allowed: true, remaining: -1 };
-          const scansRemaining = config.scansPerMonth - usage.currentPeriod.scansUsed;
-          return {
-            allowed: scansRemaining > 0,
-            remaining: Math.max(0, scansRemaining),
-            resetDate: this.getNextMonthReset()
-          };
-          
-        case 'aiQuestion':
-          // Double vérification : quotidien ET mensuel
-          const isDifferentDay = !this.isSameDay(usage.dailyUsage.date, currentDate);
-          
-          if (isDifferentDay) {
-            // Reset compteur journalier
-            await this.resetDailyUsage(userId);
-            usage.dailyUsage.aiQuestionsUsed = 0;
-          }
-          
-          // Vérifier quota journalier
-          if (config.aiQuestionsPerDay !== -1) {
-            const dailyRemaining = config.aiQuestionsPerDay - usage.dailyUsage.aiQuestionsUsed;
-            if (dailyRemaining <= 0) {
-              return {
-                allowed: false,
-                remaining: 0,
-                resetDate: this.getTomorrowReset(),
-                limitType: 'daily'
-              };
-            }
-          }
-          
-          // Vérifier quota mensuel
-          if (config.aiQuestionsPerMonth !== -1) {
-            const monthlyRemaining = config.aiQuestionsPerMonth - usage.currentPeriod.aiQuestionsUsed;
-            if (monthlyRemaining <= 0) {
-              return {
-                allowed: false,
-                remaining: 0,
-                resetDate: this.getNextMonthReset(),
-                limitType: 'monthly'
-              };
-            }
-          }
-          
-          return { allowed: true, remaining: -1 };
-          
-        case 'export':
-          if (config.exportsPerMonth === -1) return { allowed: true, remaining: -1 };
-          const exportsRemaining = config.exportsPerMonth - usage.currentPeriod.exportsUsed;
-          return {
-            allowed: exportsRemaining > 0,
-            remaining: Math.max(0, exportsRemaining),
-            resetDate: this.getNextMonthReset()
-          };
-          
-        default:
-          return { allowed: false, error: 'Unknown action' };
+  constructor() {
+    this.redisClient = null;
+    this.LOCK_TTL = 5000; // 5 secondes
+    this.initRedis();
+  }
+
+  async initRedis() {
+    if (process.env.REDIS_URL) {
+      try {
+        this.redisClient = redis.createClient({ url: process.env.REDIS_URL });
+        await this.redisClient.connect();
+        console.log('[QuotaService] Redis connected');
+      } catch (error) {
+        console.error('[QuotaService] Redis connection failed:', error);
       }
-      
-    } catch (error) {
-      console.error('❌ Erreur vérification quota:', error);
-      return { allowed: false, error: error.message };
     }
   }
-  
-  // ✅ INCRÉMENTER USAGE APRÈS ACTION
-  async incrementUsage(userId, action, tier = 'free') {
-    try {
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1;
-      const currentYear = currentDate.getFullYear();
-      
-      const updateQuery = { userId };
-      const updateData = {
-        $inc: {},
-        $set: {
-          tier,
-          updatedAt: currentDate
-        }
-      };
-      
-      switch (action) {
-        case 'scan':
-          updateData.$inc['currentPeriod.scansUsed'] = 1;
-          break;
-          
-        case 'aiQuestion':
-          updateData.$inc['currentPeriod.aiQuestionsUsed'] = 1;
-          updateData.$inc['dailyUsage.aiQuestionsUsed'] = 1;
-          updateData.$set['dailyUsage.date'] = currentDate;
-          break;
-          
-        case 'export':
-          updateData.$inc['currentPeriod.exportsUsed'] = 1;
-          break;
-      }
-      
-      // Upsert avec gestion période
-      await UserUsage.findOneAndUpdate(
-        updateQuery,
-        {
-          ...updateData,
-          $setOnInsert: {
-            userId,
-            tier,
-            currentPeriod: {
-              month: currentMonth,
-              year: currentYear,
-              scansUsed: action === 'scan' ? 1 : 0,
-              aiQuestionsUsed: action === 'aiQuestion' ? 1 : 0,
-              exportsUsed: action === 'export' ? 1 : 0
-            },
-            dailyUsage: {
-              date: currentDate,
-              aiQuestionsUsed: action === 'aiQuestion' ? 1 : 0
-            },
-            createdAt: currentDate
-          }
-        },
-        { 
-          upsert: true, 
-          new: true,
-          setDefaultsOnInsert: true
-        }
-      );
-      
-      console.log(`✅ Usage incrémenté: ${userId} → ${action}`);
-      return { success: true };
-      
-    } catch (error) {
-      console.error('❌ Erreur incrément usage:', error);
-      return { success: false, error: error.message };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // MÉTHODES PRINCIPALES
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Vérifie et consomme un quota avec gestion de concurrence
+   */
+  async checkAndConsumeQuota(userId, quotaType) {
+    const lockKey = `quota_lock:${userId}:${quotaType}`;
+    const lock = await this.acquireLock(lockKey);
+
+    if (!lock) {
+      throw new Error('Opération de quota en cours, veuillez réessayer');
     }
-  }
-  
-  // ✅ OBTENIR STATUS COMPLET UTILISATEUR
-  async getUserQuotaStatus(userId, tier = 'free') {
+
     try {
-      const usage = await this.getUserUsage(userId, tier);
-      const config = QUOTA_CONFIG[tier];
+      // Récupérer l'utilisateur
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('Utilisateur non trouvé');
+      }
+
+      // Déterminer les champs de quota
+      const quotaConfig = this.getQuotaConfig(quotaType, user.tier);
       
+      // Vérifier si reset nécessaire
+      await this.checkAndResetIfNeeded(user, quotaType, quotaConfig);
+
+      // Vérifier le quota
+      const currentValue = this.getQuotaValue(user, quotaConfig.field);
+      const limit = quotaConfig.limit;
+
+      if (user.tier !== 'premium' && currentValue >= limit) {
+        return {
+          allowed: false,
+          remaining: 0,
+          limit,
+          resetDate: this.getResetDate(user, quotaConfig.resetField),
+          requiresUpgrade: true,
+          quotaType
+        };
+      }
+
+      // Consommer le quota
+      const updateField = quotaConfig.incrementField || quotaConfig.field;
+      await User.findByIdAndUpdate(userId, {
+        $inc: { [updateField]: 1 }
+      });
+
+      // Log l'utilisation
+      await this.logQuotaUsage(userId, quotaType);
+
       return {
-        tier,
+        allowed: true,
+        remaining: user.tier === 'premium' ? -1 : Math.max(0, limit - currentValue - 1),
+        limit: user.tier === 'premium' ? -1 : limit,
+        resetDate: this.getResetDate(user, quotaConfig.resetField),
+        quotaType
+      };
+
+    } finally {
+      await this.releaseLock(lockKey);
+    }
+  }
+
+  /**
+   * Récupère l'état actuel des quotas d'un utilisateur
+   */
+  async getQuotaStatus(userId) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('Utilisateur non trouvé');
+    }
+
+    const isPremium = user.tier === 'premium';
+    
+    return {
+      tier: user.tier,
+      isPremium,
+      quotas: {
         scans: {
-          used: usage.currentPeriod.scansUsed,
-          limit: config.scansPerMonth,
-          remaining: config.scansPerMonth === -1 ? -1 : 
-            Math.max(0, config.scansPerMonth - usage.currentPeriod.scansUsed),
-          resetDate: this.getNextMonthReset()
+          used: user.currentUsage?.scansThisMonth || 0,
+          limit: isPremium ? -1 : (user.quotas?.scansPerMonth || 30),
+          remaining: isPremium ? -1 : Math.max(0, (user.quotas?.scansPerMonth || 30) - (user.currentUsage?.scansThisMonth || 0)),
+          resetDate: user.quotas?.scansResetDate || this.getNextMonthReset()
         },
         aiQuestions: {
-          dailyUsed: usage.dailyUsage.aiQuestionsUsed,
-          dailyLimit: config.aiQuestionsPerDay,
-          dailyRemaining: config.aiQuestionsPerDay === -1 ? -1 :
-            Math.max(0, config.aiQuestionsPerDay - usage.dailyUsage.aiQuestionsUsed),
-          monthlyUsed: usage.currentPeriod.aiQuestionsUsed,
-          monthlyLimit: config.aiQuestionsPerMonth,
-          monthlyRemaining: config.aiQuestionsPerMonth === -1 ? -1 :
-            Math.max(0, config.aiQuestionsPerMonth - usage.currentPeriod.aiQuestionsUsed),
-          resetDate: this.getNextMonthReset()
+          used: user.currentUsage?.aiQuestionsToday || 0,
+          limit: isPremium ? -1 : (user.quotas?.aiQuestionsPerDay || 0),
+          remaining: isPremium ? -1 : Math.max(0, (user.quotas?.aiQuestionsPerDay || 0) - (user.currentUsage?.aiQuestionsToday || 0)),
+          resetDate: user.quotas?.aiChatsResetDate || this.getNextDayReset()
         },
         exports: {
-          used: usage.currentPeriod.exportsUsed,
-          limit: config.exportsPerMonth,
-          remaining: config.exportsPerMonth === -1 ? -1 :
-            Math.max(0, config.exportsPerMonth - usage.currentPeriod.exportsUsed),
-          resetDate: this.getNextMonthReset()
-        },
-        features: config.features,
-        lastUpdated: usage.updatedAt
-      };
-      
-    } catch (error) {
-      console.error('❌ Erreur status quota:', error);
-      return null;
-    }
-  }
-  
-  // ✅ MIDDLEWARE EXPRESS POUR ROUTES PROTÉGÉES
-  checkQuotaMiddleware(action) {
-    return async (req, res, next) => {
-      try {
-        const userId = req.user?.id;
-        const userTier = req.user?.tier || 'free';
-        
-        if (!userId) {
-          return res.status(401).json({
-            success: false,
-            error: 'User not authenticated',
-            code: 'AUTH_REQUIRED'
-          });
+          used: user.currentUsage?.exportsThisMonth || 0,
+          limit: isPremium ? -1 : (user.quotas?.exportsPerMonth || 0),
+          remaining: isPremium ? -1 : Math.max(0, (user.quotas?.exportsPerMonth || 0) - (user.currentUsage?.exportsThisMonth || 0)),
+          resetDate: user.quotas?.exportsResetDate || this.getNextMonthReset()
         }
-        
-        const quotaCheck = await this.checkQuota(userId, action, userTier);
-        
-        if (!quotaCheck.allowed) {
-          return res.status(429).json({
-            success: false,
-            error: `Quota ${action} exceeded`,
-            code: 'QUOTA_EXCEEDED',
-            quota: quotaCheck,
-            upgrade: {
-              message: 'Passez Premium pour débloquer',
-              price: '4.99€/mois',
-              benefits: this.getUpgradeBenefits(action)
-            }
-          });
-        }
-        
-        // Passer au middleware suivant
-        req.quotaCheck = quotaCheck;
-        next();
-        
-      } catch (error) {
-        console.error('❌ Erreur middleware quota:', error);
-        res.status(500).json({
-          success: false,
-          error: 'Internal server error'
-        });
       }
     };
   }
-  
-  // ✅ UTILITAIRES PRIVÉES
-  async getUserUsage(userId, tier) {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentYear = currentDate.getFullYear();
+
+  /**
+   * Reset manuel des quotas (pour admin ou cron)
+   */
+  async resetQuotas(type = 'all') {
+    const now = new Date();
     
-    let usage = await UserUsage.findOne({ userId });
-    
-    if (!usage) {
-      // Créer nouveau utilisateur
-      usage = new UserUsage({
-        userId,
-        tier,
-        currentPeriod: {
-          month: currentMonth,
-          year: currentYear,
-          scansUsed: 0,
-          aiQuestionsUsed: 0,
-          exportsUsed: 0
+    if (type === 'daily' || type === 'all') {
+      // Reset quotas journaliers
+      await User.updateMany(
+        { 
+          'quotas.aiChatsResetDate': { $lte: now },
+          tier: { $ne: 'premium' }
         },
-        dailyUsage: {
-          date: currentDate,
-          aiQuestionsUsed: 0
+        {
+          $set: {
+            'currentUsage.aiQuestionsToday': 0,
+            'quotas.aiChatsResetDate': this.getNextDayReset()
+          }
         }
-      });
-      await usage.save();
-    } else {
-      // Vérifier si période mensuelle a changé
-      if (usage.currentPeriod.month !== currentMonth || 
-          usage.currentPeriod.year !== currentYear) {
-        await this.resetMonthlyUsage(userId, currentMonth, currentYear);
-        usage = await UserUsage.findOne({ userId });
+      );
+      console.log('[QuotaService] Daily quotas reset');
+    }
+
+    if (type === 'monthly' || type === 'all') {
+      // Reset quotas mensuels
+      await User.updateMany(
+        { 
+          'quotas.scansResetDate': { $lte: now },
+          tier: { $ne: 'premium' }
+        },
+        {
+          $set: {
+            'currentUsage.scansThisMonth': 0,
+            'currentUsage.exportsThisMonth': 0,
+            'quotas.scansResetDate': this.getNextMonthReset(),
+            'quotas.exportsResetDate': this.getNextMonthReset()
+          }
+        }
+      );
+      console.log('[QuotaService] Monthly quotas reset');
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // MÉTHODES PRIVÉES
+  // ═══════════════════════════════════════════════════════════════════════
+
+  getQuotaConfig(quotaType, tier) {
+    const configs = {
+      scan: {
+        field: 'currentUsage.scansThisMonth',
+        incrementField: 'currentUsage.scansThisMonth',
+        resetField: 'quotas.scansResetDate',
+        limit: tier === 'premium' ? 999999 : 30,
+        resetPeriod: 'monthly'
+      },
+      aiChat: {
+        field: 'currentUsage.aiQuestionsToday',
+        incrementField: 'currentUsage.aiQuestionsToday',
+        resetField: 'quotas.aiChatsResetDate',
+        limit: tier === 'premium' ? 999999 : 0, // 0 pour gratuit = pas d'accès
+        resetPeriod: 'daily'
+      },
+      export: {
+        field: 'currentUsage.exportsThisMonth',
+        incrementField: 'currentUsage.exportsThisMonth',
+        resetField: 'quotas.exportsResetDate',
+        limit: tier === 'premium' ? 999999 : 0,
+        resetPeriod: 'monthly'
       }
+    };
+
+    const config = configs[quotaType];
+    if (!config) {
+      throw new Error(`Type de quota invalide: ${quotaType}`);
+    }
+
+    return config;
+  }
+
+  getQuotaValue(user, field) {
+    const parts = field.split('.');
+    let value = user;
+    
+    for (const part of parts) {
+      value = value?.[part];
     }
     
-    return usage;
+    return value || 0;
   }
-  
-  async resetMonthlyUsage(userId, newMonth, newYear) {
-    await UserUsage.findOneAndUpdate(
-      { userId },
-      {
-        $set: {
-          'currentPeriod.month': newMonth,
-          'currentPeriod.year': newYear,
-          'currentPeriod.scansUsed': 0,
-          'currentPeriod.aiQuestionsUsed': 0,
-          'currentPeriod.exportsUsed': 0,
-          lastResetDate: new Date(),
-          updatedAt: new Date()
-        }
-      }
-    );
-    console.log(`🔄 Reset mensuel: ${userId} → ${newMonth}/${newYear}`);
+
+  getResetDate(user, resetField) {
+    const parts = resetField.split('.');
+    let value = user;
+    
+    for (const part of parts) {
+      value = value?.[part];
+    }
+    
+    return value || new Date();
   }
-  
-  async resetDailyUsage(userId) {
-    await UserUsage.findOneAndUpdate(
-      { userId },
-      {
-        $set: {
-          'dailyUsage.date': new Date(),
-          'dailyUsage.aiQuestionsUsed': 0,
-          updatedAt: new Date()
-        }
-      }
-    );
-  }
-  
-  isSameDay(date1, date2) {
-    return date1.toDateString() === date2.toDateString();
-  }
-  
-  getNextMonthReset() {
+
+  async checkAndResetIfNeeded(user, quotaType, config) {
+    const resetDate = this.getResetDate(user, config.resetField);
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    if (resetDate < now) {
+      // Le quota doit être réinitialisé
+      const newResetDate = config.resetPeriod === 'daily' 
+        ? this.getNextDayReset() 
+        : this.getNextMonthReset();
+
+      const updates = {
+        [config.field]: 0,
+        [config.resetField]: newResetDate
+      };
+
+      await User.findByIdAndUpdate(user._id, { $set: updates });
+      
+      // Mettre à jour l'objet user local
+      this.setNestedValue(user, config.field, 0);
+      this.setNestedValue(user, config.resetField, newResetDate);
+      
+      console.log(`[QuotaService] Reset ${quotaType} quota for user ${user._id}`);
+    }
   }
-  
-  getTomorrowReset() {
+
+  setNestedValue(obj, path, value) {
+    const parts = path.split('.');
+    let current = obj;
+    
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!current[parts[i]]) {
+        current[parts[i]] = {};
+      }
+      current = current[parts[i]];
+    }
+    
+    current[parts[parts.length - 1]] = value;
+  }
+
+  getNextDayReset() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     return tomorrow;
   }
-  
-  getUpgradeBenefits(action) {
-    const benefits = {
-      scan: ['Scans illimités', 'Toutes catégories', 'Historique complet'],
-      aiQuestion: ['Questions IA illimitées', 'DeepSeek avancé', 'Coaching 24/7'],
-      export: ['50 exports/mois', 'Formats multiples', 'API access']
+
+  getNextMonthReset() {
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    nextMonth.setDate(1);
+    nextMonth.setHours(0, 0, 0, 0);
+    return nextMonth;
+  }
+
+  async logQuotaUsage(userId, quotaType) {
+    if (!this.redisClient?.isReady) return;
+
+    try {
+      const key = `quota_usage:${userId}:${quotaType}:${new Date().toISOString().split('T')[0]}`;
+      await this.redisClient.incr(key);
+      await this.redisClient.expire(key, 86400 * 7); // Garder 7 jours
+    } catch (error) {
+      console.error('[QuotaService] Error logging usage:', error);
+    }
+  }
+
+  async acquireLock(lockKey) {
+    if (!this.redisClient?.isReady) return true; // Pas de lock si pas de Redis
+
+    try {
+      const result = await this.redisClient.set(
+        lockKey,
+        '1',
+        {
+          PX: this.LOCK_TTL,
+          NX: true
+        }
+      );
+      return result === 'OK';
+    } catch (error) {
+      console.error('[QuotaService] Lock error:', error);
+      return true; // En cas d'erreur, on continue
+    }
+  }
+
+  async releaseLock(lockKey) {
+    if (!this.redisClient?.isReady) return;
+
+    try {
+      await this.redisClient.del(lockKey);
+    } catch (error) {
+      console.error('[QuotaService] Unlock error:', error);
+    }
+  }
+
+  /**
+   * Obtenir les statistiques d'utilisation
+   */
+  async getUsageStats(userId, days = 30) {
+    if (!this.redisClient?.isReady) {
+      return { daily: {}, total: {} };
+    }
+
+    const stats = {
+      daily: {},
+      total: {
+        scans: 0,
+        aiChats: 0,
+        exports: 0
+      }
     };
-    return benefits[action] || ['Toutes fonctionnalités Premium'];
+
+    try {
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        stats.daily[dateStr] = {};
+
+        for (const quotaType of ['scan', 'aiChat', 'export']) {
+          const key = `quota_usage:${userId}:${quotaType}:${dateStr}`;
+          const usage = await this.redisClient.get(key);
+          const count = parseInt(usage) || 0;
+          
+          stats.daily[dateStr][quotaType] = count;
+          stats.total[quotaType === 'aiChat' ? 'aiChats' : quotaType + 's'] += count;
+        }
+      }
+    } catch (error) {
+      console.error('[QuotaService] Stats error:', error);
+    }
+
+    return stats;
   }
 }
 
-// ✅ ROUTES API QUOTAS
-const quotaService = new QuotaService();
-
-// GET /api/user/quota-status
-const getQuotaStatus = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const userTier = req.user.tier || 'free';
-    
-    const status = await quotaService.getUserQuotaStatus(userId, userTier);
-    
-    if (!status) {
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to fetch quota status'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: status
-    });
-    
-  } catch (error) {
-    console.error('❌ Erreur API quota status:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-};
-
-// POST /api/user/increment-usage
-const incrementUsageAPI = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const userTier = req.user.tier || 'free';
-    const { action } = req.body;
-    
-    if (!['scan', 'aiQuestion', 'export'].includes(action)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid action'
-      });
-    }
-    
-    const result = await quotaService.incrementUsage(userId, action, userTier);
-    
-    if (!result.success) {
-      return res.status(500).json({
-        success: false,
-        error: result.error
-      });
-    }
-    
-    // Retourner nouveau status
-    const newStatus = await quotaService.getUserQuotaStatus(userId, userTier);
-    
-    res.json({
-      success: true,
-      data: newStatus
-    });
-    
-  } catch (error) {
-    console.error('❌ Erreur API increment usage:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
-};
-
-module.exports = {
-  QuotaService,
-  quotaService,
-  getQuotaStatus,
-  incrementUsageAPI,
-  QUOTA_CONFIG
-};
+// Export singleton
+module.exports = new QuotaService();
