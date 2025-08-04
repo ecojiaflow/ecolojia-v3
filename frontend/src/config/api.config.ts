@@ -1,15 +1,15 @@
-// frontend/src/config/api.config.ts
+﻿// frontend/src/config/api.config.ts
 
-// Configuration API avec auto-détection
+// Configuration API avec auto-dÃ©tection
 export const API_CONFIG = {
-  // Développement local
+  // DÃ©veloppement local
   DEVELOPMENT_URL: 'http://localhost:5001',
   
   // Production (votre backend Render)
   PRODUCTION_URL: 'https://ecolojia-backend.onrender.com',
   
-  // Timeout par défaut
-  TIMEOUT: 30000, // 30 secondes pour Render qui peut être lent au démarrage
+  // Timeout par dÃ©faut
+  TIMEOUT: 30000, // 30 secondes pour Render qui peut Ãªtre lent au dÃ©marrage
   
   // Retry configuration
   RETRY: {
@@ -30,21 +30,21 @@ export const API_CONFIG = {
   isDevelopment: import.meta.env.MODE === 'development',
   isProduction: import.meta.env.MODE === 'production',
   
-  // Méthode pour obtenir l'URL courante (SANS /api qui est ajouté par apiClient)
+  // MÃ©thode pour obtenir l'URL courante (SANS /api qui est ajoutÃ© par apiClient)
   getCurrentApiUrl(): string {
-    // D'abord vérifier les variables d'environnement
+    // D'abord vÃ©rifier les variables d'environnement
     if (import.meta.env.VITE_API_URL) {
-      console.log('🔗 Using VITE_API_URL:', import.meta.env.VITE_API_URL);
+      console.log('ðŸ”— Using VITE_API_URL:', import.meta.env.VITE_API_URL);
       return import.meta.env.VITE_API_URL;
     }
     
-    // Sinon, utiliser la config par défaut selon l'environnement
+    // Sinon, utiliser la config par dÃ©faut selon l'environnement
     const url = this.isDevelopment ? this.DEVELOPMENT_URL : this.PRODUCTION_URL;
-    console.log('🔗 Using default URL:', url, '(env:', import.meta.env.MODE, ')');
+    console.log('ðŸ”— Using default URL:', url, '(env:', import.meta.env.MODE, ')');
     return url;
   },
   
-  // Endpoints principaux (SANS /api au début)
+  // Endpoints principaux (SANS /api au dÃ©but)
   ENDPOINTS: {
     // Auth
     LOGIN: '/auth/login',
@@ -103,7 +103,7 @@ export const API_CONFIG = {
   }
 };
 
-// Helper pour construire les URLs complètes (si nécessaire)
+// Helper pour construire les URLs complÃ¨tes (si nÃ©cessaire)
 export function buildApiUrl(endpoint: string): string {
   const baseUrl = API_CONFIG.getCurrentApiUrl();
   // S'assurer qu'il n'y a pas de double slash
@@ -116,7 +116,7 @@ export function getEndpoint(key: keyof typeof API_CONFIG.ENDPOINTS): string {
   return API_CONFIG.ENDPOINTS[key];
 }
 
-// Configuration des headers par défaut
+// Configuration des headers par dÃ©faut
 export const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
@@ -124,23 +124,23 @@ export const DEFAULT_HEADERS = {
   'X-Client-Platform': 'web'
 };
 
-// Configuration pour les différents types de requêtes
+// Configuration pour les diffÃ©rents types de requÃªtes
 export const REQUEST_CONFIG = {
-  // Requêtes qui ne doivent pas être retentées
+  // RequÃªtes qui ne doivent pas Ãªtre retentÃ©es
   noRetry: [
     API_CONFIG.ENDPOINTS.LOGIN,
     API_CONFIG.ENDPOINTS.REGISTER,
     API_CONFIG.ENDPOINTS.FORGOT_PASSWORD
   ],
   
-  // Requêtes qui peuvent être mises en cache
+  // RequÃªtes qui peuvent Ãªtre mises en cache
   cacheable: [
     API_CONFIG.ENDPOINTS.PRODUCTS_TRENDING,
     API_CONFIG.ENDPOINTS.USER_PROFILE,
     API_CONFIG.ENDPOINTS.SUBSCRIPTION_PLANS
   ],
   
-  // Requêtes prioritaires (bypass queue)
+  // RequÃªtes prioritaires (bypass queue)
   priority: [
     API_CONFIG.ENDPOINTS.LOGIN,
     API_CONFIG.ENDPOINTS.REFRESH,

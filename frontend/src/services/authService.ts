@@ -1,4 +1,4 @@
-// frontend/src/services/authService.ts
+﻿// frontend/src/services/authService.ts
 import { apiClient, getErrorMessage, clearRequestQueue } from './apiClient';
 import { API_CONFIG } from '../config/api.config';
 
@@ -54,7 +54,7 @@ class AuthService {
    */
   async register(data: RegisterRequest): Promise<AuthResponse> {
     try {
-      console.log('📝 Tentative d\'inscription:', { email: data.email });
+      console.log('ðŸ“ Tentative d\'inscription:', { email: data.email });
       
       const response = await apiClient.post(API_CONFIG.ENDPOINTS.REGISTER, {
         email: data.email.toLowerCase().trim(),
@@ -66,7 +66,7 @@ class AuthService {
         marketingConsent: data.marketingConsent || false
       });
       
-      // Normaliser la réponse
+      // Normaliser la rÃ©ponse
       const responseData = response.data;
       const token = responseData.token || responseData.accessToken;
       const refreshToken = responseData.refreshToken || token;
@@ -77,18 +77,18 @@ class AuthService {
         localStorage.setItem('ecolojia_refresh_token', refreshToken);
       }
       
-      console.log('✅ Inscription réussie');
+      console.log('âœ… Inscription rÃ©ussie');
       
       return {
         success: true,
         user: responseData.user,
         token: token,
         refreshToken: refreshToken,
-        message: responseData.message || 'Inscription réussie'
+        message: responseData.message || 'Inscription rÃ©ussie'
       };
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur inscription:', message);
+      console.error('âŒ Erreur inscription:', message);
       throw new Error(message);
     }
   }
@@ -98,14 +98,14 @@ class AuthService {
    */
   async login(data: LoginRequest): Promise<AuthResponse> {
     try {
-      console.log('🔐 Tentative de connexion:', { email: data.email });
+      console.log('ðŸ” Tentative de connexion:', { email: data.email });
       
       const response = await apiClient.post(API_CONFIG.ENDPOINTS.LOGIN, {
         email: data.email.toLowerCase().trim(),
         password: data.password
       });
       
-      // Normaliser la réponse
+      // Normaliser la rÃ©ponse
       const responseData = response.data;
       const token = responseData.token || responseData.accessToken;
       const refreshToken = responseData.refreshToken || token;
@@ -116,52 +116,52 @@ class AuthService {
         localStorage.setItem('ecolojia_refresh_token', refreshToken);
       }
       
-      console.log('✅ Connexion réussie');
+      console.log('âœ… Connexion rÃ©ussie');
       
       return {
         success: true,
         user: responseData.user,
         token: token,
         refreshToken: refreshToken,
-        message: responseData.message || 'Connexion réussie'
+        message: responseData.message || 'Connexion rÃ©ussie'
       };
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur connexion:', message);
+      console.error('âŒ Erreur connexion:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Déconnexion
+   * DÃ©connexion
    */
   async logout(): Promise<void> {
     try {
-      console.log('🚪 Déconnexion...');
+      console.log('ðŸšª DÃ©connexion...');
       
-      // Essayer d'appeler l'API de déconnexion
+      // Essayer d'appeler l'API de dÃ©connexion
       try {
         await apiClient.post(API_CONFIG.ENDPOINTS.LOGOUT);
       } catch (error) {
-        // Ne pas bloquer la déconnexion si l'API échoue
-        console.warn('⚠️ Logout API call failed:', error);
+        // Ne pas bloquer la dÃ©connexion si l'API Ã©choue
+        console.warn('âš ï¸ Logout API call failed:', error);
       }
       
-      // Toujours nettoyer les données locales
+      // Toujours nettoyer les donnÃ©es locales
       this.clearTokens();
-      clearRequestQueue(); // Nettoyer la queue de requêtes
+      clearRequestQueue(); // Nettoyer la queue de requÃªtes
       
-      console.log('✅ Déconnexion réussie');
+      console.log('âœ… DÃ©connexion rÃ©ussie');
     } catch (error) {
-      console.error('❌ Erreur déconnexion:', error);
-      // Nettoyer quand même en cas d'erreur
+      console.error('âŒ Erreur dÃ©connexion:', error);
+      // Nettoyer quand mÃªme en cas d'erreur
       this.clearTokens();
       clearRequestQueue();
     }
   }
 
   /**
-   * Récupérer le profil de l'utilisateur connecté
+   * RÃ©cupÃ©rer le profil de l'utilisateur connectÃ©
    */
   async getProfile(): Promise<User> {
     try {
@@ -169,13 +169,13 @@ class AuthService {
       return response.data.user || response.data.data?.user || response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur récupération profil:', message);
+      console.error('âŒ Erreur rÃ©cupÃ©ration profil:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Alternative pour récupérer le profil (endpoint /me)
+   * Alternative pour rÃ©cupÃ©rer le profil (endpoint /me)
    */
   async getMe(): Promise<User> {
     try {
@@ -183,23 +183,23 @@ class AuthService {
       return response.data.data?.user || response.data.user || response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur récupération profil (me):', message);
+      console.error('âŒ Erreur rÃ©cupÃ©ration profil (me):', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Rafraîchir le token d'accès
+   * RafraÃ®chir le token d'accÃ¨s
    */
   async refreshToken(refreshToken: string): Promise<AuthResponse> {
     try {
-      console.log('🔄 Rafraîchissement du token...');
+      console.log('ðŸ”„ RafraÃ®chissement du token...');
       
       const response = await apiClient.post(API_CONFIG.ENDPOINTS.REFRESH, { 
         refreshToken 
       });
       
-      // Normaliser la réponse
+      // Normaliser la rÃ©ponse
       const responseData = response.data;
       const newToken = responseData.accessToken || responseData.token;
       const newRefreshToken = responseData.refreshToken || refreshToken;
@@ -210,7 +210,7 @@ class AuthService {
         localStorage.setItem('ecolojia_refresh_token', newRefreshToken);
       }
       
-      console.log('✅ Token rafraîchi');
+      console.log('âœ… Token rafraÃ®chi');
       
       return {
         success: true,
@@ -220,13 +220,13 @@ class AuthService {
       };
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur rafraîchissement token:', message);
+      console.error('âŒ Erreur rafraÃ®chissement token:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Mettre à jour le profil
+   * Mettre Ã  jour le profil
    */
   async updateProfile(data: Partial<User>): Promise<User> {
     try {
@@ -234,7 +234,7 @@ class AuthService {
       return response.data.user || response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur mise à jour profil:', message);
+      console.error('âŒ Erreur mise Ã  jour profil:', message);
       throw new Error(message);
     }
   }
@@ -251,13 +251,13 @@ class AuthService {
       return response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur changement mot de passe:', message);
+      console.error('âŒ Erreur changement mot de passe:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Demander la réinitialisation du mot de passe
+   * Demander la rÃ©initialisation du mot de passe
    */
   async requestPasswordReset(email: string): Promise<any> {
     try {
@@ -267,13 +267,13 @@ class AuthService {
       return response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur demande réinitialisation:', message);
+      console.error('âŒ Erreur demande rÃ©initialisation:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Réinitialiser le mot de passe avec un token
+   * RÃ©initialiser le mot de passe avec un token
    */
   async resetPassword(token: string, newPassword: string): Promise<any> {
     try {
@@ -284,13 +284,13 @@ class AuthService {
       return response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur réinitialisation mot de passe:', message);
+      console.error('âŒ Erreur rÃ©initialisation mot de passe:', message);
       throw new Error(message);
     }
   }
 
   /**
-   * Vérifier l'email avec un token
+   * VÃ©rifier l'email avec un token
    */
   async verifyEmail(token: string): Promise<any> {
     try {
@@ -300,22 +300,22 @@ class AuthService {
       return response.data;
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('❌ Erreur vérification email:', message);
+      console.error('âŒ Erreur vÃ©rification email:', message);
       throw new Error(message);
     }
   }
 
-  // ========== Méthodes utilitaires ==========
+  // ========== MÃ©thodes utilitaires ==========
 
   /**
-   * Récupérer le token d'accès
+   * RÃ©cupÃ©rer le token d'accÃ¨s
    */
   getToken(): string | null {
     return localStorage.getItem('ecolojia_token');
   }
 
   /**
-   * Récupérer le refresh token
+   * RÃ©cupÃ©rer le refresh token
    */
   getRefreshToken(): string | null {
     return localStorage.getItem('ecolojia_refresh_token');
@@ -327,38 +327,38 @@ class AuthService {
   clearTokens(): void {
     localStorage.removeItem('ecolojia_token');
     localStorage.removeItem('ecolojia_refresh_token');
-    localStorage.removeItem('ecolojia_user'); // Au cas où
+    localStorage.removeItem('ecolojia_user'); // Au cas oÃ¹
   }
 
   /**
-   * Vérifier si le token est expiré
+   * VÃ©rifier si le token est expirÃ©
    */
   isTokenExpired(): boolean {
     const token = this.getToken();
     if (!token) return true;
 
     try {
-      // Décoder le JWT
+      // DÃ©coder le JWT
       const parts = token.split('.');
       if (parts.length !== 3) return true;
       
       const payload = JSON.parse(atob(parts[1]));
       if (!payload.exp) return false; // Pas d'expiration
       
-      // Vérifier l'expiration (avec 5 minutes de marge)
+      // VÃ©rifier l'expiration (avec 5 minutes de marge)
       const expirationTime = payload.exp * 1000;
       const currentTime = Date.now();
       const margin = 5 * 60 * 1000; // 5 minutes
       
       return currentTime >= (expirationTime - margin);
     } catch (error) {
-      console.error('❌ Erreur décodage token:', error);
+      console.error('âŒ Erreur dÃ©codage token:', error);
       return true;
     }
   }
 
   /**
-   * Vérifier si l'utilisateur est connecté
+   * VÃ©rifier si l'utilisateur est connectÃ©
    */
   isAuthenticated(): boolean {
     const token = this.getToken();
@@ -366,7 +366,7 @@ class AuthService {
   }
 
   /**
-   * Récupérer les infos de l'utilisateur depuis le token
+   * RÃ©cupÃ©rer les infos de l'utilisateur depuis le token
    */
   getUserFromToken(): Partial<User> | null {
     const token = this.getToken();
@@ -383,14 +383,14 @@ class AuthService {
         tier: payload.tier || 'free'
       };
     } catch (error) {
-      console.error('❌ Erreur décodage token:', error);
+      console.error('âŒ Erreur dÃ©codage token:', error);
       return null;
     }
   }
 }
 
-// Créer et exporter une instance unique
+// CrÃ©er et exporter une instance unique
 export const authService = new AuthService();
 
-// Export par défaut pour compatibilité
+// Export par dÃ©faut pour compatibilitÃ©
 export default authService;

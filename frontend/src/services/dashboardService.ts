@@ -1,4 +1,4 @@
-// frontend/src/services/dashboardService.ts
+﻿// frontend/src/services/dashboardService.ts
 import { apiClient, getErrorMessage } from './apiClient';
 
 // Types pour le dashboard
@@ -266,7 +266,7 @@ class DashboardService {
     }
   }
 
-  // Méthode pour obtenir des statistiques rapides
+  // MÃ©thode pour obtenir des statistiques rapides
   async getQuickStats(): Promise<any> {
     try {
       const [stats, recentScans, achievements] = await Promise.all([
