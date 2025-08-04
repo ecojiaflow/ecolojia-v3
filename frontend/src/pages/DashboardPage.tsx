@@ -61,7 +61,7 @@ async function testDashboardConnection() {
   console.log('🔍 Test de connexion Dashboard...');
   
   try {
-    const response = await fetch('http://localhost:5001/api/dashboard/stats', {
+   const response = await fetch(`${import.meta.env.VITE_API_URL}/dashboard/stats`, {
       headers: {
         'Authorization': 'Bearer test-token-507f1f77bcf86cd799439011',
         'Content-Type': 'application/json'
