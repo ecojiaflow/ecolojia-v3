@@ -1,10 +1,16 @@
-# PATH: backend/render.yaml
-services:
+﻿services:
   - type: web
     name: ecolojia-backend
     env: node
     plan: free
+    region: oregon
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
-      NODE_VERSION: 18
+      - key: NODE_VERSION
+        value: 18.18.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
