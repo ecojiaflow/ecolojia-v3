@@ -17,9 +17,10 @@ import {
   Droplet,
   Apple
 } from 'lucide-react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { analysisService } from '../services/analysisService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../auth/context/AuthContext';
 
 interface Product {
   id: string;
