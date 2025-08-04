@@ -35,7 +35,7 @@ const StatsPage: React.FC = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/stats`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/stats`);
 
       if (!response.ok) {
         throw new Error("Erreur lors du chargement des statistiques");
