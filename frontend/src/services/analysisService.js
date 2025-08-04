@@ -197,7 +197,7 @@ class AnalysisService {
   }
 }
 
-export const analysisService = new AnalysisService(); Analyse un produit alimentaire
+export const analysisService = new AnalysisService(); // Analyse un produit alimentaire
    */
   async analyzeFood(data) {
     try {
