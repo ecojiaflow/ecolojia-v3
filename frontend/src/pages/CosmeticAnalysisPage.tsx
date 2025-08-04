@@ -24,7 +24,8 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import { ScoreGauge } from '../components/analysis/ScoreGauge';
 import { IngredientsList } from '../components/cosmetics/IngredientsList';
-import { CertificationBadges } from '../components/cosmetics/CertificationBadges';
+import CertificationBadges from '../components/cosmetics/CertificationBadges';
+
 
 interface CosmeticAnalysis {
   scores: {
