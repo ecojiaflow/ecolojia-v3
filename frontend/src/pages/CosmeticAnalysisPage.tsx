@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   AlertTriangle,
   Droplet,
@@ -20,8 +20,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productService } from '../services/productService';
-import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { ErrorMessage } from '../components/common/ErrorMessage';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 import { ScoreGauge } from '../components/analysis/ScoreGauge';
 import { IngredientsList } from '../components/cosmetics/IngredientsList';
 import { CertificationBadges } from '../components/cosmetics/CertificationBadges';
