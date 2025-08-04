@@ -1,4 +1,3 @@
-// PATH: netlify.toml
 [build]
   base = "frontend"
   command = "npm run build"
