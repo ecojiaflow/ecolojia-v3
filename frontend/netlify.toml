@@ -1,4 +1,6 @@
+// PATH: netlify.toml
 [build]
+  base = "frontend"
   command = "npm run build"
   publish = "dist"
 
@@ -33,7 +35,7 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Proxy API vers le backend (optionnel mais pratique)
+# Proxy API vers le backend
 [[redirects]]
   from = "/api/*"
   to = "https://ecolojia-backend-working.onrender.com/api/:splat"
