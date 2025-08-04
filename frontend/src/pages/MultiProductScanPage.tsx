@@ -1,459 +1,389 @@
-// PATH: frontend/ecolojiaFrontV3/src/pages/MultiProductScanPage.tsx
-import React, { useState, useCallback } from 'react';
+// frontend/src/pages/MultiScanPage.tsx
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Search, ArrowLeft, Sparkles, Apple, Droplets } from 'lucide-react';
+import { 
+  Sparkles, 
+  Search, 
+  Camera, 
+  Package, 
+  Plus, 
+  X, 
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+  CheckCircle,
+  Beaker,
+  Droplet,
+  Apple
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { analysisService } from '../services/analysisService';
+import { useAuth } from '../contexts/AuthContext';
 
-// ✅ IMPORTS CORRIGÉS avec les bons chemins
-import { CosmeticsAnalyzer, DetergentsAnalyzer } from '../components/analysis/CosmeticsAnalyzer';
-import { CosmeticAnalysisDisplay, DetergentAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
-
-// Composant CategorySelector intégré pour éviter les problèmes d'import
-interface CategorySelectorProps {
-  selectedCategory: 'food' | 'cosmetics' | 'detergents';
-  onCategoryChange: (category: 'food' | 'cosmetics' | 'detergents') => void;
-  className?: string;
+interface Product {
+  id: string;
+  name: string;
+  barcode?: string;
+  category: 'food' | 'cosmetic' | 'detergent';
+  status: 'pending' | 'analyzing' | 'completed' | 'error';
+  result?: any;
+  error?: string;
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({
-  selectedCategory,
-  onCategoryChange,
-  className = ''
-}) => {
-  const categories = [
-    {
-      id: 'food' as const,
-      name: 'Alimentaire',
-      icon: Apple,
-      description: 'Analyse NOVA & ultra-transformation',
-      examples: 'Plats préparés, boissons, snacks...',
-      color: 'green',
-      stats: '2M+ produits analysés'
-    },
-    {
-      id: 'cosmetics' as const,
-      name: 'Cosmétiques',
-      icon: Sparkles,
-      description: 'Perturbateurs endocriniens & allergènes',
-      examples: 'Crèmes, shampooings, maquillage...',
-      color: 'pink',
-      stats: '500K+ produits INCI'
-    },
-    {
-      id: 'detergents' as const,
-      name: 'Détergents',
-      icon: Droplets,
-      description: 'Impact environnemental & toxicité',
-      examples: 'Lessives, produits ménagers...',
-      color: 'blue',
-      stats: '200K+ formules analysées'
-    }
-  ];
+const MultiScanPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<'food' | 'cosmetic' | 'detergent'>('food');
 
-  const getColorClasses = (color: string, isSelected: boolean) => {
-    const colorMap = {
-      green: {
-        border: isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300',
-        icon: 'text-green-600',
-        badge: 'bg-green-100 text-green-800'
-      },
-      pink: {
-        border: isSelected ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-pink-300',
-        icon: 'text-pink-600',
-        badge: 'bg-pink-100 text-pink-800'
-      },
-      blue: {
-        border: isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300',
-        icon: 'text-blue-600',
-        badge: 'bg-blue-100 text-blue-800'
-      }
+  // Ajouter un produit à analyser
+  const addProduct = (name: string, barcode?: string) => {
+    const newProduct: Product = {
+      id: Date.now().toString(),
+      name,
+      barcode,
+      category: selectedCategory,
+      status: 'pending'
     };
-    return colorMap[color];
+    setProducts([...products, newProduct]);
+    setShowAddModal(false);
+    setSearchQuery('');
+  };
+
+  // Supprimer un produit
+  const removeProduct = (id: string) => {
+    setProducts(products.filter(p => p.id !== id));
+  };
+
+  // Lancer l'analyse batch
+  const startBatchAnalysis = async () => {
+    if (products.length === 0) return;
+    
+    setIsAnalyzing(true);
+    
+    // Analyser chaque produit
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+      
+      // Mettre à jour le statut
+      setProducts(prev => prev.map(p => 
+        p.id === product.id ? { ...p, status: 'analyzing' } : p
+      ));
+      
+      try {
+        // Appel API selon la catégorie
+        const result = await analysisService.analyze({
+          name: product.name,
+          barcode: product.barcode,
+          category: product.category,
+          ingredients: '' // À améliorer avec un vrai input
+        });
+        
+        // Mettre à jour avec le résultat
+        setProducts(prev => prev.map(p => 
+          p.id === product.id 
+            ? { ...p, status: 'completed', result } 
+            : p
+        ));
+      } catch (error: any) {
+        // En cas d'erreur
+        setProducts(prev => prev.map(p => 
+          p.id === product.id 
+            ? { ...p, status: 'error', error: error.message } 
+            : p
+        ));
+      }
+      
+      // Petit délai entre les analyses
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    setIsAnalyzing(false);
+  };
+
+  // Obtenir l'icône selon la catégorie
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'food': return <Apple className="w-5 h-5" />;
+      case 'cosmetic': return <Beaker className="w-5 h-5" />;
+      case 'detergent': return <Droplet className="w-5 h-5" />;
+      default: return <Package className="w-5 h-5" />;
+    }
+  };
+
+  // Obtenir la couleur selon le statut
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'text-green-600';
+      case 'analyzing': return 'text-blue-600';
+      case 'error': return 'text-red-600';
+      default: return 'text-gray-400';
+    }
   };
 
   return (
-    <div className={`category-selector ${className}`}>
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Quelle catégorie souhaitez-vous analyser ?
-        </h2>
-        <p className="text-gray-600">
-          Notre IA adapte son analyse scientifique selon le type de produit
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {categories.map((category) => {
-          const colors = getColorClasses(category.color, selectedCategory === category.id);
-          const IconComponent = category.icon;
-          
-          return (
-            <div
-              key={category.id}
-              className={`category-card cursor-pointer p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${colors.border}`}
-              onClick={() => onCategoryChange(category.id)}
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4">
+            <Sparkles className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Analyse Multi-Produits
+          </h1>
+          <p className="text-gray-600">
+            Analysez plusieurs produits en une seule fois avec notre IA
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-white rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-gray-800">{products.length}</div>
+            <div className="text-sm text-gray-500">Produits</div>
+          </div>
+          <div className="bg-white rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {products.filter(p => p.status === 'completed').length}
+            </div>
+            <div className="text-sm text-gray-500">Analysés</div>
+          </div>
+          <div className="bg-white rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">
+              {user?.subscription?.tier === 'premium' ? '∞' : '10'}
+            </div>
+            <div className="text-sm text-gray-500">Limite</div>
+          </div>
+        </div>
+
+        {/* Liste des produits */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Produits à analyser
+            </h2>
+            <button
+              onClick={() => setShowAddModal(true)}
+              disabled={products.length >= 10 && user?.subscription?.tier !== 'premium'}
+              className="inline-flex items-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <div className="text-center">
-                {/* Icon */}
-                <div className={`mx-auto w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center mb-4 ${colors.icon}`}>
-                  <IconComponent size={32} />
-                </div>
-                
-                {/* Title */}
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  {category.name}
-                </h3>
-                
-                {/* Description */}
-                <p className="text-sm text-gray-600 mb-3">
-                  {category.description}
-                </p>
-                
-                {/* Examples */}
-                <p className="text-xs text-gray-500 mb-4 italic">
-                  {category.examples}
-                </p>
-                
-                {/* Stats badge */}
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${colors.badge}`}>
-                  {category.stats}
-                </div>
-                
-                {/* Selection indicator */}
-                {selectedCategory === category.id && (
-                  <div className="mt-4">
-                    <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-green-500 to-blue-500 text-white">
-                      ✓ Sélectionné
+              <Plus className="w-4 h-4 mr-2" />
+              Ajouter
+            </button>
+          </div>
+
+          {products.length === 0 ? (
+            <div className="text-center py-12">
+              <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">Aucun produit ajouté</p>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="mt-4 text-purple-600 hover:text-purple-700 font-medium"
+              >
+                Ajouter votre premier produit
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {products.map((product) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${
+                      product.category === 'food' ? 'bg-green-100' :
+                      product.category === 'cosmetic' ? 'bg-pink-100' :
+                      'bg-blue-100'
+                    }`}>
+                      {getCategoryIcon(product.category)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">{product.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {product.barcode || product.category}
+                      </p>
                     </div>
                   </div>
-                )}
-              </div>
+
+                  <div className="flex items-center gap-3">
+                    {/* Status */}
+                    <div className={`flex items-center gap-2 ${getStatusColor(product.status)}`}>
+                      {product.status === 'analyzing' && (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      )}
+                      {product.status === 'completed' && (
+                        <CheckCircle className="w-4 h-4" />
+                      )}
+                      {product.status === 'error' && (
+                        <AlertCircle className="w-4 h-4" />
+                      )}
+                      <span className="text-sm font-medium">
+                        {product.status === 'pending' && 'En attente'}
+                        {product.status === 'analyzing' && 'Analyse...'}
+                        {product.status === 'completed' && 'Terminé'}
+                        {product.status === 'error' && 'Erreur'}
+                      </span>
+                    </div>
+
+                    {/* Actions */}
+                    {product.status === 'completed' && (
+                      <button
+                        onClick={() => navigate(`/products/${product.id}/${product.category}`)}
+                        className="text-purple-600 hover:text-purple-700"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    )}
+                    
+                    {product.status !== 'analyzing' && (
+                      <button
+                        onClick={() => removeProduct(product.id)}
+                        className="text-gray-400 hover:text-red-600"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          );
-        })}
-      </div>
-      
-      {/* Benefits section */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200">
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-green-600" />
-            </div>
-          </div>
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-2">
-              🧠 IA Scientifique Adaptative
-            </h4>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Notre intelligence artificielle adapte automatiquement ses critères d'analyse selon la catégorie :
-              <span className="font-medium"> Classification NOVA</span> pour l'alimentaire,
-              <span className="font-medium"> analyse INCI</span> pour les cosmétiques,
-              <span className="font-medium"> impact environnemental</span> pour les détergents.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Interface principale
-interface MultiProductScanPageProps {}
-
-type ProductCategory = 'food' | 'cosmetics' | 'detergents';
-
-export const MultiProductScanPage: React.FC<MultiProductScanPageProps> = () => {
-  const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('food');
-  const [scanMode, setScanMode] = useState<'category' | 'scan' | 'results'>('category');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const [productName, setProductName] = useState('');
-
-  // Mock données selon catégorie pour demo
-  const getMockData = (category: ProductCategory) => {
-    switch (category) {
-      case 'cosmetics':
-        return {
-          productName: 'Crème Hydratante Visage',
-          composition: 'aqua, glycerin, cetyl alcohol, dimethicone, butylparaben, methylparaben, parfum, limonene, linalool, benzyl benzoate',
-          barcode: '3401234567890'
-        };
-      case 'detergents':
-        return {
-          productName: 'Lessive Liquide Concentrée',
-          composition: 'sodium lauryl sulfate, sodium laureth sulfate, phosphates, enzymes, parfum, colorants, conservateurs',
-          barcode: '3501234567891'
-        };
-      default:
-        return {
-          productName: 'Produit Alimentaire',
-          composition: 'Ingrédients alimentaires...',
-          barcode: '3301234567892'
-        };
-    }
-  };
-
-  const handleCategoryChange = useCallback((category: ProductCategory) => {
-    setSelectedCategory(category);
-  }, []);
-
-  const handleStartScan = useCallback(() => {
-    setScanMode('scan');
-  }, []);
-
-  const handleScanProduct = useCallback(async () => {
-    setIsAnalyzing(true);
-    
-    try {
-      // Simulation scan avec données mock
-      const mockData = getMockData(selectedCategory);
-      setProductName(mockData.productName);
-      
-      // Analyse selon catégorie
-      let result;
-      if (selectedCategory === 'cosmetics') {
-        const analyzer = new CosmeticsAnalyzer();
-        result = await analyzer.analyzeCosmetic(mockData.composition, mockData.productName);
-      } else if (selectedCategory === 'detergents') {
-        const analyzer = new DetergentsAnalyzer();
-        result = await analyzer.analyzeDetergent(mockData.composition, mockData.productName);
-      } else {
-        // Redirection vers analyse alimentaire existante
-        navigate('/scan');
-        return;
-      }
-      
-      setAnalysisResult(result);
-      setScanMode('results');
-      
-    } catch (error) {
-      console.error('Erreur analyse:', error);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  }, [selectedCategory, navigate]);
-
-  const handleBackToCategories = useCallback(() => {
-    setScanMode('category');
-    setAnalysisResult(null);
-    setProductName('');
-  }, []);
-
-  const handleNewScan = useCallback(() => {
-    setScanMode('scan');
-    setAnalysisResult(null);
-    setProductName('');
-  }, []);
-
-  const renderCategorySelection = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Retour</span>
-          </button>
-          
-          <div className="flex items-center space-x-2">
-            <Sparkles className="w-6 h-6 text-purple-600" />
-            <span className="text-purple-600 font-medium">IA Multi-Produits</span>
-          </div>
+          )}
         </div>
 
-        {/* Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Analyse Multi-Catégories
-          </h1>
-          <p className="text-xl text-gray-600">
-            L'IA qui s'adapte à chaque type de produit
-          </p>
-        </div>
-
-        {/* Category Selector */}
-        <CategorySelector
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
-          className="mb-8"
-        />
-
-        {/* Action Button */}
-        <div className="text-center">
-          <button
-            onClick={handleStartScan}
-            className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-semibold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200"
-          >
-            <Camera className="w-6 h-6 mr-2 inline" />
-            Commencer l'Analyse {selectedCategory === 'food' ? 'Alimentaire' : 
-                                selectedCategory === 'cosmetics' ? 'Cosmétique' : 'Détergent'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderScanInterface = () => (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={handleBackToCategories}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Changer catégorie</span>
-          </button>
-          
+        {/* Bouton analyser */}
+        {products.length > 0 && (
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Analyse {selectedCategory === 'cosmetics' ? 'Cosmétique' : 'Détergent'}
-            </h2>
-          </div>
-        </div>
-
-        {/* Scan Simulation */}
-        <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-          <div className="mb-6">
-            <div className="w-32 h-32 mx-auto bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
-              <Camera className="w-16 h-16 text-blue-600" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
-              Scanner votre produit
-            </h3>
-            <p className="text-gray-600">
-              {selectedCategory === 'cosmetics' 
-                ? 'Analysez la composition INCI et détectez les perturbateurs endocriniens'
-                : 'Évaluez l\'impact environnemental et la toxicité aquatique'
-              }
-            </p>
-          </div>
-
-          {/* Demo Analysis Button */}
-          <button
-            onClick={handleScanProduct}
-            disabled={isAnalyzing}
-            className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${
-              isAnalyzing
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg transform hover:scale-105'
-            }`}
-          >
-            {isAnalyzing ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                <span>Analyse en cours...</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Sparkles className="w-5 h-5" />
-                <span>Analyser Produit Demo</span>
-              </div>
-            )}
-          </button>
-
-          <p className="text-xs text-gray-500 mt-4">
-            Version demo - Utilise des données d'exemple pour illustration
-          </p>
-        </div>
-
-        {/* Category specific info */}
-        <div className="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h4 className="font-semibold text-blue-800 mb-2">
-            {selectedCategory === 'cosmetics' ? '🧴 Analyse Cosmétique' : '🧽 Analyse Détergent'}
-          </h4>
-          <p className="text-sm text-blue-700">
-            {selectedCategory === 'cosmetics' 
-              ? 'Notre IA analyse la liste INCI pour détecter les perturbateurs endocriniens, allergènes et évaluer la naturalité selon les standards européens.'
-              : 'Notre IA évalue l\'impact environnemental, la biodégradabilité et la toxicité aquatique selon les critères Ecolabel Européen.'
-            }
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderResults = () => (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">{productName}</h1>
-            <p className="text-gray-600">
-              Analyse {selectedCategory === 'cosmetics' ? 'cosmétique' : 'détergent'} complète
-            </p>
-          </div>
-          
-          <div className="flex space-x-3">
             <button
-              onClick={handleNewScan}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              onClick={startBatchAnalysis}
+              disabled={isAnalyzing || products.every(p => p.status === 'completed')}
+              className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Camera className="w-4 h-4 mr-2 inline" />
-              Nouveau scan
-            </button>
-            <button
-              onClick={handleBackToCategories}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Changer catégorie
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Analyse en cours...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Analyser tous les produits
+                </>
+              )}
             </button>
           </div>
-        </div>
-
-        {/* Analysis Results */}
-        {selectedCategory === 'cosmetics' && analysisResult && (
-          <CosmeticAnalysisDisplay 
-            analysis={analysisResult} 
-            productName={productName}
-          />
-        )}
-        
-        {selectedCategory === 'detergents' && analysisResult && (
-          <DetergentAnalysisDisplay 
-            analysis={analysisResult} 
-            productName={productName}
-          />
         )}
 
-        {/* Actions */}
-        <div className="mt-8 flex justify-center space-x-4">
-          <button
-            onClick={() => navigate('/search')}
-            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center"
-          >
-            <Search className="w-5 h-5 mr-2" />
-            Rechercher alternatives
-          </button>
-          
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
-          >
-            Voir mon dashboard
-          </button>
-        </div>
+        {/* Note Premium */}
+        {user?.subscription?.tier !== 'premium' && products.length >= 5 && (
+          <div className="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+            <p className="text-purple-700 mb-2">
+              Limite gratuite : 10 produits par analyse
+            </p>
+            <button
+              onClick={() => navigate('/premium')}
+              className="text-purple-600 hover:text-purple-700 font-medium"
+            >
+              Passer à Premium pour des analyses illimitées →
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Modal d'ajout */}
+      <AnimatePresence>
+        {showAddModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            onClick={() => setShowAddModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="bg-white rounded-lg p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Ajouter un produit
+              </h3>
+
+              {/* Sélection catégorie */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Catégorie
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { value: 'food', label: 'Alimentaire', icon: '🍎' },
+                    { value: 'cosmetic', label: 'Cosmétique', icon: '✨' },
+                    { value: 'detergent', label: 'Détergent', icon: '💧' }
+                  ].map((cat) => (
+                    <button
+                      key={cat.value}
+                      onClick={() => setSelectedCategory(cat.value as any)}
+                      className={`p-3 rounded-lg border-2 transition-colors ${
+                        selectedCategory === cat.value
+                          ? 'border-purple-500 bg-purple-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">{cat.icon}</div>
+                      <div className="text-sm font-medium">{cat.label}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recherche produit */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nom du produit
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Ex: Nutella, Shampooing L'Oréal..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => searchQuery && addProduct(searchQuery)}
+                  disabled={!searchQuery}
+                  className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
-
-  // Render selon mode
-  switch (scanMode) {
-    case 'category':
-      return renderCategorySelection();
-    case 'scan':
-      return renderScanInterface();
-    case 'results':
-      return renderResults();
-    default:
-      return renderCategorySelection();
-  }
 };
 
-export default MultiProductScanPage;
+export default MultiScanPage;

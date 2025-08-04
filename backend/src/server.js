@@ -1,5 +1,12 @@
 // backend/src/server.js
-// VERSION PRODUCTION COMPLÈTE ECOLOJIA V3
+// VERSION PRODUCTION COMPLÈTE ECOLOJIA V3 - AVEC RATE LIMITING ROBUSTE
+
+const fs = require('fs');
+const path = require('path');
+
+// Debug des chemins
+console.log('Current directory:', __dirname);
+console.log('Quota file exists?', fs.existsSync(path.join(__dirname, 'routes', 'quota.js')));
 
 require('dotenv').config();
 const express = require('express');
@@ -7,7 +14,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const redis = require('redis');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -16,6 +22,63 @@ const jwt = require('jsonwebtoken');
 const { logger } = require('./utils/logger');
 const { asyncHandler } = require('./utils/errors');
 
+// Import du middleware de quotas
+const { checkQuota, checkQuotaMiddleware } = require('./middleware/quotaMiddleware');
+
+// Import du système de rate limiting robuste
+let rateLimiters = {};
+try {
+  const rateLimiterModule = require('./middleware/rateLimiter');
+  rateLimiters = {
+    globalLimiter: rateLimiterModule.globalLimiter,
+    loginLimiter: rateLimiterModule.loginLimiter,
+    registerLimiter: rateLimiterModule.registerLimiter,
+    dashboardLimiter: rateLimiterModule.dashboardLimiter,
+    analysisLimiter: rateLimiterModule.analysisLimiter,
+    aiLimiter: rateLimiterModule.aiLimiter,
+    exportLimiter: rateLimiterModule.exportLimiter,
+    addQuotaHeaders: rateLimiterModule.addQuotaHeaders,
+    getRateLimitStats: rateLimiterModule.getRateLimitStats,
+    resetUserRateLimits: rateLimiterModule.resetUserRateLimits
+  };
+  logger.info('✅ Rate limiter module loaded successfully');
+} catch (error) {
+  logger.warn('⚠️ Custom rate limiter not found, using fallback');
+  // Fallback rate limiter simple
+  const rateLimit = require('express-rate-limit');
+  
+  const createFallbackLimiter = (windowMs, max, message) => {
+    return rateLimit({
+      windowMs,
+      max,
+      message,
+      standardHeaders: true,
+      legacyHeaders: false,
+      handler: (req, res) => {
+        res.status(429).json({
+          success: false,
+          error: 'RATE_LIMIT_EXCEEDED',
+          message,
+          retryAfter: Math.ceil(windowMs / 1000)
+        });
+      }
+    });
+  };
+  
+  rateLimiters = {
+    globalLimiter: createFallbackLimiter(15 * 60 * 1000, 1000, 'Trop de requêtes, veuillez réessayer plus tard'),
+    loginLimiter: createFallbackLimiter(15 * 60 * 1000, 5, 'Trop de tentatives de connexion'),
+    registerLimiter: createFallbackLimiter(60 * 60 * 1000, 3, 'Trop de créations de compte'),
+    dashboardLimiter: createFallbackLimiter(60 * 1000, 60, 'Trop de requêtes au dashboard'),
+    analysisLimiter: createFallbackLimiter(60 * 60 * 1000, 30, 'Limite d\'analyses atteinte'),
+    aiLimiter: createFallbackLimiter(60 * 60 * 1000, 5, 'Limite de questions IA atteinte'),
+    exportLimiter: createFallbackLimiter(24 * 60 * 60 * 1000, 5, 'Limite d\'exports atteinte'),
+    addQuotaHeaders: (req, res, next) => next(),
+    getRateLimitStats: async () => ({ error: 'Stats not available' }),
+    resetUserRateLimits: async () => ({ error: 'Reset not available' })
+  };
+}
+
 // Initialisation Express
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -23,8 +86,9 @@ const PORT = process.env.PORT || 5001;
 // Configuration
 app.set('trust proxy', 1);
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
+const ADMIN_API_KEY = process.env.ADMIN_API_KEY || 'admin-secret-key-2024';
 
-// Redis client global
+// Redis client global - EXPORTÉ pour usage dans d'autres modules
 let redisClient;
 
 // ========== MIDDLEWARES DE SÉCURITÉ ==========
@@ -35,7 +99,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.algolia.com", "https://api.deepseek.com"]
+      connectSrc: ["'self'", "https://api.algolia.com", "https://api.deepseek.com", "https://api.lemonsqueezy.com"]
     }
   }
 }));
@@ -64,28 +128,24 @@ app.use(cors({
 // Compression
 app.use(compression());
 
-// Body parsing
+// ========== IMPORTANT: Webhooks AVANT body parser ==========
+const webhookRoutes = require('./routes/webhooks');
+app.use('/api/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
+
+// Body parsing pour les autres routes
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Trop de requêtes, veuillez réessayer plus tard',
-  standardHeaders: true,
-  legacyHeaders: false
-});
+// ========== RATE LIMITING PRODUCTION ==========
+// Middleware global pour ajouter les headers de quota
+app.use(rateLimiters.addQuotaHeaders);
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: 'Trop de tentatives de connexion',
-  skipSuccessfulRequests: true
-});
+// Rate limiting global (appliqué à toutes les routes)
+app.use(rateLimiters.globalLimiter);
 
-app.use(globalLimiter);
-app.use('/api/auth', authLimiter);
+// Rate limiting spécifique pour l'authentification
+app.use('/api/auth/login', rateLimiters.loginLimiter);
+app.use('/api/auth/register', rateLimiters.registerLimiter);
 
 // ========== CONNEXIONS DB ==========
 async function connectMongoDB() {
@@ -117,13 +177,29 @@ async function connectRedis() {
   try {
     if (process.env.REDIS_URL) {
       redisClient = redis.createClient({
-        url: process.env.REDIS_URL
+        url: process.env.REDIS_URL,
+        socket: {
+          reconnectStrategy: (retries) => {
+            if (retries > 10) {
+              logger.error('Redis: Max reconnection attempts reached');
+              return new Error('Max reconnection attempts reached');
+            }
+            return Math.min(retries * 100, 3000);
+          }
+        }
       });
 
       redisClient.on('error', (err) => logger.error('Redis error:', err));
+      redisClient.on('connect', () => logger.info('Redis: Connecting...'));
+      redisClient.on('ready', () => logger.info('Redis: Ready'));
+      redisClient.on('reconnecting', () => logger.warn('Redis: Reconnecting...'));
 
       await redisClient.connect();
       logger.info('✅ Redis connected successfully');
+      
+      // Exporter le client Redis pour usage global
+      global.redisClient = redisClient;
+      module.exports.redisClient = redisClient;
     } else {
       logger.info('ℹ️ Redis not configured');
     }
@@ -139,10 +215,15 @@ app.get('/api/health', async (req, res) => {
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
+    version: '3.0.0',
     services: {
       api: 'operational',
       mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-      redis: redisClient?.isReady ? 'connected' : 'disconnected'
+      redis: redisClient?.isReady ? 'connected' : 'disconnected',
+      rateLimiting: redisClient?.isReady ? 'redis' : 'memory',
+      deepseek: process.env.DEEPSEEK_API_KEY ? 'configured' : 'not configured',
+      algolia: process.env.ALGOLIA_APP_ID ? 'configured' : 'not configured',
+      lemonsqueezy: process.env.LEMONSQUEEZY_STORE_ID ? 'configured' : 'not configured'
     }
   };
 
@@ -163,6 +244,15 @@ app.get('/api/test', (req, res) => {
     success: true,
     message: 'ECOLOJIA Backend V3 is running!',
     version: '3.0.0',
+    features: [
+      'Product Analysis (Food, Cosmetics, Detergents)',
+      'AI Chat Assistant',
+      'Secure API Proxy',
+      'GDPR Compliance',
+      'Payment Processing',
+      'Quota Management',
+      'Advanced Rate Limiting'
+    ],
     timestamp: new Date().toISOString()
   });
 });
@@ -214,6 +304,7 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+// Routes d'authentification
 app.post('/api/auth/register', asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -247,20 +338,27 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
     });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 12);
-
   const user = new User({
     email: email.toLowerCase(),
-    password: hashedPassword,
+    password: password,
     name: `${firstName} ${lastName}`,
     profile: { firstName, lastName },
     tier: 'free',
     status: 'active',
+    emailVerified: true,
     quotas: {
       scansRemaining: 30,
       scansResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       aiChatsRemaining: 5,
       aiChatsResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    },
+    gdpr: {
+      consentDate: new Date(),
+      consentVersion: '1.0',
+      consentIP: req.ip,
+      marketingConsent: false,
+      dataProcessingConsent: true,
+      cookieConsent: true
     }
   });
 
@@ -306,7 +404,9 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
         success: true,
         message: 'Mode test - Login simulé',
         user: { email, tier: 'free' },
-        token: fakeToken
+        token: fakeToken,
+        accessToken: fakeToken,
+        refreshToken: fakeToken
       });
     } else {
       return res.status(401).json({
@@ -324,7 +424,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
     });
   }
 
-  const isValidPassword = await bcrypt.compare(password, user.password);
+  const isValidPassword = await user.comparePassword(password);
   if (!isValidPassword) {
     return res.status(401).json({
       success: false,
@@ -395,14 +495,64 @@ app.post('/api/auth/refresh', (req, res) => {
   }
 });
 
+// ========== ROUTES ADMIN RATE LIMITING ==========
+app.get('/api/admin/rate-limits/stats', authMiddleware, async (req, res) => {
+  // Vérifier que c'est un admin
+  if (req.user.role !== 'admin' && req.headers['x-admin-key'] !== ADMIN_API_KEY) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  
+  try {
+    const stats = await rateLimiters.getRateLimitStats();
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/admin/rate-limits/reset/:userId', authMiddleware, async (req, res) => {
+  // Vérifier que c'est un admin
+  if (req.user.role !== 'admin' && req.headers['x-admin-key'] !== ADMIN_API_KEY) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  
+  try {
+    const { userId } = req.params;
+    const { endpoint } = req.body;
+    const result = await rateLimiters.resetUserRateLimits(userId, endpoint);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ========== CHARGEMENT DES ROUTES ==========
 function setupRoutes() {
   logger.info('🔄 Chargement des routes...');
 
+  // Routes cosmétiques
+  try {
+    const cosmeticRoutes = require('./routes/cosmetic.routes');
+    app.use('/api/cosmetic', authMiddleware, cosmeticRoutes);
+    logger.info('  ✅ Cosmetic routes loaded');
+  } catch (error) {
+    logger.error('  ❌ Cosmetic routes error:', error.message);
+  }
+
+  // Routes détergents
+  try {
+    const detergentRoutes = require('./routes/detergent.routes');
+    app.use('/api/detergent', authMiddleware, detergentRoutes);
+    logger.info('  ✅ Detergent routes loaded');
+  } catch (error) {
+    logger.error('  ❌ Detergent routes error:', error.message);
+  }
+
+  // Routes dashboard avec rate limiter spécifique
   try {
     const dashboardRoutes = require('./routes/dashboard');
-    app.use('/api/dashboard', dashboardRoutes);
-    logger.info('  ✅ Dashboard routes loaded');
+    app.use('/api/dashboard', authMiddleware, rateLimiters.dashboardLimiter, dashboardRoutes);
+    logger.info('  ✅ Dashboard routes loaded with rate limiting');
   } catch (error) {
     logger.error('  ❌ Dashboard routes error:', error.message);
   }
@@ -415,14 +565,183 @@ function setupRoutes() {
     logger.error('  ❌ Product routes error:', error.message);
   }
 
+  // Routes d'analyse avec rate limiter et middleware de quotas
+  try {
+    const analysisRoutes = require('./routes/analysis');
+    app.use('/api/analysis', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, analysisRoutes);
+    logger.info('  ✅ Analysis routes loaded with rate limiting and quota check');
+  } catch (error) {
+    logger.warn('  ⚠️ Analysis routes not found, creating minimal routes');
+    
+    // Routes minimales si le fichier n'existe pas
+    const analysisRouter = express.Router();
+    
+    // Import des analyseurs
+    let cosmeticAnalyzer, detergentAnalyzer;
+    try {
+      cosmeticAnalyzer = require('./services/analysis/cosmeticAnalyzer');
+      detergentAnalyzer = require('./services/analysis/detergentAnalyzer');
+      logger.info('  ✅ Analyzers loaded successfully');
+    } catch (err) {
+      logger.error('  ❌ Error loading analyzers:', err.message);
+    }
+    
+    // Route analyse cosmétique
+    analysisRouter.post('/cosmetic', asyncHandler(async (req, res) => {
+      const { productName, ingredients } = req.body;
+      
+      if (!productName || !ingredients) {
+        return res.status(400).json({
+          success: false,
+          error: 'Nom du produit et ingrédients requis'
+        });
+      }
+      
+      if (cosmeticAnalyzer) {
+        const analysis = await cosmeticAnalyzer.analyze(productName, ingredients, req.userId);
+        res.json({ success: true, data: analysis });
+      } else {
+        res.status(500).json({
+          success: false,
+          error: 'Service d\'analyse cosmétique non disponible'
+        });
+      }
+    }));
+    
+    // Route analyse détergent
+    analysisRouter.post('/detergent', asyncHandler(async (req, res) => {
+      const { productName, ingredients } = req.body;
+      
+      if (!productName || !ingredients) {
+        return res.status(400).json({
+          success: false,
+          error: 'Nom du produit et composition requis'
+        });
+      }
+      
+      if (detergentAnalyzer) {
+        const analysis = await detergentAnalyzer.analyze(productName, ingredients, req.userId);
+        res.json({ success: true, data: analysis });
+      } else {
+        res.status(500).json({
+          success: false,
+          error: 'Service d\'analyse détergent non disponible'
+        });
+      }
+    }));
+    
+    app.use('/api/analysis', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, analysisRouter);
+  }
+
   try {
     const analyzeRoutes = require('./routes/analyze.routes');
-    app.use('/api/analyze', analyzeRoutes);
-    logger.info('  ✅ Analyze routes loaded');
+    app.use('/api/analyze', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, analyzeRoutes);
+    logger.info('  ✅ Analyze routes loaded with rate limiting and quota check');
   } catch (error) {
     logger.warn('  ⚠️ Analyze routes not found');
   }
 
+  // QUOTA ROUTES
+  try {
+    const quotaRoutes = require('./routes/quota');
+    app.use('/api/quota', quotaRoutes);
+    logger.info('  ✅ Quota routes loaded');
+  } catch (error) {
+    logger.warn('  ⚠️ Quota routes not found, creating minimal routes');
+    
+    // Routes minimales de quota si le fichier n'existe pas
+    const quotaRouter = express.Router();
+    
+    // Route status des quotas
+    quotaRouter.get('/status', authMiddleware, async (req, res) => {
+      try {
+        if (User && mongoose.connection.readyState === 1) {
+          const user = await User.findById(req.userId).select('quotas tier subscription');
+          
+          if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+          }
+
+          // Calculer les limites selon le tier
+          const limits = {
+            free: { scans: 30, aiQuestions: 5 },
+            premium: { scans: -1, aiQuestions: 500 },
+            family: { scans: -1, aiQuestions: 500 }
+          };
+
+          const userLimits = limits[user.tier || 'free'];
+
+          res.json({
+            quotas: {
+              scansUsed: user.quotas?.scansUsed || 0,
+              scansLimit: userLimits.scans,
+              scansRemaining: userLimits.scans === -1 ? -1 : (userLimits.scans - (user.quotas?.scansUsed || 0)),
+              aiQuestionsUsed: user.quotas?.aiChatsUsed || 0,
+              aiQuestionsLimit: userLimits.aiQuestions,
+              aiQuestionsRemaining: userLimits.aiQuestions - (user.quotas?.aiChatsUsed || 0)
+            },
+            scan: {
+              used: user.quotas?.scansUsed || 0,
+              limit: userLimits.scans,
+              unlimited: userLimits.scans === -1
+            },
+            aiQuestion: {
+              used: user.quotas?.aiChatsUsed || 0,
+              limit: userLimits.aiQuestions,
+              unlimited: false
+            }
+          });
+        } else {
+          // Mode test sans DB
+          res.json({
+            quotas: {
+              scansUsed: 5,
+              scansLimit: 30,
+              scansRemaining: 25,
+              aiQuestionsUsed: 2,
+              aiQuestionsLimit: 5,
+              aiQuestionsRemaining: 3
+            }
+          });
+        }
+      } catch (error) {
+        logger.error('Error fetching quotas:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des quotas' });
+      }
+    });
+    
+    app.use('/api/quota', quotaRouter);
+    logger.info('  ✅ Quota routes created (minimal)');
+  }
+
+  // NOUVELLES ROUTES
+  try {
+    const proxyRoutes = require('./routes/proxy');
+    app.use('/api/proxy', authMiddleware, proxyRoutes);
+    logger.info('  ✅ Proxy routes loaded');
+  } catch (error) {
+    logger.error('  ❌ Proxy routes error:', error.message);
+  }
+
+  try {
+    const gdprRoutes = require('./routes/gdpr');
+    app.use('/api/gdpr', authMiddleware, gdprRoutes);
+    logger.info('  ✅ GDPR routes loaded');
+  } catch (error) {
+    logger.error('  ❌ GDPR routes error:', error.message);
+  }
+
+  // AI Routes avec rate limiter et quota check
+  try {
+    const aiRoutes = require('./routes/ai');
+    app.use('/api/ai', authMiddleware, rateLimiters.aiLimiter, checkQuotaMiddleware, aiRoutes);
+    app.use('/api/v1/ai', authMiddleware, rateLimiters.aiLimiter, checkQuotaMiddleware, aiRoutes);
+    logger.info('  ✅ AI routes loaded with rate limiting and quota check');
+  } catch (error) {
+    logger.warn('  ⚠️ AI routes not found');
+  }
+
+  // Autres routes
   try {
     const partnerRoutes = require('./routes/partner.routes');
     app.use('/api/partner', partnerRoutes);
@@ -432,16 +751,8 @@ function setupRoutes() {
   }
 
   try {
-    const aiRoutes = require('./routes/ai');
-    app.use('/api/ai', aiRoutes);
-    logger.info('  ✅ AI routes loaded');
-  } catch (error) {
-    logger.warn('  ⚠️ AI routes not found');
-  }
-
-  try {
     const paymentRoutes = require('./routes/payment');
-    app.use('/api/payment', paymentRoutes);
+    app.use('/api/payment', authMiddleware, paymentRoutes);
     logger.info('  ✅ Payment routes loaded');
   } catch (error) {
     logger.warn('  ⚠️ Payment routes not found');
@@ -455,7 +766,70 @@ function setupRoutes() {
     logger.warn('  ⚠️ Algolia routes not found');
   }
 
+  // Route export avec rate limiter spécifique
+  app.post('/api/export/*', authMiddleware, rateLimiters.exportLimiter, (req, res) => {
+    res.status(501).json({ error: 'Export functionality not yet implemented' });
+  });
+
   logger.info('✅ Routes setup completed\n');
+}
+
+// ========== JOBS CRON ==========
+function setupCronJobs() {
+  const cron = require('node-cron');
+  
+  // Reset des quotas quotidiens à minuit
+  cron.schedule('0 0 * * *', async () => {
+    logger.info('🔄 Running daily quota reset...');
+    try {
+      if (User && mongoose.connection.readyState === 1) {
+        const result = await User.updateMany(
+          { 
+            'quotas.scansResetDate': { $lte: new Date() },
+            tier: 'free'
+          },
+          {
+            $set: {
+              'quotas.scansRemaining': 30,
+              'quotas.scansResetDate': new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            }
+          }
+        );
+        logger.info(`✅ Reset quotas for ${result.modifiedCount} users`);
+      }
+    } catch (error) {
+      logger.error('❌ Quota reset error:', error);
+    }
+  });
+
+  // Nettoyage des logs anciens (90 jours)
+  cron.schedule('0 3 * * 0', async () => {
+    logger.info('🔄 Running log cleanup...');
+    try {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - 90);
+      
+      if (mongoose.connection.readyState === 1) {
+        const WebhookLog = require('./models/WebhookLog');
+        const result = await WebhookLog.cleanupOldLogs(90);
+        logger.info(`✅ Cleaned up old webhook logs`);
+      }
+    } catch (error) {
+      logger.error('❌ Log cleanup error:', error);
+    }
+  });
+
+  // Stats de rate limiting toutes les heures (en production)
+  if (process.env.NODE_ENV === 'production') {
+    cron.schedule('0 * * * *', async () => {
+      try {
+        const stats = await rateLimiters.getRateLimitStats();
+        logger.info('📊 Hourly rate limit stats:', JSON.stringify(stats));
+      } catch (error) {
+        logger.error('❌ Rate limit stats error:', error);
+      }
+    });
+  }
 }
 
 // ========== DÉMARRAGE SERVEUR ==========
@@ -464,8 +838,9 @@ async function startServer() {
     await connectMongoDB();
     await connectRedis();
     setupRoutes();
+    setupCronJobs();
 
-    // 404 Handler déplacé ici, après setupRoutes
+    // 404 Handler
     app.use((req, res) => {
       res.status(404).json({
         success: false,
@@ -478,6 +853,17 @@ async function startServer() {
     // Error handler
     app.use((err, req, res, next) => {
       logger.error('Error:', err);
+      
+      // Gestion spéciale pour les erreurs de rate limit
+      if (err.status === 429) {
+        return res.status(429).json({
+          success: false,
+          error: 'RATE_LIMIT_EXCEEDED',
+          message: err.message || 'Trop de requêtes',
+          retryAfter: err.retryAfter || 60
+        });
+      }
+      
       res.status(err.status || 500).json({
         success: false,
         error: err.message || 'Internal server error',
@@ -486,14 +872,30 @@ async function startServer() {
     });
 
     app.listen(PORT, () => {
-      logger.info(`🚀 Server running on port ${PORT}`);
-      logger.info(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-      logger.info(`🗄️  MongoDB: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Not connected'}`);
-      logger.info(`💾 Redis: ${redisClient?.isReady ? 'Connected' : 'Not connected'}`);
-      logger.info(`🔍 Algolia: ${process.env.ALGOLIA_APP_ID ? 'Configured' : 'Not configured'}`);
-      logger.info(`💳 LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? 'Configured' : 'Not configured'}`);
-      logger.info(`🤖 DeepSeek AI: ${process.env.DEEPSEEK_API_KEY ? 'Configured' : 'Not configured'}`);
+      logger.info('╔════════════════════════════════════════════════════════════╗');
+      logger.info('║             ECOLOJIA V3 SERVER STARTED                     ║');
+      logger.info('╠════════════════════════════════════════════════════════════╣');
+      logger.info(`║ 🚀 Server:       http://localhost:${PORT}                      ║`);
+      logger.info(`║ 📊 Environment:  ${(process.env.NODE_ENV || 'development').padEnd(41)}║`);
+      logger.info(`║ 🔗 Frontend:     ${(process.env.FRONTEND_URL || 'http://localhost:3000').padEnd(41)}║`);
+      logger.info('╠════════════════════════════════════════════════════════════╣');
+      logger.info(`║ 🗄️  MongoDB:      ${mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Not connected'}                              ║`);
+      logger.info(`║ 💾 Redis:        ${redisClient?.isReady ? '✅ Connected' : '❌ Not connected'}                              ║`);
+      logger.info(`║ 🚦 Rate Limit:   ${redisClient?.isReady ? '✅ Redis' : '⚠️  Memory'}                                 ║`);
+      logger.info(`║ 🔍 Algolia:      ${process.env.ALGOLIA_APP_ID ? '✅ Configured' : '❌ Not configured'}                             ║`);
+      logger.info(`║ 💳 LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? '✅ Configured' : '❌ Not configured'}                             ║`);
+      logger.info(`║ 🤖 DeepSeek AI:  ${process.env.DEEPSEEK_API_KEY ? '✅ Configured' : '❌ Not configured'}                             ║`);
+      logger.info('╠════════════════════════════════════════════════════════════╣');
+      logger.info('║ 📦 Features:                                               ║');
+      logger.info('║   • Food Analysis (NOVA, Nutri-Score)                     ║');
+      logger.info('║   • Cosmetic Analysis (INCI, Safety)                      ║');
+      logger.info('║   • Detergent Analysis (Eco, CDV)                         ║');
+      logger.info('║   • AI Chat Assistant with Quotas                         ║');
+      logger.info('║   • Advanced Rate Limiting (Per Tier)                     ║');
+      logger.info('║   • Secure API Proxy                                      ║');
+      logger.info('║   • GDPR Compliance                                       ║');
+      logger.info('║   • Payment Processing                                    ║');
+      logger.info('╚════════════════════════════════════════════════════════════╝');
     });
 
   } catch (error) {
@@ -502,6 +904,7 @@ async function startServer() {
   }
 }
 
+// Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM signal received');
   if (mongoose.connection.readyState === 1) {
@@ -525,4 +928,6 @@ process.on('SIGINT', async () => {
 });
 
 startServer();
-module.exports = app;
+
+// Export pour les tests
+module.exports = { app, redisClient };

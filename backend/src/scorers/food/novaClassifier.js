@@ -1,200 +1,130 @@
+// PATH: backend/src/services/analysis/novaClassifier.js
 const novaRules = require('../../data/nova-rules.json');
 
 /**
- * Classifie un produit selon NOVA (1-4)
- * Basé sur méthodologie officielle INSERM
+ * Classifie un produit selon NOVA (1 à 4) – méthodologie INSERM simplifiée
  */
 class NovaClassifier {
-  
   /**
-   * Classification principale
-   * @param {string|Array} ingredients - Liste ingrédients
-   * @param {string} productName - Nom produit
-   * @returns {Object} Résultat classification
+   * @param {string|string[]} ingredients
+   * @param {string} productName
+   * @returns {{group:number,confidence:number,reasoning:string[],detected_markers:Object,
+   *            ingredients_count:number,classification_date:string}}
    */
   classify(ingredients, productName = '') {
     try {
-      const ingredientsList = this.parseIngredients(ingredients);
-      const processMarkers = this.detectProcessMarkers(ingredients, productName);
-      
-      // Algorithme classification NOVA
-      const group = this.determineNovaGroup(ingredientsList, processMarkers);
-      const confidence = this.calculateConfidence(ingredientsList, processMarkers);
-      
+      const list     = this.parseIngredients(ingredients);
+      const markers  = this.detectProcessMarkers(ingredients, productName);
+
+      const group       = this.determineNovaGroup(list, markers);
+      const confidence  = this.calculateConfidence(list, markers);
+
       return {
-        group: group,
-        confidence: confidence,
-        reasoning: this.generateReasoning(group, processMarkers),
-        detected_markers: processMarkers,
-        ingredients_count: ingredientsList.length,
+        group,
+        confidence,
+        reasoning          : this.generateReasoning(group, markers),
+        detected_markers   : markers,
+        ingredients_count  : list.length,
         classification_date: new Date().toISOString()
       };
-      
-    } catch (error) {
-      console.error('Erreur classification NOVA:', error);
+    } catch (err) {
+      console.error('Erreur NOVA :', err);
       return {
-        group: 1, // CORRECTION: Retourner 1 au lieu de null
+        group: 1,
         confidence: 0.3,
-        error: error.message,
-        reasoning: ['Erreur classification - Classifié groupe 1 par défaut']
+        reasoning: ['Erreur classification – groupe 1 par défaut'],
+        detected_markers: {},
+        ingredients_count: 0,
+        classification_date: new Date().toISOString()
       };
     }
   }
-  
-  /**
-   * Parse la liste d'ingrédients
-   */
-  parseIngredients(ingredients) {
-    if (!ingredients) return [];
-    
-    // CORRECTION : Gestion array ET string
-    let ingredientsText = '';
-    if (Array.isArray(ingredients)) {
-      ingredientsText = ingredients.join(', ');
-    } else if (typeof ingredients === 'string') {
-      ingredientsText = ingredients;
-    } else {
-      return [];
-    }
-    
-    return ingredientsText
+
+  /* ---------- Helpers ---------- */
+  parseIngredients(ing) {
+    if (!ing) return [];
+    const txt = Array.isArray(ing) ? ing.join(',') : ing;
+    return txt
       .toLowerCase()
-      .split(/[,;().]/)
-      .map(ing => ing.trim())
-      .filter(ing => ing.length > 2)
-      .slice(0, 50); // Limite pour performance
+      .split(/[,;()]/)
+      .map(s => s.trim())
+      .filter(s => s.length > 1);
   }
-  
-  /**
-   * Détecte marqueurs ultra-transformation
-   */
+
   detectProcessMarkers(ingredients, productName) {
     const markers = {
-      additives_count: 0,
+      additives_count      : 0,
       industrial_ingredients: [],
-      process_indicators: [],
+      process_indicators   : [],
       ultra_processed_terms: []
     };
-    
-    // CORRECTION : Gestion array ET string pour ingredients
-    let ingredientsText = '';
-    if (Array.isArray(ingredients)) {
-      ingredientsText = ingredients.join(' ');
-    } else if (typeof ingredients === 'string') {
-      ingredientsText = ingredients;
-    }
-    
-    const text = (ingredientsText + ' ' + productName).toLowerCase();
-    
-    // Comptage E-codes (additifs)
-    const ecodes = text.match(/e\d{3,4}/g) || [];
-    markers.additives_count = ecodes.length;
-    
-    // Ingrédients industriels (règles NOVA)
-    novaRules.industrial_ingredients.forEach(ingredient => {
-      if (text.includes(ingredient.name)) {
-        markers.industrial_ingredients.push(ingredient);
-      }
+    const txt = (
+      (Array.isArray(ingredients) ? ingredients.join(' ') : ingredients) +
+      ' ' + productName
+    ).toLowerCase();
+
+    markers.additives_count = (txt.match(/e\d{3,4}/g) || []).length;
+
+    novaRules.industrial_ingredients.forEach(i => {
+      if (txt.includes(i.name)) markers.industrial_ingredients.push(i.name);
     });
-    
-    // Indicateurs processus industriel
-    novaRules.process_indicators.forEach(process => {
-      if (text.includes(process)) {
-        markers.process_indicators.push(process);
-      }
+    novaRules.process_indicators.forEach(p => {
+      if (txt.includes(p)) markers.process_indicators.push(p);
     });
-    
-    // Termes ultra-transformés
-    novaRules.ultra_processed_terms.forEach(term => {
-      if (text.includes(term) || productName.toLowerCase().includes(term)) {
-        markers.ultra_processed_terms.push(term);
-      }
+    novaRules.ultra_processed_terms.forEach(t => {
+      if (txt.includes(t)) markers.ultra_processed_terms.push(t);
     });
-    
+
     return markers;
   }
-  
-  /**
-   * Détermine groupe NOVA selon règles officielles
-   */
-  determineNovaGroup(ingredientsList, markers) {
-    // Groupe 4 : Ultra-transformé
-    if (markers.additives_count >= 3 || 
-        markers.industrial_ingredients.length >= 2 ||
-        markers.ultra_processed_terms.length >= 1) {
-      return 4;
-    }
-    
-    // Groupe 3 : Transformé  
-    if (markers.additives_count >= 1 || 
-        markers.process_indicators.length >= 1 ||
-        ingredientsList.length >= 8) {
-      return 3;
-    }
-    
-    // Groupe 2 : Peu transformé
-    if (ingredientsList.length >= 3 && ingredientsList.length <= 7) {
-      return 2;
-    }
-    
-    // Groupe 1 : Non/minimalement transformé
+
+  determineNovaGroup(list, m) {
+    if (
+      m.additives_count >= 3 ||
+      m.industrial_ingredients.length >= 2 ||
+      m.ultra_processed_terms.length >= 1
+    ) return 4;
+
+    if (
+      m.additives_count >= 1 ||
+      m.process_indicators.length >= 1 ||
+      list.length >= 8
+    ) return 3;
+
+    if (list.length >= 3) return 2;
+
     return 1;
   }
-  
-  /**
-   * Calcule confiance classification (0-1)
-   */
-  calculateConfidence(ingredientsList, markers) {
-    let confidence = 0.3; // Base minimum
-    
-    // Bonus si données riches
-    if (ingredientsList.length > 0) confidence += 0.3;
-    if (markers.additives_count > 0) confidence += 0.2;
-    if (markers.industrial_ingredients.length > 0) confidence += 0.2;
-    
-    return Math.min(1.0, confidence);
+
+  calculateConfidence(list, m) {
+    let c = 0.3;
+    if (list.length) c += 0.3;
+    if (m.additives_count) c += 0.2;
+    if (m.industrial_ingredients.length) c += 0.2;
+    return Math.min(1, +c.toFixed(2));
   }
-  
-  /**
-   * Génère explication classification
-   */
-  generateReasoning(group, markers) {
-    const reasons = [];
-    
-    switch(group) {
-      case 4:
-        if (markers.additives_count >= 3) {
-          reasons.push(`${markers.additives_count} additifs détectés (seuil ultra-transformation)`);
-        }
-        if (markers.industrial_ingredients.length >= 2) {
-          reasons.push(`Ingrédients industriels: ${markers.industrial_ingredients.map(i => i.name).join(', ')}`);
-        }
-        if (markers.ultra_processed_terms.length >= 1) {
-          reasons.push(`Termes ultra-transformés: ${markers.ultra_processed_terms.join(', ')}`);
-        }
-        break;
-        
-      case 3:
-        if (markers.additives_count >= 1) {
-          reasons.push(`${markers.additives_count} additif(s) présent(s)`);
-        }
-        if (markers.process_indicators.length >= 1) {
-          reasons.push(`Processus industriel: ${markers.process_indicators.join(', ')}`);
-        }
-        break;
-        
-      case 2:
-        reasons.push('Produit peu transformé (3-7 ingrédients)');
-        break;
-        
-      case 1:
-        reasons.push('Produit non ou minimalement transformé');
-        break;
+
+  generateReasoning(group, m) {
+    const r = [];
+    if (group === 4) {
+      if (m.additives_count >= 3) r.push(`${m.additives_count} additifs détectés`);
+      if (m.industrial_ingredients.length)
+        r.push(`Ingrédients industriels : ${m.industrial_ingredients.join(', ')}`);
+      if (m.ultra_processed_terms.length)
+        r.push(`Termes ultra-transformés : ${m.ultra_processed_terms.join(', ')}`);
+    } else if (group === 3) {
+      if (m.additives_count) r.push(`${m.additives_count} additif(s) présent(s)`);
+      if (m.process_indicators.length)
+        r.push(`Processus industriels : ${m.process_indicators.join(', ')}`);
+    } else if (group === 2) {
+      r.push('Produit peu transformé (3-7 ingrédients)');
+    } else {
+      r.push('Produit non ou minimalement transformé');
     }
-    
-    return reasons;
+    return r;
   }
 }
 
-// CORRECTION EXPORT : Exporter la CLASSE, pas l'instance
-module.exports = NovaClassifier;
+/*  ✅ Exporter directement l’INSTANCE pour éviter
+    TypeError: novaClassifier.classify is not a function */
+module.exports = new NovaClassifier();

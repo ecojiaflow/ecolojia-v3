@@ -36,4 +36,61 @@ const checkQuota = (quotaType) => {
         });
       }
       
-      //
+      next();
+    } catch (error) {
+      console.error('Erreur middleware quota:', error);
+      // En cas d'erreur, on laisse passer pour ne pas bloquer le service
+      next();
+    }
+  };
+};
+
+/**
+ * Obtenir les bénéfices selon le type de quota
+ */
+function getQuotaBenefits(quotaType) {
+  const benefits = {
+    scan: [
+      'Scans illimités',
+      'Historique complet',
+      'Analyses détaillées',
+      'Recommandations personnalisées'
+    ],
+    aiChat: [
+      '500 conversations IA par mois',
+      'Réponses détaillées',
+      'Conseils nutritionnels personnalisés',
+      'Accès prioritaire'
+    ],
+    export: [
+      'Export PDF illimité',
+      'Rapports détaillés',
+      'Historique complet',
+      'Partage familial'
+    ]
+  };
+  
+  return benefits[quotaType] || benefits.scan;
+}
+
+/**
+ * Middleware simplifié pour les routes qui utilisent checkQuota sans paramètre
+ */
+const checkQuotaMiddleware = async (req, res, next) => {
+  // Déterminer le type de quota selon la route
+  let quotaType = 'scan';
+  
+  if (req.path.includes('/ai/') || req.path.includes('/chat')) {
+    quotaType = 'aiChat';
+  } else if (req.path.includes('/export')) {
+    quotaType = 'export';
+  }
+  
+  // Appeler checkQuota avec le bon type
+  return checkQuota(quotaType)(req, res, next);
+};
+
+module.exports = {
+  checkQuota,
+  checkQuotaMiddleware
+};

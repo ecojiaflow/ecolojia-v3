@@ -1,9 +1,12 @@
 // frontend/src/services/dashboardService.ts
-import { apiClient } from './apiClient';
+import { apiClient, getErrorMessage } from './apiClient';
 
-// Interfaces pour la nouvelle structure
-interface DashboardStats {
+// Types pour le dashboard
+export interface DashboardStats {
   overview: {
+    totalScans: number;
+    averageHealthScore: number;
+    productsAnalyzed: number;
     totalAnalyses: number;
     avgHealthScore: number;
     minHealthScore: number;
@@ -25,7 +28,7 @@ interface DashboardStats {
     type: string;
     title: string;
     description: string;
-    impact: 'high' | 'medium' | 'low';
+    impact: string;
     icon: string;
     cta: string;
   }>;
@@ -35,7 +38,7 @@ interface DashboardStats {
     category: string;
     healthScore: number;
     date: string;
-    trend: 'up' | 'down' | 'stable';
+    trend: string;
     alternatives: number;
   }>;
   achievements: Array<{
@@ -43,9 +46,9 @@ interface DashboardStats {
     title: string;
     description: string;
     icon: string;
-    unlockedAt?: string;
-    progress?: number;
-    maxProgress?: number;
+    unlockedAt: string | null;
+    progress: number;
+    maxProgress: number;
   }>;
   community: {
     averageScore: number;
@@ -69,326 +72,220 @@ interface DashboardStats {
   };
 }
 
-// Interface pour la structure attendue par le composant
-interface ComponentDashboardStats {
-  totalScans: number;
-  healthScoreAverage: number;
-  categoryBreakdown: {
-    food: number;
-    cosmetics: number;
-    detergents: number;
-  };
-  recentAnalyses: Array<{
-    _id: string;
-    productName: string;
-    score: number;
-    category: string;
+export interface HistoryResponse {
+  success: boolean;
+  data: Array<{
+    id: string;
     date: string;
+    product: {
+      name: string;
+      category: string;
+      brand: string;
+    };
+    scores: {
+      health: number;
+      environment: number;
+      social: number;
+    };
+    alternatives: number;
   }>;
-  weeklyTrend: Array<{
-    day: string;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+  total: number;
+}
+
+export interface WeeklySummaryResponse {
+  success: boolean;
+  data: Array<{
+    date: string;
     scans: number;
+    avgScore: number;
   }>;
+  summary: {
+    totalScans: number;
+    avgScore: number;
+    bestDay: {
+      date: string;
+      scans: number;
+      avgScore: number;
+    };
+    trend: string;
+  };
+}
+
+export interface AchievementsResponse {
+  success: boolean;
+  achievements: Array<{
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+    points: number;
+    category: string;
+    unlocked?: boolean;
+    progress?: number;
+    maxProgress?: number;
+  }>;
+  unlockedCount: number;
+  totalPoints: number;
+  categories?: {
+    [key: string]: {
+      unlocked: number;
+      total: number;
+    };
+  };
 }
 
 class DashboardService {
-  async getStats(range: 'week' | 'month' | 'year' = 'month'): Promise<ComponentDashboardStats> {
+  
+  async getStats(range: 'week' | 'month' | 'year' = 'month'): Promise<DashboardStats> {
     try {
-      const response = await apiClient.get<DashboardStats>('/dashboard/stats', {
+      const response = await apiClient.get('/dashboard/stats', {
         params: { range }
       });
-      
-      // Transformer les données vers le format attendu par le composant
-      return this.transformStatsForComponent(response.data);
+      return response.data;
     } catch (error: any) {
-      console.error('Error fetching dashboard stats:', error);
-      console.log('Using demo data due to error');
-      return this.getDemoStats();
+      const message = getErrorMessage(error);
+      console.error('Dashboard stats error:', message);
+      throw new Error(message);
     }
   }
 
-  private transformStatsForComponent(data: DashboardStats): ComponentDashboardStats {
-    return {
-      totalScans: data.overview?.totalAnalyses || 0,
-      healthScoreAverage: data.overview?.avgHealthScore || 0,
-      categoryBreakdown: {
-        food: data.overview?.categories?.food || 0,
-        cosmetics: data.overview?.categories?.cosmetics || 0,
-        detergents: data.overview?.categories?.detergents || 0
-      },
-      recentAnalyses: data.recentAnalyses?.map(analysis => ({
-        _id: analysis.id,
-        productName: analysis.productName,
-        score: analysis.healthScore,
-        category: analysis.category,
-        date: analysis.date
-      })) || [],
-      weeklyTrend: this.generateWeeklyTrend(data.weeklyDigest)
-    };
-  }
-
-  private generateWeeklyTrend(weeklyDigest: DashboardStats['weeklyDigest']): ComponentDashboardStats['weeklyTrend'] {
-    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-    const totalScans = weeklyDigest?.scansCount || 12;
-    
-    // Distribuer les scans de manière réaliste sur la semaine
-    const distribution = [0.15, 0.18, 0.14, 0.20, 0.16, 0.10, 0.07];
-    
-    return days.map((day, index) => ({
-      day,
-      scans: Math.round(totalScans * distribution[index])
-    }));
-  }
-
-  private getDemoStats(): ComponentDashboardStats {
-    return {
-      totalScans: 12,
-      healthScoreAverage: 75,
-      categoryBreakdown: {
-        food: 8,
-        cosmetics: 3,
-        detergents: 1
-      },
-      recentAnalyses: [
-        {
-          _id: '1',
-          productName: 'Yaourt nature bio',
-          category: 'food',
-          score: 92,
-          date: new Date().toISOString()
-        },
-        {
-          _id: '2',
-          productName: 'Shampoing doux sans sulfates',
-          category: 'cosmetics',
-          score: 78,
-          date: new Date(Date.now() - 86400000).toISOString()
-        },
-        {
-          _id: '3',
-          productName: 'Lessive écologique',
-          category: 'detergents',
-          score: 85,
-          date: new Date(Date.now() - 172800000).toISOString()
-        }
-      ],
-      weeklyTrend: [
-        { day: 'Lun', scans: 2 },
-        { day: 'Mar', scans: 3 },
-        { day: 'Mer', scans: 1 },
-        { day: 'Jeu', scans: 2 },
-        { day: 'Ven', scans: 2 },
-        { day: 'Sam', scans: 1 },
-        { day: 'Dim', scans: 1 }
-      ]
-    };
-  }
-
-  async exportDashboardData(format: 'pdf' | 'csv'): Promise<Blob> {
+  async getHistory(page: number = 1, limit: number = 10): Promise<HistoryResponse> {
     try {
-      const response = await apiClient.get('/dashboard/export', {
-        params: { format },
-        responseType: 'blob'
+      const response = await apiClient.get('/dashboard/history', {
+        params: { page, limit }
       });
       return response.data;
-    } catch (error) {
-      const stats = await this.getStats();
-      
-      if (format === 'csv') {
-        const csv = this.generateCSV(stats);
-        return new Blob([csv], { type: 'text/csv' });
-      } else {
-        const text = this.generateTextReport(stats);
-        return new Blob([text], { type: 'text/plain' });
-      }
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Dashboard history error:', message);
+      throw new Error(message);
     }
   }
 
-  private generateCSV(stats: ComponentDashboardStats): string {
-    const lines = [
-      'Métrique,Valeur',
-      `Total analyses,${stats.totalScans}`,
-      `Score moyen,${stats.healthScoreAverage}`,
-      `Analyses alimentaires,${stats.categoryBreakdown.food}`,
-      `Analyses cosmétiques,${stats.categoryBreakdown.cosmetics}`,
-      `Analyses détergents,${stats.categoryBreakdown.detergents}`
-    ];
-    
-    lines.push('');
-    lines.push('Analyses récentes');
-    lines.push('Produit,Catégorie,Score,Date');
-    
-    stats.recentAnalyses.forEach(analysis => {
-      lines.push(
-        `"${analysis.productName}",${analysis.category},${analysis.score},"${new Date(analysis.date).toLocaleDateString('fr-FR')}"`
-      );
-    });
-    
-    return lines.join('\n');
-  }
-
-  private generateTextReport(stats: ComponentDashboardStats): string {
-    const date = new Date().toLocaleDateString('fr-FR');
-    const time = new Date().toLocaleTimeString('fr-FR');
-    
-    let report = `
-RAPPORT ECOLOJIA
-================
-Généré le ${date} à ${time}
-
-VUE D'ENSEMBLE
---------------
-Total des analyses : ${stats.totalScans}
-Score de santé moyen : ${stats.healthScoreAverage}/100
-
-RÉPARTITION PAR CATÉGORIE
--------------------------
-• Alimentaire : ${stats.categoryBreakdown.food} analyses
-• Cosmétiques : ${stats.categoryBreakdown.cosmetics} analyses
-• Détergents : ${stats.categoryBreakdown.detergents} analyses
-
-ANALYSES RÉCENTES
------------------
-`;
-
-    stats.recentAnalyses.forEach((analysis, index) => {
-      report += `
-${index + 1}. ${analysis.productName}
-   Catégorie : ${analysis.category === 'food' ? 'Alimentaire' : 
-                  analysis.category === 'cosmetics' ? 'Cosmétique' : 'Détergent'}
-   Score : ${analysis.score}/100
-   Date : ${new Date(analysis.date).toLocaleDateString('fr-FR')}
-`;
-    });
-
-    report += `
-ACTIVITÉ HEBDOMADAIRE
---------------------
-`;
-    
-    stats.weeklyTrend.forEach(day => {
-      report += `${day.day} : ${day.scans} scan(s)\n`;
-    });
-
-    report += `
-================
-Fin du rapport
-`;
-
-    return report;
-  }
-
-  // Méthodes additionnelles pour accéder aux nouvelles données
-  async getFullStats(range: 'week' | 'month' | 'year' = 'month'): Promise<DashboardStats> {
+  async getWeeklySummary(): Promise<WeeklySummaryResponse> {
     try {
-      const response = await apiClient.get<DashboardStats>('/dashboard/stats', {
-        params: { range }
+      const response = await apiClient.get('/dashboard/weekly-summary');
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Weekly summary error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async getProductDistribution(): Promise<any> {
+    try {
+      const response = await apiClient.get('/dashboard/product-distribution');
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Product distribution error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async getHealthTrends(period: number = 30): Promise<any> {
+    try {
+      const response = await apiClient.get('/dashboard/health-trends', {
+        params: { period }
       });
       return response.data;
-    } catch (error) {
-      return this.getFullDemoStats();
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Health trends error:', message);
+      throw new Error(message);
     }
   }
 
-  private getFullDemoStats(): DashboardStats {
-    return {
-      overview: {
-        totalAnalyses: 12,
-        avgHealthScore: 75,
-        minHealthScore: 45,
-        maxHealthScore: 92,
-        categories: {
-          food: 8,
-          cosmetics: 3,
-          detergents: 1
-        }
-      },
-      trends: {
-        healthScoreImprovement: 12,
-        comparedToLastMonth: 15,
-        currentStreak: 5,
-        bestStreak: 12
-      },
-      recommendations: [
-        {
-          id: '1',
-          type: 'welcome',
-          title: 'Bienvenue sur ECOLOJIA !',
-          description: 'Commencez par scanner votre premier produit',
-          impact: 'high',
-          icon: '🎉',
-          cta: 'Scanner un produit'
-        },
-        {
-          id: '2',
-          type: 'health',
-          title: 'Améliorez votre alimentation',
-          description: 'Votre score moyen peut être amélioré avec des choix plus sains',
-          impact: 'medium',
-          icon: '🍎',
-          cta: 'Voir les conseils'
-        }
-      ],
-      recentAnalyses: [
-        {
-          id: '1',
-          productName: 'Yaourt nature bio',
-          category: 'food',
-          healthScore: 92,
-          date: new Date().toISOString(),
-          trend: 'up',
-          alternatives: 3
-        },
-        {
-          id: '2',
-          productName: 'Shampoing doux sans sulfates',
-          category: 'cosmetics',
-          healthScore: 78,
-          date: new Date(Date.now() - 86400000).toISOString(),
-          trend: 'stable',
-          alternatives: 5
-        },
-        {
-          id: '3',
-          productName: 'Lessive écologique',
-          category: 'detergents',
-          healthScore: 85,
-          date: new Date(Date.now() - 172800000).toISOString(),
-          trend: 'up',
-          alternatives: 2
-        }
-      ],
-      achievements: [
-        {
-          id: '1',
-          title: 'Première semaine',
-          description: 'Utilisez ECOLOJIA pendant 7 jours',
-          icon: '🏆',
-          progress: 5,
-          maxProgress: 7
-        }
-      ],
-      community: {
-        averageScore: 72,
-        userRank: 1250,
-        totalUsers: 5000,
-        topCategory: 'Alimentaire'
-      },
-      weeklyDigest: {
-        scansCount: 12,
-        avgScore: 78,
-        bestProduct: {
-          name: 'Pommes bio',
-          score: 95
-        },
-        worstProduct: {
-          name: 'Chips saveur barbecue',
-          score: 35
-        },
-        discoveries: 5,
-        alternatives: 8
-      }
-    };
+  async getRecentScans(limit: number = 5): Promise<any> {
+    try {
+      const response = await apiClient.get('/dashboard/recent-scans', {
+        params: { limit }
+      });
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Recent scans error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async getAchievements(): Promise<AchievementsResponse> {
+    try {
+      const response = await apiClient.get('/dashboard/achievements');
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Achievements error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async getRecommendations(): Promise<any> {
+    try {
+      const response = await apiClient.get('/dashboard/recommendations');
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Recommendations error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async exportData(format: 'json' | 'csv' | 'pdf' = 'json', dateRange?: string): Promise<any> {
+    try {
+      const response = await apiClient.post('/dashboard/export', {
+        format,
+        dateRange
+      });
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Export data error:', message);
+      throw new Error(message);
+    }
+  }
+
+  async shareData(platform: string, message?: string): Promise<any> {
+    try {
+      const response = await apiClient.post('/dashboard/share', {
+        platform,
+        message
+      });
+      return response.data;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Share data error:', message);
+      throw new Error(message);
+    }
+  }
+
+  // Méthode pour obtenir des statistiques rapides
+  async getQuickStats(): Promise<any> {
+    try {
+      const [stats, recentScans, achievements] = await Promise.all([
+        this.getStats('month'),
+        this.getRecentScans(3),
+        this.getAchievements()
+      ]);
+
+      return {
+        stats,
+        recentScans: recentScans.scans || [],
+        unlockedAchievements: achievements.unlockedCount || 0,
+        totalPoints: achievements.totalPoints || 0
+      };
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      console.error('Quick stats error:', message);
+      throw new Error(message);
+    }
   }
 }
 

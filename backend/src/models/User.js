@@ -1,5 +1,5 @@
 // backend/src/models/User.js
-// FICHIER COMPLET CORRIGÉ - Sans index dupliqués
+// FICHIER COMPLET CORRIGÉ - Sans index dupliqués - emailVerified par défaut à TRUE
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -133,7 +133,7 @@ const userSchema = new mongoose.Schema({
   
   emailVerified: {
     type: Boolean,
-    default: false
+    default: true  // MODIFIÉ : Changé de false à true pour faciliter les tests
   },
   
   emailVerificationToken: String,

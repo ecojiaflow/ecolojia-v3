@@ -1,379 +1,440 @@
-// backend/src/routes/analyze.routes.js
+// backend/src/routes/analysis.routes.js
+// Routes pour l'analyse universelle de produits
+
 const express = require('express');
 const router = express.Router();
+const universalAnalyzer = require('../services/analysis/universalAnalyzer');
+const { authenticateToken } = require('../middleware/auth');
+const { validateAnalysis } = require('../middleware/validation');
+const rateLimit = require('express-rate-limit');
 
-// Import des middlewares auth avec fallback
-let authenticateUser, checkQuota;
-try {
-  const authModule = require('../middleware/auth');
-  authenticateUser = authModule.authenticateUser || authModule.auth || authModule;
-  checkQuota = authModule.checkQuota || ((type) => (req, res, next) => {
-    req.quotaRemaining = 30;
-    req.decrementQuota = async () => {};
-    next();
-  });
-} catch (error) {
-  console.log('[Analyze] Auth middleware not found, using fallback');
-  authenticateUser = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      req.userId = 'test-user-id';
-      req.user = { _id: 'test-user-id', tier: 'free' };
+// Rate limiting selon le tier d'abonnement
+const createRateLimiter = (tier) => {
+  const limits = {
+    free: { windowMs: 60 * 60 * 1000, max: 30 },      // 30 analyses/heure
+    premium: { windowMs: 60 * 60 * 1000, max: 500 },   // 500 analyses/heure
+    family: { windowMs: 60 * 60 * 1000, max: 1000 }    // 1000 analyses/heure
+  };
+
+  return rateLimit({
+    ...limits[tier] || limits.free,
+    keyGenerator: (req) => req.user.id,
+    handler: (req, res) => {
+      res.status(429).json({
+        success: false,
+        error: 'Limite d\'analyses atteinte',
+        upgradeRequired: tier === 'free',
+        resetTime: req.rateLimit.resetTime
+      });
     }
-    next();
-  };
-  checkQuota = (type) => (req, res, next) => {
-    req.quotaRemaining = 30;
-    req.decrementQuota = async () => {};
-    next();
-  };
-}
-
-// Import des services avec fallback
-let productAnalysisService;
-try {
-  productAnalysisService = require('../services/productAnalysisService');
-} catch (error) {
-  console.log('[Analyze] Product analysis service not found, using mock');
-  // Service d'analyse mocké
-  productAnalysisService = {
-    analyzeProduct: async (productData, userId) => {
-      const category = productData.category || 'food';
-      const baseScore = Math.floor(Math.random() * 40) + 60;
-      
-      return {
-        healthScore: baseScore,
-        environmentScore: baseScore - 5,
-        socialScore: baseScore + 5,
-        nova: category === 'food' ? Math.floor(Math.random() * 4) + 1 : null,
-        ecoscore: ['A', 'B', 'C', 'D', 'E'][Math.floor(Math.random() * 5)],
-        concerns: ['Sucre élevé', 'Additifs E322'],
-        benefits: ['Source de fibres', 'Sans gluten'],
-        recommendations: ['Consommer avec modération', 'Privilégier les alternatives bio'],
-        alternatives: [
-          { name: 'Alternative Bio', score: baseScore + 20 },
-          { name: 'Version allégée', score: baseScore + 10 }
-        ],
-        confidence: 0.92
-      };
-    }
-  };
-}
-
-// Logger simple
-const logger = {
-  info: (...args) => console.log('[Analyze]', ...args),
-  error: (...args) => console.error('[Analyze ERROR]', ...args),
-  warn: (...args) => console.warn('[Analyze WARN]', ...args)
-};
-
-// Helper pour gérer les erreurs async
-const handleAsync = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch((error) => {
-    logger.error('Async error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: error.message || 'Erreur serveur'
-    });
   });
 };
 
-// Données mockées pour détection automatique
-const productDatabase = {
-  '3017620422003': {
-    name: 'Nutella',
-    brand: 'Ferrero',
-    category: 'food',
-    type: 'spread'
-  },
-  '3596710472697': {
-    name: 'Shampooing Doux',
-    brand: 'Auchan',
-    category: 'cosmetics',
-    type: 'shampoo'
-  },
-  '3450970049405': {
-    name: 'Lessive Liquide',
-    brand: 'Carrefour',
-    category: 'detergents',
-    type: 'laundry'
-  }
-};
-
-// Helper pour détecter la catégorie
-const detectCategory = (data) => {
-  // Si barcode connu
-  if (data.barcode && productDatabase[data.barcode]) {
-    return productDatabase[data.barcode].category;
-  }
-  
-  // Détection par mots-clés dans le nom
-  const name = (data.name || '').toLowerCase();
-  
-  // Cosmétiques
-  if (name.includes('shampoo') || name.includes('shampooing') || 
-      name.includes('crème') || name.includes('cream') ||
-      name.includes('gel') || name.includes('lotion') ||
-      name.includes('maquillage') || name.includes('makeup')) {
-    return 'cosmetics';
-  }
-  
-  // Détergents
-  if (name.includes('lessive') || name.includes('detergent') ||
-      name.includes('savon') || name.includes('soap') ||
-      name.includes('nettoyant') || name.includes('cleaner')) {
-    return 'detergents';
-  }
-  
-  // Par défaut: alimentaire
-  return 'food';
-};
-
-// POST /api/analyze/auto - Détection automatique et analyse
-router.post('/auto', authenticateUser, checkQuota('scan'), handleAsync(async (req, res) => {
-  const userId = req.userId || 'anonymous';
-  const { barcode, name, brand, image } = req.body;
-  
-  logger.info('Auto analysis request:', { userId, barcode, name });
-  
-  // Validation
-  if (!barcode && !name) {
-    return res.status(400).json({
-      success: false,
-      error: 'Barcode ou nom du produit requis'
-    });
-  }
-  
-  // Détection de la catégorie
-  const detectedCategory = detectCategory({ barcode, name });
-  
-  logger.info('Category detected:', detectedCategory);
-  
-  // Créer les données du produit
-  const productData = {
-    barcode,
-    name: name || (productDatabase[barcode]?.name) || 'Produit inconnu',
-    brand: brand || (productDatabase[barcode]?.brand) || 'Marque inconnue',
-    category: detectedCategory,
-    image
-  };
-  
-  // Analyser le produit
+// Middleware pour vérifier les quotas
+const checkQuota = async (req, res, next) => {
   try {
-    const analysis = await productAnalysisService.analyzeProduct(productData, userId);
+    const user = req.user;
+    const User = require('mongoose').model('User');
     
-    // Décrémenter le quota
-    if (req.decrementQuota) {
-      await req.decrementQuota();
+    const dbUser = await User.findById(user.id);
+    
+    // Vérifier les quotas selon le plan
+    if (dbUser.subscription.tier === 'free') {
+      if (dbUser.quotas.scansUsed >= dbUser.quotas.scansLimit) {
+        return res.status(403).json({
+          success: false,
+          error: 'Quota mensuel atteint',
+          upgradeRequired: true,
+          quotas: {
+            used: dbUser.quotas.scansUsed,
+            limit: dbUser.quotas.scansLimit,
+            resetDate: dbUser.quotas.scansResetDate
+          }
+        });
+      }
     }
     
-    res.json({
-      success: true,
-      detectedCategory,
-      product: productData,
-      analysis,
-      quotaRemaining: req.quotaRemaining || 29
+    // Incrémenter le compteur
+    await User.findByIdAndUpdate(user.id, {
+      $inc: { 'quotas.scansUsed': 1, 'quotas.totalScansAllTime': 1 }
     });
+    
+    next();
   } catch (error) {
-    logger.error('Analysis error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de l\'analyse'
-    });
+    console.error('Erreur vérification quota:', error);
+    next(error);
   }
-}));
+};
 
-// POST /api/analyze/food - Analyse alimentaire
-router.post('/food', authenticateUser, checkQuota('scan'), handleAsync(async (req, res) => {
-  const userId = req.userId || 'anonymous';
-  const productData = req.body;
-  
-  logger.info('Food analysis request:', { userId, product: productData.name });
-  
-  // Forcer la catégorie alimentaire
-  productData.category = 'food';
-  
-  // Analyser le produit
-  const analysis = await productAnalysisService.analyzeProduct(productData, userId);
-  
-  // Ajouter des informations spécifiques alimentaires
-  analysis.nutritionalInfo = {
-    nova: analysis.nova || Math.floor(Math.random() * 4) + 1,
-    nutriscore: ['A', 'B', 'C', 'D', 'E'][Math.floor(Math.random() * 5)],
-    additives: ['E322', 'E471'],
-    allergens: ['gluten', 'lactose']
-  };
-  
-  // Décrémenter le quota
-  if (req.decrementQuota) {
-    await req.decrementQuota();
-  }
-  
-  res.json({
-    success: true,
-    analysis,
-    quotaRemaining: req.quotaRemaining || 29
-  });
-}));
+/**
+ * POST /api/v1/analyses
+ * Analyse un produit (auto-détection de catégorie)
+ */
+router.post('/',
+  authenticateToken,
+  checkQuota,
+  validateAnalysis,
+  async (req, res) => {
+    try {
+      const {
+        barcode,
+        name,
+        ingredients,
+        category,
+        method = 'manual'
+      } = req.body;
 
-// POST /api/analyze/cosmetic - Analyse cosmétique
-router.post('/cosmetic', authenticateUser, checkQuota('scan'), handleAsync(async (req, res) => {
-  const userId = req.userId || 'anonymous';
-  const productData = req.body;
-  
-  logger.info('Cosmetic analysis request:', { userId, product: productData.name });
-  
-  // Forcer la catégorie cosmétique
-  productData.category = 'cosmetics';
-  
-  // Analyser le produit
-  const analysis = await productAnalysisService.analyzeProduct(productData, userId);
-  
-  // Ajouter des informations spécifiques cosmétiques
-  analysis.cosmeticInfo = {
-    inciScore: Math.floor(Math.random() * 100),
-    allergens: ['parfum', 'phenoxyethanol'],
-    endocrineDisruptors: Math.random() > 0.7 ? ['BHA'] : [],
-    naturalIngredients: Math.floor(Math.random() * 100) + '%'
-  };
-  
-  // Décrémenter le quota
-  if (req.decrementQuota) {
-    await req.decrementQuota();
-  }
-  
-  res.json({
-    success: true,
-    analysis,
-    quotaRemaining: req.quotaRemaining || 29
-  });
-}));
+      // Validation basique
+      if (!barcode && !name && !ingredients) {
+        return res.status(400).json({
+          success: false,
+          error: 'Au moins un paramètre requis: barcode, name ou ingredients'
+        });
+      }
 
-// POST /api/analyze/detergent - Analyse détergent
-router.post('/detergent', authenticateUser, checkQuota('scan'), handleAsync(async (req, res) => {
-  const userId = req.userId || 'anonymous';
-  const productData = req.body;
-  
-  logger.info('Detergent analysis request:', { userId, product: productData.name });
-  
-  // Forcer la catégorie détergent
-  productData.category = 'detergents';
-  
-  // Analyser le produit
-  const analysis = await productAnalysisService.analyzeProduct(productData, userId);
-  
-  // Ajouter des informations spécifiques détergents
-  analysis.detergentInfo = {
-    biodegradability: Math.floor(Math.random() * 30) + 70,
-    toxicity: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
-    ecolabel: Math.random() > 0.5,
-    phosphates: Math.random() > 0.7
-  };
-  
-  // Décrémenter le quota
-  if (req.decrementQuota) {
-    await req.decrementQuota();
-  }
-  
-  res.json({
-    success: true,
-    analysis,
-    quotaRemaining: req.quotaRemaining || 29
-  });
-}));
+      // Lancer l'analyse
+      const result = await universalAnalyzer.analyze({
+        barcode,
+        name,
+        ingredients,
+        category,
+        userId: req.user.id,
+        method
+      });
 
-// GET /api/analyze/history - Historique des analyses
-router.get('/history', authenticateUser, handleAsync(async (req, res) => {
-  const userId = req.userId;
-  const { page = 1, limit = 20, category } = req.query;
-  
-  logger.info('Analysis history requested:', { userId, page, limit, category });
-  
-  // Historique mocké
-  const mockHistory = [
-    {
-      _id: '1',
-      productName: 'Nutella',
-      category: 'food',
-      healthScore: 25,
-      date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      barcode: '3017620422003'
-    },
-    {
-      _id: '2',
-      productName: 'Shampooing Doux',
-      category: 'cosmetics',
-      healthScore: 75,
-      date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-      barcode: '3596710472697'
-    },
-    {
-      _id: '3',
-      productName: 'Lessive Écologique',
-      category: 'detergents',
-      healthScore: 85,
-      date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      barcode: '3450970049405'
+      // Log pour statistiques
+      console.log(`✅ Analyse réussie: ${result.product?.name || barcode} (${result.metadata.category})`);
+
+      res.json({
+        success: true,
+        data: result
+      });
+
+    } catch (error) {
+      console.error('Erreur analyse:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de l\'analyse'
+      });
     }
-  ];
-  
-  // Filtrer par catégorie si demandé
-  const filteredHistory = category 
-    ? mockHistory.filter(h => h.category === category)
-    : mockHistory;
-  
-  res.json({
-    success: true,
-    analyses: filteredHistory,
-    pagination: {
-      total: filteredHistory.length,
-      page: parseInt(page),
-      pages: Math.ceil(filteredHistory.length / limit),
-      hasNext: false,
-      hasPrev: false
-    }
-  });
-}));
+  }
+);
 
-// GET /api/analyze/stats - Statistiques d'analyses
-router.get('/stats', authenticateUser, handleAsync(async (req, res) => {
-  const userId = req.userId;
-  
-  logger.info('Analysis stats requested:', { userId });
-  
-  res.json({
-    success: true,
-    stats: {
-      totalAnalyses: 42,
-      byCategory: {
-        food: 25,
-        cosmetics: 10,
-        detergents: 7
-      },
-      averageScores: {
-        health: 73,
-        environment: 68,
-        social: 71
-      },
-      lastAnalysis: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-    }
-  });
-}));
+/**
+ * POST /api/v1/analyses/batch
+ * Analyse plusieurs produits en une fois
+ */
+router.post('/batch',
+  authenticateToken,
+  checkQuota,
+  async (req, res) => {
+    try {
+      const { products } = req.body;
 
-// Route de test
-router.get('/test', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Analyze routes are working!',
-    routes: [
-      'POST /api/analyze/auto',
-      'POST /api/analyze/food',
-      'POST /api/analyze/cosmetic',
-      'POST /api/analyze/detergent',
-      'GET /api/analyze/history',
-      'GET /api/analyze/stats'
-    ]
-  });
-});
+      if (!Array.isArray(products) || products.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Liste de produits requise'
+        });
+      }
+
+      // Limiter le nombre de produits selon le tier
+      const limits = {
+        free: 10,
+        premium: 50,
+        family: 100
+      };
+      
+      const userTier = req.user.subscription?.tier || 'free';
+      const limit = limits[userTier];
+
+      if (products.length > limit) {
+        return res.status(400).json({
+          success: false,
+          error: `Limite de ${limit} produits pour votre abonnement`,
+          upgradeRequired: userTier === 'free'
+        });
+      }
+
+      // Lancer l'analyse batch
+      const results = await universalAnalyzer.analyzeBatch(products, req.user.id);
+
+      res.json({
+        success: true,
+        data: results
+      });
+
+    } catch (error) {
+      console.error('Erreur analyse batch:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de l\'analyse batch'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/v1/analyses
+ * Récupère l'historique des analyses
+ */
+router.get('/',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const {
+        page = 1,
+        limit = 20,
+        category,
+        sort = '-timestamp'
+      } = req.query;
+
+      const Analysis = require('mongoose').model('Analysis');
+      
+      const query = { userId: req.user.id };
+      if (category) {
+        query['results.category'] = category;
+      }
+
+      const skip = (page - 1) * limit;
+      
+      const [analyses, total] = await Promise.all([
+        Analysis.find(query)
+          .populate('productId', 'name brand images.front barcode')
+          .sort(sort)
+          .skip(skip)
+          .limit(parseInt(limit)),
+        Analysis.countDocuments(query)
+      ]);
+
+      res.json({
+        success: true,
+        data: analyses,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+
+    } catch (error) {
+      console.error('Erreur récupération analyses:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors de la récupération des analyses'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/v1/analyses/:id
+ * Récupère une analyse spécifique
+ */
+router.get('/:id',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const Analysis = require('mongoose').model('Analysis');
+      
+      const analysis = await Analysis.findOne({
+        _id: req.params.id,
+        userId: req.user.id
+      }).populate('productId');
+
+      if (!analysis) {
+        return res.status(404).json({
+          success: false,
+          error: 'Analyse non trouvée'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: analysis
+      });
+
+    } catch (error) {
+      console.error('Erreur récupération analyse:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors de la récupération de l\'analyse'
+      });
+    }
+  }
+);
+
+/**
+ * DELETE /api/v1/analyses/:id
+ * Supprime une analyse
+ */
+router.delete('/:id',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const Analysis = require('mongoose').model('Analysis');
+      
+      const result = await Analysis.findOneAndDelete({
+        _id: req.params.id,
+        userId: req.user.id
+      });
+
+      if (!result) {
+        return res.status(404).json({
+          success: false,
+          error: 'Analyse non trouvée'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Analyse supprimée'
+      });
+
+    } catch (error) {
+      console.error('Erreur suppression analyse:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors de la suppression'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/v1/analyses/:id/alternatives
+ * Trouve des alternatives pour un produit analysé
+ */
+router.get('/:id/alternatives',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const {
+        limit = 5,
+        betterScoreOnly = true,
+        sameCategory = true
+      } = req.query;
+
+      const Analysis = require('mongoose').model('Analysis');
+      
+      // Vérifier que l'analyse appartient à l'utilisateur
+      const analysis = await Analysis.findOne({
+        _id: req.params.id,
+        userId: req.user.id
+      });
+
+      if (!analysis) {
+        return res.status(404).json({
+          success: false,
+          error: 'Analyse non trouvée'
+        });
+      }
+
+      // Chercher des alternatives
+      const alternatives = await universalAnalyzer.findAlternatives(
+        analysis.productId,
+        {
+          limit: parseInt(limit),
+          betterScoreOnly: betterScoreOnly === 'true',
+          sameCategory: sameCategory === 'true'
+        }
+      );
+
+      res.json({
+        success: true,
+        data: alternatives
+      });
+
+    } catch (error) {
+      console.error('Erreur recherche alternatives:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors de la recherche d\'alternatives'
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/v1/analyses/stats
+ * Statistiques des analyses de l'utilisateur
+ */
+router.get('/stats/summary',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { period = '30d' } = req.query;
+      
+      const stats = await universalAnalyzer.getAnalysisStats(
+        req.user.id,
+        period
+      );
+
+      res.json({
+        success: true,
+        data: stats
+      });
+
+    } catch (error) {
+      console.error('Erreur statistiques:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors du calcul des statistiques'
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/v1/analyses/:id/feedback
+ * Donner un feedback sur une analyse
+ */
+router.post('/:id/feedback',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { helpful, rating, comment, reportedIssue } = req.body;
+      
+      const Analysis = require('mongoose').model('Analysis');
+      
+      const analysis = await Analysis.findOneAndUpdate(
+        {
+          _id: req.params.id,
+          userId: req.user.id
+        },
+        {
+          feedback: {
+            helpful,
+            rating,
+            comment,
+            reportedIssue,
+            submittedAt: new Date()
+          }
+        },
+        { new: true }
+      );
+
+      if (!analysis) {
+        return res.status(404).json({
+          success: false,
+          error: 'Analyse non trouvée'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Merci pour votre feedback'
+      });
+
+    } catch (error) {
+      console.error('Erreur feedback:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Erreur lors de l\'enregistrement du feedback'
+      });
+    }
+  }
+);
 
 module.exports = router;
