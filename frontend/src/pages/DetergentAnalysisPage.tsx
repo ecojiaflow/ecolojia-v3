@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productService } from '../services/productService';
-import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import { ScoreGauge } from '../components/analysis/ScoreGauge';
 import { IngredientsList } from '../components/cosmetics/IngredientsList';
