@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { 
   Info, 
   Leaf, 
-  Flask, 
+  Beaker, 
   AlertTriangle, 
   ChevronDown, 
   ChevronUp,
