@@ -1,28 +1,31 @@
 // frontend/src/pages/DetergentAnalysisPage.tsx
 
-
+// PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'; // ✅ Correction ici
 import {
-  Droplets,
+  AlertTriangle,
+  Droplet,
   Leaf,
   Shield,
-  AlertTriangle,
+  Star,
   Info,
   ChevronDown,
   ChevronUp,
-  Beaker,
-  Wind,
-  Fish,
+  Search,
+  Package,
+  AlertCircle,
   CheckCircle,
   XCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productService } from '../services/productService';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { ErrorMessage } from '../components/common/ErrorMessage';
+import ErrorMessage from '../components/ErrorMessage';
 import { ScoreGauge } from '../components/analysis/ScoreGauge';
+import { IngredientsList } from '../components/cosmetics/IngredientsList';
+import { CertificationBadges } from '../components/cosmetics/CertificationBadges';
 
 interface DetergentAnalysis {
   scores: {
