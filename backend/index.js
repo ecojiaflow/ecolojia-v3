@@ -1,8 +1,7 @@
-﻿// Point d'entrée Render - Force Node.js
-if (typeof Bun !== 'undefined') {
-  console.error('ERROR: Bun detected! Use Node.js instead.');
-  process.exit(1);
-}
+﻿// backend/index.js - Point d'entrée minimal
+console.log('=== ECOLOJIA Backend Starting ===');
+console.log('Node version:', process.version);
+console.log('Current directory:', __dirname);
 
-console.log('Starting with Node.js', process.version);
+// Pas de require('zod') !
 require('./src/server.js');
