@@ -329,3 +329,5 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
     </div>
   );
 };
+
+export default IngredientsList;

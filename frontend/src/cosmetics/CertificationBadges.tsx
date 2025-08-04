@@ -279,3 +279,5 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
     </div>
   );
 };
+
+export default CertificationBadges;
