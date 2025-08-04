@@ -37,7 +37,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "jspdf": "^3.0.1",
     "lucide-react": "^0.314.0",
-    "quagga": "^0.12.1",
+    "quagga": "^0.6.16",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -76,8 +76,8 @@
     "prettier": "^3.2.4",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11",
-    "vite-plugin-pwa": "^0.17.4"
+    "vite": "^7.0.6",
+    "vite-plugin-pwa": "^1.0.2"
   },
   "eslintConfig": {
     "extends": [

@@ -1,4 +1,4 @@
-// frontend/src/services/analysisService.js
+// PATH: frontend/src/services/analysisService.js
 
 import axios from 'axios';
 
@@ -110,7 +110,6 @@ class AnalysisService {
         }
       );
 
-      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -160,45 +159,8 @@ class AnalysisService {
   }
 
   /**
-   * Gestion des erreurs
+   * Analyse un produit alimentaire
    */
-  handleError(error) {
-    if (error.response) {
-      // Erreur de l'API
-      const { data, status } = error.response;
-      
-      if (status === 401) {
-        // Token expiré ou invalide
-        localStorage.removeItem('token');
-        window.location.href = '/auth';
-        return new Error('Session expirée. Veuillez vous reconnecter.');
-      }
-      
-      if (status === 403) {
-        // Quota dépassé ou accès refusé
-        return new Error(data.error || 'Accès refusé. Vérifiez vos quotas.');
-      }
-      
-      if (status === 429) {
-        // Rate limit
-        return new Error('Trop de requêtes. Veuillez patienter.');
-      }
-      
-      return new Error(data.error || 'Une erreur est survenue');
-    }
-    
-    if (error.request) {
-      // Pas de réponse
-      return new Error('Impossible de contacter le serveur. Vérifiez votre connexion.');
-    }
-    
-    // Autre erreur
-    return new Error('Une erreur inattendue est survenue');
-  }
-}
-
-export const analysisService = new AnalysisService(); // Analyse un produit alimentaire
-   
   async analyzeFood(data) {
     try {
       const response = await axios.post(
@@ -265,4 +227,31 @@ export const analysisService = new AnalysisService(); // Analyse un produit alim
   }
 
   /**
-   *
+   * Gestion des erreurs
+   */
+  handleError(error) {
+    if (error.response) {
+      const { data, status } = error.response;
+      if (status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/auth';
+        return new Error('Session expirée. Veuillez vous reconnecter.');
+      }
+      if (status === 403) {
+        return new Error(data.error || 'Accès refusé. Vérifiez vos quotas.');
+      }
+      if (status === 429) {
+        return new Error('Trop de requêtes. Veuillez patienter.');
+      }
+      return new Error(data.error || 'Une erreur est survenue');
+    }
+
+    if (error.request) {
+      return new Error('Impossible de contacter le serveur. Vérifiez votre connexion.');
+    }
+
+    return new Error('Une erreur inattendue est survenue');
+  }
+}
+
+export const analysisService = new AnalysisService();
