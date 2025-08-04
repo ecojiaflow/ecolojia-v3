@@ -198,7 +198,7 @@ class AnalysisService {
 }
 
 export const analysisService = new AnalysisService(); // Analyse un produit alimentaire
-   */
+   
   async analyzeFood(data) {
     try {
       const response = await axios.post(
