@@ -1,5 +1,14 @@
+﻿// Logger simple
+const logger = {
+  info: console.log,
+  error: console.error,
+  warn: console.warn
+};
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
 // backend/src/server.js
-// VERSION PRODUCTION COMPLÈTE ECOLOJIA V3 - AVEC RATE LIMITING ROBUSTE
+// VERSION PRODUCTION COMPLÃˆTE ECOLOJIA V3 - AVEC RATE LIMITING ROBUSTE
 
 const fs = require('fs');
 const path = require('path');
@@ -8,7 +17,7 @@ const path = require('path');
 console.log('Current directory:', __dirname);
 console.log('Quota file exists?', fs.existsSync(path.join(__dirname, 'routes', 'quota.js')));
 
-require('dotenv').config();
+// require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -19,13 +28,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Import des utils
-const { logger } = require('./utils/logger');
-const { asyncHandler } = require('./utils/errors');
+// const { logger } = require('./utils/logger');
+// const { asyncHandler } = require('./utils/errors');
 
 // Import du middleware de quotas
 const { checkQuota, checkQuotaMiddleware } = require('./middleware/quotaMiddleware');
 
-// Import du système de rate limiting robuste
+// Import du systÃ¨me de rate limiting robuste
 let rateLimiters = {};
 try {
   const rateLimiterModule = require('./middleware/rateLimiter');
@@ -41,9 +50,9 @@ try {
     getRateLimitStats: rateLimiterModule.getRateLimitStats,
     resetUserRateLimits: rateLimiterModule.resetUserRateLimits
   };
-  logger.info('✅ Rate limiter module loaded successfully');
+  logger.info('âœ… Rate limiter module loaded successfully');
 } catch (error) {
-  logger.warn('⚠️ Custom rate limiter not found, using fallback');
+  logger.warn('âš ï¸ Custom rate limiter not found, using fallback');
   // Fallback rate limiter simple
   const rateLimit = require('express-rate-limit');
   
@@ -66,10 +75,10 @@ try {
   };
   
   rateLimiters = {
-    globalLimiter: createFallbackLimiter(15 * 60 * 1000, 1000, 'Trop de requêtes, veuillez réessayer plus tard'),
+    globalLimiter: createFallbackLimiter(15 * 60 * 1000, 1000, 'Trop de requÃªtes, veuillez rÃ©essayer plus tard'),
     loginLimiter: createFallbackLimiter(15 * 60 * 1000, 5, 'Trop de tentatives de connexion'),
-    registerLimiter: createFallbackLimiter(60 * 60 * 1000, 3, 'Trop de créations de compte'),
-    dashboardLimiter: createFallbackLimiter(60 * 1000, 60, 'Trop de requêtes au dashboard'),
+    registerLimiter: createFallbackLimiter(60 * 60 * 1000, 3, 'Trop de crÃ©ations de compte'),
+    dashboardLimiter: createFallbackLimiter(60 * 1000, 60, 'Trop de requÃªtes au dashboard'),
     analysisLimiter: createFallbackLimiter(60 * 60 * 1000, 30, 'Limite d\'analyses atteinte'),
     aiLimiter: createFallbackLimiter(60 * 60 * 1000, 5, 'Limite de questions IA atteinte'),
     exportLimiter: createFallbackLimiter(24 * 60 * 60 * 1000, 5, 'Limite d\'exports atteinte'),
@@ -88,10 +97,10 @@ app.set('trust proxy', 1);
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY || 'admin-secret-key-2024';
 
-// Redis client global - EXPORTÉ pour usage dans d'autres modules
+// Redis client global - EXPORTÃ‰ pour usage dans d'autres modules
 let redisClient;
 
-// ========== MIDDLEWARES DE SÉCURITÉ ==========
+// ========== MIDDLEWARES DE SÃ‰CURITÃ‰ ==========
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -140,10 +149,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Middleware global pour ajouter les headers de quota
 app.use(rateLimiters.addQuotaHeaders);
 
-// Rate limiting global (appliqué à toutes les routes)
+// Rate limiting global (appliquÃ© Ã  toutes les routes)
 app.use(rateLimiters.globalLimiter);
 
-// Rate limiting spécifique pour l'authentification
+// Rate limiting spÃ©cifique pour l'authentification
 app.use('/api/auth/login', rateLimiters.loginLimiter);
 app.use('/api/auth/register', rateLimiters.registerLimiter);
 
@@ -161,10 +170,10 @@ async function connectMongoDB() {
       serverSelectionTimeoutMS: 10000
     });
 
-    logger.info('✅ MongoDB Atlas connected successfully');
+    logger.info('âœ… MongoDB Atlas connected successfully');
 
     const collections = await mongoose.connection.db.listCollections().toArray();
-    logger.info(`📦 Collections: ${collections.map(c => c.name).join(', ')}`);
+    logger.info(`ðŸ“¦ Collections: ${collections.map(c => c.name).join(', ')}`);
 
     return true;
   } catch (error) {
@@ -195,13 +204,13 @@ async function connectRedis() {
       redisClient.on('reconnecting', () => logger.warn('Redis: Reconnecting...'));
 
       await redisClient.connect();
-      logger.info('✅ Redis connected successfully');
+      logger.info('âœ… Redis connected successfully');
       
       // Exporter le client Redis pour usage global
       global.redisClient = redisClient;
       module.exports.redisClient = redisClient;
     } else {
-      logger.info('ℹ️ Redis not configured');
+      logger.info('â„¹ï¸ Redis not configured');
     }
   } catch (error) {
     logger.warn('Redis connection failed:', error.message);
@@ -285,7 +294,7 @@ const authMiddleware = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           success: false,
-          error: 'Utilisateur non trouvé'
+          error: 'Utilisateur non trouvÃ©'
         });
       }
       req.user = user;
@@ -299,7 +308,7 @@ const authMiddleware = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      error: 'Token invalide ou expiré'
+      error: 'Token invalide ou expirÃ©'
     });
   }
 };
@@ -324,7 +333,7 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: 'Mode test - MongoDB non connecté',
+      message: 'Mode test - MongoDB non connectÃ©',
       user: { email, firstName, lastName, tier: 'free' },
       token: fakeToken
     });
@@ -334,7 +343,7 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
   if (existingUser) {
     return res.status(409).json({
       success: false,
-      error: 'Cet email est déjà utilisé'
+      error: 'Cet email est dÃ©jÃ  utilisÃ©'
     });
   }
 
@@ -402,7 +411,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
 
       return res.json({
         success: true,
-        message: 'Mode test - Login simulé',
+        message: 'Mode test - Login simulÃ©',
         user: { email, tier: 'free' },
         token: fakeToken,
         accessToken: fakeToken,
@@ -490,14 +499,14 @@ app.post('/api/auth/refresh', (req, res) => {
   } catch (error) {
     res.status(401).json({
       success: false,
-      error: 'Token invalide ou expiré'
+      error: 'Token invalide ou expirÃ©'
     });
   }
 });
 
 // ========== ROUTES ADMIN RATE LIMITING ==========
 app.get('/api/admin/rate-limits/stats', authMiddleware, async (req, res) => {
-  // Vérifier que c'est un admin
+  // VÃ©rifier que c'est un admin
   if (req.user.role !== 'admin' && req.headers['x-admin-key'] !== ADMIN_API_KEY) {
     return res.status(403).json({ error: 'Admin access required' });
   }
@@ -511,7 +520,7 @@ app.get('/api/admin/rate-limits/stats', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/admin/rate-limits/reset/:userId', authMiddleware, async (req, res) => {
-  // Vérifier que c'est un admin
+  // VÃ©rifier que c'est un admin
   if (req.user.role !== 'admin' && req.headers['x-admin-key'] !== ADMIN_API_KEY) {
     return res.status(403).json({ error: 'Admin access required' });
   }
@@ -528,50 +537,50 @@ app.post('/api/admin/rate-limits/reset/:userId', authMiddleware, async (req, res
 
 // ========== CHARGEMENT DES ROUTES ==========
 function setupRoutes() {
-  logger.info('🔄 Chargement des routes...');
+  logger.info('ðŸ”„ Chargement des routes...');
 
-  // Routes cosmétiques
+  // Routes cosmÃ©tiques
   try {
     const cosmeticRoutes = require('./routes/cosmetic.routes');
     app.use('/api/cosmetic', authMiddleware, cosmeticRoutes);
-    logger.info('  ✅ Cosmetic routes loaded');
+    logger.info('  âœ… Cosmetic routes loaded');
   } catch (error) {
-    logger.error('  ❌ Cosmetic routes error:', error.message);
+    logger.error('  âŒ Cosmetic routes error:', error.message);
   }
 
-  // Routes détergents
+  // Routes dÃ©tergents
   try {
     const detergentRoutes = require('./routes/detergent.routes');
     app.use('/api/detergent', authMiddleware, detergentRoutes);
-    logger.info('  ✅ Detergent routes loaded');
+    logger.info('  âœ… Detergent routes loaded');
   } catch (error) {
-    logger.error('  ❌ Detergent routes error:', error.message);
+    logger.error('  âŒ Detergent routes error:', error.message);
   }
 
-  // Routes dashboard avec rate limiter spécifique
+  // Routes dashboard avec rate limiter spÃ©cifique
   try {
     const dashboardRoutes = require('./routes/dashboard');
     app.use('/api/dashboard', authMiddleware, rateLimiters.dashboardLimiter, dashboardRoutes);
-    logger.info('  ✅ Dashboard routes loaded with rate limiting');
+    logger.info('  âœ… Dashboard routes loaded with rate limiting');
   } catch (error) {
-    logger.error('  ❌ Dashboard routes error:', error.message);
+    logger.error('  âŒ Dashboard routes error:', error.message);
   }
 
   try {
     const productRoutes = require('./routes/products');
     app.use('/api/products', productRoutes);
-    logger.info('  ✅ Product routes loaded');
+    logger.info('  âœ… Product routes loaded');
   } catch (error) {
-    logger.error('  ❌ Product routes error:', error.message);
+    logger.error('  âŒ Product routes error:', error.message);
   }
 
   // Routes d'analyse avec rate limiter et middleware de quotas
   try {
     const analysisRoutes = require('./routes/analysis');
     app.use('/api/analysis', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, analysisRoutes);
-    logger.info('  ✅ Analysis routes loaded with rate limiting and quota check');
+    logger.info('  âœ… Analysis routes loaded with rate limiting and quota check');
   } catch (error) {
-    logger.warn('  ⚠️ Analysis routes not found, creating minimal routes');
+    logger.warn('  âš ï¸ Analysis routes not found, creating minimal routes');
     
     // Routes minimales si le fichier n'existe pas
     const analysisRouter = express.Router();
@@ -581,19 +590,19 @@ function setupRoutes() {
     try {
       cosmeticAnalyzer = require('./services/analysis/cosmeticAnalyzer');
       detergentAnalyzer = require('./services/analysis/detergentAnalyzer');
-      logger.info('  ✅ Analyzers loaded successfully');
+      logger.info('  âœ… Analyzers loaded successfully');
     } catch (err) {
-      logger.error('  ❌ Error loading analyzers:', err.message);
+      logger.error('  âŒ Error loading analyzers:', err.message);
     }
     
-    // Route analyse cosmétique
+    // Route analyse cosmÃ©tique
     analysisRouter.post('/cosmetic', asyncHandler(async (req, res) => {
       const { productName, ingredients } = req.body;
       
       if (!productName || !ingredients) {
         return res.status(400).json({
           success: false,
-          error: 'Nom du produit et ingrédients requis'
+          error: 'Nom du produit et ingrÃ©dients requis'
         });
       }
       
@@ -603,12 +612,12 @@ function setupRoutes() {
       } else {
         res.status(500).json({
           success: false,
-          error: 'Service d\'analyse cosmétique non disponible'
+          error: 'Service d\'analyse cosmÃ©tique non disponible'
         });
       }
     }));
     
-    // Route analyse détergent
+    // Route analyse dÃ©tergent
     analysisRouter.post('/detergent', asyncHandler(async (req, res) => {
       const { productName, ingredients } = req.body;
       
@@ -625,7 +634,7 @@ function setupRoutes() {
       } else {
         res.status(500).json({
           success: false,
-          error: 'Service d\'analyse détergent non disponible'
+          error: 'Service d\'analyse dÃ©tergent non disponible'
         });
       }
     }));
@@ -636,18 +645,18 @@ function setupRoutes() {
   try {
     const analyzeRoutes = require('./routes/analyze.routes');
     app.use('/api/analyze', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, analyzeRoutes);
-    logger.info('  ✅ Analyze routes loaded with rate limiting and quota check');
+    logger.info('  âœ… Analyze routes loaded with rate limiting and quota check');
   } catch (error) {
-    logger.warn('  ⚠️ Analyze routes not found');
+    logger.warn('  âš ï¸ Analyze routes not found');
   }
 
   // QUOTA ROUTES
   try {
     const quotaRoutes = require('./routes/quota');
     app.use('/api/quota', quotaRoutes);
-    logger.info('  ✅ Quota routes loaded');
+    logger.info('  âœ… Quota routes loaded');
   } catch (error) {
-    logger.warn('  ⚠️ Quota routes not found, creating minimal routes');
+    logger.warn('  âš ï¸ Quota routes not found, creating minimal routes');
     
     // Routes minimales de quota si le fichier n'existe pas
     const quotaRouter = express.Router();
@@ -659,7 +668,7 @@ function setupRoutes() {
           const user = await User.findById(req.userId).select('quotas tier subscription');
           
           if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+            return res.status(404).json({ message: 'Utilisateur non trouvÃ©' });
           }
 
           // Calculer les limites selon le tier
@@ -706,29 +715,29 @@ function setupRoutes() {
         }
       } catch (error) {
         logger.error('Error fetching quotas:', error);
-        res.status(500).json({ message: 'Erreur lors de la récupération des quotas' });
+        res.status(500).json({ message: 'Erreur lors de la rÃ©cupÃ©ration des quotas' });
       }
     });
     
     app.use('/api/quota', quotaRouter);
-    logger.info('  ✅ Quota routes created (minimal)');
+    logger.info('  âœ… Quota routes created (minimal)');
   }
 
   // NOUVELLES ROUTES
   try {
     const proxyRoutes = require('./routes/proxy');
     app.use('/api/proxy', authMiddleware, proxyRoutes);
-    logger.info('  ✅ Proxy routes loaded');
+    logger.info('  âœ… Proxy routes loaded');
   } catch (error) {
-    logger.error('  ❌ Proxy routes error:', error.message);
+    logger.error('  âŒ Proxy routes error:', error.message);
   }
 
   try {
     const gdprRoutes = require('./routes/gdpr');
     app.use('/api/gdpr', authMiddleware, gdprRoutes);
-    logger.info('  ✅ GDPR routes loaded');
+    logger.info('  âœ… GDPR routes loaded');
   } catch (error) {
-    logger.error('  ❌ GDPR routes error:', error.message);
+    logger.error('  âŒ GDPR routes error:', error.message);
   }
 
   // AI Routes avec rate limiter et quota check
@@ -736,51 +745,51 @@ function setupRoutes() {
     const aiRoutes = require('./routes/ai');
     app.use('/api/ai', authMiddleware, rateLimiters.aiLimiter, checkQuotaMiddleware, aiRoutes);
     app.use('/api/v1/ai', authMiddleware, rateLimiters.aiLimiter, checkQuotaMiddleware, aiRoutes);
-    logger.info('  ✅ AI routes loaded with rate limiting and quota check');
+    logger.info('  âœ… AI routes loaded with rate limiting and quota check');
   } catch (error) {
-    logger.warn('  ⚠️ AI routes not found');
+    logger.warn('  âš ï¸ AI routes not found');
   }
 
   // Autres routes
   try {
     const partnerRoutes = require('./routes/partner.routes');
     app.use('/api/partner', partnerRoutes);
-    logger.info('  ✅ Partner routes loaded');
+    logger.info('  âœ… Partner routes loaded');
   } catch (error) {
-    logger.warn('  ⚠️ Partner routes not found');
+    logger.warn('  âš ï¸ Partner routes not found');
   }
 
   try {
     const paymentRoutes = require('./routes/payment');
     app.use('/api/payment', authMiddleware, paymentRoutes);
-    logger.info('  ✅ Payment routes loaded');
+    logger.info('  âœ… Payment routes loaded');
   } catch (error) {
-    logger.warn('  ⚠️ Payment routes not found');
+    logger.warn('  âš ï¸ Payment routes not found');
   }
 
   try {
     const algoliaRoutes = require('./routes/algolia');
     app.use('/api/algolia', algoliaRoutes);
-    logger.info('  ✅ Algolia routes loaded');
+    logger.info('  âœ… Algolia routes loaded');
   } catch (error) {
-    logger.warn('  ⚠️ Algolia routes not found');
+    logger.warn('  âš ï¸ Algolia routes not found');
   }
 
-  // Route export avec rate limiter spécifique
+  // Route export avec rate limiter spÃ©cifique
   app.post('/api/export/*', authMiddleware, rateLimiters.exportLimiter, (req, res) => {
     res.status(501).json({ error: 'Export functionality not yet implemented' });
   });
 
-  logger.info('✅ Routes setup completed\n');
+  logger.info('âœ… Routes setup completed\n');
 }
 
 // ========== JOBS CRON ==========
 function setupCronJobs() {
   const cron = require('node-cron');
   
-  // Reset des quotas quotidiens à minuit
+  // Reset des quotas quotidiens Ã  minuit
   cron.schedule('0 0 * * *', async () => {
-    logger.info('🔄 Running daily quota reset...');
+    logger.info('ðŸ”„ Running daily quota reset...');
     try {
       if (User && mongoose.connection.readyState === 1) {
         const result = await User.updateMany(
@@ -795,16 +804,16 @@ function setupCronJobs() {
             }
           }
         );
-        logger.info(`✅ Reset quotas for ${result.modifiedCount} users`);
+        logger.info(`âœ… Reset quotas for ${result.modifiedCount} users`);
       }
     } catch (error) {
-      logger.error('❌ Quota reset error:', error);
+      logger.error('âŒ Quota reset error:', error);
     }
   });
 
   // Nettoyage des logs anciens (90 jours)
   cron.schedule('0 3 * * 0', async () => {
-    logger.info('🔄 Running log cleanup...');
+    logger.info('ðŸ”„ Running log cleanup...');
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - 90);
@@ -812,10 +821,10 @@ function setupCronJobs() {
       if (mongoose.connection.readyState === 1) {
         const WebhookLog = require('./models/WebhookLog');
         const result = await WebhookLog.cleanupOldLogs(90);
-        logger.info(`✅ Cleaned up old webhook logs`);
+        logger.info(`âœ… Cleaned up old webhook logs`);
       }
     } catch (error) {
-      logger.error('❌ Log cleanup error:', error);
+      logger.error('âŒ Log cleanup error:', error);
     }
   });
 
@@ -824,15 +833,15 @@ function setupCronJobs() {
     cron.schedule('0 * * * *', async () => {
       try {
         const stats = await rateLimiters.getRateLimitStats();
-        logger.info('📊 Hourly rate limit stats:', JSON.stringify(stats));
+        logger.info('ðŸ“Š Hourly rate limit stats:', JSON.stringify(stats));
       } catch (error) {
-        logger.error('❌ Rate limit stats error:', error);
+        logger.error('âŒ Rate limit stats error:', error);
       }
     });
   }
 }
 
-// ========== DÉMARRAGE SERVEUR ==========
+// ========== DÃ‰MARRAGE SERVEUR ==========
 async function startServer() {
   try {
     await connectMongoDB();
@@ -854,12 +863,12 @@ async function startServer() {
     app.use((err, req, res, next) => {
       logger.error('Error:', err);
       
-      // Gestion spéciale pour les erreurs de rate limit
+      // Gestion spÃ©ciale pour les erreurs de rate limit
       if (err.status === 429) {
         return res.status(429).json({
           success: false,
           error: 'RATE_LIMIT_EXCEEDED',
-          message: err.message || 'Trop de requêtes',
+          message: err.message || 'Trop de requÃªtes',
           retryAfter: err.retryAfter || 60
         });
       }
@@ -872,34 +881,34 @@ async function startServer() {
     });
 
     app.listen(PORT, () => {
-      logger.info('╔════════════════════════════════════════════════════════════╗');
-      logger.info('║             ECOLOJIA V3 SERVER STARTED                     ║');
-      logger.info('╠════════════════════════════════════════════════════════════╣');
-      logger.info(`║ 🚀 Server:       http://localhost:${PORT}                      ║`);
-      logger.info(`║ 📊 Environment:  ${(process.env.NODE_ENV || 'development').padEnd(41)}║`);
-      logger.info(`║ 🔗 Frontend:     ${(process.env.FRONTEND_URL || 'http://localhost:3000').padEnd(41)}║`);
-      logger.info('╠════════════════════════════════════════════════════════════╣');
-      logger.info(`║ 🗄️  MongoDB:      ${mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Not connected'}                              ║`);
-      logger.info(`║ 💾 Redis:        ${redisClient?.isReady ? '✅ Connected' : '❌ Not connected'}                              ║`);
-      logger.info(`║ 🚦 Rate Limit:   ${redisClient?.isReady ? '✅ Redis' : '⚠️  Memory'}                                 ║`);
-      logger.info(`║ 🔍 Algolia:      ${process.env.ALGOLIA_APP_ID ? '✅ Configured' : '❌ Not configured'}                             ║`);
-      logger.info(`║ 💳 LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? '✅ Configured' : '❌ Not configured'}                             ║`);
-      logger.info(`║ 🤖 DeepSeek AI:  ${process.env.DEEPSEEK_API_KEY ? '✅ Configured' : '❌ Not configured'}                             ║`);
-      logger.info('╠════════════════════════════════════════════════════════════╣');
-      logger.info('║ 📦 Features:                                               ║');
-      logger.info('║   • Food Analysis (NOVA, Nutri-Score)                     ║');
-      logger.info('║   • Cosmetic Analysis (INCI, Safety)                      ║');
-      logger.info('║   • Detergent Analysis (Eco, CDV)                         ║');
-      logger.info('║   • AI Chat Assistant with Quotas                         ║');
-      logger.info('║   • Advanced Rate Limiting (Per Tier)                     ║');
-      logger.info('║   • Secure API Proxy                                      ║');
-      logger.info('║   • GDPR Compliance                                       ║');
-      logger.info('║   • Payment Processing                                    ║');
-      logger.info('╚════════════════════════════════════════════════════════════╝');
+      logger.info('â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—');
+      logger.info('â•‘             ECOLOJIA V3 SERVER STARTED                     â•‘');
+      logger.info('â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£');
+      logger.info(`â•‘ ðŸš€ Server:       http://localhost:${PORT}                      â•‘`);
+      logger.info(`â•‘ ðŸ“Š Environment:  ${(process.env.NODE_ENV || 'development').padEnd(41)}â•‘`);
+      logger.info(`â•‘ ðŸ”— Frontend:     ${(process.env.FRONTEND_URL || 'http://localhost:3000').padEnd(41)}â•‘`);
+      logger.info('â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£');
+      logger.info(`â•‘ ðŸ—„ï¸  MongoDB:      ${mongoose.connection.readyState === 1 ? 'âœ… Connected' : 'âŒ Not connected'}                              â•‘`);
+      logger.info(`â•‘ ðŸ’¾ Redis:        ${redisClient?.isReady ? 'âœ… Connected' : 'âŒ Not connected'}                              â•‘`);
+      logger.info(`â•‘ ðŸš¦ Rate Limit:   ${redisClient?.isReady ? 'âœ… Redis' : 'âš ï¸  Memory'}                                 â•‘`);
+      logger.info(`â•‘ ðŸ” Algolia:      ${process.env.ALGOLIA_APP_ID ? 'âœ… Configured' : 'âŒ Not configured'}                             â•‘`);
+      logger.info(`â•‘ ðŸ’³ LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? 'âœ… Configured' : 'âŒ Not configured'}                             â•‘`);
+      logger.info(`â•‘ ðŸ¤– DeepSeek AI:  ${process.env.DEEPSEEK_API_KEY ? 'âœ… Configured' : 'âŒ Not configured'}                             â•‘`);
+      logger.info('â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£');
+      logger.info('â•‘ ðŸ“¦ Features:                                               â•‘');
+      logger.info('â•‘   â€¢ Food Analysis (NOVA, Nutri-Score)                     â•‘');
+      logger.info('â•‘   â€¢ Cosmetic Analysis (INCI, Safety)                      â•‘');
+      logger.info('â•‘   â€¢ Detergent Analysis (Eco, CDV)                         â•‘');
+      logger.info('â•‘   â€¢ AI Chat Assistant with Quotas                         â•‘');
+      logger.info('â•‘   â€¢ Advanced Rate Limiting (Per Tier)                     â•‘');
+      logger.info('â•‘   â€¢ Secure API Proxy                                      â•‘');
+      logger.info('â•‘   â€¢ GDPR Compliance                                       â•‘');
+      logger.info('â•‘   â€¢ Payment Processing                                    â•‘');
+      logger.info('â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
     });
 
   } catch (error) {
-    logger.error('❌ Failed to start server:', error);
+    logger.error('âŒ Failed to start server:', error);
     process.exit(1);
   }
 }
