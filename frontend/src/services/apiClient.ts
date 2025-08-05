@@ -112,7 +112,7 @@ const requestQueue = new RequestQueue();
 
 // Créer l'instance Axios
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: `${API_CONFIG.getCurrentApiUrl()}/api`,
+  baseURL: API_CONFIG.getCurrentApiUrl(), // ✅ CORRECTION: Sans ajouter /api (déjà dans les endpoints)
   timeout: API_CONFIG.TIMEOUT,
   headers: DEFAULT_HEADERS,
 });
