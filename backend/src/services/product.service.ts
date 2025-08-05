@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/services/product.service.ts
+// PATH: backend/src/services/product.service.ts
 // // import { PrismaClient } from '@prisma/client';
 import { EcoScoreService } from './eco-score.service';
 
@@ -13,12 +13,12 @@ export class ProductService {
 
   async analyzeProductFromText(text: string) {
     try {
-      console.log('ðŸ” Analyse produit depuis texte:', text);
+      console.log('🔍 Analyse produit depuis texte:', text);
       
       // Extraction des informations depuis le texte
       const productInfo = this.extractProductInfo(text);
       
-      // âœ… CORRECTION: Utiliser la mÃ©thode qui existe
+      // ✅ CORRECTION: Utiliser la méthode qui existe
       const aiResult = await this.ecoScoreService.calculate({
         id: `text-analysis-${Date.now()}`,
         title: productInfo.title,
@@ -36,27 +36,27 @@ export class ProductService {
         }
       };
     } catch (error) {
-      console.error('âŒ Erreur analyse texte:', error);
+      console.error('❌ Erreur analyse texte:', error);
       throw error;
     }
   }
 
   private extractProductInfo(text: string) {
-    // Logique simplifiÃ©e d'extraction
+    // Logique simplifiée d'extraction
     const lines = text.split('\n').filter(line => line.trim());
     
-    let title = 'Produit analysÃ©';
+    let title = 'Produit analysé';
     let ingredients = '';
-    let category = 'Non classÃ©';
+    let category = 'Non classé';
     
-    // Tentative d'extraction du titre (premiÃ¨re ligne non vide)
+    // Tentative d'extraction du titre (première ligne non vide)
     if (lines.length > 0) {
       title = lines[0].trim();
     }
     
-    // Recherche des ingrÃ©dients
+    // Recherche des ingrédients
     const ingredientsLine = lines.find(line => 
-      line.toLowerCase().includes('ingrÃ©dients') || 
+      line.toLowerCase().includes('ingrédients') || 
       line.toLowerCase().includes('composition') ||
       line.includes('E') || 
       line.includes('%')
@@ -66,12 +66,12 @@ export class ProductService {
       ingredients = ingredientsLine.replace(/^[^:]*:/, '').trim();
     }
     
-    // DÃ©tection de catÃ©gorie basique
+    // Détection de catégorie basique
     const textLower = text.toLowerCase();
-    if (textLower.includes('cosmÃ©tique') || textLower.includes('crÃ¨me') || textLower.includes('shampoing')) {
-      category = 'cosmÃ©tique';
-    } else if (textLower.includes('dÃ©tergent') || textLower.includes('lessive') || textLower.includes('nettoyant')) {
-      category = 'dÃ©tergent';
+    if (textLower.includes('cosmétique') || textLower.includes('crème') || textLower.includes('shampoing')) {
+      category = 'cosmétique';
+    } else if (textLower.includes('détergent') || textLower.includes('lessive') || textLower.includes('nettoyant')) {
+      category = 'détergent';
     } else if (textLower.includes('alimentaire') || textLower.includes('food') || textLower.includes('nutrition')) {
       category = 'alimentaire';
     }
@@ -121,7 +121,7 @@ export class ProductService {
         count: products.length
       };
     } catch (error) {
-      console.error('âŒ Erreur recherche produits:', error);
+      console.error('❌ Erreur recherche produits:', error);
       throw error;
     }
   }
@@ -130,11 +130,11 @@ export class ProductService {
     try {
       // const product = await prisma.product.findUnique({ // PRISMA DISABLED
         where: { id }
-        // âœ… CORRECTION: supprimer _count qui n'existe pas
+        // ✅ CORRECTION: supprimer _count qui n'existe pas
       });
       
       if (!product) {
-        return { success: false, error: 'Produit non trouvÃ©' };
+        return { success: false, error: 'Produit non trouvé' };
       }
       
       return {
@@ -142,7 +142,7 @@ export class ProductService {
         product
       };
     } catch (error) {
-      console.error('âŒ Erreur rÃ©cupÃ©ration produit:', error);
+      console.error('❌ Erreur récupération produit:', error);
       throw error;
     }
   }
@@ -154,19 +154,19 @@ export class ProductService {
         select: {
           id: true,
           title: true,
-          description: true, // âœ… CORRECTION: utiliser description
+          description: true, // ✅ CORRECTION: utiliser description
           category: true
         }
       });
       
       if (!product) {
-        return { success: false, error: 'Produit non trouvÃ©' };
+        return { success: false, error: 'Produit non trouvé' };
       }
       
       const newScore = await this.ecoScoreService.calculate({
         id: product.id,
         title: product.title,
-        ingredients: product.description || '', // âœ… CORRECTION: utiliser description
+        ingredients: product.description || '', // ✅ CORRECTION: utiliser description
         category: product.category || ''
       });
       
@@ -174,11 +174,11 @@ export class ProductService {
       
       return {
         success: true,
-        message: 'Score mis Ã  jour',
+        message: 'Score mis à jour',
         score: newScore
       };
     } catch (error) {
-      console.error('âŒ Erreur mise Ã  jour score:', error);
+      console.error('❌ Erreur mise à jour score:', error);
       throw error;
     }
   }
@@ -209,7 +209,7 @@ export class ProductService {
         count: products.length
       };
     } catch (error) {
-      console.error('âŒ Erreur produits par catÃ©gorie:', error);
+      console.error('❌ Erreur produits par catégorie:', error);
       throw error;
     }
   }
@@ -238,7 +238,7 @@ export class ProductService {
         count: products.length
       };
     } catch (error) {
-      console.error('âŒ Erreur top produits:', error);
+      console.error('❌ Erreur top produits:', error);
       throw error;
     }
   }
@@ -269,7 +269,7 @@ export class ProductService {
         }
       };
     } catch (error) {
-      console.error('âŒ Erreur statistiques produits:', error);
+      console.error('❌ Erreur statistiques produits:', error);
       throw error;
     }
   }

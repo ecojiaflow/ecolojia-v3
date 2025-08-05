@@ -1,4 +1,4 @@
-ï»¿// PATH: backend/src/controllers/scanController.ts
+// PATH: backend/src/controllers/scanController.ts
 import { Request, Response } from 'express';
 import { BarcodeAnalyzer } from '../services/ai/barcodeAnalyzer';
 import { OpenFoodFactsService } from '../services/external/openFoodFactsService';
@@ -18,15 +18,15 @@ export const scanBarcodeController = async (req: Request, res: Response) => {
     if (!category || !name || !ingredients) {
       return res.status(400).json({
         success: false,
-        message: 'CatÃ©gorie, nom et ingrÃ©dients requis'
+        message: 'Catégorie, nom et ingrédients requis'
       });
     }
 
-    // TODO: ImplÃ©menter l'analyse pour scanController
+    // TODO: Implémenter l'analyse pour scanController
     
     return res.json({
       success: true,
-      message: 'Analyse scanController en cours de dÃ©veloppement'
+      message: 'Analyse scanController en cours de développement'
     });
     
   } catch (error) {

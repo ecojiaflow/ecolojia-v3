@@ -1,7 +1,7 @@
-﻿// PATH: backend/src/routes/user.routes.ts
+// PATH: backend/src/routes/user.routes.ts
 // ==============================
-// ðŸ“ backend/src/routes/user.routes.ts
-// SYSTÃˆME DE QUOTA ET GESTION UTILISATEUR ECOLOJIA
+// 📁 backend/src/routes/user.routes.ts
+// SYSTÈME DE QUOTA ET GESTION UTILISATEUR ECOLOJIA
 // ==============================
 
 import express, { Request, Response, NextFunction } from 'express';
@@ -14,7 +14,7 @@ import { User } from '../models/User';
 const router = express.Router();
 
 // ==============================
-// SYSTÃˆME DE QUOTA EN MÃ‰MOIRE
+// SYSTÈME DE QUOTA EN MÉMOIRE
 // ==============================
 
 interface UserQuota {
@@ -36,7 +36,7 @@ interface QuotaCheck {
 // Structure : { userId: { analyses: 5, lastReset: '2025-07-13', chat: 20 } }
 const userQuotas = new Map<string, UserQuota>();
 
-// Limites par dÃ©faut
+// Limites par défaut
 const DAILY_LIMITS = {
   free: {
     analyses: 10,
@@ -53,7 +53,7 @@ const DAILY_LIMITS = {
 // ==============================
 
 function getUserId(req: any): string {
-  // Si c'est une requÃªte authentifiÃ©e avec cacheAuthMiddleware
+  // Si c'est une requête authentifiée avec cacheAuthMiddleware
   if (req.cacheUser) {
     return req.cacheUser.id;
   }
@@ -92,16 +92,16 @@ function getResetTime(): string {
 
 // ==============================
 // ROUTE GET /api/user/quota
-// Route existante amÃ©liorÃ©e
+// Route existante améliorée
 // ==============================
 
 router.get('/quota', async (req: Request, res: Response) => {
   try {
-    console.log('ðŸ“Š Demande quota utilisateur');
+    console.log('📊 Demande quota utilisateur');
     
     const userId = getUserId(req);
     
-    // Si l'utilisateur est authentifiÃ©, vÃ©rifier aussi dans MongoDB
+    // Si l'utilisateur est authentifié, vérifier aussi dans MongoDB
     if (req.headers.authorization) {
       try {
         const quotaCheck = await mongoDBService.checkUserQuota(userId, 'analyses') as QuotaCheck;
@@ -120,7 +120,7 @@ router.get('/quota', async (req: Request, res: Response) => {
           }
         });
       } catch (mongoError) {
-        console.log('âš ï¸ Fallback to in-memory quota');
+        console.log('⚠️ Fallback to in-memory quota');
       }
     }
     
@@ -142,11 +142,11 @@ router.get('/quota', async (req: Request, res: Response) => {
       }
     };
     
-    console.log('âœ… Quota envoyÃ©:', response);
+    console.log('✅ Quota envoyé:', response);
     res.json(response);
     
   } catch (error) {
-    console.error('âŒ Erreur quota:', error); return res.status(500).json({ error: "Erreur serveur" });
+    console.error('❌ Erreur quota:', error); return res.status(500).json({ error: "Erreur serveur" });
     res.status(500).json({
       success: false,
       error: 'Erreur serveur quota',
@@ -247,7 +247,7 @@ router.post('/history', cacheAuthMiddleware as any, async (req: any, res: Respon
   }
 });
 
-// Route pour rÃ©cupÃ©rer l'historique
+// Route pour récupérer l'historique
 router.get('/history', cacheAuthMiddleware as any, async (req: any, res: Response) => {
   try {
     if (!req.cacheUser) {
@@ -257,12 +257,12 @@ router.get('/history', cacheAuthMiddleware as any, async (req: any, res: Respons
     const userId = req.cacheUser.id;
     const limit = parseInt(req.query.limit as string) || 20;
     
-    // RÃ©cupÃ©rer les derniÃ¨res analyses de l'utilisateur
+    // Récupérer les dernières analyses de l'utilisateur
     const analytics = await UserAnalytics.find({ userId })
       .sort({ date: -1 })
       .limit(30); // 30 derniers jours
 
-    // Extraire tous les Ã©vÃ©nements de type 'scan'
+    // Extraire tous les événements de type 'scan'
     const scanEvents: any[] = [];
     for (const day of analytics) {
       for (const event of day.events) {
@@ -349,10 +349,10 @@ router.get('/analytics', cacheAuthMiddleware as any, async (req: any, res: Respo
 });
 
 // ==============================
-// NOUVELLES ROUTES - PRÃ‰FÃ‰RENCES
+// NOUVELLES ROUTES - PRÉFÉRENCES
 // ==============================
 
-// Route pour mettre Ã  jour les prÃ©fÃ©rences utilisateur
+// Route pour mettre à jour les préférences utilisateur
 router.put('/preferences', cacheAuthMiddleware as any, async (req: any, res: Response) => {
   try {
     if (!req.cacheUser) {
@@ -379,7 +379,7 @@ router.put('/preferences', cacheAuthMiddleware as any, async (req: any, res: Res
 });
 
 // ==============================
-// MIDDLEWARE VÃ‰RIFICATION QUOTA
+// MIDDLEWARE VÉRIFICATION QUOTA
 // ==============================
 
 export function checkAnalysisQuota(req: Request, res: Response, next: NextFunction) {
@@ -401,16 +401,16 @@ export function checkAnalysisQuota(req: Request, res: Response, next: NextFuncti
       });
     }
     
-    // IncrÃ©menter le compteur
+    // Incrémenter le compteur
     userQuota.analyses++;
     userQuotas.set(userId, userQuota);
     
-    console.log(`ðŸ“Š Quota analyse utilisÃ©: ${userQuota.analyses}/${limits.analyses} (user: ${userId.substring(0, 20)}...)`);
+    console.log(`📊 Quota analyse utilisé: ${userQuota.analyses}/${limits.analyses} (user: ${userId.substring(0, 20)}...)`);
     next();
     
   } catch (error) {
-    console.error('âŒ Erreur middleware quota analyse:', error); return res.status(500).json({ error: "Erreur serveur" });
-    next(); // En cas d'erreur, on continue (mode dÃ©gradÃ©)
+    console.error('❌ Erreur middleware quota analyse:', error); return res.status(500).json({ error: "Erreur serveur" });
+    next(); // En cas d'erreur, on continue (mode dégradé)
   }
 }
 
@@ -432,16 +432,16 @@ export function checkChatQuota(req: Request, res: Response, next: NextFunction) 
       });
     }
     
-    // IncrÃ©menter le compteur
+    // Incrémenter le compteur
     userQuota.chat++;
     userQuotas.set(userId, userQuota);
     
-    console.log(`ðŸ’¬ Quota chat utilisÃ©: ${userQuota.chat}/${limits.chat} (user: ${userId.substring(0, 20)}...)`);
+    console.log(`💬 Quota chat utilisé: ${userQuota.chat}/${limits.chat} (user: ${userId.substring(0, 20)}...)`);
     next();
     
   } catch (error) {
-    console.error('âŒ Erreur middleware chat quota:', error); return res.status(500).json({ error: "Erreur serveur" });
-    next(); // En cas d'erreur, on continue (mode dÃ©gradÃ©)
+    console.error('❌ Erreur middleware chat quota:', error); return res.status(500).json({ error: "Erreur serveur" });
+    next(); // En cas d'erreur, on continue (mode dégradé)
   }
 }
 

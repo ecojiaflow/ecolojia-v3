@@ -1,6 +1,6 @@
-﻿// ═══════════════════════════════════════════════════════════════════════
-// backend/src/services/ai/alternativesEngine.js - VERSION CORRIGÉE
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
+// backend/src/services/ai/alternativesEngine.js - VERSION CORRIG�E
+// -----------------------------------------------------------------------
 
 // Gestion du logger avec fallback
 let logger;
@@ -23,21 +23,21 @@ class AlternativesEngine {
   constructor() {
     this.alternatives = {
       food: {
-        'nutella': ['Nocciolata Bio', 'Pâte à tartiner maison', 'Beurre de cacahuète bio'],
-        'coca-cola': ['Eau pétillante citronnée', 'Kombucha', 'Thé glacé maison'],
-        'chips': ['Chips de légumes maison', 'Noix non salées', 'Popcorn nature'],
+        'nutella': ['Nocciolata Bio', 'P�te � tartiner maison', 'Beurre de cacahu�te bio'],
+        'coca-cola': ['Eau p�tillante citronn�e', 'Kombucha', 'Th� glac� maison'],
+        'chips': ['Chips de l�gumes maison', 'Noix non sal�es', 'Popcorn nature'],
         'biscuit': ['Biscuits maison', 'Fruits secs', 'Galettes de riz'],
-        'yaourt': ['Yaourt nature bio', 'Kéfir', 'Fromage blanc 0%']
+        'yaourt': ['Yaourt nature bio', 'K�fir', 'Fromage blanc 0%']
       },
       cosmetics: {
         'shampoing': ['Shampoing solide bio', 'No-poo', 'Rhassoul'],
-        'crème': ['Aloe vera', 'Huile de coco', 'Crème bio certifiée'],
-        'déodorant': ['Déodorant solide bio', 'Pierre d\'alun', 'Bicarbonate'],
-        'maquillage': ['Maquillage bio', 'Produits minéraux', 'DIY naturel']
+        'cr�me': ['Aloe vera', 'Huile de coco', 'Cr�me bio certifi�e'],
+        'd�odorant': ['D�odorant solide bio', 'Pierre d\'alun', 'Bicarbonate'],
+        'maquillage': ['Maquillage bio', 'Produits min�raux', 'DIY naturel']
       },
       detergents: {
         'lessive': ['Lessive au savon de Marseille', 'Noix de lavage', 'Lessive maison'],
-        'liquide vaisselle': ['Savon de Marseille', 'Vinaigre blanc', 'Produit bio certifié'],
+        'liquide vaisselle': ['Savon de Marseille', 'Vinaigre blanc', 'Produit bio certifi�'],
         'nettoyant': ['Vinaigre blanc', 'Bicarbonate', 'Savon noir']
       }
     };
@@ -54,7 +54,7 @@ class AlternativesEngine {
     // Chercher dans la base d'alternatives
     const categoryAlternatives = this.alternatives[category] || {};
     
-    // Recherche par mots-clés
+    // Recherche par mots-cl�s
     for (const [key, values] of Object.entries(categoryAlternatives)) {
       if (productNameLower.includes(key)) {
         alternatives.push(...values.map(alt => ({
@@ -67,7 +67,7 @@ class AlternativesEngine {
       }
     }
 
-    // Si pas d'alternatives trouvées, générer des suggestions génériques
+    // Si pas d'alternatives trouv�es, g�n�rer des suggestions g�n�riques
     if (alternatives.length === 0) {
       logger.debug('No specific alternatives found, generating generic suggestions');
       
@@ -80,7 +80,7 @@ class AlternativesEngine {
         },
         {
           name: `Alternative maison`,
-          reason: 'Fait maison, 100% naturel et économique',
+          reason: 'Fait maison, 100% naturel et �conomique',
           score: 95,
           category: category
         },
@@ -119,7 +119,7 @@ class AlternativesEngine {
 
       return betterProducts.map(p => ({
         name: `${p.brand ? p.brand + ' - ' : ''}${p.name}`,
-        reason: 'Meilleur score santé dans la même catégorie',
+        reason: 'Meilleur score sant� dans la m�me cat�gorie',
         score: p.analysisData?.healthScore || 0,
         productId: p._id
       }));
@@ -132,19 +132,19 @@ class AlternativesEngine {
   getAlternativeReason(alternativeName, category) {
     const reasons = {
       food: {
-        'bio': 'Sans pesticides, meilleur pour la santé',
+        'bio': 'Sans pesticides, meilleur pour la sant�',
         'maison': 'Fait maison, sans additifs',
-        'nature': 'Non transformé, plus nutritif'
+        'nature': 'Non transform�, plus nutritif'
       },
       cosmetics: {
         'bio': 'Sans produits chimiques agressifs',
-        'solide': 'Écologique, sans emballage plastique',
-        'naturel': 'Ingrédients naturels, respectueux de la peau'
+        'solide': '�cologique, sans emballage plastique',
+        'naturel': 'Ingr�dients naturels, respectueux de la peau'
       },
       detergents: {
-        'marseille': 'Naturel et biodégradable',
-        'vinaigre': 'Écologique et économique',
-        'bio': 'Certifié écologique, sans danger'
+        'marseille': 'Naturel et biod�gradable',
+        'vinaigre': '�cologique et �conomique',
+        'bio': 'Certifi� �cologique, sans danger'
       }
     };
 
@@ -154,14 +154,14 @@ class AlternativesEngine {
       }
     }
 
-    return 'Alternative plus saine et écologique';
+    return 'Alternative plus saine et �cologique';
   }
 }
 
-// IMPORTANT : Export par défaut de la CLASSE pour compatibilité
+// IMPORTANT : Export par d�faut de la CLASSE pour compatibilit�
 module.exports = AlternativesEngine;
 
-// Export secondaire pour compatibilité avec l'ancienne API
+// Export secondaire pour compatibilit� avec l'ancienne API
 const alternativesEngine = new AlternativesEngine();
 module.exports.alternativesEngine = alternativesEngine;
 module.exports.generateAlternatives = (product, category) => alternativesEngine.generateAlternatives(product, category);

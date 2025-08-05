@@ -1,10 +1,10 @@
-ï»¿console.log('=== DEBUG SERVER START ===');
+console.log('=== DEBUG SERVER START ===');
 console.log('Current directory:', process.cwd());
 console.log('__dirname:', __dirname);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
 
-// VÃ©rifier les imports
+// Vérifier les imports
 try {
   console.log('Loading dotenv...');
   require('dotenv').config();
@@ -21,7 +21,7 @@ try {
   process.exit(1);
 }
 
-// DÃ©marrer serveur minimal
+// Démarrer serveur minimal
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5001;

@@ -1,4 +1,4 @@
-ï»¿// PATH: backend/src/controllers/detergentController.ts
+// PATH: backend/src/controllers/detergentController.ts
 import { Request, Response } from 'express';
 import { DetergentClassifier } from '../services/ai/detergentClassifier';
 import { detergentsAnalyzer } from '../services/ai/detergentsAnalyzer';
@@ -20,15 +20,15 @@ export const analyzeDetergentController = async (req: Request, res: Response) =>
     if (!category || !name || !ingredients) {
       return res.status(400).json({
         success: false,
-        message: 'CatÃ©gorie, nom et ingrÃ©dients requis'
+        message: 'Catégorie, nom et ingrédients requis'
       });
     }
 
-    // TODO: ImplÃ©menter l'analyse pour detergentController
+    // TODO: Implémenter l'analyse pour detergentController
     
     return res.json({
       success: true,
-      message: 'Analyse detergentController en cours de dÃ©veloppement'
+      message: 'Analyse detergentController en cours de développement'
     });
     
   } catch (error) {

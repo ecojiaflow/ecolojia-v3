@@ -1,9 +1,9 @@
-﻿// PATH: backend/src/auth/services/AuthService.ts
+// PATH: backend/src/auth/services/AuthService.ts
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
-// Import du modÃ¨le MongoDB existant
+// Import du modèle MongoDB existant
 import User, { IUser } from '../../models/User';
 
 export interface RegisterData {
@@ -52,23 +52,23 @@ export class AuthService {
    */
   async register(registerData: RegisterData, sessionInfo: SessionInfo): Promise<AuthResult> {
     try {
-      console.log('ðŸ“ Tentative inscription:', registerData.email);
+      console.log('📝 Tentative inscription:', registerData.email);
 
-      // VÃ©rifier si email existe dÃ©jÃ 
+      // Vérifier si email existe déjà
       const existingUser = await User.findOne({ email: registerData.email.toLowerCase() });
 
       if (existingUser) {
-        console.log('âŒ Email dÃ©jÃ  utilisÃ©:', registerData.email);
+        console.log('❌ Email déjà utilisé:', registerData.email);
         return {
           success: false,
-          message: 'Un compte existe dÃ©jÃ  avec cet email'
+          message: 'Un compte existe déjà avec cet email'
         };
       }
 
       // Hash du mot de passe
       const passwordHash = await bcrypt.hash(registerData.password, 12);
 
-      // CrÃ©er utilisateur avec MongoDB
+      // Créer utilisateur avec MongoDB
       const user = new User({
         email: registerData.email.toLowerCase(),
         password: passwordHash,
@@ -76,7 +76,7 @@ export class AuthService {
         tier: 'free',
         isEmailVerified: false,
         
-        // Quotas par dÃ©faut pour utilisateur gratuit
+        // Quotas par défaut pour utilisateur gratuit
         quotas: {
           analyses: 30,
           aiQuestions: 0,
@@ -94,7 +94,7 @@ export class AuthService {
         }
       });
 
-      // GÃ©nÃ©rer token de vÃ©rification email
+      // Générer token de vérification email
       const emailToken = this.generateEmailValidationToken();
       user.emailVerificationToken = emailToken;
       user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
@@ -102,29 +102,29 @@ export class AuthService {
       // Sauvegarder l'utilisateur
       await user.save();
 
-      // GÃ©nÃ©rer token JWT pour session - Utiliser id au lieu de _id
+      // Générer token JWT pour session - Utiliser id au lieu de _id
       const userId = user.id || user._id?.toString() || '';
       const token = this.generateJWT(userId, user.email, user.tier);
 
-      console.log('âœ… Utilisateur crÃ©Ã© avec succÃ¨s:', user.email);
+      console.log('✅ Utilisateur créé avec succès:', user.email);
 
-      // TODO: Envoyer email de vÃ©rification
+      // TODO: Envoyer email de vérification
       // await emailService.sendVerificationEmail(user.email, emailToken);
 
       return {
         success: true,
         user: this.sanitizeUser(user),
         token,
-        message: 'Inscription rÃ©ussie. VÃ©rifiez votre email pour activer votre compte.'
+        message: 'Inscription réussie. Vérifiez votre email pour activer votre compte.'
       };
 
     } catch (error: any) {
-      console.error('âŒ Registration error:', error);
+      console.error('❌ Registration error:', error);
       
       if (error.code === 11000) {
         return {
           success: false,
-          message: 'Un compte existe dÃ©jÃ  avec cet email'
+          message: 'Un compte existe déjà avec cet email'
         };
       }
       
@@ -140,48 +140,48 @@ export class AuthService {
    */
   async login(loginData: LoginData, sessionInfo: SessionInfo): Promise<AuthResult> {
     try {
-      console.log('ðŸ” Tentative connexion:', loginData.email);
+      console.log('🔐 Tentative connexion:', loginData.email);
 
       // Rechercher utilisateur par email
       const user = await User.findOne({ email: loginData.email.toLowerCase() });
 
       if (!user) {
-        console.log('âŒ Utilisateur non trouvÃ©:', loginData.email);
+        console.log('❌ Utilisateur non trouvé:', loginData.email);
         return {
           success: false,
           message: 'Email ou mot de passe incorrect'
         };
       }
 
-      // VÃ©rifier mot de passe
+      // Vérifier mot de passe
       const passwordMatch = await bcrypt.compare(loginData.password, user.password);
       if (!passwordMatch) {
-        console.log('âŒ Mot de passe incorrect pour:', loginData.email);
+        console.log('❌ Mot de passe incorrect pour:', loginData.email);
         return {
           success: false,
           message: 'Email ou mot de passe incorrect'
         };
       }
 
-      // GÃ©nÃ©rer token JWT avec le tier de l'utilisateur - Utiliser id au lieu de _id
+      // Générer token JWT avec le tier de l'utilisateur - Utiliser id au lieu de _id
       const userId = user.id || user._id?.toString() || '';
       const token = this.generateJWT(userId, user.email, user.tier);
 
-      // Mettre Ã  jour derniÃ¨re connexion
+      // Mettre à jour dernière connexion
       user.updatedAt = new Date();
       await user.save();
 
-      console.log('âœ… Connexion rÃ©ussie:', user.email);
+      console.log('✅ Connexion réussie:', user.email);
 
       return {
         success: true,
         user: this.sanitizeUser(user),
         token,
-        message: 'Connexion rÃ©ussie'
+        message: 'Connexion réussie'
       };
 
     } catch (error: any) {
-      console.error('âŒ Login error:', error);
+      console.error('❌ Login error:', error);
       return {
         success: false,
         message: 'Erreur lors de la connexion'
@@ -190,42 +190,42 @@ export class AuthService {
   }
 
   /**
-   * DÃ©connexion utilisateur
+   * Déconnexion utilisateur
    */
   async logout(token: string): Promise<AuthResult> {
     try {
-      // Avec JWT, pas besoin de gÃ©rer cÃ´tÃ© serveur
+      // Avec JWT, pas besoin de gérer côté serveur
       // Le client supprime simplement le token
       
-      console.log('âœ… DÃ©connexion effectuÃ©e');
+      console.log('✅ Déconnexion effectuée');
       
       return {
         success: true,
-        message: 'DÃ©connexion rÃ©ussie'
+        message: 'Déconnexion réussie'
       };
 
     } catch (error: any) {
-      console.error('âŒ Logout error:', error);
+      console.error('❌ Logout error:', error);
       return {
         success: false,
-        message: 'Erreur lors de la dÃ©connexion'
+        message: 'Erreur lors de la déconnexion'
       };
     }
   }
 
   /**
-   * RÃ©cupÃ©rer utilisateur par token JWT
+   * Récupérer utilisateur par token JWT
    */
   async getUserFromToken(token: string): Promise<IUser | null> {
     try {
-      // VÃ©rifier token JWT
+      // Vérifier token JWT
       const decoded = jwt.verify(token, this.jwtSecret) as JWTPayload;
       
-      // RÃ©cupÃ©rer utilisateur depuis MongoDB
+      // Récupérer utilisateur depuis MongoDB
       const user = await User.findById(decoded.userId);
 
       if (!user) {
-        console.log('âŒ Utilisateur non trouvÃ© pour ID:', decoded.userId);
+        console.log('❌ Utilisateur non trouvé pour ID:', decoded.userId);
         return null;
       }
 
@@ -233,18 +233,18 @@ export class AuthService {
 
     } catch (error: any) {
       if (error.name === 'TokenExpiredError') {
-        console.log('âŒ Token expirÃ©');
+        console.log('❌ Token expiré');
       } else if (error.name === 'JsonWebTokenError') {
-        console.log('âŒ Token invalide');
+        console.log('❌ Token invalide');
       } else {
-        console.error('âŒ Token verification error:', error);
+        console.error('❌ Token verification error:', error);
       }
       return null;
     }
   }
 
   /**
-   * VÃ©rifier email avec token
+   * Vérifier email avec token
    */
   async verifyEmail(token: string): Promise<AuthResult> {
     try {
@@ -256,48 +256,48 @@ export class AuthService {
       if (!user) {
         return {
           success: false,
-          message: 'Token invalide ou expirÃ©'
+          message: 'Token invalide ou expiré'
         };
       }
 
-      // Marquer comme vÃ©rifiÃ©
+      // Marquer comme vérifié
       user.isEmailVerified = true;
       user.emailVerificationToken = undefined;
       user.emailVerificationExpires = undefined;
       await user.save();
 
-      console.log('âœ… Email vÃ©rifiÃ© pour:', user.email);
+      console.log('✅ Email vérifié pour:', user.email);
 
       return {
         success: true,
-        message: 'Email vÃ©rifiÃ© avec succÃ¨s'
+        message: 'Email vérifié avec succès'
       };
 
     } catch (error) {
-      console.error('âŒ Email verification error:', error);
+      console.error('❌ Email verification error:', error);
       return {
         success: false,
-        message: 'Erreur lors de la vÃ©rification'
+        message: 'Erreur lors de la vérification'
       };
     }
   }
 
   /**
-   * RÃ©initialisation mot de passe - Demande
+   * Réinitialisation mot de passe - Demande
    */
   async requestPasswordReset(email: string): Promise<AuthResult> {
     try {
       const user = await User.findOne({ email: email.toLowerCase() });
 
       if (!user) {
-        // Ne pas rÃ©vÃ©ler si l'email existe
+        // Ne pas révéler si l'email existe
         return {
           success: true,
-          message: 'Si cet email existe, vous recevrez un lien de rÃ©initialisation'
+          message: 'Si cet email existe, vous recevrez un lien de réinitialisation'
         };
       }
 
-      // GÃ©nÃ©rer token de reset
+      // Générer token de reset
       const resetToken = crypto.randomBytes(32).toString('hex');
       user.resetPasswordToken = resetToken;
       user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
@@ -308,11 +308,11 @@ export class AuthService {
 
       return {
         success: true,
-        message: 'Si cet email existe, vous recevrez un lien de rÃ©initialisation'
+        message: 'Si cet email existe, vous recevrez un lien de réinitialisation'
       };
 
     } catch (error) {
-      console.error('âŒ Password reset request error:', error);
+      console.error('❌ Password reset request error:', error);
       return {
         success: false,
         message: 'Erreur lors de la demande'
@@ -321,7 +321,7 @@ export class AuthService {
   }
 
   /**
-   * RÃ©initialisation mot de passe - Confirmation
+   * Réinitialisation mot de passe - Confirmation
    */
   async resetPassword(token: string, newPassword: string): Promise<AuthResult> {
     try {
@@ -333,7 +333,7 @@ export class AuthService {
       if (!user) {
         return {
           success: false,
-          message: 'Token invalide ou expirÃ©'
+          message: 'Token invalide ou expiré'
         };
       }
 
@@ -345,14 +345,14 @@ export class AuthService {
 
       return {
         success: true,
-        message: 'Mot de passe rÃ©initialisÃ© avec succÃ¨s'
+        message: 'Mot de passe réinitialisé avec succès'
       };
 
     } catch (error) {
-      console.error('âŒ Password reset error:', error);
+      console.error('❌ Password reset error:', error);
       return {
         success: false,
-        message: 'Erreur lors de la rÃ©initialisation'
+        message: 'Erreur lors de la réinitialisation'
       };
     }
   }
@@ -365,12 +365,12 @@ export class AuthService {
       const user = await User.findById(userId);
       return user;
     } catch (error) {
-      console.error('âŒ Get profile error:', error);
+      console.error('❌ Get profile error:', error);
       return null;
     }
   }
 
-  // === MÃ‰THODES UTILITAIRES ===
+  // === MÉTHODES UTILITAIRES ===
 
   
 

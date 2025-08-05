@@ -1,4 +1,4 @@
-ï»¿// backend/src/middleware/authMiddleware.js
+// backend/src/middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // VÃ©rifier et dÃ©coder le token
+    // Vérifier et décoder le token
     let decoded;
     try {
       decoded = jwt.verify(
@@ -25,21 +25,21 @@ const authMiddleware = async (req, res, next) => {
     } catch (error) {
       return res.status(401).json({
         success: false,
-        message: 'Token invalide ou expirÃ©'
+        message: 'Token invalide ou expiré'
       });
     }
 
-    // RÃ©cupÃ©rer l'utilisateur depuis la base de donnÃ©es
+    // Récupérer l'utilisateur depuis la base de données
     const user = await User.findById(decoded.userId).select('-password');
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Utilisateur non trouvÃ©'
+        message: 'Utilisateur non trouvé'
       });
     }
 
-    // VÃ©rifier si l'utilisateur est actif
+    // Vérifier si l'utilisateur est actif
     if (user.status === 'suspended' || user.status === 'deleted') {
       return res.status(403).json({
         success: false,
@@ -47,7 +47,7 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // Attacher l'utilisateur Ã  la requÃªte
+    // Attacher l'utilisateur à la requête
     req.user = user;
     req.userId = user._id.toString();
     req.token = token;
@@ -62,20 +62,20 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// Middleware optionnel (n'arrÃªte pas si pas de token)
+// Middleware optionnel (n'arrête pas si pas de token)
 const authOptionalMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
 
     if (token) {
       try {
-        // VÃ©rifier le token
+        // Vérifier le token
         const decoded = jwt.verify(
           token, 
           process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
         );
 
-        // RÃ©cupÃ©rer l'utilisateur
+        // Récupérer l'utilisateur
         const user = await User.findById(decoded.userId).select('-password');
         
         if (user && user.status !== 'suspended' && user.status !== 'deleted') {
@@ -91,15 +91,15 @@ const authOptionalMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    // Continuer mÃªme si erreur
+    // Continuer même si erreur
     next();
   }
 };
 
-// Middleware pour vÃ©rifier le tier Premium
+// Middleware pour vérifier le tier Premium
 const requirePremium = async (req, res, next) => {
   try {
-    // S'assurer que l'utilisateur est authentifiÃ© d'abord
+    // S'assurer que l'utilisateur est authentifié d'abord
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -107,11 +107,11 @@ const requirePremium = async (req, res, next) => {
       });
     }
 
-    // VÃ©rifier le tier
+    // Vérifier le tier
     if (req.user.tier !== 'premium') {
       return res.status(403).json({
         success: false,
-        message: 'FonctionnalitÃ© rÃ©servÃ©e aux membres Premium',
+        message: 'Fonctionnalité réservée aux membres Premium',
         requiresUpgrade: true
       });
     }
@@ -121,12 +121,12 @@ const requirePremium = async (req, res, next) => {
     console.error('[Premium Middleware] Error:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur de vÃ©rification Premium'
+      message: 'Erreur de vérification Premium'
     });
   }
 };
 
-// Middleware pour vÃ©rifier les quotas
+// Middleware pour vérifier les quotas
 const checkQuota = (quotaType) => {
   return async (req, res, next) => {
     try {
@@ -153,9 +153,9 @@ const checkQuota = (quotaType) => {
           return next();
       }
 
-      // VÃ©rifier si la date de reset est passÃ©e
+      // Vérifier si la date de reset est passée
       if (quotas[resetField] && new Date(quotas[resetField]) < new Date()) {
-        // RÃ©initialiser les quotas
+        // Réinitialiser les quotas
         const User = require('../models/User');
         const defaultQuotas = {
           scansRemaining: req.user.tier === 'premium' ? 999999 : 30,
@@ -170,18 +170,18 @@ const checkQuota = (quotaType) => {
         req.user.quotas[quotaField] = defaultQuotas[quotaField];
       }
 
-      // VÃ©rifier le quota restant
+      // Vérifier le quota restant
       if (!quotas[quotaField] || quotas[quotaField] <= 0) {
         return res.status(429).json({
           success: false,
-          message: `Quota ${quotaType} Ã©puisÃ©`,
+          message: `Quota ${quotaType} épuisé`,
           quotaType,
           resetDate: quotas[resetField],
           requiresUpgrade: req.user.tier === 'free'
         });
       }
 
-      // DÃ©crÃ©menter le quota
+      // Décrémenter le quota
       req.decrementQuota = async () => {
         const User = require('../models/User');
         await User.findByIdAndUpdate(req.user._id, {
@@ -194,7 +194,7 @@ const checkQuota = (quotaType) => {
       console.error('[Quota Middleware] Error:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur de vÃ©rification des quotas'
+        message: 'Erreur de vérification des quotas'
       });
     }
   };
@@ -206,7 +206,7 @@ module.exports = {
   authOptionalMiddleware,
   requirePremium,
   checkQuota,
-  // Alias pour compatibilitÃ©
+  // Alias pour compatibilité
   auth: authMiddleware,
   authOptional: authOptionalMiddleware
 };

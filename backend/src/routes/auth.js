@@ -1,5 +1,5 @@
-ï»¿// backend/src/routes/auth.js
-// FICHIER COMPLET CORRIGÃ‰
+// backend/src/routes/auth.js
+// FICHIER COMPLET CORRIGÉ
 
 const express = require('express');
 const router = express.Router();
@@ -10,7 +10,7 @@ const User = require('../models/User');
 // Configuration JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
 
-// Middleware d'authentification simple intÃ©grÃ©
+// Middleware d'authentification simple intégré
 const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -32,7 +32,7 @@ const authMiddleware = (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      error: error.name === 'TokenExpiredError' ? 'Token expirÃ©' : 'Token invalide'
+      error: error.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide'
     });
   }
 };
@@ -40,7 +40,7 @@ const authMiddleware = (req, res, next) => {
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    console.log('ğŸ“ Register endpoint appelÃ©:', req.body);
+    console.log('?? Register endpoint appelé:', req.body);
     const { email, password, firstName, lastName } = req.body;
 
     // Validation
@@ -51,19 +51,19 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // VÃ©rifier si l'utilisateur existe
+    // Vérifier si l'utilisateur existe
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        error: 'Cet email est dÃ©jÃ  utilisÃ©'
+        error: 'Cet email est déjà utilisé'
       });
     }
 
     // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // CrÃ©er l'utilisateur
+    // Créer l'utilisateur
     const user = new User({
       email: email.toLowerCase(),
       password: hashedPassword,
@@ -83,16 +83,16 @@ router.post('/register', async (req, res) => {
     });
 
     await user.save();
-    console.log('âœ… Utilisateur crÃ©Ã©:', user.email);
+    console.log('? Utilisateur créé:', user.email);
 
-    // GÃ©nÃ©rer le token
+    // Générer le token
     const token = jwt.sign(
       { userId: user._id, email: user.email, tier: user.tier },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Retourner la rÃ©ponse
+    // Retourner la réponse
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -105,7 +105,7 @@ router.post('/register', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('âŒ Register error:', error);
+    console.error('? Register error:', error);
     res.status(500).json({
       success: false,
       error: error.message || 'Erreur lors de l\'inscription'
@@ -116,7 +116,7 @@ router.post('/register', async (req, res) => {
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
-    console.log('ğŸ”‘ Login endpoint appelÃ©:', req.body.email);
+    console.log('?? Login endpoint appelé:', req.body.email);
     const { email, password } = req.body;
 
     // Validation
@@ -136,7 +136,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // VÃ©rifier le mot de passe
+    // Vérifier le mot de passe
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({
@@ -145,7 +145,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // VÃ©rifier le statut
+    // Vérifier le statut
     if (user.status === 'suspended' || user.status === 'deleted') {
       return res.status(403).json({
         success: false,
@@ -153,20 +153,20 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Mettre Ã  jour la derniÃ¨re connexion
+    // Mettre à jour la dernière connexion
     user.lastLoginAt = new Date();
     await user.save();
 
-    console.log('âœ… Connexion rÃ©ussie:', user.email);
+    console.log('? Connexion réussie:', user.email);
 
-    // GÃ©nÃ©rer le token
+    // Générer le token
     const token = jwt.sign(
       { userId: user._id, email: user.email, tier: user.tier },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Retourner la rÃ©ponse
+    // Retourner la réponse
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -179,7 +179,7 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('âŒ Login error:', error);
+    console.error('? Login error:', error);
     res.status(500).json({
       success: false,
       error: 'Erreur lors de la connexion'
@@ -187,16 +187,16 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET /api/auth/profile (protÃ©gÃ©)
+// GET /api/auth/profile (protégé)
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    console.log('ğŸ‘¤ Profile endpoint appelÃ© pour:', req.userId);
+    console.log('?? Profile endpoint appelé pour:', req.userId);
     
     const user = await User.findById(req.userId).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'Utilisateur non trouvÃ©'
+        error: 'Utilisateur non trouvé'
       });
     }
 
@@ -205,10 +205,10 @@ router.get('/profile', authMiddleware, async (req, res) => {
       user
     });
   } catch (error) {
-    console.error('âŒ Profile error:', error);
+    console.error('? Profile error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©cupÃ©ration du profil'
+      error: 'Erreur lors de la récupération du profil'
     });
   }
 });
@@ -216,7 +216,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 // POST /api/auth/refresh
 router.post('/refresh', async (req, res) => {
   try {
-    console.log('ğŸ”„ Refresh endpoint appelÃ©');
+    console.log('?? Refresh endpoint appelé');
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
@@ -226,19 +226,19 @@ router.post('/refresh', async (req, res) => {
       });
     }
 
-    // VÃ©rifier le token
+    // Vérifier le token
     const decoded = jwt.verify(refreshToken, JWT_SECRET);
     
-    // RÃ©cupÃ©rer l'utilisateur
+    // Récupérer l'utilisateur
     const user = await User.findById(decoded.userId).select('-password');
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'Utilisateur non trouvÃ©'
+        error: 'Utilisateur non trouvé'
       });
     }
 
-    // GÃ©nÃ©rer un nouveau token
+    // Générer un nouveau token
     const newToken = jwt.sign(
       { userId: user._id, email: user.email, tier: user.tier },
       JWT_SECRET,
@@ -253,17 +253,17 @@ router.post('/refresh', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('âŒ Refresh error:', error);
+    console.error('? Refresh error:', error);
     res.status(401).json({
       success: false,
-      error: 'Token invalide ou expirÃ©'
+      error: 'Token invalide ou expiré'
     });
   }
 });
 
 // GET /api/auth/test
 router.get('/test', (req, res) => {
-  console.log('ğŸ§ª Test endpoint appelÃ©');
+  console.log('?? Test endpoint appelé');
   res.json({
     success: true,
     message: 'Auth routes fonctionnent parfaitement !',
@@ -271,7 +271,7 @@ router.get('/test', (req, res) => {
     endpoints: [
       'POST /api/auth/register',
       'POST /api/auth/login',
-      'GET /api/auth/profile (protÃ©gÃ©)',
+      'GET /api/auth/profile (protégé)',
       'POST /api/auth/refresh',
       'GET /api/auth/test'
     ]
@@ -280,11 +280,11 @@ router.get('/test', (req, res) => {
 
 // POST /api/auth/logout
 router.post('/logout', authMiddleware, (req, res) => {
-  console.log('ğŸšª Logout endpoint appelÃ© pour:', req.userEmail);
-  // Pour un JWT, le logout se fait cÃ´tÃ© client en supprimant le token
+  console.log('?? Logout endpoint appelé pour:', req.userEmail);
+  // Pour un JWT, le logout se fait côté client en supprimant le token
   res.json({
     success: true,
-    message: 'DÃ©connexion rÃ©ussie'
+    message: 'Déconnexion réussie'
   });
 });
 

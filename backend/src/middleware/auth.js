@@ -1,10 +1,10 @@
-﻿// backend/src/middleware/auth.js
+// backend/src/middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 // MIDDLEWARE D'AUTHENTIFICATION PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 
 const auth = async (req, res, next) => {
   try {
@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
       });
     }
 
-    // Vérifier et décoder le token
+    // V�rifier et d�coder le token
     let decoded;
     try {
       decoded = jwt.verify(
@@ -30,7 +30,7 @@ const auth = async (req, res, next) => {
       if (error.name === 'TokenExpiredError') {
         return res.status(401).json({
           success: false,
-          message: 'Token expiré',
+          message: 'Token expir�',
           code: 'TOKEN_EXPIRED'
         });
       }
@@ -41,18 +41,18 @@ const auth = async (req, res, next) => {
       });
     }
 
-    // Récupérer l'utilisateur depuis la base de données
+    // R�cup�rer l'utilisateur depuis la base de donn�es
     const user = await User.findById(decoded.userId).select('-password');
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Utilisateur non trouvé',
+        message: 'Utilisateur non trouv�',
         code: 'USER_NOT_FOUND'
       });
     }
 
-    // Vérifier si l'utilisateur est actif
+    // V�rifier si l'utilisateur est actif
     if (user.status === 'suspended') {
       return res.status(403).json({
         success: false,
@@ -64,12 +64,12 @@ const auth = async (req, res, next) => {
     if (user.status === 'deleted') {
       return res.status(403).json({
         success: false,
-        message: 'Compte supprimé',
+        message: 'Compte supprim�',
         code: 'ACCOUNT_DELETED'
       });
     }
 
-    // Attacher l'utilisateur à la requête
+    // Attacher l'utilisateur � la requ�te
     req.user = user;
     req.userId = user._id.toString();
     req.token = token;
@@ -88,9 +88,9 @@ const auth = async (req, res, next) => {
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 // MIDDLEWARE OPTIONNEL (ne bloque pas si pas de token)
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 
 const authOptional = async (req, res, next) => {
   try {
@@ -98,13 +98,13 @@ const authOptional = async (req, res, next) => {
 
     if (token) {
       try {
-        // Vérifier le token
+        // V�rifier le token
         const decoded = jwt.verify(
           token, 
           process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
         );
 
-        // Récupérer l'utilisateur
+        // R�cup�rer l'utilisateur
         const user = await User.findById(decoded.userId).select('-password');
         
         if (user && user.status !== 'suspended' && user.status !== 'deleted') {
@@ -121,19 +121,19 @@ const authOptional = async (req, res, next) => {
 
     next();
   } catch (error) {
-    // Continuer même si erreur
+    // Continuer m�me si erreur
     console.error('[Auth Optional] Error:', error);
     next();
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 // MIDDLEWARE PREMIUM
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 
 const requirePremium = async (req, res, next) => {
   try {
-    // S'assurer que l'utilisateur est authentifié d'abord
+    // S'assurer que l'utilisateur est authentifi� d'abord
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -142,11 +142,11 @@ const requirePremium = async (req, res, next) => {
       });
     }
 
-    // Vérifier le tier
+    // V�rifier le tier
     if (req.user.tier !== 'premium') {
       return res.status(403).json({
         success: false,
-        message: 'Fonctionnalité réservée aux membres Premium',
+        message: 'Fonctionnalit� r�serv�e aux membres Premium',
         code: 'PREMIUM_REQUIRED',
         requiresUpgrade: true,
         upgradeUrl: '/pricing'
@@ -159,15 +159,15 @@ const requirePremium = async (req, res, next) => {
     console.error('[Premium Middleware] Error:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur de vérification Premium',
+      message: 'Erreur de v�rification Premium',
       code: 'PREMIUM_CHECK_ERROR'
     });
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 // MIDDLEWARE DE QUOTAS
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 
 const checkQuota = (quotaType) => {
   return async (req, res, next) => {
@@ -205,11 +205,11 @@ const checkQuota = (quotaType) => {
           return next();
       }
 
-      // Vérifier si la date de reset est passée
+      // V�rifier si la date de reset est pass�e
       if (quotas[resetField] && new Date(quotas[resetField]) < new Date()) {
         console.log(`[Quota] Resetting ${quotaType} quota for user ${req.user.email}`);
         
-        // Réinitialiser les quotas
+        // R�initialiser les quotas
         await User.findByIdAndUpdate(req.user._id, {
           [`quotas.${quotaField}`]: defaultQuota,
           [`quotas.${resetField}`]: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // +30 jours
@@ -219,12 +219,12 @@ const checkQuota = (quotaType) => {
         req.user.quotas[resetField] = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
       }
 
-      // Vérifier le quota restant
+      // V�rifier le quota restant
       const remaining = quotas[quotaField] || 0;
       if (remaining <= 0) {
         return res.status(429).json({
           success: false,
-          message: `Quota ${quotaType} épuisé`,
+          message: `Quota ${quotaType} �puis�`,
           code: 'QUOTA_EXCEEDED',
           quotaType,
           remaining: 0,
@@ -233,17 +233,17 @@ const checkQuota = (quotaType) => {
         });
       }
 
-      // Ajouter les infos de quota à la requête
+      // Ajouter les infos de quota � la requ�te
       req.quota = {
         type: quotaType,
         remaining: remaining - 1,
         resetDate: quotas[resetField]
       };
 
-      // IMPORTANT : Ajouter quotaRemaining pour compatibilité avec analyze.routes.js
+      // IMPORTANT : Ajouter quotaRemaining pour compatibilit� avec analyze.routes.js
       req.quotaRemaining = remaining - 1;
 
-      // Fonction pour décrémenter le quota (à appeler après succès)
+      // Fonction pour d�cr�menter le quota (� appeler apr�s succ�s)
       req.decrementQuota = async () => {
         try {
           await User.findByIdAndUpdate(req.user._id, {
@@ -260,16 +260,16 @@ const checkQuota = (quotaType) => {
       console.error('[Quota Middleware] Error:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur de vérification des quotas',
+        message: 'Erreur de v�rification des quotas',
         code: 'QUOTA_CHECK_ERROR'
       });
     }
   };
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 // MIDDLEWARE ADMIN
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
 
 const requireAdmin = async (req, res, next) => {
   try {
@@ -281,11 +281,11 @@ const requireAdmin = async (req, res, next) => {
       });
     }
 
-    // Vérifier si l'utilisateur est admin
+    // V�rifier si l'utilisateur est admin
     if (!req.user.isAdmin && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Accès réservé aux administrateurs',
+        message: 'Acc�s r�serv� aux administrateurs',
         code: 'ADMIN_REQUIRED'
       });
     }
@@ -296,15 +296,15 @@ const requireAdmin = async (req, res, next) => {
     console.error('[Admin Middleware] Error:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur de vérification admin',
+      message: 'Erreur de v�rification admin',
       code: 'ADMIN_CHECK_ERROR'
     });
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
-// EXPORTS - AVEC TOUS LES ALIAS POUR COMPATIBILITÉ
-// ═══════════════════════════════════════════════════════════════════════
+// -----------------------------------------------------------------------
+// EXPORTS - AVEC TOUS LES ALIAS POUR COMPATIBILIT�
+// -----------------------------------------------------------------------
 
 module.exports = {
   // Middlewares principaux
@@ -314,11 +314,11 @@ module.exports = {
   checkQuota,
   requireAdmin,
   
-  // Alias pour compatibilité avec l'ancien code
+  // Alias pour compatibilit� avec l'ancien code
   authMiddleware: auth,
   authOptionalMiddleware: authOptional,
   
   // ALIAS IMPORTANTS pour products.js et analyze.routes.js
-  authenticateUser: auth,  // Pour compatibilité avec products.js ligne 4
-  checkPremium: requirePremium  // Pour compatibilité avec products.js ligne 4
+  authenticateUser: auth,  // Pour compatibilit� avec products.js ligne 4
+  checkPremium: requirePremium  // Pour compatibilit� avec products.js ligne 4
 };

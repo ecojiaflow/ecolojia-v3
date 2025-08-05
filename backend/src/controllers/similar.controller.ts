@@ -1,4 +1,4 @@
-ï»¿// PATH: backend/src/controllers/similar.controller.ts
+// PATH: backend/src/controllers/similar.controller.ts
 import { Request, Response } from 'express';
 
 export const findClosestOption = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const findClosestOption = async (req: Request, res: Response) => {
       });
     }
 
-    // TODO: ImplÃ©menter la recherche de similaritÃ©
+    // TODO: Implémenter la recherche de similarité
     const results = [
       { name: 'Option 1', similarity: 0.95 },
       { name: 'Option 2', similarity: 0.85 }

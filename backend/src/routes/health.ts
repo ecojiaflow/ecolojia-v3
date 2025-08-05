@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/routes/health.ts
+// PATH: backend/src/routes/health.ts
 import { Router } from 'express';
 
 const router = Router();

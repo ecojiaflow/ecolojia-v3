@@ -1,4 +1,4 @@
-ï»¿// PATH: backend/src/controllers/cosmeticController.ts
+// PATH: backend/src/controllers/cosmeticController.ts
 import { Request, Response } from 'express';
 import { CosmeticClassifier } from '../services/ai/cosmeticClassifier';
 import { cosmeticsAnalyzer } from '../services/ai/cosmeticsAnalyzer';
@@ -20,15 +20,15 @@ export const analyzeCosmeticController = async (req: Request, res: Response) => 
     if (!category || !name || !ingredients) {
       return res.status(400).json({
         success: false,
-        message: 'CatÃ©gorie, nom et ingrÃ©dients requis'
+        message: 'Catégorie, nom et ingrédients requis'
       });
     }
 
-    // TODO: ImplÃ©menter l'analyse pour cosmeticController
+    // TODO: Implémenter l'analyse pour cosmeticController
     
     return res.json({
       success: true,
-      message: 'Analyse cosmeticController en cours de dÃ©veloppement'
+      message: 'Analyse cosmeticController en cours de développement'
     });
     
   } catch (error) {

@@ -1,4 +1,4 @@
-ï»¿// PATH: backend/src/index.ts
+// PATH: backend/src/index.ts
 import express from 'express';
 import cors from 'cors';
 import { connectMongoDB } from './config/mongodb';
@@ -24,19 +24,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy' });
 });
 
-// DÃ©marrage
+// Démarrage
 async function start() {
   try {
     // Connexion MongoDB
     await connectMongoDB();
-    console.log('âœ… MongoDB connectÃ©');
+    console.log('? MongoDB connecté');
     
-    // DÃ©marrer le serveur
+    // Démarrer le serveur
     app.listen(PORT, () => {
-      console.log(`ğŸš€ Serveur dÃ©marrÃ© sur http://localhost:${PORT}`);
+      console.log(`?? Serveur démarré sur http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('âŒ Erreur:', error);
+    console.error('? Erreur:', error);
   }
 }
 
