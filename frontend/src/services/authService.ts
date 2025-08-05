@@ -1,4 +1,4 @@
-﻿// frontend/src/services/authService.ts
+// frontend/src/services/authService.ts
 import { apiClient, getErrorMessage, clearRequestQueue } from './apiClient';
 import { API_CONFIG } from '../config/api.config';
 

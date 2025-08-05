@@ -5,24 +5,20 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   css: {
-    postcss: './postcss.config.js', // Assure le support Tailwind
+    postcss: './postcss.config.cjs',
   },
   build: {
     rollupOptions: {
-      output: {
-        manualChunks: undefined, // Corrige le bug crypto.hash
-      },
+      output: { manualChunks: undefined },
     },
-    sourcemap: false, // Désactive les maps en prod pour de meilleures perfs
-    chunkSizeWarningLimit: 1500, // Évite les warnings inutiles sur les bundles lourds
+    sourcemap: false,
+    chunkSizeWarningLimit: 1500,
   },
   server: {
-    port: 5173, // Port local par défaut pour Vite
-    open: true, // Ouvre le navigateur automatiquement
+    port: 5173,
+    open: true,
   },
   resolve: {
-    alias: {
-      '@': '/src', // Alias pour simplifier les imports
-    },
+    alias: { '@': '/src' },
   },
 });

@@ -1,4 +1,4 @@
-﻿// src/components/CategoryCard.tsx
+// src/components/CategoryCard.tsx
 // Composant carte pour afficher une catégorie et permettre l'analyse - VERSION SÉCURISÉE COMPLÈTE
 
 import React, { useState } from 'react';

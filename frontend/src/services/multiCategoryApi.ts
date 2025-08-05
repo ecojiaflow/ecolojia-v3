@@ -1,4 +1,4 @@
-﻿// src/services/multiCategoryApi.ts - VERSION CORRIGÉE POUR SERVER.JS
+// src/services/multiCategoryApi.ts - VERSION CORRIGÉE POUR SERVER.JS
 
 // 🔧 Configuration multi-environnements
 const API_ENDPOINTS = {

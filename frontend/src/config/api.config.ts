@@ -1,4 +1,4 @@
-﻿// frontend/src/config/api.config.ts
+// frontend/src/config/api.config.ts
 
 // Configuration API avec auto-dÃ©tection
 export const API_CONFIG = {

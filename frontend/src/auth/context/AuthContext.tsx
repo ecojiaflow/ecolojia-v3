@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/auth/context/AuthContext.tsx
+// PATH: frontend/src/auth/context/AuthContext.tsx
 import React, {
   createContext,
   useContext,

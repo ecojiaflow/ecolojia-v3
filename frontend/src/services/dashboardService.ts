@@ -1,4 +1,4 @@
-﻿// frontend/src/services/dashboardService.ts
+// frontend/src/services/dashboardService.ts
 import { apiClient, getErrorMessage } from './apiClient';
 
 // Types pour le dashboard
