@@ -368,7 +368,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <InstantSearch searchClient={searchClient} indexName="ecolojia_products_staging">
+     <InstantSearch searchClient={searchClient} indexName="ecolojia_products">
         <Configure
           hitsPerPage={20}
           attributesToRetrieve={[
