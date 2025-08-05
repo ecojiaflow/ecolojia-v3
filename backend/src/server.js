@@ -16,7 +16,7 @@ const jwt = require('jsonwebtoken');
 // Import des services Queue et Workers
 const queueService = require('./services/queue/QueueService');
 const imageProcessingWorker = require('./workers/ImageProcessingWorker');
-const cloudinaryService = require('./upload/CloudinaryService');
+const cloudinaryService = require('./services/upload/CloudinaryService');
 
 // Logger simple
 const logger = {
