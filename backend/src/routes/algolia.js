@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { algoliasearch } = require('algoliasearch'); // Version 5 utilise un export nommé
+const algoliasearch = require('algoliasearch').default; // ✅ Correction de l'import pour v5
 
 // Initialiser Algolia
 const client = algoliasearch(
@@ -16,38 +16,35 @@ const client = algoliasearch(
 router.post('/sync', async (req, res) => {
   try {
     const Product = require('../models/Product');
-    
+
     console.log('[Algolia] Starting sync...');
-    
-    // Récupérer tous les produits
+
     const products = await Product.find()
       .select('name brand barcode category foodData cosmeticsData detergentsData analysisData imageUrl')
-      .limit(1000); // Limiter pour éviter timeout
-    
-    // Formatter pour Algolia
+      .limit(1000);
+
     const objects = products.map(product => ({
       objectID: product._id.toString(),
       name: product.name || 'Produit sans nom',
       brand: product.brand || 'Marque inconnue',
       barcode: product.barcode || '',
       category: product.category || 'food',
-      healthScore: product.analysisData?.healthScore || 
-                   product.foodData?.nutriScore ? (105 - product.foodData.nutriScore.charCodeAt(0)) * 20 : 50,
+      healthScore: product.analysisData?.healthScore ||
+        (product.foodData?.nutriScore ? (105 - product.foodData.nutriScore.charCodeAt(0)) * 20 : 50),
       novaGroup: product.foodData?.novaScore || 0,
       nutriScore: product.foodData?.nutriScore || '',
       ecoScore: product.foodData?.ecoScore || '',
       imageUrl: product.imageUrl || '',
       _tags: [
-        product.category || 'food', 
+        product.category || 'food',
         product.foodData?.novaScore ? `nova${product.foodData.novaScore}` : 'nova-unknown',
         product.foodData?.nutriScore ? `nutri${product.foodData.nutriScore}` : 'nutri-unknown'
       ]
     }));
 
-    // Envoyer à Algolia avec le nouveau client v5
     const index = client.initIndex('products');
     const { taskID, objectIDs } = await index.saveObjects(objects);
-    
+
     console.log(`[Algolia] Synced ${objectIDs.length} products with taskID: ${taskID}`);
 
     res.json({
@@ -71,7 +68,7 @@ router.post('/sync', async (req, res) => {
 router.get('/search', async (req, res) => {
   try {
     const { query = '', filters = '', page = 0 } = req.query;
-    
+
     console.log('[Algolia] Search:', query, filters);
 
     const index = client.initIndex('products');
@@ -106,23 +103,16 @@ router.post('/configure', async (req, res) => {
     console.log('[Algolia] Configuring index...');
 
     const index = client.initIndex('products');
-    
-    // Configuration de l'index pour v5
+
     const { taskID } = await index.setSettings({
-      searchableAttributes: [
-        'name',
-        'brand',
-        'barcode'
-      ],
+      searchableAttributes: ['name', 'brand', 'barcode'],
       attributesForFaceting: [
         'category',
         'filterOnly(healthScore)',
         'filterOnly(novaGroup)',
         'filterOnly(nutriScore)'
       ],
-      customRanking: [
-        'desc(healthScore)'
-      ],
+      customRanking: ['desc(healthScore)'],
       highlightPreTag: '<mark>',
       highlightPostTag: '</mark>',
       hitsPerPage: 20,
@@ -158,13 +148,12 @@ router.post('/configure', async (req, res) => {
 // GET /api/algolia/health
 router.get('/health', async (req, res) => {
   try {
-    // Test de connexion avec v5
     const index = client.initIndex('products');
-    const { nbHits } = await index.search('', { 
+    const { nbHits } = await index.search('', {
       hitsPerPage: 1,
       attributesToRetrieve: ['objectID']
     });
-    
+
     res.json({
       success: true,
       service: 'algolia',
@@ -183,30 +172,15 @@ router.get('/health', async (req, res) => {
   }
 });
 
-// GET /api/algolia/stats - Statistiques de l'index
+// GET /api/algolia/stats
 router.get('/stats', async (req, res) => {
   try {
     const index = client.initIndex('products');
-    
-    // Récupérer les stats par catégorie
-    const foodHits = await index.search('', { 
-      filters: 'category:food',
-      hitsPerPage: 0,
-      attributesToRetrieve: []
-    });
-    
-    const cosmeticsHits = await index.search('', { 
-      filters: 'category:cosmetics',
-      hitsPerPage: 0,
-      attributesToRetrieve: []
-    });
-    
-    const detergentsHits = await index.search('', { 
-      filters: 'category:detergents',
-      hitsPerPage: 0,
-      attributesToRetrieve: []
-    });
-    
+
+    const foodHits = await index.search('', { filters: 'category:food', hitsPerPage: 0 });
+    const cosmeticsHits = await index.search('', { filters: 'category:cosmetics', hitsPerPage: 0 });
+    const detergentsHits = await index.search('', { filters: 'category:detergents', hitsPerPage: 0 });
+
     res.json({
       success: true,
       stats: {
@@ -219,7 +193,7 @@ router.get('/stats', async (req, res) => {
         lastSync: new Date().toISOString()
       }
     });
-    
+
   } catch (error) {
     console.error('[Algolia] Stats error:', error);
     res.status(500).json({
@@ -231,3 +205,4 @@ router.get('/stats', async (req, res) => {
 });
 
 module.exports = router;
+
