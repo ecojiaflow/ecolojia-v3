@@ -97,7 +97,7 @@ try {
 
 loadRoute('GDPR', './routes/gdpr.routes', '/api/gdpr');
 loadRoute('AI', './routes/ai.routes', '/api/ai');
-loadTSRoute('User', './routes/user.routes', '/api/users');
+loadRoute('User', './routes/user.routes', '/api/users');
 loadRoute('Products', './routes/products', '/api/products');
 loadRoute('Quota', './routes/quota', '/api/quota');
 loadRoute('Algolia', './routes/algolia', '/api/algolia');
