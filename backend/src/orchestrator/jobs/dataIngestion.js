@@ -33,7 +33,7 @@ class DataIngestion {
           imported++;
         } catch (error) {
           errors++;
-          this.logger.warn(`Erreur import produit ${product.code}:`, error.message);
+          this.console.warn(`Erreur import produit ${product.code}:`, error.message);
         }
       }
 

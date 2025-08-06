@@ -1,128 +1,108 @@
-// backend/test-real-products.js
-// Test des vrais produits cosmétiques et détergents
+﻿const vision = require('@google-cloud/vision');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
-const axios = require('axios');
-const colors = require('colors');
-
-const API_URL = 'http://localhost:5001/api';
-let token = '';
-
-async function login() {
-  try {
-    const res = await axios.post(`${API_URL}/auth/login`, {
-      email: 'test@example.com',
-      password: 'password123'
-    });
-    token = res.data.token || res.data.accessToken;
-    console.log('✅ Connecté'.green);
-    return true;
-  } catch (error) {
-    console.log('❌ Erreur connexion'.red);
-    return false;
-  }
+async function downloadImage(url, filename) {
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(filename);
+    https.get(url, response => {
+      response.pipe(file);
+      file.on('finish', () => {
+        file.close(resolve);
+      });
+    }).on('error', reject);
+  });
 }
 
-async function testCosmeticBarcode() {
-  console.log('\n🧴 TEST COSMÉTIQUE PAR CODE-BARRES'.cyan);
-  console.log('='.repeat(50));
+async function testRealProducts() {
+  console.log('Test Google Vision avec de vrais produits ECOLOJIA\n');
+  
+  const client = new vision.ImageAnnotatorClient({
+    keyFilename: './google-vision-key.json'
+  });
   
   try {
-    // Test avec un vrai shampooing L'Oréal
-    const res = await axios.post(
-      `${API_URL}/cosmetic/analyze/barcode`,
-      { barcode: '3600551018638' },
-      { headers: { Authorization: `Bearer ${token}` } }
+    // Image 1: Nutella haute qualite
+    console.log('=== TEST 1: NUTELLA ===');
+    const nutellaUrl = 'https://fr.openfoodfacts.org/images/products/301/762/042/5035/front_fr.288.full.jpg';
+    await downloadImage(nutellaUrl, 'nutella.jpg');
+    
+    const [nutellaText] = await client.textDetection('./nutella.jpg');
+    const [nutellaLabels] = await client.labelDetection('./nutella.jpg');
+    const [nutellaLogos] = await client.logoDetection('./nutella.jpg');
+    
+    console.log('Texte detecte:', nutellaText.textAnnotations ? 'OUI' : 'NON');
+    if (nutellaText.textAnnotations && nutellaText.textAnnotations.length > 0) {
+      const fullText = nutellaText.textAnnotations[0].description;
+      console.log('Extrait:', fullText.substring(0, 100) + '...');
+      
+      // Chercher le code-barres
+      const barcodeMatch = fullText.match(/3017620425035/);
+      console.log('Code-barres trouve:', barcodeMatch ? barcodeMatch[0] : 'NON');
+      
+      // Chercher ingredients
+      const ingredientsMatch = fullText.match(/sucre|sugar|huile|oil|noisettes|hazelnuts/i);
+      console.log('Ingredients detectes:', ingredientsMatch ? 'OUI' : 'NON');
+    }
+    
+    console.log('\nLabels:');
+    nutellaLabels.labelAnnotations?.slice(0, 5).forEach(label => {
+      console.log('- ' + label.description + ' (' + Math.round(label.score * 100) + '%)');
+    });
+    
+    console.log('\nLogos:', nutellaLogos.logoAnnotations?.length || 0);
+    nutellaLogos.logoAnnotations?.forEach(logo => {
+      console.log('- ' + logo.description);
+    });
+    
+    // Image 2: Produit cosmetique
+    console.log('\n\n=== TEST 2: PRODUIT COSMETIQUE ===');
+    const cosmeticUrl = 'https://cdn.pixabay.com/photo/2020/08/14/15/22/shampoo-5488235_960_720.jpg';
+    await downloadImage(cosmeticUrl, 'cosmetic.jpg');
+    
+    const [cosmeticLabels] = await client.labelDetection('./cosmetic.jpg');
+    console.log('Labels cosmetiques:');
+    cosmeticLabels.labelAnnotations?.slice(0, 5).forEach(label => {
+      console.log('- ' + label.description);
+    });
+    
+    // Detecter la categorie
+    const isCosmetic = cosmeticLabels.labelAnnotations?.some(label => 
+      ['cosmetics', 'shampoo', 'bottle', 'personal care'].includes(label.description.toLowerCase())
     );
+    console.log('Categorie detectee:', isCosmetic ? 'COSMETIQUE' : 'AUTRE');
     
-    console.log('✅ Produit trouvé:'.green, res.data.data.product.name);
-    console.log('   Marque:', res.data.data.product.brand);
-    console.log('   Score sécurité:', res.data.data.scores.safety + '/100');
-    console.log('   Score naturalité:', res.data.data.scores.naturalness + '/100');
-    console.log('   Ingrédients détectés:', res.data.data.analysis.totalIngredients);
+    // Test avec VisionService
+    console.log('\n\n=== TEST 3: AVEC VISIONSERVICE ===');
+    const VisionService = require('./src/services/vision/VisionService');
     
-  } catch (error) {
-    console.log('❌ Erreur:'.red, error.response?.data?.error || error.message);
-  }
-}
-
-async function testDetergentBarcode() {
-  console.log('\n🧽 TEST DÉTERGENT PAR CODE-BARRES'.cyan);
-  console.log('='.repeat(50));
-  
-  try {
-    // Test avec Ariel Original
-    const res = await axios.post(
-      `${API_URL}/detergent/analyze/barcode`,
-      { barcode: '3178041320584' },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    // Bypasser Tesseract
+    VisionService.initialized = true;
+    VisionService.googleVisionClient = client;
     
-    console.log('✅ Produit trouvé:'.green, res.data.data.product.name);
-    console.log('   Marque:', res.data.data.product.brand);
-    console.log('   Score écologique:', res.data.data.scores.ecological + '/100');
-    console.log('   Biodégradabilité:', res.data.data.details.biodegradability);
-    console.log('   CDV:', res.data.data.details.cdv);
+    const result = await VisionService.analyzeWithGoogleVision('./nutella.jpg', 'fr');
+    console.log('Methode:', result.method);
+    console.log('Confiance:', result.confidence);
+    console.log('Type produit:', result.productType);
     
-  } catch (error) {
-    console.log('❌ Erreur:'.red, error.response?.data?.error || error.message);
-  }
-}
-
-async function testCertifiedDetergents() {
-  console.log('\n🌿 TEST DÉTERGENTS CERTIFIÉS'.cyan);
-  console.log('='.repeat(50));
-  
-  try {
-    const res = await axios.get(
-      `${API_URL}/detergent/certified`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    if (result.extractedData) {
+      console.log('\nDonnees extraites:');
+      console.log('- Nom:', result.extractedData.productName);
+      console.log('- Marque:', result.extractedData.brand);
+      console.log('- Code-barres:', result.extractedData.barcode);
+      console.log('- Categorie:', result.extractedData.category);
+    }
     
-    console.log('✅ Produits certifiés trouvés:'.green, res.data.total);
-    res.data.data.forEach(product => {
-      console.log(`   - ${product.name} (${product.brand})`);
-    });
+    // Nettoyer
+    fs.unlinkSync('./nutella.jpg');
+    fs.unlinkSync('./cosmetic.jpg');
+    
+    console.log('\n✅ Tests termines avec succes !');
     
   } catch (error) {
-    console.log('❌ Erreur:'.red, error.response?.data?.error || error.message);
+    console.error('Erreur:', error.message);
   }
 }
 
-async function getExamples() {
-  console.log('\n📋 EXEMPLES DE CODES-BARRES'.cyan);
-  console.log('='.repeat(50));
-  
-  try {
-    // Cosmétiques
-    const cosmeticRes = await axios.get(`${API_URL}/cosmetic/examples`);
-    console.log('\n🧴 Cosmétiques:'.yellow);
-    cosmeticRes.data.data.forEach(ex => {
-      console.log(`   ${ex.barcode} - ${ex.name} (${ex.type})`);
-    });
-    
-    // Détergents
-    const detergentRes = await axios.get(`${API_URL}/detergent/examples`);
-    console.log('\n🧽 Détergents:'.yellow);
-    detergentRes.data.data.forEach(ex => {
-      console.log(`   ${ex.barcode} - ${ex.name} (${ex.type})${ex.certified ? ' ✅' : ''}`);
-    });
-    
-  } catch (error) {
-    console.log('❌ Erreur récupération exemples'.red);
-  }
-}
-
-async function main() {
-  console.log('🧪 TEST DES VRAIS PRODUITS ECOLOJIA'.bold.blue);
-  
-  if (await login()) {
-    await getExamples();
-    await testCosmeticBarcode();
-    await testDetergentBarcode();
-    await testCertifiedDetergents();
-  }
-  
-  console.log('\n✨ Tests terminés'.green);
-}
-
-main();
+testRealProducts();

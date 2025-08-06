@@ -76,25 +76,25 @@ class ProductAnalysisService {
         this.analyzers.food = require('../scorers/food/foodScorer');
         logger.info('Food analyzer loaded');
       } catch (e) {
-        logger.warn('Food analyzer not available');
+        console.warn('Food analyzer not available');
       }
       
       try {
         this.analyzers.cosmetics = require('../scorers/cosmetic/cosmeticScorer');
         logger.info('Cosmetics analyzer loaded');
       } catch (e) {
-        logger.warn('Cosmetics analyzer not available');
+        console.warn('Cosmetics analyzer not available');
       }
       
       try {
         this.analyzers.detergents = require('../scorers/detergent/detergentScorer');
         logger.info('Detergents analyzer loaded');
       } catch (e) {
-        logger.warn('Detergents analyzer not available');
+        console.warn('Detergents analyzer not available');
       }
       
     } catch (error) {
-      logger.warn('Error loading analyzers:', error.message);
+      console.warn('Error loading analyzers:', error.message);
     }
   }
 
@@ -231,7 +231,7 @@ class ProductAnalysisService {
     const analyzer = this.analyzers[category];
     
     if (!analyzer) {
-      logger.warn(`No analyzer found for category: ${category}`);
+      console.warn(`No analyzer found for category: ${category}`);
       // Analyse générique de fallback
       return this.generateGenericAnalysis(product);
     }
@@ -553,7 +553,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
       this.analyzers.detergents = require('../scorers/detergents/detergentsScorer');
       logger.info('All analyzers loaded successfully');
     } catch (error) {
-      logger.warn('Some analyzers could not be loaded:', error.message);
+      console.warn('Some analyzers could not be loaded:', error.message);
     }
   }
 
@@ -652,7 +652,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
     const analyzer = this.analyzers[category];
     
     if (!analyzer) {
-      logger.warn(`No analyzer found for category: ${category}`);
+      console.warn(`No analyzer found for category: ${category}`);
       // Analyse générique de fallback
       return this.generateGenericAnalysis(product);
     }

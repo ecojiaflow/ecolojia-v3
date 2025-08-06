@@ -293,7 +293,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     try { 
       novaGroup = novaClassifier.classify(ingredientsText, product.name).group; 
     } catch(err) { 
-      logger.warn('NOVA classification failed:', err.message); 
+      console.warn('NOVA classification failed:', err.message); 
     }
   }
 
@@ -334,7 +334,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
         results: analysisResult 
       }); 
     } catch(e) { 
-      logger.warn('Could not save analysis:', e.message); 
+      console.warn('Could not save analysis:', e.message); 
     }
   }
 

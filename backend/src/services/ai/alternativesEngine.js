@@ -98,7 +98,7 @@ class AlternativesEngine {
       const similarProducts = await this.findSimilarProducts(product, 3);
       alternatives.push(...similarProducts);
     } catch (error) {
-      logger.warn('Error finding similar products:', error.message);
+      console.warn('Error finding similar products:', error.message);
     }
 
     logger.info('Generated alternatives:', { count: alternatives.length });

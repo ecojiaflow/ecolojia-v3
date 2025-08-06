@@ -1,96 +1,113 @@
 // backend/src/middleware/quotaMiddleware.js
-const quotaService = require('../services/quotaService');
+const User = require('../models/User');
 
-/**
- * Middleware pour vérifier et consommer les quotas
- * @param {string} quotaType - Type de quota ('scan', 'aiChat', 'export')
- */
-const checkQuota = (quotaType) => {
+const checkQuota = (quotaType = 'scan') => {
   return async (req, res, next) => {
     try {
-      const userId = req.userId;
+      // IMPORTANT: Ne pas parser le body pour les requêtes multipart
+      // Multer doit s'exécuter AVANT ce middleware
+      const isMultipart = req.headers['content-type']?.includes('multipart/form-data');
       
-      // Vérifier et consommer le quota
-      const quotaResult = await quotaService.checkAndConsumeQuota(userId, quotaType);
+      if (isMultipart) {
+        console.log('Multipart request detected, skipping body parsing');
+      }
+
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'Utilisateur non authentifié' });
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+      }
+
+      // Vérifier si l'utilisateur est premium
+      if (user.subscription?.status === 'active' && user.subscription?.plan === 'premium') {
+        // Premium : pas de limite
+        return next();
+      }
+
+      // Utilisateur gratuit : vérifier les quotas
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      // Réinitialiser le compteur si nouveau mois
+      if (!user.quotas.lastReset || user.quotas.lastReset < startOfMonth) {
+        user.quotas = {
+          scansUsed: 0,
+          scansLimit: 30,
+          aiChatsUsed: 0,
+          aiChatsLimit: 5,
+          lastReset: now
+        };
+        await user.save();
+      }
+
+      // Vérifier le quota approprié
+      let quotaField, limitField, quotaName;
       
-      // Ajouter les infos de quota à la requête
-      req.quotaInfo = quotaResult;
-      
-      // Si quota épuisé
-      if (!quotaResult.allowed) {
-        return res.status(403).json({
-          success: false,
-          error: 'Quota épuisé',
-          quotaInfo: {
-            type: quotaType,
-            limit: quotaResult.limit,
-            remaining: 0,
-            resetDate: quotaResult.resetDate,
-            requiresUpgrade: true
+      switch (quotaType) {
+        case 'scan':
+          quotaField = 'scansUsed';
+          limitField = 'scansLimit';
+          quotaName = 'scans';
+          break;
+        case 'ai':
+          quotaField = 'aiChatsUsed';
+          limitField = 'aiChatsLimit';
+          quotaName = 'chats IA';
+          break;
+        default:
+          return res.status(400).json({ error: 'Type de quota invalide' });
+      }
+
+      if (user.quotas[quotaField] >= user.quotas[limitField]) {
+        return res.status(429).json({ 
+          error: 'Quota dépassé',
+          message: `Vous avez atteint votre limite mensuelle de ${user.quotas[limitField]} ${quotaName}`,
+          quotas: {
+            used: user.quotas[quotaField],
+            limit: user.quotas[limitField],
+            resetDate: new Date(now.getFullYear(), now.getMonth() + 1, 1)
           },
           upgrade: {
-            message: 'Passez à Premium pour débloquer cette fonctionnalité',
-            benefits: getQuotaBenefits(quotaType),
-            upgradeUrl: `${process.env.FRONTEND_URL}/premium`
+            message: 'Passez à Premium pour des analyses illimitées',
+            url: '/pricing'
           }
         });
       }
-      
+
+      // Incrémenter le compteur
+      user.quotas[quotaField] += 1;
+      await user.save();
+
+      // Ajouter les infos de quota à la requête
+      req.quotaInfo = {
+        type: quotaType,
+        used: user.quotas[quotaField],
+        limit: user.quotas[limitField],
+        remaining: user.quotas[limitField] - user.quotas[quotaField]
+      };
+
       next();
     } catch (error) {
-      console.error('Erreur middleware quota:', error);
-      // En cas d'erreur, on laisse passer pour ne pas bloquer le service
-      next();
+      console.error('Erreur vérification quota:', error);
+      res.status(500).json({ error: 'Erreur lors de la vérification du quota' });
     }
   };
 };
 
-/**
- * Obtenir les bénéfices selon le type de quota
- */
-function getQuotaBenefits(quotaType) {
-  const benefits = {
-    scan: [
-      'Scans illimités',
-      'Historique complet',
-      'Analyses détaillées',
-      'Recommandations personnalisées'
-    ],
-    aiChat: [
-      '500 conversations IA par mois',
-      'Réponses détaillées',
-      'Conseils nutritionnels personnalisés',
-      'Accès prioritaire'
-    ],
-    export: [
-      'Export PDF illimité',
-      'Rapports détaillés',
-      'Historique complet',
-      'Partage familial'
-    ]
+// Middleware spécifique pour les routes avec upload
+const checkQuotaAfterUpload = (quotaType = 'scan') => {
+  return async (req, res, next) => {
+    // Ce middleware est conçu pour être utilisé APRÈS multer
+    // Il aura accès à req.file
+    console.log('CheckQuotaAfterUpload - File present:', !!req.file);
+    
+    // Appeler la logique de quota normale
+    return checkQuota(quotaType)(req, res, next);
   };
-  
-  return benefits[quotaType] || benefits.scan;
-}
-
-/**
- * Middleware simplifié pour les routes qui utilisent checkQuota sans paramètre
- */
-const checkQuotaMiddleware = async (req, res, next) => {
-  // Déterminer le type de quota selon la route
-  let quotaType = 'scan';
-  
-  if (req.path.includes('/ai/') || req.path.includes('/chat')) {
-    quotaType = 'aiChat';
-  } else if (req.path.includes('/export')) {
-    quotaType = 'export';
-  }
-  
-  // Appeler checkQuota avec le bon type
-  return checkQuota(quotaType)(req, res, next);
 };
 
-module.exports = {
-  checkQuota,
-  checkQuotaMiddleware
-};
+module.exports = { checkQuota, checkQuotaAfterUpload };

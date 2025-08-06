@@ -9,7 +9,7 @@ let CosmeticScorer;
 try {
   CosmeticScorer = require('../scorers/cosmetic/cosmeticScorer');
 } catch (error) {
-  logger.warn('CosmeticScorer not found, using mock');
+  console.warn('CosmeticScorer not found, using mock');
   // Mock scorer pour tests
   CosmeticScorer = class {
     async analyzeCosmetic(productData) {
@@ -57,7 +57,7 @@ try {
     authMiddleware = authMiddleware.auth;
   }
 } catch (error) {
-  logger.warn('Auth middleware not found, using bypass');
+  console.warn('Auth middleware not found, using bypass');
   authMiddleware = (req, res, next) => {
     req.userId = 'test-user';
     req.user = { _id: req.userId, tier: 'free' };
@@ -119,7 +119,7 @@ router.post('/analyze', authMiddleware, async (req, res) => {
 
     // Vérifier la confiance
     if (analysisResult.confidence < 0.4) {
-      logger.warn('Low confidence analysis', { 
+      console.warn('Low confidence analysis', { 
         confidence: analysisResult.confidence,
         productName: name 
       });

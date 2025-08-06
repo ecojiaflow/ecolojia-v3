@@ -39,7 +39,7 @@ class EnrichmentService {
           await new Promise(resolve => setTimeout(resolve, 2000));
         } catch (error) {
           errors++;
-          this.logger.warn(`Erreur enrichissement ${product.id}:`, error.message);
+          this.console.warn(`Erreur enrichissement ${product.id}:`, error.message);
         }
       }
 

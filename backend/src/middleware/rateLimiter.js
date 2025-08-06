@@ -72,7 +72,7 @@ const createRateLimiter = (config, keyPrefix, options = {}) => {
     legacyHeaders: false,
     keyGenerator: createKeyGenerator(keyPrefix),
     handler: (req, res) => {
-      logger.warn('Rate limit exceeded', {
+      console.warn('Rate limit exceeded', {
         ip: req.ip,
         userId: req.user?._id,
         path: req.path,
@@ -110,7 +110,7 @@ const createRateLimiter = (config, keyPrefix, options = {}) => {
       sendCommand: (...args) => global.redisClient.sendCommand(args)
     });
   } else {
-    logger.warn(`Rate limiter ${keyPrefix} using memory store (Redis not available)`);
+    console.warn(`Rate limiter ${keyPrefix} using memory store (Redis not available)`);
   }
   
   return rateLimit(limiterConfig);

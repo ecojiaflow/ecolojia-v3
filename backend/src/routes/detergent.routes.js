@@ -9,7 +9,7 @@ let DetergentScorer;
 try {
   DetergentScorer = require('../scorers/detergent/detergentScorer').DetergentScorer;
 } catch (error) {
-  logger.warn('DetergentScorer not found, using mock');
+  console.warn('DetergentScorer not found, using mock');
   // Mock scorer pour tests
   DetergentScorer = class {
     async analyzeDetergent(ingredients, productName, certifications) {
@@ -42,7 +42,7 @@ try {
     throw new Error('Auth middleware is not a function');
   }
 } catch (error) {
-  logger.warn('Auth middleware not found or invalid, using bypass');
+  console.warn('Auth middleware not found or invalid, using bypass');
   authMiddleware = (req, res, next) => {
     req.userId = 'test-user';
     req.user = { _id: req.userId, tier: 'free' };

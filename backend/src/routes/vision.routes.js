@@ -1,93 +1,136 @@
-// backend/src/routes/vision.routes.js – version sans doublon cloudinaryService
-//-------------------------------------------------------
+// backend/src/routes/vision.routes.js
+// Routes Vision avec imports corrigés
+
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
+const ProductOCRService = require('../services/vision/ProductOCRService');
 
-const { auth } = require('../middleware/auth');
-const { checkQuota } = require('../middleware/quotaMiddleware');
-const queueService = require('../services/queue/QueueService');
-const visionService = require('../services/vision/VisionService');
-const cloudinaryService = require('../services/upload/CloudinaryService'); // unique import
+// Import unifié depuis middleware/index.js
+const { 
+  authenticateToken, 
+  checkQuotaAfterUpload 
+} = require('../middleware');
 
-const logger = require('../utils/logger').child('VisionRoutes');
-
-// ──────────────────────────────────────────────────────
-const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+// Configuration multer
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (!allowedExtensions.includes(ext)) return cb(new Error('Unsupported image format'));
-    cb(null, true);
+  limits: { 
+    fileSize: 10 * 1024 * 1024 // 10MB
   },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Format non supporté. Utilisez JPEG, PNG ou WebP.'));
+    }
+  }
 });
 
-// ──────────────────────────────────────────────────────
-router.post('/analyze', auth, checkQuota('scan'), upload.single('image'), async (req, res) => {
-  try {
-    const userId = req.userId;
-    if (!req.file && !req.body.imageUrl) return res.status(400).json({ success: false, error: 'Image missing' });
+// Route d'analyse d'image
+// IMPORTANT: L'ordre des middlewares est crucial
+// 1. Auth -> 2. Multer -> 3. Quota
+router.post('/analyze-image',
+  authenticateToken,
+  upload.single('image'),
+  checkQuotaAfterUpload('scan'),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ 
+          error: 'Aucune image fournie'
+        });
+      }
 
-    // Upload or reuse URL
-    let imageUrl = req.body.imageUrl;
-    if (req.file) {
-      const { secure_url } = await cloudinaryService.uploadImage(req.file.buffer, {
-        folder: `users/${userId}/vision`,
-        resource_type: 'image',
+      console.log('Analyse image pour user:', req.user.userId);
+      console.log('Quota info:', req.quotaInfo);
+
+      const ocrService = new ProductOCRService();
+      const result = await ocrService.analyzeProductImage(req.file.buffer, {
+        userId: req.user.userId,
+        language: req.body.language || 'fra',
+        enhanceImage: req.body.enhanceImage !== 'false'
       });
-      imageUrl = secure_url;
+
+      // Décrémenter le quota après succès
+      if (req.decrementQuota) {
+        await req.decrementQuota();
+      }
+
+      res.json({
+        success: true,
+        jobId: result.jobId,
+        status: result.status,
+        result: result.result,
+        quotaInfo: req.quotaInfo || req.quota,
+        message: 'Analyse lancée avec succès'
+      });
+
+    } catch (error) {
+      console.error('Vision route error:', error);
+      res.status(500).json({ 
+        error: 'Erreur lors de l\'analyse',
+        message: error.message
+      });
     }
-
-    // Save analysis doc
-    const Analysis = require('../models/Analysis');
-    const analysis = await Analysis.create({
-      userId,
-      method: 'vision',
-      timestamp: new Date(),
-      visionAnalysis: { status: 'pending', imageUrl },
-    });
-
-    // Queue job
-    const job = await queueService.addJob('image-analysis', {
-      userId,
-      imageUrl,
-      analysisId: analysis._id.toString(),
-    });
-
-    await req.decrementQuota?.();
-    res.json({ success: true, data: { analysisId: analysis._id, jobId: job.id } });
-  } catch (err) {
-    logger.error('Analyze error', err);
-    res.status(500).json({ success: false, error: err.message });
   }
-});
+);
 
-// ──────────────────────────────────────────────────────
-router.get('/status/:analysisId', auth, async (req, res) => {
-  try {
-    const { analysisId } = req.params;
-    const Analysis = require('../models/Analysis');
-    const doc = await Analysis.findOne({ _id: analysisId, userId: req.userId }).select('visionAnalysis');
-    if (!doc) return res.status(404).json({ success: false, error: 'Not found' });
+// Route de statut du job
+router.get('/status/:jobId', 
+  authenticateToken, 
+  async (req, res) => {
+    try {
+      const { jobId } = req.params;
+      const ocrService = new ProductOCRService();
+      const status = await ocrService.getJobStatus(jobId);
 
-    const { status, jobId, imageUrl, error } = doc.visionAnalysis;
-    if (status === 'processing' && jobId) {
-      const job = await queueService.getJob('image-analysis', jobId);
-      return res.json({ success: true, status, progress: job?.progress || 0 });
+      if (!status) {
+        return res.status(404).json({ error: 'Job non trouvé' });
+      }
+
+      // Vérifier que le job appartient à l'utilisateur
+      if (status.userId !== req.user.userId) {
+        return res.status(403).json({ error: 'Accès non autorisé' });
+      }
+
+      res.json(status);
+    } catch (error) {
+      console.error('Status route error:', error);
+      res.status(500).json({ 
+        error: 'Erreur lors de la récupération du statut' 
+      });
     }
-    res.json({ success: status === 'completed', status, imageUrl, error });
-  } catch (err) {
-    logger.error('Status error', err);
-    res.status(500).json({ success: false, error: err.message });
   }
-});
+);
 
-// ──────────────────────────────────────────────────────
-router.get('/health', (req, res) => {
-  res.json({ success: true, queue: !!queueService.queues['image-analysis'] });
+// Route de test (dev only)
+if (process.env.NODE_ENV === 'development') {
+  router.get('/test', (req, res) => {
+    res.json({ 
+      status: 'ok', 
+      message: 'Vision routes operational',
+      endpoints: [
+        'POST /api/vision/analyze-image',
+        'GET /api/vision/status/:jobId'
+      ]
+    });
+  });
+}
+
+// Error handler pour multer
+router.use((error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ 
+        error: 'Fichier trop volumineux (max 10MB)' 
+      });
+    }
+  }
+  return res.status(500).json({ 
+    error: error.message 
+  });
 });
 
 module.exports = router;

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Upload</title>
+</head>
+<body>
+    <h1>Test Upload ECOLOJIA</h1>
+    <input type="file" id="file" accept="image/*">
+    <button onclick="testUpload()">Upload</button>
+    <div id="result"></div>
+
+    <script>
+        async function testUpload() {
+            const file = document.getElementById('file').files[0];
+            if (!file) return alert('Choisir un fichier');
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try {
+                const res = await fetch('http://localhost:5002/test/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (e) {
+                document.getElementById('result').innerHTML = 'Erreur: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

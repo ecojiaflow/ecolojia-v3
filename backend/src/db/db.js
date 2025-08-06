@@ -33,7 +33,7 @@ const connectMongo = async () => {
     });
 
     mongoose.connection.on('disconnected', () => {
-      logger.warn('[MongoDB] Disconnected from database');
+      console.warn('[MongoDB] Disconnected from database');
     });
 
     // Graceful shutdown

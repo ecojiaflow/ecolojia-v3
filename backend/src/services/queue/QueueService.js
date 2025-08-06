@@ -49,7 +49,7 @@ class QueueService {
       });
     } else {
       // BullMQ v4 : simple warning, la queue fonctionnera mais sans redrive automatique
-      logger.warn(`[QueueService] QueueScheduler not available – running without scheduler (BullMQ v4)`);
+      console.warn(`[QueueService] QueueScheduler not available – running without scheduler (BullMQ v4)`);
     }
 
     this.queues[queueName] = new Queue(queueName, {
