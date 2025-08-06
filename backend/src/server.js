@@ -178,7 +178,7 @@ app.listen(PORT, () => {
 📋 État des services externes:
   ${process.env.MONGODB_URI ? '✅' : '⚠️'} MongoDB: ${process.env.MONGODB_URI ? 'Configuré' : 'Non configuré'}
   ${process.env.REDIS_URL ? '✅' : '⚠️'} Redis: ${process.env.REDIS_URL ? 'Configuré' : 'Local'}
-  ${process.env.GOOGLE_CLOUD_KEYFILE ? '✅' : '⚠️'} Google Vision: ${process.env.GOOGLE_CLOUD_KEYFILE ? 'Configuré' : 'Non configuré'}
+  ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? '✅' : '⚠️'} Google Vision: ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? 'Configuré' : 'Non configuré'}
   ${process.env.LEMONSQUEEZY_API_KEY ? '✅' : '⚠️'} LemonSqueezy: ${process.env.LEMONSQUEEZY_API_KEY ? 'Configuré' : 'Non configuré'}
   ${process.env.DEEPSEEK_API_KEY ? '✅' : '⚠️'} DeepSeek AI: ${process.env.DEEPSEEK_API_KEY ? 'Configuré' : 'Non configuré'}
   ${process.env.CLOUDINARY_CLOUD_NAME ? '✅' : '⚠️'} Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? 'Configuré' : 'Non configuré'}
