@@ -38,8 +38,12 @@ app.get('/', (req, res) => {
 const loadRoute = (name, modulePath, mountPath) => {
   try {
     const route = require(modulePath);
-    app.use(mountPath, route);
-    console.log(`✅ Routes ${name} chargées`);
+    if (route && typeof route === 'function') {
+      app.use(mountPath, route);
+      console.log(`✅ Routes ${name} chargées`);
+    } else {
+      console.log(`⚠️ Routes ${name} non valides`);
+    }
   } catch (error) {
     console.log(`⚠️ Routes ${name} non chargées: ${error.message}`);
   }
@@ -51,7 +55,7 @@ const loadTSRoute = (name, basePath, mountPath) => {
     const route = require(`${basePath}.js`);
     app.use(mountPath, route);
     console.log(`✅ Routes ${name} chargées (.js)`);
-  } catch (error) {
+  } catch {
     try {
       require('ts-node/register');
       const route = require(`${basePath}.ts`);
@@ -71,28 +75,23 @@ loadRoute('Analyse', './routes/analysis.routes', '/api/analysis');
 loadRoute('Vision', './routes/vision.routes', '/api/vision');
 loadRoute('Dashboard', './routes/dashboard', '/api/dashboard');
 
-// Routes Payment avec fallback email simulé
 try {
   const paymentRoutes = require('./routes/payment.routes');
   app.use('/api/payment', paymentRoutes);
   console.log('✅ Routes Payment chargées');
 } catch (error) {
-  if (error.message.includes('emailService')) {
-    console.log('⚠️ Service Email non configuré (mode simulation)');
-    require.cache[require.resolve('./services/emailService')] = {
-      exports: {
-        sendEmail: async (options) => {
-          console.log('📧 Email simulé:', options.subject);
-          return { success: true, simulated: true };
-        }
+  console.log('⚠️ Service Email non configuré - Mode simulation activé');
+  require.cache[require.resolve('./services/emailService')] = {
+    exports: {
+      sendEmail: async (options) => {
+        console.log('📧 Email simulé:', options.subject);
+        return { success: true, simulated: true };
       }
-    };
-    const paymentRoutes = require('./routes/payment.routes');
-    app.use('/api/payment', paymentRoutes);
-    console.log('✅ Routes Payment chargées (simulation email)');
-  } else {
-    console.log('⚠️ Routes Payment non trouvées:', error.message);
-  }
+    }
+  };
+  const paymentRoutes = require('./routes/payment.routes');
+  app.use('/api/payment', paymentRoutes);
+  console.log('✅ Routes Payment chargées (simulation email)');
 }
 
 loadRoute('GDPR', './routes/gdpr.routes', '/api/gdpr');
@@ -128,17 +127,14 @@ app.use((err, req, res, next) => {
 // ─────────────────────────────────────────────
 // Connexion MongoDB
 // ─────────────────────────────────────────────
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('✅ MongoDB Atlas connecté');
-  console.log(`📊 Base de données: ${mongoose.connection.db.databaseName}`);
-})
-.catch(err => {
-  console.error('❌ Erreur MongoDB:', err.message);
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia')
+  .then(() => {
+    console.log('✅ MongoDB Atlas connecté');
+    console.log(`📊 Base de données: ${mongoose.connection.db.databaseName}`);
+  })
+  .catch(err => {
+    console.error('❌ Erreur MongoDB:', err.message);
+  });
 
 // ─────────────────────────────────────────────
 // Connexion Redis
@@ -194,6 +190,4 @@ app.listen(PORT, () => {
   `);
 });
 
-// Export pour tests
 module.exports = app;
-
