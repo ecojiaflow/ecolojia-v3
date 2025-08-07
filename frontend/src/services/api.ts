@@ -6,10 +6,6 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 // Instance axios configurée
 const api = axios.create({
-  baseURL: ${API_URL}/api,
-
-// Instance axios configurÃ©e
-const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -17,7 +13,7 @@ const api = axios.create({
   timeout: 30000, // 30 secondes
 });
 
-// ===== TYPES UNIFIÃ‰S =====
+// ===== TYPES UNIFIÉS =====
 export interface ApiError {
   message: string;
   code?: string;
@@ -44,7 +40,7 @@ export interface User {
   };
   tier: 'free' | 'premium';
   status: 'active' | 'suspended' | 'deleted';
-  // CompatibilitÃ© avec les deux structures
+  // Compatibilité avec les deux structures
   quotas: {
     scansPerMonth: number;
     aiQuestionsPerDay: number;
@@ -200,14 +196,14 @@ export interface DashboardStats {
     scans: number;
     avgScore: number;
   }>;
-  [key: string]: any; // Pour la flexibilitÃ©
+  [key: string]: any; // Pour la flexibilité
 }
 
 // ===== GESTION DES TOKENS =====
 const TOKEN_KEY = 'token';
 const REFRESH_TOKEN_KEY = 'refreshToken';
 
-// Fonction pour obtenir le token (compatible avec les deux systÃ¨mes)
+// Fonction pour obtenir le token (compatible avec les deux systèmes)
 const getToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY) || localStorage.getItem('ecolojia_token');
 };
@@ -215,7 +211,7 @@ const getToken = (): string | null => {
 const setTokens = (token: string, refreshToken: string) => {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-  // CompatibilitÃ© avec l'ancien systÃ¨me
+  // Compatibilité avec l'ancien système
   localStorage.setItem('ecolojia_token', token);
   localStorage.setItem('ecolojia_refresh_token', refreshToken);
 };
@@ -237,7 +233,7 @@ api.interceptors.request.use(
     
     // Log en mode debug
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.log(`ðŸŒ API Request: ${config.method?.toUpperCase()} ${config.url}`);
+      console.log(`🌐 API Request: ${config.method?.toUpperCase()} ${config.url}`);
     }
     
     return config;
@@ -251,7 +247,7 @@ api.interceptors.response.use(
   (response) => {
     // Log en mode debug
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.log(`âœ… API Response:`, response.data);
+      console.log(`✅ API Response:`, response.data);
     }
     return response;
   },
@@ -260,10 +256,10 @@ api.interceptors.response.use(
 
     // Log des erreurs
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.error(`âŒ API Error:`, error.response?.status, error.response?.data);
+      console.error(`❌ API Error:`, error.response?.status, error.response?.data);
     }
 
-    // Si erreur 401 et pas dÃ©jÃ  tentÃ© de refresh
+    // Si erreur 401 et pas déjà tenté de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -275,14 +271,14 @@ api.interceptors.response.use(
           
           setTokens(token, newRefreshToken || refreshToken);
           
-          // Retry la requÃªte originale avec le nouveau token
+          // Retry la requête originale avec le nouveau token
           if (originalRequest.headers) {
             originalRequest.headers.Authorization = `Bearer ${token}`;
           }
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Ã‰chec du refresh, rediriger vers login
+        // Échec du refresh, rediriger vers login
         clearTokens();
         window.location.href = '/auth';
         return Promise.reject(refreshError);
@@ -355,7 +351,7 @@ export const authService = {
     return response.data;
   },
 
-  // MÃ©thodes utilitaires
+  // Méthodes utilitaires
   getToken,
   isTokenExpired: (): boolean => {
     const token = getToken();
@@ -471,7 +467,7 @@ export const dashboardService = {
     const response = await api.get('/dashboard/stats', { params: { range: period } });
     const data = response.data;
     
-    // Normaliser les donnÃ©es pour la compatibilitÃ©
+    // Normaliser les données pour la compatibilité
     return {
       ...data,
       totalScans: data.totalScans || data.overview?.totalAnalyses || 0,
@@ -561,8 +557,8 @@ export const partnerService = {
   },
 };
 
-// Export de l'instance API pour usage personnalisÃ© si nÃ©cessaire
+// Export de l'instance API pour usage personnalisé si nécessaire
 export default api;
 
-// Service Algolia (alias pour compatibilitÃ©)
+// Service Algolia (alias pour compatibilité)
 export const algoliaService = searchService;
