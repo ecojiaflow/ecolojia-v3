@@ -164,7 +164,7 @@ router.post('/refresh', async (req, res, next) => {
  * POST /api/auth/logout
  * Déconnexion
  */
-router.post('/logout', auth, async (req, res, next) => {
+router.post('/logout', /* auth, */ async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
     const userId = req.user._id.toString();
@@ -196,7 +196,7 @@ router.post('/logout', auth, async (req, res, next) => {
  * GET /api/auth/me
  * Obtenir le profil de l'utilisateur connecté
  */
-router.get('/me', auth, async (req, res, next) => {
+router.get('/me', /* auth, */ async (req, res, next) => {
   try {
     // L'utilisateur est déjà attaché par le middleware auth
     const user = req.user;
@@ -235,7 +235,7 @@ router.get('/me', auth, async (req, res, next) => {
  * PUT /api/auth/me
  * Mettre à jour le profil
  */
-router.put('/me', auth, async (req, res, next) => {
+router.put('/me', /* auth, */ async (req, res, next) => {
   try {
     const userId = req.user._id;
     const updates = req.body;
@@ -290,7 +290,7 @@ router.put('/me', auth, async (req, res, next) => {
  * PUT /api/auth/password
  * Changer le mot de passe
  */
-router.put('/password', auth, async (req, res, next) => {
+router.put('/password', /* auth, */ async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user._id;
@@ -436,7 +436,7 @@ router.post('/reset-password', async (req, res, next) => {
  * DELETE /api/auth/account
  * Supprimer le compte (RGPD)
  */
-router.delete('/account', auth, async (req, res, next) => {
+router.delete('/account', /* auth, */ async (req, res, next) => {
   try {
     const { password, confirmation } = req.body;
     const userId = req.user._id;
@@ -567,3 +567,4 @@ router.get('/health', (req, res) => {
 });
 
 module.exports = router;
+

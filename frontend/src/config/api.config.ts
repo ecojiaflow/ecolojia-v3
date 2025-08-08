@@ -1,152 +1,82 @@
-// frontend/src/config/api.config.ts
+// PATH: frontend/src/config/api.config.ts
 
-// Configuration API avec auto-dÃ©tection
-export const API_CONFIG = {
-  // DÃ©veloppement local
-  DEVELOPMENT_URL: 'http://localhost:5001',
-  
-  // Production (votre backend Render)
-  PRODUCTION_URL: 'https://ecolojia-backend.onrender.com',
-  
-  // Timeout par dÃ©faut
-  TIMEOUT: 30000, // 30 secondes pour Render qui peut Ãªtre lent au dÃ©marrage
-  
-  // Retry configuration
-  RETRY: {
-    maxRetries: 3,
-    initialDelay: 1000,
-    maxDelay: 30000,
-    backoffMultiplier: 2
+const API_CONFIG = {
+  development: {
+    url: 'http://localhost:5001', // ⚠️ PORT 5001, PAS 5000 !
+    timeout: 30000
+  },
+  production: {
+    url: 'https://ecolojia-backendvf.onrender.com',
+    timeout: 30000
   },
   
-  // Rate limit configuration
-  RATE_LIMIT: {
-    retryAfter429: true,
-    showToasts: true,
-    queueRequests: true
-  },
-  
-  // Environnement
-  isDevelopment: import.meta.env.MODE === 'development',
-  isProduction: import.meta.env.MODE === 'production',
-  
-  // MÃ©thode pour obtenir l'URL courante (SANS /api qui est ajoutÃ© par apiClient)
-  getCurrentApiUrl(): string {
-    // D'abord vÃ©rifier les variables d'environnement
+  // Méthode pour obtenir l'URL selon l'environnement
+  getCurrentApiUrl: () => {
+    // Priorité : variable d'environnement > environnement détecté
     if (import.meta.env.VITE_API_URL) {
-      console.log('ðŸ”— Using VITE_API_URL:', import.meta.env.VITE_API_URL);
       return import.meta.env.VITE_API_URL;
     }
     
-    // Sinon, utiliser la config par dÃ©faut selon l'environnement
-    const url = this.isDevelopment ? this.DEVELOPMENT_URL : this.PRODUCTION_URL;
-    console.log('ðŸ”— Using default URL:', url, '(env:', import.meta.env.MODE, ')');
-    return url;
+    // Détection automatique
+    if (import.meta.env.PROD) {
+      return API_CONFIG.production.url;
+    }
+    
+    return API_CONFIG.development.url;
   },
   
-  // Endpoints principaux (SANS /api au dÃ©but)
-  ENDPOINTS: {
+  // Endpoints principaux avec /api/ inclus
+  endpoints: {
     // Auth
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    REFRESH: '/auth/refresh',
-    LOGOUT: '/auth/logout',
-    PROFILE: '/auth/profile',
-    ME: '/auth/me',
-    FORGOT_PASSWORD: '/auth/forgot-password',
-    RESET_PASSWORD: '/auth/reset-password',
-    VERIFY_EMAIL: '/auth/verify-email',
-    CHANGE_PASSWORD: '/auth/change-password',
-    
-    // Dashboard
-    DASHBOARD_STATS: '/dashboard/stats',
-    DASHBOARD_EXPORT: '/dashboard/export',
-    DASHBOARD_HISTORY: '/dashboard/history',
-    DASHBOARD_WEEKLY: '/dashboard/weekly-summary',
-    DASHBOARD_ACHIEVEMENTS: '/dashboard/achievements',
-    DASHBOARD_RECOMMENDATIONS: '/dashboard/recommendations',
-    
-    // Products
-    PRODUCTS_SEARCH: '/products/search',
-    PRODUCTS_SCAN: '/products/scan',
-    PRODUCTS_ANALYZE: '/products/analyze',
-    PRODUCTS_BY_BARCODE: '/products/barcode',
-    PRODUCTS_TRENDING: '/products/trending',
+    login: '/api/auth/login',
+    register: '/api/auth/register',
+    refresh: '/api/auth/refresh',
+    logout: '/api/auth/logout',
     
     // Analysis
-    ANALYSIS_FOOD: '/analysis/food',
-    ANALYSIS_COSMETIC: '/analysis/cosmetic',
-    ANALYSIS_DETERGENT: '/analysis/detergent',
+    analyzeBarcode: '/api/analysis/barcode',
+    analyzeManual: '/api/analysis/manual',
+    analyzeImage: '/api/vision/analyze-image',
+    
+    // Dashboard
+    dashboardStats: '/api/dashboard/stats',
+    quota: '/api/quota', // Endpoint correct pour les quotas
+    
+    // Products
+    searchProducts: '/api/products/search',
+    getProduct: '/api/products/:id',
+    getProductByBarcode: '/api/products/barcode/:code',
     
     // User
-    USER_PROFILE: '/user/profile',
-    USER_PREFERENCES: '/user/preferences',
-    USER_HISTORY: '/user/history',
-    USER_QUOTAS: '/quota/status',
+    profile: '/api/user/profile',
+    updateProfile: '/api/user/profile',
+    preferences: '/api/user/preferences',
     
-    // AI
-    AI_CHAT: '/ai/chat',
-    AI_ANALYZE: '/ai/analyze',
-    AI_HISTORY: '/ai/chat/history',
-    AI_SUGGESTIONS: '/ai/suggestions',
+    // Analyses history
+    analysesHistory: '/api/analyses/history',
+    analysesRecent: '/api/analyses/recent',
     
-    // Subscriptions
-    SUBSCRIPTION_STATUS: '/subscription/status',
-    SUBSCRIPTION_PLANS: '/subscription/plans',
-    SUBSCRIPTION_UPGRADE: '/subscription/upgrade',
-    SUBSCRIPTION_CANCEL: '/subscription/cancel',
+    // Export
+    exportAnalysis: '/api/analysis/:id/export',
     
-    // GDPR
-    GDPR_EXPORT: '/gdpr/export',
-    GDPR_DELETE: '/gdpr/delete',
-    GDPR_CONSENT: '/gdpr/consent'
+    // Favorites
+    addFavorite: '/api/analysis/:id/favorite',
+    getFavorites: '/api/user/favorites'
+  },
+  
+  // Headers par défaut
+  getDefaultHeaders: () => {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+  },
+  
+  // Vérifier si on est en production
+  isProduction: () => {
+    return import.meta.env.PROD || window.location.hostname !== 'localhost';
   }
 };
 
-// Helper pour construire les URLs complÃ¨tes (si nÃ©cessaire)
-export function buildApiUrl(endpoint: string): string {
-  const baseUrl = API_CONFIG.getCurrentApiUrl();
-  // S'assurer qu'il n'y a pas de double slash
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  return `${baseUrl}/api${cleanEndpoint}`;
-}
-
-// Helper pour obtenir un endpoint
-export function getEndpoint(key: keyof typeof API_CONFIG.ENDPOINTS): string {
-  return API_CONFIG.ENDPOINTS[key];
-}
-
-// Configuration des headers par dÃ©faut
-export const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-  'X-Client-Version': '3.0.0',
-  'X-Client-Platform': 'web'
-};
-
-// Configuration pour les diffÃ©rents types de requÃªtes
-export const REQUEST_CONFIG = {
-  // RequÃªtes qui ne doivent pas Ãªtre retentÃ©es
-  noRetry: [
-    API_CONFIG.ENDPOINTS.LOGIN,
-    API_CONFIG.ENDPOINTS.REGISTER,
-    API_CONFIG.ENDPOINTS.FORGOT_PASSWORD
-  ],
-  
-  // RequÃªtes qui peuvent Ãªtre mises en cache
-  cacheable: [
-    API_CONFIG.ENDPOINTS.PRODUCTS_TRENDING,
-    API_CONFIG.ENDPOINTS.USER_PROFILE,
-    API_CONFIG.ENDPOINTS.SUBSCRIPTION_PLANS
-  ],
-  
-  // RequÃªtes prioritaires (bypass queue)
-  priority: [
-    API_CONFIG.ENDPOINTS.LOGIN,
-    API_CONFIG.ENDPOINTS.REFRESH,
-    API_CONFIG.ENDPOINTS.DASHBOARD_STATS
-  ]
-};
-
-// Export pour utilisation directe
 export default API_CONFIG;

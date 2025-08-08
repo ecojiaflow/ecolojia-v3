@@ -1,0 +1,11 @@
+﻿===========================================
+PROJET ECOLOJIA - CODE COMPLET POUR PRODUCTION
+===========================================
+
+ÉTAT ACTUEL:
+- Frontend React + TypeScript avec mode démo fonctionnel
+- Backend Node.js + Express avec routes API
+- Mode démo qui simule toutes les fonctionnalités
+- Besoin d'implémenter l'authentification et le switch demo/prod
+
+===========================================

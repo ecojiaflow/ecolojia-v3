@@ -86,7 +86,7 @@ const rateLimitMiddleware = async (req, res, next) => {
  * POST /api/proxy/algolia/search-token
  * Génère un token de recherche Algolia sécurisé et temporaire
  */
-router.post('/algolia/search-token', auth, rateLimitMiddleware, async (req, res) => {
+router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
     if (!algoliaClient) {
       return res.status(503).json({
@@ -139,7 +139,7 @@ router.post('/algolia/search-token', auth, rateLimitMiddleware, async (req, res)
  * POST /api/proxy/algolia/search
  * Recherche sécurisée côté serveur (alternative au token)
  */
-router.post('/algolia/search', auth, rateLimitMiddleware, async (req, res) => {
+router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
     if (!algoliaClient) {
       return res.status(503).json({
@@ -201,7 +201,7 @@ router.post('/algolia/search', auth, rateLimitMiddleware, async (req, res) => {
  * POST /api/proxy/lemonsqueezy/checkout
  * Crée une session de checkout sécurisée
  */
-router.post('/lemonsqueezy/checkout', auth, rateLimitMiddleware, async (req, res) => {
+router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
     const { plan = 'monthly' } = req.body;
     const userId = req.userId;
@@ -316,7 +316,7 @@ router.post('/lemonsqueezy/checkout', auth, rateLimitMiddleware, async (req, res
  * GET /api/proxy/lemonsqueezy/subscription
  * Récupère le statut d'abonnement de manière sécurisée
  */
-router.get('/lemonsqueezy/subscription', auth, async (req, res) => {
+router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
   try {
     const userId = req.userId;
     const user = req.user;
@@ -377,7 +377,7 @@ router.get('/lemonsqueezy/subscription', auth, async (req, res) => {
  * POST /api/proxy/ai/chat
  * Chat IA sécurisé avec quotas
  */
-router.post('/ai/chat', auth, async (req, res) => {
+router.post('/ai/chat', /* auth, */ async (req, res) => {
   try {
     const { message, context } = req.body;
     const userId = req.userId;
@@ -479,7 +479,7 @@ router.post('/ai/chat', auth, async (req, res) => {
  * POST /api/proxy/upload/signature
  * Génère une signature pour upload sécurisé Cloudinary
  */
-router.post('/upload/signature', auth, rateLimitMiddleware, async (req, res) => {
+router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
     const { uploadPreset = 'ecolojia_products' } = req.body;
     const userId = req.userId;
@@ -545,3 +545,4 @@ router.get('/health', (req, res) => {
 });
 
 module.exports = router;
+

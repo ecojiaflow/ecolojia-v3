@@ -1,0 +1,2547 @@
+﻿===========================================
+PROJET ECOLOJIA - CODE COMPLET POUR PRODUCTION
+===========================================
+
+ÉTAT ACTUEL:
+- Frontend React + TypeScript avec mode démo fonctionnel
+- Backend Node.js + Express avec routes API
+- Mode démo qui simule toutes les fonctionnalités
+- Besoin d'implémenter l'authentification et le switch demo/prod
+
+===========================================
+
+
+===========================================
+
+FICHIER: BACKEND - server.js
+
+PATH: backend\src\server.js
+
+===========================================
+// PATH: backend/src/server.js
+// Serveur ECOLOJIA robuste et prÃªt pour la production
+
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const path = require('path');
+const Redis = require('ioredis');
+
+const app = express();
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Configuration CORS optimisÃ©e
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://frontendvf.netlify.app',
+      'https://ecolojia.app',
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174'
+    ];
+    
+    // En dÃ©veloppement, accepter toutes les origines
+    if (process.env.NODE_ENV === 'development') {
+      callback(null, true);
+      return;
+    }
+    
+    // En production, vÃ©rifier la liste blanche
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
+  maxAge: 86400 // Cache CORS preflight pendant 24h
+};
+
+app.use(cors(corsOptions));
+
+// Headers de sÃ©curitÃ© supplÃ©mentaires
+app.use((req, res, next) => {
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'DENY');
+  res.header('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Middleware globaux
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Route de test racine avec info CORS
+app.get('/', (req, res) => {
+  res.json({
+    message: 'ECOLOJIA API V3.0',
+    status: 'running',
+    timestamp: new Date(),
+    cors: {
+      origin: req.headers.origin || 'No origin header',
+      allowed: corsOptions.origin instanceof Function ? 'Dynamic check' : corsOptions.origin
+    },
+    endpoints: {
+      auth: '/api/auth',
+      analysis: '/api/analysis',
+      vision: '/api/vision',
+      dashboard: '/api/dashboard'
+    }
+  });
+});
+
+// Route de santÃ© pour monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    env: process.env.NODE_ENV || 'development'
+  });
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Fonction gÃ©nÃ©rique pour charger les routes
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const loadRoute = (name, modulePath, mountPath) => {
+  try {
+    const route = require(modulePath);
+    if (route && typeof route === 'function') {
+      app.use(mountPath, route);
+      console.log(`âœ… Routes ${name} chargÃ©es sur ${mountPath}`);
+    } else {
+      console.log(`âš ï¸ Routes ${name} non valides`);
+    }
+  } catch (error) {
+    console.log(`âš ï¸ Routes ${name} non chargÃ©es: ${error.message}`);
+  }
+};
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Chargement des routes
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+loadRoute('Auth', './routes/auth', '/api/auth');
+loadRoute('Analyse', './routes/analysis.routes', '/api/analysis');
+loadRoute('Vision', './routes/vision.routes', '/api/vision');
+loadRoute('Dashboard', './routes/dashboard', '/api/dashboard');
+
+// Gestion spÃ©ciale pour les routes de paiement
+try {
+  const paymentRoutes = require('./routes/payment.routes');
+  app.use('/api/payment', paymentRoutes);
+  console.log('âœ… Routes Payment chargÃ©es');
+} catch (error) {
+  console.log('âš ï¸ Service Email non configurÃ© - Mode simulation activÃ©');
+  require.cache[require.resolve('./services/emailService')] = {
+    exports: {
+      sendEmail: async (options) => {
+        console.log('ðŸ“§ Email simulÃ©:', options.subject);
+        return { success: true, simulated: true };
+      }
+    }
+  };
+  const paymentRoutes = require('./routes/payment.routes');
+  app.use('/api/payment', paymentRoutes);
+  console.log('âœ… Routes Payment chargÃ©es (simulation email)');
+}
+
+loadRoute('GDPR', './routes/gdpr.routes', '/api/gdpr');
+loadRoute('AI', './routes/ai.routes', '/api/ai');
+loadRoute('User', './routes/user.routes', '/api/users');
+loadRoute('Products', './routes/products', '/api/products');
+loadRoute('Quota', './routes/quota', '/api/quota');
+loadRoute('Algolia', './routes/algolia', '/api/algolia');
+loadRoute('Export', './routes/export', '/api/export');
+loadRoute('History', './routes/history', '/api/history');
+loadRoute('Favorites', './routes/favorites', '/api/favorites');
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Gestion des erreurs 404
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Endpoint non trouvÃ©',
+    path: req.path,
+    method: req.method,
+    suggestion: 'VÃ©rifiez l\'URL ou consultez GET / pour la liste des endpoints'
+  });
+});
+
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  // Gestion spÃ©ciale des erreurs CORS
+  if (err.message && err.message.includes('CORS')) {
+    return res.status(403).json({
+      error: 'CORS Policy Error',
+      message: 'Cette origine n\'est pas autorisÃ©e',
+      origin: req.headers.origin || 'No origin',
+      allowedOrigins: [
+        'https://frontendvf.netlify.app',
+        'http://localhost:5173',
+        'http://localhost:5174'
+      ]
+    });
+  }
+
+  console.error('Erreur serveur:', err.stack);
+  res.status(err.status || 500).json({
+    error: err.message || 'Erreur serveur interne',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Connexion MongoDB avec retry
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const connectMongoDB = async () => {
+  const maxRetries = 5;
+  let retries = 0;
+
+  while (retries < maxRetries) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log('âœ… MongoDB Atlas connectÃ©');
+      console.log(`ðŸ“Š Base de donnÃ©es: ${mongoose.connection.db.databaseName}`);
+      break;
+    } catch (err) {
+      retries++;
+      console.error(`âŒ Tentative ${retries}/${maxRetries} - Erreur MongoDB:`, err.message);
+      if (retries < maxRetries) {
+        console.log(`â³ Nouvelle tentative dans 5 secondes...`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
+  }
+};
+
+connectMongoDB();
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Connexion Redis avec fallback
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+let redisClient;
+
+try {
+  redisClient = new Redis({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD,
+    tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
+    retryStrategy: (times) => {
+      if (times > 3) {
+        console.log('âš ï¸ Redis indisponible, utilisation du cache mÃ©moire');
+        return null;
+      }
+      return Math.min(times * 50, 2000);
+    }
+  });
+
+  redisClient.on('connect', () => console.log('âœ… Redis connectÃ©'));
+  redisClient.on('error', (err) => console.error('âš ï¸ Redis erreur:', err.message));
+} catch (error) {
+  console.log('âš ï¸ Redis non configurÃ©, utilisation du cache mÃ©moire');
+}
+
+// Export du client Redis pour utilisation dans d'autres modules
+app.locals.redisClient = redisClient;
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Graceful shutdown
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+process.on('SIGTERM', async () => {
+  console.log('â¹ï¸ SIGTERM reÃ§u, arrÃªt gracieux...');
+  
+  // Fermer les connexions
+  if (redisClient) await redisClient.quit();
+  await mongoose.connection.close();
+  
+  process.exit(0);
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Lancement du serveur
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const PORT = process.env.PORT || 5001;
+const server = app.listen(PORT, () => {
+  console.log(`
+â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+â•‘                   ECOLOJIA Backend V3.0                       â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+â•‘  ðŸš€ Serveur:     http://localhost:${PORT}                     â•‘
+â•‘  ðŸ“Š Mode:        ${process.env.NODE_ENV || 'development'}                              â•‘
+â•‘  ðŸ”§ MongoDB:     ${mongoose.connection.readyState === 1 ? 'ConnectÃ© âœ…' : 'En attente â³'}              â•‘
+â•‘  ðŸ’¾ Redis:       ${redisClient && redisClient.status === 'ready' ? 'ConnectÃ© âœ…' : 'Cache mÃ©moire ðŸ“'}            â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+â•‘  ðŸ“ Endpoints principaux:                                     â•‘
+â•‘  â€¢ GET  /                          - Info API & endpoints     â•‘
+â•‘  â€¢ GET  /health                    - Ã‰tat du serveur          â•‘
+â•‘  â€¢ POST /api/auth/login            - Connexion               â•‘
+â•‘  â€¢ POST /api/auth/register         - Inscription             â•‘
+â•‘  â€¢ POST /api/analysis              - Analyse universelle     â•‘
+â•‘  â€¢ POST /api/vision/analyze-image  - OCR sur image           â•‘
+â•‘  â€¢ GET  /api/dashboard/stats       - Statistiques            â•‘
+â•‘  â€¢ POST /api/payment/create-checkout - Paiement              â•‘
+â•‘  â€¢ GET  /api/gdpr/download-data    - Export RGPD             â•‘
+â•‘  â€¢ POST /api/ai/chat               - Chat IA                 â•‘
+â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+ðŸ“‹ Ã‰tat des services externes:
+  ${process.env.MONGODB_URI ? 'âœ…' : 'âš ï¸'} MongoDB: ${process.env.MONGODB_URI ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.REDIS_URL || process.env.REDIS_HOST ? 'âœ…' : 'âš ï¸'} Redis: ${process.env.REDIS_URL || process.env.REDIS_HOST ? 'ConfigurÃ©' : 'Local'}
+  ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? 'âœ…' : 'âš ï¸'} Google Vision: ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.LEMONSQUEEZY_API_KEY ? 'âœ…' : 'âš ï¸'} LemonSqueezy: ${process.env.LEMONSQUEEZY_API_KEY ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.DEEPSEEK_API_KEY ? 'âœ…' : 'âš ï¸'} DeepSeek AI: ${process.env.DEEPSEEK_API_KEY ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.CLOUDINARY_CLOUD_NAME ? 'âœ…' : 'âš ï¸'} Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.ALGOLIA_APP_ID ? 'âœ…' : 'âš ï¸'} Algolia: ${process.env.ALGOLIA_APP_ID ? 'ConfigurÃ©' : 'Non configurÃ©'}
+
+ðŸŒ CORS configurÃ© pour:
+  â€¢ https://frontendvf.netlify.app (Production)
+  â€¢ http://localhost:5173 (Dev Vite)
+  â€¢ http://localhost:5174 (Dev Vite alt)
+  â€¢ ${process.env.NODE_ENV === 'development' ? 'Toutes origines (mode dev)' : 'Liste blanche uniquement'}
+
+ðŸŽ‰ Serveur ECOLOJIA prÃªt !
+ðŸ“ Pour tester: curl http://localhost:${PORT}/health
+  `);
+});
+
+// Timeout pour les requÃªtes longues
+server.timeout = 30000; // 30 secondes
+
+module.exports = app;
+
+
+===========================================
+
+FICHIER: BACKEND - routes/auth.js
+
+PATH: backend\src\routes\auth.js
+
+===========================================
+// backend/src/routes/auth.js
+// FICHIER COMPLET CORRIGÉ
+
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+// Configuration JWT
+const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
+
+// Middleware d'authentification simple intégré
+const authMiddleware = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Token non fourni'
+      });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    req.userId = decoded.userId;
+    req.userEmail = decoded.email;
+    req.userTier = decoded.tier;
+    
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      error: error.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide'
+    });
+  }
+};
+
+// POST /api/auth/register
+router.post('/register', async (req, res) => {
+  try {
+    console.log('?? Register endpoint appelé:', req.body);
+    const { email, password, firstName, lastName } = req.body;
+
+    // Validation
+    if (!email || !password || !firstName || !lastName) {
+      return res.status(400).json({
+        success: false,
+        error: 'Tous les champs sont requis'
+      });
+    }
+
+    // Vérifier si l'utilisateur existe
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        error: 'Cet email est déjà utilisé'
+      });
+    }
+
+    // Hasher le mot de passe
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Créer l'utilisateur
+    const user = new User({
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      name: `${firstName} ${lastName}`,
+      profile: {
+        firstName,
+        lastName
+      },
+      tier: 'free',
+      status: 'active',
+      quotas: {
+        scansRemaining: 30,
+        scansResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        aiChatsRemaining: 5,
+        aiChatsResetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      }
+    });
+
+    await user.save();
+    console.log('? Utilisateur créé:', user.email);
+
+    // Générer le token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, tier: user.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Retourner la réponse
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(201).json({
+      success: true,
+      user: userResponse,
+      token,
+      accessToken: token,
+      refreshToken: token
+    });
+
+  } catch (error) {
+    console.error('? Register error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Erreur lors de l\'inscription'
+    });
+  }
+});
+
+// POST /api/auth/login
+router.post('/login', async (req, res) => {
+  try {
+    console.log('?? Login endpoint appelé:', req.body.email);
+    const { email, password } = req.body;
+
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email et mot de passe requis'
+      });
+    }
+
+    // Trouver l'utilisateur
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    // Vérifier le mot de passe
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        error: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    // Vérifier le statut
+    if (user.status === 'suspended' || user.status === 'deleted') {
+      return res.status(403).json({
+        success: false,
+        error: 'Compte inactif'
+      });
+    }
+
+    // Mettre à jour la dernière connexion
+    user.lastLoginAt = new Date();
+    await user.save();
+
+    console.log('? Connexion réussie:', user.email);
+
+    // Générer le token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, tier: user.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Retourner la réponse
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.json({
+      success: true,
+      user: userResponse,
+      token,
+      accessToken: token,
+      refreshToken: token
+    });
+
+  } catch (error) {
+    console.error('? Login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la connexion'
+    });
+  }
+});
+
+// GET /api/auth/profile (protégé)
+router.get('/profile', authMiddleware, async (req, res) => {
+  try {
+    console.log('?? Profile endpoint appelé pour:', req.userId);
+    
+    const user = await User.findById(req.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Utilisateur non trouvé'
+      });
+    }
+
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error('? Profile error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur lors de la récupération du profil'
+    });
+  }
+});
+
+// POST /api/auth/refresh
+router.post('/refresh', async (req, res) => {
+  try {
+    console.log('?? Refresh endpoint appelé');
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({
+        success: false,
+        error: 'Token requis'
+      });
+    }
+
+    // Vérifier le token
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+    
+    // Récupérer l'utilisateur
+    const user = await User.findById(decoded.userId).select('-password');
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Utilisateur non trouvé'
+      });
+    }
+
+    // Générer un nouveau token
+    const newToken = jwt.sign(
+      { userId: user._id, email: user.email, tier: user.tier },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      user,
+      accessToken: newToken,
+      refreshToken: newToken
+    });
+
+  } catch (error) {
+    console.error('? Refresh error:', error);
+    res.status(401).json({
+      success: false,
+      error: 'Token invalide ou expiré'
+    });
+  }
+});
+
+// GET /api/auth/test
+router.get('/test', (req, res) => {
+  console.log('?? Test endpoint appelé');
+  res.json({
+    success: true,
+    message: 'Auth routes fonctionnent parfaitement !',
+    timestamp: new Date(),
+    endpoints: [
+      'POST /api/auth/register',
+      'POST /api/auth/login',
+      'GET /api/auth/profile (protégé)',
+      'POST /api/auth/refresh',
+      'GET /api/auth/test'
+    ]
+  });
+});
+
+// POST /api/auth/logout
+router.post('/logout', authMiddleware, (req, res) => {
+  console.log('?? Logout endpoint appelé pour:', req.userEmail);
+  // Pour un JWT, le logout se fait côté client en supprimant le token
+  res.json({
+    success: true,
+    message: 'Déconnexion réussie'
+  });
+});
+
+// Export du router
+module.exports = router;
+
+
+===========================================
+
+FICHIER: BACKEND - routes/analysis.routes.js
+
+PATH: backend\src\routes\analysis.routes.js
+
+===========================================
+// PATH: backend\src\routes\analysis.routes.js
+// Routes pour lâ€™analyse universelle de produits
+
+const express           = require('express');
+const rateLimit         = require('express-rate-limit');
+const router            = express.Router();
+
+// Imports internes
+const universalAnalyzer = require('../services/analysis/universalAnalyzer');
+const {
+  authenticateToken,
+  checkQuota,
+  validateAnalysis
+} = require('../middleware');      // middleware/index.js fournit tout
+
+/* ------------------------------------------------------------------ *
+ *  Rate-limiting dynamique selon le plan dâ€™abonnement                *
+ * ------------------------------------------------------------------ */
+const createRateLimiter = tier => {
+  const limits = {
+    free:    { windowMs: 60 * 60 * 1000, max:   30 },
+    premium: { windowMs: 60 * 60 * 1000, max:  500 },
+    family:  { windowMs: 60 * 60 * 1000, max: 1000 }
+  };
+
+  return rateLimit({
+    ...(limits[tier] || limits.free),
+    keyGenerator: req => req.user.id,
+    handler: (req, res) => {
+      res.status(429).json({
+        success: false,
+        error:   'Limite dâ€™analyses atteinte',
+        upgradeRequired: tier === 'free',
+        resetTime: req.rateLimit.resetTime
+      });
+    }
+  });
+};
+
+/* ------------------------------------------------------------------ *
+ *  POST /api/v1/analyses - Analyse dâ€™un produit unique               *
+ * ------------------------------------------------------------------ */
+router.post(
+  '/',
+  authenticateToken,
+  checkQuota,
+  validateAnalysis,
+  async (req, res) => {
+    try {
+      const {
+        barcode,
+        name,
+        ingredients,
+        category,
+        method = 'manual'
+      } = req.body;
+
+      const result = await universalAnalyzer.analyze({
+        barcode,
+        name,
+        ingredients,
+        category,
+        userId: req.user.id,
+        method
+      });
+
+      console.log(`âœ… Analyse rÃ©ussie : ${result.product?.name || barcode} (${result.metadata.category})`);
+      res.json({ success: true, data: result });
+    } catch (err) {
+      console.error('Erreur analyse :', err);
+      res.status(500).json({ success: false, error: err.message || 'Analyse impossible' });
+    }
+  }
+);
+
+/* ------------------------------------------------------------------ *
+ *  POST /api/v1/analyses/batch - Analyse en lot                      *
+ * ------------------------------------------------------------------ */
+router.post(
+  '/batch',
+  authenticateToken,
+  checkQuota,
+  async (req, res) => {
+    try {
+      const { products = [] } = req.body;
+      if (!Array.isArray(products) || products.length === 0) {
+        return res.status(400).json({ success: false, error: 'Liste de produits requise' });
+      }
+
+      const limits   = { free: 10, premium: 50, family: 100 };
+      const userTier = req.user.subscription?.tier || 'free';
+      if (products.length > limits[userTier]) {
+        return res.status(400).json({
+          success: false,
+          error:   `Limite de ${limits[userTier]} produits dÃ©passÃ©e`,
+          upgradeRequired: userTier === 'free'
+        });
+      }
+
+      const results = await universalAnalyzer.analyzeBatch(products, req.user.id);
+      res.json({ success: true, data: results });
+    } catch (err) {
+      console.error('Erreur analyse batch :', err);
+      res.status(500).json({ success: false, error: err.message || 'Analyse batch impossible' });
+    }
+  }
+);
+
+/* ------------------------------------------------------------------ *
+ *  GET /api/v1/analyses â€¦  (historique, item, stats, etc.)           *
+ * ------------------------------------------------------------------ */
+/* Le reste du fichier (historique, GET :id, DELETE :id, alternatives,
+   stats, feedback) est inchangÃ© â€“ il compilait dÃ©jÃ  correctement.    */
+
+module.exports = router;
+
+
+===========================================
+
+FICHIER: BACKEND - middleware/auth.js
+
+PATH: backend\src\middleware\auth.js
+
+===========================================
+// backend/src/middleware/auth.js
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+// -----------------------------------------------------------------------
+// MIDDLEWARE D'AUTHENTIFICATION PRINCIPAL
+// -----------------------------------------------------------------------
+
+const auth = async (req, res, next) => {
+  try {
+    // Extraire le token du header Authorization
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token non fourni',
+        code: 'NO_TOKEN'
+      });
+    }
+
+    // Vérifier et décoder le token
+    let decoded;
+    try {
+      decoded = jwt.verify(
+        token, 
+        process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
+      );
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Token expiré',
+          code: 'TOKEN_EXPIRED'
+        });
+      }
+      return res.status(401).json({
+        success: false,
+        message: 'Token invalide',
+        code: 'INVALID_TOKEN'
+      });
+    }
+
+    // Récupérer l'utilisateur depuis la base de données
+    const user = await User.findById(decoded.userId).select('-password');
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Utilisateur non trouvé',
+        code: 'USER_NOT_FOUND'
+      });
+    }
+
+    // Vérifier si l'utilisateur est actif
+    if (user.status === 'suspended') {
+      return res.status(403).json({
+        success: false,
+        message: 'Compte suspendu',
+        code: 'ACCOUNT_SUSPENDED'
+      });
+    }
+
+    if (user.status === 'deleted') {
+      return res.status(403).json({
+        success: false,
+        message: 'Compte supprimé',
+        code: 'ACCOUNT_DELETED'
+      });
+    }
+
+    // Attacher l'utilisateur à la requête
+    req.user = user;
+    req.userId = user._id.toString();
+    req.token = token;
+
+    // Log pour debug
+    console.log(`[Auth] User ${user.email} authenticated successfully`);
+
+    next();
+  } catch (error) {
+    console.error('[Auth Middleware] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur d\'authentification',
+      code: 'AUTH_ERROR'
+    });
+  }
+};
+
+// -----------------------------------------------------------------------
+// MIDDLEWARE OPTIONNEL (ne bloque pas si pas de token)
+// -----------------------------------------------------------------------
+
+const authOptional = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (token) {
+      try {
+        // Vérifier le token
+        const decoded = jwt.verify(
+          token, 
+          process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
+        );
+
+        // Récupérer l'utilisateur
+        const user = await User.findById(decoded.userId).select('-password');
+        
+        if (user && user.status !== 'suspended' && user.status !== 'deleted') {
+          req.user = user;
+          req.userId = user._id.toString();
+          req.token = token;
+          console.log(`[Auth Optional] User ${user.email} authenticated`);
+        }
+      } catch (error) {
+        // Ignorer les erreurs de token en mode optionnel
+        console.log('[Auth Optional] Invalid token, continuing without auth');
+      }
+    }
+
+    next();
+  } catch (error) {
+    // Continuer même si erreur
+    console.error('[Auth Optional] Error:', error);
+    next();
+  }
+};
+
+// -----------------------------------------------------------------------
+// MIDDLEWARE PREMIUM
+// -----------------------------------------------------------------------
+
+const requirePremium = async (req, res, next) => {
+  try {
+    // S'assurer que l'utilisateur est authentifié d'abord
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentification requise',
+        code: 'AUTH_REQUIRED'
+      });
+    }
+
+    // Vérifier le tier
+    if (req.user.tier !== 'premium') {
+      return res.status(403).json({
+        success: false,
+        message: 'Fonctionnalité réservée aux membres Premium',
+        code: 'PREMIUM_REQUIRED',
+        requiresUpgrade: true,
+        upgradeUrl: '/pricing'
+      });
+    }
+
+    console.log(`[Premium] User ${req.user.email} has premium access`);
+    next();
+  } catch (error) {
+    console.error('[Premium Middleware] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur de vérification Premium',
+      code: 'PREMIUM_CHECK_ERROR'
+    });
+  }
+};
+
+// -----------------------------------------------------------------------
+// MIDDLEWARE DE QUOTAS
+// -----------------------------------------------------------------------
+
+const checkQuota = (quotaType) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentification requise',
+          code: 'AUTH_REQUIRED'
+        });
+      }
+
+      const quotas = req.user.quotas || {};
+      let quotaField, resetField, defaultQuota;
+
+      // Configuration selon le type de quota
+      switch (quotaType) {
+        case 'scan':
+          quotaField = 'scansRemaining';
+          resetField = 'scansResetDate';
+          defaultQuota = req.user.tier === 'premium' ? 999999 : 30;
+          break;
+        case 'chat':
+          quotaField = 'aiChatsRemaining';
+          resetField = 'aiChatsResetDate';
+          defaultQuota = req.user.tier === 'premium' ? 500 : 5;
+          break;
+        case 'export':
+          quotaField = 'exportsRemaining';
+          resetField = 'exportsResetDate';
+          defaultQuota = req.user.tier === 'premium' ? 100 : 0;
+          break;
+        default:
+          console.warn(`[Quota] Unknown quota type: ${quotaType}`);
+          return next();
+      }
+
+      // Vérifier si la date de reset est passée
+      if (quotas[resetField] && new Date(quotas[resetField]) < new Date()) {
+        console.log(`[Quota] Resetting ${quotaType} quota for user ${req.user.email}`);
+        
+        // Réinitialiser les quotas
+        await User.findByIdAndUpdate(req.user._id, {
+          [`quotas.${quotaField}`]: defaultQuota,
+          [`quotas.${resetField}`]: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // +30 jours
+        });
+
+        req.user.quotas[quotaField] = defaultQuota;
+        req.user.quotas[resetField] = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      }
+
+      // Vérifier le quota restant
+      const remaining = quotas[quotaField] || 0;
+      if (remaining <= 0) {
+        return res.status(429).json({
+          success: false,
+          message: `Quota ${quotaType} épuisé`,
+          code: 'QUOTA_EXCEEDED',
+          quotaType,
+          remaining: 0,
+          resetDate: quotas[resetField],
+          requiresUpgrade: req.user.tier === 'free'
+        });
+      }
+
+      // Ajouter les infos de quota à la requête
+      req.quota = {
+        type: quotaType,
+        remaining: remaining - 1,
+        resetDate: quotas[resetField]
+      };
+
+      // IMPORTANT : Ajouter quotaRemaining pour compatibilité avec analyze.routes.js
+      req.quotaRemaining = remaining - 1;
+
+      // Fonction pour décrémenter le quota (à appeler après succès)
+      req.decrementQuota = async () => {
+        try {
+          await User.findByIdAndUpdate(req.user._id, {
+            $inc: { [`quotas.${quotaField}`]: -1 }
+          });
+          console.log(`[Quota] Decremented ${quotaType} quota for user ${req.user.email}. Remaining: ${remaining - 1}`);
+        } catch (error) {
+          console.error('[Quota] Error decrementing quota:', error);
+        }
+      };
+
+      next();
+    } catch (error) {
+      console.error('[Quota Middleware] Error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur de vérification des quotas',
+        code: 'QUOTA_CHECK_ERROR'
+      });
+    }
+  };
+};
+
+// -----------------------------------------------------------------------
+// MIDDLEWARE ADMIN
+// -----------------------------------------------------------------------
+
+const requireAdmin = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentification requise',
+        code: 'AUTH_REQUIRED'
+      });
+    }
+
+    // Vérifier si l'utilisateur est admin
+    if (!req.user.isAdmin && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès réservé aux administrateurs',
+        code: 'ADMIN_REQUIRED'
+      });
+    }
+
+    console.log(`[Admin] Admin ${req.user.email} accessing admin route`);
+    next();
+  } catch (error) {
+    console.error('[Admin Middleware] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur de vérification admin',
+      code: 'ADMIN_CHECK_ERROR'
+    });
+  }
+};
+
+// -----------------------------------------------------------------------
+// EXPORTS - AVEC TOUS LES ALIAS POUR COMPATIBILITÉ
+// -----------------------------------------------------------------------
+
+module.exports = {
+  // Middlewares principaux
+  auth,
+  authOptional,
+  requirePremium,
+  checkQuota,
+  requireAdmin,
+  
+  // Alias pour compatibilité avec l'ancien code
+  authMiddleware: auth,
+  authOptionalMiddleware: authOptional,
+  
+  // ALIAS IMPORTANTS pour products.js et analyze.routes.js
+  authenticateUser: auth,  // Pour compatibilité avec products.js ligne 4
+  checkPremium: requirePremium  // Pour compatibilité avec products.js ligne 4
+};
+
+
+===========================================
+
+FICHIER: FRONTEND - services/analysisService.js
+
+PATH: frontend\src\services\analysisService.js
+
+===========================================
+// PATH: frontend/src/services/analysisService.js
+import { demoMode } from './demoMode';
+
+export const analysisService = {
+  // VÃ©rifier les quotas - MODE DÃ‰MO
+  checkQuota: async () => {
+    console.log("ðŸŽ­ DEMO: Check quota");
+    return demoMode.getQuota();
+  },
+
+  // Analyser par code-barres - MODE DÃ‰MO
+  analyzeByBarcode: async (barcode) => {
+    console.log("ðŸŽ­ DEMO: Analyse barcode", barcode);
+    const result = await demoMode.analyzeBarcode(barcode);
+    demoMode.incrementScans();
+    return result;
+  },
+
+  // Analyser manuellement - MODE DÃ‰MO
+  analyzeManual: async (data) => {
+    console.log("ðŸŽ­ DEMO: Analyse manuelle", data);
+    const result = await demoMode.analyzeManual(data);
+    demoMode.incrementScans();
+    return result;
+  },
+
+  // RÃ©cupÃ©rer une analyse - MODE DÃ‰MO
+  getAnalysis: async (productId) => {
+    console.log("ðŸŽ­ DEMO: Get analysis", productId);
+    return {
+      product: {
+        _id: productId,
+        name: "Produit Demo",
+        category: "food"
+      },
+      analysis: {
+        healthScore: 75,
+        novaScore: 2,
+        nutriScore: "B"
+      }
+    };
+  },
+
+  // Historique - MODE DÃ‰MO
+  getHistory: async (options = {}) => {
+    console.log("ðŸŽ­ DEMO: Get history");
+    return { 
+      analyses: [], 
+      total: 0, 
+      page: 1, 
+      totalPages: 1 
+    };
+  }
+};
+
+export default analysisService;
+
+
+===========================================
+
+FICHIER: FRONTEND - services/dashboardService.ts
+
+PATH: frontend\src\services\dashboardService.ts
+
+===========================================
+// PATH: frontend/src/services/dashboardService.ts
+import { demoMode } from './demoMode';
+
+export interface DashboardStats {
+  totalScans: number;
+  monthlyScans: number;
+  averageScore: number;
+  healthScoreAverage?: number;
+  categoriesAnalyzed: any;
+  categoryBreakdown?: any;
+  recentAnalyses: any[];
+  quotaUsage: any;
+  weeklyTrend?: any[];
+}
+
+class DashboardService {
+  async getStats(range: string = "month"): Promise<DashboardStats> {
+    console.log("ðŸŽ­ DEMO: Dashboard stats");
+    return demoMode.getDashboardStats();
+  }
+
+  async getQuotas() {
+    console.log("ðŸŽ­ DEMO: Get quotas");
+    const quota = await demoMode.getQuota();
+    return {
+      scansUsed: quota.used,
+      scansLimit: quota.limit,
+      scansRemaining: quota.remaining,
+      plan: quota.plan
+    };
+  }
+}
+
+export const dashboardService = new DashboardService();
+export default dashboardService;
+
+
+===========================================
+
+FICHIER: FRONTEND - services/visionService.ts
+
+PATH: frontend\src\services\visionService.ts
+
+===========================================
+// PATH: frontend/src/services/visionService.ts
+import { demoMode } from './demoMode';
+
+export interface VisionAnalysisResponse {
+  success: boolean;
+  message?: string;
+  result?: {
+    text?: string;
+    barcode?: string;
+    productName?: string;
+    confidence: number;
+    extractedData: any;
+  };
+}
+
+export async function analyzeProductImage(imageFile: File): Promise<VisionAnalysisResponse> {
+  console.log("ðŸ“¸ Analyse image (MODE DEMO):", imageFile.name);
+  
+  // TOUJOURS utiliser le mode dÃ©mo - PAS D'API !
+  return demoMode.analyzeImage(imageFile);
+}
+
+export const visionService = {
+  analyzeProductImage,
+  uploadAndAnalyze: async (file: File, onProgress?: (progress: number) => void) => {
+    console.log("ðŸ“¸ Upload image (MODE DEMO):", file.name);
+    if (onProgress) {
+      onProgress(50);
+      await new Promise(r => setTimeout(r, 500));
+      onProgress(100);
+    }
+    return demoMode.analyzeImage(file);
+  }
+};
+
+export default visionService;
+
+
+===========================================
+
+FICHIER: FRONTEND - services/demoMode.ts
+
+PATH: frontend\src\services\demoMode.ts
+
+===========================================
+// PATH: frontend/src/services/demoMode.ts
+// Service de dÃ©monstration avec donnÃ©es complÃ¨tes
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const demoMode = {
+  isEnabled: () => true,
+  
+  toggle: (enabled) => {
+    console.log(enabled ? "ðŸŽ­ Mode dÃ©mo activÃ©" : "ðŸ”Œ Mode dÃ©mo dÃ©sactivÃ©");
+  },
+  
+  analyzeBarcode: async (barcode) => {
+    console.log("ðŸŽ­ DEMO: Analyse barcode", barcode);
+    await delay(1000);
+    
+    return {
+      success: true,
+      product: {
+        _id: "demo-" + barcode,
+        name: barcode === "3017620422003" ? "Nutella" : "Produit Test",
+        barcode: barcode,
+        brand: barcode === "3017620422003" ? "Ferrero" : "Marque Demo",
+        category: "food",
+        image: "https://via.placeholder.com/300",
+        quantity: "400g"
+      },
+      analysis: {
+        healthScore: 25,
+        novaScore: 4,
+        nutriScore: "E",
+        ecoScore: "D",
+        additives: ["E322 - LÃ©cithines", "E330 - Acide citrique"],
+        allergens: ["Lait", "Fruits Ã  coque", "Soja"],
+        warnings: ["Teneur Ã©levÃ©e en sucre", "Ultra-transformÃ©"],
+        ingredients: "Sucre, huile de palme, NOISETTES 13%, cacao maigre, LAIT Ã©crÃ©mÃ© en poudre, lactoserum, lÃ©cithines, vanilline",
+        nutritionalValues: {
+          energy: 539,
+          energyKj: 2252,
+          fat: 30.9,
+          saturatedFat: 10.6,
+          carbohydrates: 57.5,
+          sugars: 56.3,
+          fiber: 3.5,
+          proteins: 6.3,
+          salt: 0.107,
+          sodium: 0.0428
+        },
+        alternatives: [
+          {
+            _id: "alt1",
+            name: "PÃ¢te Ã  tartiner bio sans huile de palme",
+            brand: "Bio Brand",
+            healthScore: 65,
+            nutriScore: "C",
+            image: "https://via.placeholder.com/150"
+          },
+          {
+            _id: "alt2",
+            name: "PurÃ©e d''amandes complÃ¨tes",
+            brand: "Nature",
+            healthScore: 85,
+            nutriScore: "A",
+            image: "https://via.placeholder.com/150"
+          }
+        ],
+        impactEnvironmental: {
+          co2: 3.2,
+          water: 1500,
+          landUse: 2.1
+        },
+        impactSocial: {
+          fairTrade: false,
+          localProduction: false,
+          animalWelfare: "N/A"
+        }
+      }
+    };
+  },
+  
+  analyzeImage: async (file) => {
+    console.log("ðŸŽ­ DEMO: Analyse image", file.name);
+    await delay(2000);
+    
+    return {
+      success: true,
+      result: {
+        productName: "Produit DÃ©tectÃ© par Vision",
+        confidence: 0.85,
+        barcode: Math.random() > 0.5 ? "3017620422003" : null,
+        extractedData: {
+          name: "Produit Demo Vision",
+          ingredients: "Eau, sucre, arÃ´mes naturels, conservateurs",
+          category: "food",
+          brand: "Marque DÃ©tectÃ©e"
+        }
+      }
+    };
+  },
+  
+  analyzeManual: async (data) => {
+    console.log("ðŸŽ­ DEMO: Analyse manuelle", data);
+    await delay(1500);
+    
+    return {
+      success: true,
+      product: {
+        _id: "demo-manual-" + Date.now(),
+        name: data.name,
+        brand: data.brand || "Marque inconnue",
+        category: data.category || "food",
+        ingredients: data.ingredients,
+        image: "https://via.placeholder.com/300"
+      },
+      analysis: {
+        healthScore: 65,
+        novaScore: 3,
+        nutriScore: "C",
+        ecoScore: "C",
+        additives: ["E300 - Acide ascorbique"],
+        allergens: [],
+        warnings: ["Contient des additifs"],
+        nutritionalValues: {
+          energy: 250,
+          energyKj: 1046,
+          fat: 10,
+          saturatedFat: 3,
+          carbohydrates: 30,
+          sugars: 15,
+          fiber: 2,
+          proteins: 5,
+          salt: 0.5,
+          sodium: 0.2
+        },
+        alternatives: [],
+        impactEnvironmental: {
+          co2: 1.5,
+          water: 800,
+          landUse: 1.0
+        },
+        impactSocial: {
+          fairTrade: false,
+          localProduction: true,
+          animalWelfare: "N/A"
+        }
+      }
+    };
+  },
+  
+  getQuota: async () => ({
+    remaining: 999,
+    limit: 999,
+    used: 0,
+    plan: "premium"
+  }),
+  
+  getDashboardStats: async () => ({
+    totalScans: 42,
+    monthlyScans: 12,
+    averageScore: 73,
+    healthScoreAverage: 73,
+    categoriesAnalyzed: {
+      food: 35,
+      cosmetic: 5,
+      detergent: 2
+    },
+    categoryBreakdown: {
+      food: 35,
+      cosmetics: 5,
+      detergents: 2
+    },
+    recentAnalyses: [
+      {
+        _id: "1",
+        productName: "Yaourt Nature Bio",
+        score: 92,
+        category: "food",
+        date: new Date().toISOString()
+      },
+      {
+        _id: "2",
+        productName: "Nutella",
+        score: 25,
+        category: "food",
+        date: new Date(Date.now() - 86400000).toISOString()
+      }
+    ],
+    quotaUsage: {
+      used: 12,
+      limit: 999,
+      percentage: 1.2
+    },
+    weeklyTrend: [
+      { day: "Lun", scans: 7 },
+      { day: "Mar", scans: 9 },
+      { day: "Mer", scans: 6 },
+      { day: "Jeu", scans: 10 },
+      { day: "Ven", scans: 8 },
+      { day: "Sam", scans: 5 },
+      { day: "Dim", scans: 2 }
+    ]
+  }),
+  
+  incrementScans: () => {
+    console.log("ðŸŽ­ Scan comptabilisÃ©");
+  }
+};
+
+
+===========================================
+
+FICHIER: FRONTEND - pages/Scan.tsx
+
+PATH: frontend\src\pages\Scan.tsx
+
+===========================================
+// PATH: frontend/src/pages/Scan.tsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { BarcodeScanner } from '../components/scanner/BarcodeScanner';
+import { ManualSearch } from '../components/scanner/ManualSearch';
+import { analysisService } from '../services/analysisService';
+import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface AnalysisState {
+  isAnalyzing: boolean;
+  error: string | null;
+  progress: number;
+  currentStep: string;
+}
+
+export default function Scan() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [showManualSearch, setShowManualSearch] = useState(false);
+  const [prefillData, setPrefillData] = useState<any>(null);
+  const [analysisState, setAnalysisState] = useState<AnalysisState>({
+    isAnalyzing: false,
+    error: null,
+    progress: 0,
+    currentStep: ''
+  });
+
+  // Ã‰couter les Ã©vÃ©nements de prÃ©-remplissage
+  useEffect(() => {
+    const handlePrefill = (event: CustomEvent) => {
+      console.log('ðŸ“ DonnÃ©es reÃ§ues pour prÃ©-remplissage:', event.detail);
+      setPrefillData(event.detail);
+      setShowManualSearch(true);
+    };
+
+    window.addEventListener('prefillManualForm', handlePrefill as any);
+    
+    return () => {
+      window.removeEventListener('prefillManualForm', handlePrefill as any);
+    };
+  }, []);
+
+  // GÃ©rer la navigation depuis d'autres pages
+  useEffect(() => {
+    if (location.state?.mode === 'manual' && location.state?.prefillData) {
+      setPrefillData(location.state.prefillData);
+      setShowManualSearch(true);
+    }
+  }, [location]);
+
+  const handleScanSuccess = async (barcode: string) => {
+    console.log('ðŸ“· Code-barres scannÃ©:', barcode);
+    
+    setAnalysisState({
+      isAnalyzing: true,
+      error: null,
+      progress: 20,
+      currentStep: 'VÃ©rification des quotas...'
+    });
+
+    try {
+      const quotas = await analysisService.checkQuota();
+      
+      if (quotas.remaining <= 0) {
+        throw new Error('Quota dÃ©passÃ©. Passez au plan Premium pour continuer.');
+      }
+
+      setAnalysisState(prev => ({
+        ...prev,
+        progress: 40,
+        currentStep: 'Recherche du produit dans notre base de donnÃ©es...'
+      }));
+
+      const result = await analysisService.analyzeByBarcode(barcode);
+      
+      console.log('âœ… RÃ©sultat analyse:', result);
+
+      setAnalysisState(prev => ({
+        ...prev,
+        progress: 80,
+        currentStep: 'GÃ©nÃ©ration du rapport d\'analyse...'
+      }));
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      if (result.product && result.product._id) {
+        navigate(`/product/${result.product._id}`, {
+          state: { 
+            analysis: result,
+            fromScan: true,
+            scanMethod: 'barcode'
+          }
+        });
+      } else {
+        throw new Error('Produit non trouvÃ© dans notre base de donnÃ©es');
+      }
+
+    } catch (error: any) {
+      console.error('âŒ Erreur analyse:', error);
+      
+      let errorMessage = error.message || 'Impossible d\'analyser ce produit';
+      
+      if (error.message?.includes('non trouvÃ©')) {
+        errorMessage = 'Ce produit n\'est pas encore dans notre base de donnÃ©es. Essayez la saisie manuelle ou prenez une photo du produit.';
+      } else if (error.message?.includes('Quota')) {
+        errorMessage = 'Vous avez atteint votre limite mensuelle de scans gratuits. Passez au plan Premium pour des scans illimitÃ©s !';
+      } else if (error.message?.includes('connexion')) {
+        errorMessage = 'ProblÃ¨me de connexion. VÃ©rifiez votre connexion Internet et rÃ©essayez.';
+      }
+      
+      setAnalysisState({
+        isAnalyzing: false,
+        error: errorMessage,
+        progress: 0,
+        currentStep: ''
+      });
+
+      if (error.message?.includes('non trouvÃ©')) {
+        setTimeout(() => {
+          setShowManualSearch(true);
+          setPrefillData({ barcode });
+        }, 2000);
+      }
+    }
+  };
+
+  const handleManualSubmit = async (data: any) => {
+    console.log('ðŸ“ Analyse manuelle:', data);
+    
+    setAnalysisState({
+      isAnalyzing: true,
+      error: null,
+      progress: 30,
+      currentStep: 'Analyse du produit...'
+    });
+
+    try {
+      const result = await analysisService.analyzeManual(data);
+      
+      console.log('âœ… RÃ©sultat analyse manuelle:', result);
+
+      setAnalysisState(prev => ({
+        ...prev,
+        progress: 90,
+        currentStep: 'Finalisation...'
+      }));
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      if (result.product && result.product._id) {
+        navigate(`/product/${result.product._id}`, {
+          state: { 
+            analysis: result,
+            fromScan: true,
+            scanMethod: 'manual'
+          }
+        });
+      }
+    } catch (error: any) {
+      console.error('âŒ Erreur analyse manuelle:', error);
+      setAnalysisState({
+        isAnalyzing: false,
+        error: error.message || 'Impossible d\'analyser ce produit',
+        progress: 0,
+        currentStep: ''
+      });
+    }
+  };
+
+  const handleError = (error: Error) => {
+    console.error('âŒ Erreur scanner:', error);
+    setAnalysisState({
+      isAnalyzing: false,
+      error: error.message || 'Erreur lors du scan. VÃ©rifiez que la camÃ©ra est autorisÃ©e.',
+      progress: 0,
+      currentStep: ''
+    });
+  };
+
+  const handleClose = () => {
+    navigate('/dashboard');
+  };
+
+  const resetError = () => {
+    setAnalysisState(prev => ({ ...prev, error: null }));
+  };
+
+  const handleManualData = (data: any) => {
+    console.log('ðŸ“ DonnÃ©es manuelles reÃ§ues:', data);
+    setPrefillData(data);
+    setShowManualSearch(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">
+            Scanner un produit
+          </h1>
+          <p className="text-lg text-gray-600">
+            DÃ©couvrez instantanÃ©ment l'impact de vos produits sur votre santÃ©
+          </p>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {!analysisState.isAnalyzing && !showManualSearch ? (
+            <motion.div
+              key="scanner"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+            >
+              <BarcodeScanner
+                onScanSuccess={handleScanSuccess}
+                onError={handleError}
+                onClose={handleClose}
+                onManualData={handleManualData}
+              />
+            </motion.div>
+          ) : showManualSearch ? (
+            <motion.div
+              key="manual"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ManualSearch
+                onSubmit={handleManualSubmit}
+                prefillData={prefillData}
+              />
+              <button
+                onClick={() => {
+                  setShowManualSearch(false);
+                  setPrefillData(null);
+                }}
+                className="mt-4 text-sm text-gray-600 hover:text-gray-800 underline block text-center"
+              >
+                Retour au scanner
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="analyzing"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-xl shadow-xl p-8"
+            >
+              <div className="text-center">
+                <div className="relative inline-block mb-6">
+                  <Loader2 className="w-20 h-20 text-green-600 animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-green-600">
+                      {analysisState.progress}%
+                    </span>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-semibold mb-3 text-gray-800">
+                  Analyse en cours...
+                </h3>
+                
+                <p className="text-gray-600 mb-6 text-lg">
+                  {analysisState.currentStep}
+                </p>
+
+                <div className="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden">
+                  <motion.div
+                    className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${analysisState.progress}%` }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                </div>
+
+                <div className="flex justify-between text-sm text-gray-500 mt-6">
+                  <div className={`flex items-center ${analysisState.progress >= 20 ? 'text-green-600' : ''}`}>
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Quotas
+                  </div>
+                  <div className={`flex items-center ${analysisState.progress >= 40 ? 'text-green-600' : ''}`}>
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Recherche
+                  </div>
+                  <div className={`flex items-center ${analysisState.progress >= 80 ? 'text-green-600' : ''}`}>
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Analyse
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {analysisState.error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-4 shadow-md"
+            >
+              <div className="flex items-start">
+                <AlertCircle className="w-6 h-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  <h4 className="text-red-800 font-semibold mb-1 text-lg">
+                    Oops ! Une erreur est survenue
+                  </h4>
+                  <p className="text-red-700">
+                    {analysisState.error}
+                  </p>
+                  <div className="mt-4 flex gap-3">
+                    <button
+                      onClick={resetError}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                    >
+                      RÃ©essayer
+                    </button>
+                    <button
+                      onClick={() => setShowManualSearch(true)}
+                      className="bg-white text-red-600 border border-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors font-medium"
+                    >
+                      Saisie manuelle
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {!analysisState.isAnalyzing && !analysisState.error && !showManualSearch && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 shadow-md"
+          >
+            <h3 className="text-xl font-semibold text-blue-900 mb-4 flex items-center">
+              <span className="text-2xl mr-2">ðŸ’¡</span>
+              Conseils pour un scan rÃ©ussi
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start">
+                <span className="text-blue-600 font-bold mr-2">â€¢</span>
+                <span className="text-blue-800">Assurez-vous que le code-barres est bien Ã©clairÃ© et net</span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-blue-600 font-bold mr-2">â€¢</span>
+                <span className="text-blue-800">Tenez votre appareil stable pendant le scan</span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-blue-600 font-bold mr-2">â€¢</span>
+                <span className="text-blue-800">Le code-barres se trouve gÃ©nÃ©ralement au dos du produit</span>
+              </div>
+              <div className="flex items-start">
+                <span className="text-blue-600 font-bold mr-2">â€¢</span>
+                <span className="text-blue-800">En cas d'Ã©chec, utilisez le mode manuel ou photo</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="mt-6 text-center text-gray-600"
+        >
+          <p className="text-sm">
+            Plus de <span className="font-semibold text-green-600">50 000 produits</span> analysÃ©s dans notre base de donnÃ©es
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+
+===========================================
+
+FICHIER: FRONTEND - pages/ProductPage.tsx
+
+PATH: frontend\src\pages\ProductPage.tsx
+
+===========================================
+// =============================
+// PATH: frontend/src/pages/ProductPage.tsx
+// =============================
+
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { analysisService } from '../services/analysisService';
+import { visionService } from '../services/visionService';
+import ProgressiveAnalysis from '../components/analysis/ProgressiveAnalysis';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorBoundary from '../components/ErrorBoundary';
+import { useAuth } from '../hooks/useAuth';
+
+/**
+ * ProductPage - Version intÃ©grÃ©e avec backend ECOLOJIA
+ * - IntÃ©gration complÃ¨te avec l'API backend
+ * - Support des 3 modes de scan (barcode, photo, manuel)
+ * - Affichage progressif selon le niveau utilisateur (free/premium)
+ * - Utilise le nouveau composant ProgressiveAnalysis
+ */
+
+interface ProductAnalysis {
+  productId: string;
+  name: string;
+  brand?: string;
+  category: string;
+  barcode?: string;
+  
+  // Scores
+  healthScore: number;
+  environmentScore: number;
+  ethicsScore: number;
+  overallScore: number;
+  
+  // Analyse santÃ©
+  novaGroup: number;
+  nutriScore: string;
+  
+  // DÃ©tails
+  ingredients: string[];
+  additives: {
+    code: string;
+    name: string;
+    risk: 'low' | 'medium' | 'high';
+    description?: string;
+  }[];
+  allergens: string[];
+  nutritionalInfo?: any;
+  
+  // Alternatives
+  alternatives?: any[];
+  
+  // Metadata
+  sources?: any[];
+  lastUpdated: string;
+  confidence: number;
+}
+
+const ProductPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+
+  // Ã‰tats principaux
+  const [analysis, setAnalysis] = useState<ProductAnalysis | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Informations du produit
+  const [productInfo, setProductInfo] = useState({
+    name: '',
+    brand: '',
+    category: 'food',
+    ingredients: '',
+    barcode: ''
+  });
+
+  // Mode d'arrivÃ©e sur la page
+  const [scanMethod, setScanMethod] = useState<'barcode' | 'photo' | 'manual' | 'direct'>('direct');
+  const [ocrData, setOcrData] = useState<any>(null);
+
+  // RÃ©cupÃ©ration des donnÃ©es depuis la navigation
+  useEffect(() => {
+    // DonnÃ©es passÃ©es par la navigation (depuis ScanPage)
+    const state = location.state as any;
+    if (state?.analysis) {
+      setAnalysis(state.analysis);
+      setScanMethod(state.scanMethod || 'direct');
+      setOcrData(state.ocrData || null);
+      return;
+    }
+
+    // ParamÃ¨tres URL
+    const barcode = searchParams.get('barcode');
+    const name = searchParams.get('name');
+    const ingredients = searchParams.get('ingredients');
+
+    if (barcode || name) {
+      setProductInfo({
+        name: name || '',
+        brand: searchParams.get('brand') || '',
+        category: searchParams.get('category') || 'food',
+        ingredients: ingredients || '',
+        barcode: barcode || ''
+      });
+      setScanMethod(barcode ? 'barcode' : 'manual');
+    }
+
+    // Si on a un ID, charger l'analyse
+    if (id && !state?.analysis) {
+      loadAnalysis(id);
+    }
+  }, [id, location.state, searchParams]);
+
+  // Charger une analyse existante
+  const loadAnalysis = async (productId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const result = await analysisService.getAnalysis(productId);
+      
+      if (result.success && result.data) {
+        setAnalysis(result.data);
+      } else {
+        throw new Error(result.message || 'Analyse non trouvÃ©e');
+      }
+    } catch (err: any) {
+      console.error('Erreur chargement analyse:', err);
+      setError(err.message || 'Impossible de charger l\'analyse');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Analyser un nouveau produit
+  const analyzeProduct = async () => {
+    if (!productInfo.name && !productInfo.barcode) {
+      setError('Veuillez fournir au moins le nom du produit ou un code-barres');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      let result;
+
+      // Analyse par code-barres
+      if (productInfo.barcode) {
+        result = await analysisService.analyzeByBarcode(productInfo.barcode);
+      } 
+      // Analyse manuelle
+      else {
+        result = await analysisService.analyzeManual({
+          name: productInfo.name,
+          brand: productInfo.brand,
+          category: productInfo.category,
+          ingredients: productInfo.ingredients
+        });
+      }
+
+      if (result.success && result.data) {
+        setAnalysis(result.data);
+        // Mettre Ã  jour l'URL avec l'ID du produit
+        navigate(`/product/${result.data.productId}`, { replace: true });
+      } else {
+        throw new Error(result.message || 'Analyse Ã©chouÃ©e');
+      }
+
+    } catch (err: any) {
+      console.error('Erreur analyse:', err);
+      setError(err.message || 'Impossible d\'analyser ce produit');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handlers
+  const handleNewAnalysis = () => {
+    navigate('/scan');
+  };
+
+  const handleUpgrade = () => {
+    navigate('/pricing');
+  };
+
+  const handleExportPDF = async () => {
+    if (!analysis) return;
+    
+    try {
+      const response = await analysisService.exportAnalysis(analysis.productId, 'pdf');
+      // TÃ©lÃ©charger le PDF
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analyse-${analysis.name.replace(/\s+/g, '-')}.pdf`;
+      a.click();
+    } catch (err) {
+      console.error('Erreur export PDF:', err);
+    }
+  };
+
+  const handleChatAI = () => {
+    if (analysis) {
+      navigate('/chat', {
+        state: { 
+          context: analysis, 
+          initialMessage: `Parle-moi de "${analysis.name}"` 
+        }
+      });
+    }
+  };
+
+  // DÃ©terminer le niveau d'affichage selon l'abonnement
+  const getDisplayLevel = (): 'basic' | 'detailed' | 'expert' => {
+    if (user?.subscription?.plan === 'premium') {
+      return 'expert';
+    }
+    // Pour les utilisateurs gratuits, on peut afficher un peu plus aprÃ¨s X scans
+    if (user?.stats?.totalScans > 5) {
+      return 'detailed';
+    }
+    return 'basic';
+  };
+
+  // Formulaire de saisie manuelle
+  if (!analysis && !loading && scanMethod === 'manual' && !id) {
+    return (
+      <ErrorBoundary>
+        <div className="min-h-screen bg-gray-50 py-8">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center text-gray-600 hover:text-gray-800 font-medium transition-colors"
+              >
+                <span className="mr-2 text-lg">â†</span>
+                Retour
+              </button>
+              <h1 className="text-2xl font-bold text-gray-800">Analyse manuelle</h1>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom du produit *
+                  </label>
+                  <input
+                    value={productInfo.name}
+                    onChange={(e) => setProductInfo({ ...productInfo, name: e.target.value })}
+                    placeholder="Ex: Nutella 400g"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Marque
+                  </label>
+                  <input
+                    value={productInfo.brand}
+                    onChange={(e) => setProductInfo({ ...productInfo, brand: e.target.value })}
+                    placeholder="Ex: Ferrero"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CatÃ©gorie
+                  </label>
+                  <select
+                    value={productInfo.category}
+                    onChange={(e) => setProductInfo({ ...productInfo, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                  >
+                    <option value="food">Alimentaire</option>
+                    <option value="cosmetic">CosmÃ©tique</option>
+                    <option value="detergent">Produit mÃ©nager</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    IngrÃ©dients
+                  </label>
+                  <textarea
+                    value={productInfo.ingredients}
+                    onChange={(e) => setProductInfo({ ...productInfo, ingredients: e.target.value })}
+                    placeholder="Copiez la liste complÃ¨te des ingrÃ©dients..."
+                    rows={4}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <button
+                  onClick={analyzeProduct}
+                  disabled={!productInfo.name || loading}
+                  className="w-full bg-green-600 text-white py-3 rounded-md font-medium hover:bg-green-700 disabled:bg-gray-400 transition-colors"
+                >
+                  {loading ? 'Analyse en cours...' : 'Analyser le produit'}
+                </button>
+              </div>
+
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700">{error}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center text-gray-600 hover:text-gray-800 font-medium transition-colors"
+            >
+              <span className="mr-2 text-lg">â†</span>
+              Retour
+            </button>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={handleNewAnalysis}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              >
+                Nouvelle analyse
+              </button>
+              {user?.subscription?.plan !== 'premium' && (
+                <button
+                  onClick={handleUpgrade}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  Passer Premium
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Loading */}
+          {loading && (
+            <div className="bg-white rounded-lg shadow-md p-12">
+              <div className="text-center">
+                <LoadingSpinner />
+                <h3 className="mt-4 text-lg font-medium text-gray-800">
+                  Analyse en cours...
+                </h3>
+                <p className="text-gray-600 mt-2">
+                  {scanMethod === 'photo' ? 'Extraction des donnÃ©es de l\'image...' : 'Classification et Ã©valuation...'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error */}
+          {error && !analysis && (
+            <div className="bg-white rounded-lg shadow-md p-8">
+              <div className="text-center">
+                <div className="text-6xl mb-4">âŒ</div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  Erreur d'analyse
+                </h3>
+                <p className="text-gray-600 mb-6">{error}</p>
+                <button
+                  onClick={handleNewAnalysis}
+                  className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+                >
+                  RÃ©essayer
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* RÃ©sultats */}
+          {analysis && !loading && (
+            <>
+              {/* Info scan method */}
+              {scanMethod !== 'direct' && (
+                <div className="mb-4 flex items-center justify-center">
+                  <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
+                    {scanMethod === 'barcode' && 'ðŸ“Š ScannÃ© par code-barres'}
+                    {scanMethod === 'photo' && 'ðŸ“¸ AnalysÃ© par photo'}
+                    {scanMethod === 'manual' && 'âœï¸ Saisi manuellement'}
+                  </span>
+                </div>
+              )}
+
+              {/* Composant d'analyse progressive */}
+              <ProgressiveAnalysis
+                analysis={analysis}
+                level={getDisplayLevel()}
+                userTier={user?.subscription?.plan || 'free'}
+                onUpgrade={handleUpgrade}
+              />
+
+              {/* Actions */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button
+                  onClick={handleChatAI}
+                  className="flex items-center justify-center gap-2 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  ðŸ’¬ Discuter avec l'IA
+                </button>
+                
+                {user?.subscription?.plan === 'premium' && (
+                  <button
+                    onClick={handleExportPDF}
+                    className="flex items-center justify-center gap-2 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                  >
+                    ðŸ“„ Exporter en PDF
+                  </button>
+                )}
+                
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="flex items-center justify-center gap-2 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  ðŸ“Š Voir mon dashboard
+                </button>
+              </div>
+
+              {/* OCR Data Debug (dev only) */}
+              {ocrData && process.env.NODE_ENV === 'development' && (
+                <div className="mt-8 bg-gray-100 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-700 mb-2">DonnÃ©es OCR extraites:</h4>
+                  <pre className="text-xs text-gray-600 overflow-auto">
+                    {JSON.stringify(ocrData, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default ProductPage;
+
+
+===========================================
+
+FICHIER: FRONTEND - App.tsx
+
+PATH: frontend\src\App.tsx
+
+===========================================
+// PATH: frontend/src/App.tsx
+import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './auth/context/AuthContext';
+import TestLogin from './pages/TestLogin';
+
+// âœ… Import des pages existantes
+import HomePage from './pages/HomePage';
+import Scan from './pages/Scan';
+import ProductPage from './pages/ProductPage';
+import ChatPage from './pages/ChatPage';
+import DashboardPage from './pages/DashboardPage';
+import HistoryPage from './pages/HistoryPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import Results from './pages/Results';
+
+// âœ… Import des composants d'authentification
+import { AuthPage } from './auth/components/AuthPage';
+
+// âœ… Pages lÃ©gales
+import AboutPage from './pages/AboutPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+
+// âœ… Composant de chargement
+const PageLoader = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="text-6xl mb-4 animate-pulse">ðŸŒ±</div>
+      <p className="text-gray-600">Chargement...</p>
+    </div>
+  </div>
+);
+
+// âœ… Composant pour les routes protÃ©gÃ©es
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+// âœ… Layout avec navigation (DOIT Ãªtre dans AuthProvider)
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, logout, isAuthenticated } = useAuth();
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center space-x-2">
+              <span className="text-2xl">ðŸŒ±</span>
+              <span className="font-bold text-xl text-gray-800">ECOLOJIA</span>
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Link to="/scan" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
+                Scanner
+              </Link>
+              <Link to="/dashboard" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
+                Dashboard
+              </Link>
+              <Link to="/history" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
+                Historique
+              </Link>
+              <Link to="/chat" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
+                Chat IA
+              </Link>
+              
+              {isAuthenticated ? (
+                <>
+                  <Link to="/profile" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
+                    {user?.name || 'Profil'}
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    DÃ©connexion
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Connexion
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Contenu principal */}
+      <main className="flex-grow">
+        {children}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-100 py-6 mt-auto">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-wrap justify-between items-center">
+            <div className="text-gray-600 text-sm">
+              Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
+            </div>
+            <div className="flex space-x-4 text-sm">
+              <Link to="/about" className="text-gray-600 hover:text-green-600">Ã€ propos</Link>
+              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃ©</Link>
+              <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// Page 404
+const NotFoundPage = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="text-8xl mb-4">ðŸ¤”</div>
+      <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
+      <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
+      <Link to="/" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+        Retour Ã  l'accueil
+      </Link>
+    </div>
+  </div>
+);
+
+// âœ… Composant AppContent (avec Layout Ã  l'intÃ©rieur du Provider)
+const AppContent = () => {
+  return (
+    <Layout>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* ===== PAGES PUBLIQUES ===== */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/auth/login" element={<AuthPage defaultMode="login" />} />
+          <Route path="/auth/register" element={<AuthPage defaultMode="register" />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+
+          {/* ===== PAGES PROTÃ‰GÃ‰ES ===== */}
+          <Route path="/scan" element={
+            <ProtectedRoute>
+              <Scan />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/history" element={
+            <ProtectedRoute>
+              <HistoryPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/product/:id" element={
+            <ProtectedRoute>
+              <ProductPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/results" element={
+            <ProtectedRoute>
+              <Results />
+            </ProtectedRoute>
+          } />
+          // Dans les routes
+<Route path="/test-login" element={<TestLogin />} />
+
+          {/* ===== 404 ===== */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </Layout>
+  );
+};
+
+// âœ… APPLICATION PRINCIPALE
+const App: React.FC = () => {
+  return (
+    <BrowserRouter 
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
+
+export default App;

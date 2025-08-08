@@ -35,14 +35,14 @@ const ImprovedSearchPage: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Interface de recherche améliorée */}
         <div className="mb-8">
-          <EnhancedSearchInterface
+          // <EnhancedSearchInterface
             placeholder="🔍 Rechercher un produit... (nutella, shampoing bio, lessive écologique)"
             onResultSelect={(result) => {
               // Navigation vers analyse
               window.location.href = `/product/${result.id}`;
             }}
             showFilters={true}
-          />
+          // />
         </div>
 
         {/* Métriques discrètes SEULEMENT si recherche effectuée */}
@@ -63,7 +63,7 @@ const ImprovedSearchPage: React.FC = () => {
         {/* Résultats */}
         <div className="space-y-4">
           {searchResults.map((result, index) => (
-            <SearchResultCard key={index} result={result} />
+            <SearchResultCard key={index} result={result} // />
           ))}
         </div>
 
@@ -73,7 +73,7 @@ const ImprovedSearchPage: React.FC = () => {
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
               💡 Suggestions populaires
             </h2>
-            <PopularSearches />
+            <PopularSearches // />
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ const SmartNavbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <Leaf className="h-8 w-8 text-green-600 mr-2" />
+              <Leaf className="h-8 w-8 text-green-600 mr-2" // />
               <span className="text-xl font-bold text-gray-800">ECOLOJIA</span>
             </Link>
           </div>
@@ -106,7 +106,7 @@ const SmartNavbar: React.FC = () => {
           {/* NOUVEAU : Recherche centrale intelligente */}
           <div className="flex-1 max-w-2xl mx-8 relative">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" // />
               <input
                 type="text"
                 value={quickSearchQuery}
@@ -114,7 +114,7 @@ const SmartNavbar: React.FC = () => {
                 onFocus={() => setShowSearchDropdown(true)}
                 placeholder="Rechercher un produit... (nutella, shampoing bio)"
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              // />
               
               {/* Badge multi-sources */}
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -132,7 +132,7 @@ const SmartNavbar: React.FC = () => {
                     // Navigation directe
                     window.location.href = `/product/${result.id}`;
                   }}
-                />
+                // />
               </div>
             )}
           </div>
@@ -140,11 +140,11 @@ const SmartNavbar: React.FC = () => {
           {/* Menu classique */}
           <div className="flex items-center space-x-4">
             <Link to="/scan" className="flex items-center text-gray-600 hover:text-gray-800">
-              <Camera className="h-4 w-4 mr-1" />
+              <Camera className="h-4 w-4 mr-1" // />
               Scanner
             </Link>
             <Link to="/dashboard" className="flex items-center text-gray-600 hover:text-gray-800">
-              <BarChart3 className="h-4 w-4 mr-1" />
+              <BarChart3 className="h-4 w-4 mr-1" // />
               Dashboard
             </Link>
           </div>
@@ -176,11 +176,11 @@ const SearchFirstHomePage: React.FC = () => {
 
           {/* RECHERCHE CENTRALE HERO */}
           <div className="max-w-2xl mx-auto mb-12">
-            <EnhancedSearchInterface
+            // <EnhancedSearchInterface
               placeholder="🔍 Recherchez votre premier produit... (nutella, shampoing L'Oréal, lessive Ariel)"
               showFilters={false}
               className="text-lg"
-            />
+            // />
             
             {/* Suggestions immédiates */}
             <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -215,9 +215,9 @@ const SearchFirstHomePage: React.FC = () => {
       </div>
 
       {/* Le reste de la homepage... */}
-      <FeaturesSection />
-      <TestimonialsSection />
-      <CTASection />
+      <FeaturesSection // />
+      <TestimonialsSection // />
+      <CTASection // />
     </div>
   );
 };
@@ -242,7 +242,7 @@ const UniversalSearchWidget: React.FC<{
   return (
     <div className="universal-search-widget">
       <div className={`relative ${sizeClasses[size]}`}>
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" // />
         
         <input
           type="text"
@@ -257,7 +257,7 @@ const UniversalSearchWidget: React.FC<{
               window.location.href = '/search';
             }
           }}
-        />
+        // />
         
         {/* Badge multi-sources */}
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">

@@ -1,10 +1,6 @@
 // frontend/src/services/scanService.ts
-import axios from 'axios';
-
-// Configuration
-const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
-const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_UPLOAD_URL || 'https://api.cloudinary.com/v1_1/dma0ywmfb/image/upload';
-const CLOUDINARY_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'ecolojia_unsigned';
+import { apiClient, getErrorMessage } from './apiClient';
+import { cloudinaryService } from './cloudinaryService';
 
 // Types
 export interface ScanResult {
@@ -42,7 +38,7 @@ export class ScanService {
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
       // Essayer d'abord de récupérer le produit
-      const response = await axios.get(`${API_URL}/api/products/barcode/${code}`);
+      const response = await apiClient.get(`/products/barcode/${code}`);
       
       if (response.data.product) {
         return {
@@ -53,7 +49,7 @@ export class ScanService {
       }
       
       // Si pas trouvé, lancer une analyse
-      const analysisResponse = await axios.post(`${API_URL}/api/analysis`, {
+      const analysisResponse = await apiClient.post('/analysis', {
         barcode: code,
         method: 'barcode',
         source: 'web'
@@ -69,13 +65,13 @@ export class ScanService {
   async analyzePhoto(file: File, useOCR: boolean = false): Promise<ScanResult> {
     try {
       // 1. Upload vers Cloudinary
-      const imageUrl = await this.uploadToCloudinary(file);
+      const imageUrl = await cloudinaryService.uploadImage(file);
       
       // 2. Choisir l'endpoint selon le mode
-      const endpoint = useOCR ? '/api/vision/analyze-image' : '/api/analysis';
+      const endpoint = useOCR ? '/vision/analyze-image' : '/analysis';
       
       // 3. Analyser l'image
-      const response = await axios.post(`${API_URL}${endpoint}`, {
+      const response = await apiClient.post(endpoint, {
         imageUrl,
         method: 'photo',
         source: 'web',
@@ -96,7 +92,7 @@ export class ScanService {
     offset?: number;
   }): Promise<ScanResult> {
     try {
-      const response = await axios.get(`${API_URL}/api/products/search`, {
+      const response = await apiClient.get('/products/search', {
         params: {
           q: query,
           ...options
@@ -112,29 +108,11 @@ export class ScanService {
     }
   }
 
-  // Upload vers Cloudinary
-  private async uploadToCloudinary(file: File): Promise<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_PRESET);
-    formData.append('folder', 'ecolojia/products');
-    
-    try {
-      const response = await axios.post(CLOUDINARY_URL, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      
-      return response.data.secure_url;
-    } catch (error) {
-      throw new Error('Échec de l\'upload de l\'image');
-    }
-  }
-
   // Gestion des erreurs
   private handleError(error: any, code: string): ScanError {
     return {
       code,
-      message: error.response?.data?.message || error.message || 'Une erreur est survenue',
+      message: getErrorMessage(error),
       details: error.response?.data
     };
   }
@@ -163,205 +141,4 @@ export class ScanService {
     
     return 'food'; // Par défaut
   }
-}
-
-// Hook personnalisé pour React
-// frontend/src/hooks/useScanner.ts
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ScanService, ScanResult, ScanError } from '../services/scanService';
-
-export type ScanMode = 'barcode' | 'photo' | 'manual';
-
-interface UseScannerState {
-  mode: ScanMode;
-  loading: boolean;
-  error: ScanError | null;
-  result: ScanResult | null;
-  progress: number; // 0-100
-  status: string; // Message de statut
-}
-
-export function useScanner() {
-  const navigate = useNavigate();
-  const scanService = ScanService.getInstance();
-  
-  const [state, setState] = useState<UseScannerState>({
-    mode: 'barcode',
-    loading: false,
-    error: null,
-    result: null,
-    progress: 0,
-    status: ''
-  });
-
-  // Changer de mode
-  const setMode = useCallback((mode: ScanMode) => {
-    setState(prev => ({
-      ...prev,
-      mode,
-      error: null,
-      result: null,
-      progress: 0,
-      status: ''
-    }));
-  }, []);
-
-  // Scanner un code-barres
-  const scanBarcode = useCallback(async (code: string) => {
-    if (!ScanService.isValidBarcode(code)) {
-      setState(prev => ({
-        ...prev,
-        error: {
-          code: 'INVALID_BARCODE',
-          message: 'Code-barres invalide. Vérifiez le format.'
-        }
-      }));
-      return;
-    }
-
-    setState(prev => ({ ...prev, loading: true, error: null, status: 'Recherche du produit...' }));
-    
-    try {
-      const result = await scanService.scanBarcode(code);
-      
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        result,
-        status: 'Produit trouvé !'
-      }));
-      
-      // Redirection automatique si produit trouvé
-      if (result.productId) {
-        setTimeout(() => {
-          navigate(`/product/${result.productId}`);
-        }, 1000);
-      }
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error as ScanError
-      }));
-    }
-  }, [scanService, navigate]);
-
-  // Analyser une photo
-  const analyzePhoto = useCallback(async (file: File, useOCR: boolean = false) => {
-    setState(prev => ({ 
-      ...prev, 
-      loading: true, 
-      error: null, 
-      progress: 10,
-      status: 'Upload de l\'image...' 
-    }));
-    
-    try {
-      // Simuler la progression
-      const progressInterval = setInterval(() => {
-        setState(prev => ({
-          ...prev,
-          progress: Math.min(prev.progress + 10, 80)
-        }));
-      }, 300);
-
-      const result = await scanService.analyzePhoto(file, useOCR);
-      
-      clearInterval(progressInterval);
-      
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        result,
-        progress: 100,
-        status: 'Analyse terminée !'
-      }));
-      
-      // Redirection si produit identifié
-      if (result.productId) {
-        setTimeout(() => {
-          navigate(`/product/${result.productId}`);
-        }, 1000);
-      }
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error as ScanError,
-        progress: 0
-      }));
-    }
-  }, [scanService, navigate]);
-
-  // Recherche manuelle
-  const searchProducts = useCallback(async (query: string, category?: string) => {
-    if (query.trim().length < 2) {
-      setState(prev => ({
-        ...prev,
-        error: {
-          code: 'QUERY_TOO_SHORT',
-          message: 'Entrez au moins 2 caractères'
-        }
-      }));
-      return;
-    }
-
-    setState(prev => ({ 
-      ...prev, 
-      loading: true, 
-      error: null,
-      status: 'Recherche en cours...'
-    }));
-    
-    try {
-      const detectedCategory = category || ScanService.detectCategory(query);
-      const result = await scanService.searchProducts(query, { 
-        category: detectedCategory,
-        limit: 10 
-      });
-      
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        result,
-        status: `${result.products?.length || 0} produits trouvés`
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        error: error as ScanError
-      }));
-    }
-  }, [scanService]);
-
-  // Réinitialiser l'état
-  const reset = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      loading: false,
-      error: null,
-      result: null,
-      progress: 0,
-      status: ''
-    }));
-  }, []);
-
-  return {
-    // État
-    ...state,
-    
-    // Actions
-    setMode,
-    scanBarcode,
-    analyzePhoto,
-    searchProducts,
-    reset,
-    
-    // Helpers
-    isScanning: state.loading,
-    hasResult: !!state.result,
-    hasError: !!state.error
-  };
 }

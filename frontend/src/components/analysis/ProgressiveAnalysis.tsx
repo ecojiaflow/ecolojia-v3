@@ -1,177 +1,45 @@
+// PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
+// Composant d'analyse progressive avec gestion des valeurs manquantes
+
 import React, { useState } from 'react';
-import { 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Info, 
-  Lock, 
-  Sparkles,
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  Info,
   ChevronDown,
   ChevronUp,
-  Download,
-  MessageSquare,
+  Leaf,
+  Heart,
+  Globe,
+  ShieldAlert,
   TrendingUp,
-  Shield,
-  Leaf
+  Award,
+  Download,
+  Share2,
+  Lock
 } from 'lucide-react';
 
 interface ProgressiveAnalysisProps {
-  analysis?: ProductAnalysis;
+  analysis: any;
   level?: 'basic' | 'detailed' | 'expert';
   userTier?: 'free' | 'premium';
-  onUpgrade?: () => void;
 }
 
-interface ProductAnalysis {
-  productId: string;
-  name: string;
-  brand?: string;
-  category: string;
-  
-  // Scores
-  healthScore: number;
-  environmentScore: number;
-  ethicsScore: number;
-  overallScore: number;
-  
-  // Analyse santé
-  novaGroup?: number;
-  nutriScore?: string;
-  
-  // Détails
-  ingredients?: string[];
-  additives?: Additive[];
-  allergens?: string[];
-  nutritionalInfo?: NutritionalInfo;
-  
-  // Alternatives
-  alternatives?: Alternative[];
-  
-  // Metadata
-  sources?: Source[];
-  lastUpdated?: string;
-}
-
-interface Additive {
-  code: string;
-  name: string;
-  risk: 'low' | 'medium' | 'high';
-  description?: string;
-}
-
-interface NutritionalInfo {
-  calories: number;
-  proteins: number;
-  carbs: number;
-  sugars: number;
-  fats: number;
-  saturatedFats: number;
-  fiber: number;
-  salt: number;
-}
-
-interface Alternative {
-  id: string;
-  name: string;
-  brand: string;
-  score: number;
-  improvement: string;
-  priceRange?: string;
-}
-
-interface Source {
-  name: string;
-  url: string;
-  type: string;
-}
-
-// Données de démonstration
-const DEMO_ANALYSIS: ProductAnalysis = {
-  productId: 'demo-001',
-  name: 'Produit de démonstration',
-  brand: 'Marque Example',
-  category: 'food',
-  healthScore: 6.5,
-  environmentScore: 7.2,
-  ethicsScore: 5.8,
-  overallScore: 6.5,
-  novaGroup: 3,
-  nutriScore: 'C',
-  additives: [
-    { code: 'E330', name: 'Acide citrique', risk: 'low', description: 'Acidifiant naturel' },
-    { code: 'E202', name: 'Sorbate de potassium', risk: 'medium', description: 'Conservateur' },
-    { code: 'E621', name: 'Glutamate monosodique', risk: 'high', description: 'Exhausteur de goût controversé' }
-  ],
-  alternatives: [
-    { id: '1', name: 'Alternative Bio', brand: 'NaturePlus', score: 8.2, improvement: '+25% meilleur score santé' },
-    { id: '2', name: 'Option Locale', brand: 'TerraNova', score: 7.8, improvement: 'Produit localement' },
-    { id: '3', name: 'Sans Additifs', brand: 'PureFood', score: 7.5, improvement: 'Sans conservateurs' }
-  ],
-  sources: [
-    { name: 'Open Food Facts', url: 'https://openfoodfacts.org', type: 'Base de données' },
-    { name: 'Étude INRAE 2024', url: '#', type: 'Publication scientifique' }
-  ]
-};
-
-// Composant pour afficher un score avec jauge
-const ScoreGauge = ({ score, label, color }: { score: number; label: string; color: string }) => {
-  const percentage = Math.round(score * 10);
-  const getScoreColor = () => {
-    if (score >= 8) return 'text-green-600';
-    if (score >= 5) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  return (
-    <div className="text-center">
-      <div className="relative w-24 h-24 mx-auto">
-        <svg className="transform -rotate-90 w-24 h-24">
-          <circle
-            cx="48"
-            cy="48"
-            r="36"
-            stroke="currentColor"
-            strokeWidth="8"
-            fill="none"
-            className="text-gray-200"
-          />
-          <circle
-            cx="48"
-            cy="48"
-            r="36"
-            stroke="currentColor"
-            strokeWidth="8"
-            fill="none"
-            strokeDasharray={`${2 * Math.PI * 36}`}
-            strokeDashoffset={`${2 * Math.PI * 36 * (1 - score / 10)}`}
-            className={color}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className={`absolute inset-0 flex items-center justify-center text-2xl font-bold ${getScoreColor()}`}>
-          {score.toFixed(1)}
-        </div>
-      </div>
-      <p className="mt-2 text-sm font-medium text-gray-700">{label}</p>
-    </div>
-  );
-};
-
-export default function ProgressiveAnalysis({
-  analysis = DEMO_ANALYSIS,
+export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
+  analysis,
   level = 'basic',
-  userTier = 'free',
-  onUpgrade = () => alert('Fonction upgrade à implémenter')
-}: ProgressiveAnalysisProps) {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['summary']));
+  userTier = 'free'
+}) => {
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [selectedTab, setSelectedTab] = useState<'health' | 'environment' | 'social'>('health');
 
-  // Vérification de sécurité
+  // Vérifications de sécurité pour éviter les erreurs
   if (!analysis) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <p className="text-yellow-800">Aucune analyse disponible</p>
-        </div>
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <p className="text-gray-500 text-center">Aucune analyse disponible</p>
       </div>
     );
   }
@@ -186,287 +54,420 @@ export default function ProgressiveAnalysis({
     setExpandedSections(newExpanded);
   };
 
-  const getNovaAlert = () => {
-    if (!analysis.novaGroup) return null;
-    
-    const novaInfo = {
-      1: { color: 'bg-green-50 border-green-200', icon: CheckCircle, text: 'Aliments non transformés', iconColor: 'text-green-600' },
-      2: { color: 'bg-blue-50 border-blue-200', icon: Info, text: 'Ingrédients culinaires', iconColor: 'text-blue-600' },
-      3: { color: 'bg-yellow-50 border-yellow-200', icon: AlertTriangle, text: 'Aliments transformés', iconColor: 'text-yellow-600' },
-      4: { color: 'bg-red-50 border-red-200', icon: XCircle, text: 'Aliments ultra-transformés', iconColor: 'text-red-600' }
-    };
+  // Fonction pour obtenir la couleur selon le score
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    if (score >= 40) return 'text-orange-600';
+    return 'text-red-600';
+  };
 
-    const info = novaInfo[analysis.novaGroup as keyof typeof novaInfo];
-    if (!info) return null;
+  const getScoreBgColor = (score: number) => {
+    if (score >= 80) return 'bg-green-100';
+    if (score >= 60) return 'bg-yellow-100';
+    if (score >= 40) return 'bg-orange-100';
+    return 'bg-red-100';
+  };
+
+  const getNutriScoreColor = (score: string) => {
+    const colors: Record<string, string> = {
+      'A': 'bg-green-600',
+      'B': 'bg-lime-500',
+      'C': 'bg-yellow-500',
+      'D': 'bg-orange-500',
+      'E': 'bg-red-600'
+    };
+    return colors[score] || 'bg-gray-400';
+  };
+
+  // Niveau 1 : Analyse basique (Free)
+  const renderBasicLevel = () => {
+    const healthScore = analysis.healthScore || 0;
+    const novaScore = analysis.novaScore || 0;
+    const nutriScore = analysis.nutriScore || 'NC';
+    const mainWarning = analysis.warnings?.[0];
 
     return (
-      <div className={`p-4 rounded-lg border ${info.color}`}>
-        <div className="flex items-start">
-          <info.icon className={`h-5 w-5 mt-0.5 mr-3 ${info.iconColor}`} />
-          <div className="flex-1">
-            <h4 className="font-medium text-gray-900">Groupe NOVA {analysis.novaGroup}</h4>
-            <p className="text-sm text-gray-700 mt-1">{info.text}</p>
+      <div className="space-y-6">
+        {/* Score principal */}
+        <div className="text-center">
+          <div className="relative inline-block">
+            <div className={`w-32 h-32 rounded-full ${getScoreBgColor(healthScore)} flex items-center justify-center`}>
+              <span className={`text-5xl font-bold ${getScoreColor(healthScore)}`}>
+                {healthScore}
+              </span>
+            </div>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-full shadow-md">
+              <span className="text-sm font-medium text-gray-700">Score Santé</span>
+            </div>
           </div>
         </div>
+
+        {/* Scores secondaires */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* NOVA Score */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-gray-600 mb-2">Classification NOVA</h4>
+            <div className="flex items-center justify-between">
+              <span className="text-2xl font-bold">{novaScore}/4</span>
+              <div className="text-right">
+                <p className="text-xs text-gray-500">
+                  {novaScore <= 1 && 'Non transformé'}
+                  {novaScore === 2 && 'Peu transformé'}
+                  {novaScore === 3 && 'Transformé'}
+                  {novaScore === 4 && 'Ultra-transformé'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Nutri-Score */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-gray-600 mb-2">Nutri-Score</h4>
+            <div className="flex items-center justify-center">
+              <div className={`w-16 h-16 rounded-lg ${getNutriScoreColor(nutriScore)} text-white flex items-center justify-center`}>
+                <span className="text-3xl font-bold">{nutriScore}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Alerte principale */}
+        {mainWarning && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg"
+          >
+            <div className="flex items-start">
+              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+              <div>
+                <h4 className="font-semibold text-red-800">Attention</h4>
+                <p className="text-red-700 text-sm mt-1">{mainWarning}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Teaser pour le niveau supérieur */}
+        {userTier === 'free' && (
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Lock className="w-5 h-5 text-purple-600 mr-2" />
+                <span className="text-sm font-medium text-purple-800">
+                  Débloquez l'analyse complète
+                </span>
+              </div>
+              <button className="text-xs bg-purple-600 text-white px-3 py-1 rounded-full hover:bg-purple-700 transition-colors">
+                Passer Premium
+              </button>
+            </div>
+            <ul className="mt-3 text-xs text-purple-700 space-y-1">
+              <li>• Liste complète des additifs</li>
+              <li>• Alternatives personnalisées</li>
+              <li>• Impact environnemental détaillé</li>
+            </ul>
+          </div>
+        )}
       </div>
     );
   };
 
-  const renderBasicLevel = () => (
-    <>
-      {/* Résumé principal */}
-      <div className="mb-6">
-        <button
-          onClick={() => toggleSection('summary')}
-          className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-        >
-          <h3 className="text-lg font-semibold">Résumé de l'analyse</h3>
-          {expandedSections.has('summary') ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-        </button>
-        
-        {expandedSections.has('summary') && (
-          <div className="mt-4 bg-white rounded-lg p-6">
-            {/* Scores principaux */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <ScoreGauge score={analysis.healthScore} label="Santé" color="text-green-500" />
-              <ScoreGauge score={analysis.environmentScore} label="Environnement" color="text-blue-500" />
-              <ScoreGauge score={analysis.ethicsScore} label="Éthique" color="text-purple-500" />
+  // Niveau 2 : Analyse détaillée (Free avec limitations)
+  const renderDetailedLevel = () => {
+    const additives = analysis.additives || [];
+    const allergens = analysis.allergens || [];
+    const alternatives = analysis.alternatives?.slice(0, userTier === 'free' ? 3 : undefined) || [];
+    const nutritionalValues = analysis.nutritionalValues || {};
+
+    return (
+      <div className="space-y-6">
+        {/* Inclure le niveau basique */}
+        {renderBasicLevel()}
+
+        {/* Additifs */}
+        <div className="bg-white border rounded-lg">
+          <button
+            onClick={() => toggleSection('additives')}
+            className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center">
+              <ShieldAlert className="w-5 h-5 text-orange-600 mr-2" />
+              <span className="font-medium">Additifs ({additives.length})</span>
             </div>
+            {expandedSections.has('additives') ? <ChevronUp /> : <ChevronDown />}
+          </button>
+          
+          <AnimatePresence>
+            {expandedSections.has('additives') && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="px-4 pb-4"
+              >
+                {additives.length > 0 ? (
+                  <div className="space-y-2 mt-2">
+                    {additives.map((additive: string, index: number) => (
+                      <div key={index} className="flex items-center text-sm">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full mr-2" />
+                        <span>{additive}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-2">Aucun additif détecté</p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
-            {/* Score global */}
-            <div className="text-center mb-6">
-              <div className={`text-4xl font-bold ${
-                analysis.overallScore >= 7 ? 'text-green-600' :
-                analysis.overallScore >= 5 ? 'text-yellow-600' : 'text-red-600'
-              }`}>
-                {analysis.overallScore.toFixed(1)}/10
-              </div>
-              <p className="text-gray-600">Score global</p>
-            </div>
-
-            {/* Alerte NOVA */}
-            {getNovaAlert()}
-
-            {/* Nutri-Score */}
-            {analysis.nutriScore && (
-              <div className="mt-4 flex items-center justify-center">
-                <span className="text-sm text-gray-600 mr-2">Nutri-Score:</span>
-                <span className={`px-3 py-1 rounded font-bold text-white ${
-                  analysis.nutriScore === 'A' ? 'bg-green-600' :
-                  analysis.nutriScore === 'B' ? 'bg-green-500' :
-                  analysis.nutriScore === 'C' ? 'bg-yellow-500' :
-                  analysis.nutriScore === 'D' ? 'bg-orange-500' : 'bg-red-600'
-                }`}>
-                  {analysis.nutriScore}
+        {/* Allergènes */}
+        {allergens.length > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h4 className="font-medium text-yellow-800 mb-2 flex items-center">
+              <Info className="w-5 h-5 mr-2" />
+              Allergènes
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {allergens.map((allergen: string, index: number) => (
+                <span key={index} className="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">
+                  {allergen}
                 </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Valeurs nutritionnelles */}
+        <div className="bg-white border rounded-lg">
+          <button
+            onClick={() => toggleSection('nutrition')}
+            className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center">
+              <Heart className="w-5 h-5 text-red-600 mr-2" />
+              <span className="font-medium">Valeurs nutritionnelles</span>
+            </div>
+            {expandedSections.has('nutrition') ? <ChevronUp /> : <ChevronDown />}
+          </button>
+          
+          <AnimatePresence>
+            {expandedSections.has('nutrition') && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="px-4 pb-4"
+              >
+                <div className="mt-2 space-y-2">
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Énergie</span>
+                      <span className="font-medium">{nutritionalValues.energy?.toFixed(0) || 0} kcal</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Protéines</span>
+                      <span className="font-medium">{nutritionalValues.proteins?.toFixed(1) || 0} g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Glucides</span>
+                      <span className="font-medium">{nutritionalValues.carbohydrates?.toFixed(1) || 0} g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Lipides</span>
+                      <span className="font-medium">{nutritionalValues.fat?.toFixed(1) || 0} g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Sucres</span>
+                      <span className="font-medium">{nutritionalValues.sugars?.toFixed(1) || 0} g</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Sel</span>
+                      <span className="font-medium">{nutritionalValues.salt?.toFixed(2) || 0} g</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Alternatives */}
+        {alternatives.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="font-medium flex items-center">
+              <TrendingUp className="w-5 h-5 text-green-600 mr-2" />
+              Alternatives plus saines
+            </h4>
+            {alternatives.map((alt: any, index: number) => (
+              <div key={alt._id || index} className="bg-green-50 rounded-lg p-3 flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-green-800">{alt.name}</p>
+                  <p className="text-sm text-green-600">{alt.brand}</p>
+                </div>
+                <div className="text-right">
+                  <span className={`text-lg font-bold ${getScoreColor(alt.healthScore || 0)}`}>
+                    {alt.healthScore || 0}
+                  </span>
+                  <p className="text-xs text-gray-500">Score santé</p>
+                </div>
+              </div>
+            ))}
+            
+            {userTier === 'free' && alternatives.length >= 3 && (
+              <div className="text-center">
+                <button className="text-sm text-purple-600 hover:text-purple-700">
+                  <Lock className="w-4 h-4 inline mr-1" />
+                  Voir plus d'alternatives (Premium)
+                </button>
               </div>
             )}
           </div>
         )}
       </div>
+    );
+  };
 
-      {/* Teaser Premium */}
-      {userTier === 'free' && (
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
-          <div className="flex items-start">
-            <Sparkles className="h-6 w-6 text-purple-600 mr-3 flex-shrink-0" />
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Débloquez l'analyse complète
-              </h4>
-              <ul className="text-sm text-gray-700 space-y-1 mb-4">
-                <li>• Détail des additifs et leur impact santé</li>
-                <li>• {analysis.alternatives?.length || 10}+ alternatives plus saines</li>
-                <li>• Export PDF de l'analyse</li>
-                <li>• Chat avec notre IA nutritionniste</li>
-              </ul>
-              <button
-                onClick={onUpgrade}
-                className="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors"
-              >
-                Passer à Premium (2,49€/mois)
-              </button>
-            </div>
+  // Niveau 3 : Analyse expert (Premium uniquement)
+  const renderExpertLevel = () => {
+    if (userTier !== 'premium') {
+      return (
+        <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl p-8 text-center">
+          <Lock className="w-16 h-16 text-purple-600 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-purple-800 mb-2">
+            Analyse Expert Premium
+          </h3>
+          <p className="text-purple-600 mb-4">
+            Débloquez l'analyse complète avec impact environnemental, social et recommandations personnalisées
+          </p>
+          <button className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+            Passer au Premium
+          </button>
+        </div>
+      );
+    }
+
+    const impactEnv = analysis.impactEnvironmental || {};
+    const impactSocial = analysis.impactSocial || {};
+
+    return (
+      <div className="space-y-6">
+        {/* Inclure les niveaux précédents */}
+        {renderDetailedLevel()}
+
+        {/* Onglets pour les différents impacts */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="flex border-b">
+            <button
+              onClick={() => setSelectedTab('health')}
+              className={`flex-1 px-4 py-3 font-medium transition-colors ${
+                selectedTab === 'health'
+                  ? 'bg-green-50 text-green-700 border-b-2 border-green-600'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Heart className="w-5 h-5 inline mr-2" />
+              Santé
+            </button>
+            <button
+              onClick={() => setSelectedTab('environment')}
+              className={`flex-1 px-4 py-3 font-medium transition-colors ${
+                selectedTab === 'environment'
+                  ? 'bg-green-50 text-green-700 border-b-2 border-green-600'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Globe className="w-5 h-5 inline mr-2" />
+              Environnement
+            </button>
+            <button
+              onClick={() => setSelectedTab('social')}
+              className={`flex-1 px-4 py-3 font-medium transition-colors ${
+                selectedTab === 'social'
+                  ? 'bg-green-50 text-green-700 border-b-2 border-green-600'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Award className="w-5 h-5 inline mr-2" />
+              Social
+            </button>
+          </div>
+
+          <div className="p-6">
+            {selectedTab === 'environment' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <Leaf className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <p className="text-2xl font-bold">{impactEnv.co2?.toFixed(1) || 0}</p>
+                    <p className="text-sm text-gray-600">kg CO₂</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-8 h-8 text-blue-600 mx-auto mb-2">💧</div>
+                    <p className="text-2xl font-bold">{impactEnv.water?.toFixed(0) || 0}</p>
+                    <p className="text-sm text-gray-600">L d'eau</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-8 h-8 text-brown-600 mx-auto mb-2">🌾</div>
+                    <p className="text-2xl font-bold">{impactEnv.landUse?.toFixed(1) || 0}</p>
+                    <p className="text-sm text-gray-600">m² de terre</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {selectedTab === 'social' && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium">Commerce équitable</span>
+                  {impactSocial.fairTrade ? (
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <XCircle className="w-5 h-5 text-red-600" />
+                  )}
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium">Production locale</span>
+                  {impactSocial.localProduction ? (
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <XCircle className="w-5 h-5 text-red-600" />
+                  )}
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium">Bien-être animal</span>
+                  <span className="text-sm text-gray-600">{impactSocial.animalWelfare || 'N/A'}</span>
+                </div>
+              </div>
+            )}
+
+            {selectedTab === 'health' && (
+              <div className="prose prose-sm max-w-none">
+                <p className="text-gray-600">
+                  Analyse détaillée de l'impact sur votre santé avec recommandations personnalisées...
+                </p>
+              </div>
+            )}
           </div>
         </div>
-      )}
-    </>
-  );
 
-  const renderDetailedLevel = () => (
-    <>
-      {renderBasicLevel()}
-      
-      {/* Additifs */}
-      {analysis.additives && analysis.additives.length > 0 && (
-        <div className="mt-6">
-          <button
-            onClick={() => toggleSection('additives')}
-            className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="text-lg font-semibold">
-              Additifs ({analysis.additives.length})
-            </h3>
-            {expandedSections.has('additives') ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+            <Download className="w-5 h-5 mr-2" />
+            Exporter l'analyse
           </button>
-          
-          {expandedSections.has('additives') && (
-            <div className="mt-4 bg-white rounded-lg p-6">
-              {userTier === 'free' ? (
-                <div className="relative">
-                  <div className="filter blur-sm">
-                    {analysis.additives.slice(0, 3).map((additive, index) => (
-                      <div key={index} className="mb-3 p-3 bg-gray-50 rounded">
-                        <span className="font-medium">{additive.code}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 rounded-lg">
-                    <div className="text-center">
-                      <Lock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">Contenu Premium</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {analysis.additives.map((additive, index) => (
-                    <div key={index} className={`p-3 rounded-lg border ${
-                      additive.risk === 'high' ? 'bg-red-50 border-red-200' :
-                      additive.risk === 'medium' ? 'bg-yellow-50 border-yellow-200' :
-                      'bg-green-50 border-green-200'
-                    }`}>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <span className="font-medium">{additive.code}</span>
-                          <span className="ml-2 text-sm text-gray-700">{additive.name}</span>
-                        </div>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          additive.risk === 'high' ? 'bg-red-200 text-red-800' :
-                          additive.risk === 'medium' ? 'bg-yellow-200 text-yellow-800' :
-                          'bg-green-200 text-green-800'
-                        }`}>
-                          {additive.risk === 'high' ? 'Risque élevé' :
-                           additive.risk === 'medium' ? 'Risque modéré' : 'Faible risque'}
-                        </span>
-                      </div>
-                      {additive.description && (
-                        <p className="text-sm text-gray-600 mt-1">{additive.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Alternatives (3 max pour free) */}
-      {analysis.alternatives && analysis.alternatives.length > 0 && (
-        <div className="mt-6">
-          <button
-            onClick={() => toggleSection('alternatives')}
-            className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="text-lg font-semibold">
-              Alternatives recommandées
-            </h3>
-            {expandedSections.has('alternatives') ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-          </button>
-          
-          {expandedSections.has('alternatives') && (
-            <div className="mt-4 bg-white rounded-lg p-6">
-              <div className="grid gap-4">
-                {analysis.alternatives.slice(0, userTier === 'free' ? 3 : undefined).map((alt, index) => (
-                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-medium">{alt.name}</h4>
-                        <p className="text-sm text-gray-600">{alt.brand}</p>
-                        <p className="text-sm text-green-600 mt-1">{alt.improvement}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-green-600">{alt.score}</div>
-                        <div className="text-xs text-gray-500">/10</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {userTier === 'free' && analysis.alternatives.length > 3 && (
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-600 mb-2">
-                    + {analysis.alternatives.length - 3} autres alternatives
-                  </p>
-                  <button
-                    onClick={onUpgrade}
-                    className="text-purple-600 hover:text-purple-700 text-sm font-medium"
-                  >
-                    Voir toutes les alternatives →
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-    </>
-  );
-
-  const renderExpertLevel = () => (
-    <>
-      {renderDetailedLevel()}
-      
-      {/* Actions Premium */}
-      {userTier === 'premium' && (
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          <button className="flex items-center justify-center gap-2 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200">
-            <Download className="h-5 w-5 text-gray-600" />
-            <span className="font-medium">Exporter PDF</span>
-          </button>
-          <button className="flex items-center justify-center gap-2 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200">
-            <MessageSquare className="h-5 w-5 text-gray-600" />
-            <span className="font-medium">Chat IA</span>
+          <button className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+            <Share2 className="w-5 h-5 mr-2" />
+            Partager
           </button>
         </div>
-      )}
-
-      {/* Sources */}
-      {analysis.sources && analysis.sources.length > 0 && userTier === 'premium' && (
-        <div className="mt-6">
-          <button
-            onClick={() => toggleSection('sources')}
-            className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="text-lg font-semibold">Sources scientifiques</h3>
-            {expandedSections.has('sources') ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-          </button>
-          
-          {expandedSections.has('sources') && (
-            <div className="mt-4 bg-white rounded-lg p-6">
-              <ul className="space-y-2">
-                {analysis.sources.map((source, index) => (
-                  <li key={index} className="text-sm">
-                    <a 
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      {source.name}
-                    </a>
-                    <span className="text-gray-500 ml-2">({source.type})</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-    </>
-  );
+      </div>
+    );
+  };
 
   // Rendu selon le niveau
   const renderContent = () => {
@@ -475,21 +476,17 @@ export default function ProgressiveAnalysis({
         return renderExpertLevel();
       case 'detailed':
         return renderDetailedLevel();
+      case 'basic':
       default:
         return renderBasicLevel();
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">{analysis.name}</h2>
-        {analysis.brand && (
-          <p className="text-gray-600">{analysis.brand}</p>
-        )}
-      </div>
-
+    <div className="progressive-analysis">
       {renderContent()}
     </div>
   );
-}
+};
+
+export default ProgressiveAnalysis;

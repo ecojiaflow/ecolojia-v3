@@ -1,0 +1,225 @@
+### 🎨 Prompt prêt à envoyer à Claude
+
+*(copie-colle tel quel — version française, ton professionnel et enthousiaste)*
+
+---
+
+## Contexte & Mission
+
+Tu es **Claude**, un·e concepteur·trice **UX/UI senior** avec **15 ans d’expérience**, spécialiste des **apps PWA React + Tailwind**.
+Ta mission : **sublimer l’interface web & mobile d’ECOLOJIA** – l’assistant IA qui analyse instantanément l’impact **Santé / Environnement / Éthique** de millions de produits.
+Tu dois livrer une **expérience utilisateur moderne, fluide et addictive**, soutenue par une **identité visuelle forte** et un **design system robuste**. L’interface doit respirer la **confiance scientifique** et l’**engagement éco-responsable**, tout en restant **accessible à tous**.
+
+---
+
+### 1. 🧭 Objectifs UX prioritaires
+
+1. **Fluidité extrême** : < 3 s TTI, interactions 60 fps, transitions naturelles.
+2. **Simplicité guidée** : 3 taps max pour scanner un produit et comprendre ses scores.
+3. **Émotion & Gamification** : badges, progression visuelle, défis hebdos.
+4. **Accessibilité AA** : contrastes, navigation clavier, lecteurs d’écran, « prefers-reduced-motion ».
+5. **Confiance** : transparence des sources scientifiques + feedback instantané (toast + haptics).
+
+---
+
+### 2. 🎨 Identité visuelle officielle
+
+| Élément           | Valeur    | Usage                           |
+| ----------------- | --------- | ------------------------------- |
+| **Vert primaire** | `#7DDE4A` | CTA, highlights, icônes succès  |
+| **Vert clair**    | `#E9F8DF` | backgrounds légers, hover cards |
+| **Gris texte**    | `#3B3B3B` | paragraphes, labels             |
+| **Gris clair**    | `#F7F9F4` | surfaces secondaires            |
+| **Gris bordure**  | `#DDE9DA` | bordures, tags neutres          |
+| **Blanc**         | `#FFFFFF` | fond principal, cartes          |
+
+* **Typographie** : **Inter**
+
+  * H1 48 px / 700
+  * H2 32 px / 600
+  * Body 16 px / 400
+* **Rayons** : 16 px (cartes, champs) ; 8 px (boutons).
+* **Ombres** : `0 4px 12px rgba(0,0,0,0.08)`.
+* **Motion** : Framer-Motion, easing `cubic-bezier(0.4,0,0.2,1)`, 200–350 ms.
+
+---
+
+### 3. 🏗️ Design System / Atomic Kit
+
+1. **Tokens**
+
+   ```yaml
+   colors:
+     primary: '#7DDE4A'
+     primary-light: '#E9F8DF'
+     text-default: '#3B3B3B'
+     surface: '#FFFFFF'
+     surface-alt: '#F7F9F4'
+     border: '#DDE9DA'
+   radius: [4, 8, 16]
+   spacing: [4, 8, 16, 24, 64]
+   shadow-s: '0 2px 6px rgba(0,0,0,0.05)'
+   shadow-m: '0 4px 12px rgba(0,0,0,0.08)'
+   ```
+2. **Primitives Tailwind** : Button (solid / outline / ghost), Input, TextArea, Select, Card, Badge, Tooltip, Modal, BottomSheet, Tabs, Accordion (dark/light).
+3. **Layout grid** : 12 colonnes desktop (≤ 1280 px), 1 col mobile ; breakpoints `sm 640`, `md 768`, `lg 1024`, `xl 1280`.
+4. **Motion variants** : fade-in, slide-up, scale-in, stagger-list.
+
+---
+
+### 4. 📱 Parcours clés & micro-interactions
+
+| Parcours             | « Wow » à designer                                                                                 |
+| -------------------- | -------------------------------------------------------------------------------------------------- |
+| **Scan produit**     | Rayon vert animé autour du code-barres, toast vert « Analyse prête ! », haptic léger (PWA mobile). |
+| **Résultat analyse** | Anneaux progressifs NOVA / Nutri / Eco (vert → rouge), conseils IA en accordéons.                  |
+| **Dashboard**        | Graphiques Recharts skinnés (palette charte), badges animés « leaf-burst ».                        |
+| **Chat IA**          | Bulle IA verte avec ombre douce, suggestions quick-reply en pills.                                 |
+| **Paywall Premium**  | Gradient primaire → primaire-light, cartes 3D comparatives.                                        |
+
+---
+
+### 5. ⚙️ Contraintes techniques
+
+* **Stack** : React 18 + Vite + Tailwind 3 + TypeScript (strict).
+* **State** : Zustand (slices auth, product, dashboard).
+* **Data-fetch** : React-Query 5 (Suspense).
+* **PWA** : Workbox SWR, offline scans (IndexedDB).
+* **Tests** : Vitest / RTL + Playwright (flows essentiels).
+* **Accessibilité** : contraste AA, focus-ring 2 px vert, `aria-live` sur toasts.
+* **Performance** : bundle < 200 KB gzip, LCP < 2.5 s, CLS < 0.1.
+
+---
+
+### 6. ✅ Définition de Done
+
+1. Lighthouse mobile ≥ 95 (perf, PWA, a11y, best-practices).
+2. Taux conversion **scan → analyse** ≥ 85 %.
+3. Audit Wave : 0 erreurs critiques.
+4. Tests E2E Playwright verts sur Chrome, Safari, Firefox, Edge mobile.
+5. Livrables : **Design kit Figma** complet + prototype haute-fidélité interactif + guidelines Tailwind détaillées.
+
+---
+
+**En résumé** : applique la palette #7DDE4A, la typo Inter, des rayons généreux et des ombres douces pour dégager modernité & confiance. Crée une UX rapide, guidée et inclusive qui incarne la science et l’engagement écologique d’ECOLOJIA.
+
+
+
+
+## 📊 ANALYSE DETAILLEE DU FRONTEND ECOLOJIA (état du 7 août 2025)
+
+> **Objectif** : donner à Claude une vision claire et exhaustive de l’existant pour qu’il puisse reprendre le chantier front dans de bonnes conditions.
+
+---
+
+### 1. Arborescence principale (extrait ≤ profondeur 3)
+
+```
+frontend/
+└─ src/
+   ├─ api/                      # appels CRUD bruts (axios)
+   ├─ auth/                     # logique JWT / refresh
+   ├─ chat/                     # intégration DeepSeek / GPT-4
+   ├─ components/
+   │  ├─ scanner/               # 📸 Barcode + fallback photo
+   │  ├─ dashboard/             # cartes & graphiques Recharts
+   │  ├─ premium/               # paywall & upgrade modal
+   │  └─ … ~60 composants
+   ├─ hooks/                    # useAuth, useIntersection, …
+   ├─ i18n/                     # traductions FR + EN (json)
+   ├─ pages/
+   │  ├─ HomePage.tsx
+   │  ├─ Scan.tsx               # ⚠️ remplace ScanPage.tsx dans la spec
+   │  ├─ ProductPage.tsx
+   │  ├─ DashboardPage.tsx
+   │  └─ … 25 autres pages
+   ├─ router/                   # React-Router v6 (routes protégées)
+   ├─ services/
+   │  ├─ api.ts                 # instance axios + interceptors
+   │  ├─ paymentService.ts      # appel LemonSqueezy (stub)
+   │  └─ security/              # SecureProxyService.ts (Cloudinary, IA)
+   └─ config/ tailwind, vite, …
+```
+
+---
+
+### 2. Pile technologique réellement installée
+
+| Domaine         | Librairies clés (package.json)           | Statut                                                  |
+| --------------- | ---------------------------------------- | ------------------------------------------------------- |
+| **UI**          | React 18.3.1, Tailwind 3.4, Lucide-react | ✔️ opérationnel                                         |
+| **Etat / Data** | Zustand 4.5, TanStack React-Query 5      | ✔️ configuré                                            |
+| **Formulaires** | React-Hook-Form + Zod v3                 | ✔️                                                      |
+| **Routing**     | React-Router-Dom 6.20                    | ✔️                                                      |
+| **Animation**   | Framer-Motion 10                         | ✔️ (ex : cartes dashboard)                              |
+| **Recherche**   | Algolia (via react-instantsearch)        | ✔️ (page UniversalSearch)                               |
+| **Charts**      | Recharts 2.10, Chart.js (legacy)         | ✔️                                                      |
+| **Scanner**     | @zxing/library, Quagga                   | ✔️ (BarcodeScanner + EnhancedBarcodeScanner)            |
+| **PWA**         | vite-plugin-pwa + Workbox                | ⚠️ service-worker généré mais manifest.json à finaliser |
+| **Tests**       | Vitest + RTL + Playwright (setup)        | ⚠️ peu de tests écrits                                  |
+
+---
+
+### 3. Fonctionnalités **déjà** couvertes
+
+| Domaine             | Implémentation                                                                        | Couverture                                                  |
+| ------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Auth**            | login, register, refresh token, protected routes                                      | 100 %                                                       |
+| **Analyse produit** | service `api.post('/analysis')`, page *ProductPage* affiche scores Nova, Nutri-, Eco- | 80 % (UI OK, gestion erreurs à raffiner)                    |
+| **Scan multi-mode** | composant `EnhancedBarcodeScanner` (barcode + photo + saisie manuelle)                | 70 % (caméra OK desktop/mobile, OCR photo en attente)       |
+| **Dashboard**       | graphiques d’usage + badges gamification                                              | 60 % (données mock + requête `/dashboard/stats` à brancher) |
+| **Chat IA**         | page *ChatPage*, appels SecureProxy → DeepSeek                                        | 80 % (quotas & toasts gérés)                                |
+| **i18n**            | FR & EN complets, détection navigateur + cookie                                       | 100 %                                                       |
+| **Dark / Light**    | toggle + stockage dans localStorage                                                   | 100 %                                                       |
+
+---
+
+### 4. Fonctionnalités **partielles ou manquantes**
+
+| Spécification             | Écart constaté                                                                                                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ScanPage.tsx**          | la spec mentionne `ScanPage.tsx` ; projet utilise `Scan.tsx` (à renommer ou router)                                                                                     |
+| **OCR Google Vision**     | backend prêt mais côté front seul stub `analyzePhotos()` (photo → /vision/analyze-image) ; UI pour recadrage / preview manquante                                        |
+| **Cloudinary**            | `SecureProxyService.uploadImageSecure()` implémenté, mais aucune clé `.env` ni signature dynamique côté backend → uploads KO                                            |
+| **Paiement LemonSqueezy** | `paymentService.ts` pointe encore vers ancien endpoint `/backend-working` et gère seulement checkout + portal ; pas de gestion webhooks ni mise à jour du store Zustand |
+| **PWA offline**           | cache API paramétré (Workbox Stale-While-Revalidate) mais manifest icons 512 px manquant, prompt “add to home screen” non déclenché                                     |
+| **Tests E2E**             | Playwright configuré mais 0 specs écrites                                                                                                                               |
+| **Accessibilité**         | composants Radix UI présents mais audit Lighthouse montre contrast warnings & absence d’`aria-live` sur toasts                                                          |
+| **Performance**           | bundle gzip 310 KB (-22 % à viser) ; lazy loading déjà en place mais images non optimisées (pas de `srcset/webp`)                                                       |
+| **Lint/CI**               | ESLint + Prettier installés mais GitHub Actions “lint” job absent                                                                                                       |
+
+---
+
+### 5. Dette technique & quick wins
+
+1. **Nettoyage doublons** – fichier `api.ts` déclaré deux fois (erreur de merge)
+2. **Variables d’env. typées** – créer `src/config/env.ts` pour centraliser (`VITE_API_URL`, `VITE_CLOUDINARY_CLOUD_NAME`, …)
+3. **Réduction bundle** – activer `vite-plugin-compress`, supprimer Chart.js (doublon)
+4. **Strict TypeScript** – `tsconfig` pas encore en `strict: true` (nombreux `any`)
+5. **Automatisation CI** – ajouter workflow `test + lint + build` sur chaque PR (réutiliser pipeline backend)
+
+---
+
+### 6. Synthèse pour Claude (« photo actuelle »)
+
+> **TL;DR**
+> Le front ECOLOJIA est **à 70 % complet** : toutes les briques clés (auth, recherche, scan, chat, dashboard, i18n, PWA) sont déjà codées et fonctionnent en local.
+> Il reste surtout **de l’intégration externe** (Cloudinary, LemonSqueezy), **le raccordement OCR**, l’**optimisation production** (bundle < 200 KB, accessibilité AA) et **la couverture test**.
+> L’architecture React + Vite + Zustand est saine ; le code est modulaire (≈ 60 composants), typé, et déjà prêt pour le scale (service-worker, lazy loading, i18n).
+> **Roadmap front finale** (≈ 2-3 sprints) :
+>
+> 1. Brancher services externes (Cloudinary + paiement) & finaliser Scan multi-mode
+> 2. Stabiliser API calls (Dashboard, quotas, erreurs)
+> 3. Optimiser bundle & accessibilité ; activer PWA offline complet
+> 4. Rédiger tests Vitest + Playwright ≥ 80 % core flows
+> 5. Mettre en place CI GitHub Actions (lint/test/build)
+
+---
+
+### ✅ Check-list pour toi avant transmission à Claude
+
+* [ ] Valider que cette synthèse correspond à la réalité constatée en local
+* [ ] Confirmer les variables `.env` manquantes (Cloudinary, API\_URL définitif)
+* [ ] Lister les priorités par sprint pour aligner l’équipe
+
+*(Dis-moi si un point est inexact ou si tu veux un zoom sur un fichier précis.)*

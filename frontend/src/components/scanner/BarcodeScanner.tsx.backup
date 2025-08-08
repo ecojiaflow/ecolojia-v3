@@ -1,31 +1,25 @@
 // PATH: frontend/src/components/scanner/BarcodeScanner.tsx
-// Scanner avec navigation corrigée pour le mode photo
+// Scanner avec bascule automatique en mode photo si caméra refusée
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
-import { Camera, X, Keyboard, AlertCircle, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
+import { Camera, X, Keyboard, AlertCircle, Image as ImageIcon, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { analyzeProductImage } from '../../services/visionService';
-import { useNavigate } from 'react-router-dom';
 import './BarcodeScanner.css';
 
 interface BarcodeScannerProps {
   onScanSuccess: (barcode: string) => void;
   onError?: (error: Error) => void;
   onClose?: () => void;
-  onManualData?: (data: any) => void; // Nouveau prop pour gérer les données manuelles
 }
 
 export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   onScanSuccess,
   onError,
-  onClose,
-  onManualData
+  onClose
 }) => {
-  const navigate = useNavigate();
   const [mode, setMode] = useState<'camera' | 'manual' | 'photo'>('camera');
   const [isScanning, setIsScanning] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [manualCode, setManualCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -57,18 +51,20 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     } catch (err) {
       console.error('Permission caméra refusée:', err);
       setHasPermission(false);
-      setError('Accès caméra refusé. Mode photo activé.');
-      setTimeout(() => setMode('photo'), 1500);
+      setError('Accès caméra refusé (HTTPS requis)');
+      // BASCULE AUTOMATIQUE EN MODE PHOTO
+      setMode('photo');
     }
   };
 
-  const startScanning = async () => {
+    const startScanning = async () => {
     if (!codeReaderRef.current || !videoRef.current) return;
     
     setError(null);
     setIsScanning(true);
 
     try {
+      // Attendre que la vidéo soit prête
       await new Promise<void>((resolve) => {
         if (videoRef.current!.readyState >= 2) {
           resolve();
@@ -86,6 +82,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
             onScanSuccess(result.getText());
           }
           if (err && !(err instanceof NotFoundException)) {
+            // Ignorer les erreurs IndexSizeError
             if (!err.message?.includes('IndexSizeError')) {
               console.error('Erreur scan:', err);
             }
@@ -128,65 +125,13 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     onScanSuccess(cleanCode);
   };
 
-  // Fonction corrigée pour gérer l'analyse photo
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setError(null);
-    setIsAnalyzing(true);
-
-    try {
-      console.log('📸 Analyse de l\'image:', file.name);
-      
-      const visionResult = await analyzeProductImage(file);
-      
-      console.log('🔍 Résultat Vision API:', visionResult);
-
-      if (visionResult.result?.barcode) {
-        // Code-barres détecté dans l'image
-        console.log('✅ Code-barres trouvé:', visionResult.result.barcode);
-        onScanSuccess(visionResult.result.barcode);
-        
-      } else if (visionResult.result?.extractedData || visionResult.result?.productName) {
-        // Texte détecté - CORRIGER ICI : Passer en mode manuel au lieu de naviguer
-        console.log('📝 Données extraites, passage en mode manuel');
-        
-        const extractedData = {
-          name: visionResult.result.productName || visionResult.result.extractedData?.name || '',
-          ingredients: visionResult.result.extractedData?.ingredients || '',
-          brand: visionResult.result.extractedData?.brand || '',
-          category: visionResult.result.extractedData?.category || 'food'
-        };
-
-        // Si on a un callback pour les données manuelles, l'utiliser
-        if (onManualData) {
-          setMode('manual');
-          onManualData(extractedData);
-        } else {
-          // Sinon, passer en mode manuel avec les données
-          setMode('manual');
-          // Simuler un événement pour pré-remplir le formulaire existant
-          setTimeout(() => {
-            const event = new CustomEvent('prefillManualForm', { 
-              detail: extractedData 
-            });
-            window.dispatchEvent(event);
-          }, 100);
-        }
-        
-      } else {
-        setError('Aucune information détectée. Essayez une photo plus nette du code-barres ou de la liste d\'ingrédients.');
-      }
-    } catch (err: any) {
-      console.error('❌ Erreur analyse photo:', err);
-      setError(err.message || 'Erreur lors de l\'analyse de l\'image');
-    } finally {
-      setIsAnalyzing(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
+    // Pour l'instant, on ne fait que notifier l'utilisateur
+    // L'analyse OCR sera faite dans PhotoCapture.tsx
+    setError('Utilisez le composant PhotoCapture pour analyser une image');
   };
 
   const switchMode = (newMode: 'camera' | 'manual' | 'photo') => {
@@ -248,7 +193,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
               <div className="permission-denied">
                 <AlertCircle className="w-12 h-12 text-red-500 mb-4 mx-auto" />
                 <p>L'accès à la caméra a été refusé.</p>
-                <p className="text-sm text-gray-500 mt-2">Basculement vers le mode photo...</p>
+                <p className="text-sm text-gray-500 mt-2">Mode photo activé automatiquement</p>
               </div>
             ) : (
               <div className="video-container">
@@ -309,52 +254,32 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
             className="photo-section"
           >
             <div className="text-center p-6">
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="w-16 h-16 text-green-600 mx-auto mb-4 animate-spin" />
-                  <h4 className="text-lg font-semibold mb-2">Analyse en cours...</h4>
-                  <p className="text-sm text-gray-600">
-                    Google Vision analyse votre image
-                  </p>
-                </>
-              ) : (
-                <>
-                  <ImageIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Mode Photo</h4>
-                  <p className="text-sm text-gray-600 mb-6">
-                    Prenez une photo du produit pour l'analyser avec l'IA
-                  </p>
-                  
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                    disabled={isAnalyzing}
-                  />
-                  
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isAnalyzing}
-                  >
-                    <Upload className="w-5 h-5" />
-                    Choisir une photo
-                  </button>
-                  
-                  <div className="mt-6 text-left max-w-sm mx-auto">
-                    <p className="text-xs text-gray-600 font-semibold mb-2">📸 Conseils pour une bonne analyse :</p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Photographiez le code-barres en gros plan</li>
-                      <li>• Ou prenez la liste d'ingrédients complète</li>
-                      <li>• Assurez-vous que le texte est net et lisible</li>
-                      <li>• Évitez les reflets et les ombres</li>
-                    </ul>
-                  </div>
-                </>
-              )}
+              <ImageIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h4 className="text-lg font-semibold mb-2">Mode Photo</h4>
+              <p className="text-sm text-gray-600 mb-6">
+                Prenez une photo du produit pour l'analyser avec Google Vision
+              </p>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+              
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 mx-auto"
+              >
+                <Upload className="w-5 h-5" />
+                Choisir une photo
+              </button>
+              
+              <p className="text-xs text-gray-500 mt-4">
+                Astuce : Photographiez la liste d'ingrédients ou le code-barres
+              </p>
             </div>
           </motion.div>
         )}

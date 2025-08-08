@@ -58,7 +58,7 @@ interface Stats {
 
 // Fonction de test pour debug
 async function testDashboardConnection() {
-  console.log('ðŸ” Test de connexion Dashboard...');
+  console.log('🔍 Test de connexion Dashboard...');
   
   try {
    const response = await fetch(`${import.meta.env.VITE_API_URL}/dashboard/stats`, {
@@ -68,17 +68,17 @@ async function testDashboardConnection() {
       }
     });
     
-    console.log('ðŸ“¡ Response status:', response.status);
+    console.log('📡 Response status:', response.status);
     if (response.ok) {
       const data = await response.json();
-      console.log('ðŸ“Š Dashboard data (fetch direct):', data);
+      console.log('📊 Dashboard data (fetch direct):', data);
       return data;
     } else {
-      console.error('âŒ Erreur serveur:', response.status, response.statusText);
+      console.error('❌ Erreur serveur:', response.status, response.statusText);
       return null;
     }
   } catch (error) {
-    console.error('âŒ Erreur rÃ©seau:', error);
+    console.error('❌ Erreur réseau:', error);
     return null;
   }
 }
@@ -99,22 +99,22 @@ const DashboardPage: React.FC = () => {
       setError(null);
       setIsUsingDemoData(false);
       
-      console.log('ðŸ“Š Fetching dashboard stats...');
+      console.log('📊 Fetching dashboard stats...');
       
       // Tenter d'abord via le service
       try {
         const data = await dashboardService.getStats();
-        console.log('âœ… Stats reÃ§ues via service:', data);
+        console.log('✅ Stats reçues via service:', data);
         setStats(data);
         return;
       } catch (serviceError) {
-        console.error('âš ï¸ Service error, trying direct fetch...', serviceError);
+        console.error('⚠️ Service error, trying direct fetch...', serviceError);
       }
       
-      // Si le service Ã©choue, tenter un fetch direct
+      // Si le service échoue, tenter un fetch direct
       const directData = await testDashboardConnection();
       if (directData) {
-        // Transformer les donnÃ©es si nÃ©cessaire
+        // Transformer les données si nécessaire
         const transformedData = {
           totalScans: directData.overview?.totalAnalyses || 0,
           healthScoreAverage: directData.overview?.avgHealthScore || 0,
@@ -132,14 +132,14 @@ const DashboardPage: React.FC = () => {
         return;
       }
       
-      // Si tout Ã©choue, utiliser les donnÃ©es de dÃ©mo
-      console.log('ðŸ“Š Using demo data...');
+      // Si tout échoue, utiliser les données de démo
+      console.log('📊 Using demo data...');
       setIsUsingDemoData(true);
       setStats(getDemoStats());
       
     } catch (err: any) {
-      console.error('âŒ Error fetching dashboard stats:', err);
-      setError('Impossible de charger les donnÃ©es. Mode dÃ©mo activÃ©.');
+      console.error('❌ Error fetching dashboard stats:', err);
+      setError('Impossible de charger les données. Mode démo activé.');
       setIsUsingDemoData(true);
       setStats(getDemoStats());
     } finally {
@@ -147,7 +147,7 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  // GÃ©nÃ©rer les donnÃ©es de tendance hebdomadaire
+  // Générer les données de tendance hebdomadaire
   function generateWeeklyTrend(data: any): Array<{ day: string; scans: number }> {
     const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
     const total = data?.weeklyDigest?.scansCount || 12;
@@ -159,7 +159,7 @@ const DashboardPage: React.FC = () => {
     }));
   }
 
-  // DonnÃ©es de dÃ©monstration
+  // Données de démonstration
   function getDemoStats(): Stats {
     return {
       totalScans: 47,
@@ -179,21 +179,21 @@ const DashboardPage: React.FC = () => {
         },
         {
           _id: '2',
-          productName: 'Shampoing Sans Sulfate L\'OrÃ©al',
+          productName: 'Shampoing Sans Sulfate L\'Oréal',
           score: 78,
           category: 'cosmetics',
           date: new Date(Date.now() - 86400000).toISOString()
         },
         {
           _id: '3',
-          productName: 'Nutella PÃ¢te Ã  Tartiner',
+          productName: 'Nutella Pâte à Tartiner',
           score: 45,
           category: 'food',
           date: new Date(Date.now() - 172800000).toISOString()
         },
         {
           _id: '4',
-          productName: 'Lessive Ã‰cologique Arbre Vert',
+          productName: 'Lessive Écologique Arbre Vert',
           score: 85,
           category: 'detergents',
           date: new Date(Date.now() - 259200000).toISOString()
@@ -234,12 +234,12 @@ const DashboardPage: React.FC = () => {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">Aucune donnÃ©e disponible</p>
+          <p className="text-gray-500 mb-4">Aucune donnée disponible</p>
           <button 
             onClick={fetchDashboardStats}
             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
           >
-            RÃ©essayer
+            Réessayer
           </button>
         </div>
       </div>
@@ -248,7 +248,7 @@ const DashboardPage: React.FC = () => {
 
   // Configuration des graphiques
   const categoryData = {
-    labels: ['Alimentaire', 'CosmÃ©tiques', 'DÃ©tergents'],
+    labels: ['Alimentaire', 'Cosmétiques', 'Détergents'],
     datasets: [{
       data: [
         stats.categoryBreakdown?.food || 0,
@@ -343,12 +343,12 @@ const DashboardPage: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">ðŸ“Š Tableau de bord</h1>
-              <p className="text-gray-600 mt-2">Suivez votre progression santÃ©</p>
+              <h1 className="text-3xl font-bold text-gray-800">📊 Tableau de bord</h1>
+              <p className="text-gray-600 mt-2">Suivez votre progression santé</p>
             </div>
             {isUsingDemoData && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
-                <p className="text-sm text-amber-800">ðŸ”„ Mode dÃ©monstration actif</p>
+                <p className="text-sm text-amber-800">🔄 Mode démonstration actif</p>
               </div>
             )}
           </div>
@@ -420,7 +420,7 @@ const DashboardPage: React.FC = () => {
                 </p>
                 <div className="flex items-center mt-2">
                   <Award className="w-4 h-4 text-amber-500 mr-1" />
-                  <p className="text-xs text-amber-600">SÃ©rie de 7 jours !</p>
+                  <p className="text-xs text-amber-600">Série de 7 jours !</p>
                 </div>
               </div>
               <div className="bg-amber-100 p-3 rounded-xl">
@@ -440,7 +440,7 @@ const DashboardPage: React.FC = () => {
             transition={{ delay: 0.4 }}
             className="bg-white rounded-xl shadow-md p-6"
           >
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">RÃ©partition par catÃ©gorie</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Répartition par catégorie</h3>
             <div className="h-64">
               <Doughnut data={categoryData} options={doughnutOptions} />
             </div>
@@ -452,7 +452,7 @@ const DashboardPage: React.FC = () => {
             transition={{ delay: 0.5 }}
             className="bg-white rounded-xl shadow-md p-6"
           >
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">ActivitÃ© hebdomadaire</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Activité hebdomadaire</h3>
             <div className="h-64">
               <Line data={weeklyData} options={{ ...chartOptions, maintainAspectRatio: false }} />
             </div>
@@ -467,17 +467,17 @@ const DashboardPage: React.FC = () => {
           className="bg-white rounded-xl shadow-md p-6"
         >
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-800">Analyses rÃ©centes</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Analyses récentes</h3>
             <button className="text-sm text-green-600 hover:text-green-700 font-medium">
-              Voir tout â†’
+              Voir tout →
             </button>
           </div>
           
           <div className="space-y-4">
             {stats.recentAnalyses && stats.recentAnalyses.length > 0 ? (
-              stats.recentAnalyses.map((analysis, index) => (
+              stats.recentAnalyses.map((analysis) => (
                 <motion.div 
-                  key={`${analysis._id}-${index}`}
+                  key={analysis._id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
@@ -504,8 +504,8 @@ const DashboardPage: React.FC = () => {
                       ${analysis.category === 'food' ? 'bg-green-100 text-green-800' : 
                         analysis.category === 'cosmetics' ? 'bg-blue-100 text-blue-800' : 
                         'bg-amber-100 text-amber-800'}`}>
-                      {analysis.category === 'food' ? 'ðŸŽ Alimentaire' :
-                       analysis.category === 'cosmetics' ? 'âœ¨ CosmÃ©tique' : 'ðŸ§½ DÃ©tergent'}
+                      {analysis.category === 'food' ? '🍎 Alimentaire' :
+                       analysis.category === 'cosmetics' ? '✨ Cosmétique' : '🧽 Détergent'}
                     </span>
                     <div className="text-right">
                       <span className={`text-2xl font-bold
@@ -521,7 +521,7 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="text-center py-12">
                 <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">Aucune analyse rÃ©cente</p>
+                <p className="text-gray-500">Aucune analyse récente</p>
                 <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
                   Scanner un produit
                 </button>
@@ -548,7 +548,7 @@ const DashboardPage: React.FC = () => {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span className="font-medium">Exporter les donnÃ©es</span>
+            <span className="font-medium">Exporter les données</span>
           </button>
           
           <button className="bg-purple-500 hover:bg-purple-600 text-white rounded-xl p-4 flex items-center justify-center space-x-2 transition-colors">
