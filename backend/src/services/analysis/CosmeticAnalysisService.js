@@ -411,4 +411,4 @@ class CosmeticAnalyzer {
   }
 }
 
-module.exports = new CosmeticAnalyzer();
+module.exports = CosmeticAnalyzer;

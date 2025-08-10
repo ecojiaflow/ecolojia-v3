@@ -692,4 +692,4 @@ class DetergentAnalyzer {
   }
 }
 
-module.exports = new DetergentAnalyzer();
+module.exports = DetergentAnalyzer;

@@ -1,4 +1,4 @@
-// backend/src/middleware/index.js
+// PATH: backend\src\middleware\index.js
 // Point d'entrée unifié pour tous les middlewares ECOLOJIA
 // SOLUTION ROBUSTE POUR PRODUCTION
 

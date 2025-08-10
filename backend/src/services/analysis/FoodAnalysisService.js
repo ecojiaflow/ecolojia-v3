@@ -341,4 +341,4 @@ class FoodAnalyzer {
   }
 }
 
-module.exports = new FoodAnalyzer();
+module.exports = FoodAnalyzer;

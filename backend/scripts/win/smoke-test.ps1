@@ -3,17 +3,23 @@
   [string]$JwtToken = $env:JWT_TOKEN
 )
 
+try {
+  chcp 65001 | Out-Null
+  [Console]::OutputEncoding = [System.Text.UTF8Encoding]::UTF8
+  $OutputEncoding = New-Object System.Text.UTF8Encoding $false
+} catch {}
+
 if (-not $BaseUrl -or $BaseUrl.Trim().Length -eq 0) { $BaseUrl = "http://localhost:5001" }
 
 Write-Host "=== ECOLOJIA Smoke Test ===" -ForegroundColor Cyan
 Write-Host "Base URL: $BaseUrl"
 
-$headers = @{ "Content-Type" = "application/json" }
+$headers = @{ "Accept" = "application/json" }
 if ($JwtToken -and $JwtToken.Trim().Length -gt 0) {
   $headers["Authorization"] = "Bearer $JwtToken"
   Write-Host "JWT: OK" -ForegroundColor DarkGray
 } else {
-  Write-Host "⚠️ Aucun JWT fourni (si 401/403, lance d’abord get-dev-jwt.ps1)" -ForegroundColor Yellow
+  Write-Host "⚠️ Aucun JWT (si 401/403, lance get-dev-jwt.ps1)" -ForegroundColor Yellow
 }
 
 function Show-HttpError($err) {
@@ -21,7 +27,7 @@ function Show-HttpError($err) {
     $status = $err.Response.StatusCode.value__
     Write-Host "Erreur HTTP: $status" -ForegroundColor Red
     try {
-      $reader = New-Object System.IO.StreamReader($err.Response.GetResponseStream())
+      $reader = New-Object System.IO.StreamReader($err.Response.GetResponseStream(), [System.Text.Encoding]::UTF8)
       Write-Host ($reader.ReadToEnd())
     } catch {}
   } else {
@@ -29,30 +35,42 @@ function Show-HttpError($err) {
   }
 }
 
-# 1) Health
+# 0) Service status
 try {
-  $h = Invoke-RestMethod -Method Get -Uri "$BaseUrl/health" -TimeoutSec 20
-  Write-Host "Health OK" -ForegroundColor Green
-} catch { Show-HttpError $_.Exception }
+  $status = Invoke-RestMethod -Method Get -Uri "$BaseUrl/api/analysis/_service/status" -Headers $headers -TimeoutSec 20
+  Write-Host ("Service: {0}" -f ($status.service)) -ForegroundColor DarkGray
+} catch { }
 
-# 2) Payload d’analyse
-$payload = @{
+# 1) PING
+try {
+  Write-Host "POST $BaseUrl/api/analysis/ping" -ForegroundColor Cyan
+  $pingResp = Invoke-RestMethod -Method Post -Uri "$BaseUrl/api/analysis/ping" -Headers ($headers + @{ "Content-Type" = "application/json; charset=utf-8" }) -Body ([System.Text.Encoding]::UTF8.GetBytes("{}")) -TimeoutSec 30
+  Write-Host "Ping OK" -ForegroundColor Green
+  $pingResp | ConvertTo-Json -Depth 5
+} catch { Show-HttpError $_.Exception; Write-Host "⚠️ Ping KO" -ForegroundColor Yellow }
+
+# 2) Payload d’analyse (accents)
+$payloadObj = @{
   name = "Céréales chocolat"
   category = "food"
   ingredients = "Céréales (blé), sucre, cacao, sirop de glucose, E322, arôme"
   createProduct = $false
-} | ConvertTo-Json -Depth 5
+}
+$payload = ($payloadObj | ConvertTo-Json -Depth 5)
 
 function Try-Post($url) {
   Write-Host "POST $url" -ForegroundColor Cyan
   $sw = [System.Diagnostics.Stopwatch]::StartNew()
-  $resp = Invoke-RestMethod -Method Post -Uri $url -Headers $headers -Body $payload -TimeoutSec 120
+  $resp = Invoke-RestMethod -Method Post -Uri $url `
+    -Headers ($headers + @{ "Content-Type" = "application/json; charset=utf-8" }) `
+    -Body ([System.Text.Encoding]::UTF8.GetBytes($payload)) `
+    -TimeoutSec 120
   $sw.Stop()
   Write-Host ("⏱️  Durée: {0} ms" -f $sw.ElapsedMilliseconds) -ForegroundColor DarkGray
   return $resp
 }
 
-# 3) Essai /api/analysis/manual puis fallback /api/analysis
+# 3) /manual puis fallback /
 $response = $null
 try {
   $response = Try-Post "$BaseUrl/api/analysis/manual"
@@ -62,23 +80,18 @@ try {
     Write-Host "→ Fallback vers /api/analysis" -ForegroundColor Yellow
     try { $response = Try-Post "$BaseUrl/api/analysis" } catch { Show-HttpError $_.Exception; exit 1 }
   } elseif ($code -eq 401 -or $code -eq 403) {
-    Show-HttpError $_.Exception
-    Write-Host "`nAstuce: powershell -ExecutionPolicy Bypass -File .\scripts\win\get-dev-jwt.ps1" -ForegroundColor Yellow
-    exit 1
-  } else {
-    Show-HttpError $_.Exception
-    exit 1
-  }
+    Show-HttpError $_.Exception; exit 1
+  } else { Show-HttpError $_.Exception; exit 1 }
 }
 
 Write-Host "Réponse analyse: OK" -ForegroundColor Green
 $response | ConvertTo-Json -Depth 7
 
-if ($response.scores) {
-  $nova = $response.scores.nova
-  $nutri = $response.scores.nutriscore
-  $eco = $response.scores.ecoscore
-  $g = $response.globalScore
-  Write-Host ""
-  Write-Host ("Résumé -> NOVA={0}  Nutri={1}  Eco={2}  Global={3}" -f $nova,$nutri,$eco,$g) -ForegroundColor Magenta
-}
+# Résumé lisant d'abord scores, puis details si manquants
+$nova  = $response.scores.nova
+$nutri = $response.scores.nutriscore; if (-not $nutri) { $nutri = $response.details.nutriscore }
+$eco   = $response.scores.ecoscore;   if (-not $eco)   { $eco   = $response.details.ecoscore }
+$g     = $response.globalScore
+
+Write-Host ""
+Write-Host ("Résumé -> NOVA={0}  Nutri={1}  Eco={2}  Global={3}" -f $nova,$nutri,$eco,$g) -ForegroundColor Magenta

@@ -1,397 +1,379 @@
-// PATH: backend/src/auth/services/AuthService.ts
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+// frontend/src/services/authService.ts
+import apiClient from './apiClient';
+import ConfigService from './configService';
 
-// Import du modèle MongoDB existant
-import User, { IUser } from '../../models/User';
-
-export interface RegisterData {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export interface LoginData {
+interface LoginCredentials {
   email: string;
   password: string;
 }
 
-export interface SessionInfo {
-  ipAddress: string;
-  userAgent: string;
+interface RegisterData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  preferences?: {
+    dietaryRestrictions?: string[];
+    allergies?: string[];
+    interests?: string[];
+  };
 }
 
-export interface AuthResult {
+interface User {
+  _id: string;
+  email: string;
+  profile: {
+    firstName: string;
+    lastName: string;
+    subscription?: {
+      plan: 'free' | 'premium' | 'family';
+      status: 'active' | 'inactive' | 'cancelled';
+      expiresAt?: string;
+    };
+  };
+  preferences?: {
+    dietaryRestrictions?: string[];
+    allergies?: string[];
+    interests?: string[];
+  };
+}
+
+interface AuthResponse {
   success: boolean;
-  user?: any;
-  token?: string;
-  message: string;
+  token: string;
+  refreshToken?: string;
+  user: User;
 }
 
-// Interface pour le payload JWT
-interface JWTPayload {
-  userId: string;
-  email: string;
-  tier: string;
-  iat?: number;
-  exp?: number;
-}
+class AuthService {
+  private static instance: AuthService;
+  private user: User | null = null;
+  private authCheckPromise: Promise<User | null> | null = null;
 
-export class AuthService {
-  private jwtSecret: string;
-  private jwtExpiresIn: string;
-
-  constructor() {
-    this.jwtSecret = process.env.JWT_SECRET || 'ecolojia-jwt-secret-2024';
-    this.jwtExpiresIn = process.env.JWT_EXPIRES_IN || '7d';
+  private constructor() {
+    this.loadUserFromStorage();
   }
 
-  /**
-   * Inscription utilisateur avec validation email
-   */
-  async register(registerData: RegisterData, sessionInfo: SessionInfo): Promise<AuthResult> {
-    try {
-      console.log('📝 Tentative inscription:', registerData.email);
+  static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
+    }
+    return AuthService.instance;
+  }
 
-      // Vérifier si email existe déjà
-      const existingUser = await User.findOne({ email: registerData.email.toLowerCase() });
-
-      if (existingUser) {
-        console.log('❌ Email déjà utilisé:', registerData.email);
-        return {
-          success: false,
-          message: 'Un compte existe déjà avec cet email'
-        };
+  private loadUserFromStorage() {
+    const userStr = localStorage.getItem('ecolojia_user');
+    if (userStr) {
+      try {
+        this.user = JSON.parse(userStr);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        this.clearAuth();
       }
-
-      // Hash du mot de passe
-      const passwordHash = await bcrypt.hash(registerData.password, 12);
-
-      // Créer utilisateur avec MongoDB
-      const user = new User({
-        email: registerData.email.toLowerCase(),
-        password: passwordHash,
-        name: registerData.name,
-        tier: 'free',
-        isEmailVerified: false,
-        
-        // Quotas par défaut pour utilisateur gratuit
-        quotas: {
-          analyses: 30,
-          aiQuestions: 0,
-          exports: 0,
-          apiCalls: 0
-        },
-        
-        // Usage initial
-        usage: {
-          analyses: 0,
-          aiQuestions: 0,
-          exports: 0,
-          apiCalls: 0,
-          lastResetDate: new Date()
-        }
-      });
-
-      // Générer token de vérification email
-      const emailToken = this.generateEmailValidationToken();
-      user.emailVerificationToken = emailToken;
-      user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
-
-      // Sauvegarder l'utilisateur
-      await user.save();
-
-      // Générer token JWT pour session - Utiliser id au lieu de _id
-      const userId = user.id || user._id?.toString() || '';
-      const token = this.generateJWT(userId, user.email, user.tier);
-
-      console.log('✅ Utilisateur créé avec succès:', user.email);
-
-      // TODO: Envoyer email de vérification
-      // await emailService.sendVerificationEmail(user.email, emailToken);
-
-      return {
-        success: true,
-        user: this.sanitizeUser(user),
-        token,
-        message: 'Inscription réussie. Vérifiez votre email pour activer votre compte.'
-      };
-
-    } catch (error: any) {
-      console.error('❌ Registration error:', error);
-      
-      if (error.code === 11000) {
-        return {
-          success: false,
-          message: 'Un compte existe déjà avec cet email'
-        };
-      }
-      
-      return {
-        success: false,
-        message: 'Erreur lors de l\'inscription'
-      };
     }
   }
 
-  /**
-   * Connexion utilisateur
-   */
-  async login(loginData: LoginData, sessionInfo: SessionInfo): Promise<AuthResult> {
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      console.log('🔐 Tentative connexion:', loginData.email);
-
-      // Rechercher utilisateur par email
-      const user = await User.findOne({ email: loginData.email.toLowerCase() });
-
-      if (!user) {
-        console.log('❌ Utilisateur non trouvé:', loginData.email);
-        return {
-          success: false,
-          message: 'Email ou mot de passe incorrect'
+      // En mode démo, simuler une connexion réussie
+      if (ConfigService.isDemo()) {
+        const demoUser: User = {
+          _id: 'demo-user-123',
+          email: credentials.email,
+          profile: {
+            firstName: 'Utilisateur',
+            lastName: 'Démo',
+            subscription: {
+              plan: 'free',
+              status: 'active'
+            }
+          },
+          preferences: {
+            dietaryRestrictions: [],
+            allergies: [],
+            interests: ['santé', 'environnement']
+          }
         };
+
+        const demoResponse: AuthResponse = {
+          success: true,
+          token: 'demo-token-' + Date.now(),
+          refreshToken: 'demo-refresh-token-' + Date.now(),
+          user: demoUser
+        };
+
+        this.setAuth(demoResponse.token, demoResponse.refreshToken || '', demoUser);
+        return demoResponse;
       }
 
-      // Vérifier mot de passe
-      const passwordMatch = await bcrypt.compare(loginData.password, user.password);
-      if (!passwordMatch) {
-        console.log('❌ Mot de passe incorrect pour:', loginData.email);
-        return {
-          success: false,
-          message: 'Email ou mot de passe incorrect'
-        };
+      const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+      
+      if (response.success && response.token) {
+        this.setAuth(response.token, response.refreshToken || '', response.user);
       }
-
-      // Générer token JWT avec le tier de l'utilisateur - Utiliser id au lieu de _id
-      const userId = user.id || user._id?.toString() || '';
-      const token = this.generateJWT(userId, user.email, user.tier);
-
-      // Mettre à jour dernière connexion
-      user.updatedAt = new Date();
-      await user.save();
-
-      console.log('✅ Connexion réussie:', user.email);
-
-      return {
-        success: true,
-        user: this.sanitizeUser(user),
-        token,
-        message: 'Connexion réussie'
-      };
-
+      
+      return response;
     } catch (error: any) {
-      console.error('❌ Login error:', error);
-      return {
-        success: false,
-        message: 'Erreur lors de la connexion'
-      };
+      console.error('Login error:', error);
+      
+      // Si le backend n'est pas accessible, passer en mode démo
+      if (error.message?.includes('ERR_CONNECTION_REFUSED') || error.message?.includes('Failed to fetch')) {
+        ConfigService.setMode('demo');
+        return this.login(credentials);
+      }
+      
+      throw error;
     }
   }
 
-  /**
-   * Déconnexion utilisateur
-   */
-  async logout(token: string): Promise<AuthResult> {
+  async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      // Avec JWT, pas besoin de gérer côté serveur
-      // Le client supprime simplement le token
-      
-      console.log('✅ Déconnexion effectuée');
-      
-      return {
-        success: true,
-        message: 'Déconnexion réussie'
-      };
+      // En mode démo, simuler une inscription réussie
+      if (ConfigService.isDemo()) {
+        const demoUser: User = {
+          _id: 'demo-user-' + Date.now(),
+          email: data.email,
+          profile: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            subscription: {
+              plan: 'free',
+              status: 'active'
+            }
+          },
+          preferences: data.preferences || {
+            dietaryRestrictions: [],
+            allergies: [],
+            interests: []
+          }
+        };
 
+        const demoResponse: AuthResponse = {
+          success: true,
+          token: 'demo-token-' + Date.now(),
+          refreshToken: 'demo-refresh-token-' + Date.now(),
+          user: demoUser
+        };
+
+        this.setAuth(demoResponse.token, demoResponse.refreshToken || '', demoUser);
+        return demoResponse;
+      }
+
+      const response = await apiClient.post<AuthResponse>('/auth/register', data);
+      
+      if (response.success && response.token) {
+        this.setAuth(response.token, response.refreshToken || '', response.user);
+      }
+      
+      return response;
     } catch (error: any) {
-      console.error('❌ Logout error:', error);
-      return {
-        success: false,
-        message: 'Erreur lors de la déconnexion'
-      };
+      console.error('Register error:', error);
+      
+      // Si le backend n'est pas accessible, passer en mode démo
+      if (error.message?.includes('ERR_CONNECTION_REFUSED') || error.message?.includes('Failed to fetch')) {
+        ConfigService.setMode('demo');
+        return this.register(data);
+      }
+      
+      throw error;
     }
   }
 
-  /**
-   * Récupérer utilisateur par token JWT
-   */
-  async getUserFromToken(token: string): Promise<IUser | null> {
+  async logout(): Promise<void> {
     try {
-      // Vérifier token JWT
-      const decoded = jwt.verify(token, this.jwtSecret) as JWTPayload;
-      
-      // Récupérer utilisateur depuis MongoDB
-      const user = await User.findById(decoded.userId);
+      const token = this.getToken();
+      if (token && !ConfigService.isDemo()) {
+        await apiClient.post('/auth/logout', {});
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      this.clearAuth();
+    }
+  }
 
-      if (!user) {
-        console.log('❌ Utilisateur non trouvé pour ID:', decoded.userId);
+  async refreshToken(): Promise<string | null> {
+    try {
+      const refreshToken = localStorage.getItem('ecolojia_refresh_token');
+      if (!refreshToken || ConfigService.isDemo()) {
         return null;
       }
 
-      return user;
+      const response = await apiClient.post<{ token: string; refreshToken: string }>('/auth/refresh', {
+        refreshToken
+      });
 
+      if (response.token) {
+        localStorage.setItem('ecolojia_token', response.token);
+        if (response.refreshToken) {
+          localStorage.setItem('ecolojia_refresh_token', response.refreshToken);
+        }
+        return response.token;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      this.clearAuth();
+      return null;
+    }
+  }
+
+  async getProfile(): Promise<User | null> {
+    try {
+      if (ConfigService.isDemo()) {
+        return this.user;
+      }
+
+      const token = this.getToken();
+      if (!token) {
+        return null;
+      }
+
+      // Utiliser /auth/profile au lieu de /auth/me si c'est l'endpoint correct
+      const response = await apiClient.get<User>('/auth/profile');
+      
+      if (response) {
+        this.user = response;
+        localStorage.setItem('ecolojia_user', JSON.stringify(response));
+        return response;
+      }
+      
+      return null;
     } catch (error: any) {
-      if (error.name === 'TokenExpiredError') {
-        console.log('❌ Token expiré');
-      } else if (error.name === 'JsonWebTokenError') {
-        console.log('❌ Token invalide');
-      } else {
-        console.error('❌ Token verification error:', error);
+      console.error('Get profile error:', error);
+      
+      // Si c'est une erreur 404, essayer un autre endpoint ou utiliser les données en cache
+      if (error.statusCode === 404 || error.message?.includes('404')) {
+        console.log('Profile endpoint not found, using cached user data');
+        return this.user;
       }
-      return null;
+      
+      // Si c'est une erreur 401, le token est invalide
+      if (error.statusCode === 401) {
+        this.clearAuth();
+      }
+      
+      throw error;
     }
   }
 
-  /**
-   * Vérifier email avec token
-   */
-  async verifyEmail(token: string): Promise<AuthResult> {
+  async updateProfile(data: Partial<User>): Promise<User> {
     try {
-      const user = await User.findOne({
-        emailVerificationToken: token,
-        emailVerificationExpires: { $gt: Date.now() }
-      });
-
-      if (!user) {
-        return {
-          success: false,
-          message: 'Token invalide ou expiré'
-        };
-      }
-
-      // Marquer comme vérifié
-      user.isEmailVerified = true;
-      user.emailVerificationToken = undefined;
-      user.emailVerificationExpires = undefined;
-      await user.save();
-
-      console.log('✅ Email vérifié pour:', user.email);
-
-      return {
-        success: true,
-        message: 'Email vérifié avec succès'
-      };
-
-    } catch (error) {
-      console.error('❌ Email verification error:', error);
-      return {
-        success: false,
-        message: 'Erreur lors de la vérification'
-      };
-    }
-  }
-
-  /**
-   * Réinitialisation mot de passe - Demande
-   */
-  async requestPasswordReset(email: string): Promise<AuthResult> {
-    try {
-      const user = await User.findOne({ email: email.toLowerCase() });
-
-      if (!user) {
-        // Ne pas révéler si l'email existe
-        return {
-          success: true,
-          message: 'Si cet email existe, vous recevrez un lien de réinitialisation'
-        };
+      if (ConfigService.isDemo()) {
+        if (this.user) {
+          this.user = { ...this.user, ...data };
+          localStorage.setItem('ecolojia_user', JSON.stringify(this.user));
+        }
+        return this.user!;
       }
 
-      // Générer token de reset
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      user.resetPasswordToken = resetToken;
-      user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
-      await user.save();
-
-      // TODO: Envoyer email
-      // await emailService.sendPasswordResetEmail(user.email, resetToken);
-
-      return {
-        success: true,
-        message: 'Si cet email existe, vous recevrez un lien de réinitialisation'
-      };
-
+      const response = await apiClient.put<User>('/auth/profile', data);
+      
+      if (response) {
+        this.user = response;
+        localStorage.setItem('ecolojia_user', JSON.stringify(response));
+      }
+      
+      return response;
     } catch (error) {
-      console.error('❌ Password reset request error:', error);
-      return {
-        success: false,
-        message: 'Erreur lors de la demande'
-      };
+      console.error('Update profile error:', error);
+      throw error;
     }
   }
 
-  /**
-   * Réinitialisation mot de passe - Confirmation
-   */
-  async resetPassword(token: string, newPassword: string): Promise<AuthResult> {
-    try {
-      const user = await User.findOne({
-        resetPasswordToken: token,
-        resetPasswordExpires: { $gt: Date.now() }
-      });
+  async checkAuthStatus(): Promise<User | null> {
+    // Éviter les appels multiples simultanés
+    if (this.authCheckPromise) {
+      return this.authCheckPromise;
+    }
 
-      if (!user) {
-        return {
-          success: false,
-          message: 'Token invalide ou expiré'
-        };
+    this.authCheckPromise = this._checkAuthStatus();
+    
+    try {
+      const result = await this.authCheckPromise;
+      return result;
+    } finally {
+      this.authCheckPromise = null;
+    }
+  }
+
+  private async _checkAuthStatus(): Promise<User | null> {
+    try {
+      const token = this.getToken();
+      
+      if (!token) {
+        return null;
       }
 
-      // Hash nouveau mot de passe
-      user.password = await bcrypt.hash(newPassword, 12);
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpires = undefined;
-      await user.save();
+      if (ConfigService.isDemo()) {
+        return this.user;
+      }
 
-      return {
-        success: true,
-        message: 'Mot de passe réinitialisé avec succès'
-      };
-
+      // Essayer de récupérer le profil
+      try {
+        const user = await this.getProfile();
+        return user;
+      } catch (profileError: any) {
+        console.log('Profile fetch failed:', profileError.message);
+        
+        // Si le profil échoue mais qu'on a un utilisateur en cache, l'utiliser
+        if (this.user) {
+          console.log('Using cached user data');
+          return this.user;
+        }
+        
+        // Si c'est une erreur 401, nettoyer l'auth
+        if (profileError.statusCode === 401) {
+          this.clearAuth();
+          return null;
+        }
+        
+        // Pour toute autre erreur, garder l'utilisateur en cache s'il existe
+        return this.user;
+      }
     } catch (error) {
-      console.error('❌ Password reset error:', error);
-      return {
-        success: false,
-        message: 'Erreur lors de la réinitialisation'
-      };
+      console.error('Check auth status error:', error);
+      return this.user; // Retourner l'utilisateur en cache s'il existe
     }
   }
 
-  /**
-   * Obtenir le profil utilisateur
-   */
-  async getProfile(userId: string): Promise<IUser | null> {
-    try {
-      const user = await User.findById(userId);
-      return user;
-    } catch (error) {
-      console.error('❌ Get profile error:', error);
-      return null;
+  private setAuth(token: string, refreshToken: string, user: User) {
+    localStorage.setItem('ecolojia_token', token);
+    if (refreshToken) {
+      localStorage.setItem('ecolojia_refresh_token', refreshToken);
     }
+    localStorage.setItem('ecolojia_user', JSON.stringify(user));
+    this.user = user;
   }
 
-  // === MÉTHODES UTILITAIRES ===
-
-  
-
-  private generateRefreshToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+  private clearAuth() {
+    localStorage.removeItem('ecolojia_token');
+    localStorage.removeItem('ecolojia_refresh_token');
+    localStorage.removeItem('ecolojia_user');
+    this.user = null;
   }
 
-  private generateEmailValidationToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+  getToken(): string | null {
+    return localStorage.getItem('ecolojia_token');
   }
 
-  private sanitizeUser(user: IUser) {
-    const userObject = user.toObject();
-    delete userObject.password;
-    delete userObject.emailVerificationToken;
-    delete userObject.resetPasswordToken;
-    return userObject;
+  getUser(): User | null {
+    return this.user;
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken() && !!this.user;
+  }
+
+  isPremium(): boolean {
+    return this.user?.profile?.subscription?.plan === 'premium' || 
+           this.user?.profile?.subscription?.plan === 'family';
+  }
+
+  hasActiveSubscription(): boolean {
+    return this.user?.profile?.subscription?.status === 'active';
   }
 }
 
-export const authService = new AuthService();
-
-
-
+export default AuthService.getInstance();

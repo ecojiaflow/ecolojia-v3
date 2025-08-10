@@ -1,595 +1,431 @@
-// backend/src/services/vision/VisionService.js
-// Service OCR avec Google Vision API réel
-
+// PATH: backend\src\services\vision\VisionService.js
 const vision = require('@google-cloud/vision');
 const sharp = require('sharp');
-const crypto = require('crypto');
-const Redis = require('redis');
-const { promisify } = require('util');
+const fs = require('fs').promises;
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 class VisionService {
   constructor() {
-    // Initialiser Google Vision avec les credentials
-    this.client = new vision.ImageAnnotatorClient({
-      keyFilename: process.env.GOOGLE_CLOUD_KEYFILE,
-      projectId: process.env.GOOGLE_CLOUD_PROJECT_ID
-    });
+    this.googleVisionClient = null;
+    this.tesseractWorker = null;
+    this.initializeClients();
+  }
 
-    // Redis pour le cache
-    this.redis = Redis.createClient({
-      url: process.env.REDIS_URL,
-      tls: process.env.REDIS_TLS === 'true' ? {} : undefined
-    });
-    
-    this.redis.on('error', (err) => {
-      console.log('Redis Client Error', err);
-    });
+  async initializeClients() {
+    try {
+      // Google Vision
+      if (process.env.GOOGLE_CLOUD_KEYFILE) {
+        this.googleVisionClient = new vision.ImageAnnotatorClient({
+          keyFilename: process.env.GOOGLE_CLOUD_KEYFILE
+        });
+        console.log('✅ Google Vision client initialisé');
+      } else {
+        console.warn('⚠️ GOOGLE_CLOUD_KEYFILE non configuré - fallback Tesseract uniquement');
+      }
+    } catch (error) {
+      console.error('❌ Erreur init Google Vision:', error.message);
+    }
+  }
 
-    // Promisify Redis methods
-    this.redisGet = promisify(this.redis.get).bind(this.redis);
-    this.redisSet = promisify(this.redis.set).bind(this.redis);
-    this.redisSetex = promisify(this.redis.setex).bind(this.redis);
+  async initializeTesseract() {
+    if (!this.tesseractWorker) {
+      try {
+        const Tesseract = await import('tesseract.js');
+        const { createWorker } = Tesseract.default || Tesseract;
+        
+        this.tesseractWorker = await createWorker('fra+eng', 1, {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              console.log(`[Tesseract] Progress: ${Math.round(m.progress * 100)}%`);
+            }
+          }
+        });
+        console.log('✅ Tesseract worker initialisé');
+      } catch (error) {
+        console.error('❌ Erreur init Tesseract:', error.message);
+        throw error;
+      }
+    }
+    return this.tesseractWorker;
   }
 
   /**
-   * Analyse une image avec Google Vision API
-   * @param {Buffer|String} image - Buffer de l'image ou chemin
-   * @param {Object} options - Options d'analyse
+   * Amélioration d'image pour OCR
    */
-  async analyzeImage(image, options = {}) {
+  async enhanceImage(imagePath) {
+    const outputPath = imagePath.replace(/\.[^.]+$/, '_enhanced.jpg');
+    
     try {
-      const {
-        detectText = true,
-        detectLabels = true,
-        detectLogos = true,
-        detectProducts = false,
-        language = 'fr'
-      } = options;
-
-      // Créer un hash pour le cache
-      const imageHash = crypto.createHash('md5')
-        .update(Buffer.isBuffer(image) ? image : image.toString())
-        .digest('hex');
+      await sharp(imagePath)
+        .resize(2000, null, { 
+          withoutEnlargement: true,
+          fit: 'inside'
+        })
+        .normalize()
+        .sharpen()
+        .modulate({
+          brightness: 1.1,
+          contrast: 1.2
+        })
+        .greyscale()
+        .jpeg({ quality: 95 })
+        .toFile(outputPath);
       
-      const cacheKey = `vision:${imageHash}`;
+      return outputPath;
+    } catch (error) {
+      console.error('Erreur enhancement:', error);
+      return imagePath; // Fallback image originale
+    }
+  }
 
-      // Vérifier le cache
-      try {
-        const cached = await this.redisGet(cacheKey);
-        if (cached) {
-          console.log('🎯 Vision result from cache');
-          return JSON.parse(cached);
-        }
-      } catch (cacheError) {
-        console.warn('Cache error:', cacheError);
-      }
+  /**
+   * Analyse avec Google Vision
+   */
+  async analyzeWithGoogleVision(imagePath, language = 'fr') {
+    if (!this.googleVisionClient) {
+      return null;
+    }
 
-      // Préparer l'image pour l'API
-      const imageContent = Buffer.isBuffer(image) ? image : await this.loadImage(image);
-      
-      // Optimiser l'image si elle est trop grande
-      const optimizedImage = await this.optimizeImage(imageContent);
-
-      // Construire les features à détecter
-      const features = [];
-      if (detectText) features.push({ type: 'TEXT_DETECTION', maxResults: 1 });
-      if (detectLabels) features.push({ type: 'LABEL_DETECTION', maxResults: 10 });
-      if (detectLogos) features.push({ type: 'LOGO_DETECTION', maxResults: 5 });
-      if (detectProducts) features.push({ type: 'PRODUCT_SEARCH', maxResults: 5 });
-
-      // Appel à Google Vision API
-      console.log('🔍 Calling Google Vision API...');
-      const [result] = await this.client.annotateImage({
-        image: {
-          content: optimizedImage.toString('base64')
-        },
-        features,
+    try {
+      const [result] = await this.googleVisionClient.textDetection({
+        image: { source: { filename: imagePath } },
         imageContext: {
-          languageHints: [language]
+          languageHints: [language, 'en']
         }
       });
 
-      // Traiter les résultats
-      const processedResult = {
-        success: true,
-        timestamp: new Date().toISOString(),
-        data: {
-          text: this.processTextDetection(result),
-          labels: this.processLabels(result),
-          logos: this.processLogos(result),
-          products: detectProducts ? this.processProducts(result) : null,
-          extractedInfo: this.extractProductInfo(result)
-        },
-        confidence: this.calculateOverallConfidence(result)
-      };
+      const fullText = result.fullTextAnnotation?.text || '';
+      const confidence = this.calculateGoogleConfidence(result);
 
-      // Mettre en cache pour 1 heure
-      try {
-        await this.redisSetex(cacheKey, 3600, JSON.stringify(processedResult));
-      } catch (cacheError) {
-        console.warn('Failed to cache result:', cacheError);
-      }
-
-      return processedResult;
-
-    } catch (error) {
-      console.error('❌ Google Vision API error:', error);
-      
-      // Si l'API échoue, essayer avec Tesseract en fallback
-      if (options.fallbackToTesseract !== false) {
-        console.log('🔄 Falling back to Tesseract...');
-        return this.analyzeWithTesseract(image);
-      }
-      
-      throw error;
-    }
-  }
-
-  /**
-   * Optimise l'image avant l'envoi à l'API
-   */
-  async optimizeImage(imageBuffer) {
-    try {
-      const metadata = await sharp(imageBuffer).metadata();
-      
-      // Si l'image est trop grande, la redimensionner
-      if (metadata.width > 4096 || metadata.height > 4096) {
-        return await sharp(imageBuffer)
-          .resize(4096, 4096, {
-            fit: 'inside',
-            withoutEnlargement: true
-          })
-          .jpeg({ quality: 85 })
-          .toBuffer();
-      }
-      
-      // Améliorer le contraste pour une meilleure OCR
-      return await sharp(imageBuffer)
-        .normalize()
-        .sharpen()
-        .jpeg({ quality: 90 })
-        .toBuffer();
-        
-    } catch (error) {
-      console.warn('Image optimization failed:', error);
-      return imageBuffer;
-    }
-  }
-
-  /**
-   * Traite la détection de texte
-   */
-  processTextDetection(result) {
-    const textAnnotation = result.fullTextAnnotation;
-    
-    if (!textAnnotation) {
       return {
-        fullText: '',
-        blocks: [],
-        confidence: 0
+        text: fullText,
+        confidence,
+        blocks: result.textAnnotations || [],
+        service: 'google_vision'
+      };
+    } catch (error) {
+      console.error('Erreur Google Vision:', error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Analyse avec Tesseract
+   */
+  async analyzeWithTesseract(imagePath, language = 'fra') {
+    try {
+      const worker = await this.initializeTesseract();
+      
+      // Améliorer l'image avant OCR
+      const enhancedPath = await this.enhanceImage(imagePath);
+      
+      const { data } = await worker.recognize(enhancedPath);
+      
+      // Nettoyer l'image améliorée
+      if (enhancedPath !== imagePath) {
+        await fs.unlink(enhancedPath).catch(() => {});
+      }
+
+      return {
+        text: data.text,
+        confidence: data.confidence / 100,
+        blocks: data.words || [],
+        service: 'tesseract'
+      };
+    } catch (error) {
+      console.error('Erreur Tesseract:', error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Fusion des résultats Google Vision et Tesseract
+   */
+  mergeResults(googleResult, tesseractResult) {
+    // Si un seul résultat disponible
+    if (!googleResult) return tesseractResult;
+    if (!tesseractResult) return googleResult;
+
+    // Prioriser Google Vision si confiance > 0.7
+    if (googleResult.confidence > 0.7) {
+      return {
+        ...googleResult,
+        alternativeText: tesseractResult.text,
+        mergedConfidence: (googleResult.confidence + tesseractResult.confidence) / 2
       };
     }
+
+    // Sinon, utiliser le plus confiant
+    const bestResult = googleResult.confidence > tesseractResult.confidence 
+      ? googleResult 
+      : tesseractResult;
+
+    const alternativeResult = googleResult.confidence > tesseractResult.confidence 
+      ? tesseractResult 
+      : googleResult;
 
     return {
-      fullText: textAnnotation.text,
-      blocks: textAnnotation.pages?.[0]?.blocks?.map(block => ({
-        text: block.paragraphs?.map(p => 
-          p.words?.map(w => 
-            w.symbols?.map(s => s.text).join('')
-          ).join(' ')
-        ).join('\n'),
-        confidence: block.confidence || 0,
-        boundingBox: block.boundingBox
-      })) || [],
-      confidence: this.calculateTextConfidence(textAnnotation)
+      ...bestResult,
+      alternativeText: alternativeResult.text,
+      mergedConfidence: (googleResult.confidence + tesseractResult.confidence) / 2,
+      usedFallback: true
     };
   }
 
   /**
-   * Traite les labels détectés
+   * Extraction de données structurées
    */
-  processLabels(result) {
-    return (result.labelAnnotations || []).map(label => ({
-      description: label.description,
-      score: label.score,
-      topicality: label.topicality
-    }));
-  }
-
-  /**
-   * Traite les logos détectés
-   */
-  processLogos(result) {
-    return (result.logoAnnotations || []).map(logo => ({
-      description: logo.description,
-      score: logo.score,
-      boundingBox: logo.boundingPoly
-    }));
-  }
-
-  /**
-   * Extrait les informations produit du texte
-   */
-  extractProductInfo(result) {
-    const text = result.fullTextAnnotation?.text || '';
-    
-    if (!text) {
+  extractStructuredData(visionResult) {
+    if (!visionResult || !visionResult.text) {
       return {
         name: null,
         brand: null,
         ingredients: null,
-        nutritionalInfo: null,
         barcode: null,
-        category: null
+        category: null,
+        hasNutritionalInfo: false
       };
     }
 
+    const text = visionResult.text;
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+
+    // Extraction du nom (premières lignes, souvent plus grosses)
+    const name = this.extractProductName(lines);
+
+    // Extraction de la marque
+    const brand = this.extractBrand(lines, text);
+
+    // Extraction des ingrédients
+    const ingredients = this.extractIngredients(text);
+
+    // Extraction du code-barres
+    const barcode = this.extractBarcode(text);
+
+    // Détection de la catégorie
+    const category = this.detectCategory(text, ingredients);
+
+    // Détection infos nutritionnelles
+    const hasNutritionalInfo = this.hasNutritionalInfo(text);
+
     return {
-      name: this.extractProductName(text, result.logoAnnotations),
-      brand: this.extractBrand(text, result.logoAnnotations),
-      ingredients: this.extractIngredients(text),
-      nutritionalInfo: this.extractNutritionalInfo(text),
-      barcode: this.extractBarcode(text),
-      category: this.detectCategory(text, result.labelAnnotations)
+      name,
+      brand,
+      ingredients,
+      barcode,
+      category,
+      hasNutritionalInfo,
+      confidence: visionResult.confidence || 0
     };
   }
 
-  /**
-   * Extrait le nom du produit
-   */
-  extractProductName(text, logos) {
-    // Patterns pour identifier le nom du produit
-    const lines = text.split('\n').filter(line => line.trim());
-    
-    // Rechercher les lignes en majuscules ou avec une taille importante
-    const candidateNames = lines.filter(line => {
-      const upperRatio = (line.match(/[A-Z]/g) || []).length / line.length;
-      return upperRatio > 0.5 && line.length > 3 && line.length < 50;
-    });
+  extractProductName(lines) {
+    // Prendre les 2-3 premières lignes significatives
+    const candidates = lines.slice(0, 5).filter(line => 
+      line.length > 3 && 
+      !line.match(/^(ingredients|ingrédients|composition)/i) &&
+      !line.match(/^\d+\s*[gml]/i)
+    );
 
-    // Si on a des logos, privilégier les lignes proches
-    if (logos && logos.length > 0 && candidateNames.length > 0) {
-      return candidateNames[0];
-    }
-
-    // Sinon prendre la première ligne significative
-    return candidateNames[0] || lines.find(l => l.length > 5 && l.length < 50) || null;
+    return candidates[0] || null;
   }
 
-  /**
-   * Extrait la marque
-   */
-  extractBrand(text, logos) {
-    // Si on a des logos détectés, les utiliser
-    if (logos && logos.length > 0) {
-      return logos[0].description;
-    }
-
-    // Sinon chercher des patterns de marques connues
+  extractBrand(lines, fullText) {
+    // Patterns de marques connues (à enrichir)
     const brandPatterns = [
-      /(?:marque|brand|fabriqué par|produit par)[:\s]+([^\n]+)/i,
-      /^([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*)/m
+      /\b(Nestlé|Danone|Unilever|L'Oréal|Garnier|Nivea|Dove|Ariel|Skip)\b/i,
+      /\bmarque\s*:\s*([^\n]+)/i,
+      /\bbrand\s*:\s*([^\n]+)/i
     ];
 
     for (const pattern of brandPatterns) {
-      const match = text.match(pattern);
+      const match = fullText.match(pattern);
       if (match) return match[1].trim();
     }
 
-    return null;
+    // Heuristique: souvent en majuscules dans les premières lignes
+    const upperCaseLines = lines.slice(0, 3).filter(line => 
+      line === line.toUpperCase() && line.length > 2
+    );
+    
+    return upperCaseLines[0] || null;
   }
 
-  /**
-   * Extrait les ingrédients
-   */
   extractIngredients(text) {
-    // Patterns multilingues pour les ingrédients
+    // Patterns multilingues pour ingrédients
     const patterns = [
-      /ingrédients?\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|valeurs|nutritional|allergen)/i,
-      /composition\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|valeurs|nutritional)/i,
-      /ingredients?\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|nutrition|allergen)/i
+      /ingrédients\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|valeurs|nutrition|$)/is,
+      /ingredients\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|values|nutrition|$)/is,
+      /composition\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|$)/is
     ];
 
     for (const pattern of patterns) {
       const match = text.match(pattern);
       if (match) {
-        // Nettoyer et formater les ingrédients
-        return match[1]
-          .trim()
+        const ingredients = match[1]
+          .replace(/\n/g, ' ')
           .replace(/\s+/g, ' ')
-          .replace(/\*/g, '')
-          .replace(/\([^)]*\)/g, match => match.replace(/,/g, ';')); // Préserver les virgules dans les parenthèses
+          .trim();
+        
+        if (ingredients.length > 10) {
+          return ingredients;
+        }
       }
     }
 
     return null;
   }
 
-  /**
-   * Extrait les informations nutritionnelles
-   */
-  extractNutritionalInfo(text) {
-    const nutritionalData = {};
-    
-    // Patterns pour les valeurs nutritionnelles
-    const patterns = {
-      energy: /(?:énergie|energy|calories?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*(?:kcal|cal)/i,
-      fat: /(?:matières grasses|graisses?|fat|lipides?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      saturatedFat: /(?:acides gras saturés|saturated|saturés)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      carbohydrates: /(?:glucides?|carbohydrates?|sucres totaux)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      sugars: /(?:dont sucres|sugars?|sucres)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      fiber: /(?:fibres?|fiber)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      protein: /(?:protéines?|proteins?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      salt: /(?:sel|salt|sodium)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i
-    };
-
-    Object.entries(patterns).forEach(([key, pattern]) => {
-      const match = text.match(pattern);
-      if (match) {
-        nutritionalData[key] = parseFloat(match[1].replace(',', '.'));
-      }
-    });
-
-    return Object.keys(nutritionalData).length > 0 ? nutritionalData : null;
-  }
-
-  /**
-   * Extrait le code-barres
-   */
   extractBarcode(text) {
-    // Patterns pour codes-barres EAN-13, EAN-8, UPC
-    const barcodePatterns = [
-      /\b(\d{13})\b/,  // EAN-13
-      /\b(\d{12})\b/,  // UPC-A
-      /\b(\d{8})\b/    // EAN-8
-    ];
-
-    for (const pattern of barcodePatterns) {
-      const matches = text.match(new RegExp(pattern, 'g'));
-      if (matches) {
-        // Valider avec checksum si possible
-        const validBarcode = matches.find(code => this.isValidBarcode(code));
-        if (validBarcode) return validBarcode;
+    // EAN-13 ou EAN-8
+    const barcodePattern = /\b(\d{8}|\d{13})\b/g;
+    const matches = text.match(barcodePattern);
+    
+    if (matches) {
+      // Vérifier la validité EAN
+      for (const match of matches) {
+        if (this.isValidEAN(match)) {
+          return match;
+        }
       }
     }
-
+    
     return null;
   }
 
-  /**
-   * Valide un code-barres avec checksum
-   */
-  isValidBarcode(code) {
-    if (code.length !== 8 && code.length !== 12 && code.length !== 13) {
-      return false;
-    }
-
-    // Validation EAN/UPC checksum
-    const digits = code.split('').map(Number);
-    const checkDigit = digits.pop();
+  isValidEAN(code) {
+    if (code.length !== 8 && code.length !== 13) return false;
     
     let sum = 0;
-    digits.forEach((digit, index) => {
-      sum += digit * (index % 2 === 0 ? 1 : 3);
-    });
-    
-    const calculatedCheck = (10 - (sum % 10)) % 10;
-    return calculatedCheck === checkDigit;
-  }
-
-  /**
-   * Détecte la catégorie du produit
-   */
-  detectCategory(text, labels) {
-    const textLower = text.toLowerCase();
-    
-    // Score pour chaque catégorie
-    const categoryScores = {
-      food: 0,
-      cosmetic: 0,
-      detergent: 0
-    };
-
-    // Analyse des labels
-    if (labels) {
-      labels.forEach(label => {
-        const desc = label.description.toLowerCase();
-        if (['food', 'aliment', 'nourriture', 'beverage', 'drink'].some(w => desc.includes(w))) {
-          categoryScores.food += label.score * 10;
-        }
-        if (['cosmetic', 'beauty', 'skin', 'hair', 'makeup'].some(w => desc.includes(w))) {
-          categoryScores.cosmetic += label.score * 10;
-        }
-        if (['cleaning', 'detergent', 'household'].some(w => desc.includes(w))) {
-          categoryScores.detergent += label.score * 10;
-        }
-      });
-    }
-
-    // Analyse du texte
-    const foodKeywords = ['ingrédients', 'nutritionnel', 'kcal', 'protéines', 'glucides'];
-    const cosmeticKeywords = ['aqua', 'parfum', 'inci', 'appliquer', 'peau', 'cheveux'];
-    const detergentKeywords = ['tensioactif', 'lessive', 'nettoyer', 'détergent', 'usage domestique'];
-
-    foodKeywords.forEach(kw => {
-      if (textLower.includes(kw)) categoryScores.food += 5;
-    });
-    
-    cosmeticKeywords.forEach(kw => {
-      if (textLower.includes(kw)) categoryScores.cosmetic += 5;
-    });
-    
-    detergentKeywords.forEach(kw => {
-      if (textLower.includes(kw)) categoryScores.detergent += 5;
-    });
-
-    // Retourner la catégorie avec le score le plus élevé
-    const maxScore = Math.max(...Object.values(categoryScores));
-    if (maxScore === 0) return null;
-
-    return Object.entries(categoryScores)
-      .find(([_, score]) => score === maxScore)[0];
-  }
-
-  /**
-   * Calcule la confiance globale
-   */
-  calculateOverallConfidence(result) {
-    const confidences = [];
-    
-    // Confiance du texte
-    if (result.fullTextAnnotation) {
-      const textConfidence = this.calculateTextConfidence(result.fullTextAnnotation);
-      confidences.push(textConfidence);
+    for (let i = 0; i < code.length - 1; i++) {
+      sum += parseInt(code[i]) * (i % 2 === 0 ? 1 : 3);
     }
     
-    // Confiance des labels
-    if (result.labelAnnotations && result.labelAnnotations.length > 0) {
-      const avgLabelScore = result.labelAnnotations
-        .reduce((sum, label) => sum + label.score, 0) / result.labelAnnotations.length;
-      confidences.push(avgLabelScore);
-    }
+    const checkDigit = (10 - (sum % 10)) % 10;
+    return checkDigit === parseInt(code[code.length - 1]);
+  }
 
-    // Moyenne des confiances
-    if (confidences.length === 0) return 0;
+  detectCategory(text, ingredients) {
+    const lowerText = text.toLowerCase();
     
-    return confidences.reduce((sum, conf) => sum + conf, 0) / confidences.length;
-  }
-
-  /**
-   * Calcule la confiance du texte
-   */
-  calculateTextConfidence(textAnnotation) {
-    if (!textAnnotation.pages || textAnnotation.pages.length === 0) {
-      return 0;
+    // Détection alimentaire
+    if (ingredients && ingredients.match(/sucre|sel|farine|lait|œuf|huile/i)) {
+      return 'food';
     }
-
-    const page = textAnnotation.pages[0];
-    const confidences = [];
-
-    // Collecter toutes les confiances des mots
-    page.blocks?.forEach(block => {
-      block.paragraphs?.forEach(paragraph => {
-        paragraph.words?.forEach(word => {
-          if (word.confidence !== undefined) {
-            confidences.push(word.confidence);
-          }
-        });
-      });
-    });
-
-    if (confidences.length === 0) return 0.5;
     
-    return confidences.reduce((sum, conf) => sum + conf, 0) / confidences.length;
-  }
-
-  /**
-   * Fallback avec Tesseract si Google Vision échoue
-   */
-  async analyzeWithTesseract(image) {
-    try {
-      const Tesseract = require('tesseract.js');
-      
-      console.log('🔄 Using Tesseract OCR...');
-      
-      const { data } = await Tesseract.recognize(
-        image,
-        'fra+eng',
-        {
-          logger: m => console.log(m)
-        }
-      );
-
-      return {
-        success: true,
-        timestamp: new Date().toISOString(),
-        fallback: true,
-        data: {
-          text: {
-            fullText: data.text,
-            blocks: data.blocks?.map(block => ({
-              text: block.text,
-              confidence: block.confidence / 100,
-              boundingBox: block.bbox
-            })) || [],
-            confidence: data.confidence / 100
-          },
-          labels: [],
-          logos: [],
-          products: null,
-          extractedInfo: this.extractProductInfo({
-            fullTextAnnotation: { text: data.text }
-          })
-        },
-        confidence: data.confidence / 100
-      };
-
-    } catch (error) {
-      console.error('❌ Tesseract error:', error);
-      throw new Error('Analyse OCR échouée');
+    // Détection cosmétique
+    if (lowerText.match(/aqua|glycerin|parfum|paraben|sodium|lotion|crème|cream|shampoo/)) {
+      return 'cosmetics';
     }
-  }
-
-  /**
-   * Charge une image depuis un chemin
-   */
-  async loadImage(imagePath) {
-    const fs = require('fs').promises;
-    return await fs.readFile(imagePath);
-  }
-
-  /**
-   * Analyse une image uploadée via l'API
-   */
-  async analyzeUploadedImage(fileBuffer, mimetype) {
-    // Vérifier le type de fichier
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(mimetype)) {
-      throw new Error('Format d\'image non supporté');
-    }
-
-    // Analyser avec les options par défaut
-    return await this.analyzeImage(fileBuffer, {
-      detectText: true,
-      detectLabels: true,
-      detectLogos: true,
-      detectProducts: false, // Désactivé par défaut (coûteux)
-      language: 'fr'
-    });
-  }
-
-  /**
-   * Extrait et structure toutes les données pour un produit
-   */
-  async extractProductData(imageBuffer, options = {}) {
-    const analysis = await this.analyzeImage(imageBuffer, options);
     
-    if (!analysis.success) {
-      throw new Error('Analyse échouée');
+    // Détection détergent
+    if (lowerText.match(/tensioactif|surfactant|lessive|detergent|nettoyant|javel|savon/)) {
+      return 'detergents';
     }
-
-    const { extractedInfo } = analysis.data;
     
-    return {
-      confidence: analysis.confidence,
-      data: {
-        name: extractedInfo.name,
-        brand: extractedInfo.brand,
-        category: extractedInfo.category,
-        barcode: extractedInfo.barcode,
-        ingredients: extractedInfo.ingredients,
-        nutritionalInfo: extractedInfo.nutritionalInfo,
-        rawText: analysis.data.text.fullText
-      },
-      metadata: {
-        timestamp: analysis.timestamp,
-        method: analysis.fallback ? 'tesseract' : 'google-vision',
-        labels: analysis.data.labels,
-        logos: analysis.data.logos
+    // Fallback basé sur certains mots-clés
+    if (lowerText.match(/nutrition|kcal|calories|glucides|protéines/)) {
+      return 'food';
+    }
+    
+    return null;
+  }
+
+  hasNutritionalInfo(text) {
+    const nutritionPatterns = [
+      /valeurs? nutrition/i,
+      /nutrition(al)? (facts|information|values)/i,
+      /\b(kcal|calories|glucides|lipides|protéines|proteins|carbs|sugars)\b/i,
+      /pour\s+100\s*g/i,
+      /per\s+100\s*g/i
+    ];
+
+    return nutritionPatterns.some(pattern => pattern.test(text));
+  }
+
+  calculateGoogleConfidence(result) {
+    if (!result.fullTextAnnotation) return 0;
+    
+    // Calculer la confiance basée sur la qualité de détection
+    const blocks = result.fullTextAnnotation.pages?.[0]?.blocks || [];
+    if (blocks.length === 0) return 0;
+    
+    let totalConfidence = 0;
+    let count = 0;
+    
+    blocks.forEach(block => {
+      if (block.confidence) {
+        totalConfidence += block.confidence;
+        count++;
       }
-    };
+    });
+    
+    return count > 0 ? totalConfidence / count : 0.5;
+  }
+
+  /**
+   * Méthode principale d'analyse
+   */
+  async analyzeImage(imagePath, options = {}) {
+    const startTime = Date.now();
+    const jobId = options.jobId || uuidv4();
+    
+    try {
+      console.log(`[Vision] Début analyse ${jobId}`);
+      
+      // Essayer Google Vision d'abord
+      const googleResult = await this.analyzeWithGoogleVision(imagePath, options.language);
+      
+      let finalResult;
+      
+      // Si Google Vision échoue ou confiance faible, utiliser Tesseract
+      if (!googleResult || googleResult.confidence < 0.7) {
+        console.log(`[Vision] Confiance Google faible (${googleResult?.confidence || 0}), utilisation Tesseract`);
+        const tesseractResult = await this.analyzeWithTesseract(imagePath, options.language);
+        
+        finalResult = this.mergeResults(googleResult, tesseractResult);
+      } else {
+        finalResult = googleResult;
+      }
+      
+      // Extraction des données structurées
+      const extractedData = this.extractStructuredData(finalResult);
+      
+      const duration = Date.now() - startTime;
+      console.log(`[Vision] Analyse terminée en ${duration}ms - Service: ${finalResult.service}`);
+      
+      return {
+        jobId,
+        status: 'completed',
+        result: {
+          text: finalResult.text,
+          extractedData,
+          confidence: finalResult.confidence || 0,
+          service: finalResult.service,
+          usedFallback: finalResult.usedFallback || false,
+          duration
+        }
+      };
+    } catch (error) {
+      console.error(`[Vision] Erreur analyse ${jobId}:`, error);
+      return {
+        jobId,
+        status: 'failed',
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Nettoyage des ressources
+   */
+  async cleanup() {
+    if (this.tesseractWorker) {
+      await this.tesseractWorker.terminate();
+      this.tesseractWorker = null;
+    }
   }
 }
 
-// Export singleton
 module.exports = new VisionService();

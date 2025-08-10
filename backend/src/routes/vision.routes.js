@@ -1,136 +1,187 @@
-// backend/src/routes/vision.routes.js
-// Routes Vision avec imports corrigés
-
+// PATH: backend\src\routes\vision.routes.js
 const express = require('express');
-const router = express.Router();
 const multer = require('multer');
-const ProductOCRService = require('../services/vision/ProductOCRService');
+const path = require('path');
+const fs = require('fs').promises;
+const { v4: uuidv4 } = require('uuid');
+const visionService = require('../services/vision/VisionService');
+const { authenticateToken } = require('../middleware');
 
-// Import unifié depuis middleware/index.js
-const { 
-  authenticateToken, 
-  checkQuotaAfterUpload 
-} = require('../middleware');
+const router = express.Router();
 
-// Configuration multer
+// Configuration Multer pour l'upload
+const storage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../../uploads/vision');
+    await fs.mkdir(uploadDir, { recursive: true });
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${uuidv4()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
+  }
+});
+
 const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { 
-    fileSize: 10 * 1024 * 1024 // 10MB
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB max
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
     } else {
-      cb(new Error('Format non supporté. Utilisez JPEG, PNG ou WebP.'));
+      cb(new Error('Seuls les formats JPEG, PNG et WebP sont acceptés'));
     }
   }
 });
 
-// Route d'analyse d'image
-// IMPORTANT: L'ordre des middlewares est crucial
-// 1. Auth -> 2. Multer -> 3. Quota
-router.post('/analyze-image',
-  authenticateToken,
-  upload.single('image'),
-  checkQuotaAfterUpload('scan'),
+// Jobs en mémoire (en prod: utiliser Redis ou BullMQ)
+const visionJobs = new Map();
+
+/**
+ * POST /api/vision/analyze-image
+ * Analyse une image avec OCR
+ */
+router.post('/analyze-image', 
+  authenticateToken, // Optionnel en dev
+  upload.single('image'), 
   async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ 
-          error: 'Aucune image fournie'
-        });
-      }
-
-      console.log('Analyse image pour user:', req.user.userId);
-      console.log('Quota info:', req.quotaInfo);
-
-      const ocrService = new ProductOCRService();
-      const result = await ocrService.analyzeProductImage(req.file.buffer, {
-        userId: req.user.userId,
-        language: req.body.language || 'fra',
-        enhanceImage: req.body.enhanceImage !== 'false'
-      });
-
-      // Décrémenter le quota après succès
-      if (req.decrementQuota) {
-        await req.decrementQuota();
-      }
-
-      res.json({
-        success: true,
-        jobId: result.jobId,
-        status: result.status,
-        result: result.result,
-        quotaInfo: req.quotaInfo || req.quota,
-        message: 'Analyse lancée avec succès'
-      });
-
-    } catch (error) {
-      console.error('Vision route error:', error);
-      res.status(500).json({ 
-        error: 'Erreur lors de l\'analyse',
-        message: error.message
-      });
-    }
-  }
-);
-
-// Route de statut du job
-router.get('/status/:jobId', 
-  authenticateToken, 
-  async (req, res) => {
-    try {
-      const { jobId } = req.params;
-      const ocrService = new ProductOCRService();
-      const status = await ocrService.getJobStatus(jobId);
-
-      if (!status) {
-        return res.status(404).json({ error: 'Job non trouvé' });
-      }
-
-      // Vérifier que le job appartient à l'utilisateur
-      if (status.userId !== req.user.userId) {
-        return res.status(403).json({ error: 'Accès non autorisé' });
-      }
-
-      res.json(status);
-    } catch (error) {
-      console.error('Status route error:', error);
-      res.status(500).json({ 
-        error: 'Erreur lors de la récupération du statut' 
-      });
-    }
-  }
-);
-
-// Route de test (dev only)
-if (process.env.NODE_ENV === 'development') {
-  router.get('/test', (req, res) => {
-    res.json({ 
-      status: 'ok', 
-      message: 'Vision routes operational',
-      endpoints: [
-        'POST /api/vision/analyze-image',
-        'GET /api/vision/status/:jobId'
-      ]
-    });
-  });
-}
-
-// Error handler pour multer
-router.use((error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
-    if (error.code === 'LIMIT_FILE_SIZE') {
+    if (!req.file) {
       return res.status(400).json({ 
-        error: 'Fichier trop volumineux (max 10MB)' 
+        error: 'Image requise',
+        details: 'Veuillez envoyer une image dans le champ "image"'
       });
     }
+
+    const jobId = uuidv4();
+    const imagePath = req.file.path;
+
+    try {
+      // Démarrer l'analyse en async
+      visionJobs.set(jobId, { 
+        status: 'processing', 
+        startTime: Date.now() 
+      });
+
+      // Lancer l'analyse (non bloquant)
+      visionService.analyzeImage(imagePath, {
+        jobId,
+        language: req.body.language || 'fr'
+      }).then(async (result) => {
+        // Mettre à jour le job
+        visionJobs.set(jobId, result);
+        
+        // Nettoyer l'image après 5 minutes
+        setTimeout(async () => {
+          try {
+            await fs.unlink(imagePath);
+            visionJobs.delete(jobId); // Nettoyer le job après 30 min
+          } catch (error) {
+            console.error('Erreur suppression image:', error);
+          }
+        }, 30 * 60 * 1000);
+      }).catch(error => {
+        visionJobs.set(jobId, {
+          status: 'failed',
+          error: error.message
+        });
+      });
+
+      // Si l'analyse est très rapide (< 2s), renvoyer directement
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const job = visionJobs.get(jobId);
+      if (job && job.status === 'completed') {
+        return res.json(job);
+      }
+
+      // Sinon, renvoyer l'ID du job
+      res.json({ 
+        jobId,
+        status: 'processing',
+        message: 'Analyse en cours, utilisez /status/:jobId pour vérifier'
+      });
+
+    } catch (error) {
+      // Nettoyer en cas d'erreur
+      await fs.unlink(imagePath).catch(() => {});
+      
+      res.status(500).json({ 
+        error: 'Erreur analyse image',
+        details: error.message 
+      });
+    }
+});
+
+/**
+ * GET /api/vision/status/:jobId
+ * Vérifier le statut d'une analyse
+ */
+router.get('/status/:jobId', async (req, res) => {
+  const { jobId } = req.params;
+  
+  const job = visionJobs.get(jobId);
+  
+  if (!job) {
+    return res.status(404).json({ 
+      error: 'Job non trouvé',
+      jobId 
+    });
   }
-  return res.status(500).json({ 
-    error: error.message 
-  });
+
+  res.json(job);
+});
+
+/**
+ * POST /api/vision/extract-test
+ * Route de test pour l'extraction (dev only)
+ */
+router.post('/extract-test', async (req, res) => {
+  const { text } = req.body;
+  
+  if (!text) {
+    return res.status(400).json({ error: 'Texte requis' });
+  }
+
+  try {
+    const extractedData = visionService.extractStructuredData({ text });
+    res.json({ extractedData });
+  } catch (error) {
+    res.status(500).json({ 
+      error: 'Erreur extraction',
+      details: error.message 
+    });
+  }
+});
+
+/**
+ * GET /api/vision/health
+ * Vérifier l'état du service
+ */
+router.get('/health', async (req, res) => {
+  try {
+    const hasGoogleVision = !!visionService.googleVisionClient;
+    const hasTesseract = true; // Toujours disponible
+    
+    res.json({
+      status: 'healthy',
+      services: {
+        googleVision: hasGoogleVision,
+        tesseract: hasTesseract
+      },
+      activeJobs: visionJobs.size
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'unhealthy',
+      error: error.message
+    });
+  }
 });
 
 module.exports = router;

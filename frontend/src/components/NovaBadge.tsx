@@ -1,58 +1,151 @@
-// PATH: frontend/src/components/NovaBadge.tsx
+// PATH: frontend\src\components\NovaBadge.tsx
 import React from 'react';
+import { Info } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface NovaBadgeProps {
-  novaLevel: 1 | 2 | 3 | 4;
-  className?: string;
+  nova?: 1 | 2 | 3 | 4;
+  label?: string;
+  reason?: string;
+  confidence?: number;
+  size?: 'small' | 'medium' | 'large';
+  showTooltip?: boolean;
 }
 
-const NovaBadge: React.FC<NovaBadgeProps> = ({ novaLevel, className = '' }) => {
-  const getNovaConfig = (level: 1 | 2 | 3 | 4) => {
-    switch (level) {
-      case 1:
-        return {
-          color: 'bg-green-500',
-          textColor: 'text-white',
-          icon: '🍎',
-          label: 'Naturel'
-        };
-      case 2:
-        return {
-          color: 'bg-yellow-500',
-          textColor: 'text-white',
-          icon: '🥄',
-          label: 'Culinaire'
-        };
-      case 3:
-        return {
-          color: 'bg-orange-500',
-          textColor: 'text-white',
-          icon: '⚠️',
-          label: 'Transformé'
-        };
-      case 4:
-      default:
-        return {
-          color: 'bg-red-500',
-          textColor: 'text-white',
-          icon: '🚫',
-          label: 'Ultra-transformé'
-        };
+export const NovaBadge: React.FC<NovaBadgeProps> = ({
+  nova,
+  label,
+  reason,
+  confidence,
+  size = 'medium',
+  showTooltip = true,
+}) => {
+  const getNovaColor = (nova?: 1 | 2 | 3 | 4): string => {
+    switch (nova) {
+      case 1: return 'bg-green-500 text-white';
+      case 2: return 'bg-yellow-500 text-white';
+      case 3: return 'bg-orange-500 text-white';
+      case 4: return 'bg-red-500 text-white';
+      default: return 'bg-gray-400 text-white';
     }
   };
 
-  const config = getNovaConfig(novaLevel);
+  const getNovaLabel = (nova?: 1 | 2 | 3 | 4): string => {
+    if (label) return label;
+    switch (nova) {
+      case 1: return 'Non transformé';
+      case 2: return 'Peu transformé';
+      case 3: return 'Transformé';
+      case 4: return 'Ultra-transformé';
+      default: return 'Non classé';
+    }
+  };
+
+  const getSizeClasses = () => {
+    switch (size) {
+      case 'small':
+        return 'w-12 h-12 text-lg';
+      case 'large':
+        return 'w-20 h-20 text-3xl';
+      default:
+        return 'w-16 h-16 text-2xl';
+    }
+  };
+
+  const badge = (
+    <div className="flex flex-col items-center gap-1">
+      <div
+        className={`
+          ${getSizeClasses()}
+          ${getNovaColor(nova)}
+          rounded-full flex items-center justify-center font-bold
+          shadow-md transition-transform hover:scale-105
+        `}
+      >
+        {nova || '?'}
+      </div>
+      <span className="text-xs text-gray-600 font-medium">
+        NOVA
+      </span>
+    </div>
+  );
+
+  if (!showTooltip || !reason) {
+    return badge;
+  }
 
   return (
-    <div className={`inline-flex items-center space-x-2 ${config.color} rounded-xl px-4 py-2 ${className}`}>
-      <span className="text-lg">{config.icon}</span>
-      <div className={`${config.textColor}`}>
-        <div className="text-sm font-bold">NOVA {novaLevel}</div>
-        <div className="text-xs opacity-90">{config.label}</div>
-      </div>
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="relative cursor-help">
+            {badge}
+            <Info className="absolute -top-1 -right-1 w-4 h-4 text-gray-500" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs p-3">
+          <div className="space-y-2">
+            <p className="font-semibold">{getNovaLabel(nova)}</p>
+            {reason && (
+              <p className="text-sm text-gray-600">{reason}</p>
+            )}
+            {confidence !== undefined && (
+              <p className="text-xs text-gray-500">
+                Confiance: {Math.round(confidence * 100)}%
+              </p>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
-export default NovaBadge;
-// EOF
+// Version compacte pour les listes
+export const NovaBadgeCompact: React.FC<{
+  nova?: 1 | 2 | 3 | 4;
+  showLabel?: boolean;
+}> = ({ nova, showLabel = false }) => {
+  const getNovaColor = (nova?: 1 | 2 | 3 | 4): string => {
+    switch (nova) {
+      case 1: return 'bg-green-500';
+      case 2: return 'bg-yellow-500';
+      case 3: return 'bg-orange-500';
+      case 4: return 'bg-red-500';
+      default: return 'bg-gray-400';
+    }
+  };
+
+  const getNovaLabel = (nova?: 1 | 2 | 3 | 4): string => {
+    switch (nova) {
+      case 1: return 'Non transformé';
+      case 2: return 'Peu transformé';
+      case 3: return 'Transformé';
+      case 4: return 'Ultra-transformé';
+      default: return 'Non classé';
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <div
+        className={`
+          w-8 h-8 rounded-full flex items-center justify-center
+          text-white font-bold text-sm ${getNovaColor(nova)}
+        `}
+      >
+        {nova || '?'}
+      </div>
+      {showLabel && (
+        <span className="text-sm text-gray-600">
+          {getNovaLabel(nova)}
+        </span>
+      )}
+    </div>
+  );
+};
