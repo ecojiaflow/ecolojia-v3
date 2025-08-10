@@ -1,104 +1,115 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/Navbar.tsx
+// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Menu, X, Leaf, Search, ShoppingBag, BookOpen, Home, Info, 
   BarChart3, ChevronDown, Apple, Sparkles, Camera, Package,
-  TrendingUp, Clock, ArrowRight, Zap
+  TrendingUp, Clock, ArrowRight, Zap, User, LogOut, Crown,
+  Bell, Settings, Heart, Shield, FileText, MessageCircle,
+  History, Star
 } from 'lucide-react';
+import { useAuth } from '@/auth/context/AuthContext';
+// Couleurs ECOLOJIA
+const COLORS = {
+  primary: '#7DDE4A',
+  secondary: '#4A90E2',
+  warning: '#F5A623',
+  danger: '#D0021B',
+  grayText: '#3B3B3B'
+};
 
-// ✅ INTERFACE POUR SUGGESTIONS NAVBAR
+// Logo ECOLOJIA component
+const EcolojiaLogo = ({ className = "h-8 w-8" }) => (
+  <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 10 C20 10, 10 30, 10 50 C10 70, 20 90, 50 90 C80 90, 90 70, 90 50 C90 30, 80 10, 50 10" fill={COLORS.primary} />
+    <path d="M50 25 C50 25, 35 40, 35 55 C35 65, 42 72, 50 72 C58 72, 65 65, 65 55 C65 40, 50 25, 50 25" fill="white" />
+    <path d="M50 35 Q55 45, 60 35" stroke={COLORS.grayText} strokeWidth="2" fill="none" />
+  </svg>
+);
+
+// Interface pour suggestions
 interface SearchSuggestion {
   query: string;
   type?: 'product' | 'brand' | 'category' | 'ingredient';
   icon?: string;
   category?: string;
+  score?: string;
 }
 
-// ✅ SERVICE DE RECHERCHE SIMPLIFIÉ INTÉGRÉ
+// Service de recherche amélioré
 class NavbarSearchService {
   private cache = new Map<string, SearchSuggestion[]>();
 
   async getSuggestions(query: string): Promise<SearchSuggestion[]> {
-    // 🆕 SUGGESTIONS ÉTENDUES MULTI-CATÉGORIES
     const popularSuggestions = [
-      // 🍎 Alimentaire
-      { query: 'nutella bio', icon: '🍫', category: 'Alimentaire' },
-      { query: 'yaourt sans additifs', icon: '🥛', category: 'Alimentaire' },
-      { query: 'pain complet bio', icon: '🍞', category: 'Alimentaire' },
+      // Alimentaire
+      { query: 'nutella bio', icon: 'ðŸ«', category: 'Alimentaire', score: 'A' },
+      { query: 'yaourt nature danone', icon: 'ðŸ¥›', category: 'Alimentaire', score: 'A' },
+      { query: 'pain complet bio', icon: 'ðŸž', category: 'Alimentaire', score: 'A' },
+      { query: 'coca-cola zero', icon: 'ðŸ¥¤', category: 'Alimentaire', score: 'D' },
       
-      // 💄 🆕 Cosmétiques
-      { query: 'shampoing sans sulfate', icon: '🧴', category: 'Cosmétiques' },
-      { query: 'crème sans parabènes', icon: '✨', category: 'Cosmétiques' },
-      { query: 'dentifrice bio', icon: '🦷', category: 'Cosmétiques' },
+      // Cosmétiques
+      { query: 'shampoing l\'oréal sans sulfate', icon: 'ðŸ§´', category: 'Cosmétiques', score: 'B' },
+      { query: 'crème nivea sans parabènes', icon: 'âœ¨', category: 'Cosmétiques', score: 'B' },
+      { query: 'dentifrice signal bio', icon: 'ðŸ¦·', category: 'Cosmétiques', score: 'A' },
+      { query: 'déodorant dove', icon: 'ðŸŒ¸', category: 'Cosmétiques', score: 'C' },
       
-      // 🧽 🆕 Détergents
-      { query: 'lessive écologique', icon: '🧽', category: 'Détergents' },
-      { query: 'liquide vaisselle bio', icon: '💧', category: 'Détergents' },
-      { query: 'nettoyant multi-surface', icon: '🏠', category: 'Détergents' },
+      // Détergents
+      { query: 'lessive ariel pods', icon: 'ðŸ§½', category: 'Détergents', score: 'C' },
+      { query: 'liquide vaisselle paic', icon: 'ðŸ’§', category: 'Détergents', score: 'B' },
+      { query: 'nettoyant ajax', icon: 'ðŸ ', category: 'Détergents', score: 'C' },
+      { query: 'lessive écologique arbre vert', icon: 'ðŸŒ¿', category: 'Détergents', score: 'A' },
       
-      // Général
-      { query: 'produits zéro déchet', icon: '🌿', category: 'Écologique' },
-      { query: 'marques responsables', icon: '🌍', category: 'Éthique' }
+      // Marques populaires
+      { query: 'produits bjorg', icon: 'ðŸŒ¾', category: 'Marque Bio' },
+      { query: 'produits la vie claire', icon: 'ðŸŒ±', category: 'Marque Bio' },
+      { query: 'produits carrefour bio', icon: 'ðŸ›’', category: 'Marque Bio' }
     ];
 
     if (!query.trim()) {
-      return popularSuggestions.slice(0, 6);
+      return popularSuggestions.slice(0, 8);
     }
 
-    // Cache simple
     const cacheKey = query.toLowerCase();
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey)!;
     }
 
     // Filtrage intelligent
-    const filteredSuggestions = popularSuggestions.filter(p => 
-      p.query.toLowerCase().includes(query.toLowerCase()) ||
-      p.category.toLowerCase().includes(query.toLowerCase())
+    const queryLower = query.toLowerCase();
+    const filtered = popularSuggestions.filter(p => 
+      p.query.toLowerCase().includes(queryLower) ||
+      p.category.toLowerCase().includes(queryLower)
     );
 
-    // 🆕 SUGGESTIONS CONTEXTUELLES INTELLIGENTES
-    const contextualSuggestions: SearchSuggestion[] = [];
-    const queryLower = query.toLowerCase();
+    // Suggestions contextuelles
+    const contextual: SearchSuggestion[] = [];
 
-    // Suggestions alimentaires spécialisées
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
-      contextualSuggestions.push(
-        { query: `${query} NOVA 1`, icon: '✅', category: 'Alimentaire' },
-        { query: `${query} sans additifs`, icon: '🌿', category: 'Alimentaire' }
+      contextual.push(
+        { query: `${query} NOVA 1`, icon: 'âœ…', category: 'Alimentaire sain' },
+        { query: `${query} nutri-score A`, icon: 'ðŸŒŸ', category: 'Top santé' }
       );
     }
 
-    // Suggestions cosmétiques spécialisées
-    if (queryLower.includes('shampoing') || queryLower.includes('crème') || queryLower.includes('soin')) {
-      contextualSuggestions.push(
-        { query: `${query} sans parabènes`, icon: '🚫', category: 'Cosmétiques' },
-        { query: `${query} hypoallergénique`, icon: '💚', category: 'Cosmétiques' },
-        { query: `${query} naturel`, icon: '🌱', category: 'Cosmétiques' }
+    if (queryLower.includes('shampoing') || queryLower.includes('savon')) {
+      contextual.push(
+        { query: `${query} hypoallergénique`, icon: 'ðŸ’š', category: 'Peau sensible' },
+        { query: `${query} vegan`, icon: 'ðŸŒ±', category: 'Ã‰thique' }
       );
     }
 
-    // Suggestions détergents spécialisées
-    if (queryLower.includes('lessive') || queryLower.includes('vaisselle') || queryLower.includes('nettoyant')) {
-      contextualSuggestions.push(
-        { query: `${query} écologique`, icon: '🌍', category: 'Détergents' },
-        { query: `${query} biodégradable`, icon: '♻️', category: 'Détergents' },
-        { query: `${query} concentré`, icon: '💧', category: 'Détergents' }
-      );
-    }
+    const all = [...filtered, ...contextual];
+    const unique = this.deduplicateSuggestions(all).slice(0, 10);
 
-    const allSuggestions = [...filteredSuggestions, ...contextualSuggestions];
-    const uniqueSuggestions = this.deduplicateSuggestions(allSuggestions).slice(0, 8);
-
-    this.cache.set(cacheKey, uniqueSuggestions);
-    return uniqueSuggestions;
+    this.cache.set(cacheKey, unique);
+    return unique;
   }
 
   private deduplicateSuggestions(suggestions: SearchSuggestion[]): SearchSuggestion[] {
     const seen = new Set<string>();
-    return suggestions.filter(suggestion => {
-      const key = suggestion.query.toLowerCase();
+    return suggestions.filter(s => {
+      const key = s.query.toLowerCase();
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
@@ -106,36 +117,46 @@ class NavbarSearchService {
   }
 }
 
-// Instance du service
-const navbarSearchService = new NavbarSearchService();
+const searchService = new NavbarSearchService();
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, logout, isAuthenticated } = useAuth();
   
-  // ========== STATE ==========
+  // Ã‰tat
   const [isOpen, setIsOpen] = useState(false);
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  const [searchStats, setSearchStats] = useState({
-    totalProducts: '2M+',
-    categories: 3,
-    sources: 5
-  });
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [notifications, setNotifications] = useState(3);
   
-  // ========== REFS ==========
+  // Refs
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
   const suggestionTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // ========== EFFECTS ==========
-  
+  // Navigation items
+  const navigation = [
+    { name: 'Recherche', href: '/search', icon: Search },
+    { name: 'Scanner', href: '/scan', icon: Camera },
+    { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles },
+    { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
+    { name: 'Historique', href: '/history', icon: History },
+    { name: 'Chat IA', href: '/chat', icon: MessageCircle },
+  ];
+
+  // Effects
   useEffect(() => {
-    // Fermer dropdown si click extérieur
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowSearchDropdown(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
       }
     };
 
@@ -144,15 +165,15 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Raccourci clavier Ctrl+K pour focus recherche
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'k') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         searchInputRef.current?.focus();
         setShowSearchDropdown(true);
       }
       if (e.key === 'Escape') {
         setShowSearchDropdown(false);
+        setShowProfileMenu(false);
         searchInputRef.current?.blur();
       }
     };
@@ -161,12 +182,10 @@ const Navbar: React.FC = () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // ========== SEARCH HANDLERS ==========
-
+  // Handlers
   const handleSearchChange = async (query: string) => {
     setQuickSearchQuery(query);
 
-    // Clear timeout précédent
     if (suggestionTimeoutRef.current) {
       clearTimeout(suggestionTimeoutRef.current);
     }
@@ -176,15 +195,14 @@ const Navbar: React.FC = () => {
       return;
     }
 
-    // Délai pour éviter trop de requêtes
     suggestionTimeoutRef.current = setTimeout(async () => {
       setIsLoadingSuggestions(true);
       
       try {
-        const newSuggestions = await navbarSearchService.getSuggestions(query);
+        const newSuggestions = await searchService.getSuggestions(query);
         setSuggestions(newSuggestions);
       } catch (error) {
-        console.error('Erreur suggestions navbar:', error);
+        console.error('Erreur suggestions:', error);
         setSuggestions([]);
       } finally {
         setIsLoadingSuggestions(false);
@@ -208,32 +226,47 @@ const Navbar: React.FC = () => {
 
   const handleSearchFocus = async () => {
     setShowSearchDropdown(true);
-    // Charger suggestions populaires si pas de query
     if (!quickSearchQuery.trim()) {
       try {
-        const popularSuggestions = await navbarSearchService.getSuggestions('');
-        setSuggestions(popularSuggestions);
+        const popular = await searchService.getSuggestions('');
+        setSuggestions(popular);
       } catch (error) {
-        console.error('Erreur chargement suggestions populaires:', error);
+        console.error('Erreur suggestions populaires:', error);
       }
     }
   };
 
-  // ========== RENDER ==========
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  const isActive = (path: string) => location.pathname === path;
+
+  const getScoreColor = (score?: string) => {
+    switch(score) {
+      case 'A': return COLORS.primary;
+      case 'B': return '#A8D5A8';
+      case 'C': return COLORS.warning;
+      case 'D': return '#FF9F40';
+      case 'E': return COLORS.danger;
+      default: return COLORS.grayText;
+    }
+  };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white border-b border-[#DDE9DA] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* ===== LOGO ===== */}
+          {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link to="/" className="flex items-center group">
-              <Leaf className="h-8 w-8 text-green-600 mr-2 group-hover:scale-110 transition-transform" />
-              <span className="text-xl font-bold text-gray-800">ECOLOJIA</span>
+              <EcolojiaLogo className="h-8 w-8 mr-2 group-hover:scale-110 transition-transform" />
+              <span className="text-xl font-bold text-[#3B3B3B]">ECOLOJIA</span>
             </Link>
           </div>
 
-          {/* ===== 🔬 IA SCIENTIFIQUE CENTRALE ===== */}
+          {/* Barre de recherche centrale */}
           <div className="flex-1 max-w-2xl mx-8 relative" ref={dropdownRef}>
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="relative">
@@ -245,59 +278,56 @@ const Navbar: React.FC = () => {
                   value={quickSearchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={handleSearchFocus}
-                  placeholder="🔬 Rechercher parmi 2M+ produits analysés par IA... (nutella, shampoing L'Oréal, lessive Ariel)"
-                  className="w-full pl-11 pr-32 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all placeholder-gray-500 text-sm"
+                  placeholder="Rechercher parmi 2M+ produits (Nutella, L'Oréal, Ariel...)"
+                  className="w-full pl-11 pr-32 py-3 border-2 border-[#DDE9DA] rounded-full 
+                           focus:border-[#7DDE4A] focus:ring-4 focus:ring-[#E9F8DF] 
+                           transition-all placeholder-gray-500 text-sm bg-[#F7F9F4]"
                 />
                 
-                {/* 🔬 BADGES IA SCIENTIFIQUE */}
+                {/* Badges */}
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
-                      IA
-                    </span>
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-                      {searchStats.categories} catégories
-                    </span>
-                  </div>
+                  <span className="text-xs bg-[#E9F8DF] text-[#7DDE4A] px-2 py-1 rounded-full font-medium">
+                    IA
+                  </span>
                   
                   {/* Raccourci clavier */}
                   <div className="hidden lg:flex items-center space-x-1 text-xs text-gray-400">
-                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded text-xs">⌘</kbd>
-                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded text-xs">K</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">Ctrl</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">K</kbd>
                   </div>
                 </div>
               </div>
             </form>
 
-            {/* ===== 🔬 DROPDOWN SUGGESTIONS IA ENRICHI ===== */}
+            {/* Dropdown suggestions */}
             {showSearchDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-96 overflow-hidden">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#DDE9DA] rounded-2xl shadow-xl z-50 max-h-96 overflow-hidden">
                 
-                {/* 🔬 HEADER DROPDOWN AVEC STATS IA */}
-                <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-green-50 to-blue-50">
+                {/* Header dropdown */}
+                <div className="p-4 border-b border-[#DDE9DA] bg-gradient-to-r from-[#E9F8DF] to-[#F7F9F4]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-800">
+                    <span className="text-sm font-semibold text-[#3B3B3B]">
                       {quickSearchQuery ? 'Suggestions intelligentes' : 'Recherches populaires'}
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-gray-600">
-                      <Zap className="w-3 h-3" />
-                      <span>IA Scientifique • Temps réel</span>
+                      <Zap className="w-3 h-3 text-[#7DDE4A]" />
+                      <span>IA Scientifique "¢ Temps réel</span>
                     </div>
                   </div>
                   
-                  {/* 🔬 MÉTRIQUES IA SCIENTIFIQUE */}
+                  {/* Métriques */}
                   <div className="flex items-center space-x-4 text-xs text-gray-600">
                     <div className="flex items-center">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
-                      NOVA V2 (alimentaire)
+                      <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-1"></span>
+                      Alimentaire
                     </div>
                     <div className="flex items-center">
-                      <span className="w-2 h-2 bg-pink-500 rounded-full mr-1"></span>
-                      INCI V2 (cosmétiques)
+                      <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-1"></span>
+                      Cosmétiques
                     </div>
                     <div className="flex items-center">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
-                      ECO V2 (détergents)
+                      <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-1"></span>
+                      Détergents
                     </div>
                   </div>
                 </div>
@@ -305,12 +335,12 @@ const Navbar: React.FC = () => {
                 {/* Loading */}
                 {isLoadingSuggestions && (
                   <div className="p-6 text-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500 mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7DDE4A] mx-auto mb-2"></div>
                     <span className="text-sm text-gray-500">Analyse IA en cours...</span>
                   </div>
                 )}
 
-                {/* 🔬 SUGGESTIONS ENRICHIES IA */}
+                {/* Suggestions */}
                 {!isLoadingSuggestions && suggestions.length > 0 && (
                   <div className="max-h-80 overflow-y-auto">
                     <div className="py-2">
@@ -318,9 +348,9 @@ const Navbar: React.FC = () => {
                         <button
                           key={index}
                           onClick={() => handleSuggestionClick(suggestion)}
-                          className="w-full flex items-center px-4 py-3 hover:bg-gray-50 transition-colors text-left group"
+                          className="w-full flex items-center px-4 py-3 hover:bg-[#F7F9F4] transition-colors text-left group"
                         >
-                          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
+                          <div className="w-10 h-10 bg-[#E9F8DF] rounded-xl flex items-center justify-center mr-3 group-hover:bg-[#7DDE4A] group-hover:text-white transition-all">
                             {suggestion.icon ? (
                               <span className="text-lg">{suggestion.icon}</span>
                             ) : (
@@ -329,7 +359,7 @@ const Navbar: React.FC = () => {
                           </div>
                           
                           <div className="flex-1">
-                            <div className="font-medium text-gray-800">{suggestion.query}</div>
+                            <div className="font-medium text-[#3B3B3B]">{suggestion.query}</div>
                             {suggestion.category && (
                               <div className="text-xs text-gray-500 mt-0.5">
                                 {suggestion.category}
@@ -338,11 +368,13 @@ const Navbar: React.FC = () => {
                           </div>
                           
                           <div className="flex items-center space-x-2">
-                            {suggestion.query.includes('bio') && (
-                              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Bio</span>
-                            )}
-                            {suggestion.query.includes('sans') && (
-                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Clean</span>
+                            {suggestion.score && (
+                              <span 
+                                className="text-xs font-bold px-2 py-1 rounded text-white"
+                                style={{ backgroundColor: getScoreColor(suggestion.score) }}
+                              >
+                                {suggestion.score}
+                              </span>
                             )}
                             <ArrowRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
@@ -350,8 +382,8 @@ const Navbar: React.FC = () => {
                       ))}
                     </div>
                     
-                    {/* 🔬 FOOTER SUGGESTIONS AVEC ACTIONS RAPIDES */}
-                    <div className="border-t border-gray-100 p-3 bg-gray-50">
+                    {/* Footer suggestions */}
+                    <div className="border-t border-[#DDE9DA] p-3 bg-[#F7F9F4]">
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-3">
                           <button
@@ -359,7 +391,7 @@ const Navbar: React.FC = () => {
                               setShowSearchDropdown(false);
                               navigate('/scan');
                             }}
-                            className="flex items-center text-xs text-gray-600 hover:text-green-600 transition-colors"
+                            className="flex items-center text-xs text-gray-600 hover:text-[#7DDE4A] transition-colors"
                           >
                             <Camera className="w-3 h-3 mr-1" />
                             Scanner
@@ -377,195 +409,236 @@ const Navbar: React.FC = () => {
                         </div>
                         
                         <div className="text-xs text-gray-500">
-                          Appuyez <kbd className="px-1 bg-gray-200 rounded">↵</kbd> pour analyser
+                          Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">â†µ</kbd> pour rechercher
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* 🔬 ÉTAT VIDE AMÉLIORÉ */}
+                {/* Ã‰tat vide */}
                 {!isLoadingSuggestions && suggestions.length === 0 && quickSearchQuery && (
                   <div className="p-6 text-center">
                     <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <h3 className="font-medium text-gray-800 mb-2">Aucune suggestion</h3>
+                    <h3 className="font-medium text-[#3B3B3B] mb-2">Aucune suggestion</h3>
                     <p className="text-sm text-gray-500 mb-4">
-                      Appuyez Entrée pour analyser "<span className="font-medium">{quickSearchQuery}</span>" 
-                      avec notre IA scientifique
+                      Appuyez Entrée pour rechercher "<span className="font-medium text-[#7DDE4A]">{quickSearchQuery}</span>"
                     </p>
-                    <div className="flex space-x-2 justify-center">
-                      <button
-                        onClick={() => {
-                          setShowSearchDropdown(false);
-                          navigate('/scan');
-                        }}
-                        className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition-colors"
-                      >
-                        📷 Scanner
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowSearchDropdown(false);
-                          navigate('/multi-scan');
-                        }}
-                        className="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors"
-                      >
-                        ✨ Analyse manuelle
-                      </button>
-                    </div>
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          {/* ===== MENU DESKTOP ===== */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link 
-              to="/scan" 
-              className="flex items-center text-gray-600 hover:text-green-600 font-medium transition-colors group"
-            >
-              <Camera className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
-              Scanner
-            </Link>
-            
-            <Link 
-              to="/multi-scan" 
-              className="flex items-center text-gray-600 hover:text-purple-600 font-medium transition-colors group"
-            >
-              <Sparkles className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
-              Multi-Produits
-            </Link>
-            
-            <Link 
-              to="/dashboard" 
-              className="flex items-center text-gray-600 hover:text-blue-600 font-medium transition-colors group"
-            >
-              <BarChart3 className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
-              Dashboard
-            </Link>
+          {/* Menu desktop & User */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Navigation links */}
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive(item.href)
+                      ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                      : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 mr-1" />
+                  {item.name}
+                </Link>
+              );
+            })}
 
-            {/* Dropdown À propos */}
-            <div className="relative group">
-              <button className="flex items-center text-gray-600 hover:text-gray-800 font-medium transition-colors">
-                À propos
-                <ChevronDown className="h-4 w-4 ml-1 group-hover:rotate-180 transition-transform" />
+            {/* Notifications */}
+            {isAuthenticated && (
+              <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors relative">
+                <Bell className="w-5 h-5" />
+                {notifications > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#7DDE4A] text-white text-xs rounded-full flex items-center justify-center">
+                    {notifications}
+                  </span>
+                )}
               </button>
-              
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <Link to="/about" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors">
-                  🌱 Notre mission
-                </Link>
-                <Link to="/blog" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors">
-                  📚 Blog
-                </Link>
-                <Link to="/contact" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors">
-                  📧 Contact
-                </Link>
-                <div className="border-t border-gray-100 mt-1 pt-1">
-                  <div className="px-4 py-2 text-xs text-gray-500">
-                    🔬 IA scientifique propriétaire
+            )}
+
+            {/* Profile Menu */}
+            {isAuthenticated ? (
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#F7F9F4] transition-colors"
+                >
+                  <div className="w-8 h-8 bg-[#E9F8DF] rounded-full flex items-center justify-center">
+                    <span className="text-[#7DDE4A] font-semibold">
+                      {user?.username?.[0]?.toUpperCase() || 'U'}
+                    </span>
                   </div>
-                </div>
+                  <span className="hidden lg:block text-sm font-medium text-[#3B3B3B]">
+                    {user?.username}
+                  </span>
+                  {user?.plan === 'premium' && (
+                    <Crown className="w-4 h-4 text-[#FFD700]" />
+                  )}
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Profile Dropdown */}
+                {showProfileMenu && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 border border-[#DDE9DA]">
+                    <div className="px-4 py-2 border-b border-[#DDE9DA]">
+                      <p className="text-sm font-medium text-[#3B3B3B]">{user?.email}</p>
+                      <p className="text-xs text-gray-500">
+                        Plan {user?.plan === 'premium' ? 'Premium â­' : 'Gratuit'}
+                      </p>
+                    </div>
+                    
+                    <Link
+                      to="/profile"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Mon profil
+                    </Link>
+                    
+                    <Link
+                      to="/favorites"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <Heart className="w-4 h-4 mr-2" />
+                      Mes favoris
+                    </Link>
+                    
+                    <Link
+                      to="/settings"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Paramètres
+                    </Link>
+                    
+                    {user?.plan === 'free' && (
+                      <Link
+                        to="/pricing"
+                        className="flex items-center px-4 py-2 text-sm text-[#7DDE4A] hover:bg-[#E9F8DF] transition-colors font-medium"
+                        onClick={() => setShowProfileMenu(false)}
+                      >
+                        <Crown className="w-4 h-4 mr-2" />
+                        Passer Premium
+                      </Link>
+                    )}
+                    
+                    <div className="border-t border-[#DDE9DA] mt-2 pt-2">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Déconnexion
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm font-medium text-[#3B3B3B] hover:text-[#7DDE4A] transition-colors"
+                >
+                  Connexion
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 bg-[#7DDE4A] hover:bg-[#6bc93a] text-white text-sm font-medium rounded-full transition-colors"
+                >
+                  S'inscrire
+                </Link>
+              </div>
+            )}
           </div>
 
-          {/* ===== BOUTON MENU MOBILE ===== */}
+          {/* Bouton menu mobile */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-all"
+              className="p-2 rounded-lg text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4] transition-all"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* ===== MENU MOBILE ÉTENDU ===== */}
+        {/* Menu mobile */}
         {isOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div className="md:hidden border-t border-[#DDE9DA] py-4">
             <div className="space-y-2">
-              <Link 
-                to="/" 
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 rounded-lg transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                <Home className="h-4 w-4 mr-3" />
-                Accueil
-              </Link>
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center px-3 py-2 rounded-lg transition-all ${
+                      isActive(item.href)
+                        ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                        : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon className="h-4 w-4 mr-3" />
+                    {item.name}
+                  </Link>
+                );
+              })}
               
-              <Link 
-                to="/search" 
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 rounded-lg transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                <Search className="h-4 w-4 mr-3" />
-                IA Scientifique
-              </Link>
-              
-              <Link 
-                to="/scan" 
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 rounded-lg transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                <Camera className="h-4 w-4 mr-3" />
-                Scanner Code-Barres
-              </Link>
-              
-              <Link 
-                to="/multi-scan" 
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-purple-600 hover:bg-gray-50 rounded-lg transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                <Sparkles className="h-4 w-4 mr-3" />
-                Analyse Multi-Produits
-              </Link>
-              
-              <Link 
-                to="/dashboard" 
-                className="flex items-center px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all"
-                onClick={() => setIsOpen(false)}
-              >
-                <BarChart3 className="h-4 w-4 mr-3" />
-                Dashboard Personnel
-              </Link>
-              
-              {/* 🔬 SECTION IA SCIENTIFIQUE MOBILE */}
-              <div className="border-t border-gray-200 pt-3 mt-3">
+              {/* Section IA Mobile */}
+              <div className="border-t border-[#DDE9DA] pt-3 mt-3">
                 <div className="px-3 py-2">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">🔬 IA Scientifique Multi-Catégories</h3>
+                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">ðŸ”¬ IA Scientifique</h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center text-gray-600">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                      NOVA V2 Alimentaire
+                      <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-2"></span>
+                      2M+ produits
                     </div>
                     <div className="flex items-center text-gray-600">
-                      <span className="w-2 h-2 bg-pink-500 rounded-full mr-2"></span>
-                      INCI V2 Cosmétiques
+                      <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2"></span>
+                      Score santé
                     </div>
                     <div className="flex items-center text-gray-600">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                      ECO V2 Détergents
+                      <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-2"></span>
+                      Impact éco
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                      INSERM/ANSES validé
+                      Validé ANSES
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="border-t border-gray-200 pt-2 mt-2">
-                <Link 
-                  to="/about" 
-                  className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-all"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Info className="h-4 w-4 mr-3" />
-                  À propos
-                </Link>
-              </div>
+              {!isAuthenticated && (
+                <div className="border-t border-[#DDE9DA] pt-3 mt-3 space-y-2">
+                  <Link
+                    to="/login"
+                    className="block px-3 py-2 text-center text-[#7DDE4A] font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Connexion
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block px-3 py-2 text-center bg-[#7DDE4A] text-white rounded-lg font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    S'inscrire gratuitement
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

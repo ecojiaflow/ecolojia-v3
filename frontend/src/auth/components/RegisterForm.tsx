@@ -1,6 +1,6 @@
 // PATH: frontend/src/auth/components/RegisterForm.tsx
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff, Mail, Lock, User, Check, X, ArrowRight } from 'lucide-react';
 
 interface RegisterFormProps {
@@ -38,8 +38,8 @@ const PasswordStrength: React.FC<{ password: string }> = ({ password }) => {
   );
 };
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin }) => {
-  const { register, error, clearError } = useAuth();
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin }) => {
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -53,6 +53,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,14 +63,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
       delete newErrors[name];
       setValidationErrors(newErrors);
     }
-    if (error) clearError();
+    if (error) setError(null);
   };
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
     if (!formData.firstName) errors.firstName = 'Le prénom est requis';
     if (!formData.lastName) errors.lastName = 'Le nom est requis';
-    if (!formData.email) errors.email = 'L’email est requis';
+    if (!formData.email) errors.email = 'L\'email est requis';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = 'Email invalide';
     if (!formData.password) errors.password = 'Le mot de passe est requis';
     else if (formData.password.length < 6) errors.password = 'Min. 6 caractères';
@@ -86,82 +87,199 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setError(null);
+    
     try {
       await register({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
-        lastName: formData.lastName
+        lastName: formData.lastName,
+        name: `${formData.firstName} ${formData.lastName}`,
+        acceptTerms
       });
       onSuccess?.();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Register error:', err);
+      setError(err.message || 'Erreur lors de l\'inscription');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8">
+    <div className="w-full">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Créer votre compte gratuit</h2>
-      {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">{error}</div>}
+      
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+          {error}
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Prénom</label>
-            <input name="firstName" value={formData.firstName} onChange={handleChange}
-              className={`w-full border rounded-lg p-3 ${validationErrors.firstName ? 'border-red-500' : 'border-gray-300'}`} />
-            {validationErrors.firstName && <p className="text-red-600 text-sm">{validationErrors.firstName}</p>}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+            <div className="relative">
+              <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+              <input 
+                name="firstName" 
+                value={formData.firstName} 
+                onChange={handleChange}
+                className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
+                  validationErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                }`} 
+                placeholder="Jean"
+              />
+            </div>
+            {validationErrors.firstName && (
+              <p className="text-red-600 text-xs mt-1">{validationErrors.firstName}</p>
+            )}
           </div>
+          
           <div>
-            <label className="block text-sm font-medium mb-2">Nom</label>
-            <input name="lastName" value={formData.lastName} onChange={handleChange}
-              className={`w-full border rounded-lg p-3 ${validationErrors.lastName ? 'border-red-500' : 'border-gray-300'}`} />
-            {validationErrors.lastName && <p className="text-red-600 text-sm">{validationErrors.lastName}</p>}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+            <div className="relative">
+              <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+              <input 
+                name="lastName" 
+                value={formData.lastName} 
+                onChange={handleChange}
+                className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
+                  validationErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Dupont"
+              />
+            </div>
+            {validationErrors.lastName && (
+              <p className="text-red-600 text-xs mt-1">{validationErrors.lastName}</p>
+            )}
           </div>
         </div>
+        
         <div>
-          <label className="block text-sm font-medium mb-2">Email</label>
-          <input name="email" type="email" value={formData.email} onChange={handleChange}
-            className={`w-full border rounded-lg p-3 ${validationErrors.email ? 'border-red-500' : 'border-gray-300'}`} />
-          {validationErrors.email && <p className="text-red-600 text-sm">{validationErrors.email}</p>}
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Mot de passe</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
           <div className="relative">
-            <input name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange}
-              className={`w-full border rounded-lg p-3 ${validationErrors.password ? 'border-red-500' : 'border-gray-300'}`} />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-gray-400">
-              {showPassword ? <EyeOff /> : <Eye />}
+            <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+            <input 
+              name="email" 
+              type="email" 
+              value={formData.email} 
+              onChange={handleChange}
+              className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
+                validationErrors.email ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="jean.dupont@example.com"
+            />
+          </div>
+          {validationErrors.email && (
+            <p className="text-red-600 text-xs mt-1">{validationErrors.email}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+            <input 
+              name="password" 
+              type={showPassword ? 'text' : 'password'} 
+              value={formData.password} 
+              onChange={handleChange}
+              className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
+                validationErrors.password ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="••••••••"
+            />
+            <button 
+              type="button" 
+              onClick={() => setShowPassword(!showPassword)} 
+              className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
           <PasswordStrength password={formData.password} />
-          {validationErrors.password && <p className="text-red-600 text-sm">{validationErrors.password}</p>}
+          {validationErrors.password && (
+            <p className="text-red-600 text-xs mt-1">{validationErrors.password}</p>
+          )}
         </div>
+        
         <div>
-          <label className="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Confirmer le mot de passe</label>
           <div className="relative">
-            <input name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange}
-              className={`w-full border rounded-lg p-3 ${validationErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`} />
-            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 text-gray-400">
-              {showConfirmPassword ? <EyeOff /> : <Eye />}
+            <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+            <input 
+              name="confirmPassword" 
+              type={showConfirmPassword ? 'text' : 'password'} 
+              value={formData.confirmPassword} 
+              onChange={handleChange}
+              className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
+                validationErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="••••••••"
+            />
+            <button 
+              type="button" 
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+              className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+            >
+              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-          {validationErrors.confirmPassword && <p className="text-red-600 text-sm">{validationErrors.confirmPassword}</p>}
+          {validationErrors.confirmPassword && (
+            <p className="text-red-600 text-xs mt-1">{validationErrors.confirmPassword}</p>
+          )}
         </div>
+        
         <div>
           <label className="flex items-start">
-            <input type="checkbox" checked={acceptTerms} onChange={e => setAcceptTerms(e.target.checked)} className="mt-1" />
+            <input 
+              type="checkbox" 
+              checked={acceptTerms} 
+              onChange={e => setAcceptTerms(e.target.checked)} 
+              className="mt-1 w-4 h-4 text-[#7DDE4A] border-gray-300 rounded focus:ring-[#7DDE4A]"
+            />
             <span className="ml-2 text-sm text-gray-600">
-              J'accepte les <a href="/terms" className="text-green-600">conditions d'utilisation</a>
+              J'accepte les <a href="/terms" className="text-[#7DDE4A] hover:underline">conditions d'utilisation</a> et 
+              la <a href="/privacy" className="text-[#7DDE4A] hover:underline">politique de confidentialité</a>
             </span>
           </label>
-          {validationErrors.terms && <p className="text-red-600 text-sm">{validationErrors.terms}</p>}
+          {validationErrors.terms && (
+            <p className="text-red-600 text-xs mt-1 ml-6">{validationErrors.terms}</p>
+          )}
         </div>
-        <button type="submit" disabled={isSubmitting} className="w-full bg-green-500 text-white p-3 rounded-lg">
-          {isSubmitting ? 'Création...' : <>Créer mon compte <ArrowRight className="inline ml-2" /></>}
+        
+        <button 
+          type="submit" 
+          disabled={isSubmitting} 
+          className="w-full bg-[#7DDE4A] hover:bg-[#6BC93B] text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? (
+            <span>Création en cours...</span>
+          ) : (
+            <>
+              Créer mon compte
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </>
+          )}
         </button>
       </form>
+      
+      {onSwitchToLogin && (
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Déjà inscrit ? 
+          <button 
+            onClick={onSwitchToLogin}
+            className="text-[#7DDE4A] hover:underline ml-1 font-medium"
+          >
+            Se connecter
+          </button>
+        </p>
+      )}
     </div>
   );
 };
+
+export default RegisterForm;

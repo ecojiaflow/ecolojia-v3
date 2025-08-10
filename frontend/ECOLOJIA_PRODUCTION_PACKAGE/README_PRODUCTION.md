@@ -1,4 +1,4 @@
-﻿# ECOLOJIA - Package Production
+# ECOLOJIA - Package Production
 
 ## État actuel
 - Mode démo fonctionnel ✅

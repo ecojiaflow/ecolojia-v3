@@ -1,4 +1,4 @@
-﻿// Configuration pour basculer Demo/Production
+// Configuration pour basculer Demo/Production
 - Utiliser ConfigService.isDemoMode()
 - Si demo: utiliser demoMode.ts
 - Si prod: utiliser apiClient avec auth

@@ -1,374 +1,248 @@
-// frontend/src/auth/components/AuthPage.tsx
-
-import React, { useState, useCallback, useEffect } from 'react';
-import { LoginForm } from './LoginForm';
-import { RegisterForm } from './RegisterForm';
-import { useAuth } from '../hooks/useAuth';
+// PATH: frontend/src/auth/components/AuthPage.tsx
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
-type AuthMode = 'login' | 'register' | 'success';
+import { Sparkles, Leaf, Heart, Shield } from 'lucide-react';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import { useAuth } from '../context/AuthContext';
 
 interface AuthPageProps {
-  defaultMode?: AuthMode;
-  redirectTo?: string;
-  className?: string;
+  defaultMode?: 'login' | 'register';
 }
 
-export const AuthPage: React.FC<AuthPageProps> = ({
-  defaultMode = 'login',
-  redirectTo = '/dashboard',
-  className = ''
-}) => {
-  const [mode, setMode] = useState<AuthMode>(defaultMode);
-  const [registrationEmail, setRegistrationEmail] = useState('');
-  const [isDemoLoading, setIsDemoLoading] = useState(false);
-  
-  const { isAuthenticated, startDemoSession } = useAuth();
+export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode = 'login' }) => {
+  const [mode, setMode] = useState<'login' | 'register'>(defaultMode);
+  const [demoError, setDemoError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { startDemoMode } = useAuth();
 
-  // Si déjà connecté, rediriger
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(redirectTo);
-    }
-  }, [isAuthenticated, navigate, redirectTo]);
-
-  // Handlers pour forms
-  const handleLoginSuccess = useCallback(() => {
-    navigate(redirectTo);
-  }, [navigate, redirectTo]);
-
-  const handleRegisterSuccess = useCallback(() => {
-    setMode('success');
-  }, []);
-
-  const handleSwitchToRegister = useCallback(() => {
-    setMode('register');
-  }, []);
-
-  const handleSwitchToLogin = useCallback(() => {
-    setMode('login');
-  }, []);
-
-  // ✅ NOUVELLE FONCTION MODE DÉMO CORRIGÉE
-  const handleDemoMode = useCallback(async (tier: 'free' | 'premium' = 'premium') => {
-    if (!startDemoSession) {
-      console.error('❌ startDemoSession non disponible');
-      alert('Service mode démo temporairement indisponible');
-      return;
-    }
-
+  const handleStartDemo = async () => {
     try {
-      setIsDemoLoading(true);
-      console.log(`🎭 Activation mode démo ${tier} demandée`);
+      setDemoError(null);
       
-      // Utiliser le service intégré dans AuthContext
-      await startDemoSession(tier);
+      // Vérifier si startDemoMode existe
+      if (typeof startDemoMode !== 'function') {
+        console.error('❌ startDemoMode non disponible');
+        // Fallback: activer le mode démo manuellement
+        localStorage.setItem('ecolojia_demo_mode', 'true');
+        // Créer un utilisateur démo
+        const demoUser = {
+          _id: 'demo-user-' + Date.now(),
+          email: 'demo@ecolojia.app',
+          name: 'Utilisateur Démo',
+          profile: {
+            firstName: 'Utilisateur',
+            lastName: 'Démo',
+            avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=7DDE4A&color=fff'
+          },
+          tier: 'premium' as const,
+          emailVerified: true,
+          quotas: {
+            scansUsed: 15,
+            scansLimit: -1,
+            aiChatsUsed: 10,
+            aiChatsLimit: -1,
+            lastReset: new Date().toISOString()
+          }
+        };
+        
+        localStorage.setItem('ecolojia_token', 'demo-token-' + Date.now());
+        localStorage.setItem('ecolojia_user', JSON.stringify(demoUser));
+        
+        // Recharger la page pour appliquer les changements
+        window.location.href = '/dashboard';
+        return;
+      }
       
-      console.log('✅ Mode démo activé via AuthContext');
-      
-      // Petite pause pour UX
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Redirection automatique via useEffect au changement de isAuthenticated
-      
+      await startDemoMode();
     } catch (error) {
       console.error('❌ Erreur activation mode démo:', error);
-      alert('Erreur lors de l\'activation du mode démo. Veuillez réessayer.');
-    } finally {
-      setIsDemoLoading(false);
+      setDemoError('Impossible d\'activer le mode démo. Veuillez réessayer.');
     }
-  }, [startDemoSession]);
+  };
 
-  // ✅ FONCTIONS POUR LES DEUX TIERS
-  const handleFreeDemoMode = useCallback(() => handleDemoMode('free'), [handleDemoMode]);
-  const handlePremiumDemoMode = useCallback(() => handleDemoMode('premium'), [handleDemoMode]);
-
-  if (mode === 'success') {
-    return (
-      <div className={`auth-success ${className}`}>
-        <SuccessMessage 
-          email={registrationEmail}
-          onBackToLogin={() => setMode('login')}
-        />
-      </div>
-    );
-  }
+  const features = [
+    {
+      icon: Heart,
+      title: 'Santé',
+      description: 'Analysez l\'impact des produits sur votre santé'
+    },
+    {
+      icon: Leaf,
+      title: 'Environnement',
+      description: 'Découvrez l\'empreinte écologique de vos achats'
+    },
+    {
+      icon: Shield,
+      title: 'Transparence',
+      description: 'Accédez à des informations vérifiées et sourcées'
+    }
+  ];
 
   return (
-    <div className={`auth-page min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 ${className}`}>
+    <div className="min-h-screen bg-gradient-to-br from-[#F7F9F4] to-white">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            ECOLOJIA
-          </h1>
-          <p className="text-lg text-gray-600">
-            Votre assistant IA pour une consommation éclairée
-          </p>
-        </div>
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-4rem)]">
+          {/* Left side - Branding */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="hidden lg:block"
+          >
+            <div className="mb-8">
+              <h1 className="text-5xl font-bold text-[#3B3B3B] mb-4">
+                ECOLOJIA
+              </h1>
+              <p className="text-xl text-gray-600">
+                Votre guide pour une consommation éclairée et responsable
+              </p>
+            </div>
 
-        {/* ✅ SECTION MODE DÉMO AMÉLIORÉE */}
-        <div className="flex justify-center mb-8">
-          <div className="max-w-4xl w-full">
-            <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-              🎭 Tester ECOLOJIA en Mode Démo
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Mode Démo FREE */}
-              <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg p-6 text-center">
-                <div className="text-4xl mb-3">🆓</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Démo Gratuite
-                </h3>
-                <p className="text-blue-100 text-sm mb-4">
-                  Découvrez les fonctionnalités de base
-                </p>
-                
-                <div className="bg-white bg-opacity-20 rounded-lg p-3 mb-4 text-left">
-                  <div className="text-xs text-blue-100 space-y-1">
-                    <div className="flex items-center">
-                      <span className="text-blue-200 mr-2">✓</span>
-                      <span>25 analyses/mois</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-blue-200 mr-2">✓</span>
-                      <span>IA scientifique complète</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-blue-200 mr-2">✓</span>
-                      <span>Dashboard basique</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-red-300 mr-2">✗</span>
-                      <span>Chat IA premium</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={handleFreeDemoMode}
-                  disabled={isDemoLoading}
-                  className="w-full py-3 px-6 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            <div className="space-y-6 mb-8">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 * (index + 1) }}
+                  className="flex items-start gap-4"
                 >
-                  {isDemoLoading ? '⏳ Chargement...' : '🎯 Essayer Version Gratuite'}
+                  <div className="w-12 h-12 bg-[#7DDE4A]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <feature.icon className="w-6 h-6 text-[#7DDE4A]" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#3B3B3B] mb-1">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      {feature.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="p-6 bg-[#7DDE4A]/5 rounded-xl border border-[#7DDE4A]/20"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
+                <h4 className="font-semibold text-[#3B3B3B]">
+                  Essayez le mode démo
+                </h4>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">
+                Découvrez toutes les fonctionnalités d'ECOLOJIA sans créer de compte
+              </p>
+              <button
+                onClick={handleStartDemo}
+                className="w-full px-4 py-2 bg-[#7DDE4A] text-white rounded-lg font-medium hover:bg-[#6BC93B] transition-colors"
+              >
+                Démarrer la démo
+              </button>
+              {demoError && (
+                <p className="text-red-600 text-sm mt-2">{demoError}</p>
+              )}
+            </motion.div>
+          </motion.div>
+
+          {/* Right side - Auth forms */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-auto">
+              {/* Logo mobile */}
+              <div className="lg:hidden mb-6 text-center">
+                <h1 className="text-3xl font-bold text-[#3B3B3B]">ECOLOJIA</h1>
+              </div>
+
+              {/* Tabs */}
+              <div className="flex mb-8 bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setMode('login')}
+                  className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
+                    mode === 'login'
+                      ? 'bg-white text-[#3B3B3B] shadow-sm'
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Connexion
+                </button>
+                <button
+                  onClick={() => setMode('register')}
+                  className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
+                    mode === 'register'
+                      ? 'bg-white text-[#3B3B3B] shadow-sm'
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Inscription
                 </button>
               </div>
 
-              {/* Mode Démo PREMIUM */}
-              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg p-6 text-center relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
-                    ⭐ RECOMMANDÉ
-                  </span>
-                </div>
-                
-                <div className="text-4xl mb-3 mt-2">🚀</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Démo Premium
-                </h3>
-                <p className="text-purple-100 text-sm mb-4">
-                  Explorez toutes les fonctionnalités avancées
-                </p>
-                
-                <div className="bg-white bg-opacity-20 rounded-lg p-3 mb-4 text-left">
-                  <div className="text-xs text-purple-100 space-y-1">
-                    <div className="flex items-center">
-                      <span className="text-purple-200 mr-2">✓</span>
-                      <span>Analyses illimitées</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-purple-200 mr-2">✓</span>
-                      <span>Chat IA DeepSeek personnalisé</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-purple-200 mr-2">✓</span>
-                      <span>Dashboard analytics complet</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-purple-200 mr-2">✓</span>
-                      <span>Export données + API</span>
-                    </div>
-                  </div>
-                </div>
-                
+              {/* Forms */}
+              <AnimatePresence mode="wait">
+                {mode === 'login' ? (
+                  <motion.div
+                    key="login"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <LoginForm />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="register"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <RegisterForm />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Demo button mobile */}
+              <div className="lg:hidden mt-6 pt-6 border-t border-gray-200">
                 <button
-                  onClick={handlePremiumDemoMode}
-                  disabled={isDemoLoading}
-                  className="w-full py-3 px-6 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleStartDemo}
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                 >
-                  {isDemoLoading ? '⏳ Chargement...' : '🎯 Essayer Version Premium'}
+                  <Sparkles className="w-5 h-5" />
+                  Essayer le mode démo
                 </button>
+                {demoError && (
+                  <p className="text-red-600 text-sm mt-2 text-center">{demoError}</p>
+                )}
               </div>
             </div>
-            
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-800 text-sm text-center flex items-center justify-center">
-                <span className="text-blue-500 mr-2">💡</span>
-                <span>
-                  <strong>Mode Démo :</strong> Données factices stockées localement • Aucune inscription requise • Exploration complète de l'interface
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
 
-        {/* Séparateur */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="border-t border-gray-300 flex-1 max-w-xs"></div>
-          <div className="px-4 text-gray-500 text-sm">ou créer un compte réel</div>
-          <div className="border-t border-gray-300 flex-1 max-w-xs"></div>
-        </div>
-
-        {/* Auth Forms */}
-        <div className="flex justify-center">
-          <div className="max-w-md w-full">
-            {mode === 'login' ? (
-              <LoginForm
-                onSuccess={handleLoginSuccess}
-                onSwitchToRegister={handleSwitchToRegister}
-              />
-            ) : (
-              <RegisterForm
-                onSuccess={handleRegisterSuccess}
-                onSwitchToLogin={handleSwitchToLogin}
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Benefits Section */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
-            Pourquoi choisir ECOLOJIA ?
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-5xl mb-4">🔬</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                IA Scientifique Propriétaire
-              </h3>
-              <p className="text-gray-600">
-                Analyses basées sur INSERM, ANSES et EFSA. 
-                Classification NOVA, détection ultra-transformation pour tous produits.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-5xl mb-4">🤖</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Chat IA Expert Premium
-              </h3>
-              <p className="text-gray-600">
-                Questions illimitées à notre nutritionniste IA DeepSeek. 
-                Conseils personnalisés et alternatives sur mesure.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-5xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Multi-Catégories Unique
-              </h3>
-              <p className="text-gray-600">
-                Alimentaire, cosmétiques, détergents dans une seule app. 
-                Seule plateforme européenne complète.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Call to Action Final */}
-        <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-lg p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">
-              🌱 Prêt à commencer votre parcours santé consciente ?
-            </h3>
-            <p className="text-green-100 mb-6">
-              Rejoignez des milliers d'utilisateurs qui ont déjà amélioré leur consommation
+            {/* Legal */}
+            <p className="text-center text-xs text-gray-500 mt-6">
+              En continuant, vous acceptez nos{' '}
+              <a href="/terms" className="text-[#7DDE4A] hover:underline">
+                Conditions d'utilisation
+              </a>{' '}
+              et notre{' '}
+              <a href="/privacy" className="text-[#7DDE4A] hover:underline">
+                Politique de confidentialité
+              </a>
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={handlePremiumDemoMode}
-                disabled={isDemoLoading}
-                className="px-8 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50"
-              >
-                {isDemoLoading ? '⏳ Chargement...' : '🎯 Essayer Premium Démo'}
-              </button>
-              <button
-                onClick={() => setMode('register')}
-                className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg border-2 border-green-600 hover:bg-green-700 hover:border-green-700 transition-all duration-200"
-              >
-                📝 Créer un Compte Gratuit
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
   );
 };
 
-// Success Message Component
-interface SuccessMessageProps {
-  email: string;
-  onBackToLogin: () => void;
-}
-
-const SuccessMessage: React.FC<SuccessMessageProps> = ({ email, onBackToLogin }) => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center px-4">
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
-      <div className="text-6xl mb-6">🎉</div>
-      
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        Compte créé avec succès !
-      </h2>
-      
-      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <p className="text-green-800">
-          <strong>📧 Vérifiez votre email</strong>
-        </p>
-        <p className="text-green-700 text-sm mt-2">
-          Nous avons envoyé un lien de vérification à <strong>{email}</strong>
-        </p>
-      </div>
-      
-      <div className="space-y-4 text-sm text-gray-600">
-        <p>
-          <strong>Étapes suivantes :</strong>
-        </p>
-        <div className="text-left space-y-2">
-          <div className="flex items-start">
-            <span className="text-blue-500 mr-2">1.</span>
-            <span>Ouvrez votre boîte email</span>
-          </div>
-          <div className="flex items-start">
-            <span className="text-blue-500 mr-2">2.</span>
-            <span>Cliquez sur le lien de vérification</span>
-          </div>
-          <div className="flex items-start">
-            <span className="text-blue-500 mr-2">3.</span>
-            <span>Connectez-vous et commencez à scanner !</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="mt-8">
-        <button
-          onClick={onBackToLogin}
-          className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200"
-        >
-          🚀 Aller à la connexion
-        </button>
-      </div>
-      
-      <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-xs text-blue-800">
-          <strong>💡 Conseil :</strong> Vérifiez aussi vos spams si vous ne voyez pas l'email
-        </p>
-      </div>
-    </div>
-  </div>
-);
+export default AuthPage;

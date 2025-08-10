@@ -1,306 +1,202 @@
-// PATH: frontend\src\auth\context\AuthContext.tsx
+// PATH: frontend/src/auth/context/AuthContext.tsx
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import authService from '../../services/authService';
+import demoService from '../../services/demoService';
+import ConfigService from '../../services/configService';
+import { useNavigate } from 'react-router-dom';
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useCallback
-} from 'react';
-import { authService } from '../../services/authService';
-import { demoService } from '../../services/demoService';
-
-// Types simplifiés pour éviter les erreurs d'import
 interface User {
   _id: string;
   email: string;
   name: string;
-  profile?: {
+  profile: {
     firstName: string;
     lastName: string;
-    avatarUrl?: string;
+    avatar?: string;
   };
   tier: 'free' | 'premium' | 'family';
-  emailVerified: boolean;
-  quotas?: {
-    scansRemaining: number;
-    aiChatsRemaining: number;
+  quotas: {
+    scansUsed: number;
+    scansLimit: number;
   };
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  name?: string;
-  acceptTerms?: boolean;
-  marketingConsent?: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
   isDemoMode: boolean;
-  login: (credentials: LoginRequest) => Promise<void>;
-  register: (userData: RegisterRequest) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (data: any) => Promise<void>;
   logout: () => Promise<void>;
-  clearError: () => void;
-  refreshUser: () => Promise<void>;
-  startDemoSession: (tier?: 'free' | 'premium') => Promise<void>;
-  hasPermission: (permission: string) => boolean;
-  isFreeTier: () => boolean;
-  isPremiumTier: () => boolean;
-  getRemainingQuota: (type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls') => number;
-  canPerformAction: (action: 'scan' | 'aiQuestion' | 'export' | 'apiCall') => boolean;
+  updateUser: (user: User) => void;
+  startDemoMode: () => Promise<void>;
+  endDemoMode: () => void;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        setIsLoading(true);
-        if (demoService && demoService.isDemoActive?.()) {
-          const demoSession = demoService.getCurrentSession?.();
-          if (demoSession) {
-            setUser(demoSession.user);
-            setIsAuthenticated(true);
-            setIsDemoMode(true);
-            return;
-          }
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Vérifier si on est en mode démo
+      const demoMode = localStorage.getItem('ecolojia_demo_mode') === 'true';
+      if (demoMode) {
+        setIsDemoMode(true);
+        ConfigService.setMode('demo');
+        
+        // Charger l'utilisateur démo depuis le localStorage
+        const demoUser = localStorage.getItem('ecolojia_user');
+        if (demoUser) {
+          setUser(JSON.parse(demoUser));
         }
-        const token = localStorage.getItem('ecolojia_token');
-        if (token && authService) {
+      } else {
+        // Vérifier l'authentification normale
+        const token = authService.getToken();
+        if (token) {
           try {
             const userData = await authService.getProfile();
             setUser(userData);
-            setIsAuthenticated(true);
-            setIsDemoMode(false);
-          } catch (err) {
-            localStorage.removeItem('ecolojia_token');
-            localStorage.removeItem('ecolojia_refresh_token');
+          } catch (error) {
+            console.error('Failed to fetch profile:', error);
+            authService.logout();
           }
         }
-      } catch (err) {
-        console.error('Erreur initialisation auth:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
-  }, []);
-
-  const login = useCallback(async (credentials: LoginRequest) => {
-    try {
-      setError(null);
-      setIsLoading(true);
-      if (isDemoMode) {
-        demoService?.endDemoSession?.();
-        setIsDemoMode(false);
-      }
-      const response = await authService.login(credentials);
-      if (response.user) {
-        setUser(response.user);
-        setIsAuthenticated(true);
-        setIsDemoMode(false);
-      }
-    } catch (err: any) {
-      setError(err.message || 'Erreur de connexion');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isDemoMode]);
-
-  const register = useCallback(async (userData: RegisterRequest) => {
-    try {
-      setError(null);
-      setIsLoading(true);
-
-      if (isDemoMode) {
-        demoService?.endDemoSession?.();
-        setIsDemoMode(false);
-      }
-
-      await authService.register(userData);
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de l'inscription");
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isDemoMode]);
-
-  const logout = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      if (isDemoMode) {
-        demoService?.endDemoSession?.();
-      } else {
-        try {
-          await authService.logout();
-        } catch (err) {
-          console.warn('Erreur logout serveur:', err);
-        }
       }
     } catch (error) {
-      console.error('Erreur déconnexion:', error);
+      console.error('Auth status check failed:', error);
     } finally {
-      setUser(null);
-      setIsAuthenticated(false);
+      setIsLoading(false);
+    }
+  };
+
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await authService.login({ 
+        email, 
+        password,
+        rememberMe: true // Par défaut
+      });
+      setUser(response.user);
       setIsDemoMode(false);
-      setIsLoading(false);
-      setError(null);
-    }
-  }, [isDemoMode]);
-
-  const startDemoSession = useCallback(async (tier: 'free' | 'premium' = 'premium') => {
-    try {
-      if (isAuthenticated && !isDemoMode) {
-        localStorage.removeItem('ecolojia_token');
-        localStorage.removeItem('ecolojia_refresh_token');
-      }
-      const demoSession = demoService.startDemoSession(tier);
-      setUser(demoSession.user);
-      setIsAuthenticated(true);
-      setIsDemoMode(true);
-      setError(null);
+      ConfigService.setMode('production');
+      navigate('/dashboard');
     } catch (error) {
-      console.error('Erreur démarrage session démo:', error);
-      throw new Error('Impossible de démarrer le mode démo');
+      throw error;
     }
-  }, [isAuthenticated, isDemoMode]);
+  };
 
-  const refreshUser = useCallback(async () => {
+  const register = async (data: any) => {
     try {
-      if (isDemoMode) {
-        const demoSession = demoService?.getCurrentSession?.();
-        if (demoSession) {
-          setUser(demoSession.user);
-        }
-        return;
-      }
-
-      if (isAuthenticated && authService.getToken?.()) {
-        const userData = await authService.getProfile();
-        setUser(userData);
-      }
-    } catch (err) {
-      console.error('Erreur refresh user:', err);
-      await logout();
+      const response = await authService.register(data);
+      setUser(response.user);
+      setIsDemoMode(false);
+      ConfigService.setMode('production');
+      navigate('/dashboard');
+    } catch (error) {
+      throw error;
     }
-  }, [isDemoMode, isAuthenticated, logout]);
+  };
 
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
-  const hasPermission = useCallback((permission: string): boolean => {
-    if (!user) return false;
-    const premiumPermissions = [
-      'unlimited_scans',
-      'ai_chat',
-      'export_data',
-      'advanced_analytics',
-      'api_access'
-    ];
-    if (permission === 'basic_analysis') return true;
-    return premiumPermissions.includes(permission) && user.tier === 'premium';
-  }, [user]);
-
-  const isFreeTier = useCallback(() => !user || user.tier === 'free', [user]);
-  const isPremiumTier = useCallback(() => user?.tier === 'premium', [user]);
-
-  const getRemainingQuota = useCallback((type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls'): number => {
-    if (!user) return 0;
-
-    if (isDemoMode) {
-      const demoSession = demoService?.getCurrentSession?.();
-      if (demoSession?.quotas?.[type]) {
-        const quota = demoSession.quotas[type];
-        if (quota.limit === -1) return -1;
-        return Math.max(0, quota.limit - quota.used);
-      }
-      return 0;
+  const logout = async () => {
+    try {
+      await authService.logout();
+      setUser(null);
+      setIsDemoMode(false);
+      ConfigService.setMode('demo');
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
     }
+  };
 
-    if (user.tier === 'premium') return -1;
+  const startDemoMode = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Utiliser demoService pour créer une session démo
+      const demoSession = await demoService.startDemoSession();
+      
+      // Sauvegarder les données de démo
+      localStorage.setItem('ecolojia_demo_mode', 'true');
+      localStorage.setItem('ecolojia_token', demoSession.token);
+      localStorage.setItem('ecolojia_refresh_token', demoSession.refreshToken);
+      localStorage.setItem('ecolojia_user', JSON.stringify(demoSession.user));
+      
+      // Mettre à jour l'état
+      setUser(demoSession.user);
+      setIsDemoMode(true);
+      ConfigService.setMode('demo');
+      
+      // Rediriger vers le dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Failed to start demo mode:', error);
+      throw new Error('Impossible de démarrer le mode démo');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const freeQuotas = {
-      scans: 30,
-      aiQuestions: 5,
-      exports: 0,
-      apiCalls: 0
-    };
+  const endDemoMode = () => {
+    // Nettoyer les données de démo
+    localStorage.removeItem('ecolojia_demo_mode');
+    localStorage.removeItem('ecolojia_token');
+    localStorage.removeItem('ecolojia_refresh_token');
+    localStorage.removeItem('ecolojia_user');
+    
+    // Réinitialiser l'état
+    setUser(null);
+    setIsDemoMode(false);
+    ConfigService.setMode('demo');
+    
+    // Rediriger vers l'accueil
+    navigate('/');
+  };
 
-    return freeQuotas[type] || 0;
-  }, [user, isDemoMode]);
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem('ecolojia_user', JSON.stringify(updatedUser));
+  };
 
-  const canPerformAction = useCallback((action: 'scan' | 'aiQuestion' | 'export' | 'apiCall') => {
-    const actionMap = {
-      scan: 'scans',
-      aiQuestion: 'aiQuestions',
-      export: 'exports',
-      apiCall: 'apiCalls'
-    } as const;
-
-    const remaining = getRemainingQuota(actionMap[action]);
-    return remaining === -1 || remaining > 0;
-  }, [getRemainingQuota]);
-
-  const contextValue: AuthContextType = {
+  const value: AuthContextType = {
     user,
-    isAuthenticated,
+    isAuthenticated: !!user,
     isLoading,
-    error,
     isDemoMode,
     login,
     register,
     logout,
-    clearError,
-    refreshUser,
-    startDemoSession,
-    hasPermission,
-    isFreeTier,
-    isPremiumTier,
-    getRemainingQuota,
-    canPerformAction
+    updateUser,
+    startDemoMode,
+    endDemoMode
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth doit être utilisé dans un AuthProvider');
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
+export { AuthContext };
 export default AuthContext;

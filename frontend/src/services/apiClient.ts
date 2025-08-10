@@ -1,207 +1,251 @@
-// ===================================
-// 1. apiClient.ts - VERSION CORRIGÉE
-// ===================================
 // PATH: frontend/src/services/apiClient.ts
+/**
+ * Client API pour toutes les requÃƒÂªtes HTTP
+ * GÃƒÂ¨re automatiquement l'authentification et les erreurs
+ */
 
 import axios from 'axios';
-import API_CONFIG from '../config/api.config';
+import { API_CONFIG, ERROR_MESSAGES } from '../config/api.config';
+import ConfigService from './configService';
 
 // Configuration de base
-const API_BASE_URL = API_CONFIG.getCurrentApiUrl();
-
-console.log('🔧 API Client Configuration:', {
-  baseURL: API_BASE_URL,
-  env: import.meta.env.MODE,
-  isProduction: import.meta.env.PROD,
-  viteApiUrl: import.meta.env.VITE_API_URL
-});
-
-// Instance Axios avec configuration complète
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true, // Important pour les cookies
+  baseURL: API_CONFIG.getCurrentUrl(),
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.DEFAULT_HEADERS
 });
 
-// Types pour une meilleure gestion des erreurs
-interface ApiError {
-  message: string;
-  code?: string;
-  status?: number;
-  details?: any;
-}
-
-// Intercepteur de requête
+// Intercepteur pour ajouter le token d'authentification
 apiClient.interceptors.request.use(
   (config) => {
-    // Ajouter le token si disponible
-    const token = localStorage.getItem('token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Ne pas ajouter de token pour les endpoints d'authentification
+    const isAuthEndpoint = config.url?.includes('/auth/login') || 
+                          config.url?.includes('/auth/register') ||
+                          config.url?.includes('/auth/refresh');
+    
+    if (!isAuthEndpoint) {
+      // RÃƒÂ©cupÃƒÂ©rer le token depuis le localStorage avec la bonne clÃƒÂ©
+      const token = localStorage.getItem('ecolojia_token');
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-
-    // Log en développement
+    
+    // Log en dev
     if (import.meta.env.DEV) {
-      console.log(`🔤 ${config.method?.toUpperCase()} ${config.url}`, {
-        headers: config.headers,
-        data: config.data
+      console.log('Ã°Å¸â€â€ž API Request:', {
+        method: config.method?.toUpperCase(),
+        url: config.url,
+        hasToken: !!config.headers.Authorization,
+        headers: config.headers
       });
     }
-
+    
     return config;
   },
   (error) => {
-    console.error('❌ Erreur requête:', error);
+    console.error('Ã¢ÂÅ’ Request error:', error);
     return Promise.reject(error);
   }
 );
 
-// Intercepteur de réponse
+// Intercepteur pour gÃƒÂ©rer les rÃƒÂ©ponses et erreurs
 apiClient.interceptors.response.use(
   (response) => {
-    // Log en développement
+    // Log en dev
     if (import.meta.env.DEV) {
-      console.log(`📥 ${response.config.method?.toUpperCase()} ${response.config.url}`, {
-        status: response.status,
-        data: response.data
-      });
+      console.log('Ã¢Å“â€¦ API Response:', response.config.url, response.status);
     }
+    
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
-
-    // Gestion du refresh token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    
+    // Log dÃƒÂ©taillÃƒÂ© de l'erreur
+    if (import.meta.env.DEV) {
+      console.error('Ã¢ÂÅ’ API Error:', {
+        url: originalRequest?.url,
+        status: error.response?.status,
+        message: error.message,
+        data: error.response?.data
+      });
+    }
+    
+    // Ne pas traiter les erreurs d'authentification sur les endpoints de login/register
+    const isAuthEndpoint = originalRequest?.url?.includes('/auth/login') || 
+                          originalRequest?.url?.includes('/auth/register');
+    
+    // Gestion du token expirÃƒÂ© (401) - seulement pour les routes protÃƒÂ©gÃƒÂ©es
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
-
+      
+      // Si le message est "Token non fourni", c'est qu'on n'est pas connectÃƒÂ©
+      if (error.response?.data?.message === 'Token non fourni') {
+        // Basculer en mode dÃƒÂ©mo
+        ConfigService.setMode('demo');
+        
+        // CrÃƒÂ©er une erreur personnalisÃƒÂ©e qui indique qu'on est en mode dÃƒÂ©mo
+        const demoError = new Error('Mode dÃƒÂ©monstration activÃƒÂ©') as any;
+        demoError.isDemoMode = true;
+        demoError.statusCode = 401;
+        return Promise.reject(demoError);
+      }
+      
+      // Sinon, essayer de rafraÃƒÂ®chir le token
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = localStorage.getItem('ecolojia_refresh_token');
         if (refreshToken) {
-          const response = await apiClient.post('/auth/refresh', {
-            refreshToken
-          });
-
-          const { token } = response.data;
-          localStorage.setItem('token', token);
-
-          // Réessayer la requête originale
+          const response = await axios.post(
+            `${API_CONFIG.getCurrentUrl()}${API_CONFIG.ENDPOINTS.AUTH.REFRESH}`,
+            { refreshToken }
+          );
+          
+          const { token, refreshToken: newRefreshToken } = response.data;
+          
+          // Sauvegarder les nouveaux tokens avec les bonnes clÃƒÂ©s
+          localStorage.setItem('ecolojia_token', token);
+          localStorage.setItem('ecolojia_refresh_token', newRefreshToken);
+          
+          // RÃƒÂ©essayer la requÃƒÂªte originale
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return apiClient(originalRequest);
         }
       } catch (refreshError) {
-        // Échec du refresh, déconnexion
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/login';
+        // Ãƒâ€°chec du refresh, dÃƒÂ©connecter l'utilisateur
+        localStorage.removeItem('ecolojia_token');
+        localStorage.removeItem('ecolojia_refresh_token');
+        localStorage.removeItem('ecolojia_user');
+        
+        // Basculer en mode dÃƒÂ©mo
+        ConfigService.setMode('demo');
+        
+        // CrÃƒÂ©er une erreur qui indique qu'on est en mode dÃƒÂ©mo
+        const demoError = new Error('Session expirÃƒÂ©e - Mode dÃƒÂ©monstration activÃƒÂ©') as any;
+        demoError.isDemoMode = true;
+        demoError.statusCode = 401;
+        return Promise.reject(demoError);
       }
     }
-
-    // Gestion des erreurs détaillée
-    const apiError: ApiError = {
-      message: 'Une erreur est survenue',
-      status: error.response?.status
-    };
-
-    if (error.response) {
-      // Erreur de réponse du serveur
-      apiError.message = error.response.data?.error || error.response.data?.message || 'Erreur serveur';
-      apiError.code = error.response.data?.code;
-      apiError.details = error.response.data?.details;
-
-      // Messages d'erreur personnalisés selon le statut
+    
+    // Gestion des autres erreurs
+    let errorMessage = ERROR_MESSAGES.SERVER_ERROR;
+    
+    if (error.code === 'ECONNABORTED') {
+      errorMessage = ERROR_MESSAGES.TIMEOUT;
+    } else if (!error.response) {
+      errorMessage = ERROR_MESSAGES.NETWORK_ERROR;
+    } else {
       switch (error.response.status) {
-        case 400:
-          apiError.message = error.response.data?.error || 'Données invalides';
-          break;
-        case 401:
-          apiError.message = 'Session expirée, veuillez vous reconnecter';
-          break;
         case 403:
-          apiError.message = 'Accès refusé';
+          errorMessage = ERROR_MESSAGES.FORBIDDEN;
           break;
         case 404:
-          apiError.message = 'Ressource non trouvée';
+          errorMessage = ERROR_MESSAGES.NOT_FOUND;
           break;
         case 429:
-          apiError.message = 'Trop de requêtes, veuillez réessayer plus tard';
+          errorMessage = ERROR_MESSAGES.QUOTA_EXCEEDED;
           break;
-        case 500:
-          apiError.message = 'Erreur serveur, veuillez réessayer plus tard';
+        case 400:
+          errorMessage = error.response.data?.message || ERROR_MESSAGES.INVALID_DATA;
           break;
+        case 401:
+          // Pour les endpoints d'auth, utiliser le message du serveur
+          if (isAuthEndpoint) {
+            errorMessage = error.response.data?.message || ERROR_MESSAGES.UNAUTHORIZED;
+          } else {
+            errorMessage = error.response.data?.message || ERROR_MESSAGES.UNAUTHORIZED;
+          }
+          break;
+        default:
+          errorMessage = error.response.data?.message || ERROR_MESSAGES.SERVER_ERROR;
       }
-    } else if (error.request) {
-      // Pas de réponse du serveur
-      apiError.message = 'Impossible de contacter le serveur';
-      apiError.code = 'NETWORK_ERROR';
-    } else {
-      // Erreur de configuration
-      apiError.message = error.message;
-      apiError.code = 'CLIENT_ERROR';
     }
-
-    console.error('❌ Erreur API:', {
-      url: originalRequest?.url,
-      method: originalRequest?.method,
-      error: apiError
-    });
-
-    return Promise.reject(apiError);
+    
+    // CrÃƒÂ©er une erreur personnalisÃƒÂ©e
+    const customError = new Error(errorMessage) as any;
+    customError.originalError = error;
+    customError.statusCode = error.response?.status;
+    customError.data = error.response?.data;
+    
+    return Promise.reject(customError);
   }
 );
 
-// Fonctions utilitaires pour les requêtes communes
-export const api = {
-  // GET avec gestion d'erreur améliorée
-  get: <T = any>(url: string, config?: any) => 
-    apiClient.get<T>(url, config)
-      .then(res => res.data)
-      .catch(error => {
-        console.error(`❌ GET ${url} failed:`, error);
-        throw error;
-      }),
+// Wrapper pour gÃƒÂ©rer le mode dÃƒÂ©mo
+const makeRequest = async (method: string, url: string, data?: any, config?: any) => {
+  // Si on est en mode dÃƒÂ©mo, utiliser le ConfigService
+  if (ConfigService.isDemo()) {
+    try {
+      const response = await ConfigService.makeRequest(url, {
+        method,
+        body: data ? JSON.stringify(data) : undefined,
+        ...config
+      });
+      return response;
+    } catch (error) {
+      console.error('Demo mode error:', error);
+      throw error;
+    }
+  }
+  
+  // Sinon, utiliser le client axios normal
+  const axiosMethod = method.toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete';
+  
+  if (axiosMethod === 'get' || axiosMethod === 'delete') {
+    return apiClient[axiosMethod](url, config).then(res => res.data);
+  } else {
+    return apiClient[axiosMethod](url, data, config).then(res => res.data);
+  }
+};
 
+// MÃƒÂ©thodes utilitaires
+export const api = {
+  // GET
+  get: <T = any>(url: string, config?: any) => 
+    makeRequest('GET', url, undefined, config) as Promise<T>,
+  
   // POST
   post: <T = any>(url: string, data?: any, config?: any) => 
-    apiClient.post<T>(url, data, config)
-      .then(res => res.data)
-      .catch(error => {
-        console.error(`❌ POST ${url} failed:`, error);
-        throw error;
-      }),
-
+    makeRequest('POST', url, data, config) as Promise<T>,
+  
   // PUT
   put: <T = any>(url: string, data?: any, config?: any) => 
-    apiClient.put<T>(url, data, config)
-      .then(res => res.data)
-      .catch(error => {
-        console.error(`❌ PUT ${url} failed:`, error);
-        throw error;
-      }),
-
+    makeRequest('PUT', url, data, config) as Promise<T>,
+  
   // PATCH
   patch: <T = any>(url: string, data?: any, config?: any) => 
-    apiClient.patch<T>(url, data, config)
-      .then(res => res.data)
-      .catch(error => {
-        console.error(`❌ PATCH ${url} failed:`, error);
-        throw error;
-      }),
-
+    makeRequest('PATCH', url, data, config) as Promise<T>,
+  
   // DELETE
   delete: <T = any>(url: string, config?: any) => 
-    apiClient.delete<T>(url, config)
-      .then(res => res.data)
-      .catch(error => {
-        console.error(`❌ DELETE ${url} failed:`, error);
-        throw error;
-      }),
-
-  // Upload avec progress
-  upload: <T = any>(url: string, formData: FormData, onProgress?: (progress: number) => void) => {
+    makeRequest('DELETE', url, undefined, config) as Promise<T>,
+  
+  // Upload de fichier
+  upload: <T = any>(url: string, file: File, onProgress?: (progress: number) => void) => {
+    if (ConfigService.isDemo()) {
+      // Simuler un upload en mode dÃƒÂ©mo
+      return new Promise<T>((resolve) => {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 10;
+          if (onProgress) onProgress(progress);
+          if (progress >= 100) {
+            clearInterval(interval);
+            resolve({
+              success: true,
+              url: 'https://demo-url.com/file.jpg',
+              filename: file.name
+            } as any);
+          }
+        }, 200);
+      });
+    }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
     return apiClient.post<T>(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -216,71 +260,32 @@ export const api = {
   }
 };
 
-// File d'attente pour les requêtes en attente
-let requestQueue: Array<() => void> = [];
-
-// Fonction pour vider la file d'attente
-export const clearRequestQueue = () => {
-  requestQueue = [];
-  console.log('🧹 File d\'attente des requêtes vidée');
-};
-
-// Fonction pour extraire un message d'erreur lisible
-export const getErrorMessage = (error: any): string => {
-  // Si c'est déjà une chaîne
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  // Si c'est notre format ApiError
-  if (error?.message) {
-    return error.message;
-  }
-
-  // Si c'est une erreur axios
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
-  }
-
-  if (error?.response?.data?.error) {
-    return error.response.data.error;
-  }
-
-  // Si c'est une erreur réseau
-  if (error?.code === 'NETWORK_ERROR') {
-    return 'Impossible de contacter le serveur. Vérifiez votre connexion.';
-  }
-
-  // Message par défaut
-  return 'Une erreur inattendue s\'est produite';
-};
-
-// Export nommé pour compatibilité avec les imports existants
+// Export du client axios pour les cas spÃƒÂ©ciaux
 export { apiClient };
 
-// Export par défaut aussi
-export default apiClient;
+// Export par dÃƒÂ©faut
+export default api;
 
-// Fonction de test de connexion
-export const testConnection = async () => {
+
+//
+// === Anti-double-/api interceptor (auto-fix, generic) ===
+(function attachAntiApiInterceptor(){
   try {
-    console.log('🔍 Test de connexion à :', API_BASE_URL);
-    const response = await apiClient.get('/');
-    console.log('✅ Connexion réussie:', response.data);
-    return { success: true, data: response.data };
-  } catch (error: any) {
-    console.error('❌ Échec de connexion:', error);
-    return { success: false, error };
-  }
-};
+    var inst = apiClient;
+    if (!inst || !inst.interceptors || !inst.interceptors.request) return;
+    if (inst.__antiApiPatched) return;
+    inst.__antiApiPatched = true;
 
-// Auto-test au chargement en développement
-if (import.meta.env.DEV) {
-  setTimeout(() => {
-    testConnection().then(result => {
-      if (!result.success) {
-        console.warn('⚠️ Impossible de se connecter au backend. Vérifiez que le serveur est lancé.');
-      }
+    var API_BASE_NORMALIZED = (typeof API_CONFIG !== 'undefined' && API_CONFIG.BASE_URL ? API_CONFIG.BASE_URL : '').replace(/\/+$/, '');
+    inst.interceptors.request.use(function(config){
+      try {
+        var url = config && config.url ? config.url : '';
+        var baseEndsWithApi = /\/api$/i.test(API_BASE_NORMALIZED);
+        if (baseEndsWithApi && /^\/api(\/|$)/i.test(url)) {
+          config.url = url.replace(/^\/api(\/|$)/i, '/');
+        }
+      } catch(e){}
+      return config;
     });
-  }, 1000);
-}
+  } catch(e){}
+})();

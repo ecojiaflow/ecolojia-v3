@@ -1,341 +1,669 @@
 // PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Clock, 
-  Package, 
-  Heart, 
-  Droplets, 
-  ChevronRight,
-  Search,
-  Filter,
-  Trash2,
+  Calendar, 
+  Search, 
+  Filter, 
+  Download, 
+  Trash2, 
+  ChevronDown,
   Star,
+  AlertCircle,
   TrendingUp,
-  TrendingDown,
-  Minus
+  Package,
+  ArrowUpRight,
+  Clock,
+  CheckSquare,
+  X
 } from 'lucide-react';
-import { aiAnalysisService } from '../services/aiAnalysisService';
+import historyService from '../services/historyService';
+import dashboardService from '../services/dashboardService';
+import authService from '../services/authService';
+import ConfigService from '../services/configService';
+import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
+// Types
 interface HistoryItem {
-  id: string;
-  product: {
-    name: string;
-    brand?: string;
-    category: 'food' | 'cosmetics' | 'detergents';
-    barcode?: string;
+  _id: string;
+  productId: string;
+  productName: string;
+  productBrand: string;
+  category: string;
+  analysisDate: string;
+  scores: {
+    health: number;
+    environment: number;
+    social: number;
+    overall: number;
   };
-  analysis: {
-    healthScore: number;
-    category: string;
-    recommendations: string[];
-  };
-  analyzedAt: Date;
-  isFavorite?: boolean;
+  nutriScore?: string;
+  novaGroup?: number;
+  isFavorite: boolean;
+  productImage?: string;
 }
 
-export const HistoryPage: React.FC = () => {
+interface FilterState {
+  category: string;
+  dateRange: string;
+  minScore: number;
+  sortBy: 'date' | 'score' | 'name';
+  sortOrder: 'asc' | 'desc';
+}
+
+const HistoryPage: React.FC = () => {
   const navigate = useNavigate();
-  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
-  const [filteredItems, setFilteredItems] = useState<HistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
+  const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [stats, setStats] = useState<any>(null);
+  const [isDemo, setIsDemo] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  
+  const [filters, setFilters] = useState<FilterState>({
+    category: 'all',
+    dateRange: 'all',
+    minScore: 0,
+    sortBy: 'date',
+    sortOrder: 'desc'
+  });
+
+  const itemsPerPage = 12;
+  const isPremium = authService.isPremium();
 
   useEffect(() => {
-    loadHistory();
-  }, []);
+    fetchHistory();
+    fetchStats();
+  }, [currentPage, filters]);
 
-  useEffect(() => {
-    filterAndSortItems();
-  }, [historyItems, searchQuery, selectedCategory, sortBy]);
-
-  const loadHistory = async () => {
-    setIsLoading(true);
+  const fetchHistory = async () => {
     try {
-      const history = await aiAnalysisService.getHistory(50);
-      setHistoryItems(history.map((item, index) => ({
-        ...item,
-        id: `history-${index}`,
-        analyzedAt: new Date(item.timestamp || Date.now())
-      })));
-    } catch (error) {
-      console.error('Error loading history:', error);
+      setLoading(true);
+      setError(null);
+      
+      // Vérifier si l'utilisateur est connecté
+      const token = localStorage.getItem('ecolojia_token');
+      
+      if (!token && !ConfigService.isDemo()) {
+        // Basculer en mode démo
+        ConfigService.setMode('demo');
+        setIsDemo(true);
+        setShowLoginPrompt(true);
+      }
+      
+      // Utiliser les services normalement (ils gèrent le mode démo en interne)
+      const [historyData, totalCount] = await Promise.all([
+        historyService.getHistory(
+          currentPage,
+          itemsPerPage,
+          filters.category !== 'all' ? filters.category : undefined,
+          filters.sortBy,
+          filters.sortOrder
+        ),
+        historyService.getHistoryCount(
+          filters.category !== 'all' ? filters.category : undefined
+        )
+      ]);
+
+      // Filtrer selon la recherche
+      let filteredHistory = historyData;
+      if (searchQuery) {
+        filteredHistory = historyData.filter(item =>
+          item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.productBrand.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+
+      // Filtrer selon le score minimum
+      if (filters.minScore > 0) {
+        filteredHistory = filteredHistory.filter(item =>
+          item.scores.overall >= filters.minScore
+        );
+      }
+
+      setHistory(filteredHistory);
+      setTotalPages(Math.ceil(totalCount / itemsPerPage));
+      setIsDemo(ConfigService.isDemo());
+      
+    } catch (error: any) {
+      console.error('Error fetching history:', error);
+      
+      // Si on a une erreur isDemoMode, passer en mode démo
+      if (error.isDemoMode || error.statusCode === 401) {
+        ConfigService.setMode('demo');
+        setIsDemo(true);
+        setShowLoginPrompt(true);
+        
+        // Réessayer en mode démo
+        fetchHistory();
+      } else {
+        setError('Impossible de charger votre historique');
+      }
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const filterAndSortItems = () => {
-    let filtered = [...historyItems];
+  const fetchStats = async () => {
+    try {
+      const dashboardStats = await dashboardService.getStats();
+      setStats(dashboardStats);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
-    // Filtrer par recherche
-    if (searchQuery) {
-      filtered = filtered.filter(item =>
-        item.product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.product.brand?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  const handleDelete = async (ids: string[]) => {
+    if (isDemo) {
+      alert('La suppression n\'est pas disponible en mode démonstration');
+      return;
+    }
+    
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+      return;
     }
 
-    // Filtrer par catégorie
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(item => item.product.category === selectedCategory);
+    try {
+      await Promise.all(ids.map(id => historyService.deleteHistoryItem(id)));
+      setSelectedItems([]);
+      fetchHistory();
+    } catch (error) {
+      console.error('Error deleting items:', error);
+      alert('Erreur lors de la suppression');
+    }
+  };
+
+  const handleExport = async () => {
+    if (!isPremium) {
+      navigate('/pricing');
+      return;
     }
 
-    // Trier
-    filtered.sort((a, b) => {
-      if (sortBy === 'date') {
-        return b.analyzedAt.getTime() - a.analyzedAt.getTime();
-      } else {
-        return b.analysis.healthScore - a.analysis.healthScore;
-      }
-    });
-
-    setFilteredItems(filtered);
+    try {
+      const data = await historyService.exportHistory('csv');
+      // Créer un blob et télécharger
+      const blob = new Blob([data], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ecolojia-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      a.click();
+    } catch (error) {
+      console.error('Error exporting history:', error);
+      alert('Erreur lors de l\'export');
+    }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food':
-        return <Package className="w-4 h-4" />;
-      case 'cosmetics':
-        return <Heart className="w-4 h-4" />;
-      case 'detergents':
-        return <Droplets className="w-4 h-4" />;
-      default:
-        return <Package className="w-4 h-4" />;
+      case 'food': return '🍎';
+      case 'cosmetic': return '💄';
+      case 'detergent': return '🧼';
+      default: return '📦';
     }
   };
 
-  const getScoreColor = (score: number): string => {
+  const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
     return 'text-red-600';
   };
 
-  const getScoreTrend = (score: number) => {
-    if (score >= 80) return <TrendingUp className="w-4 h-4 text-green-600" />;
-    if (score >= 40) return <Minus className="w-4 h-4 text-yellow-600" />;
-    return <TrendingDown className="w-4 h-4 text-red-600" />;
-  };
-
-  const toggleFavorite = (id: string) => {
-    setHistoryItems(prev => prev.map(item =>
-      item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-    ));
-  };
-
-  const deleteItem = (id: string) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-      setHistoryItems(prev => prev.filter(item => item.id !== id));
-    }
-  };
-
-  const viewAnalysis = (item: HistoryItem) => {
-    navigate('/results', { 
-      state: { 
-        result: {
-          product: item.product,
-          analysis: item.analysis,
-          timestamp: item.analyzedAt
-        }
-      }
-    });
-  };
-
-  // Statistiques
-  const stats = {
-    total: historyItems.length,
-    avgScore: historyItems.length > 0 
-      ? Math.round(historyItems.reduce((sum, item) => sum + item.analysis.healthScore, 0) / historyItems.length)
-      : 0,
-    byCategory: {
-      food: historyItems.filter(item => item.product.category === 'food').length,
-      cosmetics: historyItems.filter(item => item.product.category === 'cosmetics').length,
-      detergents: historyItems.filter(item => item.product.category === 'detergents').length
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header avec stats */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Historique des analyses</h1>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Total analyses</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+    <div className="min-h-screen bg-[#F7F9F4]">
+      {/* Bannière mode démo */}
+      <AnimatePresence>
+        {showLoginPrompt && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-[#7DDE4A] text-white p-4"
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5" />
+                <p className="font-medium">
+                  Mode démonstration activé - Connectez-vous pour accéder à votre historique personnel
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-white text-[#7DDE4A] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                >
+                  Se connecter
+                </button>
+                <button
+                  onClick={() => setShowLoginPrompt(false)}
+                  className="text-white hover:text-gray-200"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Score moyen</p>
-              <p className={`text-2xl font-bold ${getScoreColor(stats.avgScore)}`}>
-                {stats.avgScore}/100
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-[#DDE9DA]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-[#3B3B3B]">
+                Historique des analyses
+              </h1>
+              <p className="text-gray-600 mt-2">
+                {isDemo 
+                  ? 'Découvrez des exemples d\'analyses de produits'
+                  : 'Retrouvez tous vos produits scannés'
+                }
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Alimentaire</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.byCategory.food}</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600">Cosmétiques</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.byCategory.cosmetics}</p>
+            
+            {/* Actions */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Filter className="w-5 h-5" />
+                <span>Filtrer</span>
+              </button>
+              
+              <button
+                onClick={handleExport}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                  isPremium 
+                    ? 'bg-[#7DDE4A] text-white hover:bg-[#6BC93B]'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+                disabled={!isPremium}
+              >
+                <Download className="w-5 h-5" />
+                <span>Exporter</span>
+                {!isPremium && (
+                  <span className="bg-[#FFD700] text-[#3B3B3B] text-xs px-2 py-0.5 rounded-full">
+                    Premium
+                  </span>
+                )}
+              </button>
+              
+              {selectedItems.length > 0 && !isDemo && (
+                <button
+                  onClick={() => handleDelete(selectedItems)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span>Supprimer ({selectedItems.length})</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filtres et recherche */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Barre de recherche */}
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Rechercher un produit..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+      {/* Statistiques */}
+      {stats && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-xl p-6 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm">Total scans</p>
+                  <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
+                    {stats.totalScans}
+                  </p>
+                </div>
+                <Package className="w-10 h-10 text-[#7DDE4A]" />
               </div>
-            </div>
+            </motion.div>
 
-            {/* Filtre par catégorie */}
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl p-6 shadow-sm"
             >
-              <option value="all">Toutes catégories</option>
-              <option value="food">Alimentaire</option>
-              <option value="cosmetics">Cosmétiques</option>
-              <option value="detergents">Détergents</option>
-            </select>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm">Score moyen</p>
+                  <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
+                    {stats.healthScoreAverage}%
+                  </p>
+                </div>
+                <TrendingUp className="w-10 h-10 text-[#7DDE4A]" />
+              </div>
+            </motion.div>
 
-            {/* Tri */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl p-6 shadow-sm"
             >
-              <option value="date">Plus récents</option>
-              <option value="score">Meilleur score</option>
-            </select>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm">Ce mois-ci</p>
+                  <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
+                    +{stats.monthlyProgress}%
+                  </p>
+                </div>
+                <ArrowUpRight className="w-10 h-10 text-[#7DDE4A]" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl p-6 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm">Catégorie top</p>
+                  <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
+                    {stats.topCategory}
+                  </p>
+                </div>
+                <Star className="w-10 h-10 text-[#7DDE4A]" />
+              </div>
+            </motion.div>
           </div>
         </div>
+      )}
 
-        {/* Liste des analyses */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center space-x-2">
-              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-gray-600">Chargement...</span>
-            </div>
-          </div>
-        ) : filteredItems.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              {searchQuery || selectedCategory !== 'all' 
-                ? 'Aucun résultat trouvé' 
-                : 'Aucune analyse enregistrée'
-              }
-            </h2>
-            <p className="text-gray-600 mb-6">
-              {searchQuery || selectedCategory !== 'all'
-                ? 'Essayez avec d\'autres critères de recherche'
-                : 'Commencez à analyser des produits pour voir votre historique ici'
-              }
-            </p>
-            {!searchQuery && selectedCategory === 'all' && (
-              <button
-                onClick={() => navigate('/scan')}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-              >
-                Analyser un produit
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => viewAnalysis(item)}
-              >
-                <div className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-4 flex-1">
-                      {/* Icône catégorie */}
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        item.product.category === 'food' ? 'bg-green-100 text-green-600' :
-                        item.product.category === 'cosmetics' ? 'bg-pink-100 text-pink-600' :
-                        'bg-blue-100 text-blue-600'
-                      }`}>
-                        {getCategoryIcon(item.product.category)}
-                      </div>
-
-                      {/* Informations produit */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
-                            {item.product.brand && (
-                              <p className="text-sm text-gray-600">{item.product.brand}</p>
-                            )}
-                            <p className="text-xs text-gray-500 mt-1">
-                              Analysé le {item.analyzedAt.toLocaleDateString()}
-                            </p>
-                          </div>
-                          
-                          {/* Score et actions */}
-                          <div className="flex items-center space-x-4">
-                            <div className="text-right">
-                              <div className={`text-2xl font-bold ${getScoreColor(item.analysis.healthScore)}`}>
-                                {item.analysis.healthScore}/100
-                              </div>
-                              <div className="flex items-center justify-end mt-1">
-                                {getScoreTrend(item.analysis.healthScore)}
-                                <span className="text-xs text-gray-600 ml-1">
-                                  {item.analysis.category}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
-                              <button
-                                onClick={() => toggleFavorite(item.id)}
-                                className={`p-2 rounded-lg transition-colors ${
-                                  item.isFavorite 
-                                    ? 'bg-yellow-100 text-yellow-600' 
-                                    : 'bg-gray-100 text-gray-400 hover:text-gray-600'
-                                }`}
-                              >
-                                <Star className={`w-4 h-4 ${item.isFavorite ? 'fill-current' : ''}`} />
-                              </button>
-                              <button
-                                onClick={() => deleteItem(item.id)}
-                                className="p-2 bg-gray-100 text-gray-400 rounded-lg hover:text-red-600 transition-colors"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+      {/* Filtres */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-white border-b border-[#DDE9DA]"
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Catégorie */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Catégorie
+                  </label>
+                  <select
+                    value={filters.category}
+                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+                  >
+                    <option value="all">Toutes</option>
+                    <option value="food">Alimentation</option>
+                    <option value="cosmetic">Cosmétiques</option>
+                    <option value="detergent">Produits ménagers</option>
+                  </select>
                 </div>
+
+                {/* Période */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Période
+                  </label>
+                  <select
+                    value={filters.dateRange}
+                    onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+                  >
+                    <option value="all">Toutes</option>
+                    <option value="today">Aujourd'hui</option>
+                    <option value="week">Cette semaine</option>
+                    <option value="month">Ce mois</option>
+                    <option value="year">Cette année</option>
+                  </select>
+                </div>
+
+                {/* Score minimum */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Score minimum: {filters.minScore}%
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="10"
+                    value={filters.minScore}
+                    onChange={(e) => setFilters({ ...filters, minScore: parseInt(e.target.value) })}
+                    className="w-full accent-[#7DDE4A]"
+                  />
+                </div>
+
+                {/* Tri */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Trier par
+                  </label>
+                  <select
+                    value={`${filters.sortBy}-${filters.sortOrder}`}
+                    onChange={(e) => {
+                      const [sortBy, sortOrder] = e.target.value.split('-');
+                      setFilters({ ...filters, sortBy: sortBy as any, sortOrder: sortOrder as any });
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+                  >
+                    <option value="date-desc">Plus récent</option>
+                    <option value="date-asc">Plus ancien</option>
+                    <option value="score-desc">Meilleur score</option>
+                    <option value="score-asc">Moins bon score</option>
+                    <option value="name-asc">Nom A-Z</option>
+                    <option value="name-desc">Nom Z-A</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Barre de recherche */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Rechercher un produit..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Liste des produits */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl p-6 shadow-sm animate-pulse">
+                <div className="h-24 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               </div>
             ))}
           </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <p className="text-gray-600">{error}</p>
+            <button
+              onClick={fetchHistory}
+              className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
+            >
+              Réessayer
+            </button>
+          </div>
+        ) : history.length === 0 ? (
+          <div className="text-center py-12">
+            <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-600">Aucun produit dans votre historique</p>
+            <button
+              onClick={() => navigate('/scan')}
+              className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
+            >
+              Scanner un produit
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {history.map((item, index) => (
+                <motion.div
+                  key={item._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
+                  onClick={() => navigate(`/product/${item.productId}`)}
+                >
+                  {/* Header avec checkbox */}
+                  {!isDemo && (
+                    <div className="px-6 pt-4 pb-2 border-b border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.includes(item._id)}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            if (e.target.checked) {
+                              setSelectedItems([...selectedItems, item._id]);
+                            } else {
+                              setSelectedItems(selectedItems.filter(id => id !== item._id));
+                            }
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-4 h-4 text-[#7DDE4A] rounded focus:ring-[#7DDE4A]"
+                        />
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Clock className="w-4 h-4" />
+                          <span>{format(new Date(item.analysisDate), 'dd MMM yyyy', { locale: fr })}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Contenu */}
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-[#3B3B3B] text-lg mb-1">
+                          {item.productName}
+                        </h3>
+                        <p className="text-gray-600 text-sm">{item.productBrand}</p>
+                      </div>
+                      <span className="text-2xl ml-4">{getCategoryIcon(item.category)}</span>
+                    </div>
+
+                    {/* Scores */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Score global</span>
+                        <span className={`text-lg font-bold ${getScoreColor(item.scores.overall)}`}>
+                          {item.scores.overall}%
+                        </span>
+                      </div>
+
+                      {/* Badges */}
+                      <div className="flex items-center gap-2">
+                        {item.nutriScore && (
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            item.nutriScore === 'A' ? 'bg-green-100 text-green-700' :
+                            item.nutriScore === 'B' ? 'bg-lime-100 text-lime-700' :
+                            item.nutriScore === 'C' ? 'bg-yellow-100 text-yellow-700' :
+                            item.nutriScore === 'D' ? 'bg-orange-100 text-orange-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            Nutri-Score {item.nutriScore}
+                          </span>
+                        )}
+                        {item.novaGroup && (
+                          <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                            NOVA {item.novaGroup}
+                          </span>
+                        )}
+                        {item.isFavorite && (
+                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-8">
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                >
+                  Précédent
+                </button>
+                
+                <div className="flex items-center gap-2">
+                  {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                    const page = i + 1;
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-lg transition-colors ${
+                          currentPage === page
+                            ? 'bg-[#7DDE4A] text-white'
+                            : 'bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                  {totalPages > 5 && (
+                    <>
+                      <span className="text-gray-400">...</span>
+                      <button
+                        onClick={() => setCurrentPage(totalPages)}
+                        className={`w-10 h-10 rounded-lg transition-colors ${
+                          currentPage === totalPages
+                            ? 'bg-[#7DDE4A] text-white'
+                            : 'bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                >
+                  Suivant
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -4,8 +4,14 @@ import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/context/AuthContext';
 import TestLogin from './pages/TestLogin';
 
-// ✅ Import des pages existantes
+// Pages d'authentification
+import { LoginPage } from './pages/Auth/LoginPage';
+import { RegisterPage } from './pages/Auth/RegisterPage';
+
+// Import des pages existantes
 import HomePage from './pages/HomePage';
+import Navbar from './components/Navbar';
+import SearchPage from './pages/SearchPage';
 import Scan from './pages/Scan';
 import ProductPage from './pages/ProductPage';
 import ChatPage from './pages/ChatPage';
@@ -15,15 +21,15 @@ import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import Results from './pages/Results';
 
-// ✅ Import des composants d'authentification
+// Import des composants d'authentification
 import { AuthPage } from './auth/components/AuthPage';
 
-// ✅ Pages légales
+// Pages légales
 import AboutPage from './pages/AboutPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 
-// ✅ Composant de chargement
+// Composant de chargement
 const PageLoader = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
@@ -33,7 +39,7 @@ const PageLoader = () => (
   </div>
 );
 
-// ✅ Composant pour les routes protégées
+// Composant pour les routes protégées
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -48,58 +54,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
-// ✅ Layout avec navigation (DOIT être dans AuthProvider)
+// Layout avec navigation
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, logout, isAuthenticated } = useAuth();
-
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2">
-              <span className="text-2xl">🌱</span>
-              <span className="font-bold text-xl text-gray-800">ECOLOJIA</span>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link to="/scan" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
-                Scanner
-              </Link>
-              <Link to="/dashboard" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
-                Dashboard
-              </Link>
-              <Link to="/history" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
-                Historique
-              </Link>
-              <Link to="/chat" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
-                Chat IA
-              </Link>
-              
-              {isAuthenticated ? (
-                <>
-                  <Link to="/profile" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">
-                    {user?.name || 'Profil'}
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-                  >
-                    Déconnexion
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/auth"
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-                >
-                  Connexion
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Navigation avec Navbar avancé */}
+      <Navbar />
 
       {/* Contenu principal */}
       <main className="flex-grow">
@@ -139,22 +99,26 @@ const NotFoundPage = () => (
   </div>
 );
 
-// ✅ Composant AppContent (avec Layout à l'intérieur du Provider)
+// Composant AppContent (avec Layout à l'intérieur du Provider)
 const AppContent = () => {
   return (
     <Layout>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* ===== PAGES PUBLIQUES ===== */}
+          {/* PAGES PUBLIQUES */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/auth/login" element={<AuthPage defaultMode="login" />} />
           <Route path="/auth/register" element={<AuthPage defaultMode="register" />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/test-login" element={<TestLogin />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-          {/* ===== PAGES PROTÉGÉES ===== */}
+          {/* PAGES PROTÉGÉES */}
           <Route path="/scan" element={
             <ProtectedRoute>
               <Scan />
@@ -195,10 +159,8 @@ const AppContent = () => {
               <Results />
             </ProtectedRoute>
           } />
-          // Dans les routes
-<Route path="/test-login" element={<TestLogin />} />
 
-          {/* ===== 404 ===== */}
+          {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
@@ -206,7 +168,7 @@ const AppContent = () => {
   );
 };
 
-// ✅ APPLICATION PRINCIPALE
+// APPLICATION PRINCIPALE
 const App: React.FC = () => {
   return (
     <BrowserRouter 

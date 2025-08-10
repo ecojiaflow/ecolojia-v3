@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // Import des pages
-import MultiCategoriesPage from '../pages/MultiCategoriesPage';
+import MultiCATÉGORIESPage from '../pages/MultiCATÉGORIESPage';
 import ProductPage from '../pages/ProductPage';
 import SearchPage from '../pages/SearchPage';
 import AdminDashboard from '../pages/AdminDashboard';
@@ -17,11 +17,11 @@ const AppRouter: React.FC = () => {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          {/* Route par défaut - Multi-catégories */}
-          <Route path="/" element={<MultiCategoriesPage />} />
+          {/* Route par défaut - Multi-CATÉGORIES */}
+          <Route path="/" element={<MultiCATÉGORIESPage />} />
           
-          {/* Page multi-catégories */}
-          <Route path="/categories" element={<MultiCategoriesPage />} />
+          {/* Page multi-CATÉGORIES */}
+          <Route path="/CATÉGORIES" element={<MultiCATÉGORIESPage />} />
           
           {/* Page produit */}
           <Route path="/product" element={<ProductPage />} />

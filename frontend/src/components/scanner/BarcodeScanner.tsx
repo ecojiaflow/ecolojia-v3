@@ -1,375 +1,318 @@
 // PATH: frontend/src/components/scanner/BarcodeScanner.tsx
-// Scanner avec navigation corrigée pour le mode photo
-
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
-import { Camera, X, Keyboard, AlertCircle, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { analyzeProductImage } from '../../services/visionService';
-import { useNavigate } from 'react-router-dom';
-import './BarcodeScanner.css';
+import { Camera, X, AlertCircle, Loader } from 'lucide-react';
+// @ts-ignore
+(window as any).glMatrixArrayType = Float32Array;
+import Quagga from '@ericblade/quagga2';
 
 interface BarcodeScannerProps {
   onScanSuccess: (barcode: string) => void;
-  onError?: (error: Error) => void;
+  onError?: (error: string) => void;
   onClose?: () => void;
-  onManualData?: (data: any) => void; // Nouveau prop pour gérer les données manuelles
 }
 
 export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   onScanSuccess,
   onError,
-  onClose,
-  onManualData
+  onClose
 }) => {
-  const navigate = useNavigate();
-  const [mode, setMode] = useState<'camera' | 'manual' | 'photo'>('camera');
+  const scannerRef = useRef<HTMLDivElement>(null);
   const [isScanning, setIsScanning] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [manualCode, setManualCode] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [detectedCode, setDetectedCode] = useState<string | null>(null);
+  const [cameraPermission, setCameraPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
 
   useEffect(() => {
-    codeReaderRef.current = new BrowserMultiFormatReader();
+    checkCameraPermission();
     return () => {
-      stopScanning();
+      stopScanner();
     };
   }, []);
 
-  useEffect(() => {
-    if (mode === 'camera' && !isScanning) {
-      checkCameraPermission();
-    }
-  }, [mode]);
-
   const checkCameraPermission = async () => {
+    try {
+      const result = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      setCameraPermission(result.state as any);
+      if (result.state === 'granted') {
+        startScanner();
+      }
+    } catch (err) {
+      console.error('Erreur permission caméra:', err);
+      requestCameraAccess();
+    }
+  };
+
+  const requestCameraAccess = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       stream.getTracks().forEach(track => track.stop());
-      setHasPermission(true);
-      startScanning();
+      setCameraPermission('granted');
+      startScanner();
     } catch (err) {
-      console.error('Permission caméra refusée:', err);
-      setHasPermission(false);
-      setError('Accès caméra refusé. Mode photo activé.');
-      setTimeout(() => setMode('photo'), 1500);
+      setCameraPermission('denied');
+      setError('Accès à la caméra refusé');
+      onError?.('Accès à la caméra refusé');
     }
   };
 
-  const startScanning = async () => {
-    if (!codeReaderRef.current || !videoRef.current) return;
-    
-    setError(null);
+  const startScanner = () => {
+    if (!scannerRef.current || isScanning) return;
+
     setIsScanning(true);
+    setError(null);
 
-    try {
-      await new Promise<void>((resolve) => {
-        if (videoRef.current!.readyState >= 2) {
-          resolve();
-        } else {
-          videoRef.current!.addEventListener('loadeddata', () => resolve(), { once: true });
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: scannerRef.current,
+        constraints: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: "environment"
         }
-      });
+      },
+      locator: {
+        patchSize: "medium",
+        halfSample: true
+      },
+      numOfWorkers: navigator.hardwareConcurrency || 4,
+      decoder: {
+        readers: [
+          "ean_reader",
+          "ean_8_reader",
+          "code_128_reader",
+          "code_39_reader",
+          "upc_reader",
+          "upc_e_reader"
+        ]
+      },
+      locate: true
+    }, (err: any) => {
+      if (err) {
+        console.error('Erreur Quagga:', err);
+        setError('Erreur lors de l\'initialisation du scanner');
+        setIsScanning(false);
+        onError?.('Erreur lors de l\'initialisation du scanner');
+        return;
+      }
+      
+      Quagga.start();
+    });
 
-      await codeReaderRef.current.decodeFromVideoDevice(
-        undefined,
-        videoRef.current,
-        (result, err) => {
-          if (result) {
-            stopScanning();
-            onScanSuccess(result.getText());
-          }
-          if (err && !(err instanceof NotFoundException)) {
-            if (!err.message?.includes('IndexSizeError')) {
-              console.error('Erreur scan:', err);
-            }
-          }
+    Quagga.onDetected((result: any) => {
+      const code = result.codeResult.code;
+      
+      // Validation du code-barres
+      if (code && code.length >= 8) {
+        setDetectedCode(code);
+        
+        // Vibration si disponible
+        if ('vibrate' in navigator) {
+          navigator.vibrate(200);
         }
-      );
-    } catch (err) {
-      console.error('Erreur démarrage scan:', err);
-      setError('Impossible de démarrer la caméra');
-      setIsScanning(false);
-      onError?.(err as Error);
-    }
+        
+        // Son de confirmation
+        playBeep();
+        
+        // Arrêter le scanner et notifier
+        stopScanner();
+        onScanSuccess(code);
+      }
+    });
+
+    Quagga.onProcessed((result: any) => {
+      const drawingCtx = Quagga.canvas.ctx.overlay;
+      const drawingCanvas = Quagga.canvas.dom.overlay;
+
+      if (result) {
+        if (result.boxes) {
+          drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+          result.boxes.filter((box: any) => box !== result.box).forEach((box: any) => {
+            Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+              color: '#7DDE4A',
+              lineWidth: 2
+            });
+          });
+        }
+
+        if (result.box) {
+          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+            color: '#7DDE4A',
+            lineWidth: 3
+          });
+        }
+
+        if (result.codeResult && result.codeResult.code) {
+          Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, {
+            color: '#7DDE4A',
+            lineWidth: 4
+          });
+        }
+      }
+    });
   };
 
-  const stopScanning = useCallback(() => {
-    if (codeReaderRef.current) {
-      codeReaderRef.current.reset();
-    }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
+  const stopScanner = () => {
+    if (Quagga) {
+      Quagga.stop();
     }
     setIsScanning(false);
-  }, []);
-
-  const handleManualSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanCode = manualCode.trim();
-    
-    if (!cleanCode) {
-      setError('Veuillez entrer un code-barres');
-      return;
-    }
-    
-    if (!/^\d{8,13}$/.test(cleanCode)) {
-      setError('Code-barres invalide (8 à 13 chiffres)');
-      return;
-    }
-    
-    onScanSuccess(cleanCode);
   };
 
-  // Fonction corrigée pour gérer l'analyse photo
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setError(null);
-    setIsAnalyzing(true);
-
-    try {
-      console.log('📸 Analyse de l\'image:', file.name);
-      
-      const visionResult = await analyzeProductImage(file);
-      
-      console.log('🔍 Résultat Vision API:', visionResult);
-
-      if (visionResult.result?.barcode) {
-        // Code-barres détecté dans l'image
-        console.log('✅ Code-barres trouvé:', visionResult.result.barcode);
-        onScanSuccess(visionResult.result.barcode);
-        
-      } else if (visionResult.result?.extractedData || visionResult.result?.productName) {
-        // Texte détecté - CORRIGER ICI : Passer en mode manuel au lieu de naviguer
-        console.log('📝 Données extraites, passage en mode manuel');
-        
-        const extractedData = {
-          name: visionResult.result.productName || visionResult.result.extractedData?.name || '',
-          ingredients: visionResult.result.extractedData?.ingredients || '',
-          brand: visionResult.result.extractedData?.brand || '',
-          category: visionResult.result.extractedData?.category || 'food'
-        };
-
-        // Si on a un callback pour les données manuelles, l'utiliser
-        if (onManualData) {
-          setMode('manual');
-          onManualData(extractedData);
-        } else {
-          // Sinon, passer en mode manuel avec les données
-          setMode('manual');
-          // Simuler un événement pour pré-remplir le formulaire existant
-          setTimeout(() => {
-            const event = new CustomEvent('prefillManualForm', { 
-              detail: extractedData 
-            });
-            window.dispatchEvent(event);
-          }, 100);
-        }
-        
-      } else {
-        setError('Aucune information détectée. Essayez une photo plus nette du code-barres ou de la liste d\'ingrédients.');
-      }
-    } catch (err: any) {
-      console.error('❌ Erreur analyse photo:', err);
-      setError(err.message || 'Erreur lors de l\'analyse de l\'image');
-    } finally {
-      setIsAnalyzing(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
+  const playBeep = () => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    gainNode.gain.value = 0.1;
+    
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.1);
   };
 
-  const switchMode = (newMode: 'camera' | 'manual' | 'photo') => {
-    if (newMode === mode) return;
-    stopScanning();
-    setError(null);
-    setMode(newMode);
+  const handleManualInput = () => {
+    const code = prompt('Entrez le code-barres manuellement :');
+    if (code && code.length >= 8) {
+      onScanSuccess(code);
+    }
   };
 
   return (
-    <div className="barcode-scanner-container">
-      <div className="scanner-header">
-        <h3>Scanner un produit</h3>
-        
-        <div className="mode-switcher">
+    <div className="fixed inset-0 z-50 bg-black">
+      {/* Header */}
+      <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/70 to-transparent p-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-white text-xl font-semibold">Scanner un produit</h2>
           <button
-            onClick={() => switchMode('camera')}
-            className={`mode-btn ${mode === 'camera' ? 'active' : ''}`}
-            disabled={hasPermission === false}
+            onClick={() => {
+              stopScanner();
+              onClose?.();
+            }}
+            className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
           >
-            <Camera className="w-4 h-4 mr-2" />
-            Caméra
-          </button>
-          
-          <button
-            onClick={() => switchMode('manual')}
-            className={`mode-btn ${mode === 'manual' ? 'active' : ''}`}
-          >
-            <Keyboard className="w-4 h-4 mr-2" />
-            Manuel
-          </button>
-
-          <button
-            onClick={() => switchMode('photo')}
-            className={`mode-btn ${mode === 'photo' ? 'active' : ''}`}
-          >
-            <ImageIcon className="w-4 h-4 mr-2" />
-            Photo
+            <X className="w-6 h-6 text-white" />
           </button>
         </div>
+      </div>
 
-        {onClose && (
-          <button onClick={onClose} className="close-btn">
-            <X className="w-5 h-5" />
-          </button>
+      {/* Scanner Area */}
+      <div className="relative h-full w-full">
+        {cameraPermission === 'denied' ? (
+          <div className="flex flex-col items-center justify-center h-full p-8">
+            <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+            <h3 className="text-white text-xl font-semibold mb-2">Caméra non accessible</h3>
+            <p className="text-gray-300 text-center mb-6">
+              Veuillez autoriser l'accès à la caméra dans les paramètres de votre navigateur
+            </p>
+            <button
+              onClick={handleManualInput}
+              className="px-6 py-3 bg-[#7DDE4A] text-white rounded-lg font-medium hover:bg-[#6BC93B] transition-colors"
+            >
+              Saisir manuellement
+            </button>
+          </div>
+        ) : (
+          <>
+            <div ref={scannerRef} className="h-full w-full" />
+            
+            {/* Overlay */}
+            <div className="absolute inset-0 pointer-events-none">
+              {/* Zone de scan */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative">
+                  <div className="w-64 h-48 border-2 border-[#7DDE4A] rounded-lg">
+                    {/* Coins animés */}
+                    <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-4 border-l-4 border-[#7DDE4A] rounded-tl-lg" />
+                    <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-4 border-r-4 border-[#7DDE4A] rounded-tr-lg" />
+                    <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-4 border-l-4 border-[#7DDE4A] rounded-bl-lg" />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-4 border-r-4 border-[#7DDE4A] rounded-br-lg" />
+                    
+                    {/* Ligne de scan animée */}
+                    <motion.div
+                      className="absolute left-0 right-0 h-0.5 bg-[#7DDE4A]"
+                      animate={{
+                        top: ['10%', '90%', '10%']
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Instructions */}
+                  <p className="text-white text-center mt-4 text-sm">
+                    Alignez le code-barres dans le cadre
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
-      <AnimatePresence mode="wait">
-        {mode === 'camera' ? (
-          <motion.div
-            key="camera"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="scanner-content"
+      {/* Bottom Controls */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/70 to-transparent p-6">
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={handleManualInput}
+            className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-lg font-medium hover:bg-white/30 transition-colors"
           >
-            {hasPermission === false ? (
-              <div className="permission-denied">
-                <AlertCircle className="w-12 h-12 text-red-500 mb-4 mx-auto" />
-                <p>L'accès à la caméra a été refusé.</p>
-                <p className="text-sm text-gray-500 mt-2">Basculement vers le mode photo...</p>
-              </div>
-            ) : (
-              <div className="video-container">
-                <video ref={videoRef} className="scanner-video" playsInline muted />
-                <div className="scanner-overlay">
-                  <div className="scanner-guide">
-                    <div className="scanner-corner top-left" />
-                    <div className="scanner-corner top-right" />
-                    <div className="scanner-corner bottom-left" />
-                    <div className="scanner-corner bottom-right" />
-                  </div>
-                  {isScanning && <div className="scanner-line" />}
-                </div>
-                <div className="scanner-instructions">
-                  <p>Placez le code-barres dans le cadre</p>
+            Saisir manuellement
+          </button>
+        </div>
+      </div>
+
+      {/* Résultat détecté */}
+      <AnimatePresence>
+        {detectedCode && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          >
+            <div className="bg-white rounded-xl p-8 max-w-sm w-full mx-4">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-[#7DDE4A] rounded-full flex items-center justify-center">
+                  <Camera className="w-8 h-8 text-white" />
                 </div>
               </div>
-            )}
-          </motion.div>
-        ) : mode === 'manual' ? (
-          <motion.div
-            key="manual"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <form onSubmit={handleManualSubmit} className="manual-form">
-              <p className="text-sm text-gray-600 mb-4">
-                Entrez le code-barres situé sous le produit
-              </p>
-              
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={manualCode}
-                  onChange={(e) => {
-                    setManualCode(e.target.value.replace(/\D/g, ''));
-                    setError(null);
-                  }}
-                  placeholder="Ex: 3017620422003"
-                  className="barcode-input"
-                  maxLength={13}
-                  autoFocus
-                />
-                
-                <button type="submit" className="submit-btn" disabled={!manualCode}>
-                  Valider
-                </button>
+              <h3 className="text-xl font-semibold text-center mb-2">Code-barres détecté !</h3>
+              <p className="text-center text-gray-600 text-lg font-mono">{detectedCode}</p>
+              <div className="flex items-center justify-center mt-4">
+                <Loader className="w-5 h-5 text-[#7DDE4A] animate-spin mr-2" />
+                <span className="text-gray-600">Recherche du produit...</span>
               </div>
-            </form>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="photo"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="photo-section"
-          >
-            <div className="text-center p-6">
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="w-16 h-16 text-green-600 mx-auto mb-4 animate-spin" />
-                  <h4 className="text-lg font-semibold mb-2">Analyse en cours...</h4>
-                  <p className="text-sm text-gray-600">
-                    Google Vision analyse votre image
-                  </p>
-                </>
-              ) : (
-                <>
-                  <ImageIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Mode Photo</h4>
-                  <p className="text-sm text-gray-600 mb-6">
-                    Prenez une photo du produit pour l'analyser avec l'IA
-                  </p>
-                  
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                    disabled={isAnalyzing}
-                  />
-                  
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isAnalyzing}
-                  >
-                    <Upload className="w-5 h-5" />
-                    Choisir une photo
-                  </button>
-                  
-                  <div className="mt-6 text-left max-w-sm mx-auto">
-                    <p className="text-xs text-gray-600 font-semibold mb-2">📸 Conseils pour une bonne analyse :</p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Photographiez le code-barres en gros plan</li>
-                      <li>• Ou prenez la liste d'ingrédients complète</li>
-                      <li>• Assurez-vous que le texte est net et lisible</li>
-                      <li>• Évitez les reflets et les ombres</li>
-                    </ul>
-                  </div>
-                </>
-              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {error && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="error-message"
-        >
-          <AlertCircle className="w-4 h-4 mr-2" />
-          {error}
-        </motion.div>
-      )}
+      {/* Erreur */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="absolute bottom-20 left-4 right-4"
+          >
+            <div className="bg-red-500 text-white p-4 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <p>{error}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
