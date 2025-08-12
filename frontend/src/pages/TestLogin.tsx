@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/TestLogin.tsx
+// PATH: frontend/src/pages/TestLogin.tsx
 // Page de connexion rapide pour tester
 
 import React, { useState } from 'react';

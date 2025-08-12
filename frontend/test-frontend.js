@@ -1,4 +1,4 @@
-﻿// test-frontend.js
+// test-frontend.js
 const API_URL = 'https://ecolojia-backendvf.onrender.com';
 
 async function testConnections() {

@@ -1,4 +1,4 @@
-﻿import mockService from './mockService';
+import mockService from './mockService';
 // PATH: frontend/src/services/historyService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';

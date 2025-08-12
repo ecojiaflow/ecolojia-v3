@@ -1,4 +1,4 @@
-﻿// Tester si le backend répond
+// Tester si le backend répond
 fetch('https://ecolojia-backendvf.onrender.com/api/analysis/ping', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },

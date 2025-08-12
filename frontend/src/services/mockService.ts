@@ -1,4 +1,4 @@
-﻿// mockService.ts - Données de fallback pour les routes manquantes
+// mockService.ts - Données de fallback pour les routes manquantes
 class MockService {
   private static instance: MockService;
 

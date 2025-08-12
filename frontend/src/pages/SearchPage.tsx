@@ -1,4 +1,4 @@
-﻿// PATH: frontend\src\pages\SearchPage.tsx
+// PATH: frontend\src\pages\SearchPage.tsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';

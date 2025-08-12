@@ -1,4 +1,4 @@
-﻿// api.config.ts - Configuration pour backend local
+// api.config.ts - Configuration pour backend local
 export const API_CONFIG = {
   // Utiliser le backend local en dev, ou Render en prod
   BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5001',

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/aiService.ts
+// PATH: frontend/src/services/aiService.ts
 import apiClient from './apiClient';
 
 export const aiService = {

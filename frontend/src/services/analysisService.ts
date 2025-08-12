@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/analysisService.ts
+// PATH: frontend/src/services/analysisService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';
 

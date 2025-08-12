@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'https://ecolojia-backendvf.onrender.com',

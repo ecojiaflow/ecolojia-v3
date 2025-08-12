@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/authService.ts
+// PATH: frontend/src/services/authService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';
 import { ConfigService } from './configService';

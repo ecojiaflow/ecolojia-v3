@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import analysisService from '../services/analysisService';
 
 const TestAnalysis: React.FC = () => {
