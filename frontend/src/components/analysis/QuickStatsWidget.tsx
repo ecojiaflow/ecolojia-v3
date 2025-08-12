@@ -5,9 +5,9 @@ import { BarChart3, TrendingUp, Target, Award } from 'lucide-react';
 import { useUserAnalytics } from '../../hooks/useUserAnalytics';
 
 /**
- * 📊 QuickStatsWidget - Aperçu Analytics pour HomePage
+ * Ã°Å¸â€œÅ  QuickStatsWidget - Aperçu Analytics pour HomePage
  * Widget compact qui montre les stats essentielles utilisateur
- * Incite à aller vers le dashboard complet
+ * Incite ÃƒÂ  aller vers le dashboard complet
  */
 
 const QuickStatsWidget: React.FC = () => {
@@ -23,7 +23,7 @@ const QuickStatsWidget: React.FC = () => {
     return (
       <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
         <div className="text-center mb-6">
-          <div className="text-4xl mb-3">📊</div>
+          <div className="text-4xl mb-3">Ã°Å¸â€œÅ </div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">
             Votre Dashboard Personnel
           </h3>
@@ -62,7 +62,7 @@ const QuickStatsWidget: React.FC = () => {
 
         <div className="mt-4 p-3 bg-purple-50 rounded-lg text-center">
           <p className="text-purple-700 text-xs">
-            <strong>🎯 Première étape :</strong> Analysez 3 produits pour commencer !
+            <strong>Ã°Å¸Å½Â¯ Première étape :</strong> Analysez 3 produits pour commencer !
           </p>
         </div>
       </div>
@@ -75,7 +75,7 @@ const QuickStatsWidget: React.FC = () => {
   const activeGoals = goalsProgress.filter(g => g.progress < 100).length;
   const completedAchievements = healthMetrics.achievementsEarned;
   
-  // Évolution score (derniers 7 jours vs précédents)
+  // Ãƒâ€°volution score (derniers 7 jours vs précédents)
   const recentEvolution = scoreEvolution.slice(-7);
   const previousEvolution = scoreEvolution.slice(-14, -7);
   const avgRecent = recentEvolution.length > 0 
@@ -92,7 +92,7 @@ const QuickStatsWidget: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-1">
-            📊 Vos Statistiques
+            Ã°Å¸â€œÅ  Vos Statistiques
           </h3>
           <p className="text-gray-600 text-sm">
             Aperçu de vos progrès nutrition
@@ -151,7 +151,7 @@ const QuickStatsWidget: React.FC = () => {
         {/* Score Santé Progress */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="text-green-500 mr-2">❤️</div>
+            <div className="text-green-500 mr-2">âÂÂ¤ïÂ¸Â</div>
             <span className="text-sm font-medium text-gray-700">Score Santé Global</span>
           </div>
           <div className="flex items-center">
@@ -199,14 +199,14 @@ const QuickStatsWidget: React.FC = () => {
           onClick={() => navigate('/product')}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md text-sm flex items-center justify-center"
         >
-          🔬 Analyser un nouveau produit
+          Ã°Å¸â€Â¬ Analyser un nouveau produit
         </button>
       </div>
 
       {/* Insight du jour */}
       <div className="mt-4 p-3 bg-purple-50 rounded-lg">
         <p className="text-purple-700 text-xs text-center">
-          <strong>💡 Insight :</strong> 
+          <strong>Ã°Å¸â€™Â¡ Insight :</strong> 
           {currentScore >= 75 
             ? " Excellente hygiène alimentaire ! Continuez ainsi."
             : currentScore >= 50 

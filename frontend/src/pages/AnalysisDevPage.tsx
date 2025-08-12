@@ -17,7 +17,7 @@ const EXAMPLES = {
   food_nova4: {
     name: 'Céréales chocolat',
     category: 'food' as const,
-    ingredients: 'Céréales (blé, maïs), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arôme artificiel vanille, émulsifiant (lécithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
+    ingredients: 'Céréales (blé, maÃƒÂ¯s), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arôme artificiel vanille, émulsifiant (lécithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
     brand: 'Test Brand'
   },
   food_nova1: {

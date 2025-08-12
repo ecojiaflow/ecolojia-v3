@@ -1,6 +1,6 @@
 // PATH: backend/src/services/ai/DeepSeekClient.ts
 /*  Dépendances : axios, crypto
-    Utilise cacheManager (Redis) et Logger déjà présents                  */
+    Utilise cacheManager (Redis) et Logger déjÃƒÂ  présents                  */
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import crypto from 'crypto';
 
@@ -9,7 +9,7 @@ import { cacheManager } from '../cache/CacheManager';
 
 const logger = new Logger('DeepSeekClient');
 
-// ──────────────────────────────────── Types ───────────────────────────────────
+// ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ Types ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
 export interface DeepSeekMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -32,7 +32,7 @@ export interface AnalysisEnhancementRequest {
   };
 }
 
-// ────────────────────────────────── Client ───────────────────────────────────
+// ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ Client ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
 export class DeepSeekClient {
   private readonly client: AxiosInstance;
   private readonly CACHE_PREFIX = 'deepseek:';
@@ -57,7 +57,7 @@ export class DeepSeekClient {
     };
 
     if (!this.cfg.apiKey) {
-      logger.warn('⚠️  Clé API DeepSeek non définie – fonctions IA désactivées.');
+      logger.warn('âÅ¡Â ïÂ¸Â  Clé API DeepSeek non définie â€â€œ fonctions IA désactivées.');
     }
 
     this.client = axios.create({
@@ -78,7 +78,7 @@ export class DeepSeekClient {
     );
   }
 
-  // ─────────── API publiques ───────────
+  // ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ API publiques ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
   async enhanceProductAnalysis(req: AnalysisEnhancementRequest) {
     const cacheKey = this.key('enhance', req);
     const cached = await cacheManager.get(cacheKey);
@@ -125,7 +125,7 @@ export class DeepSeekClient {
     return alt;
   }
 
-  // ─────────── Low-level chat ───────────
+  // ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ Low-level chat ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
   private async chat(msg: DeepSeekMessage[]): Promise<string> {
     if (!this.cfg.apiKey) throw new Error('DeepSeek API key absente.');
 
@@ -147,7 +147,7 @@ export class DeepSeekClient {
     }
   }
 
-  // ─────────── Prompts ───────────
+  // ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ Prompts ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
   private promptEnhanceSys(cat: string) {
     const base = {
       food: 'Tu es nutritionniste expert NOVA/EFSA.',
@@ -163,25 +163,25 @@ Produit : ${r.productName}
 Analyse : ${JSON.stringify(r.baseAnalysis)}
 ${r.userQuery ? 'Question : ' + r.userQuery : ''}
 ${r.userProfile ? 'Profil : ' + JSON.stringify(r.userProfile) : ''}
-Enrichis l’analyse (insights, recommandations, alternatives, sources).`.trim();
+Enrichis lâ€â„¢analyse (insights, recommandations, alternatives, sources).`.trim();
   }
 
   private promptChatSys(ctx?: any) {
     return `
 Assistant scientifique ECOLOJIA.
-Contexte : ${ctx ? JSON.stringify(ctx) : '—'} 
-Réponses ≤3 paragraphes, citer sources, action concrète.`.trim();
+Contexte : ${ctx ? JSON.stringify(ctx) : 'â€â€'} 
+Réponses ââ€°Â¤3 paragraphes, citer sources, action concrète.`.trim();
   }
 
   private promptAlt(p: any, cat: string, crit: string[]) {
     return `
 Alternatives saines pour : ${p.name}
 Catégorie : ${cat}
-Critères : ${crit.join(', ') || '—'}
+Critères : ${crit.join(', ') || 'â€â€'}
 Format JSON.`.trim();
   }
 
-  // ─────────── Parsing ───────────
+  // ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ Parsing ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€ââ€€
   private parseEnhance(txt: string) {
     try {
       const m = txt.match(/\{[\s\S]*}/);
@@ -225,3 +225,4 @@ Format JSON.`.trim();
 // singleton
 export const deepSeekClient = new DeepSeekClient();
 // EOF
+

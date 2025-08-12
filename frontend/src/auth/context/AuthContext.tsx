@@ -1,4 +1,4 @@
-// PATH: frontend/src/auth/context/AuthContext.tsx
+﻿// PATH: frontend/src/auth/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import authService from '../../services/authService';
 import demoService from '../../services/demoService';
@@ -77,7 +77,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error('Auth status check failed:', error);
     } finally {
-      setIsLoading(false);
+              // Mode démo automatique
+        if (!user && !localStorage.getItem('ecolojia_token')) {
+          console.log('🎭 Activation du mode démo');
+          startDemoMode();
+        }
+        setIsLoading(false);
     }
   };
 
@@ -134,7 +139,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('ecolojia_refresh_token', demoSession.refreshToken);
       localStorage.setItem('ecolojia_user', JSON.stringify(demoSession.user));
       
-      // Mettre à jour l'état
+      // Mettre ÃƒÂ  jour l'état
       setUser(demoSession.user);
       setIsDemoMode(true);
       ConfigService.setMode('demo');
@@ -145,7 +150,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Failed to start demo mode:', error);
       throw new Error('Impossible de démarrer le mode démo');
     } finally {
-      setIsLoading(false);
+              // Mode démo automatique
+        if (!user && !localStorage.getItem('ecolojia_token')) {
+          console.log('🎭 Activation du mode démo');
+          startDemoMode();
+        }
+        setIsLoading(false);
     }
   };
 
@@ -200,3 +210,4 @@ export const useAuth = () => {
 
 export { AuthContext };
 export default AuthContext;
+

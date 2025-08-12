@@ -67,10 +67,10 @@ const FavoritesPage: React.FC = () => {
     name: '',
     description: '',
     color: '#7DDE4A',
-    icon: '⭐'
+    icon: 'âÂ­Â'
   });
 
-  const listIcons = ['⭐', '❤️', '🛒', '🥗', '💄', '🧹', '👶', '🏠'];
+  const listIcons = ['âÂ­Â', 'âÂÂ¤ïÂ¸Â', 'Ã°Å¸â€ºâ€™', 'Ã°Å¸Â¥â€”', 'Ã°Å¸â€™â€ž', 'Ã°Å¸Â§Â¹', 'Ã°Å¸â€˜Â¶', 'Ã°Å¸ÂÂ '];
   const listColors = ['#7DDE4A', '#4A90E2', '#F5A623', '#D0021B', '#9013FE', '#50E3C2'];
 
   useEffect(() => {
@@ -167,7 +167,7 @@ const FavoritesPage: React.FC = () => {
       const newList = await api.post(`${API_CONFIG.ENDPOINTS.FAVORITES.LIST}/lists`, newListForm);
       setLists(prev => [...prev, newList]);
       setShowCreateList(false);
-      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: '⭐' });
+      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: 'âÂ­Â' });
     } catch (err) {
       console.error('Error creating list:', err);
     }
@@ -228,10 +228,10 @@ const FavoritesPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return '🍎';
-      case 'cosmetic': return '💄';
-      case 'household': return '🧹';
-      default: return '📦';
+      case 'food': return 'Ã°Å¸ÂÅ½';
+      case 'cosmetic': return 'Ã°Å¸â€™â€ž';
+      case 'household': return 'Ã°Å¸Â§Â¹';
+      default: return 'Ã°Å¸â€œÂ¦';
     }
   };
 
@@ -496,7 +496,7 @@ const FavoritesPage: React.FC = () => {
                       
                       {item.price && (
                         <div className="text-lg font-semibold text-[#3B3B3B]">
-                          {item.price}€
+                          {item.price}ââ€šÂ¬
                         </div>
                       )}
                     </div>
@@ -531,7 +531,7 @@ const FavoritesPage: React.FC = () => {
                         onClick={() => navigate(`/product/${item.productId}`)}
                         className="text-[#7DDE4A] hover:text-[#6bc93a] font-medium text-sm"
                       >
-                        Voir détails →
+                        Voir détails ââ€ â€™
                       </button>
                       
                       <div className="flex gap-2">

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/context/AuthContext';
@@ -24,10 +24,12 @@ import ResultsPage from './pages/ResultsPage';
 // Import des composants d'authentification
 import { AuthPage } from './auth/components/AuthPage';
 
-// Pages lÃ©gales
+// Pages légales
 import AboutPage from './pages/AboutPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
+import MultiScanPage from './pages/MultiScanPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 // Composant de chargement
 const PageLoader = () => (
@@ -39,7 +41,7 @@ const PageLoader = () => (
   </div>
 );
 
-// Composant pour les routes protÃ©gÃ©es
+// Composant pour les routes protégées
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -58,7 +60,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation avec Navbar avancÃ© */}
+      {/* Navigation avec Navbar avancé */}
       <Navbar />
 
       {/* Contenu principal */}
@@ -71,11 +73,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center">
             <div className="text-gray-600 text-sm">
-              Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
+              © 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
             </div>
             <div className="flex space-x-4 text-sm">
-              <Link to="/about" className="text-gray-600 hover:text-green-600">Ã€ propos</Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃ©</Link>
+              <Link to="/about" className="text-gray-600 hover:text-green-600">À propos</Link>
+              <Link to="/privacy" className="text-gray-600 hover:text-green-600">Confidentialité</Link>
               <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
             </div>
           </div>
@@ -99,7 +101,7 @@ const NotFoundPage = () => (
   </div>
 );
 
-// Composant AppContent (avec Layout Ã  l'intÃ©rieur du Provider)
+// Composant AppContent (avec Layout Ã  l'intérieur du Provider)
 const AppContent = () => {
   return (
     <Layout>
@@ -118,7 +120,7 @@ const AppContent = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* PAGES PROTÃ‰GÃ‰ES */}
+          {/* PAGES PROTÉGÉES */}
           <Route path="/scan" element={
             <ProtectedRoute>
               <ScanPage />
@@ -160,7 +162,17 @@ const AppContent = () => {
             </ProtectedRoute>
           } />
 
-          {/* 404 */}
+          {/* 404 */}          <Route path="/multi-scan" element={
+            <ProtectedRoute>
+              <MultiScanPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/favorites" element={
+            <ProtectedRoute>
+              <FavoritesPage />
+            </ProtectedRoute>
+          } />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
@@ -185,5 +197,9 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+
+
 
 

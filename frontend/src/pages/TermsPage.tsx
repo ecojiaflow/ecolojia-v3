@@ -17,13 +17,13 @@ const TermsPage: React.FC = () => {
             Conditions Générales d'Utilisation
           </h1>
           <p className="text-[#3B3B3B]/70 text-lg">
-            Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}
+            Dernière mise ÃƒÂ  jour : {new Date().toLocaleDateString('fr-FR')}
           </p>
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 mt-4 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
           >
-            ← Retour à l'accueil
+            ââ€ Â Retour ÃƒÂ  l'accueil
           </Link>
         </div>
 
@@ -55,7 +55,7 @@ const TermsPage: React.FC = () => {
                 <li>L'analyse instantanée de produits via scan, photo ou recherche manuelle</li>
                 <li>Des scores de santé, environnement et éthique basés sur des critères scientifiques</li>
                 <li>Des recommandations d'alternatives plus saines</li>
-                <li>Un assistant IA pour répondre à vos questions nutritionnelles</li>
+                <li>Un assistant IA pour répondre ÃƒÂ  vos questions nutritionnelles</li>
                 <li>Un tableau de bord personnalisé pour suivre vos habitudes</li>
               </ul>
             </div>
@@ -71,7 +71,7 @@ const TermsPage: React.FC = () => {
               3. Conditions d'utilisation
             </h2>
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-[#3B3B3B]">Vous vous engagez à :</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B]">Vous vous engagez ÃƒÂ  :</h3>
               <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
                 <li>Fournir des informations exactes lors de votre inscription</li>
                 <li>Utiliser le service de manière responsable et légale</li>
@@ -85,7 +85,7 @@ const TermsPage: React.FC = () => {
                 <li>Utiliser des robots ou scripts automatisés sans autorisation</li>
                 <li>Tenter d'accéder aux systèmes informatiques d'ECOLOJIA</li>
                 <li>Reproduire ou redistribuer nos analyses sans autorisation</li>
-                <li>Utiliser le service à des fins commerciales sans accord préalable</li>
+                <li>Utiliser le service ÃƒÂ  des fins commerciales sans accord préalable</li>
                 <li>Usurper l'identité d'une autre personne</li>
               </ul>
             </div>
@@ -102,7 +102,7 @@ const TermsPage: React.FC = () => {
             </p>
             <p className="text-[#3B3B3B]/70">
               Nous nous réservons le droit de suspendre temporairement l'accès pour maintenance, 
-              mise à jour ou en cas de force majeure, sans préavis.
+              mise ÃƒÂ  jour ou en cas de force majeure, sans préavis.
             </p>
           </section>
 
@@ -112,11 +112,11 @@ const TermsPage: React.FC = () => {
             </h2>
             <p className="text-[#3B3B3B]/70 mb-4">
               Tous les contenus présents sur ECOLOJIA (textes, images, logos, bases de données, algorithmes) 
-              sont protégés par le droit de la propriété intellectuelle et appartiennent à ECOLOJIA ou ses partenaires.
+              sont protégés par le droit de la propriété intellectuelle et appartiennent ÃƒÂ  ECOLOJIA ou ses partenaires.
             </p>
             <p className="text-[#3B3B3B]/70">
               Toute reproduction, représentation ou exploitation non autorisée est interdite et 
-              peut donner lieu à des poursuites judiciaires.
+              peut donner lieu ÃƒÂ  des poursuites judiciaires.
             </p>
           </section>
 
@@ -126,7 +126,7 @@ const TermsPage: React.FC = () => {
             </h2>
             <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
               <p className="text-[#3B3B3B]/70 mb-4">
-                <strong>Important :</strong> Les informations fournies par ECOLOJIA sont à titre informatif uniquement.
+                <strong>Important :</strong> Les informations fournies par ECOLOJIA sont ÃƒÂ  titre informatif uniquement.
               </p>
               <p className="text-[#3B3B3B]/70">
                 ECOLOJIA ne saurait être tenu responsable des décisions prises sur la base de nos analyses. 
@@ -157,7 +157,7 @@ const TermsPage: React.FC = () => {
             </h2>
             <p className="text-[#3B3B3B]/70">
               Les présentes CGU sont régies par le droit français. 
-              Tout litige relatif à leur interprétation ou exécution relève de la compétence 
+              Tout litige relatif ÃƒÂ  leur interprétation ou exécution relève de la compétence 
               exclusive des tribunaux français.
             </p>
           </section>

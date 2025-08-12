@@ -42,3 +42,4 @@ const EcoScoreBadge: React.FC<Props> = ({ score, className = '', confidenceColor
 
 export default EcoScoreBadge;
 
+

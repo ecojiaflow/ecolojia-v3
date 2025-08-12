@@ -48,7 +48,7 @@ const COSMETIC_INGREDIENTS_DB = {
     'triclosan': {
       evidenceLevel: 'CONFIRMED' as const,
       riskLevel: 'VERY_HIGH' as const,
-      healthEffects: ['Perturbation thyroïdienne', 'Résistance antibiotique'],
+      healthEffects: ['Perturbation thyroÃƒÂ¯dienne', 'Résistance antibiotique'],
       regulatoryStatus: 'Interdit dans l\'UE depuis 2017'
     },
     'bht': {
@@ -66,7 +66,7 @@ const COSMETIC_INGREDIENTS_DB = {
     'parabens': {
       evidenceLevel: 'CONFIRMED' as const,
       riskLevel: 'MEDIUM' as const,
-      healthEffects: ['Mimétisme œstrogénique'],
+      healthEffects: ['Mimétisme Ã…â€œstrogénique'],
       regulatoryStatus: 'Certains interdits (propyl-, butyl-)'
     },
     'phenoxyethanol': {
@@ -118,7 +118,7 @@ export class CosmeticsAnalyzer {
     brand?: string,
     category?: string
   ): Promise<CosmeticAnalysisResult> {
-    console.log('🧴 Analyse cosmétique:', { name, ingredientsCount: ingredients.length });
+    console.log('Ã°Å¸Â§Â´ Analyse cosmétique:', { name, ingredientsCount: ingredients.length });
 
     // Parsing et analyse des ingrédients INCI
     const inciIngredients = this.parseInciIngredients(ingredients);
@@ -170,7 +170,7 @@ export class CosmeticsAnalyzer {
       // Détection fonction ingrédient
       const ingredientFunction = this.detectIngredientFunction(normalizedName);
       
-      // Évaluation risque
+      // Ãƒâ€°valuation risque
       const riskAssessment = this.assessIngredientRisk(normalizedName);
       
       return {
@@ -207,16 +207,16 @@ export class CosmeticsAnalyzer {
       return 'Parfum/Fragrance';
     }
     
-    // Émulsifiants
+    // Ãƒâ€°mulsifiants
     if (ingredient.includes('cetyl') || ingredient.includes('stearyl') ||
         ingredient.includes('glycol') || ingredient.includes('polysorbate')) {
-      return 'Émulsifiant';
+      return 'Ãƒâ€°mulsifiant';
     }
     
     // Huiles naturelles
     if (ingredient.includes('oil') || ingredient.includes('butter') ||
         this.ingredientsDb.naturalIngredients.some(natural => ingredient.includes(natural))) {
-      return 'Émollient naturel';
+      return 'Ãƒâ€°mollient naturel';
     }
     
     return 'Fonction non identifiée';
@@ -412,7 +412,7 @@ export class CosmeticsAnalyzer {
     const recommendations = [];
     
     if (endocrineDisruptors.length > 0) {
-      recommendations.push('Éviter les perturbateurs endocriniens identifiés');
+      recommendations.push('Ãƒâ€°viter les perturbateurs endocriniens identifiés');
       recommendations.push('Privilégier les cosmétiques certifiés sans PE');
     }
     
@@ -449,9 +449,9 @@ export class CosmeticsAnalyzer {
 
   private determineRiskLevel(score: number): string {
     if (score >= 80) return 'FAIBLE';
-    if (score >= 60) return 'MODÉRÉ';
-    if (score >= 40) return 'ÉLEVÉ';
-    return 'TRÈS ÉLEVÉ';
+    if (score >= 60) return 'MODÃƒâ€°RÃƒâ€°';
+    if (score >= 40) return 'Ãƒâ€°LEVÃƒâ€°';
+    return 'TRÃƒË†S Ãƒâ€°LEVÃƒâ€°';
   }
 }
 
@@ -464,7 +464,7 @@ export class DetergentsAnalyzer {
     ingredients: string[],
     brand?: string
   ): Promise<DetergentAnalysisResult> {
-    console.log('🧽 Analyse détergent:', { name, ingredientsCount: ingredients.length });
+    console.log('Ã°Å¸Â§Â½ Analyse détergent:', { name, ingredientsCount: ingredients.length });
 
     // Analyse toxicité aquatique
     const aquaticToxicity = this.analyzeAquaticToxicity(ingredients);
@@ -623,8 +623,8 @@ export class DetergentsAnalyzer {
 
   private determineRiskLevel(score: number): string {
     if (score >= 80) return 'FAIBLE';
-    if (score >= 60) return 'MODÉRÉ';
-    if (score >= 40) return 'ÉLEVÉ';
-    return 'TRÈS ÉLEVÉ';
+    if (score >= 60) return 'MODÃƒâ€°RÃƒâ€°';
+    if (score >= 40) return 'Ãƒâ€°LEVÃƒâ€°';
+    return 'TRÃƒË†S Ãƒâ€°LEVÃƒâ€°';
   }
 }

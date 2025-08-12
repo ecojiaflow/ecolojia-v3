@@ -1,4 +1,4 @@
-// 📁 src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
+// Ã°Å¸â€œÂ src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
 import React, { useState } from 'react';
 import { CircleGauge, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
@@ -105,7 +105,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
             <ul className="text-xs text-gray-700 space-y-1">
               {nova.reasoning.slice(0, 3).map((reason, idx) => (
                 <li key={idx} className="flex items-start gap-1">
-                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-400">â€Â¢</span>
                   {reason}
                 </li>
               ))}
@@ -113,7 +113,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
           </div>
         )}
         <div className="mt-2 text-xs text-gray-500">
-          Confiance : {Math.round(nova.confidence * 100)}% • Source : INSERM 2024
+          Confiance : {Math.round(nova.confidence * 100)}% â€Â¢ Source : INSERM 2024
         </div>
       </div>
     );
@@ -155,7 +155,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
                     additive.risk_level === 'medium' ? 'bg-orange-100 text-orange-700' :
                     'bg-yellow-100 text-yellow-700'
                   }`}>
-                    {additive.risk_level === 'high' ? 'Élevé' : additive.risk_level === 'medium' ? 'Modéré' : 'Faible'}
+                    {additive.risk_level === 'high' ? 'Ãƒâ€°levé' : additive.risk_level === 'medium' ? 'Modéré' : 'Faible'}
                   </span>
                 </div>
               ))}
@@ -210,7 +210,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
     const categoryLabels = {
       low: { label: 'Faible', color: 'text-green-600', bg: 'bg-green-50' },
       medium: { label: 'Modéré', color: 'text-yellow-600', bg: 'bg-yellow-50' },
-      high: { label: 'Élevé', color: 'text-red-600', bg: 'bg-red-50' }
+      high: { label: 'Ãƒâ€°levé', color: 'text-red-600', bg: 'bg-red-50' }
     };
 
     const categoryStyle = categoryLabels[glycemic.category as keyof typeof categoryLabels] || categoryLabels.medium;
@@ -244,25 +244,25 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
   const sections = [
     {
       key: 'transformation',
-      title: '🏭 Transformation',
+      title: 'Ã°Å¸ÂÂ­ Transformation',
       score: breakdown.transformation?.score || 0,
       hasDetails: !!(breakdown.transformation?.details?.nova || breakdown.transformation?.details?.additives)
     },
     {
       key: 'nutrition', 
-      title: '🧬 Nutrition',
+      title: 'Ã°Å¸Â§Â¬ Nutrition',
       score: breakdown.nutrition?.score || 0,
       hasDetails: !!breakdown.nutrition?.details?.nutriScore
     },
     {
       key: 'glycemic',
-      title: '📊 Glycémique', 
+      title: 'Ã°Å¸â€œÅ  Glycémique', 
       score: breakdown.glycemic?.score || 0,
       hasDetails: !!breakdown.glycemic?.details?.glycemic
     },
     {
       key: 'environmental',
-      title: '🌱 Environnemental',
+      title: 'Ã°Å¸Å’Â± Environnemental',
       score: breakdown.environmental?.score || 0,
       hasDetails: !!(breakdown.environmental?.details?.certifications?.length)
     }
@@ -287,7 +287,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
         </h2>
         <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
           <span>Confiance : {Math.round(confidence * 100)}%</span>
-          <span>•</span>
+          <span>â€Â¢</span>
           <span>Analyse IA Complète</span>
         </div>
       </div>
@@ -336,7 +336,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
 
       {/* Footer sources */}
       <div className="mt-6 pt-4 border-t text-xs text-gray-500 text-center">
-        Sources : INSERM • ANSES • EFSA • ECHA • Base Internationale IG 2024
+        Sources : INSERM â€Â¢ ANSES â€Â¢ EFSA â€Â¢ ECHA â€Â¢ Base Internationale IG 2024
       </div>
     </div>
   );

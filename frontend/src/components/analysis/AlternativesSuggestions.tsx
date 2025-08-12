@@ -1,4 +1,4 @@
-// 📁 src/components/analysis/AlternativesSuggestions.tsx
+// Ã°Å¸â€œÂ src/components/analysis/AlternativesSuggestions.tsx
 
 import React from 'react';
 import { Lightbulb, ArrowUpRight } from 'lucide-react';
@@ -33,11 +33,11 @@ export const AlternativesSuggestions: React.FC<Props> = ({ alternatives }) => {
         {alternatives.map((alt, idx) => (
           <li key={idx} className="border-l-4 border-emerald-400 pl-3">
             <p className="font-medium text-gray-800">
-              🌿 {alt.name} {alt.price && `- ${alt.price.toFixed(2)}€`}
+              Ã°Å¸Å’Â¿ {alt.name} {alt.price && `- ${alt.price.toFixed(2)}ââ€šÂ¬`}
             </p>
             <p className="text-sm text-gray-600 italic">{alt.benefits}</p>
             <p className="text-xs text-gray-400 mt-1">
-              📚 Source : {alt.source}
+              Ã°Å¸â€œÅ¡ Source : {alt.source}
             </p>
             {alt.where_to_buy && (
               <a
@@ -56,3 +56,4 @@ export const AlternativesSuggestions: React.FC<Props> = ({ alternatives }) => {
     </div>
   );
 };
+

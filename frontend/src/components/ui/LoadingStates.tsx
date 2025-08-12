@@ -3,25 +3,25 @@ import React from 'react';
 
 export const AnalysisLoadingStates = {
   scanning: {
-    icon: "📱",
+    icon: "Ã°Å¸â€œÂ±",
     title: "Scan en cours...",
     message: "Lecture du code-barres",
     duration: "~2 secondes"
   },
   searching: {
-    icon: "🔍", 
+    icon: "Ã°Å¸â€Â", 
     title: "Recherche du produit...",
     message: "Consultation de notre base de données",
     duration: "~3 secondes"
   },
   analyzing: {
-    icon: "🧬",
+    icon: "Ã°Å¸Â§Â¬",
     title: "Analyse IA en cours...",
     message: "Classification scientifique des ingrédients",
     duration: "~5 secondes"
   },
   finalizing: {
-    icon: "✨",
+    icon: "âÅ“Â¨",
     title: "Finalisation...",
     message: "Calcul du score santé et recommandations",
     duration: "~2 secondes"
@@ -45,7 +45,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
       analyzing: "Détection perturbateurs endocriniens et allergènes..."
     },
     detergents: {
-      analyzing: "Évaluation impact environnemental et toxicité..."
+      analyzing: "Ãƒâ€°valuation impact environnemental et toxicité..."
     }
   };
 
@@ -78,7 +78,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
         </div>
       </div>
 
-      {/* Étapes process */}
+      {/* Ãƒâ€°tapes process */}
       <div className="space-y-2">
         {Object.entries(AnalysisLoadingStates).map(([key, state], index) => {
           const isActive = key === stage;
@@ -94,7 +94,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
                 isActive ? 'bg-blue-500 text-white animate-pulse' :
                 'bg-gray-300 text-gray-600'
               }`}>
-                {isCompleted ? '✓' : index + 1}
+                {isCompleted ? 'âÅ“â€œ' : index + 1}
               </div>
               <div className="flex-1">
                 <div className={`text-sm font-medium ${
@@ -118,7 +118,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
       {/* Message d'encouragement */}
       <div className="mt-6 text-center">
         <p className="text-xs text-gray-500">
-          ⚡ Analyse scientifique en temps réel
+          âÅ¡Â¡ Analyse scientifique en temps réel
         </p>
       </div>
     </div>

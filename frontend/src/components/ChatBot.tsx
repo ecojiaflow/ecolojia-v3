@@ -38,8 +38,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ initialProduct }) => {
         id: 'welcome',
         type: 'bot',
         content: initialProduct 
-          ? `Salut ! 👋 Je vois que vous analysez **${initialProduct.name}**. Je peux vous expliquer son score NOVA, ses ingrédients, ou vous suggérer des alternatives plus saines. Que voulez-vous savoir ?`
-          : "Bonjour ! 🌟 Je suis votre assistant ECOLOJIA. Je peux vous aider à comprendre la classification NOVA, analyser des ingrédients, ou vous guider vers des choix plus sains. Comment puis-je vous aider ?",
+          ? `Salut ! Ã°Å¸â€˜â€¹ Je vois que vous analysez **${initialProduct.name}**. Je peux vous expliquer son score NOVA, ses ingrédients, ou vous suggérer des alternatives plus saines. Que voulez-vous savoir ?`
+          : "Bonjour ! Ã°Å¸Å’Å¸ Je suis votre assistant ECOLOJIA. Je peux vous aider ÃƒÂ  comprendre la classification NOVA, analyser des ingrédients, ou vous guider vers des choix plus sains. Comment puis-je vous aider ?",
         timestamp: new Date(),
         productContext: initialProduct ? {
           name: initialProduct.name,
@@ -57,7 +57,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ initialProduct }) => {
               "Comment fonctionne la classification NOVA ?",
               "Qu'est-ce que l'ultra-transformation ?",
               "Analysez un produit pour moi",
-              "Quels sont les additifs à éviter ?"
+              "Quels sont les additifs ÃƒÂ  éviter ?"
             ]
       };
       setMessages([welcomeMessage]);
@@ -153,7 +153,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ initialProduct }) => {
                   {message.productContext && (
                     <div className="mt-2 p-2 bg-white/10 rounded-lg text-xs">
                       <div className="font-medium">{message.productContext.name}</div>
-                      <div>NOVA {message.productContext.novaGroup} • Score: {message.productContext.score}/100</div>
+                      <div>NOVA {message.productContext.novaGroup} â€Â¢ Score: {message.productContext.score}/100</div>
                     </div>
                   )}
                 </div>
@@ -222,7 +222,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ initialProduct }) => {
   );
 };
 
-// Service de génération de réponses (à remplacer par l'API)
+// Service de génération de réponses (ÃƒÂ  remplacer par l'API)
 async function generateBotResponse(
   userMessage: string, 
   productContext?: { name: string; ingredients: string; novaGroup?: number; score?: number }
@@ -234,12 +234,12 @@ async function generateBotResponse(
   let suggestions: string[] = [];
 
   if (lowerMessage.includes('nova') || lowerMessage.includes('classification')) {
-    response = `🔬 **Classification NOVA** expliquée simplement :
+    response = `Ã°Å¸â€Â¬ **Classification NOVA** expliquée simplement :
 
-**NOVA 1** 🥬 : Aliments naturels (fruits, légumes, viandes fraîches)
-**NOVA 2** 🧂 : Ingrédients culinaires (huile, sel, sucre)  
-**NOVA 3** 🍞 : Aliments transformés (pain, conserves, fromages)
-**NOVA 4** 🍟 : Ultra-transformés (sodas, plats préparés, biscuits industriels)
+**NOVA 1** Ã°Å¸Â¥Â¬ : Aliments naturels (fruits, légumes, viandes fraîches)
+**NOVA 2** Ã°Å¸Â§â€š : Ingrédients culinaires (huile, sel, sucre)  
+**NOVA 3** Ã°Å¸ÂÅ¾ : Aliments transformés (pain, conserves, fromages)
+**NOVA 4** Ã°Å¸ÂÅ¸ : Ultra-transformés (sodas, plats préparés, biscuits industriels)
 
 Plus le chiffre est élevé, plus l'aliment a subi de transformations industrielles !`;
     
@@ -251,7 +251,7 @@ Plus le chiffre est élevé, plus l'aliment a subi de transformations industriel
   } 
   else if (lowerMessage.includes('alternative') || lowerMessage.includes('remplacer')) {
     if (productContext) {
-      response = `🔄 **Alternatives pour ${productContext.name}** :
+      response = `Ã°Å¸â€â€ž **Alternatives pour ${productContext.name}** :
 
 Voici des options plus saines (NOVA 1-2) :
 - Version bio ou artisanale similaire
@@ -259,9 +259,9 @@ Voici des options plus saines (NOVA 1-2) :
 - Marques avec moins d'additifs
 - Produits du terroir local
 
-💡 **Conseil** : Cherchez des produits avec max 5 ingrédients que vous reconnaissez !`;
+Ã°Å¸â€™Â¡ **Conseil** : Cherchez des produits avec max 5 ingrédients que vous reconnaissez !`;
     } else {
-      response = `🔄 **Trouver des alternatives saines** :
+      response = `Ã°Å¸â€â€ž **Trouver des alternatives saines** :
 
 1. **Lisez la liste d'ingrédients** - plus c'est court, mieux c'est
 2. **Privilégiez le bio** quand possible
@@ -271,15 +271,15 @@ Voici des options plus saines (NOVA 1-2) :
     }
     
     suggestions = [
-      "Où acheter des produits plus sains ?",
+      "OÃƒÂ¹ acheter des produits plus sains ?",
       "Comment lire une étiquette ?",
       "Recettes maison simples"
     ];
   }
   else if (lowerMessage.includes('dangereux') || lowerMessage.includes('santé') || lowerMessage.includes('risque')) {
-    response = `⚠️ **Impact santé des ultra-transformés** :
+    response = `âÅ¡Â ïÂ¸Â **Impact santé des ultra-transformés** :
 
-**Études scientifiques récentes** montrent :
+**Ãƒâ€°tudes scientifiques récentes** montrent :
 - +22% risque de dépression (Nature 2024)
 - +53% risque diabète type 2 (BMJ 2024)  
 - +10% maladies cardiovasculaires (Lancet 2024)
@@ -287,7 +287,7 @@ Voici des options plus saines (NOVA 1-2) :
 
 **Pourquoi ?** Les additifs et le processus de transformation détruisent la matrice alimentaire naturelle.
 
-⚖️ **L'important** : l'équilibre ! 80% naturel, 20% plaisir.`;
+âÅ¡â€“ïÂ¸Â **L'important** : l'équilibre ! 80% naturel, 20% plaisir.`;
     
     suggestions = [
       "Quels additifs éviter absolument ?",
@@ -296,22 +296,22 @@ Voici des options plus saines (NOVA 1-2) :
     ];
   }
   else if (lowerMessage.includes('additif') || lowerMessage.includes('e1') || lowerMessage.includes('conservateur')) {
-    response = `⚗️ **Les additifs à surveiller** :
+    response = `âÅ¡â€”ïÂ¸Â **Les additifs ÃƒÂ  surveiller** :
 
-**🔴 À éviter** :
+**Ã°Å¸â€Â´ Ãƒ€ éviter** :
 - E102, E110, E124 (colorants liés hyperactivité)
 - E320, E321 (BHA, BHT - perturbateurs endocriniens)
 - E249, E250 (nitrites - cancérigènes potentiels)
 
-**🟡 Modération** :
+**Ã°Å¸Å¸Â¡ Modération** :
 - E471 (émulsifiants courants)
 - E330 (acide citrique - naturel mais ajouté)
 
-**🟢 Acceptables** :
+**Ã°Å¸Å¸Â¢ Acceptables** :
 - E300 (vitamine C)
 - E322 (lécithine naturelle)
 
-💡 **Règle simple** : moins il y a de E-numbers, mieux c'est !`;
+Ã°Å¸â€™Â¡ **Règle simple** : moins il y a de E-numbers, mieux c'est !`;
     
     suggestions = [
       "Comment éviter ces additifs ?",
@@ -323,9 +323,9 @@ Voici des options plus saines (NOVA 1-2) :
     const novaGroup = productContext.novaGroup || 4;
     const score = productContext.score || 50;
     
-    response = `📊 **Score de ${productContext.name}** : ${score}/100
+    response = `Ã°Å¸â€œÅ  **Score de ${productContext.name}** : ${score}/100
 
-**Groupe NOVA ${novaGroup}** ${novaGroup === 4 ? '🚨' : novaGroup === 3 ? '⚠️' : novaGroup === 2 ? '👌' : '✅'}
+**Groupe NOVA ${novaGroup}** ${novaGroup === 4 ? 'Ã°Å¸Å¡Â¨' : novaGroup === 3 ? 'âÅ¡Â ïÂ¸Â' : novaGroup === 2 ? 'Ã°Å¸â€˜Å’' : 'âÅ“â€¦'}
 
 Le score dépend de :
 - **Transformation** (${novaGroup >= 4 ? 'très élevée' : novaGroup >= 3 ? 'modérée' : 'faible'})
@@ -333,9 +333,9 @@ Le score dépend de :
 - **Qualité nutritionnelle** globale
 - **Procédés industriels** utilisés
 
-${score < 40 ? '🚨 Score faible - consommation occasionnelle' : 
-  score < 60 ? '⚠️ Score moyen - modération recommandée' : 
-  '✅ Score correct - choix acceptable'}`;
+${score < 40 ? 'Ã°Å¸Å¡Â¨ Score faible - consommation occasionnelle' : 
+  score < 60 ? 'âÅ¡Â ïÂ¸Â Score moyen - modération recommandée' : 
+  'âÅ“â€¦ Score correct - choix acceptable'}`;
     
     suggestions = [
       "Comment améliorer ce score ?",
@@ -344,7 +344,7 @@ ${score < 40 ? '🚨 Score faible - consommation occasionnelle' :
     ];
   }
   else {
-    response = `🤔 Je comprends votre question ! 
+    response = `Ã°Å¸Â¤â€ Je comprends votre question ! 
 
 En tant qu'assistant ECOLOJIA, je peux vous aider avec :
 - **Classification NOVA** et ultra-transformation

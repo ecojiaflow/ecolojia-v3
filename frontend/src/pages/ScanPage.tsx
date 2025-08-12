@@ -1,10 +1,10 @@
-﻿// PATH: frontend/src/pages/ScanPage.tsx
+// PATH: frontend/src/pages/ScanPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Camera, 
-  Search, 
-  Barcode, 
+import {
+  Camera,
+  Search,
+  Barcode,
   ArrowLeft,
   Sparkles,
   Clock,
@@ -50,30 +50,30 @@ const ScanPage: React.FC = () => {
     error: null
   });
 
-  // Ã‰tat pour les scans rÃ©cents
+  // État pour les scans récents
   const [recentScans, setRecentScans] = useState<RecentScan[]>(() => {
     const stored = localStorage.getItem('recentScans');
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Auto-dismiss des erreurs aprÃ¨s 5 secondes
+  // Auto-dismiss des erreurs après 5 secondes
   useEffect(() => {
     if (analysisState.error) {
       const timer = setTimeout(() => {
-        setAnalysisState(prev => ({ ...prev, error: null }));
+        setAnalysisState((prev) => ({ ...prev, error: null }));
       }, 5000);
       return () => clearTimeout(timer);
     }
   }, [analysisState.error]);
 
-  // Sauvegarder un scan rÃ©cent
+  // Sauvegarder un scan récent
   const addRecentScan = (scan: RecentScan) => {
-    const updated = [scan, ...recentScans.filter(s => s.id !== scan.id)].slice(0, 5);
+    const updated = [scan, ...recentScans.filter((s) => s.id !== scan.id)].slice(0, 5);
     setRecentScans(updated);
     localStorage.setItem('recentScans', JSON.stringify(updated));
   };
 
-  // Gestionnaire pour le scan de code-barres
+  // Gestionnaire — scan code-barres
   const handleBarcodeScanned = async (barcode: string) => {
     try {
       setAnalysisState({
@@ -84,9 +84,8 @@ const ScanPage: React.FC = () => {
       });
 
       const result = await analysisService.analyzeByBarcode(barcode);
-      
+
       if (result.success && result.data) {
-        // Sauvegarder dans les scans rÃ©cents
         addRecentScan({
           id: `barcode-${barcode}-${Date.now()}`,
           name: result.data.name || 'Produit',
@@ -97,16 +96,15 @@ const ScanPage: React.FC = () => {
           scores: result.data.scores
         });
 
-        // Naviguer vers les rÃ©sultats
         navigate('/results', {
-          state: { 
+          state: {
             analysis: result.data,
             scanType: 'barcode',
             barcode
           }
         });
       } else {
-        throw new Error(result.error || 'Produit non trouvÃ©');
+        throw new Error(result.error || 'Produit non trouvé');
       }
     } catch (error: any) {
       setAnalysisState({
@@ -118,42 +116,42 @@ const ScanPage: React.FC = () => {
     }
   };
 
-  // Gestionnaire pour la capture photo avec intÃ©gration Visionâ†’Analysis
+  // Gestionnaire — capture photo (Vision → Analysis)
   const handlePhotoCapture = async (file: File) => {
     try {
-      // 1. Upload et OCR
+      // 1) Upload & OCR
       setAnalysisState({
         isAnalyzing: true,
         progress: 20,
-        currentStep: 'Upload de l\'image...',
+        currentStep: "Upload de l'image...",
         error: null
       });
 
       const visionResult = await visionService.analyzeImage(file);
-      
+
       if (!visionResult.success) {
-        throw new Error(visionResult.error || 'Erreur lors de l\'analyse de l\'image');
+        throw new Error(visionResult.error || "Erreur lors de l'analyse de l'image");
       }
 
-      // 2. Extraction des donnÃ©es
-      setAnalysisState(prev => ({
+      // 2) Extraction des données
+      setAnalysisState((prev) => ({
         ...prev,
         progress: 50,
         currentStep: 'Extraction des informations du produit...'
       }));
 
       const extractedData = visionResult.data?.extractedData;
-      
-      // 3. Si on a des ingrÃ©dients, lancer l'analyse automatique
+
+      // 3) Si ingrédients présents, lancer l’analyse automatique
       if (extractedData?.ingredients) {
-        setAnalysisState(prev => ({
+        setAnalysisState((prev) => ({
           ...prev,
           progress: 80,
           currentStep: 'Analyse nutritionnelle et environnementale...'
         }));
 
         const analysisResult = await analysisService.analyzeManual({
-          name: extractedData.name || 'Produit analysÃ©',
+          name: extractedData.name || 'Produit analysé',
           brand: extractedData.brand,
           ingredients: extractedData.ingredients,
           category: extractedData.category || 'food',
@@ -161,10 +159,9 @@ const ScanPage: React.FC = () => {
         });
 
         if (analysisResult.success && analysisResult.data) {
-          // Sauvegarder dans les scans rÃ©cents
           addRecentScan({
             id: `photo-${Date.now()}`,
-            name: extractedData.name || 'Produit analysÃ©',
+            name: extractedData.name || 'Produit analysé',
             brand: extractedData.brand,
             category: extractedData.category || 'food',
             scanType: 'photo',
@@ -172,9 +169,8 @@ const ScanPage: React.FC = () => {
             scores: analysisResult.data.scores
           });
 
-          // Naviguer vers les rÃ©sultats avec toutes les donnÃ©es
           navigate('/results', {
-            state: { 
+            state: {
               analysis: analysisResult.data,
               visionData: visionResult.data,
               extractedData,
@@ -182,34 +178,31 @@ const ScanPage: React.FC = () => {
             }
           });
         } else {
-          throw new Error(analysisResult.error || 'Erreur lors de l\'analyse');
+          throw new Error(analysisResult.error || "Erreur lors de l'analyse");
         }
       } else {
-        // Si pas assez de donnÃ©es extraites, proposer le mode manuel prÃ©-rempli
+        // Pas assez d’infos → repasser en manuel, pré-remplissage géré par le formulaire
         setAnalysisState({
           isAnalyzing: false,
           progress: 0,
           currentStep: '',
           error: null
         });
-        
-        // Passer au mode manuel avec les donnÃ©es partielles
         setScanMode('manual');
-        
-        // TODO: Passer les donnÃ©es extraites au formulaire manuel
-        console.log('DonnÃ©es partielles extraites:', extractedData);
+        // Optionnel: transmettre extractedData au composant ManualSearch via un état global/context si déjà prévu
+        // console.log('Données partielles extraites:', extractedData);
       }
     } catch (error: any) {
       setAnalysisState({
         isAnalyzing: false,
         progress: 0,
         currentStep: '',
-        error: error.message || 'Erreur lors de l\'analyse de l\'image'
+        error: error.message || "Erreur lors de l'analyse de l'image"
       });
     }
   };
 
-  // Gestionnaire pour la saisie manuelle
+  // Gestionnaire — saisie manuelle
   const handleManualSubmit = async (data: any) => {
     try {
       setAnalysisState({
@@ -220,9 +213,8 @@ const ScanPage: React.FC = () => {
       });
 
       const result = await analysisService.analyzeManual(data);
-      
+
       if (result.success && result.data) {
-        // Sauvegarder dans les scans rÃ©cents
         addRecentScan({
           id: `manual-${Date.now()}`,
           name: data.name,
@@ -233,31 +225,30 @@ const ScanPage: React.FC = () => {
           scores: result.data.scores
         });
 
-        // Naviguer vers les rÃ©sultats
         navigate('/results', {
-          state: { 
+          state: {
             analysis: result.data,
             scanType: 'manual',
             inputData: data
           }
         });
       } else {
-        throw new Error(result.error || 'Erreur lors de l\'analyse');
+        throw new Error(result.error || "Erreur lors de l'analyse");
       }
     } catch (error: any) {
       setAnalysisState({
         isAnalyzing: false,
         progress: 0,
         currentStep: '',
-        error: error.message || 'Erreur lors de l\'analyse'
+        error: error.message || "Erreur lors de l'analyse"
       });
     }
   };
 
-  // Ouvrir un scan rÃ©cent
+  // Ouvrir un scan récent (placeholder)
   const handleRecentScanClick = (scan: RecentScan) => {
-    // TODO: ImplÃ©menter la rÃ©cupÃ©ration des donnÃ©es complÃ¨tes
-    console.log('Ouvrir scan rÃ©cent:', scan);
+    // TODO: Implémenter la récupération des données complètes d’un scan historique si stockées côté backend
+    console.log('Ouvrir scan récent:', scan);
   };
 
   const scanOptions = [
@@ -272,7 +263,7 @@ const ScanPage: React.FC = () => {
       id: 'photo' as ScanMode,
       icon: Camera,
       title: 'Prendre une photo',
-      description: 'Photographiez le produit et ses Ã©tiquettes',
+      description: 'Photographiez le produit et ses étiquettes',
       color: 'bg-purple-500'
     },
     {
@@ -327,7 +318,7 @@ const ScanPage: React.FC = () => {
                 Analysez vos produits en quelques secondes
               </h2>
               <p className="text-gray-600">
-                DÃ©couvrez leur impact sur votre santÃ© et l'environnement
+                Découvrez leur impact sur votre santé et l'environnement
               </p>
             </div>
 
@@ -341,15 +332,15 @@ const ScanPage: React.FC = () => {
                   onClick={() => setScanMode(option.id)}
                   className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left group"
                 >
-                  <div className={`w-14 h-14 ${option.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <div
+                    className={`w-14 h-14 ${option.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                  >
                     <option.icon className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="font-semibold text-[#3B3B3B] mb-2">
                     {option.title}
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    {option.description}
-                  </p>
+                  <p className="text-sm text-gray-600">{option.description}</p>
                 </motion.button>
               ))}
             </div>
@@ -357,7 +348,7 @@ const ScanPage: React.FC = () => {
             {/* Recent scans */}
             <div className="mt-12">
               <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-                Produits rÃ©cemment scannÃ©s
+                Produits récemment scannés
               </h3>
               <div className="bg-white rounded-xl shadow-sm">
                 {recentScans.length > 0 ? (
@@ -369,9 +360,15 @@ const ScanPage: React.FC = () => {
                         className="w-full p-4 hover:bg-gray-50 transition-colors text-left flex items-center gap-4"
                       >
                         <div className="flex-shrink-0">
-                          {scan.scanType === 'barcode' && <Barcode className="w-5 h-5 text-blue-500" />}
-                          {scan.scanType === 'photo' && <Camera className="w-5 h-5 text-purple-500" />}
-                          {scan.scanType === 'manual' && <Search className="w-5 h-5 text-green-500" />}
+                          {scan.scanType === 'barcode' && (
+                            <Barcode className="w-5 h-5 text-blue-500" />
+                          )}
+                          {scan.scanType === 'photo' && (
+                            <Camera className="w-5 h-5 text-purple-500" />
+                          )}
+                          {scan.scanType === 'manual' && (
+                            <Search className="w-5 h-5 text-green-500" />
+                          )}
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-[#3B3B3B]">{scan.name}</p>
@@ -390,11 +387,9 @@ const ScanPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="p-6 text-center">
-                    <p className="text-gray-500">
-                      Aucun produit scannÃ© rÃ©cemment
-                    </p>
+                    <p className="text-gray-500">Aucun produit scanné récemment</p>
                     <p className="text-sm text-gray-400 mt-2">
-                      Vos derniers scans apparaÃ®tront ici
+                      Vos derniers scans apparaîtront ici
                     </p>
                   </div>
                 )}
@@ -413,18 +408,18 @@ const ScanPage: React.FC = () => {
               <div className="w-20 h-20 mx-auto mb-6">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                   className="w-full h-full"
                 >
                   <Sparkles className="w-full h-full text-[#7DDE4A]" />
                 </motion.div>
               </div>
-              
+
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-2">
                 Analyse en cours...
               </h3>
               <p className="text-gray-600 mb-6">{analysisState.currentStep}</p>
-              
+
               {/* Progress bar */}
               <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                 <motion.div
@@ -434,9 +429,9 @@ const ScanPage: React.FC = () => {
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              
+
               <p className="text-sm text-gray-500 mt-4">
-                {analysisState.progress}% complÃ©tÃ©
+                {analysisState.progress}% complété
               </p>
             </div>
           </motion.div>
@@ -449,11 +444,11 @@ const ScanPage: React.FC = () => {
           <BarcodeScanner
             onScanSuccess={handleBarcodeScanned}
             onError={(error) => {
-              setAnalysisState({ 
+              setAnalysisState({
                 isAnalyzing: false,
                 progress: 0,
                 currentStep: '',
-                error: error.message 
+                error: error.message
               });
               setScanMode(null);
             }}
@@ -465,11 +460,11 @@ const ScanPage: React.FC = () => {
           <PhotoCapture
             onCapture={handlePhotoCapture}
             onError={(error) => {
-              setAnalysisState({ 
+              setAnalysisState({
                 isAnalyzing: false,
                 progress: 0,
                 currentStep: '',
-                error: error.message 
+                error: error.message
               });
               setScanMode(null);
             }}
@@ -478,10 +473,7 @@ const ScanPage: React.FC = () => {
         )}
 
         {scanMode === 'manual' && (
-          <ManualSearch
-            onSubmit={handleManualSubmit}
-            onClose={() => setScanMode(null)}
-          />
+          <ManualSearch onSubmit={handleManualSubmit} onClose={() => setScanMode(null)} />
         )}
       </AnimatePresence>
 
@@ -509,5 +501,3 @@ const ScanPage: React.FC = () => {
 };
 
 export default ScanPage;
-
-

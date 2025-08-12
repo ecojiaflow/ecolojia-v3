@@ -262,9 +262,9 @@ const ProductPage: React.FC = () => {
             {scanMethod !== 'direct' && (
               <div className="mb-4 flex items-center justify-center">
                 <span className="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600 flex items-center gap-2">
-                  {scanMethod === 'barcode' && '📊 Scanné par code-barres'}
-                  {scanMethod === 'photo' && '📸 Analysé par photo avec IA'}
-                  {scanMethod === 'manual' && '✍️ Saisi manuellement'}
+                  {scanMethod === 'barcode' && 'Ã°Å¸â€œÅ  Scanné par code-barres'}
+                  {scanMethod === 'photo' && 'Ã°Å¸â€œÂ¸ Analysé par photo avec IA'}
+                  {scanMethod === 'manual' && 'âÅ“ÂïÂ¸Â Saisi manuellement'}
                 </span>
               </div>
             )}
@@ -279,9 +279,9 @@ const ProductPage: React.FC = () => {
                   )}
                   <div className="flex flex-wrap items-center gap-3 mt-4">
                     <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                      {analysis.category === 'food' ? '🍎 Alimentaire' : 
-                       analysis.category === 'cosmetic' ? '💄 Cosmétique' : 
-                       '🧼 Ménager'}
+                      {analysis.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentaire' : 
+                       analysis.category === 'cosmetic' ? 'Ã°Å¸â€™â€ž Cosmétique' : 
+                       'Ã°Å¸Â§Â¼ Ménager'}
                     </span>
                     {analysis.barcode && (
                       <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-mono">
@@ -348,7 +348,7 @@ const ProductPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Shield className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-700">Éthique</span>
+                      <span className="font-medium text-gray-700">Ãƒâ€°thique</span>
                     </div>
                     <span className={`text-2xl font-bold ${getScoreColor(analysis.ethicsScore)}`}>
                       {analysis.ethicsScore}

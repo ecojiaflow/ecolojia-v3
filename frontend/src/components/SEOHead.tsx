@@ -19,10 +19,10 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   type = 'website'
 }) => {
   useEffect(() => {
-    // Mise à jour du titre
+    // Mise ÃƒÂ  jour du titre
     document.title = title;
     
-    // Fonction helper pour mettre à jour ou créer une meta tag
+    // Fonction helper pour mettre ÃƒÂ  jour ou créer une meta tag
     const updateMetaTag = (property: string, content: string, isProperty = false) => {
       const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
       let metaTag = document.querySelector(selector) as HTMLMetaElement;

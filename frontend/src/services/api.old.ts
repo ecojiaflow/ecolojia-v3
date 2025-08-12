@@ -13,7 +13,7 @@ const api = axios.create({
   timeout: 30000, // 30 secondes
 });
 
-// ===== TYPES UNIFIÉS =====
+// ===== TYPES UNIFIÃƒâ€°S =====
 export interface ApiError {
   message: string;
   code?: string;
@@ -233,7 +233,7 @@ api.interceptors.request.use(
     
     // Log en mode debug
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.log(`🌐 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+      console.log(`Ã°Å¸Å’Â API Request: ${config.method?.toUpperCase()} ${config.url}`);
     }
     
     return config;
@@ -247,7 +247,7 @@ api.interceptors.response.use(
   (response) => {
     // Log en mode debug
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.log(`✅ API Response:`, response.data);
+      console.log(`âÅ“â€¦ API Response:`, response.data);
     }
     return response;
   },
@@ -256,10 +256,10 @@ api.interceptors.response.use(
 
     // Log des erreurs
     if (import.meta.env.VITE_DEBUG === 'true') {
-      console.error(`❌ API Error:`, error.response?.status, error.response?.data);
+      console.error(`âÂÅ’ API Error:`, error.response?.status, error.response?.data);
     }
 
-    // Si erreur 401 et pas déjà tenté de refresh
+    // Si erreur 401 et pas déjÃƒÂ  tenté de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -278,7 +278,7 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Échec du refresh, rediriger vers login
+        // Ãƒâ€°chec du refresh, rediriger vers login
         clearTokens();
         window.location.href = '/auth';
         return Promise.reject(refreshError);

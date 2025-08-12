@@ -83,7 +83,7 @@ export async function streamDeepSeekResponse(
                 onToken(content);
               }
             } catch (err) {
-              console.warn('⚠️ Impossible de parser:', data);
+              console.warn('âÅ¡Â ïÂ¸Â Impossible de parser:', data);
             }
           }
         }
@@ -92,7 +92,7 @@ export async function streamDeepSeekResponse(
 
     onDone?.();
   } catch (err: any) {
-    console.error('❌ Erreur streaming IA:', err);
+    console.error('âÂÅ’ Erreur streaming IA:', err);
     
     // Message d'erreur plus détaillé selon le type d'erreur
     let errorMessage = 'Erreur de connexion avec le serveur';

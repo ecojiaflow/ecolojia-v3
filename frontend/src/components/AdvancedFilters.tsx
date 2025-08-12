@@ -105,7 +105,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           {/* Prix */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Gamme de prix (€)
+              Gamme de prix (ââ€šÂ¬)
             </label>
             <div className="flex items-center space-x-4">
               <input

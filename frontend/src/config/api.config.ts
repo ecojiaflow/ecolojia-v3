@@ -1,228 +1,65 @@
-// PATH: frontend/src/config/api.config.ts
-/**
- * Configuration centralisée pour l'API
- */
-
-// URLs de base selon l'environnement
-const API_URLS = {
-  development: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api',
-  production: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api',
-  demo: '/demo/api' // Mode démo local
-} as const;
-
-// Déterminer l'environnement actuel
-const getCurrentEnvironment = (): keyof typeof API_URLS => {
-  // Si on est en mode démo explicite
-  if (import.meta.env.VITE_APP_MODE === 'demo') return 'demo';
-  
-  // Si on est en production
-  if (import.meta.env.VITE_IS_PRODUCTION === 'true' || import.meta.env.MODE === 'production') {
-    return 'production';
-  }
-  
-  // Sinon, développement
-  return 'development';
-};
-
-// Configuration principale
+﻿// api.config.ts - Configuration pour backend local
 export const API_CONFIG = {
-  // URL de base dynamique
-  BASE_URL: API_URLS[getCurrentEnvironment()],
-  
-  // Fonction pour obtenir l'URL courante
-  getCurrentUrl: () => API_URLS[getCurrentEnvironment()],
-  
-  // Timeout des requêtes (en ms)
+  // Utiliser le backend local en dev, ou Render en prod
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5001',
   TIMEOUT: 30000,
   
-  // Headers par défaut
-  DEFAULT_HEADERS: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-  
-  // Endpoints de l'API
   ENDPOINTS: {
-    // Authentification
     AUTH: {
-      LOGIN: '/auth/login',
-      REGISTER: '/auth/register',
-      LOGOUT: '/auth/logout',
-      REFRESH: '/auth/refresh',
-      ME: '/auth/me',
-      VERIFY_EMAIL: '/auth/verify-email',
-      RESET_PASSWORD: '/auth/reset-password',
-      CHANGE_PASSWORD: '/auth/change-password',
+      LOGIN: '/api/auth/login',
+      REGISTER: '/api/auth/register',
+      PROFILE: '/api/users/me',
+      LOGOUT: '/api/auth/logout',
+      REFRESH: '/api/auth/refresh'
     },
-    
-    // Utilisateur
-    USER: {
-      PROFILE: '/users/profile',
-      UPDATE: '/users/profile',
-      PREFERENCES: '/users/preferences',
-      DELETE: '/users/account',
-      EXPORT_DATA: '/users/export-data',
-      UPLOAD_AVATAR: '/users/avatar',
+    USERS: {
+      PROFILE: '/api/users/me',
+      UPDATE: '/api/users/me'
     },
-    
-    // Produits
-    PRODUCTS: {
-      SEARCH: '/products/search',
-      GET_BY_ID: '/products',
-      GET_BY_BARCODE: '/products/barcode',
-      CREATE: '/products',
-      UPDATE: '/products',
-      TRENDING: '/products/trending',
-      CATEGORIES: '/products/categories',
-    },
-    
-    // Analyses
     ANALYSIS: {
-      ANALYZE: '/analysis/analyze',
-      ANALYZE_BARCODE: '/analysis/barcode',
-      ANALYZE_IMAGE: '/analysis/image',
-      ANALYZE_MANUAL: '/analysis/manual',
-      GET_BY_ID: '/analysis',
-      HISTORY: '/analysis/history',
+      MANUAL: '/api/analysis/manual',
+      BARCODE: '/api/analysis/barcode',
+      VISION: '/api/vision/analyze-image',
+      PING: '/api/analysis/ping',
+      STATUS: '/api/analysis/_service/status'
     },
-    
-    // Dashboard
     DASHBOARD: {
-      STATS: '/dashboard/stats',
-      INSIGHTS: '/dashboard/insights',
-      WIDGETS: '/dashboard/widgets',
-      EXPORT: '/dashboard/export',
+      STATS: '/api/dashboard/stats',
+      HISTORY: '/api/dashboard/history',
+      WEEKLY_SUMMARY: '/api/dashboard/weekly-summary',
+      RECOMMENDATIONS: '/api/dashboard/recommendations',
+      ACHIEVEMENTS: '/api/dashboard/achievements'
     },
-    
-    // Historique
-    HISTORY: '/history',
-    
-    // Favoris
-    FAVORITES: {
-      LIST: '/favorites',
-      ADD: '/favorites',
-      REMOVE: '/favorites',
-      LISTS: '/favorites/lists',
+    HISTORY: {
+      LIST: '/api/history',
+      COUNT: '/api/history/count'
     },
-    
-    // Vision/OCR
-    VISION: {
-      ANALYZE: '/vision/analyze-image',
-      STATUS: '/vision/status',
-    },
-    
-    // Algolia (proxy)
-    ALGOLIA: {
-      SEARCH: '/algolia/search',
-      TRENDING: '/algolia/trending',
-    },
-    
-    // Abonnements
-    SUBSCRIPTION: {
-      PLANS: '/subscription/plans',
-      CURRENT: '/subscription/current',
-      SUBSCRIBE: '/subscription/subscribe',
-      CANCEL: '/subscription/cancel',
-      UPDATE: '/subscription/update',
-      HISTORY: '/subscription/history',
-    },
-    
-    // Chat IA
-    AI_CHAT: {
-      SEND: '/ai/chat',
-      HISTORY: '/ai/chat/history',
-      CLEAR: '/ai/chat/clear',
-    },
-    
-    // Notifications
-    NOTIFICATIONS: {
-      LIST: '/notifications',
-      MARK_READ: '/notifications/read',
-      SETTINGS: '/notifications/settings',
-    },
-    
-    // Admin (si applicable)
-    ADMIN: {
-      USERS: '/admin/users',
-      PRODUCTS: '/admin/products',
-      ANALYTICS: '/admin/analytics',
-      REPORTS: '/admin/reports',
-    }
-  },
-  
-  // Clés de stockage local
-  STORAGE_KEYS: {
-    TOKEN: 'ecolojia_token',
-    REFRESH_TOKEN: 'ecolojia_refresh_token',
-    USER: 'ecolojia_user',
-    PREFERENCES: 'ecolojia_preferences',
-    THEME: 'ecolojia_theme',
-    LANGUAGE: 'ecolojia_language',
-    ONBOARDING: 'ecolojia_onboarding_completed',
-  },
-  
-  // Configuration des quotas
-  QUOTAS: {
-    FREE: {
-      SCANS_PER_MONTH: 30,
-      AI_CHATS_PER_MONTH: 5,
-      EXPORT_ENABLED: false,
-      ADVANCED_ANALYTICS: false,
-    },
-    PREMIUM: {
-      SCANS_PER_MONTH: -1, // Illimité
-      AI_CHATS_PER_MONTH: 500,
-      EXPORT_ENABLED: true,
-      ADVANCED_ANALYTICS: true,
-    },
-    FAMILY: {
-      SCANS_PER_MONTH: -1, // Illimité
-      AI_CHATS_PER_MONTH: 2500, // 500 par membre
-      EXPORT_ENABLED: true,
-      ADVANCED_ANALYTICS: true,
-      MAX_MEMBERS: 5,
+    PRODUCTS: {
+      SEARCH: '/api/products/search',
+      GET_BY_ID: '/api/products',
+      STATS: '/api/products/stats',
+      POPULAR: '/api/products/popular',
+      TRENDING: '/api/products/trending',
+      BARCODE: '/api/products/barcode'
     }
   }
 };
 
-// Messages d'erreur standardisés
-export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Erreur de connexion. Vérifiez votre connexion internet.',
-  SERVER_ERROR: 'Erreur serveur. Veuillez réessayer plus tard.',
-  UNAUTHORIZED: 'Non autorisé. Veuillez vous reconnecter.',
-  FORBIDDEN: 'Accès refusé. Vous n\'avez pas les permissions nécessaires.',
-  NOT_FOUND: 'Ressource introuvable.',
-  INVALID_DATA: 'Les données fournies sont invalides.',
-  TIMEOUT: 'La requête a pris trop de temps. Veuillez réessayer.',
-  QUOTA_EXCEEDED: 'Quota dépassé. Passez à Premium pour continuer.',
-  SESSION_EXPIRED: 'Votre session a expiré. Veuillez vous reconnecter.',
-  TOKEN_REFRESH_FAILED: 'Impossible de rafraîchir votre session.',
-  OFFLINE: 'Vous êtes hors ligne. Vérifiez votre connexion.',
-} as const;
+// Helper pour construire les URLs complètes
+export const buildApiUrl = (endpoint: string): string => {
+  return `${API_CONFIG.BASE_URL}${endpoint}`;
+};
 
-// Configuration des webhooks (si nécessaire)
-export const WEBHOOK_EVENTS = {
-  USER_REGISTERED: 'user.registered',
-  USER_UPGRADED: 'user.upgraded',
-  SCAN_COMPLETED: 'scan.completed',
-  SUBSCRIPTION_CREATED: 'subscription.created',
-  SUBSCRIPTION_CANCELLED: 'subscription.cancelled',
-} as const;
-
-// Configuration des limites
-export const LIMITS = {
-  MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-  MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
-  ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/webp'],
-  MAX_INGREDIENTS_LENGTH: 5000,
-  MAX_PRODUCT_NAME_LENGTH: 200,
-  MAX_SEARCH_QUERY_LENGTH: 100,
-  PAGINATION_DEFAULT_LIMIT: 20,
-  PAGINATION_MAX_LIMIT: 100,
-} as const;
-
-// Export des types
-export type ApiEndpoint = typeof API_CONFIG.ENDPOINTS;
-export type StorageKey = keyof typeof API_CONFIG.STORAGE_KEYS;
-export type ErrorMessage = typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES];
-export type Environment = keyof typeof API_URLS;
+// Helper pour les headers par défaut
+export const getDefaultHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  
+  const token = localStorage.getItem('ecolojia_token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  return headers;
+};

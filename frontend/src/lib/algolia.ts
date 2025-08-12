@@ -43,21 +43,21 @@ export const cleanText = (text: string): string => {
   if (!text) return '';
   
   return text
-    .replace(/�/g, 'é')
-    .replace(/à/g, 'à')
+    .replace(/ïÂ¿Â½/g, 'é')
+    .replace(/ÃƒÂ /g, 'ÃƒÂ ')
     .replace(/é/g, 'é')
     .replace(/è/g, 'è')
     .replace(/ç/g, 'ç')
     .replace(/ô/g, 'ô')
-    .replace(/û/g, 'û')
+    .replace(/ÃƒÂ»/g, 'ÃƒÂ»')
     .replace(/î/g, 'î')
     .replace(/â/g, 'â')
-    .replace(/Ã‰/g, 'É')
-    .replace(/Ã€/g, 'À')
-    .replace(/ù/g, 'ù')
+    .replace(/ÃƒÆ’â€Â°/g, 'Ãƒâ€°')
+    .replace(/ÃƒÆ’ââ€šÂ¬/g, 'Ãƒ€')
+    .replace(/ÃƒÂ¹/g, 'ÃƒÂ¹')
     .replace(/ê/g, 'ê')
-    .replace(/Ã«/g, 'ë')
-    .replace(/Ã¯/g, 'ï')
+    .replace(/ÃƒÆ’Ã‚Â«/g, 'ÃƒÂ«')
+    .replace(/ÃƒÆ’Ã‚Â¯/g, 'ÃƒÂ¯')
     .trim();
 };
 

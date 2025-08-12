@@ -269,7 +269,7 @@ const DashboardPage: React.FC = () => {
                 onClick={() => setShowLoginBanner(false)}
                 className="text-white hover:text-gray-200"
               >
-                ✕
+                âÅ“â€¢
               </button>
             </div>
           </div>
@@ -526,10 +526,10 @@ const DashboardPage: React.FC = () => {
             className="mt-8 bg-gradient-to-r from-[#7DDE4A] to-[#6BC93B] rounded-xl p-8 text-white text-center"
           >
             <h3 className="text-2xl font-bold mb-4">
-              Prêt à analyser vos propres produits ?
+              Prêt ÃƒÂ  analyser vos propres produits ?
             </h3>
             <p className="text-lg mb-6 opacity-90">
-              Créez votre compte gratuit et commencez à faire des choix éclairés
+              Créez votre compte gratuit et commencez ÃƒÂ  faire des choix éclairés
             </p>
             <button
               onClick={() => navigate('/register')}

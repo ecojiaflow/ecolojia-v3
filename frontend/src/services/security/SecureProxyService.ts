@@ -45,9 +45,9 @@ export class SecureProxyService {
     return SecureProxyService.instance;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
   // ALGOLIA SECURE METHODS
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
 
   /**
    * Obtient un token de recherche Algolia temporaire et sécurisé
@@ -74,10 +74,10 @@ export class SecureProxyService {
       // Programmer le renouvellement automatique
       this.scheduleTokenRefresh(tokenData.expiresIn);
 
-      console.log('✅ Algolia search token obtained (expires in', tokenData.expiresIn, 'seconds)');
+      console.log('âÅ“â€¦ Algolia search token obtained (expires in', tokenData.expiresIn, 'seconds)');
       return tokenData;
     } catch (error) {
-      console.error('❌ Failed to get Algolia search token:', error);
+      console.error('âÂÅ’ Failed to get Algolia search token:', error);
       throw new Error('Impossible d\'obtenir le token de recherche');
     }
   }
@@ -101,14 +101,14 @@ export class SecureProxyService {
 
       return response.data.results;
     } catch (error) {
-      console.error('❌ Secure Algolia search failed:', error);
+      console.error('âÂÅ’ Secure Algolia search failed:', error);
       throw new Error('Erreur lors de la recherche');
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
   // LEMONSQUEEZY SECURE METHODS
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
 
   /**
    * Crée une session de checkout LemonSqueezy sécurisée
@@ -117,13 +117,13 @@ export class SecureProxyService {
     try {
       const response = await api.post('/proxy/lemonsqueezy/checkout', { plan });
       
-      console.log('✅ Secure checkout session created:', plan);
+      console.log('âÅ“â€¦ Secure checkout session created:', plan);
       return response.data;
     } catch (error: any) {
-      console.error('❌ Failed to create secure checkout:', error);
+      console.error('âÂÅ’ Failed to create secure checkout:', error);
       
       if (error.response?.status === 403) {
-        throw new Error('Vous devez être connecté pour accéder à cette fonctionnalité');
+        throw new Error('Vous devez être connecté pour accéder ÃƒÂ  cette fonctionnalité');
       }
       
       throw new Error(error.response?.data?.error || 'Erreur lors de la création du paiement');
@@ -138,14 +138,14 @@ export class SecureProxyService {
       const response = await api.get('/proxy/lemonsqueezy/subscription');
       return response.data.subscription;
     } catch (error) {
-      console.error('❌ Failed to get subscription status:', error);
+      console.error('âÂÅ’ Failed to get subscription status:', error);
       return null;
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
   // AI SECURE METHODS
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
 
   /**
    * Envoie un message au chat IA de manière sécurisée avec gestion des quotas
@@ -162,19 +162,19 @@ export class SecureProxyService {
         quotaRemaining: response.data.quotaRemaining
       };
     } catch (error: any) {
-      console.error('❌ AI chat error:', error);
+      console.error('âÂÅ’ AI chat error:', error);
       
       if (error.response?.status === 403) {
-        throw new Error('Quota de questions IA épuisé. Passez à Premium pour des questions illimitées.');
+        throw new Error('Quota de questions IA épuisé. Passez ÃƒÂ  Premium pour des questions illimitées.');
       }
       
       throw new Error(error.response?.data?.error || 'Erreur lors de la communication avec l\'IA');
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
   // CLOUDINARY SECURE METHODS
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
 
   /**
    * Obtient une signature pour upload sécurisé Cloudinary
@@ -185,10 +185,10 @@ export class SecureProxyService {
         uploadPreset
       });
 
-      console.log('✅ Upload signature obtained');
+      console.log('âÅ“â€¦ Upload signature obtained');
       return response.data;
     } catch (error) {
-      console.error('❌ Failed to get upload signature:', error);
+      console.error('âÂÅ’ Failed to get upload signature:', error);
       throw new Error('Erreur lors de la préparation de l\'upload');
     }
   }
@@ -229,18 +229,18 @@ export class SecureProxyService {
       }
 
       const data = await response.json();
-      console.log('✅ Image uploaded successfully:', data.secure_url);
+      console.log('âÅ“â€¦ Image uploaded successfully:', data.secure_url);
       
       return data.secure_url;
     } catch (error) {
-      console.error('❌ Image upload failed:', error);
+      console.error('âÂÅ’ Image upload failed:', error);
       throw new Error('Erreur lors de l\'upload de l\'image');
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
   // HELPER METHODS
-  // ═══════════════════════════════════════════════════════════════════════
+  // ââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Âââ€¢Â
 
   /**
    * Programme le renouvellement automatique du token
@@ -256,7 +256,7 @@ export class SecureProxyService {
     
     if (refreshIn > 0) {
       this.tokenRefreshTimer = setTimeout(() => {
-        console.log('🔄 Auto-refreshing Algolia token...');
+        console.log('Ã°Å¸â€â€ž Auto-refreshing Algolia token...');
         this.searchTokenCache = null;
         this.getAlgoliaSearchToken().catch(console.error);
       }, refreshIn);
@@ -264,7 +264,7 @@ export class SecureProxyService {
   }
 
   /**
-   * Nettoie les ressources (à appeler lors du logout)
+   * Nettoie les ressources (ÃƒÂ  appeler lors du logout)
    */
   cleanup(): void {
     if (this.tokenRefreshTimer) {

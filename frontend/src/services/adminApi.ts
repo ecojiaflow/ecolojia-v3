@@ -17,7 +17,7 @@ const adminApi = axios.create({
 adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('❌ Erreur API Admin:', error.response?.data || error.message);
+    console.error('âÂÅ’ Erreur API Admin:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
@@ -34,7 +34,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur getDashboardStats:', error);
+      console.error('âÂÅ’ Erreur getDashboardStats:', error);
       throw new Error('Impossible de récupérer les statistiques du dashboard');
     }
   }
@@ -50,7 +50,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur getRecentProducts:', error);
+      console.error('âÂÅ’ Erreur getRecentProducts:', error);
       throw new Error('Impossible de récupérer les produits récents');
     }
   }
@@ -66,7 +66,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur getImportLogs:', error);
+      console.error('âÂÅ’ Erreur getImportLogs:', error);
       throw new Error('Impossible de récupérer les logs d\'import');
     }
   }
@@ -84,7 +84,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur triggerImport:', error);
+      console.error('âÂÅ’ Erreur triggerImport:', error);
       throw new Error('Impossible de déclencher l\'import');
     }
   }
@@ -100,7 +100,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur getImportProgress:', error);
+      console.error('âÂÅ’ Erreur getImportProgress:', error);
       throw new Error('Impossible de récupérer le progrès de l\'import');
     }
   }
@@ -116,7 +116,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur deleteProduct:', error);
+      console.error('âÂÅ’ Erreur deleteProduct:', error);
       throw new Error('Impossible de supprimer le produit');
     }
   }
@@ -134,7 +134,7 @@ export class AdminApiService {
       
       return response.data.data;
     } catch (error) {
-      console.error('❌ Erreur validateProduct:', error);
+      console.error('âÂÅ’ Erreur validateProduct:', error);
       throw new Error('Impossible de valider le produit');
     }
   }

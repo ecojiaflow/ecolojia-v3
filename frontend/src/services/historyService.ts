@@ -1,3 +1,4 @@
+﻿import mockService from './mockService';
 // PATH: frontend/src/services/historyService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';
@@ -71,6 +72,9 @@ class HistoryService {
         params.append('category', category);
       }
 
+            if (!API_CONFIG?.ENDPOINTS?.HISTORY) {
+        return mockService.getHistory();
+      }
       const response = await api.get<HistoryItem[]>(
         `${API_CONFIG.ENDPOINTS.HISTORY}?${params.toString()}`
       );
@@ -110,6 +114,9 @@ class HistoryService {
    */
   async getHistoryItem(id: string): Promise<HistoryItem> {
     try {
+            if (!API_CONFIG?.ENDPOINTS?.HISTORY) {
+        return mockService.getHistory();
+      }
       const response = await api.get<HistoryItem>(
         `${API_CONFIG.ENDPOINTS.HISTORY}/${id}`
       );
@@ -163,6 +170,9 @@ class HistoryService {
         if (filters.dateTo) params.append('dateTo', filters.dateTo.toISOString());
       }
 
+            if (!API_CONFIG?.ENDPOINTS?.HISTORY) {
+        return mockService.getHistory();
+      }
       const response = await api.get<HistoryItem[]>(
         `${API_CONFIG.ENDPOINTS.HISTORY}/search?${params.toString()}`
       );
@@ -204,6 +214,9 @@ class HistoryService {
     favoriteProducts: number;
   }> {
     try {
+            if (!API_CONFIG?.ENDPOINTS?.HISTORY) {
+        return mockService.getHistory();
+      }
       const response = await api.get(`${API_CONFIG.ENDPOINTS.HISTORY}/stats`);
       return response;
     } catch (error) {
@@ -229,6 +242,9 @@ class HistoryService {
    */
   async getFavorites(): Promise<HistoryItem[]> {
     try {
+            if (!API_CONFIG?.ENDPOINTS?.HISTORY) {
+        return mockService.getHistory();
+      }
       const response = await api.get<HistoryItem[]>(
         `${API_CONFIG.ENDPOINTS.HISTORY}/favorites`
       );
@@ -259,3 +275,4 @@ class HistoryService {
 }
 
 export default HistoryService.getInstance();
+

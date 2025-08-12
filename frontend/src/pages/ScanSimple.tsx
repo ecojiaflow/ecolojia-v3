@@ -14,7 +14,7 @@ const ScanSimple: React.FC = () => {
     setError('');
     setResult(null);
     
-    console.log('🔍 Recherche pour:', query);
+    console.log('Ã°Å¸â€Â Recherche pour:', query);
     
     try {
       // Test direct avec l'URL complète
@@ -25,14 +25,14 @@ const ScanSimple: React.FC = () => {
         }
       });
       
-      console.log('📥 Response status:', response.status);
+      console.log('Ã°Å¸â€œÂ¥ Response status:', response.status);
       
       const data = await response.json();
-      console.log('📦 Data:', data);
+      console.log('Ã°Å¸â€œÂ¦ Data:', data);
       
       setResult(data);
     } catch (err: any) {
-      console.error('❌ Erreur:', err);
+      console.error('âÂÅ’ Erreur:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ const ScanSimple: React.FC = () => {
         
         <div className="mt-8 bg-yellow-100 p-4 rounded">
           <p className="text-sm">
-            ℹ️ Cette page teste directement l'API sans proxy.
+            ââ€žÂ¹ïÂ¸Â Cette page teste directement l'API sans proxy.
             Ouvrez la console (F12) pour voir les logs.
           </p>
         </div>

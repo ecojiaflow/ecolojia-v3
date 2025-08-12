@@ -52,7 +52,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: '🌱 Vérifiez votre email ECOLOJIA',
+        subject: 'Ã°Å¸Å’Â± Vérifiez votre email ECOLOJIA',
         text: textContent,
         html: htmlContent
       });
@@ -75,7 +75,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: '🔐 Réinitialisation de votre mot de passe ECOLOJIA',
+        subject: 'Ã°Å¸â€Â Réinitialisation de votre mot de passe ECOLOJIA',
         text: textContent,
         html: htmlContent
       });
@@ -96,7 +96,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: '🎉 Bienvenue sur ECOLOJIA !',
+        subject: 'Ã°Å¸Å½â€° Bienvenue sur ECOLOJIA !',
         text: textContent,
         html: htmlContent
       });
@@ -129,7 +129,7 @@ export class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <h1>🌱 ECOLOJIA</h1>
+                <h1>Ã°Å¸Å’Â± ECOLOJIA</h1>
                 <p>Votre expert IA pour une consommation éclairée</p>
             </div>
             
@@ -138,30 +138,30 @@ export class EmailService {
                 
                 <p>Merci de vous être inscrit sur <strong>ECOLOJIA</strong>, votre nouvelle plateforme d'analyse de produits alimentée par IA scientifique.</p>
                 
-                <p>Pour commencer à analyser vos produits et accéder à toutes nos fonctionnalités, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+                <p>Pour commencer ÃƒÂ  analyser vos produits et accéder ÃƒÂ  toutes nos fonctionnalités, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
                 
                 <div style="text-align: center;">
-                    <a href="${verificationUrl}" class="button">✅ Vérifier mon email</a>
+                    <a href="${verificationUrl}" class="button">âÅ“â€¦ Vérifier mon email</a>
                 </div>
                 
                 <p><strong>Ce que vous allez découvrir avec ECOLOJIA :</strong></p>
                 <ul>
-                    <li>🔬 <strong>Analyse scientifique avancée</strong> : Classification NOVA, détection ultra-transformation</li>
-                    <li>🤖 <strong>Chat IA Expert</strong> : 5 questions gratuites par jour avec notre nutritionniste IA</li>
-                    <li>🏆 <strong>Score santé 0-100</strong> : Évaluation instantanée de vos produits</li>
-                    <li>🌿 <strong>Alternatives saines</strong> : Suggestions personnalisées</li>
+                    <li>Ã°Å¸â€Â¬ <strong>Analyse scientifique avancée</strong> : Classification NOVA, détection ultra-transformation</li>
+                    <li>Ã°Å¸Â¤â€“ <strong>Chat IA Expert</strong> : 5 questions gratuites par jour avec notre nutritionniste IA</li>
+                    <li>Ã°Å¸Ââ€  <strong>Score santé 0-100</strong> : Ãƒâ€°valuation instantanée de vos produits</li>
+                    <li>Ã°Å¸Å’Â¿ <strong>Alternatives saines</strong> : Suggestions personnalisées</li>
                 </ul>
                 
                 <p>Ce lien est valable pendant <strong>24 heures</strong>.</p>
                 
-                <p>Si vous n'arrivez pas à cliquer sur le bouton, copiez et collez cette URL dans votre navigateur :</p>
+                <p>Si vous n'arrivez pas ÃƒÂ  cliquer sur le bouton, copiez et collez cette URL dans votre navigateur :</p>
                 <p style="word-break: break-all; color: #6b7280;">${verificationUrl}</p>
             </div>
             
             <div class="footer">
                 <p>Vous recevez cet email car vous avez créé un compte sur ecolojia.com</p>
-                <p>Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer cet email.</p>
-                <p>© 2024 ECOLOJIA - Consommation éclairée par IA</p>
+                <p>Si vous n'êtes pas ÃƒÂ  l'origine de cette inscription, vous pouvez ignorer cet email.</p>
+                <p>Ã‚© 2024 ECOLOJIA - Consommation éclairée par IA</p>
             </div>
         </div>
     </body>
@@ -175,19 +175,19 @@ Bonjour ${name} !
 
 Merci de vous être inscrit sur ECOLOJIA, votre nouvelle plateforme d'analyse de produits alimentée par IA scientifique.
 
-Pour commencer à analyser vos produits et accéder à toutes nos fonctionnalités, veuillez vérifier votre adresse email en cliquant sur ce lien :
+Pour commencer ÃƒÂ  analyser vos produits et accéder ÃƒÂ  toutes nos fonctionnalités, veuillez vérifier votre adresse email en cliquant sur ce lien :
 
 ${verificationUrl}
 
 Ce que vous allez découvrir avec ECOLOJIA :
 - Analyse scientifique avancée : Classification NOVA, détection ultra-transformation
 - Chat IA Expert : 5 questions gratuites par jour avec notre nutritionniste IA
-- Score santé 0-100 : Évaluation instantanée de vos produits
+- Score santé 0-100 : Ãƒâ€°valuation instantanée de vos produits
 - Alternatives saines : Suggestions personnalisées
 
 Ce lien est valable pendant 24 heures.
 
-Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer cet email.
+Si vous n'êtes pas ÃƒÂ  l'origine de cette inscription, vous pouvez ignorer cet email.
 
 Merci !
 L'équipe ECOLOJIA
@@ -215,7 +215,7 @@ L'équipe ECOLOJIA
     <body>
         <div class="container">
             <div class="header">
-                <h1>🔐 ECOLOJIA</h1>
+                <h1>Ã°Å¸â€Â ECOLOJIA</h1>
                 <p>Réinitialisation de mot de passe</p>
             </div>
             
@@ -227,11 +227,11 @@ L'équipe ECOLOJIA
                 <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
                 
                 <div style="text-align: center;">
-                    <a href="${resetUrl}" class="button">🔑 Réinitialiser mon mot de passe</a>
+                    <a href="${resetUrl}" class="button">Ã°Å¸â€â€˜ Réinitialiser mon mot de passe</a>
                 </div>
                 
                 <div class="warning">
-                    <strong>⚠️ Important :</strong>
+                    <strong>âÅ¡Â ïÂ¸Â Important :</strong>
                     <ul>
                         <li>Ce lien est valable pendant <strong>1 heure seulement</strong></li>
                         <li>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email</li>
@@ -245,8 +245,8 @@ L'équipe ECOLOJIA
             
             <div class="footer">
                 <p>Vous recevez cet email car une réinitialisation de mot de passe a été demandée pour votre compte ECOLOJIA.</p>
-                <p>Si vous n'êtes pas à l'origine de cette demande, votre compte est peut-être compromis. Contactez-nous immédiatement.</p>
-                <p>© 2024 ECOLOJIA</p>
+                <p>Si vous n'êtes pas ÃƒÂ  l'origine de cette demande, votre compte est peut-être compromis. Contactez-nous immédiatement.</p>
+                <p>Ã‚© 2024 ECOLOJIA</p>
             </div>
         </div>
     </body>
@@ -268,7 +268,7 @@ IMPORTANT :
 - Si vous n'avez pas demandé cette réinitialisation, ignorez cet email
 - Votre mot de passe actuel reste inchangé tant que vous ne cliquez pas sur le lien
 
-Si vous n'êtes pas à l'origine de cette demande, votre compte est peut-être compromis. Contactez-nous immédiatement.
+Si vous n'êtes pas ÃƒÂ  l'origine de cette demande, votre compte est peut-être compromis. Contactez-nous immédiatement.
 
 L'équipe ECOLOJIA
     `;
@@ -295,48 +295,48 @@ L'équipe ECOLOJIA
     <body>
         <div class="container">
             <div class="header">
-                <h1>🎉 Bienvenue sur ECOLOJIA !</h1>
+                <h1>Ã°Å¸Å½â€° Bienvenue sur ECOLOJIA !</h1>
                 <p>Votre voyage vers une consommation éclairée commence maintenant</p>
             </div>
             
             <div class="content">
-                <h2>Félicitations ${name} ! 🌱</h2>
+                <h2>Félicitations ${name} ! Ã°Å¸Å’Â±</h2>
                 
                 <p>Votre compte ECOLOJIA est maintenant actif. Vous faites désormais partie de la communauté de consommateurs éclairés qui utilisent l'IA pour faire de meilleurs choix.</p>
                 
                 <div class="feature">
-                    <h3>🔬 Votre IA Scientifique Gratuite</h3>
+                    <h3>Ã°Å¸â€Â¬ Votre IA Scientifique Gratuite</h3>
                     <p>Analysez instantanément vos produits avec nos algorithmes basés sur INSERM, ANSES et EFSA. Classification NOVA, détection ultra-transformation, score santé 0-100.</p>
                 </div>
                 
                 <div class="feature">
-                    <h3>🤖 Chat Expert IA (5 questions/jour)</h3>
-                    <p>Posez vos questions à notre nutritionniste IA. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Réponses personnalisées garanties.</p>
+                    <h3>Ã°Å¸Â¤â€“ Chat Expert IA (5 questions/jour)</h3>
+                    <p>Posez vos questions ÃƒÂ  notre nutritionniste IA. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Réponses personnalisées garanties.</p>
                 </div>
                 
                 <div class="feature">
-                    <h3>🏆 Premium à découvrir</h3>
+                    <h3>Ã°Å¸Ââ€  Premium ÃƒÂ  découvrir</h3>
                     <p>Questions IA illimitées, coaching personnalisé, dashboard analytics complet. Essai gratuit disponible !</p>
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="${this.baseUrl}/scanner" class="button">🚀 Commencer à scanner</a>
+                    <a href="${this.baseUrl}/scanner" class="button">Ã°Å¸Å¡€ Commencer ÃƒÂ  scanner</a>
                 </div>
                 
                 <p><strong>Premiers pas conseillés :</strong></p>
                 <ol>
                     <li>Scannez un produit de votre cuisine</li>
                     <li>Découvrez son score santé et ses analyses</li>
-                    <li>Posez une question à notre IA Expert</li>
+                    <li>Posez une question ÃƒÂ  notre IA Expert</li>
                     <li>Explorez les alternatives suggérées</li>
                 </ol>
                 
-                <p>Des questions ? Notre équipe est là pour vous aider !</p>
+                <p>Des questions ? Notre équipe est lÃƒÂ  pour vous aider !</p>
             </div>
             
             <div class="footer">
-                <p>Merci de faire confiance à ECOLOJIA pour votre parcours vers une consommation plus consciente.</p>
-                <p>© 2024 ECOLOJIA - L'IA au service de votre santé</p>
+                <p>Merci de faire confiance ÃƒÂ  ECOLOJIA pour votre parcours vers une consommation plus consciente.</p>
+                <p>Ã‚© 2024 ECOLOJIA - L'IA au service de votre santé</p>
             </div>
         </div>
     </body>
@@ -354,22 +354,22 @@ VOTRE IA SCIENTIFIQUE GRATUITE :
 Analysez instantanément vos produits avec nos algorithmes basés sur INSERM, ANSES et EFSA. Classification NOVA, détection ultra-transformation, score santé 0-100.
 
 CHAT EXPERT IA (5 questions/jour) :
-Posez vos questions à notre nutritionniste IA. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Réponses personnalisées garanties.
+Posez vos questions ÃƒÂ  notre nutritionniste IA. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Réponses personnalisées garanties.
 
-PREMIUM À DÉCOUVRIR :
+PREMIUM Ãƒ€ DÃƒâ€°COUVRIR :
 Questions IA illimitées, coaching personnalisé, dashboard analytics complet. Essai gratuit disponible !
 
 Premiers pas conseillés :
 1. Scannez un produit de votre cuisine
 2. Découvrez son score santé et ses analyses  
-3. Posez une question à notre IA Expert
+3. Posez une question ÃƒÂ  notre IA Expert
 4. Explorez les alternatives suggérées
 
 Commencez dès maintenant : ${this.baseUrl}/scanner
 
-Des questions ? Notre équipe est là pour vous aider !
+Des questions ? Notre équipe est lÃƒÂ  pour vous aider !
 
-Merci de faire confiance à ECOLOJIA pour votre parcours vers une consommation plus consciente.
+Merci de faire confiance ÃƒÂ  ECOLOJIA pour votre parcours vers une consommation plus consciente.
 
 L'équipe ECOLOJIA
     `;

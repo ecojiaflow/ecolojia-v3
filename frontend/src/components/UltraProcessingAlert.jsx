@@ -23,7 +23,7 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
       bg: 'bg-red-50',
       border: 'border-red-400',
       text: 'text-red-800',
-      icon: '🚨',
+      icon: 'Ã°Å¸Å¡Â¨',
       title: 'Ultra-transformation détectée',
       severity: 'CRITIQUE'
     },
@@ -31,7 +31,7 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
       bg: 'bg-orange-50',
       border: 'border-orange-400',
       text: 'text-orange-800',
-      icon: '⚠️',
+      icon: 'âÅ¡Â ïÂ¸Â',
       title: 'Transformation industrielle détectée',
       severity: 'ATTENTION'
     },
@@ -39,7 +39,7 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
       bg: 'bg-blue-50',
       border: 'border-blue-400',
       text: 'text-blue-800',
-      icon: 'ℹ️',
+      icon: 'ââ€žÂ¹ïÂ¸Â',
       title: 'Produit transformé',
       severity: 'INFO'
     }
@@ -84,14 +84,14 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
           {novaGroup === 4 && (
             <div className="mt-3 bg-white bg-opacity-50 rounded-lg p-3 border border-red-200">
               <div className="text-xs font-medium text-red-900 mb-1">
-                📊 Impact Santé Scientifiquement Documenté :
+                Ã°Å¸â€œÅ  Impact Santé Scientifiquement Documenté :
               </div>
               <div className="text-xs text-red-700 space-y-1">
-                <div>• +22% risque dépression (Nature Mental Health 2024)</div>
-                <div>• +53% risque diabète type 2 (Diabetes Care 2024)</div>
-                <div>• +10% maladies cardiovasculaires (BMJ 2024)</div>
+                <div>â€Â¢ +22% risque dépression (Nature Mental Health 2024)</div>
+                <div>â€Â¢ +53% risque diabète type 2 (Diabetes Care 2024)</div>
+                <div>â€Â¢ +10% maladies cardiovasculaires (BMJ 2024)</div>
                 {additives?.microbiomeDisruptors?.length > 0 && (
-                  <div>• Perturbation microbiote intestinal en 2-4 semaines</div>
+                  <div>â€Â¢ Perturbation microbiote intestinal en 2-4 semaines</div>
                 )}
               </div>
             </div>
@@ -128,30 +128,30 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
           {/* Actions Recommandées */}
           <div className="mt-4 bg-white bg-opacity-70 rounded-lg p-3 border">
             <h4 className={`text-sm font-semibold ${style.text} mb-2`}>
-              💡 Actions Recommandées :
+              Ã°Å¸â€™Â¡ Actions Recommandées :
             </h4>
             <div className="text-xs space-y-1">
               {novaGroup === 4 && (
                 <>
-                  <div>• <strong>Remplacer</strong> par une alternative naturelle (voir suggestions ci-dessous)</div>
-                  <div>• <strong>Limiter la consommation</strong> à occasionnelle si remplacement impossible</div>
-                  <div>• <strong>Vérifier les étiquettes</strong> : privilégier &lt;5 ingrédients reconnaissables</div>
+                  <div>â€Â¢ <strong>Remplacer</strong> par une alternative naturelle (voir suggestions ci-dessous)</div>
+                  <div>â€Â¢ <strong>Limiter la consommation</strong> ÃƒÂ  occasionnelle si remplacement impossible</div>
+                  <div>â€Â¢ <strong>Vérifier les étiquettes</strong> : privilégier &lt;5 ingrédients reconnaissables</div>
                 </>
               )}
               {novaGroup === 3 && (
                 <>
-                  <div>• <strong>Modérer la consommation</strong> dans le cadre d'une alimentation équilibrée</div>
-                  <div>• <strong>Alterner</strong> avec des versions moins transformées quand possible</div>
+                  <div>â€Â¢ <strong>Modérer la consommation</strong> dans le cadre d'une alimentation équilibrée</div>
+                  <div>â€Â¢ <strong>Alterner</strong> avec des versions moins transformées quand possible</div>
                 </>
               )}
-              <div>• <strong>S'informer</strong> sur les alternatives naturelles disponibles</div>
+              <div>â€Â¢ <strong>S'informer</strong> sur les alternatives naturelles disponibles</div>
             </div>
           </div>
 
           {/* Sources Scientifiques */}
           <div className="mt-3 text-xs text-gray-600">
             <strong>Sources :</strong> Classification NOVA INSERM 2024, Base additifs EFSA 2024, 
-            Études épidémiologiques Nature/BMJ/Diabetes Care 2024
+            Ãƒâ€°tudes épidémiologiques Nature/BMJ/Diabetes Care 2024
           </div>
         </div>
       </div>

@@ -137,7 +137,7 @@ const CosmeticAnalysisPage: React.FC = () => {
       dry: 'Peaux sèches',
       oily: 'Peaux grasses',
       combination: 'Peaux mixtes',
-      acneic: 'Peaux à tendance acnéique'
+      acneic: 'Peaux ÃƒÂ  tendance acnéique'
     };
     return labels[type] || type;
   };

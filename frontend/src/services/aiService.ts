@@ -1,5 +1,5 @@
-// PATH: frontend/src/services/aiService.ts
-import { apiClient } from './apiClient';
+﻿// PATH: frontend/src/services/aiService.ts
+import apiClient from './apiClient';
 
 export const aiService = {
   analyze: (payload: {
@@ -10,3 +10,5 @@ export const aiService = {
   }) => apiClient.post('/ai/analyze', payload).then((r) => r.data.data)
 };
 // EOF
+
+

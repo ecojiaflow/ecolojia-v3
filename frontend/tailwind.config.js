@@ -4,14 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 🌿 Palette Ecolojia existante (gardée)
+        // ðŸŒ¿ Palette Ecolojia existante (gardÃ©e)
         'eco': {
           leaf: '#6BDF44',
           text: '#1E3D2B', 
           glow: '#A3C75A',
           olive: '#555B1B',
         },
-        // 🌿 Ajout des couleurs manquantes pour compatibilité
+        // ðŸŒ¿ Ajout des couleurs manquantes pour compatibilitÃ©
         'eco-leaf': {
           DEFAULT: '#6BDF44', // Utilise ta couleur existante
           50: '#F7FCF2',
@@ -62,7 +62,7 @@ export default {
       backgroundImage: {
         'eco-gradient': 'linear-gradient(135deg, #A3C75A 0%, #F5F7F0 100%)', // Ta config existante
       },
-      // 🎨 Ajout des animations pour les composants
+      // ðŸŽ¨ Ajout des animations pour les composants
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'fade-in-up': 'fadeInUp 0.3s ease-out forwards', 

@@ -34,7 +34,7 @@ interface Analysis {
 }
 
 interface ProductState {
-  // État
+  // Ãƒâ€°tat
   recentScans: Analysis[];
   favorites: string[];
   searchHistory: string[];
@@ -58,7 +58,7 @@ interface ProductState {
 export const useProductStore = create<ProductState>()(
   persist(
     (set, get) => ({
-      // État initial
+      // Ãƒâ€°tat initial
       recentScans: [],
       favorites: [],
       searchHistory: [],
@@ -68,7 +68,7 @@ export const useProductStore = create<ProductState>()(
       // Actions
       addRecentScan: (analysis: Analysis) => {
         set((state) => {
-          // Éviter les doublons
+          // Ãƒâ€°viter les doublons
           const filtered = state.recentScans.filter(
             scan => scan.productSnapshot._id !== analysis.productSnapshot._id
           );
@@ -95,7 +95,7 @@ export const useProductStore = create<ProductState>()(
         if (!query.trim()) return;
         
         set((state) => {
-          // Éviter les doublons et garder seulement les 20 dernières recherches
+          // Ãƒâ€°viter les doublons et garder seulement les 20 dernières recherches
           const filtered = state.searchHistory.filter(q => q !== query);
           const newHistory = [query, ...filtered].slice(0, 20);
           

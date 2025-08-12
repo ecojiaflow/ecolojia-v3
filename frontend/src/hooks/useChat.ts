@@ -1,4 +1,4 @@
-// 📁 src/hooks/useChat.ts
+// Ã°Å¸â€œÂ src/hooks/useChat.ts
 
 import { useState, useCallback } from 'react';
 import { chatWithAI, ChatRequest, ChatResponse } from '../api/realApi';
@@ -98,3 +98,4 @@ export const useChat = (maxMessages: number = 5): UseChatReturn => {
     clearMessages
   };
 };
+

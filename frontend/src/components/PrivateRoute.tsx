@@ -13,7 +13,7 @@ export function PrivateRoute() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4 animate-pulse">🌱</div>
+          <div className="text-6xl mb-4 animate-pulse">Ã°Å¸Å’Â±</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">ECOLOJIA</h2>
           <LoadingSpinner message="Vérification de votre session..." />
         </div>

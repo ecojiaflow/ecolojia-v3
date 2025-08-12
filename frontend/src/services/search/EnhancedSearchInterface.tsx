@@ -35,7 +35,7 @@ interface SearchFilters {
 // ============================================================================
 
 export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = ({
-  placeholder = "🔍 Découvrez des alternatives plus saines... (nutella bio, shampoing sans sulfate)",
+  placeholder = "Ã°Å¸â€Â Découvrez des alternatives plus saines... (nutella bio, shampoing sans sulfate)",
   onResultSelect,
   showFilters = true,
   categories = ['food', 'cosmetics', 'detergents'],
@@ -148,7 +148,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     const startTime = Date.now();
 
     try {
-      console.log('🔍 Recherche lancée:', queryToSearch);
+      console.log('Ã°Å¸â€Â Recherche lancée:', queryToSearch);
       
       const searchResults = await universalSearchEngine.search(queryToSearch, {
         categories: filters.categories,
@@ -188,10 +188,10 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         sources
       });
 
-      console.log(`✅ Recherche terminée: ${filteredResults.length} résultats en ${searchTime}ms`);
+      console.log(`âÅ“â€¦ Recherche terminée: ${filteredResults.length} résultats en ${searchTime}ms`);
 
     } catch (error) {
-      console.error('❌ Erreur recherche:', error);
+      console.error('âÂÅ’ Erreur recherche:', error);
       setResults([]);
       setSearchStats(null);
     } finally {
@@ -237,7 +237,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     setShowScanner(false);
     
     try {
-      console.log('📊 Code-barres scanné:', barcode);
+      console.log('Ã°Å¸â€œÅ  Code-barres scanné:', barcode);
       
       const result = await universalSearchEngine.searchByBarcode(barcode);
       
@@ -262,7 +262,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         });
       }
     } catch (error) {
-      console.error('❌ Erreur analyse code-barres:', error);
+      console.error('âÂÅ’ Erreur analyse code-barres:', error);
     }
   }, []);
 
@@ -283,24 +283,24 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 
     recognition.onstart = () => {
       setIsListening(true);
-      console.log('🎤 Écoute vocale démarrée');
+      console.log('Ã°Å¸Å½Â¤ Ãƒâ€°coute vocale démarrée');
     };
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      console.log('🎤 Résultat vocal:', transcript);
+      console.log('Ã°Å¸Å½Â¤ Résultat vocal:', transcript);
       setQuery(transcript);
       handleSearch(transcript);
     };
 
     recognition.onerror = (event: any) => {
-      console.error('❌ Erreur reconnaissance vocale:', event.error);
+      console.error('âÂÅ’ Erreur reconnaissance vocale:', event.error);
       setIsListening(false);
     };
 
     recognition.onend = () => {
       setIsListening(false);
-      console.log('🎤 Écoute vocale terminée');
+      console.log('Ã°Å¸Å½Â¤ Ãƒâ€°coute vocale terminée');
     };
 
     recognition.start();
@@ -403,9 +403,9 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             result.category === 'detergents' ? 'bg-blue-100 text-blue-700' :
             'bg-gray-100 text-gray-700'
           }`}>
-            {result.category === 'food' ? '🍎 Alimentaire' :
-             result.category === 'cosmetics' ? '✨ Cosmétique' :
-             result.category === 'detergents' ? '🧽 Détergent' : '📦 Produit'}
+            {result.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentaire' :
+             result.category === 'cosmetics' ? 'âÅ“Â¨ Cosmétique' :
+             result.category === 'detergents' ? 'Ã°Å¸Â§Â½ Détergent' : 'Ã°Å¸â€œÂ¦ Produit'}
           </span>
 
           {/* Source */}
@@ -414,15 +414,15 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             result.source === 'openfoodfacts' ? 'bg-orange-100 text-orange-700' :
             'bg-purple-100 text-purple-700'
           }`}>
-            {result.source === 'local' ? '🏠 Local' :
-             result.source === 'openfoodfacts' ? '🌍 OpenFoodFacts' :
-             '⚡ Algolia'}
+            {result.source === 'local' ? 'Ã°Å¸ÂÂ  Local' :
+             result.source === 'openfoodfacts' ? 'Ã°Å¸Å’Â OpenFoodFacts' :
+             'âÅ¡Â¡ Algolia'}
           </span>
 
           {/* Badges enrichissement */}
           {result.enrichment?.ultra_processed && (
             <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-              ⚠️ Ultra-transformé
+              âÅ¡Â ïÂ¸Â Ultra-transformé
             </span>
           )}
 
@@ -438,7 +438,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 
           {result.enrichment?.alternatives_available > 0 && (
             <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-              🔄 {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
+              Ã°Å¸â€â€ž {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
             </span>
           )}
         </div>
@@ -447,7 +447,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         {result.enrichment?.educational_tips && result.enrichment.educational_tips.length > 0 && (
           <div className="mt-2">
             <p className="text-xs text-orange-700 bg-orange-50 px-2 py-1 rounded">
-              💡 {result.enrichment.educational_tips[0]}
+              Ã°Å¸â€™Â¡ {result.enrichment.educational_tips[0]}
             </p>
           </div>
         )}
@@ -475,7 +475,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             disabled={isSearching}
           />
 
-          {/* Actions à droite */}
+          {/* Actions ÃƒÂ  droite */}
           <div className="flex items-center space-x-2 px-4">
             {/* Recherche vocale */}
             <button
@@ -556,9 +556,9 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             <label className="block text-sm font-medium text-gray-700 mb-2">Catégories</label>
             <div className="flex flex-wrap gap-2">
               {[
-                { key: 'food', label: '🍎 Alimentaire' },
-                { key: 'cosmetics', label: '✨ Cosmétiques' },
-                { key: 'detergents', label: '🧽 Détergents' }
+                { key: 'food', label: 'Ã°Å¸ÂÅ½ Alimentaire' },
+                { key: 'cosmetics', label: 'âÅ“Â¨ Cosmétiques' },
+                { key: 'detergents', label: 'Ã°Å¸Â§Â½ Détergents' }
               ].map(cat => (
                 <label key={cat.key} className="flex items-center">
                   <input
@@ -631,8 +631,8 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-600">
                   {searchStats.totalResults} résultat{searchStats.totalResults !== 1 ? 's' : ''} 
-                  • {searchStats.searchTime}ms
-                  • {searchStats.sources.join(', ')}
+                  â€Â¢ {searchStats.searchTime}ms
+                  â€Â¢ {searchStats.sources.join(', ')}
                 </div>
                 {searchStats.totalResults > 0 && (
                   <button
@@ -642,7 +642,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                     }}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                   >
-                    Voir tous les résultats →
+                    Voir tous les résultats ââ€ â€™
                   </button>
                 )}
               </div>
@@ -680,7 +680,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                   onClick={() => setShowScanner(true)}
                   className="block w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                 >
-                  📷 Essayer le scanner code-barres
+                  Ã°Å¸â€œÂ· Essayer le scanner code-barres
                 </button>
                 <button
                   onClick={() => {
@@ -689,7 +689,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                   }}
                   className="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  ✨ Analyser un nouveau produit
+                  âÅ“Â¨ Analyser un nouveau produit
                 </button>
               </div>
             </div>

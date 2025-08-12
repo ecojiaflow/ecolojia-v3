@@ -1,63 +1,96 @@
-import express from 'express';
-import { ProductUpdateSchema } from '../types';
-import prisma from '../../lib/prisma';
+// ECOLOJIA - Service Worker PWA
+const CACHE_NAME = 'ecolojia-v1.0.0';
+const API_CACHE_NAME = 'ecolojia-api-v1.0.0';
 
-const router = express.Router();
+const STATIC_ASSETS = [
+  '/',
+  '/manifest.json',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png'
+];
 
-router.put('/:id', async (req: express.Request, res: express.Response) => {
-  try {
-    const { id } = req.params;
-    const validatedData = ProductUpdateSchema.parse(req.body);
+// Installation du Service Worker
+self.addEventListener('install', (event) => {
+  console.log('ðŸ”§ SW: Installation en cours...');
+  
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('ðŸ“¦ SW: Cache statique crÃ©Ã©');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .then(() => {
+        console.log('âœ… SW: Installation terminÃ©e');
+        self.skipWaiting();
+      })
+      .catch((error) => {
+        console.error('âŒ SW: Erreur installation:', error);
+      })
+  );
+});
 
-    // Determine confidence color based on percentage
-    let confidence_color = '🔴'; // Default red
-    if (validatedData.confidence_pct >= 70) {
-      confidence_color = '🟢';
-    } else if (validatedData.confidence_pct >= 50) {
-      confidence_color = '🟡';
-    }
+// Activation du Service Worker
+self.addEventListener('activate', (event) => {
+  console.log('ðŸš€ SW: Activation...');
+  
+  event.waitUntil(
+    caches.keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME) {
+              console.log('ðŸ—‘ï¸ SW: Suppression ancien cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+      .then(() => {
+        console.log('âœ… SW: Activation terminÃ©e');
+        return self.clients.claim();
+      })
+  );
+});
 
-    // Determine verification status based on confidence
-    const verification_status = validatedData.confidence_pct >= 50 ? 'verified' : 'manual_review';
-
-    // Update product in database
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
-        resume_fr: validatedData.resume_fr,
-        resume_en: validatedData.resume_en,
-        ethicalScore: validatedData.eco_score,
-        confidence_pct: validatedData.confidence_pct,
-        confidence_color,
-        criteria_score: validatedData.criteria_score,
-        verification_status,
-        suggested_by_ai: true,
-        updatedAt: new Date()
-      }
-    });
-
-    res.status(200).json(updatedProduct);
-  } catch (error) {
-    console.error('Error updating product:', error);
-    
-    if (error.code === 'P2025') {
-      return res.status(404).json({ 
-        error: 'Product not found' 
-      });
-    }
-
-    if (error.name === 'ZodError') {
-      return res.status(400).json({ 
-        error: 'Invalid request data',
-        details: error.errors 
-      });
-    }
-
-    res.status(500).json({ 
-      error: 'Failed to update product',
-      details: error.message 
-    });
+// Interception des requÃªtes
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  
+  // Cache strategy pour les ressources statiques
+  if (STATIC_ASSETS.includes(url.pathname)) {
+    event.respondWith(
+      caches.match(request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return fetch(request);
+        })
+    );
+  }
+  
+  // Network first pour l'API
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Mettre en cache les rÃ©ponses API rÃ©ussies
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(API_CACHE_NAME)
+              .then((cache) => {
+                cache.put(request, responseClone);
+              });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback vers le cache en cas d'erreur rÃ©seau
+          return caches.match(request);
+        })
+    );
   }
 });
 
-export default router;
+console.log('ðŸŒ± ECOLOJIA Service Worker chargÃ© et actif');

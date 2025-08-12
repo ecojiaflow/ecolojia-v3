@@ -1,5 +1,5 @@
 // src/components/CategoryCard.tsx
-// Composant carte pour afficher une catégorie et permettre l'analyse - VERSION SÉCURISÉE COMPLÈTE
+// Composant carte pour afficher une catégorie et permettre l'analyse - VERSION SÃƒâ€°CURISÃƒâ€°E COMPLÃƒË†TE
 
 import React, { useState } from 'react';
 import { Category, AnalysisResponse, multiCategoryApi } from '../services/multiCategoryApi';
@@ -14,12 +14,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 🔧 FIX: Vérification de sécurité pour category
+  // Ã°Å¸â€Â§ FIX: Vérification de sécurité pour category
   if (!category) {
     return (
       <div className="bg-white rounded-3xl shadow-lg border-2 border-gray-200 p-6">
         <div className="text-center">
-          <div className="text-4xl mb-4">⚠️</div>
+          <div className="text-4xl mb-4">âÅ¡Â ïÂ¸Â</div>
           <h3 className="text-lg font-bold text-gray-500 mb-2">Catégorie indisponible</h3>
           <p className="text-sm text-gray-400">
             Les données de cette catégorie n'ont pas pu être chargées.
@@ -76,7 +76,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
         throw new Error(`Pas de données de test pour ${category.id}`);
       }
 
-      console.log(`🧪 Test analyse ${category.id}:`, testData.product.title);
+      console.log(`Ã°Å¸Â§Âª Test analyse ${category.id}:`, testData.product.title);
       
       // Lancer l'analyse
       const result = await multiCategoryApi.analyzeProduct(testData);
@@ -87,7 +87,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
-      console.error(`❌ Erreur analyse ${category.id}:`, errorMessage);
+      console.error(`âÂÅ’ Erreur analyse ${category.id}:`, errorMessage);
     } finally {
       setIsAnalyzing(false);
     }
@@ -99,10 +99,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
     setError(null);
   };
 
-  // 🔧 FIX: Sécurisation des données avec fallbacks
+  // Ã°Å¸â€Â§ FIX: Sécurisation des données avec fallbacks
   const categoryName = category.name || 'Catégorie inconnue';
   const categoryDescription = category.description || 'Description non disponible';
-  const categoryIcon = category.icon || '❓';
+  const categoryIcon = category.icon || 'âÂâ€œ';
   const categoryFeatures = category.features || [];
   const categoryAvailable = category.available ?? false;
 
@@ -143,7 +143,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
           {categoryDescription}
         </p>
 
-        {/* Fonctionnalités - 🔧 FIX: Sécurisation avec slice() */}
+        {/* Fonctionnalités - Ã°Å¸â€Â§ FIX: Sécurisation avec slice() */}
         <div className="grid grid-cols-2 gap-2">
           {categoryFeatures.slice(0, 4).map((feature, index) => (
             <div key={index} className="bg-white rounded-lg p-2 text-center">
@@ -152,7 +152,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
           ))}
           {categoryFeatures.length === 0 && (
             <div className="col-span-2 bg-white rounded-lg p-2 text-center">
-              <span className="text-xs text-gray-400">Fonctionnalités à venir</span>
+              <span className="text-xs text-gray-400">Fonctionnalités ÃƒÂ  venir</span>
             </div>
           )}
         </div>
@@ -180,9 +180,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                 <span>Analyse en cours...</span>
               </div>
             ) : categoryAvailable ? (
-              `🧪 Tester l'analyse ${categoryName.toLowerCase()}`
+              `Ã°Å¸Â§Âª Tester l'analyse ${categoryName.toLowerCase()}`
             ) : (
-              `⏳ ${categoryName} bientôt disponible`
+              `âÂÂ³ ${categoryName} bientôt disponible`
             )}
           </button>
         )}
@@ -198,7 +198,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
               }}
             >
               <h4 className="font-bold text-lg mb-3" style={{ color: theme.text }}>
-                ✅ Analyse Terminée
+                âÅ“â€¦ Analyse Terminée
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -229,7 +229,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
 
               {/* Métadonnées */}
               <div className="mt-3 text-xs text-gray-500 text-center">
-                Temps de traitement: {analysisResult.metadata?.processing_time_ms || 'N/A'}ms • 
+                Temps de traitement: {analysisResult.metadata?.processing_time_ms || 'N/A'}ms â€Â¢ 
                 API: {analysisResult.metadata?.api_version || 'N/A'}
               </div>
             </div>
@@ -244,7 +244,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                 backgroundColor: 'white'
               }}
             >
-              🔄 Nouveau Test
+              Ã°Å¸â€â€ž Nouveau Test
             </button>
           </div>
         )}
@@ -253,7 +253,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
         {error && (
           <div className="space-y-4">
             <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4">
-              <h4 className="font-bold text-red-800 mb-2">❌ Erreur d'Analyse</h4>
+              <h4 className="font-bold text-red-800 mb-2">âÂÅ’ Erreur d'Analyse</h4>
               <p className="text-red-600 text-sm">{error}</p>
             </div>
             
@@ -261,7 +261,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
               onClick={handleReset}
               className="w-full py-3 rounded-2xl border-2 border-red-300 text-red-700 font-medium hover:bg-red-50 transition-all"
             >
-              🔄 Réessayer
+              Ã°Å¸â€â€ž Réessayer
             </button>
           </div>
         )}

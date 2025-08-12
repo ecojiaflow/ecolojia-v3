@@ -121,17 +121,17 @@ const BatteryProgress = ({
       <div className="mt-2 text-center">
         {percentage <= 10 && (
           <div className="text-xs text-red-400 animate-pulse">
-            ⚠️ Quota presque épuisé
+            âÅ¡Â ïÂ¸Â Quota presque épuisé
           </div>
         )}
         {percentage > 10 && percentage <= 30 && (
           <div className="text-xs text-orange-400">
-            📊 Niveau bas
+            Ã°Å¸â€œÅ  Niveau bas
           </div>
         )}
         {percentage > 80 && (
           <div className="text-xs text-green-400">
-            ✅ Excellent niveau
+            âÅ“â€¦ Excellent niveau
           </div>
         )}
       </div>

@@ -30,11 +30,11 @@ export const useAdmin = () => {
       setImportLogs(logsData);
       setLastUpdate(new Date());
       
-      console.log('✅ Dashboard data loaded successfully');
+      console.log('âÅ“â€¦ Dashboard data loaded successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors du chargement des données';
       setError(errorMessage);
-      console.error('❌ Erreur loadDashboardData:', err);
+      console.error('âÂÅ’ Erreur loadDashboardData:', err);
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ export const useAdmin = () => {
       setStats(statsData);
       setLastUpdate(new Date());
     } catch (err) {
-      console.error('❌ Erreur refreshStats:', err);
+      console.error('âÂÅ’ Erreur refreshStats:', err);
     }
   }, []);
 
@@ -76,7 +76,7 @@ export const useAdmin = () => {
     try {
       const result = await AdminApiService.validateProduct(productId, status);
       
-      // Mettre à jour la liste des produits localement
+      // Mettre ÃƒÂ  jour la liste des produits localement
       setRecentProducts(products => 
         products.map(product => 
           product.id === productId 
@@ -130,7 +130,7 @@ export const useAdmin = () => {
     importLogs,
     importProgress,
     
-    // États
+    // Ãƒâ€°tats
     loading,
     error,
     lastUpdate,

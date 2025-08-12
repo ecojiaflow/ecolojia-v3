@@ -16,7 +16,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Sélection de texte avec couleurs Ecolojia */
+/* SÃ©lection de texte avec couleurs Ecolojia */
 ::selection {
   background-color: #7DDE4A;
   color: #1E3D2B;
@@ -95,7 +95,7 @@ html {
   overflow: hidden;
 }
 
-/* Scrollbar personnalisée */
+/* Scrollbar personnalisÃ©e */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -113,7 +113,7 @@ html {
   background: #6BCF3A;
 }
 
-/* Focus states améliorés */
+/* Focus states amÃ©liorÃ©s */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -129,7 +129,7 @@ textarea:focus-visible {
   transition-timing-function: ease-in-out;
 }
 
-/* Améliorations pour les cartes produits */
+/* AmÃ©liorations pour les cartes produits */
 .product-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -5px rgba(125, 222, 74, 0.1), 0 8px 10px -6px rgba(125, 222, 74, 0.1);
@@ -141,7 +141,7 @@ textarea:focus-visible {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Amélioration des boutons */
+/* AmÃ©lioration des boutons */
 .btn-primary {
   background: linear-gradient(135deg, #7DDE4A 0%, #6BCF3A 100%);
   box-shadow: 0 4px 14px 0 rgba(125, 222, 74, 0.25);
@@ -166,7 +166,7 @@ mark {
   border-radius: 2px;
 }
 
-/* Responsive design améliorations */
+/* Responsive design amÃ©liorations */
 @media (max-width: 768px) {
   .animate-fade-in-up {
     animation-delay: 0ms !important;

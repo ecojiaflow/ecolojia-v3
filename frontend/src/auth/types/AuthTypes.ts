@@ -130,13 +130,13 @@ export interface AuthDebugState {
 
 // ===== INTERFACE CONTEXTE AUTHENTIFICATION =====
 export interface AuthContextType {
-  // ===== ÉTAT DE BASE =====
+  // ===== Ãƒâ€°TAT DE BASE =====
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   
-  // ===== ÉTAT MODE DÉMO =====
+  // ===== Ãƒâ€°TAT MODE DÃƒâ€°MO =====
   isDemoMode: boolean;
   
   // ===== ACTIONS AUTHENTIFICATION =====
@@ -153,7 +153,7 @@ export interface AuthContextType {
   updateProfile?: (data: UpdateProfileRequest) => Promise<void>;
   deleteAccount?: () => Promise<void>;
   
-  // ===== ACTIONS MODE DÉMO =====
+  // ===== ACTIONS MODE DÃƒâ€°MO =====
   startDemoSession: (tier: 'free' | 'premium') => Promise<void>;
   
   // Actions démo avancées (optionnelles)

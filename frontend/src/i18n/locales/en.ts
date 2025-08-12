@@ -28,9 +28,9 @@ export const en = {
     productsFound_one: '{{count}} product found',
     productsFound_other: '{{count}} products found',
     noResults: 'No products match your search.',
-    backToHome: '← Back to home',
+    backToHome: 'ââ€ Â Back to home',
     
-    // NOUVELLES CLÉS POUR LA NAVIGATION FONCTIONNELLE :
+    // NOUVELLES CLÃƒâ€°S POUR LA NAVIGATION FONCTIONNELLE :
     confidence: 'Confidence',
     viewProduct: 'View product',
     searchingAlgolia: 'Searching...',
@@ -153,7 +153,7 @@ export const en = {
       title: 'Join the Eco-responsible Revolution',
       subtitle: 'Together, let\'s create a future where every purchase counts for the planet. Your feedback helps us continuously improve our service.',
       email: 'contact@ecolojia.com',
-      response: 'We respond within 48h • Suggestions and partnerships welcome'
+      response: 'We respond within 48h â€Â¢ Suggestions and partnerships welcome'
     }
   },
   privacy: {
@@ -195,11 +195,11 @@ export const en = {
     cookies: {
       title: 'Cookies and similar technologies',
       essential: {
-        title: '🍪 Essential cookies',
+        title: 'Ã°Å¸ÂÂª Essential cookies',
         description: 'Necessary for site operation (always active)'
       },
       analytics: {
-        title: '📊 Analytics (Plausible)',
+        title: 'Ã°Å¸â€œÅ  Analytics (Plausible)',
         description: 'Anonymous traffic analysis, privacy-friendly, without tracking cookies'
       }
     },

@@ -1,5 +1,5 @@
-// PATH: frontend\src\lib\api\analysis.ts
-import { apiClient } from './client';
+﻿// PATH: frontend\src\lib\api\analysis.ts
+import apiClient from './client';
 
 export interface AnalysisResult {
   scores: {
@@ -190,3 +190,4 @@ class AnalysisAPI {
 }
 
 export const analysisAPI = new AnalysisAPI();
+

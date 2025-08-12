@@ -110,10 +110,10 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
 
             {/* Résumé rapide */}
             <div className="flex items-center space-x-6 text-sm text-gray-600 mb-3">
-              <span>📊 {log.productsProcessed} traités</span>
-              <span>✅ {log.productsSuccess} réussis</span>
-              <span>❌ {log.productsFailed} échoués</span>
-              <span>⏱️ {formatDuration(log.duration)}</span>
+              <span>Ã°Å¸â€œÅ  {log.productsProcessed} traités</span>
+              <span>âÅ“â€¦ {log.productsSuccess} réussis</span>
+              <span>âÂÅ’ {log.productsFailed} échoués</span>
+              <span>âÂÂ±ïÂ¸Â {formatDuration(log.duration)}</span>
             </div>
 
             {/* Barre de progression */}
@@ -178,7 +178,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
                         <span className="font-medium text-green-600">{log.productsSuccess}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-red-600">Échecs:</span>
+                        <span className="text-red-600">Ãƒâ€°checs:</span>
                         <span className="font-medium text-red-600">{log.productsFailed}</span>
                       </div>
                     </div>

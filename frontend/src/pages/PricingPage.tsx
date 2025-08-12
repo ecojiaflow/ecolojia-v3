@@ -62,7 +62,7 @@ const PricingPage: React.FC = () => {
       name: 'Premium',
       description: 'Pour les consommateurs avertis',
       price: billingPeriod === 'monthly' ? 2.49 : 24.90,
-      priceLabel: billingPeriod === 'monthly' ? '2,49€/mois' : '24,90€/an',
+      priceLabel: billingPeriod === 'monthly' ? '2,49ââ€šÂ¬/mois' : '24,90ââ€šÂ¬/an',
       color: 'green',
       icon: <Star className="w-6 h-6" />,
       popular: true,
@@ -77,14 +77,14 @@ const PricingPage: React.FC = () => {
         { name: 'Sans publicité', included: true },
         { name: 'Support prioritaire', included: true },
       ],
-      cta: 'Passer à Premium'
+      cta: 'Passer ÃƒÂ  Premium'
     },
     {
       id: 'family',
       name: 'Famille',
       description: 'Pour toute la famille',
       price: billingPeriod === 'monthly' ? 4.99 : 49.90,
-      priceLabel: billingPeriod === 'monthly' ? '4,99€/mois' : '49,90€/an',
+      priceLabel: billingPeriod === 'monthly' ? '4,99ââ€šÂ¬/mois' : '49,90ââ€šÂ¬/an',
       color: 'purple',
       icon: <Users className="w-6 h-6" />,
       features: [
@@ -132,8 +132,8 @@ const PricingPage: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Puis-je changer de plan à tout moment ?',
-      answer: 'Oui ! Vous pouvez passer à un plan supérieur à tout moment. Le changement sera effectif immédiatement et vous serez facturé au prorata.'
+      question: 'Puis-je changer de plan ÃƒÂ  tout moment ?',
+      answer: 'Oui ! Vous pouvez passer ÃƒÂ  un plan supérieur ÃƒÂ  tout moment. Le changement sera effectif immédiatement et vous serez facturé au prorata.'
     },
     {
       question: 'Comment fonctionne la période d\'essai ?',
@@ -141,11 +141,11 @@ const PricingPage: React.FC = () => {
     },
     {
       question: 'Puis-je annuler mon abonnement ?',
-      answer: 'Oui, vous pouvez annuler votre abonnement à tout moment depuis votre profil. Vous continuerez à bénéficier du service jusqu\'à la fin de la période payée.'
+      answer: 'Oui, vous pouvez annuler votre abonnement ÃƒÂ  tout moment depuis votre profil. Vous continuerez ÃƒÂ  bénéficier du service jusqu\'ÃƒÂ  la fin de la période payée.'
     },
     {
       question: 'Les données sont-elles sécurisées ?',
-      answer: 'Absolument ! Nous utilisons un chiffrement de niveau bancaire et respectons strictement le RGPD. Vos données ne sont jamais vendues à des tiers.'
+      answer: 'Absolument ! Nous utilisons un chiffrement de niveau bancaire et respectons strictement le RGPD. Vos données ne sont jamais vendues ÃƒÂ  des tiers.'
     }
   ];
 
@@ -162,7 +162,7 @@ const PricingPage: React.FC = () => {
               Choisissez votre plan ECOLOJIA
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Accédez à toutes les fonctionnalités pour une consommation plus consciente
+              Accédez ÃƒÂ  toutes les fonctionnalités pour une consommation plus consciente
             </p>
           </motion.div>
 
@@ -246,7 +246,7 @@ const PricingPage: React.FC = () => {
                   </div>
                   {plan.price > 0 && billingPeriod === 'yearly' && (
                     <p className="text-sm text-gray-500 mt-1">
-                      soit {(plan.price / 12).toFixed(2)}€/mois
+                      soit {(plan.price / 12).toFixed(2)}ââ€šÂ¬/mois
                     </p>
                   )}
                 </div>
@@ -324,7 +324,7 @@ const PricingPage: React.FC = () => {
                   { name: 'Score santé', free: 'Basique', premium: 'Complet', family: 'Complet' },
                   { name: 'Chat IA', free: '5/mois', premium: '500/mois', family: '500/mois/compte' },
                   { name: 'Alternatives suggérées', free: '3', premium: '10', family: '10' },
-                  { name: 'Export données', free: '❌', premium: 'CSV, PDF', family: 'CSV, PDF' },
+                  { name: 'Export données', free: 'âÂÅ’', premium: 'CSV, PDF', family: 'CSV, PDF' },
                   { name: 'Historique', free: '30 jours', premium: 'Illimité', family: 'Illimité' },
                   { name: 'Comptes utilisateurs', free: '1', premium: '1', family: '5' },
                   { name: 'Support', free: 'Standard', premium: 'Prioritaire', family: 'VIP' },
@@ -381,7 +381,7 @@ const PricingPage: React.FC = () => {
       <div className="bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] py-16">
         <div className="max-w-4xl mx-auto px-4 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">
-            Prêt à améliorer votre consommation ?
+            Prêt ÃƒÂ  améliorer votre consommation ?
           </h2>
           <p className="text-xl mb-8 text-white/90">
             Rejoignez des milliers d'utilisateurs qui font des choix plus éclairés
@@ -394,7 +394,7 @@ const PricingPage: React.FC = () => {
             Commencer l'essai gratuit
           </button>
           <p className="mt-4 text-sm text-white/80">
-            Aucune carte bancaire requise • Annulation à tout moment
+            Aucune carte bancaire requise â€Â¢ Annulation ÃƒÂ  tout moment
           </p>
         </div>
       </div>

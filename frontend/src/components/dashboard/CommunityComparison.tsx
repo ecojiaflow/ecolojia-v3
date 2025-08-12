@@ -1,8 +1,8 @@
-// frontend/src/components/dashboard/CommunityComparison.tsx
+﻿// frontend/src/components/dashboard/CommunityComparison.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Award, BarChart3, Info } from 'lucide-react';
-import { dashboardService } from '../../services/dashboardService';
+import dashboardService from '../../services/dashboardService';
 import {
   RadarChart,
   PolarGrid,
@@ -68,10 +68,10 @@ export const CommunityComparison: React.FC = () => {
   };
 
   const getRankIcon = (percentile: number) => {
-    if (percentile >= 90) return '🏆';
-    if (percentile >= 75) return '🥈';
-    if (percentile >= 50) return '🥉';
-    return '📊';
+    if (percentile >= 90) return 'Ã°Å¸Ââ€ ';
+    if (percentile >= 75) return 'Ã°Å¸Â¥Ë†';
+    if (percentile >= 50) return 'Ã°Å¸Â¥â€°';
+    return 'Ã°Å¸â€œÅ ';
   };
 
   const getRankTitle = (percentile: number) => {
@@ -147,7 +147,7 @@ export const CommunityComparison: React.FC = () => {
               <p className="text-white/90">{comparisonData.message}</p>
             </div>
             <div className="text-right">
-              <div className="text-5xl font-bold">{comparisonData.percentile}°</div>
+              <div className="text-5xl font-bold">{comparisonData.percentile}Ã‚Â°</div>
               <div className="text-sm text-white/80">Percentile</div>
             </div>
           </div>
@@ -318,3 +318,4 @@ export const CommunityComparison: React.FC = () => {
 };
 export default CommunityComparison;
 // EOF
+

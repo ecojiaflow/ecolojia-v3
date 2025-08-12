@@ -2,7 +2,7 @@
 import algoliasearch from 'algoliasearch';
 import { InstantSearch } from 'react-instantsearch';
 
-// ✅ Configuration Algolia avec vraies clés
+// âÅ“â€¦ Configuration Algolia avec vraies clés
 export const ALGOLIA_CONFIG = {
   appId: import.meta.env.VITE_ALGOLIA_APP_ID || 'A2KJGZ2811',
   apiKey: import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY || '085aeee2b3ec8efa66dabb7691a01b67',
@@ -15,13 +15,13 @@ export const searchClient = algoliasearch(
   ALGOLIA_CONFIG.apiKey
 );
 
-console.log('🔍 Algolia configuré:', {
+console.log('Ã°Å¸â€Â Algolia configuré:', {
   appId: ALGOLIA_CONFIG.appId,
   indexName: ALGOLIA_CONFIG.indexName,
   apiKeyLength: ALGOLIA_CONFIG.apiKey.length
 });
 
-// ✅ Interface pour les produits Algolia
+// âÅ“â€¦ Interface pour les produits Algolia
 export interface AlgoliaProduct {
   objectID: string;
   id: string;
@@ -39,7 +39,7 @@ export interface AlgoliaProduct {
   updated_at?: string;
 }
 
-// ✅ Configuration des facettes pour les filtres
+// âÅ“â€¦ Configuration des facettes pour les filtres
 export const ALGOLIA_FACETS = {
   category: 'Catégorie',
   nova_group: 'Groupe NOVA',
@@ -48,7 +48,7 @@ export const ALGOLIA_FACETS = {
   confidence_color: 'Confiance'
 };
 
-// ✅ Helper pour formater les résultats de recherche
+// âÅ“â€¦ Helper pour formater les résultats de recherche
 export const formatSearchHit = (hit: any): AlgoliaProduct => {
   return {
     objectID: hit.objectID,
@@ -68,7 +68,7 @@ export const formatSearchHit = (hit: any): AlgoliaProduct => {
   };
 };
 
-// ✅ Configuration par défaut pour InstantSearch
+// âÅ“â€¦ Configuration par défaut pour InstantSearch
 export const INSTANT_SEARCH_CONFIG = {
   indexName: ALGOLIA_CONFIG.indexName,
   searchClient,
@@ -76,7 +76,7 @@ export const INSTANT_SEARCH_CONFIG = {
   stalledSearchDelay: 500 // Délai avant d'afficher "Recherche en cours..."
 };
 
-// ✅ Helper pour les couleurs NOVA
+// âÅ“â€¦ Helper pour les couleurs NOVA
 export const getNovaColor = (novaGroup: number): string => {
   switch (novaGroup) {
     case 1: return 'text-green-600 bg-green-100';
@@ -87,7 +87,7 @@ export const getNovaColor = (novaGroup: number): string => {
   }
 };
 
-// ✅ Helper pour les couleurs de confiance
+// âÅ“â€¦ Helper pour les couleurs de confiance
 export const getConfidenceColor = (color: string): string => {
   switch (color) {
     case 'green': return 'text-green-600 bg-green-100';
@@ -97,24 +97,24 @@ export const getConfidenceColor = (color: string): string => {
   }
 };
 
-// ✅ Helper pour vérifier la connexion Algolia
+// âÅ“â€¦ Helper pour vérifier la connexion Algolia
 export const testAlgoliaConnection = async (): Promise<boolean> => {
   try {
     const index = searchClient.initIndex(ALGOLIA_CONFIG.indexName);
     const result = await index.search('', { hitsPerPage: 1 });
-    console.log('✅ Algolia connecté:', result.nbHits, 'produits disponibles');
+    console.log('âÅ“â€¦ Algolia connecté:', result.nbHits, 'produits disponibles');
     return true;
   } catch (error) {
-    console.error('❌ Erreur connexion Algolia:', error);
+    console.error('âÂÅ’ Erreur connexion Algolia:', error);
     return false;
   }
 };
 
-// ✅ Export par défaut
+// âÅ“â€¦ Export par défaut
 export default searchClient;
 // EOF
 
-// ✅ Interface pour les produits Algolia
+// âÅ“â€¦ Interface pour les produits Algolia
 export interface AlgoliaProduct {
   objectID: string;
   id: string;
@@ -132,7 +132,7 @@ export interface AlgoliaProduct {
   updated_at?: string;
 }
 
-// ✅ Configuration des facettes pour les filtres
+// âÅ“â€¦ Configuration des facettes pour les filtres
 export const ALGOLIA_FACETS = {
   category: 'Catégorie',
   nova_group: 'Groupe NOVA',
@@ -141,7 +141,7 @@ export const ALGOLIA_FACETS = {
   confidence_color: 'Confiance'
 };
 
-// ✅ Helper pour formater les résultats de recherche
+// âÅ“â€¦ Helper pour formater les résultats de recherche
 export const formatSearchHit = (hit: any): AlgoliaProduct => {
   return {
     objectID: hit.objectID,
@@ -161,7 +161,7 @@ export const formatSearchHit = (hit: any): AlgoliaProduct => {
   };
 };
 
-// ✅ Configuration par défaut pour InstantSearch
+// âÅ“â€¦ Configuration par défaut pour InstantSearch
 export const INSTANT_SEARCH_CONFIG = {
   indexName: ALGOLIA_CONFIG.indexName,
   searchClient,
@@ -169,7 +169,7 @@ export const INSTANT_SEARCH_CONFIG = {
   stalledSearchDelay: 500 // Délai avant d'afficher "Recherche en cours..."
 };
 
-// ✅ Helper pour les couleurs NOVA
+// âÅ“â€¦ Helper pour les couleurs NOVA
 export const getNovaColor = (novaGroup: number): string => {
   switch (novaGroup) {
     case 1: return 'text-green-600 bg-green-100';
@@ -180,7 +180,7 @@ export const getNovaColor = (novaGroup: number): string => {
   }
 };
 
-// ✅ Helper pour les couleurs de confiance
+// âÅ“â€¦ Helper pour les couleurs de confiance
 export const getConfidenceColor = (color: string): string => {
   switch (color) {
     case 'green': return 'text-green-600 bg-green-100';
@@ -190,6 +190,6 @@ export const getConfidenceColor = (color: string): string => {
   }
 };
 
-// ✅ Export par défaut
+// âÅ“â€¦ Export par défaut
 export default searchClient;
 // EOF

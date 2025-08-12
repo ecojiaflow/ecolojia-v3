@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/scanner/PhotoCapture.tsx
+// PATH: frontend/src/components/scanner/PhotoCapture.tsx
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -40,7 +40,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
     // Validation du fichier
     if (!acceptedFormats.includes(file.type)) {
-      const errorMsg = 'Format de fichier non supportÃ©. Utilisez JPG, PNG ou WebP.';
+      const errorMsg = 'Format de fichier non supporté. Utilisez JPG, PNG ou WebP.';
       setError(errorMsg);
       onError?.(new Error(errorMsg));
       return;
@@ -55,7 +55,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
     setSelectedFile(file);
 
-    // CrÃ©er la preview
+    // Créer la preview
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreview(e.target?.result as string);
@@ -137,13 +137,13 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
             {/* Instructions */}
             <div className="mb-6 p-4 bg-blue-50 rounded-lg">
               <h3 className="font-medium text-blue-900 mb-2">
-                ðŸ“¸ Comment prendre une bonne photo ?
+                Ã°Å¸â€œÂ¸ Comment prendre une bonne photo ?
               </h3>
               <ul className="space-y-1 text-sm text-blue-700">
-                <li>â€¢ Prenez la photo dans un endroit bien Ã©clairÃ©</li>
-                <li>â€¢ Cadrez le produit en entier avec ses Ã©tiquettes</li>
-                <li>â€¢ Assurez-vous que le texte est net et lisible</li>
-                <li>â€¢ Incluez le code-barres si possible</li>
+                <li>â€Â¢ Prenez la photo dans un endroit bien éclairé</li>
+                <li>â€Â¢ Cadrez le produit en entier avec ses étiquettes</li>
+                <li>â€Â¢ Assurez-vous que le texte est net et lisible</li>
+                <li>â€Â¢ Incluez le code-barres si possible</li>
               </ul>
             </div>
 
@@ -183,11 +183,11 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                 </div>
 
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {dragActive ? 'DÃ©posez votre image ici' : 'Glissez une image ou cliquez pour sÃ©lectionner'}
+                  {dragActive ? 'Déposez votre image ici' : 'Glissez une image ou cliquez pour sélectionner'}
                 </h3>
                 
                 <p className="text-sm text-gray-500 mb-4">
-                  JPG, PNG ou WebP â€¢ Max {maxSize / 1024 / 1024}MB
+                  JPG, PNG ou WebP â€Â¢ Max {maxSize / 1024 / 1024}MB
                 </p>
 
                 <div className="flex items-center justify-center gap-4">
@@ -201,7 +201,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
                   <button
                     onClick={() => {
-                      // Ouvrir la camÃ©ra si disponible
+                      // Ouvrir la caméra si disponible
                       if (navigator.mediaDevices?.getUserMedia) {
                         fileInputRef.current?.setAttribute('capture', 'environment');
                         fileInputRef.current?.click();
@@ -298,10 +298,10 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           )}
         </AnimatePresence>
 
-        {/* Info lÃ©gale */}
+        {/* Info légale */}
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600 text-center">
-            ðŸ”’ Vos photos sont analysÃ©es de maniÃ¨re sÃ©curisÃ©e et ne sont pas conservÃ©es sur nos serveurs
+            Ã°Å¸â€â€™ Vos photos sont analysées de manière sécurisée et ne sont pas conservées sur nos serveurs
           </p>
         </div>
       </div>
@@ -310,3 +310,5 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+
+

@@ -176,10 +176,10 @@ export class NovaAdapter {
       'E452': 'Polyphosphates',
       'E460': 'Cellulose',
       'E461': 'Méthylcellulose',
-      'E462': 'Éthylcellulose',
+      'E462': 'Ãƒâ€°thylcellulose',
       'E463': 'Hydroxypropylcellulose',
       'E464': 'Hydroxypropylméthylcellulose',
-      'E465': 'Éthylméthylcellulose',
+      'E465': 'Ãƒâ€°thylméthylcellulose',
       'E466': 'Carboxyméthylcellulose',
       'E470a': 'Sels de sodium, de potassium et de calcium d\'acides gras',
       'E470b': 'Sels de magnésium d\'acides gras',
@@ -302,7 +302,7 @@ export class NovaAdapter {
       'E965': 'Maltitol',
       'E966': 'Lactitol',
       'E967': 'Xylitol',
-      'E968': 'Érythritol',
+      'E968': 'Ãƒâ€°rythritol',
       'E999': 'Extrait de quillaia'
     };
 
@@ -315,7 +315,7 @@ export class NovaAdapter {
     if (code.startsWith('E3')) return 'Antioxydant';
     if (code.startsWith('E4')) return 'Texturant';
     if (code.startsWith('E5')) return 'Régulateur d\'acidité';
-    if (code.startsWith('E6')) return 'Exhausteur de goût';
+    if (code.startsWith('E6')) return 'Exhausteur de goÃƒÂ»t';
     if (code.startsWith('E9')) return 'Agent d\'enrobage';
     return 'Additif alimentaire';
   }
@@ -344,7 +344,7 @@ export class NovaAdapter {
     // Marqueurs basés sur les additifs détectés
     const highRiskAdditives = additives.filter(a => a.riskLevel === 'high');
     if (highRiskAdditives.length > 0) {
-      markers.push(`${highRiskAdditives.length} additif(s) à risque élevé`);
+      markers.push(`${highRiskAdditives.length} additif(s) ÃƒÂ  risque élevé`);
     }
 
     // Marqueurs basés sur le score NOVA
@@ -423,7 +423,7 @@ export class NovaAdapter {
   private static getScientificSources(type: 'food' | 'cosmetic' | 'detergent'): string[] {
     const commonSources = [
       'Classification NOVA - INSERM 2024',
-      'Règlement (CE) n° 1333/2008 sur les additifs alimentaires',
+      'Règlement (CE) nÃ‚Â° 1333/2008 sur les additifs alimentaires',
       'Base de données EFSA (Autorité européenne de sécurité des aliments)'
     ];
 
@@ -432,18 +432,18 @@ export class NovaAdapter {
         return [
           ...commonSources,
           'Programme National Nutrition Santé (PNNS)',
-          'Étude NutriNet-Santé - EREN',
+          'Ãƒâ€°tude NutriNet-Santé - EREN',
           'Recommandations nutritionnelles ANSES 2024'
         ];
       case 'cosmetic':
         return [
-          'Règlement (CE) n° 1223/2009 relatif aux produits cosmétiques',
+          'Règlement (CE) nÃ‚Â° 1223/2009 relatif aux produits cosmétiques',
           'Base de données CosIng (Commission européenne)',
-          'Évaluations SCCS (Comité scientifique pour la sécurité des consommateurs)'
+          'Ãƒâ€°valuations SCCS (Comité scientifique pour la sécurité des consommateurs)'
         ];
       case 'detergent':
         return [
-          'Règlement (CE) n° 648/2004 relatif aux détergents',
+          'Règlement (CE) nÃ‚Â° 648/2004 relatif aux détergents',
           'Classification CLP (Classification, étiquetage et emballage)',
           'Base de données ECHA (Agence européenne des produits chimiques)'
         ];

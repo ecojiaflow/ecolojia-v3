@@ -25,7 +25,7 @@ interface Props {
 
 const PREDEFINED_QUESTIONS = [
   {
-    category: '🔬 Analyses Scientifiques',
+    category: 'Ã°Å¸â€Â¬ Analyses Scientifiques',
     questions: [
       { text: 'Explique-moi le score scientifique de ce produit', type: 'scientific_analysis' },
       { text: 'Quels sont les additifs problématiques détectés ?', type: 'additives_analysis' },
@@ -34,7 +34,7 @@ const PREDEFINED_QUESTIONS = [
     ]
   },
   {
-    category: '🥗 Nutrition & Santé',
+    category: 'Ã°Å¸Â¥â€” Nutrition & Santé',
     questions: [
       { text: 'Quel est l\'impact glycémique de ce produit ?', type: 'glycemic_impact' },
       { text: 'Ce produit convient-il aux diabétiques ?', type: 'diabetes_suitability' },
@@ -43,7 +43,7 @@ const PREDEFINED_QUESTIONS = [
     ]
   },
   {
-    category: '🌱 Alternatives & Conseils',
+    category: 'Ã°Å¸Å’Â± Alternatives & Conseils',
     questions: [
       { text: 'Suggère des alternatives plus saines', type: 'alternatives' },
       { text: 'Comment améliorer mon alimentation ?', type: 'nutrition_tips' },
@@ -52,7 +52,7 @@ const PREDEFINED_QUESTIONS = [
     ]
   },
   {
-    category: '🧪 Cosmétique & Détergents',
+    category: 'Ã°Å¸Â§Âª Cosmétique & Détergents',
     questions: [
       { text: 'Analyse INCI complète de ce cosmétique', type: 'inci_analysis' },
       { text: 'Ingrédients controversés détectés', type: 'controversial_ingredients' },
@@ -118,34 +118,34 @@ export const AIChat: React.FC<Props> = ({ productData, onAnalysisRequest }) => {
   };
 
   const generateAIResponse = (message: string, type?: string, product?: ProductData): string => {
-    if (!product) return "Je n'ai pas de données produit à analyser pour le moment.";
+    if (!product) return "Je n'ai pas de données produit ÃƒÂ  analyser pour le moment.";
 
     switch (type) {
       case 'scientific_analysis':
-        return `📊 **Analyse Scientifique de "${product.name}"**
+        return `Ã°Å¸â€œÅ  **Analyse Scientifique de "${product.name}"**
 
-🔬 **Score Global : ${product.scientificScore || 'Non calculé'}/100**
+Ã°Å¸â€Â¬ **Score Global : ${product.scientificScore || 'Non calculé'}/100**
 
 Votre produit a été analysé selon 4 critères scientifiques :
-• **Transformation** : Classification NOVA ${product.novaGroup || 'X'}
-• **Nutrition** : Nutri-Score ${product.nutriScore || 'Non calculé'}
-• **Impact Glycémique** : Analysé selon la base internationale
-• **Environnemental** : Certifications et emballage
+â€Â¢ **Transformation** : Classification NOVA ${product.novaGroup || 'X'}
+â€Â¢ **Nutrition** : Nutri-Score ${product.nutriScore || 'Non calculé'}
+â€Â¢ **Impact Glycémique** : Analysé selon la base internationale
+â€Â¢ **Environnemental** : Certifications et emballage
 
 Cette analyse se base sur les dernières études INSERM 2024 et les bases de données officielles ANSES/EFSA.`;
 
       case 'additives_analysis':
-        return `🧪 **Analyse des Additifs**
+        return `Ã°Å¸Â§Âª **Analyse des Additifs**
 
 ${product.additives?.length ? 
   `J'ai détecté ${product.additives.length} additifs dans "${product.name}" :
 
 ${product.additives.slice(0, 3).map((additive: any, i: number) => 
-  `• **${additive.e_number}** - ${additive.name} (Risque: ${additive.risk_level})`
+  `â€Â¢ **${additive.e_number}** - ${additive.name} (Risque: ${additive.risk_level})`
 ).join('\n')}
 
-⚠️ **Additifs préoccupants** : Focus sur les perturbateurs du microbiote
-✅ **Recommandation** : Privilégier les alternatives avec moins d'additifs` :
+âÅ¡Â ïÂ¸Â **Additifs préoccupants** : Focus sur les perturbateurs du microbiote
+âÅ“â€¦ **Recommandation** : Privilégier les alternatives avec moins d'additifs` :
   'Excellente nouvelle ! Ce produit ne contient pas d\'additifs détectés.'
 }
 
@@ -153,39 +153,39 @@ Source : Base EFSA 2024`;
 
       case 'nova_explanation':
         const novaExplanations = {
-          1: '✅ **Groupe 1 - Non/Minimalement Transformé**\n\nExcellent choix ! Ce produit subit peu de transformation industrielle. Associé à -23% de risques de maladies chroniques selon les études INSERM.',
-          2: '✅ **Groupe 2 - Peu Transformé**\n\nBon choix ! Quelques ingrédients ajoutés pour conservation. Impact santé neutre à positif.',
-          3: '⚠️ **Groupe 3 - Transformé**\n\nProduit avec plusieurs ingrédients transformés. À consommer avec modération.',
-          4: '🚨 **Groupe 4 - ULTRA-TRANSFORMÉ**\n\nATTENTION : Transformation industrielle intensive. Risque +53% diabète, +22% dépression selon BMJ 2024. Privilégier les alternatives naturelles.'
+          1: 'âÅ“â€¦ **Groupe 1 - Non/Minimalement Transformé**\n\nExcellent choix ! Ce produit subit peu de transformation industrielle. Associé ÃƒÂ  -23% de risques de maladies chroniques selon les études INSERM.',
+          2: 'âÅ“â€¦ **Groupe 2 - Peu Transformé**\n\nBon choix ! Quelques ingrédients ajoutés pour conservation. Impact santé neutre ÃƒÂ  positif.',
+          3: 'âÅ¡Â ïÂ¸Â **Groupe 3 - Transformé**\n\nProduit avec plusieurs ingrédients transformés. Ãƒ€ consommer avec modération.',
+          4: 'Ã°Å¸Å¡Â¨ **Groupe 4 - ULTRA-TRANSFORMÃƒâ€°**\n\nATTENTION : Transformation industrielle intensive. Risque +53% diabète, +22% dépression selon BMJ 2024. Privilégier les alternatives naturelles.'
         };
         return novaExplanations[product.novaGroup as keyof typeof novaExplanations] || 'Classification en cours...';
 
       case 'alternatives':
-        return `🌱 **Alternatives Recommandées pour "${product.name}"**
+        return `Ã°Å¸Å’Â± **Alternatives Recommandées pour "${product.name}"**
 
 **Marques Naturelles :**
-• Marque Bio A - Sans additifs, NOVA 1
-• Marque Bio B - Certification AB, score 85/100
-• Marque Bio C - Ingrédients locaux, emballage recyclable
+â€Â¢ Marque Bio A - Sans additifs, NOVA 1
+â€Â¢ Marque Bio B - Certification AB, score 85/100
+â€Â¢ Marque Bio C - Ingrédients locaux, emballage recyclable
 
 **Recettes Maison :**
-🏠 Je peux vous donner une recette simple pour remplacer ce produit !
+Ã°Å¸ÂÂ  Je peux vous donner une recette simple pour remplacer ce produit !
 
-**Où acheter :**
-• Magasins bio locaux
-• Coopératives
-• Vente directe producteurs
+**OÃƒÂ¹ acheter :**
+â€Â¢ Magasins bio locaux
+â€Â¢ Coopératives
+â€Â¢ Vente directe producteurs
 
 Voulez-vous que je détaille une alternative spécifique ?`;
 
       default:
         return `J'ai bien reçu votre question sur "${product.name}". 
 
-Grâce à mon analyse scientifique avancée, je peux vous expliquer :
-• La composition exacte et les risques potentiels
-• L'impact sur votre santé selon les dernières études
-• Des alternatives plus saines et naturelles
-• Des conseils personnalisés
+Grâce ÃƒÂ  mon analyse scientifique avancée, je peux vous expliquer :
+â€Â¢ La composition exacte et les risques potentiels
+â€Â¢ L'impact sur votre santé selon les dernières études
+â€Â¢ Des alternatives plus saines et naturelles
+â€Â¢ Des conseils personnalisés
 
 Posez-moi une question plus spécifique pour une analyse détaillée !`;
     }
@@ -198,9 +198,9 @@ Posez-moi une question plus spécifique pour une analyse détaillée !`;
   const formatMessage = (content: string) => {
     return content.split('\n').map((line, index) => (
       <div key={index} className="mb-1">
-        {line.startsWith('•') ? (
+        {line.startsWith('â€Â¢') ? (
           <div className="flex items-start gap-2">
-            <span className="text-blue-500 mt-1">•</span>
+            <span className="text-blue-500 mt-1">â€Â¢</span>
             <span dangerouslySetInnerHTML={{ __html: line.substring(1).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
           </div>
         ) : (
@@ -220,7 +220,7 @@ Posez-moi une question plus spécifique pour une analyse détaillée !`;
           </div>
           <div>
             <h3 className="font-bold text-lg">Assistant IA Scientifique</h3>
-            <p className="text-sm text-gray-600">Analyse basée sur INSERM • ANSES • EFSA 2024</p>
+            <p className="text-sm text-gray-600">Analyse basée sur INSERM â€Â¢ ANSES â€Â¢ EFSA 2024</p>
           </div>
           <div className="ml-auto">
             <Sparkles className="w-5 h-5 text-purple-500" />
@@ -326,7 +326,7 @@ Posez-moi une question plus spécifique pour une analyse détaillée !`;
         </div>
         <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
           <Zap className="w-3 h-3" />
-          <span>Powered by IA avancée • Analyses scientifiques en temps réel</span>
+          <span>Powered by IA avancée â€Â¢ Analyses scientifiques en temps réel</span>
         </div>
       </div>
     </div>

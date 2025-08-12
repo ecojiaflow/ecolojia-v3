@@ -7,7 +7,7 @@ export const EmailVerificationBanner: React.FC = () => {
   const { resendVerificationEmail, isLoading } = useEmailValidation();
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Ne pas afficher si pas d'utilisateur, mode démo, ou email déjà vérifié
+  // Ne pas afficher si pas d'utilisateur, mode démo, ou email déjÃƒÂ  vérifié
   if (!user || user.email.includes('demo') || user.emailVerified) {
     return null;
   }
@@ -27,7 +27,7 @@ export const EmailVerificationBanner: React.FC = () => {
       <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
         <div className="flex">
           <div className="flex-shrink-0">
-            <span className="text-green-400 text-xl">✅</span>
+            <span className="text-green-400 text-xl">âÅ“â€¦</span>
           </div>
           <div className="ml-3">
             <p className="text-sm text-green-700">
@@ -43,7 +43,7 @@ export const EmailVerificationBanner: React.FC = () => {
     <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <span className="text-yellow-400 text-xl">⚠️</span>
+          <span className="text-yellow-400 text-xl">âÅ¡Â ïÂ¸Â</span>
         </div>
         <div className="ml-3 flex-1">
           <h3 className="text-sm font-medium text-yellow-800">

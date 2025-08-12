@@ -135,7 +135,7 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+    if (window.confirm('ÃƒÅ tes-vous sÃƒÂ»r de vouloir vous déconnecter ?')) {
       await logout();
       navigate('/');
     }
@@ -248,7 +248,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Emails de mise à jour</span>
+                <span className="text-[#3B3B3B] font-medium">Emails de mise ÃƒÂ  jour</span>
                 <p className="text-sm text-gray-600 mt-1">Nouvelles fonctionnalités et améliorations</p>
               </div>
               <Switch
@@ -271,7 +271,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Alertes produits</span>
-                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises à jour</p>
+                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises ÃƒÂ  jour</p>
               </div>
               <Switch
                 checked={settings.notifications.productAlerts}
@@ -329,7 +329,7 @@ const SettingsPage: React.FC = () => {
               >
                 <option value="fr">Français</option>
                 <option value="en">English</option>
-                <option value="es">Español</option>
+                <option value="es">EspaÃƒÂ±ol</option>
                 <option value="de">Deutsch</option>
               </select>
             </div>
@@ -365,7 +365,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Partager les analyses anonymes</span>
-                <p className="text-sm text-gray-600 mt-1">Aidez à améliorer notre base de données</p>
+                <p className="text-sm text-gray-600 mt-1">Aidez ÃƒÂ  améliorer notre base de données</p>
               </div>
               <Switch
                 checked={settings.privacy.shareAnalytics}
@@ -424,7 +424,7 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between p-4 bg-[#E9F8DF] rounded-lg">
               <div>
-                <h4 className="font-medium text-[#3B3B3B]">Authentification à deux facteurs</h4>
+                <h4 className="font-medium text-[#3B3B3B]">Authentification ÃƒÂ  deux facteurs</h4>
                 <p className="text-sm text-gray-600 mt-1">
                   {settings.security.twoFactorEnabled 
                     ? 'Votre compte est protégé par 2FA'
@@ -535,7 +535,7 @@ const SettingsPage: React.FC = () => {
               {user.tier !== 'free' && (
                 <div className="space-y-2 text-sm text-gray-600">
                   <p>Prochaine facturation : 1er du mois prochain</p>
-                  <p>Méthode de paiement : •••• 4242</p>
+                  <p>Méthode de paiement : â€Â¢â€Â¢â€Â¢â€Â¢ 4242</p>
                 </div>
               )}
             </div>
@@ -688,10 +688,10 @@ const SettingsPage: React.FC = () => {
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-red-800 mb-2">Vous allez perdre :</h4>
               <ul className="text-sm text-red-700 space-y-1">
-                <li>• Toutes vos analyses de produits</li>
-                <li>• Vos favoris et listes personnalisées</li>
-                <li>• Votre historique et statistiques</li>
-                <li>• Votre abonnement actif</li>
+                <li>â€Â¢ Toutes vos analyses de produits</li>
+                <li>â€Â¢ Vos favoris et listes personnalisées</li>
+                <li>â€Â¢ Votre historique et statistiques</li>
+                <li>â€Â¢ Votre abonnement actif</li>
               </ul>
             </div>
             

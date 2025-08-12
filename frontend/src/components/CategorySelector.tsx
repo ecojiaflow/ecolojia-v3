@@ -116,7 +116,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 {selectedCategory === category.id && (
                   <div className="mt-4">
                     <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-${category.color}-500 to-${category.color}-600 text-white`}>
-                      ✓ Sélectionné
+                      âÅ“â€œ Sélectionné
                     </div>
                   </div>
                 )}
@@ -136,7 +136,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
           </div>
           <div>
             <h4 className="font-semibold text-gray-800 mb-2">
-              🧠 IA Scientifique Adaptative
+              Ã°Å¸Â§Â  IA Scientifique Adaptative
             </h4>
             <p className="text-sm text-gray-600 leading-relaxed">
               Notre intelligence artificielle adapte automatiquement ses critères d'analyse selon la catégorie :

@@ -3,9 +3,9 @@ import React from 'react';
 
 /**
  * Résumé du produit côté transformation :
- *  - novaClass : 1 (nature) → 4 (ultra-transformé)
- *  - transformationScore : 0 – 100 (≤ 40 conseillé)
- *  - additivesCount : nombre d’additifs identifiés
+ *  - novaClass : 1 (nature) ââ€ â€™ 4 (ultra-transformé)
+ *  - transformationScore : 0 â€â€œ 100 (ââ€°Â¤ 40 conseillé)
+ *  - additivesCount : nombre dâ€â„¢additifs identifiés
  */
 interface UltraTransformResultsProps {
   novaClass?: 1 | 2 | 3 | 4;
@@ -41,7 +41,7 @@ const UltraTransformResults: React.FC<UltraTransformResultsProps> = ({
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 w-full">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">🔬 Ultra-Transformation</h3>
+      <h3 className="text-lg font-bold text-gray-800 mb-4">Ã°Å¸â€Â¬ Ultra-Transformation</h3>
 
       <div className="flex items-center justify-between mb-3">
         <span className="text-gray-600">Classe NOVA</span>
@@ -65,3 +65,4 @@ const UltraTransformResults: React.FC<UltraTransformResultsProps> = ({
 
 export default UltraTransformResults;
 // EOF
+

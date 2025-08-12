@@ -1,24 +1,218 @@
-// PATH: frontend/ecolojiaFrontV3/src/main.tsx
+// PATH: frontend/src/main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
-// ✅ Imports CSS dans l'ordre correct
 import './i18n';
 import './index.css';
+import App from './App';
 
-// ❌ SUPPRIMÉ TEMPORAIREMENT : Import des animations CSS
-// import './styles/animations.css';
+// Configuration de l'API URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';
 
-// Import explicite pour éviter la dépendance circulaire
-import * as AppModule from './App';
-const App = AppModule.default || AppModule;
+// Fixes simples sans casser fetch
+const applyQuickFixes = () => {
+  // Fix 1: Logger les erreurs pour debug
+  window.addEventListener('error', (event) => {
+    console.error('🔴 Erreur:', event.message, event.error);
+  });
 
-// Fallback si l'import échoue encore
-if (!App) {
-  throw new Error('App component not found - check for circular dependencies');
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('🔴 Promise rejetée:', event.reason);
+  });
+
+  console.log('✅ Debug activé');
+};
+
+// Test backend fonctionnel
+(window as any).testBackend = async () => {
+  console.log('🧪 Test Backend ECOLOJIA...\n');
+  console.log('📍 API URL:', API_URL);
+  
+  const tests = [];
+  
+  try {
+    // Test 1: Health
+    const healthRes = await fetch('https://ecolojia-backendvf.onrender.com/health');
+    tests.push({
+      endpoint: '/health',
+      status: healthRes.status,
+      ok: healthRes.ok ? '✅' : '❌'
+    });
+    
+    // Test 2: Analysis Status
+    const statusRes = await fetch(`${API_URL}/analysis/_service/status`);
+    tests.push({
+      endpoint: '/api/analysis/_service/status',
+      status: statusRes.status,
+      ok: statusRes.ok ? '✅' : '❌'
+    });
+    
+    if (statusRes.ok) {
+      const data = await statusRes.json();
+      console.log('📊 Service Analysis:', data);
+    }
+    
+    // Test 3: Ping
+    const pingRes = await fetch(`${API_URL}/analysis/ping`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ test: true })
+    });
+    tests.push({
+      endpoint: '/api/analysis/ping',
+      status: pingRes.status,
+      ok: pingRes.ok ? '✅' : '❌'
+    });
+    
+    console.table(tests);
+    
+  } catch (error) {
+    console.error('❌ Erreur:', error);
+  }
+};
+
+// Test d'analyse complet
+(window as any).testAnalysis = async (category = 'food') => {
+  console.log(`🔬 Test analyse ${category}...\n`);
+  
+  const testProducts = {
+    food: {
+      name: 'Céréales chocolat test',
+      category: 'food',
+      ingredients: 'Céréales (blé 60%), sucre, chocolat 15% (sucre, cacao), sirop de glucose, sel, vitamines (B1, B2), émulsifiant E322'
+    },
+    cosmetic: {
+      name: 'Crème hydratante test',
+      category: 'cosmetic',
+      ingredients: 'Aqua, Glycerin, Dimethicone, Cetearyl Alcohol, Parfum, Limonene, Methylparaben, BHT'
+    },
+    detergent: {
+      name: 'Lessive liquide test',
+      category: 'detergent',
+      ingredients: '5-15% tensioactifs anioniques, <5% tensioactifs non-ioniques, parfum (Limonene), enzymes'
+    }
+  };
+  
+  const product = testProducts[category] || testProducts.food;
+  
+  try {
+    console.log('📤 Envoi:', product);
+    
+    const response = await fetch(`${API_URL}/analysis/manual`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(localStorage.getItem('token') && { 
+          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        })
+      },
+      body: JSON.stringify(product)
+    });
+    
+    console.log('📥 Status:', response.status);
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ Résultat:');
+      console.log('- Catégorie:', result.category);
+      console.log('- Score global:', result.globalScore);
+      console.log('- Scores:', result.scores);
+      console.log('- Détails:', result.details);
+      console.log('- Recommandations:', result.recommendations);
+      return result;
+    } else {
+      const error = await response.text();
+      console.error('❌ Erreur:', error);
+    }
+  } catch (error) {
+    console.error('❌ Exception:', error);
+  }
+};
+
+// Test complet de l'application
+(window as any).testComplet = async () => {
+  console.log('🚀 TEST COMPLET ECOLOJIA\n');
+  console.log('=' .repeat(50));
+  
+  // 1. Backend
+  console.log('\n1️⃣ TEST BACKEND');
+  await (window as any).testBackend();
+  
+  // 2. Analyses
+  console.log('\n2️⃣ TEST ANALYSES');
+  console.log('Testing Food...');
+  await (window as any).testAnalysis('food');
+  
+  console.log('\nTesting Cosmetic...');
+  await (window as any).testAnalysis('cosmetic');
+  
+  console.log('\nTesting Detergent...');
+  await (window as any).testAnalysis('detergent');
+  
+  // 3. Auth
+  console.log('\n3️⃣ TEST AUTH');
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  console.log('Token:', token ? `✅ Présent (${token.length} car.)` : '❌ Absent');
+  console.log('User:', user ? '✅ Présent' : '❌ Absent');
+  
+  // 4. Routes Frontend
+  console.log('\n4️⃣ ROUTES FRONTEND');
+  console.log('Route actuelle:', window.location.pathname);
+  console.log('Routes disponibles:');
+  console.log('- / (Home)');
+  console.log('- /scan');
+  console.log('- /results');
+  console.log('- /search');
+  console.log('- /dashboard');
+  console.log('- /login');
+  console.log('- /register');
+  
+  console.log('\n✅ Test terminé !');
+};
+
+// Commandes disponibles
+(window as any).ecolojiaHelp = () => {
+  console.log(`
+🌱 ECOLOJIA - Commandes de test
+================================
+
+📋 Tests rapides:
+  testBackend()          → Tester la connexion backend
+  testAnalysis('food')   → Tester analyse food
+  testAnalysis('cosmetic') → Tester analyse cosmétique
+  testAnalysis('detergent') → Tester analyse détergent
+  testComplet()          → Lancer TOUS les tests
+
+🔧 Debug:
+  localStorage.clear()   → Effacer le cache
+  location.reload()      → Recharger la page
+
+📊 Info système:
+  API: ${API_URL}
+  Backend: https://ecolojia-backendvf.onrender.com
+  Frontend: ${window.location.origin}
+  `);
+};
+
+// Appliquer les fixes
+try {
+  applyQuickFixes();
+} catch (error) {
+  console.error('Erreur lors de l\'application des fixes:', error);
 }
 
-createRoot(document.getElementById('root')!).render(
+// Message de bienvenue
+console.log('%c🌱 ECOLOJIA', 'color: #22c55e; font-size: 24px; font-weight: bold;');
+console.log('Tapez ecolojiaHelp() pour voir les commandes');
+console.log('Tapez testComplet() pour lancer tous les tests');
+
+// Créer l'application
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Element root non trouvé');
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <App />
   </StrictMode>

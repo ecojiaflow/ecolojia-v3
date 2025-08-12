@@ -17,13 +17,13 @@ const PrivacyPage: React.FC = () => {
             Politique de Confidentialité
           </h1>
           <p className="text-[#3B3B3B]/70 text-lg">
-            Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}
+            Dernière mise ÃƒÂ  jour : {new Date().toLocaleDateString('fr-FR')}
           </p>
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 mt-4 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
           >
-            ← Retour à l'accueil
+            ââ€ Â Retour ÃƒÂ  l'accueil
           </Link>
         </div>
 
@@ -38,7 +38,7 @@ const PrivacyPage: React.FC = () => {
                   Notre engagement
                 </h3>
                 <p className="text-[#3B3B3B]/70">
-                  Chez ECOLOJIA, nous nous engageons à protéger votre vie privée et vos données personnelles. 
+                  Chez ECOLOJIA, nous nous engageons ÃƒÂ  protéger votre vie privée et vos données personnelles. 
                   Cette politique explique comment nous collectons, utilisons et protégeons vos informations.
                 </p>
               </div>
@@ -79,7 +79,7 @@ const PrivacyPage: React.FC = () => {
               <li>Fournir et améliorer nos services d'analyse de produits</li>
               <li>Personnaliser votre expérience utilisateur</li>
               <li>Vous envoyer des notifications pertinentes (avec votre consentement)</li>
-              <li>Répondre à vos questions et demandes de support</li>
+              <li>Répondre ÃƒÂ  vos questions et demandes de support</li>
               <li>Améliorer nos algorithmes d'analyse</li>
               <li>Respecter nos obligations légales</li>
             </ul>
@@ -101,7 +101,7 @@ const PrivacyPage: React.FC = () => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-[#3B3B3B] mb-2">Cookies analytiques</h3>
                 <p className="text-[#3B3B3B]/70">
-                  Nous aident à comprendre comment vous utilisez ECOLOJIA (anonymisés)
+                  Nous aident ÃƒÂ  comprendre comment vous utilisez ECOLOJIA (anonymisés)
                 </p>
               </div>
             </div>
@@ -114,13 +114,13 @@ const PrivacyPage: React.FC = () => {
             </h2>
             <p className="text-[#3B3B3B]/70 mb-4">Conformément au RGPD, vous disposez des droits suivants :</p>
             <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
-              <li>Droit d'accès à vos données personnelles</li>
+              <li>Droit d'accès ÃƒÂ  vos données personnelles</li>
               <li>Droit de rectification des données inexactes</li>
-              <li>Droit à l'effacement (droit à l'oubli)</li>
-              <li>Droit à la limitation du traitement</li>
-              <li>Droit à la portabilité des données</li>
+              <li>Droit ÃƒÂ  l'effacement (droit ÃƒÂ  l'oubli)</li>
+              <li>Droit ÃƒÂ  la limitation du traitement</li>
+              <li>Droit ÃƒÂ  la portabilité des données</li>
               <li>Droit d'opposition au traitement</li>
-              <li>Droit de retirer votre consentement à tout moment</li>
+              <li>Droit de retirer votre consentement ÃƒÂ  tout moment</li>
             </ul>
           </section>
 
@@ -146,9 +146,9 @@ const PrivacyPage: React.FC = () => {
               Modifications
             </h2>
             <p className="text-[#3B3B3B]/70">
-              Nous pouvons mettre à jour cette politique de confidentialité. 
+              Nous pouvons mettre ÃƒÂ  jour cette politique de confidentialité. 
               Les modifications importantes seront notifiées par email ou via l'application.
-              Nous vous encourageons à consulter régulièrement cette page.
+              Nous vous encourageons ÃƒÂ  consulter régulièrement cette page.
             </p>
           </section>
         </div>

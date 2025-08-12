@@ -55,7 +55,7 @@ const SearchExperience: React.FC<Props> = ({ hideSearchBox = false }) => {
         <div className="flex flex-col md:flex-row gap-6">
           <aside className="md:w-72">
             <h2 className="font-semibold text-gray-700 mb-2">
-              🎯 {t('common.filters', 'Filtres')}
+              Ã°Å¸Å½Â¯ {t('common.filters', 'Filtres')}
             </h2>
             <div className="space-y-4">
               <RefinementList attribute="category" />
@@ -91,3 +91,4 @@ const SearchExperience: React.FC<Props> = ({ hideSearchBox = false }) => {
 };
 
 export default SearchExperience;
+

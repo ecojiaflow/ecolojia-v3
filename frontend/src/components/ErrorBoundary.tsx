@@ -22,7 +22,7 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    // Met à jour le state pour afficher l'UI d'erreur
+    // Met ÃƒÂ  jour le state pour afficher l'UI d'erreur
     return {
       hasError: true,
       error,
@@ -31,7 +31,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('❌ ErrorBoundary a capturé une erreur:', error, errorInfo);
+    console.error('âÂÅ’ ErrorBoundary a capturé une erreur:', error, errorInfo);
     this.setState({ error, errorInfo });
   }
 
@@ -50,7 +50,7 @@ class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-2xl w-full">
             <div className="bg-white rounded-3xl shadow-lg border-2 border-red-200 p-8 text-center">
               {/* Icon et titre */}
-              <div className="text-6xl mb-6">💥</div>
+              <div className="text-6xl mb-6">Ã°Å¸â€™Â¥</div>
               <h1 className="text-3xl font-bold text-red-800 mb-4">Oops ! Une erreur est survenue</h1>
               <p className="text-red-600 mb-6 text-lg">L'application ECOLOJIA a rencontré un problème inattendu.</p>
 
@@ -71,13 +71,13 @@ class ErrorBoundary extends Component<Props, State> {
                   onClick={this.handleReset}
                   className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-2xl transition-colors"
                 >
-                  🔄 Réessayer
+                  Ã°Å¸â€â€ž Réessayer
                 </button>
                 <button
                   onClick={this.handleReload}
                   className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-2xl transition-colors"
                 >
-                  🔃 Recharger la page
+                  Ã°Å¸â€Æ’ Recharger la page
                 </button>
               </div>
 
@@ -85,7 +85,7 @@ class ErrorBoundary extends Component<Props, State> {
               <div className="mt-8 pt-6 border-t border-red-200">
                 <div className="flex items-center justify-center space-x-3 mb-3">
                   <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white text-sm">🌱</span>
+                    <span className="text-white text-sm">Ã°Å¸Å’Â±</span>
                   </div>
                   <span className="font-bold text-gray-800">ECOLOJIA</span>
                 </div>

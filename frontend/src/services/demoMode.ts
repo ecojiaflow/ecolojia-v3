@@ -7,11 +7,11 @@ export const demoMode = {
   isEnabled: () => true,
   
   toggle: (enabled) => {
-    console.log(enabled ? "🎭 Mode démo activé" : "🔌 Mode démo désactivé");
+    console.log(enabled ? "Ã°Å¸Å½Â­ Mode démo activé" : "Ã°Å¸â€Å’ Mode démo désactivé");
   },
   
   analyzeBarcode: async (barcode) => {
-    console.log("🎭 DEMO: Analyse barcode", barcode);
+    console.log("Ã°Å¸Å½Â­ DEMO: Analyse barcode", barcode);
     await delay(1000);
     
     return {
@@ -31,7 +31,7 @@ export const demoMode = {
         nutriScore: "E",
         ecoScore: "D",
         additives: ["E322 - Lécithines", "E330 - Acide citrique"],
-        allergens: ["Lait", "Fruits à coque", "Soja"],
+        allergens: ["Lait", "Fruits ÃƒÂ  coque", "Soja"],
         warnings: ["Teneur élevée en sucre", "Ultra-transformé"],
         ingredients: "Sucre, huile de palme, NOISETTES 13%, cacao maigre, LAIT écrémé en poudre, lactoserum, lécithines, vanilline",
         nutritionalValues: {
@@ -49,7 +49,7 @@ export const demoMode = {
         alternatives: [
           {
             _id: "alt1",
-            name: "Pâte à tartiner bio sans huile de palme",
+            name: "Pâte ÃƒÂ  tartiner bio sans huile de palme",
             brand: "Bio Brand",
             healthScore: 65,
             nutriScore: "C",
@@ -79,7 +79,7 @@ export const demoMode = {
   },
   
   analyzeImage: async (file) => {
-    console.log("🎭 DEMO: Analyse image", file.name);
+    console.log("Ã°Å¸Å½Â­ DEMO: Analyse image", file.name);
     await delay(2000);
     
     return {
@@ -99,7 +99,7 @@ export const demoMode = {
   },
   
   analyzeManual: async (data) => {
-    console.log("🎭 DEMO: Analyse manuelle", data);
+    console.log("Ã°Å¸Å½Â­ DEMO: Analyse manuelle", data);
     await delay(1500);
     
     return {
@@ -202,6 +202,7 @@ export const demoMode = {
   }),
   
   incrementScans: () => {
-    console.log("🎭 Scan comptabilisé");
+    console.log("Ã°Å¸Å½Â­ Scan comptabilisé");
   }
 };
+

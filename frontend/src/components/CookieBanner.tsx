@@ -5,7 +5,7 @@ const CookieBanner: React.FC = () => {
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur a déjà fait un choix
+    // Vérifier si l'utilisateur a déjÃƒÂ  fait un choix
     const cookieConsent = localStorage.getItem('ecolojia-cookie-consent');
     if (!cookieConsent) {
       setIsVisible(true);
@@ -48,7 +48,7 @@ const CookieBanner: React.FC = () => {
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-1">
                 <div className="w-6 h-6 bg-eco-leaf rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">🍃</span>
+                  <span className="text-white text-xs">Ã°Å¸ÂÆ’</span>
                 </div>
               </div>
               <div>

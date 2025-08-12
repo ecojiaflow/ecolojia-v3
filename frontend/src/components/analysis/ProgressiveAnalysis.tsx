@@ -164,9 +164,9 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
               </button>
             </div>
             <ul className="mt-3 text-xs text-purple-700 space-y-1">
-              <li>• Liste complète des additifs</li>
-              <li>• Alternatives personnalisées</li>
-              <li>• Impact environnemental détaillé</li>
+              <li>â€Â¢ Liste complète des additifs</li>
+              <li>â€Â¢ Alternatives personnalisées</li>
+              <li>â€Â¢ Impact environnemental détaillé</li>
             </ul>
           </div>
         )}
@@ -265,7 +265,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                 <div className="mt-2 space-y-2">
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Énergie</span>
+                      <span className="text-gray-600">Ãƒâ€°nergie</span>
                       <span className="font-medium">{nutritionalValues.energy?.toFixed(0) || 0} kcal</span>
                     </div>
                     <div className="flex justify-between">
@@ -403,17 +403,17 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                   <div className="text-center">
                     <Leaf className="w-8 h-8 text-green-600 mx-auto mb-2" />
                     <p className="text-2xl font-bold">{impactEnv.co2?.toFixed(1) || 0}</p>
-                    <p className="text-sm text-gray-600">kg CO₂</p>
+                    <p className="text-sm text-gray-600">kg COââ€šâ€š</p>
                   </div>
                   <div className="text-center">
-                    <div className="w-8 h-8 text-blue-600 mx-auto mb-2">💧</div>
+                    <div className="w-8 h-8 text-blue-600 mx-auto mb-2">Ã°Å¸â€™Â§</div>
                     <p className="text-2xl font-bold">{impactEnv.water?.toFixed(0) || 0}</p>
                     <p className="text-sm text-gray-600">L d'eau</p>
                   </div>
                   <div className="text-center">
-                    <div className="w-8 h-8 text-brown-600 mx-auto mb-2">🌾</div>
+                    <div className="w-8 h-8 text-brown-600 mx-auto mb-2">Ã°Å¸Å’Â¾</div>
                     <p className="text-2xl font-bold">{impactEnv.landUse?.toFixed(1) || 0}</p>
-                    <p className="text-sm text-gray-600">m² de terre</p>
+                    <p className="text-sm text-gray-600">mÃ‚Â² de terre</p>
                   </div>
                 </div>
               </div>

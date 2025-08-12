@@ -14,7 +14,7 @@ const SimilarProductsCarousel: React.FC<{ productId: string }> = ({ productId })
         const similar = allProducts.filter(p => p.id !== productId).slice(0, 3);
         setProducts(similar);
       } catch (error) {
-        console.error('❌ Erreur suggestions :', error);
+        console.error('âÂÅ’ Erreur suggestions :', error);
         setProducts([]);
       } finally {
         setLoading(false);

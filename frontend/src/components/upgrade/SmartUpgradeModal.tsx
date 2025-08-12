@@ -27,21 +27,21 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
 
   if (!isOpen) return null;
 
-  // ✅ PERSONNALISATION SELON CONTEXTE
+  // âÅ“â€¦ PERSONNALISATION SELON CONTEXTE
   const getModalContent = () => {
     switch (trigger) {
       case 'quota_hit':
         return {
-          title: '🚫 Limite atteinte !',
+          title: 'Ã°Å¸Å¡Â« Limite atteinte !',
           subtitle: 'Débloquez toutes les fonctionnalités avec Premium',
           urgency: 'high',
           primaryBenefit: 'Analyses illimitées',
-          savings: `Vous avez déjà utilisé ${quotaStatus?.scans.used || 0} analyses ce mois`
+          savings: `Vous avez déjÃƒÂ  utilisé ${quotaStatus?.scans.used || 0} analyses ce mois`
         };
         
       case 'feature_blocked':
         return {
-          title: '🚀 Fonctionnalité Premium',
+          title: 'Ã°Å¸Å¡€ Fonctionnalité Premium',
           subtitle: `${feature} est réservé aux utilisateurs Premium`,
           urgency: 'medium',
           primaryBenefit: feature || 'Accès complet',
@@ -50,16 +50,16 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
         
       case 'voluntary':
         return {
-          title: '⭐ Passez Premium',
+          title: 'âÂ­Â Passez Premium',
           subtitle: 'Débloquez tout le potentiel d\'ECOLOJIA',
           urgency: 'low',
           primaryBenefit: 'Expérience complète',
-          savings: 'Économisez des centaines d\'€ en évitant les mauvais achats'
+          savings: 'Ãƒâ€°conomisez des centaines d\'ââ€šÂ¬ en évitant les mauvais achats'
         };
         
       default:
         return {
-          title: '🌟 Découvrez Premium',
+          title: 'Ã°Å¸Å’Å¸ Découvrez Premium',
           subtitle: 'Pour une expérience sans limite',
           urgency: 'low',
           primaryBenefit: 'Toutes fonctionnalités',
@@ -70,41 +70,41 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
 
   const content = getModalContent();
 
-  // ✅ BÉNÉFICES PERSONNALISÉS
+  // âÅ“â€¦ BÃƒâ€°NÃƒâ€°FICES PERSONNALISÃƒâ€°S
   const getPremiumBenefits = () => {
     const baseBenefits = [
       {
-        icon: '🔍',
+        icon: 'Ã°Å¸â€Â',
         title: 'Analyses illimitées',
         description: 'Scannez autant que vous voulez, toutes catégories',
         highlight: trigger === 'quota_hit'
       },
       {
-        icon: '🤖',
+        icon: 'Ã°Å¸Â¤â€“',
         title: 'Chat IA DeepSeek avancé',
         description: 'Questions illimitées + analyses personnalisées',
         highlight: feature === 'Chat IA' || trigger === 'feature_blocked'
       },
       {
-        icon: '📊',
+        icon: 'Ã°Å¸â€œÅ ',
         title: 'Dashboard analytics complet',
         description: 'Historique illimité + insights comportementaux',
         highlight: feature === 'Analytics'
       },
       {
-        icon: '📄',
+        icon: 'Ã°Å¸â€œâ€ž',
         title: 'Exports & API',
         description: '50 exports/mois + accès API développeur',
         highlight: feature === 'Export'
       },
       {
-        icon: '🎯',
+        icon: 'Ã°Å¸Å½Â¯',
         title: 'Coaching IA personnalisé',
-        description: 'Recommandations adaptées à votre profil',
+        description: 'Recommandations adaptées ÃƒÂ  votre profil',
         highlight: feature === 'Coaching'
       },
       {
-        icon: '⚡',
+        icon: 'âÅ¡Â¡',
         title: 'Support prioritaire',
         description: 'Réponse garantie sous 24h',
         highlight: false
@@ -114,7 +114,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
     return baseBenefits;
   };
 
-  // ✅ CALCUL VALEUR ÉCONOMIQUE
+  // âÅ“â€¦ CALCUL VALEUR Ãƒâ€°CONOMIQUE
   const getEconomicValue = () => {
     const monthlyScans = quotaStatus?.scans.used || 15;
     const annualScans = monthlyScans * 12;
@@ -132,7 +132,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
 
   const economicValue = getEconomicValue();
 
-  // ✅ HANDLE UPGRADE
+  // âÅ“â€¦ HANDLE UPGRADE
   const handleUpgrade = async () => {
     setIsLoading(true);
     try {
@@ -146,7 +146,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
       window.location.href = `/subscription?${params.toString()}`;
       
     } catch (error) {
-      console.error('❌ Erreur upgrade:', error);
+      console.error('âÂÅ’ Erreur upgrade:', error);
       alert('Erreur lors de la redirection. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
@@ -172,7 +172,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
             >
-              ×
+              Ãƒâ€”
             </button>
           </div>
         </div>
@@ -184,7 +184,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           {content.urgency === 'high' && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-800 font-medium mb-2">
-                🔥 <strong>Action requise :</strong> Quota épuisé
+                Ã°Å¸â€Â¥ <strong>Action requise :</strong> Quota épuisé
               </p>
               <p className="text-red-700 text-sm">
                 Passez Premium maintenant pour continuer vos analyses sans interruption.
@@ -195,22 +195,22 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           {/* Pricing Hero */}
           <div className="mb-8 text-center">
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-6 mb-4">
-              <div className="text-4xl font-bold mb-2">4.99€</div>
-              <div className="text-purple-100 mb-4">/mois • Annulable à tout moment</div>
+              <div className="text-4xl font-bold mb-2">4.99ââ€šÂ¬</div>
+              <div className="text-purple-100 mb-4">/mois â€Â¢ Annulable ÃƒÂ  tout moment</div>
               <div className="text-lg font-semibold">
-                = 0.16€ par jour
+                = 0.16ââ€šÂ¬ par jour
               </div>
               <div className="text-purple-200 text-sm">
-                Moins qu'un café ☕
+                Moins qu'un café âËœâ€¢
               </div>
             </div>
             
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-3 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">
-                  {economicValue.annualSavings}€
+                  {economicValue.annualSavings}ââ€šÂ¬
                 </div>
-                <div className="text-xs text-green-700">Économies/an estimées</div>
+                <div className="text-xs text-green-700">Ãƒâ€°conomies/an estimées</div>
               </div>
               <div className="p-3 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">
@@ -220,7 +220,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
               </div>
               <div className="p-3 bg-purple-50 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">
-                  ∞
+                  âË†Å¾
                 </div>
                 <div className="text-xs text-purple-700">Analyses illimitées</div>
               </div>
@@ -230,7 +230,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           {/* Bénéfices détaillés */}
           <div className="mb-8">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              ✨ Tout ce qui est inclus :
+              âÅ“Â¨ Tout ce qui est inclus :
             </h3>
             
             <div className="space-y-3">
@@ -249,7 +249,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
                       {benefit.title}
                       {benefit.highlight && (
                         <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
-                          🎯 Votre besoin
+                          Ã°Å¸Å½Â¯ Votre besoin
                         </span>
                       )}
                     </h4>
@@ -257,7 +257,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
                       {benefit.description}
                     </p>
                   </div>
-                  <span className="text-green-500 text-xl">✓</span>
+                  <span className="text-green-500 text-xl">âÅ“â€œ</span>
                 </div>
               ))}
             </div>
@@ -266,20 +266,20 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           {/* Social Proof */}
           <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <h4 className="font-semibold text-blue-800 mb-3">
-              👥 Rejoignez 2,847 utilisateurs Premium satisfaits
+              Ã°Å¸â€˜Â¥ Rejoignez 2,847 utilisateurs Premium satisfaits
             </h4>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div className="bg-white p-3 rounded">
                 <p className="text-gray-700 italic mb-2">
-                  "Économisé 200€ en évitant produits toxiques pour ma famille"
+                  "Ãƒâ€°conomisé 200ââ€šÂ¬ en évitant produits toxiques pour ma famille"
                 </p>
-                <p className="text-gray-500">— Marie D., maman de 2 enfants</p>
+                <p className="text-gray-500">â€â€ Marie D., maman de 2 enfants</p>
               </div>
               <div className="bg-white p-3 rounded">
                 <p className="text-gray-700 italic mb-2">
                   "IA révolutionnaire, analyses bien plus poussées que Yuka"
                 </p>
-                <p className="text-gray-500">— Thomas L., nutritionniste</p>
+                <p className="text-gray-500">â€â€ Thomas L., nutritionniste</p>
               </div>
             </div>
           </div>
@@ -287,7 +287,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           {/* Garantie */}
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
             <h4 className="font-semibold text-green-800 mb-2">
-              🛡️ Garantie Satisfait ou Remboursé 30 jours
+              Ã°Å¸â€ºÂ¡ïÂ¸Â Garantie Satisfait ou Remboursé 30 jours
             </h4>
             <p className="text-green-700 text-sm">
               Testez Premium sans risque. Annulation en 1 clic depuis votre compte.
@@ -311,14 +311,14 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
                 Activation...
               </span>
             ) : (
-              '🚀 Passer Premium maintenant - 4.99€/mois'
+              'Ã°Å¸Å¡€ Passer Premium maintenant - 4.99ââ€šÂ¬/mois'
             )}
           </button>
 
           {/* Infos légales */}
           <div className="mt-4 text-center">
             <p className="text-xs text-gray-500">
-              Paiement sécurisé • Annulation à tout moment • Sans engagement
+              Paiement sécurisé â€Â¢ Annulation ÃƒÂ  tout moment â€Â¢ Sans engagement
             </p>
           </div>
         </div>

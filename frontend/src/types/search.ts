@@ -25,3 +25,4 @@ export interface SearchResult {
   nbPages: number;
   processingTimeMS: number;
 }
+

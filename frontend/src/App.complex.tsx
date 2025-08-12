@@ -30,19 +30,19 @@ import {
   X
 } from 'lucide-react';
 
-// ✅ IMPORTS D'AUTHENTIFICATION
+// âÅ“â€¦ IMPORTS D'AUTHENTIFICATION
 import { AuthProvider } from './auth/context/AuthContext';
 import { AuthPage } from './auth/components/AuthPage';
 import { useAuth } from './auth/hooks/useAuth';
 
-// ✅ IMPORTS COMPOSANTS STATIQUES
+// âÅ“â€¦ IMPORTS COMPOSANTS STATIQUES
 import LoadingSpinner from './components/LoadingSpinner';
 
-// ✅ IMPORT DU LAYOUT ET PRIVATE ROUTE
+// âÅ“â€¦ IMPORT DU LAYOUT ET PRIVATE ROUTE
 import { Layout } from './components/Layout';
 import { PrivateRoute } from './components/PrivateRoute';
 
-// ✅ PAGES PRINCIPALES (EAGER LOADING)
+// âÅ“â€¦ PAGES PRINCIPALES (EAGER LOADING)
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import ProductPage from './pages/ProductPage';
@@ -51,7 +51,7 @@ import ChatPage from './pages/ChatPage';
 import Results from './pages/Results';
 import Scan from './pages/Scan';
 
-// ✅ PAGES OPTIONNELLES (avec fallback)
+// âÅ“â€¦ PAGES OPTIONNELLES (avec fallback)
 const TestAffiliate = lazy(() => 
   import('./pages/TestAffiliate')
     .catch(() => ({ default: () => <div className="p-8 text-center">Page TestAffiliate non disponible</div> }))
@@ -62,7 +62,7 @@ const Demo = lazy(() =>
     .catch(() => ({ default: () => <div className="p-8 text-center">Page Demo non disponible</div> }))
 );
 
-// ✅ PAGES LAZY LOADING AVEC FALLBACK
+// âÅ“â€¦ PAGES LAZY LOADING AVEC FALLBACK
 const UnifiedResultsPage = lazy(() => 
   import('./pages/UnifiedResultsPage')
     .then(module => ({ default: module.UnifiedResultsPage || module.default }))
@@ -106,7 +106,7 @@ const SettingsPage = lazy(() =>
     .catch(() => ({ default: () => <SettingsPageBuiltIn /> }))
 );
 
-// ✅ NOUVELLES PAGES COSMÉTIQUES ET DÉTERGENTS
+// âÅ“â€¦ NOUVELLES PAGES COSMÃƒâ€°TIQUES ET DÃƒâ€°TERGENTS
 const CosmeticAnalysisPage = lazy(() => 
   import('./pages/CosmeticAnalysisPage')
     .then(module => ({ default: module.default || module.CosmeticAnalysisPage }))
@@ -119,7 +119,7 @@ const DetergentAnalysisPage = lazy(() =>
     .catch(() => ({ default: () => <div className="p-8 text-center">Page d'analyse détergent en construction</div> }))
 );
 
-// ✅ HOOK POUR GÉRER LES ÉTATS DE CHARGEMENT
+// âÅ“â€¦ HOOK POUR GÃƒâ€°RER LES Ãƒâ€°TATS DE CHARGEMENT
 const useAnalysisProgress = (category: string) => {
   const [stage, setStage] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -151,7 +151,7 @@ const useAnalysisProgress = (category: string) => {
   return { stage, progress, simulateAnalysis, stages };
 };
 
-// ✅ COMPOSANT LOADING STATES INTELLIGENT
+// âÅ“â€¦ COMPOSANT LOADING STATES INTELLIGENT
 interface SmartLoadingProps {
   stage: number;
   progress: number;
@@ -188,16 +188,16 @@ const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, category }
   ];
 
   const categoryEmojis = {
-    food: '🍎',
-    cosmetics: '🧴',
-    detergents: '🧽'
+    food: 'Ã°Å¸ÂÅ½',
+    cosmetics: 'Ã°Å¸Â§Â´',
+    detergents: 'Ã°Å¸Â§Â½'
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">
-          {categoryEmojis[category as keyof typeof categoryEmojis] || '📦'}
+          {categoryEmojis[category as keyof typeof categoryEmojis] || 'Ã°Å¸â€œÂ¦'}
         </div>
         <h2 className="text-2xl font-bold text-gray-800">
           Analyse en cours...
@@ -246,7 +246,7 @@ const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, category }
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <p className="text-sm text-blue-800">
-          💡 <strong>Le saviez-vous ?</strong>
+          Ã°Å¸â€™Â¡ <strong>Le saviez-vous ?</strong>
           {category === 'food' && ' ECOLOJIA détecte automatiquement les produits ultra-transformés selon la classification NOVA.'}
           {category === 'cosmetics' && ' Notre IA identifie les perturbateurs endocriniens selon les listes officielles européennes.'}
           {category === 'detergents' && ' Nous analysons l\'impact environnemental selon les standards OECD et Ecolabel.'}
@@ -256,7 +256,7 @@ const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, category }
   );
 };
 
-// ✅ PAGE MULTI-PRODUITS AVEC LOADING STATES (FALLBACK)
+// âÅ“â€¦ PAGE MULTI-PRODUITS AVEC LOADING STATES (FALLBACK)
 const MultiProductScanPageBuiltIn: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<'food' | 'cosmetics' | 'detergents'>('food');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -267,21 +267,21 @@ const MultiProductScanPageBuiltIn: React.FC = () => {
     {
       id: 'food' as const,
       name: 'Alimentaire',
-      icon: '🍎',
+      icon: 'Ã°Å¸ÂÅ½',
       description: 'Analyse NOVA & ultra-transformation',
       examples: ['Plats préparés', 'Boissons', 'Snacks', 'Conserves']
     },
     {
       id: 'cosmetics' as const,
       name: 'Cosmétiques',
-      icon: '🧴',
+      icon: 'Ã°Å¸Â§Â´',
       description: 'Perturbateurs endocriniens & allergènes',
       examples: ['Crèmes', 'Shampooings', 'Maquillage', 'Parfums']
     },
     {
       id: 'detergents' as const,
       name: 'Détergents',
-      icon: '🧽',
+      icon: 'Ã°Å¸Â§Â½',
       description: 'Impact environnemental & toxicité',
       examples: ['Lessives', 'Produits ménagers', 'Savons', 'Dégraissants']
     }
@@ -368,7 +368,7 @@ const MultiProductScanPageBuiltIn: React.FC = () => {
                 {selectedCategory === category.id && (
                   <div className="mt-4 text-center">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      ✓ Sélectionné
+                      âÅ“â€œ Sélectionné
                     </span>
                   </div>
                 )}
@@ -390,7 +390,7 @@ const MultiProductScanPageBuiltIn: React.FC = () => {
   );
 };
 
-// ✅ DASHBOARD AVEC INFOS UTILISATEUR (FALLBACK)
+// âÅ“â€¦ DASHBOARD AVEC INFOS UTILISATEUR (FALLBACK)
 const DashboardPageBuiltIn: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
@@ -424,7 +424,7 @@ const DashboardPageBuiltIn: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                📊 Dashboard de {user?.name || 'Utilisateur'}
+                Ã°Å¸â€œÅ  Dashboard de {user?.name || 'Utilisateur'}
               </h1>
               <p className="text-gray-600">
                 Membre depuis {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'aujourd\'hui'}
@@ -433,11 +433,11 @@ const DashboardPageBuiltIn: React.FC = () => {
             <div className="text-right">
               {user?.tier === 'premium' ? (
                 <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium">
-                  ⭐ Premium Actif
+                  âÂ­Â Premium Actif
                 </span>
               ) : (
                 <a href="/premium" className="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:shadow-lg transition-all">
-                  ⭐ Passer Premium
+                  âÂ­Â Passer Premium
                 </a>
               )}
             </div>
@@ -456,7 +456,7 @@ const DashboardPageBuiltIn: React.FC = () => {
               </div>
               <div className="text-sm text-gray-500">sur 100</div>
               <div className="mt-2 text-sm font-medium text-green-600">
-                ↗️ +{stats.improvementRate} pts
+                ââ€ â€”ïÂ¸Â +{stats.improvementRate} pts
               </div>
             </div>
           </div>
@@ -472,7 +472,7 @@ const DashboardPageBuiltIn: React.FC = () => {
               </div>
               <div className="text-sm text-gray-500">ce mois</div>
               <div className="text-sm text-blue-600 mt-2">
-                Quota: {user?.quotas?.scansPerMonth === -1 ? '∞' : user?.quotas?.scansPerMonth || 30}
+                Quota: {user?.quotas?.scansPerMonth === -1 ? 'âË†Å¾' : user?.quotas?.scansPerMonth || 30}
               </div>
             </div>
           </div>
@@ -488,7 +488,7 @@ const DashboardPageBuiltIn: React.FC = () => {
               </div>
               <div className="text-sm text-gray-500">aujourd'hui</div>
               <div className="text-xs text-gray-400 mt-2">
-                {user?.tier === 'premium' ? '🤖 Illimitées' : '⭐ Premium requis'}
+                {user?.tier === 'premium' ? 'Ã°Å¸Â¤â€“ Illimitées' : 'âÂ­Â Premium requis'}
               </div>
             </div>
           </div>
@@ -504,7 +504,7 @@ const DashboardPageBuiltIn: React.FC = () => {
               </div>
               <div className="text-sm text-gray-500">ce mois</div>
               <div className="text-xs text-gray-400 mt-2">
-                {user?.tier === 'premium' ? `/${user?.quotas?.exportsPerMonth || 10}` : '⭐ Premium requis'}
+                {user?.tier === 'premium' ? `/${user?.quotas?.exportsPerMonth || 10}` : 'âÂ­Â Premium requis'}
               </div>
             </div>
           </div>
@@ -515,14 +515,14 @@ const DashboardPageBuiltIn: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-purple-800 mb-2">
-                  ⭐ Débloquez toutes les fonctionnalités Premium
+                  âÂ­Â Débloquez toutes les fonctionnalités Premium
                 </h3>
                 <p className="text-purple-700">
-                  Chat IA illimité • Analyses illimitées • Dashboard avancé • Export données
+                  Chat IA illimité â€Â¢ Analyses illimitées â€Â¢ Dashboard avancé â€Â¢ Export données
                 </p>
               </div>
               <a href="/premium" className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all font-medium">
-                🚀 Passer Premium
+                Ã°Å¸Å¡€ Passer Premium
               </a>
             </div>
           </div>
@@ -530,22 +530,22 @@ const DashboardPageBuiltIn: React.FC = () => {
 
         <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            🎯 Continuez votre parcours santé, {user?.name || 'vous'} !
+            Ã°Å¸Å½Â¯ Continuez votre parcours santé, {user?.name || 'vous'} !
           </h2>
           <p className="text-gray-600 mb-6">
             Vous avez utilisé {user?.currentUsage?.scansThisMonth || 0} scans ce mois. 
-            Continuez à analyser vos produits pour améliorer votre santé !
+            Continuez ÃƒÂ  analyser vos produits pour améliorer votre santé !
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a href="/search" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
-              🔍 Recherche Universelle
+              Ã°Å¸â€Â Recherche Universelle
             </a>
             <a href="/multi-scan" className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
-              ✨ Multi-Produits
+              âÅ“Â¨ Multi-Produits
             </a>
             <a href="/chat" className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
-              💬 Assistant IA
-              {user?.tier !== 'premium' && <span className="ml-1">⭐</span>}
+              Ã°Å¸â€™Â¬ Assistant IA
+              {user?.tier !== 'premium' && <span className="ml-1">âÂ­Â</span>}
             </a>
           </div>
         </div>
@@ -554,12 +554,12 @@ const DashboardPageBuiltIn: React.FC = () => {
   );
 };
 
-// ✅ PAGES FALLBACK SIMPLES
+// âÅ“â€¦ PAGES FALLBACK SIMPLES
 const HistoryPageBuiltIn: React.FC = () => (
   <div className="min-h-screen bg-gray-50 py-12">
     <div className="max-w-4xl mx-auto px-4">
       <div className="bg-white rounded-xl p-8 shadow-sm text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">📜 Historique</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Ã°Å¸â€œÅ“ Historique</h1>
         <p className="text-gray-600">Votre historique d'analyses sera disponible ici.</p>
       </div>
     </div>
@@ -572,7 +572,7 @@ const ProfilePageBuiltIn: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-xl p-8 shadow-sm">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">👤 Mon Profil</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Ã°Å¸â€˜Â¤ Mon Profil</h1>
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Nom</p>
@@ -584,7 +584,7 @@ const ProfilePageBuiltIn: React.FC = () => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Statut</p>
-              <p className="text-lg font-medium">{user?.tier === 'premium' ? '⭐ Premium' : '🆓 Gratuit'}</p>
+              <p className="text-lg font-medium">{user?.tier === 'premium' ? 'âÂ­Â Premium' : 'Ã°Å¸â€ â€œ Gratuit'}</p>
             </div>
           </div>
         </div>
@@ -597,24 +597,24 @@ const SettingsPageBuiltIn: React.FC = () => (
   <div className="min-h-screen bg-gray-50 py-12">
     <div className="max-w-4xl mx-auto px-4">
       <div className="bg-white rounded-xl p-8 shadow-sm">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">⚙️ Paramètres</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">âÅ¡â„¢ïÂ¸Â Paramètres</h1>
         <p className="text-gray-600">Les paramètres seront disponibles prochainement.</p>
       </div>
     </div>
   </div>
 );
 
-// ✅ Composant de chargement pour Suspense
+// âÅ“â€¦ Composant de chargement pour Suspense
 const PageLoader = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-6xl mb-4 animate-pulse">🌱</div>
+      <div className="text-6xl mb-4 animate-pulse">Ã°Å¸Å’Â±</div>
       <LoadingSpinner size="large" message="Chargement de la page..." />
     </div>
   </div>
 );
 
-// ✅ APPLICATION PRINCIPALE
+// âÅ“â€¦ APPLICATION PRINCIPALE
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
@@ -657,7 +657,7 @@ const App: React.FC = () => {
                   } />
                   <Route path="/analyze" element={<ProductPage />} />
                   
-                  {/* ===== CATÉGORIES SPÉCIFIQUES ===== */}
+                  {/* ===== CATÃƒâ€°GORIES SPÃƒâ€°CIFIQUES ===== */}
                   <Route path="/products/:productId/cosmetic" element={
                     <Suspense fallback={<PageLoader />}>
                       <CosmeticAnalysisPage />
@@ -694,7 +694,7 @@ const App: React.FC = () => {
                   {/* ===== CHAT IA ===== */}
                   <Route path="/chat" element={<ChatPage />} />
                   
-                  {/* ===== PROFIL ET PARAMÈTRES ===== */}
+                  {/* ===== PROFIL ET PARAMÃƒË†TRES ===== */}
                   <Route path="/profile" element={
                     <Suspense fallback={<PageLoader />}>
                       <ProfilePage />
@@ -706,30 +706,30 @@ const App: React.FC = () => {
                     </Suspense>
                   } />
                   
-                  {/* ===== PAGES LÉGALES ===== */}
+                  {/* ===== PAGES LÃƒâ€°GALES ===== */}
                   <Route path="/about" element={
                     <div className="min-h-screen bg-gray-50 py-12">
                       <div className="max-w-4xl mx-auto px-4">
                         <div className="bg-white rounded-xl p-8 shadow-sm">
                           <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                            🌱 À propos d'ECOLOJIA
+                            Ã°Å¸Å’Â± Ãƒ€ propos d'ECOLOJIA
                           </h1>
                           <div className="prose max-w-none">
                             <p className="text-lg text-gray-600 mb-6">
-                              ECOLOJIA est un assistant IA révolutionnaire qui vous aide à faire des choix 
+                              ECOLOJIA est un assistant IA révolutionnaire qui vous aide ÃƒÂ  faire des choix 
                               de consommation plus conscients et responsables.
                             </p>
                             <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">Notre Mission</h2>
                             <p className="text-gray-600 mb-4">
-                              Démocratiser l'accès à une consommation éclairée et responsable en fournissant une analyse 
+                              Démocratiser l'accès ÃƒÂ  une consommation éclairée et responsable en fournissant une analyse 
                               instantanée et scientifique de tous les produits du quotidien.
                             </p>
                             <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">Nos Valeurs</h2>
                             <ul className="list-disc list-inside text-gray-600 space-y-2">
-                              <li>🔬 Rigueur scientifique basée sur INSERM, ANSES, EFSA</li>
-                              <li>🌍 Impact environnemental et durabilité</li>
-                              <li>💚 Santé et bien-être des consommateurs</li>
-                              <li>🔒 Protection des données personnelles (RGPD)</li>
+                              <li>Ã°Å¸â€Â¬ Rigueur scientifique basée sur INSERM, ANSES, EFSA</li>
+                              <li>Ã°Å¸Å’Â Impact environnemental et durabilité</li>
+                              <li>Ã°Å¸â€™Å¡ Santé et bien-être des consommateurs</li>
+                              <li>Ã°Å¸â€â€™ Protection des données personnelles (RGPD)</li>
                             </ul>
                           </div>
                         </div>
@@ -741,10 +741,10 @@ const App: React.FC = () => {
                     <div className="min-h-screen bg-gray-50 py-12">
                       <div className="max-w-4xl mx-auto px-4">
                         <div className="bg-white rounded-xl p-8 shadow-sm">
-                          <h1 className="text-3xl font-bold text-gray-800 mb-6">🔒 Politique de Confidentialité</h1>
+                          <h1 className="text-3xl font-bold text-gray-800 mb-6">Ã°Å¸â€â€™ Politique de Confidentialité</h1>
                           <div className="prose max-w-none text-gray-600">
                             <p className="mb-4">
-                              ECOLOJIA respecte votre vie privée et s'engage à protéger vos données personnelles 
+                              ECOLOJIA respecte votre vie privée et s'engage ÃƒÂ  protéger vos données personnelles 
                               conformément au Règlement Général sur la Protection des Données (RGPD).
                             </p>
                             <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Données collectées</h2>
@@ -756,7 +756,7 @@ const App: React.FC = () => {
                             </ul>
                             <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Vos droits</h2>
                             <ul className="list-disc list-inside space-y-1">
-                              <li>Accès à vos données personnelles</li>
+                              <li>Accès ÃƒÂ  vos données personnelles</li>
                               <li>Rectification et suppression</li>
                               <li>Portabilité des données</li>
                               <li>Opposition au traitement</li>
@@ -771,14 +771,14 @@ const App: React.FC = () => {
                     <div className="min-h-screen bg-gray-50 py-12">
                       <div className="max-w-4xl mx-auto px-4">
                         <div className="bg-white rounded-xl p-8 shadow-sm">
-                          <h1 className="text-3xl font-bold text-gray-800 mb-6">📋 Conditions d'utilisation</h1>
+                          <h1 className="text-3xl font-bold text-gray-800 mb-6">Ã°Å¸â€œâ€¹ Conditions d'utilisation</h1>
                           <div className="prose max-w-none text-gray-600">
                             <p className="mb-4">
                               En utilisant ECOLOJIA, vous acceptez les présentes conditions d'utilisation.
                             </p>
                             <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Service informatif</h2>
                             <p className="mb-4">
-                              ECOLOJIA fournit des analyses à titre informatif uniquement. Les résultats ne constituent 
+                              ECOLOJIA fournit des analyses ÃƒÂ  titre informatif uniquement. Les résultats ne constituent 
                               pas des conseils médicaux ou nutritionnels professionnels.
                             </p>
                             <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">Utilisation acceptable</h2>
@@ -799,14 +799,14 @@ const App: React.FC = () => {
                     <div className="min-h-screen bg-gray-50 py-12">
                       <div className="max-w-4xl mx-auto px-4">
                         <div className="bg-white rounded-xl p-8 shadow-sm text-center">
-                          <h1 className="text-3xl font-bold text-gray-800 mb-6">⭐ ECOLOJIA Premium</h1>
+                          <h1 className="text-3xl font-bold text-gray-800 mb-6">âÂ­Â ECOLOJIA Premium</h1>
                           <p className="text-xl text-gray-600 mb-8">
                             Débloquez toutes les fonctionnalités avancées pour une expérience complète
                           </p>
                           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                             <div className="p-6 bg-gray-50 rounded-lg">
-                              <h3 className="text-lg font-semibold mb-4">🆓 Gratuit</h3>
-                              <div className="text-3xl font-bold mb-4">0€</div>
+                              <h3 className="text-lg font-semibold mb-4">Ã°Å¸â€ â€œ Gratuit</h3>
+                              <div className="text-3xl font-bold mb-4">0ââ€šÂ¬</div>
                               <ul className="text-left space-y-2 text-sm mb-6">
                                 <li className="flex items-center">
                                   <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -840,8 +840,8 @@ const App: React.FC = () => {
                                   POPULAIRE
                                 </span>
                               </div>
-                              <h3 className="text-lg font-semibold mb-4 text-purple-800">⭐ Premium</h3>
-                              <div className="text-3xl font-bold mb-1">2,49€</div>
+                              <h3 className="text-lg font-semibold mb-4 text-purple-800">âÂ­Â Premium</h3>
+                              <div className="text-3xl font-bold mb-1">2,49ââ€šÂ¬</div>
                               <div className="text-sm text-gray-600 mb-4">par mois</div>
                               <ul className="text-left space-y-2 text-sm mb-6">
                                 <li className="flex items-center">
@@ -870,15 +870,15 @@ const App: React.FC = () => {
                                 </li>
                               </ul>
                               <button className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
-                                🚀 Commencer l'essai gratuit
+                                Ã°Å¸Å¡€ Commencer l'essai gratuit
                               </button>
-                              <p className="text-xs text-gray-600 mt-2">7 jours d'essai gratuit • Sans engagement</p>
+                              <p className="text-xs text-gray-600 mt-2">7 jours d'essai gratuit â€Â¢ Sans engagement</p>
                             </div>
                           </div>
                           <div className="mt-12 p-6 bg-blue-50 rounded-lg max-w-2xl mx-auto">
-                            <h3 className="font-semibold text-blue-800 mb-2">💡 Pourquoi passer Premium ?</h3>
+                            <h3 className="font-semibold text-blue-800 mb-2">Ã°Å¸â€™Â¡ Pourquoi passer Premium ?</h3>
                             <p className="text-sm text-blue-700">
-                              Accédez à notre assistant IA personnel qui répond à toutes vos questions nutritionnelles, 
+                              Accédez ÃƒÂ  notre assistant IA personnel qui répond ÃƒÂ  toutes vos questions nutritionnelles, 
                               exportez vos analyses pour votre médecin, et suivez votre progression santé avec des 
                               graphiques détaillés. Idéal pour les familles et les professionnels de santé.
                             </p>
@@ -888,7 +888,7 @@ const App: React.FC = () => {
                     </div>
                   } />
                   
-                  {/* ===== DÉMO ET TESTS ===== */}
+                  {/* ===== DÃƒâ€°MO ET TESTS ===== */}
                   <Route path="/demo" element={
                     <Suspense fallback={<PageLoader />}>
                       <Demo />
@@ -904,12 +904,12 @@ const App: React.FC = () => {
                   <Route path="*" element={
                     <div className="min-h-screen flex items-center justify-center bg-gray-50">
                       <div className="text-center">
-                        <div className="text-8xl mb-4">🤔</div>
+                        <div className="text-8xl mb-4">Ã°Å¸Â¤â€</div>
                         <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
                         <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
                         <a href="/" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
                           <ArrowLeft className="w-4 h-4 mr-2" />
-                          Retour à l'accueil
+                          Retour ÃƒÂ  l'accueil
                         </a>
                       </div>
                     </div>

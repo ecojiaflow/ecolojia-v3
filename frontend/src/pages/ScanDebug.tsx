@@ -68,7 +68,7 @@ export function ScanDebug() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">🔧 Debug Scanner API</h1>
+      <h1 className="text-2xl font-bold mb-6">Ã°Å¸â€Â§ Debug Scanner API</h1>
       
       <button
         onClick={runTests}
@@ -88,7 +88,7 @@ export function ScanDebug() {
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold">
-                {result.success ? '✅' : '❌'} {result.test}
+                {result.success ? 'âÅ“â€¦' : 'âÂÅ’'} {result.test}
               </h3>
               <span className="text-sm text-gray-500">
                 {new Date(result.timestamp).toLocaleTimeString()}

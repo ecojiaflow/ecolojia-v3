@@ -18,23 +18,23 @@ const demoProducts: DemoProduct[] = [
     description: 'Boisson gazeuse sucrée populaire',
     ingredients: 'Eau gazéifiée, sucre, sirop de glucose-fructose, arôme naturel de cola, colorant E150d (caramel IV), acidifiant E338 (acide phosphorique), édulcorant E952 (cyclamate de sodium), conservateur E211 (benzoate de sodium)',
     expectedNova: 4,
-    icon: '🥤',
+    icon: 'Ã°Å¸Â¥Â¤',
     category: 'Boisson'
   },
   {
-    name: 'Nutella Pâte à tartiner',
-    description: 'Pâte à tartiner aux noisettes et cacao',
-    ingredients: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT écrémé en poudre 6.6%, LACTOSÉRUM en poudre, émulsifiants E322 (lécithines) E471 (mono- et diglycérides d\'acides gras), arôme vanilline',
+    name: 'Nutella Pâte ÃƒÂ  tartiner',
+    description: 'Pâte ÃƒÂ  tartiner aux noisettes et cacao',
+    ingredients: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT écrémé en poudre 6.6%, LACTOSÃƒâ€°RUM en poudre, émulsifiants E322 (lécithines) E471 (mono- et diglycérides d\'acides gras), arôme vanilline',
     expectedNova: 4,
-    icon: '🍫',
-    category: 'Pâte à tartiner'
+    icon: 'Ã°Å¸ÂÂ«',
+    category: 'Pâte ÃƒÂ  tartiner'
   },
   {
     name: 'Pizza 4 Fromages Surgelée',
     description: 'Pizza surgelée industrielle',
-    ingredients: 'Pâte (farine de BLÉ, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goût E621, stabilisant E412, colorant E150d',
+    ingredients: 'Pâte (farine de BLÃƒâ€°, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goÃƒÂ»t E621, stabilisant E412, colorant E150d',
     expectedNova: 4,
-    icon: '🍕',
+    icon: 'Ã°Å¸Ââ€¢',
     category: 'Plat préparé'
   },
   {
@@ -42,23 +42,23 @@ const demoProducts: DemoProduct[] = [
     description: 'Yaourt nature issu de l\'agriculture biologique',
     ingredients: 'LAIT entier pasteurisé issu de l\'agriculture biologique, ferments lactiques (Streptococcus thermophilus, Lactobacillus bulgaricus)',
     expectedNova: 1,
-    icon: '🥛',
+    icon: 'Ã°Å¸Â¥â€º',
     category: 'Produit laitier'
   },
   {
     name: 'Pain de Mie Complet',
     description: 'Pain de mie aux céréales complètes',
-    ingredients: 'Farine complète de BLÉ, eau, levure, huile de tournesol, sucre, sel, gluten de BLÉ, conservateur E282, émulsifiant E471, agent de traitement de la farine E300',
+    ingredients: 'Farine complète de BLÃƒâ€°, eau, levure, huile de tournesol, sucre, sel, gluten de BLÃƒâ€°, conservateur E282, émulsifiant E471, agent de traitement de la farine E300',
     expectedNova: 3,
-    icon: '🍞',
+    icon: 'Ã°Å¸ÂÅ¾',
     category: 'Boulangerie'
   },
   {
     name: 'Biscuits Petit-Déjeuner',
     description: 'Biscuits enrichis en vitamines',
-    ingredients: 'Céréales 58% (farine de BLÉ, flocons d\'AVOINE 14%), sucre, huile de palme, sirop de glucose-fructose, poudre à lever E500, sel, arômes, vitamines (B1, B6, B9, B12, C, E), colorant E160a, émulsifiant E322',
+    ingredients: 'Céréales 58% (farine de BLÃƒâ€°, flocons d\'AVOINE 14%), sucre, huile de palme, sirop de glucose-fructose, poudre ÃƒÂ  lever E500, sel, arômes, vitamines (B1, B6, B9, B12, C, E), colorant E160a, émulsifiant E322',
     expectedNova: 4,
-    icon: '🍪',
+    icon: 'Ã°Å¸ÂÂª',
     category: 'Biscuiterie'
   }
 ];
@@ -83,7 +83,7 @@ const Demo: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            🔬 Démonstration ECOLOJIA
+            Ã°Å¸â€Â¬ Démonstration ECOLOJIA
           </h1>
           <p className="text-xl text-gray-600 mb-6">
             Intelligence Artificielle de Classification NOVA
@@ -91,7 +91,7 @@ const Demo: React.FC = () => {
           
           {/* Info quota simulée */}
           <div className="inline-flex items-center bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 text-sm">
-            <span className="text-blue-600 mr-2">📊</span>
+            <span className="text-blue-600 mr-2">Ã°Å¸â€œÅ </span>
             <span className="text-blue-800">
               Mode démonstration - <strong>Analyses illimitées</strong>
             </span>
@@ -101,7 +101,7 @@ const Demo: React.FC = () => {
         {/* Produits de démonstration */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Sélectionnez un produit à analyser
+            Sélectionnez un produit ÃƒÂ  analyser
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -169,7 +169,7 @@ const Demo: React.FC = () => {
         {/* Informations techniques */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            🛠️ Informations Techniques
+            Ã°Å¸â€ºÂ ïÂ¸Â Informations Techniques
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -198,19 +198,19 @@ const Demo: React.FC = () => {
             <div>
               <h3 className="text-lg font-bold text-gray-800 mb-3">Technologies utilisées</h3>
               <ul className="space-y-1 text-sm text-gray-600">
-                <li>🤖 <strong>IA propriétaire</strong> de classification automatique</li>
-                <li>📊 <strong>Analyse multi-critères</strong> (santé, environnement, social)</li>
-                <li>🔬 <strong>Détection d'additifs</strong> avec évaluation des risques</li>
-                <li>🎯 <strong>Recommandations</strong> personnalisées basées sur la science</li>
-                <li>📚 <strong>Sources scientifiques</strong> INSERM, EFSA, ANSES</li>
-                <li>⚡ <strong>Temps de réponse</strong> optimisé &lt; 2 secondes</li>
+                <li>Ã°Å¸Â¤â€“ <strong>IA propriétaire</strong> de classification automatique</li>
+                <li>Ã°Å¸â€œÅ  <strong>Analyse multi-critères</strong> (santé, environnement, social)</li>
+                <li>Ã°Å¸â€Â¬ <strong>Détection d'additifs</strong> avec évaluation des risques</li>
+                <li>Ã°Å¸Å½Â¯ <strong>Recommandations</strong> personnalisées basées sur la science</li>
+                <li>Ã°Å¸â€œÅ¡ <strong>Sources scientifiques</strong> INSERM, EFSA, ANSES</li>
+                <li>âÅ¡Â¡ <strong>Temps de réponse</strong> optimisé &lt; 2 secondes</li>
               </ul>
             </div>
           </div>
           
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-green-700 text-sm">
-              <strong>🌱 Mission ECOLOJIA:</strong> Démocratiser l'accès à l'information nutritionnelle 
+              <strong>Ã°Å¸Å’Â± Mission ECOLOJIA:</strong> Démocratiser l'accès ÃƒÂ  l'information nutritionnelle 
               scientifique pour encourager une consommation plus responsable et éclairée.
             </p>
           </div>
@@ -238,7 +238,7 @@ const Demo: React.FC = () => {
           </div>
           
           <p className="text-gray-600">
-            ECOLOJIA • Intelligence Artificielle de Classification Nutritionnelle • 
+            ECOLOJIA â€Â¢ Intelligence Artificielle de Classification Nutritionnelle â€Â¢ 
             <span className="text-green-600 ml-1">Mode Démonstration</span>
           </p>
         </div>

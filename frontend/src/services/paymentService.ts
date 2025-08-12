@@ -24,7 +24,7 @@ class PaymentService {
     console.log('Clés dans localStorage:', Object.keys(localStorage));
     console.log('Clés dans sessionStorage:', Object.keys(sessionStorage));
     
-    // Vérifier les différents endroits où le token peut être stocké
+    // Vérifier les différents endroits oÃƒÂ¹ le token peut être stocké
     const possibleKeys = ['token', 'authToken', 'auth_token', 'jwt', 'access_token'];
     
     for (const key of possibleKeys) {
@@ -62,7 +62,7 @@ class PaymentService {
     try {
       const token = this.getAuthToken();
       if (!token) {
-        throw new Error('Vous devez être connecté pour accéder à cette fonctionnalité. Veuillez vous reconnecter.');
+        throw new Error('Vous devez être connecté pour accéder ÃƒÂ  cette fonctionnalité. Veuillez vous reconnecter.');
       }
 
       console.log('Création du checkout avec token présent');
@@ -120,7 +120,7 @@ class PaymentService {
     try {
       const token = this.getAuthToken();
       if (!token) {
-        throw new Error('Vous devez être connecté pour accéder à cette fonctionnalité');
+        throw new Error('Vous devez être connecté pour accéder ÃƒÂ  cette fonctionnalité');
       }
 
       const response = await axios.get<PortalResponse>(

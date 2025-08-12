@@ -303,7 +303,7 @@ export const useCacheStats = () => {
 
     cacheManager.addListener(updateStats);
     
-    // Mise à jour périodique
+    // Mise ÃƒÂ  jour périodique
     const interval = setInterval(updateStats, 30000); // 30 secondes
 
     return () => {
@@ -316,3 +316,4 @@ export const useCacheStats = () => {
 };
 
 export default cacheManager;
+

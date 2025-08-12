@@ -6,16 +6,16 @@ const CameraDebug = () => {
 
   return (
     <div className="p-6 space-y-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold text-eco-text">🔬 Test Caméra Mobile</h1>
+      <h1 className="text-xl font-bold text-eco-text">Ã°Å¸â€Â¬ Test Caméra Mobile</h1>
 
       <PhotoCapture
-        label="📷 Appareil mobile"
+        label="Ã°Å¸â€œÂ· Appareil mobile"
         onCapture={(img) => setImage(img)}
       />
 
       {image && (
         <div>
-          <h2 className="mt-4 text-eco-text/80 text-sm">📸 Preview :</h2>
+          <h2 className="mt-4 text-eco-text/80 text-sm">Ã°Å¸â€œÂ¸ Preview :</h2>
           <img src={image} alt="Capture" className="w-full mt-2 rounded-xl border" />
         </div>
       )}
@@ -24,3 +24,4 @@ const CameraDebug = () => {
 };
 
 export default CameraDebug;
+

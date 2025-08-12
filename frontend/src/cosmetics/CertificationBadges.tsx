@@ -256,7 +256,7 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
       {categorizedCerts.ethical.length > 0 && (
         <div className="text-center">
           <Heart className="w-8 h-8 mx-auto text-pink-600 mb-2" />
-          <p className="text-sm font-medium">Éthique</p>
+          <p className="text-sm font-medium">Ãƒâ€°thique</p>
           <p className="text-xs text-gray-500">{categorizedCerts.ethical.length} certification(s)</p>
         </div>
       )}
@@ -281,3 +281,4 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
 };
 
 export default CertificationBadges;
+

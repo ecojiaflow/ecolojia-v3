@@ -16,7 +16,7 @@ const AboutPage: React.FC = () => {
             </Link>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-[#3B3B3B] mb-6">
-            À propos d'ECOLOJIA
+            Ãƒ€ propos d'ECOLOJIA
           </h1>
           <p className="text-xl text-[#3B3B3B]/80 max-w-3xl mx-auto leading-relaxed">
             Votre assistant IA pour une consommation éclairée et responsable. 
@@ -26,7 +26,7 @@ const AboutPage: React.FC = () => {
             to="/" 
             className="inline-flex items-center gap-2 mt-6 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
           >
-            ← Retour à l'accueil
+            ââ€ Â Retour ÃƒÂ  l'accueil
           </Link>
         </div>
       </section>
@@ -42,13 +42,13 @@ const AboutPage: React.FC = () => {
               </h2>
               <div className="space-y-4 text-[#3B3B3B]/80 text-lg leading-relaxed">
                 <p>
-                  <strong className="text-[#3B3B3B]">Démocratiser l'accès à une information fiable</strong> sur tous les produits du quotidien.
+                  <strong className="text-[#3B3B3B]">Démocratiser l'accès ÃƒÂ  une information fiable</strong> sur tous les produits du quotidien.
                 </p>
                 <p>
-                  Nous croyons que chaque consommateur a le droit de savoir ce qu'il achète et consomme. ECOLOJIA rend cette information accessible à tous.
+                  Nous croyons que chaque consommateur a le droit de savoir ce qu'il achète et consomme. ECOLOJIA rend cette information accessible ÃƒÂ  tous.
                 </p>
                 <p>
-                  Grâce à notre intelligence artificielle avancée, nous analysons instantanément les produits alimentaires, cosmétiques et ménagers selon des critères scientifiques reconnus.
+                  Grâce ÃƒÂ  notre intelligence artificielle avancée, nous analysons instantanément les produits alimentaires, cosmétiques et ménagers selon des critères scientifiques reconnus.
                 </p>
               </div>
             </div>
@@ -139,7 +139,7 @@ const AboutPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Simplicité</h3>
               <p className="text-[#3B3B3B]/70">
-                Interface intuitive accessible à tous
+                Interface intuitive accessible ÃƒÂ  tous
               </p>
             </div>
           </div>
@@ -162,7 +162,7 @@ const AboutPage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🤖</span>
+                <span className="text-2xl">Ã°Å¸Â¤â€“</span>
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">IA Propriétaire</h3>
               <p className="text-[#3B3B3B]/70">
@@ -172,7 +172,7 @@ const AboutPage: React.FC = () => {
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">⚡</span>
+                <span className="text-2xl">âÅ¡Â¡</span>
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Analyse Temps Réel</h3>
               <p className="text-[#3B3B3B]/70">
@@ -182,7 +182,7 @@ const AboutPage: React.FC = () => {
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🔒</span>
+                <span className="text-2xl">Ã°Å¸â€â€™</span>
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Données Sécurisées</h3>
               <p className="text-[#3B3B3B]/70">
@@ -204,11 +204,11 @@ const AboutPage: React.FC = () => {
           </h2>
           <p className="text-[#3B3B3B]/80 text-lg mb-8 max-w-2xl mx-auto">
             Une question, une suggestion ou envie de collaborer ? 
-            Notre équipe est à votre écoute
+            Notre équipe est ÃƒÂ  votre écoute
           </p>
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-white/80 px-6 py-3 rounded-full text-[#3B3B3B]">
-              <span className="text-[#7DDE4A]">✉️</span>
+              <span className="text-[#7DDE4A]">âÅ“â€°ïÂ¸Â</span>
               <span className="font-medium">contact@ecolojia.app</span>
             </div>
             <p className="text-[#3B3B3B]/60 text-sm">

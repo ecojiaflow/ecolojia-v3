@@ -138,7 +138,7 @@ const CircularScoreGauge = ({
           style={{ backgroundColor: scoreColor }}
         />
         <span className="text-xs text-gray-400">
-          {score >= 70 ? 'Excellent' : score >= 40 ? 'Correct' : 'À améliorer'}
+          {score >= 70 ? 'Excellent' : score >= 40 ? 'Correct' : 'Ãƒ€ améliorer'}
         </span>
       </div>
     </div>

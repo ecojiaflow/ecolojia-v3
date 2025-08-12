@@ -1,4 +1,4 @@
-// frontend/src/pages/MultiScanPage.tsx
+﻿// frontend/src/pages/MultiScanPage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { analysisService } from '../services/analysisService';
+import analysisService from '../services/analysisService';
 import { useAuth } from '../auth/context/AuthContext';
 
 interface Product {
@@ -41,7 +41,7 @@ const MultiScanPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'food' | 'cosmetic' | 'detergent'>('food');
 
-  // Ajouter un produit à analyser
+  // Ajouter un produit ÃƒÂ  analyser
   const addProduct = (name: string, barcode?: string) => {
     const newProduct: Product = {
       id: Date.now().toString(),
@@ -70,7 +70,7 @@ const MultiScanPage: React.FC = () => {
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       
-      // Mettre à jour le statut
+      // Mettre ÃƒÂ  jour le statut
       setProducts(prev => prev.map(p => 
         p.id === product.id ? { ...p, status: 'analyzing' } : p
       ));
@@ -81,10 +81,10 @@ const MultiScanPage: React.FC = () => {
           name: product.name,
           barcode: product.barcode,
           category: product.category,
-          ingredients: '' // À améliorer avec un vrai input
+          ingredients: '' // Ãƒ€ améliorer avec un vrai input
         });
         
-        // Mettre à jour avec le résultat
+        // Mettre ÃƒÂ  jour avec le résultat
         setProducts(prev => prev.map(p => 
           p.id === product.id 
             ? { ...p, status: 'completed', result } 
@@ -156,7 +156,7 @@ const MultiScanPage: React.FC = () => {
           </div>
           <div className="bg-white rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
-              {user?.subscription?.tier === 'premium' ? '∞' : '10'}
+              {user?.subscription?.tier === 'premium' ? 'âË†Å¾' : '10'}
             </div>
             <div className="text-sm text-gray-500">Limite</div>
           </div>
@@ -166,7 +166,7 @@ const MultiScanPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Produits à analyser
+              Produits ÃƒÂ  analyser
             </h2>
             <button
               onClick={() => setShowAddModal(true)}
@@ -292,7 +292,7 @@ const MultiScanPage: React.FC = () => {
               onClick={() => navigate('/premium')}
               className="text-purple-600 hover:text-purple-700 font-medium"
             >
-              Passer à Premium pour des analyses illimitées →
+              Passer ÃƒÂ  Premium pour des analyses illimitées ââ€ â€™
             </button>
           </div>
         )}
@@ -326,9 +326,9 @@ const MultiScanPage: React.FC = () => {
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: 'food', label: 'Alimentaire', icon: '🍎' },
-                    { value: 'cosmetic', label: 'Cosmétique', icon: '✨' },
-                    { value: 'detergent', label: 'Détergent', icon: '💧' }
+                    { value: 'food', label: 'Alimentaire', icon: 'Ã°Å¸ÂÅ½' },
+                    { value: 'cosmetic', label: 'Cosmétique', icon: 'âÅ“Â¨' },
+                    { value: 'detergent', label: 'Détergent', icon: 'Ã°Å¸â€™Â§' }
                   ].map((cat) => (
                     <button
                       key={cat.value}
@@ -388,3 +388,4 @@ const MultiScanPage: React.FC = () => {
 };
 
 export default MultiScanPage;
+

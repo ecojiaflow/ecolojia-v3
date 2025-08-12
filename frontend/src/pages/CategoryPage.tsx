@@ -61,7 +61,7 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  // 🔧 FONCTION: Génération de slug sécurisée
+  // Ã°Å¸â€Â§ FONCTION: Génération de slug sécurisée
   const generateSlug = (product: Product): string => {
     if (product.slug && product.slug !== 'undefined') {
       return product.slug;
@@ -76,22 +76,22 @@ const CategoryPage: React.FC = () => {
       .replace(/^-|-$/g, '') || `product-${product.id}`;
   };
 
-  // 🎯 FONCTION CRITIQUE: Navigation vers produit
+  // Ã°Å¸Å½Â¯ FONCTION CRITIQUE: Navigation vers produit
   const handleProductClick = (product: Product) => {
-    console.log('🚀 CategoryPage - Clic produit détecté:', {
+    console.log('Ã°Å¸Å¡€ CategoryPage - Clic produit détecté:', {
       id: product.id,
       nameKey: product.nameKey,
       slug: product.slug
     });
     
     const slug = generateSlug(product);
-    console.log('🔧 CategoryPage - Slug généré:', slug);
+    console.log('Ã°Å¸â€Â§ CategoryPage - Slug généré:', slug);
     
     if (slug && slug !== 'undefined') {
-      console.log('✅ CategoryPage - Navigation vers:', `/product/${slug}`);
+      console.log('âÅ“â€¦ CategoryPage - Navigation vers:', `/product/${slug}`);
       navigate(`/product/${slug}`);
     } else {
-      console.error('❌ CategoryPage - Slug invalide:', slug);
+      console.error('âÂÅ’ CategoryPage - Slug invalide:', slug);
     }
   };
 
@@ -143,7 +143,7 @@ const CategoryPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
+          <div className="text-6xl mb-4">âÂÅ’</div>
           <h2 className="text-2xl font-bold text-gray-800">Catégorie non trouvée</h2>
         </div>
       </div>
@@ -259,7 +259,7 @@ const CategoryPage: React.FC = () => {
                   ))}
                   {filters.minScore > 0 && (
                     <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                      Score ≥ {filters.minScore}%
+                      Score ââ€°Â¥ {filters.minScore}%
                     </span>
                   )}
                   {filters.verified !== null && (
@@ -288,7 +288,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">🔍</div>
+                <div className="text-6xl mb-4">Ã°Å¸â€Â</div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Aucun produit trouvé</h3>
                 <p className="text-gray-600">
                   Essayez de modifier vos filtres ou votre recherche
@@ -317,22 +317,22 @@ const CategoryPage: React.FC = () => {
   );
 };
 
-// 🎯 PRODUCTCARD AVEC NAVIGATION CLIQUABLE
+// Ã°Å¸Å½Â¯ PRODUCTCARD AVEC NAVIGATION CLIQUABLE
 interface ProductCardProps {
   product: Product;
   viewMode: 'grid' | 'list';
-  onClick: () => void; // 🎯 AJOUT DE LA PROP ONCLICK
+  onClick: () => void; // Ã°Å¸Å½Â¯ AJOUT DE LA PROP ONCLICK
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick }) => {
   const isListMode = viewMode === 'list';
 
-  // 🎯 GESTION DU CLIC
+  // Ã°Å¸Å½Â¯ GESTION DU CLIC
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('🚀 ProductCard - Clic détecté sur:', product.nameKey);
+    console.log('Ã°Å¸Å¡€ ProductCard - Clic détecté sur:', product.nameKey);
     onClick();
   };
 
@@ -395,13 +395,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick })
             </div>
             {product.verified && (
               <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                ✓ Vérifié
+                âÅ“â€œ Vérifié
               </div>
             )}
           </div>
           <div className="text-right">
             <span className="text-lg font-bold text-gray-900">
-              {product.price}€
+              {product.price}ââ€šÂ¬
             </span>
             <div className="text-xs text-green-600 font-medium group-hover:underline">
               Voir détails

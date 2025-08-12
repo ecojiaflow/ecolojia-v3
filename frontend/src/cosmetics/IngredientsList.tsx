@@ -63,13 +63,13 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
     const labels: Record<string, string> = {
       moisturizer: 'Hydratant',
       surfactant: 'Tensioactif',
-      emollient: 'Émollient',
+      emollient: 'Ãƒâ€°mollient',
       preservative: 'Conservateur',
       fragrance: 'Parfum',
       colorant: 'Colorant',
       antioxidant: 'Antioxydant',
       'anti-aging': 'Anti-âge',
-      thickener: 'Épaississant',
+      thickener: 'Ãƒâ€°paississant',
       solvent: 'Solvant',
       'uv_filter': 'Filtre UV',
       antimicrobial: 'Antimicrobien',
@@ -82,7 +82,7 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
 
   const getConcentrationLabel = (concentration: string) => {
     const labels: Record<string, string> = {
-      high: 'Élevée (>10%)',
+      high: 'Ãƒâ€°levée (>10%)',
       medium: 'Moyenne (1-10%)',
       low: 'Faible (0.1-1%)',
       trace: 'Traces (<0.1%)'

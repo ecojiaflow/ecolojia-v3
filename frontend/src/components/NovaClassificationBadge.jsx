@@ -10,7 +10,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           bg: 'bg-gradient-to-r from-red-100 to-red-50',
           text: 'text-red-800',
           border: 'border-red-200',
-          icon: '🚨',
+          icon: 'Ã°Å¸Å¡Â¨',
           message: 'Ultra-transformé',
           color: '#dc2626'
         };
@@ -19,7 +19,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           bg: 'bg-gradient-to-r from-orange-100 to-orange-50',
           text: 'text-orange-800',
           border: 'border-orange-200',
-          icon: '⚠️',
+          icon: 'âÅ¡Â ïÂ¸Â',
           message: 'Transformé',
           color: '#ea580c'
         };
@@ -28,7 +28,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           bg: 'bg-gradient-to-r from-yellow-100 to-yellow-50',
           text: 'text-yellow-800',
           border: 'border-yellow-200',
-          icon: '🥄',
+          icon: 'Ã°Å¸Â¥â€ž',
           message: 'Ingrédient culinaire',
           color: '#d97706'
         };
@@ -38,7 +38,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           bg: 'bg-gradient-to-r from-green-100 to-green-50',
           text: 'text-green-800',
           border: 'border-green-200',
-          icon: '🌱',
+          icon: 'Ã°Å¸Å’Â±',
           message: 'Naturel',
           color: '#16a34a'
         };
@@ -73,11 +73,11 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           {novaGroup === 4 && (
             <div className="bg-white bg-opacity-70 rounded-lg p-4 border border-red-200">
               <div className="text-sm text-red-800 font-semibold mb-2">
-                ⚡ Impact Santé Documenté
+                âÅ¡Â¡ Impact Santé Documenté
               </div>
               <div className="text-xs text-red-700 space-y-1">
-                <div>• Augmentation risques cardiovasculaires et diabète</div>
-                <div>• Perturbation potentielle du microbiote intestinal</div>
+                <div>â€Â¢ Augmentation risques cardiovasculaires et diabète</div>
+                <div>â€Â¢ Perturbation potentielle du microbiote intestinal</div>
               </div>
               <div className="text-xs text-red-600 mt-2">
                 Sources : BMJ, Nature, Diabetes Care 2024
@@ -89,7 +89,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           {novaGroup === 1 && (
             <div className="bg-white bg-opacity-70 rounded-lg p-4 border border-green-200">
               <div className="text-sm text-green-800 font-semibold mb-2">
-                ✨ Excellent pour la Santé
+                âÅ“Â¨ Excellent pour la Santé
               </div>
               <div className="text-xs text-green-700">
                 Préserve la matrice alimentaire et les qualités nutritionnelles originales

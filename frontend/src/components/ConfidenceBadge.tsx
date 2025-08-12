@@ -28,3 +28,4 @@ const ConfidenceBadge: React.FC<Props> = ({ pct, color, className = "" }) => {
 
 export default ConfidenceBadge;
 
+

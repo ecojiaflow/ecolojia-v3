@@ -1,3 +1,4 @@
+﻿// PATH: frontend\src\pages\SearchPage.tsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,13 +19,13 @@ import {
 import { useDebounce } from '@/hooks/useDebounce';
 import { useUniversalSearch } from '@/hooks/useUniversalSearch';
 import { searchService } from '@/services/searchService';
-import { analysisService } from '@/services/analysisService';
+import analysisService from '@/services/analysisService';
 import { useAuthStore } from '@/store/authStore';
 import type { Product, SearchFilters, SearchResult } from '@/types';
 
 // ==================== COMPOSANTS SEARCH ====================
 
-// Widget de recherche rÃƒÂ©utilisable
+// Widget de recherche réutilisable
 const SearchWidget: React.FC<{
   variant?: 'compact' | 'expanded' | 'hero';
   placeholder?: string;
@@ -33,7 +34,7 @@ const SearchWidget: React.FC<{
   className?: string;
 }> = ({ 
   variant = 'expanded', 
-  placeholder = 'Rechercher un produit, une marque, un ingrÃƒÂ©dient...', 
+  placeholder = 'Rechercher un produit, une marque, un ingrédient...',
   autoFocus = false,
   onSearch,
   className = ''
@@ -131,7 +132,7 @@ const SearchWidget: React.FC<{
       {isHero && !query && (
         <div className="mt-4 flex flex-wrap gap-2 justify-center">
           <span className="text-sm text-gray-500">Suggestions :</span>
-          {['Bio', 'Sans gluten', 'Vegan', 'Local', 'Ãƒ"°co-score A'].map((suggestion) => (
+          {['Bio', 'Sans gluten', 'Vegan', 'Local', 'Éco-score A'].map((suggestion) => (
             <button
               key={suggestion}
               type="button"
@@ -148,7 +149,7 @@ const SearchWidget: React.FC<{
   );
 };
 
-// MÃƒÂ©triques contextuelles
+// Métriques contextuelles
 const ContextualMetrics: React.FC<{
   totalResults: number;
   searchTime: number;
@@ -163,7 +164,7 @@ const ContextualMetrics: React.FC<{
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-4 text-sm text-gray-600">
         <span className="font-medium">
-          {totalResults.toLocaleString()} rÃƒÂ©sultat{totalResults > 1 ? 's' : ''}
+          {totalResults.toLocaleString()} résultat{totalResults > 1 ? 's' : ''}
         </span>
         
         <span className="flex items-center gap-1">
@@ -191,22 +192,22 @@ const ContextualMetrics: React.FC<{
   );
 };
 
-// Filtres avancÃƒÂ©s
+// Filtres avancés
 const AdvancedFilters: React.FC<{
   filters: SearchFilters;
   onFiltersChange: (filters: SearchFilters) => void;
   isOpen: boolean;
   onToggle: () => void;
 }> = ({ filters, onFiltersChange, isOpen, onToggle }) => {
-  const CATÉGORIES = ['Alimentaire', 'Cosmétique', 'Entretien', 'Hygiène'];
+  const categories = ['Alimentaire', 'Cosmétique', 'Entretien', 'Hygiène'];
   const scores = ['A', 'B', 'C', 'D', 'E'];
-  const labels = ['Bio équitable'];
+  const labels = ['Bio', 'Équitable', 'Local', 'Sans additifs'];
 
   return (
     <>
       <button
         onClick={onToggle}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 
+        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200
                    rounded-xl hover:border-[#7DDE4A] transition-colors"
       >
         <SlidersHorizontal className="w-4 h-4" />
@@ -220,26 +221,26 @@ const AdvancedFilters: React.FC<{
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl 
+            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl
                        border border-gray-100 p-6 z-50"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* CATÉGORIES */}
+              {/* Catégories */}
               <div>
-                <h3 className="font-semibold mb-3">CatÃƒÂ©gorie</h3>
+                <h3 className="font-semibold mb-3">Catégorie</h3>
                 <div className="space-y-2">
-                  {CATÉGORIES.map((cat) => (
+                  {categories.map((cat) => (
                     <label key={cat} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={filters.CATÉGORIES?.includes(cat) || false}
+                        checked={filters.categories?.includes(cat) || false}
                         onChange={(e) => {
-                          const newCATÉGORIES = e.target.checked
-                            ? [...(filters.CATÉGORIES || []), cat]
-                            : filters.CATÉGORIES?.filter(c => c !== cat) || [];
-                          onFiltersChange({ ...filters, CATÉGORIES: newCATÉGORIES });
+                          const newCategories = e.target.checked
+                            ? [...(filters.categories || []), cat]
+                            : filters.categories?.filter(c => c !== cat) || [];
+                          onFiltersChange({ ...filters, categories: newCategories });
                         }}
-                        className="rounded border-gray-300 text-[#7DDE4A] 
+                        className="rounded border-gray-300 text-[#7DDE4A]
                                  focus:ring-[#7DDE4A]"
                       />
                       <span className="text-sm">{cat}</span>
@@ -263,7 +264,7 @@ const AdvancedFilters: React.FC<{
                             : filters.nutriScore?.filter(s => s !== score) || [];
                           onFiltersChange({ ...filters, nutriScore: newScores });
                         }}
-                        className="rounded border-gray-300 text-[#7DDE4A] 
+                        className="rounded border-gray-300 text-[#7DDE4A]
                                  focus:ring-[#7DDE4A]"
                       />
                       <span className={`
@@ -296,7 +297,7 @@ const AdvancedFilters: React.FC<{
                             : filters.labels?.filter(l => l !== label) || [];
                           onFiltersChange({ ...filters, labels: newLabels });
                         }}
-                        className="rounded border-gray-300 text-[#7DDE4A] 
+                        className="rounded border-gray-300 text-[#7DDE4A]
                                  focus:ring-[#7DDE4A]"
                       />
                       <span className="text-sm">{label}</span>
@@ -311,12 +312,12 @@ const AdvancedFilters: React.FC<{
                 onClick={() => onFiltersChange({})}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
               >
-                RÃƒÂ©initialiser
+                Réinitialiser
               </button>
               <button
                 onClick={onToggle}
-                className="px-6 py-2 bg-[#7DDE4A] text-white rounded-xl 
-                         hover:bg-[#6bc73a] transition-colors"
+                className="px-6 py-2 bg-[#7DDE4A] text-white rounded-xl
+                          hover:bg-[#6bc73a] transition-colors"
               >
                 Appliquer
               </button>
@@ -354,7 +355,7 @@ const ProductCard: React.FC<{
         exit={{ opacity: 0, y: -20 }}
         whileHover={{ scale: 1.01 }}
         onClick={handleClick}
-        className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all 
+        className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all
                    cursor-pointer border border-gray-100"
       >
         <div className="flex gap-4">
@@ -384,7 +385,7 @@ const ProductCard: React.FC<{
               
               {product.ecoScore && (
                 <span className="text-xs px-2 py-0.5 bg-[#E9F8DF] text-gray-700 rounded">
-                  Ãƒ"°co: {product.ecoScore}
+                  Éco: {product.ecoScore}
                 </span>
               )}
               
@@ -416,7 +417,7 @@ const ProductCard: React.FC<{
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -4 }}
       onClick={handleClick}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all 
+      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all
                  cursor-pointer border border-gray-100 overflow-hidden"
     >
       <div className="aspect-square relative overflow-hidden bg-gray-50">
@@ -427,8 +428,8 @@ const ProductCard: React.FC<{
         />
         
         {product.isNew && (
-          <span className="absolute top-2 left-2 px-2 py-1 bg-[#7DDE4A] text-white 
-                         text-xs rounded-full flex items-center gap-1">
+          <span className="absolute top-2 left-2 px-2 py-1 bg-[#7DDE4A] text-white
+                          text-xs rounded-full flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
             Nouveau
           </span>
@@ -457,7 +458,7 @@ const ProductCard: React.FC<{
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-1">
             {product.labels?.slice(0, 2).map((label) => (
-              <span key={label} className="text-xs px-2 py-0.5 bg-[#E9F8DF] 
+              <span key={label} className="text-xs px-2 py-0.5 bg-[#E9F8DF]
                                           text-gray-700 rounded-full">
                 {label}
               </span>
@@ -475,7 +476,7 @@ const ProductCard: React.FC<{
   );
 };
 
-// Ãƒ"°tats de chargement et erreur
+// États de chargement et erreur
 const LoadingState: React.FC = () => (
   <div className="flex flex-col items-center justify-center py-16">
     <Loader className="w-8 h-8 text-[#7DDE4A] animate-spin mb-4" />
@@ -487,10 +488,10 @@ const EmptyState: React.FC<{ query: string }> = ({ query }) => (
   <div className="flex flex-col items-center justify-center py-16">
     <Search className="w-16 h-16 text-gray-300 mb-4" />
     <h3 className="text-xl font-semibold text-gray-800 mb-2">
-      Aucun rÃƒÂ©sultat pour "{query}"
+      Aucun résultat pour "{query}"
     </h3>
     <p className="text-gray-500 text-center max-w-md">
-      Essayez avec d'autres mots-clÃƒÂ©s ou vÃƒÂ©rifiez l'orthographe
+      Essayez avec d'autres mots-clés ou vérifiez l'orthographe
     </p>
   </div>
 );
@@ -502,31 +503,30 @@ const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
       Une erreur est survenue
     </h3>
     <p className="text-gray-500 mb-4">
-      Impossible de charger les rÃƒÂ©sultats
+      Impossible de charger les résultats
     </p>
     <button
       onClick={onRetry}
-      className="px-6 py-2 bg-[#7DDE4A] text-white rounded-xl 
+      className="px-6 py-2 bg-[#7DDE4A] text-white rounded-xl
                  hover:bg-[#6bc73a] transition-colors"
     >
-      RÃƒÂ©essayer
+      Réessayer
     </button>
   </div>
 );
 
 // ==================== PAGE PRINCIPALE ====================
-
-export const SearchPage: React.FC = () => {
+const SearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuthStore();
   
-  // Ãƒ"°tats
+  // États
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({});
   
-  // RÃƒÂ©cupÃƒÂ©ration de la query depuis l'URL
+  // Récupération de la query depuis l'URL
   const query = searchParams.get('q') || '';
   
   // Hook de recherche universelle
@@ -568,7 +568,7 @@ export const SearchPage: React.FC = () => {
     });
   }, [query]);
 
-  // MÃƒÂ©ta-donnÃƒÂ©es pour SEO
+  // Méta-données pour SEO
   useEffect(() => {
     document.title = query 
       ? `${query} - Recherche ECOLOJIA` 
@@ -577,7 +577,7 @@ export const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header avec SearchWidget intÃƒÂ©grÃƒÂ© */}
+      {/* Header avec SearchWidget intégré */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
@@ -585,7 +585,7 @@ export const SearchPage: React.FC = () => {
               onClick={() => navigate('/')}
               className="text-gray-600 hover:text-gray-800"
             >
-              â" Â Retour
+              ← Retour
             </button>
             
             <div className="flex-1 max-w-2xl">
@@ -601,12 +601,12 @@ export const SearchPage: React.FC = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Filtres et mÃƒÂ©triques */}
+        {/* Filtres et métriques */}
         {(results.length > 0 || loading) && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold text-gray-800">
-                {query ? `RÃƒÂ©sultats pour "${query}"` : 'Tous les produits'}
+                {query ? `Résultats pour "${query}"` : 'Tous les produits'}
               </h1>
               
               <div className="relative">
@@ -630,7 +630,7 @@ export const SearchPage: React.FC = () => {
           </div>
         )}
 
-        {/* Ãƒ"°tats et rÃƒÂ©sultats */}
+        {/* États et résultats */}
         <AnimatePresence mode="wait">
           {loading && <LoadingState />}
           
@@ -670,17 +670,17 @@ export const SearchPage: React.FC = () => {
                 Commencez votre recherche
               </h2>
               <p className="text-gray-500 mb-8">
-                Trouvez des produits sains et ÃƒÂ©co-responsables
+                Trouvez des produits sains et éco-responsables
               </p>
               
-              {/* CATÉGORIES populaires */}
+              {/* Catégories populaires */}
               <div className="max-w-2xl mx-auto">
                 <h3 className="text-sm font-semibold text-gray-600 mb-4">
                   CATÉGORIES POPULAIRES
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                   {[
-                    { name: 'Alimentaire', icon: '🥗', count: '12.5k' },
+                  {[
+                    { name: 'Alimentaire', icon: '🍎', count: '12.5k' },
                     { name: 'Cosmétique', icon: '💄', count: '3.2k' },
                     { name: 'Entretien', icon: '🧹', count: '1.8k' },
                     { name: 'Hygiène', icon: '🧼', count: '2.1k' }
@@ -688,11 +688,11 @@ export const SearchPage: React.FC = () => {
                     <button
                       key={cat.name}
                       onClick={() => {
-                        setFilters({ CATÉGORIES: [cat.name] });
+                        setFilters({ categories: [cat.name] });
                         handleSearch(cat.name);
                       }}
-                      className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md 
-                               transition-all border border-gray-100"
+                      className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md
+                                transition-all border border-gray-100"
                     >
                       <div className="text-3xl mb-2">{cat.icon}</div>
                       <div className="font-medium text-gray-800">{cat.name}</div>
@@ -704,19 +704,19 @@ export const SearchPage: React.FC = () => {
 
               {/* Tendances */}
               <div className="mt-12 max-w-2xl mx-auto">
-                <h3 className="text-sm font-semibold text-gray-600 mb-4 flex items-center 
-                             justify-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-600 mb-4 flex items-center
+                              justify-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   TENDANCES DU MOMENT
                 </h3>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {['Sans additifs', 'Zéro déchet', 'Made in France', 'Bio équitable', 
+                  {['Sans additifs', 'Zéro déchet', 'Made in France', 'Bio équitable',
                     'Sans huile de palme'].map((trend) => (
                     <button
                       key={trend}
                       onClick={() => handleSearch(trend)}
-                      className="px-4 py-2 bg-white rounded-full text-sm hover:bg-[#E9F8DF] 
-                               transition-colors border border-gray-200"
+                      className="px-4 py-2 bg-white rounded-full text-sm hover:bg-[#E9F8DF]
+                                transition-colors border border-gray-200"
                     >
                       {trend}
                     </button>
@@ -727,12 +727,12 @@ export const SearchPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Pagination (si rÃƒÂ©sultats) */}
+        {/* Pagination (si résultats) */}
         {!loading && results.length > 0 && totalResults > results.length && (
           <div className="mt-8 flex justify-center">
-            <button className="px-6 py-3 bg-[#7DDE4A] text-white rounded-xl 
-                             hover:bg-[#6bc73a] transition-colors">
-              Charger plus de rÃƒÂ©sultats
+            <button className="px-6 py-3 bg-[#7DDE4A] text-white rounded-xl
+                              hover:bg-[#6bc73a] transition-colors">
+              Charger plus de résultats
             </button>
           </div>
         )}
@@ -742,3 +742,4 @@ export const SearchPage: React.FC = () => {
 };
 
 export default SearchPage;
+

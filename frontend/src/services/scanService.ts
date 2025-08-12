@@ -75,7 +75,7 @@ export class ScanService {
         imageUrl,
         method: 'photo',
         source: 'web',
-        category: 'food', // À détecter automatiquement plus tard
+        category: 'food', // Ãƒ€ détecter automatiquement plus tard
         extractText: useOCR
       });
       
@@ -123,7 +123,7 @@ export class ScanService {
     return /^(\d{8}|\d{12}|\d{13})$/.test(code);
   }
 
-  // Méthode pour détecter la catégorie d'un produit à partir de son nom
+  // Méthode pour détecter la catégorie d'un produit ÃƒÂ  partir de son nom
   static detectCategory(productName: string): string {
     const categories = {
       food: ['yaourt', 'lait', 'pain', 'pâtes', 'riz', 'chocolat', 'biscuit', 'céréales'],

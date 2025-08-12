@@ -29,14 +29,14 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
   const [activeTab, setActiveTab] = useState<'overview' | 'details'>('overview');
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
-  // Vérifier si déjà consenti
+  // Vérifier si déjÃƒÂ  consenti
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY);
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
         if (parsed.version === CONSENT_VERSION) {
-          // Consentement déjà donné et à jour
+          // Consentement déjÃƒÂ  donné et ÃƒÂ  jour
           return;
         }
       } catch (e) {
@@ -98,7 +98,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
     },
     {
       id: 'healthData',
-      name: '📊 Analyse nutritionnelle & santé',
+      name: 'Ã°Å¸â€œÅ  Analyse nutritionnelle & santé',
       icon: <Eye className="w-5 h-5" />,
       required: false,
       important: true,
@@ -117,7 +117,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
       name: 'Analytics & amélioration',
       icon: <Cookie className="w-5 h-5" />,
       required: false,
-      description: 'Nous aide à améliorer l\'application',
+      description: 'Nous aide ÃƒÂ  améliorer l\'application',
       details: 'Ces cookies collectent des informations sur la façon dont vous utilisez notre site, comme les pages que vous visitez le plus souvent. Toutes les informations sont anonymisées et ne peuvent pas être utilisées pour vous identifier.',
       cookies: [
         { name: '_ga', purpose: 'Google Analytics', duration: '2 ans' },
@@ -144,7 +144,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
       <div className="bg-white rounded-t-3xl sm:rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl transform transition-all">
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white">
-          <h2 className="text-2xl font-bold mb-2">🍃 Votre vie privée nous importe</h2>
+          <h2 className="text-2xl font-bold mb-2">Ã°Å¸ÂÆ’ Votre vie privée nous importe</h2>
           <p className="text-green-50">
             ECOLOJIA utilise des cookies et traite des données pour vous offrir une expérience personnalisée et sécurisée.
           </p>
@@ -299,7 +299,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
           {/* RGPD Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Vos droits RGPD :</strong> Vous pouvez accéder, rectifier, supprimer vos données ou retirer votre consentement à tout moment depuis votre compte ou en nous contactant à privacy@ecolojia.app
+              <strong>Vos droits RGPD :</strong> Vous pouvez accéder, rectifier, supprimer vos données ou retirer votre consentement ÃƒÂ  tout moment depuis votre compte ou en nous contactant ÃƒÂ  privacy@ecolojia.app
             </p>
           </div>
         </div>
@@ -328,7 +328,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
           </div>
           
           <p className="text-xs text-center text-gray-500 mt-4">
-            En cliquant sur "Accepter", vous consentez à l'utilisation de cookies et au traitement de vos données conformément à notre{' '}
+            En cliquant sur "Accepter", vous consentez ÃƒÂ  l'utilisation de cookies et au traitement de vos données conformément ÃƒÂ  notre{' '}
             <a href="/privacy" className="text-green-600 hover:underline">politique de confidentialité</a>.
           </p>
         </div>

@@ -17,14 +17,14 @@ const NovaDetails: React.FC<{ novaAnalysis: NovaAnalysis }> = ({ novaAnalysis })
     <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mt-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <span className="text-2xl">🔬</span>
+          <span className="text-2xl">Ã°Å¸â€Â¬</span>
           <h3 className="text-lg font-bold text-blue-700">Classification NOVA Scientifique</h3>
         </div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="text-blue-600 hover:text-blue-700 text-sm font-medium"
         >
-          {isExpanded ? '▲ Masquer détails' : '▼ Voir détails'}
+          {isExpanded ? 'ââ€“Â² Masquer détails' : 'ââ€“Â¼ Voir détails'}
         </button>
       </div>
 
@@ -46,11 +46,11 @@ const NovaDetails: React.FC<{ novaAnalysis: NovaAnalysis }> = ({ novaAnalysis })
       {isExpanded && (
         <div className="space-y-4">
           <div>
-            <h4 className="font-bold text-blue-700 mb-2">🧬 Raisons de Classification</h4>
+            <h4 className="font-bold text-blue-700 mb-2">Ã°Å¸Â§Â¬ Raisons de Classification</h4>
             <ul className="space-y-1">
               {novaAnalysis.reasons.map((reason, idx) => (
                 <li key={idx} className="text-sm text-blue-600 flex items-start space-x-2">
-                  <span>•</span>
+                  <span>â€Â¢</span>
                   <span>{reason}</span>
                 </li>
               ))}
@@ -58,18 +58,18 @@ const NovaDetails: React.FC<{ novaAnalysis: NovaAnalysis }> = ({ novaAnalysis })
           </div>
 
           <div>
-            <h4 className="font-bold text-blue-700 mb-2">🏥 Impact sur la Santé</h4>
+            <h4 className="font-bold text-blue-700 mb-2">Ã°Å¸ÂÂ¥ Impact sur la Santé</h4>
             <p className="text-sm text-blue-600 bg-white rounded-lg p-3">
               {novaAnalysis.health_impact}
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold text-blue-700 mb-2">📚 Sources Scientifiques</h4>
+            <h4 className="font-bold text-blue-700 mb-2">Ã°Å¸â€œÅ¡ Sources Scientifiques</h4>
             <ul className="space-y-1">
               {novaAnalysis.scientific_sources.map((source, idx) => (
                 <li key={idx} className="text-xs text-blue-500 bg-white rounded-lg p-2">
-                  📖 {source}
+                  Ã°Å¸â€œâ€“ {source}
                 </li>
               ))}
             </ul>
@@ -82,3 +82,4 @@ const NovaDetails: React.FC<{ novaAnalysis: NovaAnalysis }> = ({ novaAnalysis })
 
 export default NovaDetails;
 // EOF
+

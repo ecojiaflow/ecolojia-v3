@@ -81,9 +81,9 @@ class SearchService {
       try {
         this.client = algoliasearch(ALGOLIA_CONFIG.appId, ALGOLIA_CONFIG.searchKey);
         this.index = this.client.initIndex(ALGOLIA_CONFIG.indexName);
-        console.log('✅ Algolia initialized');
+        console.log('âÅ“â€¦ Algolia initialized');
       } catch (error) {
-        console.error('❌ Algolia initialization error:', error);
+        console.error('âÂÅ’ Algolia initialization error:', error);
       }
     }
   }
@@ -340,13 +340,13 @@ class SearchService {
       },
       {
         objectID: '3',
-        name: 'Lessive Écologique',
+        name: 'Lessive Ãƒâ€°cologique',
         brand: 'Arbre Vert',
         category: 'household',
         barcode: '3450601030307',
         score: 85,
         image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=200',
-        tags: ['Écologique', 'Biodégradable', 'Sans phosphates']
+        tags: ['Ãƒâ€°cologique', 'Biodégradable', 'Sans phosphates']
       },
       {
         objectID: '4',
@@ -356,7 +356,7 @@ class SearchService {
         barcode: '3017620422003',
         score: 45,
         image: 'https://images.unsplash.com/photo-1614898986923-86c1c8a8a6c3?w=200',
-        tags: ['Pâte à tartiner', 'Noisettes']
+        tags: ['Pâte ÃƒÂ  tartiner', 'Noisettes']
       },
       {
         objectID: '5',

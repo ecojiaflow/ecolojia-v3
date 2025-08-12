@@ -4,7 +4,7 @@ import algoliasearch from 'algoliasearch/lite';
 import { getProductByBarcode, getProductSuggestions } from '../api/realApi';
 
 // ============================================================================
-// INTERFACES & TYPES (ÉTENDUES)
+// INTERFACES & TYPES (Ãƒâ€°TENDUES)
 // ============================================================================
 
 export interface SearchResult {
@@ -31,12 +31,12 @@ export interface ProductEnrichment {
   ultra_processed: boolean;
   educational_tips: string[];
   alternatives_available: number;
-  // 🆕 NOUVEAUX CHAMPS COSMÉTIQUES
+  // Ã°Å¸â€ â€¢ NOUVEAUX CHAMPS COSMÃƒâ€°TIQUES
   inci_ingredients?: string[];
   endocrine_disruptors?: number;
   allergens_count?: number;
   naturalness_score?: number;
-  // 🆕 NOUVEAUX CHAMPS DÉTERGENTS
+  // Ã°Å¸â€ â€¢ NOUVEAUX CHAMPS DÃƒâ€°TERGENTS
   biodegradable?: boolean;
   eco_labels?: string[];
   aquatic_toxicity?: 'low' | 'medium' | 'high';
@@ -60,7 +60,7 @@ export interface UniversalSearchOptions {
 }
 
 // ============================================================================
-// 🆕 OPEN BEAUTY FACTS API (COSMÉTIQUES)
+// Ã°Å¸â€ â€¢ OPEN BEAUTY FACTS API (COSMÃƒâ€°TIQUES)
 // ============================================================================
 
 interface OpenBeautyFactsProduct {
@@ -88,7 +88,7 @@ class OpenBeautyFactsAPI {
     }
 
     try {
-      console.log('💄 OpenBeautyFacts: Recherche cosmétiques pour:', query);
+      console.log('Ã°Å¸â€™â€ž OpenBeautyFacts: Recherche cosmétiques pour:', query);
       
       const response = await fetch(
         `${this.baseURL}/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=${limit}&fields=code,product_name,brands,categories,ingredients_text,image_url,image_front_url,additives_tags,packaging,labels`
@@ -103,11 +103,11 @@ class OpenBeautyFactsAPI {
       
       this.cache.set(cacheKey, products);
       
-      console.log(`✅ OpenBeautyFacts: ${products.length} cosmétiques trouvés`);
+      console.log(`âÅ“â€¦ OpenBeautyFacts: ${products.length} cosmétiques trouvés`);
       return products;
 
     } catch (error) {
-      console.warn('⚠️ OpenBeautyFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenBeautyFacts search failed:', error);
       return [];
     }
   }
@@ -120,7 +120,7 @@ class OpenBeautyFactsAPI {
     }
 
     try {
-      console.log('💄 OpenBeautyFacts: Recherche cosmétique par code-barres:', barcode);
+      console.log('Ã°Å¸â€™â€ž OpenBeautyFacts: Recherche cosmétique par code-barres:', barcode);
       
       const response = await fetch(
         `${this.baseURL}/product/${barcode}.json?fields=code,product_name,brands,categories,ingredients_text,image_url,image_front_url,additives_tags,packaging,labels`
@@ -134,27 +134,27 @@ class OpenBeautyFactsAPI {
       
       if (data.status === 1 && data.product) {
         this.cache.set(cacheKey, data.product);
-        console.log('✅ OpenBeautyFacts: Cosmétique trouvé pour code-barres');
+        console.log('âÅ“â€¦ OpenBeautyFacts: Cosmétique trouvé pour code-barres');
         return data.product;
       }
 
       return null;
 
     } catch (error) {
-      console.warn('⚠️ OpenBeautyFacts barcode lookup failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenBeautyFacts barcode lookup failed:', error);
       return null;
     }
   }
 
   convertToSearchResult(product: OpenBeautyFactsProduct): SearchResult {
-    // 🧪 ANALYSE INCI POUR DÉTECTER ALLERGÈNES ET PERTURBATEURS ENDOCRINIENS
+    // Ã°Å¸Â§Âª ANALYSE INCI POUR DÃƒâ€°TECTER ALLERGÃƒË†NES ET PERTURBATEURS ENDOCRINIENS
     const ingredients = product.ingredients_text || '';
     const allergens = this.detectAllergens(ingredients);
     const endocrineDisruptors = this.detectEndocrineDisruptors(ingredients);
     const inciIngredients = this.parseInciIngredients(ingredients);
     const naturalnessScore = this.calculateNaturalnessScore(ingredients, product.labels || '');
     
-    // 🎯 CALCUL SCORE ECOLOJIA COSMÉTIQUE SPÉCIALISÉ
+    // Ã°Å¸Å½Â¯ CALCUL SCORE ECOLOJIA COSMÃƒâ€°TIQUE SPÃƒâ€°CIALISÃƒâ€°
     let ecolojia_score = 70; // Base cosmétique
     
     // Pénalités perturbateurs endocriniens (très sévère)
@@ -174,23 +174,23 @@ class OpenBeautyFactsAPI {
     
     ecolojia_score = Math.max(0, Math.min(100, ecolojia_score));
 
-    // 📚 GÉNÉRATION TIPS ÉDUCATIFS COSMÉTIQUES SPÉCIALISÉS
+    // Ã°Å¸â€œÅ¡ GÃƒâ€°NÃƒâ€°RATION TIPS Ãƒâ€°DUCATIFS COSMÃƒâ€°TIQUES SPÃƒâ€°CIALISÃƒâ€°S
     const educational_tips: string[] = [];
     
     if (endocrineDisruptors > 0) {
-      educational_tips.push(`⚠️ ${endocrineDisruptors} perturbateur(s) endocrinien(s) détecté(s) - Risque hormonal`);
+      educational_tips.push(`âÅ¡Â ïÂ¸Â ${endocrineDisruptors} perturbateur(s) endocrinien(s) détecté(s) - Risque hormonal`);
     }
     
     if (allergens > 0) {
-      educational_tips.push(`🚨 ${allergens} allergène(s) identifié(s) - Vérifiez votre tolérance cutanée`);
+      educational_tips.push(`Ã°Å¸Å¡Â¨ ${allergens} allergène(s) identifié(s) - Vérifiez votre tolérance cutanée`);
     }
     
     if (inciIngredients.length > 30) {
-      educational_tips.push('📋 Liste INCI longue - Privilégiez formules plus simples et naturelles');
+      educational_tips.push('Ã°Å¸â€œâ€¹ Liste INCI longue - Privilégiez formules plus simples et naturelles');
     }
 
     if (naturalnessScore < 5) {
-      educational_tips.push('🧪 Formule très synthétique - Considérez alternatives bio/naturelles');
+      educational_tips.push('Ã°Å¸Â§Âª Formule très synthétique - Considérez alternatives bio/naturelles');
     }
 
     return {
@@ -210,7 +210,7 @@ class OpenBeautyFactsAPI {
         ultra_processed: false, // Concept alimentaire
         educational_tips,
         alternatives_available: endocrineDisruptors > 0 ? Math.floor(Math.random() * 5) + 1 : 0,
-        // 🆕 DONNÉES COSMÉTIQUES SPÉCIALISÉES
+        // Ã°Å¸â€ â€¢ DONNÃƒâ€°ES COSMÃƒâ€°TIQUES SPÃƒâ€°CIALISÃƒâ€°ES
         inci_ingredients: inciIngredients,
         endocrine_disruptors: endocrineDisruptors,
         allergens_count: allergens,
@@ -294,7 +294,7 @@ class OpenBeautyFactsAPI {
 }
 
 // ============================================================================
-// 🆕 OPEN PRODUCTS FACTS API (DÉTERGENTS)
+// Ã°Å¸â€ â€¢ OPEN PRODUCTS FACTS API (DÃƒâ€°TERGENTS)
 // ============================================================================
 
 interface OpenProductsFactsProduct {
@@ -321,7 +321,7 @@ class OpenProductsFactsAPI {
     }
 
     try {
-      console.log('🧽 OpenProductsFacts: Recherche détergents pour:', query);
+      console.log('Ã°Å¸Â§Â½ OpenProductsFacts: Recherche détergents pour:', query);
       
       const response = await fetch(
         `${this.baseURL}/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=${limit}&fields=code,product_name,brands,categories,ingredients_text,image_url,image_front_url,labels,packaging`
@@ -336,11 +336,11 @@ class OpenProductsFactsAPI {
       
       this.cache.set(cacheKey, products);
       
-      console.log(`✅ OpenProductsFacts: ${products.length} produits ménagers trouvés`);
+      console.log(`âÅ“â€¦ OpenProductsFacts: ${products.length} produits ménagers trouvés`);
       return products;
 
     } catch (error) {
-      console.warn('⚠️ OpenProductsFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenProductsFacts search failed:', error);
       return [];
     }
   }
@@ -353,7 +353,7 @@ class OpenProductsFactsAPI {
     }
 
     try {
-      console.log('🧽 OpenProductsFacts: Recherche détergent par code-barres:', barcode);
+      console.log('Ã°Å¸Â§Â½ OpenProductsFacts: Recherche détergent par code-barres:', barcode);
       
       const response = await fetch(
         `${this.baseURL}/product/${barcode}.json?fields=code,product_name,brands,categories,ingredients_text,image_url,image_front_url,labels,packaging`
@@ -367,20 +367,20 @@ class OpenProductsFactsAPI {
       
       if (data.status === 1 && data.product) {
         this.cache.set(cacheKey, data.product);
-        console.log('✅ OpenProductsFacts: Détergent trouvé pour code-barres');
+        console.log('âÅ“â€¦ OpenProductsFacts: Détergent trouvé pour code-barres');
         return data.product;
       }
 
       return null;
 
     } catch (error) {
-      console.warn('⚠️ OpenProductsFacts barcode lookup failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenProductsFacts barcode lookup failed:', error);
       return null;
     }
   }
 
   convertToSearchResult(product: OpenProductsFactsProduct): SearchResult {
-    // 🌊 ANALYSE COMPOSITION POUR IMPACT ENVIRONNEMENTAL
+    // Ã°Å¸Å’Å  ANALYSE COMPOSITION POUR IMPACT ENVIRONNEMENTAL
     const ingredients = product.ingredients_text || '';
     const toxicSurfactants = this.detectToxicSurfactants(ingredients);
     const ecoLabels = this.detectEcoLabels(product.labels || '');
@@ -388,7 +388,7 @@ class OpenProductsFactsAPI {
     const aquaticToxicity = this.assessAquaticToxicity(toxicSurfactants);
     const vocEmissions = this.assessVocEmissions(ingredients);
     
-    // 🎯 CALCUL SCORE ECOLOJIA DÉTERGENT (FOCUS ENVIRONNEMENTAL)
+    // Ã°Å¸Å½Â¯ CALCUL SCORE ECOLOJIA DÃƒâ€°TERGENT (FOCUS ENVIRONNEMENTAL)
     let ecolojia_score = 60; // Base détergent (plus strict que cosmétique)
     
     // Bonus labels écologiques (important)
@@ -406,23 +406,23 @@ class OpenProductsFactsAPI {
     
     ecolojia_score = Math.max(0, Math.min(100, ecolojia_score));
 
-    // 📚 GÉNÉRATION TIPS ÉDUCATIFS DÉTERGENTS SPÉCIALISÉS
+    // Ã°Å¸â€œÅ¡ GÃƒâ€°NÃƒâ€°RATION TIPS Ãƒâ€°DUCATIFS DÃƒâ€°TERGENTS SPÃƒâ€°CIALISÃƒâ€°S
     const educational_tips: string[] = [];
     
     if (toxicSurfactants > 0) {
-      educational_tips.push(`🌊 ${toxicSurfactants} tensio-actif(s) toxique(s) pour la vie aquatique - Impact écologique`);
+      educational_tips.push(`Ã°Å¸Å’Å  ${toxicSurfactants} tensio-actif(s) toxique(s) pour la vie aquatique - Impact écologique`);
     }
     
     if (!biodegradable) {
-      educational_tips.push('♻️ Biodégradabilité non confirmée - Risque pollution eau/sol persistante');
+      educational_tips.push('ââ„¢Â»ïÂ¸Â Biodégradabilité non confirmée - Risque pollution eau/sol persistante');
     }
     
     if (ecoLabels.length > 0) {
-      educational_tips.push(`🌿 Certifié ${ecoLabels.join(', ')} - Choix écologique validé scientifiquement`);
+      educational_tips.push(`Ã°Å¸Å’Â¿ Certifié ${ecoLabels.join(', ')} - Choix écologique validé scientifiquement`);
     }
 
     if (vocEmissions === 'high') {
-      educational_tips.push('💨 Émissions COV élevées - Risque qualité air intérieur');
+      educational_tips.push('Ã°Å¸â€™Â¨ Ãƒâ€°missions COV élevées - Risque qualité air intérieur');
     }
 
     return {
@@ -442,7 +442,7 @@ class OpenProductsFactsAPI {
         ultra_processed: false, // Concept alimentaire
         educational_tips,
         alternatives_available: toxicSurfactants > 0 ? Math.floor(Math.random() * 3) + 1 : 0,
-        // 🆕 DONNÉES DÉTERGENTS SPÉCIALISÉES
+        // Ã°Å¸â€ â€¢ DONNÃƒâ€°ES DÃƒâ€°TERGENTS SPÃƒâ€°CIALISÃƒâ€°ES
         biodegradable,
         eco_labels: ecoLabels,
         aquatic_toxicity: aquaticToxicity,
@@ -511,14 +511,14 @@ class OpenProductsFactsAPI {
 }
 
 // ============================================================================
-// UNIVERSAL SEARCH ENGINE ÉTENDU MULTI-SOURCES
+// UNIVERSAL SEARCH ENGINE Ãƒâ€°TENDU MULTI-SOURCES
 // ============================================================================
 
 export class UniversalSearchEngine {
   private algoliaClient: any;
   private openFoodFacts: OpenFoodFactsAPI;
-  private openBeautyFacts: OpenBeautyFactsAPI; // 🆕
-  private openProductsFacts: OpenProductsFactsAPI; // 🆕
+  private openBeautyFacts: OpenBeautyFactsAPI; // Ã°Å¸â€ â€¢
+  private openProductsFacts: OpenProductsFactsAPI; // Ã°Å¸â€ â€¢
   private searchHistory: string[] = [];
   private suggestionCache = new Map<string, SearchSuggestion[]>();
 
@@ -529,16 +529,16 @@ export class UniversalSearchEngine {
       '085aeee2b3ec8efa66dabb7691a01b67'
     );
     
-    // 🌍 INITIALISATION DES 5 SOURCES DE DONNÉES
+    // Ã°Å¸Å’Â INITIALISATION DES 5 SOURCES DE DONNÃƒâ€°ES
     this.openFoodFacts = new OpenFoodFactsAPI();
-    this.openBeautyFacts = new OpenBeautyFactsAPI(); // 🆕 COSMÉTIQUES
-    this.openProductsFacts = new OpenProductsFactsAPI(); // 🆕 DÉTERGENTS
+    this.openBeautyFacts = new OpenBeautyFactsAPI(); // Ã°Å¸â€ â€¢ COSMÃƒâ€°TIQUES
+    this.openProductsFacts = new OpenProductsFactsAPI(); // Ã°Å¸â€ â€¢ DÃƒâ€°TERGENTS
     
     // Charger historique depuis localStorage
     this.loadSearchHistory();
   }
 
-  // ========== 🚀 RECHERCHE UNIVERSELLE ÉTENDUE 5 SOURCES ==========
+  // ========== Ã°Å¸Å¡€ RECHERCHE UNIVERSELLE Ãƒâ€°TENDUE 5 SOURCES ==========
 
   async search(
     query: string, 
@@ -552,9 +552,9 @@ export class UniversalSearchEngine {
       timeout = 5000
     } = options;
 
-    console.log('🔍 🌍 Recherche universelle 5 sources:', { query, options });
+    console.log('Ã°Å¸â€Â Ã°Å¸Å’Â Recherche universelle 5 sources:', { query, options });
 
-    // Éviter les recherches vides
+    // Ãƒâ€°viter les recherches vides
     if (!query.trim()) {
       return [];
     }
@@ -563,23 +563,23 @@ export class UniversalSearchEngine {
     const allResults: SearchResult[] = [];
 
     try {
-      // 1. 🔄 RECHERCHE PARALLÈLE SUR TOUTES LES 5 SOURCES
+      // 1. Ã°Å¸â€â€ž RECHERCHE PARALLÃƒË†LE SUR TOUTES LES 5 SOURCES
       const searchPromises: Promise<SearchResult[]>[] = [];
 
       // Algolia (base existante - toutes catégories)
       searchPromises.push(this.searchAlgolia(query, categories, Math.floor(maxResults * 0.25)));
 
-      // 🍎 OpenFoodFacts (alimentaire)
+      // Ã°Å¸ÂÅ½ OpenFoodFacts (alimentaire)
       if (categories.includes('food')) {
         searchPromises.push(this.searchOpenFoodFacts(query, Math.floor(maxResults * 0.25)));
       }
 
-      // 💄 🆕 OpenBeautyFacts (cosmétiques)
+      // Ã°Å¸â€™â€ž Ã°Å¸â€ â€¢ OpenBeautyFacts (cosmétiques)
       if (categories.includes('cosmetics')) {
         searchPromises.push(this.searchOpenBeautyFacts(query, Math.floor(maxResults * 0.25)));
       }
 
-      // 🧽 🆕 OpenProductsFacts (détergents)
+      // Ã°Å¸Â§Â½ Ã°Å¸â€ â€¢ OpenProductsFacts (détergents)
       if (categories.includes('detergents')) {
         searchPromises.push(this.searchOpenProductsFacts(query, Math.floor(maxResults * 0.25)));
       }
@@ -587,7 +587,7 @@ export class UniversalSearchEngine {
       // Base locale (realApi - toutes catégories)
       searchPromises.push(this.searchLocal(query, Math.floor(maxResults * 0.25)));
 
-      // 2. ⏱️ ATTENDRE TOUTES LES RECHERCHES AVEC TIMEOUT
+      // 2. âÂÂ±ïÂ¸Â ATTENDRE TOUTES LES RECHERCHES AVEC TIMEOUT
       const results = await Promise.allSettled(
         searchPromises.map(p => 
           Promise.race([
@@ -599,57 +599,57 @@ export class UniversalSearchEngine {
         )
       );
 
-      // 3. 📊 MERGER LES RÉSULTATS AVEC LOGGING DÉTAILLÉ
+      // 3. Ã°Å¸â€œÅ  MERGER LES RÃƒâ€°SULTATS AVEC LOGGING DÃƒâ€°TAILLÃƒâ€°
       const sources = ['Algolia', 'OpenFoodFacts', 'OpenBeautyFacts', 'OpenProductsFacts', 'Local'];
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
-          console.log(`✅ ${sources[index]}: ${result.value.length} résultats`);
+          console.log(`âÅ“â€¦ ${sources[index]}: ${result.value.length} résultats`);
           allResults.push(...result.value);
         } else {
-          console.warn(`❌ ${sources[index]} failed:`, result.reason);
+          console.warn(`âÂÅ’ ${sources[index]} failed:`, result.reason);
         }
       });
 
-      // 4. 🔄 DÉDUPLICATION INTELLIGENTE MULTI-SOURCES
+      // 4. Ã°Å¸â€â€ž DÃƒâ€°DUPLICATION INTELLIGENTE MULTI-SOURCES
       const deduplicatedResults = this.deduplicateResults(allResults);
 
-      // 5. 🎯 ENRICHISSEMENT IA SI DEMANDÉ
+      // 5. Ã°Å¸Å½Â¯ ENRICHISSEMENT IA SI DEMANDÃƒâ€°
       let finalResults = deduplicatedResults;
       if (enrichProducts) {
         finalResults = await this.enrichResults(deduplicatedResults);
       }
 
-      // 6. 📈 TRI PAR PERTINENCE MULTI-CRITÈRES
+      // 6. Ã°Å¸â€œË† TRI PAR PERTINENCE MULTI-CRITÃƒË†RES
       finalResults = this.sortByRelevance(finalResults, query);
 
-      // 7. ✂️ LIMITER RÉSULTATS
+      // 7. âÅ“â€šïÂ¸Â LIMITER RÃƒâ€°SULTATS
       finalResults = finalResults.slice(0, maxResults);
 
-      // 8. 💾 SAUVEGARDER RECHERCHE
+      // 8. Ã°Å¸â€™Â¾ SAUVEGARDER RECHERCHE
       this.saveSearch(query);
 
       const duration = Date.now() - startTime;
-      console.log(`✅ 🌍 Recherche universelle terminée: ${finalResults.length} résultats en ${duration}ms`);
-      console.log(`📊 Sources utilisées: ${[...new Set(finalResults.map(r => r.source))].join(', ')}`);
+      console.log(`âÅ“â€¦ Ã°Å¸Å’Â Recherche universelle terminée: ${finalResults.length} résultats en ${duration}ms`);
+      console.log(`Ã°Å¸â€œÅ  Sources utilisées: ${[...new Set(finalResults.map(r => r.source))].join(', ')}`);
 
       return finalResults;
 
     } catch (error) {
-      console.error('❌ Erreur recherche universelle:', error);
+      console.error('âÂÅ’ Erreur recherche universelle:', error);
       return [];
     }
   }
 
-  // ========== 📊 RECHERCHE PAR CODE-BARRES ÉTENDUE 5 SOURCES ==========
+  // ========== Ã°Å¸â€œÅ  RECHERCHE PAR CODE-BARRES Ãƒâ€°TENDUE 5 SOURCES ==========
 
   async searchByBarcode(barcode: string): Promise<SearchResult | null> {
-    console.log('📊 🌍 Recherche universelle par code-barres sur 5 sources:', barcode);
+    console.log('Ã°Å¸â€œÅ  Ã°Å¸Å’Â Recherche universelle par code-barres sur 5 sources:', barcode);
 
     try {
       // 1. Essayer base locale d'abord (plus rapide)
       const localProduct = await getProductByBarcode(barcode);
       if (localProduct) {
-        console.log('✅ Produit trouvé en local');
+        console.log('âÅ“â€¦ Produit trouvé en local');
         return {
           id: localProduct.id,
           name: localProduct.title,
@@ -663,11 +663,11 @@ export class UniversalSearchEngine {
         };
       }
 
-      // 2. 🔄 ESSAYER EN PARALLÈLE SUR LES 3 SOURCES OPEN*FACTS
+      // 2. Ã°Å¸â€â€ž ESSAYER EN PARALLÃƒË†LE SUR LES 3 SOURCES OPEN*FACTS
       const barcodePromises = [
         this.openFoodFacts.getProductByBarcode(barcode),
-        this.openBeautyFacts.getProductByBarcode(barcode), // 🆕
-        this.openProductsFacts.getProductByBarcode(barcode) // 🆕
+        this.openBeautyFacts.getProductByBarcode(barcode), // Ã°Å¸â€ â€¢
+        this.openProductsFacts.getProductByBarcode(barcode) // Ã°Å¸â€ â€¢
       ];
 
       const barcodeResults = await Promise.allSettled(barcodePromises);
@@ -678,28 +678,28 @@ export class UniversalSearchEngine {
         if (result.status === 'fulfilled' && result.value) {
           const apis = [this.openFoodFacts, this.openBeautyFacts, this.openProductsFacts];
           const sourceNames = ['OpenFoodFacts', 'OpenBeautyFacts', 'OpenProductsFacts'];
-          console.log(`✅ Produit trouvé sur ${sourceNames[i]}`);
+          console.log(`âÅ“â€¦ Produit trouvé sur ${sourceNames[i]}`);
           return apis[i].convertToSearchResult(result.value);
         }
       }
 
-      console.log('❌ Produit non trouvé sur aucune des 5 sources');
+      console.log('âÂÅ’ Produit non trouvé sur aucune des 5 sources');
       return null;
 
     } catch (error) {
-      console.error('❌ Erreur recherche code-barres:', error);
+      console.error('âÂÅ’ Erreur recherche code-barres:', error);
       return null;
     }
   }
 
-  // ========== 🆕 NOUVELLES MÉTHODES DE RECHERCHE SPÉCIALISÉES ==========
+  // ========== Ã°Å¸â€ â€¢ NOUVELLES MÃƒâ€°THODES DE RECHERCHE SPÃƒâ€°CIALISÃƒâ€°ES ==========
 
   private async searchOpenBeautyFacts(query: string, limit: number): Promise<SearchResult[]> {
     try {
       const products = await this.openBeautyFacts.searchProducts(query, limit);
       return products.map(product => this.openBeautyFacts.convertToSearchResult(product));
     } catch (error) {
-      console.warn('⚠️ OpenBeautyFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenBeautyFacts search failed:', error);
       return [];
     }
   }
@@ -709,12 +709,12 @@ export class UniversalSearchEngine {
       const products = await this.openProductsFacts.searchProducts(query, limit);
       return products.map(product => this.openProductsFacts.convertToSearchResult(product));
     } catch (error) {
-      console.warn('⚠️ OpenProductsFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenProductsFacts search failed:', error);
       return [];
     }
   }
 
-  // ========== 🎯 AUTO-COMPLÉTION ENRICHIE MULTI-CATÉGORIES ==========
+  // ========== Ã°Å¸Å½Â¯ AUTO-COMPLÃƒâ€°TION ENRICHIE MULTI-CATÃƒâ€°GORIES ==========
 
   async getSuggestions(query: string): Promise<SearchSuggestion[]> {
     if (query.length < 2) {
@@ -750,12 +750,12 @@ export class UniversalSearchEngine {
       return sortedSuggestions;
 
     } catch (error) {
-      console.warn('⚠️ Erreur suggestions:', error);
+      console.warn('âÅ¡Â ïÂ¸Â Erreur suggestions:', error);
       return this.getPopularSuggestions();
     }
   }
 
-  // ========== MÉTHODES PRIVÉES EXISTANTES (CONSERVÉES + ÉTENDUES) ==========
+  // ========== MÃƒâ€°THODES PRIVÃƒâ€°ES EXISTANTES (CONSERVÃƒâ€°ES + Ãƒâ€°TENDUES) ==========
 
   private async searchAlgolia(
     query: string, 
@@ -783,7 +783,7 @@ export class UniversalSearchEngine {
       }));
 
     } catch (error) {
-      console.warn('⚠️ Algolia search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â Algolia search failed:', error);
       return [];
     }
   }
@@ -793,7 +793,7 @@ export class UniversalSearchEngine {
       const products = await this.openFoodFacts.searchProducts(query, limit);
       return products.map(product => this.openFoodFacts.convertToSearchResult(product));
     } catch (error) {
-      console.warn('⚠️ OpenFoodFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenFoodFacts search failed:', error);
       return [];
     }
   }
@@ -813,7 +813,7 @@ export class UniversalSearchEngine {
         rawData: product
       }));
     } catch (error) {
-      console.warn('⚠️ Local search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â Local search failed:', error);
       return [];
     }
   }
@@ -955,20 +955,20 @@ export class UniversalSearchEngine {
 
   private getPopularSuggestions(): SearchSuggestion[] {
     return [
-      // 🍎 Alimentaire
-      { query: 'nutella bio', type: 'product', icon: '🍫', category: 'food' },
-      { query: 'yaourt sans additifs', type: 'product', icon: '🥛', category: 'food' },
+      // Ã°Å¸ÂÅ½ Alimentaire
+      { query: 'nutella bio', type: 'product', icon: 'Ã°Å¸ÂÂ«', category: 'food' },
+      { query: 'yaourt sans additifs', type: 'product', icon: 'Ã°Å¸Â¥â€º', category: 'food' },
       
-      // 💄 🆕 Cosmétiques
-      { query: 'shampoing sans sulfate', type: 'product', icon: '🧴', category: 'cosmetics' },
-      { query: 'crème sans parabènes', type: 'product', icon: '✨', category: 'cosmetics' },
+      // Ã°Å¸â€™â€ž Ã°Å¸â€ â€¢ Cosmétiques
+      { query: 'shampoing sans sulfate', type: 'product', icon: 'Ã°Å¸Â§Â´', category: 'cosmetics' },
+      { query: 'crème sans parabènes', type: 'product', icon: 'âÅ“Â¨', category: 'cosmetics' },
       
-      // 🧽 🆕 Détergents
-      { query: 'lessive écologique', type: 'product', icon: '🧽', category: 'detergents' },
-      { query: 'liquide vaisselle bio', type: 'product', icon: '💧', category: 'detergents' },
+      // Ã°Å¸Â§Â½ Ã°Å¸â€ â€¢ Détergents
+      { query: 'lessive écologique', type: 'product', icon: 'Ã°Å¸Â§Â½', category: 'detergents' },
+      { query: 'liquide vaisselle bio', type: 'product', icon: 'Ã°Å¸â€™Â§', category: 'detergents' },
       
       // Général
-      { query: 'produits zéro déchet', type: 'category', icon: '🌿' }
+      { query: 'produits zéro déchet', type: 'category', icon: 'Ã°Å¸Å’Â¿' }
     ];
   }
 
@@ -979,7 +979,7 @@ export class UniversalSearchEngine {
       .map(search => ({
         query: search,
         type: 'product' as const,
-        icon: '🕐'
+        icon: 'Ã°Å¸â€¢Â'
       }));
   }
 
@@ -987,47 +987,47 @@ export class UniversalSearchEngine {
     const suggestions: SearchSuggestion[] = [];
     const queryLower = query.toLowerCase();
     
-    // 🆕 Suggestions contextuelle alimentaire
+    // Ã°Å¸â€ â€¢ Suggestions contextuelle alimentaire
     if (queryLower.includes('bio') || queryLower.includes('naturel')) {
-      suggestions.push({ query: `${query} sans additifs`, type: 'product', icon: '🌿', category: 'food' });
-      suggestions.push({ query: `${query} NOVA 1`, type: 'product', icon: '✅', category: 'food' });
+      suggestions.push({ query: `${query} sans additifs`, type: 'product', icon: 'Ã°Å¸Å’Â¿', category: 'food' });
+      suggestions.push({ query: `${query} NOVA 1`, type: 'product', icon: 'âÅ“â€¦', category: 'food' });
     }
     
-    // 🆕 Suggestions cosmétiques spécialisées
+    // Ã°Å¸â€ â€¢ Suggestions cosmétiques spécialisées
     if (queryLower.includes('shampoing') || queryLower.includes('crème') || queryLower.includes('soin')) {
-      suggestions.push({ query: `${query} sans parabènes`, type: 'product', icon: '🚫', category: 'cosmetics' });
-      suggestions.push({ query: `${query} hypoallergénique`, type: 'product', icon: '💚', category: 'cosmetics' });
+      suggestions.push({ query: `${query} sans parabènes`, type: 'product', icon: 'Ã°Å¸Å¡Â«', category: 'cosmetics' });
+      suggestions.push({ query: `${query} hypoallergénique`, type: 'product', icon: 'Ã°Å¸â€™Å¡', category: 'cosmetics' });
     }
     
-    // 🆕 Suggestions détergents spécialisées
+    // Ã°Å¸â€ â€¢ Suggestions détergents spécialisées
     if (queryLower.includes('lessive') || queryLower.includes('vaisselle') || queryLower.includes('ménager')) {
-      suggestions.push({ query: `${query} écologique`, type: 'product', icon: '🌍', category: 'detergents' });
-      suggestions.push({ query: `${query} biodégradable`, type: 'product', icon: '♻️', category: 'detergents' });
+      suggestions.push({ query: `${query} écologique`, type: 'product', icon: 'Ã°Å¸Å’Â', category: 'detergents' });
+      suggestions.push({ query: `${query} biodégradable`, type: 'product', icon: 'ââ„¢Â»ïÂ¸Â', category: 'detergents' });
     }
     
     return suggestions;
   }
 
   private getEntitySuggestions(query: string): SearchSuggestion[] {
-    // 🆕 Suggestions d'entités étendues (marques, ingrédients) par catégorie
+    // Ã°Å¸â€ â€¢ Suggestions d'entités étendues (marques, ingrédients) par catégorie
     const entities = [
       // Marques alimentaires
       { name: 'jardin bio', type: 'brand', category: 'food' },
       { name: 'bjorg', type: 'brand', category: 'food' },
       
-      // 🆕 Marques cosmétiques
+      // Ã°Å¸â€ â€¢ Marques cosmétiques
       { name: 'weleda', type: 'brand', category: 'cosmetics' },
       { name: 'cattier', type: 'brand', category: 'cosmetics' },
       { name: 'melvita', type: 'brand', category: 'cosmetics' },
       { name: 'loccitane', type: 'brand', category: 'cosmetics' },
       
-      // 🆕 Marques détergents
+      // Ã°Å¸â€ â€¢ Marques détergents
       { name: 'ecover', type: 'brand', category: 'detergents' },
       { name: 'rainett', type: 'brand', category: 'detergents' },
       { name: 'arbre vert', type: 'brand', category: 'detergents' },
       { name: 'frosch', type: 'brand', category: 'detergents' },
       
-      // 🆕 Ingrédients problématiques multi-catégories
+      // Ã°Å¸â€ â€¢ Ingrédients problématiques multi-catégories
       { name: 'sans parabènes', type: 'ingredient', category: 'cosmetics' },
       { name: 'sans sulfates', type: 'ingredient', category: 'cosmetics' },
       { name: 'sans phosphates', type: 'ingredient', category: 'detergents' },
@@ -1040,7 +1040,7 @@ export class UniversalSearchEngine {
         query: entity.name,
         type: entity.type as any,
         category: entity.category,
-        icon: entity.category === 'food' ? '🍎' : entity.category === 'cosmetics' ? '✨' : '🧽'
+        icon: entity.category === 'food' ? 'Ã°Å¸ÂÅ½' : entity.category === 'cosmetics' ? 'âÅ“Â¨' : 'Ã°Å¸Â§Â½'
       }));
   }
 
@@ -1083,7 +1083,7 @@ export class UniversalSearchEngine {
 }
 
 // ============================================================================
-// CLASSES OPENFOODFACTS EXISTANTES (CONSERVÉES)
+// CLASSES OPENFOODFACTS EXISTANTES (CONSERVÃƒâ€°ES)
 // ============================================================================
 
 interface OpenFoodFactsProduct {
@@ -1120,7 +1120,7 @@ class OpenFoodFactsAPI {
     }
 
     try {
-      console.log('🍎 OpenFoodFacts: Recherche produits pour:', query);
+      console.log('Ã°Å¸ÂÅ½ OpenFoodFacts: Recherche produits pour:', query);
       
       const response = await fetch(
         `${this.baseURL}/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=${limit}&fields=code,product_name,brands,categories,ingredients_text,nova_group,nutriscore_grade,image_url,image_front_url,additives_tags,ecoscore_grade`
@@ -1136,11 +1136,11 @@ class OpenFoodFactsAPI {
       
       this.cache.set(cacheKey, products);
       
-      console.log(`✅ OpenFoodFacts: ${products.length} produits trouvés`);
+      console.log(`âÅ“â€¦ OpenFoodFacts: ${products.length} produits trouvés`);
       return products;
 
     } catch (error) {
-      console.warn('⚠️ OpenFoodFacts search failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenFoodFacts search failed:', error);
       return [];
     }
   }
@@ -1153,7 +1153,7 @@ class OpenFoodFactsAPI {
     }
 
     try {
-      console.log('🍎 OpenFoodFacts: Recherche par code-barres:', barcode);
+      console.log('Ã°Å¸ÂÅ½ OpenFoodFacts: Recherche par code-barres:', barcode);
       
       const response = await fetch(
         `${this.baseURL}/product/${barcode}.json?fields=code,product_name,brands,categories,ingredients_text,nova_group,nutriscore_grade,image_url,image_front_url,additives_tags,ecoscore_grade`
@@ -1167,14 +1167,14 @@ class OpenFoodFactsAPI {
       
       if (data.status === 1 && data.product) {
         this.cache.set(cacheKey, data.product);
-        console.log('✅ OpenFoodFacts: Produit trouvé pour code-barres');
+        console.log('âÅ“â€¦ OpenFoodFacts: Produit trouvé pour code-barres');
         return data.product;
       }
 
       return null;
 
     } catch (error) {
-      console.warn('⚠️ OpenFoodFacts barcode lookup failed:', error);
+      console.warn('âÅ¡Â ïÂ¸Â OpenFoodFacts barcode lookup failed:', error);
       return null;
     }
   }
@@ -1201,15 +1201,15 @@ class OpenFoodFactsAPI {
     const educational_tips: string[] = [];
     
     if (ultra_processed) {
-      educational_tips.push('⚠️ Produit ultra-transformé - Consommation occasionnelle recommandée');
+      educational_tips.push('âÅ¡Â ïÂ¸Â Produit ultra-transformé - Consommation occasionnelle recommandée');
     }
     
     if (additives_count > 3) {
-      educational_tips.push(`🧪 ${additives_count} additifs détectés - Vérifiez les E-numbers`);
+      educational_tips.push(`Ã°Å¸Â§Âª ${additives_count} additifs détectés - Vérifiez les E-numbers`);
     }
     
     if (product.nutriscore_grade && ['d', 'e'].includes(product.nutriscore_grade.toLowerCase())) {
-      educational_tips.push('📊 Nutri-Score faible - Cherchez des alternatives plus saines');
+      educational_tips.push('Ã°Å¸â€œÅ  Nutri-Score faible - Cherchez des alternatives plus saines');
     }
 
     return {
@@ -1238,7 +1238,7 @@ class OpenFoodFactsAPI {
 }
 
 // ============================================================================
-// 🌍 INSTANCE GLOBALE ÉTENDUE 5 SOURCES
+// Ã°Å¸Å’Â INSTANCE GLOBALE Ãƒâ€°TENDUE 5 SOURCES
 // ============================================================================
 
 export const universalSearchEngine = new UniversalSearchEngine();

@@ -59,7 +59,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
               Risque : {analysis.endocrineRisk?.level === 'NONE' ? 'Aucun' : 
                         analysis.endocrineRisk?.level === 'LOW' ? 'Faible' :
                         analysis.endocrineRisk?.level === 'MODERATE' ? 'Modéré' :
-                        analysis.endocrineRisk?.level === 'HIGH' ? 'Élevé' : 'Très élevé'}
+                        analysis.endocrineRisk?.level === 'HIGH' ? 'Ãƒâ€°levé' : 'Très élevé'}
             </div>
             
             {analysis.endocrineRisk?.disruptors?.length > 0 && (
@@ -104,7 +104,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
                 'bg-red-50 text-red-600'
               }`}>
                 Risque allergique : {analysis.allergens.severity === 'LOW' ? 'Faible' :
-                                   analysis.allergens.severity === 'MODERATE' ? 'Modéré' : 'Élevé'}
+                                   analysis.allergens.severity === 'MODERATE' ? 'Modéré' : 'Ãƒâ€°levé'}
               </div>
               
               <div className="mt-4">
@@ -118,7 +118,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
               </div>
               
               <p className="text-sm text-gray-600 mt-3">
-                💡 Testez le produit sur une petite zone avant utilisation
+                Ã°Å¸â€™Â¡ Testez le produit sur une petite zone avant utilisation
               </p>
             </div>
           </div>
@@ -162,12 +162,12 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
       {/* Recommandations */}
       <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
         <h3 className="text-lg font-semibold mb-4 text-blue-800">
-          💡 Nos Recommandations
+          Ã°Å¸â€™Â¡ Nos Recommandations
         </h3>
         <ul className="space-y-2">
           {analysis.recommendations?.map((rec: string, index: number) => (
             <li key={index} className="flex items-start space-x-2 text-blue-700">
-              <span className="text-blue-500 mt-0.5">•</span>
+              <span className="text-blue-500 mt-0.5">â€Â¢</span>
               <span className="text-sm">{rec}</span>
             </li>
           ))}
@@ -199,7 +199,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
                 <div className="flex flex-wrap gap-2">
                   {alt.benefits?.map((benefit: string, idx: number) => (
                     <span key={idx} className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-                      ✓ {benefit}
+                      âÅ“â€œ {benefit}
                     </span>
                   ))}
                 </div>
@@ -216,10 +216,10 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
           Sources Scientifiques
         </h4>
         <div className="text-xs text-gray-600 space-y-1">
-          <p>• Commission Européenne - Liste perturbateurs endocriniens 2024</p>
-          <p>• ANSES - Évaluation sécurité ingrédients cosmétiques</p>
-          <p>• Règlement cosmétique européen - Allergènes obligatoires</p>
-          <p>• Base de données INCI internationale</p>
+          <p>â€Â¢ Commission Européenne - Liste perturbateurs endocriniens 2024</p>
+          <p>â€Â¢ ANSES - Ãƒâ€°valuation sécurité ingrédients cosmétiques</p>
+          <p>â€Â¢ Règlement cosmétique européen - Allergènes obligatoires</p>
+          <p>â€Â¢ Base de données INCI internationale</p>
         </div>
       </div>
     </div>
@@ -227,7 +227,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
 };
 
 // ========================================
-// COMPOSANT AFFICHAGE DÉTERGENTS
+// COMPOSANT AFFICHAGE DÃƒâ€°TERGENTS
 // ========================================
 
 interface DetergentAnalysisDisplayProps {
@@ -290,7 +290,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
             <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getToxicityColor(analysis.aquaticToxicity?.level || 'LOW')}`}>
               Toxicité : {analysis.aquaticToxicity?.level === 'LOW' ? 'Faible' :
                          analysis.aquaticToxicity?.level === 'MODERATE' ? 'Modérée' :
-                         analysis.aquaticToxicity?.level === 'HIGH' ? 'Élevée' : 'Très élevée'}
+                         analysis.aquaticToxicity?.level === 'HIGH' ? 'Ãƒâ€°levée' : 'Très élevée'}
             </div>
             
             {analysis.aquaticToxicity?.toxicIngredients?.length > 0 && (
@@ -339,12 +339,12 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
         <div className="bg-green-50 p-6 rounded-xl border border-green-200">
           <h3 className="text-lg font-semibold mb-4 text-green-800 flex items-center">
             <Star className="w-5 h-5 mr-2" />
-            Certifications Écologiques
+            Certifications Ãƒâ€°cologiques
           </h3>
           <div className="flex flex-wrap gap-2">
             {analysis.ecoLabels.map((label: string, index: number) => (
               <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                ✓ {label}
+                âÅ“â€œ {label}
               </span>
             ))}
           </div>
@@ -354,12 +354,12 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
       {/* Recommandations */}
       <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
         <h3 className="text-lg font-semibold mb-4 text-blue-800">
-          🌍 Nos Recommandations Écologiques
+          Ã°Å¸Å’Â Nos Recommandations Ãƒâ€°cologiques
         </h3>
         <ul className="space-y-2">
           {analysis.recommendations?.map((rec: string, index: number) => (
             <li key={index} className="flex items-start space-x-2 text-blue-700">
-              <span className="text-blue-500 mt-0.5">•</span>
+              <span className="text-blue-500 mt-0.5">â€Â¢</span>
               <span className="text-sm">{rec}</span>
             </li>
           ))}
@@ -371,7 +371,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
         <div className="bg-white p-6 rounded-xl border border-gray-200">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <Leaf className="w-5 h-5 mr-2 text-green-500" />
-            Alternatives Écologiques
+            Alternatives Ãƒâ€°cologiques
           </h3>
           
           <div className="space-y-4">
@@ -391,7 +391,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
                 <div className="flex flex-wrap gap-2">
                   {alt.benefits?.map((benefit: string, idx: number) => (
                     <span key={idx} className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-                      ✓ {benefit}
+                      âÅ“â€œ {benefit}
                     </span>
                   ))}
                 </div>

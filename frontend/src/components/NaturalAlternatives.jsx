@@ -10,7 +10,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
     return (
       <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
         <div className="text-center">
-          <span className="text-4xl mb-3 block">🌱</span>
+          <span className="text-4xl mb-3 block">Ã°Å¸Å’Â±</span>
           <h3 className="text-xl font-bold text-green-800 mb-2">
             Recherche d'Alternatives en Cours
           </h3>
@@ -28,19 +28,19 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
 
   const getDifficultyIcon = (difficulty) => {
     switch(difficulty?.toLowerCase()) {
-      case 'facile': return '😊';
-      case 'moyen': return '🤔';
-      case 'avancé': return '💪';
-      default: return '⭐';
+      case 'facile': return 'Ã°Å¸ËœÅ ';
+      case 'moyen': return 'Ã°Å¸Â¤â€';
+      case 'avancé': return 'Ã°Å¸â€™Âª';
+      default: return 'âÂ­Â';
     }
   };
 
   const getTypeIcon = (type) => {
     switch(type) {
-      case 'diy': return '🏠';
-      case 'substitute': return '🔄';
-      case 'natural': return '🌱';
-      default: return '💡';
+      case 'diy': return 'Ã°Å¸ÂÂ ';
+      case 'substitute': return 'Ã°Å¸â€â€ž';
+      case 'natural': return 'Ã°Å¸Å’Â±';
+      default: return 'Ã°Å¸â€™Â¡';
     }
   };
 
@@ -49,7 +49,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
       {/* En-tête Simplifié */}
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-green-800 mb-2">
-          🌱 Alternatives Naturelles
+          Ã°Å¸Å’Â± Alternatives Naturelles
         </h3>
         <p className="text-green-700 text-sm">
           {alternatives.length} solution{alternatives.length > 1 ? 's' : ''} plus naturelle{alternatives.length > 1 ? 's' : ''} trouvée{alternatives.length > 1 ? 's' : ''}
@@ -83,12 +83,12 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                         <span className="text-gray-600">{alternative.difficulty || 'moyen'}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <span>⏱️</span>
+                        <span>âÂÂ±ïÂ¸Â</span>
                         <span className="text-gray-600">{alternative.time || '15-30min'}</span>
                       </div>
                       {alternative.cost_comparison && (
                         <div className="flex items-center space-x-1">
-                          <span>💰</span>
+                          <span>Ã°Å¸â€™Â°</span>
                           <span className="text-gray-600">{alternative.cost_comparison}</span>
                         </div>
                       )}
@@ -101,11 +101,11 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                   onClick={() => toggleExpanded(index)}
                   className="ml-4 text-green-600 hover:text-green-800 text-sm font-medium"
                 >
-                  {expandedIndex === index ? '▲ Moins' : '▼ Plus'}
+                  {expandedIndex === index ? 'ââ€“Â² Moins' : 'ââ€“Â¼ Plus'}
                 </button>
               </div>
 
-              {/* Détails Étendus */}
+              {/* Détails Ãƒâ€°tendus */}
               {expandedIndex === index && (
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -114,7 +114,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                     {alternative.nutritional_advantage && (
                       <div className="bg-green-50 rounded-lg p-3">
                         <h5 className="font-semibold text-green-800 text-sm mb-1">
-                          🍃 Avantages Nutritionnels
+                          Ã°Å¸ÂÆ’ Avantages Nutritionnels
                         </h5>
                         <p className="text-xs text-green-700">
                           {alternative.nutritional_advantage}
@@ -126,7 +126,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                     {alternative.environmental_benefit && (
                       <div className="bg-blue-50 rounded-lg p-3">
                         <h5 className="font-semibold text-blue-800 text-sm mb-1">
-                          🌍 Impact Environnemental
+                          Ã°Å¸Å’Â Impact Environnemental
                         </h5>
                         <p className="text-xs text-blue-700">
                           {alternative.environmental_benefit}
@@ -139,11 +139,11 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                   {alternative.sources && alternative.sources.length > 0 && (
                     <div className="bg-purple-50 rounded-lg p-3 mb-4">
                       <h5 className="font-semibold text-purple-800 text-sm mb-2">
-                        📚 Preuves Scientifiques
+                        Ã°Å¸â€œÅ¡ Preuves Scientifiques
                       </h5>
                       <div className="text-xs text-purple-700 space-y-1">
                         {alternative.sources.slice(0, 2).map((source, idx) => (
-                          <div key={idx}>• {source}</div>
+                          <div key={idx}>â€Â¢ {source}</div>
                         ))}
                       </div>
                     </div>
@@ -153,11 +153,11 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
                   <div className="flex flex-wrap gap-2">
                     {alternative.recipe_link && (
                       <button className="bg-green-100 hover:bg-green-200 text-green-800 text-xs px-3 py-2 rounded-lg transition-colors">
-                        📖 Voir la recette
+                        Ã°Å¸â€œâ€“ Voir la recette
                       </button>
                     )}
                     <button className="bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs px-3 py-2 rounded-lg transition-colors">
-                      💬 Poser une question
+                      Ã°Å¸â€™Â¬ Poser une question
                     </button>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
       {/* Footer Impact Simplifié */}
       <div className="mt-6 bg-white bg-opacity-70 rounded-lg p-4 text-center">
         <h4 className="font-semibold text-green-800 text-sm mb-3">
-          📊 Impact Prévu de ces Alternatives
+          Ã°Å¸â€œÅ  Impact Prévu de ces Alternatives
         </h4>
         <div className="grid grid-cols-3 gap-3 text-xs">
           <div>
@@ -191,7 +191,7 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
       {/* Source IA */}
       <div className="mt-4 text-center">
         <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-          🤖 Alternatives générées par l'IA scientifique ECOLOJIA
+          Ã°Å¸Â¤â€“ Alternatives générées par l'IA scientifique ECOLOJIA
         </span>
       </div>
     </div>

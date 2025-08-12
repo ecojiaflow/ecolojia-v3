@@ -268,10 +268,10 @@ export const ManualAnalysisPage: React.FC = () => {
             Conseils pour une analyse précise
           </h3>
           <ul className="space-y-1 text-sm text-blue-800">
-            <li>• Copiez la liste complète des ingrédients dans l'ordre exact</li>
-            <li>• Pour les cosmétiques, utilisez la liste INCI (noms internationaux)</li>
-            <li>• Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
-            <li>• Séparez les ingrédients par des virgules</li>
+            <li>â€Â¢ Copiez la liste complète des ingrédients dans l'ordre exact</li>
+            <li>â€Â¢ Pour les cosmétiques, utilisez la liste INCI (noms internationaux)</li>
+            <li>â€Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
+            <li>â€Â¢ Séparez les ingrédients par des virgules</li>
           </ul>
         </div>
       </div>

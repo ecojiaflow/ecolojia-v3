@@ -23,19 +23,19 @@ const ProductTable: React.FC<ProductTableProps> = ({
     try {
       await onValidate(productId, status);
     } catch (error) {
-      console.error('❌ Erreur validation:', error);
+      console.error('âÂÅ’ Erreur validation:', error);
     } finally {
       setActionLoading(null);
     }
   };
 
   const handleDelete = async (productId: string) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (window.confirm('ÃƒÅ tes-vous sÃƒÂ»r de vouloir supprimer ce produit ?')) {
       setActionLoading(`${productId}-delete`);
       try {
         await onDelete(productId);
       } catch (error) {
-        console.error('❌ Erreur suppression:', error);
+        console.error('âÂÅ’ Erreur suppression:', error);
       } finally {
         setActionLoading(null);
       }
@@ -52,9 +52,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium border ${badges[status]}`}>
-        {status === 'verified' && '✅ Vérifié'}
-        {status === 'pending' && '⏳ En attente'}
-        {status === 'rejected' && '❌ Rejeté'}
+        {status === 'verified' && 'âÅ“â€¦ Vérifié'}
+        {status === 'pending' && 'âÂÂ³ En attente'}
+        {status === 'rejected' && 'âÂÅ’ Rejeté'}
       </span>
     );
   };
@@ -75,11 +75,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
   const getCategoryIcon = (category: string) => {
     const icons = {
-      alimentaire: '🔬',
-      cosmetic: '💄',
-      detergent: '🧽'
+      alimentaire: 'Ã°Å¸â€Â¬',
+      cosmetic: 'Ã°Å¸â€™â€ž',
+      detergent: 'Ã°Å¸Â§Â½'
     };
-    return icons[category as keyof typeof icons] || '📦';
+    return icons[category as keyof typeof icons] || 'Ã°Å¸â€œÂ¦';
   };
 
   if (loading && products.length === 0) {
@@ -131,7 +131,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                         {product.title}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {product.brand && <span className="mr-2">📌 {product.brand}</span>}
+                        {product.brand && <span className="mr-2">Ã°Å¸â€œÅ’ {product.brand}</span>}
                         <span className="font-mono text-xs bg-gray-100 px-1 rounded">
                           {product.slug}
                         </span>
@@ -190,7 +190,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       </>
                     )}
 
-                    {/* ✅ FIX ajouté ici */}
+                    {/* âÅ“â€¦ FIX ajouté ici */}
                     <a
                       href={`/product/${product.slug}`}
                       target="_blank"
@@ -219,7 +219,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
       {products.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-4xl mb-4">📦</div>
+          <div className="text-gray-400 text-4xl mb-4">Ã°Å¸â€œÂ¦</div>
           <p className="text-gray-600">Aucun produit trouvé</p>
         </div>
       )}
@@ -229,3 +229,4 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
 export default ProductTable;
 // EOF
+

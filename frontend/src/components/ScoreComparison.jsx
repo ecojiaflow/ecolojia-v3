@@ -4,9 +4,9 @@ import React from 'react';
 
 const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analysisDetails }) => {
   const getDifferenceStyle = (diff) => {
-    if (diff > 5) return { color: 'text-green-600', bg: 'bg-green-50', message: 'Plus indulgent', icon: '📈' };
-    if (diff < -5) return { color: 'text-purple-600', bg: 'bg-purple-50', message: 'Plus strict (IA)', icon: '🔬' };
-    return { color: 'text-gray-600', bg: 'bg-gray-50', message: 'Similaire', icon: '⚖️' };
+    if (diff > 5) return { color: 'text-green-600', bg: 'bg-green-50', message: 'Plus indulgent', icon: 'Ã°Å¸â€œË†' };
+    if (diff < -5) return { color: 'text-purple-600', bg: 'bg-purple-50', message: 'Plus strict (IA)', icon: 'Ã°Å¸â€Â¬' };
+    return { color: 'text-gray-600', bg: 'bg-gray-50', message: 'Similaire', icon: 'âÅ¡â€“ïÂ¸Â' };
   };
 
   const diffStyle = getDifferenceStyle(difference);
@@ -15,7 +15,7 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
     <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 mt-6 border border-purple-100">
       <div className="text-center mb-4">
         <h3 className="text-lg font-bold text-purple-800 mb-1">
-          🆚 ECOLOJIA vs Autres Apps
+          Ã°Å¸â€ Å¡ ECOLOJIA vs Autres Apps
         </h3>
         <p className="text-sm text-purple-600">
           Analyse scientifique révolutionnaire vs scoring classique
@@ -80,31 +80,31 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
       {/* Avantages ECOLOJIA */}
       <div className="mt-4 bg-white rounded-lg p-4 border border-purple-100">
         <h4 className="font-semibold text-purple-800 text-sm mb-2">
-          🔬 Ce que ECOLOJIA ajoute en plus :
+          Ã°Å¸â€Â¬ Ce que ECOLOJIA ajoute en plus :
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Classification NOVA automatique</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Base additifs EFSA 2024</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Alternatives naturelles prouvées</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Assistant IA conversationnel</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Sources scientifiques citées</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">✅</span>
+            <span className="text-green-500">âÅ“â€¦</span>
             <span>Impact microbiote analysé</span>
           </div>
         </div>
@@ -113,7 +113,7 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
       {/* Call to Action */}
       <div className="text-center mt-4">
         <div className="text-xs text-purple-600">
-          🚀 <strong>ECOLOJIA</strong> - Premier assistant IA scientifique pour consommation responsable
+          Ã°Å¸Å¡€ <strong>ECOLOJIA</strong> - Premier assistant IA scientifique pour consommation responsable
         </div>
       </div>
     </div>

@@ -79,7 +79,7 @@ class DemoService {
     },
     {
       _id: 'demo-3',
-      name: 'Lessive Écologique',
+      name: 'Lessive Ãƒâ€°cologique',
       brand: 'Arbre Vert',
       barcode: '3450601030178',
       category: 'detergent',
@@ -145,7 +145,7 @@ class DemoService {
     },
     'demo-3': {
       productId: 'demo-3',
-      productName: 'Lessive Écologique',
+      productName: 'Lessive Ãƒâ€°cologique',
       productBrand: 'Arbre Vert',
       category: 'detergent',
       healthScore: 85,
@@ -404,7 +404,7 @@ class DemoService {
   }
 
   private extractAllergens(ingredients: string[]): string[] {
-    const commonAllergens = ['gluten', 'lait', 'œuf', 'soja', 'fruits à coque', 'arachide'];
+    const commonAllergens = ['gluten', 'lait', 'Ã…â€œuf', 'soja', 'fruits ÃƒÂ  coque', 'arachide'];
     const found: string[] = [];
     
     ingredients.forEach(ingredient => {
@@ -430,7 +430,7 @@ class DemoService {
         { productId: 'alt-c2', name: 'Version Solide', brand: 'ZeroWaste', score: 90, reason: 'Sans emballage' }
       ],
       detergent: [
-        { productId: 'alt-d1', name: 'Détergent Écologique', brand: 'EcoClean', score: 94, reason: 'Biodégradable' },
+        { productId: 'alt-d1', name: 'Détergent Ãƒâ€°cologique', brand: 'EcoClean', score: 94, reason: 'Biodégradable' },
         { productId: 'alt-d2', name: 'Alternative Maison', brand: 'DIY', score: 96, reason: 'Fait maison' }
       ]
     };

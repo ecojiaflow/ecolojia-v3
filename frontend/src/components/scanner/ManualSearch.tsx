@@ -43,9 +43,9 @@ interface SearchSuggestion {
 }
 
 const defaultCategories: CategoryOption[] = [
-  { value: 'food', label: 'Alimentation', icon: '🍎' },
-  { value: 'cosmetic', label: 'Cosmétiques', icon: '💄' },
-  { value: 'detergent', label: 'Produits ménagers', icon: '🧼' }
+  { value: 'food', label: 'Alimentation', icon: 'Ã°Å¸ÂÅ½' },
+  { value: 'cosmetic', label: 'Cosmétiques', icon: 'Ã°Å¸â€™â€ž' },
+  { value: 'detergent', label: 'Produits ménagers', icon: 'Ã°Å¸Â§Â¼' }
 ];
 
 export const ManualSearch: React.FC<ManualSearchProps> = ({
@@ -203,9 +203,9 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-1">Conseils pour une meilleure analyse</p>
               <ul className="space-y-1">
-                <li>• Saisissez le nom exact tel qu'il apparaît sur l'emballage</li>
-                <li>• Incluez les ingrédients si possible pour une analyse plus précise</li>
-                <li>• Le code-barres permet d'identifier le produit plus rapidement</li>
+                <li>â€Â¢ Saisissez le nom exact tel qu'il apparaît sur l'emballage</li>
+                <li>â€Â¢ Incluez les ingrédients si possible pour une analyse plus précise</li>
+                <li>â€Â¢ Le code-barres permet d'identifier le produit plus rapidement</li>
               </ul>
             </div>
           </div>

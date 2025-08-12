@@ -17,63 +17,63 @@ interface CosmeticProduct {
 const cosmeticProducts: CosmeticProduct[] = [
   {
     id: 'rouge-levres-naturel',
-    name: 'Rouge à Lèvres Naturel',
+    name: 'Rouge ÃƒÂ  Lèvres Naturel',
     brand: 'BioChic',
     category: 'Maquillage',
-    image: '💄',
+    image: 'Ã°Å¸â€™â€ž',
     ingredients: ['Cire de candelilla bio', 'Huile de jojoba bio', 'Pigments minéraux naturels'],
-    description: 'Rouge à lèvres longue tenue formulé avec 98% d\'ingrédients naturels',
-    price: '24,90 €'
+    description: 'Rouge ÃƒÂ  lèvres longue tenue formulé avec 98% d\'ingrédients naturels',
+    price: '24,90 ââ€šÂ¬'
   },
   {
     id: 'creme-visage-hydratante',
     name: 'Crème Visage Hydratante',
     brand: 'GreenSkin',
     category: 'Soin du visage',
-    image: '🧴',
+    image: 'Ã°Å¸Â§Â´',
     ingredients: ['Aqua', 'Glycérine végétale', 'Acide hyaluronique', 'Huile d\'argan bio'],
     description: 'Crème hydratante 24h pour tous types de peaux, certifiée bio',
-    price: '32,50 €'
+    price: '32,50 ââ€šÂ¬'
   },
   {
     id: 'shampoing-doux-bio',
     name: 'Shampoing Doux Bio',
     brand: 'CosméBio',
     category: 'Soin des cheveux',
-    image: '🧴',
+    image: 'Ã°Å¸Â§Â´',
     ingredients: ['Coco-glucoside', 'Aloe vera bio', 'Huile essentielle lavande', 'Protéines de blé'],
     description: 'Shampoing sans sulfates pour cheveux sensibles, formule douce',
-    price: '18,90 €'
+    price: '18,90 ââ€šÂ¬'
   },
   {
     id: 'deodorant-solide',
     name: 'Déodorant Solide',
     brand: 'EcoFresh',
     category: 'Hygiène',
-    image: '🌿',
+    image: 'Ã°Å¸Å’Â¿',
     ingredients: ['Bicarbonate de sodium', 'Beurre de karité bio', 'Huile essentielle palmarosa'],
     description: 'Déodorant solide efficace 24h, sans aluminium ni parabènes',
-    price: '12,90 €'
+    price: '12,90 ââ€šÂ¬'
   },
   {
     id: 'lotion-corps',
     name: 'Lotion Corps',
     brand: 'PureSkin',
     category: 'Soin du corps',
-    image: '🧴',
+    image: 'Ã°Å¸Â§Â´',
     ingredients: ['Aloe vera bio', 'Beurre de cacao', 'Huile de coco vierge'],
-    description: 'Lotion corporelle nourrissante à absorption rapide',
-    price: '28,90 €'
+    description: 'Lotion corporelle nourrissante ÃƒÂ  absorption rapide',
+    price: '28,90 ââ€šÂ¬'
   },
   {
     id: 'huile-cheveux',
     name: 'Huile Cheveux',
     brand: 'NatureHair',
     category: 'Soin des cheveux',
-    image: '✨',
+    image: 'âÅ“Â¨',
     ingredients: ['Huile d\'argan bio', 'Huile de ricin bio'],
     description: 'Huile capillaire réparatrice pour cheveux abîmés et secs',
-    price: '22,90 €'
+    price: '22,90 ââ€šÂ¬'
   }
 ];
 
@@ -101,10 +101,10 @@ export default function CosmeticDemo() {
   };
 
   const getSafetyIcon = (score: number) => {
-    if (score >= 80) return '✅';
-    if (score >= 60) return '⚠️';
-    if (score >= 40) return '🔶';
-    return '❌';
+    if (score >= 80) return 'âÅ“â€¦';
+    if (score >= 60) return 'âÅ¡Â ïÂ¸Â';
+    if (score >= 40) return 'Ã°Å¸â€Â¶';
+    return 'âÂÅ’';
   };
 
   const getRiskLevelText = (riskLevel: string) => {
@@ -122,17 +122,17 @@ export default function CosmeticDemo() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
-            <span className="text-4xl mr-3">💄</span>
+            <span className="text-4xl mr-3">Ã°Å¸â€™â€ž</span>
             <h1 className="text-4xl font-bold text-gray-800">
               Analyse Cosmétiques IA
             </h1>
           </div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Découvrez la composition de vos produits cosmétiques grâce à notre IA spécialisée.
+            Découvrez la composition de vos produits cosmétiques grâce ÃƒÂ  notre IA spécialisée.
             Analyse des ingrédients INCI, détection des substances préoccupantes et recommandations personnalisées.
           </p>
           <div className="mt-4 inline-flex items-center px-4 py-2 bg-pink-100 text-pink-800 rounded-full text-sm font-medium">
-            <span className="mr-2">🧪</span>
+            <span className="mr-2">Ã°Å¸Â§Âª</span>
             Mode simulation - Données réalistes pour démonstration
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function CosmeticDemo() {
                         <span className="ml-2">Analyse...</span>
                       </span>
                     ) : (
-                      '🔬 Analyser'
+                      'Ã°Å¸â€Â¬ Analyser'
                     )}
                   </button>
                 </div>
@@ -214,7 +214,7 @@ export default function CosmeticDemo() {
                   Résultats de l'analyse cosmétique
                 </h2>
                 <p className="text-gray-600">
-                  {selectedProduct.name} • {selectedProduct.brand}
+                  {selectedProduct.name} â€Â¢ {selectedProduct.brand}
                 </p>
               </div>
               <div className="text-right">
@@ -234,7 +234,7 @@ export default function CosmeticDemo() {
                 {/* Risk Level */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                    <span className="mr-2">⚠️</span>
+                    <span className="mr-2">âÅ¡Â ïÂ¸Â</span>
                     Niveau de risque
                   </h3>
                   <div className={`inline-flex items-center px-3 py-2 rounded-full text-sm font-medium ${
@@ -250,7 +250,7 @@ export default function CosmeticDemo() {
                 {result.data.product.composition && (
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                      <span className="mr-2">🧪</span>
+                      <span className="mr-2">Ã°Å¸Â§Âª</span>
                       Composition
                     </h3>
                     <div className="space-y-2">
@@ -282,7 +282,7 @@ export default function CosmeticDemo() {
                 {result.data.product.positiveIngredients && result.data.product.positiveIngredients.length > 0 && (
                   <div className="bg-green-50 rounded-lg p-4">
                     <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                      <span className="mr-2">✅</span>
+                      <span className="mr-2">âÅ“â€¦</span>
                       Ingrédients bénéfiques
                     </h3>
                     <div className="space-y-3">
@@ -303,7 +303,7 @@ export default function CosmeticDemo() {
                 {result.data.product.problematicIngredients && result.data.product.problematicIngredients.length > 0 && (
                   <div className="bg-red-50 rounded-lg p-4">
                     <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                      <span className="mr-2">⚠️</span>
+                      <span className="mr-2">âÅ¡Â ïÂ¸Â</span>
                       Ingrédients préoccupants
                     </h3>
                     <div className="space-y-3">
@@ -328,8 +328,8 @@ export default function CosmeticDemo() {
                 }`}>
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
                     <span className="mr-2">
-                      {result.data.product.recommendation.type === 'enjoy' ? '👍' :
-                       result.data.product.recommendation.type === 'moderate' ? '⚖️' : '👎'}
+                      {result.data.product.recommendation.type === 'enjoy' ? 'Ã°Å¸â€˜Â' :
+                       result.data.product.recommendation.type === 'moderate' ? 'âÅ¡â€“ïÂ¸Â' : 'Ã°Å¸â€˜Å½'}
                     </span>
                     Recommandation
                   </h3>
@@ -343,7 +343,7 @@ export default function CosmeticDemo() {
                       <ul className="space-y-1">
                         {result.data.product.recommendation.alternatives.map((alt, index) => (
                           <li key={index} className="text-sm text-gray-600 flex items-center">
-                            <span className="mr-2">•</span>
+                            <span className="mr-2">â€Â¢</span>
                             {alt}
                           </li>
                         ))}
@@ -355,13 +355,13 @@ export default function CosmeticDemo() {
                 {/* Scientific Sources */}
                 <div className="bg-blue-50 rounded-lg p-4">
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                    <span className="mr-2">📚</span>
+                    <span className="mr-2">Ã°Å¸â€œÅ¡</span>
                     Sources scientifiques
                   </h3>
                   <ul className="space-y-2">
                     {result.data.product.scientificSources.map((source, index) => (
                       <li key={index} className="text-sm text-blue-800 flex items-start">
-                        <span className="mr-2 mt-1">•</span>
+                        <span className="mr-2 mt-1">â€Â¢</span>
                         <span>{source}</span>
                       </li>
                     ))}
@@ -391,7 +391,7 @@ export default function CosmeticDemo() {
         {error && (
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
             <div className="flex">
-              <span className="mr-2">❌</span>
+              <span className="mr-2">âÂÅ’</span>
               <div>
                 <h3 className="text-red-800 font-medium">Erreur d'analyse</h3>
                 <p className="text-red-700 text-sm mt-1">{error}</p>
@@ -403,25 +403,25 @@ export default function CosmeticDemo() {
         {/* Information Section */}
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-pink-100">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            🧪 Comprendre l'analyse cosmétique ECOLOJIA
+            Ã°Å¸Â§Âª Comprendre l'analyse cosmétique ECOLOJIA
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="text-center p-4">
-              <div className="text-3xl mb-3">🏷️</div>
+              <div className="text-3xl mb-3">Ã°Å¸ÂÂ·ïÂ¸Â</div>
               <h3 className="font-bold text-gray-800 mb-2">Analyse INCI</h3>
               <p className="text-gray-600 text-sm">
                 Décryptage de la nomenclature internationale des ingrédients cosmétiques
               </p>
             </div>
             <div className="text-center p-4">
-              <div className="text-3xl mb-3">⚖️</div>
-              <h3 className="font-bold text-gray-800 mb-2">Évaluation des risques</h3>
+              <div className="text-3xl mb-3">âÅ¡â€“ïÂ¸Â</div>
+              <h3 className="font-bold text-gray-800 mb-2">Ãƒâ€°valuation des risques</h3>
               <p className="text-gray-600 text-sm">
                 Classification selon les données SCCS et les réglementations européennes
               </p>
             </div>
             <div className="text-center p-4">
-              <div className="text-3xl mb-3">🌿</div>
+              <div className="text-3xl mb-3">Ã°Å¸Å’Â¿</div>
               <h3 className="font-bold text-gray-800 mb-2">Alternatives naturelles</h3>
               <p className="text-gray-600 text-sm">
                 Suggestions de produits plus sains et respectueux de l'environnement

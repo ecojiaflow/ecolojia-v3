@@ -28,11 +28,11 @@ export function useNovaApi(): NovaApiState {
       setError(null);
       setResult(null);
 
-      console.log('🔬 Démarrage analyse pour:', payload.title);
+      console.log('Ã°Å¸â€Â¬ Démarrage analyse pour:', payload.title);
 
       // Si c'est un cosmétique ou détergent, utiliser la simulation
       if (payload.detected_type === 'cosmetic' || payload.detected_type === 'detergent') {
-        console.log('🧪 Mode simulation activé pour:', payload.detected_type);
+        console.log('Ã°Å¸Â§Âª Mode simulation activé pour:', payload.detected_type);
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simulation délai API
         
         const simulatedResult = generateCosmeticSimulation(payload);
@@ -43,8 +43,8 @@ export function useNovaApi(): NovaApiState {
       // Pour l'alimentaire, utiliser la vraie API
       const API_URL = 'https://ecolojia-backend-working.onrender.com/api/analyze/auto';
 
-      console.log('📡 URL API utilisée:', API_URL);
-      console.log('📦 Payload envoyé:', payload);
+      console.log('Ã°Å¸â€œÂ¡ URL API utilisée:', API_URL);
+      console.log('Ã°Å¸â€œÂ¦ Payload envoyé:', payload);
 
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -62,7 +62,7 @@ export function useNovaApi(): NovaApiState {
         }),
       });
 
-      console.log('📨 Status réponse:', res.status, res.statusText);
+      console.log('Ã°Å¸â€œÂ¨ Status réponse:', res.status, res.statusText);
 
       if (!res.ok) {
         let errorMessage = `Erreur ${res.status}: ${res.statusText}`;
@@ -76,11 +76,11 @@ export function useNovaApi(): NovaApiState {
       }
 
       const data = await res.json();
-      console.log('✅ Réponse API reçue:', data);
+      console.log('âÅ“â€¦ Réponse API reçue:', data);
       
       setResult(data);
     } catch (e: any) {
-      console.error('❌ useNovaApi - analyze error:', e);
+      console.error('âÂÅ’ useNovaApi - analyze error:', e);
       setError(e.message || 'Erreur inconnue lors de l\'analyse');
     } finally {
       setLoading(false);
@@ -179,13 +179,13 @@ function generateCosmeticSimulation(payload: AnalysisRequest) {
           ]) : undefined
         },
         scientificSources: isCosmetic ? [
-          'Règlement (CE) n° 1223/2009 relatif aux produits cosmétiques',
+          'Règlement (CE) nÃ‚Â° 1223/2009 relatif aux produits cosmétiques',
           'Base de données CosIng (Commission européenne)',
-          'Évaluations SCCS (Comité scientifique pour la sécurité des consommateurs)',
+          'Ãƒâ€°valuations SCCS (Comité scientifique pour la sécurité des consommateurs)',
           'ANSM - Agence nationale de sécurité du médicament',
-          'Étude INERIS sur les perturbateurs endocriniens (2024)'
+          'Ãƒâ€°tude INERIS sur les perturbateurs endocriniens (2024)'
         ] : [
-          'Règlement (CE) n° 648/2004 relatif aux détergents',
+          'Règlement (CE) nÃ‚Â° 648/2004 relatif aux détergents',
           'Classification CLP (Classification, étiquetage et emballage)',
           'Base de données ECHA (Agence européenne des produits chimiques)',
           'ADEME - Agence de l\'environnement et de la maîtrise de l\'énergie',
@@ -210,7 +210,7 @@ function generateCosmeticSimulation(payload: AnalysisRequest) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ✅ HOOK POUR COMPATIBILITÉ AVEC L'ANCIENNE VERSION                          */
+/* âÅ“â€¦ HOOK POUR COMPATIBILITÃƒâ€° AVEC L'ANCIENNE VERSION                          */
 /* -------------------------------------------------------------------------- */
 
 interface UseNovaApiState {
@@ -244,7 +244,7 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
     setState({ data: null, loading: true, error: null });
     
     try {
-      console.log('🔬 Simulation analyse NOVA pour:', productName);
+      console.log('Ã°Å¸â€Â¬ Simulation analyse NOVA pour:', productName);
       
       // Simulation d'analyse avec données mockées réalistes
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -271,7 +271,7 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
                    ingredients?.includes('E150d') || ingredients?.includes('parfum') ? 25 : 60,
             ultraProcessedMarkers: ingredients?.includes('E150d') || ingredients?.includes('parfum') ? [
               isCosmetic ? 'Parfum synthétique détecté' : 'Colorant artificiel E150d détecté',
-              isCosmetic ? 'Conservateurs chimiques' : 'Édulcorant E952 détecté',
+              isCosmetic ? 'Conservateurs chimiques' : 'Ãƒâ€°dulcorant E952 détecté',
               isCosmetic ? 'Tensioactifs sulfatés' : 'Conservateur E211 détecté'
             ] : [],
             additives: ingredients?.includes('E150d') || ingredients?.includes('parfum') ? [
@@ -284,7 +284,7 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
               { 
                 code: isCosmetic ? 'Parfum' : 'E952', 
                 name: isCosmetic ? 'Parfum synthétique' : 'Cyclamate', 
-                category: isCosmetic ? 'Fragrance' : 'Édulcorant', 
+                category: isCosmetic ? 'Fragrance' : 'Ãƒâ€°dulcorant', 
                 riskLevel: 'medium' as const
               }
             ] : [],
@@ -312,12 +312,12 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
                 ] : undefined
             },
             scientificSources: isCosmetic ? [
-              'Règlement (CE) n° 1223/2009 relatif aux produits cosmétiques',
+              'Règlement (CE) nÃ‚Â° 1223/2009 relatif aux produits cosmétiques',
               'Base de données CosIng (Commission européenne)',
-              'Évaluations SCCS (Comité scientifique pour la sécurité des consommateurs)',
+              'Ãƒâ€°valuations SCCS (Comité scientifique pour la sécurité des consommateurs)',
               'ANSM - Agence nationale de sécurité du médicament'
             ] : isDetergent ? [
-              'Règlement (CE) n° 648/2004 relatif aux détergents',
+              'Règlement (CE) nÃ‚Â° 648/2004 relatif aux détergents',
               'Classification CLP (Classification, étiquetage et emballage)',
               'Base de données ECHA (Agence européenne des produits chimiques)',
               'ADEME - Agence de l\'environnement et de la maîtrise de l\'énergie'
@@ -341,7 +341,7 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
       
       return mockResult;
     } catch (error: any) {
-      console.error('❌ Erreur analyse NOVA:', error);
+      console.error('âÂÅ’ Erreur analyse NOVA:', error);
       
       const errorMessage = 'Erreur lors de l\'analyse du produit (mode simulation)';
       setState({ data: null, loading: false, error: errorMessage });
@@ -383,15 +383,15 @@ export function useQuickNovaTest() {
 
   const testNutella = useCallback(() => {
     return analyzeProduct(
-      'Nutella Pâte à tartiner',
-      'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT écrémé en poudre 6.6%, LACTOSÉRUM en poudre, émulsifiants E322 (lécithines) E471 (mono- et diglycérides d\'acides gras), arôme vanilline'
+      'Nutella Pâte ÃƒÂ  tartiner',
+      'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT écrémé en poudre 6.6%, LACTOSÃƒâ€°RUM en poudre, émulsifiants E322 (lécithines) E471 (mono- et diglycérides d\'acides gras), arôme vanilline'
     );
   }, [analyzeProduct]);
 
   const testPizzaSurgelee = useCallback(() => {
     return analyzeProduct(
       'Pizza 4 Fromages Surgelée',
-      'Pâte (farine de BLÉ, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goût E621, stabilisant E412, colorant E150d'
+      'Pâte (farine de BLÃƒâ€°, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goÃƒÂ»t E621, stabilisant E412, colorant E150d'
     );
   }, [analyzeProduct]);
 
@@ -413,7 +413,7 @@ export function useQuickNovaTest() {
   // Tests détergents
   const testLessiveBio = useCallback(() => {
     return analyzeProduct(
-      'Lessive Écologique Bio',
+      'Lessive Ãƒâ€°cologique Bio',
       'Savon de Marseille, Bicarbonate de sodium, Cristaux de soude, Huiles essentielles bio, Enzymes naturelles, Agents lavants végétaux'
     );
   }, [analyzeProduct]);

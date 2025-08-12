@@ -193,7 +193,7 @@ const ThermoMeter = ({
           style={{ backgroundColor: currentColor }}
         />
         <span className="text-xs text-gray-400">
-          {fillPercentage <= 33 ? 'Optimal' : fillPercentage <= 66 ? 'Modéré' : 'Élevé'}
+          {fillPercentage <= 33 ? 'Optimal' : fillPercentage <= 66 ? 'Modéré' : 'Ãƒâ€°levé'}
         </span>
       </div>
     </div>

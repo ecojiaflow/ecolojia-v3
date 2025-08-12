@@ -23,7 +23,7 @@ const DEFAULT_PARTNERS: AffiliatePartner[] = [
   {
     id: 'lafourche',
     name: 'La Fourche',
-    tagline: 'Bio en ligne à prix juste',
+    tagline: 'Bio en ligne ÃƒÂ  prix juste',
     discount: '-10% première commande',
     available: true
   },
@@ -38,7 +38,7 @@ const DEFAULT_PARTNERS: AffiliatePartner[] = [
     id: 'greenweez',
     name: 'Greenweez',
     tagline: 'Le leader du bio en ligne',
-    discount: 'Livraison offerte dès 49€',
+    discount: 'Livraison offerte dès 49ââ€šÂ¬',
     available: true
   }
 ];
@@ -173,7 +173,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
 
 export default AffiliateButton;
 
-// Styles à ajouter dans index.css ou Tailwind config
+// Styles ÃƒÂ  ajouter dans index.css ou Tailwind config
 /*
 @keyframes fadeIn {
   from {

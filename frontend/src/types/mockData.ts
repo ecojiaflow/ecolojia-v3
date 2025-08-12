@@ -77,7 +77,7 @@ export const DEMO_CONFIG = {
   SESSION_DURATION_HOURS: 24
 };
 
-// ===== DONNÉES FACTICES =====
+// ===== DONNÃƒâ€°ES FACTICES =====
 export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
   {
     id: 'scan-1',
@@ -108,7 +108,7 @@ export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
   },
   {
     id: 'scan-4',
-    productName: 'Lessive Écologique',
+    productName: 'Lessive Ãƒâ€°cologique',
     brand: 'Ecover',
     category: 'detergents',
     healthScore: 85,
@@ -151,14 +151,14 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
 
   const usageConfig = {
     free: {
-      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 déjà utilisés
+      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 déjÃƒÂ  utilisés
       aiQuestionsToday: 0,
       aiQuestionsThisMonth: 0,
       exportsThisMonth: 0,
       apiCallsThisMonth: 0
     },
     premium: {
-      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 déjà utilisés
+      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 déjÃƒÂ  utilisés
       aiQuestionsToday: Math.floor(Math.random() * 3) + 1, // 1-4 aujourd'hui
       aiQuestionsThisMonth: Math.floor(Math.random() * 25) + 10, // 10-35 ce mois
       exportsThisMonth: Math.floor(Math.random() * 3), // 0-3 ce mois

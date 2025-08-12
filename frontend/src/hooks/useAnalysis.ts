@@ -1,4 +1,4 @@
-// 📁 src/hooks/useAnalysis.ts
+// Ã°Å¸â€œÂ src/hooks/useAnalysis.ts
 
 import { useState, useCallback } from 'react';
 import { analyzeAuto, AnalyzeRequest, AnalyzeResponse } from '../api/realApi';
@@ -28,7 +28,7 @@ export const useAnalysis = (onQuotaUsed?: () => void): UseAnalysisReturn => {
         return result;
       } catch (err: any) {
         setError(err.message);
-        console.error('❌ Erreur analyse:', err);
+        console.error('âÂÅ’ Erreur analyse:', err);
         return null;
       } finally {
         setIsAnalyzing(false);
@@ -43,3 +43,4 @@ export const useAnalysis = (onQuotaUsed?: () => void): UseAnalysisReturn => {
     analyze
   };
 };
+

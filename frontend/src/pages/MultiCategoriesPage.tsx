@@ -1,5 +1,5 @@
 // frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
-// Page principale pour afficher et tester les catégories multi-analyses - VERSION CORRIGÉE
+// Page principale pour afficher et tester les catégories multi-analyses - VERSION CORRIGÃƒâ€°E
 
 import React, { useState, useEffect } from 'react';
 import CategoryCard from '../components/CategoryCard';
@@ -34,20 +34,20 @@ const MultiCategoriesPage: React.FC = () => {
     }
   };
 
-  // Fonction pour charger les catégories - CORRIGÉE
+  // Fonction pour charger les catégories - CORRIGÃƒâ€°E
   const loadCategories = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      console.log('🔄 Chargement des catégories...');
+      console.log('Ã°Å¸â€â€ž Chargement des catégories...');
       const response: CategoriesResponse = await multiCategoryApi.getCategories();
       
-      // 🔧 FIX: Inspection de la réponse et adaptation dynamique
-      console.log('📊 Réponse API reçue:', response);
+      // Ã°Å¸â€Â§ FIX: Inspection de la réponse et adaptation dynamique
+      console.log('Ã°Å¸â€œÅ  Réponse API reçue:', response);
       
       if (response.success) {
-        // 🔧 FIX: Gestion flexible de la structure de réponse
+        // Ã°Å¸â€Â§ FIX: Gestion flexible de la structure de réponse
         let categoriesData: Category[] = [];
         let totalCount = 0;
         
@@ -55,7 +55,7 @@ const MultiCategoriesPage: React.FC = () => {
           categoriesData = response.categories;
           totalCount = response.total_categories || response.categories.length;
         } else if ((response as any).data && Array.isArray((response as any).data)) {
-          // Cas où les catégories sont dans response.data
+          // Cas oÃƒÂ¹ les catégories sont dans response.data
           categoriesData = (response as any).data;
           totalCount = (response as any).total || categoriesData.length;
         } else {
@@ -63,14 +63,14 @@ const MultiCategoriesPage: React.FC = () => {
         }
         
         setCategories(categoriesData);
-        console.log('✅ Catégories chargées:', totalCount, 'catégories trouvées');
+        console.log('âÅ“â€¦ Catégories chargées:', totalCount, 'catégories trouvées');
       } else {
         throw new Error(response.error || 'Réponse API invalide');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
-      console.error('❌ Erreur chargement catégories:', errorMessage);
+      console.error('âÂÅ’ Erreur chargement catégories:', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const MultiCategoriesPage: React.FC = () => {
   // Callback appelé quand une analyse est terminée
   const handleAnalysisComplete = (result: AnalysisResponse) => {
     setLastAnalysis(result);
-    console.log('📊 Nouvelle analyse terminée:', result.category, result.analysis?.overall_score);
+    console.log('Ã°Å¸â€œÅ  Nouvelle analyse terminée:', result.category, result.analysis?.overall_score);
   };
 
   // Fonction pour réessayer le chargement
@@ -91,9 +91,9 @@ const MultiCategoriesPage: React.FC = () => {
   // Rendu du statut de connexion
   const renderConnectionStatus = () => {
     const statusConfig = {
-      checking: { color: 'text-yellow-600', bg: 'bg-yellow-50', icon: '🔄', text: 'Vérification...' },
-      connected: { color: 'text-green-600', bg: 'bg-green-50', icon: '✅', text: 'API Connectée' },
-      disconnected: { color: 'text-red-600', bg: 'bg-red-50', icon: '❌', text: 'API Déconnectée' }
+      checking: { color: 'text-yellow-600', bg: 'bg-yellow-50', icon: 'Ã°Å¸â€â€ž', text: 'Vérification...' },
+      connected: { color: 'text-green-600', bg: 'bg-green-50', icon: 'âÅ“â€¦', text: 'API Connectée' },
+      disconnected: { color: 'text-red-600', bg: 'bg-red-50', icon: 'âÂÅ’', text: 'API Déconnectée' }
     };
     
     const config = statusConfig[connectionStatus];
@@ -114,7 +114,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              🌱 ECOLOJIA Multi-Catégories
+              Ã°Å¸Å’Â± ECOLOJIA Multi-Catégories
             </h1>
             <p className="text-xl text-gray-600">
               Analyse IA scientifique pour tous vos produits
@@ -125,7 +125,7 @@ const MultiCategoriesPage: React.FC = () => {
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-lg text-gray-600">Chargement des catégories...</p>
-            <p className="text-sm text-gray-500 mt-2">Connexion à l'API ECOLOJIA</p>
+            <p className="text-sm text-gray-500 mt-2">Connexion ÃƒÂ  l'API ECOLOJIA</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              🌱 ECOLOJIA Multi-Catégories
+              Ã°Å¸Å’Â± ECOLOJIA Multi-Catégories
             </h1>
             <p className="text-xl text-gray-600">
               Analyse IA scientifique pour tous vos produits
@@ -150,7 +150,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Error state */}
           <div className="max-w-2xl mx-auto">
             <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-8 text-center">
-              <div className="text-6xl mb-4">❌</div>
+              <div className="text-6xl mb-4">âÂÅ’</div>
               <h2 className="text-2xl font-bold text-red-800 mb-4">
                 Erreur de Connexion
               </h2>
@@ -162,7 +162,7 @@ const MultiCategoriesPage: React.FC = () => {
                 onClick={handleRetry}
                 className="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-2xl transition-colors"
               >
-                🔄 Réessayer
+                Ã°Å¸â€â€ž Réessayer
               </button>
             </div>
           </div>
@@ -171,18 +171,18 @@ const MultiCategoriesPage: React.FC = () => {
     );
   }
 
-  // 🔧 FIX: Vérification que les catégories sont bien chargées
+  // Ã°Å¸â€Â§ FIX: Vérification que les catégories sont bien chargées
   if (!categories || categories.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              🌱 ECOLOJIA Multi-Catégories
+              Ã°Å¸Å’Â± ECOLOJIA Multi-Catégories
             </h1>
             <div className="max-w-2xl mx-auto">
               <div className="bg-yellow-50 border-2 border-yellow-200 rounded-3xl p-8 text-center">
-                <div className="text-6xl mb-4">📭</div>
+                <div className="text-6xl mb-4">Ã°Å¸â€œÂ­</div>
                 <h2 className="text-2xl font-bold text-yellow-800 mb-4">
                   Aucune Catégorie Disponible
                 </h2>
@@ -193,7 +193,7 @@ const MultiCategoriesPage: React.FC = () => {
                   onClick={handleRetry}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-2xl transition-colors"
                 >
-                  🔄 Recharger
+                  Ã°Å¸â€â€ž Recharger
                 </button>
               </div>
             </div>
@@ -210,7 +210,7 @@ const MultiCategoriesPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
-            🌱 ECOLOJIA Multi-Catégories
+            Ã°Å¸Å’Â± ECOLOJIA Multi-Catégories
           </h1>
           <p className="text-xl text-gray-600 mb-6">
             Analyse IA scientifique pour tous vos produits de consommation
@@ -245,7 +245,7 @@ const MultiCategoriesPage: React.FC = () => {
           <div className="max-w-4xl mx-auto mb-12">
             <div className="bg-white rounded-3xl shadow-lg border-2 border-green-200 p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
-                📊 Dernière Analyse Terminée
+                Ã°Å¸â€œÅ  Dernière Analyse Terminée
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -296,12 +296,12 @@ const MultiCategoriesPage: React.FC = () => {
         <div className="max-w-4xl mx-auto mt-16">
           <div className="bg-white rounded-3xl shadow-lg p-8">
             <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              🧪 Comment tester les analyses ?
+              Ã°Å¸Â§Âª Comment tester les analyses ?
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-4xl mb-3">🍎</div>
+                <div className="text-4xl mb-3">Ã°Å¸ÂÅ½</div>
                 <h4 className="font-bold text-green-600 mb-2">Alimentaire</h4>
                 <p className="text-sm text-gray-600">
                   Test avec céréales bio + additifs pour détecter l'ultra-transformation
@@ -309,7 +309,7 @@ const MultiCategoriesPage: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="text-4xl mb-3">💄</div>
+                <div className="text-4xl mb-3">Ã°Å¸â€™â€ž</div>
                 <h4 className="font-bold text-pink-600 mb-2">Cosmétiques</h4>
                 <p className="text-sm text-gray-600">
                   Test avec shampooing + sulfates pour analyser les ingrédients controversés
@@ -317,7 +317,7 @@ const MultiCategoriesPage: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="text-4xl mb-3">🧽</div>
+                <div className="text-4xl mb-3">Ã°Å¸Â§Â½</div>
                 <h4 className="font-bold text-blue-600 mb-2">Détergents</h4>
                 <p className="text-sm text-gray-600">
                   Test avec lessive + tensioactifs pour évaluer l'impact environnemental
@@ -330,11 +330,11 @@ const MultiCategoriesPage: React.FC = () => {
         {/* Footer */}
         <div className="text-center mt-16 py-8">
           <p className="text-gray-500">
-            🔬 Powered by ECOLOJIA Scientific AI • 
-            Backend API: {connectionStatus === 'connected' ? '✅ Opérationnel' : '❌ Indisponible'}
+            Ã°Å¸â€Â¬ Powered by ECOLOJIA Scientific AI â€Â¢ 
+            Backend API: {connectionStatus === 'connected' ? 'âÅ“â€¦ Opérationnel' : 'âÂÅ’ Indisponible'}
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            Sources: ANSES, EFSA, INSERM, OMS • Classification NOVA • Bases scientifiques officielles
+            Sources: ANSES, EFSA, INSERM, OMS â€Â¢ Classification NOVA â€Â¢ Bases scientifiques officielles
           </p>
         </div>
       </div>

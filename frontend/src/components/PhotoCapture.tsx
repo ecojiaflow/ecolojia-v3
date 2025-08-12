@@ -56,7 +56,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
         await videoRef.current.play();
       }
     } catch (err) {
-      setError('Impossible d\'accéder à la caméra');
+      setError('Impossible d\'accéder ÃƒÂ  la caméra');
       setState('error');
       onError?.(err as Error);
     }
@@ -83,7 +83,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
-      // Ajuster le canvas à la taille de la vidéo
+      // Ajuster le canvas ÃƒÂ  la taille de la vidéo
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
@@ -209,7 +209,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
   return (
     <div className="w-full max-w-md mx-auto">
       <AnimatePresence mode="wait">
-        {/* État initial - Choix du mode */}
+        {/* Ãƒâ€°tat initial - Choix du mode */}
         {state === 'idle' && (
           <motion.div
             key="idle"
@@ -321,7 +321,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* État de traitement */}
+        {/* Ãƒâ€°tat de traitement */}
         {state === 'processing' && (
           <motion.div
             key="processing"
@@ -383,7 +383,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* État d'erreur */}
+        {/* Ãƒâ€°tat d'erreur */}
         {state === 'error' && (
           <motion.div
             key="error"
@@ -408,3 +408,4 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+

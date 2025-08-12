@@ -95,7 +95,7 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Connexion à votre compte
+        Connexion ÃƒÂ  votre compte
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -149,7 +149,7 @@ export const LoginForm: React.FC = () => {
               className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent transition-colors ${
                 errors.password ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="••••••••"
+              placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
               autoComplete="current-password"
               disabled={isLoading}
             />

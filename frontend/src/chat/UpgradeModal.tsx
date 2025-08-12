@@ -141,8 +141,8 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
               <Calculator className="w-5 h-5 text-orange-600" />
               <div>
-                <div className="font-medium text-orange-800">Coût maîtrisé</div>
-                <div className="text-sm text-orange-600">~0,02€ par question • {currentUsage.totalCost.toFixed(4)}€ ce mois</div>
+                <div className="font-medium text-orange-800">CoÃƒÂ»t maîtrisé</div>
+                <div className="text-sm text-orange-600">~0,02ââ€šÂ¬ par question â€Â¢ {currentUsage.totalCost.toFixed(4)}ââ€šÂ¬ ce mois</div>
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-4 mb-6 text-center">
             <div className="text-sm text-gray-600 mb-1">Tarification transparente</div>
             <div className="text-2xl font-bold text-purple-800">Pay-as-you-use</div>
-            <div className="text-sm text-purple-600">Seulement ce que vous consommez • Pas d'abonnement</div>
+            <div className="text-sm text-purple-600">Seulement ce que vous consommez â€Â¢ Pas d'abonnement</div>
           </div>
 
           {/* Actions */}
@@ -234,7 +234,7 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
                 onClick={onUpgrade}
                 className="text-xs text-yellow-300 hover:text-yellow-100 mt-1"
               >
-                🔓 Upgrade
+                Ã°Å¸â€â€œ Upgrade
               </button>
             )}
           </div>
@@ -242,7 +242,7 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
           <div>
             <div className="text-lg font-bold">{stats.monthlyUsed}</div>
             <div className="text-xs opacity-75">questions ce mois</div>
-            <div className="text-xs mt-1">💰 {stats.totalCost.toFixed(4)}€</div>
+            <div className="text-xs mt-1">Ã°Å¸â€™Â° {stats.totalCost.toFixed(4)}ââ€šÂ¬</div>
           </div>
         )}
       </div>
@@ -321,10 +321,10 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-gray-600">Coût</div>
+              <div className="text-gray-600">CoÃƒÂ»t</div>
               <div className="font-bold text-green-600 flex items-center gap-1">
                 <Calculator className="w-3 h-3" />
-                {stats.totalCost.toFixed(4)}€
+                {stats.totalCost.toFixed(4)}ââ€šÂ¬
               </div>
             </div>
           </div>

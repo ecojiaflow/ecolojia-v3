@@ -17,7 +17,7 @@ export function LoginPage() {
   const { toast } = useToast();
   const state = location.state as LocationState;
 
-  // État du formulaire
+  // Ãƒâ€°tat du formulaire
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -211,7 +211,7 @@ export function LoginPage() {
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="••••••••"
+                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button

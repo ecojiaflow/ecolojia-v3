@@ -16,7 +16,7 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
   // Image par défaut fiable
   const defaultImage = 'https://via.assets.so/img.jpg?w=300&h=200&tc=gray&bg=%23f3f4f6&t=Image%20non%20disponible';
   
-  // 🎯 FONCTION CRITIQUE: Gestion de la navigation
+  // Ã°Å¸Å½Â¯ FONCTION CRITIQUE: Gestion de la navigation
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -30,7 +30,7 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
     // Sinon, navigation directe
     const slug = hit.slug || hit.objectID || hit.id;
     
-    console.log('🔗 ProductHit - Navigation vers produit:', {
+    console.log('Ã°Å¸â€â€” ProductHit - Navigation vers produit:', {
       objectID: hit.objectID || hit.id,
       slug: slug,
       title: hit.title
@@ -38,11 +38,11 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
     
     // Validation du slug
     if (!slug || slug === 'undefined' || slug.trim() === '') {
-      console.error('❌ ProductHit - Slug invalide:', slug);
+      console.error('âÂÅ’ ProductHit - Slug invalide:', slug);
       return;
     }
     
-    console.log('✅ ProductHit - Navigation vers:', `/product/${slug}`);
+    console.log('âÅ“â€¦ ProductHit - Navigation vers:', `/product/${slug}`);
     navigate(`/product/${slug}`);
   };
 

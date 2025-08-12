@@ -25,8 +25,8 @@ const App: React.FC = () => {
           } />
           <Route path="*" element={
             <div className="p-8 text-center">
-              <h1 className="text-2xl">Page non trouvée</h1>
-              <a href="/" className="text-blue-500 underline">Retour à l'accueil</a>
+              <h1 className="text-2xl">Page non trouvÃ©e</h1>
+              <a href="/" className="text-blue-500 underline">Retour ÃƒÂ  l'accueil</a>
             </div>
           } />
         </Routes>
@@ -36,3 +36,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

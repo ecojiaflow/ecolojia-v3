@@ -57,7 +57,7 @@ export const usePerformanceMonitoring = () => {
     
     // Log pour debug (en mode développement seulement)
     if (import.meta.env.DEV) {
-      console.log('📊 Performance - Recherche enregistrée:', {
+      console.log('Ã°Å¸â€œÅ  Performance - Recherche enregistrée:', {
         query,
         resultsCount,
         searchTime: `${searchTime}ms`,
@@ -83,7 +83,7 @@ export const usePerformanceMonitoring = () => {
     }
     
     if (import.meta.env.DEV) {
-      console.log('📊 Performance - Page chargée:', {
+      console.log('Ã°Å¸â€œÅ  Performance - Page chargée:', {
         url,
         loadTime: `${loadTime}ms`
       });
@@ -104,7 +104,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.log(`⏱️ Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
+        console.log(`âÂÂ±ïÂ¸Â Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
       }
       
       return { result, time: executionTime };
@@ -113,7 +113,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.error(`❌ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
+        console.error(`âÂÅ’ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
       }
       
       throw error;
@@ -136,7 +136,7 @@ export const usePerformanceMonitoring = () => {
     };
     
     if (import.meta.env.DEV) {
-      console.log('🔄 Performance - Métriques réinitialisées');
+      console.log('Ã°Å¸â€â€ž Performance - Métriques réinitialisées');
     }
   }, []);
   

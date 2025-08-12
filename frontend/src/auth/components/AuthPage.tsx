@@ -23,7 +23,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode = 'login' }) => 
       
       // Vérifier si startDemoMode existe
       if (typeof startDemoMode !== 'function') {
-        console.error('❌ startDemoMode non disponible');
+        console.error('âÂÅ’ startDemoMode non disponible');
         // Fallback: activer le mode démo manuellement
         localStorage.setItem('ecolojia_demo_mode', 'true');
         // Créer un utilisateur démo
@@ -57,7 +57,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode = 'login' }) => 
       
       await startDemoMode();
     } catch (error) {
-      console.error('❌ Erreur activation mode démo:', error);
+      console.error('âÂÅ’ Erreur activation mode démo:', error);
       setDemoError('Impossible d\'activer le mode démo. Veuillez réessayer.');
     }
   };
@@ -76,7 +76,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode = 'login' }) => 
     {
       icon: Shield,
       title: 'Transparence',
-      description: 'Accédez à des informations vérifiées et sourcées'
+      description: 'Accédez ÃƒÂ  des informations vérifiées et sourcées'
     }
   ];
 

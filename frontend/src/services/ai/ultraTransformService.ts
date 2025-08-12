@@ -71,9 +71,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<UltraTransformResult> {
     try {
-      console.log('🔬 UltraTransformService - Démarrage analyse:', { productName });
+      console.log('Ã°Å¸â€Â¬ UltraTransformService - Démarrage analyse:', { productName });
 
-      // ✅ CORRECTION: Utiliser la nouvelle URL /api/products/ultra-transform
+      // âÅ“â€¦ CORRECTION: Utiliser la nouvelle URL /api/products/ultra-transform
       const response = await fetch(`${this.baseUrl}/api/products/ultra-transform`, {
         method: 'POST',
         headers: this.headers,
@@ -84,30 +84,30 @@ class UltraTransformService {
         })
       });
 
-      console.log('🌐 Réponse serveur Ultra-Transform:', response.status, response.statusText);
+      console.log('Ã°Å¸Å’Â Réponse serveur Ultra-Transform:', response.status, response.statusText);
 
       if (!response.ok) {
         if (response.status === 404) {
-          console.warn('⚠️ Endpoint ultra-transform non disponible, utilisation du fallback');
+          console.warn('âÅ¡Â ïÂ¸Â Endpoint ultra-transform non disponible, utilisation du fallback');
           return this.analyzeLocal(productName, ingredients);
         }
         
         const errorData = await response.json().catch(() => ({ error: 'Erreur inconnue' }));
-        console.error('❌ Erreur HTTP:', response.status, errorData);
+        console.error('âÂÅ’ Erreur HTTP:', response.status, errorData);
         throw new Error(errorData.error || errorData.message || `Erreur HTTP ${response.status}`);
       }
 
       const data = await response.json();
       
       if (!data.success) {
-        console.error('❌ Réponse backend échec:', data);
+        console.error('âÂÅ’ Réponse backend échec:', data);
         throw new Error(data.message || 'Erreur analyse ultra-transformation');
       }
       
       // Extraction du résultat selon la structure de réponse
       const result = data.analysis || data;
       
-      console.log('✅ Analyse Ultra-Transformation réussie:', result);
+      console.log('âÅ“â€¦ Analyse Ultra-Transformation réussie:', result);
 
       // Ajout des champs de compatibilité et enrichissement
       const enrichedResult: UltraTransformResult = {
@@ -133,14 +133,14 @@ class UltraTransformService {
 
       return enrichedResult;
     } catch (error: any) {
-      console.error('❌ Erreur service Ultra-Transformation:', error);
+      console.error('âÂÅ’ Erreur service Ultra-Transformation:', error);
       
       // Fallback vers analyse locale si backend indisponible
       if (error.message.includes('fetch') || 
           error.message.includes('Failed to fetch') ||
           error.message.includes('Route non trouvée') ||
           error.message.includes('404')) {
-        console.log('🔄 Fallback vers analyse locale');
+        console.log('Ã°Å¸â€â€ž Fallback vers analyse locale');
         return this.analyzeLocal(productName, ingredients);
       }
       
@@ -156,9 +156,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<CombinedAnalysisResult> {
     try {
-      console.log('🔬 Analyse combinée NOVA + Ultra-Transform:', { productName });
+      console.log('Ã°Å¸â€Â¬ Analyse combinée NOVA + Ultra-Transform:', { productName });
 
-      // ✅ CORRECTION: Tenter d'abord /products/combined, sinon fallback
+      // âÅ“â€¦ CORRECTION: Tenter d'abord /products/combined, sinon fallback
       const response = await fetch(`${this.baseUrl}/api/products/combined`, {
         method: 'POST',
         headers: this.headers,
@@ -172,7 +172,7 @@ class UltraTransformService {
       if (!response.ok) {
         if (response.status === 404) {
           // Fallback : analyses séparées
-          console.log('🔄 Endpoint combined non disponible, analyses séparées');
+          console.log('Ã°Å¸â€â€ž Endpoint combined non disponible, analyses séparées');
           return this.combinedFallback(productName, ingredients);
         }
         throw new Error(`Erreur HTTP ${response.status}`);
@@ -181,11 +181,11 @@ class UltraTransformService {
       const data = await response.json();
       const result = data.analysis || data;
       
-      console.log('✅ Analyse combinée réussie:', result);
+      console.log('âÅ“â€¦ Analyse combinée réussie:', result);
 
       return result;
     } catch (error: any) {
-      console.error('❌ Erreur analyse combinée:', error);
+      console.error('âÂÅ’ Erreur analyse combinée:', error);
       
       if (error.message.includes('404') || error.message.includes('fetch')) {
         return this.combinedFallback(productName, ingredients);
@@ -199,7 +199,7 @@ class UltraTransformService {
    * Fallback pour analyse combinée
    */
   private async combinedFallback(productName: string, ingredients: string): Promise<CombinedAnalysisResult> {
-    console.log('🔄 Fallback analyse combinée');
+    console.log('Ã°Å¸â€â€ž Fallback analyse combinée');
     
     // Analyse ultra-transformation locale
     const ultraResult = await this.analyzeUltraTransformation(productName, ingredients);
@@ -225,11 +225,11 @@ class UltraTransformService {
       ultraTransformation: ultraResult,
       holisticScore: Math.round((novaResult.healthScore + (100 - (ultraResult.transformationScore || 80))) / 2),
       globalAssessment: ultraResult.transformationLevel >= 4 ? 
-        'Produit ultra-transformé à limiter' : 
+        'Produit ultra-transformé ÃƒÂ  limiter' : 
         'Produit acceptable avec modération',
       recommendations: [
         ...ultraResult.recommendations,
-        '🔄 Analyse combinée en mode fallback'
+        'Ã°Å¸â€â€ž Analyse combinée en mode fallback'
       ],
       timestamp: new Date().toISOString()
     };
@@ -239,7 +239,7 @@ class UltraTransformService {
    * Analyse locale de secours (fallback)
    */
   private analyzeLocal(productName: string, ingredients: string): UltraTransformResult {
-    console.log('🔄 Analyse Ultra-Transformation locale pour:', productName);
+    console.log('Ã°Å¸â€â€ž Analyse Ultra-Transformation locale pour:', productName);
     
     // Analyse simplifiée locale
     const lower = ingredients.toLowerCase();
@@ -313,13 +313,13 @@ class UltraTransformService {
     
     // Recommandations personnalisées
     const recommendations = [
-      level >= 4 ? '🚨 Ultra-transformation détectée - limiter la consommation' : 
-      level >= 3 ? '⚠️ Transformation importante - consommation modérée' :
-      level >= 2 ? '💛 Produit transformé - consommation occasionnelle' :
-      '✅ Transformation minimale - produit acceptable',
-      `📊 ${methods.length} méthode(s) de transformation identifiée(s)`,
-      `🔬 ${markers.length} marqueur(s) industriel(s) détecté(s)`,
-      '📱 Analyse locale - résultats approximatifs'
+      level >= 4 ? 'Ã°Å¸Å¡Â¨ Ultra-transformation détectée - limiter la consommation' : 
+      level >= 3 ? 'âÅ¡Â ïÂ¸Â Transformation importante - consommation modérée' :
+      level >= 2 ? 'Ã°Å¸â€™â€º Produit transformé - consommation occasionnelle' :
+      'âÅ“â€¦ Transformation minimale - produit acceptable',
+      `Ã°Å¸â€œÅ  ${methods.length} méthode(s) de transformation identifiée(s)`,
+      `Ã°Å¸â€Â¬ ${markers.length} marqueur(s) industriel(s) détecté(s)`,
+      'Ã°Å¸â€œÂ± Analyse locale - résultats approximatifs'
     ];
 
     const naturalIngredients = Math.max(0, ingredients.split(',').length - additivesCount - methods.length);
@@ -361,7 +361,7 @@ class UltraTransformService {
    */
   async getServiceInfo(): Promise<any> {
     try {
-      // ✅ CORRECTION: Nouvelle URL
+      // âÅ“â€¦ CORRECTION: Nouvelle URL
       const response = await fetch(`${this.baseUrl}/api/products/status`);
       if (!response.ok) throw new Error('Service info unavailable');
       return await response.json();
@@ -389,12 +389,12 @@ class UltraTransformService {
 
   private getLevelIcon(level: number): string {
     switch (level) {
-      case 1: return '🌿';
-      case 2: return '🌱';
-      case 3: return '⚠️';
-      case 4: return '🚨';
-      case 5: return '❌';
-      default: return '❓';
+      case 1: return 'Ã°Å¸Å’Â¿';
+      case 2: return 'Ã°Å¸Å’Â±';
+      case 3: return 'âÅ¡Â ïÂ¸Â';
+      case 4: return 'Ã°Å¸Å¡Â¨';
+      case 5: return 'âÂÅ’';
+      default: return 'âÂâ€œ';
     }
   }
 

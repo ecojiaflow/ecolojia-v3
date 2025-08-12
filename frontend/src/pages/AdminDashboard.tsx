@@ -29,9 +29,9 @@ const AdminDashboard: React.FC = () => {
   const handleImport = async () => {
     try {
       const result = await triggerImport(25);
-      alert(`✅ Import démarré: ${result.message}`);
+      alert(`âÅ“â€¦ Import démarré: ${result.message}`);
     } catch (err) {
-      console.error('❌ Erreur import:', err);
+      console.error('âÂÅ’ Erreur import:', err);
     }
   };
 
@@ -48,7 +48,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               {lastUpdate && (
                 <div className="text-sm text-gray-500">
-                  Dernière MàJ: {lastUpdate.toLocaleTimeString()}
+                  Dernière MÃƒÂ J: {lastUpdate.toLocaleTimeString()}
                 </div>
               )}
             </div>
@@ -90,7 +90,7 @@ const AdminDashboard: React.FC = () => {
                 onClick={clearError}
                 className="text-red-600 hover:text-red-800 text-sm"
               >
-                ✕
+                âÅ“â€¢
               </button>
             </div>
           </div>
@@ -148,9 +148,9 @@ const AdminDashboard: React.FC = () => {
                 {Object.entries(stats.productsByCategory).map(([category, count]) => (
                   <div key={category} className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl mb-2">
-                      {category === 'alimentaire' && '🔬'}
-                      {category === 'cosmetic' && '💄'}
-                      {category === 'detergent' && '🧽'}
+                      {category === 'alimentaire' && 'Ã°Å¸â€Â¬'}
+                      {category === 'cosmetic' && 'Ã°Å¸â€™â€ž'}
+                      {category === 'detergent' && 'Ã°Å¸Â§Â½'}
                     </div>
                     <div className="text-2xl font-bold text-gray-900">{count}</div>
                     <div className="text-sm text-gray-600 capitalize">{category}</div>
@@ -181,3 +181,4 @@ const AdminDashboard: React.FC = () => {
 
 export default AdminDashboard;
 // EOF
+

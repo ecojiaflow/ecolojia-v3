@@ -64,7 +64,7 @@ export const useSEO = (seoData: SEOData = {}) => {
       url: fullUrl
     };
 
-    // Mettre à jour les meta tags
+    // Mettre ÃƒÂ  jour les meta tags
     updatePageSEO(finalSEOData);
 
   }, [location, seoData]);

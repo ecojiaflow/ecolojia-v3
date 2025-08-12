@@ -48,7 +48,7 @@ class BarcodeDetectionEngine {
     this.canvas = canvasElement;
 
     try {
-      console.log('🎥 Initialisation caméra...');
+      console.log('Ã°Å¸Å½Â¥ Initialisation caméra...');
       
       this.stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -64,22 +64,22 @@ class BarcodeDetectionEngine {
         this.video!.onloadedmetadata = async () => {
           try {
             await this.video!.play();
-            console.log('✅ Caméra initialisée');
+            console.log('âÅ“â€¦ Caméra initialisée');
             resolve(true);
           } catch (playError) {
-            console.error('❌ Erreur play caméra:', playError);
+            console.error('âÂÅ’ Erreur play caméra:', playError);
             resolve(false);
           }
         };
         
         this.video!.onerror = () => {
-          console.error('❌ Erreur caméra');
+          console.error('âÂÅ’ Erreur caméra');
           resolve(false);
         };
       });
 
     } catch (error) {
-      console.error('❌ Erreur initialisation caméra:', error);
+      console.error('âÂÅ’ Erreur initialisation caméra:', error);
       return false;
     }
   }
@@ -91,7 +91,7 @@ class BarcodeDetectionEngine {
     this.scanCount = 0;
     this.consecutiveDetections = {};
 
-    console.log('🔍 Démarrage scan code-barres...');
+    console.log('Ã°Å¸â€Â Démarrage scan code-barres...');
 
     const scanFrame = () => {
       if (!this.isScanning || !this.video || !this.canvas) return;
@@ -123,7 +123,7 @@ class BarcodeDetectionEngine {
 
           // Déclencher callback si détection confirmée
           if (this.consecutiveDetections[barcode] >= 3) {
-            console.log('✅ Code-barres détecté:', barcode);
+            console.log('âÅ“â€¦ Code-barres détecté:', barcode);
             onDetection(barcode, confidence);
             this.stopScanning();
             return;
@@ -136,7 +136,7 @@ class BarcodeDetectionEngine {
         this.animationFrameId = requestAnimationFrame(scanFrame);
 
       } catch (error) {
-        console.error('❌ Erreur scan frame:', error);
+        console.error('âÂÅ’ Erreur scan frame:', error);
       }
     };
 
@@ -174,7 +174,7 @@ class BarcodeDetectionEngine {
       this.animationFrameId = null;
     }
     
-    console.log('🛑 Scan arrêté');
+    console.log('Ã°Å¸â€ºâ€˜ Scan arrêté');
   }
 
   cleanup(): void {
@@ -188,7 +188,7 @@ class BarcodeDetectionEngine {
     this.video = null;
     this.canvas = null;
     
-    console.log('🧹 Scanner nettoyé');
+    console.log('Ã°Å¸Â§Â¹ Scanner nettoyé');
   }
 
   async toggleFlash(): Promise<boolean> {
@@ -206,7 +206,7 @@ class BarcodeDetectionEngine {
       
       return false;
     } catch (error) {
-      console.warn('⚠️ Flash non supporté:', error);
+      console.warn('âÅ¡Â ïÂ¸Â Flash non supporté:', error);
       return false;
     }
   }
@@ -219,7 +219,7 @@ class BarcodeDetectionEngine {
 class OCREngine {
   async extractTextFromImage(imageFile: File): Promise<OCRResult> {
     try {
-      console.log('🔍 Extraction OCR depuis image...');
+      console.log('Ã°Å¸â€Â Extraction OCR depuis image...');
       
       // Utiliser l'API existante
       const analysisResult = await analyzePhotos([imageFile]);
@@ -245,7 +245,7 @@ class OCREngine {
       throw new Error('Aucun texte extrait');
       
     } catch (error) {
-      console.error('❌ Erreur OCR:', error);
+      console.error('âÂÅ’ Erreur OCR:', error);
       throw error;
     }
   }
@@ -353,7 +353,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
       }
 
     } catch (err) {
-      console.error('❌ Erreur initialisation scanner:', err);
+      console.error('âÂÅ’ Erreur initialisation scanner:', err);
       setError(err instanceof Error ? err.message : 'Erreur initialisation scanner');
       setScanState('error');
       setHasCamera(false);
@@ -368,7 +368,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
         setScanState('processing');
         
         try {
-          console.log('🔍 Code-barres détecté, recherche produit...');
+          console.log('Ã°Å¸â€Â Code-barres détecté, recherche produit...');
           
           // Rechercher produit via moteur universel
           const productInfo = await universalSearchEngine.searchByBarcode(barcode);
@@ -377,7 +377,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
           onScanSuccess(barcode, productInfo);
           
         } catch (searchError) {
-          console.warn('⚠️ Produit non trouvé, mais code-barres valide:', searchError);
+          console.warn('âÅ¡Â ïÂ¸Â Produit non trouvé, mais code-barres valide:', searchError);
           setScanState('success');
           onScanSuccess(barcode, null); // Transmettre code-barres même si produit non trouvé
         }
@@ -400,7 +400,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
 
       if (ocrResult.detectedBarcode) {
         // Code-barres détecté dans l'image
-        console.log('📊 Code-barres détecté via OCR:', ocrResult.detectedBarcode);
+        console.log('Ã°Å¸â€œÅ  Code-barres détecté via OCR:', ocrResult.detectedBarcode);
         
         const productInfo = await universalSearchEngine.searchByBarcode(ocrResult.detectedBarcode);
         setScanState('success');
@@ -516,8 +516,8 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
                     {scanState === 'initializing' && 'Initialisation caméra...'}
                     {scanState === 'scanning' && 'Pointez vers le code-barres'}
                     {scanState === 'processing' && 'Traitement...'}
-                    {scanState === 'success' && '✅ Code-barres détecté !'}
-                    {scanState === 'error' && '❌ Erreur de scan'}
+                    {scanState === 'success' && 'âÅ“â€¦ Code-barres détecté !'}
+                    {scanState === 'error' && 'âÂÅ’ Erreur de scan'}
                   </p>
                 </div>
               </div>
@@ -568,7 +568,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
                 onClick={() => setScanMode('camera')}
                 className="px-4 py-2 text-gray-300 hover:text-white transition-all"
               >
-                ← Retour au scanner
+                ââ€ Â Retour au scanner
               </button>
               
               {detectedText && (
@@ -606,7 +606,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
                 onClick={() => setScanMode('camera')}
                 className="px-4 py-2 text-gray-300 hover:text-white transition-all"
               >
-                ← Retour au scanner
+                ââ€ Â Retour au scanner
               </button>
             </div>
           )}

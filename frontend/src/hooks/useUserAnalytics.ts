@@ -1,23 +1,23 @@
 // PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
 import { useState, useEffect, useCallback } from 'react';
 
-// ✅ INTERFACES COMPATIBLES DASHBOARDPAGE
+// âÅ“â€¦ INTERFACES COMPATIBLES DASHBOARDPAGE
 export interface HealthMetrics {
-  healthScore: number;           // ← Nom attendu par DashboardPage
+  healthScore: number;           // ââ€ Â Nom attendu par DashboardPage
   totalScans: number;
   averageNovaScore: number;
-  ultraTransformPercent: number; // ← Nom attendu par DashboardPage
-  additivesCount: number;        // ← Nom attendu par DashboardPage
+  ultraTransformPercent: number; // ââ€ Â Nom attendu par DashboardPage
+  additivesCount: number;        // ââ€ Â Nom attendu par DashboardPage
   bioProductsPercent: number;
-  improvementTrend: number;      // ← Nom attendu par DashboardPage
+  improvementTrend: number;      // ââ€ Â Nom attendu par DashboardPage
   lastAnalysisDate: Date | null;
 }
 
 export interface ScoreEvolution {
   date: Date;
-  healthScore: number;          // ← Nom attendu par DashboardPage
+  healthScore: number;          // ââ€ Â Nom attendu par DashboardPage
   novaGroup: number;
-  scansCount: number;           // ← Nom attendu par DashboardPage
+  scansCount: number;           // ââ€ Â Nom attendu par DashboardPage
   productName?: string;
 }
 
@@ -25,24 +25,24 @@ export interface PersonalizedInsight {
   id: string;
   title: string;
   message: string;
-  action: string;               // ← Propriété attendue par DashboardPage
-  priority: 'low' | 'medium' | 'high'; // ← Format attendu
+  action: string;               // ââ€ Â Propriété attendue par DashboardPage
+  priority: 'low' | 'medium' | 'high'; // ââ€ Â Format attendu
   category: 'health' | 'nutrition' | 'additives' | 'nova' | 'bio';
-  isRead: boolean;              // ← Propriété attendue par DashboardPage
+  isRead: boolean;              // ââ€ Â Propriété attendue par DashboardPage
   createdAt: Date;
 }
 
 export interface UserGoal {
   id: string;
-  type: 'improve_score' | 'reduce_ultra_processed' | 'increase_bio' | 'reduce_additives' | 'custom'; // ← Format attendu
+  type: 'improve_score' | 'reduce_ultra_processed' | 'increase_bio' | 'reduce_additives' | 'custom'; // ââ€ Â Format attendu
   title: string;
   description: string;
-  target: number;               // ← Nom attendu par DashboardPage
-  current: number;              // ← Nom attendu par DashboardPage
+  target: number;               // ââ€ Â Nom attendu par DashboardPage
+  current: number;              // ââ€ Â Nom attendu par DashboardPage
   progress: number;
   unit: string;
   deadline: Date;
-  isCompleted: boolean;         // ← Propriété attendue par DashboardPage
+  isCompleted: boolean;         // ââ€ Â Propriété attendue par DashboardPage
   createdAt: Date;
 }
 
@@ -59,13 +59,13 @@ export interface Achievement {
 export interface WeeklyReport {
   weekStart: Date;
   weekEnd: Date;
-  scansCount: number;           // ← Nom attendu par DashboardPage
-  avgHealthScore: number;       // ← Nom attendu par DashboardPage
+  scansCount: number;           // ââ€ Â Nom attendu par DashboardPage
+  avgHealthScore: number;       // ââ€ Â Nom attendu par DashboardPage
   improvement: number;
   bestProduct: string;
   worstProduct: string;
-  mainInsight: string;          // ← Propriété attendue par DashboardPage
-  nextWeekGoal: string;         // ← Propriété attendue par DashboardPage
+  mainInsight: string;          // ââ€ Â Propriété attendue par DashboardPage
+  nextWeekGoal: string;         // ââ€ Â Propriété attendue par DashboardPage
 }
 
 export interface ProductAnalysis {
@@ -95,7 +95,7 @@ export interface OverallStats {
 }
 
 /**
- * 📊 useUserAnalytics Hook - Compatible DashboardPage
+ * Ã°Å¸â€œÅ  useUserAnalytics Hook - Compatible DashboardPage
  * Version adaptée pour fonctionner avec votre DashboardPage existant
  */
 export const useUserAnalytics = () => {
@@ -156,7 +156,7 @@ export const useUserAnalytics = () => {
       
       saveData(STORAGE_KEYS.analyses, analyses);
       
-      console.log('📊 Analyse trackée:', newAnalysis.productName);
+      console.log('Ã°Å¸â€œÅ  Analyse trackée:', newAnalysis.productName);
       return newAnalysis;
     } catch (error) {
       console.error('Erreur tracking scan:', error);
@@ -324,7 +324,7 @@ export const useUserAnalytics = () => {
       return defaultGoals;
     }
     
-    // Mettre à jour les progrès
+    // Mettre ÃƒÂ  jour les progrès
     return storedGoals.map((goal: UserGoal) => {
       let current = goal.current;
       let progress = goal.progress;
@@ -362,27 +362,27 @@ export const useUserAnalytics = () => {
     const achievementRules = [
       {
         id: 'first_scan',
-        title: '🔍 Premier Scan',
+        title: 'Ã°Å¸â€Â Premier Scan',
         description: 'Première analyse réalisée',
-        icon: '🔍',
+        icon: 'Ã°Å¸â€Â',
         category: 'scanner' as const,
         rarity: 'common' as const,
         check: () => analyses.length >= 1
       },
       {
         id: 'explorer',
-        title: '📊 Explorateur',
+        title: 'Ã°Å¸â€œÅ  Explorateur',
         description: '5 analyses réalisées',
-        icon: '📊',
+        icon: 'Ã°Å¸â€œÅ ',
         category: 'scanner' as const,
         rarity: 'common' as const,
         check: () => analyses.length >= 5
       },
       {
         id: 'analyst',
-        title: '🧪 Analyste',
+        title: 'Ã°Å¸Â§Âª Analyste',
         description: '10 analyses réalisées',
-        icon: '🧪',
+        icon: 'Ã°Å¸Â§Âª',
         category: 'scanner' as const,
         rarity: 'rare' as const,
         check: () => analyses.length >= 10
@@ -596,7 +596,7 @@ export const useUserAnalytics = () => {
     Object.values(STORAGE_KEYS).forEach(key => {
       localStorage.removeItem(key);
     });
-    console.log('🗑️ Toutes les données supprimées');
+    console.log('Ã°Å¸â€”â€˜ïÂ¸Â Toutes les données supprimées');
   }, []);
 
   // ========== COMPATIBILITY FUNCTIONS ==========

@@ -12,7 +12,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Désactiver HMR en production
+    // DÃ©sactiver HMR en production
     hmr: process.env.NODE_ENV === 'production' ? false : {
       overlay: false
     }

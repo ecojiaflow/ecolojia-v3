@@ -37,7 +37,7 @@ class PerformanceMonitor {
 
     // Log en développement
     if (import.meta.env.DEV) {
-      console.log('📊 Recherche enregistrée:', metric);
+      console.log('Ã°Å¸â€œÅ  Recherche enregistrée:', metric);
     }
   }
 
@@ -58,7 +58,7 @@ class PerformanceMonitor {
 
     // Log en développement
     if (import.meta.env.DEV) {
-      console.log('📈 Page chargée:', metric);
+      console.log('Ã°Å¸â€œË† Page chargée:', metric);
     }
   }
 

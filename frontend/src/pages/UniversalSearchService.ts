@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Search, Sparkles, TrendingUp, Package, Clock, Zap } from 'lucide-react';
 import { universalSearchEngine, SearchResult } from '../services/search/UniversalSearchService';
-import BarcodeScanner from '../components/scanner/BarcodeScanner'; // ✅ Votre scanner existant
+import BarcodeScanner from '../components/scanner/BarcodeScanner'; // âÅ“â€¦ Votre scanner existant
 import { EnhancedSearchInterface } from '../components/search/EnhancedSearchInterface';
 
 // ============================================================================
@@ -57,7 +57,7 @@ const UniversalSearchPage: React.FC = () => {
     const startTime = Date.now();
 
     try {
-      console.log('🔍 Recherche universelle lancée:', query);
+      console.log('Ã°Å¸â€Â Recherche universelle lancée:', query);
       
       const searchResults = await universalSearchEngine.search(query, {
         categories: selectedFilters.categories,
@@ -97,13 +97,13 @@ const UniversalSearchPage: React.FC = () => {
         query
       });
 
-      // Mettre à jour URL sans reload
+      // Mettre ÃƒÂ  jour URL sans reload
       setSearchParams({ q: query });
 
-      console.log(`✅ Recherche terminée: ${filteredResults.length}/${searchResults.length} résultats en ${searchTime}ms`);
+      console.log(`âÅ“â€¦ Recherche terminée: ${filteredResults.length}/${searchResults.length} résultats en ${searchTime}ms`);
 
     } catch (error) {
-      console.error('❌ Erreur recherche:', error);
+      console.error('âÂÅ’ Erreur recherche:', error);
       setResults([]);
       setSearchStats(null);
     } finally {
@@ -135,7 +135,7 @@ const UniversalSearchPage: React.FC = () => {
     setShowScanner(false);
     
     try {
-      console.log('📊 Code-barres scanné:', barcode);
+      console.log('Ã°Å¸â€œÅ  Code-barres scanné:', barcode);
       
       const result = await universalSearchEngine.searchByBarcode(barcode);
       
@@ -160,7 +160,7 @@ const UniversalSearchPage: React.FC = () => {
         setSearchParams({ barcode });
       }
     } catch (error) {
-      console.error('❌ Erreur scan:', error);
+      console.error('âÂÅ’ Erreur scan:', error);
     }
   }, [setSearchParams]);
 
@@ -207,9 +207,9 @@ const UniversalSearchPage: React.FC = () => {
               result.category === 'detergents' ? 'text-blue-600 bg-blue-50 border-blue-200' :
               'text-gray-600 bg-gray-50 border-gray-200'
             }`}>
-              {result.category === 'food' ? '🍎 Alimentaire' :
-               result.category === 'cosmetics' ? '✨ Cosmétique' :
-               result.category === 'detergents' ? '🧽 Détergent' : '📦 Produit'}
+              {result.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentaire' :
+               result.category === 'cosmetics' ? 'âÅ“Â¨ Cosmétique' :
+               result.category === 'detergents' ? 'Ã°Å¸Â§Â½ Détergent' : 'Ã°Å¸â€œÂ¦ Produit'}
             </span>
 
             {/* Source */}
@@ -218,9 +218,9 @@ const UniversalSearchPage: React.FC = () => {
               result.source === 'openfoodfacts' ? 'text-orange-600 bg-orange-50 border-orange-200' :
               'text-purple-600 bg-purple-50 border-purple-200'
             }`}>
-              {result.source === 'local' ? '🏠 Base ECOLOJIA' :
-               result.source === 'openfoodfacts' ? '🌍 OpenFoodFacts' :
-               '⚡ Algolia'}
+              {result.source === 'local' ? 'Ã°Å¸ÂÂ  Base ECOLOJIA' :
+               result.source === 'openfoodfacts' ? 'Ã°Å¸Å’Â OpenFoodFacts' :
+               'âÅ¡Â¡ Algolia'}
             </span>
 
             {/* NOVA Group */}
@@ -230,23 +230,23 @@ const UniversalSearchPage: React.FC = () => {
                 result.enrichment.nova_group === 3 ? 'text-yellow-600 bg-yellow-50 border-yellow-200' :
                 'text-red-600 bg-red-50 border-red-200'
               }`}>
-                🔬 NOVA {result.enrichment.nova_group}
-                {result.enrichment.nova_group === 1 && ' ✨'}
-                {result.enrichment.nova_group === 4 && ' ⚠️'}
+                Ã°Å¸â€Â¬ NOVA {result.enrichment.nova_group}
+                {result.enrichment.nova_group === 1 && ' âÅ“Â¨'}
+                {result.enrichment.nova_group === 4 && ' âÅ¡Â ïÂ¸Â'}
               </span>
             )}
 
             {/* Ultra-transformé */}
             {result.enrichment?.ultra_processed && (
               <span className="px-3 py-1 bg-red-100 text-red-700 border border-red-200 rounded-full text-xs font-medium">
-                ⚠️ Ultra-transformé
+                âÅ¡Â ïÂ¸Â Ultra-transformé
               </span>
             )}
 
             {/* Alternatives */}
             {result.enrichment?.alternatives_available > 0 && (
               <span className="px-3 py-1 bg-purple-100 text-purple-700 border border-purple-200 rounded-full text-xs font-medium">
-                🔄 {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
+                Ã°Å¸â€â€ž {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
               </span>
             )}
           </div>
@@ -255,7 +255,7 @@ const UniversalSearchPage: React.FC = () => {
           {result.enrichment?.educational_tips && result.enrichment.educational_tips.length > 0 && (
             <div className="mb-4">
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <div className="text-sm font-medium text-orange-800 mb-2">💡 Insights ECOLOJIA :</div>
+                <div className="text-sm font-medium text-orange-800 mb-2">Ã°Å¸â€™Â¡ Insights ECOLOJIA :</div>
                 <ul className="space-y-1">
                   {result.enrichment.educational_tips.slice(0, 2).map((tip, idx) => (
                     <li key={idx} className="text-sm text-orange-700">{tip}</li>
@@ -306,12 +306,12 @@ const UniversalSearchPage: React.FC = () => {
       <div className="flex justify-between items-center pt-4 border-t border-gray-100">
         <div className="text-xs text-gray-500">
           ID: {result.id}
-          {result.barcode && ` • Code: ${result.barcode}`}
+          {result.barcode && ` â€Â¢ Code: ${result.barcode}`}
         </div>
         
         <div className="flex items-center space-x-2">
           <div className="px-3 py-1 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors">
-            Analyser ECOLOJIA →
+            Analyser ECOLOJIA ââ€ â€™
           </div>
         </div>
       </div>
@@ -332,7 +332,7 @@ const UniversalSearchPage: React.FC = () => {
               onClick={() => navigate('/multi-scan')}
               className="block mx-auto px-6 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
             >
-              📷 Analyser avec photo des ingrédients
+              Ã°Å¸â€œÂ· Analyser avec photo des ingrédients
             </button>
             <button
               onClick={() => {
@@ -343,7 +343,7 @@ const UniversalSearchPage: React.FC = () => {
               }}
               className="block mx-auto px-6 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors"
             >
-              ✏️ Ajouter manuellement ce produit
+              âÅ“ÂïÂ¸Â Ajouter manuellement ce produit
             </button>
           </div>
         </div>
@@ -361,7 +361,7 @@ const UniversalSearchPage: React.FC = () => {
           onClick={() => setShowScanner(true)}
           className="px-6 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
         >
-          📷 Scanner un produit
+          Ã°Å¸â€œÂ· Scanner un produit
         </button>
       </div>
     );
@@ -410,7 +410,7 @@ const UniversalSearchPage: React.FC = () => {
 
         <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
           <div className="text-sm text-blue-800">
-            <strong>💡 Conseil personnalisé :</strong>{' '}
+            <strong>Ã°Å¸â€™Â¡ Conseil personnalisé :</strong>{' '}
             {avgScore >= 80 ? 
               "Excellente sélection ! Vous privilégiez des produits sains." :
               avgScore >= 60 ? 
@@ -436,7 +436,7 @@ const UniversalSearchPage: React.FC = () => {
               className="flex items-center text-gray-600 hover:text-gray-800 font-medium transition-colors"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Retour à l'accueil
+              Retour ÃƒÂ  l'accueil
             </button>
             
             <h1 className="text-3xl font-bold text-gray-800 flex items-center">
@@ -451,13 +451,13 @@ const UniversalSearchPage: React.FC = () => {
               onClick={() => setShowScanner(true)}
               className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
             >
-              📷 Scanner
+              Ã°Å¸â€œÂ· Scanner
             </button>
           </div>
 
           {/* Interface de recherche */}
           <EnhancedSearchInterface
-            placeholder="🔍 Recherche universelle : nutella bio, shampoing sans sulfate, lessive écologique..."
+            placeholder="Ã°Å¸â€Â Recherche universelle : nutella bio, shampoing sans sulfate, lessive écologique..."
             onResultSelect={handleResultSelect}
             showFilters={true}
             categories={selectedFilters.categories}
@@ -470,8 +470,8 @@ const UniversalSearchPage: React.FC = () => {
               <div>
                 <span className="font-medium">{searchStats.totalResults}</span> résultats pour "
                 <span className="font-medium">{searchStats.query}</span>" 
-                • <span className="font-medium">{searchStats.searchTime}ms</span>
-                • Sources: <span className="font-medium">{searchStats.sources.join(', ')}</span>
+                â€Â¢ <span className="font-medium">{searchStats.searchTime}ms</span>
+                â€Â¢ Sources: <span className="font-medium">{searchStats.sources.join(', ')}</span>
               </div>
               
               {isSearching && (
@@ -506,26 +506,26 @@ const UniversalSearchPage: React.FC = () => {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               <div className="p-4 bg-white rounded-lg border border-gray-200">
-                <div className="text-2xl mb-2">🍎</div>
+                <div className="text-2xl mb-2">Ã°Å¸ÂÅ½</div>
                 <div className="font-medium">Alimentaire</div>
                 <div className="text-sm text-gray-600">NOVA, additifs, bio</div>
               </div>
               <div className="p-4 bg-white rounded-lg border border-gray-200">
-                <div className="text-2xl mb-2">✨</div>
+                <div className="text-2xl mb-2">âÅ“Â¨</div>
                 <div className="font-medium">Cosmétiques</div>
                 <div className="text-sm text-gray-600">INCI, perturbateurs</div>
               </div>
               <div className="p-4 bg-white rounded-lg border border-gray-200">
-                <div className="text-2xl mb-2">🧽</div>
+                <div className="text-2xl mb-2">Ã°Å¸Â§Â½</div>
                 <div className="font-medium">Détergents</div>
-                <div className="text-sm text-gray-600">Écologie, toxicité</div>
+                <div className="text-sm text-gray-600">Ãƒâ€°cologie, toxicité</div>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Scanner modal - ✅ Votre composant existant */}
+      {/* Scanner modal - âÅ“â€¦ Votre composant existant */}
       {showScanner && (
         <BarcodeScanner
           isOpen={showScanner}

@@ -48,7 +48,7 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
   };
 
   try {
-    console.log(`🌐 API Call: ${config.method || 'GET'} ${url}`);
+    console.log(`Ã°Å¸Å’Â API Call: ${config.method || 'GET'} ${url}`);
     
     const response = await fetch(url, config);
     
@@ -57,12 +57,12 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     }
 
     const data = await response.json();
-    console.log('📥 API Response:', data);
+    console.log('Ã°Å¸â€œÂ¥ API Response:', data);
     
     return data;
     
   } catch (error) {
-    console.error('🚨 API Error:', error);
+    console.error('Ã°Å¸Å¡Â¨ API Error:', error);
     throw error;
   }
 }
@@ -94,7 +94,7 @@ export async function fetchRealProducts(category: string): Promise<Product[]> {
     return response.data;
     
   } catch (error) {
-    console.warn(`⚠️ fetchRealProducts: fallback mock pour catégorie "${category}"`);
+    console.warn(`âÅ¡Â ïÂ¸Â fetchRealProducts: fallback mock pour catégorie "${category}"`);
     
     // Fallback mock data
     return [
@@ -140,7 +140,7 @@ export async function searchProducts(
     return response.data;
     
   } catch (error) {
-    console.error('❌ Search failed:', error);
+    console.error('âÂÅ’ Search failed:', error);
     return {
       hits: [],
       total: 0,
@@ -160,7 +160,7 @@ export async function getProductByBarcode(barcode: string): Promise<Product | nu
     return response.data;
     
   } catch (error) {
-    console.error('❌ Product not found:', error);
+    console.error('âÂÅ’ Product not found:', error);
     return null;
   }
 }
@@ -174,7 +174,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     return response.data;
     
   } catch (error) {
-    console.error('❌ Product not found:', error);
+    console.error('âÂÅ’ Product not found:', error);
     return null;
   }
 }
@@ -198,13 +198,13 @@ export async function analyzeProduct(
     return response.data;
     
   } catch (error) {
-    console.error('❌ Analysis failed:', error);
+    console.error('âÂÅ’ Analysis failed:', error);
     throw error;
   }
 }
 
 // ============================================================================
-// ✅ NOUVELLE FONCTION: ANALYSE PHOTOS
+// âÅ“â€¦ NOUVELLE FONCTION: ANALYSE PHOTOS
 // ============================================================================
 
 export async function analyzePhotos(
@@ -217,7 +217,7 @@ export async function analyzePhotos(
   }
 ): Promise<PhotoAnalysisResponse> {
   try {
-    console.log('📸 Starting photo analysis for', imageFiles.length, 'images');
+    console.log('Ã°Å¸â€œÂ¸ Starting photo analysis for', imageFiles.length, 'images');
     
     // Validation des fichiers
     if (!imageFiles || imageFiles.length === 0) {
@@ -235,7 +235,7 @@ export async function analyzePhotos(
     const imagePromises = imageFiles.map(file => convertFileToBase64(file));
     const base64Images = await Promise.all(imagePromises);
     
-    // Envoi à l'API
+    // Envoi ÃƒÂ  l'API
     const response = await apiRequest<ApiResponse<PhotoAnalysisResponse>>(
       '/api/products/analyze-photos',
       {
@@ -252,11 +252,11 @@ export async function analyzePhotos(
       }
     );
     
-    console.log('✅ Photo analysis completed:', response.data);
+    console.log('âÅ“â€¦ Photo analysis completed:', response.data);
     return response.data;
     
   } catch (error) {
-    console.error('❌ Photo analysis failed:', error);
+    console.error('âÂÅ’ Photo analysis failed:', error);
     
     // Fallback avec analyse basique simulée
     try {
@@ -271,11 +271,11 @@ export async function analyzePhotos(
         }
       };
       
-      console.log('🔄 Using fallback mock analysis:', mockAnalysis);
+      console.log('Ã°Å¸â€â€ž Using fallback mock analysis:', mockAnalysis);
       return mockAnalysis;
       
     } catch (fallbackError) {
-      console.error('❌ Fallback analysis also failed:', fallbackError);
+      console.error('âÂÅ’ Fallback analysis also failed:', fallbackError);
       throw new Error('Analyse photo échouée - Service temporairement indisponible');
     }
   }
@@ -294,7 +294,7 @@ export async function getProductSuggestions(query: string): Promise<Product[]> {
     return response.data;
     
   } catch (error) {
-    console.error('❌ Suggestions failed:', error);
+    console.error('âÂÅ’ Suggestions failed:', error);
     return [];
   }
 }
@@ -308,7 +308,7 @@ export async function getPopularProducts(limit: number = 10): Promise<Product[]>
     return response.data;
     
   } catch (error) {
-    console.error('❌ Popular products failed:', error);
+    console.error('âÂÅ’ Popular products failed:', error);
     return [];
   }
 }
@@ -330,7 +330,7 @@ export async function reportProduct(productId: string, reason: string, details?:
     return true;
     
   } catch (error) {
-    console.error('❌ Report failed:', error);
+    console.error('âÂÅ’ Report failed:', error);
     return false;
   }
 }
@@ -344,7 +344,7 @@ export async function checkApiHealth(): Promise<boolean> {
     const response = await fetch(`${API_BASE_URL}/api/health`);
     return response.ok;
   } catch (error) {
-    console.error('❌ API Health check failed:', error);
+    console.error('âÂÅ’ API Health check failed:', error);
     return false;
   }
 }

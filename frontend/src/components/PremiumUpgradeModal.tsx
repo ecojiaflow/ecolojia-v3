@@ -98,7 +98,7 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Passez à Premium</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Passez ÃƒÂ  Premium</h2>
                 <p className="text-sm text-gray-600">{getTriggerMessage()}</p>
               </div>
             </div>
@@ -115,11 +115,11 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
         <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50">
           <div className="text-center">
             <div className="text-5xl font-bold text-gray-900">
-              12,99€
+              12,99ââ€šÂ¬
               <span className="text-xl font-normal text-gray-600">/mois</span>
             </div>
             <p className="mt-2 text-gray-600">
-              Annulable à tout moment • Sans engagement
+              Annulable ÃƒÂ  tout moment â€Â¢ Sans engagement
             </p>
           </div>
         </div>
@@ -158,21 +158,21 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
                 <span className="text-gray-600">Analyses par mois</span>
                 <div className="flex items-center space-x-4">
                   <span className="text-gray-500">Gratuit: 30</span>
-                  <span className="font-medium text-primary">Premium: ∞</span>
+                  <span className="font-medium text-primary">Premium: âË†Å¾</span>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Questions IA</span>
                 <div className="flex items-center space-x-4">
                   <span className="text-gray-500">Gratuit: 0</span>
-                  <span className="font-medium text-primary">Premium: ∞</span>
+                  <span className="font-medium text-primary">Premium: âË†Å¾</span>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Export PDF</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-500">Gratuit: ❌</span>
-                  <span className="font-medium text-primary">Premium: ✅</span>
+                  <span className="text-gray-500">Gratuit: âÂÅ’</span>
+                  <span className="font-medium text-primary">Premium: âÅ“â€¦</span>
                 </div>
               </div>
             </div>
@@ -203,7 +203,7 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
               </span>
             ) : (
               <>
-                Passer à Premium maintenant
+                Passer ÃƒÂ  Premium maintenant
                 <Zap className="w-5 h-5 ml-2" />
               </>
             )}

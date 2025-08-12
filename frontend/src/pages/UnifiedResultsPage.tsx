@@ -194,12 +194,12 @@ export const UnifiedResultsPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500">Aucun résultat à afficher</p>
+          <p className="text-gray-500">Aucun résultat ÃƒÂ  afficher</p>
           <button
             onClick={() => navigate('/')}
             className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
           >
-            Retour à l'accueil
+            Retour ÃƒÂ  l'accueil
           </button>
         </div>
       </div>
@@ -266,7 +266,7 @@ export const UnifiedResultsPage: React.FC = () => {
             className="w-full bg-primary text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-primary-dark transition-colors"
           >
             <MessageCircle className="w-5 h-5" />
-            <span>Poser des questions à l'IA sur ce produit</span>
+            <span>Poser des questions ÃƒÂ  l'IA sur ce produit</span>
           </button>
         </div>
 
@@ -293,7 +293,7 @@ export const UnifiedResultsPage: React.FC = () => {
               <ul className="space-y-2">
                 {result.analysis.recommendations.map((rec, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
+                    <span className="text-primary mr-2">â€Â¢</span>
                     <span className="text-gray-700">{rec}</span>
                   </li>
                 ))}
@@ -460,7 +460,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
           'bg-red-100 text-red-700'
         }`}>
           {analysis.aquaticToxicity === 'low' ? 'Faible' :
-           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'Élevée'}
+           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'Ãƒâ€°levée'}
         </span>
       </div>
     )}

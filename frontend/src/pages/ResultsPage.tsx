@@ -176,7 +176,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'Moyen';
-    return 'À éviter';
+    return 'Ãƒ€ éviter';
   };
 
   const getNovaColor = (nova: number) => {
@@ -215,7 +215,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                   <span>
                     Scanné via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
                   </span>
-                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-400">â€Â¢</span>
                   <Clock className="w-4 h-4" />
                   <span>{new Date().toLocaleTimeString()}</span>
                 </div>
@@ -259,9 +259,9 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               )}
               <div className="flex items-center gap-4 mt-2">
                 <span className="text-sm px-3 py-1 bg-gray-100 rounded-full">
-                  {analysis.category === 'food' ? '🍎 Alimentation' : 
-                   analysis.category === 'cosmetics' ? '💄 Cosmétiques' : 
-                   '🧼 Produits ménagers'}
+                  {analysis.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentation' : 
+                   analysis.category === 'cosmetics' ? 'Ã°Å¸â€™â€ž Cosmétiques' : 
+                   'Ã°Å¸Â§Â¼ Produits ménagers'}
                 </span>
                 {analysis.barcode && (
                   <span className="text-sm text-gray-500 font-mono">

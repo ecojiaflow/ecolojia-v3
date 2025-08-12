@@ -31,7 +31,7 @@ export const useIntersectionObserver = (
       return;
     }
 
-    // Si freezeOnceVisible est activé et l'élément a déjà été visible
+    // Si freezeOnceVisible est activé et l'élément a déjÃƒÂ  été visible
     if (freezeOnceVisible && wasVisibleRef.current) {
       return;
     }

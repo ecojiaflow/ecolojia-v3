@@ -243,7 +243,7 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold text-gray-800">
-            📊 Évolution sur {period} jours
+            Ã°Å¸â€œÅ  Ãƒâ€°volution sur {period} jours
           </h3>
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center">

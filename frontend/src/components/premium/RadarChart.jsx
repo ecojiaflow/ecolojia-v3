@@ -188,7 +188,7 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span className="text-gray-300">&lt;40 À améliorer</span>
+          <span className="text-gray-300">&lt;40 Ãƒ€ améliorer</span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-gray-500 rounded-full"></div>

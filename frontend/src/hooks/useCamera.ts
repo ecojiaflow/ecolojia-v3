@@ -18,7 +18,7 @@ export function useCamera() {
         setIsActive(true);
       }
     } catch (err) {
-      console.error("❌ Erreur démarrage caméra :", err);
+      console.error("âÂÅ’ Erreur démarrage caméra :", err);
       setIsActive(false);
     }
   };
@@ -51,3 +51,4 @@ export function useCamera() {
     takePhoto,
   };
 }
+

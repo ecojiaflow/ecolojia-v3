@@ -40,7 +40,7 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
 
         {query && (
           <p className="text-eco-text/70 mb-6">
-            Votre recherche <strong>« {query} »</strong> n’a donné aucun
+            Votre recherche <strong>Ã‚Â« {query} Ã‚Â»</strong> nâ€â„¢a donné aucun
             résultat dans notre base de données écoresponsable.
           </p>
         )}
@@ -48,7 +48,7 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
         {onEnrichRequest && (
           <div className="space-y-4">
             <p className="text-sm text-eco-text/60">
-              💡 Vous pouvez lancer une recherche web intelligente :
+              Ã°Å¸â€™Â¡ Vous pouvez lancer une recherche web intelligente :
             </p>
 
             <button
@@ -61,7 +61,7 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
               {isEnriching ? (
                 <>
                   <Loader className="animate-spin h-4 w-4 mr-2" />
-                  Recherche en cours…
+                  Recherche en coursâ€Â¦
                 </>
               ) : (
                 <>
@@ -76,8 +76,8 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
                 role="status"
                 className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700"
               >
-                🤖 Notre IA explore le web pour trouver des alternatives
-                écoresponsables…
+                Ã°Å¸Â¤â€“ Notre IA explore le web pour trouver des alternatives
+                écoresponsablesâ€Â¦
               </div>
             )}
           </div>
@@ -86,7 +86,7 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
         <footer className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500">
             Suggestions : essayez des mots-clés plus simples ou vérifiez
-            l’orthographe.
+            lâ€â„¢orthographe.
           </p>
         </footer>
       </div>
@@ -95,3 +95,4 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
 };
 
 export default NoResultsFound;
+

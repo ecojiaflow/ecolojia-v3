@@ -11,27 +11,27 @@ const STATIC_ASSETS = [
 
 // Installation du Service Worker
 self.addEventListener('install', (event) => {
-  console.log('🔧 SW: Installation en cours...');
+  console.log('ðŸ”§ SW: Installation en cours...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('📦 SW: Cache statique créé');
+        console.log('ðŸ“¦ SW: Cache statique crÃ©Ã©');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        console.log('✅ SW: Installation terminée');
+        console.log('âœ… SW: Installation terminÃ©e');
         self.skipWaiting();
       })
       .catch((error) => {
-        console.error('❌ SW: Erreur installation:', error);
+        console.error('âŒ SW: Erreur installation:', error);
       })
   );
 });
 
 // Activation du Service Worker
 self.addEventListener('activate', (event) => {
-  console.log('🚀 SW: Activation...');
+  console.log('ðŸš€ SW: Activation...');
   
   event.waitUntil(
     caches.keys()
@@ -39,20 +39,20 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME) {
-              console.log('🗑️ SW: Suppression ancien cache:', cacheName);
+              console.log('ðŸ—‘ï¸ SW: Suppression ancien cache:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log('✅ SW: Activation terminée');
+        console.log('âœ… SW: Activation terminÃ©e');
         return self.clients.claim();
       })
   );
 });
 
-// Interception des requêtes
+// Interception des requÃªtes
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -75,7 +75,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Mettre en cache les réponses API réussies
+          // Mettre en cache les rÃ©ponses API rÃ©ussies
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(API_CACHE_NAME)
@@ -86,11 +86,11 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Fallback vers le cache en cas d'erreur réseau
+          // Fallback vers le cache en cas d'erreur rÃ©seau
           return caches.match(request);
         })
     );
   }
 });
 
-console.log('🌱 ECOLOJIA Service Worker chargé et actif');
+console.log('ðŸŒ± ECOLOJIA Service Worker chargÃ© et actif');

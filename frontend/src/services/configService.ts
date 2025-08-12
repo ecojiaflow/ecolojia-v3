@@ -26,7 +26,7 @@ export class ConfigService {
 
   setMode(mode: AppMode): void {
     this.mode = mode;
-    console.log(`🔄 App mode switched to: ${mode}`);
+    console.log(`Ã°Å¸â€â€ž App mode switched to: ${mode}`);
   }
 
   getMode(): AppMode {
@@ -204,12 +204,12 @@ export class ConfigService {
           },
           {
             objectID: '3',
-            name: 'Lessive Écologique',
+            name: 'Lessive Ãƒâ€°cologique',
             brand: 'Arbre Vert',
             category: 'detergents',
             score: 85,
             image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=150',
-            tags: ['Écologique', 'Biodégradable']
+            tags: ['Ãƒâ€°cologique', 'Biodégradable']
           }
         ]
       };

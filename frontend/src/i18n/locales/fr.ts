@@ -3,7 +3,7 @@ export const fr = {
     home: 'Accueil',
     products: 'Produits',
     categories: 'Catégories',
-    about: 'À propos',
+    about: 'Ãƒ€ propos',
     blog: 'Blog',
     search: 'Rechercher',
     searchPlaceholder: 'Rechercher shampoing bio, jean éthique, miel local...',
@@ -29,13 +29,13 @@ export const fr = {
     ecoProducts: 'Produits éco-responsables',
     productsFound_one: '{{count}} produit trouvé',
     productsFound_other: '{{count}} produits trouvés',
-    noResults: 'Aucun produit ne correspond à votre recherche.',
-    backToHome: '← Retour à l\'accueil',
+    noResults: 'Aucun produit ne correspond ÃƒÂ  votre recherche.',
+    backToHome: 'ââ€ Â Retour ÃƒÂ  l\'accueil',
     
     // Clés pour les filtres et recherche
     searchingAlgolia: 'Recherche en cours...',
     discoverProducts: 'Découvrir nos produits',
-    correspondingSearch: 'correspondant à votre recherche',
+    correspondingSearch: 'correspondant ÃƒÂ  votre recherche',
     available: 'disponibles',
     filtered: 'filtré',
     filtered_plural: 'filtrés',
@@ -50,7 +50,7 @@ export const fr = {
     allZones: 'Toutes les zones',
     france: 'France',
     europe: 'Europe',
-    usa: 'États-Unis',
+    usa: 'Ãƒâ€°tats-Unis',
     aiConfidence: 'Confiance IA',
     allLevels: 'Tous les niveaux',
     certified: 'Certifié (80%+)',
@@ -82,11 +82,11 @@ export const fr = {
   homepage: {
     hero: {
       title: 'Trouvez des produits <highlight>éco-responsables</highlight>',
-      subtitle: 'Trouvez facilement des alternatives durables grâce à notre intelligence artificielle'
+      subtitle: 'Trouvez facilement des alternatives durables grâce ÃƒÂ  notre intelligence artificielle'
     },
     whyUs: {
       title: 'Pourquoi choisir Ecolojia ?',
-      subtitle: 'Nous vous aidons à faire des choix éclairés pour un mode de vie plus durable.',
+      subtitle: 'Nous vous aidons ÃƒÂ  faire des choix éclairés pour un mode de vie plus durable.',
       features: {
         verified: {
           title: 'Produits Vérifiés',
@@ -98,15 +98,15 @@ export const fr = {
         },
         search: {
           title: 'Recherche Intelligente',
-          description: 'Notre moteur de recherche vous aide à trouver rapidement des alternatives durables à vos produits habituels.'
+          description: 'Notre moteur de recherche vous aide ÃƒÂ  trouver rapidement des alternatives durables ÃƒÂ  vos produits habituels.'
         }
       }
     }
   },
   
   about: {
-    title: 'À propos d\'Ecolojia',
-    subtitle: 'Le moteur de recherche qui révolutionne la découverte de produits écoresponsables grâce à l\'intelligence artificielle.',
+    title: 'Ãƒ€ propos d\'Ecolojia',
+    subtitle: 'Le moteur de recherche qui révolutionne la découverte de produits écoresponsables grâce ÃƒÂ  l\'intelligence artificielle.',
     mission: {
       title: 'Notre Mission',
       content: {
@@ -121,7 +121,7 @@ export const fr = {
         },
         scores: {
           title: 'Scores transparents',
-          description: 'Évaluation objective basée sur des critères environnementaux'
+          description: 'Ãƒâ€°valuation objective basée sur des critères environnementaux'
         },
         partners: {
           title: 'Partenaires éthiques',
@@ -166,16 +166,16 @@ export const fr = {
       }
     },
     contact: {
-      title: 'Rejoignez la Révolution Écoresponsable',
-      subtitle: 'Ensemble, créons un avenir où chaque achat compte pour la planète. Votre feedback nous aide à améliorer continuellement notre service.',
+      title: 'Rejoignez la Révolution Ãƒâ€°coresponsable',
+      subtitle: 'Ensemble, créons un avenir oÃƒÂ¹ chaque achat compte pour la planète. Votre feedback nous aide ÃƒÂ  améliorer continuellement notre service.',
       email: 'contact@ecolojia.com',
-      response: 'Nous répondons dans les 48h • Suggestions et partenariats bienvenus'
+      response: 'Nous répondons dans les 48h â€Â¢ Suggestions et partenariats bienvenus'
     }
   },
   
   privacy: {
     title: 'Politique de Confidentialité',
-    lastUpdated: 'Dernière mise à jour',
+    lastUpdated: 'Dernière mise ÃƒÂ  jour',
     commitment: {
       title: 'Notre engagement pour votre vie privée',
       description: 'Chez Ecolojia, nous respectons votre vie privée. Cette politique explique comment nous collectons, utilisons et protégeons vos données personnelles conformément au RGPD.'
@@ -212,11 +212,11 @@ export const fr = {
     cookies: {
       title: 'Cookies et technologies similaires',
       essential: {
-        title: '🍪 Cookies essentiels',
+        title: 'Ã°Å¸ÂÂª Cookies essentiels',
         description: 'Nécessaires au fonctionnement du site (toujours actifs)'
       },
       analytics: {
-        title: '📊 Analytics (Plausible)',
+        title: 'Ã°Å¸â€œÅ  Analytics (Plausible)',
         description: 'Analyse anonyme du trafic, respectueuse de la vie privée, sans cookies de pistage'
       }
     },
@@ -226,8 +226,8 @@ export const fr = {
       items: [
         'Droit d\'accès : Obtenir une copie de vos données personnelles',
         'Droit de rectification : Corriger des données inexactes',
-        'Droit à l\'effacement : Demander la suppression de vos données',
-        'Droit à la portabilité : Recevoir vos données dans un format structuré',
+        'Droit ÃƒÂ  l\'effacement : Demander la suppression de vos données',
+        'Droit ÃƒÂ  la portabilité : Recevoir vos données dans un format structuré',
         'Droit d\'opposition : Vous opposer au traitement de vos données'
       ]
     },
@@ -235,18 +235,18 @@ export const fr = {
       title: 'Nous contacter',
       description: 'Pour exercer vos droits ou pour toute question concernant cette politique :',
       email: 'Email : contact@ecolojia.com',
-      dpo: 'Délégué à la Protection des Données : contact@ecolojia.com',
+      dpo: 'Délégué ÃƒÂ  la Protection des Données : contact@ecolojia.com',
       response: 'Réponse sous : 30 jours maximum'
     },
     changes: {
       title: 'Modifications de cette politique',
-      description: 'Cette politique peut être mise à jour occasionnellement. Les modifications importantes seront signalées par un bannière sur le site. La date de dernière mise à jour est indiquée en haut de cette page.'
+      description: 'Cette politique peut être mise ÃƒÂ  jour occasionnellement. Les modifications importantes seront signalées par un bannière sur le site. La date de dernière mise ÃƒÂ  jour est indiquée en haut de cette page.'
     }
   },
   
   terms: {
     title: 'Conditions Générales d\'Utilisation',
-    lastUpdated: 'Dernière mise à jour',
+    lastUpdated: 'Dernière mise ÃƒÂ  jour',
     object: {
       title: 'Objet et acceptation',
       description1: 'Les présentes Conditions Générales d\'Utilisation (CGU) régissent l\'utilisation du site web Ecolojia.com, moteur de recherche dédié aux produits écoresponsables.',
@@ -266,18 +266,18 @@ export const fr = {
     usage: {
       title: 'Utilisation responsable',
       commit: {
-        title: 'Vous vous engagez à :',
+        title: 'Vous vous engagez ÃƒÂ  :',
         items: [
-          'Utiliser le site conformément à sa destination',
+          'Utiliser le site conformément ÃƒÂ  sa destination',
           'Ne pas compromettre la sécurité ou l\'intégrité du site',
-          'Ne pas utiliser le site à des fins commerciales non autorisées',
+          'Ne pas utiliser le site ÃƒÂ  des fins commerciales non autorisées',
           'Respecter les droits de propriété intellectuelle'
         ]
       },
       forbidden: {
         title: 'Il est interdit de :',
         items: [
-          'Tenter d\'accéder à des zones non autorisées',
+          'Tenter d\'accéder ÃƒÂ  des zones non autorisées',
           'Perturber le fonctionnement du site',
           'Extraire massivement des données (scraping)',
           'Utiliser des robots ou scripts automatisés'
@@ -287,7 +287,7 @@ export const fr = {
     availability: {
       title: 'Disponibilité et modifications',
       description1: 'Nous nous efforçons de maintenir le site accessible 24h/24 et 7j/7, mais ne pouvons garantir une disponibilité continue. Des interruptions peuvent survenir pour maintenance ou pour des raisons techniques.',
-      description2: 'Nous nous réservons le droit de modifier, suspendre ou interrompre tout ou partie du service à tout moment, avec ou sans préavis.'
+      description2: 'Nous nous réservons le droit de modifier, suspendre ou interrompre tout ou partie du service ÃƒÂ  tout moment, avec ou sans préavis.'
     },
     intellectual: {
       title: 'Propriété intellectuelle',
@@ -296,7 +296,7 @@ export const fr = {
     },
     liability: {
       title: 'Limitation de responsabilité',
-      warning: 'Les informations fournies le sont à titre indicatif. Nous ne garantissons pas l\'exactitude, la complétude ou l\'actualité des informations sur les produits.',
+      warning: 'Les informations fournies le sont ÃƒÂ  titre indicatif. Nous ne garantissons pas l\'exactitude, la complétude ou l\'actualité des informations sur les produits.',
       description: 'Ecolojia ne saurait être tenu responsable des dommages directs ou indirects résultant de l\'utilisation du site ou de l\'achat de produits chez nos partenaires.'
     },
     contact: {
@@ -315,7 +315,7 @@ export const fr = {
     title: 'Mentions Légales',
     subtitle: 'Informations légales et coordonnées',
     editor: {
-      title: 'Éditeur du site',
+      title: 'Ãƒâ€°diteur du site',
       company: {
         title: 'Informations société',
         name: 'Raison sociale : Ecolojia',
@@ -354,13 +354,13 @@ export const fr = {
     },
     data: {
       title: 'Données personnelles et cookies',
-      description: 'Pour toute question relative au traitement de vos données personnelles et à l\'utilisation des cookies, veuillez consulter notre',
+      description: 'Pour toute question relative au traitement de vos données personnelles et ÃƒÂ  l\'utilisation des cookies, veuillez consulter notre',
       link: 'Politique de Confidentialité',
-      dpo: 'Délégué à la Protection des Données (DPO) : contact@ecolojia.com'
+      dpo: 'Délégué ÃƒÂ  la Protection des Données (DPO) : contact@ecolojia.com'
     },
     update: {
-      title: 'Mise à jour',
-      description: 'Ces mentions légales ont été mises à jour le {{date}} et peuvent être modifiées à tout moment. Il appartient à l\'utilisateur de vérifier régulièrement la version en vigueur.'
+      title: 'Mise ÃƒÂ  jour',
+      description: 'Ces mentions légales ont été mises ÃƒÂ  jour le {{date}} et peuvent être modifiées ÃƒÂ  tout moment. Il appartient ÃƒÂ  l\'utilisateur de vérifier régulièrement la version en vigueur.'
     }
   },
   
@@ -401,7 +401,7 @@ export const fr = {
     mode: 'Mode',
     beauté: 'Beauté',
     maison: 'Maison',
-    electronique: 'Électronique',
+    electronique: 'Ãƒâ€°lectronique',
     jardin: 'Jardin'
   }
 };

@@ -27,7 +27,7 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // État du formulaire
+  // Ãƒâ€°tat du formulaire
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -176,9 +176,9 @@ export function RegisterPage() {
       // Gestion des erreurs spécifiques
       if (error.message.includes('already exists')) {
         if (error.message.includes('email')) {
-          setErrors({ email: 'Cet email est déjà utilisé' });
+          setErrors({ email: 'Cet email est déjÃƒÂ  utilisé' });
         } else if (error.message.includes('username')) {
-          setErrors({ username: 'Ce nom d\'utilisateur est déjà pris' });
+          setErrors({ username: 'Ce nom d\'utilisateur est déjÃƒÂ  pris' });
         }
       } else {
         setErrors({ general: error.message || 'Erreur lors de l\'inscription' });
@@ -233,7 +233,7 @@ export function RegisterPage() {
             Créer un compte gratuit
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Déjà inscrit ?{' '}
+            DéjÃƒÂ  inscrit ?{' '}
             <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
               Se connecter
             </Link>
@@ -384,7 +384,7 @@ export function RegisterPage() {
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="••••••••"
+                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button
@@ -439,7 +439,7 @@ export function RegisterPage() {
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="••••••••"
+                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button

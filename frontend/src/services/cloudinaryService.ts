@@ -14,3 +14,4 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
 
   return response.data.secure_url;
 }
+

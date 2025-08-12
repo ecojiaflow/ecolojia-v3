@@ -41,7 +41,7 @@ const ProfilePage: React.FC = () => {
   });
 
   // Suggestions prédéfinies
-  const allergySuggestions = ['Gluten', 'Lactose', 'Arachides', 'Oeufs', 'Soja', 'Fruits à coque', 'Poisson', 'Crustacés'];
+  const allergySuggestions = ['Gluten', 'Lactose', 'Arachides', 'Oeufs', 'Soja', 'Fruits ÃƒÂ  coque', 'Poisson', 'Crustacés'];
   const dietSuggestions = ['Végétarien', 'Vegan', 'Sans gluten', 'Sans lactose', 'Halal', 'Casher', 'Paléo', 'Keto'];
   const goalSuggestions = ['Perdre du poids', 'Manger plus sain', 'Réduire le sucre', 'Plus de protéines', 'Manger bio', 'Réduire les additifs'];
 
@@ -68,7 +68,7 @@ const ProfilePage: React.FC = () => {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      setError(err.message || 'Erreur lors de la mise à jour du profil');
+      setError(err.message || 'Erreur lors de la mise ÃƒÂ  jour du profil');
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ const ProfilePage: React.FC = () => {
       <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">Veuillez vous connecter pour accéder à votre profil</p>
+          <p className="text-gray-600">Veuillez vous connecter pour accéder ÃƒÂ  votre profil</p>
           <button
             onClick={() => navigate('/login')}
             className="mt-4 px-6 py-3 bg-[#7DDE4A] text-white rounded-full hover:bg-[#6bc93a] transition-all"
@@ -261,7 +261,7 @@ const ProfilePage: React.FC = () => {
               className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 flex items-center gap-2"
             >
               <Check className="w-5 h-5" />
-              Profil mis à jour avec succès !
+              Profil mis ÃƒÂ  jour avec succès !
             </motion.div>
           )}
 

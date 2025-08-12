@@ -17,13 +17,13 @@ i18n
       }
     },
     fallbackLng: 'fr',
-    lng: 'fr', // ✅ Langue par défaut explicite
-    debug: true, // ✅ Activer temporairement pour déboguer
+    lng: 'fr', // âÅ“â€¦ Langue par défaut explicite
+    debug: true, // âÅ“â€¦ Activer temporairement pour déboguer
     interpolation: {
       escapeValue: false
     },
     detection: {
-      // ✅ Configuration de détection améliorée
+      // âÅ“â€¦ Configuration de détection améliorée
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng'

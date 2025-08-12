@@ -1,8 +1,8 @@
-// frontend/src/components/dashboard/RecommendationsSection.tsx
+﻿// frontend/src/components/dashboard/RecommendationsSection.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, AlertTriangle, Sparkles, ChevronRight, Target, Heart, Leaf } from 'lucide-react';
-import { dashboardService } from '../../services/dashboardService';
+import dashboardService from '../../services/dashboardService';
 import { useNavigate } from 'react-router-dom';
 
 interface Recommendation {
@@ -252,3 +252,4 @@ export const RecommendationsSection: React.FC = () => {
 
 export default RecommendationsSection;
 // EOF
+

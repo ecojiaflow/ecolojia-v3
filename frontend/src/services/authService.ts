@@ -1,9 +1,9 @@
-// PATH: frontend/src/services/authService.ts
+﻿// PATH: frontend/src/services/authService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';
 import { ConfigService } from './configService';
 
-// Types cohÃƒÂ©rents avec le backend
+// Types cohÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rents avec le backend
 export interface User {
   _id: string;
   email: string;
@@ -79,9 +79,9 @@ class AuthService {
   // Connexion
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      console.log('Ã°Å¸"Â Attempting login with:', { email: credentials.email });
+      console.log('ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸"Ã‚ÂÃƒâ€šÃ‚Â Attempting login with:', { email: credentials.email });
       
-      // Formater correctement les donnÃƒÂ©es
+      // Formater correctement les donnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es
       const formattedCredentials = {
         email: credentials.email.toLowerCase().trim(),
         password: credentials.password,
@@ -93,18 +93,18 @@ class AuthService {
         formattedCredentials
       );
 
-      console.log('âÅ“"¦ Login response received:', { 
+      console.log('âÃƒâ€¦â€Å“"Ã‚Â¦ Login response received:', { 
         success: response.success, 
         hasToken: !!response.token,
         hasUser: !!response.user 
       });
 
-      // VÃƒÂ©rifier que nous avons bien reÃƒÂ§u les donnÃƒÂ©es nÃƒÂ©cessaires
+      // VÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rifier que nous avons bien reÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§u les donnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©cessaires
       if (!response.token || !response.user) {
-        throw new Error('RÃƒÂ©ponse du serveur invalide');
+        throw new Error('RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©ponse du serveur invalide');
       }
 
-      // Sauvegarder les donnÃƒÂ©es d'authentification
+      // Sauvegarder les donnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es d'authentification
       this.saveAuthData(response);
       this.configService.setMode('production');
       
@@ -113,28 +113,28 @@ class AuthService {
         this.scheduleTokenRefresh(response.expiresIn);
       }
       
-      // Ãƒ"°mettre l'ÃƒÂ©vÃƒÂ©nement de connexion
+      // ÃƒÆ’Ã†â€™"Ã‚Â°mettre l'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©nement de connexion
       window.dispatchEvent(new CustomEvent('auth:login', { detail: response.user }));
 
       return response;
     } catch (error: any) {
-      console.error('âÂÅ’ Login error details:', {
+      console.error('âÃƒâ€šÃ‚ÂÃƒâ€¦â€â„¢ Login error details:', {
         message: error.message,
         statusCode: error.statusCode,
         originalError: error.originalError
       });
       
-      // Gestion spÃƒÂ©cifique des erreurs
+      // Gestion spÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©cifique des erreurs
       if (error.statusCode === 401) {
         throw new Error('Email ou mot de passe incorrect');
       } else if (error.statusCode === 409) {
-        throw new Error('Un compte existe dÃƒÂ©jÃƒÂ  avec cet email');
+        throw new Error('Un compte existe dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©jÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  avec cet email');
       } else if (error.statusCode === 400) {
-        throw new Error('DonnÃƒÂ©es invalides. VÃƒÂ©rifiez vos informations.');
+        throw new Error('DonnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es invalides. VÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rifiez vos informations.');
       } else if (error.message) {
         throw new Error(error.message);
       } else {
-        throw new Error('Erreur de connexion. Veuillez rÃƒÂ©essayer.');
+        throw new Error('Erreur de connexion. Veuillez rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©essayer.');
       }
     }
   }
@@ -142,9 +142,9 @@ class AuthService {
   // Inscription
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      console.log('Ã°Å¸"Â Attempting registration with:', { email: data.email });
+      console.log('ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸"Ãƒâ€šÃ‚Â Attempting registration with:', { email: data.email });
       
-      // Formater les donnÃƒÂ©es pour le backend
+      // Formater les donnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es pour le backend
       const formattedData = {
         email: data.email.toLowerCase().trim(),
         password: data.password,
@@ -160,17 +160,17 @@ class AuthService {
         formattedData
       );
 
-      console.log('âÅ“"¦ Registration successful:', { 
+      console.log('âÃƒâ€¦â€Å“"Ã‚Â¦ Registration successful:', { 
         success: response.success,
         hasUser: !!response.user 
       });
 
-      // VÃƒÂ©rifier la rÃƒÂ©ponse
+      // VÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rifier la rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©ponse
       if (!response.token || !response.user) {
-        throw new Error('RÃƒÂ©ponse du serveur invalide');
+        throw new Error('RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©ponse du serveur invalide');
       }
 
-      // Sauvegarder les donnÃƒÂ©es
+      // Sauvegarder les donnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es
       this.saveAuthData(response);
       this.configService.setMode('production');
       
@@ -182,22 +182,22 @@ class AuthService {
 
       return response;
     } catch (error: any) {
-      console.error('âÂÅ’ Register error:', error);
+      console.error('âÃƒâ€šÃ‚ÂÃƒâ€¦â€â„¢ Register error:', error);
       
-      // Gestion spÃƒÂ©cifique des erreurs
+      // Gestion spÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©cifique des erreurs
       if (error.statusCode === 409) {
-        throw new Error('Un compte existe dÃƒÂ©jÃƒÂ  avec cet email');
+        throw new Error('Un compte existe dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©jÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  avec cet email');
       } else if (error.statusCode === 400) {
-        throw new Error(error.message || 'DonnÃƒÂ©es invalides. VÃƒÂ©rifiez vos informations.');
+        throw new Error(error.message || 'DonnÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es invalides. VÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rifiez vos informations.');
       } else if (error.message) {
         throw new Error(error.message);
       } else {
-        throw new Error('Erreur lors de l\'inscription. Veuillez rÃƒÂ©essayer.');
+        throw new Error('Erreur lors de l\'inscription. Veuillez rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©essayer.');
       }
     }
   }
 
-  // DÃƒÂ©connexion
+  // DÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©connexion
   async logout(): Promise<void> {
     try {
       await api.post(API_CONFIG.ENDPOINTS.AUTH.LOGOUT);
@@ -216,7 +216,7 @@ class AuthService {
     }
   }
 
-  // RafraÃƒÂ®chir le token
+  // RafraÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â®chir le token
   async refreshToken(): Promise<void> {
     const refreshToken = this.getRefreshToken();
     
@@ -243,7 +243,7 @@ class AuthService {
     }
   }
 
-  // RÃƒÂ©cupÃƒÂ©rer le profil utilisateur
+  // RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©cupÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rer le profil utilisateur
   async getProfile(): Promise<User> {
     try {
       const user = await api.get<User>(API_CONFIG.ENDPOINTS.AUTH.ME);
@@ -255,7 +255,7 @@ class AuthService {
     }
   }
 
-  // Mettre ÃƒÂ  jour le profil
+  // Mettre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour le profil
   async updateProfile(data: Partial<User>): Promise<User> {
     try {
       const user = await api.put<User>(API_CONFIG.ENDPOINTS.USER.UPDATE, data);
@@ -267,7 +267,7 @@ class AuthService {
     }
   }
 
-  // RÃƒÂ©initialiser le mot de passe
+  // RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©initialiser le mot de passe
   async resetPassword(email: string): Promise<void> {
     await api.post(API_CONFIG.ENDPOINTS.AUTH.RESET_PASSWORD, { 
       email: email.toLowerCase().trim() 
@@ -282,12 +282,12 @@ class AuthService {
     });
   }
 
-  // VÃƒÂ©rifier l'email
+  // VÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rifier l'email
   async verifyEmail(token: string): Promise<void> {
     await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_EMAIL, { token });
   }
 
-  // MÃƒÂ©thodes utilitaires
+  // MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©thodes utilitaires
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
@@ -315,7 +315,7 @@ class AuthService {
     return tier === 'premium' || tier === 'family';
   }
 
-  // MÃƒÂ©thodes privÃƒÂ©es
+  // MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©thodes privÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es
   private saveAuthData(data: AuthResponse): void {
     localStorage.setItem(this.tokenKey, data.token);
     localStorage.setItem(this.refreshTokenKey, data.refreshToken);
@@ -343,7 +343,7 @@ class AuthService {
       clearTimeout(this.refreshTimer);
     }
     
-    // RafraÃƒÂ®chir 5 minutes avant expiration
+    // RafraÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â®chir 5 minutes avant expiration
     const refreshDelay = Math.max(0, (expiresIn - 300) * 1000);
     
     this.refreshTimer = setTimeout(() => {
@@ -371,7 +371,7 @@ export default AuthService.getInstance();
 //
 // === Profil avec fallback robuste ===
 export async function getProfileWithFallback(): Promise<any> {
-  const candidates = ['/auth/me', '/users/me', '/users/profile'];
+  const candidates = ['/api/users/me', '/users/me', '/users/profile'];
   let lastErr: any = null;
 
   for (const path of candidates) {
@@ -385,3 +385,5 @@ export async function getProfileWithFallback(): Promise<any> {
   }
   throw lastErr || new Error('Profil introuvable via tous les endpoints');
 }
+
+

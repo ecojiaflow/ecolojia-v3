@@ -1,8 +1,8 @@
-// frontend/src/components/dashboard/WeeklySummary.tsx
+﻿// frontend/src/components/dashboard/WeeklySummary.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Award, Target, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react';
-import { dashboardService } from '../../services/dashboardService';
+import dashboardService from '../../services/dashboardService';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import toast from 'react-hot-toast';
@@ -99,11 +99,11 @@ export const WeeklySummary: React.FC = () => {
 
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'achievement': return '🏆';
-      case 'improvement': return '📈';
-      case 'warning': return '⚠️';
-      case 'tip': return '💡';
-      default: return '📌';
+      case 'achievement': return 'Ã°Å¸Ââ€ ';
+      case 'improvement': return 'Ã°Å¸â€œË†';
+      case 'warning': return 'âÅ¡Â ïÂ¸Â';
+      case 'tip': return 'Ã°Å¸â€™Â¡';
+      default: return 'Ã°Å¸â€œÅ’';
     }
   };
 
@@ -146,7 +146,7 @@ export const WeeklySummary: React.FC = () => {
             Résumé Hebdomadaire
           </h2>
           <p className="text-gray-600 mt-1">
-            Semaine {summaryData.period.weekNumber} · {format(new Date(summaryData.period.start), 'd MMM', { locale: fr })} - {format(new Date(summaryData.period.end), 'd MMM yyyy', { locale: fr })}
+            Semaine {summaryData.period.weekNumber} Ã‚Â· {format(new Date(summaryData.period.start), 'd MMM', { locale: fr })} - {format(new Date(summaryData.period.end), 'd MMM yyyy', { locale: fr })}
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -186,7 +186,7 @@ export const WeeklySummary: React.FC = () => {
                     <p className="text-sm text-blue-600 font-medium">Analyses</p>
                     <p className="text-2xl font-bold text-gray-800">{summaryData.stats.totalScans}</p>
                   </div>
-                  <div className="text-3xl">📊</div>
+                  <div className="text-3xl">Ã°Å¸â€œÅ </div>
                 </div>
               </motion.div>
 
@@ -213,7 +213,7 @@ export const WeeklySummary: React.FC = () => {
                     <p className="text-lg font-bold text-gray-800 truncate">{summaryData.stats.bestProduct.name}</p>
                     <p className="text-sm text-gray-600">{summaryData.stats.bestProduct.score}/100</p>
                   </div>
-                  <div className="text-3xl">⭐</div>
+                  <div className="text-3xl">âÂ­Â</div>
                 </div>
               </motion.div>
 
@@ -223,18 +223,18 @@ export const WeeklySummary: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-orange-600 font-medium">À améliorer</p>
+                    <p className="text-sm text-orange-600 font-medium">Ãƒ€ améliorer</p>
                     <p className="text-lg font-bold text-gray-800 truncate">{summaryData.stats.worstProduct.name}</p>
                     <p className="text-sm text-gray-600">{summaryData.stats.worstProduct.score}/100</p>
                   </div>
-                  <div className="text-3xl">⚠️</div>
+                  <div className="text-3xl">âÅ¡Â ïÂ¸Â</div>
                 </div>
               </motion.div>
             </div>
 
             {/* Insights */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">📊 Insights de la semaine</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Ã°Å¸â€œÅ  Insights de la semaine</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {summaryData.insights.map((insight, index) => (
                   <motion.div
@@ -279,7 +279,7 @@ export const WeeklySummary: React.FC = () => {
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg"
                       >
-                        <span className="text-green-600">✓</span>
+                        <span className="text-green-600">âÅ“â€œ</span>
                         <div>
                           <p className="font-medium text-gray-800">{goal.title}</p>
                           <p className="text-sm text-gray-600">{goal.description}</p>
@@ -307,7 +307,7 @@ export const WeeklySummary: React.FC = () => {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-start space-x-2 p-3 bg-blue-50 rounded-lg"
                     >
-                      <span className="text-blue-600">→</span>
+                      <span className="text-blue-600">ââ€ â€™</span>
                       <div>
                         <p className="font-medium text-gray-800">{goal.title}</p>
                         <p className="text-sm text-gray-600">{goal.target}</p>
@@ -346,6 +346,7 @@ export const WeeklySummary: React.FC = () => {
   );
 };
 
-// ✅ À ajouter à la toute fin :
+// âÅ“â€¦ Ãƒ€ ajouter ÃƒÂ  la toute fin :
 export default WeeklySummary;
 // EOF
+

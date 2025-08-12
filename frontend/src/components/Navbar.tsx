@@ -43,27 +43,27 @@ class NavbarSearchService {
   async getSuggestions(query: string): Promise<SearchSuggestion[]> {
     const popularSuggestions = [
       // Alimentaire
-      { query: 'nutella bio', icon: 'ðŸ«', category: 'Alimentaire', score: 'A' },
-      { query: 'yaourt nature danone', icon: 'ðŸ¥›', category: 'Alimentaire', score: 'A' },
-      { query: 'pain complet bio', icon: 'ðŸž', category: 'Alimentaire', score: 'A' },
-      { query: 'coca-cola zero', icon: 'ðŸ¥¤', category: 'Alimentaire', score: 'D' },
+      { query: 'nutella bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â«', category: 'Alimentaire', score: 'A' },
+      { query: 'yaourt nature danone', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥â€Âº', category: 'Alimentaire', score: 'A' },
+      { query: 'pain complet bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â¾', category: 'Alimentaire', score: 'A' },
+      { query: 'coca-cola zero', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã‚Â¤', category: 'Alimentaire', score: 'D' },
       
       // Cosmétiques
-      { query: 'shampoing l\'oréal sans sulfate', icon: 'ðŸ§´', category: 'Cosmétiques', score: 'B' },
-      { query: 'crème nivea sans parabènes', icon: 'âœ¨', category: 'Cosmétiques', score: 'B' },
-      { query: 'dentifrice signal bio', icon: 'ðŸ¦·', category: 'Cosmétiques', score: 'A' },
-      { query: 'déodorant dove', icon: 'ðŸŒ¸', category: 'Cosmétiques', score: 'C' },
+      { query: 'shampoing l\'oréal sans sulfate', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â´', category: 'Cosmétiques', score: 'B' },
+      { query: 'crème nivea sans parabènes', icon: 'âÃ…â€œÃ‚Â¨', category: 'Cosmétiques', score: 'B' },
+      { query: 'dentifrice signal bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¦Ã‚Â·', category: 'Cosmétiques', score: 'A' },
+      { query: 'déodorant dove', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¸', category: 'Cosmétiques', score: 'C' },
       
       // Détergents
-      { query: 'lessive ariel pods', icon: 'ðŸ§½', category: 'Détergents', score: 'C' },
-      { query: 'liquide vaisselle paic', icon: 'ðŸ’§', category: 'Détergents', score: 'B' },
-      { query: 'nettoyant ajax', icon: 'ðŸ ', category: 'Détergents', score: 'C' },
-      { query: 'lessive écologique arbre vert', icon: 'ðŸŒ¿', category: 'Détergents', score: 'A' },
+      { query: 'lessive ariel pods', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â½', category: 'Détergents', score: 'C' },
+      { query: 'liquide vaisselle paic', icon: 'ÃƒÂ°Ã…Â¸â€â„¢Ã‚Â§', category: 'Détergents', score: 'B' },
+      { query: 'nettoyant ajax', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â ', category: 'Détergents', score: 'C' },
+      { query: 'lessive écologique arbre vert', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¿', category: 'Détergents', score: 'A' },
       
       // Marques populaires
-      { query: 'produits bjorg', icon: 'ðŸŒ¾', category: 'Marque Bio' },
-      { query: 'produits la vie claire', icon: 'ðŸŒ±', category: 'Marque Bio' },
-      { query: 'produits carrefour bio', icon: 'ðŸ›’', category: 'Marque Bio' }
+      { query: 'produits bjorg', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¾', category: 'Marque Bio' },
+      { query: 'produits la vie claire', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±', category: 'Marque Bio' },
+      { query: 'produits carrefour bio', icon: 'ÃƒÂ°Ã…Â¸â€Âºâ€â„¢', category: 'Marque Bio' }
     ];
 
     if (!query.trim()) {
@@ -87,15 +87,15 @@ class NavbarSearchService {
 
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
       contextual.push(
-        { query: `${query} NOVA 1`, icon: 'âœ…', category: 'Alimentaire sain' },
-        { query: `${query} nutri-score A`, icon: 'ðŸŒŸ', category: 'Top santé' }
+        { query: `${query} NOVA 1`, icon: 'âÃ…â€œâ€Â¦', category: 'Alimentaire sain' },
+        { query: `${query} nutri-score A`, icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â¸', category: 'Top santé' }
       );
     }
 
     if (queryLower.includes('shampoing') || queryLower.includes('savon')) {
       contextual.push(
-        { query: `${query} hypoallergénique`, icon: 'ðŸ’š', category: 'Peau sensible' },
-        { query: `${query} vegan`, icon: 'ðŸŒ±', category: 'Ã‰thique' }
+        { query: `${query} hypoallergénique`, icon: 'ÃƒÂ°Ã…Â¸â€â„¢Ã…Â¡', category: 'Peau sensible' },
+        { query: `${query} vegan`, icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±', category: 'ÃƒÆ’â€Â°thique' }
       );
     }
 
@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
   
-  // Ã‰tat
+  // ÃƒÆ’â€Â°tat
   const [isOpen, setIsOpen] = useState(false);
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -311,7 +311,7 @@ const Navbar: React.FC = () => {
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-gray-600">
                       <Zap className="w-3 h-3 text-[#7DDE4A]" />
-                      <span>IA Scientifique "¢ Temps réel</span>
+                      <span>IA Scientifique "Ã‚Â¢ Temps réel</span>
                     </div>
                   </div>
                   
@@ -409,14 +409,14 @@ const Navbar: React.FC = () => {
                         </div>
                         
                         <div className="text-xs text-gray-500">
-                          Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">â†µ</kbd> pour rechercher
+                          Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">ââ€Â Ã‚Âµ</kbd> pour rechercher
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Ã‰tat vide */}
+                {/* ÃƒÆ’â€Â°tat vide */}
                 {!isLoadingSuggestions && suggestions.length === 0 && quickSearchQuery && (
                   <div className="p-6 text-center">
                     <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -490,7 +490,7 @@ const Navbar: React.FC = () => {
                     <div className="px-4 py-2 border-b border-[#DDE9DA]">
                       <p className="text-sm font-medium text-[#3B3B3B]">{user?.email}</p>
                       <p className="text-xs text-gray-500">
-                        Plan {user?.plan === 'premium' ? 'Premium â­' : 'Gratuit'}
+                        Plan {user?.plan === 'premium' ? 'Premium âÃ‚Â­Ã‚Â' : 'Gratuit'}
                       </p>
                     </div>
                     
@@ -599,7 +599,7 @@ const Navbar: React.FC = () => {
               {/* Section IA Mobile */}
               <div className="border-t border-[#DDE9DA] pt-3 mt-3">
                 <div className="px-3 py-2">
-                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">ðŸ”¬ IA Scientifique</h3>
+                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">ÃƒÂ°Ã…Â¸â€ÂÃ‚Â¬ IA Scientifique</h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-2"></span>

@@ -1,11 +1,11 @@
 // PATH: frontend/src/services/analytics/UserAnalytics.ts
 /**
- * 📊 ECOLOJIA User Analytics Service
+ * Ã°Å¸â€œÅ  ECOLOJIA User Analytics Service
  * Infrastructure de tracking pour Dashboard Personnel
  * Stockage local + calculs métriques avancés
  */
 
-// ✅ INTERFACES PRINCIPALES
+// âÅ“â€¦ INTERFACES PRINCIPALES
 export interface ProductAnalysis {
   id: string;
   productName: string;
@@ -106,7 +106,7 @@ export interface WeeklyReport {
   generatedAt: Date;
 }
 
-// ✅ SERVICE PRINCIPAL
+// âÅ“â€¦ SERVICE PRINCIPAL
 class UserAnalyticsService {
   private sessionId: string;
   private readonly storageKey = 'ecolojia_user_data';
@@ -135,7 +135,7 @@ class UserAnalyticsService {
 
     userData.scannedProducts.push(fullAnalysis);
     
-    // Limiter à 1000 scans pour éviter overflow localStorage
+    // Limiter ÃƒÂ  1000 scans pour éviter overflow localStorage
     if (userData.scannedProducts.length > 1000) {
       userData.scannedProducts = userData.scannedProducts.slice(-800);
     }
@@ -152,7 +152,7 @@ class UserAnalyticsService {
     // Sauvegarder
     this.saveUserData(userData);
     
-    console.log('📊 Scan tracké:', {
+    console.log('Ã°Å¸â€œÅ  Scan tracké:', {
       product: analysis.productName,
       nova: analysis.novaGroup,
       totalScans: userData.scannedProducts.length,
@@ -303,7 +303,7 @@ class UserAnalyticsService {
     return report;
   }
 
-  // ===== MÉTHODES PRIVÉES DE CALCUL =====
+  // ===== MÃƒâ€°THODES PRIVÃƒâ€°ES DE CALCUL =====
 
   private calculateMetrics(products: ProductAnalysis[]): HealthMetrics {
     if (products.length === 0) {
@@ -394,7 +394,7 @@ class UserAnalyticsService {
       insights.push({
         id: this.generateId(),
         type: 'warning',
-        title: '⚠️ Produit ultra-transformé détecté',
+        title: 'âÅ¡Â ïÂ¸Â Produit ultra-transformé détecté',
         message: `"${analysis.productName}" est classé NOVA 4 avec ${analysis.additives.length} additif(s)`,
         action: 'Rechercher une alternative NOVA 1-2',
         priority: 'high',
@@ -415,7 +415,7 @@ class UserAnalyticsService {
         insights.push({
           id: this.generateId(),
           type: 'progress',
-          title: '📈 Excellent progrès !',
+          title: 'Ã°Å¸â€œË† Excellent progrès !',
           message: `Vos 5 derniers scans montrent une amélioration de ${Math.round(avgRecentScore - overallScore)} points`,
           action: 'Continuez sur cette lancée !',
           priority: 'medium',
@@ -441,9 +441,9 @@ class UserAnalyticsService {
     if (userData.scannedProducts.length === 1 && !existingIds.has('first_scan')) {
       newAchievements.push({
         id: 'first_scan',
-        title: '🔍 Premier Scan',
+        title: 'Ã°Å¸â€Â Premier Scan',
         description: 'Votre première analyse NOVA !',
-        icon: '🔍',
+        icon: 'Ã°Å¸â€Â',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
@@ -454,9 +454,9 @@ class UserAnalyticsService {
     if (userData.scannedProducts.length >= 10 && !existingIds.has('scanner_enthusiast')) {
       newAchievements.push({
         id: 'scanner_enthusiast',
-        title: '📱 Explorateur NOVA',
+        title: 'Ã°Å¸â€œÂ± Explorateur NOVA',
         description: '10 produits analysés !',
-        icon: '📱',
+        icon: 'Ã°Å¸â€œÂ±',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
@@ -467,22 +467,22 @@ class UserAnalyticsService {
     if (userData.currentMetrics.healthScore >= 80 && !existingIds.has('health_champion')) {
       newAchievements.push({
         id: 'health_champion',
-        title: '🏆 Champion Santé',
-        description: 'Score santé supérieur à 80 !',
-        icon: '🏆',
+        title: 'Ã°Å¸Ââ€  Champion Santé',
+        description: 'Score santé supérieur ÃƒÂ  80 !',
+        icon: 'Ã°Å¸Ââ€ ',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'rare'
       });
     }
 
-    // Achievement: Éviter ultra-transformés
+    // Achievement: Ãƒâ€°viter ultra-transformés
     if (userData.currentMetrics.ultraTransformPercent <= 20 && userData.scannedProducts.length >= 20 && !existingIds.has('ultra_avoider')) {
       newAchievements.push({
         id: 'ultra_avoider',
-        title: '🛡️ Anti Ultra-Transformé',
+        title: 'Ã°Å¸â€ºÂ¡ïÂ¸Â Anti Ultra-Transformé',
         description: 'Moins de 20% d\'ultra-transformés !',
-        icon: '🛡️',
+        icon: 'Ã°Å¸â€ºÂ¡ïÂ¸Â',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'epic'
@@ -492,7 +492,7 @@ class UserAnalyticsService {
     userData.achievements.push(...newAchievements);
   }
 
-  // ===== MÉTHODES UTILITAIRES =====
+  // ===== MÃƒâ€°THODES UTILITAIRES =====
 
   private getOrCreateSessionId(): string {
     let sessionId = localStorage.getItem(this.sessionKey);
@@ -590,10 +590,10 @@ class UserAnalyticsService {
   }
 
   private generateDayInsight(metrics: HealthMetrics, products: ProductAnalysis[]): string {
-    if (metrics.healthScore >= 80) return 'Excellente journée santé ! 🌟';
-    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle 👍';
-    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformés ⚠️';
-    return 'Continuez vos efforts ! 💪';
+    if (metrics.healthScore >= 80) return 'Excellente journée santé ! Ã°Å¸Å’Å¸';
+    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle Ã°Å¸â€˜Â';
+    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformés âÅ¡Â ïÂ¸Â';
+    return 'Continuez vos efforts ! Ã°Å¸â€™Âª';
   }
 
   private getCurrentValueForGoalType(type: UserGoal['type']): number {
@@ -636,7 +636,7 @@ class UserAnalyticsService {
   }
 
   private generateNextWeekGoal(metrics: HealthMetrics): string {
-    if (metrics.ultraTransformPercent > 60) return 'Réduire les ultra-transformés à moins de 50%';
+    if (metrics.ultraTransformPercent > 60) return 'Réduire les ultra-transformés ÃƒÂ  moins de 50%';
     if (metrics.bioPercent < 20) return 'Essayer 3 nouveaux produits bio';
     if (metrics.healthScore < 70) return 'Atteindre un score santé de 75';
     return 'Maintenir vos bonnes habitudes alimentaires';
@@ -717,7 +717,7 @@ class UserAnalyticsService {
     }
   }
 
-  // ===== MÉTHODES PUBLIQUES SUPPLÉMENTAIRES =====
+  // ===== MÃƒâ€°THODES PUBLIQUES SUPPLÃƒâ€°MENTAIRES =====
 
   /**
    * Obtenir statistiques générales
@@ -747,7 +747,7 @@ class UserAnalyticsService {
   resetAllData(): void {
     localStorage.removeItem(this.storageKey);
     localStorage.removeItem(this.sessionKey);
-    console.log('✅ Données utilisateur réinitialisées');
+    console.log('âÅ“â€¦ Données utilisateur réinitialisées');
   }
 
   /**
@@ -775,3 +775,4 @@ class UserAnalyticsService {
 // Export singleton
 export const userAnalytics = new UserAnalyticsService();
 export default UserAnalyticsService;
+

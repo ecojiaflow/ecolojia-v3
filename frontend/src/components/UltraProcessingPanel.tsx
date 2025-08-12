@@ -27,7 +27,7 @@ const UltraProcessingPanel: React.FC<Props> = ({ result }) => {
   return (
     <div className={`border-l-4 border-${color}-500 bg-${color}-50 p-6 rounded-2xl mb-6`}>
       <h3 className={`text-${color}-700 text-xl font-bold mb-2`}>
-        🧪 Niveau de Transformation : {result.level.toUpperCase()}
+        Ã°Å¸Â§Âª Niveau de Transformation : {result.level.toUpperCase()}
       </h3>
       <p className="text-sm text-gray-700 mb-3">{result.justification}</p>
 
@@ -49,3 +49,4 @@ const UltraProcessingPanel: React.FC<Props> = ({ result }) => {
 
 export default UltraProcessingPanel;
 // EOF
+

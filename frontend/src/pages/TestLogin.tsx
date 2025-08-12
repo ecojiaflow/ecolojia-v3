@@ -1,9 +1,9 @@
-// PATH: frontend/src/pages/TestLogin.tsx
+﻿// PATH: frontend/src/pages/TestLogin.tsx
 // Page de connexion rapide pour tester
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiClient } from '../services/apiClient';
+import apiClient from '../services/apiClient';
 
 export default function TestLogin() {
   const navigate = useNavigate();
@@ -28,15 +28,15 @@ export default function TestLogin() {
         localStorage.setItem('userId', response.data.userId || '');
         localStorage.setItem('userEmail', 'test@ecolojia.com');
         
-        console.log('✅ Connexion réussie !');
+        console.log('Ã¢Ã…â€œÃ¢â‚¬Â¦ Connexion rÃ©ussie !');
         navigate('/scan');
       }
     } catch (err: any) {
-      console.error('❌ Erreur connexion:', err);
+      console.error('Ã¢Ã‚ÂÃ…â€™ Erreur connexion:', err);
       
-      // Si le compte test n'existe pas, créer un token local
+      // Si le compte test n'existe pas, crÃ©er un token local
       if (err.status === 404 || err.status === 401) {
-        console.log('🔧 Création d\'un token local de test...');
+        console.log('ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ CrÃ©ation d\'un token local de test...');
         
         // Token de test local
         const testToken = 'test-token-' + Date.now();
@@ -54,16 +54,16 @@ export default function TestLogin() {
     }
   };
 
-  // Connexion sans backend (mode démo)
+  // Connexion sans backend (mode dÃ©mo)
   const handleDemoMode = () => {
-    console.log('🎭 Mode démo activé');
+    console.log('ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â­ Mode dÃ©mo activÃ©');
     
-    // Créer un token de démonstration
+    // CrÃ©er un token de dÃ©monstration
     const demoToken = 'demo-token-' + Date.now();
     localStorage.setItem('token', demoToken);
     localStorage.setItem('userId', 'demo-user-123');
     localStorage.setItem('userEmail', 'demo@ecolojia.com');
-    localStorage.setItem('plan', 'premium'); // Premium en démo
+    localStorage.setItem('plan', 'premium'); // Premium en dÃ©mo
     localStorage.setItem('demoMode', 'true');
     
     navigate('/scan');
@@ -74,7 +74,7 @@ export default function TestLogin() {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            🌿 ECOLOJIA
+            ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¿ ECOLOJIA
           </h1>
           <p className="text-gray-600">
             Connexion rapide pour tester
@@ -104,12 +104,12 @@ export default function TestLogin() {
               </>
             ) : (
               <>
-                🔐 Se connecter avec le compte test
+                ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â Se connecter avec le compte test
               </>
             )}
           </button>
 
-          {/* Séparateur */}
+          {/* SÃ©parateur */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -119,23 +119,23 @@ export default function TestLogin() {
             </div>
           </div>
 
-          {/* Bouton mode démo */}
+          {/* Bouton mode dÃ©mo */}
           <button
             onClick={handleDemoMode}
             className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
           >
-            🎭 Mode démonstration (sans backend)
+            ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â­ Mode dÃ©monstration (sans backend)
           </button>
         </div>
 
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600 text-center">
-            <strong>Note :</strong> En mode démo, les analyses sont simulées localement.
-            Pour une expérience complète, assurez-vous que le backend est lancé.
+            <strong>Note :</strong> En mode dÃ©mo, les analyses sont simulÃ©es localement.
+            Pour une expÃ©rience complÃ¨te, assurez-vous que le backend est lancÃ©.
           </p>
         </div>
 
-        {/* Info développeur */}
+        {/* Info dÃ©veloppeur */}
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
             Backend URL: {import.meta.env.VITE_API_URL || 'http://localhost:5001'}
@@ -145,3 +145,4 @@ export default function TestLogin() {
     </div>
   );
 }
+

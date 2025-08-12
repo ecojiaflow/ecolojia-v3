@@ -50,7 +50,7 @@ export const ChatPage: React.FC = () => {
 
 **Score santé : ${location.state.context.analysis.healthScore}/100**
 
-Je suis là pour répondre à toutes vos questions sur ce produit. Que souhaitez-vous savoir ?`,
+Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Que souhaitez-vous savoir ?`,
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -165,7 +165,7 @@ Je suis là pour répondre à toutes vos questions sur ce produit. Que souhaitez
         }
       }
 
-      // Mettre à jour le message final
+      // Mettre ÃƒÂ  jour le message final
       setMessages(prev => prev.map(msg => 
         msg.id === assistantMessage.id 
           ? { ...msg, content: fullContent, isStreaming: false }
@@ -208,7 +208,7 @@ Je suis là pour répondre à toutes vos questions sur ce produit. Que souhaitez
     "Quel est l'impact environnemental ?"
   ] : [
     "Comment reconnaître un produit ultra-transformé ?",
-    "Quels sont les perturbateurs endocriniens à éviter ?",
+    "Quels sont les perturbateurs endocriniens ÃƒÂ  éviter ?",
     "Comment choisir des produits ménagers écologiques ?",
     "Quelle est la différence entre bio et naturel ?",
     "Comment lire une étiquette alimentaire ?"
@@ -336,7 +336,7 @@ Je suis là pour répondre à toutes vos questions sur ce produit. Que souhaitez
               <AlertCircle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-amber-800">
                 <p className="font-medium">Chat IA réservé aux membres Premium</p>
-                <p className="mt-1">Passez à Premium pour poser des questions illimitées à notre IA experte.</p>
+                <p className="mt-1">Passez ÃƒÂ  Premium pour poser des questions illimitées ÃƒÂ  notre IA experte.</p>
               </div>
             </div>
           )}
@@ -348,7 +348,7 @@ Je suis là pour répondre à toutes vos questions sur ce produit. Que souhaitez
               onKeyPress={handleKeyPress}
               placeholder={checkPremiumStatus() 
                 ? "Posez votre question..." 
-                : "Passez à Premium pour utiliser le chat IA"
+                : "Passez ÃƒÂ  Premium pour utiliser le chat IA"
               }
               disabled={isLoading || !checkPremiumStatus()}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"

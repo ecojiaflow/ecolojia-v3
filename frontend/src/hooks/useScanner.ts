@@ -46,7 +46,7 @@ export function useScanner() {
         ...prev,
         loading: false,
         result,
-        status: 'Produit trouvé !'
+        status: 'Produit trouvÃ© !'
       }));
       
       if (result.productId) {
@@ -89,7 +89,7 @@ export function useScanner() {
         loading: false,
         result,
         progress: 100,
-        status: 'Analyse terminée !'
+        status: 'Analyse terminÃ©e !'
       }));
       
       if (result.productId) {
@@ -121,7 +121,7 @@ export function useScanner() {
         ...prev,
         loading: false,
         result,
-        status: `${result.products?.length || 0} produits trouvés`
+        status: `${result.products?.length || 0} produits trouvÃ©s`
       }));
     } catch (error) {
       setState(prev => ({
@@ -155,3 +155,4 @@ export function useScanner() {
     hasError: !!state.error
   };
 }
+

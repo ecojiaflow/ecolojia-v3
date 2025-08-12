@@ -43,3 +43,4 @@ export interface ProductStats {
 // Export des types de catégories
 export * from './categories';
 export * from './search';
+

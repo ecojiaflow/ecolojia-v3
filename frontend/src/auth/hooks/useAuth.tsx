@@ -30,27 +30,27 @@ interface AuthState {
 }
 
 export interface AuthContextType extends AuthState {
-  //  ⚡ Real authentication actions
+  //  âÅ¡Â¡ Real authentication actions
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
 
-  //  🎭 Demo‑mode helpers
+  //  Ã°Å¸Å½Â­ Demoâ€â€˜mode helpers
   enableDemoMode: () => void;
   disableDemoMode: () => void;
   simulateScan: (category: string) => void;
   simulateAIQuestion: () => boolean;
 
-  //  🔎 Misc helpers
+  //  Ã°Å¸â€Å½ Misc helpers
   checkAuth: () => Promise<void>;
   clearError: () => void;
 }
 
 /*
   ---------------------------------------------------------------------------
-  Context set‑up
+  Context setâ€â€˜up
   ---------------------------------------------------------------------------
 */
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -125,7 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!state.user) return;
     try {
       setState(s => ({ ...s, isLoading: true, error: null }));
-      // 👉 TODO: Replace with real API call once available
+      // Ã°Å¸â€˜â€° TODO: Replace with real API call once available
       // const updatedUser = await authService.updateProfile(data);
       setState(s => ({
         ...s,
@@ -133,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading: false
       }));
     } catch (err: any) {
-      setState(s => ({ ...s, error: err.message ?? 'Erreur de mise à jour', isLoading: false }));
+      setState(s => ({ ...s, error: err.message ?? 'Erreur de mise ÃƒÂ  jour', isLoading: false }));
       throw err;
     }
   }, [state.user]);
@@ -148,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   /* ---------------------------------------------------------------------
-     Demo‑mode actions (purely client‑side, no API calls!)
+     Demoâ€â€˜mode actions (purely clientâ€â€˜side, no API calls!)
   --------------------------------------------------------------------- */
   const enableDemoMode = useCallback(() => {
     const demoUser: User = {
@@ -158,7 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       profile: { firstName: 'Demo', lastName: 'User' },
       tier: 'free',
       status: 'active'
-    } as User; //  Some optional fields may not exist on real User – that is fine for demo
+    } as User; //  Some optional fields may not exist on real User â€â€œ that is fine for demo
 
     setState(s => ({
       ...s,
@@ -181,14 +181,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate('/');
   }, [navigate]);
 
-  //  The two helpers below simply mutate local demo‑quotas – ignored for real users
+  //  The two helpers below simply mutate local demoâ€â€˜quotas â€â€œ ignored for real users
   const simulateScan = useCallback((category: string) => {
     if (!state.isDemoMode || !state.user) return;
     setState(s => ({
       ...s,
       user: {
         ...s.user!,
-        // @ts‑ignore – demo only
+        // @tsâ€â€˜ignore â€â€œ demo only
         usage: {
           totalScans: (s.user!.usage?.totalScans ?? 0) + 1,
           lastScanAt: new Date()
@@ -199,16 +199,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const simulateAIQuestion = useCallback((): boolean => {
     if (!state.isDemoMode || !state.user) return false;
-    // @ts‑ignore – demo only
+    // @tsâ€â€˜ignore â€â€œ demo only
     const remaining = (state.user.quotas?.aiChatsRemaining ?? 0) - 1;
     if (remaining < 0) return false;
     setState(s => ({
       ...s,
       user: {
         ...s.user!,
-        // @ts‑ignore – demo only
+        // @tsâ€â€˜ignore â€â€œ demo only
         quotas: { ...s.user!.quotas, aiChatsRemaining: remaining },
-        // @ts‑ignore – demo only
+        // @tsâ€â€˜ignore â€â€œ demo only
         usage: {
           totalChats: (s.user!.usage?.totalChats ?? 0) + 1,
           lastChatAt: new Date()
@@ -252,7 +252,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearError = () => setState(s => ({ ...s, error: null }));
 
   /* ---------------------------------------------------------------------
-     Memoised context value – avoids useless renders
+     Memoised context value â€â€œ avoids useless renders
   --------------------------------------------------------------------- */
   const contextValue = useMemo<AuthContextType>(() => ({
     ...state,
@@ -314,3 +314,4 @@ export const usePermission = (requiredTier: 'free' | 'premium' = 'free') => {
 
   return { hasPermission, userTier: user?.tier ?? 'free', isPremium };
 };
+

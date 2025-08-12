@@ -17,7 +17,7 @@ const PWAInstallBanner: React.FC = () => {
       setIsStandalone(standalone);
       
       if (standalone) {
-        console.log('📱 Mode Standalone - Banner désactivé');
+        console.log('Ã°Å¸â€œÂ± Mode Standalone - Banner désactivé');
         setShowBanner(false);
         return false;
       }
@@ -42,7 +42,7 @@ const PWAInstallBanner: React.FC = () => {
       }
     }
 
-    // Écouter changements display-mode
+    // Ãƒâ€°couter changements display-mode
     const mediaQuery = window.matchMedia('(display-mode: standalone)');
     const handleDisplayModeChange = () => {
       if (mediaQuery.matches) {
@@ -60,23 +60,23 @@ const PWAInstallBanner: React.FC = () => {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     
     if (isAndroid) {
-      alert(`📱 Installation Android :
+      alert(`Ã°Å¸â€œÂ± Installation Android :
 
-1️⃣ Appuyez sur le menu ⋮ (3 points) en haut
-2️⃣ Cherchez "Installer l'application" 
-3️⃣ Confirmez l'installation
+1ïÂ¸ÂâÆ’Â£ Appuyez sur le menu ââ€¹Â® (3 points) en haut
+2ïÂ¸ÂâÆ’Â£ Cherchez "Installer l'application" 
+3ïÂ¸ÂâÆ’Â£ Confirmez l'installation
 
-💡 L'app apparaîtra sur votre écran d'accueil !`);
+Ã°Å¸â€™Â¡ L'app apparaîtra sur votre écran d'accueil !`);
     } else if (isIOS) {
-      alert(`🍎 Installation iOS :
+      alert(`Ã°Å¸ÂÅ½ Installation iOS :
 
-1️⃣ Appuyez sur Partager ⎁ en bas
-2️⃣ Sélectionnez "Sur l'écran d'accueil"
-3️⃣ Appuyez sur "Ajouter"
+1ïÂ¸ÂâÆ’Â£ Appuyez sur Partager âÅ½Â en bas
+2ïÂ¸ÂâÆ’Â£ Sélectionnez "Sur l'écran d'accueil"
+3ïÂ¸ÂâÆ’Â£ Appuyez sur "Ajouter"
 
-💡 L'icône ECOLOJIA apparaîtra !`);
+Ã°Å¸â€™Â¡ L'icône ECOLOJIA apparaîtra !`);
     } else {
-      alert("💻 Pour installer l'application, utilisez le menu de votre navigateur.");
+      alert("Ã°Å¸â€™Â» Pour installer l'application, utilisez le menu de votre navigateur.");
     }
   };
 
@@ -115,7 +115,7 @@ const PWAInstallBanner: React.FC = () => {
                     Installer ECOLOJIA
                   </h3>
                   <p className="text-xs text-gray-600">
-                    Ajouter à l'écran d'accueil
+                    Ajouter ÃƒÂ  l'écran d'accueil
                   </p>
                 </div>
               </div>

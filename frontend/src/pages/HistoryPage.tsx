@@ -166,7 +166,7 @@ const HistoryPage: React.FC = () => {
       return;
     }
     
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+    if (!confirm(`ÃƒÅ tes-vous sÃƒÂ»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
       return;
     }
 
@@ -203,10 +203,10 @@ const HistoryPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return '🍎';
-      case 'cosmetic': return '💄';
-      case 'detergent': return '🧼';
-      default: return '📦';
+      case 'food': return 'Ã°Å¸ÂÅ½';
+      case 'cosmetic': return 'Ã°Å¸â€™â€ž';
+      case 'detergent': return 'Ã°Å¸Â§Â¼';
+      default: return 'Ã°Å¸â€œÂ¦';
     }
   };
 
@@ -231,7 +231,7 @@ const HistoryPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
-                  Mode démonstration activé - Connectez-vous pour accéder à votre historique personnel
+                  Mode démonstration activé - Connectez-vous pour accéder ÃƒÂ  votre historique personnel
                 </p>
               </div>
               <div className="flex items-center gap-4">

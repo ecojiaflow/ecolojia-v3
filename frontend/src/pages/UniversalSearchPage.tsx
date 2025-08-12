@@ -1,8 +1,8 @@
 // ============================================================================
-// APPROCHE 1 : INTÉGRATION DIRECTE DANS SEARCHPAGE EXISTANTE
+// APPROCHE 1 : INTÃƒâ€°GRATION DIRECTE DANS SEARCHPAGE EXISTANTE
 // ============================================================================
 
-// PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMÉLIORÉE)
+// PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMÃƒâ€°LIORÃƒâ€°E)
 
 import React, { useState, useEffect } from 'react';
 import { universalSearchEngine } from '../services/search/UniversalSearchService';
@@ -19,14 +19,14 @@ const ImprovedSearchPage: React.FC = () => {
       <div className="bg-white border-b border-gray-200 py-6">
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            🔍 Recherche Produits
+            Ã°Å¸â€Â Recherche Produits
           </h1>
           
           {/* NOUVEAU : Badge "Recherche Universelle" discret */}
           <div className="flex items-center text-sm text-gray-600">
-            <span>Alimentaire • Cosmétiques • Détergents</span>
+            <span>Alimentaire â€Â¢ Cosmétiques â€Â¢ Détergents</span>
             <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-              ✨ Multi-sources
+              âÅ“Â¨ Multi-sources
             </span>
           </div>
         </div>
@@ -36,7 +36,7 @@ const ImprovedSearchPage: React.FC = () => {
         {/* Interface de recherche améliorée */}
         <div className="mb-8">
           // <EnhancedSearchInterface
-            placeholder="🔍 Rechercher un produit... (nutella, shampoing bio, lessive écologique)"
+            placeholder="Ã°Å¸â€Â Rechercher un produit... (nutella, shampoing bio, lessive écologique)"
             onResultSelect={(result) => {
               // Navigation vers analyse
               window.location.href = `/product/${result.id}`;
@@ -54,7 +54,7 @@ const ImprovedSearchPage: React.FC = () => {
                 en <strong>{searchStats.searchTime}ms</strong>
               </div>
               <div className="text-blue-600">
-                Sources : {searchStats.sources.join(' • ')}
+                Sources : {searchStats.sources.join(' â€Â¢ ')}
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ const ImprovedSearchPage: React.FC = () => {
         {searchResults.length === 0 && (
           <div className="mt-12">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              💡 Suggestions populaires
+              Ã°Å¸â€™Â¡ Suggestions populaires
             </h2>
             <PopularSearches // />
           </div>
@@ -177,7 +177,7 @@ const SearchFirstHomePage: React.FC = () => {
           {/* RECHERCHE CENTRALE HERO */}
           <div className="max-w-2xl mx-auto mb-12">
             // <EnhancedSearchInterface
-              placeholder="🔍 Recherchez votre premier produit... (nutella, shampoing L'Oréal, lessive Ariel)"
+              placeholder="Ã°Å¸â€Â Recherchez votre premier produit... (nutella, shampoing L'Oréal, lessive Ariel)"
               showFilters={false}
               className="text-lg"
             // />
@@ -246,7 +246,7 @@ const UniversalSearchWidget: React.FC<{
         
         <input
           type="text"
-          placeholder="🔍 Rechercher parmi 2M+ produits..."
+          placeholder="Ã°Å¸â€Â Rechercher parmi 2M+ produits..."
           className={`w-full pl-12 pr-4 ${sizeClasses[size]} border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all`}
           onFocus={() => {
             // Redirection intelligente selon contexte
@@ -270,7 +270,7 @@ const UniversalSearchWidget: React.FC<{
       {/* Stats contextuelles */}
       {showStats && (
         <div className="mt-2 text-center text-sm text-gray-500">
-          2M+ produits • 3 catégories • Recherche instantanée
+          2M+ produits â€Â¢ 3 catégories â€Â¢ Recherche instantanée
         </div>
       )}
     </div>
@@ -282,28 +282,29 @@ const UniversalSearchWidget: React.FC<{
 // ============================================================================
 
 /*
-🎯 APPROCHE RECOMMANDÉE : HYBRIDE
+Ã°Å¸Å½Â¯ APPROCHE RECOMMANDÃƒâ€°E : HYBRIDE
 
 1. HOMEPAGE = Recherche Hero (Approche 3)
-   → Positionnement immédiat comme moteur de recherche
-   → UX intuitive : voir → chercher → analyser
+   ââ€ â€™ Positionnement immédiat comme moteur de recherche
+   ââ€ â€™ UX intuitive : voir ââ€ â€™ chercher ââ€ â€™ analyser
 
 2. NAVBAR = Recherche centrale (Approche 2) 
-   → Accessible partout
-   → Dropdown intelligent avec suggestions
+   ââ€ â€™ Accessible partout
+   ââ€ â€™ Dropdown intelligent avec suggestions
 
 3. SEARCH PAGE = Version améliorée (Approche 1)
-   → Page dédiée pour recherches avancées
-   → Métriques contextuelles uniquement
+   ââ€ â€™ Page dédiée pour recherches avancées
+   ââ€ â€™ Métriques contextuelles uniquement
 
 4. WIDGET = Composant universel (Approche 4)
-   → Réutilisable partout
-   → Consistent UX
+   ââ€ â€™ Réutilisable partout
+   ââ€ â€™ Consistent UX
 
 AVANTAGES :
-✅ UX intuitive : recherche omniprésente
-✅ SEO : Homepage optimisée "recherche produits"
-✅ Conversion : flux naturel recherche → analyse
-✅ Différenciation : "Google des produits éthiques"
-✅ Métriques : affichées dans contexte pertinent
+âÅ“â€¦ UX intuitive : recherche omniprésente
+âÅ“â€¦ SEO : Homepage optimisée "recherche produits"
+âÅ“â€¦ Conversion : flux naturel recherche ââ€ â€™ analyse
+âÅ“â€¦ Différenciation : "Google des produits éthiques"
+âÅ“â€¦ Métriques : affichées dans contexte pertinent
 */
+

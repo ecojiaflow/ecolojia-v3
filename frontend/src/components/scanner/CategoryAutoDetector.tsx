@@ -31,7 +31,7 @@ export class CategoryDetector {
     return {
       type: detectedType,
       confidence,
-      icon: detectedType === 'alimentaire' ? '🍎' : detectedType === 'cosmetique' ? '💄' : '🧽',
+      icon: detectedType === 'alimentaire' ? 'Ã°Å¸ÂÅ½' : detectedType === 'cosmetique' ? 'Ã°Å¸â€™â€ž' : 'Ã°Å¸Â§Â½',
       color: '#7DDE4A',
       bgColor: '#E9F8DF',
       route: '/results'

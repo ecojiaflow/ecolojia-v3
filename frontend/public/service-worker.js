@@ -3,7 +3,7 @@ const CACHE_NAME = 'ecolojia-v3';
 const RUNTIME_CACHE = 'ecolojia-runtime';
 const OFFLINE_URL = '/offline.html';
 
-// Assets à mettre en cache lors de l'installation
+// Assets Ã  mettre en cache lors de l'installation
 const STATIC_CACHE_URLS = [
   '/',
   '/offline.html',
@@ -17,7 +17,7 @@ const STATIC_CACHE_URLS = [
   '/fonts/Inter-Bold.woff2'
 ];
 
-// Patterns d'URL à mettre en cache
+// Patterns d'URL Ã  mettre en cache
 const CACHE_PATTERNS = {
   // Images produits - cache 7 jours
   images: {
@@ -27,7 +27,7 @@ const CACHE_PATTERNS = {
     maxEntries: 100
   },
   
-  // API calls - cache 5 minutes pour les données non-critiques
+  // API calls - cache 5 minutes pour les donnÃ©es non-critiques
   api: {
     pattern: /\/api\/v1\/(products|categories|trending)/,
     cache: RUNTIME_CACHE,
@@ -53,9 +53,9 @@ const CACHE_PATTERNS = {
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
-// ÉVÉNEMENTS DU SERVICE WORKER
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// Ã‰VÃ‰NEMENTS DU SERVICE WORKER
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 // Installation
 self.addEventListener('install', (event) => {
@@ -67,7 +67,7 @@ self.addEventListener('install', (event) => {
         console.log('[ServiceWorker] Pre-caching static assets');
         return cache.addAll(STATIC_CACHE_URLS);
       })
-      .then(() => self.skipWaiting()) // Active immédiatement
+      .then(() => self.skipWaiting()) // Active immÃ©diatement
   );
 });
 
@@ -87,29 +87,29 @@ self.addEventListener('activate', (event) => {
         })
       );
     })
-    .then(() => self.clients.claim()) // Prend le contrôle immédiatement
+    .then(() => self.clients.claim()) // Prend le contrÃ´le immÃ©diatement
   );
 });
 
-// Interception des requêtes
+// Interception des requÃªtes
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Ignorer les requêtes non-GET
+  // Ignorer les requÃªtes non-GET
   if (request.method !== 'GET') return;
 
-  // Ignorer les requêtes cross-origin (sauf CDN autorisés)
+  // Ignorer les requÃªtes cross-origin (sauf CDN autorisÃ©s)
   if (url.origin !== self.location.origin && 
       !url.origin.includes('cloudinary.com') &&
       !url.origin.includes('algolia.net')) {
     return;
   }
 
-  // Ignorer les requêtes de développement
+  // Ignorer les requÃªtes de dÃ©veloppement
   if (url.pathname.includes('hot-update')) return;
 
-  // Déterminer la stratégie de cache
+  // DÃ©terminer la stratÃ©gie de cache
   const cacheStrategy = getCacheStrategy(url, request);
   
   if (cacheStrategy) {
@@ -117,19 +117,19 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// STRATÉGIES DE CACHE
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// STRATÃ‰GIES DE CACHE
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function getCacheStrategy(url, request) {
-  // Vérifier chaque pattern
+  // VÃ©rifier chaque pattern
   for (const [key, config] of Object.entries(CACHE_PATTERNS)) {
     if (config.pattern.test(url.pathname) || config.pattern.test(url.href)) {
       return config;
     }
   }
   
-  // Stratégie par défaut pour les pages HTML
+  // StratÃ©gie par dÃ©faut pour les pages HTML
   if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
     return {
       cache: RUNTIME_CACHE,
@@ -149,7 +149,7 @@ async function handleRequest(request, strategy) {
     try {
       const response = await fetchWithTimeout(request, 5000);
       
-      // Mettre en cache si succès
+      // Mettre en cache si succÃ¨s
       if (response && response.status === 200) {
         const responseToCache = response.clone();
         cache.put(request, responseToCache);
@@ -174,16 +174,16 @@ async function handleRequest(request, strategy) {
     }
   }
   
-  // Cache First Strategy (par défaut)
+  // Cache First Strategy (par dÃ©faut)
   const cachedResponse = await cache.match(request);
   
   if (cachedResponse) {
-    // Vérifier l'âge du cache
+    // VÃ©rifier l'Ã¢ge du cache
     const cachedDate = new Date(cachedResponse.headers.get('date'));
     const age = (Date.now() - cachedDate.getTime()) / 1000;
     
     if (!strategy.maxAge || age < strategy.maxAge) {
-      // Rafraîchir en arrière-plan si > 50% du maxAge
+      // RafraÃ®chir en arriÃ¨re-plan si > 50% du maxAge
       if (strategy.maxAge && age > strategy.maxAge * 0.5) {
         refreshCache(request, cache);
       }
@@ -191,14 +191,14 @@ async function handleRequest(request, strategy) {
     }
   }
   
-  // Pas de cache ou expiré - fetch network
+  // Pas de cache ou expirÃ© - fetch network
   try {
     const response = await fetchWithTimeout(request, 5000);
     
     if (response && response.status === 200) {
       const responseToCache = response.clone();
       
-      // Nettoyer le cache si trop d'entrées
+      // Nettoyer le cache si trop d'entrÃ©es
       if (strategy.maxEntries) {
         await cleanCache(strategy.cache, strategy.maxEntries);
       }
@@ -208,7 +208,7 @@ async function handleRequest(request, strategy) {
     
     return response;
   } catch (error) {
-    // Si échec et cache disponible (même expiré), l'utiliser
+    // Si Ã©chec et cache disponible (mÃªme expirÃ©), l'utiliser
     if (cachedResponse) {
       console.log('[ServiceWorker] Using stale cache after network failure');
       return cachedResponse;
@@ -218,9 +218,9 @@ async function handleRequest(request, strategy) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // UTILITAIRES
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function fetchWithTimeout(request, timeout = 5000) {
   return new Promise((resolve, reject) => {
@@ -256,15 +256,15 @@ async function cleanCache(cacheName, maxEntries) {
   const requests = await cache.keys();
   
   if (requests.length > maxEntries) {
-    // Supprimer les plus anciennes entrées
+    // Supprimer les plus anciennes entrÃ©es
     const toDelete = requests.slice(0, requests.length - maxEntries);
     await Promise.all(toDelete.map(request => cache.delete(request)));
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// SYNC EN ARRIÈRE-PLAN
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// SYNC EN ARRIÃˆRE-PLAN
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 // Background Sync pour envoyer les analyses hors ligne
 self.addEventListener('sync', (event) => {
@@ -297,8 +297,8 @@ async function syncPendingAnalyses() {
         await store.delete(analysis.id);
         
         // Notifier l'utilisateur
-        self.registration.showNotification('Analyse synchronisée', {
-          body: `L'analyse de ${analysis.data.productName} a été envoyée`,
+        self.registration.showNotification('Analyse synchronisÃ©e', {
+          body: `L'analyse de ${analysis.data.productName} a Ã©tÃ© envoyÃ©e`,
           icon: '/images/icons/icon-192x192.png',
           badge: '/images/icons/badge-72x72.png'
         });
@@ -309,9 +309,9 @@ async function syncPendingAnalyses() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // PUSH NOTIFICATIONS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 self.addEventListener('push', (event) => {
   console.log('[ServiceWorker] Push received');
@@ -357,13 +357,13 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // Si une fenêtre est déjà ouverte, focus
+        // Si une fenÃªtre est dÃ©jÃ  ouverte, focus
         for (const client of clientList) {
           if (client.url === url && 'focus' in client) {
             return client.focus();
           }
         }
-        // Sinon ouvrir une nouvelle fenêtre
+        // Sinon ouvrir une nouvelle fenÃªtre
         if (clients.openWindow) {
           return clients.openWindow(url);
         }
@@ -371,9 +371,9 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // MESSAGE HANDLING
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 self.addEventListener('message', (event) => {
   console.log('[ServiceWorker] Message received:', event.data);
@@ -408,9 +408,9 @@ async function cacheUrls(urls) {
   await cache.addAll(urls);
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // INDEXEDDB POUR STOCKAGE OFFLINE
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function openIndexedDB() {
   return new Promise((resolve, reject) => {

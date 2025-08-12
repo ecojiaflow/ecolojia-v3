@@ -58,7 +58,7 @@ export function Layout() {
             {/* Logo */}
             <div className="flex items-center">
               <NavLink to="/" className="flex items-center space-x-2">
-                <span className="text-2xl">🌱</span>
+                <span className="text-2xl">Ã°Å¸Å’Â±</span>
                 <span className="text-xl font-bold text-gray-800">ECOLOJIA</span>
               </NavLink>
             </div>
@@ -92,11 +92,11 @@ export function Layout() {
               <div className="hidden lg:flex items-center space-x-4 text-sm">
                 <div className="text-gray-600">
                   <span className="font-medium">{user?.currentUsage?.scansThisMonth || 0}</span>
-                  <span className="text-gray-400">/{user?.quotas?.scansPerMonth === -1 ? '∞' : user?.quotas?.scansPerMonth || 30} scans</span>
+                  <span className="text-gray-400">/{user?.quotas?.scansPerMonth === -1 ? 'âË†Å¾' : user?.quotas?.scansPerMonth || 30} scans</span>
                 </div>
                 {user?.tier === 'premium' && (
                   <span className="px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs rounded-full font-medium">
-                    ⭐ Premium
+                    âÂ­Â Premium
                   </span>
                 )}
               </div>
@@ -205,7 +205,7 @@ export function Layout() {
         <div className="px-4">
           <div className="flex items-center justify-between h-16">
             <NavLink to="/" className="flex items-center space-x-2">
-              <span className="text-2xl">🌱</span>
+              <span className="text-2xl">Ã°Å¸Å’Â±</span>
               <span className="text-lg font-bold text-gray-800">ECOLOJIA</span>
             </NavLink>
 

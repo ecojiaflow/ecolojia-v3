@@ -42,21 +42,21 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
   const quotaInfo = {
     scans: {
       title: 'Analyses de produits',
-      icon: '🔍',
+      icon: 'Ã°Å¸â€Â',
       resetPeriod: 'ce mois-ci',
       benefit: 'Analyses illimitées avec Premium',
       color: 'blue'
     },
     aiQuestions: {
       title: 'Questions IA',
-      icon: '🤖',
+      icon: 'Ã°Å¸Â¤â€“',
       resetPeriod: "aujourd'hui",
       benefit: 'Chat IA illimité avec Premium',
       color: 'purple'
     },
     exports: {
       title: 'Exports de données',
-      icon: '📊',
+      icon: 'Ã°Å¸â€œÅ ',
       resetPeriod: 'ce mois-ci',
       benefit: 'Exports illimités avec Premium',
       color: 'green'
@@ -134,7 +134,7 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
               className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all flex items-center justify-center"
             >
               <Zap className="w-4 h-4 mr-2" />
-              Passer à Premium
+              Passer ÃƒÂ  Premium
             </button>
             <button
               onClick={() => setShowDetails(!showDetails)}
@@ -206,13 +206,13 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
 
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-700 mb-3">
-                Seulement <span className="font-bold text-lg">2,49€</span>/mois
+                Seulement <span className="font-bold text-lg">2,49ââ€šÂ¬</span>/mois
               </p>
               <button
                 onClick={handleUpgrade}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                🚀 Débloquer Premium maintenant
+                Ã°Å¸Å¡€ Débloquer Premium maintenant
               </button>
             </div>
           </div>

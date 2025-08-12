@@ -35,11 +35,11 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
           navigate(`/product/${product.slug || product.id}`);
         }
       } else {
-        // Produit non trouvé → Workflow enrichissement
+        // Produit non trouvé ââ€ â€™ Workflow enrichissement
         await handleProductNotFound(barcode);
       }
     } catch (error) {
-      console.error('❌ Erreur recherche code-barres:', error);
+      console.error('âÂÅ’ Erreur recherche code-barres:', error);
       await handleProductNotFound(barcode);
     } finally {
       setIsSearching(false);
@@ -67,11 +67,11 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
       navigate(`/scan/not-found?barcode=${barcode}`);
       
     } catch (error) {
-      console.error('❌ Erreur enrichissement:', error);
+      console.error('âÂÅ’ Erreur enrichissement:', error);
       
       // Fallback : Alerte simple
-      alert(`❌ Produit non trouvé (${barcode})\n\n` +
-            'Ce produit sera ajouté prochainement à notre base de données.');
+      alert(`âÂÅ’ Produit non trouvé (${barcode})\n\n` +
+            'Ce produit sera ajouté prochainement ÃƒÂ  notre base de données.');
     }
   };
 

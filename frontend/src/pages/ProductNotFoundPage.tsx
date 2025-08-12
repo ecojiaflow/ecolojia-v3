@@ -26,7 +26,7 @@ const ProductNotFoundPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Debug pour vérifier le code-barres au chargement
-  console.log('🔍 ProductNotFoundPage Debug:');
+  console.log('Ã°Å¸â€Â ProductNotFoundPage Debug:');
   console.log('  - paramBarcode:', paramBarcode);
   console.log('  - searchParams barcode:', searchParams.get('barcode'));
   console.log('  - barcode final:', barcode);
@@ -49,11 +49,11 @@ const ProductNotFoundPage: React.FC = () => {
 
     // Validation stricte du code-barres
     const barcodeToSend = barcode.trim();
-    console.log('📦 Code-barres à envoyer:', `"${barcodeToSend}"`);
-    console.log('📏 Longueur code-barres:', barcodeToSend.length);
+    console.log('Ã°Å¸â€œÂ¦ Code-barres ÃƒÂ  envoyer:', `"${barcodeToSend}"`);
+    console.log('Ã°Å¸â€œÂ Longueur code-barres:', barcodeToSend.length);
 
     if (!barcodeToSend || barcodeToSend === '') {
-      setError('Code-barres manquant. Veuillez scanner le produit à nouveau.');
+      setError('Code-barres manquant. Veuillez scanner le produit ÃƒÂ  nouveau.');
       return;
     }
 
@@ -61,8 +61,8 @@ const ProductNotFoundPage: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🔄 Envoi photos pour analyse IA...');
-      console.log('📊 Données complètes:', {
+      console.log('Ã°Å¸â€â€ž Envoi photos pour analyse IA...');
+      console.log('Ã°Å¸â€œÅ  Données complètes:', {
         barcode: barcodeToSend,
         barcodeLength: barcodeToSend.length,
         photosCount: 3,
@@ -80,7 +80,7 @@ const ProductNotFoundPage: React.FC = () => {
         }
       });
 
-      console.log('✅ Analyse terminée:', response);
+      console.log('âÅ“â€¦ Analyse terminée:', response);
       
       if (response.success) {
         // Gestion des différents formats de réponse backend
@@ -98,19 +98,19 @@ const ProductNotFoundPage: React.FC = () => {
         }
         
         if (redirectPath) {
-          console.log('🎯 Redirection vers:', redirectPath);
+          console.log('Ã°Å¸Å½Â¯ Redirection vers:', redirectPath);
           navigate(redirectPath);
         } else {
-          console.error('❌ Aucune URL de redirection trouvée dans:', response);
+          console.error('âÂÅ’ Aucune URL de redirection trouvée dans:', response);
           setError('Produit créé mais impossible de le trouver. Rechargez la page.');
         }
       } else {
         const errorMsg = response.error || response.message || 'Erreur lors de l\'analyse. Réessayez.';
-        console.error('❌ Erreur backend:', errorMsg);
+        console.error('âÂÅ’ Erreur backend:', errorMsg);
         setError(errorMsg);
       }
     } catch (err) {
-      console.error('❌ Erreur analyse (catch):', err);
+      console.error('âÂÅ’ Erreur analyse (catch):', err);
       setError('Impossible d\'analyser les photos. Vérifiez votre connexion.');
     } finally {
       setIsAnalyzing(false);
@@ -140,12 +140,12 @@ const ProductNotFoundPage: React.FC = () => {
               </p>
               {barcodeValid && (
                 <p className="text-xs text-green-600 mt-1">
-                  ✅ Code-barres détecté ({barcode.length} caractères)
+                  âÅ“â€¦ Code-barres détecté ({barcode.length} caractères)
                 </p>
               )}
               {!barcodeValid && (
                 <p className="text-xs text-red-600 mt-1">
-                  ⚠️ Code-barres manquant - Retournez scanner le produit
+                  âÅ¡Â ïÂ¸Â Code-barres manquant - Retournez scanner le produit
                 </p>
               )}
             </div>
@@ -160,7 +160,7 @@ const ProductNotFoundPage: React.FC = () => {
               <Upload className="h-8 w-8 text-orange-600" />
             </div>
             <h2 className="text-2xl font-bold text-eco-text mb-2">
-              Aidez-nous à enrichir notre base !
+              Aidez-nous ÃƒÂ  enrichir notre base !
             </h2>
             <p className="text-gray-600">
               Prenez 3 photos du produit et notre IA l'analysera automatiquement
@@ -243,7 +243,7 @@ const ProductNotFoundPage: React.FC = () => {
               </>
             ) : !barcodeValid ? (
               <>
-                <span>❌ Code-barres requis</span>
+                <span>âÂÅ’ Code-barres requis</span>
               </>
             ) : (
               <>
@@ -264,10 +264,10 @@ const ProductNotFoundPage: React.FC = () => {
             Comment fonctionne notre IA ?
           </h3>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Extraction automatique du nom et de la marque</li>
-            <li>• Reconnaissance OCR des ingrédients</li>
-            <li>• Calcul du score écologique (0-100%)</li>
-            <li>• Création automatique de la fiche produit</li>
+            <li>â€Â¢ Extraction automatique du nom et de la marque</li>
+            <li>â€Â¢ Reconnaissance OCR des ingrédients</li>
+            <li>â€Â¢ Calcul du score écologique (0-100%)</li>
+            <li>â€Â¢ Création automatique de la fiche produit</li>
           </ul>
         </div>
       </div>

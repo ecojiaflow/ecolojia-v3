@@ -35,7 +35,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
     remaining: quotaStatus.scans.remaining,
     progress: getScansProgress(),
     label: 'Analyses',
-    icon: '🔍',
+    icon: 'Ã°Å¸â€Â',
     resetDate: quotaStatus.scans.resetDate
   } : {
     used: quotaStatus.aiQuestions.dailyUsed,
@@ -43,7 +43,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
     remaining: quotaStatus.aiQuestions.dailyRemaining,
     progress: getAIQuestionsProgress().daily,
     label: 'Questions IA',
-    icon: '🤖',
+    icon: 'Ã°Å¸Â¤â€“',
     resetDate: quotaStatus.aiQuestions.resetDate
   };
 
@@ -128,7 +128,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
           {config.progress >= 80 && config.remaining > 0 && (
             <div className="p-2 bg-orange-50 border border-orange-200 rounded-lg">
               <p className="text-xs text-orange-800">
-                ⚠️ <strong>Plus que {config.remaining} {config.label.toLowerCase()}</strong> ce mois
+                âÅ¡Â ïÂ¸Â <strong>Plus que {config.remaining} {config.label.toLowerCase()}</strong> ce mois
               </p>
             </div>
           )}
@@ -137,7 +137,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
           {config.remaining === 0 && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-800 font-medium mb-2">
-                🚫 Quota {config.label.toLowerCase()} épuisé
+                Ã°Å¸Å¡Â« Quota {config.label.toLowerCase()} épuisé
               </p>
               <p className="text-xs text-red-700 mb-3">
                 Reset {formatResetDate(config.resetDate)}
@@ -147,7 +147,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
                   onClick={handleUpgradeClick}
                   className="w-full py-2 px-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all"
                 >
-                  🚀 Passer Premium - 4.99€/mois
+                  Ã°Å¸Å¡€ Passer Premium - 4.99ââ€šÂ¬/mois
                 </button>
               )}
             </div>
@@ -157,13 +157,13 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
           {config.progress >= 50 && config.progress < 80 && showUpgrade && (
             <div className="p-2 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-xs text-blue-800 mb-2">
-                💡 Vous utilisez beaucoup ECOLOJIA !
+                Ã°Å¸â€™Â¡ Vous utilisez beaucoup ECOLOJIA !
               </p>
               <button
                 onClick={handleUpgradeClick}
                 className="text-xs text-blue-600 hover:text-blue-700 underline"
               >
-                Découvrir Premium → {config.label.toLowerCase()} illimité{config.label.toLowerCase() === 'questions ia' ? 'es' : 's'}
+                Découvrir Premium ââ€ â€™ {config.label.toLowerCase()} illimité{config.label.toLowerCase() === 'questions ia' ? 'es' : 's'}
               </button>
             </div>
           )}
@@ -174,7 +174,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
       {isPremium && (
         <div className="p-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
           <p className="text-xs text-purple-800">
-            ⭐ <strong>Premium actif</strong> - {config.label} illimité{config.label === 'Questions IA' ? 'es' : 's'} !
+            âÂ­Â <strong>Premium actif</strong> - {config.label} illimité{config.label === 'Questions IA' ? 'es' : 's'} !
           </p>
         </div>
       )}

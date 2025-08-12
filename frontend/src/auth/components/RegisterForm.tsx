@@ -190,7 +190,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
               className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
                 validationErrors.password ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="••••••••"
+              placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
             />
             <button 
               type="button" 
@@ -218,7 +218,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
               className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
                 validationErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="••••••••"
+              placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
             />
             <button 
               type="button" 
@@ -269,7 +269,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
       
       {onSwitchToLogin && (
         <p className="text-center text-sm text-gray-600 mt-6">
-          Déjà inscrit ? 
+          DéjÃƒÂ  inscrit ? 
           <button 
             onClick={onSwitchToLogin}
             className="text-[#7DDE4A] hover:underline ml-1 font-medium"

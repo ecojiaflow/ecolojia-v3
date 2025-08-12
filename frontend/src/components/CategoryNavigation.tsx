@@ -18,7 +18,7 @@ const CategoryNavigation: React.FC = () => {
                 : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
             }`}
           >
-            <span>🌱</span>
+            <span>Ã°Å¸Å’Â±</span>
             <span>Toutes</span>
           </Link>
 
@@ -47,7 +47,7 @@ const CategoryNavigation: React.FC = () => {
                 : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
             }`}
           >
-            <span>📊</span>
+            <span>Ã°Å¸â€œÅ </span>
             <span>Stats</span>
           </Link>
         </div>

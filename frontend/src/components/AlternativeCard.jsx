@@ -48,9 +48,9 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
             +{improvement} points
           </div>
           <div className="text-2xl">
-            {alternative.name.includes('maison') ? '🏠' : 
-             alternative.name.includes('flocons') ? '🌾' : 
-             alternative.name.includes('fruits') ? '🍎' : '🌱'}
+            {alternative.name.includes('maison') ? 'Ã°Å¸ÂÂ ' : 
+             alternative.name.includes('flocons') ? 'Ã°Å¸Å’Â¾' : 
+             alternative.name.includes('fruits') ? 'Ã°Å¸ÂÅ½' : 'Ã°Å¸Å’Â±'}
           </div>
         </div>
 
@@ -59,11 +59,11 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
         {/* Métriques */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="bg-gray-50 rounded-xl p-3">
-            <div className="text-sm text-gray-600 mb-1">⏱️ Temps</div>
+            <div className="text-sm text-gray-600 mb-1">âÂÂ±ïÂ¸Â Temps</div>
             <div className="font-bold text-gray-800">{alternative.time}</div>
           </div>
           <div className="bg-green-50 rounded-xl p-3">
-            <div className="text-sm text-gray-600 mb-1">💰 Économie</div>
+            <div className="text-sm text-gray-600 mb-1">Ã°Å¸â€™Â° Ãƒâ€°conomie</div>
             <div className="font-bold text-green-600">{alternative.cost}</div>
           </div>
         </div>
@@ -73,10 +73,10 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
         {isSelected && (
           <div className="border-t border-gray-100 pt-4 mt-4 space-y-4">
             <div className="bg-green-50 rounded-xl p-4">
-              <h4 className="font-bold text-green-700 mb-2">🔬 Bénéfices Santé Prouvés</h4>
+              <h4 className="font-bold text-green-700 mb-2">Ã°Å¸â€Â¬ Bénéfices Santé Prouvés</h4>
               <ul className="text-sm text-green-600 space-y-1">
                 {getHealthBenefits(alternative.name).map((benefit, idx) => (
-                  <li key={idx}>• {benefit}</li>
+                  <li key={idx}>â€Â¢ {benefit}</li>
                 ))}
               </ul>
             </div>
@@ -85,7 +85,7 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
 
         <div className="text-center mt-4">
           <span className="text-xs text-gray-400">
-            {isSelected ? '▲ Masquer détails' : '▼ Voir bénéfices santé'}
+            {isSelected ? 'ââ€“Â² Masquer détails' : 'ââ€“Â¼ Voir bénéfices santé'}
           </span>
         </div>
       </div>

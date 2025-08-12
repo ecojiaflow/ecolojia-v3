@@ -51,8 +51,8 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       startScanner();
     } catch (err) {
       setCameraPermission('denied');
-      setError('Accès à la caméra refusé');
-      onError?.('Accès à la caméra refusé');
+      setError('Accès ÃƒÂ  la caméra refusé');
+      onError?.('Accès ÃƒÂ  la caméra refusé');
     }
   };
 
@@ -209,7 +209,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
             <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
             <h3 className="text-white text-xl font-semibold mb-2">Caméra non accessible</h3>
             <p className="text-gray-300 text-center mb-6">
-              Veuillez autoriser l'accès à la caméra dans les paramètres de votre navigateur
+              Veuillez autoriser l'accès ÃƒÂ  la caméra dans les paramètres de votre navigateur
             </p>
             <button
               onClick={handleManualInput}
@@ -318,3 +318,4 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 };
 
 export default BarcodeScanner;
+

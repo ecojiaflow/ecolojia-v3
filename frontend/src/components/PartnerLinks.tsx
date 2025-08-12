@@ -46,7 +46,7 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
   const getEthicalBadgeText = (score: number) => {
     if (score >= 0.8) return 'Très éthique';
     if (score >= 0.6) return 'Correct';
-    return 'À améliorer';
+    return 'Ãƒ€ améliorer';
   };
 
   return (
@@ -54,7 +54,7 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
       <div className="flex items-center gap-2 mb-4">
         <Shield className="w-5 h-5 text-eco-leaf" />
         <h3 className="text-lg font-semibold text-gray-900">
-          Où acheter ce produit
+          OÃƒÂ¹ acheter ce produit
         </h3>
       </div>
 
@@ -98,8 +98,8 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
 
       <div className="mt-4 p-3 bg-gray-50 rounded-lg">
         <p className="text-xs text-gray-600">
-          ℹ️ Ecolojia peut percevoir une commission sur les achats effectués via ces liens, 
-          ce qui nous aide à maintenir le service gratuitement.
+          ââ€žÂ¹ïÂ¸Â Ecolojia peut percevoir une commission sur les achats effectués via ces liens, 
+          ce qui nous aide ÃƒÂ  maintenir le service gratuitement.
         </p>
       </div>
     </div>
@@ -107,3 +107,4 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
 };
 
 export default PartnerLinks;
+
