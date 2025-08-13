@@ -13,17 +13,17 @@ import {
   Target,
   Award,
   ShoppingBag,
-  LogIn
+  LogIn,
+  X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Line, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   ArcElement,
   Title,
   Tooltip,
@@ -40,7 +40,6 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   ArcElement,
   Title,
   Tooltip,
@@ -101,6 +100,7 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDashboardData = async () => {
@@ -171,23 +171,6 @@ const DashboardPage: React.FC = () => {
     );
   }
 
-  if (error && !stats) {
-    return (
-      <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p className="text-gray-600">{error}</p>
-          <button
-            onClick={fetchDashboardData}
-            className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
-          >
-            Réessayer
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // Configuration des graphiques
   const lineChartData = {
     labels: stats.weeklyTrend?.map(d => d.day) || ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
@@ -239,7 +222,7 @@ const DashboardPage: React.FC = () => {
         }
       }
     }
-  };
+  } as const;
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
@@ -254,7 +237,7 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5" />
               <p className="font-medium">
-                Mode démonstration - Connectez-vous pour voir vos vraies statistiques
+                Mode démonstration — Connectez-vous pour voir vos vraies statistiques
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -266,10 +249,11 @@ const DashboardPage: React.FC = () => {
                 Se connecter
               </button>
               <button
+                aria-label="Fermer la bannière"
                 onClick={() => setShowLoginBanner(false)}
-                className="text-white hover:text-gray-200"
+                className="text-white hover:text-gray-200 p-2 rounded-lg hover:bg-white/10"
               >
-                âÅ“â€¢
+                <X className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -526,10 +510,10 @@ const DashboardPage: React.FC = () => {
             className="mt-8 bg-gradient-to-r from-[#7DDE4A] to-[#6BC93B] rounded-xl p-8 text-white text-center"
           >
             <h3 className="text-2xl font-bold mb-4">
-              Prêt ÃƒÂ  analyser vos propres produits ?
+              Prêt à analyser vos propres produits ?
             </h3>
             <p className="text-lg mb-6 opacity-90">
-              Créez votre compte gratuit et commencez ÃƒÂ  faire des choix éclairés
+              Créez votre compte gratuit et commencez à faire des choix éclairés
             </p>
             <button
               onClick={() => navigate('/register')}

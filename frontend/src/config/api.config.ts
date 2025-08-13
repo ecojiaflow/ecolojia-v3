@@ -1,7 +1,7 @@
-// api.config.ts - Configuration pour backend local
+﻿// api.config.ts - Configuration pour backend Render (production)
 export const API_CONFIG = {
-  // Utiliser le backend local en dev, ou Render en prod
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5001',
+  // Utiliser le backend Render en production
+  BASE_URL: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
   TIMEOUT: 30000,
   
   ENDPOINTS: {
@@ -63,3 +63,4 @@ export const getDefaultHeaders = (): Record<string, string> => {
   
   return headers;
 };
+

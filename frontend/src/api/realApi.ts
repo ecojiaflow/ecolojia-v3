@@ -1,353 +1,125 @@
-// PATH: frontend/ecolojiaFrontV3/src/api/realApi.ts
-import { Product, AnalysisResult, SearchFilters, SearchResult } from '../types';
+// PATH: frontend/src/api/realApi.ts
+import type { AnalysisResult } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backend-working.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
-// ============================================================================
-// TYPES & INTERFACES
-// ============================================================================
-
-interface ApiResponse<T> {
-  success: boolean;
+interface ApiOk<T> {
+  success: true;
   data: T;
   message?: string;
-  error?: string;
 }
 
-interface PhotoAnalysisRequest {
-  imageBase64: string;
-  productName?: string;
+interface ApiErr {
+  success: false;
+  error: string;
+  message?: string;
+}
+
+type ApiResponse<T> = ApiOk<T> | ApiErr;
+
+export interface SearchFilters {
   category?: string;
+  page?: number;
+  limit?: number;
 }
 
-interface PhotoAnalysisResponse {
-  extractedText?: string;
-  confidence?: number;
-  ingredients?: string[];
-  productInfo?: {
-    name?: string;
-    brand?: string;
-    category?: string;
-  };
-  analysisResult?: AnalysisResult;
+export interface ProductItem {
+  _id: string;
+  name: string;
+  brand?: string;
+  barcode?: string;
+  category?: string;
+  imageUrl?: string;
 }
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-
-async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  const config: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  };
-
-  try {
-    console.log(`Ã°Å¸Å’Â API Call: ${config.method || 'GET'} ${url}`);
-    
-    const response = await fetch(url, config);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('Ã°Å¸â€œÂ¥ API Response:', data);
-    
-    return data;
-    
-  } catch (error) {
-    console.error('Ã°Å¸Å¡Â¨ API Error:', error);
-    throw error;
-  }
+export interface SearchPayload {
+  products: ProductItem[];
+  pagination: { total: number; page: number; pages: number; hasNext: boolean; hasPrev: boolean };
 }
-
-function convertFileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      // Retourner seulement la partie base64 (sans le préfixe data:image/...)
-      const base64 = result.split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-// ============================================================================
-// EXISTING FUNCTIONS
-// ============================================================================
-
-export async function fetchRealProducts(category: string): Promise<Product[]> {
-  try {
-    const response = await apiRequest<ApiResponse<Product[]>>(
-      `/api/products?category=${encodeURIComponent(category)}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.warn(`âÅ¡Â ïÂ¸Â fetchRealProducts: fallback mock pour catégorie "${category}"`);
-    
-    // Fallback mock data
-    return [
-      {
-        id: '1',
-        title: `Produit démo - ${category}`,
-        slug: 'demo-product-1',
-        category,
-        brand: 'Ecolojia Brand',
-        created_at: new Date().toISOString(),
-        eco_score: 80,
-        ai_confidence: 95,
-        confidence_color: 'green',
-        verified_status: 'verified',
-        image_url: 'https://via.placeholder.com/80'
-      }
-    ];
-  }
-}
-
-// ============================================================================
-// PRODUCT SEARCH & ANALYSIS
-// ============================================================================
 
 export async function searchProducts(
-  query: string, 
-  filters?: SearchFilters
-): Promise<SearchResult> {
-  try {
-    const params = new URLSearchParams();
-    params.append('q', query);
-    
-    if (filters?.category) params.append('category', filters.category);
-    if (filters?.novaGroup) params.append('nova', filters.novaGroup.toString());
-    if (filters?.hasAdditives !== undefined) {
-      params.append('additives', filters.hasAdditives.toString());
-    }
-    
-    const response = await apiRequest<ApiResponse<SearchResult>>(
-      `/api/products/search?${params.toString()}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Search failed:', error);
-    return {
-      hits: [],
-      total: 0,
-      query,
-      facets: {},
-      processingTimeMS: 0
-    };
-  }
+  query: string,
+  filters: SearchFilters = {}
+): Promise<SearchPayload> {
+  const params = new URLSearchParams();
+  params.set('q', query);
+  if (filters.category) params.set('category', filters.category);
+  params.set('page', String(filters.page ?? 1));
+  params.set('limit', String(filters.limit ?? 20));
+
+  const res = await fetch(`${API_BASE_URL}/api/products/search?${params.toString()}`);
+  if (!res.ok) throw new Error(`Search API error (${res.status})`);
+  const json: ApiResponse<SearchPayload> = await res.json();
+  if (!json.success) throw new Error(json.error || 'Search API error');
+  return json.data;
 }
 
-export async function getProductByBarcode(barcode: string): Promise<Product | null> {
-  try {
-    const response = await apiRequest<ApiResponse<Product>>(
-      `/api/products/barcode/${barcode}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Product not found:', error);
-    return null;
-  }
+export interface ProductDetail extends ProductItem {
+  ingredients?: string;
+  nova_group?: number;
+  nutriscore_grade?: string;
+  ecoscore_grade?: string;
+  analysisData?: { healthScore?: number };
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
-  try {
-    const response = await apiRequest<ApiResponse<Product>>(
-      `/api/products/${id}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Product not found:', error);
-    return null;
-  }
+export async function getProductByBarcode(barcode: string): Promise<ProductDetail | null> {
+  const res = await fetch(`${API_BASE_URL}/api/products/barcode/${encodeURIComponent(barcode)}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Get product error (${res.status})`);
+  const json: ApiResponse<ProductDetail> = await res.json();
+  if (!json.success) throw new Error(json.error || 'Get product error');
+  return json.data;
 }
 
-export async function analyzeProduct(
-  productData: any,
-  options: { useCustomPrompt?: boolean; customPrompt?: string } = {}
-): Promise<AnalysisResult> {
-  try {
-    const response = await apiRequest<ApiResponse<AnalysisResult>>(
-      '/api/products/analyze',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          product: productData,
-          options
-        })
-      }
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Analysis failed:', error);
-    throw error;
-  }
+export interface ManualAnalysisInput {
+  name?: string;
+  brand?: string;
+  barcode?: string;
+  category?: 'food' | 'cosmetics' | 'detergents' | string;
+  ingredientsText?: string;
 }
 
-// ============================================================================
-// âÅ“â€¦ NOUVELLE FONCTION: ANALYSE PHOTOS
-// ============================================================================
-
-export async function analyzePhotos(
-  imageFiles: File[],
-  options?: {
-    extractText?: boolean;
-    analyzeIngredients?: boolean;
-    productName?: string;
-    category?: string;
-  }
-): Promise<PhotoAnalysisResponse> {
-  try {
-    console.log('Ã°Å¸â€œÂ¸ Starting photo analysis for', imageFiles.length, 'images');
-    
-    // Validation des fichiers
-    if (!imageFiles || imageFiles.length === 0) {
-      throw new Error('Aucune image fournie pour l\'analyse');
-    }
-
-    // Vérification que ce sont bien des images
-    for (const file of imageFiles) {
-      if (!file.type.startsWith('image/')) {
-        throw new Error(`Le fichier ${file.name} n'est pas une image valide`);
-      }
-    }
-    
-    // Conversion des images en base64
-    const imagePromises = imageFiles.map(file => convertFileToBase64(file));
-    const base64Images = await Promise.all(imagePromises);
-    
-    // Envoi ÃƒÂ  l'API
-    const response = await apiRequest<ApiResponse<PhotoAnalysisResponse>>(
-      '/api/products/analyze-photos',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          images: base64Images,
-          options: {
-            extractText: options?.extractText ?? true,
-            analyzeIngredients: options?.analyzeIngredients ?? true,
-            productName: options?.productName,
-            category: options?.category || 'food'
-          }
-        })
-      }
-    );
-    
-    console.log('âÅ“â€¦ Photo analysis completed:', response.data);
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Photo analysis failed:', error);
-    
-    // Fallback avec analyse basique simulée
-    try {
-      const mockAnalysis: PhotoAnalysisResponse = {
-        extractedText: "Texte extrait simulé - Service d'analyse photo temporairement indisponible",
-        confidence: 0.7,
-        ingredients: ['Ingrédient exemple 1', 'Ingrédient exemple 2'],
-        productInfo: {
-          name: options?.productName || 'Produit analysé par photo',
-          brand: 'Marque détectée',
-          category: options?.category || 'food'
-        }
-      };
-      
-      console.log('Ã°Å¸â€â€ž Using fallback mock analysis:', mockAnalysis);
-      return mockAnalysis;
-      
-    } catch (fallbackError) {
-      console.error('âÂÅ’ Fallback analysis also failed:', fallbackError);
-      throw new Error('Analyse photo échouée - Service temporairement indisponible');
-    }
-  }
+export async function analyzeManual(input: ManualAnalysisInput): Promise<AnalysisResult> {
+  const res = await fetch(`${API_BASE_URL}/api/analysis/manual`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input)
+  });
+  if (!res.ok) throw new Error(`Manual analysis API error (${res.status})`);
+  const json: ApiResponse<AnalysisResult> = await res.json();
+  if (!json.success) throw new Error(json.error || 'Manual analysis error');
+  return json.data;
 }
 
-// ============================================================================
-// ADDITIONAL API FUNCTIONS
-// ============================================================================
-
-export async function getProductSuggestions(query: string): Promise<Product[]> {
-  try {
-    const response = await apiRequest<ApiResponse<Product[]>>(
-      `/api/products/suggestions?q=${encodeURIComponent(query)}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Suggestions failed:', error);
-    return [];
-  }
+export interface DashboardStats {
+  totals: { scans: number; products: number; favorites: number };
+  averages: { health: number; environment: number; ethics: number };
+  weeklyTrend: { day: string; scans: number }[];
+  recentAnalyses: {
+    date: string;
+    productName: string;
+    category: string;
+    score: number;
+    nutriScore?: string;
+    ecoScore?: string;
+  }[];
+  topProducts: ProductItem[];
 }
 
-export async function getPopularProducts(limit: number = 10): Promise<Product[]> {
-  try {
-    const response = await apiRequest<ApiResponse<Product[]>>(
-      `/api/products/popular?limit=${limit}`
-    );
-    
-    return response.data;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Popular products failed:', error);
-    return [];
-  }
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const res = await fetch(`${API_BASE_URL}/api/dashboard/stats`);
+  if (!res.ok) throw new Error(`Dashboard API error (${res.status})`);
+  const json: ApiResponse<DashboardStats> = await res.json();
+  if (!json.success) throw new Error(json.error || 'Dashboard error');
+  return json.data;
 }
 
-export async function reportProduct(productId: string, reason: string, details?: string): Promise<boolean> {
-  try {
-    await apiRequest<ApiResponse<any>>(
-      '/api/products/report',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          productId,
-          reason,
-          details
-        })
-      }
-    );
-    
-    return true;
-    
-  } catch (error) {
-    console.error('âÂÅ’ Report failed:', error);
-    return false;
-  }
+export async function getAnalysesHistory(page = 1, limit = 20): Promise<any> {
+  const params = new URLSearchParams();
+  params.set('page', String(page));
+  params.set('limit', String(limit));
+  const res = await fetch(`${API_BASE_URL}/api/analysis/history?${params.toString()}`);
+  if (!res.ok) throw new Error(`History API error (${res.status})`);
+  const json = await res.json();
+  return json.data || json;
 }
-
-// ============================================================================
-// HEALTH CHECK
-// ============================================================================
-
-export async function checkApiHealth(): Promise<boolean> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/health`);
-    return response.ok;
-  } catch (error) {
-    console.error('âÂÅ’ API Health check failed:', error);
-    return false;
-  }
-}
-
-// Export types for external use
-export type { PhotoAnalysisResponse, PhotoAnalysisRequest };
