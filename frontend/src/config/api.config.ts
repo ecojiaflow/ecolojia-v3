@@ -1,4 +1,4 @@
-﻿// api.config.ts - Configuration pour backend Render (production)
+// api.config.ts - Configuration pour backend Render (production)
 export const API_CONFIG = {
   // Utiliser le backend Render en production
   BASE_URL: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',

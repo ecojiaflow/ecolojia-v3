@@ -12,3 +12,5 @@ export const aiService = {
 // EOF
 
 
+
+export default aiService;

@@ -370,3 +370,5 @@ export class MultiCategoryApiService {
 export const multiCategoryApi = new MultiCategoryApiService();
 
 export type { AnalysisRequest, AnalysisResponse, Category, CategoriesResponse };
+
+export default multiCategoryApi;

@@ -233,3 +233,5 @@ class ProductService {
 }
 
 export const productService = new ProductService();
+
+export default productService;
