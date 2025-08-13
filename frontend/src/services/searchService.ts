@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/searchService.ts
+﻿// PATH: frontend/src/services/searchService.ts
 import { API_BASE_URL } from '../config/constants';
 
 class SearchService {
@@ -11,7 +11,7 @@ class SearchService {
     });
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/search?${params.toString()}`);
+      const response = await fetch(`${API_BASE_URL}/api/algolia/search?${params.toString()}`);
       
       if (!response.ok) {
         throw new Error(`Search error: ${response.status}`);
@@ -38,3 +38,4 @@ class SearchService {
 
 export const searchService = new SearchService();
 export default searchService;
+
