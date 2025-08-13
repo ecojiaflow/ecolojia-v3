@@ -1,67 +1,47 @@
-﻿// api.config.ts - Configuration pour backend Render (production)
+﻿// src/config/api.config.ts
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
+
 export const API_CONFIG = {
-  // Utiliser le backend Render en production
-  BASE_URL: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
-  TIMEOUT: 30000,
-  
+  BASE_URL: API_BASE_URL,
   ENDPOINTS: {
+    // Auth
     AUTH: {
       LOGIN: '/api/auth/login',
       REGISTER: '/api/auth/register',
-      PROFILE: '/api/users/me',
+      ME: '/api/auth/me',
       LOGOUT: '/api/auth/logout',
-      REFRESH: '/api/auth/refresh'
     },
-    USERS: {
-      PROFILE: '/api/users/me',
-      UPDATE: '/api/users/me'
+    // Products - UN SEUL endpoint de recherche
+    PRODUCTS: {
+      SEARCH: '/api/algolia/search',  // SEULEMENT celui-ci
+      GET_BY_ID: '/api/products/:id',
+      GET_BY_BARCODE: '/api/products/barcode/:barcode',
     },
+    // Analysis
     ANALYSIS: {
-      MANUAL: '/api/analysis/manual',
-      BARCODE: '/api/analysis/barcode',
-      VISION: '/api/vision/analyze-image',
-      PING: '/api/analysis/ping',
-      STATUS: '/api/analysis/_service/status'
+      ANALYZE: '/api/analysis',  // UN SEUL endpoint
+      BY_BARCODE: '/api/analysis/barcode',
+      HISTORY: '/api/history',
     },
+    // Dashboard
     DASHBOARD: {
       STATS: '/api/dashboard/stats',
-      HISTORY: '/api/dashboard/history',
-      WEEKLY_SUMMARY: '/api/dashboard/weekly-summary',
-      RECOMMENDATIONS: '/api/dashboard/recommendations',
-      ACHIEVEMENTS: '/api/dashboard/achievements'
+      RECENT: '/api/dashboard/recent',
     },
-    HISTORY: {
-      LIST: '/api/history',
-      COUNT: '/api/history/count'
-    },
-    PRODUCTS: {
+    // Algolia
+    ALGOLIA: {
       SEARCH: '/api/algolia/search',
-      GET_BY_ID: '/api/products',
-      STATS: '/api/products/stats',
-      POPULAR: '/api/products/popular',
-      TRENDING: '/api/products/trending',
-      BARCODE: '/api/products/barcode'
+      STATS: '/api/algolia/stats',
     }
   }
 };
 
-// Helper pour construire les URLs complÃ¨tes
-export const buildApiUrl = (endpoint: string): string => {
-  return `${API_CONFIG.BASE_URL}${endpoint}`;
-};
-
-// Helper pour les headers par dÃ©faut
-export const getDefaultHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  
-  const token = localStorage.getItem('ecolojia_token');
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+export const buildApiUrl = (endpoint: string, params?: Record<string, string>): string => {
+  let url = `${API_BASE_URL}${endpoint}`;
+  if (params) {
+    Object.keys(params).forEach(key => {
+      url = url.replace(`:${key}`, params[key]);
+    });
   }
-  
-  return headers;
+  return url;
 };
-
-
