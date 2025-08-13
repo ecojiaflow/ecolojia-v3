@@ -1,4 +1,4 @@
-﻿// src/services/searchService.ts
+// src/services/searchService.ts
 import { API_CONFIG, buildApiUrl } from '../config/api.config';
 
 export interface Product {
@@ -57,7 +57,6 @@ export const searchProducts = async (
 
     const data = await response.json();
     
-    // S'assurer que la structure est correcte
     if (!data.data || !data.data.products) {
       return {
         success: false,
@@ -81,4 +80,17 @@ export const searchProducts = async (
   }
 };
 
-export default { searchProducts };
+// Export nommé pour useUniversalSearch
+export const searchService = {
+  searchProducts,
+  // Ajouter d'autres méthodes si nécessaire
+  searchByBarcode: async (barcode: string) => {
+    return searchProducts(barcode);
+  },
+  searchByCategory: async (category: string, query: string = '') => {
+    return searchProducts(query, { category });
+  }
+};
+
+// Export par défaut aussi pour compatibilité
+export default searchService;
