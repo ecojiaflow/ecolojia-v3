@@ -1,5 +1,5 @@
-// PATH: frontend\src\pages\SearchPage.tsx
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+// PATH: frontend/src/pages/SearchPage.tsx
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,10 +18,9 @@ import {
 } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useUniversalSearch } from '@/hooks/useUniversalSearch';
-import { searchService } from '@/services/searchService';
 import analysisService from '@/services/analysisService';
 import { useAuthStore } from '@/store/authStore';
-import type { Product, SearchFilters, SearchResult } from '@/types';
+import type { Product, SearchFilters } from '@/types';
 
 // ==================== COMPOSANTS SEARCH ====================
 
@@ -41,7 +40,7 @@ const SearchWidget: React.FC<{
 }) => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const debouncedQuery = useDebounce(query, 300);
+  useDebounce(query, 300); // (Conservé pour future amélioration)
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -107,6 +106,7 @@ const SearchWidget: React.FC<{
               type="button"
               onClick={() => setQuery('')}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Vider la recherche"
             >
               <X className="w-4 h-4 text-gray-400" />
             </button>
@@ -155,7 +155,8 @@ const ContextualMetrics: React.FC<{
   searchTime: number;
   filters: SearchFilters;
   viewMode: 'grid' | 'list';
-}> = ({ totalResults, searchTime, filters, viewMode }) => {
+  onToggleView: () => void;
+}> = ({ totalResults, searchTime, filters, viewMode, onToggleView }) => {
   const activeFiltersCount = Object.values(filters).filter(v => 
     v && (Array.isArray(v) ? v.length > 0 : true)
   ).length;
@@ -182,10 +183,12 @@ const ContextualMetrics: React.FC<{
 
       <div className="flex items-center gap-2">
         <button
-          onClick={() => {/* Toggle view mode */}}
+          onClick={onToggleView}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          aria-label="Changer l’affichage"
+          title="Changer l’affichage"
         >
-          {viewMode === 'grid' ? <Grid className="w-4 h-4" /> : <List className="w-4 h-4" />}
+          {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
         </button>
       </div>
     </div>
@@ -547,7 +550,7 @@ const SearchPage: React.FC = () => {
     } else {
       clearResults();
     }
-  }, [query, filters]);
+  }, [query, filters, search, clearResults]);
 
   // Gestion de la recherche
   const handleSearch = useCallback((newQuery: string) => {
@@ -557,7 +560,7 @@ const SearchPage: React.FC = () => {
       filters,
       userId: user?.id
     });
-  }, [filters, user]);
+  }, [filters, user, setSearchParams]);
 
   // Gestion des filtres
   const handleFiltersChange = useCallback((newFilters: SearchFilters) => {
@@ -567,6 +570,11 @@ const SearchPage: React.FC = () => {
       query
     });
   }, [query]);
+
+  // Toggle affichage
+  const handleToggleView = useCallback(() => {
+    setViewMode((prev) => (prev === 'grid' ? 'list' : 'grid'));
+  }, []);
 
   // Méta-données pour SEO
   useEffect(() => {
@@ -591,7 +599,7 @@ const SearchPage: React.FC = () => {
             <div className="flex-1 max-w-2xl">
               <SearchWidget
                 variant="compact"
-                placeholder={query || "Rechercher..."}
+                placeholder={query || 'Rechercher...'}
                 onSearch={handleSearch}
                 autoFocus={!query}
               />
@@ -625,6 +633,7 @@ const SearchPage: React.FC = () => {
                 searchTime={searchTime}
                 filters={filters}
                 viewMode={viewMode}
+                onToggleView={handleToggleView}
               />
             )}
           </div>
@@ -742,4 +751,3 @@ const SearchPage: React.FC = () => {
 };
 
 export default SearchPage;
-

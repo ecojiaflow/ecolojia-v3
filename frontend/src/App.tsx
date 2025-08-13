@@ -1,4 +1,4 @@
-// PATH: frontend/src/App.tsx
+﻿// PATH: frontend/src/App.tsx
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/context/AuthContext';
@@ -30,6 +30,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import MultiScanPage from './pages/MultiScanPage';
 import FavoritesPage from './pages/FavoritesPage';
+import TestConnection from './pages/TestConnection';
 
 // Composant de chargement
 const PageLoader = () => (
@@ -120,6 +121,8 @@ const AppContent = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
+          <Route path="/test-connection" element={<TestConnection />} />
+
           {/* PAGES PROTÉGÉES */}
           <Route path="/scan" element={
             <ProtectedRoute>
@@ -197,6 +200,8 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
 
 
 

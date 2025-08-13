@@ -189,8 +189,6 @@ const ScanPage: React.FC = () => {
           error: null
         });
         setScanMode('manual');
-        // Optionnel: transmettre extractedData au composant ManualSearch via un état global/context si déjà prévu
-        // console.log('Données partielles extraites:', extractedData);
       }
     } catch (error: any) {
       setAnalysisState({
