@@ -1,4 +1,4 @@
-// PATH: frontend/src/lib/api.ts
+﻿// PATH: frontend/src/lib/api.ts
 const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
 async function fetchWithAuth(url: string, options: RequestInit = {}) {
@@ -41,7 +41,7 @@ export const api = {
       limit: String(filters.limit || 20)
     });
     
-    return fetchWithAuth(`${API_URL}/api/products/search?${params.toString()}`);
+    return fetchWithAuth(`${API_URL}/api/algolia/search?${params.toString()}`);
   },
 
   async analyzeProduct(data: any) {
@@ -53,3 +53,4 @@ export const api = {
 };
 
 export default api;
+

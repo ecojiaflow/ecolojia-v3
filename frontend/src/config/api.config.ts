@@ -1,4 +1,4 @@
-// api.config.ts - Configuration pour backend Render (production)
+﻿// api.config.ts - Configuration pour backend Render (production)
 export const API_CONFIG = {
   // Utiliser le backend Render en production
   BASE_URL: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
@@ -35,7 +35,7 @@ export const API_CONFIG = {
       COUNT: '/api/history/count'
     },
     PRODUCTS: {
-      SEARCH: '/api/products/search',
+      SEARCH: '/api/algolia/search',
       GET_BY_ID: '/api/products',
       STATS: '/api/products/stats',
       POPULAR: '/api/products/popular',
@@ -45,12 +45,12 @@ export const API_CONFIG = {
   }
 };
 
-// Helper pour construire les URLs complètes
+// Helper pour construire les URLs complÃ¨tes
 export const buildApiUrl = (endpoint: string): string => {
   return `${API_CONFIG.BASE_URL}${endpoint}`;
 };
 
-// Helper pour les headers par défaut
+// Helper pour les headers par dÃ©faut
 export const getDefaultHeaders = (): Record<string, string> => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -63,4 +63,5 @@ export const getDefaultHeaders = (): Record<string, string> => {
   
   return headers;
 };
+
 

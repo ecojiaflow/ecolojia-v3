@@ -1,4 +1,4 @@
-// PATH: frontend/src/config/constants.ts
+﻿// PATH: frontend/src/config/constants.ts
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
 export const ROUTES = {
@@ -12,7 +12,7 @@ export const ROUTES = {
     BARCODE: '/api/analysis/barcode'
   },
   PRODUCTS: {
-    SEARCH: '/api/products/search',
+    SEARCH: '/api/algolia/search',
     BARCODE: '/api/products/barcode'
   },
   HISTORY: '/api/history',
@@ -21,3 +21,4 @@ export const ROUTES = {
     CHECKOUT: '/api/payment/create-checkout'
   }
 };
+

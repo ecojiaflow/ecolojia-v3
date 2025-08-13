@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+﻿import React, { useState, useCallback, useRef } from 'react';
 import { Camera, Search, Barcode, Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 
 // Configuration API
@@ -25,7 +25,7 @@ interface ScanState {
   result: ScanResult | null;
 }
 
-// Hook personnalisé pour gérer le scan
+// Hook personnalisÃ© pour gÃ©rer le scan
 const useScanner = () => {
   const [state, setState] = useState<ScanState>({
     mode: 'barcode',
@@ -60,12 +60,12 @@ const useScanner = () => {
           result: data 
         }));
         
-        // Redirection après 1 seconde
+        // Redirection aprÃ¨s 1 seconde
         setTimeout(() => {
           window.location.href = `/product/${data.product._id}`;
         }, 1000);
       } else {
-        throw new Error(data.message || 'Produit non trouvé');
+        throw new Error(data.message || 'Produit non trouvÃ©');
       }
     } catch (error: any) {
       setState(prev => ({ 
@@ -114,7 +114,7 @@ const useScanner = () => {
         result: analysisData 
       }));
 
-      // Si un produit est identifié, rediriger
+      // Si un produit est identifiÃ©, rediriger
       if (analysisData.productId) {
         setTimeout(() => {
           window.location.href = `/product/${analysisData.productId}`;
@@ -133,7 +133,7 @@ const useScanner = () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      const response = await fetch(`${API_URL}/api/products/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`${API_URL}/api/algolia/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
 
       if (response.ok && data.products && data.products.length > 0) {
@@ -144,7 +144,7 @@ const useScanner = () => {
           result: { products: data.products }
         }));
       } else {
-        throw new Error('Aucun produit trouvé');
+        throw new Error('Aucun produit trouvÃ©');
       }
     } catch (error: any) {
       setState(prev => ({ 
@@ -165,7 +165,7 @@ const useScanner = () => {
   };
 };
 
-// Composants des différents modes
+// Composants des diffÃ©rents modes
 const BarcodeScanner: React.FC<{ onScan: (code: string) => void }> = ({ onScan }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [manualCode, setManualCode] = useState('');
@@ -182,10 +182,10 @@ const BarcodeScanner: React.FC<{ onScan: (code: string) => void }> = ({ onScan }
       <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
         <Barcode className="w-16 h-16 mx-auto mb-4 text-green-600" />
         <p className="text-gray-700 mb-4">
-          Scannez le code-barres avec votre caméra ou entrez-le manuellement
+          Scannez le code-barres avec votre camÃ©ra ou entrez-le manuellement
         </p>
         <button className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors opacity-50 cursor-not-allowed" disabled>
-          Activer la caméra (bientôt disponible)
+          Activer la camÃ©ra (bientÃ´t disponible)
         </button>
       </div>
       
@@ -267,7 +267,7 @@ const PhotoCapture: React.FC<{ onCapture: (file: File) => void }> = ({ onCapture
       ) : (
         <div className="space-y-4">
           <div className="relative rounded-xl overflow-hidden">
-            <img src={preview} alt="Aperçu" className="w-full h-64 object-cover" />
+            <img src={preview} alt="AperÃ§u" className="w-full h-64 object-cover" />
             <button
               onClick={resetCapture}
               className="absolute top-2 right-2 bg-white/80 p-2 rounded-full hover:bg-white transition-colors"
@@ -302,7 +302,7 @@ const ManualSearch: React.FC<{ onSearch: (query: string) => void }> = ({ onSearc
       <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
         <Search className="w-16 h-16 mx-auto mb-4 text-purple-600" />
         <p className="text-gray-700">
-          Recherchez un produit par son nom, sa marque ou ses ingrédients
+          Recherchez un produit par son nom, sa marque ou ses ingrÃ©dients
         </p>
       </div>
       
@@ -358,7 +358,7 @@ export default function ScanPage() {
                 onClick={resetState}
                 className="text-red-600 underline text-sm mt-1"
               >
-                Réessayer
+                RÃ©essayer
               </button>
             </div>
           </div>
@@ -371,17 +371,17 @@ export default function ScanPage() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
           <div className="flex items-center">
             <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-            <p className="text-green-800">Produit trouvé ! Redirection...</p>
+            <p className="text-green-800">Produit trouvÃ© ! Redirection...</p>
           </div>
         </div>
       );
     }
 
-    // Affichage des résultats de recherche manuelle
+    // Affichage des rÃ©sultats de recherche manuelle
     if (state.result?.products) {
       return (
         <div className="space-y-4">
-          <h3 className="font-semibold text-lg">Résultats de recherche :</h3>
+          <h3 className="font-semibold text-lg">RÃ©sultats de recherche :</h3>
           {state.result.products.map((product: any) => (
             <div
               key={product._id}
@@ -419,7 +419,7 @@ export default function ScanPage() {
           Scanner un produit
         </h1>
 
-        {/* Sélecteur de mode */}
+        {/* SÃ©lecteur de mode */}
         <div className="flex gap-2 mb-6">
           {[
             { mode: 'barcode' as ScanMode, icon: Barcode, label: 'Code-barres' },
@@ -452,12 +452,13 @@ export default function ScanPage() {
         {/* Aide contextuelle */}
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>
-            {state.mode === 'barcode' && "Le code-barres se trouve généralement au dos du produit"}
-            {state.mode === 'photo' && "Prenez une photo claire du produit, de préférence de face"}
-            {state.mode === 'manual' && "Entrez le nom exact ou des mots-clés du produit"}
+            {state.mode === 'barcode' && "Le code-barres se trouve gÃ©nÃ©ralement au dos du produit"}
+            {state.mode === 'photo' && "Prenez une photo claire du produit, de prÃ©fÃ©rence de face"}
+            {state.mode === 'manual' && "Entrez le nom exact ou des mots-clÃ©s du produit"}
           </p>
         </div>
       </div>
     </div>
   );
 }
+

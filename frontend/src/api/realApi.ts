@@ -1,4 +1,4 @@
-// PATH: frontend/src/api/realApi.ts
+﻿// PATH: frontend/src/api/realApi.ts
 import type { AnalysisResult } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
@@ -47,7 +47,7 @@ export async function searchProducts(
   params.set('page', String(filters.page ?? 1));
   params.set('limit', String(filters.limit ?? 20));
 
-  const res = await fetch(`${API_BASE_URL}/api/products/search?${params.toString()}`);
+  const res = await fetch(`${API_BASE_URL}/api/algolia/search?${params.toString()}`);
   if (!res.ok) throw new Error(`Search API error (${res.status})`);
   const json: ApiResponse<SearchPayload> = await res.json();
   if (!json.success) throw new Error(json.error || 'Search API error');
@@ -236,3 +236,4 @@ export async function getCurrentUser(): Promise<any> {
   if (!res.ok) throw new Error(`Get user error (${res.status})`);
   return res.json();
 }
+
