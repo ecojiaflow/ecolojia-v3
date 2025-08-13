@@ -1,3 +1,4 @@
+import './utils/setupMocks';
 // PATH: frontend/src/main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -12,20 +13,20 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onre
 const applyQuickFixes = () => {
   // Fix 1: Logger les erreurs pour debug
   window.addEventListener('error', (event) => {
-    console.error('🔴 Erreur:', event.message, event.error);
+    console.error('ðŸ”´ Erreur:', event.message, event.error);
   });
 
   window.addEventListener('unhandledrejection', (event) => {
-    console.error('🔴 Promise rejetée:', event.reason);
+    console.error('ðŸ”´ Promise rejetÃ©e:', event.reason);
   });
 
-  console.log('✅ Debug activé');
+  console.log('âœ… Debug activÃ©');
 };
 
 // Test backend fonctionnel
 (window as any).testBackend = async () => {
-  console.log('🧪 Test Backend ECOLOJIA...\n');
-  console.log('📍 API URL:', API_URL);
+  console.log('ðŸ§ª Test Backend ECOLOJIA...\n');
+  console.log('ðŸ“ API URL:', API_URL);
   
   const tests = [];
   
@@ -35,7 +36,7 @@ const applyQuickFixes = () => {
     tests.push({
       endpoint: '/health',
       status: healthRes.status,
-      ok: healthRes.ok ? '✅' : '❌'
+      ok: healthRes.ok ? 'âœ…' : 'âŒ'
     });
     
     // Test 2: Analysis Status
@@ -43,12 +44,12 @@ const applyQuickFixes = () => {
     tests.push({
       endpoint: '/api/analysis/_service/status',
       status: statusRes.status,
-      ok: statusRes.ok ? '✅' : '❌'
+      ok: statusRes.ok ? 'âœ…' : 'âŒ'
     });
     
     if (statusRes.ok) {
       const data = await statusRes.json();
-      console.log('📊 Service Analysis:', data);
+      console.log('ðŸ“Š Service Analysis:', data);
     }
     
     // Test 3: Ping
@@ -60,28 +61,28 @@ const applyQuickFixes = () => {
     tests.push({
       endpoint: '/api/analysis/ping',
       status: pingRes.status,
-      ok: pingRes.ok ? '✅' : '❌'
+      ok: pingRes.ok ? 'âœ…' : 'âŒ'
     });
     
     console.table(tests);
     
   } catch (error) {
-    console.error('❌ Erreur:', error);
+    console.error('âŒ Erreur:', error);
   }
 };
 
 // Test d'analyse complet
 (window as any).testAnalysis = async (category = 'food') => {
-  console.log(`🔬 Test analyse ${category}...\n`);
+  console.log(`ðŸ”¬ Test analyse ${category}...\n`);
   
   const testProducts = {
     food: {
-      name: 'Céréales chocolat test',
+      name: 'CÃ©rÃ©ales chocolat test',
       category: 'food',
-      ingredients: 'Céréales (blé 60%), sucre, chocolat 15% (sucre, cacao), sirop de glucose, sel, vitamines (B1, B2), émulsifiant E322'
+      ingredients: 'CÃ©rÃ©ales (blÃ© 60%), sucre, chocolat 15% (sucre, cacao), sirop de glucose, sel, vitamines (B1, B2), Ã©mulsifiant E322'
     },
     cosmetic: {
-      name: 'Crème hydratante test',
+      name: 'CrÃ¨me hydratante test',
       category: 'cosmetic',
       ingredients: 'Aqua, Glycerin, Dimethicone, Cetearyl Alcohol, Parfum, Limonene, Methylparaben, BHT'
     },
@@ -95,7 +96,7 @@ const applyQuickFixes = () => {
   const product = testProducts[category] || testProducts.food;
   
   try {
-    console.log('📤 Envoi:', product);
+    console.log('ðŸ“¤ Envoi:', product);
     
     const response = await fetch(`${API_URL}/analysis/manual`, {
       method: 'POST',
@@ -108,37 +109,37 @@ const applyQuickFixes = () => {
       body: JSON.stringify(product)
     });
     
-    console.log('📥 Status:', response.status);
+    console.log('ðŸ“¥ Status:', response.status);
     
     if (response.ok) {
       const result = await response.json();
-      console.log('✅ Résultat:');
-      console.log('- Catégorie:', result.category);
+      console.log('âœ… RÃ©sultat:');
+      console.log('- CatÃ©gorie:', result.category);
       console.log('- Score global:', result.globalScore);
       console.log('- Scores:', result.scores);
-      console.log('- Détails:', result.details);
+      console.log('- DÃ©tails:', result.details);
       console.log('- Recommandations:', result.recommendations);
       return result;
     } else {
       const error = await response.text();
-      console.error('❌ Erreur:', error);
+      console.error('âŒ Erreur:', error);
     }
   } catch (error) {
-    console.error('❌ Exception:', error);
+    console.error('âŒ Exception:', error);
   }
 };
 
 // Test complet de l'application
 (window as any).testComplet = async () => {
-  console.log('🚀 TEST COMPLET ECOLOJIA\n');
+  console.log('ðŸš€ TEST COMPLET ECOLOJIA\n');
   console.log('=' .repeat(50));
   
   // 1. Backend
-  console.log('\n1️⃣ TEST BACKEND');
+  console.log('\n1ï¸âƒ£ TEST BACKEND');
   await (window as any).testBackend();
   
   // 2. Analyses
-  console.log('\n2️⃣ TEST ANALYSES');
+  console.log('\n2ï¸âƒ£ TEST ANALYSES');
   console.log('Testing Food...');
   await (window as any).testAnalysis('food');
   
@@ -149,14 +150,14 @@ const applyQuickFixes = () => {
   await (window as any).testAnalysis('detergent');
   
   // 3. Auth
-  console.log('\n3️⃣ TEST AUTH');
+  console.log('\n3ï¸âƒ£ TEST AUTH');
   const token = localStorage.getItem('token');
   const user = localStorage.getItem('user');
-  console.log('Token:', token ? `✅ Présent (${token.length} car.)` : '❌ Absent');
-  console.log('User:', user ? '✅ Présent' : '❌ Absent');
+  console.log('Token:', token ? `âœ… PrÃ©sent (${token.length} car.)` : 'âŒ Absent');
+  console.log('User:', user ? 'âœ… PrÃ©sent' : 'âŒ Absent');
   
   // 4. Routes Frontend
-  console.log('\n4️⃣ ROUTES FRONTEND');
+  console.log('\n4ï¸âƒ£ ROUTES FRONTEND');
   console.log('Route actuelle:', window.location.pathname);
   console.log('Routes disponibles:');
   console.log('- / (Home)');
@@ -167,27 +168,27 @@ const applyQuickFixes = () => {
   console.log('- /login');
   console.log('- /register');
   
-  console.log('\n✅ Test terminé !');
+  console.log('\nâœ… Test terminÃ© !');
 };
 
 // Commandes disponibles
 (window as any).ecolojiaHelp = () => {
   console.log(`
-🌱 ECOLOJIA - Commandes de test
+ðŸŒ± ECOLOJIA - Commandes de test
 ================================
 
-📋 Tests rapides:
-  testBackend()          → Tester la connexion backend
-  testAnalysis('food')   → Tester analyse food
-  testAnalysis('cosmetic') → Tester analyse cosmétique
-  testAnalysis('detergent') → Tester analyse détergent
-  testComplet()          → Lancer TOUS les tests
+ðŸ“‹ Tests rapides:
+  testBackend()          â†’ Tester la connexion backend
+  testAnalysis('food')   â†’ Tester analyse food
+  testAnalysis('cosmetic') â†’ Tester analyse cosmÃ©tique
+  testAnalysis('detergent') â†’ Tester analyse dÃ©tergent
+  testComplet()          â†’ Lancer TOUS les tests
 
-🔧 Debug:
-  localStorage.clear()   → Effacer le cache
-  location.reload()      → Recharger la page
+ðŸ”§ Debug:
+  localStorage.clear()   â†’ Effacer le cache
+  location.reload()      â†’ Recharger la page
 
-📊 Info système:
+ðŸ“Š Info systÃ¨me:
   API: ${API_URL}
   Backend: https://ecolojia-backendvf.onrender.com
   Frontend: ${window.location.origin}
@@ -202,14 +203,14 @@ try {
 }
 
 // Message de bienvenue
-console.log('%c🌱 ECOLOJIA', 'color: #22c55e; font-size: 24px; font-weight: bold;');
+console.log('%cðŸŒ± ECOLOJIA', 'color: #22c55e; font-size: 24px; font-weight: bold;');
 console.log('Tapez ecolojiaHelp() pour voir les commandes');
 console.log('Tapez testComplet() pour lancer tous les tests');
 
-// Créer l'application
+// CrÃ©er l'application
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error('Element root non trouvé');
+  throw new Error('Element root non trouvÃ©');
 }
 
 createRoot(rootElement).render(

@@ -1,25 +1,26 @@
-﻿// src/config/api.config.ts
+// src/config/api.config.ts
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
   ENDPOINTS: {
-    // Auth
+    // Auth - UN SEUL endpoint pour le profil
     AUTH: {
       LOGIN: '/api/auth/login',
       REGISTER: '/api/auth/register',
-      ME: '/api/auth/me',
+      ME: '/api/users/me',  // ou /api/auth/me selon ce qui marche
       LOGOUT: '/api/auth/logout',
+      PROFILE: '/api/users/me', // alias pour compatibilité
     },
-    // Products - UN SEUL endpoint de recherche
+    // Products
     PRODUCTS: {
-      SEARCH: '/api/algolia/search',  // SEULEMENT celui-ci
+      SEARCH: '/api/algolia/search',
       GET_BY_ID: '/api/products/:id',
       GET_BY_BARCODE: '/api/products/barcode/:barcode',
     },
     // Analysis
     ANALYSIS: {
-      ANALYZE: '/api/analysis',  // UN SEUL endpoint
+      ANALYZE: '/api/analysis',
       BY_BARCODE: '/api/analysis/barcode',
       HISTORY: '/api/history',
     },
@@ -36,6 +37,14 @@ export const API_CONFIG = {
   }
 };
 
+// Endpoints publics (pas besoin d'auth)
+export const PUBLIC_ENDPOINTS = [
+  '/api/algolia/search',
+  '/api/products/search',
+  '/api/analysis',
+  '/api/products/barcode',
+];
+
 export const buildApiUrl = (endpoint: string, params?: Record<string, string>): string => {
   let url = `${API_BASE_URL}${endpoint}`;
   if (params) {
@@ -44,4 +53,8 @@ export const buildApiUrl = (endpoint: string, params?: Record<string, string>): 
     });
   }
   return url;
+};
+
+export const isPublicEndpoint = (endpoint: string): boolean => {
+  return PUBLIC_ENDPOINTS.some(pe => endpoint.includes(pe));
 };
