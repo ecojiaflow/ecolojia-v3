@@ -44,3 +44,5 @@ class EmailValidationService {
 
 export const emailValidationService = new EmailValidationService();
 
+
+export default emailValidationService;

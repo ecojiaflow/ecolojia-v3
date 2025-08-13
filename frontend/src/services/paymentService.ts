@@ -252,3 +252,5 @@ if (typeof window !== 'undefined') {
     isAuthenticated: () => paymentService.isAuthenticated()
   };
 }
+
+export default paymentService;

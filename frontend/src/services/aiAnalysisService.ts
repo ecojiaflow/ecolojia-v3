@@ -82,3 +82,5 @@ class AIAnalysisService {
 }
 
 export const aiAnalysisService = new AIAnalysisService();
+
+export default aiAnalysisService;

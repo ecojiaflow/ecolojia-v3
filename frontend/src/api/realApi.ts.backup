@@ -79,8 +79,8 @@ export interface ManualAnalysisInput {
   ingredientsText?: string;
 }
 
-export async function analyzeProduct(input: ManualAnalysisInput): Promise<AnalysisResult> {
-  const res = await fetch(`${API_BASE_URL}/api/analysis`, {
+export async function analyzeManual(input: ManualAnalysisInput): Promise<AnalysisResult> {
+  const res = await fetch(`${API_BASE_URL}/api/analysis/manual`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input)
@@ -122,117 +122,4 @@ export async function getAnalysesHistory(page = 1, limit = 20): Promise<any> {
   if (!res.ok) throw new Error(`History API error (${res.status})`);
   const json = await res.json();
   return json.data || json;
-}
-
-
-// Historique
-export interface HistoryItem {
-  _id: string;
-  productName: string;
-  category: string;
-  scores: {
-    healthScore: number;
-    environmentScore: number;
-    nova?: number;
-  };
-  createdAt: string;
-}
-
-export async function getHistory(page = 1, limit = 12, sortBy = 'date', sortOrder = 'desc'): Promise<any> {
-  const params = new URLSearchParams({
-    page: String(page),
-    limit: String(limit),
-    sortBy,
-    sortOrder
-  });
-  
-  const token = localStorage.getItem('token');
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json'
-  };
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  
-  const res = await fetch(`${API_BASE_URL}/api/history?${params.toString()}`, {
-    headers
-  });
-  
-  if (!res.ok) throw new Error(`History API error (${res.status})`);
-  const json = await res.json();
-  return json;
-}
-
-export async function getHistoryCount(): Promise<number> {
-  const token = localStorage.getItem('token');
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json'
-  };
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  
-  const res = await fetch(`${API_BASE_URL}/api/history/count`, {
-    headers
-  });
-  
-  if (!res.ok) {
-    // Si le endpoint count n'existe pas, utiliser la pagination
-    const history = await getHistory(1, 1);
-    return history.pagination?.total || 0;
-  }
-  
-  const json = await res.json();
-  return json.count || 0;
-}
-
-// Auth
-export async function login(email: string, password: string): Promise<any> {
-  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
-  });
-  
-  if (!res.ok) throw new Error(`Login error (${res.status})`);
-  const json = await res.json();
-  
-  if (json.token) {
-    localStorage.setItem('token', json.token);
-  }
-  
-  return json;
-}
-
-export async function register(email: string, password: string, name: string): Promise<any> {
-  const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, name })
-  });
-  
-  if (!res.ok) throw new Error(`Register error (${res.status})`);
-  const json = await res.json();
-  
-  if (json.token) {
-    localStorage.setItem('token', json.token);
-  }
-  
-  return json;
-}
-
-export async function getCurrentUser(): Promise<any> {
-  const token = localStorage.getItem('token');
-  if (!token) throw new Error('No token');
-  
-  const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-  
-  if (!res.ok) throw new Error(`Get user error (${res.status})`);
-  return res.json();
 }

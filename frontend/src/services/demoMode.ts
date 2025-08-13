@@ -206,3 +206,5 @@ export const demoMode = {
   }
 };
 
+
+export default demoMode;
