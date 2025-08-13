@@ -1,95 +1,88 @@
-// backend/src/routes/history.js
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
-const { authenticateUser } = require('../middleware/auth');
 const Analysis = require('../models/Analysis');
-const { asyncHandler } = require('../utils/errors');
-const logger = require('../utils/logger');
+const { authOptional } = require('../middleware/auth');
 
-// GET /api/history - Récupérer l'historique utilisateur
-router.get('/', authenticateUser, asyncHandler(async (req, res) => {
-  const userId = req.userId;
-  const {
-    page = 1,
-    limit = 20,
-    category,
-    minScore,
-    maxScore,
-    startDate,
-    endDate
-  } = req.query;
-  
-  logger.info(`Fetching history for user ${userId}`, { page, limit, category });
-  
-  const result = await Analysis.getUserHistory(userId, {
-    page: parseInt(page),
-    limit: parseInt(limit),
-    category,
-    minScore: minScore ? parseInt(minScore) : null,
-    maxScore: maxScore ? parseInt(maxScore) : null,
-    startDate,
-    endDate
-  });
-  
-  res.json({
-    success: true,
-    ...result
-  });
-}));
+// GET /api/history
+router.get('/', authOptional, async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    
+    // Si pas d'utilisateur, retourner une liste vide
+    if (!userId) {
+      return res.json({
+        success: true,
+        data: {
+          analyses: [],
+          pagination: {
+            total: 0,
+            page: 1,
+            pages: 0,
+            limit: 12
+          }
+        }
+      });
+    }
 
-// GET /api/history/stats - Statistiques utilisateur
-router.get('/stats', authenticateUser, asyncHandler(async (req, res) => {
-  const userId = req.userId;
-  const { period = 30 } = req.query;
-  
-  const stats = await Analysis.getUserStats(userId, parseInt(period));
-  
-  res.json({
-    success: true,
-    stats
-  });
-}));
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const skip = (page - 1) * limit;
 
-// GET /api/history/:id - Détails d'une analyse
-router.get('/:id', authenticateUser, asyncHandler(async (req, res) => {
-  const analysis = await Analysis.findOne({
-    _id: req.params.id,
-    userId: req.userId
-  }).populate('productId', 'name brand imageUrl');
-  
-  if (!analysis) {
-    return res.status(404).json({
+    const query = { userId };
+    if (req.query.category) {
+      query['productSnapshot.category'] = req.query.category;
+    }
+
+    const [analyses, total] = await Promise.all([
+      Analysis.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Analysis.countDocuments(query)
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        analyses,
+        pagination: {
+          total,
+          page,
+          pages: Math.ceil(total / limit),
+          limit,
+          hasNext: page < Math.ceil(total / limit),
+          hasPrev: page > 1
+        }
+      }
+    });
+  } catch (error) {
+    console.error('History error:', error);
+    res.status(500).json({
       success: false,
-      error: 'Analysis not found'
+      error: 'Erreur lors de la récupération de l\'historique'
     });
   }
-  
-  res.json({
-    success: true,
-    analysis
-  });
-}));
+});
 
-// DELETE /api/history/:id - Supprimer une analyse
-router.delete('/:id', authenticateUser, asyncHandler(async (req, res) => {
-  const result = await Analysis.deleteOne({
-    _id: req.params.id,
-    userId: req.userId
-  });
-  
-  if (result.deletedCount === 0) {
-    return res.status(404).json({
-      success: false,
-      error: 'Analysis not found'
-    });
+// GET /api/history/count
+router.get('/count', authOptional, async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.json({ success: true, count: 0 });
+    }
+
+    const query = { userId };
+    if (req.query.category) {
+      query['productSnapshot.category'] = req.query.category;
+    }
+
+    const count = await Analysis.countDocuments(query);
+    res.json({ success: true, count });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
-  
-  logger.info(`Analysis ${req.params.id} deleted by user ${req.userId}`);
-  
-  res.json({
-    success: true,
-    message: 'Analysis deleted successfully'
-  });
-}));
+});
 
 module.exports = router;
