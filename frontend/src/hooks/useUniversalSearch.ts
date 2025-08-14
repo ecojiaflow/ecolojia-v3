@@ -1,28 +1,72 @@
-// hooks/useUniversalSearch.ts
+// PATH: src/hooks/useUniversalSearch.ts
 import { useState, useCallback } from 'react';
-import { searchService } from '@/services/searchService';
-import { algoliaService } from '@/services/algolia/client';
+import searchService, { extractProducts } from '@/services/searchService';
 
-export const useUniversalSearch = () => {
+export interface SearchFilters {
+  categories?: string[];
+  nutriScore?: string[];
+  labels?: string[];
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  brand?: string;
+  image?: string;
+  nutriScore?: 'A'|'B'|'C'|'D'|'E';
+  ecoScore?: string;
+  labels?: string[];
+  healthScore?: number;
+  isNew?: boolean;
+}
+
+export function useUniversalSearch() {
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string|null>(null);
   const [searchTime, setSearchTime] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
 
+  const normalize = (items: any[]): Product[] => {
+    return (items || []).map((it: any) => ({
+      id: it.objectID || it.id || it._id || it.barcode || '',
+      name: it.name || it.product_name || 'Sans nom',
+      brand: it.brand || it.brands || '',
+      image: it.image || it.imageUrl || it.image_url || '',
+      nutriScore: it.nutriScore || it.nutriscore_grade || undefined,
+      ecoScore: it.ecoScore || it.ecoscore_grade || undefined,
+      labels: it.labels || [],
+      healthScore: it.healthScore || it.score || undefined,
+      isNew: Boolean(it.isNew)
+    }));
+  };
+
   const search = useCallback(async (query: string, filters?: SearchFilters) => {
+    if (!query || !query.trim()) {
+      setResults([]);
+      setTotalResults(0);
+      setError(null);
+      return;
+    }
+
     setLoading(true);
     setError(null);
-    const startTime = Date.now();
 
+    const t0 = performance.now();
     try {
-      const response = await searchService.search(query, filters);
-      setResults(response.hits);
-      setTotalResults(response.nbHits);
-      setSearchTime(Date.now() - startTime);
-    } catch (err) {
-      setError(err as Error);
+      // Appelle le backend (proxy Netlify) GET /api/algolia/search?q=...
+      const payload = await searchService.searchProducts(query);
+      const items = extractProducts(payload);
+      const normalized = normalize(items);
+      setResults(normalized);
+      setTotalResults(items.length || normalized.length || 0);
+    } catch (e: any) {
+      console.error('Search error:', e);
+      setError(e?.message || 'Erreur de recherche');
+      setResults([]);
+      setTotalResults(0);
     } finally {
+      setSearchTime(Math.round(performance.now() - t0));
       setLoading(false);
     }
   }, []);
@@ -30,6 +74,8 @@ export const useUniversalSearch = () => {
   const clearResults = useCallback(() => {
     setResults([]);
     setTotalResults(0);
+    setError(null);
+    setSearchTime(0);
   }, []);
 
   return {
@@ -41,4 +87,6 @@ export const useUniversalSearch = () => {
     search,
     clearResults
   };
-};
+}
+
+export default useUniversalSearch;
