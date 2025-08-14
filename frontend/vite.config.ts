@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: { alias: { '@': '/src' } },
   server: {
     port: 5173,
     proxy: {
@@ -14,6 +15,5 @@ export default defineConfig({
       },
     },
   },
-  resolve: { alias: { '@': '/src' } },
   build: { target: 'es2020', sourcemap: false },
 });
