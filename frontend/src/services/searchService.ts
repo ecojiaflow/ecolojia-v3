@@ -9,7 +9,29 @@ export type SearchResponse =
 
 export async function searchProducts(query: string): Promise<SearchResponse> {
   const q = encodeURIComponent((query || '').trim());
-  return await api.get<SearchResponse>(`/api/algolia/search?q=${q}`);
+
+  // Stratégie résiliente : on essaie plusieurs endpoints connus.
+  const candidates = [
+    `/api/algolia/search?q=${q}`,
+    `/api/products/search?q=${q}`,
+    `/api/search?q=${q}`,
+  ];
+
+  let lastErr: unknown = null;
+  for (const path of candidates) {
+    try {
+      return await api.get<SearchResponse>(path);
+    } catch (e: any) {
+      lastErr = e;
+      const msg = String(e?.message || '');
+      // On enchaîne uniquement si c'est un 404 (endpoint non présent)
+      if (!msg.startsWith('HTTP 404')) {
+        throw e;
+      }
+    }
+  }
+  // Si on arrive ici : tous ont renvoyé 404
+  throw (lastErr instanceof Error ? lastErr : new Error('HTTP 404'));
 }
 
 export function extractProducts(payload: SearchResponse): any[] {
