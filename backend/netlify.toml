@@ -1,0 +1,23 @@
+﻿# PATH: netlify.toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[dev]
+  command = "npm run dev"
+  port = 5173
+  targetPort = 8888
+  autoLaunch = false
+
+# Proxy API -> backend Render
+[[redirects]]
+  from = "/api/*"
+  to = "https://ecolojia-backendvf.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# Redirection SPA (React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
