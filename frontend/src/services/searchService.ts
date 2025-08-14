@@ -1,96 +1,51 @@
-// src/services/searchService.ts
-import { API_CONFIG, buildApiUrl } from '../config/api.config';
+// PATH: frontend/src/services/searchService.ts
+export type SearchResponse =
+  | { data: { products: any[] } }
+  | { products: any[] }
+  | { hits: any[] }         // cas Algolia
+  | { items: any[] };
 
-export interface Product {
-  _id: string;
-  name: string;
-  brand: string;
-  category: string;
-  barcode: string;
-  imageUrl?: string;
-  ingredients?: { text: string };
-  nova_group?: number;
-  nutriscore_grade?: string;
-  analysisData?: {
-    healthScore: number;
-    environmentScore: number;
-  };
-}
+const API_BASE =
+  (import.meta as any)?.env?.VITE_API_URL?.replace(/\/+$/, '') || '';
 
-export interface SearchResponse {
-  success: boolean;
-  data: {
-    products: Product[];
-    pagination: {
-      total: number;
-      page: number;
-      pages: number;
-      limit: number;
-    };
-  };
-}
+/**
+ * Recherche de produits SANS en-têtes d'authentification.
+ * Endpoint aligné: GET /api/algolia/search?q=...
+ */
+export async function searchProducts(query: string): Promise<SearchResponse> {
+  const q = encodeURIComponent((query || '').trim());
+  const url = API_BASE
+    ? `${API_BASE}/api/algolia/search?q=${q}`
+    : `/api/algolia/search?q=${q}`;
 
-export const searchProducts = async (
-  query: string,
-  options: { category?: string; page?: number; limit?: number } = {}
-): Promise<SearchResponse> => {
-  try {
-    const params = new URLSearchParams({
-      q: query || '',
-      ...(options.category && { category: options.category }),
-      page: String(options.page || 0),
-      limit: String(options.limit || 20)
-    });
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: { 'Accept': 'application/json' }
+  });
 
-    const url = buildApiUrl(API_CONFIG.ENDPOINTS.ALGOLIA.SEARCH) + '?' + params;
-    
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    if (!data.data || !data.data.products) {
-      return {
-        success: false,
-        data: {
-          products: [],
-          pagination: { total: 0, page: 0, pages: 0, limit: 20 }
-        }
-      };
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Search error:', error);
-    return {
-      success: false,
-      data: {
-        products: [],
-        pagination: { total: 0, page: 0, pages: 0, limit: 20 }
-      }
-    };
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(text || `HTTP ${res.status}`);
   }
-};
 
-// Export nommé pour useUniversalSearch
+  const json = await res.json().catch(() => ({}));
+  return json as SearchResponse;
+}
+
+/** Normalise la liste de produits depuis différentes formes de payload */
+export function extractProducts(payload: SearchResponse): any[] {
+  const anyData: any = payload || {};
+  if (Array.isArray(anyData?.data?.products)) return anyData.data.products;
+  if (Array.isArray(anyData?.products)) return anyData.products;
+  if (Array.isArray(anyData?.hits)) return anyData.hits;
+  if (Array.isArray(anyData?.items)) return anyData.items;
+  return [];
+}
+
+/** ✅ Compatibilité avec l’import existant: export nommé ET export par défaut */
 export const searchService = {
   searchProducts,
-  // Ajouter d'autres méthodes si nécessaire
-  searchByBarcode: async (barcode: string) => {
-    return searchProducts(barcode);
-  },
-  searchByCategory: async (category: string, query: string = '') => {
-    return searchProducts(query, { category });
-  }
+  extractProducts
 };
 
-// Export par défaut aussi pour compatibilité
 export default searchService;
