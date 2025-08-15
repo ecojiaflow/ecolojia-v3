@@ -1,192 +1,137 @@
-// PATH: src/services/analysisService.ts
+// PATH: frontend/src/services/analysisService.ts
 import api from './apiClient';
+import { productService } from './productService';
 
-// Types pour les analyses
-export interface AnalysisResult {
-  success: boolean;
-  scores: {
-    nova?: number;
-    healthScore: number;
-    environmentScore: number;
-    nutriscore?: string;
-    ecoscore?: string;
-  };
-  details: {
-    ingredientsTextRaw?: string;
-    nova?: number;
-    novaLabel?: string;
-    novaReason?: string;
-    novaConfidence?: number;
-    nutriscore?: string;
-    ecoscore?: string;
-    riskFlags?: string[];
-    notableIngredients?: string[];
-    riskLevel?: string;
-    clpPictograms?: string[];
-    surfactants?: string[];
-    allergens?: string[];
-    biodegradability?: string;
-  };
-  globalScore: number;
-  confidence: number;
-  productId?: string;
-  analysisId?: string;
-}
+export type Category = 'food' | 'cosmetic' | 'detergent';
 
-export interface ManualAnalysisRequest {
+export interface ManualAnalysisInput {
   name: string;
-  category: 'food' | 'cosmetics' | 'detergents';
-  ingredients?: string;
-  brand?: string;
-  barcode?: string;
+  category: Category;
+  ingredients: string;
 }
 
-// Service d'analyse
-class AnalysisService {
-  /**
-   * Analyse manuelle d'un produit
-   */
-  async analyzeManual(data: ManualAnalysisRequest): Promise<AnalysisResult> {
-    try {
-      const response = await api.post<AnalysisResult>('/api/analysis/manual', data);
-      return response;
-    } catch (error) {
-      console.error('Erreur lors de l\'analyse manuelle:', error);
-      throw error;
-    }
+export interface AnalysisResult {
+  category: Category;
+  nova?: number;
+  nutriScore?: 'A' | 'B' | 'C' | 'D' | 'E';
+  warnings?: string[];
+  score?: number;
+  details?: any;
+}
+
+const ANALYSIS_PATH =
+  // possibilité de surcharger via env si besoin (ex: /api/analysis/v2)
+  (import.meta as any)?.env?.VITE_ANALYSIS_PATH || '/api/analysis';
+
+function normalizeCategory(raw: any): Category {
+  const s = String(raw || '').toLowerCase();
+  if (s.includes('cosm')) return 'cosmetic';
+  if (s.includes('deter') || s.includes('clean')) return 'detergent';
+  return 'food';
+}
+
+/**
+ * Analyse manuelle universelle (Render: POST /api/analysis)
+ */
+export async function analyzeManual(input: ManualAnalysisInput): Promise<AnalysisResult> {
+  const payload: ManualAnalysisInput = {
+    name: String(input?.name || 'Produit'),
+    category: normalizeCategory(input?.category) as Category,
+    ingredients: String(input?.ingredients || '').trim(),
+  };
+
+  if (!payload.ingredients) {
+    // Le backend gère les validations, mais on renvoie une erreur claire côté front.
+    throw new Error('Aucun ingrédient fourni pour l’analyse.');
   }
 
-  /**
-   * Analyse par code-barres
-   */
-  async analyzeByBarcode(barcode: string): Promise<AnalysisResult> {
-    try {
-      const response = await api.post<AnalysisResult>('/api/analysis/barcode', { barcode });
-      return response;
-    } catch (error) {
-      console.error('Erreur lors de l\'analyse par code-barres:', error);
-      throw error;
-    }
+  const res = await api.post<AnalysisResult>(ANALYSIS_PATH, payload);
+  // fallback sécurité au cas où l’API ne renverrait pas la catégorie
+  if (!res?.category) {
+    res.category = payload.category;
+  }
+  return res;
+}
+
+/**
+ * Analyse à partir d’un code‑barres :
+ * 1) Récupère le produit via /api/products/barcode/:code
+ * 2) Construit une analyse manuelle cohérente et appelle /api/analysis
+ */
+export async function analyzeByBarcode(barcode: string): Promise<AnalysisResult> {
+  const code = String(barcode || '').trim();
+  if (!code) throw new Error('Code‑barres manquant.');
+
+  const p = await productService.getByBarcode(code);
+
+  // Normalisation tolérante des champs fréquents (Open Food Facts, internes, etc.)
+  const name =
+    p?.name ||
+    p?.product_name ||
+    p?.generic_name ||
+    p?.brand ||
+    p?.brands ||
+    p?.label ||
+    'Produit';
+
+  const ingredients =
+    p?.ingredients_text ||
+    p?.ingredients ||
+    p?.composition ||
+    p?.ingredientsList ||
+    '';
+
+  const catRaw =
+    p?.category ||
+    (Array.isArray(p?.categories_tags) && p.categories_tags[0]) ||
+    p?.mainCategory ||
+    'food';
+
+  const category = normalizeCategory(catRaw);
+
+  return await analyzeManual({ name, category, ingredients });
+}
+
+/**
+ * Analyse de texte direct (si tu as juste un bloc d’ingrédients)
+ */
+export async function analyzeText(ingredients: string, opts?: { name?: string; category?: Category }) {
+  return analyzeManual({
+    name: String(opts?.name || 'Produit'),
+    category: normalizeCategory(opts?.category || 'food'),
+    ingredients: String(ingredients || ''),
+  });
+}
+
+/**
+ * Tracking (no‑op si l’endpoint n’existe pas)
+ */
+export async function track(event: string, data?: any): Promise<void> {
+  const payload = { event, data, ts: Date.now() };
+
+  // 1) Endpoint moderne
+  try {
+    await api.post('/api/analytics/track', payload);
+    return;
+  } catch (e) {
+    const msg = String((e as Error)?.message || '');
+    if (!msg.startsWith('HTTP 404')) throw e;
   }
 
-  /**
-   * Analyse générale (route alternative)
-   */
-  async analyze(data: ManualAnalysisRequest): Promise<AnalysisResult> {
-    try {
-      const response = await api.post<AnalysisResult>('/api/analysis', data);
-      return response;
-    } catch (error) {
-      console.error('Erreur lors de l\'analyse:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Vérification du statut du service
-   */
-  async checkStatus(): Promise<{ service: string; usingFallback: boolean }> {
-    try {
-      const response = await api.get<{ service: string; usingFallback: boolean }>(
-        '/api/analysis/_service/status'
-      );
-      return response;
-    } catch (error) {
-      console.error('Erreur lors de la vérification du statut:', error);
-      return { service: 'analysis', usingFallback: true };
-    }
-  }
-
-  /**
-   * Ping du service
-   */
-  async ping(): Promise<{ ok: boolean; now: number; user?: any }> {
-    try {
-      const response = await api.post<{ ok: boolean; now: number; user?: any }>(
-        '/api/analysis/ping',
-        {}
-      );
-      return response;
-    } catch (error) {
-      console.error('Erreur lors du ping:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Tracking des événements d'analyse
-   * Essaie plusieurs endpoints possibles pour le tracking
-   */
-  async track(event: string, data?: any): Promise<void> {
-    // Données de tracking à envoyer
-    const trackingData = {
-      event,
-      data,
-      timestamp: new Date().toISOString(),
-      source: 'web',
-      ...data
-    };
-
-    // Essayer plusieurs endpoints possibles
-    const endpoints = [
-      '/api/analytics/track',
-      '/api/track',
-      '/api/analysis/track'
-    ];
-
-    for (const endpoint of endpoints) {
-      try {
-        await api.post(endpoint, trackingData);
-        console.log(`[Analytics] Event tracked: ${event}`, data);
-        return; // Succès, on sort
-      } catch (error: any) {
-        // En DEV, on ignore les erreurs 404 pour le tracking
-        if (import.meta.env.DEV && error?.message?.includes('404')) {
-          console.log(`[Analytics] Tracking endpoint not found (${endpoint}), skipping in DEV`);
-        } else {
-          console.error(`[Analytics] Error tracking to ${endpoint}:`, error);
-        }
-      }
-    }
-
-    // Si tous les endpoints échouent en DEV, on fait un simple log
-    if (import.meta.env.DEV) {
-      console.log(`[Analytics] DEV MODE - Event logged locally: ${event}`, data);
-    }
-  }
-
-  /**
-   * Récupère l'historique des analyses de l'utilisateur
-   */
-  async getHistory(limit: number = 10): Promise<AnalysisResult[]> {
-    try {
-      const response = await api.get<{ analyses: AnalysisResult[] }>(
-        `/api/analysis/history?limit=${limit}`
-      );
-      return response.analyses || [];
-    } catch (error) {
-      console.error('Erreur lors de la récupération de l\'historique:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Récupère une analyse spécifique par ID
-   */
-  async getById(analysisId: string): Promise<AnalysisResult | null> {
-    try {
-      const response = await api.get<AnalysisResult>(`/api/analysis/${analysisId}`);
-      return response;
-    } catch (error) {
-      console.error('Erreur lors de la récupération de l\'analyse:', error);
-      return null;
-    }
+  // 2) Fallback legacy
+  try {
+    await api.post('/api/track', payload);
+  } catch {
+    // En dev, on ignore si pas d’endpoint
+    if (import.meta.env.DEV) return;
   }
 }
 
-// Export d'une instance unique
-const analysisService = new AnalysisService();
+export const analysisService = {
+  analyzeManual,
+  analyzeByBarcode,
+  analyzeText,
+  track,
+};
+
 export default analysisService;
-
-// Export de la classe pour les tests
-export { AnalysisService };

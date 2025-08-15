@@ -8,8 +8,9 @@ class ApiClient {
   private baseURL: string;
 
   constructor() {
-    // TOUJOURS utiliser le backend Render, en DEV comme en PROD
-    this.baseURL = 'https://ecolojia-backendvf.onrender.com';
+    // En DEV, on utilise le proxy Vite (/api -> backend)
+    // En PROD, Netlify redirige /api -> backend
+    this.baseURL = import.meta.env.DEV ? '' : '';
   }
 
   private async request<T>(
@@ -17,7 +18,7 @@ class ApiClient {
     options: RequestOptions = {}
   ): Promise<T> {
     const { params, ...fetchOptions } = options;
-    
+
     // Construction de l'URL avec query params
     let url = `${this.baseURL}${endpoint}`;
     if (params) {
@@ -32,8 +33,6 @@ class ApiClient {
         'Content-Type': 'application/json',
         ...fetchOptions.headers,
       },
-      // CORS nécessaire pour les appels cross-origin
-      mode: 'cors',
     };
 
     // Ajout du token JWT si présent
@@ -48,50 +47,48 @@ class ApiClient {
     try {
       console.log(`[API] ${config.method || 'GET'} ${url}`);
       const response = await fetch(url, config);
-      
-      // Log du statut
-      console.log(`[API] Response status: ${response.status}`);
-      
+
       if (!response.ok) {
-        const text = await response.text();
-        console.error(`[API] Error response:`, text);
-        throw new Error(`HTTP ${response.status}`);
+        const error = await response.text();
+        throw new Error(error || `HTTP ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log(`[API] Response data:`, data);
-      return data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        return await response.json();
+      }
+
+      return {} as T;
     } catch (error) {
-      console.error(`[API] Error:`, error);
+      console.error('[API] Error:', error);
       throw error;
     }
   }
 
-  async get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>(endpoint, { ...options, method: 'GET' });
+  // Méthodes helper
+  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET', params });
   }
 
-  async post<T>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
+  async post<T>(endpoint: string, data?: any): Promise<T> {
     return this.request<T>(endpoint, {
-      ...options,
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async put<T>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
+  async put<T>(endpoint: string, data?: any): Promise<T> {
     return this.request<T>(endpoint, {
-      ...options,
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>(endpoint, { ...options, method: 'DELETE' });
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE' });
   }
 
-  async upload<T>(endpoint: string, formData: FormData): Promise<T> {
+  async postFormData<T>(endpoint: string, formData: FormData): Promise<T> {
     const token = localStorage.getItem('token');
     const headers: HeadersInit = {};
     
@@ -99,26 +96,13 @@ class ApiClient {
       headers.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
+    return this.request<T>(endpoint, {
       method: 'POST',
-      headers,
       body: formData,
-      mode: 'cors',
+      headers,
     });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error(`[API] Upload error:`, text);
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return response.json();
   }
 }
 
-// Export d'une instance unique
-const api = new ApiClient();
+export const api = new ApiClient();
 export default api;
-
-// Export de la classe pour les tests
-export { ApiClient };

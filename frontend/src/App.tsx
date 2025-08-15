@@ -24,26 +24,31 @@ import ResultsPage from './pages/ResultsPage';
 // Import des composants d'authentification
 import { AuthPage } from './auth/components/AuthPage';
 
-// Pages lÃ©gales
+// Pages lÃƒÆ’Ã‚Â©gales
 import AboutPage from './pages/AboutPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import MultiScanPage from './pages/MultiScanPage';
 import FavoritesPage from './pages/FavoritesPage';
+import ManualAnalysisPage from './pages/ManualAnalysisPage';
+import CosmeticAnalysisPage from './pages/CosmeticAnalysisPage';
+import DetergentAnalysisPage from './pages/DetergentAnalysisPage';
+import AnalysisDevPage from './pages/AnalysisDevPage';
 import TestConnection from './pages/TestConnection';
 import TestPage from './pages/TestPage';
+import TestSearchPage from './pages/TestSearchPage';
 
 // Composant de chargement
 const PageLoader = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-6xl mb-4 animate-pulse">Ã°Å¸Å’Â±</div>
+      <div className="text-6xl mb-4 animate-pulse">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â±</div>
       <p className="text-gray-600">Chargement...</p>
     </div>
   </div>
 );
 
-// Composant pour les routes protÃ©gÃ©es
+// Composant pour les routes protÃƒÆ’Ã‚Â©gÃƒÆ’Ã‚Â©es
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -62,7 +67,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation avec Navbar avancÃ© */}
+      {/* Navigation avec Navbar avancÃƒÆ’Ã‚Â© */}
       <Navbar />
 
       {/* Contenu principal */}
@@ -75,11 +80,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center">
             <div className="text-gray-600 text-sm">
-              Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
+              Ãƒâ€šÃ‚Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
             </div>
             <div className="flex space-x-4 text-sm">
-              <Link to="/about" className="text-gray-600 hover:text-green-600">Ã€ propos</Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃ©</Link>
+              <Link to="/about" className="text-gray-600 hover:text-green-600">ÃƒÆ’Ã¢â€šÂ¬ propos</Link>
+              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃƒÆ’Ã‚Â©</Link>
               <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
             </div>
           </div>
@@ -93,17 +98,17 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const NotFoundPage = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-8xl mb-4">Ã°Å¸Â¤â€</div>
+      <div className="text-8xl mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¤ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â</div>
       <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
       <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
       <Link to="/" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
-        Retour ÃƒÂ  l'accueil
+        Retour ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'accueil
       </Link>
     </div>
   </div>
 );
 
-// Composant AppContent (avec Layout ÃƒÂ  l'intÃ©rieur du Provider)
+// Composant AppContent (avec Layout ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'intÃƒÆ’Ã‚Â©rieur du Provider)
 const AppContent = () => {
   return (
     <Layout>
@@ -124,7 +129,7 @@ const AppContent = () => {
 
           <Route path="/test-connection" element={<TestConnection />} />
 
-          {/* PAGES PROTÃ‰GÃ‰ES */}
+          {/* PAGES PROTÃƒÆ’Ã¢â‚¬Â°GÃƒÆ’Ã¢â‚¬Â°ES */}
           <Route path="/scan" element={
             <ProtectedRoute>
               <ScanPage />
@@ -177,6 +182,7 @@ const AppContent = () => {
             </ProtectedRoute>
           } />
           <Route path="/test" element={<TestPage />} />
+            <Route path="/test-search" element={<TestSearchPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -202,6 +208,8 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
 
 
 
