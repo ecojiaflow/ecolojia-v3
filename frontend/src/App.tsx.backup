@@ -24,24 +24,27 @@ import ResultsPage from './pages/ResultsPage';
 // Import des composants d'authentification
 import { AuthPage } from './auth/components/AuthPage';
 
-// Pages légales
+// Pages lÃƒÂ©gales
 import AboutPage from './pages/AboutPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
-import MultiProductScanPage from './pages/MultiProductScanPage';
+import MultiScanPage from './pages/MultiScanPage';
 import FavoritesPage from './pages/FavoritesPage';
+import TestConnection from './pages/TestConnection';
+import TestPage from './pages/TestPage';
+import TestSearchPage from './pages/TestSearchPage';
 
 // Composant de chargement
 const PageLoader = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-6xl mb-4 animate-pulse">ðŸŒ±</div>
+      <div className="text-6xl mb-4 animate-pulse">ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±</div>
       <p className="text-gray-600">Chargement...</p>
     </div>
   </div>
 );
 
-// Composant pour les routes protégées
+// Composant pour les routes protÃƒÂ©gÃƒÂ©es
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -60,7 +63,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation avec Navbar avancé */}
+      {/* Navigation avec Navbar avancÃƒÂ© */}
       <Navbar />
 
       {/* Contenu principal */}
@@ -73,11 +76,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center">
             <div className="text-gray-600 text-sm">
-              Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
+              Ã‚Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
             </div>
             <div className="flex space-x-4 text-sm">
-              <Link to="/about" className="text-gray-600 hover:text-green-600">Ã€ propos</Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-green-600">Confidentialité</Link>
+              <Link to="/about" className="text-gray-600 hover:text-green-600">Ãƒâ‚¬ propos</Link>
+              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃƒÂ©</Link>
               <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
             </div>
           </div>
@@ -91,17 +94,17 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const NotFoundPage = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-8xl mb-4">ðŸ¤”</div>
+      <div className="text-8xl mb-4">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã¢â‚¬Â</div>
       <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
       <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
       <Link to="/" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
-        Retour Ã  l'accueil
+        Retour ÃƒÆ’Ã‚Â  l'accueil
       </Link>
     </div>
   </div>
 );
 
-// Composant AppContent (avec Layout Ã  l'intérieur du Provider)
+// Composant AppContent (avec Layout ÃƒÆ’Ã‚Â  l'intÃƒÂ©rieur du Provider)
 const AppContent = () => {
   return (
     <Layout>
@@ -120,7 +123,9 @@ const AppContent = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* PAGES PROTÃ‰GÃ‰ES */}
+          <Route path="/test-connection" element={<TestConnection />} />
+
+          {/* PAGES PROTÃƒâ€°GÃƒâ€°ES */}
           <Route path="/scan" element={
             <ProtectedRoute>
               <ScanPage />
@@ -164,7 +169,7 @@ const AppContent = () => {
 
           {/* 404 */}          <Route path="/multi-scan" element={
             <ProtectedRoute>
-              <MultiProductScanPage />
+              <MultiScanPage />
             </ProtectedRoute>
           } />
           <Route path="/favorites" element={
@@ -172,6 +177,8 @@ const AppContent = () => {
               <FavoritesPage />
             </ProtectedRoute>
           } />
+          <Route path="/test" element={<TestPage />} />
+            <Route path="/test-search" element={<TestSearchPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -197,6 +204,13 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+
+
+
+
+
 
 
 
