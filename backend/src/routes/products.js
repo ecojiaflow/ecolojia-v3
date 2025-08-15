@@ -3,13 +3,13 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Middleware debug â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Middleware debug ─────────── */
 router.use((req, _res, next) => {
   console.log(`[Products Router] ${req.method} ${req.originalUrl} - Path: ${req.path}`);
   next();
 });
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Auth middlewares (fallbacks inclus) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Auth middlewares (fallbacks inclus) ───────────── */
 let authenticateUser, checkPremium;
 try {
   const auth = require('../middleware/auth');
@@ -28,7 +28,7 @@ try {
   checkPremium = (_req, _res, next) => { next(); };
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Models (fallback mocks) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Models (fallback mocks) ─────────── */
 let Product, Analysis;
 try { 
   Product = require('../models/Product'); 
@@ -44,23 +44,23 @@ try {
   Analysis = mockModel(); 
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Nova classifier (sÃ©curisÃ©) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Nova classifier (sécurisé) ─────────── */
 let novaClassifier;
 try {
   novaClassifier = require('../services/analysis/novaClassifier');
 } catch {
-  console.log('[Products] novaClassifier not found â€“ defaulting to stub');
+  console.log('[Products] novaClassifier not found — defaulting to stub');
   novaClassifier = { classify: () => ({ group: null }) };
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Logger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Logger ─────────── */
 const logger = {
   info: (...a) => console.log('[Products]', ...a),
   warn: (...a) => console.warn('[Products WARN]', ...a),
   error: (...a) => console.error('[Products ERROR]', ...a)
 };
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Mocks pour dev offline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Mocks pour dev offline ─────────── */
 const mockProducts = {
   '3017620422003': { 
     _id: '1', 
@@ -69,7 +69,7 @@ const mockProducts = {
     brand: 'Ferrero', 
     category: 'food',
     imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
-    ingredients: 'Sucre, huile de palme, noisettes 13%, cacao maigre 7,4%, lait Ã©crÃ©mÃ© en poudre 6,6%, lactoserum en poudre, Ã©mulsifiants: lÃ©cithines (soja), vanilline.',
+    ingredients: 'Sucre, huile de palme, noisettes 13%, cacao maigre 7,4%, lait écrémé en poudre 6,6%, lactoserum en poudre, émulsifiants: lécithines (soja), vanilline.',
     nova: 4, 
     additives: ['E322'],
     analysisData: { healthScore: 25, environmentScore: 30, socialScore: 40 } 
@@ -86,7 +86,7 @@ const mockProducts = {
   }
 };
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Helper async â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ──────────── Helper async ─────────── */
 const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(err => {
   logger.error('Async error:', err); 
   res.status(500).json({ success: false, error: err.message });
@@ -94,13 +94,47 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 
 /* ========== ROUTES ========== */
 
-/* Route par dÃ©faut */
-router.get('/', (_req, res) => {
-  res.json({
-    success: true,
-    products: Object.values(mockProducts)
-  });
-});
+/* Route par défaut - CORRIGÉE POUR RETOURNER LES VRAIS PRODUITS */
+router.get('/', handleAsync(async (req, res) => {
+  try {
+    const { page = 1, limit = 100, category } = req.query;
+    const query = category ? { category } : {};
+    
+    // Vérifier si MongoDB est connecté
+    if (mongoose.connection.readyState === 1) {
+      const products = await Product.find(query)
+        .limit(parseInt(limit))
+        .skip((parseInt(page) - 1) * parseInt(limit))
+        .lean();
+      
+      const total = await Product.countDocuments(query);
+      
+      logger.info(`Found ${products.length} products from MongoDB (total: ${total})`);
+      
+      return res.json({
+        success: true,
+        products,
+        total,
+        page: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit))
+      });
+    } else {
+      // Fallback sur les mocks si MongoDB n'est pas connecté
+      logger.warn('MongoDB not connected, using mock data');
+      return res.json({
+        success: true,
+        products: Object.values(mockProducts),
+        total: 2,
+        page: 1,
+        totalPages: 1,
+        warning: 'Using mock data - MongoDB not connected'
+      });
+    }
+  } catch (error) {
+    logger.error('Error fetching products:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+}));
 
 /* Test simple */
 router.get('/test', (_req, res) => {
@@ -129,10 +163,10 @@ router.get('/search', handleAsync(async (req, res) => {
   logger.info('Search request:', { query: q, category, page, limit });
 
   if (!q || q.trim().length < 2) {
-    return res.status(400).json({ success: false, error: 'La requÃªte doit contenir au moins 2 caractÃ¨res' });
+    return res.status(400).json({ success: false, error: 'La requête doit contenir au moins 2 caractères' });
   }
 
-  // D'abord essayer la vraie base de donnÃ©es
+  // D'abord essayer la vraie base de données
   if (mongoose.connection.readyState === 1) {
     try {
       const searchQuery = {
@@ -147,7 +181,8 @@ router.get('/search', handleAsync(async (req, res) => {
       
       const products = await Product.find(searchQuery)
         .limit(parseInt(limit))
-        .skip((parseInt(page) - 1) * parseInt(limit));
+        .skip((parseInt(page) - 1) * parseInt(limit))
+        .lean();
       
       const total = await Product.countDocuments(searchQuery);
       
@@ -167,7 +202,7 @@ router.get('/search', handleAsync(async (req, res) => {
     }
   }
 
-  // Fallback sur les donnÃ©es mockÃ©es
+  // Fallback sur les données mockées
   const searchTerm = q.toLowerCase();
   const filteredProducts = Object.values(mockProducts).filter(product =>
     product.name.toLowerCase().includes(searchTerm) ||
@@ -193,7 +228,7 @@ router.get('/trending', handleAsync(async (req, res) => {
   const { limit = 10 } = req.query;
   logger.info('Getting trending products', { limit });
 
-  // Essayer la vraie base de donnÃ©es
+  // Essayer la vraie base de données
   if (mongoose.connection.readyState === 1) {
     try {
       const products = await Product.find({})
@@ -222,7 +257,7 @@ router.get('/barcode/:barcode', handleAsync(async (req, res) => {
   const { barcode } = req.params;
   logger.info('Barcode lookup:', barcode);
 
-  // Essayer la vraie base de donnÃ©es
+  // Essayer la vraie base de données
   if (mongoose.connection.readyState === 1) {
     try {
       const product = await Product.findOne({ barcode });
@@ -247,7 +282,7 @@ router.get('/barcode/:barcode', handleAsync(async (req, res) => {
     });
   }
 
-  res.status(404).json({ success: false, error: 'Produit non trouvÃ©', barcode });
+  res.status(404).json({ success: false, error: 'Produit non trouvé', barcode });
 }));
 
 /* Analyse produit */
@@ -256,11 +291,11 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   const { productId, barcode, manualData, category = 'food' } = req.body;
   logger.info('Analysis request:', { userId, productId, barcode, category });
 
-  // VÃ©rifier les quotas
+  // Vérifier les quotas
   if (req.user && req.user.quotas && req.user.quotas.scansRemaining <= 0) {
     return res.status(403).json({ 
       success: false, 
-      error: 'Quota de scans dÃ©passÃ©', 
+      error: 'Quota de scans dépassé', 
       quotas: req.user.quotas 
     });
   }
@@ -284,11 +319,11 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     };
   }
 
-  /* ---------- 2. Calculs â€“ NOVA, Nutri-Score, Eco-Score ---------- */
+  /* ---------- 2. Calculs — NOVA, Nutri-Score, Eco-Score ---------- */
   const ingredientsText = product.ingredients || '';
   let novaGroup = product.nova_group || product.foodData?.nova || product.nova || null;
   
-  // Calcul automatique du NOVA si absent et ingrÃ©dients disponibles
+  // Calcul automatique du NOVA si absent et ingrédients disponibles
   if (!novaGroup && ingredientsText.length > 3) {
     try { 
       novaGroup = novaClassifier.classify(ingredientsText, product.name).group; 
@@ -300,7 +335,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   const nutriScore = product.nutriscore_grade || product.foodData?.nutriscore || null;
   const ecoScore = product.ecoscore_grade || product.foodData?.ecoscore || null;
 
-  /* ---------- 3. Construction rÃ©sultat ---------- */
+  /* ---------- 3. Construction résultat ---------- */
   const analysisResult = {
     scores: {
       nova: novaGroup,
@@ -313,18 +348,18 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
       allergens: product.allergens_tags || [],
       nutritionFacts: product.nutritionFacts || {},
       ingredients: ingredientsText,
-      // Ajout des valeurs numÃ©riques pour dÃ©tergents
+      // Ajout des valeurs numériques pour détergents
       biodegradability: product.detergentData?.biodegradability || null,
       cdv: product.detergentData?.cdv || null
     },
     summary: { 
       fr: generateSummary(novaGroup, nutriScore), 
-      en: 'Summary in Englishâ€¦' 
+      en: 'Summary in English…' 
     },
     recommendations: generateRecommendations(novaGroup, nutriScore)
   };
 
-  /* ---------- 4. Sauvegarde Ã©ventuelle ---------- */
+  /* ---------- 4. Sauvegarde éventuelle ---------- */
   if (Analysis && mongoose.connection.readyState === 1) {
     try { 
       await Analysis.create({ 
@@ -338,7 +373,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     }
   }
 
-  /* ---------- 5. RÃ©ponse ---------- */
+  /* ---------- 5. Réponse ---------- */
   res.json({ 
     success: true,
     data: { 
@@ -364,7 +399,7 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const alternatives = [
     { 
       id: '3', 
-      name: 'PÃ¢te Ã  tartiner bio sans huile de palme', 
+      name: 'Pâte à tartiner bio sans huile de palme', 
       brand: 'Bio Nature', 
       healthScore: 65, 
       environmentScore: 80, 
@@ -372,15 +407,15 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     },
     { 
       id: '4', 
-      name: 'PurÃ©e d\'amandes complÃ¨tes', 
-      brand: 'Jean HervÃ©', 
+      name: 'Purée d\'amandes complètes', 
+      brand: 'Jean Hervé', 
       healthScore: 85, 
       environmentScore: 90, 
       improvement: '+60%' 
     },
     { 
       id: '5', 
-      name: 'PÃ¢te Ã  tartiner noisettes bio', 
+      name: 'Pâte à tartiner noisettes bio', 
       brand: 'Mamie Bio', 
       healthScore: 70, 
       environmentScore: 75, 
@@ -410,7 +445,7 @@ router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
 
   res.json({ 
     success: true, 
-    message: 'Signalement enregistrÃ© avec succÃ¨s', 
+    message: 'Signalement enregistré avec succès', 
     reportId: new Date().getTime().toString() 
   });
 }));
@@ -420,7 +455,7 @@ router.get('/:id', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get product by ID:', id);
 
-  // Essayer la vraie base de donnÃ©es d'abord
+  // Essayer la vraie base de données d'abord
   if (mongoose.connection.readyState === 1) {
     try {
       let product = null;
@@ -457,10 +492,10 @@ router.get('/:id', handleAsync(async (req, res) => {
     });
   }
 
-  res.status(404).json({ success: false, error: 'Produit non trouvÃ©', id });
+  res.status(404).json({ success: false, error: 'Produit non trouvé', id });
 }));
 
-/* CrÃ©er un produit manuellement */
+/* Créer un produit manuellement */
 router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
   const { name, brand, category, barcode, specificData } = req.body;
   logger.info('Create product manually:', { name, brand, category });
@@ -468,14 +503,14 @@ router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) =>
   if (!name || !category) {
     return res.status(400).json({ 
       success: false, 
-      error: 'Le nom et la catÃ©gorie sont requis' 
+      error: 'Le nom et la catégorie sont requis' 
     });
   }
 
   if (!['food', 'cosmetics', 'detergents'].includes(category)) {
     return res.status(400).json({ 
       success: false, 
-      error: 'CatÃ©gorie invalide. Doit Ãªtre: food, cosmetics, ou detergents' 
+      error: 'Catégorie invalide. Doit être: food, cosmetics, ou detergents' 
     });
   }
 
@@ -498,10 +533,10 @@ router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) =>
 /* ========== HELPERS ========== */
 function calculateHealthScore(prod, nova, nutri) {
   let score = 50;
-  if (nova) score += (5 - nova) * 6; // NOVA 1 â†’ +24, NOVA 4 â†’ +6
+  if (nova) score += (5 - nova) * 6; // NOVA 1 → +24, NOVA 4 → +6
   if (nutri) score += ({ a: 30, b: 22, c: 15, d: 7, e: 0 }[nutri.toLowerCase()] || 0);
   
-  // PÃ©nalitÃ©s basÃ©es sur les donnÃ©es nutritionnelles si disponibles
+  // Pénalités basées sur les données nutritionnelles si disponibles
   if (prod.nutritionFacts) {
     if (prod.nutritionFacts.sugars_100g > 20) score -= 5;
     if (prod.nutritionFacts.saturated_fat_100g > 5) score -= 5;
@@ -513,23 +548,23 @@ function calculateHealthScore(prod, nova, nutri) {
 
 function generateSummary(nova, nutri) {
   const arr = [];
-  if (nova === 4) arr.push('âš ï¸ Produit ultra-transformÃ©.');
+  if (nova === 4) arr.push('⚠️ Produit ultra-transformé.');
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
-    arr.push('âš ï¸ Mauvais Nutri-Score.');
+    arr.push('⚠️ Mauvais Nutri-Score.');
   }
-  return arr.join(' ') || 'Analyse complÃ¨te du produit.';
+  return arr.join(' ') || 'Analyse complète du produit.';
 }
 
 function generateRecommendations(nova, nutri) {
   const rec = { 
-    healthImpact: 'Ã€ consommer avec modÃ©ration', 
+    healthImpact: 'À consommer avec modération', 
     alternatives: [], 
     advice: [] 
   };
   
   if (nova === 4) { 
-    rec.healthImpact = 'Ã€ limiter â€“ ultra-transformÃ©'; 
-    rec.advice.push('PrivilÃ©giez des alternatives moins transformÃ©es'); 
+    rec.healthImpact = 'À limiter — ultra-transformé'; 
+    rec.advice.push('Privilégiez des alternatives moins transformées'); 
   }
   
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
@@ -549,70 +584,6 @@ function mockModel() {
   }; 
 }
 
-console.log('[Products] Router crÃ©Ã© avec', router.stack.filter(l => l.route).length, 'routes');
-
-// GET /api/products/search - Recherche de produits
-router.get('/search', async (req, res) => {
-  try {
-    const { q = '', page = 1, limit = 20, category } = req.query;
-    const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 20;
-    const skip = (pageNum - 1) * limitNum;
-
-    let query = {};
-    let products = [];
-    let total = 0;
-
-    if (q && q.trim()) {
-      // Recherche par texte
-      query = { $text: { $search: q } };
-      if (category) query.category = category;
-      
-      products = await Product.find(query)
-        .select('name brand barcode category imageUrl ingredients nova_group nutriscore_grade')
-        .skip(skip)
-        .limit(limitNum)
-        .lean();
-      
-      total = await Product.countDocuments(query);
-    } else {
-      // Sans recherche, retourner les derniers produits
-      if (category) query.category = category;
-      products = await Product.find(query)
-        .sort({ createdAt: -1 })
-        .select('name brand barcode category imageUrl ingredients nova_group nutriscore_grade')
-        .skip(skip)
-        .limit(limitNum)
-        .lean();
-      
-      total = await Product.countDocuments(query);
-    }
-
-    res.json({
-      success: true,
-      data: {
-        products,
-        pagination: {
-          total,
-          page: pageNum,
-          pages: Math.ceil(total / limitNum),
-          limit: limitNum,
-          hasNext: pageNum < Math.ceil(total / limitNum),
-          hasPrev: pageNum > 1
-        }
-      }
-    });
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la recherche',
-      message: error.message
-    });
-  }
-});
-
+console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
-
-

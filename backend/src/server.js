@@ -309,3 +309,10 @@ server.timeout = 30000; // 30 secondes
 
 module.exports = app;
 
+
+// Route test pour voir tous les produits
+app.get('/api/test-products', async (req, res) => {
+  const Product = require('./models/Product');
+  const products = await Product.find().limit(100);
+  res.json({ count: products.length, products });
+});
