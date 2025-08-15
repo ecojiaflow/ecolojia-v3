@@ -1,0 +1,5 @@
+﻿# Rediriger toutes les routes vers index.html pour le routing SPA
+/*    /index.html   200
+
+# Proxy des appels API vers le backend
+/api/*  https://ecolojia-backendvf.onrender.com/api/:splat  200
