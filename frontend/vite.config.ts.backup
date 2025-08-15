@@ -32,16 +32,6 @@ export default defineConfig({
       }
     })
   ],
-  base: '/',  // IMPORTANT: Base URL pour Netlify
-  build: {
-    outDir: 'dist',
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined  // Évite les problèmes de chunking sur Netlify
-      }
-    }
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
