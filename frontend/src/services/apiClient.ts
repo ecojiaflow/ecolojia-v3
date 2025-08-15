@@ -1,13 +1,8 @@
 // PATH: frontend/src/services/apiClient.ts
-/* Client HTTP centralisé, compatible Vite/Netlify proxy:
-   - base '' -> /api/* en dev/prod
-   - JSON & FormData
-   - normalise les erreurs en { success:false, error, statusCode } 
-*/
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-const API_BASE =
-  (import.meta as any)?.env?.VITE_API_URL?.replace(/\/+$/, '') || '';
+// URL directe vers Render - pas de variable d'environnement
+const API_BASE = 'https://ecolojia-backendvf.onrender.com/api';
 
 function buildUrl(path: string): string {
   if (path.startsWith('http')) return path;
@@ -42,7 +37,7 @@ async function request<T = any>(
 
   let body: BodyInit | undefined;
   if (options.body instanceof FormData) {
-    body = options.body; // ne pas fixer Content-Type
+    body = options.body;
   } else if (options.body !== undefined) {
     headers['Content-Type'] = headers['Content-Type'] || 'application/json';
     body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
@@ -54,18 +49,15 @@ async function request<T = any>(
     const contentType = res.headers.get('content-type') || '';
     const isJson = contentType.includes('application/json');
 
-    // Succès HTTP
     if (res.ok) {
       if (!isJson) return { success: true, data: {} as T, statusCode: res.status };
       const json = await res.json();
-      // Si backend renvoie déjà { success, data }, on respecte
       if (json && typeof json === 'object' && ('success' in json || 'data' in json)) {
         return { success: json.success !== false, data: json.data ?? json, statusCode: res.status };
       }
       return { success: true, data: json as T, statusCode: res.status };
     }
 
-    // Erreur HTTP
     let message = `HTTP ${res.status}`;
     if (isJson) {
       const j = await res.json().catch(() => null);
