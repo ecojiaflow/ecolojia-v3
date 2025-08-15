@@ -1,4 +1,4 @@
-import mockService from '../services/mockService';
+// PATH: frontend/src/pages/HomePage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analysés', color: 'text-green-600' },
     { icon: Shield, value: '100%', label: 'Scientifique', color: 'text-blue-600' },
-    { icon: Clock, value: '<2s', label: 'Temps d\'analyse', color: 'text-purple-600' },
+    { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-purple-600' },
     { icon: Users, value: '500k+', label: 'Utilisateurs actifs', color: 'text-orange-600' }
   ];
 
@@ -83,20 +83,20 @@ const HomePage: React.FC = () => {
     {
       name: 'Marie L.',
       role: 'Maman de 3 enfants',
-      content: 'ECOLOJIA m\'aide à choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.',
+      content: "ECOLOJIA m'aide à choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
       rating: 5
     },
     {
       name: 'Thomas B.',
       role: 'Sportif amateur',
-      content: 'Je scanne tous mes produits avant achat. L\'app m\'a fait découvrir des alternatives plus saines.',
+      content: "Je scanne tous mes produits avant achat. L'app m'a fait découvrir des alternatives plus saines.",
       rating: 5
     }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-blue-50 opacity-70" />
         
@@ -106,14 +106,12 @@ const HomePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-4xl mx-auto"
           >
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-6">
               <Sparkles className="w-4 h-4" />
               <span className="text-sm font-medium">IA Scientifique Multi-Catégories</span>
               <span className="text-xs bg-green-800 text-white px-2 py-0.5 rounded-full">Nouveau</span>
             </div>
 
-            {/* Title */}
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               L'assistant IA pour une{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
@@ -121,18 +119,14 @@ const HomePage: React.FC = () => {
               </span>
             </h1>
 
-            {/* Subtitle */}
             <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
               Analysez instantanément vos produits alimentaires, cosmétiques et détergents
               grâce à notre IA basée sur INSERM, ANSES et EFSA
             </p>
 
-            {/* Search Bar */}
+            {/* Barre de recherche */}
             <form onSubmit={handleSearch} className="relative max-w-3xl mx-auto mb-8">
-              <div className={`
-                relative flex items-center bg-white rounded-2xl shadow-xl
-                transition-all duration-300 ${isSearchFocused ? 'ring-4 ring-green-100' : ''}
-              `}>
+              <div className={`relative flex items-center bg-white rounded-2xl shadow-xl transition-all duration-300 ${isSearchFocused ? 'ring-4 ring-green-100' : ''}`}>
                 <Search className="absolute left-6 w-5 h-5 text-gray-400" />
                 
                 <input
@@ -156,7 +150,7 @@ const HomePage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Quick suggestions */}
+              {/* Suggestions */}
               <div className="flex flex-wrap gap-2 justify-center mt-4">
                 {['🍫 Nutella bio', '🧴 Shampoing sans sulfate', '🧽 Lessive écologique', '🦷 Dentifrice naturel'].map((suggestion) => (
                   <button
@@ -172,7 +166,7 @@ const HomePage: React.FC = () => {
               </div>
             </form>
 
-            {/* CTA Buttons */}
+            {/* CTA */}
             <div className="flex flex-wrap gap-4 justify-center">
               <button
                 onClick={() => navigate('/scan')}
@@ -195,7 +189,7 @@ const HomePage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Floating badges */}
+          {/* Badges flottants */}
           <div className="absolute top-20 left-10 bg-white p-3 rounded-lg shadow-lg animate-bounce">
             <div className="flex items-center gap-2">
               <Award className="w-5 h-5 text-yellow-500" />
@@ -212,7 +206,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -235,16 +229,12 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Catégories */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Explorez par catégorie
-            </h2>
-            <p className="text-lg text-gray-600">
-              Analyse complète pour tous vos produits du quotidien
-            </p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par catégorie</h2>
+            <p className="text-lg text-gray-600">Analyse complète pour tous vos produits du quotidien</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -257,29 +247,23 @@ const HomePage: React.FC = () => {
                 onClick={() => navigate(`/search?category=${category.name}`)}
                 className="group cursor-pointer"
               >
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl 
-                             transition-all hover:-translate-y-1">
-                  <div className={`
-                    w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} 
-                    flex items-center justify-center mb-4 group-hover:scale-110 transition-transform
-                  `}>
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <span className="text-3xl">{category.icon}</span>
                   </div>
-                  
+
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
                   <p className="text-sm text-gray-500 mb-4">{category.count}</p>
-                  
+
                   <div className="space-y-1">
                     <p className="text-xs text-gray-400">Populaires :</p>
                     <div className="flex flex-wrap gap-1">
                       {category.popular.map((item) => (
-                        <span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          {item}
-                        </span>
+                        <span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">{item}</span>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mt-4 flex items-center text-green-600 font-medium">
                     Explorer
                     <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-2 transition-transform" />
@@ -291,16 +275,12 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Pourquoi */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Pourquoi choisir ECOLOJIA ?
-            </h2>
-            <p className="text-lg text-gray-600">
-              La technologie au service de votre santé
-            </p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
+            <p className="text-lg text-gray-600">La technologie au service de votre santé</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -315,17 +295,11 @@ const HomePage: React.FC = () => {
                 <div className={`inline-flex p-4 rounded-xl ${feature.color} mb-6`}>
                   <feature.icon className="w-6 h-6" />
                 </div>
-                
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-gray-600 mb-4">
-                  {feature.description}
-                </p>
-                
-                <button className="text-green-600 font-medium inline-flex items-center 
-                                 hover:text-green-700 transition-colors">
+
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 mb-4">{feature.description}</p>
+
+                <button className="text-green-600 font-medium inline-flex items-center hover:text-green-700 transition-colors">
                   En savoir plus
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </button>
@@ -335,13 +309,11 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Témoignages */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Ils nous font confiance
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -358,9 +330,9 @@ const HomePage: React.FC = () => {
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                
+
                 <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
-                
+
                 <div>
                   <p className="font-semibold text-gray-900">{testimonial.name}</p>
                   <p className="text-sm text-gray-500">{testimonial.role}</p>
@@ -371,17 +343,14 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA final */}
       <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Prêt à transformer votre consommation ?
-          </h2>
-          
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Prêt à transformer votre consommation ?</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Rejoignez 500 000+ utilisateurs qui font des choix éclairés chaque jour
           </p>
-          
+
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => navigate('/auth')}
@@ -391,7 +360,7 @@ const HomePage: React.FC = () => {
               <CheckCircle className="w-5 h-5" />
               Commencer gratuitement
             </button>
-            
+
             <button
               onClick={() => navigate('/pricing')}
               className="bg-green-700 text-white px-8 py-4 rounded-xl font-medium 
@@ -408,4 +377,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
