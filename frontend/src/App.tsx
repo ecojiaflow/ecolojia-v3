@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/context/AuthContext';
