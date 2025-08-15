@@ -1,144 +1,77 @@
-// PATH: src/services/searchService.ts
-import api from './apiClient';
+// PATH: frontend/src/services/searchService.ts
+import api, { ApiResponse } from './apiClient';
 
-// Types pour la réponse de recherche
-export interface Product {
-  _id: string;
-  name: string;
-  brand: string;
-  category: string;
-  barcode: string;
-  imageUrl: string;
-  ingredients?: {
-    text: string;
-  };
-  nova_group?: number | null;
-  nutriscore_grade?: string | null;
-  analysisData?: {
-    healthScore: number;
-    environmentScore: number;
-    socialScore: number;
-  };
-  scanCount?: number;
-  viewCount?: number;
-  createdAt?: string;
-  updatedAt?: string;
+export interface SearchFilters {
+  categories?: string[];
+  nutriScore?: string[];
+  labels?: string[];
 }
 
-// Types pour gérer les deux formats de réponse possibles
-export type SearchResponse = 
-  | {
-      success: true;
-      data: {
-        products: Product[];
-        pagination?: {
-          total: number;
-          page: number;
-          pages: number;
-          limit: number;
-          hasNext: boolean;
-          hasPrev: boolean;
-        };
-      };
-    }
-  | {
-      success: true;
-      products: Product[];
-    };
-
-/**
- * Recherche de produits via l'API
- * Utilise /api/algolia/search en priorité (avec pagination)
- * Fallback sur /api/products/search si nécessaire
- * @param query - Terme de recherche
- * @returns Promise avec les résultats de recherche
- */
-export async function searchProducts(query: string): Promise<SearchResponse> {
-  const q = encodeURIComponent((query || '').trim());
-  
-  try {
-    // Route principale avec pagination et structure complète
-    const response = await api.get<SearchResponse>(`/api/algolia/search?q=${q}`);
-    return response;
-  } catch (error: any) {
-    // Si la route Algolia échoue, essayer la route products
-    if (error?.message?.includes('404') || error?.message?.includes('Network')) {
-      try {
-        const fallbackResponse = await api.get<SearchResponse>(`/api/products/search?q=${q}`);
-        return fallbackResponse;
-      } catch (fallbackError) {
-        console.error('Erreur sur les deux routes de recherche:', fallbackError);
-      }
-    }
-    
-    console.error('Erreur lors de la recherche:', error);
-    
-    // Retourner une réponse vide en cas d'erreur
-    return {
-      success: true,
-      products: []
-    };
-  }
+export interface RawSearchPayload {
+  // tolérant: différentes formes possibles
+  data?: { products?: any[]; hits?: any[]; items?: any[]; total?: number; timeMS?: number };
+  products?: any[];
+  hits?: any[];
+  items?: any[];
+  total?: number;
+  nbHits?: number;
+  timeMS?: number;
 }
 
-/**
- * Extrait les produits de la réponse de recherche
- * Gère les deux formats de réponse possibles
- * @param payload - Réponse de l'API
- * @returns Tableau de produits
- */
-export function extractProducts(payload: SearchResponse | null | undefined): Product[] {
-  if (!payload || !payload.success) {
-    return [];
-  }
-  
-  // Format 1: { data: { products: [] } }
-  if ('data' in payload && payload.data?.products) {
-    return Array.isArray(payload.data.products) ? payload.data.products : [];
-  }
-  
-  // Format 2: { products: [] }
-  if ('products' in payload) {
-    return Array.isArray(payload.products) ? payload.products : [];
-  }
-  
-  return [];
+export interface NormalizedSearch {
+  results: any[];
+  total: number;
+  timeMS: number;
 }
 
-/**
- * Recherche de produits avec gestion de la pagination
- * @param query - Terme de recherche
- * @param page - Numéro de page (0-indexé)
- * @param limit - Nombre d'éléments par page
- */
-export async function searchProductsPaginated(
-  query: string, 
-  page: number = 0, 
-  limit: number = 20
-): Promise<SearchResponse> {
-  const q = encodeURIComponent((query || '').trim());
-  
-  try {
-    const response = await api.get<SearchResponse>(
-      `/api/algolia/search?q=${q}&page=${page}&limit=${limit}`
-    );
-    return response;
-  } catch (error: any) {
-    console.error('Erreur lors de la recherche paginée:', error);
-    return {
-      success: false,
-      data: {
-        products: []
-      }
-    };
-  }
+function extract(payload: RawSearchPayload): NormalizedSearch {
+  const d: any = payload || {};
+  const nested = d.data || {};
+  const results =
+    nested.products || nested.hits || nested.items ||
+    d.products || d.hits || d.items || [];
+  const total = d.total || nested.total || d.nbHits || results.length || 0;
+  const timeMS = d.timeMS || nested.timeMS || 0;
+  return { results, total, timeMS };
 }
 
-// Export du service
-export const searchService = { 
-  searchProducts, 
-  searchProductsPaginated,
-  extractProducts 
-};
+function toQuery(params: Record<string, string | string[] | undefined>) {
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v === undefined) continue;
+    if (Array.isArray(v)) v.forEach((x) => q.append(k, x));
+    else q.set(k, v);
+  }
+  return q.toString();
+}
 
-export default searchService;
+// 1) Essaye Algolia: /api/algolia/search?q=...
+// 2) Sinon fallback Products: /api/products/search?q=...
+export async function universalSearch(query: string, filters: SearchFilters = {}): Promise<{
+  success: boolean;
+  data?: NormalizedSearch;
+  error?: string;
+}> {
+  const baseParams: Record<string, any> = { q: (query || '').trim() };
+  if (filters.categories?.length) baseParams.category = filters.categories;
+  if (filters.nutriScore?.length) baseParams.nutriScore = filters.nutriScore;
+  if (filters.labels?.length) baseParams.label = filters.labels;
+
+  // Try Algolia
+  const qs = toQuery(baseParams);
+  let res: ApiResponse<RawSearchPayload> = await api.get(`/api/algolia/search?${qs}`);
+
+  if (!res.success) {
+    // Fallback Products
+    res = await api.get(`/api/products/search?${qs}`);
+  }
+
+  if (!res.success) {
+    return { success: false, error: res.error || 'SEARCH_FAILED' };
+  }
+
+  const normalized = extract(res.data as RawSearchPayload);
+  return { success: true, data: normalized };
+}
+
+export default { universalSearch };

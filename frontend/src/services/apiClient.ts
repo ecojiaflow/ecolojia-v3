@@ -1,108 +1,102 @@
-// PATH: src/services/apiClient.ts
+// PATH: frontend/src/services/apiClient.ts
+/* Client HTTP centralisé, compatible Vite/Netlify proxy:
+   - base '' -> /api/* en dev/prod
+   - JSON & FormData
+   - normalise les erreurs en { success:false, error, statusCode } 
+*/
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-interface RequestOptions extends RequestInit {
-  params?: Record<string, string>;
+const API_BASE =
+  (import.meta as any)?.env?.VITE_API_URL?.replace(/\/+$/, '') || '';
+
+function buildUrl(path: string): string {
+  if (path.startsWith('http')) return path;
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${API_BASE}${p}`;
 }
 
-class ApiClient {
-  private baseURL: string;
+export interface ApiSuccess<T = any> {
+  success: true;
+  data: T;
+  statusCode?: number;
+}
 
-  constructor() {
-    // En DEV, on utilise le proxy Vite (/api -> backend)
-    // En PROD, Netlify redirige /api -> backend
-    this.baseURL = import.meta.env.DEV ? '' : '';
+export interface ApiError {
+  success: false;
+  error: string;
+  statusCode?: number;
+}
+
+export type ApiResponse<T = any> = ApiSuccess<T> | ApiError;
+
+async function request<T = any>(
+  path: string,
+  options: { method?: HttpMethod; headers?: Record<string, string>; body?: any } = {}
+): Promise<ApiResponse<T>> {
+  const url = buildUrl(path);
+
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    ...(options.headers || {}),
+  };
+
+  let body: BodyInit | undefined;
+  if (options.body instanceof FormData) {
+    body = options.body; // ne pas fixer Content-Type
+  } else if (options.body !== undefined) {
+    headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+    body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestOptions = {}
-  ): Promise<T> {
-    const { params, ...fetchOptions } = options;
+  try {
+    const res = await fetch(url, { method: options.method || 'GET', headers, body });
 
-    // Construction de l'URL avec query params
-    let url = `${this.baseURL}${endpoint}`;
-    if (params) {
-      const searchParams = new URLSearchParams(params);
-      url += `?${searchParams.toString()}`;
+    const contentType = res.headers.get('content-type') || '';
+    const isJson = contentType.includes('application/json');
+
+    // Succès HTTP
+    if (res.ok) {
+      if (!isJson) return { success: true, data: {} as T, statusCode: res.status };
+      const json = await res.json();
+      // Si backend renvoie déjà { success, data }, on respecte
+      if (json && typeof json === 'object' && ('success' in json || 'data' in json)) {
+        return { success: json.success !== false, data: json.data ?? json, statusCode: res.status };
+      }
+      return { success: true, data: json as T, statusCode: res.status };
     }
 
-    // Configuration par défaut
-    const config: RequestInit = {
-      ...fetchOptions,
-      headers: {
-        'Content-Type': 'application/json',
-        ...fetchOptions.headers,
-      },
+    // Erreur HTTP
+    let message = `HTTP ${res.status}`;
+    if (isJson) {
+      const j = await res.json().catch(() => null);
+      if (j?.error) message = String(j.error);
+      else if (j?.message) message = String(j.message);
+    } else {
+      const txt = await res.text().catch(() => '');
+      if (txt) message = txt;
+    }
+    return { success: false, error: message, statusCode: res.status };
+
+  } catch (e: any) {
+    return {
+      success: false,
+      error: e?.message || 'NETWORK_ERROR',
+      statusCode: 0,
     };
-
-    // Ajout du token JWT si présent
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
-    }
-
-    try {
-      console.log(`[API] ${config.method || 'GET'} ${url}`);
-      const response = await fetch(url, config);
-
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || `HTTP ${response.status}`);
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        return await response.json();
-      }
-
-      return {} as T;
-    } catch (error) {
-      console.error('[API] Error:', error);
-      throw error;
-    }
-  }
-
-  // Méthodes helper
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET', params });
-  }
-
-  async post<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
-    });
-  }
-
-  async put<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'PUT',
-      body: data ? JSON.stringify(data) : undefined,
-    });
-  }
-
-  async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
-  }
-
-  async postFormData<T>(endpoint: string, formData: FormData): Promise<T> {
-    const token = localStorage.getItem('token');
-    const headers: HeadersInit = {};
-    
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
-    return this.request<T>(endpoint, {
-      method: 'POST',
-      body: formData,
-      headers,
-    });
   }
 }
 
-export const api = new ApiClient();
+export const api = {
+  get: <T = any>(path: string, headers?: Record<string, string>) =>
+    request<T>(path, { method: 'GET', headers }),
+  post: <T = any>(path: string, body?: any, headers?: Record<string, string>) =>
+    request<T>(path, { method: 'POST', body, headers }),
+  put:  <T = any>(path: string, body?: any, headers?: Record<string, string>) =>
+    request<T>(path, { method: 'PUT', body, headers }),
+  patch:<T = any>(path: string, body?: any, headers?: Record<string, string>) =>
+    request<T>(path, { method: 'PATCH', body, headers }),
+  delete:<T = any>(path: string, headers?: Record<string, string>) =>
+    request<T>(path, { method: 'DELETE', headers }),
+};
+
 export default api;
