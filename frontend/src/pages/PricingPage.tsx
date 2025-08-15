@@ -8,8 +8,7 @@ import {
   ArrowRight, Info, HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import api from '../services/apiClient';
-import { API_CONFIG } from '../config/api.config';
+import { paymentService } from '../services/paymentService';
 
 interface Plan {
   id: 'free' | 'premium' | 'family';
@@ -17,7 +16,7 @@ interface Plan {
   description: string;
   price: number;
   priceLabel: string;
-  color: string;
+  color: 'gray' | 'green' | 'purple';
   icon: React.ReactNode;
   popular?: boolean;
   features: {
@@ -30,10 +29,10 @@ interface Plan {
 
 const PricingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isPremium } = useAuth();
+  const { user } = useAuth();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const [showFAQ, setShowFAQ] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const plans: Plan[] = [
     {
@@ -62,7 +61,7 @@ const PricingPage: React.FC = () => {
       name: 'Premium',
       description: 'Pour les consommateurs avertis',
       price: billingPeriod === 'monthly' ? 2.49 : 24.90,
-      priceLabel: billingPeriod === 'monthly' ? '2,49ââ€šÂ¬/mois' : '24,90ââ€šÂ¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '2,49 €/mois' : '24,90 €/an',
       color: 'green',
       icon: <Star className="w-6 h-6" />,
       popular: true,
@@ -77,14 +76,14 @@ const PricingPage: React.FC = () => {
         { name: 'Sans publicité', included: true },
         { name: 'Support prioritaire', included: true },
       ],
-      cta: 'Passer ÃƒÂ  Premium'
+      cta: 'Passer à Premium'
     },
     {
       id: 'family',
       name: 'Famille',
       description: 'Pour toute la famille',
       price: billingPeriod === 'monthly' ? 4.99 : 49.90,
-      priceLabel: billingPeriod === 'monthly' ? '4,99ââ€šÂ¬/mois' : '49,90ââ€šÂ¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '4,99 €/mois' : '49,90 €/an',
       color: 'purple',
       icon: <Users className="w-6 h-6" />,
       features: [
@@ -102,29 +101,15 @@ const PricingPage: React.FC = () => {
     }
   ];
 
-  const handleSelectPlan = async (planId: string) => {
-    if (planId === 'free') {
-      if (!user) {
-        navigate('/register');
-      }
-      return;
-    }
-
+  const handleSelectPlan = async (plan: 'premium' | 'family') => {
     try {
-      setLoadingPlan(planId);
-      
-      // Créer la session de paiement
-      const response = await api.post(API_CONFIG.ENDPOINTS.PAYMENT.CREATE_CHECKOUT, {
-        planId,
-        billingPeriod
-      });
-
-      // Rediriger vers LemonSqueezy
-      if (response.checkoutUrl) {
-        window.location.href = response.checkoutUrl;
-      }
-    } catch (error) {
-      console.error('Error creating checkout:', error);
+      setLoadingPlan(plan);
+      // Crée une session de paiement (via backend Render)
+      const { url } = await paymentService.createCheckout(plan);
+      if (url) window.location.href = url;
+    } catch (err) {
+      console.error('[checkout] error:', err);
+      alert("Impossible de créer la session de paiement. Réessaie plus tard.");
     } finally {
       setLoadingPlan(null);
     }
@@ -132,20 +117,20 @@ const PricingPage: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Puis-je changer de plan ÃƒÂ  tout moment ?',
-      answer: 'Oui ! Vous pouvez passer ÃƒÂ  un plan supérieur ÃƒÂ  tout moment. Le changement sera effectif immédiatement et vous serez facturé au prorata.'
+      question: 'Puis-je changer de plan à tout moment ?',
+      answer: 'Oui ! Vous pouvez passer à un plan supérieur à tout moment. Le changement est effectif immédiatement et la facturation est au prorata.'
     },
     {
-      question: 'Comment fonctionne la période d\'essai ?',
-      answer: 'Tous les nouveaux utilisateurs Premium bénéficient de 7 jours d\'essai gratuit. Aucun paiement n\'est prélevé pendant cette période.'
+      question: "Comment fonctionne la période d'essai ?",
+      answer: "Les nouveaux utilisateurs Premium ont 7 jours d'essai gratuit. Aucun paiement n'est prélevé pendant cette période."
     },
     {
       question: 'Puis-je annuler mon abonnement ?',
-      answer: 'Oui, vous pouvez annuler votre abonnement ÃƒÂ  tout moment depuis votre profil. Vous continuerez ÃƒÂ  bénéficier du service jusqu\'ÃƒÂ  la fin de la période payée.'
+      answer: "Oui, vous pouvez annuler à tout moment depuis votre profil. Vous conservez l'accès jusqu'à la fin de la période en cours."
     },
     {
-      question: 'Les données sont-elles sécurisées ?',
-      answer: 'Absolument ! Nous utilisons un chiffrement de niveau bancaire et respectons strictement le RGPD. Vos données ne sont jamais vendues ÃƒÂ  des tiers.'
+      question: 'Mes données sont-elles sécurisées ?',
+      answer: 'Absolument ! Chiffrement de niveau bancaire et respect strict du RGPD. Vos données ne sont jamais revendues.'
     }
   ];
 
@@ -154,15 +139,12 @@ const PricingPage: React.FC = () => {
       {/* Header */}
       <div className="bg-white border-b border-[#DDE9DA]">
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl font-bold text-[#3B3B3B] mb-4">
               Choisissez votre plan ECOLOJIA
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Accédez ÃƒÂ  toutes les fonctionnalités pour une consommation plus consciente
+              Accédez à toutes les fonctionnalités pour une consommation plus consciente
             </p>
           </motion.div>
 
@@ -183,9 +165,7 @@ const PricingPage: React.FC = () => {
             </button>
             <span className={`font-medium ${billingPeriod === 'yearly' ? 'text-[#3B3B3B]' : 'text-gray-400'}`}>
               Annuel
-              <span className="ml-2 px-2 py-1 bg-[#7DDE4A] text-white text-xs rounded-full">
-                -17%
-              </span>
+              <span className="ml-2 px-2 py-1 bg-[#7DDE4A] text-white text-xs rounded-full">-17%</span>
             </span>
           </div>
 
@@ -216,11 +196,8 @@ const PricingPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`relative bg-white rounded-2xl shadow-lg overflow-hidden ${
-                plan.popular ? 'ring-2 ring-[#7DDE4A]' : ''
-              }`}
+              className={`relative bg-white rounded-2xl shadow-lg overflow-hidden ${plan.popular ? 'ring-2 ring-[#7DDE4A]' : ''}`}
             >
-              {/* Badge populaire */}
               {plan.popular && (
                 <div className="absolute top-0 right-0 bg-[#7DDE4A] text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
                   Le plus populaire
@@ -228,26 +205,26 @@ const PricingPage: React.FC = () => {
               )}
 
               <div className="p-8">
-                {/* En-tête du plan */}
+                {/* En-tête */}
                 <div className="text-center mb-8">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
-                    plan.color === 'green' ? 'bg-[#E9F8DF] text-[#7DDE4A]' :
-                    plan.color === 'purple' ? 'bg-purple-100 text-purple-600' :
-                    'bg-gray-100 text-gray-600'
-                  }`}>
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+                      plan.color === 'green'
+                        ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                        : plan.color === 'purple'
+                        ? 'bg-purple-100 text-purple-600'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
                     {plan.icon}
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-[#3B3B3B] mb-2">{plan.name}</h3>
                   <p className="text-gray-600 mb-4">{plan.description}</p>
-                  
-                  <div className="text-4xl font-bold text-[#3B3B3B]">
-                    {plan.priceLabel}
-                  </div>
+
+                  <div className="text-4xl font-bold text-[#3B3B3B]">{plan.priceLabel}</div>
                   {plan.price > 0 && billingPeriod === 'yearly' && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      soit {(plan.price / 12).toFixed(2)}ââ€šÂ¬/mois
-                    </p>
+                    <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} €/mois</p>
                   )}
                 </div>
 
@@ -260,13 +237,9 @@ const PricingPage: React.FC = () => {
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mt-0.5 flex-shrink-0" />
                       )}
-                      <span className={`text-sm ${
-                        feature.included ? 'text-[#3B3B3B]' : 'text-gray-400'
-                      }`}>
+                      <span className={`text-sm ${feature.included ? 'text-[#3B3B3B]' : 'text-gray-400'}`}>
                         {feature.name}
-                        {feature.tooltip && (
-                          <Info className="w-4 h-4 inline-block ml-1 text-gray-400" />
-                        )}
+                        {feature.tooltip && <Info className="w-4 h-4 inline-block ml-1 text-gray-400" />}
                       </span>
                     </li>
                   ))}
@@ -274,8 +247,8 @@ const PricingPage: React.FC = () => {
 
                 {/* CTA */}
                 <button
-                  onClick={() => handleSelectPlan(plan.id)}
-                  disabled={loadingPlan === plan.id || (user?.tier === plan.id)}
+                  onClick={() => (plan.id === 'free' ? (user ? null : navigate('/register')) : handleSelectPlan(plan.id))}
+                  disabled={loadingPlan === plan.id}
                   className={`w-full py-3 px-6 rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${
                     plan.popular
                       ? 'bg-[#7DDE4A] text-white hover:bg-[#6bc93a]'
@@ -289,9 +262,7 @@ const PricingPage: React.FC = () => {
                   ) : (
                     <>
                       {plan.cta}
-                      {plan.id !== 'free' && user?.tier !== plan.id && (
-                        <ArrowRight className="w-4 h-4" />
-                      )}
+                      {plan.id !== 'free' && <ArrowRight className="w-4 h-4" />}
                     </>
                   )}
                 </button>
@@ -301,53 +272,10 @@ const PricingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Comparaison détaillée */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">
-            Comparaison détaillée des fonctionnalités
-          </h2>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-[#DDE9DA]">
-                  <th className="text-left py-4 px-4 font-semibold text-[#3B3B3B]">Fonctionnalité</th>
-                  <th className="text-center py-4 px-4 font-semibold text-gray-600">Gratuit</th>
-                  <th className="text-center py-4 px-4 font-semibold text-[#7DDE4A]">Premium</th>
-                  <th className="text-center py-4 px-4 font-semibold text-purple-600">Famille</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { name: 'Analyses mensuelles', free: '30', premium: 'Illimitées', family: 'Illimitées' },
-                  { name: 'Score santé', free: 'Basique', premium: 'Complet', family: 'Complet' },
-                  { name: 'Chat IA', free: '5/mois', premium: '500/mois', family: '500/mois/compte' },
-                  { name: 'Alternatives suggérées', free: '3', premium: '10', family: '10' },
-                  { name: 'Export données', free: 'âÂÅ’', premium: 'CSV, PDF', family: 'CSV, PDF' },
-                  { name: 'Historique', free: '30 jours', premium: 'Illimité', family: 'Illimité' },
-                  { name: 'Comptes utilisateurs', free: '1', premium: '1', family: '5' },
-                  { name: 'Support', free: 'Standard', premium: 'Prioritaire', family: 'VIP' },
-                ].map((row, i) => (
-                  <tr key={i} className="border-b border-gray-100">
-                    <td className="py-4 px-4 text-[#3B3B3B]">{row.name}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{row.free}</td>
-                    <td className="py-4 px-4 text-center text-[#3B3B3B] font-medium">{row.premium}</td>
-                    <td className="py-4 px-4 text-center text-[#3B3B3B] font-medium">{row.family}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       {/* FAQ */}
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">
-          Questions fréquentes
-        </h2>
-        
+        <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">Questions fréquentes</h2>
+
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <motion.div
@@ -358,16 +286,18 @@ const PricingPage: React.FC = () => {
               className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
             >
               <button
-                onClick={() => setShowFAQ(showFAQ === index ? false : index)}
+                onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="font-semibold text-[#3B3B3B]">{faq.question}</span>
-                <HelpCircle className={`w-5 h-5 text-gray-400 transition-transform ${
-                  showFAQ === index ? 'rotate-180' : ''
-                }`} />
+                <HelpCircle
+                  className={`w-5 h-5 text-gray-400 transition-transform ${
+                    openFaqIndex === index ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
-              
-              {showFAQ === index && (
+
+              {openFaqIndex === index && (
                 <div className="px-6 pb-4">
                   <p className="text-gray-600">{faq.answer}</p>
                 </div>
@@ -380,9 +310,7 @@ const PricingPage: React.FC = () => {
       {/* CTA final */}
       <div className="bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] py-16">
         <div className="max-w-4xl mx-auto px-4 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Prêt ÃƒÂ  améliorer votre consommation ?
-          </h2>
+          <h2 className="text-3xl font-bold mb-4">Prêt à améliorer votre consommation ?</h2>
           <p className="text-xl mb-8 text-white/90">
             Rejoignez des milliers d'utilisateurs qui font des choix plus éclairés
           </p>
@@ -393,9 +321,7 @@ const PricingPage: React.FC = () => {
             <Zap className="w-5 h-5" />
             Commencer l'essai gratuit
           </button>
-          <p className="mt-4 text-sm text-white/80">
-            Aucune carte bancaire requise â€Â¢ Annulation ÃƒÂ  tout moment
-          </p>
+          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise • Annulation à tout moment</p>
         </div>
       </div>
     </div>
