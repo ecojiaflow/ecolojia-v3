@@ -51,7 +51,7 @@ export function useUniversalSearch() {
     setError(null);
     const t0 = performance.now();
     try {
-      const payload = await searchService.searchProducts(query);
+      const payload = await searchService.search({ query, page: 0, hitsPerPage: 20 });
       const items = extractProducts(payload);
       const normalized = normalize(items);
       setResults(normalized);
