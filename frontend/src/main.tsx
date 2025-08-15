@@ -5,10 +5,15 @@ import "./i18n";
 import "./index.css";
 import App from "./App";
 
-// Charger les mocks SANS top‑level await
-try { import("./utils/setupMocks").catch(() => {}); } catch {}
+// Active les mocks UNIQUEMENT si VITE_MOCKS === '1'
+try {
+  if ((import.meta as any)?.env?.VITE_MOCKS === '1') {
+    import("./utils/setupMocks")
+      .then((m) => m?.enableMocks?.())
+      .catch(() => {});
+  }
+} catch {}
 
-// Logs sûrs
 if (typeof window !== "undefined") {
   window.addEventListener("error", (e) =>
     console.error("Erreur JS:", e.message, e.error)

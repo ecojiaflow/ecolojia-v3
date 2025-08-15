@@ -18,9 +18,16 @@ import {
 } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useUniversalSearch } from '@/hooks/useUniversalSearch';
-import analysisService from '@/services/analysisService';
 import { useAuthStore } from '@/store/authStore';
 import type { Product, SearchFilters } from '@/types';
+
+// Service de tracking simple
+const trackEvent = (event: string, data?: any) => {
+  if (import.meta.env.DEV) {
+    console.log(`[Analytics] ${event}`, data);
+  }
+  // En production, on pourrait envoyer à un service d'analytics
+};
 
 // ==================== COMPOSANTS SEARCH ====================
 
@@ -46,7 +53,7 @@ const SearchWidget: React.FC<{
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      analysisService.track('search_submit', { query, variant });
+      trackEvent('search_submit', { query, variant });
       if (onSearch) {
         onSearch(query);
       } else {
@@ -185,8 +192,8 @@ const ContextualMetrics: React.FC<{
         <button
           onClick={onToggleView}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          aria-label="Changer l’affichage"
-          title="Changer l’affichage"
+          aria-label="Changer l'affichage"
+          title="Changer l'affichage"
         >
           {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
         </button>
@@ -338,15 +345,14 @@ const ProductCard: React.FC<{
   viewMode: 'grid' | 'list';
 }> = ({ product, viewMode }) => {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   
   const handleClick = () => {
-    analysisService.track('product_click', {
-      productId: product.id,
+    trackEvent('product_click', {
+      productId: product.id || product._id,
       productName: product.name,
       from: 'search'
     });
-    navigate(`/product/${product.id}`);
+    navigate(`/product/${product.id || product._id}`);
   };
 
   if (viewMode === 'list') {
@@ -363,9 +369,12 @@ const ProductCard: React.FC<{
       >
         <div className="flex gap-4">
           <img
-            src={product.image || '/placeholder.png'}
+            src={product.image || product.imageUrl || '/placeholder.png'}
             alt={product.name}
             className="w-20 h-20 object-cover rounded-lg"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/placeholder.png';
+            }}
           />
           
           <div className="flex-1">
@@ -401,7 +410,7 @@ const ProductCard: React.FC<{
           </div>
           
           <div className="text-right">
-            {product.healthScore && (
+            {product.healthScore !== undefined && (
               <div className="text-2xl font-bold text-[#7DDE4A]">
                 {product.healthScore}/100
               </div>
@@ -425,9 +434,12 @@ const ProductCard: React.FC<{
     >
       <div className="aspect-square relative overflow-hidden bg-gray-50">
         <img
-          src={product.image || '/placeholder.png'}
+          src={product.image || product.imageUrl || '/placeholder.png'}
           alt={product.name}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder.png';
+          }}
         />
         
         {product.isNew && (
@@ -468,7 +480,7 @@ const ProductCard: React.FC<{
             ))}
           </div>
           
-          {product.healthScore && (
+          {product.healthScore !== undefined && (
             <div className="text-lg font-bold text-[#7DDE4A]">
               {product.healthScore}/100
             </div>
@@ -555,7 +567,7 @@ const SearchPage: React.FC = () => {
   // Gestion de la recherche
   const handleSearch = useCallback((newQuery: string) => {
     setSearchParams({ q: newQuery });
-    analysisService.track('search_performed', {
+    trackEvent('search_performed', {
       query: newQuery,
       filters,
       userId: user?.id
@@ -565,7 +577,7 @@ const SearchPage: React.FC = () => {
   // Gestion des filtres
   const handleFiltersChange = useCallback((newFilters: SearchFilters) => {
     setFilters(newFilters);
-    analysisService.track('filters_applied', {
+    trackEvent('filters_applied', {
       filters: newFilters,
       query
     });
@@ -664,7 +676,7 @@ const SearchPage: React.FC = () => {
             >
               {results.map((product) => (
                 <ProductCard
-                  key={product.id}
+                  key={product.id || product._id}
                   product={product}
                   viewMode={viewMode}
                 />
