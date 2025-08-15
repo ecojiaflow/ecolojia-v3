@@ -1,4 +1,4 @@
-// PATH: backend/package.json
+
 {
   "name": "ecolojia-backend",
   "version": "3.0.0",
@@ -93,21 +93,11 @@
     "supertest": "^6.3.4"
   },
   "nodemonConfig": {
-    "watch": [
-      "src/",
-      ".env"
-    ],
+    "watch": ["src/", ".env"],
     "ext": "js,json",
-    "ignore": [
-      "src/**/*.test.js",
-      "logs/*"
-    ],
-    "env": {
-      "NODE_ENV": "development"
-    }
+    "ignore": ["src/**/*.test.js", "logs/*"],
+    "env": { "NODE_ENV": "development" }
   },
   "main": "index.js",
-  "engines": {
-    "node": "20.x"
-  }
+  "engines": { "node": "20.x" }
 }
