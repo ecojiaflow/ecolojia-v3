@@ -1,77 +1,50 @@
 // PATH: frontend/src/services/searchService.ts
-import api, { ApiResponse } from './apiClient';
+import api from './apiClient';
 
-export interface SearchFilters {
-  categories?: string[];
-  nutriScore?: string[];
-  labels?: string[];
+const SEARCH_PATH =
+  (import.meta as any)?.env?.VITE_SEARCH_PATH || '/api/algolia/search';
+
+export type SearchResponse =
+  | { data?: { products?: any[]; hits?: any[]; items?: any[] } }
+  | { products?: any[]; hits?: any[]; items?: any[] }
+  | any;
+
+/**
+ * Lance une recherche produits côté backend.
+ * La route par défaut est /api/algolia/search?q=...
+ * Si ton backend expose une autre route, définis VITE_SEARCH_PATH dans l'env.
+ */
+export async function searchProducts(query: string, filters?: Record<string, any>): Promise<SearchResponse> {
+  const q = encodeURIComponent((query || '').trim());
+  const params = new URLSearchParams({ q });
+  // On sérialise quelques filtres simples si fournis
+  if (filters && typeof filters === 'object') {
+    Object.entries(filters).forEach(([k, v]) => {
+      if (v == null) return;
+      if (Array.isArray(v)) {
+        if (v.length) params.append(k, v.join(','));
+      } else {
+        params.append(k, String(v));
+      }
+    });
+  }
+  return await api.get<SearchResponse>(`${SEARCH_PATH}?${params.toString()}`);
 }
 
-export interface RawSearchPayload {
-  // tolérant: différentes formes possibles
-  data?: { products?: any[]; hits?: any[]; items?: any[]; total?: number; timeMS?: number };
-  products?: any[];
-  hits?: any[];
-  items?: any[];
-  total?: number;
-  nbHits?: number;
-  timeMS?: number;
-}
-
-export interface NormalizedSearch {
-  results: any[];
-  total: number;
-  timeMS: number;
-}
-
-function extract(payload: RawSearchPayload): NormalizedSearch {
+/**
+ * Normalise la réponse quelle que soit la forme renvoyée.
+ * Supporte {data:{products}}, {products}, {hits}, {items}.
+ */
+export function extractProducts(payload: SearchResponse): any[] {
   const d: any = payload || {};
-  const nested = d.data || {};
-  const results =
-    nested.products || nested.hits || nested.items ||
-    d.products || d.hits || d.items || [];
-  const total = d.total || nested.total || d.nbHits || results.length || 0;
-  const timeMS = d.timeMS || nested.timeMS || 0;
-  return { results, total, timeMS };
+  if (Array.isArray(d?.data?.products)) return d.data.products;
+  if (Array.isArray(d?.data?.hits)) return d.data.hits;
+  if (Array.isArray(d?.data?.items)) return d.data.items;
+  if (Array.isArray(d?.products)) return d.products;
+  if (Array.isArray(d?.hits)) return d.hits;
+  if (Array.isArray(d?.items)) return d.items;
+  return [];
 }
 
-function toQuery(params: Record<string, string | string[] | undefined>) {
-  const q = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) {
-    if (v === undefined) continue;
-    if (Array.isArray(v)) v.forEach((x) => q.append(k, x));
-    else q.set(k, v);
-  }
-  return q.toString();
-}
-
-// 1) Essaye Algolia: /api/algolia/search?q=...
-// 2) Sinon fallback Products: /api/products/search?q=...
-export async function universalSearch(query: string, filters: SearchFilters = {}): Promise<{
-  success: boolean;
-  data?: NormalizedSearch;
-  error?: string;
-}> {
-  const baseParams: Record<string, any> = { q: (query || '').trim() };
-  if (filters.categories?.length) baseParams.category = filters.categories;
-  if (filters.nutriScore?.length) baseParams.nutriScore = filters.nutriScore;
-  if (filters.labels?.length) baseParams.label = filters.labels;
-
-  // Try Algolia
-  const qs = toQuery(baseParams);
-  let res: ApiResponse<RawSearchPayload> = await api.get(`/api/algolia/search?${qs}`);
-
-  if (!res.success) {
-    // Fallback Products
-    res = await api.get(`/api/products/search?${qs}`);
-  }
-
-  if (!res.success) {
-    return { success: false, error: res.error || 'SEARCH_FAILED' };
-  }
-
-  const normalized = extract(res.data as RawSearchPayload);
-  return { success: true, data: normalized };
-}
-
-export default { universalSearch };
+const searchService = { searchProducts, extractProducts };
+export default searchService;
