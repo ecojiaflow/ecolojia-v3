@@ -1,256 +1,134 @@
-// PATH: frontend/ecolojiaFrontV3/src/services/paymentService.ts
-import axios from 'axios';
+// PATH: frontend/src/services/paymentService.ts
+import api from './apiClient';
 
-const API_BASE_URL = 'https://ecolojia-backend-working.onrender.com/api';
-
-interface CheckoutResponse {
-  checkoutUrl: string;
+export type Plan = 'basic' | 'pro';
+export interface CheckoutSession {
+  url: string;
+  id?: string;
+  [k: string]: any;
+}
+export interface SubscriptionStatus {
+  active: boolean;
+  renewsAt?: string;
+  plan?: Plan | string;
+  trialEndsAt?: string;
+  cancelAt?: string | null;
+  [k: string]: any;
 }
 
-interface PortalResponse {
-  portalUrl: string;
+/**
+ * Permet de surcharger les routes via variables d'env si besoin.
+ * Laisse vide par défaut : on utilise les endpoints Render connus.
+ */
+const CHECKOUT_PATH =
+  (import.meta as any)?.env?.VITE_PAYMENT_CHECKOUT_PATH ||
+  '/api/payment/create-checkout';
+
+const SUBSCRIPTION_PATHS = [
+  (import.meta as any)?.env?.VITE_PAYMENT_SUBSCRIPTION_PATH || '/api/payment/subscription',
+  '/api/payment/status', // fallback tolérant
+];
+
+const PORTAL_PATHS = [
+  (import.meta as any)?.env?.VITE_PAYMENT_PORTAL_PATH || '/api/payment/portal',
+  '/api/payment/customer-portal', // fallback éventuel
+];
+
+/**
+ * Crée une session de paiement (LemonSqueezy via backend).
+ * Renvoie { url }. Tu peux ensuite rediriger l’utilisateur.
+ */
+export async function createCheckout(plan: Plan): Promise<CheckoutSession> {
+  const cleanPlan = (String(plan || 'basic').toLowerCase() as Plan);
+  const res = await api.post<CheckoutSession>(CHECKOUT_PATH, { plan: cleanPlan });
+  if (!res || !res.url) {
+    throw new Error('Le backend n’a pas retourné d’URL de paiement.');
+  }
+  return res;
 }
 
-interface SubscriptionStatus {
-  isActive: boolean;
-  status: string;
-  currentPeriodEnd?: Date;
-  cancelledAt?: Date;
+/**
+ * Ouvre la page de checkout dans un nouvel onglet (helper pratique).
+ */
+export async function openCheckout(plan: Plan): Promise<void> {
+  const session = await createCheckout(plan);
+  if (session?.url) {
+    window.open(session.url, '_blank', 'noopener,noreferrer');
+  } else {
+    throw new Error('URL de checkout indisponible.');
+  }
 }
 
-class PaymentService {
-  private getAuthToken(): string | null {
-    // Debug : lister toutes les clés dans localStorage
-    console.log('Clés dans localStorage:', Object.keys(localStorage));
-    console.log('Clés dans sessionStorage:', Object.keys(sessionStorage));
-    
-    // Vérifier les différents endroits oÃƒÂ¹ le token peut être stocké
-    const possibleKeys = ['token', 'authToken', 'auth_token', 'jwt', 'access_token'];
-    
-    for (const key of possibleKeys) {
-      const token = localStorage.getItem(key) || sessionStorage.getItem(key);
-      if (token) {
-        console.log(`Token trouvé avec la clé: ${key}`);
-        return token;
-      }
-    }
-    
-    console.warn('Aucun token trouvé dans le storage');
-    return null;
-  }
-
-  private getHeaders(): any {
-    const token = this.getAuthToken();
-    
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
-    };
-    
-    console.log('Headers envoyés:', {
-      ...headers,
-      'Authorization': headers.Authorization ? 'Bearer [TOKEN]' : 'Pas de token'
-    });
-    
-    return headers;
-  }
-
-  /**
-   * Créer une session de checkout Lemon Squeezy
-   */
-  async createCheckout(): Promise<string> {
+/**
+ * Récupère l’état d’abonnement. Essaie /subscription, puis /status.
+ */
+export async function getSubscription(): Promise<SubscriptionStatus> {
+  let lastErr: any = null;
+  for (const path of SUBSCRIPTION_PATHS) {
     try {
-      const token = this.getAuthToken();
-      if (!token) {
-        throw new Error('Vous devez être connecté pour accéder ÃƒÂ  cette fonctionnalité. Veuillez vous reconnecter.');
-      }
-
-      console.log('Création du checkout avec token présent');
-      
-      const response = await axios.post<CheckoutResponse>(
-        `${API_BASE_URL}/payment/create-checkout`,
-        {},
-        { 
-          headers: this.getHeaders()
-        }
-      );
-
-      if (!response.data || !response.data.checkoutUrl) {
-        console.error('Réponse du serveur:', response.data);
-        throw new Error('URL de paiement non reçue du serveur');
-      }
-
-      return response.data.checkoutUrl;
-    } catch (error) {
-      console.error('Create checkout error:', error);
-      
-      if (axios.isAxiosError(error)) {
-        console.error('Status:', error.response?.status);
-        console.error('Response data:', error.response?.data);
-        
-        if (error.response?.status === 401) {
-          throw new Error('Session expirée ou invalide. Veuillez vous déconnecter et vous reconnecter.');
-        }
-        if (error.response?.status === 403) {
-          throw new Error('Accès refusé. Vérifiez vos permissions.');
-        }
-        if (error.response?.status === 404) {
-          throw new Error('Service de paiement non configuré sur le serveur');
-        }
-        if (error.response?.status === 500) {
-          throw new Error('Erreur serveur. Veuillez réessayer plus tard.');
-        }
-        
-        const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erreur lors de la création du paiement';
-        throw new Error(errorMessage);
-      }
-      
-      if (error instanceof Error) {
-        throw error;
-      }
-      
-      throw new Error('Erreur inattendue lors de la création du paiement');
-    }
-  }
-
-  /**
-   * Obtenir l'URL du portail client Lemon Squeezy
-   */
-  async getCustomerPortal(): Promise<string> {
-    try {
-      const token = this.getAuthToken();
-      if (!token) {
-        throw new Error('Vous devez être connecté pour accéder ÃƒÂ  cette fonctionnalité');
-      }
-
-      const response = await axios.get<PortalResponse>(
-        `${API_BASE_URL}/payment/customer-portal`,
-        { 
-          headers: this.getHeaders()
-        }
-      );
-
-      if (!response.data || !response.data.portalUrl) {
-        throw new Error('URL du portail non reçue');
-      }
-
-      return response.data.portalUrl;
-    } catch (error) {
-      console.error('Get portal error:', error);
-      
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          throw new Error('Session expirée. Veuillez vous reconnecter.');
-        }
-        if (error.response?.status === 404) {
-          throw new Error('Le portail de gestion n\'est pas encore disponible');
-        }
-        
-        const errorMessage = error.response?.data?.message || 'Erreur lors de l\'accès au portail';
-        throw new Error(errorMessage);
-      }
-      
-      if (error instanceof Error) {
-        throw error;
-      }
-      
-      throw new Error('Erreur inattendue');
-    }
-  }
-
-  /**
-   * Vérifier le statut de l'abonnement
-   */
-  async checkSubscriptionStatus(): Promise<SubscriptionStatus> {
-    try {
-      const response = await axios.get(
-        `${API_BASE_URL}/user/subscription-status`,
-        { 
-          headers: this.getHeaders()
-        }
-      );
-
+      const status = await api.get<SubscriptionStatus>(path);
+      // Normalisation minimale
       return {
-        isActive: response.data?.isActive || false,
-        status: response.data?.status || 'inactive',
-        currentPeriodEnd: response.data?.currentPeriodEnd ? new Date(response.data.currentPeriodEnd) : undefined,
-        cancelledAt: response.data?.cancelledAt ? new Date(response.data.cancelledAt) : undefined
+        active: Boolean(
+          (status as any)?.active ??
+          (status as any)?.isActive ??
+          ((status as any)?.state === 'active')
+        ),
+        renewsAt: (status as any)?.renewsAt || (status as any)?.renews_at || (status as any)?.current_period_end,
+        plan: (status as any)?.plan || (status as any)?.product || (status as any)?.price,
+        trialEndsAt: (status as any)?.trialEndsAt || (status as any)?.trial_end,
+        cancelAt: (status as any)?.cancelAt ?? (status as any)?.cancel_at ?? null,
+        ...status,
       };
-    } catch (error) {
-      console.error('Check subscription error:', error);
-      return {
-        isActive: false,
-        status: 'inactive'
-      };
+    } catch (e) {
+      lastErr = e;
+      // si 404 -> on tente le suivant
+      const msg = String((e as Error)?.message || '');
+      if (!msg.startsWith('HTTP 404')) break;
     }
   }
+  // si on arrive ici : aucun chemin n’a fonctionné
+  throw new Error(
+    `Impossible de récupérer l’état d’abonnement (${String((lastErr as Error)?.message || 'inconnu')}).`
+  );
+}
 
-  /**
-   * Méthode de test pour vérifier la connexion
-   */
-  async testConnection(): Promise<boolean> {
+/**
+ * Récupère une URL de portail client (si le backend l’expose), sinon lève une erreur explicite.
+ * Utile pour gérer factures, cartes, annulations… (optionnel côté backend).
+ */
+export async function getPortalUrl(): Promise<string> {
+  let lastErr: any = null;
+  for (const path of PORTAL_PATHS) {
     try {
-      const token = this.getAuthToken();
-      console.log('Test de connexion - Token présent:', !!token);
-      
-      if (!token) {
-        console.error('Pas de token trouvé pour le test');
-        return false;
-      }
-      
-      // Faire un appel simple pour vérifier l'authentification
-      const response = await axios.get(
-        `${API_BASE_URL}/user/me`,
-        { headers: this.getHeaders() }
-      );
-      
-      console.log('Test de connexion réussi:', response.data);
-      return true;
-    } catch (error) {
-      console.error('Test de connexion échoué:', error);
-      return false;
+      const res = await api.get<{ url?: string }>(path);
+      if (res?.url) return res.url;
+      throw new Error('Le backend n’a pas renvoyé d’URL de portail.');
+    } catch (e) {
+      lastErr = e;
+      const msg = String((e as Error)?.message || '');
+      if (!msg.startsWith('HTTP 404')) break;
     }
   }
-
-  /**
-   * Vérifier si l'utilisateur est authentifié
-   */
-  isAuthenticated(): boolean {
-    const token = this.getAuthToken();
-    return !!token;
-  }
-
-  /**
-   * Obtenir des informations de debug
-   */
-  getDebugInfo(): { hasToken: boolean; tokenKey?: string; storageKeys: string[] } {
-    const possibleKeys = ['token', 'authToken', 'auth_token', 'jwt', 'access_token'];
-    let foundKey: string | undefined;
-    
-    for (const key of possibleKeys) {
-      if (localStorage.getItem(key) || sessionStorage.getItem(key)) {
-        foundKey = key;
-        break;
-      }
-    }
-    
-    return {
-      hasToken: !!foundKey,
-      tokenKey: foundKey,
-      storageKeys: [...Object.keys(localStorage), ...Object.keys(sessionStorage)]
-    };
-  }
+  throw new Error(
+    `Portail client indisponible (${String((lastErr as Error)?.message || 'inconnu')}).`
+  );
 }
 
-export const paymentService = new PaymentService();
-
-// Export pour debug dans la console
-if (typeof window !== 'undefined') {
-  (window as any).paymentServiceDebug = {
-    getDebugInfo: () => paymentService.getDebugInfo(),
-    testConnection: () => paymentService.testConnection(),
-    isAuthenticated: () => paymentService.isAuthenticated()
-  };
+/**
+ * Helper pour ouvrir le portail client dans un nouvel onglet.
+ */
+export async function openPortal(): Promise<void> {
+  const url = await getPortalUrl();
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
+
+export const paymentService = {
+  createCheckout,
+  openCheckout,
+  getSubscription,
+  getPortalUrl,
+  openPortal,
+};
 
 export default paymentService;
