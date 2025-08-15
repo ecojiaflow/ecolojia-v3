@@ -24,7 +24,7 @@ import ResultsPage from './pages/ResultsPage';
 // Import des composants d'authentification
 import { AuthPage } from './auth/components/AuthPage';
 
-// Pages lÃƒÆ’Ã‚Â©gales
+// Pages légales & tests
 import AboutPage from './pages/AboutPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -38,53 +38,40 @@ import TestConnection from './pages/TestConnection';
 import TestPage from './pages/TestPage';
 import TestSearchPage from './pages/TestSearchPage';
 
-// Composant de chargement
+// Loader
 const PageLoader = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-6xl mb-4 animate-pulse">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â±</div>
+      <div className="text-6xl mb-4 animate-pulse">🔄</div>
       <p className="text-gray-600">Chargement...</p>
     </div>
   </div>
 );
 
-// Composant pour les routes protÃƒÆ’Ã‚Â©gÃƒÆ’Ã‚Â©es
+// Route protégée
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
-  }
-
+  if (isLoading) return <PageLoader />;
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
 
-// Layout avec navigation
+// Layout avec navbar + footer
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation avec Navbar avancÃƒÆ’Ã‚Â© */}
       <Navbar />
-
-      {/* Contenu principal */}
-      <main className="flex-grow">
-        {children}
-      </main>
-
-      {/* Footer */}
+      <main className="flex-grow">{children}</main>
       <footer className="bg-gray-100 py-6 mt-auto">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center">
             <div className="text-gray-600 text-sm">
-              Ãƒâ€šÃ‚Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
+              © 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
             </div>
             <div className="flex space-x-4 text-sm">
-              <Link to="/about" className="text-gray-600 hover:text-green-600">ÃƒÆ’Ã¢â€šÂ¬ propos</Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃƒÆ’Ã‚Â©</Link>
+              <Link to="/about" className="text-gray-600 hover:text-green-600">À propos</Link>
+              <Link to="/privacy" className="text-gray-600 hover:text-green-600">Confidentialité</Link>
               <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
             </div>
           </div>
@@ -94,27 +81,30 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-// Page 404
+// 404
 const NotFoundPage = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="text-8xl mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¤ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â</div>
+      <div className="text-8xl mb-4">😕</div>
       <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
       <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
-      <Link to="/" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
-        Retour ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'accueil
+      <Link
+        to="/"
+        className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
+      >
+        Retour à l'accueil
       </Link>
     </div>
   </div>
 );
 
-// Composant AppContent (avec Layout ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'intÃƒÆ’Ã‚Â©rieur du Provider)
+// Contenu avec routes
 const AppContent = () => {
   return (
     <Layout>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* PAGES PUBLIQUES */}
+          {/* PUBLIQUES */}
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/auth" element={<AuthPage />} />
@@ -126,64 +116,22 @@ const AppContent = () => {
           <Route path="/test-login" element={<TestLogin />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-
           <Route path="/test-connection" element={<TestConnection />} />
-
-          {/* PAGES PROTÃƒÆ’Ã¢â‚¬Â°GÃƒÆ’Ã¢â‚¬Â°ES */}
-          <Route path="/scan" element={
-            <ProtectedRoute>
-              <ScanPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/history" element={
-            <ProtectedRoute>
-              <HistoryPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/chat" element={
-            <ProtectedRoute>
-              <ChatPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          } />
-          <Route path="/settings" element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/product/:id" element={
-            <ProtectedRoute>
-              <ProductPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/results" element={
-            <ProtectedRoute>
-              <ResultsPage />
-            </ProtectedRoute>
-          } />
-
-          {/* 404 */}          <Route path="/multi-scan" element={
-            <ProtectedRoute>
-              <MultiScanPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/favorites" element={
-            <ProtectedRoute>
-              <FavoritesPage />
-            </ProtectedRoute>
-          } />
           <Route path="/test" element={<TestPage />} />
-            <Route path="/test-search" element={<TestSearchPage />} />
+          <Route path="/test-search" element={<TestSearchPage />} />
 
+          {/* PROTÉGÉES */}
+          <Route path="/scan" element={<ProtectedRoute><ScanPage /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+          <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+          <Route path="/product/:id" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
+          <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
+          <Route path="/multi-scan" element={<ProtectedRoute><MultiScanPage /></ProtectedRoute>} />
+
+          {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
@@ -191,15 +139,10 @@ const AppContent = () => {
   );
 };
 
-// APPLICATION PRINCIPALE
+// App root
 const App: React.FC = () => {
   return (
-    <BrowserRouter 
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true
-      }}
-    >
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
@@ -208,14 +151,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
