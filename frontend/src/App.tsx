@@ -18,6 +18,7 @@ import ChatPage from './pages/ChatPage';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
+import AiPreferencesPage from './pages/AiPreferencesPage';
 import SettingsPage from './pages/SettingsPage';
 import ResultsPage from './pages/ResultsPage';
 
@@ -125,7 +126,8 @@ const AppContent = () => {
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/profile/ai-preferences" element={<ProtectedRoute><AiPreferencesPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/product/:id" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
@@ -151,3 +153,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
