@@ -1,0 +1,188 @@
+{
+  "timestamp": "2025-08-15T19:01:42.787Z",
+  "imported": 50,
+  "total": 50,
+  "products": [
+    {
+      "id": "off_8052575090254",
+      "title": "Nocciolata bio",
+      "description": "Produit bio Rigoni di Asiago. Catégorie: Petit-déjeuners. Ingrédients: Sucre brut, pâte de noisettes 18,5%, huile de tournesol, lait écrémé en poudre, cacao maigre en poudre 6,5%, beurre de cacao, émulsifiant: lécithine d...",
+      "slug": "nocciolata-bio-off-0-1755284444330",
+      "brand": "Rigoni di Asiago",
+      "category": "alimentation-bio",
+      "tags": [
+        "bio",
+        "alimentaire",
+        "openfoodfacts"
+      ],
+      "images": [
+        "https://images.openfoodfacts.org/images/products/805/257/509/0254/front_en.43.400.jpg"
+      ],
+      "zones_dispo": [
+        "FR"
+      ],
+      "prices": {
+        "FR": {
+          "amount": 18,
+          "currency": "EUR"
+        }
+      },
+      "affiliate_url": "https://world.openfoodfacts.org/product/8052575090254",
+      "eco_score": 0.8,
+      "ai_confidence": 0.75,
+      "confidence_pct": 75,
+      "confidence_color": "yellow",
+      "verified_status": "manual_review",
+      "resume_fr": "Rigoni di Asiago - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "Rigoni di Asiago - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "enriched_at": "2025-08-15T19:00:44.331Z",
+      "created_at": "2025-08-15T19:00:44.333Z"
+    },
+    {
+      "id": "off_3155250358788",
+      "title": "Primevère bio doux tartine & cuisson",
+      "description": "Produit bio Primevère. Catégorie: Plant-based foods and beverages. Ingrédients: Huiles végétales non hydrogénées 54.5% (colza, palme), eau, émulsifiant (lécithine de tournesol), sel, arôme naturel de noix de coco, jus de citron co...",
+      "slug": "primev-re-bio-doux-tartine-cuisson-off-1-1755284444333",
+      "brand": "Primevère",
+      "category": "alimentation-bio",
+      "tags": [
+        "bio",
+        "alimentaire",
+        "openfoodfacts"
+      ],
+      "images": [
+        "https://images.openfoodfacts.org/images/products/315/525/035/8788/front_en.166.400.jpg"
+      ],
+      "zones_dispo": [
+        "FR"
+      ],
+      "prices": {
+        "FR": {
+          "amount": 22,
+          "currency": "EUR"
+        }
+      },
+      "affiliate_url": "https://world.openfoodfacts.org/product/3155250358788",
+      "eco_score": 0.9,
+      "ai_confidence": 0.75,
+      "confidence_pct": 75,
+      "confidence_color": "yellow",
+      "verified_status": "manual_review",
+      "resume_fr": "Primevère - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "Primevère - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "enriched_at": "2025-08-15T19:00:44.333Z",
+      "created_at": "2025-08-15T19:00:44.333Z"
+    },
+    {
+      "id": "off_3760049794298",
+      "title": "Pain de mie Bio grandes tranches céréales & graines 500g",
+      "description": "Produit bio La Boulangère. Catégorie: Plant-based foods and beverages. Ingrédients: Farine de BLÉ*/** 55%, eau, levure, huile de tournesol*, sucre de canne roux*, graines de tournesol décortiquées* 3,3%, vinaigre de cidre*, flocons de...",
+      "slug": "pain-de-mie-bio-grandes-tranches-c-r-ale-off-2-1755284444333",
+      "brand": "La Boulangère",
+      "category": "alimentation-bio",
+      "tags": [
+        "bio",
+        "alimentaire",
+        "openfoodfacts",
+        "équitable"
+      ],
+      "images": [
+        "https://images.openfoodfacts.org/images/products/376/004/979/4298/front_fr.178.400.jpg"
+      ],
+      "zones_dispo": [
+        "FR"
+      ],
+      "prices": {
+        "FR": {
+          "amount": 6,
+          "currency": "EUR"
+        }
+      },
+      "affiliate_url": "https://world.openfoodfacts.org/product/3760049794298",
+      "eco_score": 1,
+      "ai_confidence": 0.75,
+      "confidence_pct": 75,
+      "confidence_color": "yellow",
+      "verified_status": "manual_review",
+      "resume_fr": "La Boulangère - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "La Boulangère - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "enriched_at": "2025-08-15T19:00:44.333Z",
+      "created_at": "2025-08-15T19:00:44.333Z"
+    },
+    {
+      "id": "off_3175681037854",
+      "title": "Tartines craquantes sarrasin",
+      "description": "Produit bio Céréal Bio. Catégorie: Aliments et boissons à base de végétaux. Ingrédients: SPÉCIALITÉS CÉRÉALIÈRES AU SARRASIN, ISSUES DE L'AGRICULTURE BIOLOGIQUE. 4 ingrédients et c'est tout Farine de sarrasin* 72,3g, farine de riz* 37,3g, ...",
+      "slug": "tartines-craquantes-sarrasin-off-3-1755284444333",
+      "brand": "Céréal Bio",
+      "category": "alimentation-bio",
+      "tags": [
+        "bio",
+        "alimentaire",
+        "openfoodfacts",
+        "boisson",
+        "collation",
+        "certifié-bio"
+      ],
+      "images": [
+        "https://images.openfoodfacts.org/images/products/317/568/103/7854/front_fr.219.400.jpg"
+      ],
+      "zones_dispo": [
+        "FR"
+      ],
+      "prices": {
+        "FR": {
+          "amount": 16,
+          "currency": "EUR"
+        }
+      },
+      "affiliate_url": "https://world.openfoodfacts.org/product/3175681037854",
+      "eco_score": 0.9,
+      "ai_confidence": 0.75,
+      "confidence_pct": 75,
+      "confidence_color": "yellow",
+      "verified_status": "manual_review",
+      "resume_fr": "Céréal Bio - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "Céréal Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "enriched_at": "2025-08-15T19:00:44.333Z",
+      "created_at": "2025-08-15T19:00:44.333Z"
+    },
+    {
+      "id": "off_3175681028111",
+      "title": "Les Galettes Boulgour & Quinoa - Tomate & Paprika",
+      "description": "Produit bio Céréal Bio. Catégorie: Plant-based foods and beverages. Ingrédients: whole wheat bulgur* 45,5%, quinoa* 11,9%, vegetable oils (oleic sunflower and sunflower), red peppers, onions, whole wheat flakes 5%, whole oatmeal 4,...",
+      "slug": "les-galettes-boulgour-quinoa-tomate-papr-off-4-1755284444333",
+      "brand": "Céréal Bio",
+      "category": "alimentation-bio",
+      "tags": [
+        "bio",
+        "alimentaire",
+        "openfoodfacts",
+        "vegan",
+        "certifié-bio"
+      ],
+      "images": [
+        "https://images.openfoodfacts.org/images/products/317/568/102/8111/front_en.220.400.jpg"
+      ],
+      "zones_dispo": [
+        "FR"
+      ],
+      "prices": {
+        "FR": {
+          "amount": 14,
+          "currency": "EUR"
+        }
+      },
+      "affiliate_url": "https://world.openfoodfacts.org/product/3175681028111",
+      "eco_score": 0.9,
+      "ai_confidence": 0.75,
+      "confidence_pct": 75,
+      "confidence_color": "yellow",
+      "verified_status": "manual_review",
+      "resume_fr": "Céréal Bio - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "Céréal Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "enriched_at": "2025-08-15T19:00:44.333Z",
+      "created_at": "2025-08-15T19:00:44.333Z"
+    }
+  ]
+}
