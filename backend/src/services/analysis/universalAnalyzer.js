@@ -1,5 +1,5 @@
 // backend/src/services/analysis/universalAnalyzer.js
-// Service d'analyse universel qui route vers le bon analyseur selon la catégorie
+// Service d'analyse universel qui route vers le bon analyseur selon la categorie
 
 const foodAnalyzer = require('./foodAnalyzer');
 const cosmeticAnalyzer = require('./cosmeticAnalyzer');
@@ -21,19 +21,19 @@ class UniversalAnalyzer {
         'snack', 'breakfast', 'dairy', 'meat', 'fruit', 'vegetable'
       ],
       cosmetic: [
-        'cosmétique', 'cosmetic', 'beauté', 'beauty', 'soin', 'care',
-        'shampoo', 'savon', 'soap', 'crème', 'cream', 'maquillage', 'makeup',
-        'déodorant', 'deodorant', 'parfum', 'perfume'
+        'cosmetique', 'cosmetic', 'beaute', 'beauty', 'soin', 'care',
+        'shampoo', 'savon', 'soap', 'creme', 'cream', 'maquillage', 'makeup',
+        'deodorant', 'deodorant', 'parfum', 'perfume'
       ],
       detergent: [
-        'détergent', 'detergent', 'lessive', 'laundry', 'nettoyant', 'cleaner',
-        'vaisselle', 'dish', 'ménager', 'household', 'javel', 'bleach'
+        'detergent', 'detergent', 'lessive', 'laundry', 'nettoyant', 'cleaner',
+        'vaisselle', 'dish', 'menager', 'household', 'javel', 'bleach'
       ]
     };
   }
 
   /**
-   * Analyse universelle - détermine automatiquement la catégorie si nécessaire
+   * Analyse universelle - determine automatiquement la categorie si necessaire
    */
   async analyze(data) {
     try {
@@ -46,7 +46,7 @@ class UniversalAnalyzer {
         method = 'manual'
       } = data;
 
-      // 1. Déterminer la catégorie
+      // 1. Determiner la categorie
       let category = providedCategory;
       let product = null;
 
@@ -58,25 +58,25 @@ class UniversalAnalyzer {
         }
       }
 
-      // Si pas de catégorie, essayer de la détecter
+      // Si pas de categorie, essayer de la detecter
       if (!category) {
         category = await this.detectCategory(name, ingredients, barcode);
       }
 
       if (!category) {
-        throw new Error('Impossible de déterminer la catégorie du produit');
+        throw new Error('Impossible de determiner la categorie du produit');
       }
 
-      // 2. Préparer les données selon la catégorie
+      // 2. Preparer les donnees selon la categorie
       const analysisData = await this.prepareAnalysisData(
         category,
         { barcode, name, ingredients, product }
       );
 
-      // 3. Lancer l'analyse appropriée
+      // 3. Lancer l'analyse appropriee
       const analyzer = this.analyzers[category];
       if (!analyzer) {
-        throw new Error(`Analyseur non disponible pour la catégorie: ${category}`);
+        throw new Error(`Analyseur non disponible pour la categorie: ${category}`);
       }
 
       let result;
@@ -94,10 +94,10 @@ class UniversalAnalyzer {
           break;
           
         default:
-          throw new Error(`Catégorie non supportée: ${category}`);
+          throw new Error(`Categorie non supportee: ${category}`);
       }
 
-      // 4. Enrichir le résultat avec des métadonnées
+      // 4. Enrichir le resultat avec des metadonnees
       return this.enrichResult(result, category, analysisData);
 
     } catch (error) {
@@ -139,10 +139,10 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Détecte automatiquement la catégorie d'un produit
+   * Detecte automatiquement la categorie d'un produit
    */
   async detectCategory(name, ingredients, barcode) {
-    // Score pour chaque catégorie
+    // Score pour chaque categorie
     const scores = {
       food: 0,
       cosmetic: 0,
@@ -162,31 +162,31 @@ class UniversalAnalyzer {
       }
     }
 
-    // Analyser les ingrédients
+    // Analyser les ingredients
     if (ingredients) {
       const ingredientsLower = ingredients.toLowerCase();
       
-      // Mots-clés spécifiques aux catégories
+      // Mots-cles specifiques aux categories
       if (ingredientsLower.includes('e' + /\d{3}/.source)) scores.food += 5; // Additifs E
-      if (ingredientsLower.includes('protéines') || ingredientsLower.includes('glucides')) scores.food += 5;
+      if (ingredientsLower.includes('proteines') || ingredientsLower.includes('glucides')) scores.food += 5;
       if (ingredientsLower.includes('inci') || ingredientsLower.includes('aqua')) scores.cosmetic += 5;
       if (ingredientsLower.includes('sodium lauryl') || ingredientsLower.includes('paraben')) scores.cosmetic += 5;
       if (ingredientsLower.includes('tensioactif') || ingredientsLower.includes('enzyme')) scores.detergent += 5;
       if (ingredientsLower.includes('phosphate') || ingredientsLower.includes('percarbonate')) scores.detergent += 5;
     }
 
-    // Analyser le format du code-barres (certains préfixes sont spécifiques)
+    // Analyser le format du code-barres (certains prefixes sont specifiques)
     if (barcode) {
-      // Les cosmétiques ont souvent des codes commençant par certains préfixes
+      // Les cosmetiques ont souvent des codes commencant par certains prefixes
       if (barcode.startsWith('3') && barcode.length === 13) {
-        // Préfixe courant pour produits européens
+        // Prefixe courant pour produits europeens
         scores.food += 1;
         scores.cosmetic += 1;
         scores.detergent += 1;
       }
     }
 
-    // Retourner la catégorie avec le score le plus élevé
+    // Retourner la categorie avec le score le plus eleve
     const maxScore = Math.max(...Object.values(scores));
     if (maxScore === 0) return null;
 
@@ -195,12 +195,12 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Prépare les données pour l'analyse selon la catégorie
+   * Prepare les donnees pour l'analyse selon la categorie
    */
   async prepareAnalysisData(category, rawData) {
     const { barcode, name, ingredients, product } = rawData;
 
-    // Si on a déjà un produit complet, l'utiliser
+    // Si on a dej  un produit complet, l'utiliser
     if (product) {
       return {
         ...product.toObject(),
@@ -210,7 +210,7 @@ class UniversalAnalyzer {
       };
     }
 
-    // Sinon, créer une structure minimale
+    // Sinon, creer une structure minimale
     const baseData = {
       barcode: barcode || this.generateTemporaryId(),
       name: name || 'Produit sans nom',
@@ -219,13 +219,13 @@ class UniversalAnalyzer {
       temporary: !barcode // Marquer comme temporaire si pas de code-barres
     };
 
-    // Enrichissement spécifique par catégorie
+    // Enrichissement specifique par categorie
     switch (category) {
       case 'food':
         return {
           ...baseData,
           ingredients_text: ingredients,
-          nutriments: {}, // Sera complété si possible
+          nutriments: {}, // Sera complete si possible
           categories_tags: [],
           additives_tags: [],
           allergens_tags: []
@@ -253,7 +253,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Enrichit le résultat avec des métadonnées supplémentaires
+   * Enrichit le resultat avec des metadonnees supplementaires
    */
   enrichResult(result, category, analysisData) {
     return {
@@ -276,7 +276,7 @@ class UniversalAnalyzer {
   calculateConfidence(result, data) {
     let confidence = 0.5; // Base
 
-    // Plus de données = plus de confiance
+    // Plus de donnees = plus de confiance
     if (data.barcode) confidence += 0.2;
     if (data.ingredients && data.ingredients.length > 50) confidence += 0.15;
     if (data.nutriments && Object.keys(data.nutriments).length > 5) confidence += 0.15;
@@ -293,7 +293,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Calcule la complétude des données
+   * Calcule la completude des donnees
    */
   calculateDataCompleteness(data) {
     const requiredFields = {
@@ -312,7 +312,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Génère des conseils selon la catégorie
+   * Genere des conseils selon la categorie
    */
   generateTips(category, result) {
     const tips = [];
@@ -322,13 +322,13 @@ class UniversalAnalyzer {
         if (result.scores?.nova === 4) {
           tips.push({
             type: 'warning',
-            message: 'Produit ultra-transformé : à limiter dans votre alimentation'
+            message: 'Produit ultra-transforme :   limiter dans votre alimentation'
           });
         }
         if (result.scores?.nutriscore === 'A' || result.scores?.nutriscore === 'B') {
           tips.push({
             type: 'success',
-            message: 'Bonne qualité nutritionnelle, à privilégier'
+            message: 'Bonne qualite nutritionnelle,   privilegier'
           });
         }
         break;
@@ -337,7 +337,7 @@ class UniversalAnalyzer {
         if (result.scores?.safety < 50) {
           tips.push({
             type: 'warning',
-            message: 'Contient des ingrédients préoccupants, recherchez des alternatives'
+            message: 'Contient des ingredients preoccupants, recherchez des alternatives'
           });
         }
         if (result.scores?.naturalness > 80) {
@@ -352,7 +352,7 @@ class UniversalAnalyzer {
         if (result.scores?.ecological > 80) {
           tips.push({
             type: 'success',
-            message: 'Bon choix écologique'
+            message: 'Bon choix ecologique'
           });
         }
         if (result.details?.phosphates) {
@@ -368,10 +368,10 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Génère des comparaisons avec des moyennes
+   * Genere des comparaisons avec des moyennes
    */
   generateComparisons(category, result) {
-    // TODO: Implémenter avec des vraies moyennes depuis la base
+    // TODO: Implementer avec des vraies moyennes depuis la base
     const averages = {
       food: { nova: 3, nutriscore: 'C', health: 50 },
       cosmetic: { safety: 70, naturalness: 40, effectiveness: 60 },
@@ -385,7 +385,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Interprète les comparaisons
+   * Interprete les comparaisons
    */
   interpretComparison(category, result, average) {
     if (!average || !result.scores) return null;
@@ -412,7 +412,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Génère un ID temporaire pour les produits sans code-barres
+   * Genere un ID temporaire pour les produits sans code-barres
    */
   generateTemporaryId() {
     return 'TEMP_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -489,7 +489,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Génère un résumé pour une analyse par lot
+   * Genere un resume pour une analyse par lot
    */
   generateBatchSummary(results) {
     const summary = {
@@ -498,7 +498,7 @@ class UniversalAnalyzer {
       recommendations: []
     };
 
-    // Grouper par catégorie
+    // Grouper par categorie
     results.forEach(r => {
       if (!r.success) return;
       
@@ -532,13 +532,13 @@ class UniversalAnalyzer {
       summary.averageScores[key] = Math.round(data.sum / data.count);
     });
 
-    // Générer des recommandations globales
+    // Generer des recommandations globales
     if (summary.byCategory.food?.count > 0) {
       const avgHealth = summary.averageScores.health;
       if (avgHealth < 50) {
         summary.recommendations.push({
           type: 'warning',
-          message: 'Vos produits alimentaires ont un score santé moyen faible. Privilégiez des aliments moins transformés.'
+          message: 'Vos produits alimentaires ont un score sante moyen faible. Privilegiez des aliments moins transformes.'
         });
       }
     }
@@ -548,7 +548,7 @@ class UniversalAnalyzer {
       if (avgSafety < 60) {
         summary.recommendations.push({
           type: 'warning',
-          message: 'Plusieurs produits cosmétiques contiennent des ingrédients préoccupants.'
+          message: 'Plusieurs produits cosmetiques contiennent des ingredients preoccupants.'
         });
       }
     }
@@ -558,7 +558,7 @@ class UniversalAnalyzer {
       if (avgEco < 50) {
         summary.recommendations.push({
           type: 'info',
-          message: 'Considérez des alternatives écologiques pour vos produits ménagers.'
+          message: 'Considerez des alternatives ecologiques pour vos produits menagers.'
         });
       }
     }
@@ -581,14 +581,14 @@ class UniversalAnalyzer {
       const Product = mongoose.model('Product');
       const Analysis = mongoose.model('Analysis');
 
-      // Récupérer le produit et son analyse
+      // Recuperer le produit et son analyse
       const product = await Product.findById(productId);
-      if (!product) throw new Error('Produit non trouvé');
+      if (!product) throw new Error('Produit non trouve');
 
       const analysis = await Analysis.findOne({ productId }).sort({ timestamp: -1 });
-      if (!analysis) throw new Error('Analyse non trouvée');
+      if (!analysis) throw new Error('Analyse non trouvee');
 
-      // Construire la requête pour les alternatives
+      // Construire la requete pour les alternatives
       const query = {
         _id: { $ne: productId },
         category: product.category,
@@ -599,10 +599,10 @@ class UniversalAnalyzer {
         query.subCategories = { $in: product.subCategories };
       }
 
-      // Récupérer les candidats
+      // Recuperer les candidats
       const candidates = await Product.find(query)
         .limit(limit * 3) // Prendre plus pour filtrer ensuite
-        .sort({ 'metadata.scanCount': -1 }); // Popularité
+        .sort({ 'metadata.scanCount': -1 }); // Popularite
 
       // Analyser et filtrer les candidats
       const alternatives = [];
@@ -610,7 +610,7 @@ class UniversalAnalyzer {
       for (const candidate of candidates) {
         if (alternatives.length >= limit) break;
 
-        // Récupérer l'analyse du candidat
+        // Recuperer l'analyse du candidat
         const candidateAnalysis = await Analysis.findOne({ 
           productId: candidate._id 
         }).sort({ timestamp: -1 });
@@ -640,7 +640,7 @@ class UniversalAnalyzer {
         }
       }
 
-      // Trier par amélioration décroissante
+      // Trier par amelioration decroissante
       alternatives.sort((a, b) => b.improvement - a.improvement);
 
       return alternatives.slice(0, limit);
@@ -652,7 +652,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Obtient le score principal selon la catégorie
+   * Obtient le score principal selon la categorie
    */
   getMainScore(results, category) {
     switch (category) {
@@ -668,7 +668,7 @@ class UniversalAnalyzer {
   }
 
   /**
-   * Génère la raison de recommander une alternative
+   * Genere la raison de recommander une alternative
    */
   getAlternativeReason(currentResults, alternativeResults, category) {
     const reasons = [];
@@ -676,19 +676,19 @@ class UniversalAnalyzer {
     switch (category) {
       case 'food':
         if (currentResults.scores.nova > alternativeResults.scores.nova) {
-          reasons.push('Moins transformé');
+          reasons.push('Moins transforme');
         }
         if (currentResults.scores.nutriscore > alternativeResults.scores.nutriscore) {
           reasons.push('Meilleur Nutri-Score');
         }
         if (alternativeResults.details?.additives?.controversial?.length === 0) {
-          reasons.push('Sans additifs controversés');
+          reasons.push('Sans additifs controverses');
         }
         break;
 
       case 'cosmetic':
         if (alternativeResults.details?.concerns?.length === 0) {
-          reasons.push('Sans substances préoccupantes');
+          reasons.push('Sans substances preoccupantes');
         }
         if (alternativeResults.scores.naturalness > 80) {
           reasons.push('Composition naturelle');
@@ -700,7 +700,7 @@ class UniversalAnalyzer {
           reasons.push('Sans phosphates');
         }
         if (alternativeResults.certifications?.eco?.length > 0) {
-          reasons.push('Certifié écologique');
+          reasons.push('Certifie ecologique');
         }
         break;
     }
@@ -748,13 +748,13 @@ class UniversalAnalyzer {
       const category = analysis.results.category;
       const method = analysis.method;
 
-      // Par catégorie
+      // Par categorie
       if (!stats.byCategory[category]) {
         stats.byCategory[category] = { count: 0, scores: {} };
       }
       stats.byCategory[category].count++;
 
-      // Par méthode
+      // Par methode
       if (!stats.byMethod[method]) {
         stats.byMethod[method] = 0;
       }

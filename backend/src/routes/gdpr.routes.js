@@ -1,5 +1,5 @@
 // backend/src/routes/gdpr.routes.js
-// Routes GDPR utilisant le DataExportService créé
+// Routes GDPR utilisant le DataExportService cree
 
 const express = require('express');
 const router = express.Router();
@@ -11,7 +11,7 @@ const crypto = require('crypto');
 
 /**
  * GET /api/gdpr/download-data
- * Télécharger toutes ses données (RGPD Art. 20 - Portabilité)
+ * Telecharger toutes ses donnees (RGPD Art. 20 - Portabilite)
  */
 router.get('/download-data/:format?', authenticateUser, async (req, res) => {
   try {
@@ -25,21 +25,21 @@ router.get('/download-data/:format?', authenticateUser, async (req, res) => {
       });
     }
     
-    console.log(`[GDPR] Export demandé par ${userId} au format ${format}`);
+    console.log(`[GDPR] Export demande par ${userId} au format ${format}`);
     
-    // Vérifier les quotas pour les utilisateurs gratuits
+    // Verifier les quotas pour les utilisateurs gratuits
     if (req.user.tier === 'free' && format !== 'json') {
       return res.status(403).json({
         success: false,
-        error: 'Export PDF/CSV réservé aux utilisateurs Premium',
+        error: 'Export PDF/CSV reserve aux utilisateurs Premium',
         upgradeUrl: '/pricing'
       });
     }
     
-    // Générer l'export
+    // Generer l'export
     const exportResult = await DataExportService.exportUserData(userId, format);
     
-    // Si format 'all', retourner les URLs de téléchargement
+    // Si format 'all', retourner les URLs de telechargement
     if (format === 'all') {
       return res.json({
         success: true,
@@ -57,7 +57,7 @@ router.get('/download-data/:format?', authenticateUser, async (req, res) => {
     // Pour un format unique, envoyer directement le fichier
     const file = exportResult.files[format];
     if (Array.isArray(file)) {
-      // Format CSV avec plusieurs fichiers - créer un ZIP
+      // Format CSV avec plusieurs fichiers - creer un ZIP
       const zipFile = await DataExportService.createZipArchive(file, exportResult.exportId, new Date().toISOString());
       res.download(zipFile.filepath, zipFile.filename);
     } else {
@@ -68,22 +68,22 @@ router.get('/download-data/:format?', authenticateUser, async (req, res) => {
     console.error('[GDPR] Export error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de l\'export des données'
+      error: 'Erreur lors de l\'export des donnees'
     });
   }
 });
 
 /**
  * GET /api/gdpr/download/:exportId/:format
- * Télécharger un export spécifique
+ * Telecharger un export specifique
  */
 router.get('/download/:exportId/:format', authenticateUser, async (req, res) => {
   try {
     const { exportId, format } = req.params;
     const exportPath = path.join(process.cwd(), 'exports');
     
-    // Vérifier que l'export appartient à l'utilisateur
-    // TODO: Implémenter la vérification avec un modèle ExportLog
+    // Verifier que l'export appartient   l'utilisateur
+    // TODO: Implementer la verification avec un modele ExportLog
     
     const filename = `ecolojia-export-${exportId}.${format}`;
     const filepath = path.join(exportPath, filename);
@@ -91,7 +91,7 @@ router.get('/download/:exportId/:format', authenticateUser, async (req, res) => 
     if (!fs.existsSync(filepath)) {
       return res.status(404).json({
         success: false,
-        error: 'Export non trouvé ou expiré'
+        error: 'Export non trouve ou expire'
       });
     }
     
@@ -101,14 +101,14 @@ router.get('/download/:exportId/:format', authenticateUser, async (req, res) => 
     console.error('[GDPR] Download error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors du téléchargement'
+      error: 'Erreur lors du telechargement'
     });
   }
 });
 
 /**
  * DELETE /api/gdpr/delete-account
- * Supprimer son compte (RGPD Art. 17 - Droit à l'oubli)
+ * Supprimer son compte (RGPD Art. 17 - Droit   l'oubli)
  */
 router.delete('/delete-account', authenticateUser, async (req, res) => {
   try {
@@ -122,7 +122,7 @@ router.delete('/delete-account', authenticateUser, async (req, res) => {
       });
     }
     
-    // Vérifier le mot de passe
+    // Verifier le mot de passe
     const user = await User.findById(userId).select('+password');
     const isValidPassword = await bcrypt.compare(password, user.password);
     
@@ -135,10 +135,10 @@ router.delete('/delete-account', authenticateUser, async (req, res) => {
     
     console.log(`[GDPR] Demande de suppression du compte ${userId}, raison: ${reason}`);
     
-    // Option 1: Suppression immédiate
+    // Option 1: Suppression immediate
     // const result = await DataExportService.deleteAllUserData(userId);
     
-    // Option 2: Suppression différée (30 jours)
+    // Option 2: Suppression differee (30 jours)
     const deletionDate = new Date();
     deletionDate.setDate(deletionDate.getDate() + 30);
     
@@ -154,7 +154,7 @@ router.delete('/delete-account', authenticateUser, async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Votre compte sera supprimé dans 30 jours',
+      message: 'Votre compte sera supprime dans 30 jours',
       deletionDate,
       cancellationToken: user.accountDeletion.cancellationToken,
       note: 'Vous pouvez annuler cette demande en vous reconnectant dans les 30 jours'
@@ -198,11 +198,11 @@ router.post('/cancel-deletion', authenticateUser, async (req, res) => {
     user.accountDeletion = undefined;
     await user.save();
     
-    console.log(`[GDPR] Suppression annulée pour ${userId}`);
+    console.log(`[GDPR] Suppression annulee pour ${userId}`);
     
     res.json({
       success: true,
-      message: 'Demande de suppression annulée avec succès'
+      message: 'Demande de suppression annulee avec succes'
     });
     
   } catch (error) {
@@ -216,7 +216,7 @@ router.post('/cancel-deletion', authenticateUser, async (req, res) => {
 
 /**
  * PUT /api/gdpr/update-consent
- * Mettre à jour les consentements
+ * Mettre   jour les consentements
  */
 router.put('/update-consent', authenticateUser, async (req, res) => {
   try {
@@ -235,7 +235,7 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     
     const user = await User.findById(userId);
     
-    // Mettre à jour les consentements
+    // Mettre   jour les consentements
     user.privacy = user.privacy || {};
     user.privacy.consents = {
       ...user.privacy.consents,
@@ -245,11 +245,11 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     
     await user.save();
     
-    console.log(`[GDPR] Consentements mis à jour pour ${userId}:`, consents);
+    console.log(`[GDPR] Consentements mis   jour pour ${userId}:`, consents);
     
     res.json({
       success: true,
-      message: 'Consentements mis à jour',
+      message: 'Consentements mis   jour',
       consents: user.privacy.consents
     });
     
@@ -257,14 +257,14 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     console.error('[GDPR] Update consent error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la mise à jour des consentements'
+      error: 'Erreur lors de la mise   jour des consentements'
     });
   }
 });
 
 /**
  * GET /api/gdpr/privacy-settings
- * Obtenir les paramètres de confidentialité
+ * Obtenir les parametres de confidentialite
  */
 router.get('/privacy-settings', authenticateUser, async (req, res) => {
   try {
@@ -279,18 +279,18 @@ router.get('/privacy-settings', authenticateUser, async (req, res) => {
       },
       dataRetention: {
         analyses: '2 ans',
-        personalData: 'Jusqu\'à suppression du compte',
+        personalData: 'Jusqu\'  suppression du compte',
         logs: '1 an'
       },
       rights: [
         {
-          name: 'Accès',
-          description: 'Consulter toutes vos données',
+          name: 'Acces',
+          description: 'Consulter toutes vos donnees',
           action: '/api/gdpr/download-data'
         },
         {
           name: 'Rectification',
-          description: 'Corriger vos données',
+          description: 'Corriger vos donnees',
           action: '/profile/edit'
         },
         {
@@ -299,13 +299,13 @@ router.get('/privacy-settings', authenticateUser, async (req, res) => {
           action: '/api/gdpr/delete-account'
         },
         {
-          name: 'Portabilité',
-          description: 'Exporter vos données',
+          name: 'Portabilite',
+          description: 'Exporter vos donnees',
           action: '/api/gdpr/download-data'
         },
         {
           name: 'Opposition',
-          description: 'Vous opposer à certains traitements',
+          description: 'Vous opposer   certains traitements',
           action: '/api/gdpr/update-consent'
         }
       ],
@@ -322,28 +322,28 @@ router.get('/privacy-settings', authenticateUser, async (req, res) => {
     console.error('[GDPR] Get privacy settings error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération des paramètres'
+      error: 'Erreur lors de la recuperation des parametres'
     });
   }
 });
 
 /**
  * POST /api/gdpr/data-breach-notification
- * Notification en cas de violation de données (pour les admins)
+ * Notification en cas de violation de donnees (pour les admins)
  */
 router.post('/data-breach-notification', authenticateUser, async (req, res) => {
   try {
-    // Vérifier que l'utilisateur est admin
+    // Verifier que l'utilisateur est admin
     if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
-        error: 'Accès non autorisé'
+        error: 'Acces non autorise'
       });
     }
     
     const { affectedUsers, breachType, description, discoveredAt } = req.body;
     
-    // TODO: Implémenter la notification des utilisateurs affectés
+    // TODO: Implementer la notification des utilisateurs affectes
     // - Envoyer des emails
     // - Logger l'incident
     // - Notifier la CNIL sous 72h
@@ -356,10 +356,10 @@ router.post('/data-breach-notification', authenticateUser, async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Notification de violation enregistrée',
+      message: 'Notification de violation enregistree',
       actionsRequired: [
         'Notifier la CNIL sous 72h',
-        'Informer les utilisateurs concernés',
+        'Informer les utilisateurs concernes',
         'Documenter les mesures prises'
       ]
     });
@@ -383,7 +383,7 @@ router.get('/info', (req, res) => {
     info: {
       dataController: {
         name: 'ECOLOJIA SAS',
-        address: '123 rue de la Santé, 75014 Paris, France',
+        address: '123 rue de la Sante, 75014 Paris, France',
         email: 'privacy@ecolojia.app',
         phone: '+33 1 23 45 67 89'
       },
@@ -393,22 +393,22 @@ router.get('/info', (req, res) => {
         phone: '+33 1 23 45 67 90'
       },
       legalBasis: {
-        account: 'Exécution du contrat',
+        account: 'Execution du contrat',
         healthData: 'Consentement explicite (RGPD Art. 9)',
         marketing: 'Consentement',
-        analytics: 'Intérêt légitime'
+        analytics: 'Interet legitime'
       },
       dataRetention: {
-        activeAccount: 'Durée de vie du compte + 3 ans',
-        inactiveAccount: '3 ans après dernière connexion',
+        activeAccount: 'Duree de vie du compte + 3 ans',
+        inactiveAccount: '3 ans apres derniere connexion',
         analyses: '2 ans',
         logs: '1 an',
-        financialRecords: '10 ans (obligation légale)'
+        financialRecords: '10 ans (obligation legale)'
       },
       thirdParties: [
         {
           name: 'MongoDB Atlas',
-          purpose: 'Hébergement des données',
+          purpose: 'Hebergement des donnees',
           location: 'UE (Irlande)'
         },
         {
@@ -423,13 +423,13 @@ router.get('/info', (req, res) => {
         }
       ],
       rights: {
-        access: 'Obtenir une copie de vos données',
-        rectification: 'Corriger des données inexactes',
-        erasure: 'Supprimer votre compte et vos données',
-        restriction: 'Limiter le traitement de vos données',
-        portability: 'Recevoir vos données dans un format structuré',
-        objection: 'Vous opposer à certains traitements',
-        automatedDecision: 'Ne pas faire l\'objet de décisions automatisées'
+        access: 'Obtenir une copie de vos donnees',
+        rectification: 'Corriger des donnees inexactes',
+        erasure: 'Supprimer votre compte et vos donnees',
+        restriction: 'Limiter le traitement de vos donnees',
+        portability: 'Recevoir vos donnees dans un format structure',
+        objection: 'Vous opposer   certains traitements',
+        automatedDecision: 'Ne pas faire l\'objet de decisions automatisees'
       },
       complaints: {
         authority: 'CNIL',
@@ -444,45 +444,45 @@ router.get('/info', (req, res) => {
 
 /**
  * GET /api/gdpr/processing-activities
- * Registre des activités de traitement (pour conformité)
+ * Registre des activites de traitement (pour conformite)
  */
 router.get('/processing-activities', authenticateUser, async (req, res) => {
   try {
-    // Vérifier que l'utilisateur est admin ou DPO
+    // Verifier que l'utilisateur est admin ou DPO
     if (!req.user.isAdmin && !req.user.isDPO) {
       return res.status(403).json({
         success: false,
-        error: 'Accès réservé aux administrateurs et DPO'
+        error: 'Acces reserve aux administrateurs et DPO'
       });
     }
     
     const activities = [
       {
         name: 'Gestion des comptes utilisateurs',
-        purpose: 'Permettre l\'accès et l\'utilisation du service',
-        legalBasis: 'Exécution du contrat',
-        dataCategories: ['Identité', 'Contact', 'Connexion'],
-        recipients: ['Équipe support', 'Hébergeur'],
-        retention: '3 ans après fermeture',
-        security: ['Chiffrement', 'Accès restreint', 'Logs']
+        purpose: 'Permettre l\'acces et l\'utilisation du service',
+        legalBasis: 'Execution du contrat',
+        dataCategories: ['Identite', 'Contact', 'Connexion'],
+        recipients: ['‰quipe support', 'Hebergeur'],
+        retention: '3 ans apres fermeture',
+        security: ['Chiffrement', 'Acces restreint', 'Logs']
       },
       {
         name: 'Analyses de produits',
         purpose: 'Fournir le service d\'analyse nutritionnelle',
-        legalBasis: 'Exécution du contrat',
-        dataCategories: ['Produits scannés', 'Préférences alimentaires'],
+        legalBasis: 'Execution du contrat',
+        dataCategories: ['Produits scannes', 'Preferences alimentaires'],
         recipients: ['Algorithmes d\'analyse'],
         retention: '2 ans',
         security: ['Anonymisation', 'Chiffrement']
       },
       {
         name: 'Communications marketing',
-        purpose: 'Informer des nouveautés et offres',
+        purpose: 'Informer des nouveautes et offres',
         legalBasis: 'Consentement',
-        dataCategories: ['Email', 'Préférences'],
+        dataCategories: ['Email', 'Preferences'],
         recipients: ['Service marketing', 'Outil emailing'],
         retention: 'Jusqu\'au retrait du consentement',
-        security: ['Double opt-in', 'Désinscription facile']
+        security: ['Double opt-in', 'Desinscription facile']
       }
     ];
     
@@ -497,7 +497,7 @@ router.get('/processing-activities', authenticateUser, async (req, res) => {
     console.error('[GDPR] Get processing activities error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération du registre'
+      error: 'Erreur lors de la recuperation du registre'
     });
   }
 });

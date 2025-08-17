@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/controllers/detergentController.js
+// PATH: backend/src/controllers/detergentController.js
 const { DetergentScorer } = require('../scorers/detergent/detergentScorer');
 const { Logger } = require('../utils/logger');
 const logger = new Logger('DetergentController');

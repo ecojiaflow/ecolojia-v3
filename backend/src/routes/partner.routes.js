@@ -7,7 +7,7 @@ const Product = require('../models/Product');
 const User = require('../models/User');
 
 /**
- * Configuration des partenaires affiliés
+ * Configuration des partenaires affilies
  */
 const AFFILIATE_PARTNERS = {
   lafourche: {
@@ -31,7 +31,7 @@ const AFFILIATE_PARTNERS = {
 };
 
 /**
- * Génère l'URL d'affiliation avec tracking
+ * Genere l'URL d'affiliation avec tracking
  */
 function generateAffiliateUrl(partner, originalUrl, clickId) {
   const config = AFFILIATE_PARTNERS[partner];
@@ -41,7 +41,7 @@ function generateAffiliateUrl(partner, originalUrl, clickId) {
 
   const url = new URL(originalUrl);
   
-  // Ajouter les paramètres d'affiliation
+  // Ajouter les parametres d'affiliation
   url.searchParams.set(config.trackingParam, config.affiliateId);
   url.searchParams.set('utm_source', 'ecolojia');
   url.searchParams.set('utm_medium', 'affiliate');
@@ -87,7 +87,7 @@ router.get('/track/:id', async (req, res) => {
       });
     }
 
-    // Récupérer le produit
+    // Recuperer le produit
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({
@@ -96,14 +96,14 @@ router.get('/track/:id', async (req, res) => {
       });
     }
 
-    // CORRECTION : Créer/récupérer un utilisateur anonyme avec ID valide
+    // CORRECTION : Creer/recuperer un utilisateur anonyme avec ID valide
     let userId;
     
-    // Option 1 : Récupérer depuis l'auth (si disponible)
+    // Option 1 : Recuperer depuis l'auth (si disponible)
     if (req.user && req.user.id) {
       userId = req.user.id;
     } else {
-      // Option 2 : Créer/récupérer un utilisateur anonyme
+      // Option 2 : Creer/recuperer un utilisateur anonyme
       console.log('[Affiliate] Creating/fetching anonymous user...');
       
       let anonymousUser = await User.findOne({ email: 'anonymous@ecolojia.app' });
@@ -124,17 +124,17 @@ router.get('/track/:id', async (req, res) => {
       console.log('[Affiliate] Using user ID:', userId);
     }
 
-    // Créer l'URL d'affiliation de base
+    // Creer l'URL d'affiliation de base
     const partnerConfig = AFFILIATE_PARTNERS[partner];
     const originalUrl = `${partnerConfig.baseUrl}/search?q=${encodeURIComponent(product.name)}`;
 
-    // Créer le click avec l'userId correct
+    // Creer le click avec l'userId correct
     const click = await AffiliateClick.createClick({
       userId: userId,
       productId: productId,
       partner: partner,
       originalUrl: originalUrl,
-      affiliateUrl: '', // Sera mis à jour juste après
+      affiliateUrl: '', // Sera mis   jour juste apres
       campaign: campaign,
       source: source,
       userAgent: req.headers['user-agent'],
@@ -149,10 +149,10 @@ router.get('/track/:id', async (req, res) => {
       }
     });
 
-    // Générer l'URL finale avec le clickId
+    // Generer l'URL finale avec le clickId
     const affiliateUrl = generateAffiliateUrl(partner, originalUrl, click.clickId);
     
-    // Mettre à jour le click avec l'URL finale
+    // Mettre   jour le click avec l'URL finale
     click.affiliateUrl = affiliateUrl;
     await click.save();
 
@@ -174,7 +174,7 @@ router.get('/track/:id', async (req, res) => {
 });
 
 /**
- * Récupère les statistiques d'affiliation
+ * Recupere les statistiques d'affiliation
  * GET /api/partner/stats
  */
 router.get('/stats', async (req, res) => {
@@ -216,7 +216,7 @@ router.get('/stats', async (req, res) => {
 });
 
 /**
- * Webhook pour conversions (appelé par les partenaires)
+ * Webhook pour conversions (appele par les partenaires)
  * POST /api/partner/conversion
  */
 router.post('/conversion', async (req, res) => {
@@ -224,8 +224,8 @@ router.post('/conversion', async (req, res) => {
     const { clickId, orderValue, orderId } = req.body;
     const partnerSecret = req.headers['x-partner-secret'];
 
-    // Vérifier le secret du partenaire
-    // TODO: Implémenter la vérification du secret
+    // Verifier le secret du partenaire
+    // TODO: Implementer la verification du secret
 
     if (!clickId || !orderValue) {
       return res.status(400).json({
@@ -239,7 +239,7 @@ router.post('/conversion', async (req, res) => {
       orderId
     });
 
-    console.log(`[Affiliate] Conversion recorded: ${clickId} -> ${orderValue}€`);
+    console.log(`[Affiliate] Conversion recorded: ${clickId} -> ${orderValue}â‚¬`);
 
     res.json({
       success: true,
@@ -259,7 +259,7 @@ router.post('/conversion', async (req, res) => {
 });
 
 /**
- * Test route pour vérifier que l'affiliation fonctionne
+ * Test route pour verifier que l'affiliation fonctionne
  * GET /api/partner/test
  */
 router.get('/test', async (req, res) => {
@@ -290,7 +290,7 @@ router.get('/test', async (req, res) => {
 });
 
 /**
- * Route pour récupérer les informations partenaires
+ * Route pour recuperer les informations partenaires
  * GET /api/partner/info
  */
 router.get('/info', (req, res) => {

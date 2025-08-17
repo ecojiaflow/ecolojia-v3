@@ -1,5 +1,5 @@
 // backend/src/routes/payment.routes.js
-// Routes de paiement utilisant le LemonSqueezyService créé
+// Routes de paiement utilisant le LemonSqueezyService cree
 
 const express = require('express');
 const router = express.Router();
@@ -8,7 +8,7 @@ const LemonSqueezyService = require('../services/payment/LemonSqueezyService');
 
 /**
  * POST /api/payment/create-checkout
- * Créer une session de checkout
+ * Creer une session de checkout
  */
 router.post('/create-checkout', authenticateUser, async (req, res) => {
   try {
@@ -31,7 +31,7 @@ router.post('/create-checkout', authenticateUser, async (req, res) => {
     console.error('[Payment] Checkout error:', error);
     res.status(500).json({
       success: false,
-      error: error.message || 'Erreur lors de la création du paiement'
+      error: error.message || 'Erreur lors de la creation du paiement'
     });
   }
 });
@@ -59,7 +59,7 @@ router.post('/webhook', async (req, res) => {
   } catch (error) {
     console.error('[Payment] Webhook error:', error);
     
-    // LemonSqueezy attend un 200 même en cas d'erreur
+    // LemonSqueezy attend un 200 meme en cas d'erreur
     res.status(200).json({ 
       success: false,
       error: error.message 
@@ -94,7 +94,7 @@ router.post('/cancel-subscription', authenticateUser, async (req, res) => {
 
 /**
  * POST /api/payment/resume-subscription
- * Réactiver un abonnement annulé
+ * Reactiver un abonnement annule
  */
 router.post('/resume-subscription', authenticateUser, async (req, res) => {
   try {
@@ -111,7 +111,7 @@ router.post('/resume-subscription', authenticateUser, async (req, res) => {
     console.error('[Payment] Resume subscription error:', error);
     res.status(500).json({
       success: false,
-      error: error.message || 'Erreur lors de la réactivation'
+      error: error.message || 'Erreur lors de la reactivation'
     });
   }
 });
@@ -164,7 +164,7 @@ router.get('/subscription-status', authenticateUser, async (req, res) => {
       });
     }
 
-    // Si l'abonnement existe, récupérer les détails
+    // Si l'abonnement existe, recuperer les details
     let subscriptionDetails = null;
     if (user.subscription.id) {
       try {
@@ -192,7 +192,7 @@ router.get('/subscription-status', authenticateUser, async (req, res) => {
     console.error('[Payment] Get subscription status error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération du statut'
+      error: 'Erreur lors de la recuperation du statut'
     });
   }
 });
@@ -218,7 +218,7 @@ router.get('/history', authenticateUser, async (req, res) => {
     console.error('[Payment] Get history error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération de l\'historique'
+      error: 'Erreur lors de la recuperation de l\'historique'
     });
   }
 });
@@ -234,7 +234,7 @@ router.get('/customer-portal', authenticateUser, async (req, res) => {
     if (!user?.subscription?.customerId) {
       return res.status(404).json({
         success: false,
-        error: 'Aucun abonnement trouvé'
+        error: 'Aucun abonnement trouve'
       });
     }
 
@@ -244,14 +244,14 @@ router.get('/customer-portal', authenticateUser, async (req, res) => {
     res.json({
       success: true,
       portalUrl,
-      message: 'Vous allez être redirigé vers le portail client LemonSqueezy'
+      message: 'Vous allez etre redirige vers le portail client LemonSqueezy'
     });
 
   } catch (error) {
     console.error('[Payment] Portal error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur accès portail'
+      error: 'Erreur acces portail'
     });
   }
 });
@@ -262,11 +262,11 @@ router.get('/customer-portal', authenticateUser, async (req, res) => {
  */
 router.get('/stats', authenticateUser, async (req, res) => {
   try {
-    // Vérifier si l'utilisateur est admin
+    // Verifier si l'utilisateur est admin
     if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
-        error: 'Accès non autorisé'
+        error: 'Acces non autorise'
       });
     }
     
@@ -281,7 +281,7 @@ router.get('/stats', authenticateUser, async (req, res) => {
     console.error('[Payment] Get stats error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération des statistiques'
+      error: 'Erreur lors de la recuperation des statistiques'
     });
   }
 });

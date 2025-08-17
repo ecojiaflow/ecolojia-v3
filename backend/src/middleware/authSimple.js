@@ -2,7 +2,7 @@
 
 // ========================================
 // FICHIER 2/4: backend/src/middleware/authSimple.js
-// Créez ce nouveau fichier
+// Creez ce nouveau fichier
 // ========================================
 
 const jwt = require('jsonwebtoken');
@@ -22,10 +22,10 @@ const authSimple = (req, res, next) => {
 
     const token = authHeader.substring(7);
 
-    // Vérifier le token
+    // Verifier le token
     const decoded = jwt.verify(token, JWT_SECRET);
     
-    // Ajouter les infos à la requête
+    // Ajouter les infos   la requete
     req.userId = decoded.userId;
     req.userEmail = decoded.email;
     req.userTier = decoded.tier;
@@ -35,7 +35,7 @@ const authSimple = (req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
-        error: 'Token expiré'
+        error: 'Token expire'
       });
     }
     

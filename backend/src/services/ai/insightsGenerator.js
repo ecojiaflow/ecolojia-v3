@@ -3,57 +3,57 @@ const { Logger } = require('../../utils/logger');
 
 const logger = new Logger('InsightsGenerator');
 
-/* ───── Templates d'insights ───── */
+/* â”€â”€â”€â”€â”€ Templates d'insights â”€â”€â”€â”€â”€ */
 const TEMPLATES = {
   food: {
     nova: {
-      1: ['✨ Non transformé', '🌱 Base saine'],
-      2: ['🍳 Ingrédient culinaire', '💡 Usage modéré'],
-      3: ['🏭 Transformé', '📊 Conservateurs simples'],
-      4: ['⚠️ Ultra-transformé', '🧪 Additifs multiples']
+      1: ['âœ¨ Non transforme', 'ðŸŒ± Base saine'],
+      2: ['ðŸ³ Ingredient culinaire', 'ðŸ’¡ Usage modere'],
+      3: ['ðŸ­ Transforme', 'ðŸ“Š Conservateurs simples'],
+      4: ['âš ï¸ Ultra-transforme', 'ðŸ§ª Additifs multiples']
     },
     ultra: {
-      high: ['🏭 Transformation élevée', '📈 Risque chronique'],
-      med: ['⚙️ Transformation modérée', '💡 Préférez moins transformé']
+      high: ['ðŸ­ Transformation elevee', 'ðŸ“ˆ Risque chronique'],
+      med: ['âš™ï¸ Transformation moderee', 'ðŸ’¡ Preferez moins transforme']
     },
     reco: {
-      good: ['✅ Excellent choix !', '💚 Continuez ainsi'],
-      bad: ['⚡ Consommation occasionnelle', '🏠 Privilégiez maison']
+      good: ['âœ… Excellent choix !', 'ðŸ’š Continuez ainsi'],
+      bad: ['âš¡ Consommation occasionnelle', 'ðŸ  Privilegiez maison']
     }
   },
   cosmetics: {
     hazard: {
-      high: ['⚠️ Ingrédients préoccupants', '🔬 Composants surveillés'],
-      pe: ['🚨 Perturbateurs endocriniens', '👶 Éviter grossesse'],
-      allerg: ['🌸 Allergènes présents', '💡 Test préalable']
+      high: ['âš ï¸ Ingredients preoccupants', 'ðŸ”¬ Composants surveilles'],
+      pe: ['ðŸš¨ Perturbateurs endocriniens', 'ðŸ‘¶ ‰viter grossesse'],
+      allerg: ['ðŸŒ¸ Allergenes presents', 'ðŸ’¡ Test prealable']
     },
     reco: {
-      good: ['✨ Formulation saine', '🌿 Bonne tolérance'],
-      bad: ['🚫 Ingrédients controversés', '🔄 Cherchez alternatives']
+      good: ['âœ¨ Formulation saine', 'ðŸŒ¿ Bonne tolerance'],
+      bad: ['ðŸš« Ingredients controverses', 'ðŸ”„ Cherchez alternatives']
     }
   },
   detergents: {
     impact: {
-      aqua: ['🐟 Impact aquatique', '💧 Dosez minimum'],
-      bio: ['♻️ Biodégradabilité limitée', '⏳ Persistant'],
-      voc: ['💨 Émissions volatiles', '🪟 Ventilez']
+      aqua: ['ðŸŸ Impact aquatique', 'ðŸ’§ Dosez minimum'],
+      bio: ['â™»ï¸ Biodegradabilite limitee', 'â³ Persistant'],
+      voc: ['ðŸ’¨ ‰missions volatiles', 'ðŸªŸ Ventilez']
     },
     reco: {
-      good: ['🧼 Impact acceptable', '🌱 Dosage correct'],
-      bad: ['🌍 Impact élevé', '🏆 Préférez écolabel']
+      good: ['ðŸ§¼ Impact acceptable', 'ðŸŒ± Dosage correct'],
+      bad: ['ðŸŒ Impact eleve', 'ðŸ† Preferez ecolabel']
     }
   },
   general: {
     score: {
-      80: ['🌟 Excellent !', '💚 Impact minimal'],
-      60: ['👍 Bon produit', '📊 Performance correcte'],
-      40: ['⚠️ Moyen', '🔍 Comparez'],
-      0: ['❌ Problématique', '🚫 Évitez']
+      80: ['ðŸŒŸ Excellent !', 'ðŸ’š Impact minimal'],
+      60: ['ðŸ‘ Bon produit', 'ðŸ“Š Performance correcte'],
+      40: ['âš ï¸ Moyen', 'ðŸ” Comparez'],
+      0: ['âŒ Problematique', 'ðŸš« ‰vitez']
     }
   }
 };
 
-/* ───── Générateur optimisé ───── */
+/* â”€â”€â”€â”€â”€ Generateur optimise â”€â”€â”€â”€â”€ */
 class InsightsGenerator {
   async generate(req) {
     logger.info(`Generating insights for ${req.product}`);
@@ -63,7 +63,7 @@ class InsightsGenerator {
     const tips = [];
     const warnings = [];
     
-    // Insights par catégorie
+    // Insights par categorie
     switch (req.category) {
       case 'food':
         this.genFood(req, insights, recommendations, tips, warnings);
@@ -81,8 +81,8 @@ class InsightsGenerator {
     
     // Motivation
     if (req.score < 60) {
-      recommendations.push('💪 Chaque changement compte');
-      recommendations.push('🌍 Impact positif possible');
+      recommendations.push('ðŸ’ª Chaque changement compte');
+      recommendations.push('ðŸŒ Impact positif possible');
     }
     
     return {
@@ -106,30 +106,30 @@ class InsightsGenerator {
         r.push(...TEMPLATES.food.reco.bad);
       }
       if (a.nova.additives && a.nova.additives.some(ad => ad.riskLevel === 'high')) {
-        w.push('🚨 Additifs à risque élevé');
+        w.push('ðŸš¨ Additifs   risque eleve');
       }
     }
     
     // Ultra-transform
     if (a.ultra && a.ultra.score > 7) {
       i.push(...TEMPLATES.food.ultra.high);
-      w.push('📈 Risque maladies chroniques');
-      t.push('💡 Perturbation signaux satiété');
+      w.push('ðŸ“ˆ Risque maladies chroniques');
+      t.push('ðŸ’¡ Perturbation signaux satiete');
     } else if (a.ultra && a.ultra.score > 4) {
       i.push(...TEMPLATES.food.ultra.med);
     }
     
-    // Marqueurs spécifiques
-    if (a.ultra && a.ultra.markers && a.ultra.markers.some(m => /hydrogén/i.test(m))) {
-      w.push('🚫 Acides gras trans');
-      i.push('❤️ Risque cardiovasculaire');
+    // Marqueurs specifiques
+    if (a.ultra && a.ultra.markers && a.ultra.markers.some(m => /hydrogen/i.test(m))) {
+      w.push('ðŸš« Acides gras trans');
+      i.push('â¤ï¸ Risque cardiovasculaire');
     }
     
-    // Tips généraux
-    t.push('💡 Variez les sources');
+    // Tips generaux
+    t.push('ðŸ’¡ Variez les sources');
     if (req.score < 40) {
-      r.push('🥗 Compensez avec du frais');
-      r.push('💧 Hydratez-vous bien');
+      r.push('ðŸ¥— Compensez avec du frais');
+      r.push('ðŸ’§ Hydratez-vous bien');
     }
   }
   
@@ -142,20 +142,20 @@ class InsightsGenerator {
       }
       if (a.cosmeticsHazard.endocrineDisruptors && a.cosmeticsHazard.endocrineDisruptors.length) {
         w.push(...TEMPLATES.cosmetics.hazard.pe);
-        r.push('🔄 Alternatives sans PE');
+        r.push('ðŸ”„ Alternatives sans PE');
       }
       if (a.cosmeticsHazard.allergens && a.cosmeticsHazard.allergens.length) {
         i.push(...TEMPLATES.cosmetics.hazard.allerg);
-        r.push('🔍 Surveillez réactions');
+        r.push('ðŸ” Surveillez reactions');
       }
       if (a.cosmeticsHazard.naturalityScore >= 8) {
-        i.push('🌿 Haute naturalité');
+        i.push('ðŸŒ¿ Haute naturalite');
       }
     }
     
     // Tips
-    t.push('💧 Appliquez peau propre');
-    t.push('🌞 Protection solaire jour');
+    t.push('ðŸ’§ Appliquez peau propre');
+    t.push('ðŸŒž Protection solaire jour');
     
     r.push(...(req.score >= 50 ? TEMPLATES.cosmetics.reco.good : TEMPLATES.cosmetics.reco.bad));
   }
@@ -166,26 +166,26 @@ class InsightsGenerator {
     if (a.detergentImpact) {
       if (a.detergentImpact.aquaticToxicity >= 7) {
         w.push(...TEMPLATES.detergents.impact.aqua);
-        r.push('🚰 Jamais dans nature');
+        r.push('ðŸš° Jamais dans nature');
       }
       if (a.detergentImpact.biodegradability <= 60) {
         w.push(...TEMPLATES.detergents.impact.bio);
       } else if (a.detergentImpact.biodegradability >= 90) {
-        i.push('✅ Excellente biodégradabilité');
+        i.push('âœ… Excellente biodegradabilite');
       }
       if (a.detergentImpact.vocEmissions >= 7) {
         w.push(...TEMPLATES.detergents.impact.voc);
-        r.push('😷 Évitez inhalation');
+        r.push('ðŸ˜· ‰vitez inhalation');
       }
       if (a.detergentImpact.ecoLabel) {
-        i.push('🏆 Certifié écologique');
+        i.push('ðŸ† Certifie ecologique');
       }
     }
     
-    // Tips éco
-    t.push('📏 Respectez doses');
-    t.push('🌡️ Lavez froid si possible');
-    t.push('💧 Surdosage inutile');
+    // Tips eco
+    t.push('ðŸ“ Respectez doses');
+    t.push('ðŸŒ¡ï¸ Lavez froid si possible');
+    t.push('ðŸ’§ Surdosage inutile');
     
     r.push(...(req.score >= 50 ? TEMPLATES.detergents.reco.good : TEMPLATES.detergents.reco.bad));
   }
@@ -195,11 +195,11 @@ class InsightsGenerator {
     i.push(...TEMPLATES.general.score[threshold]);
     
     if (score < 60) {
-      r.push('🔍 Comparez options');
+      r.push('ðŸ” Comparez options');
     }
   }
 
-  // Méthode principale pour compatibilité avec foodScorer
+  // Methode principale pour compatibilite avec foodScorer
   async getInsightsForProduct(productData, userProfile = {}) {
     try {
       logger.info('Getting insights for product:', { name: productData.name });
@@ -236,14 +236,14 @@ class InsightsGenerator {
         });
       });
       
-      // Limiter à 3 insights
+      // Limiter   3 insights
       return formattedInsights.slice(0, 3);
       
     } catch (error) {
       logger.error('Error generating insights:', error);
       return [{
         type: 'info',
-        icon: '💡',
+        icon: 'ðŸ’¡',
         title: 'Analyse en cours',
         priority: 'medium'
       }];

@@ -1,54 +1,54 @@
 // backend/src/services/analysis/novaClassifier.js
-// Classification NOVA : de 1 (non transformé) à 4 (ultra-transformé)
+// Classification NOVA : de 1 (non transforme)   4 (ultra-transforme)
 
 class NovaClassifier {
   constructor() {
     // Marqueurs d'ultra-transformation
     this.ultraProcessedMarkers = [
-      // Additifs cosmétiques
+      // Additifs cosmetiques
       'e102', 'e104', 'e110', 'e122', 'e124', 'e129', 'e131', 'e132', 'e133',
       'e142', 'e150c', 'e150d', 'e151', 'e154', 'e155', 'e160b', 'e160c',
       
-      // Édulcorants
+      // ‰dulcorants
       'e950', 'e951', 'e952', 'e954', 'e955', 'e960', 'e961', 'e962',
       'aspartame', 'acesulfame', 'sucralose', 'saccharine',
       
-      // Exhausteurs de goût
+      // Exhausteurs de gout
       'e620', 'e621', 'e622', 'e623', 'e624', 'e625', 'e626', 'e627', 'e628',
       'e629', 'e630', 'e631', 'e632', 'e633', 'e634', 'e635',
       'glutamate', 'msg',
       
-      // Émulsifiants
+      // ‰mulsifiants
       'e322', 'e471', 'e472a', 'e472b', 'e472c', 'e472d', 'e472e', 'e472f',
       'e473', 'e474', 'e475', 'e476', 'e477', 'e481', 'e482',
       
-      // Ingrédients ultra-transformés
-      'sirop de glucose', 'sirop de fructose', 'sirop de maïs',
-      'maltodextrine', 'dextrose', 'amidon modifié',
-      'huile hydrogénée', 'huile partiellement hydrogénée',
-      'isolat de protéine', 'caséine', 'whey',
-      'arôme', 'arôme naturel', 'arôme artificiel'
+      // Ingredients ultra-transformes
+      'sirop de glucose', 'sirop de fructose', 'sirop de mais',
+      'maltodextrine', 'dextrose', 'amidon modifie',
+      'huile hydrogenee', 'huile partiellement hydrogenee',
+      'isolat de proteine', 'caseine', 'whey',
+      'arome', 'arome naturel', 'arome artificiel'
     ];
     
-    // Ingrédients minimalement transformés (NOVA 1-2)
+    // Ingredients minimalement transformes (NOVA 1-2)
     this.minimallyProcessed = [
-      'eau', 'lait', 'œuf', 'farine', 'sucre', 'sel', 'huile', 'beurre',
-      'viande', 'poisson', 'fruits', 'légumes', 'céréales', 'légumineuses',
-      'noix', 'graines', 'herbes', 'épices', 'café', 'thé', 'cacao'
+      'eau', 'lait', 'Å“uf', 'farine', 'sucre', 'sel', 'huile', 'beurre',
+      'viande', 'poisson', 'fruits', 'legumes', 'cereales', 'legumineuses',
+      'noix', 'graines', 'herbes', 'epices', 'cafe', 'the', 'cacao'
     ];
   }
   
   /**
    * Classifie un produit selon NOVA
    * @param {Object} product - Produit avec ingredients
-   * @returns {Object} Classification NOVA détaillée
+   * @returns {Object} Classification NOVA detaillee
    */
   classify(product) {
     if (!product.ingredients) {
       return {
         group: null,
         confidence: 0,
-        reason: 'Pas d\'ingrédients disponibles'
+        reason: 'Pas d\'ingredients disponibles'
       };
     }
     
@@ -65,14 +65,14 @@ class NovaClassifier {
       return {
         group: 4,
         confidence: 0.9,
-        label: 'Ultra-transformé',
+        label: 'Ultra-transforme',
         reason: `Contient des marqueurs d'ultra-transformation: ${ultraProcessedFound.join(', ')}`,
         markers: ultraProcessedFound,
-        healthImpact: 'À limiter - Associé à des risques pour la santé'
+        healthImpact: '€ limiter - Associe   des risques pour la sante'
       };
     }
     
-    // Ratio ingrédients transformés vs minimaux
+    // Ratio ingredients transformes vs minimaux
     const totalIngredients = processedIngredients + minimalIngredients;
     const processedRatio = totalIngredients > 0 ? processedIngredients / totalIngredients : 0;
     
@@ -80,9 +80,9 @@ class NovaClassifier {
       return {
         group: 3,
         confidence: 0.8,
-        label: 'Transformé',
-        reason: 'Majorité d\'ingrédients transformés',
-        healthImpact: 'À consommer avec modération'
+        label: 'Transforme',
+        reason: 'Majorite d\'ingredients transformes',
+        healthImpact: '€ consommer avec moderation'
       };
     }
     
@@ -90,33 +90,33 @@ class NovaClassifier {
       return {
         group: 2,
         confidence: 0.8,
-        label: 'Transformé culinaire',
+        label: 'Transforme culinaire',
         reason: 'Transformation culinaire simple',
-        healthImpact: 'Acceptable dans une alimentation équilibrée'
+        healthImpact: 'Acceptable dans une alimentation equilibree'
       };
     }
     
-    // Produit peu ou pas transformé
+    // Produit peu ou pas transforme
     return {
       group: 1,
       confidence: 0.85,
-      label: 'Non transformé ou minimalement transformé',
-      reason: 'Ingrédients naturels ou peu transformés',
-      healthImpact: 'À privilégier pour une alimentation saine'
+      label: 'Non transforme ou minimalement transforme',
+      reason: 'Ingredients naturels ou peu transformes',
+      healthImpact: '€ privilegier pour une alimentation saine'
     };
   }
   
   detectUltraProcessedMarkers(ingredients, additives) {
     const found = [];
     
-    // Vérifier dans les ingrédients texte
+    // Verifier dans les ingredients texte
     for (const marker of this.ultraProcessedMarkers) {
       if (ingredients.includes(marker)) {
         found.push(marker);
       }
     }
     
-    // Vérifier dans les tags d'additifs
+    // Verifier dans les tags d'additifs
     for (const additive of additives) {
       const code = additive.replace('en:', '');
       if (this.ultraProcessedMarkers.includes(code)) {
@@ -129,8 +129,8 @@ class NovaClassifier {
   
   countProcessedIngredients(ingredients) {
     const processed = [
-      'modifié', 'hydrogéné', 'raffiné', 'concentré', 'isolat',
-      'hydrolyse', 'estérifié', 'malté', 'instantané'
+      'modifie', 'hydrogene', 'raffine', 'concentre', 'isolat',
+      'hydrolyse', 'esterifie', 'malte', 'instantane'
     ];
     
     let count = 0;
@@ -149,41 +149,41 @@ class NovaClassifier {
   }
   
   /**
-   * Obtenir des recommandations basées sur NOVA
+   * Obtenir des recommandations basees sur NOVA
    */
   getRecommendations(novaGroup) {
     const recommendations = {
       1: {
-        message: 'Excellent choix ! Produit non transformé.',
+        message: 'Excellent choix ! Produit non transforme.',
         tips: [
-          'Privilégiez ces aliments dans votre alimentation',
-          'Base idéale pour des repas sains'
+          'Privilegiez ces aliments dans votre alimentation',
+          'Base ideale pour des repas sains'
         ]
       },
       2: {
         message: 'Bon choix. Transformation culinaire acceptable.',
         tips: [
-          'À utiliser pour cuisiner des plats maison',
-          'Vérifiez les quantités de sel/sucre ajoutés'
+          '€ utiliser pour cuisiner des plats maison',
+          'Verifiez les quantites de sel/sucre ajoutes'
         ]
       },
       3: {
-        message: 'À consommer avec modération.',
+        message: '€ consommer avec moderation.',
         tips: [
-          'Limitez à 2-3 portions par semaine',
-          'Cherchez des alternatives moins transformées',
-          'Lisez bien la liste des ingrédients'
+          'Limitez   2-3 portions par semaine',
+          'Cherchez des alternatives moins transformees',
+          'Lisez bien la liste des ingredients'
         ]
       },
       4: {
-        message: 'À éviter autant que possible.',
+        message: '€ eviter autant que possible.',
         tips: [
-          'Réservez pour les occasions exceptionnelles',
+          'Reservez pour les occasions exceptionnelles',
           'Remplacez par des alternatives maison',
-          'Risque accru d\'obésité, diabète et maladies cardiovasculaires'
+          'Risque accru d\'obesite, diabete et maladies cardiovasculaires'
         ],
         alternatives: [
-          'Préparez vos propres collations',
+          'Preparez vos propres collations',
           'Choisissez des produits NOVA 1-2',
           'Optez pour des marques bio/artisanales'
         ]

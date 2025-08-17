@@ -1,7 +1,7 @@
 
 
 // ========================================
-// 3. INTÉGRATION AUTH SERVICE AMÉLIORÉE
+// 3. INT‰GRATION AUTH SERVICE AM‰LIOR‰E
 // PATH: backend/src/services/auth/authService.js
 // ========================================
 const User = require('../../models/User');
@@ -15,12 +15,12 @@ class AuthService {
 
   /**
    * Inscription d'un nouvel utilisateur
-   * @param {Object} data - Données d'inscription
+   * @param {Object} data - Donnees d'inscription
    * @returns {Object} User + tokens
    */
   async register({ email, password, name, referralCode }) {
     try {
-      // Vérifier si l'utilisateur existe
+      // Verifier si l'utilisateur existe
       const existingUser = await User.findOne({ email: email.toLowerCase() });
       if (existingUser) {
         throw new Error('Email already registered');
@@ -29,7 +29,7 @@ class AuthService {
       // Hasher le mot de passe
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      // Créer l'utilisateur
+      // Creer l'utilisateur
       const user = new User({
         email: email.toLowerCase(),
         password: hashedPassword,
@@ -43,7 +43,7 @@ class AuthService {
         }
       });
 
-      // Gérer le parrainage
+      // Gerer le parrainage
       if (referralCode) {
         const referrer = await User.findOne({ 'metadata.referralCode': referralCode });
         if (referrer) {
@@ -54,7 +54,7 @@ class AuthService {
 
       await user.save();
 
-      // Générer les tokens
+      // Generer les tokens
       const accessToken = this.tokenService.generateAccessToken(user);
       const refreshToken = this.tokenService.generateRefreshToken(user);
 
@@ -89,17 +89,17 @@ class AuthService {
         throw new Error('Invalid credentials');
       }
 
-      // Vérifier le mot de passe
+      // Verifier le mot de passe
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
         throw new Error('Invalid credentials');
       }
 
-      // Mettre à jour dernière connexion
+      // Mettre   jour derniere connexion
       user.lastLoginAt = new Date();
       await user.save();
 
-      // Générer les tokens
+      // Generer les tokens
       const accessToken = this.tokenService.generateAccessToken(user);
       const refreshToken = this.tokenService.generateRefreshToken(user);
 
@@ -121,28 +121,28 @@ class AuthService {
   }
 
   /**
-   * Rafraîchir les tokens
+   * Rafraichir les tokens
    * @param {string} refreshToken - Refresh token
    * @returns {Object} Nouveaux tokens
    */
   async refresh(refreshToken) {
     try {
-      // Vérifier le refresh token
+      // Verifier le refresh token
       const decoded = this.tokenService.verifyRefreshToken(refreshToken);
       
-      // Vérifier en base
+      // Verifier en base
       const isValid = await this.tokenService.verifyRefreshTokenInDB(decoded.userId, refreshToken);
       if (!isValid) {
         throw new Error('Invalid refresh token');
       }
 
-      // Récupérer l'utilisateur
+      // Recuperer l'utilisateur
       const user = await User.findById(decoded.userId);
       if (!user) {
         throw new Error('User not found');
       }
 
-      // Générer nouveaux tokens
+      // Generer nouveaux tokens
       const newAccessToken = this.tokenService.generateAccessToken(user);
       const newRefreshToken = this.tokenService.generateRefreshToken(user);
 
@@ -163,9 +163,9 @@ class AuthService {
   }
 
   /**
-   * Déconnexion
+   * Deconnexion
    * @param {string} userId - ID utilisateur
-   * @param {string} refreshToken - Refresh token à révoquer
+   * @param {string} refreshToken - Refresh token   revoquer
    */
   async logout(userId, refreshToken) {
     try {
@@ -178,9 +178,9 @@ class AuthService {
   }
 
   /**
-   * Nettoie les données utilisateur
+   * Nettoie les donnees utilisateur
    * @param {Object} user - Utilisateur MongoDB
-   * @returns {Object} Utilisateur sans données sensibles
+   * @returns {Object} Utilisateur sans donnees sensibles
    */
   sanitizeUser(user) {
     const userObj = user.toObject();

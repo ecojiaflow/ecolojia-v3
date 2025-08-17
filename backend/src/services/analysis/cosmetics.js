@@ -1,26 +1,26 @@
 // PATH: backend\src\services\analysis\cosmetics.js
 /**
- * Cosmetics Analysis Service - Analyse des produits cosmétiques
- * Conforme à TechReference.md : INCI, allergènes, perturbateurs endocriniens, microplastiques
+ * Cosmetics Analysis Service - Analyse des produits cosmetiques
+ * Conforme   TechReference.md : INCI, allergenes, perturbateurs endocriniens, microplastiques
  */
 
 class CosmeticsAnalyzer {
   constructor() {
-    // Base de données des ingrédients à risque
+    // Base de donnees des ingredients   risque
     this.riskIngredients = {
       allergens: {
-        'limonene': { severity: 'medium', type: 'parfum allergène' },
-        'linalool': { severity: 'medium', type: 'parfum allergène' },
-        'citral': { severity: 'medium', type: 'parfum allergène' },
-        'geraniol': { severity: 'medium', type: 'parfum allergène' },
-        'eugenol': { severity: 'high', type: 'parfum allergène' },
-        'coumarin': { severity: 'medium', type: 'parfum allergène' },
-        'citronellol': { severity: 'medium', type: 'parfum allergène' },
+        'limonene': { severity: 'medium', type: 'parfum allergene' },
+        'linalool': { severity: 'medium', type: 'parfum allergene' },
+        'citral': { severity: 'medium', type: 'parfum allergene' },
+        'geraniol': { severity: 'medium', type: 'parfum allergene' },
+        'eugenol': { severity: 'high', type: 'parfum allergene' },
+        'coumarin': { severity: 'medium', type: 'parfum allergene' },
+        'citronellol': { severity: 'medium', type: 'parfum allergene' },
         'benzyl alcohol': { severity: 'low', type: 'conservateur/parfum' },
-        'benzyl salicylate': { severity: 'medium', type: 'parfum allergène' },
-        'cinnamal': { severity: 'high', type: 'parfum allergène' },
-        'cinnamyl alcohol': { severity: 'high', type: 'parfum allergène' },
-        'hydroxycitronellal': { severity: 'medium', type: 'parfum allergène' }
+        'benzyl salicylate': { severity: 'medium', type: 'parfum allergene' },
+        'cinnamal': { severity: 'high', type: 'parfum allergene' },
+        'cinnamyl alcohol': { severity: 'high', type: 'parfum allergene' },
+        'hydroxycitronellal': { severity: 'medium', type: 'parfum allergene' }
       },
       endocrineDisruptors: {
         'bht': { severity: 'high', fullName: 'Butylated Hydroxytoluene' },
@@ -38,13 +38,13 @@ class CosmeticsAnalyzer {
         'polyethylene': { type: 'microplastic', usage: 'exfoliant' },
         'polypropylene': { type: 'microplastic', usage: 'agent de texture' },
         'polyethylene terephthalate': { type: 'microplastic', usage: 'paillettes' },
-        'polymethyl methacrylate': { type: 'microplastic', usage: 'agent filmogène' },
+        'polymethyl methacrylate': { type: 'microplastic', usage: 'agent filmogene' },
         'nylon-12': { type: 'microplastic', usage: 'agent matifiant' },
         'nylon-6': { type: 'microplastic', usage: 'agent de texture' },
-        'polyurethane': { type: 'microplastic', usage: 'agent filmogène' },
-        'acrylates copolymer': { type: 'microplastic', usage: 'agent filmogène' },
+        'polyurethane': { type: 'microplastic', usage: 'agent filmogene' },
+        'acrylates copolymer': { type: 'microplastic', usage: 'agent filmogene' },
         'polyquaternium': { type: 'microplastic', usage: 'conditionnement' },
-        'carbomer': { type: 'microplastic', usage: 'gélifiant' }
+        'carbomer': { type: 'microplastic', usage: 'gelifiant' }
       },
       silicones: {
         'dimethicone': { type: 'silicone non volatile', concern: 'accumulation' },
@@ -57,11 +57,11 @@ class CosmeticsAnalyzer {
       preservatives: {
         'methylisothiazolinone': { severity: 'high', abbr: 'MIT' },
         'methylchloroisothiazolinone': { severity: 'high', abbr: 'CMIT' },
-        'formaldehyde': { severity: 'high', type: 'libérateur de formol' },
-        'dmdm hydantoin': { severity: 'medium', type: 'libérateur de formol' },
-        'imidazolidinyl urea': { severity: 'medium', type: 'libérateur de formol' },
-        'diazolidinyl urea': { severity: 'medium', type: 'libérateur de formol' },
-        'quaternium-15': { severity: 'medium', type: 'libérateur de formol' }
+        'formaldehyde': { severity: 'high', type: 'liberateur de formol' },
+        'dmdm hydantoin': { severity: 'medium', type: 'liberateur de formol' },
+        'imidazolidinyl urea': { severity: 'medium', type: 'liberateur de formol' },
+        'diazolidinyl urea': { severity: 'medium', type: 'liberateur de formol' },
+        'quaternium-15': { severity: 'medium', type: 'liberateur de formol' }
       },
       colorants: {
         'ci 16035': { name: 'Rouge Allura', concern: 'allergie' },
@@ -76,13 +76,13 @@ class CosmeticsAnalyzer {
   }
 
   /**
-   * Analyse principale d'un produit cosmétique
+   * Analyse principale d'un produit cosmetique
    */
   async analyzeProduct(product, options = {}) {
     const ingredientsText = this.extractIngredientsText(product);
     
     if (!ingredientsText) {
-      return this.createEmptyResult('Pas d\'ingrédients fournis');
+      return this.createEmptyResult('Pas d\'ingredients fournis');
     }
     
     // Parser la liste INCI
@@ -120,7 +120,7 @@ class CosmeticsAnalyzer {
   }
 
   /**
-   * Extrait le texte des ingrédients
+   * Extrait le texte des ingredients
    */
   extractIngredientsText(product) {
     if (typeof product.ingredients === 'string') {
@@ -138,12 +138,12 @@ class CosmeticsAnalyzer {
   parseINCI(ingredientsText) {
     // Nettoyer et normaliser
     const cleaned = ingredientsText
-      .replace(/\([^)]*\)/g, '') // Enlever les parenthèses
+      .replace(/\([^)]*\)/g, '') // Enlever les parentheses
       .replace(/\[[^\]]*\]/g, '') // Enlever les crochets
       .toLowerCase()
       .trim();
     
-    // Séparer les ingrédients
+    // Separer les ingredients
     const ingredients = cleaned
       .split(/[,;]/)
       .map(ing => ing.trim())
@@ -184,7 +184,7 @@ class CosmeticsAnalyzer {
     ingredients.forEach(ing => {
       const name = ing.name.toLowerCase();
       
-      // Allergènes
+      // Allergenes
       Object.entries(this.riskIngredients.allergens).forEach(([key, data]) => {
         if (name.includes(key)) {
           analysis.allergens.push({
@@ -228,7 +228,7 @@ class CosmeticsAnalyzer {
         }
       });
       
-      // Conservateurs problématiques
+      // Conservateurs problematiques
       Object.entries(this.riskIngredients.preservatives).forEach(([key, data]) => {
         if (name.includes(key)) {
           analysis.preservatives.push({
@@ -269,13 +269,13 @@ class CosmeticsAnalyzer {
   }
 
   /**
-   * Calcule le score de santé
+   * Calcule le score de sante
    */
   calculateHealthScore(riskAnalysis, ingredients) {
     let score = 100;
     const totalIngredients = ingredients.length || 1;
     
-    // Pénalités selon la position (plus haut = plus concentré)
+    // Penalites selon la position (plus haut = plus concentre)
     const positionFactor = (position) => {
       if (position <= 3) return 1.0;
       if (position <= 5) return 0.7;
@@ -283,31 +283,31 @@ class CosmeticsAnalyzer {
       return 0.2;
     };
     
-    // Perturbateurs endocriniens (pénalité forte)
+    // Perturbateurs endocriniens (penalite forte)
     riskAnalysis.endocrineDisruptors.forEach(item => {
       const penalty = item.severity === 'high' ? 15 : 10;
       score -= penalty * positionFactor(item.position);
     });
     
-    // Allergènes
+    // Allergenes
     riskAnalysis.allergens.forEach(item => {
       const penalty = item.severity === 'high' ? 8 : 5;
       score -= penalty * positionFactor(item.position);
     });
     
-    // Conservateurs problématiques
+    // Conservateurs problematiques
     riskAnalysis.preservatives.forEach(item => {
       const penalty = item.severity === 'high' ? 12 : 8;
       score -= penalty * positionFactor(item.position);
     });
     
-    // Colorants synthétiques
+    // Colorants synthetiques
     score -= riskAnalysis.colorants.length * 3;
     
     // PEGs
     score -= riskAnalysis.pegs.length * 5;
     
-    // Bonus si peu d'ingrédients (formulation simple)
+    // Bonus si peu d'ingredients (formulation simple)
     if (totalIngredients < 10) score += 10;
     else if (totalIngredients > 30) score -= 10;
     
@@ -320,19 +320,19 @@ class CosmeticsAnalyzer {
   calculateEnvironmentScore(riskAnalysis, ingredients) {
     let score = 100;
     
-    // Microplastiques (pénalité forte)
+    // Microplastiques (penalite forte)
     riskAnalysis.microplastics.forEach(item => {
       score -= 15 * (item.position <= 5 ? 1 : 0.5);
     });
     
-    // Silicones non biodégradables
+    // Silicones non biodegradables
     riskAnalysis.silicones.forEach(item => {
       if (item.type.includes('non volatile')) {
         score -= 10 * (item.position <= 5 ? 1 : 0.5);
       }
     });
     
-    // PEGs (dérivés pétrochimiques)
+    // PEGs (derives petrochimiques)
     score -= riskAnalysis.pegs.length * 8;
     
     return Math.max(0, Math.min(100, Math.round(score)));
@@ -353,7 +353,7 @@ class CosmeticsAnalyzer {
   }
 
   /**
-   * Extrait les ingrédients notables
+   * Extrait les ingredients notables
    */
   extractNotableIngredients(riskAnalysis) {
     const notable = [];
@@ -363,17 +363,17 @@ class CosmeticsAnalyzer {
       .slice(0, 3)
       .forEach(item => notable.push(item.fullName || item.ingredient));
     
-    // Top 2 allergènes si position haute
+    // Top 2 allergenes si position haute
     riskAnalysis.allergens
       .filter(item => item.position <= 5)
       .slice(0, 2)
       .forEach(item => notable.push(item.ingredient));
     
-    return [...new Set(notable)]; // Déduplique
+    return [...new Set(notable)]; // Deduplique
   }
 
   /**
-   * Détermine le niveau de risque
+   * Determine le niveau de risque
    */
   determineRiskLevel(healthScore) {
     if (healthScore >= 80) return 'low';
@@ -385,7 +385,7 @@ class CosmeticsAnalyzer {
    * Calcule la confiance
    */
   calculateConfidence(ingredients, riskAnalysis) {
-    // Plus on a d'ingrédients analysés, plus la confiance est haute
+    // Plus on a d'ingredients analyses, plus la confiance est haute
     const analyzedCount = Object.values(riskAnalysis)
       .reduce((sum, arr) => sum + arr.length, 0);
     
@@ -395,40 +395,40 @@ class CosmeticsAnalyzer {
   }
 
   /**
-   * Génère des recommandations
+   * Genere des recommandations
    */
   generateRecommendations(riskAnalysis, healthScore, environmentScore) {
     const recommendations = [];
     
-    // Recommandations santé
+    // Recommandations sante
     if (riskAnalysis.endocrineDisruptors.length > 0) {
-      recommendations.push('⚠️ Contient des perturbateurs endocriniens suspectés');
+      recommendations.push('âš ï¸ Contient des perturbateurs endocriniens suspectes');
     }
     
     if (riskAnalysis.allergens.length > 3) {
-      recommendations.push('🔴 Nombreux allergènes : à éviter pour les peaux sensibles');
+      recommendations.push('ðŸ”´ Nombreux allergenes :   eviter pour les peaux sensibles');
     }
     
     if (healthScore < 50) {
-      recommendations.push('💡 Score santé faible : privilégiez des alternatives plus sûres');
+      recommendations.push('ðŸ’¡ Score sante faible : privilegiez des alternatives plus sures');
     } else if (healthScore > 80) {
-      recommendations.push('✅ Bonne composition pour la santé');
+      recommendations.push('âœ… Bonne composition pour la sante');
     }
     
     // Recommandations environnement
     if (riskAnalysis.microplastics.length > 0) {
-      recommendations.push('🌊 Contient des microplastiques : impact négatif sur les océans');
+      recommendations.push('ðŸŒŠ Contient des microplastiques : impact negatif sur les oceans');
     }
     
     if (environmentScore < 50) {
-      recommendations.push('🌱 Impact environnemental élevé : cherchez des alternatives écologiques');
+      recommendations.push('ðŸŒ± Impact environnemental eleve : cherchez des alternatives ecologiques');
     }
     
     return recommendations;
   }
 
   /**
-   * Crée un résultat vide avec erreur
+   * Cree un resultat vide avec erreur
    */
   createEmptyResult(error) {
     return {

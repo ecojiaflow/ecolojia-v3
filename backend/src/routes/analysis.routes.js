@@ -13,28 +13,28 @@ try {
   validateAnalysis = mw.validateAnalysis || validateAnalysis;
   asyncHandler = mw.asyncHandler || asyncHandler;
 } catch {
-  console.warn('[analysis.routes] middleware non trouvé → fallbacks no-op');
+  console.warn('[analysis.routes] middleware non trouve â†’ fallbacks no-op');
 }
 
-// -------- Chargement du service d'analyse orchestré --------
+// -------- Chargement du service d'analyse orchestre --------
 let analysisService;
 let usingFallback = false;
 
 try {
   // Essayer de charger le nouvel orchestrateur
   analysisService = require('../services/analysis/index');
-  console.log('[analysis.routes] ✅ Service Analysis orchestré chargé');
+  console.log('[analysis.routes] âœ… Service Analysis orchestre charge');
 } catch (e) {
-  console.warn('[analysis.routes] ⚠️ Service orchestré non trouvé, essai de l\'ancien service...');
+  console.warn('[analysis.routes] âš ï¸ Service orchestre non trouve, essai de l\'ancien service...');
   
   try {
-    // Fallback sur l'ancien service si présent
+    // Fallback sur l'ancien service si present
     analysisService = require('../services/analysis/analysisService');
-    console.log('[analysis.routes] ✅ analysisService legacy chargé');
+    console.log('[analysis.routes] âœ… analysisService legacy charge');
   } catch (e2) {
     // Fallback ultime avec service minimal
     usingFallback = true;
-    console.error('[analysis.routes] ❌ Aucun service trouvé, activation fallback minimal');
+    console.error('[analysis.routes] âŒ Aucun service trouve, activation fallback minimal');
     
     analysisService = {
       async analyzeProduct(productData) {
@@ -44,14 +44,14 @@ try {
         const t = String(txt || '').toLowerCase();
         const addCount = (t.match(/\be ?\d{3,4}[a-z]?\b/g) || []).length;
         const up = /(sirop de (glucose|fructose|glucose-fructose)|maltodextrine|amidon modifi|hydrog|isolat de proteine|agent de charge)/.test(t);
-        const proc = /(ar[oô]me|colorant|conservateur|emulsifiant|émulsifiant|stabilisant|correcteur d.?acidit|edulcorant|édulcorant)/.test(t);
+        const proc = /(ar[oo]me|colorant|conservateur|emulsifiant|emulsifiant|stabilisant|correcteur d.?acidit|edulcorant|edulcorant)/.test(t);
         let nova = 1;
         if (up || addCount >= 3 || (addCount >= 1 && proc)) nova = 4;
         else if (addCount >= 1 || proc) nova = 3;
         else if (t.split(/,|;|\bet\b/gi).map(s => s.trim()).filter(Boolean).length > 1) nova = 2;
         const healthByNova = { 1: 85, 2: 70, 3: 55, 4: 45 };
         
-        // Adapter selon la catégorie
+        // Adapter selon la categorie
         const category = productData.category || 'food';
         
         if (category === 'cosmetics') {
@@ -70,7 +70,7 @@ try {
             },
             globalScore: 50,
             confidence: 0.5,
-            recommendations: ['Analyse basique - données limitées']
+            recommendations: ['Analyse basique - donnees limitees']
           };
         } else if (category === 'detergents') {
           return {
@@ -88,11 +88,11 @@ try {
             },
             globalScore: 45,
             confidence: 0.5,
-            recommendations: ['Analyse basique - données limitées']
+            recommendations: ['Analyse basique - donnees limitees']
           };
         }
         
-        // Par défaut: food
+        // Par defaut: food
         return {
           category: 'food',
           timestamp: new Date(),
@@ -106,8 +106,8 @@ try {
           details: {
             ingredientsTextRaw: txt || null,
             nova,
-            novaLabel: nova === 4 ? 'Ultra-transformé' : nova === 3 ? 'Transformé' : nova === 2 ? 'Transformation simple' : 'Non transformé',
-            novaReason: `${addCount} additif(s) détecté(s)`,
+            novaLabel: nova === 4 ? 'Ultra-transforme' : nova === 3 ? 'Transforme' : nova === 2 ? 'Transformation simple' : 'Non transforme',
+            novaReason: `${addCount} additif(s) detecte(s)`,
             novaConfidence: 0.8,
             ecoscore: 'C',
             ultraProcessed: nova === 4
@@ -121,24 +121,24 @@ try {
   }
 }
 
-// -------- util: toujours répondre en UTF-8 --------
+// -------- util: toujours repondre en UTF-8 --------
 function sendJson(res, data) {
   res.set('Content-Type', 'application/json; charset=utf-8');
   return res.json(data);
 }
 
-// -------- debug chronométrage --------
+// -------- debug chronometrage --------
 function startTimer(label) {
   const start = process.hrtime.bigint();
   return () => {
     const ms = Number(process.hrtime.bigint() - start) / 1e6;
-    console.log(`⏱️  ${label}: ${ms.toFixed(1)} ms`);
+    console.log(`â±ï¸  ${label}: ${ms.toFixed(1)} ms`);
   };
 }
 
 /**
  * GET /api/analysis/_service/status
- * → Savoir si on utilise le VRAI service ou le fallback
+ * â†’ Savoir si on utilise le VRAI service ou le fallback
  */
 router.get(
   '/_service/status',
@@ -150,7 +150,7 @@ router.get(
       version: '1.0.0'
     };
     
-    // Si le service a une méthode pour lister les catégories
+    // Si le service a une methode pour lister les categories
     if (analysisService.getSupportedCategories) {
       status.supportedCategories = analysisService.getSupportedCategories();
     }
@@ -188,19 +188,19 @@ router.post(
     const stop = startTimer('POST /api/analysis/manual');
     const { name, brand, category = 'food', ingredients, barcode } = req.body || {};
     
-    // Validation de la catégorie
+    // Validation de la categorie
     const validCategories = ['food', 'cosmetic', 'detergent'];
     const normalizedCategory = category.toLowerCase().trim();
     
     if (!validCategories.includes(normalizedCategory)) {
       return res.status(400).json({
-        error: 'Catégorie invalide',
-        message: `La catégorie doit être l'une des suivantes : ${validCategories.join(', ')}`,
+        error: 'Categorie invalide',
+        message: `La categorie doit etre l'une des suivantes : ${validCategories.join(', ')}`,
         received: category
       });
     }
     
-    // Préparer les données pour l'analyse
+    // Preparer les donnees pour l'analyse
     const productData = {
       name: name || 'Sans nom',
       brand: brand || null,
@@ -223,7 +223,7 @@ router.post(
 
 /**
  * POST /api/analysis
- * Corps flexible : product object ou données directes
+ * Corps flexible : product object ou donnees directes
  */
 router.post(
   '/',
@@ -232,7 +232,7 @@ router.post(
     const stop = startTimer('POST /api/analysis');
     const body = req.body || {};
     
-    // Extraire les données du produit (flexible)
+    // Extraire les donnees du produit (flexible)
     const productData = body.product || {
       name: body.name || 'Sans nom',
       category: body.category || 'food',
@@ -245,12 +245,12 @@ router.post(
       brand: body.brand || null
     };
     
-    // Validation de la catégorie
+    // Validation de la categorie
     const validCategories = ['food', 'cosmetic', 'detergent'];
     const normalizedCategory = (productData.category || 'food').toLowerCase().trim();
     
     if (!validCategories.includes(normalizedCategory)) {
-      productData.category = 'food'; // Fallback sur food si catégorie invalide
+      productData.category = 'food'; // Fallback sur food si categorie invalide
     } else {
       productData.category = normalizedCategory;
     }
@@ -285,16 +285,16 @@ router.post(
       });
     }
     
-    // Pour l'analyse par code-barres, on laisse le service déterminer la catégorie
+    // Pour l'analyse par code-barres, on laisse le service determiner la categorie
     const productData = {
       barcode,
       name: null,
-      category: null, // Sera déterminé automatiquement
+      category: null, // Sera determine automatiquement
       ingredients: null
     };
     
     const analysis = await analysisService.analyzeProduct(productData, {
-      updateDatabase: true, // On peut sauvegarder les produits trouvés
+      updateDatabase: true, // On peut sauvegarder les produits trouves
       updateAlgolia: false,
       userId: req.user?.id || null
     });
@@ -319,7 +319,7 @@ router.post(
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({
         error: 'Produits manquants',
-        message: 'Le champ "products" doit être un tableau non vide'
+        message: 'Le champ "products" doit etre un tableau non vide'
       });
     }
     
@@ -330,7 +330,7 @@ router.post(
       });
     }
     
-    // Utiliser la méthode batch si disponible
+    // Utiliser la methode batch si disponible
     let results;
     if (analysisService.analyzeBatch) {
       results = await analysisService.analyzeBatch(products, req.user?.id || null);
@@ -376,7 +376,7 @@ router.post(
 
 /**
  * GET /api/analysis/categories
- * Liste les catégories supportées
+ * Liste les categories supportees
  */
 router.get(
   '/categories',
@@ -387,8 +387,8 @@ router.get(
           main: ['food', 'cosmetics', 'detergents'],
           aliases: {
             'alimentaire': 'food',
-            'cosmétique': 'cosmetics',
-            'détergent': 'detergents'
+            'cosmetique': 'cosmetics',
+            'detergent': 'detergents'
           }
         };
     

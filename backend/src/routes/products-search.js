@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/routes/products-search-fix.js
+// PATH: backend/src/routes/products-search-fix.js
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');

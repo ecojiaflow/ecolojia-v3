@@ -1,11 +1,11 @@
 // backend/src/routes/analyze.routes.js
-// Routes pour l'analyse universelle de produits - IMPORTS CORRIGÉS
+// Routes pour l'analyse universelle de produits - IMPORTS CORRIG‰S
 
 const express = require('express');
 const router = express.Router();
 const universalAnalyzer = require('../services/analysis/universalAnalyzer');
 
-// Import unifié depuis middleware/index.js
+// Import unifie depuis middleware/index.js
 const { 
   authenticateToken, 
   checkQuota,
@@ -36,12 +36,12 @@ const createRateLimiter = (tier) => {
   });
 };
 
-// Middleware pour vérifier les quotas (utilise maintenant checkQuota du middleware unifié)
+// Middleware pour verifier les quotas (utilise maintenant checkQuota du middleware unifie)
 const checkAnalysisQuota = checkQuota('scan');
 
 /**
  * POST /api/v1/analyses
- * Analyse un produit (auto-détection de catégorie)
+ * Analyse un produit (auto-detection de categorie)
  */
 router.post('/',
   authenticateToken,
@@ -61,7 +61,7 @@ router.post('/',
       if (!barcode && !name && !ingredients) {
         return res.status(400).json({
           success: false,
-          error: 'Au moins un paramètre requis: barcode, name ou ingredients'
+          error: 'Au moins un parametre requis: barcode, name ou ingredients'
         });
       }
 
@@ -75,13 +75,13 @@ router.post('/',
         method
       });
 
-      // Décrémenter le quota après succès
+      // Decrementer le quota apres succes
       if (req.decrementQuota) {
         await req.decrementQuota();
       }
 
       // Log pour statistiques
-      console.log(`✅ Analyse réussie: ${result.product?.name || barcode} (${result.metadata.category})`);
+      console.log(`âœ… Analyse reussie: ${result.product?.name || barcode} (${result.metadata.category})`);
 
       res.json({
         success: true,
@@ -138,7 +138,7 @@ router.post('/batch',
       // Lancer l'analyse batch
       const results = await universalAnalyzer.analyzeBatch(products, req.user.id);
 
-      // Décrémenter le quota après succès
+      // Decrementer le quota apres succes
       if (req.decrementQuota) {
         await req.decrementQuota();
       }
@@ -161,7 +161,7 @@ router.post('/batch',
 
 /**
  * GET /api/v1/analyses
- * Récupère l'historique des analyses
+ * Recupere l'historique des analyses
  */
 router.get('/',
   authenticateToken,
@@ -204,10 +204,10 @@ router.get('/',
       });
 
     } catch (error) {
-      console.error('Erreur récupération analyses:', error);
+      console.error('Erreur recuperation analyses:', error);
       res.status(500).json({
         success: false,
-        error: 'Erreur lors de la récupération des analyses'
+        error: 'Erreur lors de la recuperation des analyses'
       });
     }
   }
@@ -215,7 +215,7 @@ router.get('/',
 
 /**
  * GET /api/v1/analyses/:id
- * Récupère une analyse spécifique
+ * Recupere une analyse specifique
  */
 router.get('/:id',
   authenticateToken,
@@ -231,7 +231,7 @@ router.get('/:id',
       if (!analysis) {
         return res.status(404).json({
           success: false,
-          error: 'Analyse non trouvée'
+          error: 'Analyse non trouvee'
         });
       }
 
@@ -241,10 +241,10 @@ router.get('/:id',
       });
 
     } catch (error) {
-      console.error('Erreur récupération analyse:', error);
+      console.error('Erreur recuperation analyse:', error);
       res.status(500).json({
         success: false,
-        error: 'Erreur lors de la récupération de l\'analyse'
+        error: 'Erreur lors de la recuperation de l\'analyse'
       });
     }
   }
@@ -268,13 +268,13 @@ router.delete('/:id',
       if (!result) {
         return res.status(404).json({
           success: false,
-          error: 'Analyse non trouvée'
+          error: 'Analyse non trouvee'
         });
       }
 
       res.json({
         success: true,
-        message: 'Analyse supprimée'
+        message: 'Analyse supprimee'
       });
 
     } catch (error) {
@@ -289,7 +289,7 @@ router.delete('/:id',
 
 /**
  * GET /api/v1/analyses/:id/alternatives
- * Trouve des alternatives pour un produit analysé
+ * Trouve des alternatives pour un produit analyse
  */
 router.get('/:id/alternatives',
   authenticateToken,
@@ -303,7 +303,7 @@ router.get('/:id/alternatives',
 
       const Analysis = require('mongoose').model('Analysis');
       
-      // Vérifier que l'analyse appartient à l'utilisateur
+      // Verifier que l'analyse appartient   l'utilisateur
       const analysis = await Analysis.findOne({
         _id: req.params.id,
         userId: req.user.id
@@ -312,7 +312,7 @@ router.get('/:id/alternatives',
       if (!analysis) {
         return res.status(404).json({
           success: false,
-          error: 'Analyse non trouvée'
+          error: 'Analyse non trouvee'
         });
       }
 
@@ -403,7 +403,7 @@ router.post('/:id/feedback',
       if (!analysis) {
         return res.status(404).json({
           success: false,
-          error: 'Analyse non trouvée'
+          error: 'Analyse non trouvee'
         });
       }
 

@@ -16,7 +16,7 @@ const logger = {
 router.get("/profile", authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ success: false, error: "Utilisateur non trouvé" });
+    if (!user) return res.status(404).json({ success: false, error: "Utilisateur non trouve" });
     res.json({ success: true, data: user });
   } catch (error) {
     console.error("[User] Profile error:", error);
@@ -45,14 +45,14 @@ router.put("/profile", authenticateToken, async (req, res) => {
 router.delete("/", authenticateToken, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.user.id);
-    res.json({ success: true, message: "Compte supprimé" });
+    res.json({ success: true, message: "Compte supprime" });
   } catch (error) {
     console.error("[User] Delete error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// GET /api/users/me (compatibilité)
+// GET /api/users/me (compatibilite)
 router.get('/me', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id || req.userId).select('-password');
@@ -66,7 +66,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 
 /**
  * GET /api/users/v2/me
- * Récupérer le profil complet avec plan et quotas
+ * Recuperer le profil complet avec plan et quotas
  */
 router.get('/v2/me', authenticateToken, async (req, res) => {
   try {
@@ -75,11 +75,11 @@ router.get('/v2/me', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ 
         success: false, 
-        error: 'Utilisateur non trouvé' 
+        error: 'Utilisateur non trouve' 
       });
     }
 
-    // Vérifier si les quotas doivent être reset
+    // Verifier si les quotas doivent etre reset
     const now = new Date();
     if (user.usage && (!user.usage.currentPeriodEnd || now > user.usage.currentPeriodEnd)) {
       if (user.resetMonthlyUsage) {
@@ -87,7 +87,7 @@ router.get('/v2/me', authenticateToken, async (req, res) => {
       }
     }
 
-    // Préparer la réponse structurée
+    // Preparer la reponse structuree
     const response = {
       success: true,
       user: {
@@ -123,7 +123,7 @@ router.get('/v2/me', authenticateToken, async (req, res) => {
       }
     };
 
-    // Si l'utilisateur a la méthode getRemainingQuotas
+    // Si l'utilisateur a la methode getRemainingQuotas
     if (user.getRemainingQuotas) {
       response.user.usage.remaining = user.getRemainingQuotas();
     }
@@ -135,14 +135,14 @@ router.get('/v2/me', authenticateToken, async (req, res) => {
     logger.error('Error fetching profile v2:', error);
     res.status(500).json({ 
       success: false, 
-      error: 'Erreur lors de la récupération du profil' 
+      error: 'Erreur lors de la recuperation du profil' 
     });
   }
 });
 
 /**
  * PUT /api/users/v2/me
- * Mettre à jour le profil et les préférences
+ * Mettre   jour le profil et les preferences
  */
 router.put('/v2/me', 
   authenticateToken,
@@ -171,11 +171,11 @@ router.put('/v2/me',
       if (!user) {
         return res.status(404).json({ 
           success: false, 
-          error: 'Utilisateur non trouvé' 
+          error: 'Utilisateur non trouve' 
         });
       }
 
-      // Mise à jour sélective des champs
+      // Mise   jour selective des champs
       const updates = req.body;
       const allowedFields = ['name', 'profile', 'aiPrefs', 'preferences'];
 
@@ -187,7 +187,7 @@ router.put('/v2/me',
       allowedFields.forEach(field => {
         if (updates[field] !== undefined) {
           if (typeof updates[field] === 'object' && !Array.isArray(updates[field])) {
-            // Merge des objets imbriqués
+            // Merge des objets imbriques
             Object.keys(updates[field]).forEach(subField => {
               if (updates[field][subField] !== undefined) {
                 user[field][subField] = updates[field][subField];
@@ -204,7 +204,7 @@ router.put('/v2/me',
       logger.info(`Profile v2 updated for user ${user.email}`);
       res.json({
         success: true,
-        message: 'Profil mis à jour avec succès',
+        message: 'Profil mis   jour avec succes',
         user: {
           id: user._id,
           email: user.email,
@@ -219,14 +219,14 @@ router.put('/v2/me',
       logger.error('Error updating profile v2:', error);
       res.status(500).json({ 
         success: false, 
-        error: 'Erreur lors de la mise à jour du profil' 
+        error: 'Erreur lors de la mise   jour du profil' 
       });
     }
 });
 
 /**
  * PUT /api/users/v2/me/ai-preferences
- * Endpoint dédié pour les préférences IA
+ * Endpoint dedie pour les preferences IA
  */
 router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
   try {
@@ -235,7 +235,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ 
         success: false, 
-        error: 'Utilisateur non trouvé' 
+        error: 'Utilisateur non trouve' 
       });
     }
 
@@ -255,7 +255,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
 
     const { tone, detail, language, focusAreas, foodRestrictions, allergies, autoSuggest, saveHistory } = req.body;
 
-    // Mise à jour des préférences IA
+    // Mise   jour des preferences IA
     if (tone) user.aiPrefs.tone = tone;
     if (detail) user.aiPrefs.detail = detail;
     if (language) user.aiPrefs.language = language;
@@ -270,7 +270,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
     logger.info(`AI preferences updated for user ${user.email}`);
     res.json({
       success: true,
-      message: 'Préférences IA mises à jour',
+      message: 'Preferences IA mises   jour',
       aiPrefs: user.aiPrefs
     });
 
@@ -278,14 +278,14 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
     logger.error('Error updating AI preferences:', error);
     res.status(500).json({ 
       success: false, 
-      error: 'Erreur lors de la mise à jour des préférences IA' 
+      error: 'Erreur lors de la mise   jour des preferences IA' 
     });
   }
 });
 
 /**
  * GET /api/users/v2/me/quotas
- * Endpoint dédié pour récupérer uniquement les quotas
+ * Endpoint dedie pour recuperer uniquement les quotas
  */
 router.get('/v2/me/quotas', authenticateToken, async (req, res) => {
   try {
@@ -294,17 +294,17 @@ router.get('/v2/me/quotas', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ 
         success: false, 
-        error: 'Utilisateur non trouvé' 
+        error: 'Utilisateur non trouve' 
       });
     }
 
-    // Vérifier si reset nécessaire
+    // Verifier si reset necessaire
     const now = new Date();
     if (user.usage && user.resetMonthlyUsage && (!user.usage.currentPeriodEnd || now > user.usage.currentPeriodEnd)) {
       await user.resetMonthlyUsage();
     }
 
-    // Valeurs par défaut si les champs n'existent pas
+    // Valeurs par defaut si les champs n'existent pas
     const limits = user.limits || {
       scansPerMonth: 30,
       aiChatsPerMonth: 5,
@@ -351,7 +351,7 @@ router.get('/v2/me/quotas', authenticateToken, async (req, res) => {
     logger.error('Error fetching quotas:', error);
     res.status(500).json({ 
       success: false, 
-      error: 'Erreur lors de la récupération des quotas' 
+      error: 'Erreur lors de la recuperation des quotas' 
     });
   }
 });
@@ -364,7 +364,7 @@ router.post('/v2/me/reset-password',
   authenticateToken,
   [
     body('currentPassword').notEmpty().withMessage('Mot de passe actuel requis'),
-    body('newPassword').isLength({ min: 6 }).withMessage('Le nouveau mot de passe doit faire au moins 6 caractères')
+    body('newPassword').isLength({ min: 6 }).withMessage('Le nouveau mot de passe doit faire au moins 6 caracteres')
   ],
   async (req, res) => {
     try {
@@ -380,7 +380,7 @@ router.post('/v2/me/reset-password',
       const userId = req.user?.id || req.userId;
       const user = await User.findById(userId);
 
-      // Vérifier l'ancien mot de passe si la méthode existe
+      // Verifier l'ancien mot de passe si la methode existe
       if (user.comparePassword) {
         const isMatch = await user.comparePassword(currentPassword);
         if (!isMatch) {
@@ -391,14 +391,14 @@ router.post('/v2/me/reset-password',
         }
       }
 
-      // Mettre à jour le mot de passe
+      // Mettre   jour le mot de passe
       user.password = newPassword;
       await user.save();
 
       logger.info(`Password changed for user ${user.email}`);
       res.json({
         success: true,
-        message: 'Mot de passe modifié avec succès'
+        message: 'Mot de passe modifie avec succes'
       });
 
     } catch (error) {

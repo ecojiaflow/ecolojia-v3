@@ -37,7 +37,7 @@ router.post('/toggle', authenticateUser, asyncHandler(async (req, res) => {
     });
   }
   
-  // Récupérer les données du produit pour le snapshot
+  // Recuperer les donnees du produit pour le snapshot
   const product = await Product.findById(productId);
   if (!product) {
     return res.status(404).json({
@@ -65,7 +65,7 @@ router.post('/toggle', authenticateUser, asyncHandler(async (req, res) => {
   });
 }));
 
-// PUT /api/favorites/:id - Mettre à jour un favori
+// PUT /api/favorites/:id - Mettre   jour un favori
 router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
   const { notes, tags, notifications } = req.body;
   
@@ -98,7 +98,7 @@ router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
   });
 }));
 
-// GET /api/favorites/check/:productId - Vérifier si un produit est en favori
+// GET /api/favorites/check/:productId - Verifier si un produit est en favori
 router.get('/check/:productId', authenticateUser, asyncHandler(async (req, res) => {
   const favorite = await Favorite.findOne({
     userId: req.userId,

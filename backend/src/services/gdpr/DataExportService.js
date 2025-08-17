@@ -1,5 +1,5 @@
 // backend/src/services/gdpr/DataExportService.js
-// Service d'export des données personnelles (RGPD compliant)
+// Service d'export des donnees personnelles (RGPD compliant)
 
 const PDFDocument = require('pdfkit');
 const json2csv = require('json2csv').Parser;
@@ -19,40 +19,40 @@ class DataExportService {
   }
 
   /**
-   * Crée le répertoire d'export s'il n'existe pas
+   * Cree le repertoire d'export s'il n'existe pas
    */
   async ensureExportDirectory() {
     try {
       await fs.mkdir(this.exportPath, { recursive: true });
     } catch (error) {
-      console.error('Erreur création dossier exports:', error);
+      console.error('Erreur creation dossier exports:', error);
     }
   }
 
   /**
-   * Export complet des données utilisateur
+   * Export complet des donnees utilisateur
    * @param {string} userId - ID de l'utilisateur
    * @param {string} format - Format d'export ('json', 'csv', 'pdf', 'all')
    * @returns {Promise<Object>} Chemin du fichier et infos d'export
    */
   async exportUserData(userId, format = 'json') {
     try {
-      console.log(`📦 Export des données pour l'utilisateur ${userId} en format ${format}`);
+      console.log(`ðŸ“¦ Export des donnees pour l'utilisateur ${userId} en format ${format}`);
 
-      // Récupérer toutes les données
+      // Recuperer toutes les donnees
       const userData = await this.collectUserData(userId);
       
       if (!userData.user) {
-        throw new Error('Utilisateur non trouvé');
+        throw new Error('Utilisateur non trouve');
       }
 
-      // Générer un ID unique pour cet export
+      // Generer un ID unique pour cet export
       const exportId = crypto.randomBytes(16).toString('hex');
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       
       let exportResults = {};
 
-      // Exporter selon le format demandé
+      // Exporter selon le format demande
       switch (format.toLowerCase()) {
         case 'json':
           exportResults.json = await this.exportAsJSON(userData, exportId, timestamp);
@@ -72,7 +72,7 @@ class DataExportService {
           exportResults.csv = await this.exportAsCSV(userData, exportId, timestamp);
           exportResults.pdf = await this.exportAsPDF(userData, exportId, timestamp);
           
-          // Créer une archive ZIP
+          // Creer une archive ZIP
           exportResults.zip = await this.createZipArchive(
             Object.values(exportResults),
             exportId,
@@ -81,7 +81,7 @@ class DataExportService {
           break;
           
         default:
-          throw new Error(`Format non supporté: ${format}`);
+          throw new Error(`Format non supporte: ${format}`);
       }
 
       // Enregistrer l'export dans l'historique
@@ -93,22 +93,22 @@ class DataExportService {
         format,
         files: exportResults,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h
-        message: 'Export généré avec succès. Les fichiers seront supprimés dans 24h.'
+        message: 'Export genere avec succes. Les fichiers seront supprimes dans 24h.'
       };
 
     } catch (error) {
-      console.error('❌ Erreur export données:', error);
+      console.error('âŒ Erreur export donnees:', error);
       throw error;
     }
   }
 
   /**
-   * Collecte toutes les données d'un utilisateur
+   * Collecte toutes les donnees d'un utilisateur
    */
   async collectUserData(userId) {
-    console.log('📊 Collecte des données...');
+    console.log('ðŸ“Š Collecte des donnees...');
 
-    // Données utilisateur
+    // Donnees utilisateur
     const user = await User.findById(userId).select('-password -refreshToken');
     
     if (!user) {
@@ -120,7 +120,7 @@ class DataExportService {
       .populate('productId', 'name brand barcode category imageUrl')
       .sort({ createdAt: -1 });
 
-    // Produits scannés (sans analyse)
+    // Produits scannes (sans analyse)
     const productIds = [...new Set(analyses.map(a => a.productId?._id).filter(id => id))];
     const products = await Product.find({ _id: { $in: productIds } });
 
@@ -141,8 +141,8 @@ class DataExportService {
       exportDate: new Date().toISOString(),
       dataRetentionPolicy: {
         analyses: '2 ans',
-        personalData: 'Jusqu\'à suppression du compte',
-        payments: '10 ans (obligations légales)'
+        personalData: 'Jusqu\'  suppression du compte',
+        payments: '10 ans (obligations legales)'
       }
     };
   }
@@ -266,7 +266,7 @@ class DataExportService {
         size: 'A4',
         margin: 50,
         info: {
-          Title: 'Export de données ECOLOJIA',
+          Title: 'Export de donnees ECOLOJIA',
           Author: 'ECOLOJIA',
           Subject: 'Export RGPD',
           CreationDate: new Date()
@@ -275,7 +275,7 @@ class DataExportService {
 
       const stream = doc.pipe(fs.createWriteStream(filepath));
 
-      // En-tête avec logo
+      // En-tete avec logo
       this.addPDFHeader(doc);
 
       // Page 1: Informations personnelles
@@ -313,7 +313,7 @@ class DataExportService {
   }
 
   /**
-   * Ajoute l'en-tête du PDF
+   * Ajoute l'en-tete du PDF
    */
   addPDFHeader(doc) {
     // Titre principal
@@ -323,11 +323,11 @@ class DataExportService {
     
     doc.fontSize(16)
        .fillColor('#374151')
-       .text('Export de vos données personnelles', 50, 80);
+       .text('Export de vos donnees personnelles', 50, 80);
     
     doc.moveDown(2);
     
-    // Ligne de séparation
+    // Ligne de separation
     doc.moveTo(50, 120)
        .lineTo(545, 120)
        .stroke('#E5E7EB');
@@ -353,11 +353,11 @@ class DataExportService {
     doc.text(`Membre depuis : ${new Date(user.createdAt).toLocaleDateString('fr-FR')}`, 50, infoY + lineHeight * 3);
     
     if (user.preferences) {
-      doc.text('Préférences alimentaires :', 50, infoY + lineHeight * 5);
+      doc.text('Preferences alimentaires :', 50, infoY + lineHeight * 5);
       doc.fontSize(10);
       
       if (user.preferences.diet) {
-        doc.text(`- Régime : ${user.preferences.diet}`, 70, infoY + lineHeight * 6);
+        doc.text(`- Regime : ${user.preferences.diet}`, 70, infoY + lineHeight * 6);
       }
       if (user.preferences.allergies?.length > 0) {
         doc.text(`- Allergies : ${user.preferences.allergies.join(', ')}`, 70, infoY + lineHeight * 7);
@@ -381,18 +381,18 @@ class DataExportService {
     
     // Colonne 1
     doc.text(`Analyses totales : ${stats.totalAnalyses}`, 50, statsY);
-    doc.text(`Score santé moyen : ${stats.avgHealthScore}/100`, 50, statsY + 25);
+    doc.text(`Score sante moyen : ${stats.avgHealthScore}/100`, 50, statsY + 25);
     doc.text(`Produits alimentaires : ${stats.foodProducts}`, 50, statsY + 50);
     
     // Colonne 2
     doc.text(`Analyses ce mois : ${stats.monthlyAnalyses}`, 250, statsY);
-    doc.text(`Produits cosmétiques : ${stats.cosmeticProducts}`, 250, statsY + 25);
-    doc.text(`Produits ménagers : ${stats.detergentProducts}`, 250, statsY + 50);
+    doc.text(`Produits cosmetiques : ${stats.cosmeticProducts}`, 250, statsY + 25);
+    doc.text(`Produits menagers : ${stats.detergentProducts}`, 250, statsY + 50);
 
     // Graphique simple des tendances
     if (stats.monthlyTrend) {
       doc.fontSize(14)
-         .text('Évolution mensuelle', 50, statsY + 100);
+         .text('‰volution mensuelle', 50, statsY + 100);
       
       // Dessiner un mini graphique
       this.drawSimpleChart(doc, stats.monthlyTrend, 50, statsY + 130);
@@ -410,7 +410,7 @@ class DataExportService {
     if (analyses.length === 0) {
       doc.fontSize(12)
          .fillColor('#6B7280')
-         .text('Aucune analyse enregistrée', 50, 100);
+         .text('Aucune analyse enregistree', 50, 100);
       return;
     }
 
@@ -419,7 +419,7 @@ class DataExportService {
     const rowHeight = 25;
     const colWidths = [120, 150, 60, 60, 60, 80];
     
-    // En-têtes
+    // En-tetes
     doc.fontSize(10)
        .fillColor('#374151')
        .font('Helvetica-Bold');
@@ -428,15 +428,15 @@ class DataExportService {
     doc.text('Produit', 170, tableTop);
     doc.text('Nova', 320, tableTop);
     doc.text('Nutri', 380, tableTop);
-    doc.text('Santé', 440, tableTop);
-    doc.text('Méthode', 500, tableTop);
+    doc.text('Sante', 440, tableTop);
+    doc.text('Methode', 500, tableTop);
     
-    // Ligne sous les en-têtes
+    // Ligne sous les en-tetes
     doc.moveTo(50, tableTop + 15)
        .lineTo(545, tableTop + 15)
        .stroke('#E5E7EB');
     
-    // Données
+    // Donnees
     doc.font('Helvetica')
        .fontSize(9)
        .fillColor('#4B5563');
@@ -475,7 +475,7 @@ class DataExportService {
         500, y
       );
       
-      // Ligne de séparation
+      // Ligne de separation
       if (index < analyses.length - 1) {
         doc.moveTo(50, y + 15)
            .lineTo(545, y + 15)
@@ -501,7 +501,7 @@ class DataExportService {
     const tableTop = 100;
     const rowHeight = 25;
     
-    // En-têtes
+    // En-tetes
     doc.fontSize(10)
        .fillColor('#374151')
        .font('Helvetica-Bold');
@@ -511,7 +511,7 @@ class DataExportService {
     doc.text('Type', 250, tableTop);
     doc.text('Statut', 400, tableTop);
     
-    // Données
+    // Donnees
     doc.font('Helvetica')
        .fontSize(9)
        .fillColor('#4B5563');
@@ -550,7 +550,7 @@ class DataExportService {
     for (let i = 0; i < pages.count; i++) {
       doc.switchToPage(i);
       
-      // Ligne de séparation
+      // Ligne de separation
       doc.moveTo(50, 750)
          .lineTo(545, 750)
          .stroke('#E5E7EB');
@@ -559,7 +559,7 @@ class DataExportService {
       doc.fontSize(8)
          .fillColor('#9CA3AF')
          .text(
-           `Export généré le ${new Date(exportDate).toLocaleDateString('fr-FR')} à ${new Date(exportDate).toLocaleTimeString('fr-FR')}`,
+           `Export genere le ${new Date(exportDate).toLocaleDateString('fr-FR')}   ${new Date(exportDate).toLocaleTimeString('fr-FR')}`,
            50, 760
          );
       
@@ -582,7 +582,7 @@ class DataExportService {
     doc.rect(x, y, width, height)
        .stroke('#E5E7EB');
     
-    // Calculer l'échelle
+    // Calculer l'echelle
     const maxValue = Math.max(...data.map(d => d.value));
     const xStep = (width - 2 * padding) / (data.length - 1);
     const yScale = (height - 2 * padding) / maxValue;
@@ -618,7 +618,7 @@ class DataExportService {
   }
 
   /**
-   * Crée une archive ZIP
+   * Cree une archive ZIP
    */
   async createZipArchive(files, exportId, timestamp) {
     const zipFilename = `ecolojia-export-complete-${timestamp}.zip`;
@@ -655,20 +655,20 @@ class DataExportService {
       });
 
       // Ajouter un fichier README
-      const readme = `ECOLOJIA - Export de données personnelles
+      const readme = `ECOLOJIA - Export de donnees personnelles
 ========================================
 
-Cet export contient toutes vos données personnelles conformément au RGPD.
+Cet export contient toutes vos donnees personnelles conformement au RGPD.
 
 Contenu de l'archive :
-- Fichier JSON : Format complet avec toutes vos données structurées
-- Fichiers CSV : Données tabulaires pour analyse dans Excel/Google Sheets
-- Fichier PDF : Rapport formaté pour consultation et impression
+- Fichier JSON : Format complet avec toutes vos donnees structurees
+- Fichiers CSV : Donnees tabulaires pour analyse dans Excel/Google Sheets
+- Fichier PDF : Rapport formate pour consultation et impression
 
-Protection des données :
-- Ces fichiers contiennent des données personnelles sensibles
-- Conservez-les en lieu sûr et ne les partagez pas
-- Supprimez-les après utilisation si nécessaire
+Protection des donnees :
+- Ces fichiers contiennent des donnees personnelles sensibles
+- Conservez-les en lieu sur et ne les partagez pas
+- Supprimez-les apres utilisation si necessaire
 
 Pour toute question : privacy@ecolojia.app
 
@@ -681,7 +681,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Nettoie les données utilisateur
+   * Nettoie les donnees utilisateur
    */
   sanitizeUserData(user) {
     const sanitized = { ...user };
@@ -696,7 +696,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Nettoie les données d'analyse
+   * Nettoie les donnees d'analyse
    */
   sanitizeAnalysis(analysis) {
     const sanitized = { ...analysis };
@@ -712,12 +712,12 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Nettoie les données produit
+   * Nettoie les donnees produit
    */
   sanitizeProduct(product) {
     const sanitized = { ...product };
     
-    // Supprimer les métadonnées internes
+    // Supprimer les metadonnees internes
     delete sanitized.__v;
     delete sanitized.updatedAt;
     
@@ -725,7 +725,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Nettoie les données de paiement
+   * Nettoie les donnees de paiement
    */
   sanitizePayment(payment) {
     const sanitized = { ...payment };
@@ -752,7 +752,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
       new Date(a.createdAt) >= thisMonth
     ).length;
     
-    // Moyenne des scores santé
+    // Moyenne des scores sante
     const healthScores = analyses
       .map(a => a.results?.scores?.health)
       .filter(score => score !== undefined);
@@ -761,7 +761,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
       ? Math.round(healthScores.reduce((a, b) => a + b, 0) / healthScores.length)
       : 0;
     
-    // Répartition par catégorie
+    // Repartition par categorie
     const categories = analyses.reduce((acc, analysis) => {
       const cat = analysis.results?.category || 'unknown';
       acc[cat] = (acc[cat] || 0) + 1;
@@ -803,7 +803,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
    */
   async logExport(userId, exportId, format, files) {
     try {
-      // Créer un modèle ExportLog si nécessaire
+      // Creer un modele ExportLog si necessaire
       const exportLog = {
         userId,
         exportId,
@@ -817,8 +817,8 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
       };
       
-      // Sauvegarder en base si vous avez un modèle ExportLog
-      console.log('📝 Export enregistré:', exportLog);
+      // Sauvegarder en base si vous avez un modele ExportLog
+      console.log('ðŸ“ Export enregistre:', exportLog);
       
     } catch (error) {
       console.error('Erreur log export:', error);
@@ -826,7 +826,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Nettoie les exports expirés
+   * Nettoie les exports expires
    */
   async cleanupExpiredExports() {
     try {
@@ -840,7 +840,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
         // Supprimer les fichiers de plus de 24h
         if (now - stats.mtimeMs > 24 * 60 * 60 * 1000) {
           await fs.unlink(filepath);
-          console.log(`🗑️ Export expiré supprimé: ${file}`);
+          console.log(`ðŸ—‘ï¸ Export expire supprime: ${file}`);
         }
       }
     } catch (error) {
@@ -849,11 +849,11 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Supprime toutes les données d'un utilisateur (droit à l'oubli)
+   * Supprime toutes les donnees d'un utilisateur (droit   l'oubli)
    */
   async deleteAllUserData(userId) {
     try {
-      console.log(`🗑️ Suppression complète des données pour l'utilisateur ${userId}`);
+      console.log(`ðŸ—‘ï¸ Suppression complete des donnees pour l'utilisateur ${userId}`);
       
       // Supprimer dans l'ordre pour respecter les contraintes
       await Analysis.deleteMany({ userId });
@@ -862,12 +862,12 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
       
       return {
         success: true,
-        message: 'Toutes vos données ont été supprimées définitivement'
+        message: 'Toutes vos donnees ont ete supprimees definitivement'
       };
       
     } catch (error) {
-      console.error('Erreur suppression données:', error);
-      throw new Error('Impossible de supprimer les données');
+      console.error('Erreur suppression donnees:', error);
+      throw new Error('Impossible de supprimer les donnees');
     }
   }
 }

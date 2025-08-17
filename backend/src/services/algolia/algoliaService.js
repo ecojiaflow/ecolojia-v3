@@ -4,48 +4,48 @@ const algoliasearch = require('algoliasearch');
 
 class AlgoliaService {
   constructor() {
-    // Vérification des variables d'environnement
+    // Verification des variables d'environnement
     this.appId = process.env.ALGOLIA_APP_ID;
     this.adminKey = process.env.ALGOLIA_ADMIN_API_KEY || process.env.ALGOLIA_ADMIN_KEY;
     this.indexName = process.env.ALGOLIA_INDEX_NAME || 'ecolojia_products';
     this.stagingIndexName = process.env.ALGOLIA_INDEX_STAGING || 'ecolojia_products_staging';
 
-    console.log('🔍 Configuration Algolia:', {
-      APP_ID: this.appId ? '✅ Présent' : '❌ Manquant',
-      ADMIN_KEY: this.adminKey ? '✅ Présent' : '❌ Manquant',
+    console.log('ðŸ” Configuration Algolia:', {
+      APP_ID: this.appId ? 'âœ… Present' : 'âŒ Manquant',
+      ADMIN_KEY: this.adminKey ? 'âœ… Present' : 'âŒ Manquant',
       INDEX: this.indexName,
       STAGING: this.stagingIndexName
     });
 
-    // Initialiser le client uniquement si configuré
+    // Initialiser le client uniquement si configure
     if (this.appId && this.adminKey) {
       try {
         this.client = algoliasearch(this.appId, this.adminKey);
         this.productsIndex = this.client.initIndex(this.indexName);
         this.stagingIndex = this.client.initIndex(this.stagingIndexName);
-        console.log('✅ Client Algolia initialisé');
+        console.log('âœ… Client Algolia initialise');
       } catch (error) {
-        console.error('❌ Erreur initialisation Algolia:', error);
+        console.error('âŒ Erreur initialisation Algolia:', error);
         this.client = null;
       }
     } else {
-      console.warn('⚠️ Algolia non configuré - mode dégradé activé');
+      console.warn('âš ï¸ Algolia non configure - mode degrade active');
       this.client = null;
     }
   }
 
   /**
-   * Vérifie si le service est configuré
+   * Verifie si le service est configure
    */
   isConfigured() {
     return !!(this.client && this.productsIndex);
   }
 
   /**
-   * Transforme un produit MongoDB vers le format Algolia optimisé
+   * Transforme un produit MongoDB vers le format Algolia optimise
    */
   transformProductForAlgolia(product) {
-    // Gestion sécurisée des valeurs null/undefined
+    // Gestion securisee des valeurs null/undefined
     const safeProduct = {
       id: product._id || product.id,
       title: product.name || product.title || 'Produit sans nom',
@@ -69,13 +69,13 @@ class AlgoliaService {
       createdAt: product.createdAt || product.created_at || new Date(),
       updatedAt: product.updatedAt || product.updated_at || new Date(),
       
-      // Métadonnées
+      // Metadonnees
       source: product.source || 'manual',
       status: product.status || 'active',
       scanCount: product.scanCount || 0
     };
 
-    // Format Algolia avec objectID et champs de recherche optimisés
+    // Format Algolia avec objectID et champs de recherche optimises
     return {
       objectID: String(safeProduct.id),
       
@@ -99,7 +99,7 @@ class AlgoliaService {
       nutriscore: safeProduct.nutriscore,
       ecoscore: safeProduct.ecoscore,
       
-      // Champs de recherche optimisés (lowercase pour la recherche)
+      // Champs de recherche optimises (lowercase pour la recherche)
       _searchableTitle: safeProduct.title.toLowerCase().trim(),
       _searchableBrand: safeProduct.brand.toLowerCase().trim(),
       _searchableTags: safeProduct.tags.join(' ').toLowerCase(),
@@ -113,7 +113,7 @@ class AlgoliaService {
       categoryIcon: this.getCategoryIcon(safeProduct.category),
       confidenceScore: this.calculateConfidenceScore(safeProduct),
       
-      // Métadonnées
+      // Metadonnees
       source: safeProduct.source,
       status: safeProduct.status,
       popularity: safeProduct.scanCount,
@@ -123,7 +123,7 @@ class AlgoliaService {
   }
 
   /**
-   * Génère un slug à partir d'un texte
+   * Genere un slug   partir d'un texte
    */
   generateSlug(text) {
     if (!text) return 'product-' + Date.now();
@@ -131,13 +131,13 @@ class AlgoliaService {
     return text
       .toLowerCase()
       .trim()
-      .replace(/[àáäâ]/g, 'a')
-      .replace(/[èéëê]/g, 'e')
-      .replace(/[ìíïî]/g, 'i')
-      .replace(/[òóöô]/g, 'o')
-      .replace(/[ùúüû]/g, 'u')
-      .replace(/[ñ]/g, 'n')
-      .replace(/[ç]/g, 'c')
+      .replace(/[ ¡¤a]/g, 'a')
+      .replace(/[ee«e]/g, 'e')
+      .replace(/[¬­ii]/g, 'i')
+      .replace(/[²³¶o]/g, 'o')
+      .replace(/[uºuu]/g, 'u')
+      .replace(/[±]/g, 'n')
+      .replace(/[c]/g, 'c')
       .replace(/[^\w\s-]/g, '')
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
@@ -179,18 +179,18 @@ class AlgoliaService {
   }
 
   /**
-   * Retourne l'icône associée à une catégorie
+   * Retourne l'icone associee   une categorie
    */
   getCategoryIcon(category) {
     const icons = {
-      'food': '🍎',
-      'alimentaire': '🍎',
-      'cosmetics': '💄',
-      'cosmetique': '💄',
-      'detergents': '🧽',
-      'detergent': '🧽',
-      'hygiene': '🧼',
-      'other': '📦'
+      'food': 'ðŸŽ',
+      'alimentaire': 'ðŸŽ',
+      'cosmetics': 'ðŸ’„',
+      'cosmetique': 'ðŸ’„',
+      'detergents': 'ðŸ§½',
+      'detergent': 'ðŸ§½',
+      'hygiene': 'ðŸ§¼',
+      'other': 'ðŸ“¦'
     };
     return icons[category] || icons.other;
   }
@@ -201,7 +201,7 @@ class AlgoliaService {
   calculateConfidenceScore(product) {
     let score = 50; // Base
     
-    // Bonus pour les données complètes
+    // Bonus pour les donnees completes
     if (product.brand && product.brand.length > 2) score += 10;
     if (product.description && product.description.length > 50) score += 10;
     if (product.images && Object.keys(product.images).length > 0) score += 10;
@@ -220,11 +220,11 @@ class AlgoliaService {
   }
 
   /**
-   * Configure les paramètres optimaux de l'index Algolia
+   * Configure les parametres optimaux de l'index Algolia
    */
   async configureIndex(useStaging = false) {
     if (!this.isConfigured()) {
-      console.warn('Algolia non configuré - skip configuration index');
+      console.warn('Algolia non configure - skip configuration index');
       return;
     }
 
@@ -259,7 +259,7 @@ class AlgoliaService {
           'filterOnly(environmentScore)'
         ],
         
-        // Attributs à récupérer
+        // Attributs   recuperer
         attributesToRetrieve: [
           'objectID',
           'title',
@@ -291,7 +291,7 @@ class AlgoliaService {
           'description:50'
         ],
         
-        // Tri personnalisé
+        // Tri personnalise
         customRanking: [
           'desc(healthScore)',
           'desc(environmentScore)',
@@ -311,7 +311,7 @@ class AlgoliaService {
         hitsPerPage: 20,
         paginationLimitedTo: 1000,
         
-        // Autres paramètres
+        // Autres parametres
         distinct: false,
         replaceSynonymsInHighlight: true,
         removeWordsIfNoResults: 'lastWords',
@@ -333,7 +333,7 @@ class AlgoliaService {
           {
             objectID: 'vegan-synonyms',
             type: 'synonym',
-            synonyms: ['vegan', 'végétalien', 'végane', 'vegetalien']
+            synonyms: ['vegan', 'vegetalien', 'vegane', 'vegetalien']
           },
           {
             objectID: 'sugar-synonyms',
@@ -343,9 +343,9 @@ class AlgoliaService {
         ]
       });
       
-      console.log(`✅ Configuration index ${useStaging ? 'staging' : 'production'} mise à jour`);
+      console.log(`âœ… Configuration index ${useStaging ? 'staging' : 'production'} mise   jour`);
     } catch (error) {
-      console.error('❌ Erreur configuration index:', error);
+      console.error('âŒ Erreur configuration index:', error);
       throw error;
     }
   }
@@ -355,7 +355,7 @@ class AlgoliaService {
    */
   async indexProduct(product, useStaging = false) {
     if (!this.isConfigured()) {
-      console.warn('Algolia non configuré - skip indexation');
+      console.warn('Algolia non configure - skip indexation');
       return null;
     }
 
@@ -364,11 +364,11 @@ class AlgoliaService {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       
       const result = await index.saveObject(algoliaProduct);
-      console.log(`✅ Produit "${product.name || product.title}" indexé (${algoliaProduct.objectID})`);
+      console.log(`âœ… Produit "${product.name || product.title}" indexe (${algoliaProduct.objectID})`);
       
       return result;
     } catch (error) {
-      console.error(`❌ Erreur indexation produit:`, error);
+      console.error(`âŒ Erreur indexation produit:`, error);
       throw error;
     }
   }
@@ -378,7 +378,7 @@ class AlgoliaService {
    */
   async indexProducts(products, useStaging = false) {
     if (!this.isConfigured()) {
-      console.warn('Algolia non configuré - skip indexation batch');
+      console.warn('Algolia non configure - skip indexation batch');
       return { success: 0, failed: products.length };
     }
 
@@ -394,23 +394,23 @@ class AlgoliaService {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       const result = await index.saveObjects(algoliaProducts);
       
-      console.log(`✅ Batch indexé: ${products.length} produits`);
+      console.log(`âœ… Batch indexe: ${products.length} produits`);
       return { 
         success: result.objectIDs.length, 
         failed: products.length - result.objectIDs.length 
       };
     } catch (error) {
-      console.error('❌ Erreur indexation batch:', error);
+      console.error('âŒ Erreur indexation batch:', error);
       return { success: 0, failed: products.length };
     }
   }
 
   /**
-   * Recherche de produits avec filtres avancés
+   * Recherche de produits avec filtres avances
    */
   async searchProducts(query = '', filters = {}, options = {}) {
     if (!this.isConfigured()) {
-      console.warn('Algolia non configuré - recherche impossible');
+      console.warn('Algolia non configure - recherche impossible');
       return { hits: [], nbHits: 0, facets: {} };
     }
 
@@ -466,11 +466,11 @@ class AlgoliaService {
       
       const result = await index.search(query, searchOptions);
       
-      console.log(`🔍 Recherche "${query}": ${result.nbHits} résultats`);
+      console.log(`ðŸ” Recherche "${query}": ${result.nbHits} resultats`);
       return result;
       
     } catch (error) {
-      console.error('❌ Erreur recherche Algolia:', error);
+      console.error('âŒ Erreur recherche Algolia:', error);
       return { hits: [], nbHits: 0, facets: {}, error: error.message };
     }
   }
@@ -491,15 +491,15 @@ class AlgoliaService {
     try {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       await index.deleteObject(String(productId));
-      console.log(`✅ Produit ${productId} supprimé de l'index`);
+      console.log(`âœ… Produit ${productId} supprime de l'index`);
     } catch (error) {
-      console.error(`❌ Erreur suppression produit ${productId}:`, error);
+      console.error(`âŒ Erreur suppression produit ${productId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Met à jour partiellement un produit
+   * Met   jour partiellement un produit
    */
   async updateProduct(productId, updates, useStaging = false) {
     if (!this.isConfigured()) return;
@@ -513,35 +513,35 @@ class AlgoliaService {
         updatedAt: Math.floor(Date.now() / 1000)
       });
       
-      console.log(`✅ Produit ${productId} mis à jour dans Algolia`);
+      console.log(`âœ… Produit ${productId} mis   jour dans Algolia`);
     } catch (error) {
-      console.error(`❌ Erreur mise à jour produit ${productId}:`, error);
+      console.error(`âŒ Erreur mise   jour produit ${productId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Vide complètement un index (DANGER!)
+   * Vide completement un index (DANGER!)
    */
   async clearIndex(useStaging = false) {
     if (!this.isConfigured()) return;
 
     if (process.env.NODE_ENV === 'production' && !useStaging) {
-      throw new Error('Clear index production non autorisé');
+      throw new Error('Clear index production non autorise');
     }
 
     try {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       await index.clearObjects();
-      console.log(`⚠️ Index ${useStaging ? 'staging' : 'production'} vidé complètement`);
+      console.log(`âš ï¸ Index ${useStaging ? 'staging' : 'production'} vide completement`);
     } catch (error) {
-      console.error('❌ Erreur vidage index:', error);
+      console.error('âŒ Erreur vidage index:', error);
       throw error;
     }
   }
 
   /**
-   * Récupère les statistiques de l'index
+   * Recupere les statistiques de l'index
    */
   async getIndexStats(useStaging = false) {
     if (!this.isConfigured()) {
@@ -558,7 +558,7 @@ class AlgoliaService {
         analytics: false 
       });
 
-      // Récupérer les settings
+      // Recuperer les settings
       const settings = await index.getSettings();
 
       return {
@@ -575,7 +575,7 @@ class AlgoliaService {
       };
 
     } catch (error) {
-      console.error('❌ Erreur stats Algolia:', error);
+      console.error('âŒ Erreur stats Algolia:', error);
       return { 
         configured: false, 
         error: error.message 
@@ -588,42 +588,42 @@ class AlgoliaService {
    */
   async testConnection() {
     if (!this.client) {
-      console.error('❌ Client Algolia non initialisé');
+      console.error('âŒ Client Algolia non initialise');
       return false;
     }
 
     try {
-      console.log('🔌 Test de connexion Algolia...');
+      console.log('ðŸ”Œ Test de connexion Algolia...');
       
       // Test avec l'index staging
       const stats = await this.getIndexStats(true);
       
       if (stats.configured) {
-        console.log('✅ Connexion Algolia OK');
-        console.log(`📊 Produits dans staging: ${stats.totalRecords || 0}`);
+        console.log('âœ… Connexion Algolia OK');
+        console.log(`ðŸ“Š Produits dans staging: ${stats.totalRecords || 0}`);
         return true;
       } else {
-        console.error('❌ Index non configuré');
+        console.error('âŒ Index non configure');
         return false;
       }
     } catch (error) {
-      console.error('❌ Test connexion Algolia échoué:', error);
+      console.error('âŒ Test connexion Algolia echoue:', error);
       return false;
     }
   }
 
   /**
-   * Copie les données de staging vers production
+   * Copie les donnees de staging vers production
    */
   async promoteStaging() {
     if (!this.isConfigured()) {
-      throw new Error('Algolia non configuré');
+      throw new Error('Algolia non configure');
     }
 
     try {
-      console.log('📋 Copie staging → production...');
+      console.log('ðŸ“‹ Copie staging â†’ production...');
       
-      // Utiliser la méthode native Algolia de copie
+      // Utiliser la methode native Algolia de copie
       await this.client.copyIndex(
         this.stagingIndexName,
         this.indexName,
@@ -632,9 +632,9 @@ class AlgoliaService {
         }
       );
       
-      console.log('✅ Staging promu en production avec succès');
+      console.log('âœ… Staging promu en production avec succes');
     } catch (error) {
-      console.error('❌ Erreur promotion staging:', error);
+      console.error('âŒ Erreur promotion staging:', error);
       throw error;
     }
   }

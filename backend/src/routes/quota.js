@@ -1,11 +1,11 @@
 // backend/src/routes/quota.js
-// Version autonome sans dépendances externes
+// Version autonome sans dependances externes
 
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-// Modèle User
+// Modele User
 let User;
 try {
   User = require('../models/User');
@@ -35,7 +35,7 @@ const authMiddleware = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      error: 'Token invalide ou expiré'
+      error: 'Token invalide ou expire'
     });
   }
 };
@@ -49,7 +49,7 @@ router.get('/status', authMiddleware, async (req, res) => {
       const user = await User.findById(req.userId).select('quotas tier subscription');
       
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return res.status(404).json({ message: 'Utilisateur non trouve' });
       }
 
       // Calculer les limites selon le tier
@@ -106,11 +106,11 @@ router.get('/status', authMiddleware, async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching quotas:', error);
-    res.status(500).json({ message: 'Erreur lors de la récupération des quotas' });
+    res.status(500).json({ message: 'Erreur lors de la recuperation des quotas' });
   }
 });
 
-// POST /api/quota/increment - Incrémenter l'usage
+// POST /api/quota/increment - Incrementer l'usage
 router.post('/increment', authMiddleware, async (req, res) => {
   try {
     const { type } = req.body; // 'scan' ou 'aiQuestion'
@@ -124,7 +124,7 @@ router.post('/increment', authMiddleware, async (req, res) => {
       const user = await User.findById(req.userId);
       
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return res.status(404).json({ message: 'Utilisateur non trouve' });
       }
       
       // Initialiser les quotas s'ils n'existent pas
@@ -137,7 +137,7 @@ router.post('/increment', authMiddleware, async (req, res) => {
         };
       }
       
-      // Incrémenter selon le type
+      // Incrementer selon le type
       if (type === 'scan') {
         user.quotas.scansUsed = (user.quotas.scansUsed || 0) + 1;
       } else {
@@ -155,15 +155,15 @@ router.post('/increment', authMiddleware, async (req, res) => {
       });
     } else {
       // Mode test
-      res.json({ success: true, message: 'Quota incrémenté (mode test)' });
+      res.json({ success: true, message: 'Quota incremente (mode test)' });
     }
   } catch (error) {
     console.error('Error incrementing quota:', error);
-    res.status(500).json({ message: 'Erreur lors de l\'incrémentation du quota' });
+    res.status(500).json({ message: 'Erreur lors de l\'incrementation du quota' });
   }
 });
 
-// Middleware de vérification des quotas
+// Middleware de verification des quotas
 const checkQuotaMiddleware = (type) => {
   return async (req, res, next) => {
     try {
@@ -176,7 +176,7 @@ const checkQuotaMiddleware = (type) => {
       
       const user = await User.findById(req.userId);
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return res.status(404).json({ message: 'Utilisateur non trouve' });
       }
       
       const limits = {
@@ -194,7 +194,7 @@ const checkQuotaMiddleware = (type) => {
         if (limit !== -1 && used >= limit) {
           return res.status(429).json({
             success: false,
-            message: 'Quota de scans dépassé',
+            message: 'Quota de scans depasse',
             quotaExceeded: true,
             used,
             limit
@@ -207,7 +207,7 @@ const checkQuotaMiddleware = (type) => {
         if (used >= limit) {
           return res.status(429).json({
             success: false,
-            message: 'Quota de questions IA dépassé',
+            message: 'Quota de questions IA depasse',
             quotaExceeded: true,
             used,
             limit
@@ -224,7 +224,7 @@ const checkQuotaMiddleware = (type) => {
   };
 };
 
-// Routes protégées par quotas (exemples)
+// Routes protegees par quotas (exemples)
 router.post('/scan', authMiddleware, checkQuotaMiddleware('scan'), async (req, res) => {
   res.json({ success: true, data: 'Scan completed' });
 });

@@ -1,9 +1,9 @@
 // backend/src/services/analysis/nutriscoreCalculator.js
-// Calculateur Nutri-Score selon l'algorithme officiel Santé Publique France
+// Calculateur Nutri-Score selon l'algorithme officiel Sante Publique France
 
 class NutriScoreCalculator {
   constructor() {
-    // Seuils pour les points négatifs (par 100g)
+    // Seuils pour les points negatifs (par 100g)
     this.negativeThresholds = {
       energy: [335, 670, 1005, 1340, 1675, 2010, 2345, 2680, 3015, 3350], // kJ
       sugars: [4.5, 9, 13.5, 18, 22.5, 27, 31, 36, 40, 45], // g
@@ -15,17 +15,17 @@ class NutriScoreCalculator {
     this.positiveThresholds = {
       fiber: [0.9, 1.9, 2.8, 3.7, 4.7], // g
       proteins: [1.6, 3.2, 4.8, 6.4, 8.0], // g
-      fruitsVegetables: [40, 60, 80, 80, 80] // % (répété pour 3-5 points)
+      fruitsVegetables: [40, 60, 80, 80, 80] // % (repete pour 3-5 points)
     };
 
-    // Seuils spécifiques pour les boissons
+    // Seuils specifiques pour les boissons
     this.beverageThresholds = {
       energy: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270], // kJ
       sugars: [0, 1.5, 3, 4.5, 6, 7.5, 9, 10.5, 12, 13.5], // g
       fruitsVegetables: [40, 40, 60, 60, 80, 80, 80, 80, 80, 80] // %
     };
 
-    // Catégories spéciales
+    // Categories speciales
     this.specialCategories = {
       water: ['eaux', 'water', 'eau'],
       cheese: ['fromage', 'cheese'],
@@ -36,15 +36,15 @@ class NutriScoreCalculator {
 
   /**
    * Calcule le Nutri-Score d'un produit
-   * @param {Object} product - Produit avec nutriments et catégorie
-   * @returns {Object} Résultat détaillé du Nutri-Score
+   * @param {Object} product - Produit avec nutriments et categorie
+   * @returns {Object} Resultat detaille du Nutri-Score
    */
   calculate(product) {
     try {
-      // Vérifier si c'est une boisson
+      // Verifier si c'est une boisson
       const isBeverage = this.isBeverage(product);
       
-      // Vérifier les catégories spéciales
+      // Verifier les categories speciales
       if (this.isWater(product)) {
         return this.createResult('A', 0, 0, 0, 'Eau - Nutri-Score A automatique');
       }
@@ -57,7 +57,7 @@ class NutriScoreCalculator {
           grade: null,
           score: null,
           details: null,
-          error: 'Données nutritionnelles insuffisantes'
+          error: 'Donnees nutritionnelles insuffisantes'
         };
       }
 
@@ -73,7 +73,7 @@ class NutriScoreCalculator {
         this.isSpecialCategory(product)
       );
 
-      // Déterminer la lettre
+      // Determiner la lettre
       const grade = this.getGrade(finalScore, isBeverage);
 
       return this.createResult(
@@ -101,7 +101,7 @@ class NutriScoreCalculator {
     const nutriments = product.nutriments || product.nutritionFacts || {};
     
     return {
-      // Énergie en kJ (conversion si en kcal)
+      // ‰nergie en kJ (conversion si en kcal)
       energy: nutriments.energy || 
               nutriments['energy-kj'] || 
               nutriments['energy-kj_100g'] ||
@@ -119,7 +119,7 @@ class NutriScoreCalculator {
       sodium: nutriments.sodium || 
               nutriments.sodium_100g || 
               nutriments['sodium_100g'] || 
-              (nutriments.salt_100g ? nutriments.salt_100g * 400 : 0), // Conversion sel → sodium
+              (nutriments.salt_100g ? nutriments.salt_100g * 400 : 0), // Conversion sel â†’ sodium
               
       fiber: nutriments.fiber || 
              nutriments.fiber_100g || 
@@ -129,13 +129,13 @@ class NutriScoreCalculator {
                 nutriments.proteins_100g || 
                 nutriments['proteins_100g'] || 0,
                 
-      // Fruits et légumes (en %)
+      // Fruits et legumes (en %)
       fruitsVegetables: this.extractFruitsVegetablesPercentage(product)
     };
   }
 
   /**
-   * Calcule les points négatifs (0-40)
+   * Calcule les points negatifs (0-40)
    */
   calculateNegativePoints(nutrients, isBeverage) {
     const thresholds = isBeverage ? this.beverageThresholds : this.negativeThresholds;
@@ -171,31 +171,31 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Calcule le score final selon les règles du Nutri-Score
+   * Calcule le score final selon les regles du Nutri-Score
    */
   calculateFinalScore(negativeTotal, positiveTotal, negativeDetails, isSpecial) {
-    // Règle spéciale : si points négatifs < 11, on soustrait tous les points positifs
+    // Regle speciale : si points negatifs < 11, on soustrait tous les points positifs
     if (negativeTotal < 11) {
       return negativeTotal - positiveTotal;
     }
 
-    // Règle spéciale pour fromages et matières grasses ajoutées
+    // Regle speciale pour fromages et matieres grasses ajoutees
     if (isSpecial) {
       return negativeTotal - positiveTotal;
     }
 
-    // Règle standard : si points négatifs ≥ 11
-    // On soustrait uniquement les points fruits/légumes + fibres (pas les protéines)
+    // Regle standard : si points negatifs â‰¥ 11
+    // On soustrait uniquement les points fruits/legumes + fibres (pas les proteines)
     const partialPositive = positiveTotal - (negativeDetails.proteins || 0);
     return negativeTotal - partialPositive;
   }
 
   /**
-   * Détermine la lettre du Nutri-Score
+   * Determine la lettre du Nutri-Score
    */
   getGrade(score, isBeverage) {
     if (isBeverage) {
-      // Seuils spécifiques pour les boissons
+      // Seuils specifiques pour les boissons
       if (score <= 1) return 'B'; // Pas de A pour les boissons (sauf eau)
       if (score <= 5) return 'C';
       if (score <= 9) return 'D';
@@ -223,24 +223,24 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Détermine si le produit est une boisson
+   * Determine si le produit est une boisson
    */
   isBeverage(product) {
     const category = (product.category || '').toLowerCase();
     const name = (product.name || '').toLowerCase();
     const categories = product.categories || [];
     
-    // Vérifier dans les catégories
+    // Verifier dans les categories
     if (categories.some(cat => this.specialCategories.beverages.some(bev => cat.includes(bev)))) {
       return true;
     }
     
-    // Vérifier dans le nom
+    // Verifier dans le nom
     return this.specialCategories.beverages.some(bev => name.includes(bev));
   }
 
   /**
-   * Détermine si c'est de l'eau
+   * Determine si c'est de l'eau
    */
   isWater(product) {
     const name = (product.name || '').toLowerCase();
@@ -252,40 +252,40 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Détermine si c'est une catégorie spéciale (fromage, matière grasse)
+   * Determine si c'est une categorie speciale (fromage, matiere grasse)
    */
   isSpecialCategory(product) {
     const categories = product.categories || [];
     const name = (product.name || '').toLowerCase();
     
-    // Vérifier fromages
+    // Verifier fromages
     if (this.specialCategories.cheese.some(cheese => 
       name.includes(cheese) || categories.some(cat => cat.includes(cheese))
     )) {
       return true;
     }
     
-    // Vérifier matières grasses ajoutées
+    // Verifier matieres grasses ajoutees
     return this.specialCategories.addedFats.some(fat => 
       name.includes(fat) || categories.some(cat => cat.includes(fat))
     );
   }
 
   /**
-   * Extrait le pourcentage de fruits et légumes
+   * Extrait le pourcentage de fruits et legumes
    */
   extractFruitsVegetablesPercentage(product) {
-    // Vérifier les champs spécifiques
+    // Verifier les champs specifiques
     if (product.nutriments?.['fruits-vegetables-nuts_100g']) {
       return product.nutriments['fruits-vegetables-nuts_100g'];
     }
     
-    // Estimation basée sur les ingrédients
+    // Estimation basee sur les ingredients
     if (product.ingredients) {
       return this.estimateFruitsVegetablesFromIngredients(product.ingredients);
     }
     
-    // Valeur par défaut selon la catégorie
+    // Valeur par defaut selon la categorie
     const categories = product.categories || [];
     if (categories.some(cat => cat.includes('fruit') || cat.includes('vegetable'))) {
       return 50; // Estimation conservative
@@ -295,13 +295,13 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Estime le pourcentage de fruits/légumes depuis les ingrédients
+   * Estime le pourcentage de fruits/legumes depuis les ingredients
    */
   estimateFruitsVegetablesFromIngredients(ingredients) {
     if (!ingredients || !Array.isArray(ingredients)) return 0;
     
     const fruitVegKeywords = [
-      'fruit', 'légume', 'vegetable', 'tomate', 'carotte', 'pomme',
+      'fruit', 'legume', 'vegetable', 'tomate', 'carotte', 'pomme',
       'orange', 'banane', 'fraise', 'cerise', 'poire', 'raisin'
     ];
     
@@ -318,7 +318,7 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Vérifie si les nutriments requis sont présents
+   * Verifie si les nutriments requis sont presents
    */
   hasRequiredNutrients(nutrients) {
     return nutrients.energy !== undefined &&
@@ -328,7 +328,7 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Crée le résultat formaté
+   * Cree le resultat formate
    */
   createResult(grade, score, negativePoints, positivePoints, category) {
     return {
@@ -346,25 +346,25 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Fournit une interprétation du score
+   * Fournit une interpretation du score
    */
   getInterpretation(grade) {
     const interpretations = {
-      'A': 'Excellente qualité nutritionnelle',
-      'B': 'Bonne qualité nutritionnelle',
-      'C': 'Qualité nutritionnelle moyenne',
-      'D': 'Qualité nutritionnelle faible',
-      'E': 'Qualité nutritionnelle très faible'
+      'A': 'Excellente qualite nutritionnelle',
+      'B': 'Bonne qualite nutritionnelle',
+      'C': 'Qualite nutritionnelle moyenne',
+      'D': 'Qualite nutritionnelle faible',
+      'E': 'Qualite nutritionnelle tres faible'
     };
     
     return interpretations[grade] || 'Score non disponible';
   }
 
   /**
-   * Calcule la confiance du résultat
+   * Calcule la confiance du resultat
    */
   calculateConfidence(negativePoints, positivePoints) {
-    // Plus on a de données, plus la confiance est élevée
+    // Plus on a de donnees, plus la confiance est elevee
     const dataPoints = Object.values({
       ...negativePoints.details,
       ...positivePoints.details
@@ -374,7 +374,7 @@ class NutriScoreCalculator {
   }
 
   /**
-   * Méthode pour comparer avec un score Open Food Facts
+   * Methode pour comparer avec un score Open Food Facts
    */
   compareWithOpenFoodFacts(calculatedGrade, offGrade) {
     if (!offGrade) return null;
@@ -384,11 +384,11 @@ class NutriScoreCalculator {
     const off = grades.indexOf(offGrade.toUpperCase());
     
     if (calculated === off) {
-      return { match: true, message: 'Score identique à Open Food Facts' };
+      return { match: true, message: 'Score identique   Open Food Facts' };
     } else {
       return {
         match: false,
-        message: `Différence détectée: ${calculatedGrade} (calculé) vs ${offGrade.toUpperCase()} (OFF)`,
+        message: `Difference detectee: ${calculatedGrade} (calcule) vs ${offGrade.toUpperCase()} (OFF)`,
         difference: Math.abs(calculated - off)
       };
     }

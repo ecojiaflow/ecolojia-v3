@@ -36,7 +36,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Analyse complète d'un détergent
+   * Analyse complete d'un detergent
    */
   async analyzeProduct(product) {
     try {
@@ -50,7 +50,7 @@ class DetergentAnalyzer {
       // Calcul du score global
       const overallScore = Math.round((ecologicalScore + efficiencyScore + safetyScore) / 3);
       
-      // Analyses détaillées
+      // Analyses detaillees
       const biodegradability = this.calculateBiodegradability(composition);
       const cdv = this.calculateCDV(composition);
       const irritants = this.detectIrritants(composition);
@@ -96,12 +96,12 @@ class DetergentAnalyzer {
       };
     } catch (error) {
       console.error('Detergent analysis error:', error);
-      throw new Error('Erreur lors de l\'analyse du produit détergent');
+      throw new Error('Erreur lors de l\'analyse du produit detergent');
     }
   }
 
   /**
-   * Parse la composition et enrichit avec la base de données
+   * Parse la composition et enrichit avec la base de donnees
    */
   parseComposition(ingredientsList) {
     if (!ingredientsList || typeof ingredientsList !== 'string') {
@@ -109,9 +109,9 @@ class DetergentAnalyzer {
     }
 
     // Patterns pour extraire les pourcentages
-    const percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)\s*%|([<>≤≥]?\s*\d+(?:[.,]\d+)?)\s*%/;
+    const percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-â€“]\s*(\d+(?:[.,]\d+)?)\s*%|([<>â‰¤â‰¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
     
-    // Séparer et analyser chaque ingrédient
+    // Separer et analyser chaque ingredient
     const ingredients = ingredientsList
       .split(/[,;]/)
       .map(ing => {
@@ -128,7 +128,7 @@ class DetergentAnalyzer {
               percentage = (parseFloat(percentMatch[1]) + parseFloat(percentMatch[2])) / 2;
             } else if (percentMatch[3]) {
               // Single: ">5%", "<15%", "5%"
-              percentage = parseFloat(percentMatch[3].replace(/[<>≤≥]/g, ''));
+              percentage = parseFloat(percentMatch[3].replace(/[<>â‰¤â‰¥]/g, ''));
             }
           }
         } else {
@@ -139,7 +139,7 @@ class DetergentAnalyzer {
       })
       .filter(ing => ing.name.length > 0);
 
-    // Enrichir avec la base de données
+    // Enrichir avec la base de donnees
     return ingredients.map((ing, index) => {
       const dbChemical = this.findInDatabase(ing.name);
       
@@ -155,7 +155,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Recherche dans la base de données chimique
+   * Recherche dans la base de donnees chimique
    */
   findInDatabase(chemicalName) {
     const normalized = this.normalizeChemicalName(chemicalName);
@@ -181,13 +181,13 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Calcule le score écologique (0-100)
+   * Calcule le score ecologique (0-100)
    */
   calculateEcologicalScore(composition) {
     let score = 100;
     
     composition.forEach(chem => {
-      // Biodégradabilité
+      // Biodegradabilite
       if (chem.biodegradability !== undefined) {
         if (chem.biodegradability < 60) {
           score -= 15 * (chem.percentage || 5) / 100;
@@ -196,7 +196,7 @@ class DetergentAnalyzer {
         }
       }
       
-      // Toxicité aquatique
+      // Toxicite aquatique
       if (chem.aquaticToxicity === 'high') {
         score -= 20 * (chem.percentage || 5) / 100;
       } else if (chem.aquaticToxicity === 'moderate') {
@@ -213,7 +213,7 @@ class DetergentAnalyzer {
         score -= 25 * (chem.percentage || 5) / 100;
       }
       
-      // EDTA et dérivés
+      // EDTA et derives
       if (chem.category === 'chelating' && chem.persistent) {
         score -= 15 * (chem.percentage || 5) / 100;
       }
@@ -228,7 +228,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Calcule le score d'efficacité basé sur les actifs
+   * Calcule le score d'efficacite base sur les actifs
    */
   calculateEfficiencyScore(composition, category) {
     let score = 70; // Score de base
@@ -237,7 +237,7 @@ class DetergentAnalyzer {
     const presentActives = new Set();
     
     composition.forEach(chem => {
-      // Vérifier la présence des actifs nécessaires
+      // Verifier la presence des actifs necessaires
       if (requiredActives.includes(chem.function)) {
         presentActives.add(chem.function);
         score += 10;
@@ -251,13 +251,13 @@ class DetergentAnalyzer {
         }
       }
       
-      // Pénalité pour ingrédients inutiles
+      // Penalite pour ingredients inutiles
       if (chem.function === 'filler' && chem.percentage > 20) {
         score -= 10;
       }
     });
     
-    // Vérifier que tous les actifs requis sont présents
+    // Verifier que tous les actifs requis sont presents
     const missingActives = requiredActives.filter(a => !presentActives.has(a));
     score -= missingActives.length * 15;
     
@@ -265,7 +265,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Calcule le score de sécurité (0-100)
+   * Calcule le score de securite (0-100)
    */
   calculateSafetyScore(composition) {
     let score = 100;
@@ -282,12 +282,12 @@ class DetergentAnalyzer {
         score -= 20 * (chem.percentage || 5) / 100;
       }
       
-      // Allergènes
+      // Allergenes
       if (chem.allergen) {
         score -= 10 * (chem.percentage || 5) / 100;
       }
       
-      // pH extrême
+      // pH extreme
       if (chem.ph !== undefined) {
         if (chem.ph < 2 || chem.ph > 11.5) {
           score -= 20;
@@ -311,7 +311,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Calcule la biodégradabilité globale
+   * Calcule la biodegradabilite globale
    */
   calculateBiodegradability(composition) {
     let totalBiodegradability = 0;
@@ -326,7 +326,7 @@ class DetergentAnalyzer {
     
     const avgBiodegradability = totalPercentage > 0 
       ? totalBiodegradability / totalPercentage 
-      : 70; // Valeur par défaut
+      : 70; // Valeur par defaut
     
     return {
       percentage: Math.round(avgBiodegradability),
@@ -350,7 +350,7 @@ class DetergentAnalyzer {
     
     composition.forEach(chem => {
       if (chem.cdvFactor && chem.percentage) {
-        // CDV = (Concentration × CDV Factor) / EC50
+        // CDV = (Concentration — CDV Factor) / EC50
         const concentration = (chem.percentage / 100) * 1000; // g/L
         const cdv = concentration * chem.cdvFactor;
         totalCDV += cdv;
@@ -373,7 +373,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Détecte les irritants
+   * Detecte les irritants
    */
   detectIrritants(composition) {
     return composition
@@ -392,7 +392,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Calcule les Composés Organiques Volatils (COV)
+   * Calcule les Composes Organiques Volatils (COV)
    */
   calculateVOC(composition) {
     let totalVOC = 0;
@@ -419,7 +419,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Détecte les phosphates
+   * Detecte les phosphates
    */
   detectPhosphates(composition) {
     const phosphates = composition.filter(chem => 
@@ -479,7 +479,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Génère des recommandations
+   * Genere des recommandations
    */
   generateRecommendations(ecologicalScore, safetyScore, composition) {
     const recommendations = {
@@ -497,7 +497,7 @@ class DetergentAnalyzer {
       });
       recommendations.usage.push({
         type: 'ventilation',
-        message: 'Utiliser dans un endroit bien ventilé'
+        message: 'Utiliser dans un endroit bien ventile'
       });
     }
     
@@ -519,24 +519,24 @@ class DetergentAnalyzer {
       });
     }
     
-    // Alternatives écologiques
+    // Alternatives ecologiques
     if (ecologicalScore < 60) {
       recommendations.alternatives.push({
         type: 'ecological',
-        message: 'Privilégier des produits avec Ecolabel européen'
+        message: 'Privilegier des produits avec Ecolabel europeen'
       });
     }
     
     // Conseils d'utilisation
     recommendations.tips.push({
       category: 'dosage',
-      message: 'Respecter les doses recommandées pour limiter l\'impact environnemental'
+      message: 'Respecter les doses recommandees pour limiter l\'impact environnemental'
     });
     
     if (composition.some(c => c.enzyme)) {
       recommendations.tips.push({
         category: 'temperature',
-        message: 'Efficace dès 30°C grâce aux enzymes'
+        message: 'Efficace des 30Â°C grace aux enzymes'
       });
     }
     
@@ -547,7 +547,7 @@ class DetergentAnalyzer {
    * Estime le pourcentage si non fourni
    */
   estimatePercentage(position, total) {
-    // Estimation basée sur la position dans la liste
+    // Estimation basee sur la position dans la liste
     if (position === 0) return 30;
     if (position === 1) return 20;
     if (position === 2) return 15;
@@ -557,7 +557,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Retourne les actifs requis selon la catégorie
+   * Retourne les actifs requis selon la categorie
    */
   getRequiredActives(category) {
     const actives = {
@@ -591,10 +591,10 @@ class DetergentAnalyzer {
       hazards.push('Sensibilisant');
     }
     if (chemical.cmr) {
-      hazards.push('CMR (Cancérigène, Mutagène ou Reprotoxique)');
+      hazards.push('CMR (Cancerigene, Mutagene ou Reprotoxique)');
     }
     if (chemical.aquaticToxicity) {
-      hazards.push(`Toxicité aquatique (${chemical.aquaticToxicity})`);
+      hazards.push(`Toxicite aquatique (${chemical.aquaticToxicity})`);
     }
     if (chemical.bioaccumulative) {
       hazards.push('Bioaccumulable');
@@ -604,7 +604,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Évalue la biodégradabilité
+   * ‰value la biodegradabilite
    */
   getBiodegradabilityRating(percentage) {
     if (percentage >= this.thresholds.biodegradability.excellent) return 'excellent';
@@ -614,7 +614,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Évalue le CDV
+   * ‰value le CDV
    */
   getCDVRating(cdv) {
     if (cdv <= this.thresholds.cdv.excellent) return 'excellent';
@@ -624,22 +624,22 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Interprète le CDV
+   * Interprete le CDV
    */
   interpretCDV(cdv) {
     if (cdv < 1000) {
-      return 'Impact environnemental très faible';
+      return 'Impact environnemental tres faible';
     } else if (cdv < 10000) {
       return 'Impact environnemental faible';
     } else if (cdv < 100000) {
-      return 'Impact environnemental modéré';
+      return 'Impact environnemental modere';
     } else {
-      return 'Impact environnemental élevé - Dilution importante nécessaire';
+      return 'Impact environnemental eleve - Dilution importante necessaire';
     }
   }
 
   /**
-   * Détermine le type d'irritant
+   * Determine le type d'irritant
    */
   getIrritantType(chemical) {
     const types = [];
@@ -653,7 +653,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Évalue les COV
+   * ‰value les COV
    */
   getVOCRating(percentage) {
     if (percentage <= this.thresholds.voc.excellent) return 'excellent';
@@ -678,13 +678,13 @@ class DetergentAnalyzer {
   }
 
   /**
-   * Méthode principale pour l'analyse
+   * Methode principale pour l'analyse
    */
   async analyze(productName, ingredients, userId) {
     const product = {
       name: productName,
       ingredients: ingredients,
-      category: 'general_cleaner', // Par défaut
+      category: 'general_cleaner', // Par defaut
       labels: []
     };
     

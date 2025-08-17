@@ -4,8 +4,8 @@ const User = require('../models/User');
 const checkQuota = (quotaType = 'scan') => {
   return async (req, res, next) => {
     try {
-      // IMPORTANT: Ne pas parser le body pour les requêtes multipart
-      // Multer doit s'exécuter AVANT ce middleware
+      // IMPORTANT: Ne pas parser le body pour les requetes multipart
+      // Multer doit s'executer AVANT ce middleware
       const isMultipart = req.headers['content-type']?.includes('multipart/form-data');
       
       if (isMultipart) {
@@ -14,25 +14,25 @@ const checkQuota = (quotaType = 'scan') => {
 
       const userId = req.user?.userId;
       if (!userId) {
-        return res.status(401).json({ error: 'Utilisateur non authentifié' });
+        return res.status(401).json({ error: 'Utilisateur non authentifie' });
       }
 
       const user = await User.findById(userId);
       if (!user) {
-        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        return res.status(404).json({ error: 'Utilisateur non trouve' });
       }
 
-      // Vérifier si l'utilisateur est premium
+      // Verifier si l'utilisateur est premium
       if (user.subscription?.status === 'active' && user.subscription?.plan === 'premium') {
         // Premium : pas de limite
         return next();
       }
 
-      // Utilisateur gratuit : vérifier les quotas
+      // Utilisateur gratuit : verifier les quotas
       const now = new Date();
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-      // Réinitialiser le compteur si nouveau mois
+      // Reinitialiser le compteur si nouveau mois
       if (!user.quotas.lastReset || user.quotas.lastReset < startOfMonth) {
         user.quotas = {
           scansUsed: 0,
@@ -44,7 +44,7 @@ const checkQuota = (quotaType = 'scan') => {
         await user.save();
       }
 
-      // Vérifier le quota approprié
+      // Verifier le quota approprie
       let quotaField, limitField, quotaName;
       
       switch (quotaType) {
@@ -64,7 +64,7 @@ const checkQuota = (quotaType = 'scan') => {
 
       if (user.quotas[quotaField] >= user.quotas[limitField]) {
         return res.status(429).json({ 
-          error: 'Quota dépassé',
+          error: 'Quota depasse',
           message: `Vous avez atteint votre limite mensuelle de ${user.quotas[limitField]} ${quotaName}`,
           quotas: {
             used: user.quotas[quotaField],
@@ -72,17 +72,17 @@ const checkQuota = (quotaType = 'scan') => {
             resetDate: new Date(now.getFullYear(), now.getMonth() + 1, 1)
           },
           upgrade: {
-            message: 'Passez à Premium pour des analyses illimitées',
+            message: 'Passez   Premium pour des analyses illimitees',
             url: '/pricing'
           }
         });
       }
 
-      // Incrémenter le compteur
+      // Incrementer le compteur
       user.quotas[quotaField] += 1;
       await user.save();
 
-      // Ajouter les infos de quota à la requête
+      // Ajouter les infos de quota   la requete
       req.quotaInfo = {
         type: quotaType,
         used: user.quotas[quotaField],
@@ -92,17 +92,17 @@ const checkQuota = (quotaType = 'scan') => {
 
       next();
     } catch (error) {
-      console.error('Erreur vérification quota:', error);
-      res.status(500).json({ error: 'Erreur lors de la vérification du quota' });
+      console.error('Erreur verification quota:', error);
+      res.status(500).json({ error: 'Erreur lors de la verification du quota' });
     }
   };
 };
 
-// Middleware spécifique pour les routes avec upload
+// Middleware specifique pour les routes avec upload
 const checkQuotaAfterUpload = (quotaType = 'scan') => {
   return async (req, res, next) => {
-    // Ce middleware est conçu pour être utilisé APRÈS multer
-    // Il aura accès à req.file
+    // Ce middleware est concu pour etre utilise APRˆS multer
+    // Il aura acces   req.file
     console.log('CheckQuotaAfterUpload - File present:', !!req.file);
     
     // Appeler la logique de quota normale

@@ -8,7 +8,7 @@ const client = new vision.ImageAnnotatorClient();
  */
 async function analyzeImageOCR(base64Image) {
   try {
-    console.log('🔍 Démarrage analyse OCR Google Vision...');
+    console.log('ðŸ” Demarrage analyse OCR Google Vision...');
     
     const [result] = await client.documentTextDetection({
       image: { content: base64Image },
@@ -19,18 +19,18 @@ async function analyzeImageOCR(base64Image) {
     if (!text || text.trim().length < 10) {
       return {
         success: false,
-        error: 'Texte insuffisant détecté sur l\'image'
+        error: 'Texte insuffisant detecte sur l\'image'
       };
     }
 
-    console.log('📝 Texte brut détecté:', text.substring(0, 200) + '...');
+    console.log('ðŸ“ Texte brut detecte:', text.substring(0, 200) + '...');
     
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
     
     // Analyse intelligente du contenu
     const analysis = analyzeProductText(text, lines);
     
-    console.log('✅ Analyse terminée:', {
+    console.log('âœ… Analyse terminee:', {
       name: analysis.name,
       brand: analysis.brand,
       category: analysis.category,
@@ -51,7 +51,7 @@ async function analyzeImageOCR(base64Image) {
     };
     
   } catch (error) {
-    console.error('❌ Vision OCR failed:', error.message);
+    console.error('âŒ Vision OCR failed:', error.message);
     return { 
       success: false, 
       error: error.message,
@@ -61,11 +61,11 @@ async function analyzeImageOCR(base64Image) {
 }
 
 /**
- * Analyse multi-photos : front + ingrédients + nutrition
+ * Analyse multi-photos : front + ingredients + nutrition
  */
 async function analyzeMultipleImages(photos) {
   try {
-    console.log('📸 Analyse multi-photos:', Object.keys(photos));
+    console.log('ðŸ“¸ Analyse multi-photos:', Object.keys(photos));
     
     const results = {};
     
@@ -74,16 +74,16 @@ async function analyzeMultipleImages(photos) {
       if (!base64) continue;
       
       const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, '');
-      console.log(`🔍 Analyse photo ${type}...`);
+      console.log(`ðŸ” Analyse photo ${type}...`);
       
       const analysis = await analyzeImageOCR(cleanBase64);
       results[type] = analysis;
     }
     
-    // Fusionner les résultats intelligemment
+    // Fusionner les resultats intelligemment
     const combinedAnalysis = combinePhotoAnalyses(results);
     
-    console.log('🎯 Analyse combinée:', {
+    console.log('ðŸŽ¯ Analyse combinee:', {
       name: combinedAnalysis.name,
       brand: combinedAnalysis.brand,
       ingredients_count: combinedAnalysis.ingredients.length
@@ -92,33 +92,33 @@ async function analyzeMultipleImages(photos) {
     return combinedAnalysis;
     
   } catch (error) {
-    console.error('❌ Erreur analyse multi-photos:', error);
+    console.error('âŒ Erreur analyse multi-photos:', error);
     throw error;
   }
 }
 
 /**
- * Analyse intelligente du texte détecté
+ * Analyse intelligente du texte detecte
  */
 function analyzeProductText(text, lines) {
   const textLower = text.toLowerCase();
   
-  // 1. EXTRACTION NOM PRODUIT (améliorée)
+  // 1. EXTRACTION NOM PRODUIT (amelioree)
   const name = extractProductName(lines, textLower);
   
-  // 2. EXTRACTION MARQUE (améliorée)
+  // 2. EXTRACTION MARQUE (amelioree)
   const brand = extractBrandIntelligent(lines, textLower);
   
-  // 3. EXTRACTION CATÉGORIE (améliorée)
+  // 3. EXTRACTION CAT‰GORIE (amelioree)
   const category = extractCategoryIntelligent(textLower);
   
-  // 4. EXTRACTION INGRÉDIENTS
+  // 4. EXTRACTION INGR‰DIENTS
   const ingredients = extractIngredients(textLower);
   
   // 5. EXTRACTION INFOS NUTRITIONNELLES
   const nutritionalInfo = extractNutritionalInfo(textLower);
   
-  // 6. DÉTECTION CERTIFICATIONS
+  // 6. D‰TECTION CERTIFICATIONS
   const certifications = extractCertifications(textLower);
   
   // 7. CALCUL CONFIANCE
@@ -138,14 +138,14 @@ function analyzeProductText(text, lines) {
 }
 
 /**
- * Extraction nom produit améliorée
+ * Extraction nom produit amelioree
  */
 function extractProductName(lines, textLower) {
-  // Chercher dans les premières lignes (nom souvent en haut)
+  // Chercher dans les premieres lignes (nom souvent en haut)
   for (let i = 0; i < Math.min(5, lines.length); i++) {
     const line = lines[i];
     
-    // Éviter les marques connues, codes-barres, etc.
+    // ‰viter les marques connues, codes-barres, etc.
     if (line.length > 3 && line.length < 50 && 
         !isBarcode(line) && 
         !isKnownBrand(line.toLowerCase()) &&
@@ -155,7 +155,7 @@ function extractProductName(lines, textLower) {
     }
   }
   
-  // Fallback : utiliser patterns pour détecter noms produits
+  // Fallback : utiliser patterns pour detecter noms produits
   const productPatterns = [
     /(\w+\s+bio)/gi,
     /(\w+\s+naturel)/gi,
@@ -177,7 +177,7 @@ function extractProductName(lines, textLower) {
  * Extraction marque intelligente
  */
 function extractBrandIntelligent(lines, textLower) {
-  // Marques étendues (base de données plus large)
+  // Marques etendues (base de donnees plus large)
   const knownBrands = [
     'bjorg', 'evian', 'barilla', 'danone', 'carrefour', 'monoprix',
     'bio village', 'naturalia', 'la vie claire', 'lea nature',
@@ -195,35 +195,35 @@ function extractBrandIntelligent(lines, textLower) {
     }
   }
   
-  // Chercher dans les premières lignes (marque souvent en haut)
+  // Chercher dans les premieres lignes (marque souvent en haut)
   for (let i = 0; i < Math.min(3, lines.length); i++) {
     const line = lines[i].toLowerCase();
     if (line.length > 2 && line.length < 20 && !isBarcode(line)) {
-      // Vérifier si c'est probablement une marque
+      // Verifier si c'est probablement une marque
       if (isLikelyBrand(line)) {
         return capitalizeFirst(lines[i]);
       }
     }
   }
   
-  return 'Marque non identifiée';
+  return 'Marque non identifiee';
 }
 
 /**
- * Extraction catégorie intelligente
+ * Extraction categorie intelligente
  */
 function extractCategoryIntelligent(textLower) {
   const categories = {
-    'yaourt': ['yaourt', 'yogurt', 'fromage blanc', 'dessert lacté'],
-    'eau': ['eau', 'water', 'source', 'minérale'],
-    'biscuits': ['biscuit', 'cookie', 'gâteau', 'cake', 'sablé'],
-    'pâtes': ['pâtes', 'pasta', 'spaghetti', 'macaroni', 'linguine'],
-    'boisson': ['jus', 'juice', 'boisson', 'drink', 'soda', 'thé', 'café'],
-    'lait': ['lait', 'milk', 'crème', 'beurre'],
-    'céréales': ['céréales', 'muesli', 'granola', 'flocons'],
-    'snack': ['chips', 'crackers', 'apéritif', 'snack'],
-    'hygiène': ['shampooing', 'savon', 'dentifrice', 'gel douche'],
-    'cosmétique': ['crème', 'lotion', 'sérum', 'masque']
+    'yaourt': ['yaourt', 'yogurt', 'fromage blanc', 'dessert lacte'],
+    'eau': ['eau', 'water', 'source', 'minerale'],
+    'biscuits': ['biscuit', 'cookie', 'gateau', 'cake', 'sable'],
+    'pates': ['pates', 'pasta', 'spaghetti', 'macaroni', 'linguine'],
+    'boisson': ['jus', 'juice', 'boisson', 'drink', 'soda', 'the', 'cafe'],
+    'lait': ['lait', 'milk', 'creme', 'beurre'],
+    'cereales': ['cereales', 'muesli', 'granola', 'flocons'],
+    'snack': ['chips', 'crackers', 'aperitif', 'snack'],
+    'hygiene': ['shampooing', 'savon', 'dentifrice', 'gel douche'],
+    'cosmetique': ['creme', 'lotion', 'serum', 'masque']
   };
   
   for (const [category, keywords] of Object.entries(categories)) {
@@ -238,16 +238,16 @@ function extractCategoryIntelligent(textLower) {
 }
 
 /**
- * Extraction ingrédients
+ * Extraction ingredients
  */
 function extractIngredients(textLower) {
   const ingredients = [];
   
-  // Chercher section ingrédients
-  const ingredientSection = extractSection(textLower, ['ingrédients', 'ingredients']);
+  // Chercher section ingredients
+  const ingredientSection = extractSection(textLower, ['ingredients', 'ingredients']);
   
   if (ingredientSection) {
-    // Parser la liste d'ingrédients
+    // Parser la liste d'ingredients
     const rawIngredients = ingredientSection
       .split(/[,;]/)
       .map(i => i.trim())
@@ -268,7 +268,7 @@ function extractNutritionalInfo(textLower) {
   // Patterns pour valeurs nutritionnelles
   const patterns = {
     energy: /(\d+)\s*(kj|kcal)/gi,
-    proteins: /protéines?\s*:?\s*(\d+(?:,\d+)?)\s*g/gi,
+    proteins: /proteines?\s*:?\s*(\d+(?:,\d+)?)\s*g/gi,
     carbs: /glucides?\s*:?\s*(\d+(?:,\d+)?)\s*g/gi,
     fats: /lipides?\s*:?\s*(\d+(?:,\d+)?)\s*g/gi,
     sugar: /sucres?\s*:?\s*(\d+(?:,\d+)?)\s*g/gi
@@ -291,9 +291,9 @@ function extractCertifications(textLower) {
   const certifications = [];
   
   const certificationKeywords = [
-    'bio', 'ab', 'ecocert', 'fair trade', 'commerce équitable',
+    'bio', 'ab', 'ecocert', 'fair trade', 'commerce equitable',
     'label rouge', 'aoc', 'igp', 'fsc', 'rainforest alliance',
-    'max havelaar', 'demeter', 'nature & progrès'
+    'max havelaar', 'demeter', 'nature & progres'
   ];
   
   for (const cert of certificationKeywords) {
@@ -313,10 +313,10 @@ function combinePhotoAnalyses(results) {
   const ingredients = results.ingredients?.success ? results.ingredients : null;
   const nutrition = results.nutrition?.success ? results.nutrition : null;
   
-  // Prioriser front pour nom/marque, ingredients pour ingrédients
+  // Prioriser front pour nom/marque, ingredients pour ingredients
   return {
     success: true,
-    name: front?.name || ingredients?.name || 'Produit analysé',
+    name: front?.name || ingredients?.name || 'Produit analyse',
     brand: front?.brand || ingredients?.brand || 'Marque inconnue',
     category: front?.category || ingredients?.category || 'alimentaire',
     ingredients: [
@@ -358,7 +358,7 @@ function isNutritionalValue(text) {
 }
 
 function isLikelyBrand(text) {
-  // Heuristiques pour détecter une marque
+  // Heuristiques pour detecter une marque
   return text.length < 15 && 
          !text.includes(' ') && 
          !/\d/.test(text) &&
@@ -369,7 +369,7 @@ function extractSection(text, keywords) {
   for (const keyword of keywords) {
     const index = text.indexOf(keyword);
     if (index !== -1) {
-      // Extraire 200 caractères après le mot-clé
+      // Extraire 200 caracteres apres le mot-cle
       return text.substring(index, index + 200);
     }
   }
@@ -380,7 +380,7 @@ function calculateExtractionConfidence(data) {
   let confidence = 0.3; // Base
   
   if (data.name && data.name !== 'Produit alimentaire') confidence += 0.2;
-  if (data.brand && data.brand !== 'Marque non identifiée') confidence += 0.15;
+  if (data.brand && data.brand !== 'Marque non identifiee') confidence += 0.15;
   if (data.category && data.category !== 'alimentaire') confidence += 0.1;
   if (data.ingredients && data.ingredients.length > 0) confidence += 0.15;
   if (data.certifications && data.certifications.length > 0) confidence += 0.1;

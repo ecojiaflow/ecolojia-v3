@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 
 // Import des middlewares - on va tester s'ils existent

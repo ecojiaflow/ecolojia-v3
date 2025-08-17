@@ -1,7 +1,7 @@
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // 3. backend/src/services/eco-score.service.js
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const { Logger } = require('../utils/logger');
 const Product = require('../models/Product');
@@ -29,15 +29,15 @@ class EcoScoreService {
     // Score de base
     let score = 50;
     
-    // Analyse par catégorie
+    // Analyse par categorie
     const categoryScore = this.getCategoryScore(product.category);
     score += categoryScore;
     
-    // Analyse des ingrédients
+    // Analyse des ingredients
     const ingredientsScore = this.analyzeIngredients(product.ingredients);
     score += ingredientsScore * this.weights.ingredients;
     
-    // Bonus/malus spécifiques
+    // Bonus/malus specifiques
     const modifiers = this.getScoreModifiers(product);
     score += modifiers;
     
@@ -60,7 +60,7 @@ class EcoScoreService {
       analysis: {
         environmental_impact: this.getImpactLevel(score),
         social_impact: 'Moyen',
-        health_impact: score > 60 ? 'Positif' : 'À surveiller'
+        health_impact: score > 60 ? 'Positif' : '€ surveiller'
       },
       calculatedAt: new Date()
     };
@@ -74,9 +74,9 @@ class EcoScoreService {
       'alimentaire': 10,
       'food': 10,
       'cosmetics': 0,
-      'cosmétique': 0,
+      'cosmetique': 0,
       'detergents': -10,
-      'détergent': -10
+      'detergent': -10
     };
     
     return scores[category?.toLowerCase()] || 0;
@@ -93,20 +93,20 @@ class EcoScoreService {
       'bio': 20,
       'organic': 20,
       'naturel': 15,
-      'végétal': 10,
+      'vegetal': 10,
       'local': 15,
       'france': 10,
       'sans': 5
     };
     
-    // Analyse négative
+    // Analyse negative
     const negativeKeywords = {
       'palm': -15,
       'huile de palme': -20,
       'chimique': -10,
-      'synthétique': -10,
+      'synthetique': -10,
       'artificiel': -10,
-      'pétrole': -20
+      'petrole': -20
     };
     
     // Calcul du score
@@ -124,7 +124,7 @@ class EcoScoreService {
       }
     }
     
-    // Pénalité pour les additifs
+    // Penalite pour les additifs
     const additiveCount = (ingredientsLower.match(/e\d{3}/gi) || []).length;
     score -= additiveCount * 3;
     
@@ -151,7 +151,7 @@ class EcoScoreService {
     // Analyse du nom du produit
     if (product.title) {
       const titleLower = product.title.toLowerCase();
-      if (titleLower.includes('écologique') || titleLower.includes('eco')) {
+      if (titleLower.includes('ecologique') || titleLower.includes('eco')) {
         modifiers += 5;
       }
     }
@@ -168,28 +168,28 @@ class EcoScoreService {
   }
 
   getImpactLevel(score) {
-    if (score >= 70) return 'Très faible';
+    if (score >= 70) return 'Tres faible';
     if (score >= 50) return 'Faible';
     if (score >= 30) return 'Moyen';
-    return 'Élevé';
+    return '‰leve';
   }
 
   getRecommendations(score, product) {
     const recommendations = [];
     
     if (score >= 70) {
-      recommendations.push('Excellent choix écologique ! Continuez ainsi.');
+      recommendations.push('Excellent choix ecologique ! Continuez ainsi.');
     } else if (score >= 40) {
-      recommendations.push('Choix correct, mais des alternatives plus écologiques existent.');
+      recommendations.push('Choix correct, mais des alternatives plus ecologiques existent.');
     } else {
-      recommendations.push('Impact environnemental important, privilégiez des alternatives.');
+      recommendations.push('Impact environnemental important, privilegiez des alternatives.');
     }
     
-    // Recommandations spécifiques
-    recommendations.push('Privilégier les produits locaux et de saison');
-    recommendations.push('Vérifier les certifications environnementales');
+    // Recommandations specifiques
+    recommendations.push('Privilegier les produits locaux et de saison');
+    recommendations.push('Verifier les certifications environnementales');
     
-    if (product.category === 'detergents' || product.category === 'détergent') {
+    if (product.category === 'detergents' || product.category === 'detergent') {
       recommendations.push('Utiliser avec parcimonie et respecter les dosages');
     }
     

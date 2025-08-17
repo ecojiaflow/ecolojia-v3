@@ -5,21 +5,21 @@ const crypto = require('crypto');
 const webhookService = require('../services/webhookService');
 const User = require('../models/User');
 
-// ═══════════════════════════════════════════════════════════════════════
-// MIDDLEWARE DE VÉRIFICATION DE SIGNATURE
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// MIDDLEWARE DE V‰RIFICATION DE SIGNATURE
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const verifyWebhookSignature = (req, res, next) => {
   try {
     const signature = req.headers['x-signature'];
-    const rawBody = req.rawBody; // Nécessite le middleware rawBody
+    const rawBody = req.rawBody; // Necessite le middleware rawBody
 
     if (!signature || !rawBody) {
       console.error('[Webhook] Missing signature or body');
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Vérifier la signature HMAC
+    // Verifier la signature HMAC
     const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
     const hmac = crypto.createHmac('sha256', secret);
     hmac.update(rawBody);
@@ -30,7 +30,7 @@ const verifyWebhookSignature = (req, res, next) => {
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
-    // Vérifier l'anti-replay (timestamp)
+    // Verifier l'anti-replay (timestamp)
     const event = JSON.parse(rawBody);
     const eventTime = new Date(event.meta.event_created_at);
     const now = new Date();
@@ -49,9 +49,9 @@ const verifyWebhookSignature = (req, res, next) => {
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // WEBHOOK ENDPOINT PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/webhooks/lemonsqueezy
@@ -65,7 +65,7 @@ router.post('/lemonsqueezy', verifyWebhookSignature, async (req, res) => {
   console.log(`[Webhook] Received event: ${eventName} (${eventId})`);
 
   try {
-    // Vérifier l'idempotence
+    // Verifier l'idempotence
     const isProcessed = await webhookService.checkIdempotency(eventId);
     if (isProcessed) {
       console.log(`[Webhook] Event ${eventId} already processed`);
@@ -116,7 +116,7 @@ router.post('/lemonsqueezy', verifyWebhookSignature, async (req, res) => {
         result = { status: 'ignored' };
     }
 
-    // Marquer comme traité
+    // Marquer comme traite
     await webhookService.markAsProcessed(eventId, eventName, result);
 
     res.json({ 
@@ -139,12 +139,12 @@ router.post('/lemonsqueezy', verifyWebhookSignature, async (req, res) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// HANDLERS POUR CHAQUE TYPE D'ÉVÉNEMENT
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// HANDLERS POUR CHAQUE TYPE D'‰V‰NEMENT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
- * Subscription créée - Activer le compte Premium
+ * Subscription creee - Activer le compte Premium
  */
 async function handleSubscriptionCreated(event) {
   const { data } = event;
@@ -156,11 +156,11 @@ async function handleSubscriptionCreated(event) {
     throw new Error('No user_id in custom_data');
   }
 
-  // Déterminer le plan
+  // Determiner le plan
   const variantId = attributes.variant_id;
   const plan = determinePlanFromVariant(variantId);
   
-  // Mettre à jour l'utilisateur
+  // Mettre   jour l'utilisateur
   const user = await User.findByIdAndUpdate(userId, {
     $set: {
       'subscription.tier': 'premium',
@@ -197,7 +197,7 @@ async function handleSubscriptionCreated(event) {
 }
 
 /**
- * Subscription mise à jour (changement de plan, etc.)
+ * Subscription mise   jour (changement de plan, etc.)
  */
 async function handleSubscriptionUpdated(event) {
   const { data } = event;
@@ -212,7 +212,7 @@ async function handleSubscriptionUpdated(event) {
     throw new Error(`No user found for subscription ${subscriptionId}`);
   }
 
-  // Mettre à jour les infos
+  // Mettre   jour les infos
   const variantId = attributes.variant_id;
   const plan = determinePlanFromVariant(variantId);
 
@@ -236,7 +236,7 @@ async function handleSubscriptionUpdated(event) {
 }
 
 /**
- * Subscription annulée
+ * Subscription annulee
  */
 async function handleSubscriptionCancelled(event) {
   const { data } = event;
@@ -270,7 +270,7 @@ async function handleSubscriptionCancelled(event) {
 }
 
 /**
- * Subscription reprise après annulation
+ * Subscription reprise apres annulation
  */
 async function handleSubscriptionResumed(event) {
   const { data } = event;
@@ -300,7 +300,7 @@ async function handleSubscriptionResumed(event) {
 }
 
 /**
- * Subscription expirée - Downgrade vers Free
+ * Subscription expiree - Downgrade vers Free
  */
 async function handleSubscriptionExpired(event) {
   const { data } = event;
@@ -320,7 +320,7 @@ async function handleSubscriptionExpired(event) {
       'subscription.tier': 'free',
       'subscription.status': 'expired',
       
-      // Réinitialiser les quotas Free
+      // Reinitialiser les quotas Free
       'quotas.scansPerMonth': 30,
       'quotas.aiQuestionsPerDay': 0,
       'quotas.exportsPerMonth': 0,
@@ -341,7 +341,7 @@ async function handleSubscriptionExpired(event) {
 }
 
 /**
- * Paiement réussi
+ * Paiement reussi
  */
 async function handlePaymentSuccess(event) {
   const { data } = event;
@@ -363,7 +363,7 @@ async function handlePaymentSuccess(event) {
     invoiceUrl: data.attributes.invoice_url
   });
 
-  // Mettre à jour la période si nécessaire
+  // Mettre   jour la periode si necessaire
   if (data.attributes.current_period_end) {
     await User.findByIdAndUpdate(user._id, {
       $set: {
@@ -382,7 +382,7 @@ async function handlePaymentSuccess(event) {
 }
 
 /**
- * Paiement échoué
+ * Paiement echoue
  */
 async function handlePaymentFailed(event) {
   const { data } = event;
@@ -396,14 +396,14 @@ async function handlePaymentFailed(event) {
     throw new Error(`No user found for subscription ${subscriptionId}`);
   }
 
-  // Mettre à jour le statut
+  // Mettre   jour le statut
   await User.findByIdAndUpdate(user._id, {
     $set: {
       'subscription.status': 'past_due'
     }
   });
 
-  // Log le paiement échoué
+  // Log le paiement echoue
   await webhookService.logPayment(user._id, {
     amount: data.attributes.amount,
     currency: data.attributes.currency,
@@ -420,7 +420,7 @@ async function handlePaymentFailed(event) {
 }
 
 /**
- * Paiement récupéré après échec
+ * Paiement recupere apres echec
  */
 async function handlePaymentRecovered(event) {
   const { data } = event;
@@ -434,7 +434,7 @@ async function handlePaymentRecovered(event) {
     throw new Error(`No user found for subscription ${subscriptionId}`);
   }
 
-  // Réactiver
+  // Reactiver
   await User.findByIdAndUpdate(user._id, {
     $set: {
       'subscription.status': 'active'
@@ -447,10 +447,10 @@ async function handlePaymentRecovered(event) {
 }
 
 /**
- * Commande créée (achat one-time)
+ * Commande creee (achat one-time)
  */
 async function handleOrderCreated(event) {
-  // Pour le futur : achats ponctuels, crédits, etc.
+  // Pour le futur : achats ponctuels, credits, etc.
   console.log('[Webhook] Order created:', event.data.id);
   return { orderId: event.data.id };
 }
@@ -478,9 +478,9 @@ async function handleOrderRefunded(event) {
   return { orderId, userId };
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // HELPERS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function determinePlanFromVariant(variantId) {
   if (variantId === process.env.LEMONSQUEEZY_VARIANT_MONTHLY) {
@@ -505,13 +505,13 @@ function mapLemonSqueezyStatus(status) {
   return statusMap[status] || 'unknown';
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // HEALTH CHECK
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * GET /api/webhooks/health
- * Vérifier que les webhooks fonctionnent
+ * Verifier que les webhooks fonctionnent
  */
 router.get('/health', (req, res) => {
   res.json({
@@ -523,7 +523,7 @@ router.get('/health', (req, res) => {
 
 /**
  * POST /api/webhooks/test
- * Endpoint de test pour vérifier la configuration (dev only)
+ * Endpoint de test pour verifier la configuration (dev only)
  */
 if (process.env.NODE_ENV === 'development') {
   router.post('/test', verifyWebhookSignature, (req, res) => {

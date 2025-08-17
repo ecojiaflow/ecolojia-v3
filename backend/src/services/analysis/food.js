@@ -1,20 +1,20 @@
 // PATH: backend\src\services\analysis\food.js
 /**
- * Food Analysis Service - Analyse complète alimentaire
- * Conforme à TechReference.md : NOVA (1-4), Nutri-Score (A-E), Eco-Score
+ * Food Analysis Service - Analyse complete alimentaire
+ * Conforme   TechReference.md : NOVA (1-4), Nutri-Score (A-E), Eco-Score
  */
 
 class FoodAnalyzer {
   constructor() {
-    // Marqueurs ultra-transformés (NOVA 4)
+    // Marqueurs ultra-transformes (NOVA 4)
     this.ultraProcessedMarkers = [
       'sirop de glucose', 'sirop de fructose', 'sirop de glucose-fructose',
-      'maltodextrine', 'dextrose', 'amidon modifié', 'amidons modifiés',
-      'huile hydrogénée', 'huile partiellement hydrogénée', 'hydrogéné',
-      'isolat de protéine', 'caséine', 'protéine de lactosérum',
-      'arôme', 'arôme naturel', 'arôme artificiel', 'exhausteur de goût',
-      'colorant', 'conservateur', 'émulsifiant', 'stabilisant',
-      'épaississant', 'gélifiant', 'édulcorant', 'correcteur d\'acidité'
+      'maltodextrine', 'dextrose', 'amidon modifie', 'amidons modifies',
+      'huile hydrogenee', 'huile partiellement hydrogenee', 'hydrogene',
+      'isolat de proteine', 'caseine', 'proteine de lactoserum',
+      'arome', 'arome naturel', 'arome artificiel', 'exhausteur de gout',
+      'colorant', 'conservateur', 'emulsifiant', 'stabilisant',
+      'epaississant', 'gelifiant', 'edulcorant', 'correcteur d\'acidite'
     ];
 
     // Additifs E-xxx pattern
@@ -30,7 +30,7 @@ class FoodAnalyzer {
     // Analyse NOVA
     const novaAnalysis = this.analyzeNOVA(ingredientsText);
     
-    // Nutri-Score (fallback si pas de données nutritionnelles)
+    // Nutri-Score (fallback si pas de donnees nutritionnelles)
     const nutriscoreAnalysis = this.analyzeNutriScore(product);
     
     // Eco-Score (fallback conservateur)
@@ -68,7 +68,7 @@ class FoodAnalyzer {
   }
 
   /**
-   * Extrait le texte des ingrédients
+   * Extrait le texte des ingredients
    */
   extractIngredientsText(product) {
     if (typeof product.ingredients === 'string') {
@@ -88,7 +88,7 @@ class FoodAnalyzer {
       return {
         nova: 1,
         label: 'Non classifiable',
-        reason: 'Pas d\'ingrédients fournis',
+        reason: 'Pas d\'ingredients fournis',
         confidence: 0.3,
         additiveCount: 0,
         markers: []
@@ -101,45 +101,45 @@ class FoodAnalyzer {
     const additives = lowerText.match(this.additivePattern) || [];
     const additiveCount = additives.length;
     
-    // Détecter les marqueurs ultra-transformés
+    // Detecter les marqueurs ultra-transformes
     const foundMarkers = this.ultraProcessedMarkers.filter(marker => 
       lowerText.includes(marker)
     );
     
-    // Détecter les procédés industriels
-    const hasIndustrialProcess = /\b(modifié|hydrogéné|raffiné|concentré|isolat|hydrolyse|estérifié|malté|instantané)\b/i.test(lowerText);
+    // Detecter les procedes industriels
+    const hasIndustrialProcess = /\b(modifie|hydrogene|raffine|concentre|isolat|hydrolyse|esterifie|malte|instantane)\b/i.test(lowerText);
     
     // Logique de classification NOVA
     let nova = 1;
-    let label = 'Non transformé';
-    let reason = 'Aliment brut ou minimalement transformé';
+    let label = 'Non transforme';
+    let reason = 'Aliment brut ou minimalement transforme';
     let confidence = 0.85;
     
-    // Compter les ingrédients (approximatif)
+    // Compter les ingredients (approximatif)
     const ingredientCount = lowerText.split(/[,;]/).filter(s => s.trim().length > 2).length;
     
     if (additiveCount >= 3 || (additiveCount >= 1 && foundMarkers.length > 0)) {
-      // NOVA 4 : Ultra-transformé
+      // NOVA 4 : Ultra-transforme
       nova = 4;
-      label = 'Ultra-transformé';
+      label = 'Ultra-transforme';
       reason = `Contient ${additiveCount} additif(s) et/ou marqueurs d'ultra-transformation`;
       confidence = 0.9;
     } else if (foundMarkers.length > 0 || hasIndustrialProcess) {
-      // NOVA 4 : Ultra-transformé (même sans beaucoup d'additifs)
+      // NOVA 4 : Ultra-transforme (meme sans beaucoup d'additifs)
       nova = 4;
-      label = 'Ultra-transformé';
-      reason = 'Contient des ingrédients ou procédés caractéristiques de l\'ultra-transformation';
+      label = 'Ultra-transforme';
+      reason = 'Contient des ingredients ou procedes caracteristiques de l\'ultra-transformation';
       confidence = 0.85;
     } else if (additiveCount >= 1 || ingredientCount > 5) {
-      // NOVA 3 : Aliment transformé
+      // NOVA 3 : Aliment transforme
       nova = 3;
-      label = 'Aliment transformé';
-      reason = `Contient ${additiveCount} additif(s) ou plusieurs ingrédients transformés`;
+      label = 'Aliment transforme';
+      reason = `Contient ${additiveCount} additif(s) ou plusieurs ingredients transformes`;
       confidence = 0.8;
     } else if (ingredientCount > 1) {
-      // NOVA 2 : Ingrédient culinaire transformé
+      // NOVA 2 : Ingredient culinaire transforme
       nova = 2;
-      label = 'Ingrédient culinaire transformé';
+      label = 'Ingredient culinaire transforme';
       reason = 'Transformation simple d\'aliments du groupe 1';
       confidence = 0.8;
     }
@@ -158,14 +158,14 @@ class FoodAnalyzer {
    * Analyse Nutri-Score avec fallback
    */
   analyzeNutriScore(product) {
-    // Si on a des données nutritionnelles
+    // Si on a des donnees nutritionnelles
     if (product.foodData?.nutrition || product.nutriments) {
       const nutrition = product.foodData?.nutrition || product.nutriments;
       
-      // Calcul simplifié du Nutri-Score
+      // Calcul simplifie du Nutri-Score
       let score = 0;
       
-      // Points négatifs
+      // Points negatifs
       if (nutrition.energy_100g > 3350) score += 10;
       else if (nutrition.energy_100g > 3015) score += 9;
       else if (nutrition.energy_100g > 2680) score += 8;
@@ -189,7 +189,7 @@ class FoodAnalyzer {
       else if (nutrition.sugars_100g > 4.5) score += 1;
       
       // Conversion score -> grade
-      let grade = 'C'; // Fallback par défaut
+      let grade = 'C'; // Fallback par defaut
       if (score <= -1) grade = 'A';
       else if (score <= 2) grade = 'B';
       else if (score <= 10) grade = 'C';
@@ -204,7 +204,7 @@ class FoodAnalyzer {
       grade: 'C', 
       score: null, 
       method: 'fallback',
-      reason: 'Données nutritionnelles manquantes'
+      reason: 'Donnees nutritionnelles manquantes'
     };
   }
 
@@ -220,7 +220,7 @@ class FoodAnalyzer {
       return { 
         grade: 'B', 
         method: 'detected',
-        reason: 'Mention bio détectée'
+        reason: 'Mention bio detectee'
       };
     }
     
@@ -233,7 +233,7 @@ class FoodAnalyzer {
   }
 
   /**
-   * Calcule le score de santé global
+   * Calcule le score de sante global
    */
   calculateHealthScore(novaAnalysis, nutriscoreAnalysis) {
     const novaScores = { 1: 90, 2: 75, 3: 55, 4: 30 };
@@ -242,7 +242,7 @@ class FoodAnalyzer {
     const novaScore = novaScores[novaAnalysis.nova] || 50;
     const nutriScore = nutriScores[nutriscoreAnalysis.grade] || 50;
     
-    // Pondération : NOVA 60%, Nutri-Score 40%
+    // Ponderation : NOVA 60%, Nutri-Score 40%
     return Math.round(novaScore * 0.6 + nutriScore * 0.4);
   }
 
@@ -277,24 +277,24 @@ class FoodAnalyzer {
   }
 
   /**
-   * Génère des recommandations
+   * Genere des recommandations
    */
   generateRecommendations(novaAnalysis, healthScore) {
     const recommendations = [];
     
     if (novaAnalysis.nova === 4) {
-      recommendations.push('⚠️ Produit ultra-transformé : à limiter dans votre alimentation');
-      recommendations.push('💡 Privilégiez des alternatives moins transformées');
+      recommendations.push('âš ï¸ Produit ultra-transforme :   limiter dans votre alimentation');
+      recommendations.push('ðŸ’¡ Privilegiez des alternatives moins transformees');
     } else if (novaAnalysis.nova === 3) {
-      recommendations.push('⚡ Produit transformé : à consommer avec modération');
+      recommendations.push('âš¡ Produit transforme :   consommer avec moderation');
     } else if (novaAnalysis.nova <= 2) {
-      recommendations.push('✅ Bon choix : produit peu transformé');
+      recommendations.push('âœ… Bon choix : produit peu transforme');
     }
     
     if (healthScore < 40) {
-      recommendations.push('🔴 Score santé faible : cherchez des alternatives plus saines');
+      recommendations.push('ðŸ”´ Score sante faible : cherchez des alternatives plus saines');
     } else if (healthScore > 70) {
-      recommendations.push('🟢 Excellent score santé : à privilégier');
+      recommendations.push('ðŸŸ¢ Excellent score sante :   privilegier');
     }
     
     return recommendations;

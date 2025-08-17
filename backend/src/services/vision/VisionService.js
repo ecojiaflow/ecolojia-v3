@@ -19,12 +19,12 @@ class VisionService {
         this.googleVisionClient = new vision.ImageAnnotatorClient({
           keyFilename: process.env.GOOGLE_CLOUD_KEYFILE
         });
-        console.log('✅ Google Vision client initialisé');
+        console.log('âœ… Google Vision client initialise');
       } else {
-        console.warn('⚠️ GOOGLE_CLOUD_KEYFILE non configuré - fallback Tesseract uniquement');
+        console.warn('âš ï¸ GOOGLE_CLOUD_KEYFILE non configure - fallback Tesseract uniquement');
       }
     } catch (error) {
-      console.error('❌ Erreur init Google Vision:', error.message);
+      console.error('âŒ Erreur init Google Vision:', error.message);
     }
   }
 
@@ -41,9 +41,9 @@ class VisionService {
             }
           }
         });
-        console.log('✅ Tesseract worker initialisé');
+        console.log('âœ… Tesseract worker initialise');
       } catch (error) {
-        console.error('❌ Erreur init Tesseract:', error.message);
+        console.error('âŒ Erreur init Tesseract:', error.message);
         throw error;
       }
     }
@@ -51,7 +51,7 @@ class VisionService {
   }
 
   /**
-   * Amélioration d'image pour OCR
+   * Amelioration d'image pour OCR
    */
   async enhanceImage(imagePath) {
     const outputPath = imagePath.replace(/\.[^.]+$/, '_enhanced.jpg');
@@ -117,12 +117,12 @@ class VisionService {
     try {
       const worker = await this.initializeTesseract();
       
-      // Améliorer l'image avant OCR
+      // Ameliorer l'image avant OCR
       const enhancedPath = await this.enhanceImage(imagePath);
       
       const { data } = await worker.recognize(enhancedPath);
       
-      // Nettoyer l'image améliorée
+      // Nettoyer l'image amelioree
       if (enhancedPath !== imagePath) {
         await fs.unlink(enhancedPath).catch(() => {});
       }
@@ -140,10 +140,10 @@ class VisionService {
   }
 
   /**
-   * Fusion des résultats Google Vision et Tesseract
+   * Fusion des resultats Google Vision et Tesseract
    */
   mergeResults(googleResult, tesseractResult) {
-    // Si un seul résultat disponible
+    // Si un seul resultat disponible
     if (!googleResult) return tesseractResult;
     if (!tesseractResult) return googleResult;
 
@@ -174,7 +174,7 @@ class VisionService {
   }
 
   /**
-   * Extraction de données structurées
+   * Extraction de donnees structurees
    */
   extractStructuredData(visionResult) {
     if (!visionResult || !visionResult.text) {
@@ -191,22 +191,22 @@ class VisionService {
     const text = visionResult.text;
     const lines = text.split('\n').map(l => l.trim()).filter(l => l);
 
-    // Extraction du nom (premières lignes, souvent plus grosses)
+    // Extraction du nom (premieres lignes, souvent plus grosses)
     const name = this.extractProductName(lines);
 
     // Extraction de la marque
     const brand = this.extractBrand(lines, text);
 
-    // Extraction des ingrédients
+    // Extraction des ingredients
     const ingredients = this.extractIngredients(text);
 
     // Extraction du code-barres
     const barcode = this.extractBarcode(text);
 
-    // Détection de la catégorie
+    // Detection de la categorie
     const category = this.detectCategory(text, ingredients);
 
-    // Détection infos nutritionnelles
+    // Detection infos nutritionnelles
     const hasNutritionalInfo = this.hasNutritionalInfo(text);
 
     return {
@@ -221,10 +221,10 @@ class VisionService {
   }
 
   extractProductName(lines) {
-    // Prendre les 2-3 premières lignes significatives
+    // Prendre les 2-3 premieres lignes significatives
     const candidates = lines.slice(0, 5).filter(line => 
       line.length > 3 && 
-      !line.match(/^(ingredients|ingrédients|composition)/i) &&
+      !line.match(/^(ingredients|ingredients|composition)/i) &&
       !line.match(/^\d+\s*[gml]/i)
     );
 
@@ -232,9 +232,9 @@ class VisionService {
   }
 
   extractBrand(lines, fullText) {
-    // Patterns de marques connues (à enrichir)
+    // Patterns de marques connues (  enrichir)
     const brandPatterns = [
-      /\b(Nestlé|Danone|Unilever|L'Oréal|Garnier|Nivea|Dove|Ariel|Skip)\b/i,
+      /\b(Nestle|Danone|Unilever|L'Oreal|Garnier|Nivea|Dove|Ariel|Skip)\b/i,
       /\bmarque\s*:\s*([^\n]+)/i,
       /\bbrand\s*:\s*([^\n]+)/i
     ];
@@ -244,7 +244,7 @@ class VisionService {
       if (match) return match[1].trim();
     }
 
-    // Heuristique: souvent en majuscules dans les premières lignes
+    // Heuristique: souvent en majuscules dans les premieres lignes
     const upperCaseLines = lines.slice(0, 3).filter(line => 
       line === line.toUpperCase() && line.length > 2
     );
@@ -253,9 +253,9 @@ class VisionService {
   }
 
   extractIngredients(text) {
-    // Patterns multilingues pour ingrédients
+    // Patterns multilingues pour ingredients
     const patterns = [
-      /ingrédients\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|valeurs|nutrition|$)/is,
+      /ingredients\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|valeurs|nutrition|$)/is,
       /ingredients\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|values|nutrition|$)/is,
       /composition\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n\n|\n[A-Z]|$)/is
     ];
@@ -283,7 +283,7 @@ class VisionService {
     const matches = text.match(barcodePattern);
     
     if (matches) {
-      // Vérifier la validité EAN
+      // Verifier la validite EAN
       for (const match of matches) {
         if (this.isValidEAN(match)) {
           return match;
@@ -309,23 +309,23 @@ class VisionService {
   detectCategory(text, ingredients) {
     const lowerText = text.toLowerCase();
     
-    // Détection alimentaire
-    if (ingredients && ingredients.match(/sucre|sel|farine|lait|œuf|huile/i)) {
+    // Detection alimentaire
+    if (ingredients && ingredients.match(/sucre|sel|farine|lait|Å“uf|huile/i)) {
       return 'food';
     }
     
-    // Détection cosmétique
-    if (lowerText.match(/aqua|glycerin|parfum|paraben|sodium|lotion|crème|cream|shampoo/)) {
+    // Detection cosmetique
+    if (lowerText.match(/aqua|glycerin|parfum|paraben|sodium|lotion|creme|cream|shampoo/)) {
       return 'cosmetics';
     }
     
-    // Détection détergent
+    // Detection detergent
     if (lowerText.match(/tensioactif|surfactant|lessive|detergent|nettoyant|javel|savon/)) {
       return 'detergents';
     }
     
-    // Fallback basé sur certains mots-clés
-    if (lowerText.match(/nutrition|kcal|calories|glucides|protéines/)) {
+    // Fallback base sur certains mots-cles
+    if (lowerText.match(/nutrition|kcal|calories|glucides|proteines/)) {
       return 'food';
     }
     
@@ -336,7 +336,7 @@ class VisionService {
     const nutritionPatterns = [
       /valeurs? nutrition/i,
       /nutrition(al)? (facts|information|values)/i,
-      /\b(kcal|calories|glucides|lipides|protéines|proteins|carbs|sugars)\b/i,
+      /\b(kcal|calories|glucides|lipides|proteines|proteins|carbs|sugars)\b/i,
       /pour\s+100\s*g/i,
       /per\s+100\s*g/i
     ];
@@ -347,7 +347,7 @@ class VisionService {
   calculateGoogleConfidence(result) {
     if (!result.fullTextAnnotation) return 0;
     
-    // Calculer la confiance basée sur la qualité de détection
+    // Calculer la confiance basee sur la qualite de detection
     const blocks = result.fullTextAnnotation.pages?.[0]?.blocks || [];
     if (blocks.length === 0) return 0;
     
@@ -365,21 +365,21 @@ class VisionService {
   }
 
   /**
-   * Méthode principale d'analyse
+   * Methode principale d'analyse
    */
   async analyzeImage(imagePath, options = {}) {
     const startTime = Date.now();
     const jobId = options.jobId || uuidv4();
     
     try {
-      console.log(`[Vision] Début analyse ${jobId}`);
+      console.log(`[Vision] Debut analyse ${jobId}`);
       
       // Essayer Google Vision d'abord
       const googleResult = await this.analyzeWithGoogleVision(imagePath, options.language);
       
       let finalResult;
       
-      // Si Google Vision échoue ou confiance faible, utiliser Tesseract
+      // Si Google Vision echoue ou confiance faible, utiliser Tesseract
       if (!googleResult || googleResult.confidence < 0.7) {
         console.log(`[Vision] Confiance Google faible (${googleResult?.confidence || 0}), utilisation Tesseract`);
         const tesseractResult = await this.analyzeWithTesseract(imagePath, options.language);
@@ -389,11 +389,11 @@ class VisionService {
         finalResult = googleResult;
       }
       
-      // Extraction des données structurées
+      // Extraction des donnees structurees
       const extractedData = this.extractStructuredData(finalResult);
       
       const duration = Date.now() - startTime;
-      console.log(`[Vision] Analyse terminée en ${duration}ms - Service: ${finalResult.service}`);
+      console.log(`[Vision] Analyse terminee en ${duration}ms - Service: ${finalResult.service}`);
       
       return {
         jobId,

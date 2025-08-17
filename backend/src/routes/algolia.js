@@ -1,10 +1,10 @@
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // backend/src/routes/algolia.js - Compatible avec algoliasearch v5
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const express = require('express');
 const router = express.Router();
-const algoliasearch = require('algoliasearch').default; // ✅ Correction de l'import pour v5
+const algoliasearch = require('algoliasearch').default; // âœ… Correction de l'import pour v5
 
 // Initialiser Algolia
 const client = algoliasearch(
@@ -51,7 +51,7 @@ router.post('/sync', async (req, res) => {
       success: true,
       synced: objectIDs.length,
       taskID,
-      message: `${objectIDs.length} produits synchronisés`
+      message: `${objectIDs.length} produits synchronises`
     });
 
   } catch (error) {
@@ -132,7 +132,7 @@ router.post('/configure', async (req, res) => {
     res.json({
       success: true,
       taskID,
-      message: 'Index Algolia configuré'
+      message: 'Index Algolia configure'
     });
 
   } catch (error) {
@@ -167,7 +167,7 @@ router.get('/health', async (req, res) => {
       success: false,
       service: 'algolia',
       error: error.message,
-      hint: 'Vérifiez vos clés API Algolia dans les variables d\'environnement'
+      hint: 'Verifiez vos cles API Algolia dans les variables d\'environnement'
     });
   }
 });
@@ -198,7 +198,7 @@ router.get('/stats', async (req, res) => {
     console.error('[Algolia] Stats error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération des statistiques',
+      error: 'Erreur lors de la recuperation des statistiques',
       message: error.message
     });
   }

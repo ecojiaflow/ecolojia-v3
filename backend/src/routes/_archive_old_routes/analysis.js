@@ -24,7 +24,7 @@ router.post('/food', asyncHandler(async (req, res) => {
   if (!ingredients) {
     return res.status(400).json({
       success: false,
-      error: 'Les ingrédients sont requis'
+      error: 'Les ingredients sont requis'
     });
   }
 
@@ -34,7 +34,7 @@ router.post('/food', asyncHandler(async (req, res) => {
       novaClassifier.classify(ingredients) : 
       { score: 4, confidence: 0.5 };
 
-    // Analyse DeepSeek pour plus de détails
+    // Analyse DeepSeek pour plus de details
     let aiAnalysis = null;
     if (process.env.DEEPSEEK_API_KEY) {
       try {
@@ -45,11 +45,11 @@ router.post('/food', asyncHandler(async (req, res) => {
             messages: [
               {
                 role: 'system',
-                content: 'Tu es un expert en nutrition. Analyse les produits et fournis des conseils santé.'
+                content: 'Tu es un expert en nutrition. Analyse les produits et fournis des conseils sante.'
               },
               {
                 role: 'user',
-                content: `Analyse nutritionnelle de "${productName}" avec ingrédients: ${ingredients}. Fournis le Nutri-Score et des recommandations.`
+                content: `Analyse nutritionnelle de "${productName}" avec ingredients: ${ingredients}. Fournis le Nutri-Score et des recommandations.`
               }
             ],
             temperature: 0.7,
@@ -82,8 +82,8 @@ router.post('/food', asyncHandler(async (req, res) => {
           nova: novaScore,
           aiInsights: aiAnalysis,
           recommendations: [
-            novaScore.score >= 3 ? 'Limiter la consommation' : 'Produit peu transformé',
-            'Vérifier la teneur en sel et sucres'
+            novaScore.score >= 3 ? 'Limiter la consommation' : 'Produit peu transforme',
+            'Verifier la teneur en sel et sucres'
           ]
         },
         timestamp: new Date()
@@ -96,7 +96,7 @@ router.post('/food', asyncHandler(async (req, res) => {
 
 /**
  * POST /api/analysis/cosmetic
- * Analyse cosmétique (INCI + Sécurité)
+ * Analyse cosmetique (INCI + Securite)
  */
 router.post('/cosmetic', asyncHandler(async (req, res) => {
   const { productName, ingredients, category, labels } = req.body;
@@ -111,7 +111,7 @@ router.post('/cosmetic', asyncHandler(async (req, res) => {
   if (!cosmeticAnalyzer) {
     return res.status(503).json({
       success: false,
-      error: 'Service d\'analyse cosmétique non disponible'
+      error: 'Service d\'analyse cosmetique non disponible'
     });
   }
 
@@ -139,7 +139,7 @@ router.post('/cosmetic', asyncHandler(async (req, res) => {
 
 /**
  * POST /api/analysis/detergent
- * Analyse détergent (Écologie + CDV)
+ * Analyse detergent (‰cologie + CDV)
  */
 router.post('/detergent', asyncHandler(async (req, res) => {
   const { productName, ingredients, category, labels } = req.body;
@@ -154,7 +154,7 @@ router.post('/detergent', asyncHandler(async (req, res) => {
   if (!detergentAnalyzer) {
     return res.status(503).json({
       success: false,
-      error: 'Service d\'analyse détergent non disponible'
+      error: 'Service d\'analyse detergent non disponible'
     });
   }
 
@@ -182,7 +182,7 @@ router.post('/detergent', asyncHandler(async (req, res) => {
 
 /**
  * POST /api/analysis/deepseek
- * Analyse générique avec DeepSeek AI
+ * Analyse generique avec DeepSeek AI
  */
 router.post('/deepseek', asyncHandler(async (req, res) => {
   const { productName, ingredients, question, category } = req.body;
@@ -197,27 +197,27 @@ router.post('/deepseek', asyncHandler(async (req, res) => {
   if (!process.env.DEEPSEEK_API_KEY) {
     return res.status(503).json({
       success: false,
-      error: 'Service AI non configuré'
+      error: 'Service AI non configure'
     });
   }
 
-  // Adapter le prompt selon la catégorie
+  // Adapter le prompt selon la categorie
   let systemPrompt = 'Tu es un expert en analyse de produits. ';
   switch (category) {
     case 'food':
-      systemPrompt += 'Spécialisé en nutrition et classification NOVA.';
+      systemPrompt += 'Specialise en nutrition et classification NOVA.';
       break;
     case 'cosmetic':
-      systemPrompt += 'Spécialisé en cosmétologie, INCI et sécurité cutanée.';
+      systemPrompt += 'Specialise en cosmetologie, INCI et securite cutanee.';
       break;
     case 'detergent':
-      systemPrompt += 'Spécialisé en chimie des détergents et impact environnemental.';
+      systemPrompt += 'Specialise en chimie des detergents et impact environnemental.';
       break;
     default:
-      systemPrompt += 'Analyse les produits selon leur catégorie.';
+      systemPrompt += 'Analyse les produits selon leur categorie.';
   }
 
-  const userPrompt = question || `Analyse complète du produit "${productName}" avec les ingrédients: ${ingredients}`;
+  const userPrompt = question || `Analyse complete du produit "${productName}" avec les ingredients: ${ingredients}`;
 
   try {
     const response = await axios.post(
@@ -314,7 +314,7 @@ router.post('/batch', asyncHandler(async (req, res) => {
           }
           break;
         default:
-          // Food par défaut
+          // Food par defaut
           if (novaClassifier) {
             const novaScore = novaClassifier.classify(product.ingredients);
             analysis = {
@@ -381,7 +381,7 @@ router.get('/health', (req, res) => {
 
 /**
  * GET /api/analysis/ingredients/search
- * Recherche d'informations sur un ingrédient
+ * Recherche d'informations sur un ingredient
  */
 router.get('/ingredients/search', asyncHandler(async (req, res) => {
   const { q, category } = req.query;
@@ -389,7 +389,7 @@ router.get('/ingredients/search', asyncHandler(async (req, res) => {
   if (!q) {
     return res.status(400).json({
       success: false,
-      error: 'Paramètre de recherche requis'
+      error: 'Parametre de recherche requis'
     });
   }
 
@@ -419,7 +419,7 @@ router.get('/ingredients/search', asyncHandler(async (req, res) => {
   } else {
     res.status(404).json({
       success: false,
-      error: 'Ingrédient non trouvé'
+      error: 'Ingredient non trouve'
     });
   }
 }));

@@ -1,10 +1,10 @@
-// backend/src/services/queue/QueueService.js – version auto‑compatible BullMQ v3 & v4
+// backend/src/services/queue/QueueService.js â€“ version autoâ€‘compatible BullMQ v3 & v4
 // -----------------------------------------------------------------------------
 const { Queue, QueueEvents } = require('bullmq');
 const IORedis = require('ioredis');
 const logger = require('../../utils/logger');
 
-// QueueScheduler existe en BullMQ v3, supprimé en v4
+// QueueScheduler existe en BullMQ v3, supprime en v4
 let QueueScheduler = null;
 try {
   // eslint-disable-next-line node/no-extraneous-require
@@ -26,19 +26,19 @@ class QueueService {
     this.events = {};
   }
 
-  /** Initialise Redis et la queue par défaut */
+  /** Initialise Redis et la queue par defaut */
   async initialize() {
     try {
       await this.connection.connect();
-      logger.info('[QueueService] ✅ BullMQ Redis connection verified');
+      logger.info('[QueueService] âœ… BullMQ Redis connection verified');
     } catch (err) {
-      logger.error('[QueueService] ❌ Redis connection failed', err);
+      logger.error('[QueueService] âŒ Redis connection failed', err);
       throw err;
     }
     await this.createQueue('image-analysis');
   }
 
-  /** Crée une queue si nécessaire */
+  /** Cree une queue si necessaire */
   async createQueue(queueName) {
     if (this.queues[queueName]) return this.queues[queueName];
 
@@ -49,7 +49,7 @@ class QueueService {
       });
     } else {
       // BullMQ v4 : simple warning, la queue fonctionnera mais sans redrive automatique
-      console.warn(`[QueueService] QueueScheduler not available – running without scheduler (BullMQ v4)`);
+      console.warn(`[QueueService] QueueScheduler not available â€“ running without scheduler (BullMQ v4)`);
     }
 
     this.queues[queueName] = new Queue(queueName, {
@@ -70,13 +70,13 @@ class QueueService {
     return this.queues[queueName];
   }
 
-  /** Ajoute un job à la queue */
+  /** Ajoute un job   la queue */
   async addJob(queueName, data, opts = {}) {
     const queue = this.queues[queueName] || (await this.createQueue(queueName));
     return queue.add(queueName, data, opts);
   }
 
-  /** Récupère un job par son ID */
+  /** Recupere un job par son ID */
   async getJob(queueName, jobId) {
     const queue = this.queues[queueName];
     if (!queue) throw new Error(`Queue '${queueName}' not found`);

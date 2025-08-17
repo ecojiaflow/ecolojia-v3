@@ -6,53 +6,53 @@ const { Logger } = require('../utils/logger');
 
 const logger = new Logger('UltraProcessingRoutes');
 
-// 🔎 Liste simplifiée des procédés ultra-transformants connus
+// ðŸ”Ž Liste simplifiee des procedes ultra-transformants connus
 const suspiciousKeywords = [
   'extrusion',
-  'hydrogénation',
-  'hydrogéné',
+  'hydrogenation',
+  'hydrogene',
   'maltodextrine',
-  'arôme artificiel',
-  'arôme',
-  'émulsifiant',
+  'arome artificiel',
+  'arome',
   'emulsifiant',
-  'correcteur d\'acidité',
+  'emulsifiant',
+  'correcteur d\'acidite',
   'colorant',
-  'édulcorant',
+  'edulcorant',
   'edulcorant',
   'gomme xanthane',
-  'monoglycéride',
-  'diglycéride',
+  'monoglyceride',
+  'diglyceride',
   'conservateur',
   'antioxydant',
   'stabilisant',
-  'épaississant',
-  'exhausteur de goût',
-  'anti-agglomérant',
+  'epaississant',
+  'exhausteur de gout',
+  'anti-agglomerant',
   'agent de texture',
   'sirop de glucose',
   'sirop de fructose',
-  'amidon modifié',
-  'protéine hydrolysée',
-  'huile hydrogénée',
-  'huile partiellement hydrogénée',
-  'isolat de protéine',
-  'caséinate',
+  'amidon modifie',
+  'proteine hydrolysee',
+  'huile hydrogenee',
+  'huile partiellement hydrogenee',
+  'isolat de proteine',
+  'caseinate',
   'dextrose',
   'fructose',
   'glucose',
-  'sirop de maïs',
-  'lécithine',
-  'carraghénane',
-  'gélifiant',
+  'sirop de mais',
+  'lecithine',
+  'carraghenane',
+  'gelifiant',
   'acidifiant'
 ];
 
-// Patterns pour détecter les additifs E-numbers
+// Patterns pour detecter les additifs E-numbers
 const eNumberPattern = /\bE\d{3,4}\b/gi;
 
 /**
- * 🔬 Analyse IA ultra-transformation
+ * ðŸ”¬ Analyse IA ultra-transformation
  */
 const detectUltraTransformation = (ingredients) => {
   const found = [];
@@ -66,14 +66,14 @@ const detectUltraTransformation = (ingredients) => {
   for (const ingredient of ingredientsList) {
     const lowerIngredient = ingredient.toLowerCase();
     
-    // Détecter les mots-clés suspects
+    // Detecter les mots-cles suspects
     for (const keyword of suspiciousKeywords) {
       if (lowerIngredient.includes(keyword) && !found.includes(keyword)) {
         found.push(keyword);
       }
     }
     
-    // Détecter les E-numbers
+    // Detecter les E-numbers
     const matches = ingredient.match(eNumberPattern);
     if (matches) {
       eNumbers.push(...matches.filter(e => !eNumbers.includes(e)));
@@ -89,26 +89,26 @@ const detectUltraTransformation = (ingredients) => {
     level = 'minimal';
     score = 0;
   } else if (totalSuspicious === 1) {
-    level = 'léger';
+    level = 'leger';
     score = 25;
   } else if (totalSuspicious === 2) {
-    level = 'modéré';
+    level = 'modere';
     score = 50;
   } else if (totalSuspicious <= 4) {
-    level = 'élevé';
+    level = 'eleve';
     score = 75;
   } else {
-    level = 'sévère';
+    level = 'severe';
     score = 90;
   }
 
-  // Recommandations basées sur le niveau
+  // Recommandations basees sur le niveau
   const recommendations = {
-    minimal: "Excellent ! Ce produit semble peu ou pas transformé.",
-    léger: "Produit légèrement transformé, consommation occasionnelle recommandée.",
-    modéré: "Produit transformé, à consommer avec modération.",
-    élevé: "Produit hautement transformé, privilégier des alternatives plus naturelles.",
-    sévère: "Produit ultra-transformé, éviter la consommation régulière."
+    minimal: "Excellent ! Ce produit semble peu ou pas transforme.",
+    leger: "Produit legerement transforme, consommation occasionnelle recommandee.",
+    modere: "Produit transforme,   consommer avec moderation.",
+    eleve: "Produit hautement transforme, privilegier des alternatives plus naturelles.",
+    severe: "Produit ultra-transforme, eviter la consommation reguliere."
   };
 
   return {
@@ -118,7 +118,7 @@ const detectUltraTransformation = (ingredients) => {
     eNumbers,
     totalMarkers: totalSuspicious,
     recommendation: recommendations[level],
-    justification: `Analyse des ingrédients : ${found.length} procédé(s) suspect(s) et ${eNumbers.length} additif(s) détecté(s)`
+    justification: `Analyse des ingredients : ${found.length} procede(s) suspect(s) et ${eNumbers.length} additif(s) detecte(s)`
   };
 };
 
@@ -128,7 +128,7 @@ router.post('/analyze', asyncHandler(async (req, res) => {
   
   logger.info('Ultra-processing analysis request', { name: name || product?.title });
 
-  // Validation des données
+  // Validation des donnees
   const productName = name || product?.title || product?.name || 'Produit inconnu';
   const ingredientsList = ingredients || product?.ingredients;
   
@@ -136,7 +136,7 @@ router.post('/analyze', asyncHandler(async (req, res) => {
     return res.status(400).json({ 
       success: false, 
       error: 'Ingredients list is required',
-      message: 'Veuillez fournir la liste des ingrédients'
+      message: 'Veuillez fournir la liste des ingredients'
     });
   }
 
@@ -166,14 +166,14 @@ router.post('/analyze', asyncHandler(async (req, res) => {
   });
 }));
 
-// GET /api/ultra-processing/check/:barcode - Vérifier par code-barres
+// GET /api/ultra-processing/check/:barcode - Verifier par code-barres
 router.get('/check/:barcode', asyncHandler(async (req, res) => {
   const { barcode } = req.params;
   
   logger.info('Ultra-processing check by barcode', { barcode });
   
-  // TODO: Intégrer avec la base de données des produits
-  // Pour l'instant, retourner une réponse mock
+  // TODO: Integrer avec la base de donnees des produits
+  // Pour l'instant, retourner une reponse mock
   
   res.json({
     success: true,
@@ -186,29 +186,29 @@ router.get('/check/:barcode', asyncHandler(async (req, res) => {
 router.get('/additives', (req, res) => {
   const dangerousAdditives = {
     colorants: {
-      'E102': 'Tartrazine - Colorant jaune, peut causer hyperactivité',
-      'E110': 'Sunset Yellow - Colorant orange, allergène potentiel',
+      'E102': 'Tartrazine - Colorant jaune, peut causer hyperactivite',
+      'E110': 'Sunset Yellow - Colorant orange, allergene potentiel',
       'E122': 'Azorubine - Colorant rouge, interdit dans certains pays',
-      'E124': 'Ponceau 4R - Colorant rouge, peut causer hyperactivité',
-      'E129': 'Allura Red - Colorant rouge, allergène potentiel'
+      'E124': 'Ponceau 4R - Colorant rouge, peut causer hyperactivite',
+      'E129': 'Allura Red - Colorant rouge, allergene potentiel'
     },
     conservateurs: {
-      'E211': 'Benzoate de sodium - Conservateur, peut former du benzène',
-      'E220': 'Dioxyde de soufre - Conservateur, allergène majeur',
-      'E250': 'Nitrite de sodium - Conservateur, potentiellement cancérigène',
-      'E320': 'BHA - Antioxydant, perturbateur endocrinien suspecté',
-      'E321': 'BHT - Antioxydant, perturbateur endocrinien suspecté'
+      'E211': 'Benzoate de sodium - Conservateur, peut former du benzene',
+      'E220': 'Dioxyde de soufre - Conservateur, allergene majeur',
+      'E250': 'Nitrite de sodium - Conservateur, potentiellement cancerigene',
+      'E320': 'BHA - Antioxydant, perturbateur endocrinien suspecte',
+      'E321': 'BHT - Antioxydant, perturbateur endocrinien suspecte'
     },
-    édulcorants: {
-      'E951': 'Aspartame - Édulcorant artificiel controversé',
-      'E952': 'Cyclamate - Édulcorant interdit aux USA',
-      'E954': 'Saccharine - Édulcorant artificiel',
-      'E955': 'Sucralose - Édulcorant artificiel'
+    edulcorants: {
+      'E951': 'Aspartame - ‰dulcorant artificiel controverse',
+      'E952': 'Cyclamate - ‰dulcorant interdit aux USA',
+      'E954': 'Saccharine - ‰dulcorant artificiel',
+      'E955': 'Sucralose - ‰dulcorant artificiel'
     },
     autres: {
-      'E621': 'Glutamate monosodique - Exhausteur de goût',
+      'E621': 'Glutamate monosodique - Exhausteur de gout',
       'E150d': 'Caramel au sulfite d\'ammonium - Colorant',
-      'E471': 'Mono- et diglycérides - Émulsifiant'
+      'E471': 'Mono- et diglycerides - ‰mulsifiant'
     }
   };
   
@@ -222,21 +222,21 @@ router.get('/additives', (req, res) => {
 
 // GET /api/ultra-processing/stats - Statistiques globales
 router.get('/stats', asyncHandler(async (req, res) => {
-  // TODO: Implémenter les vraies statistiques depuis la DB
+  // TODO: Implementer les vraies statistiques depuis la DB
   
   const mockStats = {
     totalAnalyzed: 15234,
     distribution: {
       minimal: 12,
-      léger: 18,
-      modéré: 35,
-      élevé: 25,
-      sévère: 10
+      leger: 18,
+      modere: 35,
+      eleve: 25,
+      severe: 10
     },
     topAdditives: [
       { code: 'E330', name: 'Acide citrique', count: 3421 },
-      { code: 'E322', name: 'Lécithines', count: 2987 },
-      { code: 'E471', name: 'Mono- et diglycérides', count: 2341 }
+      { code: 'E322', name: 'Lecithines', count: 2987 },
+      { code: 'E471', name: 'Mono- et diglycerides', count: 2341 }
     ],
     averageScore: 52.3
   };

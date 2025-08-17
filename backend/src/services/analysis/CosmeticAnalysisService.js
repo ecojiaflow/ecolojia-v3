@@ -10,7 +10,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Analyse complète d'un produit cosmétique
+   * Analyse complete d'un produit cosmetique
    */
   async analyzeProduct(product) {
     try {
@@ -21,7 +21,7 @@ class CosmeticAnalyzer {
       const naturalnessScore = this.calculateNaturalnessScore(ingredients);
       const effectivenessScore = this.calculateEffectivenessScore(ingredients, product.category);
       
-      // Détails d'analyse
+      // Details d'analyse
       const concerns = this.detectConcerns(ingredients);
       const allergens = this.detectAllergens(ingredients);
       const certifications = this.validateCertifications(product.labels);
@@ -58,21 +58,21 @@ class CosmeticAnalyzer {
       };
     } catch (error) {
       console.error('Cosmetic analysis error:', error);
-      throw new Error('Erreur lors de l\'analyse du produit cosmétique');
+      throw new Error('Erreur lors de l\'analyse du produit cosmetique');
     }
   }
 
   /**
-   * Parse la liste INCI et enrichit avec notre base de données
+   * Parse la liste INCI et enrichit avec notre base de donnees
    */
   parseINCI(ingredientsList) {
     if (!ingredientsList || typeof ingredientsList !== 'string') {
       return [];
     }
 
-    // Nettoyer et séparer les ingrédients
+    // Nettoyer et separer les ingredients
     const ingredients = ingredientsList
-      .replace(/\([^)]*\)/g, '') // Retirer les parenthèses
+      .replace(/\([^)]*\)/g, '') // Retirer les parentheses
       .split(/[,;]/)
       .map(ing => ing.trim())
       .filter(ing => ing.length > 0);
@@ -92,7 +92,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Recherche un ingrédient dans la base de données
+   * Recherche un ingredient dans la base de donnees
    */
   findInDatabase(ingredientName) {
     const normalized = this.normalizeIngredientName(ingredientName);
@@ -105,7 +105,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Normalise les noms d'ingrédients pour la comparaison
+   * Normalise les noms d'ingredients pour la comparaison
    */
   normalizeIngredientName(name) {
     return name
@@ -116,7 +116,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Calcule le score de sécurité (0-100)
+   * Calcule le score de securite (0-100)
    */
   calculateSafetyScore(ingredients) {
     let score = 100;
@@ -127,7 +127,7 @@ class CosmeticAnalyzer {
         score -= 15;
       }
       
-      // Allergènes
+      // Allergenes
       if (ing.allergen) {
         score -= 5;
       }
@@ -137,7 +137,7 @@ class CosmeticAnalyzer {
         score -= ing.irritant === 'high' ? 10 : 5;
       }
       
-      // CMR (Cancérigène, Mutagène, Reprotoxique)
+      // CMR (Cancerigene, Mutagene, Reprotoxique)
       if (ing.cmr) {
         score -= 20;
       }
@@ -152,7 +152,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Calcule le score de naturalité (0-100)
+   * Calcule le score de naturalite (0-100)
    */
   calculateNaturalnessScore(ingredients) {
     if (ingredients.length === 0) return 0;
@@ -161,7 +161,7 @@ class CosmeticAnalyzer {
     const syntheticCount = ingredients.filter(ing => !ing.natural && !ing.mineral).length;
     const mineralCount = ingredients.filter(ing => ing.mineral).length;
     
-    // Pondération : naturel 100%, minéral 50%, synthétique 0%
+    // Ponderation : naturel 100%, mineral 50%, synthetique 0%
     const weightedScore = (
       (naturalCount * 100) + 
       (mineralCount * 50) + 
@@ -172,17 +172,17 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Calcule le score d'efficacité basé sur les actifs
+   * Calcule le score d'efficacite base sur les actifs
    */
   calculateEffectivenessScore(ingredients, category) {
     let score = 70; // Score de base
     
-    // Bonus pour les actifs reconnus selon la catégorie
+    // Bonus pour les actifs reconnus selon la categorie
     const categoryActives = this.getCategoryActives(category);
     
     ingredients.forEach((ing, index) => {
       if (categoryActives.includes(ing.function)) {
-        // Plus l'actif est haut dans la liste, plus il est concentré
+        // Plus l'actif est haut dans la liste, plus il est concentre
         const positionBonus = Math.max(0, 20 - index * 2);
         score += positionBonus;
       }
@@ -192,7 +192,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Détecte les ingrédients préoccupants
+   * Detecte les ingredients preoccupants
    */
   detectConcerns(ingredients) {
     const concerns = [];
@@ -203,7 +203,7 @@ class CosmeticAnalyzer {
           ingredient: ing.name,
           type: 'endocrine_disruptor',
           severity: 'high',
-          description: 'Perturbateur endocrinien suspecté'
+          description: 'Perturbateur endocrinien suspecte'
         });
       }
       
@@ -212,7 +212,7 @@ class CosmeticAnalyzer {
           ingredient: ing.name,
           type: 'cmr',
           severity: 'critical',
-          description: 'Substance CMR (Cancérigène, Mutagène ou Reprotoxique)'
+          description: 'Substance CMR (Cancerigene, Mutagene ou Reprotoxique)'
         });
       }
       
@@ -230,7 +230,7 @@ class CosmeticAnalyzer {
           ingredient: ing.name,
           type: 'environmental',
           severity: 'medium',
-          description: 'Impact environnemental négatif'
+          description: 'Impact environnemental negatif'
         });
       }
     });
@@ -239,7 +239,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Détecte les allergènes
+   * Detecte les allergenes
    */
   detectAllergens(ingredients) {
     return ingredients
@@ -252,7 +252,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Vérifie si un ingrédient est un perturbateur endocrinien
+   * Verifie si un ingredient est un perturbateur endocrinien
    */
   isEndocrineDisruptor(ingredient) {
     return this.disruptors.some(disruptor => 
@@ -262,7 +262,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Estime la concentration d'un ingrédient selon sa position
+   * Estime la concentration d'un ingredient selon sa position
    */
   estimateConcentration(position, totalIngredients) {
     if (position === 0) return 'high';
@@ -272,7 +272,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Recommande les types de peau adaptés
+   * Recommande les types de peau adaptes
    */
   recommendSkinTypes(ingredients, category) {
     const skinTypes = {
@@ -289,7 +289,7 @@ class CosmeticAnalyzer {
       skinTypes.sensitive = false;
     }
     
-    // Analyse pour peau grasse/acnéique
+    // Analyse pour peau grasse/acneique
     if (ingredients.some(ing => ing.comedogenic > 3)) {
       skinTypes.oily = false;
       skinTypes.acneic = false;
@@ -306,7 +306,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Génère les avertissements
+   * Genere les avertissements
    */
   generateWarnings(concerns, allergens) {
     const warnings = [];
@@ -314,21 +314,21 @@ class CosmeticAnalyzer {
     if (concerns.some(c => c.severity === 'critical')) {
       warnings.push({
         level: 'danger',
-        message: 'Ce produit contient des substances très préoccupantes'
+        message: 'Ce produit contient des substances tres preoccupantes'
       });
     }
     
     if (concerns.filter(c => c.type === 'endocrine_disruptor').length > 2) {
       warnings.push({
         level: 'warning',
-        message: 'Plusieurs perturbateurs endocriniens détectés'
+        message: 'Plusieurs perturbateurs endocriniens detectes'
       });
     }
     
     if (allergens.length > 0) {
       warnings.push({
         level: 'info',
-        message: `${allergens.length} allergène(s) potentiel(s) détecté(s)`
+        message: `${allergens.length} allergene(s) potentiel(s) detecte(s)`
       });
     }
     
@@ -339,22 +339,22 @@ class CosmeticAnalyzer {
    * Extrait la PAO (Period After Opening)
    */
   extractPAO(product) {
-    // Recherche dans les métadonnées ou le texte
+    // Recherche dans les metadonnees ou le texte
     const paoMatch = product.description?.match(/(\d+)M/i);
-    return paoMatch ? parseInt(paoMatch[1]) : 12; // 12 mois par défaut
+    return paoMatch ? parseInt(paoMatch[1]) : 12; // 12 mois par defaut
   }
 
   /**
-   * Trouve des alternatives plus sûres
+   * Trouve des alternatives plus sures
    */
   async findAlternatives(product, currentScore) {
-    // TODO: Implémenter la recherche d'alternatives dans la base de données
+    // TODO: Implementer la recherche d'alternatives dans la base de donnees
     // Pour l'instant, retourne un tableau vide
     return [];
   }
 
   /**
-   * Retourne les actifs pertinents selon la catégorie
+   * Retourne les actifs pertinents selon la categorie
    */
   getCategoryActives(category) {
     const actives = {
@@ -370,7 +370,7 @@ class CosmeticAnalyzer {
   }
 
   /**
-   * Obtient les préoccupations spécifiques d'un ingrédient
+   * Obtient les preoccupations specifiques d'un ingredient
    */
   getIngredientConcerns(ingredient) {
     if (!ingredient) return [];
@@ -382,11 +382,11 @@ class CosmeticAnalyzer {
     }
     
     if (ingredient.allergen) {
-      concerns.push('Allergène potentiel');
+      concerns.push('Allergene potentiel');
     }
     
     if (ingredient.comedogenic > 2) {
-      concerns.push(`Comédogène (${ingredient.comedogenic}/5)`);
+      concerns.push(`Comedogene (${ingredient.comedogenic}/5)`);
     }
     
     return concerns;

@@ -35,12 +35,12 @@ const upload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(new Error('Seuls les formats JPEG, PNG et WebP sont acceptés'));
+      cb(new Error('Seuls les formats JPEG, PNG et WebP sont acceptes'));
     }
   }
 });
 
-// Jobs en mémoire (en prod: utiliser Redis ou BullMQ)
+// Jobs en memoire (en prod: utiliser Redis ou BullMQ)
 const visionJobs = new Map();
 
 /**
@@ -62,7 +62,7 @@ router.post('/analyze-image',
     const imagePath = req.file.path;
 
     try {
-      // Démarrer l'analyse en async
+      // Demarrer l'analyse en async
       visionJobs.set(jobId, { 
         status: 'processing', 
         startTime: Date.now() 
@@ -73,14 +73,14 @@ router.post('/analyze-image',
         jobId,
         language: req.body.language || 'fr'
       }).then(async (result) => {
-        // Mettre à jour le job
+        // Mettre   jour le job
         visionJobs.set(jobId, result);
         
-        // Nettoyer l'image après 5 minutes
+        // Nettoyer l'image apres 5 minutes
         setTimeout(async () => {
           try {
             await fs.unlink(imagePath);
-            visionJobs.delete(jobId); // Nettoyer le job après 30 min
+            visionJobs.delete(jobId); // Nettoyer le job apres 30 min
           } catch (error) {
             console.error('Erreur suppression image:', error);
           }
@@ -92,7 +92,7 @@ router.post('/analyze-image',
         });
       });
 
-      // Si l'analyse est très rapide (< 2s), renvoyer directement
+      // Si l'analyse est tres rapide (< 2s), renvoyer directement
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const job = visionJobs.get(jobId);
@@ -104,7 +104,7 @@ router.post('/analyze-image',
       res.json({ 
         jobId,
         status: 'processing',
-        message: 'Analyse en cours, utilisez /status/:jobId pour vérifier'
+        message: 'Analyse en cours, utilisez /status/:jobId pour verifier'
       });
 
     } catch (error) {
@@ -120,7 +120,7 @@ router.post('/analyze-image',
 
 /**
  * GET /api/vision/status/:jobId
- * Vérifier le statut d'une analyse
+ * Verifier le statut d'une analyse
  */
 router.get('/status/:jobId', async (req, res) => {
   const { jobId } = req.params;
@@ -129,7 +129,7 @@ router.get('/status/:jobId', async (req, res) => {
   
   if (!job) {
     return res.status(404).json({ 
-      error: 'Job non trouvé',
+      error: 'Job non trouve',
       jobId 
     });
   }
@@ -161,7 +161,7 @@ router.post('/extract-test', async (req, res) => {
 
 /**
  * GET /api/vision/health
- * Vérifier l'état du service
+ * Verifier l'etat du service
  */
 router.get('/health', async (req, res) => {
   try {

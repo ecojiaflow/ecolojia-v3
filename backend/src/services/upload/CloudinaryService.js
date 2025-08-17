@@ -28,8 +28,8 @@ function uploadImage(buffer, options = {}) {
 }
 
 /**
- * Génère une signature SHA‑1 pour l'upload côté client.
- * @param {Record<string, any>} params – paramètres upload (timestamp, public_id, etc.)
+ * Genere une signature SHAâ€‘1 pour l'upload cote client.
+ * @param {Record<string, any>} params â€“ parametres upload (timestamp, public_id, etc.)
  */
 function signUpload(params = {}) {
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
@@ -44,6 +44,6 @@ function signUpload(params = {}) {
 module.exports = {
   uploadImage,
   signUpload,
-  /** expose l'instance cloudinary pour les opérations avancées */
+  /** expose l'instance cloudinary pour les operations avancees */
   cloudinary,
 };

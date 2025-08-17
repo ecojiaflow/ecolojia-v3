@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/services/analysis/index.js
+// PATH: backend/src/services/analysis/index.js
 // Service d'analyse orchestré pour les 3 catégories
 
 const foodExpert = require('../expert/food.rules');

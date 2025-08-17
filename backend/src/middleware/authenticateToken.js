@@ -1,5 +1,5 @@
 // backend/src/middleware/authenticateToken.js
-// Middleware d'authentification unifié
+// Middleware d'authentification unifie
 
 const jwt = require('jsonwebtoken');
 
@@ -18,11 +18,11 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       console.error('JWT verification error:', err);
       return res.status(403).json({ 
-        error: 'Token invalide ou expiré' 
+        error: 'Token invalide ou expire' 
       });
     }
 
-    // Normaliser les données utilisateur
+    // Normaliser les donnees utilisateur
     req.user = {
       id: user.id || user._id || user.userId,
       userId: user.userId || user.id || user._id,
@@ -34,14 +34,14 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Alias pour compatibilité avec différents noms
+// Alias pour compatibilite avec differents noms
 const authenticateUser = authenticateToken;
 
-// Middleware de vérification de quota
+// Middleware de verification de quota
 const checkQuota = (type) => {
   return async (req, res, next) => {
     try {
-      // Pour l'instant, on passe toujours (à implémenter selon vos besoins)
+      // Pour l'instant, on passe toujours (  implementer selon vos besoins)
       console.log(`Checking quota for ${type} - User: ${req.user?.userId}`);
       next();
     } catch (error) {
@@ -51,14 +51,14 @@ const checkQuota = (type) => {
   };
 };
 
-// Middleware spécial pour après upload (vision)
+// Middleware special pour apres upload (vision)
 const checkQuotaAfterUpload = (type) => {
   return async (req, res, next) => {
     try {
-      // Vérifier le quota après l'upload
+      // Verifier le quota apres l'upload
       const user = req.user;
       
-      // Simuler la vérification de quota
+      // Simuler la verification de quota
       req.quotaInfo = {
         used: 5,
         limit: user.subscription?.tier === 'premium' ? 'unlimited' : 30,
@@ -74,7 +74,7 @@ const checkQuotaAfterUpload = (type) => {
   };
 };
 
-// Export unifié pour tous les middlewares d'auth
+// Export unifie pour tous les middlewares d'auth
 module.exports = {
   authenticateToken,
   authenticateUser,

@@ -1,7 +1,7 @@
 // PATH: backend\src\services\analysis\detergents.js
 /**
- * Detergents Analysis Service - Analyse des produits détergents
- * Conforme à TechReference.md : CLP, tensioactifs, biodégradabilité, parfums
+ * Detergents Analysis Service - Analyse des produits detergents
+ * Conforme   TechReference.md : CLP, tensioactifs, biodegradabilite, parfums
  */
 
 class DetergentsAnalyzer {
@@ -11,11 +11,11 @@ class DetergentsAnalyzer {
       'GHS05': { name: 'Corrosif', healthImpact: 'high', envImpact: 'medium' },
       'GHS06': { name: 'Toxique', healthImpact: 'critical', envImpact: 'high' },
       'GHS07': { name: 'Irritant/Nocif', healthImpact: 'medium', envImpact: 'low' },
-      'GHS08': { name: 'Danger pour la santé', healthImpact: 'high', envImpact: 'medium' },
+      'GHS08': { name: 'Danger pour la sante', healthImpact: 'high', envImpact: 'medium' },
       'GHS09': { name: 'Danger pour l\'environnement', healthImpact: 'low', envImpact: 'high' }
     };
     
-    // Tensioactifs et leur biodégradabilité
+    // Tensioactifs et leur biodegradabilite
     this.surfactants = {
       // Anioniques
       'sls': { type: 'anionic', name: 'Sodium Lauryl Sulfate', biodegradability: 'good', irritant: true },
@@ -35,35 +35,35 @@ class DetergentsAnalyzer {
       'quaternary ammonium': { type: 'cationic', biodegradability: 'poor', irritant: true },
       'benzalkonium chloride': { type: 'cationic', biodegradability: 'poor', irritant: true, toxic: true },
       
-      // Amphotères
+      // Amphoteres
       'betaine': { type: 'amphoteric', biodegradability: 'good', irritant: false },
       'amine oxide': { type: 'amphoteric', biodegradability: 'good', irritant: false }
     };
     
-    // Agents problématiques
+    // Agents problematiques
     this.problematicAgents = {
       'phosphate': { concern: 'eutrophisation', banned: 'EU' },
       'phosphonate': { concern: 'eutrophisation', restricted: true },
       'edta': { concern: 'persistant', biodegradability: 'very poor' },
-      'nta': { concern: 'chélateur', biodegradability: 'poor' },
+      'nta': { concern: 'chelateur', biodegradability: 'poor' },
       'chlorine bleach': { concern: 'toxique', name: 'Eau de Javel' },
       'percarbonate': { concern: 'oxydant', safer: true },
-      'formaldehyde': { concern: 'cancérigène', banned: true },
+      'formaldehyde': { concern: 'cancerigene', banned: true },
       'triclosan': { concern: 'perturbateur endocrinien', restricted: true }
     };
     
-    // Patterns de détection
-    this.percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)\s*%|([<>≤≥]?\s*\d+(?:[.,]\d+)?)\s*%/;
+    // Patterns de detection
+    this.percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-â€“]\s*(\d+(?:[.,]\d+)?)\s*%|([<>â‰¤â‰¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
     this.surfactantPattern = /(tensioactif|surfactant|anionic|cationic|nonionic|amphoteric)/i;
   }
 
   /**
-   * Analyse principale d'un produit détergent
+   * Analyse principale d'un produit detergent
    */
   async analyzeProduct(product, options = {}) {
     const ingredientsText = this.extractIngredientsText(product);
     
-    // Détecter les pictogrammes CLP (depuis photo ou metadata)
+    // Detecter les pictogrammes CLP (depuis photo ou metadata)
     const clpDetected = this.detectCLPPictograms(product);
     
     // Parser la composition
@@ -100,7 +100,7 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * Extrait le texte des ingrédients
+   * Extrait le texte des ingredients
    */
   extractIngredientsText(product) {
     if (typeof product.ingredients === 'string') {
@@ -113,29 +113,29 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * Détecte les pictogrammes CLP
+   * Detecte les pictogrammes CLP
    */
   detectCLPPictograms(product) {
     const detected = [];
     
-    // Si on a des métadonnées CLP
+    // Si on a des metadonnees CLP
     if (product.clpPictograms && Array.isArray(product.clpPictograms)) {
       return product.clpPictograms;
     }
     
-    // Sinon, essayer de détecter dans le texte ou description
+    // Sinon, essayer de detecter dans le texte ou description
     const fullText = [
       product.description,
       product.warnings,
       product.ingredients
     ].filter(Boolean).join(' ').toLowerCase();
     
-    // Détection basique par mots-clés
+    // Detection basique par mots-cles
     if (/corrosif|corrosive/i.test(fullText)) detected.push('GHS05');
-    if (/toxique|toxic/i.test(fullText) && !/écotoxique/i.test(fullText)) detected.push('GHS06');
+    if (/toxique|toxic/i.test(fullText) && !/ecotoxique/i.test(fullText)) detected.push('GHS06');
     if (/irritant|nocif|harmful/i.test(fullText)) detected.push('GHS07');
-    if (/danger.*santé|health.*hazard/i.test(fullText)) detected.push('GHS08');
-    if (/danger.*environnement|environmental.*hazard|écotoxique/i.test(fullText)) detected.push('GHS09');
+    if (/danger.*sante|health.*hazard/i.test(fullText)) detected.push('GHS08');
+    if (/danger.*environnement|environmental.*hazard|ecotoxique/i.test(fullText)) detected.push('GHS09');
     
     return [...new Set(detected)];
   }
@@ -148,7 +148,7 @@ class DetergentsAnalyzer {
     
     const components = [];
     
-    // Séparer par virgules ou points-virgules
+    // Separer par virgules ou points-virgules
     const parts = ingredientsText.split(/[,;]/).map(s => s.trim());
     
     parts.forEach((part, index) => {
@@ -163,13 +163,13 @@ class DetergentsAnalyzer {
           percentage = (parseFloat(percentMatch[1]) + parseFloat(percentMatch[2])) / 2;
         } else if (percentMatch[3]) {
           // Single: "<5%", ">30%", "15%"
-          percentage = parseFloat(percentMatch[3].replace(/[<>≤≥]/g, ''));
+          percentage = parseFloat(percentMatch[3].replace(/[<>â‰¤â‰¥]/g, ''));
         }
         // Enlever le pourcentage du nom
         name = part.replace(this.percentagePattern, '').trim();
       }
       
-      // Détecter le type de tensioactif
+      // Detecter le type de tensioactif
       let surfactantType = null;
       if (this.surfactantPattern.test(name)) {
         if (/anioni/i.test(name)) surfactantType = 'anionic';
@@ -216,7 +216,7 @@ class DetergentsAnalyzer {
         });
       }
       
-      // Détection spécifique de tensioactifs connus
+      // Detection specifique de tensioactifs connus
       Object.entries(this.surfactants).forEach(([key, data]) => {
         if (nameLower.includes(key)) {
           analysis.surfactants.push({
@@ -230,9 +230,9 @@ class DetergentsAnalyzer {
         }
       });
       
-      // Allergènes parfumés
+      // Allergenes parfumes
       if (nameLower.includes('parfum') || nameLower.includes('fragrance')) {
-        // Extraire les allergènes entre parenthèses
+        // Extraire les allergenes entre parentheses
         const allergenMatch = comp.name.match(/\(([^)]+)\)/);
         if (allergenMatch) {
           const allergens = allergenMatch[1].split(',').map(a => a.trim());
@@ -240,7 +240,7 @@ class DetergentsAnalyzer {
         }
       }
       
-      // Allergènes spécifiques
+      // Allergenes specifiques
       const knownAllergens = ['limonene', 'linalool', 'citral', 'geraniol', 'eugenol'];
       knownAllergens.forEach(allergen => {
         if (nameLower.includes(allergen)) {
@@ -275,7 +275,7 @@ class DetergentsAnalyzer {
         analysis.enzymes = true;
       }
       
-      // Agents problématiques
+      // Agents problematiques
       Object.entries(this.problematicAgents).forEach(([key, data]) => {
         if (nameLower.includes(key)) {
           analysis.problematicComponents.push({
@@ -288,14 +288,14 @@ class DetergentsAnalyzer {
       });
     });
     
-    // Déduplique les allergènes
+    // Deduplique les allergenes
     analysis.allergens = [...new Set(analysis.allergens)];
     
     return analysis;
   }
 
   /**
-   * Évalue la biodégradabilité d'un tensioactif
+   * ‰value la biodegradabilite d'un tensioactif
    */
   assessSurfactantBiodegradability(name) {
     if (/glucoside|betaine|soap|savon/i.test(name)) return 'excellent';
@@ -306,7 +306,7 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * Évalue la biodégradabilité globale
+   * ‰value la biodegradabilite globale
    */
   assessBiodegradability(analysis) {
     const surfactants = analysis.surfactants;
@@ -337,7 +337,7 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * Calcule le score de santé
+   * Calcule le score de sante
    */
   calculateHealthScore(clpPictograms, analysis) {
     let score = 100;
@@ -359,10 +359,10 @@ class DetergentsAnalyzer {
       }
     });
     
-    // Allergènes
+    // Allergenes
     score -= analysis.allergens.length * 5;
     
-    // Agents problématiques
+    // Agents problematiques
     analysis.problematicComponents.forEach(comp => {
       if (comp.details?.banned) score -= 25;
       else if (comp.details?.toxic) score -= 20;
@@ -388,25 +388,25 @@ class DetergentsAnalyzer {
     // Phosphates (impact majeur)
     if (analysis.phosphates) score -= 35;
     
-    // Biodégradabilité des tensioactifs
+    // Biodegradabilite des tensioactifs
     analysis.surfactants.forEach(surf => {
       if (surf.biodegradability === 'poor') score -= 15;
       else if (surf.biodegradability === 'moderate') score -= 8;
     });
     
-    // Agents problématiques persistants
+    // Agents problematiques persistants
     const persistent = analysis.problematicComponents.filter(c => 
       c.concern === 'persistant' || c.details?.biodegradability === 'very poor'
     );
     score -= persistent.length * 20;
     
-    // Bonus pour agents blanchissants oxygénés (plus écologiques)
+    // Bonus pour agents blanchissants oxygenes (plus ecologiques)
     const oxygenBleach = analysis.bleachingAgents.filter(b => b.type === 'oxygen');
     if (oxygenBleach.length > 0 && analysis.bleachingAgents.length === oxygenBleach.length) {
       score += 10;
     }
     
-    // Bonus pour enzymes (permettent lavage basse température)
+    // Bonus pour enzymes (permettent lavage basse temperature)
     if (analysis.enzymes) score += 5;
     
     return Math.max(0, Math.min(100, Math.round(score)));
@@ -429,7 +429,7 @@ class DetergentsAnalyzer {
   calculateConfidence(composition, clpPictograms, analysis) {
     let confidence = 0.5;
     
-    // Plus de données = plus de confiance
+    // Plus de donnees = plus de confiance
     if (clpPictograms.length > 0) confidence += 0.2;
     if (composition.some(c => c.percentage !== null)) confidence += 0.15;
     if (analysis.surfactants.length > 0) confidence += 0.15;
@@ -438,38 +438,38 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * Génère des recommandations
+   * Genere des recommandations
    */
   generateRecommendations(analysis, healthScore, environmentScore) {
     const recommendations = [];
     
-    // Recommandations santé
+    // Recommandations sante
     if (healthScore < 50) {
-      recommendations.push('⚠️ Produit irritant : porter des gants lors de l\'utilisation');
-      recommendations.push('💨 Utiliser dans un endroit bien ventilé');
+      recommendations.push('âš ï¸ Produit irritant : porter des gants lors de l\'utilisation');
+      recommendations.push('ðŸ’¨ Utiliser dans un endroit bien ventile');
     }
     
     if (analysis.allergens.length > 0) {
-      recommendations.push(`🔴 Contient ${analysis.allergens.length} allergène(s) parfumé(s)`);
+      recommendations.push(`ðŸ”´ Contient ${analysis.allergens.length} allergene(s) parfume(s)`);
     }
     
     // Recommandations environnement
     if (analysis.phosphates) {
-      recommendations.push('🚫 Contient des phosphates : privilégier des alternatives sans phosphates');
+      recommendations.push('ðŸš« Contient des phosphates : privilegier des alternatives sans phosphates');
     }
     
     if (environmentScore < 50) {
-      recommendations.push('🌱 Impact environnemental élevé : chercher des produits écolabellisés');
+      recommendations.push('ðŸŒ± Impact environnemental eleve : chercher des produits ecolabellises');
     } else if (environmentScore > 80) {
-      recommendations.push('✅ Bon choix écologique');
+      recommendations.push('âœ… Bon choix ecologique');
     }
     
     // Conseils d'utilisation
     if (analysis.enzymes) {
-      recommendations.push('🌡️ Efficace dès 30°C grâce aux enzymes');
+      recommendations.push('ðŸŒ¡ï¸ Efficace des 30Â°C grace aux enzymes');
     }
     
-    recommendations.push('📏 Respecter les doses recommandées pour limiter l\'impact');
+    recommendations.push('ðŸ“ Respecter les doses recommandees pour limiter l\'impact');
     
     return recommendations;
   }

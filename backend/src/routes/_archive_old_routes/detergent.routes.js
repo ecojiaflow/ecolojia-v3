@@ -22,7 +22,7 @@ try {
           health: { score: 70 },
           biodegradability: { score: 65 }
         },
-        recommendations: ['Utiliser avec modération'],
+        recommendations: ['Utiliser avec moderation'],
         certifications: certifications || []
       };
     }
@@ -35,9 +35,9 @@ const detergentScorer = new DetergentScorer();
 let authMiddleware;
 try {
   const authModule = require('../middleware/auth');
-  // Gérer les différents exports possibles
+  // Gerer les differents exports possibles
   authMiddleware = authModule.authenticateUser || authModule.auth || authModule;
-  // Si c'est toujours un objet, créer un middleware par défaut
+  // Si c'est toujours un objet, creer un middleware par defaut
   if (typeof authMiddleware !== 'function') {
     throw new Error('Auth middleware is not a function');
   }
@@ -52,7 +52,7 @@ try {
 
 /**
  * POST /api/detergent/analyze
- * Analyser un produit détergent
+ * Analyser un produit detergent
  */
 router.post('/analyze', authMiddleware, async (req, res) => {
   try {
@@ -69,14 +69,14 @@ router.post('/analyze', authMiddleware, async (req, res) => {
     } = req.body;
 
     // Validation
-    const name = product_name || productName || 'Produit détergent';
+    const name = product_name || productName || 'Produit detergent';
     const ingredientsList = ingredients || composition;
 
     if (!ingredientsList) {
       return res.status(400).json({
         success: false,
-        error: 'Données insuffisantes',
-        message: 'Les ingrédients ou la composition sont requis',
+        error: 'Donnees insuffisantes',
+        message: 'Les ingredients ou la composition sont requis',
         required_fields: ['ingredients', 'composition']
       });
     }
@@ -99,13 +99,13 @@ router.post('/analyze', authMiddleware, async (req, res) => {
       certificationsList
     );
 
-    // Enrichir le résultat
+    // Enrichir le resultat
     const enrichedResult = {
       ...analysisResult,
       product_info: {
         name,
         brand: brand || null,
-        category: category || 'détergent',
+        category: category || 'detergent',
         certifications_declared: certificationsList
       },
       meta: {
@@ -125,9 +125,9 @@ router.post('/analyze', authMiddleware, async (req, res) => {
       type: 'detergent',
       analysis: enrichedResult,
       disclaimers: [
-        'Analyse basée sur la réglementation REACH',
-        'Impact environnemental évalué selon EU Ecolabel',
-        'Informations éducatives uniquement'
+        'Analyse basee sur la reglementation REACH',
+        'Impact environnemental evalue selon EU Ecolabel',
+        'Informations educatives uniquement'
       ]
     });
 
@@ -152,20 +152,20 @@ router.get('/certifications', (req, res) => {
       {
         id: 'ecolabel',
         name: 'EU Ecolabel',
-        description: 'Label écologique européen officiel',
-        criteria: ['Biodégradabilité', 'Toxicité réduite', 'Emballage durable']
+        description: 'Label ecologique europeen officiel',
+        criteria: ['Biodegradabilite', 'Toxicite reduite', 'Emballage durable']
       },
       {
         id: 'ecocert',
         name: 'Ecocert',
-        description: 'Certification biologique et écologique',
-        criteria: ['95% ingrédients naturels', 'Sans pétrochimie', 'Biodégradable']
+        description: 'Certification biologique et ecologique',
+        criteria: ['95% ingredients naturels', 'Sans petrochimie', 'Biodegradable']
       },
       {
         id: 'nordic-swan',
         name: 'Nordic Swan',
         description: 'Label environnemental nordique',
-        criteria: ['Impact minimal', 'Cycle de vie analysé', 'Performance garantie']
+        criteria: ['Impact minimal', 'Cycle de vie analyse', 'Performance garantie']
       }
     ]
   });
@@ -173,7 +173,7 @@ router.get('/certifications', (req, res) => {
 
 /**
  * GET /api/detergent/status
- * Vérifier le statut du service
+ * Verifier le statut du service
  */
 router.get('/status', (req, res) => {
   res.json({

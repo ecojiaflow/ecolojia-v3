@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const algoliaService = require('../services/algolia/algoliaService');
 const { asyncHandler } = require('../middleware');

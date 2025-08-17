@@ -33,7 +33,7 @@ try {
           allergens_list: [],
           risk_level: 'low'
         },
-        recommendations: ['Produit bien toléré'],
+        recommendations: ['Produit bien tolere'],
         meta: {
           total_ingredients: 10,
           analyzed_ingredients: 8,
@@ -67,7 +67,7 @@ try {
 
 /**
  * POST /api/cosmetic/analyze
- * Analyser un produit cosmétique
+ * Analyser un produit cosmetique
  */
 router.post('/analyze', authMiddleware, async (req, res) => {
   try {
@@ -85,14 +85,14 @@ router.post('/analyze', authMiddleware, async (req, res) => {
     } = req.body;
 
     // Validation
-    const name = product_name || productName || 'Produit cosmétique';
+    const name = product_name || productName || 'Produit cosmetique';
     const ingredientsList = ingredients || composition || inci;
 
     if (!ingredientsList) {
       return res.status(400).json({
         success: false,
-        error: 'Données insuffisantes',
-        message: 'Les ingrédients (INCI) sont requis',
+        error: 'Donnees insuffisantes',
+        message: 'Les ingredients (INCI) sont requis',
         required_fields: ['ingredients', 'composition', 'inci']
       });
     }
@@ -103,21 +103,21 @@ router.post('/analyze', authMiddleware, async (req, res) => {
       ingredientsLength: ingredientsList.length 
     });
 
-    // Préparer les données pour l'analyse
+    // Preparer les donnees pour l'analyse
     const productData = {
       name,
       ingredients: ingredientsList,
       composition: ingredientsList,
       inci: ingredientsList,
       brand: brand || null,
-      category: category || 'cosmétique',
+      category: category || 'cosmetique',
       type: type || null
     };
 
     // Analyse avec le scorer
     const analysisResult = await cosmeticScorer.analyzeCosmetic(productData);
 
-    // Vérifier la confiance
+    // Verifier la confiance
     if (analysisResult.confidence < 0.4) {
       console.warn('Low confidence analysis', { 
         confidence: analysisResult.confidence,
@@ -127,24 +127,24 @@ router.post('/analyze', authMiddleware, async (req, res) => {
       return res.status(422).json({
         success: false,
         error: 'Analyse non fiable',
-        message: 'Les données fournies ne permettent pas une analyse suffisamment fiable',
+        message: 'Les donnees fournies ne permettent pas une analyse suffisamment fiable',
         confidence: analysisResult.confidence,
         min_confidence_required: 0.4,
         suggestions: [
-          'Vérifiez la liste INCI complète',
-          'Assurez-vous que les ingrédients sont correctement orthographiés',
+          'Verifiez la liste INCI complete',
+          'Assurez-vous que les ingredients sont correctement orthographies',
           'Fournissez plus d\'informations sur le produit'
         ]
       });
     }
 
-    // Enrichir le résultat
+    // Enrichir le resultat
     const enrichedResult = {
       ...analysisResult,
       product_info: {
         name,
         brand: brand || null,
-        category: category || 'cosmétique',
+        category: category || 'cosmetique',
         type: type || null
       },
       insights: generateCosmeticInsights(analysisResult),
@@ -162,9 +162,9 @@ router.post('/analyze', authMiddleware, async (req, res) => {
       type: 'cosmetic',
       analysis: enrichedResult,
       disclaimers: [
-        'Analyse basée sur la composition INCI',
-        'Les réactions cutanées sont individuelles',
-        'Informations éducatives - consultez un dermatologue',
+        'Analyse basee sur la composition INCI',
+        'Les reactions cutanees sont individuelles',
+        'Informations educatives - consultez un dermatologue',
         'Sources : ANSM, EFSA, SCCS'
       ]
     });
@@ -181,16 +181,16 @@ router.post('/analyze', authMiddleware, async (req, res) => {
 
 /**
  * GET /api/cosmetic/ingredients/:ingredient
- * Obtenir des informations sur un ingrédient spécifique
+ * Obtenir des informations sur un ingredient specifique
  */
 router.get('/ingredients/:ingredient', async (req, res) => {
   try {
     const { ingredient } = req.params;
     
-    // Base de données simplifiée des ingrédients
+    // Base de donnees simplifiee des ingredients
     const ingredientDatabase = {
       'parabens': {
-        name: 'Parabènes',
+        name: 'Parabenes',
         concern: 'Perturbateur endocrinien potentiel',
         alternatives: ['Phenoxyethanol', 'Sodium benzoate'],
         risk_level: 'medium'
@@ -204,7 +204,7 @@ router.get('/ingredients/:ingredient', async (req, res) => {
       'silicones': {
         name: 'Silicones',
         concern: 'Occlusif, impact environnemental',
-        alternatives: ['Huiles végétales', 'Beurres naturels'],
+        alternatives: ['Huiles vegetales', 'Beurres naturels'],
         risk_level: 'low'
       }
     };
@@ -214,7 +214,7 @@ router.get('/ingredients/:ingredient', async (req, res) => {
     if (!info) {
       return res.status(404).json({
         success: false,
-        error: 'Ingrédient non trouvé'
+        error: 'Ingredient non trouve'
       });
     }
 
@@ -227,14 +227,14 @@ router.get('/ingredients/:ingredient', async (req, res) => {
     logger.error('Error getting ingredient info:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération des informations'
+      error: 'Erreur lors de la recuperation des informations'
     });
   }
 });
 
 /**
  * GET /api/cosmetic/status
- * Vérifier le statut du service
+ * Verifier le statut du service
  */
 router.get('/status', (req, res) => {
   res.json({
@@ -258,32 +258,32 @@ router.get('/status', (req, res) => {
 // Fonctions helper
 
 /**
- * Générer des insights pour l'analyse cosmétique
+ * Generer des insights pour l'analyse cosmetique
  */
 function generateCosmeticInsights(analysisResult) {
   const insights = [];
   
   if (analysisResult.risk_analysis?.endocrine_disruptors?.length > 0) {
-    insights.push('⚠️ Perturbateurs endocriniens détectés');
+    insights.push('âš ï¸ Perturbateurs endocriniens detectes');
   }
   
   if (analysisResult.allergen_analysis?.total_allergens > 2) {
-    insights.push('⚠️ Plusieurs allergènes présents - test cutané recommandé');
+    insights.push('âš ï¸ Plusieurs allergenes presents - test cutane recommande');
   }
   
   if (analysisResult.breakdown?.naturality?.score > 80) {
-    insights.push('✅ Formule majoritairement naturelle');
+    insights.push('âœ… Formule majoritairement naturelle');
   }
   
   if (analysisResult.score > 80) {
-    insights.push('✅ Produit bien formulé avec peu de risques');
+    insights.push('âœ… Produit bien formule avec peu de risques');
   }
   
   return insights;
 }
 
 /**
- * Générer des alternatives cosmétiques
+ * Generer des alternatives cosmetiques
  */
 async function generateCosmeticAlternatives(productData, analysisResult) {
   const alternatives = [];
@@ -293,7 +293,7 @@ async function generateCosmeticAlternatives(productData, analysisResult) {
       type: 'clean_beauty',
       reason: 'Sans perturbateurs endocriniens',
       examples: ['Weleda', 'Dr. Hauschka', 'Melvita'],
-      benefit: 'Réduction risque hormonal'
+      benefit: 'Reduction risque hormonal'
     });
   }
   
@@ -302,7 +302,7 @@ async function generateCosmeticAlternatives(productData, analysisResult) {
       type: 'natural',
       reason: 'Formules plus naturelles',
       examples: ['Cattier', 'Avril', 'Lavera'],
-      benefit: 'Meilleure tolérance cutanée'
+      benefit: 'Meilleure tolerance cutanee'
     });
   }
   

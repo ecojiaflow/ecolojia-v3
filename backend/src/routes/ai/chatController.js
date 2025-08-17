@@ -30,9 +30,9 @@ exports.chat = async (req, res) => {
 
     // Appel DeepSeek
     const systemPrompt =
-      'Tu es ECOLOJIA, assistant scientifique expert en nutrition, cosmétique et détergence. ' +
-      (context.product ? `Produit concerné : ${context.product.name}. ` : '') +
-      'Réponds clairement en français.';
+      'Tu es ECOLOJIA, assistant scientifique expert en nutrition, cosmetique et detergence. ' +
+      (context.product ? `Produit concerne : ${context.product.name}. ` : '') +
+      'Reponds clairement en francais.';
 
     const reply = await deepSeekService.analyze(message, systemPrompt);
 

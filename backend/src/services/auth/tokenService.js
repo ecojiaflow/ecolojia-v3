@@ -1,6 +1,6 @@
 // PATH: backend/src/services/auth/tokenService.js
 // ========================================
-// TOKEN SERVICE - VERSION CORRIGÉE
+// TOKEN SERVICE - VERSION CORRIG‰E
 // ========================================
 const jwt = require('jsonwebtoken');
 
@@ -14,7 +14,7 @@ class TokenService {
   }
 
   /**
-   * Génère un token d'accès JWT
+   * Genere un token d'acces JWT
    * @param {Object} user - L'utilisateur MongoDB
    * @returns {string} Token JWT
    */
@@ -34,7 +34,7 @@ class TokenService {
   }
 
   /**
-   * Génère un refresh token
+   * Genere un refresh token
    * @param {Object} user - L'utilisateur MongoDB
    * @returns {string} Refresh token
    */
@@ -74,9 +74,9 @@ class TokenService {
   }
 
   /**
-   * Vérifie si le refresh token existe dans Redis
+   * Verifie si le refresh token existe dans Redis
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} token - Token à vérifier
+   * @param {string} token - Token   verifier
    * @returns {boolean} Token valide ou non
    */
   async verifyRefreshTokenInDB(userId, token) {
@@ -96,9 +96,9 @@ class TokenService {
   }
 
   /**
-   * Révoque un refresh token
+   * Revoque un refresh token
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} token - Token à révoquer
+   * @param {string} token - Token   revoquer
    */
   async revokeRefreshToken(userId, token) {
     if (!this.redis || !this.redis.isReady) {
@@ -116,9 +116,9 @@ class TokenService {
   }
 
   /**
-   * Vérifie et décode un access token
-   * @param {string} token - Token à vérifier
-   * @returns {Object} Payload décodé
+   * Verifie et decode un access token
+   * @param {string} token - Token   verifier
+   * @returns {Object} Payload decode
    */
   verifyAccessToken(token) {
     try {
@@ -141,9 +141,9 @@ class TokenService {
   }
 
   /**
-   * Vérifie et décode un refresh token
-   * @param {string} token - Token à vérifier
-   * @returns {Object} Payload décodé
+   * Verifie et decode un refresh token
+   * @param {string} token - Token   verifier
+   * @returns {Object} Payload decode
    */
   verifyRefreshToken(token) {
     try {
@@ -159,7 +159,7 @@ class TokenService {
   }
 
   /**
-   * Génère un ID unique pour le token
+   * Genere un ID unique pour le token
    * @returns {string} ID unique
    */
   generateTokenId() {
@@ -167,5 +167,5 @@ class TokenService {
   }
 }
 
-// ⚠️ LIGNE CRUCIALE - EXPORT DE LA CLASSE
+// âš ï¸ LIGNE CRUCIALE - EXPORT DE LA CLASSE
 module.exports = TokenService;

@@ -11,30 +11,30 @@ class NutritionistChatService {
     this.apiKey = process.env.DEEPSEEK_API_KEY;
     this.apiUrl = 'https://api.deepseek.com/v1/chat/completions';
     
-    // Configuration du système
-    this.systemPrompt = `Tu es NutriAI, l'assistant nutritionniste expert d'ECOLOJIA. Tu es spécialisé dans l'analyse nutritionnelle et la santé alimentaire.
+    // Configuration du systeme
+    this.systemPrompt = `Tu es NutriAI, l'assistant nutritionniste expert d'ECOLOJIA. Tu es specialise dans l'analyse nutritionnelle et la sante alimentaire.
 
 Tes connaissances incluent :
 - Analyse NOVA et Nutri-Score
-- Additifs alimentaires et leurs effets sur la santé
-- Allergènes et intolérances alimentaires
-- Nutrition sportive et régimes spéciaux
+- Additifs alimentaires et leurs effets sur la sante
+- Allergenes et intolerances alimentaires
+- Nutrition sportive et regimes speciaux
 - Impact environnemental des aliments
-- Lecture et interprétation des étiquettes
+- Lecture et interpretation des etiquettes
 
 Ton approche :
-- Bienveillant et pédagogue, jamais moralisateur
+- Bienveillant et pedagogue, jamais moralisateur
 - Scientifiquement rigoureux avec des sources fiables
-- Personnalisé selon le profil de l'utilisateur
+- Personnalise selon le profil de l'utilisateur
 - Pratique avec des conseils applicables au quotidien
 - Encourageant vers des choix plus sains et durables
 
 Instructions importantes :
 - Toujours rester dans le domaine de la nutrition et de l'alimentation
-- Ne jamais remplacer un avis médical professionnel
+- Ne jamais remplacer un avis medical professionnel
 - Citer les classifications NOVA et Nutri-Score quand pertinent
-- Proposer des alternatives concrètes et accessibles
-- Adapter tes réponses au niveau de connaissance de l'utilisateur`;
+- Proposer des alternatives concretes et accessibles
+- Adapter tes reponses au niveau de connaissance de l'utilisateur`;
 
     // Limites de tokens
     this.maxTokens = 500;
@@ -45,30 +45,30 @@ Instructions importantes :
    * Envoie un message au chat IA
    * @param {string} userId - ID de l'utilisateur
    * @param {string} message - Message de l'utilisateur
-   * @param {Object} context - Contexte additionnel (produit analysé, etc.)
-   * @returns {Promise<Object>} Réponse de l'IA
+   * @param {Object} context - Contexte additionnel (produit analyse, etc.)
+   * @returns {Promise<Object>} Reponse de l'IA
    */
   async sendMessage(userId, message, context = {}) {
     try {
-      // Vérifier l'utilisateur et ses quotas
+      // Verifier l'utilisateur et ses quotas
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('Utilisateur non trouvé');
+        throw new Error('Utilisateur non trouve');
       }
 
-      // Vérifier les quotas
+      // Verifier les quotas
       const quotaCheck = await this.checkQuota(user);
       if (!quotaCheck.allowed) {
         throw new Error(quotaCheck.message);
       }
 
-      // Récupérer l'historique de conversation
+      // Recuperer l'historique de conversation
       const conversationHistory = await this.getConversationHistory(userId);
       
       // Construire le contexte utilisateur
       const userContext = await this.buildUserContext(userId, context);
       
-      // Préparer les messages pour l'API
+      // Preparer les messages pour l'API
       const messages = this.prepareMessages(
         message,
         conversationHistory,
@@ -76,16 +76,16 @@ Instructions importantes :
       );
 
       // Appeler l'API DeepSeek
-      console.log('🤖 Appel API DeepSeek...');
+      console.log('ðŸ¤– Appel API DeepSeek...');
       const response = await this.callDeepSeekAPI(messages);
       
-      // Sauvegarder l'échange
+      // Sauvegarder l'echange
       await this.saveConversation(userId, message, response.content, context);
       
-      // Incrémenter le compteur de quotas
+      // Incrementer le compteur de quotas
       await this.incrementQuotaUsage(user);
       
-      // Analyser la réponse pour des actions
+      // Analyser la reponse pour des actions
       const actions = this.extractActions(response.content);
       
       return {
@@ -97,11 +97,11 @@ Instructions importantes :
       };
 
     } catch (error) {
-      console.error('❌ Erreur chat IA:', error);
+      console.error('âŒ Erreur chat IA:', error);
       
-      // Gestion des erreurs spécifiques
+      // Gestion des erreurs specifiques
       if (error.response?.status === 429) {
-        throw new Error('Limite de l\'API atteinte. Réessayez dans quelques instants.');
+        throw new Error('Limite de l\'API atteinte. Reessayez dans quelques instants.');
       }
       
       throw error;
@@ -109,7 +109,7 @@ Instructions importantes :
   }
 
   /**
-   * Vérifie les quotas de l'utilisateur
+   * Verifie les quotas de l'utilisateur
    */
   async checkQuota(user) {
     const limit = user.tier === 'premium' 
@@ -119,7 +119,7 @@ Instructions importantes :
     const used = user.quotas?.aiQuestionsUsed || 0;
     const remaining = limit - used;
     
-    if (limit === -1) { // Illimité
+    if (limit === -1) { // Illimite
       return { allowed: true, remaining: -1 };
     }
     
@@ -127,8 +127,8 @@ Instructions importantes :
       return {
         allowed: false,
         message: user.tier === 'free' 
-          ? 'Quota dépassé. Passez à Premium pour continuer.'
-          : 'Quota mensuel dépassé. Il se renouvellera le mois prochain.',
+          ? 'Quota depasse. Passez   Premium pour continuer.'
+          : 'Quota mensuel depasse. Il se renouvellera le mois prochain.',
         remaining: 0
       };
     }
@@ -137,7 +137,7 @@ Instructions importantes :
   }
 
   /**
-   * Récupère l'historique de conversation
+   * Recupere l'historique de conversation
    */
   async getConversationHistory(userId) {
     const history = await ChatHistory.find({ userId })
@@ -151,13 +151,13 @@ Instructions importantes :
    * Construit le contexte utilisateur
    */
   async buildUserContext(userId, additionalContext) {
-    // Récupérer les dernières analyses
+    // Recuperer les dernieres analyses
     const recentAnalyses = await Analysis.find({ userId })
       .populate('productId', 'name brand category')
       .sort({ createdAt: -1 })
       .limit(5);
     
-    // Récupérer le profil utilisateur
+    // Recuperer le profil utilisateur
     const user = await User.findById(userId)
       .select('preferences profile');
     
@@ -190,7 +190,7 @@ Instructions importantes :
   }
 
   /**
-   * Prépare les messages pour l'API
+   * Prepare les messages pour l'API
    */
   prepareMessages(currentMessage, history, context) {
     const messages = [
@@ -203,7 +203,7 @@ Instructions importantes :
         content: `Contexte utilisateur actuel :
 ${JSON.stringify(context, null, 2)}
 
-Utilise ces informations pour personnaliser tes réponses.`
+Utilise ces informations pour personnaliser tes reponses.`
       }
     ];
     
@@ -259,7 +259,7 @@ Utilise ces informations pour personnaliser tes réponses.`
       console.error('Erreur API DeepSeek:', error.response?.data || error);
       
       if (error.response?.status === 401) {
-        throw new Error('Clé API invalide');
+        throw new Error('Cle API invalide');
       }
       
       throw new Error('Erreur de communication avec l\'IA');
@@ -271,7 +271,7 @@ Utilise ces informations pour personnaliser tes réponses.`
    */
   async saveConversation(userId, userMessage, aiResponse, context) {
     try {
-      // Générer un ID de conversation si nécessaire
+      // Generer un ID de conversation si necessaire
       const lastChat = await ChatHistory.findOne({ userId })
         .sort({ createdAt: -1 });
       
@@ -293,7 +293,7 @@ Utilise ces informations pour personnaliser tes réponses.`
   }
 
   /**
-   * Incrémente l'utilisation du quota
+   * Incremente l'utilisation du quota
    */
   async incrementQuotaUsage(user) {
     user.quotas.aiQuestionsUsed = (user.quotas.aiQuestionsUsed || 0) + 1;
@@ -301,12 +301,12 @@ Utilise ces informations pour personnaliser tes réponses.`
   }
 
   /**
-   * Extrait les actions suggérées de la réponse
+   * Extrait les actions suggerees de la reponse
    */
   extractActions(response) {
     const actions = [];
     
-    // Recherche de produits mentionnés
+    // Recherche de produits mentionnes
     const productPattern = /recherch(?:er|ez) "([^"]+)"/gi;
     let match;
     while ((match = productPattern.exec(response)) !== null) {
@@ -347,7 +347,7 @@ Utilise ces informations pour personnaliser tes réponses.`
       };
     }
     
-    // Score santé moyen
+    // Score sante moyen
     const healthScores = analyses
       .map(a => a.results?.scores?.health)
       .filter(s => s !== undefined);
@@ -356,7 +356,7 @@ Utilise ces informations pour personnaliser tes réponses.`
       ? Math.round(healthScores.reduce((a, b) => a + b, 0) / healthScores.length)
       : null;
     
-    // Catégories fréquentes
+    // Categories frequentes
     const categories = {};
     analyses.forEach(a => {
       const cat = a.productId?.category || 'unknown';
@@ -368,7 +368,7 @@ Utilise ces informations pour personnaliser tes réponses.`
       .slice(0, 3)
       .map(([cat]) => cat);
     
-    // Tendances d'amélioration
+    // Tendances d'amelioration
     const improvements = [];
     if (healthScores.length >= 3) {
       const recent = healthScores.slice(0, 3).reduce((a, b) => a + b, 0) / 3;
@@ -389,20 +389,20 @@ Utilise ces informations pour personnaliser tes réponses.`
   }
 
   /**
-   * Génère une réponse à une question sur un produit spécifique
+   * Genere une reponse   une question sur un produit specifique
    */
   async answerProductQuestion(userId, productId, question) {
     try {
-      // Récupérer l'analyse du produit
+      // Recuperer l'analyse du produit
       const analysis = await Analysis.findOne({ userId, productId })
         .populate('productId')
         .sort({ createdAt: -1 });
       
       if (!analysis) {
-        throw new Error('Produit non analysé');
+        throw new Error('Produit non analyse');
       }
       
-      // Contexte spécifique au produit
+      // Contexte specifique au produit
       const productContext = {
         currentProduct: {
           name: analysis.productId.name,
@@ -416,7 +416,7 @@ Utilise ces informations pour personnaliser tes réponses.`
         }
       };
       
-      // Ajouter un préfixe à la question pour orienter l'IA
+      // Ajouter un prefixe   la question pour orienter l'IA
       const enhancedQuestion = `Concernant le produit "${analysis.productId.name}" : ${question}`;
       
       return await this.sendMessage(userId, enhancedQuestion, productContext);
@@ -428,10 +428,10 @@ Utilise ces informations pour personnaliser tes réponses.`
   }
 
   /**
-   * Génère des suggestions personnalisées
+   * Genere des suggestions personnalisees
    */
   async generateSuggestions(userId) {
-    const prompt = `Donne-moi 3 conseils nutritionnels personnalisés basés sur mon historique récent d'analyses de produits. Sois concret et actionnable.`;
+    const prompt = `Donne-moi 3 conseils nutritionnels personnalises bases sur mon historique recent d'analyses de produits. Sois concret et actionnable.`;
     
     return await this.sendMessage(userId, prompt, { 
       requestType: 'suggestions' 
@@ -443,17 +443,17 @@ Utilise ces informations pour personnaliser tes réponses.`
    */
   async compareProducts(userId, productIds) {
     try {
-      // Récupérer les analyses des produits
+      // Recuperer les analyses des produits
       const analyses = await Analysis.find({
         userId,
         productId: { $in: productIds }
       }).populate('productId');
       
       if (analyses.length < 2) {
-        throw new Error('Pas assez de produits à comparer');
+        throw new Error('Pas assez de produits   comparer');
       }
       
-      // Préparer le contexte de comparaison
+      // Preparer le contexte de comparaison
       const comparisonContext = {
         comparison: analyses.map(a => ({
           name: a.productId.name,
@@ -462,7 +462,7 @@ Utilise ces informations pour personnaliser tes réponses.`
         }))
       };
       
-      const prompt = `Compare ces ${analyses.length} produits en termes de qualité nutritionnelle, d'impact santé et donne une recommandation claire.`;
+      const prompt = `Compare ces ${analyses.length} produits en termes de qualite nutritionnelle, d'impact sante et donne une recommandation claire.`;
       
       return await this.sendMessage(userId, prompt, comparisonContext);
       
@@ -473,11 +473,11 @@ Utilise ces informations pour personnaliser tes réponses.`
   }
 
   /**
-   * Réinitialise une conversation
+   * Reinitialise une conversation
    */
   async clearConversation(userId) {
     try {
-      // Marquer les anciennes conversations comme archivées
+      // Marquer les anciennes conversations comme archivees
       await ChatHistory.updateMany(
         { userId, archived: { $ne: true } },
         { archived: true }
@@ -485,17 +485,17 @@ Utilise ces informations pour personnaliser tes réponses.`
       
       return {
         success: true,
-        message: 'Conversation réinitialisée'
+        message: 'Conversation reinitialisee'
       };
       
     } catch (error) {
-      console.error('Erreur réinitialisation conversation:', error);
+      console.error('Erreur reinitialisation conversation:', error);
       throw error;
     }
   }
 
   /**
-   * Récupère l'historique complet d'une conversation
+   * Recupere l'historique complet d'une conversation
    */
   async getFullConversation(userId, conversationId) {
     try {
@@ -513,7 +513,7 @@ Utilise ces informations pour personnaliser tes réponses.`
       }));
       
     } catch (error) {
-      console.error('Erreur récupération conversation:', error);
+      console.error('Erreur recuperation conversation:', error);
       return [];
     }
   }
@@ -523,25 +523,25 @@ Utilise ces informations pour personnaliser tes réponses.`
    */
   async getQuestionSuggestions(userId, context = {}) {
     const suggestions = [
-      "Quels sont les additifs à éviter absolument ?",
-      "Comment réduire ma consommation de sucre ?",
+      "Quels sont les additifs   eviter absolument ?",
+      "Comment reduire ma consommation de sucre ?",
       "Quelles alternatives saines pour mes snacks ?",
-      "Comment lire correctement une étiquette nutritionnelle ?",
-      "Quelle est la différence entre NOVA 3 et NOVA 4 ?"
+      "Comment lire correctement une etiquette nutritionnelle ?",
+      "Quelle est la difference entre NOVA 3 et NOVA 4 ?"
     ];
     
     // Personnaliser selon le contexte
     if (context.lastProduct) {
       suggestions.unshift(
-        `Ce produit est-il adapté à mon régime ?`,
+        `Ce produit est-il adapte   mon regime ?`,
         `Quelles sont les alternatives plus saines ?`
       );
     }
     
     if (context.userHasAllergies) {
       suggestions.push(
-        "Comment repérer mes allergènes sur les étiquettes ?",
-        "Quels produits sont sûrs pour mes allergies ?"
+        "Comment reperer mes allergenes sur les etiquettes ?",
+        "Quels produits sont surs pour mes allergies ?"
       );
     }
     

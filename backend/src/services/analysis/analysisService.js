@@ -1,7 +1,7 @@
 // PATH: backend\src\services\analysis\analysisService.js
 const Product = require('../../models/Product');
 
-// ---------- require Algolia tolérant (plusieurs chemins + stub) ----------
+// ---------- require Algolia tolerant (plusieurs chemins + stub) ----------
 function loadAlgoliaService() {
   const candidates = [
     '../algoliaService',
@@ -13,11 +13,11 @@ function loadAlgoliaService() {
   for (const p of candidates) {
     try {
       const svc = require(p);
-      console.log('[analysisService] ✅ Algolia chargé depuis', p);
+      console.log('[analysisService] âœ… Algolia charge depuis', p);
       return svc;
     } catch (_) {}
   }
-  console.warn('[analysisService] ⚠️ Algolia non trouvé → stub no-op');
+  console.warn('[analysisService] âš ï¸ Algolia non trouve â†’ stub no-op');
   return {
     updateProduct: async () => {},
     indexProduct: async () => {},
@@ -26,21 +26,21 @@ function loadAlgoliaService() {
 }
 const algoliaService = loadAlgoliaService();
 
-// ---------- lazy-load sûrs ----------
+// ---------- lazy-load surs ----------
 function lazyNew(modPath, fallbackFactory) {
   try {
     const Ctor = require(modPath);
     return new Ctor();
   } catch (e) {
-    console.warn(`[analysisService] Module manquant/KO: ${modPath} → fallback:`, e.message);
+    console.warn(`[analysisService] Module manquant/KO: ${modPath} â†’ fallback:`, e.message);
     return fallbackFactory();
   }
 }
 
-// ---------- NOVA (robuste à divers exports) ----------
+// ---------- NOVA (robuste   divers exports) ----------
 let novaClassifierModule = null;
 try { novaClassifierModule = require('./novaClassifier'); }
-catch { console.warn('[analysisService] novaClassifier introuvable → fallback simple'); }
+catch { console.warn('[analysisService] novaClassifier introuvable â†’ fallback simple'); }
 
 function normalizeNovaResult(res) {
   if (res == null) return null;
@@ -50,7 +50,7 @@ function normalizeNovaResult(res) {
   return {
     group,
     label: res.label ?? `NOVA ${group}`,
-    reason: res.reason ?? (Array.isArray(res.reasons) ? res.reasons.join(' · ') : ''),
+    reason: res.reason ?? (Array.isArray(res.reasons) ? res.reasons.join(' Â· ') : ''),
     confidence: typeof res.confidence === 'number' ? res.confidence : 0.75,
     markers: res.markers || res.flags || [],
   };
@@ -60,11 +60,11 @@ function simpleNovaFromText(raw = '') {
   const t = String(raw || '').toLowerCase();
   const addCount = (t.match(/\be ?\d{3,4}[a-z]?\b/g) || []).length;
   const up = /(sirop de (glucose|fructose|glucose-fructose)|maltodextrine|amidon modifi|hydrog|isolat de proteine|agent de charge)/.test(t);
-  const proc = /(ar[oô]me|colorant|conservateur|emulsifiant|émulsifiant|stabilisant|correcteur d.?acidit|edulcorant|édulcorant)/.test(t);
-  let group = 1, label = 'Non transformé', reason = 'Ingrédient unique';
-  if (up || addCount >= 3 || (addCount >= 1 && proc)) { group = 4; label = 'Ultra-transformé'; reason = 'Marqueur U.P. ou ≥3 additifs'; }
-  else if (addCount >= 1 || proc) { group = 3; label = 'Transformé'; reason = 'Présence d’additifs/procédés'; }
-  else if (t.split(/,|;|\bet\b/gi).map(s => s.trim()).filter(Boolean).length > 1) { group = 2; label = 'Transformé simple'; reason = 'Plusieurs ingrédients'; }
+  const proc = /(ar[oo]me|colorant|conservateur|emulsifiant|emulsifiant|stabilisant|correcteur d.?acidit|edulcorant|edulcorant)/.test(t);
+  let group = 1, label = 'Non transforme', reason = 'Ingredient unique';
+  if (up || addCount >= 3 || (addCount >= 1 && proc)) { group = 4; label = 'Ultra-transforme'; reason = 'Marqueur U.P. ou â‰¥3 additifs'; }
+  else if (addCount >= 1 || proc) { group = 3; label = 'Transforme'; reason = 'Presence dâ€™additifs/procedes'; }
+  else if (t.split(/,|;|\bet\b/gi).map(s => s.trim()).filter(Boolean).length > 1) { group = 2; label = 'Transforme simple'; reason = 'Plusieurs ingredients'; }
   return { group, label, confidence: group === 4 ? 0.85 : 0.75, markers: [], reason };
 }
 
@@ -88,7 +88,7 @@ function runNovaClassifier(ingredientsText = '', additivesTags = []) {
     }
     return simpleNovaFromText(ingredientsText);
   } catch (e) {
-    console.warn('[analysisService] Erreur NOVA → fallback simple:', e.message);
+    console.warn('[analysisService] Erreur NOVA â†’ fallback simple:', e.message);
     return simpleNovaFromText(ingredientsText);
   }
 }
@@ -118,18 +118,18 @@ class AnalysisService {
     return this._detg;
   }
 
-  // -------- Heuristiques simples par défaut (fallback) --------
+  // -------- Heuristiques simples par defaut (fallback) --------
   estimateNutriScore(ingredientsRaw = '', nutrition = null) {
-    // ⚠️ Ultra simplifié: sucré/céréales chocolat → C ; sinon B par défaut
+    // âš ï¸ Ultra simplifie: sucre/cereales chocolat â†’ C ; sinon B par defaut
     const t = String(ingredientsRaw || '').toLowerCase();
     if (/sucre|glucose|fructose|cacao|chocolat/.test(t)) return 'C';
     return 'B';
   }
   estimateEcoScore(productData = {}) {
-    // ⚠️ Ultra simplifié: par défaut C ; si "bio" détecté → B
+    // âš ï¸ Ultra simplifie: par defaut C ; si "bio" detecte â†’ B
     const name = (productData.name || '').toLowerCase();
     const brand = (productData.brand || '').toLowerCase();
-    if (/bio|organic|écologique/.test(name) || /bio|organic/.test(brand)) return 'B';
+    if (/bio|organic|ecologique/.test(name) || /bio|organic/.test(brand)) return 'B';
     return 'C';
   }
 
@@ -140,7 +140,7 @@ class AnalysisService {
       updateAlgolia = true,
     } = options;
 
-    console.log(`🔬 Analyse du produit: ${productData.name || 'Sans nom'} [${category}]`);
+    console.log(`ðŸ”¬ Analyse du produit: ${productData.name || 'Sans nom'} [${category}]`);
 
     let analysis = {
       category,
@@ -157,19 +157,19 @@ class AnalysisService {
           analysis = await this.foodAnalyzer.analyze(productData);
           break;
         case 'cosmetics':
-        case 'cosmétique':
+        case 'cosmetique':
           analysis = await this.cosmeticAnalyzer.analyze(productData);
           break;
         case 'detergents':
-        case 'détergents':
+        case 'detergents':
           analysis = await this.detergentAnalyzer.analyze(productData);
           break;
         default:
           analysis.scores = { healthScore: 50, environmentScore: 50 };
-          analysis.details = { message: 'Catégorie non reconnue' };
+          analysis.details = { message: 'Categorie non reconnue' };
       }
 
-      // —— NOVA + Nutri/Eco par défaut + texte brut conservé ——
+      // â€”â€” NOVA + Nutri/Eco par defaut + texte brut conserve â€”â€”
       if (category === 'food' || category === 'alimentaire') {
         const ingredientsRaw =
           typeof productData.ingredients === 'string'
@@ -200,7 +200,7 @@ class AnalysisService {
           analysis.scores.environmentScore = 60;
         }
 
-        // Nutri/Eco: si non calculés par le sous-service, on met un fallback conservateur
+        // Nutri/Eco: si non calcules par le sous-service, on met un fallback conservateur
         if (!analysis.details.nutriscore && !analysis.scores.nutriscore) {
           const nutri = this.estimateNutriScore(ingredientsRaw, productData.foodData?.nutrition);
           analysis.details.nutriscore = nutri;
@@ -232,7 +232,7 @@ class AnalysisService {
 
       return analysis;
     } catch (error) {
-      console.error('❌ Erreur analyse:', error);
+      console.error('âŒ Erreur analyse:', error);
       // Fallback de secours
       const ingredientsRaw =
         typeof productData.ingredients === 'string'
@@ -276,7 +276,7 @@ class AnalysisService {
         product = await Product.findById(algoliaResult.hits[0].objectID);
       }
     }
-    if (!product) throw new Error('Produit non trouvé');
+    if (!product) throw new Error('Produit non trouve');
 
     if (userId) {
       await Product.findByIdAndUpdate(product._id, {
@@ -326,7 +326,7 @@ class AnalysisService {
       try {
         const analysis = await this.analyzeByBarcode(extractedData.barcode, userId);
         return { ...analysis, source: 'barcode', ocrConfidence: confidence };
-      } catch { console.log('Produit non trouvé par code-barres, analyse manuelle...'); }
+      } catch { console.log('Produit non trouve par code-barres, analyse manuelle...'); }
     }
     return await this.analyzeManual({ ...extractedData, createProduct: confidence > 0.8 }, userId);
   }
@@ -339,9 +339,9 @@ class AnalysisService {
       if (category.includes('cosm') || category.includes('beauty')) return 'cosmetics';
       if (category.includes('deterg') || category.includes('clean')) return 'detergents';
     }
-    const foodKeywords = ['chocolat', 'biscuit', 'yaourt', 'lait', 'pain', 'pâtes', 'riz', 'sauce', 'huile', 'sucre', 'farine'];
-    const cosmeticKeywords = ['crème', 'shampoing', 'gel', 'savon', 'lotion', 'parfum', 'déodorant', 'dentifrice'];
-    const detergentKeywords = ['lessive', 'détergent', 'nettoyant', 'javel', 'liquide vaisselle'];
+    const foodKeywords = ['chocolat', 'biscuit', 'yaourt', 'lait', 'pain', 'pates', 'riz', 'sauce', 'huile', 'sucre', 'farine'];
+    const cosmeticKeywords = ['creme', 'shampoing', 'gel', 'savon', 'lotion', 'parfum', 'deodorant', 'dentifrice'];
+    const detergentKeywords = ['lessive', 'detergent', 'nettoyant', 'javel', 'liquide vaisselle'];
     if (foodKeywords.some(kw => name.includes(kw))) return 'food';
     if (cosmeticKeywords.some(kw => name.includes(kw))) return 'cosmetics';
     if (detergentKeywords.some(kw => name.includes(kw))) return 'detergents';
@@ -374,9 +374,9 @@ class AnalysisService {
         analysis: { ...analysis, updatedAt: new Date() },
         'metadata.lastAnalyzedAt': new Date(),
       });
-      console.log(`✅ Analyse mise à jour pour le produit ${productId}`);
+      console.log(`âœ… Analyse mise   jour pour le produit ${productId}`);
     } catch (error) {
-      console.error('❌ Erreur mise à jour analyse:', error);
+      console.error('âŒ Erreur mise   jour analyse:', error);
     }
   }
 }

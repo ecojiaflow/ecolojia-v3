@@ -1,5 +1,5 @@
 // PATH: backend/src/services/ai/deepSeekService.js
-// FICHIER COMPLET - À CRÉER TEL QUEL
+// FICHIER COMPLET - € CR‰ER TEL QUEL
 
 const axios = require('axios');
 
@@ -104,54 +104,54 @@ class DeepSeekService {
 
   getSystemPromptForCategory(category) {
     const prompts = {
-      food: `Tu es un expert en nutrition et sécurité alimentaire. 
-             Analyse les produits selon la classification NOVA, les additifs, et l'impact santé.
-             Base-toi sur les données INSERM, ANSES et EFSA.
-             Réponds de manière structurée et scientifique.`,
+      food: `Tu es un expert en nutrition et securite alimentaire. 
+             Analyse les produits selon la classification NOVA, les additifs, et l'impact sante.
+             Base-toi sur les donnees INSERM, ANSES et EFSA.
+             Reponds de maniere structuree et scientifique.`,
       
-      cosmetics: `Tu es un expert en cosmétique et dermatologie. 
-                  Analyse les produits selon leur composition INCI, les perturbateurs endocriniens, et les allergènes.
-                  Base-toi sur les données ANSM et SCCS.
-                  Sois précis sur les risques cutanés.`,
+      cosmetics: `Tu es un expert en cosmetique et dermatologie. 
+                  Analyse les produits selon leur composition INCI, les perturbateurs endocriniens, et les allergenes.
+                  Base-toi sur les donnees ANSM et SCCS.
+                  Sois precis sur les risques cutanes.`,
       
-      detergents: `Tu es un expert en produits ménagers et impact environnemental. 
-                   Analyse les produits selon leur toxicité, biodégradabilité, et impact aquatique.
-                   Base-toi sur les données REACH et ECHA.
-                   Mets l'accent sur la sécurité domestique.`
+      detergents: `Tu es un expert en produits menagers et impact environnemental. 
+                   Analyse les produits selon leur toxicite, biodegradabilite, et impact aquatique.
+                   Base-toi sur les donnees REACH et ECHA.
+                   Mets l'accent sur la securite domestique.`
     };
 
     return prompts[category] || prompts.food;
   }
 
   buildProductPrompt(productData, category) {
-    return `Analyse le produit suivant de manière détaillée :
+    return `Analyse le produit suivant de maniere detaillee :
 
-Nom: ${productData.name || productData.product_name || 'Non spécifié'}
-Marque: ${productData.brand || 'Non spécifiée'}
-Catégorie: ${category}
-Ingrédients: ${productData.ingredients || productData.composition || productData.inci || 'Non spécifiés'}
+Nom: ${productData.name || productData.product_name || 'Non specifie'}
+Marque: ${productData.brand || 'Non specifiee'}
+Categorie: ${category}
+Ingredients: ${productData.ingredients || productData.composition || productData.inci || 'Non specifies'}
 
-Fournis une analyse structurée avec :
-1. Score de santé global (0-100)
+Fournis une analyse structuree avec :
+1. Score de sante global (0-100)
 2. Score environnemental (0-100)
 3. Points positifs (liste)
-4. Points négatifs (liste)
-5. Recommandations personnalisées (3 maximum)
-6. Alternatives suggérées (3 maximum)
+4. Points negatifs (liste)
+5. Recommandations personnalisees (3 maximum)
+6. Alternatives suggerees (3 maximum)
 
-Format ta réponse de manière claire avec des titres pour chaque section.`;
+Format ta reponse de maniere claire avec des titres pour chaque section.`;
   }
 
   parseAIResponse(response, category) {
     const result = {
       analysis: response,
       scores: {
-        health: this.extractScore(response, 'santé'),
+        health: this.extractScore(response, 'sante'),
         environment: this.extractScore(response, 'environnement'),
         ethics: 70
       },
       positives: this.extractListItems(response, 'positif'),
-      negatives: this.extractListItems(response, 'négatif'),
+      negatives: this.extractListItems(response, 'negatif'),
       recommendations: this.extractListItems(response, 'recommandation'),
       alternatives: this.extractListItems(response, 'alternative'),
       timestamp: new Date(),
@@ -196,7 +196,7 @@ Format ta réponse de manière claire avec des titres pour chaque section.`;
           continue;
         }
 
-        const cleaned = line.replace(/^[-•*]\s*/, '').trim();
+        const cleaned = line.replace(/^[-â€¢*]\s*/, '').trim();
         if (cleaned && items.length < 5) {
           items.push(cleaned);
         }
@@ -208,8 +208,8 @@ Format ta réponse de manière claire avec des titres pour chaque section.`;
 
   async chat(message, context = {}) {
     const systemPrompt = `Tu es l'assistant nutritionnel ECOLOJIA. 
-    Tu aides les utilisateurs à comprendre les analyses de produits et à faire des choix plus sains.
-    Sois bienveillant, pédagogue et scientifiquement précis.
+    Tu aides les utilisateurs   comprendre les analyses de produits et   faire des choix plus sains.
+    Sois bienveillant, pedagogue et scientifiquement precis.
     ${context.product ? `Produit en contexte: ${context.product.name}` : ''}`;
 
     const userPrompt = message;

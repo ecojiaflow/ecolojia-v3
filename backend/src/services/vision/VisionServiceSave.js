@@ -1,5 +1,5 @@
 // backend/src/services/vision/VisionService.js
-// Service OCR avec Google Vision API réel
+// Service OCR avec Google Vision API reel
 
 const vision = require('@google-cloud/vision');
 const sharp = require('sharp');
@@ -46,39 +46,39 @@ class VisionService {
         language = 'fr'
       } = options;
 
-      // Créer un hash pour le cache
+      // Creer un hash pour le cache
       const imageHash = crypto.createHash('md5')
         .update(Buffer.isBuffer(image) ? image : image.toString())
         .digest('hex');
       
       const cacheKey = `vision:${imageHash}`;
 
-      // Vérifier le cache
+      // Verifier le cache
       try {
         const cached = await this.redisGet(cacheKey);
         if (cached) {
-          console.log('🎯 Vision result from cache');
+          console.log('ðŸŽ¯ Vision result from cache');
           return JSON.parse(cached);
         }
       } catch (cacheError) {
         console.warn('Cache error:', cacheError);
       }
 
-      // Préparer l'image pour l'API
+      // Preparer l'image pour l'API
       const imageContent = Buffer.isBuffer(image) ? image : await this.loadImage(image);
       
       // Optimiser l'image si elle est trop grande
       const optimizedImage = await this.optimizeImage(imageContent);
 
-      // Construire les features à détecter
+      // Construire les features   detecter
       const features = [];
       if (detectText) features.push({ type: 'TEXT_DETECTION', maxResults: 1 });
       if (detectLabels) features.push({ type: 'LABEL_DETECTION', maxResults: 10 });
       if (detectLogos) features.push({ type: 'LOGO_DETECTION', maxResults: 5 });
       if (detectProducts) features.push({ type: 'PRODUCT_SEARCH', maxResults: 5 });
 
-      // Appel à Google Vision API
-      console.log('🔍 Calling Google Vision API...');
+      // Appel   Google Vision API
+      console.log('ðŸ” Calling Google Vision API...');
       const [result] = await this.client.annotateImage({
         image: {
           content: optimizedImage.toString('base64')
@@ -89,7 +89,7 @@ class VisionService {
         }
       });
 
-      // Traiter les résultats
+      // Traiter les resultats
       const processedResult = {
         success: true,
         timestamp: new Date().toISOString(),
@@ -113,11 +113,11 @@ class VisionService {
       return processedResult;
 
     } catch (error) {
-      console.error('❌ Google Vision API error:', error);
+      console.error('âŒ Google Vision API error:', error);
       
-      // Si l'API échoue, essayer avec Tesseract en fallback
+      // Si l'API echoue, essayer avec Tesseract en fallback
       if (options.fallbackToTesseract !== false) {
-        console.log('🔄 Falling back to Tesseract...');
+        console.log('ðŸ”„ Falling back to Tesseract...');
         return this.analyzeWithTesseract(image);
       }
       
@@ -126,7 +126,7 @@ class VisionService {
   }
 
   /**
-   * Optimise l'image avant l'envoi à l'API
+   * Optimise l'image avant l'envoi   l'API
    */
   async optimizeImage(imageBuffer) {
     try {
@@ -143,7 +143,7 @@ class VisionService {
           .toBuffer();
       }
       
-      // Améliorer le contraste pour une meilleure OCR
+      // Ameliorer le contraste pour une meilleure OCR
       return await sharp(imageBuffer)
         .normalize()
         .sharpen()
@@ -157,7 +157,7 @@ class VisionService {
   }
 
   /**
-   * Traite la détection de texte
+   * Traite la detection de texte
    */
   processTextDetection(result) {
     const textAnnotation = result.fullTextAnnotation;
@@ -186,7 +186,7 @@ class VisionService {
   }
 
   /**
-   * Traite les labels détectés
+   * Traite les labels detectes
    */
   processLabels(result) {
     return (result.labelAnnotations || []).map(label => ({
@@ -197,7 +197,7 @@ class VisionService {
   }
 
   /**
-   * Traite les logos détectés
+   * Traite les logos detectes
    */
   processLogos(result) {
     return (result.logoAnnotations || []).map(logo => ({
@@ -247,12 +247,12 @@ class VisionService {
       return upperRatio > 0.5 && line.length > 3 && line.length < 50;
     });
 
-    // Si on a des logos, privilégier les lignes proches
+    // Si on a des logos, privilegier les lignes proches
     if (logos && logos.length > 0 && candidateNames.length > 0) {
       return candidateNames[0];
     }
 
-    // Sinon prendre la première ligne significative
+    // Sinon prendre la premiere ligne significative
     return candidateNames[0] || lines.find(l => l.length > 5 && l.length < 50) || null;
   }
 
@@ -260,14 +260,14 @@ class VisionService {
    * Extrait la marque
    */
   extractBrand(text, logos) {
-    // Si on a des logos détectés, les utiliser
+    // Si on a des logos detectes, les utiliser
     if (logos && logos.length > 0) {
       return logos[0].description;
     }
 
     // Sinon chercher des patterns de marques connues
     const brandPatterns = [
-      /(?:marque|brand|fabriqué par|produit par)[:\s]+([^\n]+)/i,
+      /(?:marque|brand|fabrique par|produit par)[:\s]+([^\n]+)/i,
       /^([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*)/m
     ];
 
@@ -280,12 +280,12 @@ class VisionService {
   }
 
   /**
-   * Extrait les ingrédients
+   * Extrait les ingredients
    */
   extractIngredients(text) {
-    // Patterns multilingues pour les ingrédients
+    // Patterns multilingues pour les ingredients
     const patterns = [
-      /ingrédients?\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|valeurs|nutritional|allergen)/i,
+      /ingredients?\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|valeurs|nutritional|allergen)/i,
       /composition\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|valeurs|nutritional)/i,
       /ingredients?\s*:?\s*([^.]+(?:\.[^.]+)*?)(?=\n|nutrition|allergen)/i
     ];
@@ -293,12 +293,12 @@ class VisionService {
     for (const pattern of patterns) {
       const match = text.match(pattern);
       if (match) {
-        // Nettoyer et formater les ingrédients
+        // Nettoyer et formater les ingredients
         return match[1]
           .trim()
           .replace(/\s+/g, ' ')
           .replace(/\*/g, '')
-          .replace(/\([^)]*\)/g, match => match.replace(/,/g, ';')); // Préserver les virgules dans les parenthèses
+          .replace(/\([^)]*\)/g, match => match.replace(/,/g, ';')); // Preserver les virgules dans les parentheses
       }
     }
 
@@ -313,13 +313,13 @@ class VisionService {
     
     // Patterns pour les valeurs nutritionnelles
     const patterns = {
-      energy: /(?:énergie|energy|calories?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*(?:kcal|cal)/i,
-      fat: /(?:matières grasses|graisses?|fat|lipides?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      saturatedFat: /(?:acides gras saturés|saturated|saturés)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
+      energy: /(?:energie|energy|calories?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*(?:kcal|cal)/i,
+      fat: /(?:matieres grasses|graisses?|fat|lipides?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
+      saturatedFat: /(?:acides gras satures|saturated|satures)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
       carbohydrates: /(?:glucides?|carbohydrates?|sucres totaux)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
       sugars: /(?:dont sucres|sugars?|sucres)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
       fiber: /(?:fibres?|fiber)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
-      protein: /(?:protéines?|proteins?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
+      protein: /(?:proteines?|proteins?)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i,
       salt: /(?:sel|salt|sodium)\s*:?\s*(\d+(?:[.,]\d+)?)\s*g/i
     };
 
@@ -378,12 +378,12 @@ class VisionService {
   }
 
   /**
-   * Détecte la catégorie du produit
+   * Detecte la categorie du produit
    */
   detectCategory(text, labels) {
     const textLower = text.toLowerCase();
     
-    // Score pour chaque catégorie
+    // Score pour chaque categorie
     const categoryScores = {
       food: 0,
       cosmetic: 0,
@@ -407,9 +407,9 @@ class VisionService {
     }
 
     // Analyse du texte
-    const foodKeywords = ['ingrédients', 'nutritionnel', 'kcal', 'protéines', 'glucides'];
+    const foodKeywords = ['ingredients', 'nutritionnel', 'kcal', 'proteines', 'glucides'];
     const cosmeticKeywords = ['aqua', 'parfum', 'inci', 'appliquer', 'peau', 'cheveux'];
-    const detergentKeywords = ['tensioactif', 'lessive', 'nettoyer', 'détergent', 'usage domestique'];
+    const detergentKeywords = ['tensioactif', 'lessive', 'nettoyer', 'detergent', 'usage domestique'];
 
     foodKeywords.forEach(kw => {
       if (textLower.includes(kw)) categoryScores.food += 5;
@@ -423,7 +423,7 @@ class VisionService {
       if (textLower.includes(kw)) categoryScores.detergent += 5;
     });
 
-    // Retourner la catégorie avec le score le plus élevé
+    // Retourner la categorie avec le score le plus eleve
     const maxScore = Math.max(...Object.values(categoryScores));
     if (maxScore === 0) return null;
 
@@ -484,13 +484,13 @@ class VisionService {
   }
 
   /**
-   * Fallback avec Tesseract si Google Vision échoue
+   * Fallback avec Tesseract si Google Vision echoue
    */
   async analyzeWithTesseract(image) {
     try {
       const Tesseract = require('tesseract.js');
       
-      console.log('🔄 Using Tesseract OCR...');
+      console.log('ðŸ”„ Using Tesseract OCR...');
       
       const { data } = await Tesseract.recognize(
         image,
@@ -525,8 +525,8 @@ class VisionService {
       };
 
     } catch (error) {
-      console.error('❌ Tesseract error:', error);
-      throw new Error('Analyse OCR échouée');
+      console.error('âŒ Tesseract error:', error);
+      throw new Error('Analyse OCR echouee');
     }
   }
 
@@ -539,33 +539,33 @@ class VisionService {
   }
 
   /**
-   * Analyse une image uploadée via l'API
+   * Analyse une image uploadee via l'API
    */
   async analyzeUploadedImage(fileBuffer, mimetype) {
-    // Vérifier le type de fichier
+    // Verifier le type de fichier
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(mimetype)) {
-      throw new Error('Format d\'image non supporté');
+      throw new Error('Format d\'image non supporte');
     }
 
-    // Analyser avec les options par défaut
+    // Analyser avec les options par defaut
     return await this.analyzeImage(fileBuffer, {
       detectText: true,
       detectLabels: true,
       detectLogos: true,
-      detectProducts: false, // Désactivé par défaut (coûteux)
+      detectProducts: false, // Desactive par defaut (couteux)
       language: 'fr'
     });
   }
 
   /**
-   * Extrait et structure toutes les données pour un produit
+   * Extrait et structure toutes les donnees pour un produit
    */
   async extractProductData(imageBuffer, options = {}) {
     const analysis = await this.analyzeImage(imageBuffer, options);
     
     if (!analysis.success) {
-      throw new Error('Analyse échouée');
+      throw new Error('Analyse echouee');
     }
 
     const { extractedInfo } = analysis.data;

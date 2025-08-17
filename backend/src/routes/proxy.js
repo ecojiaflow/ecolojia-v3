@@ -41,9 +41,9 @@ async function initClients() {
 
 initClients();
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // MIDDLEWARE DE RATE LIMITING
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const rateLimitMiddleware = async (req, res, next) => {
   if (!redisClient?.isReady) {
@@ -62,7 +62,7 @@ const rateLimitMiddleware = async (req, res, next) => {
     if (count > RATE_LIMIT_MAX_REQUESTS) {
       return res.status(429).json({
         success: false,
-        error: 'Trop de requêtes. Veuillez réessayer plus tard.',
+        error: 'Trop de requetes. Veuillez reessayer plus tard.',
         retryAfter: RATE_LIMIT_WINDOW
       });
     }
@@ -78,13 +78,13 @@ const rateLimitMiddleware = async (req, res, next) => {
   }
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // ALGOLIA SECURE PROXY
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/proxy/algolia/search-token
- * Génère un token de recherche Algolia sécurisé et temporaire
+ * Genere un token de recherche Algolia securise et temporaire
  */
 router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
@@ -98,7 +98,7 @@ router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req
     const userId = req.userId;
     const { indices = ['ecolojia_products'], filters = {} } = req.body;
 
-    // Générer un token sécurisé avec restrictions
+    // Generer un token securise avec restrictions
     const searchKey = algoliaClient.generateSecuredApiKey(
       process.env.ALGOLIA_SEARCH_KEY,
       {
@@ -130,14 +130,14 @@ router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req
     console.error('[Proxy] Algolia token error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la génération du token'
+      error: 'Erreur lors de la generation du token'
     });
   }
 });
 
 /**
  * POST /api/proxy/algolia/search
- * Recherche sécurisée côté serveur (alternative au token)
+ * Recherche securisee cote serveur (alternative au token)
  */
 router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
@@ -155,7 +155,7 @@ router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res)
     if (!query || query.length < 2) {
       return res.status(400).json({
         success: false,
-        error: 'Requête trop courte (minimum 2 caractères)'
+        error: 'Requete trop courte (minimum 2 caracteres)'
       });
     }
 
@@ -164,11 +164,11 @@ router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res)
     const results = await index.search(query, {
       ...options,
       userToken: userId,
-      hitsPerPage: Math.min(options.hitsPerPage || 20, 50), // Max 50 résultats
+      hitsPerPage: Math.min(options.hitsPerPage || 20, 50), // Max 50 resultats
       attributesToRetrieve: [
         'objectID', 'name', 'brand', 'category', 
         'image', 'scores', 'barcode'
-      ] // Limiter les attributs retournés
+      ] // Limiter les attributs retournes
     });
 
     console.log(`[Proxy] Algolia search for user ${userId}: "${query}" - ${results.nbHits} results`);
@@ -193,13 +193,13 @@ router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res)
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // LEMONSQUEEZY SECURE PROXY
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/proxy/lemonsqueezy/checkout
- * Crée une session de checkout sécurisée
+ * Cree une session de checkout securisee
  */
 router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
@@ -223,11 +223,11 @@ router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (re
     if (!variantId) {
       return res.status(503).json({
         success: false,
-        error: 'Service de paiement non configuré'
+        error: 'Service de paiement non configure'
       });
     }
 
-    // Créer la session checkout via API LemonSqueezy
+    // Creer la session checkout via API LemonSqueezy
     const response = await axios.post(
       'https://api.lemonsqueezy.com/v1/checkouts',
       {
@@ -252,7 +252,7 @@ router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (re
             product_options: {
               enabled_variants: [variantId],
               redirect_url: `${process.env.FRONTEND_URL}/payment-success`,
-              receipt_button_text: 'Retour à ECOLOJIA',
+              receipt_button_text: 'Retour   ECOLOJIA',
               receipt_thank_you_note: 'Merci pour votre abonnement Premium!'
             }
           },
@@ -307,14 +307,14 @@ router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (re
     console.error('[Proxy] LemonSqueezy checkout error:', error.response?.data || error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la création du paiement'
+      error: 'Erreur lors de la creation du paiement'
     });
   }
 });
 
 /**
  * GET /api/proxy/lemonsqueezy/subscription
- * Récupère le statut d'abonnement de manière sécurisée
+ * Recupere le statut d'abonnement de maniere securisee
  */
 router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
   try {
@@ -330,7 +330,7 @@ router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
       });
     }
 
-    // Récupérer les infos de l'abonnement
+    // Recuperer les infos de l'abonnement
     const response = await axios.get(
       `https://api.lemonsqueezy.com/v1/subscriptions/${user.subscription.lemonSqueezySubscriptionId}`,
       {
@@ -364,18 +364,18 @@ router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
     console.error('[Proxy] LemonSqueezy subscription error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération de l\'abonnement'
+      error: 'Erreur lors de la recuperation de l\'abonnement'
     });
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // DEEPSEEK AI SECURE PROXY
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/proxy/ai/chat
- * Chat IA sécurisé avec quotas
+ * Chat IA securise avec quotas
  */
 router.post('/ai/chat', /* auth, */ async (req, res) => {
   try {
@@ -383,11 +383,11 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
     const userId = req.userId;
     const user = req.user;
 
-    // Vérifier les quotas IA
+    // Verifier les quotas IA
     if (user.tier !== 'premium' && user.quotas.aiChatsRemaining <= 0) {
       return res.status(403).json({
         success: false,
-        error: 'Quota de questions IA épuisé',
+        error: 'Quota de questions IA epuise',
         requiresUpgrade: true
       });
     }
@@ -403,7 +403,7 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
     // Limiter la longueur du message
     const truncatedMessage = message.substring(0, 1000);
 
-    // Appel à DeepSeek
+    // Appel   DeepSeek
     const response = await axios.post(
       'https://api.deepseek.com/v1/chat/completions',
       {
@@ -411,9 +411,9 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: `Tu es l'assistant IA d'ECOLOJIA, expert en nutrition et santé. 
-                     Tu analyses les produits selon la classification NOVA et fournis des conseils personnalisés.
-                     Réponds de manière concise et bienveillante.`
+            content: `Tu es l'assistant IA d'ECOLOJIA, expert en nutrition et sante. 
+                     Tu analyses les produits selon la classification NOVA et fournis des conseils personnalises.
+                     Reponds de maniere concise et bienveillante.`
           },
           ...(context ? [{
             role: 'assistant',
@@ -425,7 +425,7 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
           }
         ],
         temperature: 0.7,
-        max_tokens: 500, // Limiter la réponse
+        max_tokens: 500, // Limiter la reponse
         user: userId // Pour tracking DeepSeek
       },
       {
@@ -438,7 +438,7 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
 
     const aiResponse = response.data.choices[0].message.content;
 
-    // Décrémenter le quota si pas premium
+    // Decrementer le quota si pas premium
     if (user.tier !== 'premium') {
       await req.user.constructor.findByIdAndUpdate(userId, {
         $inc: { 'quotas.aiChatsRemaining': -1 }
@@ -456,7 +456,7 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
   } catch (error) {
     console.error('[Proxy] AI chat error:', error.response?.data || error);
     
-    // Si erreur DeepSeek, fallback sur réponse générique
+    // Si erreur DeepSeek, fallback sur reponse generique
     if (error.response?.status === 401) {
       return res.status(503).json({
         success: false,
@@ -466,18 +466,18 @@ router.post('/ai/chat', /* auth, */ async (req, res) => {
 
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la génération de la réponse'
+      error: 'Erreur lors de la generation de la reponse'
     });
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CLOUDINARY SECURE UPLOAD
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/proxy/upload/signature
- * Génère une signature pour upload sécurisé Cloudinary
+ * Genere une signature pour upload securise Cloudinary
  */
 router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, res) => {
   try {
@@ -494,7 +494,7 @@ router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, re
       eager: 'w_400,h_400,c_limit'
     };
 
-    // Générer la signature
+    // Generer la signature
     const paramsToSign = Object.keys(params)
       .sort()
       .map(key => `${key}=${params[key]}`)
@@ -520,14 +520,14 @@ router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, re
     console.error('[Proxy] Cloudinary signature error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la génération de la signature'
+      error: 'Erreur lors de la generation de la signature'
     });
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // HEALTH CHECK
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 router.get('/health', (req, res) => {
   res.json({

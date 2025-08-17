@@ -1,5 +1,5 @@
 // backend/src/routes/test-partner.js
-// Route de test minimal pour vérifier que le routing fonctionne
+// Route de test minimal pour verifier que le routing fonctionne
 
 const express = require('express');
 const router = express.Router();

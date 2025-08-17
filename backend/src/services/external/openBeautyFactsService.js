@@ -5,11 +5,11 @@ class OpenBeautyFactsService {
   static BASE_URL = 'https://world.openbeautyfacts.org/api/v0/product';
   
   /**
-   * Récupère un produit cosmétique par code-barres
+   * Recupere un produit cosmetique par code-barres
    */
   static async getProduct(barcode) {
     try {
-      console.log(`🔍 Recherche OpenBeautyFacts: ${barcode}`);
+      console.log(`ðŸ” Recherche OpenBeautyFacts: ${barcode}`);
       
       const response = await axios.get(
         `${this.BASE_URL}/${barcode}.json`,
@@ -26,23 +26,23 @@ class OpenBeautyFactsService {
         
         return {
           barcode,
-          name: product.product_name || `Produit cosmétique ${barcode}`,
+          name: product.product_name || `Produit cosmetique ${barcode}`,
           category: 'cosmetic',
           brand: product.brands || undefined,
           image_url: product.image_url || undefined,
           found: true,
           
-          // Ingrédients
+          // Ingredients
           ingredients: product.ingredients_text || '',
           ingredients_tags: product.ingredients_tags || [],
           
           // Labels et certifications
           labels: product.labels_tags || [],
           
-          // Catégories
+          // Categories
           categories: product.categories_tags || [],
           
-          // Données spécifiques cosmétiques
+          // Donnees specifiques cosmetiques
           period_after_opening: product.period_after_opening || '12M',
           
           // Images
@@ -54,7 +54,7 @@ class OpenBeautyFactsService {
         };
       }
 
-      console.log(`❌ Produit cosmétique non trouvé dans OpenBeautyFacts: ${barcode}`);
+      console.log(`âŒ Produit cosmetique non trouve dans OpenBeautyFacts: ${barcode}`);
       return null;
 
     } catch (error) {
@@ -64,7 +64,7 @@ class OpenBeautyFactsService {
   }
 
   /**
-   * Recherche de produits cosmétiques
+   * Recherche de produits cosmetiques
    */
   static async searchProducts(query, limit = 20) {
     try {
@@ -104,7 +104,7 @@ class OpenBeautyFactsService {
   }
 
   /**
-   * Récupère des produits populaires par catégorie
+   * Recupere des produits populaires par categorie
    */
   static async getPopularProducts(category = 'shampoos', limit = 10) {
     try {
@@ -142,7 +142,7 @@ class OpenBeautyFactsService {
 
       return [];
     } catch (error) {
-      console.error('Erreur récupération produits populaires:', error.message);
+      console.error('Erreur recuperation produits populaires:', error.message);
       return [];
     }
   }

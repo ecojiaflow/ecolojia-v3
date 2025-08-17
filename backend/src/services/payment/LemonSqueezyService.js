@@ -27,7 +27,7 @@ class LemonSqueezyService {
   }
 
   /**
-   * Crée une session de checkout pour un utilisateur
+   * Cree une session de checkout pour un utilisateur
    * @param {string} userId - ID de l'utilisateur
    * @param {string} email - Email de l'utilisateur
    * @param {string} plan - 'monthly' ou 'annual'
@@ -37,17 +37,17 @@ class LemonSqueezyService {
     try {
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('Utilisateur non trouvé');
+        throw new Error('Utilisateur non trouve');
       }
 
-      // Vérifier si l'utilisateur a déjà un abonnement actif
+      // Verifier si l'utilisateur a dej  un abonnement actif
       if (user.tier === 'premium' && user.subscription?.status === 'active') {
-        throw new Error('Vous avez déjà un abonnement actif');
+        throw new Error('Vous avez dej  un abonnement actif');
       }
 
       const variantId = plan === 'annual' ? this.variantAnnual : this.variantMonthly;
       
-      // Créer le checkout
+      // Creer le checkout
       const response = await this.api.post('/checkouts', {
         data: {
           type: 'checkouts',
@@ -56,7 +56,7 @@ class LemonSqueezyService {
               email: email,
               name: `${user.firstName} ${user.lastName}`,
               billing_address: {
-                country: 'FR' // Par défaut, à adapter
+                country: 'FR' // Par defaut,   adapter
               },
               custom: {
                 user_id: userId,
@@ -76,9 +76,9 @@ class LemonSqueezyService {
             product_options: {
               enabled_variants: [variantId],
               redirect_url: `${process.env.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-              receipt_button_text: 'Retour à ECOLOJIA',
+              receipt_button_text: 'Retour   ECOLOJIA',
               receipt_link_url: process.env.FRONTEND_URL,
-              receipt_thank_you_note: 'Merci de votre confiance ! Vous contribuez à une consommation plus responsable.'
+              receipt_thank_you_note: 'Merci de votre confiance ! Vous contribuez   une consommation plus responsable.'
             },
             expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Expire dans 24h
           },
@@ -118,19 +118,19 @@ class LemonSqueezyService {
       };
 
     } catch (error) {
-      console.error('Erreur création checkout:', error.response?.data || error);
-      throw new Error('Impossible de créer la session de paiement');
+      console.error('Erreur creation checkout:', error.response?.data || error);
+      throw new Error('Impossible de creer la session de paiement');
     }
   }
 
   /**
-   * Gère les webhooks de LemonSqueezy
+   * Gere les webhooks de LemonSqueezy
    * @param {Object} payload - Payload du webhook
    * @param {string} signature - Signature du webhook
    * @returns {Promise<void>}
    */
   async handleWebhook(payload, signature) {
-    // Vérifier la signature
+    // Verifier la signature
     if (!this.verifyWebhookSignature(JSON.stringify(payload), signature)) {
       throw new Error('Signature webhook invalide');
     }
@@ -138,7 +138,7 @@ class LemonSqueezyService {
     const { meta, data } = payload;
     const eventName = meta.event_name;
 
-    console.log(`📨 Webhook reçu: ${eventName}`);
+    console.log(`ðŸ“¨ Webhook recu: ${eventName}`);
 
     try {
       switch (eventName) {
@@ -179,7 +179,7 @@ class LemonSqueezyService {
           break;
           
         default:
-          console.log(`Event non géré: ${eventName}`);
+          console.log(`Event non gere: ${eventName}`);
       }
       
     } catch (error) {
@@ -189,7 +189,7 @@ class LemonSqueezyService {
   }
 
   /**
-   * Vérifie la signature d'un webhook
+   * Verifie la signature d'un webhook
    */
   verifyWebhookSignature(payload, signature) {
     const hmac = crypto.createHmac('sha256', this.webhookSecret);
@@ -203,24 +203,24 @@ class LemonSqueezyService {
   }
 
   /**
-   * Gère la création d'un abonnement
+   * Gere la creation d'un abonnement
    */
   async handleSubscriptionCreated(subscriptionData) {
     const { attributes } = subscriptionData;
     const userId = attributes.custom_data?.user_id;
     
     if (!userId) {
-      console.error('User ID manquant dans les données custom');
+      console.error('User ID manquant dans les donnees custom');
       return;
     }
 
     const user = await User.findById(userId);
     if (!user) {
-      console.error(`Utilisateur ${userId} non trouvé`);
+      console.error(`Utilisateur ${userId} non trouve`);
       return;
     }
 
-    // Mettre à jour l'utilisateur
+    // Mettre   jour l'utilisateur
     user.tier = 'premium';
     user.subscription = {
       id: subscriptionData.id,
@@ -234,9 +234,9 @@ class LemonSqueezyService {
       updatedAt: new Date(attributes.updated_at)
     };
     
-    // Mettre à jour les quotas
+    // Mettre   jour les quotas
     user.quotas = {
-      scansLimit: -1, // Illimité
+      scansLimit: -1, // Illimite
       scansUsed: user.quotas?.scansUsed || 0,
       aiQuestionsLimit: 500,
       aiQuestionsUsed: 0,
@@ -246,7 +246,7 @@ class LemonSqueezyService {
 
     await user.save();
 
-    // Créer un enregistrement de paiement
+    // Creer un enregistrement de paiement
     await Payment.create({
       userId,
       subscriptionId: subscriptionData.id,
@@ -263,11 +263,11 @@ class LemonSqueezyService {
     // Envoyer email de bienvenue Premium
     await this.sendWelcomeEmail(user);
     
-    console.log(`✅ Abonnement créé pour l'utilisateur ${userId}`);
+    console.log(`âœ… Abonnement cree pour l'utilisateur ${userId}`);
   }
 
   /**
-   * Gère la mise à jour d'un abonnement
+   * Gere la mise   jour d'un abonnement
    */
   async handleSubscriptionUpdated(subscriptionData) {
     const { attributes } = subscriptionData;
@@ -278,7 +278,7 @@ class LemonSqueezyService {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // Mettre à jour les informations d'abonnement
+    // Mettre   jour les informations d'abonnement
     user.subscription = {
       ...user.subscription,
       status: attributes.status,
@@ -291,11 +291,11 @@ class LemonSqueezyService {
 
     await user.save();
     
-    console.log(`✅ Abonnement mis à jour pour l'utilisateur ${userId}`);
+    console.log(`âœ… Abonnement mis   jour pour l'utilisateur ${userId}`);
   }
 
   /**
-   * Gère l'annulation d'un abonnement
+   * Gere l'annulation d'un abonnement
    */
   async handleSubscriptionCancelled(subscriptionData) {
     const { attributes } = subscriptionData;
@@ -306,7 +306,7 @@ class LemonSqueezyService {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // L'abonnement reste actif jusqu'à la fin de la période
+    // L'abonnement reste actif jusqu'  la fin de la periode
     user.subscription.cancelAtPeriodEnd = true;
     user.subscription.status = 'cancelled';
     user.subscription.cancelledAt = new Date();
@@ -316,11 +316,11 @@ class LemonSqueezyService {
     // Envoyer email de confirmation d'annulation
     await this.sendCancellationEmail(user);
     
-    console.log(`❌ Abonnement annulé pour l'utilisateur ${userId}`);
+    console.log(`âŒ Abonnement annule pour l'utilisateur ${userId}`);
   }
 
   /**
-   * Gère l'expiration d'un abonnement
+   * Gere l'expiration d'un abonnement
    */
   async handleSubscriptionExpired(subscriptionData) {
     const { attributes } = subscriptionData;
@@ -331,12 +331,12 @@ class LemonSqueezyService {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // Rétrograder au plan gratuit
+    // Retrograder au plan gratuit
     user.tier = 'free';
     user.subscription.status = 'expired';
     user.subscription.expiredAt = new Date();
     
-    // Réinitialiser les quotas
+    // Reinitialiser les quotas
     user.quotas = {
       scansLimit: 30,
       scansUsed: 0,
@@ -351,11 +351,11 @@ class LemonSqueezyService {
     // Envoyer email d'expiration
     await this.sendExpirationEmail(user);
     
-    console.log(`⏰ Abonnement expiré pour l'utilisateur ${userId}`);
+    console.log(`â° Abonnement expire pour l'utilisateur ${userId}`);
   }
 
   /**
-   * Gère un paiement réussi
+   * Gere un paiement reussi
    */
   async handlePaymentSuccess(paymentData) {
     const { attributes } = paymentData;
@@ -381,17 +381,17 @@ class LemonSqueezyService {
       }
     });
 
-    // Mettre à jour la prochaine date de renouvellement
+    // Mettre   jour la prochaine date de renouvellement
     if (user.subscription) {
       user.subscription.currentPeriodEnd = new Date(attributes.renews_at);
       await user.save();
     }
 
-    console.log(`💰 Paiement réussi pour l'utilisateur ${user._id}`);
+    console.log(`ðŸ’° Paiement reussi pour l'utilisateur ${user._id}`);
   }
 
   /**
-   * Gère un échec de paiement
+   * Gere un echec de paiement
    */
   async handlePaymentFailed(paymentData) {
     const { attributes } = paymentData;
@@ -403,19 +403,19 @@ class LemonSqueezyService {
     // Envoyer email d'alerte
     await this.sendPaymentFailedEmail(user);
     
-    console.log(`❌ Échec de paiement pour l'utilisateur ${user._id}`);
+    console.log(`âŒ ‰chec de paiement pour l'utilisateur ${user._id}`);
   }
 
   /**
-   * Récupère les détails d'un abonnement
+   * Recupere les details d'un abonnement
    */
   async getSubscription(subscriptionId) {
     try {
       const response = await this.api.get(`/subscriptions/${subscriptionId}`);
       return response.data.data;
     } catch (error) {
-      console.error('Erreur récupération abonnement:', error);
-      throw new Error('Impossible de récupérer l\'abonnement');
+      console.error('Erreur recuperation abonnement:', error);
+      throw new Error('Impossible de recuperer l\'abonnement');
     }
   }
 
@@ -431,13 +431,13 @@ class LemonSqueezyService {
     try {
       const response = await this.api.delete(`/subscriptions/${user.subscription.id}`);
       
-      // L'abonnement reste actif jusqu'à la fin de la période
+      // L'abonnement reste actif jusqu'  la fin de la periode
       user.subscription.cancelAtPeriodEnd = true;
       await user.save();
       
       return {
         success: true,
-        message: 'Abonnement annulé. Vous conservez l\'accès Premium jusqu\'à la fin de votre période.',
+        message: 'Abonnement annule. Vous conservez l\'acces Premium jusqu\'  la fin de votre periode.',
         endsAt: user.subscription.currentPeriodEnd
       };
       
@@ -448,12 +448,12 @@ class LemonSqueezyService {
   }
 
   /**
-   * Réactive un abonnement annulé
+   * Reactive un abonnement annule
    */
   async resumeSubscription(userId) {
     const user = await User.findById(userId);
     if (!user || !user.subscription?.id) {
-      throw new Error('Aucun abonnement à réactiver');
+      throw new Error('Aucun abonnement   reactiver');
     }
 
     try {
@@ -472,12 +472,12 @@ class LemonSqueezyService {
       
       return {
         success: true,
-        message: 'Abonnement réactivé avec succès'
+        message: 'Abonnement reactive avec succes'
       };
       
     } catch (error) {
-      console.error('Erreur réactivation abonnement:', error);
-      throw new Error('Impossible de réactiver l\'abonnement');
+      console.error('Erreur reactivation abonnement:', error);
+      throw new Error('Impossible de reactiver l\'abonnement');
     }
   }
 
@@ -505,7 +505,7 @@ class LemonSqueezyService {
       
       return {
         success: true,
-        message: 'Plan modifié avec succès'
+        message: 'Plan modifie avec succes'
       };
       
     } catch (error) {
@@ -515,7 +515,7 @@ class LemonSqueezyService {
   }
 
   /**
-   * Récupère l'historique des paiements
+   * Recupere l'historique des paiements
    */
   async getPaymentHistory(userId, limit = 10) {
     try {
@@ -525,7 +525,7 @@ class LemonSqueezyService {
         
       return payments;
     } catch (error) {
-      console.error('Erreur récupération historique:', error);
+      console.error('Erreur recuperation historique:', error);
       return [];
     }
   }
@@ -534,9 +534,9 @@ class LemonSqueezyService {
    * Sauvegarde une session de checkout
    */
   async saveCheckoutSession(sessionData) {
-    // Implémenter selon votre modèle de données
-    // Par exemple, créer un modèle CheckoutSession
-    console.log('Session de checkout sauvegardée:', sessionData);
+    // Implementer selon votre modele de donnees
+    // Par exemple, creer un modele CheckoutSession
+    console.log('Session de checkout sauvegardee:', sessionData);
   }
 
   /**
@@ -545,16 +545,16 @@ class LemonSqueezyService {
   async sendWelcomeEmail(user) {
     await sendEmail({
       to: user.email,
-      subject: 'Bienvenue dans ECOLOJIA Premium ! 🎉',
+      subject: 'Bienvenue dans ECOLOJIA Premium ! ðŸŽ‰',
       template: 'premium-welcome',
       data: {
         firstName: user.firstName,
         features: [
-          'Analyses illimitées',
+          'Analyses illimitees',
           'Chat avec notre IA nutritionniste',
-          'Export de vos données',
-          'Dashboard personnalisé',
-          'Sans publicité'
+          'Export de vos donnees',
+          'Dashboard personnalise',
+          'Sans publicite'
         ]
       }
     });
@@ -581,7 +581,7 @@ class LemonSqueezyService {
   async sendExpirationEmail(user) {
     await sendEmail({
       to: user.email,
-      subject: 'Votre abonnement ECOLOJIA Premium a expiré',
+      subject: 'Votre abonnement ECOLOJIA Premium a expire',
       template: 'subscription-expired',
       data: {
         firstName: user.firstName
@@ -590,12 +590,12 @@ class LemonSqueezyService {
   }
 
   /**
-   * Envoie l'email d'échec de paiement
+   * Envoie l'email d'echec de paiement
    */
   async sendPaymentFailedEmail(user) {
     await sendEmail({
       to: user.email,
-      subject: 'Échec du paiement - Action requise',
+      subject: '‰chec du paiement - Action requise',
       template: 'payment-failed',
       data: {
         firstName: user.firstName,
@@ -605,7 +605,7 @@ class LemonSqueezyService {
   }
 
   /**
-   * Récupère les statistiques d'abonnement
+   * Recupere les statistiques d'abonnement
    */
   async getSubscriptionStats() {
     try {

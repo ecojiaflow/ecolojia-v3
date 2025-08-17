@@ -10,46 +10,46 @@ class ProductTypeDetector {
 
   buildKeywords() {
     this.keywords = [
-      // Cosmétiques
-      'savon', 'shampoing', 'gel douche', 'crème', 'dentifrice',
-      'déodorant', 'parfum', 'maquillage', 'mascara', 'rouge à lèvres',
-      'vernis', 'lotion', 'sérum', 'masque', 'gommage',
-      'après-rasage', 'baume', 'huile corps', 'lait corps',
-      'soin visage', 'soin cheveux', 'coloration', 'démaquillant',
+      // Cosmetiques
+      'savon', 'shampoing', 'gel douche', 'creme', 'dentifrice',
+      'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge   levres',
+      'vernis', 'lotion', 'serum', 'masque', 'gommage',
+      'apres-rasage', 'baume', 'huile corps', 'lait corps',
+      'soin visage', 'soin cheveux', 'coloration', 'demaquillant',
       'eau micellaire', 'tonique', 'bb cream', 'fond de teint',
       'poudre', 'blush', 'highlighter', 'contour', 'correcteur',
       'eye liner', 'crayon', 'gloss', 'bain douche', 'savon main',
       'gel hydroalcoolique', 'dissolvant', 'durcisseur',
       'base coat', 'top coat',
       
-      // Détergents
-      'lessive', 'détergent', 'nettoyant', 'liquide vaisselle',
-      'assouplissant', 'javel', 'désinfectant', 'détachant',
-      'nettoyant sol', 'nettoyant vitre', 'déboucheur', 'anti-calcaire',
-      'produit ménager', 'savon noir', 'cristaux soude',
+      // Detergents
+      'lessive', 'detergent', 'nettoyant', 'liquide vaisselle',
+      'assouplissant', 'javel', 'desinfectant', 'detachant',
+      'nettoyant sol', 'nettoyant vitre', 'deboucheur', 'anti-calcaire',
+      'produit menager', 'savon noir', 'cristaux soude',
       'vinaigre blanc', 'bicarbonate', 'ammoniaque', 'acide citrique',
-      'cire', 'polish', 'dégraissant', 'décapant', 'dépoussiérant',
+      'cire', 'polish', 'degraissant', 'decapant', 'depoussierant',
       'lave-vitre', 'multi-surfaces', 'wc', 'toilettes',
       'salle de bain', 'cuisine', 'four', 'plaque', 'inox',
       'carrelage', 'parquet', 'moquette', 'tapis',
       'adoucissant', 'anticalcaire', 'tablette lave-vaisselle',
-      'sel lave-vaisselle', 'liquide rinçage',
+      'sel lave-vaisselle', 'liquide rincage',
       
       // Alimentaire
-      'biscuit', 'céréales', 'jus', 'yaourt', 'pain', 'pâtes',
+      'biscuit', 'cereales', 'jus', 'yaourt', 'pain', 'pates',
       'riz', 'huile', 'beurre', 'fromage', 'viande', 'poisson',
-      'légumes', 'fruits', 'chocolat', 'confiture', 'miel',
-      'café', 'thé', 'soda', 'eau', 'vin', 'bière', 'lait',
-      'crème fraîche', 'œuf', 'farine', 'sucre', 'sel',
-      'poivre', 'épices', 'herbes', 'sauce', 'mayonnaise',
+      'legumes', 'fruits', 'chocolat', 'confiture', 'miel',
+      'cafe', 'the', 'soda', 'eau', 'vin', 'biere', 'lait',
+      'creme fraiche', 'Å“uf', 'farine', 'sucre', 'sel',
+      'poivre', 'epices', 'herbes', 'sauce', 'mayonnaise',
       'ketchup', 'moutarde', 'vinaigrette', 'soupe', 'potage',
-      'plat préparé', 'pizza', 'sandwich', 'salade', 'dessert',
-      'glace', 'sorbet', 'compote', 'purée', 'chips',
-      'apéritif', 'gâteau', 'tarte', 'viennoiserie', 'bonbon',
-      'chewing-gum', 'barres', 'müesli', 'granola', 'smoothie',
+      'plat prepare', 'pizza', 'sandwich', 'salade', 'dessert',
+      'glace', 'sorbet', 'compote', 'puree', 'chips',
+      'aperitif', 'gateau', 'tarte', 'viennoiserie', 'bonbon',
+      'chewing-gum', 'barres', 'muesli', 'granola', 'smoothie',
       'boisson', 'sirop', 'alcool', 'spiritueux', 'champagne',
-      'conserve', 'bocal', 'surgelé', 'frais', 'bio',
-      'végétal', 'vegan', 'sans gluten', 'allégé', 'light'
+      'conserve', 'bocal', 'surgele', 'frais', 'bio',
+      'vegetal', 'vegan', 'sans gluten', 'allege', 'light'
     ];
   }
 
@@ -58,12 +58,12 @@ class ProductTypeDetector {
       {
         label: 'cosmetics',
         keywords: [
-          'savon', 'shampoing', 'gel douche', 'crème', 'dentifrice',
-          'déodorant', 'parfum', 'maquillage', 'mascara', 'rouge à lèvres',
-          'vernis', 'lotion', 'sérum', 'masque', 'gommage', 'gel',
-          'mousse', 'spray', 'après-rasage', 'baume', 'huile corps',
+          'savon', 'shampoing', 'gel douche', 'creme', 'dentifrice',
+          'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge   levres',
+          'vernis', 'lotion', 'serum', 'masque', 'gommage', 'gel',
+          'mousse', 'spray', 'apres-rasage', 'baume', 'huile corps',
           'lait corps', 'soin visage', 'soin cheveux', 'coloration',
-          'démaquillant', 'eau micellaire', 'tonique', 'bb cream',
+          'demaquillant', 'eau micellaire', 'tonique', 'bb cream',
           'fond de teint', 'poudre', 'blush', 'highlighter',
           'contour', 'correcteur', 'eye liner', 'crayon',
           'gloss', 'bain douche', 'savon main', 'gel hydroalcoolique',
@@ -73,36 +73,36 @@ class ProductTypeDetector {
       {
         label: 'detergents',
         keywords: [
-          'lessive', 'détergent', 'nettoyant', 'liquide vaisselle',
-          'assouplissant', 'javel', 'désinfectant', 'détachant',
-          'nettoyant sol', 'nettoyant vitre', 'déboucheur', 'anti-calcaire',
-          'produit ménager', 'savon noir', 'cristaux soude',
+          'lessive', 'detergent', 'nettoyant', 'liquide vaisselle',
+          'assouplissant', 'javel', 'desinfectant', 'detachant',
+          'nettoyant sol', 'nettoyant vitre', 'deboucheur', 'anti-calcaire',
+          'produit menager', 'savon noir', 'cristaux soude',
           'vinaigre blanc', 'bicarbonate', 'ammoniaque', 'acide citrique',
-          'cire', 'polish', 'dégraissant', 'décapant', 'dépoussiérant',
+          'cire', 'polish', 'degraissant', 'decapant', 'depoussierant',
           'lave-vitre', 'multi-surfaces', 'wc', 'toilettes',
           'salle de bain', 'cuisine', 'four', 'plaque', 'inox',
           'carrelage', 'parquet', 'moquette', 'tapis',
           'adoucissant', 'anticalcaire', 'tablette lave-vaisselle',
-          'sel lave-vaisselle', 'liquide rinçage'
+          'sel lave-vaisselle', 'liquide rincage'
         ]
       },
       {
         label: 'food',
         keywords: [
-          'biscuit', 'céréales', 'jus', 'yaourt', 'pain', 'pâtes',
+          'biscuit', 'cereales', 'jus', 'yaourt', 'pain', 'pates',
           'riz', 'huile', 'beurre', 'fromage', 'viande', 'poisson',
-          'légumes', 'fruits', 'chocolat', 'confiture', 'miel',
-          'café', 'thé', 'soda', 'eau', 'vin', 'bière', 'lait',
-          'crème fraîche', 'œuf', 'farine', 'sucre', 'sel',
-          'poivre', 'épices', 'herbes', 'sauce', 'mayonnaise',
+          'legumes', 'fruits', 'chocolat', 'confiture', 'miel',
+          'cafe', 'the', 'soda', 'eau', 'vin', 'biere', 'lait',
+          'creme fraiche', 'Å“uf', 'farine', 'sucre', 'sel',
+          'poivre', 'epices', 'herbes', 'sauce', 'mayonnaise',
           'ketchup', 'moutarde', 'vinaigrette', 'soupe', 'potage',
-          'plat préparé', 'pizza', 'sandwich', 'salade', 'dessert',
-          'glace', 'sorbet', 'compote', 'purée', 'chips',
-          'apéritif', 'gâteau', 'tarte', 'viennoiserie', 'bonbon',
-          'chewing-gum', 'barres', 'müesli', 'granola', 'smoothie',
+          'plat prepare', 'pizza', 'sandwich', 'salade', 'dessert',
+          'glace', 'sorbet', 'compote', 'puree', 'chips',
+          'aperitif', 'gateau', 'tarte', 'viennoiserie', 'bonbon',
+          'chewing-gum', 'barres', 'muesli', 'granola', 'smoothie',
           'boisson', 'sirop', 'alcool', 'spiritueux', 'champagne',
-          'conserve', 'bocal', 'surgelé', 'frais', 'bio',
-          'végétal', 'vegan', 'sans gluten', 'allégé', 'light'
+          'conserve', 'bocal', 'surgele', 'frais', 'bio',
+          'vegetal', 'vegan', 'sans gluten', 'allege', 'light'
         ]
       }
     ];
@@ -112,7 +112,7 @@ class ProductTypeDetector {
     const lowerInput = input.toLowerCase();
     const matches = [];
 
-    // Recherche des mots-clés dans chaque pattern
+    // Recherche des mots-cles dans chaque pattern
     for (const pattern of this.patterns) {
       let score = 0;
       const matchedKeywords = [];
@@ -133,16 +133,16 @@ class ProductTypeDetector {
       }
     }
 
-    // Si aucune correspondance trouvée
+    // Si aucune correspondance trouvee
     if (matches.length === 0) {
-      // Tentative de détection par mots génériques
+      // Tentative de detection par mots generiques
       if (lowerInput.match(/\b(manger|alimentaire|nutrition|comestible|nourriture|aliment)\b/i)) {
         return { label: 'food', score: 0.3, confidence: 0.3 };
       }
-      if (lowerInput.match(/\b(beauté|soin|hygiène|toilette|cosmétique|maquillage)\b/i)) {
+      if (lowerInput.match(/\b(beaute|soin|hygiene|toilette|cosmetique|maquillage)\b/i)) {
         return { label: 'cosmetics', score: 0.3, confidence: 0.3 };
       }
-      if (lowerInput.match(/\b(nettoyer|ménage|entretien|maison|nettoyage|laver)\b/i)) {
+      if (lowerInput.match(/\b(nettoyer|menage|entretien|maison|nettoyage|laver)\b/i)) {
         return { label: 'detergents', score: 0.3, confidence: 0.3 };
       }
       
@@ -172,17 +172,17 @@ class ProductTypeDetector {
     return this.keywords;
   }
 
-  // Méthode pour obtenir des suggestions basées sur une catégorie
+  // Methode pour obtenir des suggestions basees sur une categorie
   getSuggestions(category) {
     const pattern = this.patterns.find(p => p.label === category);
     if (!pattern) return [];
     
-    // Retourner un échantillon aléatoire de 5 mots-clés
+    // Retourner un echantillon aleatoire de 5 mots-cles
     const shuffled = [...pattern.keywords].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 5);
   }
 
-  // Méthode pour vérifier si un produit appartient à une catégorie
+  // Methode pour verifier si un produit appartient   une categorie
   belongsToCategory(productName, category) {
     const pattern = this.patterns.find(p => p.label === category);
     if (!pattern) return false;
@@ -191,11 +191,11 @@ class ProductTypeDetector {
     return pattern.keywords.some(keyword => lowerName.includes(keyword));
   }
 
-  // Méthode pour obtenir la catégorie avec le plus de confiance
+  // Methode pour obtenir la categorie avec le plus de confiance
   detectWithConfidence(input) {
     const result = this.detect(input);
     
-    // Ajouter des métadonnées supplémentaires
+    // Ajouter des metadonnees supplementaires
     return {
       ...result,
       isHighConfidence: result.score > 0.7,
@@ -204,7 +204,7 @@ class ProductTypeDetector {
     };
   }
 
-  // Méthode pour détecter plusieurs catégories possibles
+  // Methode pour detecter plusieurs categories possibles
   detectMultiple(input) {
     const lowerInput = input.toLowerCase();
     const results = [];
@@ -232,18 +232,18 @@ class ProductTypeDetector {
     return results.sort((a, b) => b.score - a.score);
   }
 
-  // Méthode pour analyser un code-barres et deviner la catégorie
+  // Methode pour analyser un code-barres et deviner la categorie
   detectFromBarcode(barcode) {
-    // Certains préfixes de codes-barres peuvent indiquer le type
-    // Cette méthode est basique et peut être améliorée
+    // Certains prefixes de codes-barres peuvent indiquer le type
+    // Cette methode est basique et peut etre amelioree
     const prefix = barcode.substring(0, 3);
     
-    // Préfixes courants (à titre d'exemple)
+    // Prefixes courants (  titre d'exemple)
     if (['300', '301', '302', '303', '304'].includes(prefix)) {
       return { label: 'food', score: 0.6, confidence: 0.6, source: 'barcode_prefix' };
     }
     
-    // Par défaut, on ne peut pas déterminer depuis le code-barres seul
+    // Par defaut, on ne peut pas determiner depuis le code-barres seul
     return { label: 'unknown', score: 0, confidence: 0, source: 'barcode' };
   }
 }

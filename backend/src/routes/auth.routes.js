@@ -13,9 +13,9 @@ const { AppError, ValidationError } = require('../utils/errors');
 const tokenService = new TokenService(null); // Redis optionnel en dev
 const authService = new AuthService(null);
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // VALIDATION HELPERS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,9 +26,9 @@ const validatePassword = (password) => {
   return password && password.length >= 6;
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // ROUTES PUBLIQUES
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/auth/register
@@ -48,7 +48,7 @@ router.post('/register', async (req, res, next) => {
     }
 
     if (!validatePassword(password)) {
-      throw new ValidationError('Le mot de passe doit contenir au moins 6 caractères');
+      throw new ValidationError('Le mot de passe doit contenir au moins 6 caracteres');
     }
 
     // Utiliser le service d'authentification
@@ -64,7 +64,7 @@ router.post('/register', async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Inscription réussie',
+      message: 'Inscription reussie',
       data: {
         user: result.user,
         accessToken: result.accessToken,
@@ -76,7 +76,7 @@ router.post('/register', async (req, res, next) => {
     if (error.message.includes('already registered')) {
       return res.status(409).json({
         success: false,
-        error: 'Cet email est déjà utilisé',
+        error: 'Cet email est dej  utilise',
         code: 'EMAIL_EXISTS'
       });
     }
@@ -102,7 +102,7 @@ router.post('/login', async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Connexion réussie',
+      message: 'Connexion reussie',
       data: {
         user: result.user,
         accessToken: result.accessToken,
@@ -124,7 +124,7 @@ router.post('/login', async (req, res, next) => {
 
 /**
  * POST /api/auth/refresh
- * Rafraîchir le token d'accès
+ * Rafraichir le token d'acces
  */
 router.post('/refresh', async (req, res, next) => {
   try {
@@ -139,7 +139,7 @@ router.post('/refresh', async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Token rafraîchi',
+      message: 'Token rafraichi',
       data: {
         user: result.user,
         accessToken: result.accessToken,
@@ -152,7 +152,7 @@ router.post('/refresh', async (req, res, next) => {
         error.message.includes('expired')) {
       return res.status(401).json({
         success: false,
-        error: 'Refresh token invalide ou expiré',
+        error: 'Refresh token invalide ou expire',
         code: 'INVALID_REFRESH_TOKEN'
       });
     }
@@ -162,7 +162,7 @@ router.post('/refresh', async (req, res, next) => {
 
 /**
  * POST /api/auth/logout
- * Déconnexion
+ * Deconnexion
  */
 router.post('/logout', /* auth, */ async (req, res, next) => {
   try {
@@ -175,33 +175,33 @@ router.post('/logout', /* auth, */ async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Déconnexion réussie'
+      message: 'Deconnexion reussie'
     });
 
   } catch (error) {
-    // Même si erreur, on considère la déconnexion comme réussie
+    // Meme si erreur, on considere la deconnexion comme reussie
     console.error('[Auth] Erreur lors du logout:', error);
     res.json({
       success: true,
-      message: 'Déconnexion réussie'
+      message: 'Deconnexion reussie'
     });
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// ROUTES PROTÉGÉES
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ROUTES PROT‰G‰ES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * GET /api/auth/me
- * Obtenir le profil de l'utilisateur connecté
+ * Obtenir le profil de l'utilisateur connecte
  */
 router.get('/me', /* auth, */ async (req, res, next) => {
   try {
-    // L'utilisateur est déjà attaché par le middleware auth
+    // L'utilisateur est dej  attache par le middleware auth
     const user = req.user;
 
-    // Récupérer les infos de quota
+    // Recuperer les infos de quota
     const quotas = user.quotas || {
       scansRemaining: user.tier === 'premium' ? 999999 : 30,
       aiChatsRemaining: user.tier === 'premium' ? 500 : 5
@@ -233,14 +233,14 @@ router.get('/me', /* auth, */ async (req, res, next) => {
 
 /**
  * PUT /api/auth/me
- * Mettre à jour le profil
+ * Mettre   jour le profil
  */
 router.put('/me', /* auth, */ async (req, res, next) => {
   try {
     const userId = req.user._id;
     const updates = req.body;
 
-    // Champs autorisés à la mise à jour
+    // Champs autorises   la mise   jour
     const allowedUpdates = [
       'name',
       'profile.firstName',
@@ -254,7 +254,7 @@ router.put('/me', /* auth, */ async (req, res, next) => {
       'preferences.notifications'
     ];
 
-    // Filtrer les mises à jour
+    // Filtrer les mises   jour
     const filteredUpdates = {};
     Object.keys(updates).forEach(key => {
       if (allowedUpdates.includes(key)) {
@@ -262,7 +262,7 @@ router.put('/me', /* auth, */ async (req, res, next) => {
       }
     });
 
-    // Mettre à jour l'utilisateur
+    // Mettre   jour l'utilisateur
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: filteredUpdates },
@@ -270,12 +270,12 @@ router.put('/me', /* auth, */ async (req, res, next) => {
     ).select('-password');
 
     if (!updatedUser) {
-      throw new AppError('Utilisateur non trouvé', 404);
+      throw new AppError('Utilisateur non trouve', 404);
     }
 
     res.json({
       success: true,
-      message: 'Profil mis à jour',
+      message: 'Profil mis   jour',
       data: {
         user: updatedUser
       }
@@ -301,16 +301,16 @@ router.put('/password', /* auth, */ async (req, res, next) => {
     }
 
     if (!validatePassword(newPassword)) {
-      throw new ValidationError('Le nouveau mot de passe doit contenir au moins 6 caractères');
+      throw new ValidationError('Le nouveau mot de passe doit contenir au moins 6 caracteres');
     }
 
-    // Récupérer l'utilisateur avec le mot de passe
+    // Recuperer l'utilisateur avec le mot de passe
     const user = await User.findById(userId);
     if (!user) {
-      throw new AppError('Utilisateur non trouvé', 404);
+      throw new AppError('Utilisateur non trouve', 404);
     }
 
-    // Vérifier le mot de passe actuel
+    // Verifier le mot de passe actuel
     const isValidPassword = await user.comparePassword(currentPassword);
     if (!isValidPassword) {
       throw new ValidationError('Mot de passe actuel incorrect');
@@ -322,7 +322,7 @@ router.put('/password', /* auth, */ async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Mot de passe modifié avec succès'
+      message: 'Mot de passe modifie avec succes'
     });
 
   } catch (error) {
@@ -332,7 +332,7 @@ router.put('/password', /* auth, */ async (req, res, next) => {
 
 /**
  * POST /api/auth/forgot-password
- * Demander une réinitialisation de mot de passe
+ * Demander une reinitialisation de mot de passe
  */
 router.post('/forgot-password', async (req, res, next) => {
   try {
@@ -345,15 +345,15 @@ router.post('/forgot-password', async (req, res, next) => {
     // Trouver l'utilisateur
     const user = await User.findOne({ email: email.toLowerCase() });
     
-    // Toujours retourner succès pour éviter l'énumération
+    // Toujours retourner succes pour eviter l'enumeration
     if (!user) {
       return res.json({
         success: true,
-        message: 'Si cet email existe, un lien de réinitialisation a été envoyé'
+        message: 'Si cet email existe, un lien de reinitialisation a ete envoye'
       });
     }
 
-    // Générer token de reset
+    // Generer token de reset
     const resetToken = jwt.sign(
       { userId: user._id, type: 'password_reset' },
       process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure',
@@ -370,7 +370,7 @@ router.post('/forgot-password', async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Si cet email existe, un lien de réinitialisation a été envoyé'
+      message: 'Si cet email existe, un lien de reinitialisation a ete envoye'
     });
 
   } catch (error) {
@@ -380,7 +380,7 @@ router.post('/forgot-password', async (req, res, next) => {
 
 /**
  * POST /api/auth/reset-password
- * Réinitialiser le mot de passe
+ * Reinitialiser le mot de passe
  */
 router.post('/reset-password', async (req, res, next) => {
   try {
@@ -391,10 +391,10 @@ router.post('/reset-password', async (req, res, next) => {
     }
 
     if (!validatePassword(newPassword)) {
-      throw new ValidationError('Le mot de passe doit contenir au moins 6 caractères');
+      throw new ValidationError('Le mot de passe doit contenir au moins 6 caracteres');
     }
 
-    // Vérifier le token
+    // Verifier le token
     let decoded;
     try {
       decoded = jwt.verify(
@@ -402,7 +402,7 @@ router.post('/reset-password', async (req, res, next) => {
         process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
       );
     } catch (error) {
-      throw new ValidationError('Token invalide ou expiré');
+      throw new ValidationError('Token invalide ou expire');
     }
 
     // Trouver l'utilisateur
@@ -411,12 +411,12 @@ router.post('/reset-password', async (req, res, next) => {
       throw new ValidationError('Token invalide');
     }
 
-    // Vérifier expiration
+    // Verifier expiration
     if (user.passwordResetExpires < new Date()) {
-      throw new ValidationError('Token expiré');
+      throw new ValidationError('Token expire');
     }
 
-    // Mettre à jour le mot de passe
+    // Mettre   jour le mot de passe
     user.password = newPassword;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
@@ -424,7 +424,7 @@ router.post('/reset-password', async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Mot de passe réinitialisé avec succès'
+      message: 'Mot de passe reinitialise avec succes'
     });
 
   } catch (error) {
@@ -446,14 +446,14 @@ router.delete('/account', /* auth, */ async (req, res, next) => {
       throw new ValidationError('Mot de passe et confirmation requis');
     }
 
-    // Vérifier le mot de passe
+    // Verifier le mot de passe
     const user = await User.findById(userId);
     const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       throw new ValidationError('Mot de passe incorrect');
     }
 
-    // Marquer comme supprimé (soft delete pour RGPD)
+    // Marquer comme supprime (soft delete pour RGPD)
     user.status = 'deleted';
     user.email = `deleted_${Date.now()}_${user.email}`;
     user.gdpr.deletionDate = new Date();
@@ -461,7 +461,7 @@ router.delete('/account', /* auth, */ async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Compte supprimé. Vos données seront effacées sous 30 jours.'
+      message: 'Compte supprime. Vos donnees seront effacees sous 30 jours.'
     });
 
   } catch (error) {
@@ -469,23 +469,23 @@ router.delete('/account', /* auth, */ async (req, res, next) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // ROUTES DEMO MODE
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * POST /api/auth/demo
- * Connexion en mode démo
+ * Connexion en mode demo
  */
 router.post('/demo', async (req, res, next) => {
   try {
-    // Créer ou récupérer l'utilisateur démo
+    // Creer ou recuperer l'utilisateur demo
     const demoEmail = `demo_${Date.now()}@ecolojia.app`;
     
     const demoUser = new User({
       email: demoEmail,
       password: 'demo123456',
-      name: 'Utilisateur Démo',
+      name: 'Utilisateur Demo',
       tier: 'free',
       isDemo: true,
       quotas: {
@@ -498,13 +498,13 @@ router.post('/demo', async (req, res, next) => {
 
     await demoUser.save();
 
-    // Générer tokens
+    // Generer tokens
     const accessToken = tokenService.generateAccessToken(demoUser);
     const refreshToken = tokenService.generateRefreshToken(demoUser);
 
     res.json({
       success: true,
-      message: 'Mode démo activé',
+      message: 'Mode demo active',
       data: {
         user: authService.sanitizeUser(demoUser),
         accessToken,
@@ -518,9 +518,9 @@ router.post('/demo', async (req, res, next) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // ROUTES VALIDATION
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * GET /api/auth/validate

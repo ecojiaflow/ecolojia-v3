@@ -19,20 +19,20 @@ const RATE_LIMITS = {
     premium: {
       global: { windowMs: 15 * 60 * 1000, max: 2000 },
       dashboard: { windowMs: 60 * 1000, max: 120 },
-      analysis: { windowMs: 60 * 60 * 1000, max: -1 }, // illimité
+      analysis: { windowMs: 60 * 60 * 1000, max: -1 }, // illimite
       ai: { windowMs: 60 * 60 * 1000, max: 500 },
       export: { windowMs: 24 * 60 * 60 * 1000, max: 50 }
     },
     family: {
       global: { windowMs: 15 * 60 * 1000, max: 3000 },
       dashboard: { windowMs: 60 * 1000, max: 180 },
-      analysis: { windowMs: 60 * 60 * 1000, max: -1 }, // illimité
+      analysis: { windowMs: 60 * 60 * 1000, max: -1 }, // illimite
       ai: { windowMs: 60 * 60 * 1000, max: 500 },
       export: { windowMs: 24 * 60 * 60 * 1000, max: 100 }
     }
   },
   
-  // Limites spéciales
+  // Limites speciales
   auth: {
     login: { windowMs: 15 * 60 * 1000, max: 5, skipSuccessfulRequests: true },
     register: { windowMs: 60 * 60 * 1000, max: 3 },
@@ -47,11 +47,11 @@ const RATE_LIMITS = {
 };
 
 /**
- * Créer un key generator personnalisé selon le contexte
+ * Creer un key generator personnalise selon le contexte
  */
 const createKeyGenerator = (prefix) => {
   return (req) => {
-    // Pour les routes authentifiées, utiliser l'ID utilisateur
+    // Pour les routes authentifiees, utiliser l'ID utilisateur
     if (req.user && req.user._id) {
       return `${prefix}:${req.user._id}`;
     }
@@ -61,13 +61,13 @@ const createKeyGenerator = (prefix) => {
 };
 
 /**
- * Créer un rate limiter avec gestion d'erreurs
+ * Creer un rate limiter avec gestion d'erreurs
  */
 const createRateLimiter = (config, keyPrefix, options = {}) => {
   const limiterConfig = {
     windowMs: config.windowMs,
     max: config.max,
-    message: options.message || 'Trop de requêtes, veuillez réessayer plus tard.',
+    message: options.message || 'Trop de requetes, veuillez reessayer plus tard.',
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: createKeyGenerator(keyPrefix),
@@ -88,7 +88,7 @@ const createRateLimiter = (config, keyPrefix, options = {}) => {
       });
     },
     skip: (req) => {
-      // Skip si limite illimitée (-1)
+      // Skip si limite illimitee (-1)
       if (config.max === -1) return true;
       
       // Skip pour les admins
@@ -117,12 +117,12 @@ const createRateLimiter = (config, keyPrefix, options = {}) => {
 };
 
 /**
- * Middleware dynamique qui applique différentes limites selon le tier
+ * Middleware dynamique qui applique differentes limites selon le tier
  */
 const createDynamicRateLimiter = (endpoint) => {
   const limiters = {};
   
-  // Pré-créer les limiters pour chaque tier
+  // Pre-creer les limiters pour chaque tier
   ['free', 'premium', 'family'].forEach(tier => {
     const config = RATE_LIMITS.tiers[tier][endpoint];
     if (config) {
@@ -131,14 +131,14 @@ const createDynamicRateLimiter = (endpoint) => {
         `${endpoint}:${tier}`,
         {
           message: `Limite atteinte pour les utilisateurs ${tier}. ${
-            tier === 'free' ? 'Passez à Premium pour plus de requêtes.' : ''
+            tier === 'free' ? 'Passez   Premium pour plus de requetes.' : ''
           }`
         }
       );
     }
   });
   
-  // Limiter par défaut pour les non-authentifiés
+  // Limiter par defaut pour les non-authentifies
   const defaultConfig = RATE_LIMITS.tiers.free[endpoint];
   limiters.anonymous = createRateLimiter(
     { ...defaultConfig, max: Math.floor(defaultConfig.max / 2) }, // 50% de la limite free
@@ -159,7 +159,7 @@ const createDynamicRateLimiter = (endpoint) => {
 };
 
 /**
- * Rate limiters spécifiques pré-configurés
+ * Rate limiters specifiques pre-configures
  */
 const rateLimiters = {
   // Auth endpoints
@@ -175,13 +175,13 @@ const rateLimiters = {
   register: createRateLimiter(
     RATE_LIMITS.auth.register,
     'auth:register',
-    { message: 'Trop de créations de compte. Veuillez réessayer dans 1 heure.' }
+    { message: 'Trop de creations de compte. Veuillez reessayer dans 1 heure.' }
   ),
   
   passwordReset: createRateLimiter(
     RATE_LIMITS.auth.passwordReset,
     'auth:reset',
-    { message: 'Trop de demandes de réinitialisation. Veuillez réessayer dans 1 heure.' }
+    { message: 'Trop de demandes de reinitialisation. Veuillez reessayer dans 1 heure.' }
   ),
   
   // Dynamic limiters
@@ -210,7 +210,7 @@ const addQuotaHeaders = (req, res, next) => {
 };
 
 /**
- * Fonction pour réinitialiser les limites d'un utilisateur (admin only)
+ * Fonction pour reinitialiser les limites d'un utilisateur (admin only)
  */
 const resetUserRateLimits = async (userId, endpoint = null) => {
   if (!global.redisClient?.isReady) {
@@ -250,7 +250,7 @@ const getRateLimitStats = async () => {
     topUsers: []
   };
   
-  // Analyser les clés pour extraire les stats
+  // Analyser les cles pour extraire les stats
   for (const key of keys) {
     const [, endpoint, tier, userId] = key.split(':');
     
@@ -260,7 +260,7 @@ const getRateLimitStats = async () => {
     // Stats par tier
     stats.byTier[tier] = (stats.byTier[tier] || 0) + 1;
     
-    // Récupérer le compte pour les top users
+    // Recuperer le compte pour les top users
     const count = await global.redisClient.get(key);
     if (count && parseInt(count) > 50) {
       stats.topUsers.push({

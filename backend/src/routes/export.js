@@ -10,7 +10,7 @@ const logger = require('../utils/logger');
 const fs = require('fs');
 const path = require('path');
 
-// Helper pour générer le PDF
+// Helper pour generer le PDF
 async function generatePDF(user, analyses, filters) {
   return new Promise((resolve, reject) => {
     try {
@@ -42,10 +42,10 @@ async function generatePDF(user, analyses, filters) {
       // Informations utilisateur
       doc.fontSize(10)
          .fillColor('#666')
-         .text(`Généré pour : ${user.name}`, 50, 120)
+         .text(`Genere pour : ${user.name}`, 50, 120)
          .text(`Email : ${user.email}`)
          .text(`Date : ${new Date().toLocaleDateString('fr-FR')}`)
-         .text(`Période : ${filters.startDate || 'Début'} - ${filters.endDate || 'Aujourd\'hui'}`);
+         .text(`Periode : ${filters.startDate || 'Debut'} - ${filters.endDate || 'Aujourd\'hui'}`);
       
       doc.moveDown(2);
       
@@ -59,10 +59,10 @@ async function generatePDF(user, analyses, filters) {
       doc.fontSize(10)
          .fillColor('#333')
          .text(`Nombre total d'analyses : ${stats.totalAnalyses}`)
-         .text(`Score santé moyen : ${stats.avgHealthScore}/100`)
+         .text(`Score sante moyen : ${stats.avgHealthScore}/100`)
          .text(`Meilleur score : ${stats.maxScore}/100`)
          .text(`Score le plus bas : ${stats.minScore}/100`)
-         .text(`Catégories analysées : ${stats.categories.join(', ')}`);
+         .text(`Categories analysees : ${stats.categories.join(', ')}`);
       
       doc.moveDown(2);
       
@@ -75,7 +75,7 @@ async function generatePDF(user, analyses, filters) {
       
       // Table header
       const tableTop = doc.y;
-      const tableHeaders = ['Date', 'Produit', 'Marque', 'Catégorie', 'Score'];
+      const tableHeaders = ['Date', 'Produit', 'Marque', 'Categorie', 'Score'];
       const columnWidths = [80, 180, 100, 80, 60];
       let currentX = 50;
       
@@ -127,7 +127,7 @@ async function generatePDF(user, analyses, filters) {
         
         currentY += 20;
         
-        // Nouvelle page si nécessaire
+        // Nouvelle page si necessaire
         if (currentY > 700) {
           doc.addPage();
           currentY = 50;
@@ -138,7 +138,7 @@ async function generatePDF(user, analyses, filters) {
       doc.fontSize(8)
          .fillColor('#999')
          .text(
-           'Ce rapport est généré automatiquement par ECOLOJIA. Les analyses sont basées sur des données scientifiques publiques.',
+           'Ce rapport est genere automatiquement par ECOLOJIA. Les analyses sont basees sur des donnees scientifiques publiques.',
            50,
            750,
            { align: 'center', width: 500 }
@@ -173,7 +173,7 @@ router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res
   
   logger.info('PDF export requested', { userId, filters: req.body });
   
-  // Vérifier les quotas
+  // Verifier les quotas
   if (!user.checkQuota('exports')) {
     return res.status(403).json({
       success: false,
@@ -183,7 +183,7 @@ router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res
     });
   }
   
-  // Récupérer les analyses
+  // Recuperer les analyses
   const filters = {
     startDate,
     endDate,
@@ -207,7 +207,7 @@ router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res
   
   const analyses = await Analysis.find(query)
     .sort({ createdAt: -1 })
-    .limit(500); // Limite pour éviter les PDF trop gros
+    .limit(500); // Limite pour eviter les PDF trop gros
   
   if (analyses.length === 0) {
     return res.status(404).json({
@@ -216,10 +216,10 @@ router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res
     });
   }
   
-  // Générer le PDF
+  // Generer le PDF
   const pdfBuffer = await generatePDF(user, analyses, filters);
   
-  // Incrémenter l'usage
+  // Incrementer l'usage
   await user.incrementUsage('exports');
   
   logger.info('PDF export generated', { userId, analysesCount: analyses.length });
@@ -238,7 +238,7 @@ router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res)
   
   logger.info('CSV export requested', { userId, filters: req.query });
   
-  // Vérifier les quotas
+  // Verifier les quotas
   if (!user.checkQuota('exports')) {
     return res.status(403).json({
       success: false,
@@ -248,7 +248,7 @@ router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res)
     });
   }
   
-  // Récupérer les analyses
+  // Recuperer les analyses
   const query = { userId };
   if (category) query['productSnapshot.category'] = category;
   if (minScore || maxScore) {
@@ -273,34 +273,34 @@ router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res)
     });
   }
   
-  // Préparer les données pour CSV
+  // Preparer les donnees pour CSV
   const csvData = analyses.map(analysis => ({
     Date: new Date(analysis.createdAt).toLocaleDateString('fr-FR'),
     Heure: new Date(analysis.createdAt).toLocaleTimeString('fr-FR'),
     Produit: analysis.productSnapshot.name,
     Marque: analysis.productSnapshot.brand || '',
     'Code-barres': analysis.productSnapshot.barcode || '',
-    Catégorie: analysis.productSnapshot.category,
-    'Score Santé': analysis.results.healthScore,
+    Categorie: analysis.productSnapshot.category,
+    'Score Sante': analysis.results.healthScore,
     'Score NOVA': analysis.results.foodAnalysis?.novaScore || '',
     'Nutri-Score': analysis.results.foodAnalysis?.nutriScore || '',
     'Nombre Additifs': analysis.results.foodAnalysis?.additiveCount || '',
     'Risque Endocrinien': analysis.results.cosmeticsAnalysis?.endocrineRisk || '',
-    'Score Naturalité': analysis.results.cosmeticsAnalysis?.naturalityScore || '',
+    'Score Naturalite': analysis.results.cosmeticsAnalysis?.naturalityScore || '',
     'Impact Environnemental': analysis.results.detergentsAnalysis?.environmentalImpact || '',
     'Type Analyse': analysis.analysisType
   }));
   
-  // Générer le CSV
+  // Generer le CSV
   const parser = new Parser({
     fields: Object.keys(csvData[0]),
     delimiter: ';',
-    withBOM: true // Pour Excel français
+    withBOM: true // Pour Excel francais
   });
   
   const csv = parser.parse(csvData);
   
-  // Incrémenter l'usage
+  // Incrementer l'usage
   await user.incrementUsage('exports');
   
   logger.info('CSV export generated', { userId, analysesCount: analyses.length });
@@ -311,7 +311,7 @@ router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res)
   res.send(csv);
 }));
 
-// POST /api/export/report - Rapport détaillé (PDF amélioré)
+// POST /api/export/report - Rapport detaille (PDF ameliore)
 router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
   const userId = req.userId;
   const user = req.user;
@@ -319,7 +319,7 @@ router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, 
   
   logger.info('Detailed report requested', { userId, period });
   
-  // Vérifier les quotas
+  // Verifier les quotas
   if (!user.checkQuota('exports')) {
     return res.status(403).json({
       success: false,
@@ -329,16 +329,16 @@ router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, 
     });
   }
   
-  // Récupérer les statistiques
+  // Recuperer les statistiques
   const stats = await Analysis.getUserStats(userId, period);
   
-  // Récupérer les analyses récentes
+  // Recuperer les analyses recentes
   const recentAnalyses = await Analysis.find({ userId })
     .sort({ createdAt: -1 })
     .limit(20);
   
-  // TODO: Générer un rapport PDF plus détaillé avec graphiques
-  // Pour l'instant, on retourne les données JSON
+  // TODO: Generer un rapport PDF plus detaille avec graphiques
+  // Pour l'instant, on retourne les donnees JSON
   
   await user.incrementUsage('exports');
   
@@ -364,15 +364,15 @@ router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, 
   });
 }));
 
-// Helper pour générer des recommandations
+// Helper pour generer des recommandations
 function generateRecommendations(stats, analyses) {
   const recommendations = [];
   
   if (stats.avgHealthScore < 50) {
     recommendations.push({
       type: 'warning',
-      title: 'Score santé faible',
-      message: 'Votre score santé moyen est inférieur à 50/100. Privilégiez des produits moins transformés.',
+      title: 'Score sante faible',
+      message: 'Votre score sante moyen est inferieur   50/100. Privilegiez des produits moins transformes.',
       priority: 'high'
     });
   }
@@ -381,7 +381,7 @@ function generateRecommendations(stats, analyses) {
     recommendations.push({
       type: 'info',
       title: 'Diversifiez vos analyses',
-      message: 'Vous n\'avez analysé que des produits d\'une seule catégorie. Essayez d\'analyser aussi des cosmétiques ou détergents.',
+      message: 'Vous n\'avez analyse que des produits d\'une seule categorie. Essayez d\'analyser aussi des cosmetiques ou detergents.',
       priority: 'medium'
     });
   }
@@ -398,7 +398,7 @@ function generateRecommendations(stats, analyses) {
       recommendations.push({
         type: 'success',
         title: 'Progression positive',
-        message: 'Vos choix de produits s\'améliorent ! Continuez sur cette lancée.',
+        message: 'Vos choix de produits s\'ameliorent ! Continuez sur cette lancee.',
         priority: 'low'
       });
     }
@@ -421,15 +421,15 @@ router.get('/templates', authenticateUser, checkPremium, (req, res) => {
       },
       {
         id: 'csv-data',
-        name: 'Export CSV données brutes',
+        name: 'Export CSV donnees brutes',
         description: 'Toutes vos analyses en format tableur',
         format: 'csv',
         endpoint: '/api/export/csv'
       },
       {
         id: 'detailed-report',
-        name: 'Rapport détaillé avec recommandations',
-        description: 'Analyse approfondie avec conseils personnalisés',
+        name: 'Rapport detaille avec recommandations',
+        description: 'Analyse approfondie avec conseils personnalises',
         format: 'pdf',
         endpoint: '/api/export/report'
       }

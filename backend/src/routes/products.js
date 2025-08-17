@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/routes/products.js
+// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');

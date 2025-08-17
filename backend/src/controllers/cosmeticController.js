@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/controllers/cosmeticController.js
+// PATH: backend/src/controllers/cosmeticController.js
 const CosmeticScorer = require('../scorers/cosmetic/cosmeticScorer');
 const { Logger } = require('../utils/logger');
 const logger = new Logger('CosmeticController');

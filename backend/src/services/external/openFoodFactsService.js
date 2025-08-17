@@ -6,7 +6,7 @@ class OpenFoodFactsService {
   
   static async getProduct(barcode) {
     try {
-      console.log(`🔍 Recherche OpenFoodFacts: ${barcode}`);
+      console.log(`ðŸ” Recherche OpenFoodFacts: ${barcode}`);
       
       const response = await axios.get(
         `${this.BASE_URL}/${barcode}.json`,
@@ -30,18 +30,18 @@ class OpenFoodFactsService {
           image_url: product.image_url || undefined,
           found: true,
           
-          // Données supplémentaires
+          // Donnees supplementaires
           nova_group: product.nova_group,
           nutriscore_grade: product.nutrition_grades,
           ecoscore_grade: product.ecoscore_grade,
           
-          // Ingrédients
+          // Ingredients
           ingredients: this.parseIngredients(product),
           
           // Nutriments
           nutriments: product.nutriments || {},
           
-          // Allergènes
+          // Allergenes
           allergens: product.allergens_tags || [],
           
           // Additifs
@@ -50,12 +50,12 @@ class OpenFoodFactsService {
           // Labels
           labels: product.labels_tags || [],
           
-          // Catégories
+          // Categories
           categories: product.categories_tags || []
         };
       }
 
-      console.log(`❌ Produit non trouvé dans OpenFoodFacts: ${barcode}`);
+      console.log(`âŒ Produit non trouve dans OpenFoodFacts: ${barcode}`);
       return null;
 
     } catch (error) {
@@ -137,10 +137,10 @@ class OpenFoodFactsService {
     // NOVA score impact
     if (product.nova_group) {
       const novaImpact = {
-        1: 25,   // Non transformé
-        2: 10,   // Peu transformé
-        3: -10,  // Transformé
-        4: -25   // Ultra-transformé
+        1: 25,   // Non transforme
+        2: 10,   // Peu transforme
+        3: -10,  // Transforme
+        4: -25   // Ultra-transforme
       };
       score += novaImpact[product.nova_group] || 0;
     }

@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Modèles (avec fallback console si absent)
+// Modeles (avec fallback console si absent)
 let Analysis, Product;
 try { Analysis = require('../models/Analysis'); } catch { Analysis = null; }
 try { Product = require('../models/Product'); } catch { Product = null; }
@@ -12,10 +12,10 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 
 // GET /api/dashboard/stats
 router.get('/stats', asyncHandler(async (req, res) => {
-  // userId facultatif : si non fourni, on agrège globalement (ou user 'demo' si tu préfères)
+  // userId facultatif : si non fourni, on agrege globalement (ou user 'demo' si tu preferes)
   const userId = req.user?.id || null;
 
-  // Fallback mock si pas de modèles/db
+  // Fallback mock si pas de modeles/db
   const dbReady = !!(Analysis && Product);
   if (!dbReady) {
     return res.json({
@@ -81,7 +81,7 @@ router.get('/stats', asyncHandler(async (req, res) => {
     weeklyTrend.push({ day: dayMap[(d.getDay()+6)%7], scans: hit?.scans || 0 });
   }
 
-  // 3) Dernières analyses
+  // 3) Dernieres analyses
   const recentAnalyses = await Analysis.find(match)
     .sort({ createdAt: -1 })
     .limit(10)
@@ -108,7 +108,7 @@ router.get('/stats', asyncHandler(async (req, res) => {
       totals: {
         scans: agg?.scans || 0,
         products: await Product.countDocuments({}),
-        favorites: 0 // à brancher si favoris
+        favorites: 0 //   brancher si favoris
       },
       averages: {
         health: Math.round(agg?.avgHealth || 0),

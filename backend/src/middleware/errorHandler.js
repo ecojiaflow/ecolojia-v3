@@ -24,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
     ip: req.ip
   });
 
-  // En développement, envoyer plus de détails
+  // En developpement, envoyer plus de details
   if (process.env.NODE_ENV === 'development') {
     res.status(error.statusCode).json({
       error: error.code,
@@ -44,7 +44,7 @@ const errorHandler = (err, req, res, next) => {
         timestamp: error.timestamp
       });
     } else {
-      // Erreur non-opérationnelle = erreur système
+      // Erreur non-operationnelle = erreur systeme
       res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: 'Une erreur inattendue s\'est produite',
@@ -74,7 +74,7 @@ const setupErrorHandling = (app) => {
   // Handler principal des erreurs
   app.use(errorHandler);
   
-  // Gérer les promesses non gérées
+  // Gerer les promesses non gerees
   process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   });
@@ -86,7 +86,7 @@ const setupErrorHandling = (app) => {
     }, 1000);
   });
   
-  console.log('✅ Error handling configured');
+  console.log('âœ… Error handling configured');
 };
 
 module.exports = {

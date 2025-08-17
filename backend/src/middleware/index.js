@@ -1,5 +1,5 @@
 // PATH: backend\src\middleware\index.js
-// Point d'entrée unifié pour tous les middlewares ECOLOJIA
+// Point d'entree unifie pour tous les middlewares ECOLOJIA
 // SOLUTION ROBUSTE POUR PRODUCTION
 
 // === IMPORTS DES MIDDLEWARES EXISTANTS ===
@@ -14,7 +14,7 @@ let validation;
 try {
   validation = require('./validation');
 } catch (e) {
-  console.warn('validation.js non trouvé ou erreur, utilisation du fallback');
+  console.warn('validation.js non trouve ou erreur, utilisation du fallback');
   // Fallback si validation.js est manquant ou vide
   validation = {
     validateAnalysis: (req, res, next) => {
@@ -44,7 +44,7 @@ const {
   requireAdmin
 } = authMiddleware;
 
-// === ALIAS CRITIQUES POUR COMPATIBILITÉ ===
+// === ALIAS CRITIQUES POUR COMPATIBILIT‰ ===
 const authenticateToken = authenticateUser; // analyze.routes.js et vision.routes.js attendent authenticateToken
 
 // === EXTRACTION DES FONCTIONS DE VALIDATION ===
@@ -60,7 +60,7 @@ const {
 // === EXTRACTION DES FONCTIONS D'ERROR HANDLER ===
 const {
   asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next),
-  notFound = (req, res) => res.status(404).json({ error: 'Route non trouvée' }),
+  notFound = (req, res) => res.status(404).json({ error: 'Route non trouvee' }),
   errorMiddleware = (err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).json({
@@ -78,7 +78,7 @@ const {
 } = rateLimiter || {};
 
 /**
- * EXPORT UNIFIÉ DE TOUS LES MIDDLEWARES
+ * EXPORT UNIFI‰ DE TOUS LES MIDDLEWARES
  * 
  * Usage:
  * const { authenticateUser, checkQuota, validateAnalysis } = require('../middleware');
@@ -91,8 +91,8 @@ module.exports = {
   authOptional,
   requirePremium,
   requireAdmin,
-  checkPremium: requirePremium, // Alias pour compatibilité
-  authMiddleware: auth, // Alias pour compatibilité
+  checkPremium: requirePremium, // Alias pour compatibilite
+  authMiddleware: auth, // Alias pour compatibilite
   
   // === QUOTAS ===
   checkQuota,
@@ -116,7 +116,7 @@ module.exports = {
   notFound,
   errorMiddleware,
   
-  // === MODULES COMPLETS (pour compatibilité) ===
+  // === MODULES COMPLETS (pour compatibilite) ===
   authMiddleware: authMiddleware,
   quotaMiddleware: { checkQuota, checkQuotaAfterUpload },
   validationMiddleware: validation,
@@ -125,5 +125,5 @@ module.exports = {
 };
 
 // Log pour debug
-console.log('✅ Middleware index.js chargé avec succès');
+console.log('âœ… Middleware index.js charge avec succes');
 console.log('   Exports disponibles:', Object.keys(module.exports).join(', '));

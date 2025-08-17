@@ -1,5 +1,5 @@
 // backend/src/routes/ai.routes.js
-// Routes AI utilisant le NutritionistChatService créé
+// Routes AI utilisant le NutritionistChatService cree
 
 const express = require('express');
 const router = express.Router();
@@ -26,7 +26,7 @@ router.post('/chat', authenticateUser, async (req, res) => {
     if (message.length > 1000) {
       return res.status(400).json({
         success: false,
-        error: 'Message trop long (max 1000 caractères)'
+        error: 'Message trop long (max 1000 caracteres)'
       });
     }
     
@@ -60,14 +60,14 @@ router.post('/chat', authenticateUser, async (req, res) => {
     
     res.status(500).json({
       success: false,
-      error: error.message || 'Erreur lors de la génération de la réponse'
+      error: error.message || 'Erreur lors de la generation de la reponse'
     });
   }
 });
 
 /**
  * POST /api/ai/product-question
- * Poser une question sur un produit spécifique
+ * Poser une question sur un produit specifique
  */
 router.post('/product-question', authenticateUser, async (req, res) => {
   try {
@@ -147,7 +147,7 @@ router.post('/compare-products', authenticateUser, async (req, res) => {
 
 /**
  * GET /api/ai/suggestions
- * Obtenir des suggestions personnalisées
+ * Obtenir des suggestions personnalisees
  */
 router.get('/suggestions', authenticateUser, async (req, res) => {
   try {
@@ -171,7 +171,7 @@ router.get('/suggestions', authenticateUser, async (req, res) => {
       result = { suggestions };
       
     } else {
-      // Conseils personnalisés
+      // Conseils personnalises
       result = await NutritionistChatService.generateSuggestions(userId);
     }
     
@@ -184,14 +184,14 @@ router.get('/suggestions', authenticateUser, async (req, res) => {
     console.error('[AI] Suggestions error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la génération des suggestions'
+      error: 'Erreur lors de la generation des suggestions'
     });
   }
 });
 
 /**
  * GET /api/ai/conversation/:conversationId
- * Récupérer une conversation complète
+ * Recuperer une conversation complete
  */
 router.get('/conversation/:conversationId', authenticateUser, async (req, res) => {
   try {
@@ -206,7 +206,7 @@ router.get('/conversation/:conversationId', authenticateUser, async (req, res) =
     if (!conversation || conversation.length === 0) {
       return res.status(404).json({
         success: false,
-        error: 'Conversation non trouvée'
+        error: 'Conversation non trouvee'
       });
     }
     
@@ -220,14 +220,14 @@ router.get('/conversation/:conversationId', authenticateUser, async (req, res) =
     console.error('[AI] Get conversation error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération de la conversation'
+      error: 'Erreur lors de la recuperation de la conversation'
     });
   }
 });
 
 /**
  * DELETE /api/ai/conversation
- * Réinitialiser la conversation
+ * Reinitialiser la conversation
  */
 router.delete('/conversation', authenticateUser, async (req, res) => {
   try {
@@ -244,7 +244,7 @@ router.delete('/conversation', authenticateUser, async (req, res) => {
     console.error('[AI] Clear conversation error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la réinitialisation'
+      error: 'Erreur lors de la reinitialisation'
     });
   }
 });
@@ -282,7 +282,7 @@ router.get('/quota-status', authenticateUser, async (req, res) => {
     console.error('[AI] Quota status error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération du quota'
+      error: 'Erreur lors de la recuperation du quota'
     });
   }
 });
@@ -299,45 +299,45 @@ router.get('/faq', async (req, res) => {
       nova: [
         {
           question: "Qu'est-ce que la classification NOVA ?",
-          answer: "NOVA est un système qui classe les aliments en 4 groupes selon leur degré de transformation : 1) Non transformés, 2) Ingrédients culinaires, 3) Transformés, 4) Ultra-transformés. Les aliments du groupe 4 sont à limiter.",
+          answer: "NOVA est un systeme qui classe les aliments en 4 groupes selon leur degre de transformation : 1) Non transformes, 2) Ingredients culinaires, 3) Transformes, 4) Ultra-transformes. Les aliments du groupe 4 sont   limiter.",
           keywords: ['nova', 'classification', 'transformation']
         },
         {
-          question: "Pourquoi éviter les aliments NOVA 4 ?",
-          answer: "Les aliments ultra-transformés contiennent souvent de nombreux additifs, du sucre et du sel en excès. Ils sont associés à un risque accru d'obésité, de diabète et de maladies cardiovasculaires.",
-          keywords: ['nova 4', 'ultra-transformé', 'santé']
+          question: "Pourquoi eviter les aliments NOVA 4 ?",
+          answer: "Les aliments ultra-transformes contiennent souvent de nombreux additifs, du sucre et du sel en exces. Ils sont associes   un risque accru d'obesite, de diabete et de maladies cardiovasculaires.",
+          keywords: ['nova 4', 'ultra-transforme', 'sante']
         }
       ],
       additifs: [
         {
           question: "Tous les additifs E sont-ils dangereux ?",
-          answer: "Non, tous les additifs ne sont pas dangereux. Certains sont naturels (E100 - curcumine, E322 - lécithines). D'autres sont plus controversés. L'important est leur quantité et fréquence de consommation.",
+          answer: "Non, tous les additifs ne sont pas dangereux. Certains sont naturels (E100 - curcumine, E322 - lecithines). D'autres sont plus controverses. L'important est leur quantite et frequence de consommation.",
           keywords: ['additifs', 'e', 'dangereux']
         },
         {
-          question: "Quels additifs éviter absolument ?",
-          answer: "Les plus controversés incluent : E102, E110, E124 (colorants azoïques), E320-E321 (BHA/BHT), E249-E252 (nitrites/nitrates). Ils peuvent causer hyperactivité, allergies ou être cancérigènes.",
-          keywords: ['additifs', 'éviter', 'dangereux']
+          question: "Quels additifs eviter absolument ?",
+          answer: "Les plus controverses incluent : E102, E110, E124 (colorants azoiques), E320-E321 (BHA/BHT), E249-E252 (nitrites/nitrates). Ils peuvent causer hyperactivite, allergies ou etre cancerigenes.",
+          keywords: ['additifs', 'eviter', 'dangereux']
         }
       ],
       nutrition: [
         {
-          question: "Comment lire une étiquette nutritionnelle ?",
-          answer: "Vérifiez d'abord la liste d'ingrédients (ordre décroissant). Regardez les valeurs pour 100g : sucres (<5g idéal), graisses saturées (<2g), sel (<1g). Méfiez-vous des portions trompeuses.",
-          keywords: ['étiquette', 'nutritionnel', 'lire']
+          question: "Comment lire une etiquette nutritionnelle ?",
+          answer: "Verifiez d'abord la liste d'ingredients (ordre decroissant). Regardez les valeurs pour 100g : sucres (<5g ideal), graisses saturees (<2g), sel (<1g). Mefiez-vous des portions trompeuses.",
+          keywords: ['etiquette', 'nutritionnel', 'lire']
         },
         {
           question: "Qu'est-ce que le Nutri-Score ?",
-          answer: "Le Nutri-Score est un logo qui note la qualité nutritionnelle de A (meilleur) à E. Il prend en compte les nutriments favorables (fibres, protéines) et défavorables (sucre, sel, graisses saturées).",
+          answer: "Le Nutri-Score est un logo qui note la qualite nutritionnelle de A (meilleur)   E. Il prend en compte les nutriments favorables (fibres, proteines) et defavorables (sucre, sel, graisses saturees).",
           keywords: ['nutriscore', 'score', 'nutritionnel']
         }
       ]
     };
     
-    // Filtrer par catégorie si spécifiée
+    // Filtrer par categorie si specifiee
     let results = category && faq[category] ? faq[category] : Object.values(faq).flat();
     
-    // Recherche par mots-clés si spécifiée
+    // Recherche par mots-cles si specifiee
     if (search) {
       const searchLower = search.toLowerCase();
       results = results.filter(item => 
@@ -357,7 +357,7 @@ router.get('/faq', async (req, res) => {
     console.error('[AI] FAQ error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération de la FAQ'
+      error: 'Erreur lors de la recuperation de la FAQ'
     });
   }
 });
