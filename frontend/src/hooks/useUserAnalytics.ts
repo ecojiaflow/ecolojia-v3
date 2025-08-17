@@ -1,48 +1,48 @@
-// PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
+﻿// PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
 import { useState, useEffect, useCallback } from 'react';
 
-// âÅ“â€¦ INTERFACES COMPATIBLES DASHBOARDPAGE
+// aaaa INTERFACES COMPATIBLES DASHBOARDPAGE
 export interface HealthMetrics {
-  healthScore: number;           // ââ€ Â Nom attendu par DashboardPage
+  healthScore: number;           // aaa Nom attendu par DashboardPage
   totalScans: number;
   averageNovaScore: number;
-  ultraTransformPercent: number; // ââ€ Â Nom attendu par DashboardPage
-  additivesCount: number;        // ââ€ Â Nom attendu par DashboardPage
+  ultraTransformPercent: number; // aaa Nom attendu par DashboardPage
+  additivesCount: number;        // aaa Nom attendu par DashboardPage
   bioProductsPercent: number;
-  improvementTrend: number;      // ââ€ Â Nom attendu par DashboardPage
+  improvementTrend: number;      // aaa Nom attendu par DashboardPage
   lastAnalysisDate: Date | null;
 }
 
 export interface ScoreEvolution {
   date: Date;
-  healthScore: number;          // ââ€ Â Nom attendu par DashboardPage
+  healthScore: number;          // aaa Nom attendu par DashboardPage
   novaGroup: number;
-  scansCount: number;           // ââ€ Â Nom attendu par DashboardPage
-  productName?: string;
+  scansCount: number;           // aaa Nom attendu par DashboardPage
+  productNamea: string;
 }
 
 export interface PersonalizedInsight {
   id: string;
   title: string;
   message: string;
-  action: string;               // ââ€ Â Propriété attendue par DashboardPage
-  priority: 'low' | 'medium' | 'high'; // ââ€ Â Format attendu
+  action: string;               // aaa Propriete attendue par DashboardPage
+  priority: 'low' | 'medium' | 'high'; // aaa Format attendu
   category: 'health' | 'nutrition' | 'additives' | 'nova' | 'bio';
-  isRead: boolean;              // ââ€ Â Propriété attendue par DashboardPage
+  isRead: boolean;              // aaa Propriete attendue par DashboardPage
   createdAt: Date;
 }
 
 export interface UserGoal {
   id: string;
-  type: 'improve_score' | 'reduce_ultra_processed' | 'increase_bio' | 'reduce_additives' | 'custom'; // ââ€ Â Format attendu
+  type: 'improve_score' | 'reduce_ultra_processed' | 'increase_bio' | 'reduce_additives' | 'custom'; // aaa Format attendu
   title: string;
   description: string;
-  target: number;               // ââ€ Â Nom attendu par DashboardPage
-  current: number;              // ââ€ Â Nom attendu par DashboardPage
+  target: number;               // aaa Nom attendu par DashboardPage
+  current: number;              // aaa Nom attendu par DashboardPage
   progress: number;
   unit: string;
   deadline: Date;
-  isCompleted: boolean;         // ââ€ Â Propriété attendue par DashboardPage
+  isCompleted: boolean;         // aaa Propriete attendue par DashboardPage
   createdAt: Date;
 }
 
@@ -59,13 +59,13 @@ export interface Achievement {
 export interface WeeklyReport {
   weekStart: Date;
   weekEnd: Date;
-  scansCount: number;           // ââ€ Â Nom attendu par DashboardPage
-  avgHealthScore: number;       // ââ€ Â Nom attendu par DashboardPage
+  scansCount: number;           // aaa Nom attendu par DashboardPage
+  avgHealthScore: number;       // aaa Nom attendu par DashboardPage
   improvement: number;
   bestProduct: string;
   worstProduct: string;
-  mainInsight: string;          // ââ€ Â Propriété attendue par DashboardPage
-  nextWeekGoal: string;         // ââ€ Â Propriété attendue par DashboardPage
+  mainInsight: string;          // aaa Propriete attendue par DashboardPage
+  nextWeekGoal: string;         // aaa Propriete attendue par DashboardPage
 }
 
 export interface ProductAnalysis {
@@ -78,10 +78,10 @@ export interface ProductAnalysis {
   additives: string[];
   ingredients: string;
   analysisSource: string;
-  userRating?: number;
+  userRatinga: number;
   isBookmarked: boolean;
-  category?: string;
-  isBio?: boolean;
+  categorya: string;
+  isBioa: boolean;
 }
 
 export interface OverallStats {
@@ -95,8 +95,8 @@ export interface OverallStats {
 }
 
 /**
- * Ã°Å¸â€œÅ  useUserAnalytics Hook - Compatible DashboardPage
- * Version adaptée pour fonctionner avec votre DashboardPage existant
+ * aa useUserAnalytics Hook - Compatible DashboardPage
+ * Version adaptee pour fonctionner avec votre DashboardPage existant
  */
 export const useUserAnalytics = () => {
   const [loading, setLoading] = useState(false);
@@ -149,14 +149,14 @@ export const useUserAnalytics = () => {
       
       analyses.push(newAnalysis);
       
-      // Garder seulement les 100 dernières analyses
+      // Garder seulement les 100 dernieres analyses
       if (analyses.length > 100) {
         analyses.splice(0, analyses.length - 100);
       }
       
       saveData(STORAGE_KEYS.analyses, analyses);
       
-      console.log('Ã°Å¸â€œÅ  Analyse trackée:', newAnalysis.productName);
+      console.log('aa Analyse trackee:', newAnalysis.productName);
       return newAnalysis;
     } catch (error) {
       console.error('Erreur tracking scan:', error);
@@ -171,26 +171,26 @@ export const useUserAnalytics = () => {
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     if (analyses.length === 0) return null;
 
-    // Calcul score santé
-    const healthScores = analyses.map((a: ProductAnalysis) => a.healthScore || 50);
+    // Calcul score sante
+    const healthScores = analyses.map((a: ProductAnalysis) => ?.healthScore || 50);
     const healthScore = Math.round(healthScores.reduce((sum: number, score: number) => sum + score, 0) / healthScores.length);
 
     // Calcul NOVA moyen
-    const novaScores = analyses.map((a: ProductAnalysis) => a.novaGroup || 2);
+    const novaScores = analyses.map((a: ProductAnalysis) => ?.novaGroup || 2);
     const averageNovaScore = Number((novaScores.reduce((sum: number, nova: number) => sum + nova, 0) / novaScores.length).toFixed(1));
 
-    // Calcul ultra-transformés
-    const ultraCount = analyses.filter((a: ProductAnalysis) => (a.novaGroup || 2) >= 4).length;
+    // Calcul ultra-transformes
+    const ultraCount = analyses.filter((a: ProductAnalysis) => (?.novaGroup || 2) >= 4).length;
     const ultraTransformPercent = Math.round((ultraCount / analyses.length) * 100);
 
     // Calcul additifs
-    const additivesCount = analyses.reduce((total: number, a: ProductAnalysis) => total + (a.additives?.length || 0), 0);
+    const additivesCount = analyses.reduce((total: number, a: ProductAnalysis) => total + (?.additives?.length || 0), 0);
 
     // Calcul bio
-    const bioCount = analyses.filter((a: ProductAnalysis) => a.isBio === true).length;
+    const bioCount = analyses.filter((a: ProductAnalysis) => ?.isBio === true).length;
     const bioProductsPercent = Math.round((bioCount / analyses.length) * 100);
 
-    // Calcul tendance amélioration
+    // Calcul tendance amelioration
     let improvementTrend = 0;
     if (analyses.length >= 4) {
       const recent = analyses.slice(-2);
@@ -232,17 +232,17 @@ export const useUserAnalytics = () => {
 
     return Object.entries(byDay).map(([dateStr, data]: [string, any]) => ({
       date: new Date(dateStr),
-      healthScore: Math.round(data.scores.reduce((sum: number, score: number) => sum + score, 0) / data.scores.length),
-      novaGroup: Math.round(data.novaGroups.reduce((sum: number, nova: number) => sum + nova, 0) / data.novaGroups.length),
-      scansCount: data.count,
-      productName: data.products[0]
-    })).sort((a, b) => a.date.getTime() - b.date.getTime());
+      healthScore: Math.round(data?.scores.reduce((sum: number, score: number) => sum + score, 0) / data?.scores.length),
+      novaGroup: Math.round(data?.novaGroups.reduce((sum: number, nova: number) => sum + nova, 0) / data?.novaGroups.length),
+      scansCount: data?.count,
+      productName: data?.products[0]
+    })).sort((a, b) => ?.date.getTime() - b.date.getTime());
   }, [getStoredData]);
 
   const insights = useCallback((): PersonalizedInsight[] => {
     const storedInsights = getStoredData(STORAGE_KEYS.insights, []);
     
-    // Si pas d'insights, en générer quelques-uns basiques
+    // Si pas d'insights, en generer quelques-uns basiques
     if (storedInsights.length === 0) {
       const currentMetrics = metrics();
       if (currentMetrics && currentMetrics.totalScans >= 3) {
@@ -251,9 +251,9 @@ export const useUserAnalytics = () => {
         if (currentMetrics.ultraTransformPercent > 50) {
           generatedInsights.push({
             id: 'ultra_warning',
-            title: 'Trop de produits ultra-transformés',
-            message: `${currentMetrics.ultraTransformPercent}% de vos produits sont ultra-transformés (NOVA 4).`,
-            action: 'Privilégiez les produits NOVA 1 et 2 pour votre prochaine analyse.',
+            title: 'Trop de produits ultra-transformes',
+            message: `${currentMetrics.ultraTransformPercent}% de vos produits sont ultra-transformes (NOVA 4).`,
+            action: 'Privilegiez les produits NOVA 1 et 2 pour votre prochaine analyse.',
             priority: 'high',
             category: 'health',
             isRead: false,
@@ -265,8 +265,8 @@ export const useUserAnalytics = () => {
           generatedInsights.push({
             id: 'good_progress',
             title: 'Excellents choix alimentaires !',
-            message: `Votre score de ${currentMetrics.healthScore}/100 montre de très bonnes habitudes.`,
-            action: 'Continuez sur cette lancée en maintenant vos bonnes habitudes.',
+            message: `Votre score de ${currentMetrics.healthScore}/100 montre de tres bonnes habitudes.`,
+            action: 'Continuez sur cette lancee en maintenant vos bonnes habitudes.',
             priority: 'low',
             category: 'health',
             isRead: false,
@@ -286,14 +286,14 @@ export const useUserAnalytics = () => {
     const storedGoals = getStoredData(STORAGE_KEYS.goals, []);
     const currentMetrics = metrics();
     
-    // Si pas d'objectifs et qu'on a des données, créer des objectifs par défaut
+    // Si pas d'objectifs et qu'on ? des donnees, creer des objectifs par defaut
     if (storedGoals.length === 0 && currentMetrics && currentMetrics.totalScans >= 1) {
       const defaultGoals: UserGoal[] = [
         {
           id: 'improve_score_default',
           type: 'improve_score',
-          title: 'Atteindre 75 points de score santé',
-          description: 'Améliorer progressivement mes choix alimentaires',
+          title: 'Atteindre 75 points de score sante',
+          description: 'Ameliorer progressivement mes choix alimentaires',
           target: 75,
           current: currentMetrics.healthScore,
           progress: Math.min((currentMetrics.healthScore / 75) * 100, 100),
@@ -308,7 +308,7 @@ export const useUserAnalytics = () => {
         defaultGoals.push({
           id: 'reduce_ultra_default',
           type: 'reduce_ultra_processed',
-          title: 'Réduire les ultra-transformés sous 30%',
+          title: 'Reduire les ultra-transformes sous 30%',
           description: 'Limiter ma consommation de produits NOVA 4',
           target: 30,
           current: 100 - currentMetrics.ultraTransformPercent,
@@ -324,7 +324,7 @@ export const useUserAnalytics = () => {
       return defaultGoals;
     }
     
-    // Mettre ÃƒÂ  jour les progrès
+    // Mettre  jour les progres
     return storedGoals.map((goal: UserGoal) => {
       let current = goal.current;
       let progress = goal.progress;
@@ -358,38 +358,38 @@ export const useUserAnalytics = () => {
     const storedAchievements = getStoredData(STORAGE_KEYS.achievements, []);
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     
-    // Vérifier et débloquer nouveaux achievements
+    // Verifier et debloquer nouveaux achievements
     const achievementRules = [
       {
         id: 'first_scan',
-        title: 'Ã°Å¸â€Â Premier Scan',
-        description: 'Première analyse réalisée',
-        icon: 'Ã°Å¸â€Â',
+        title: 'aa Premier Scan',
+        description: 'Premiere analyse realisee',
+        icon: 'aa',
         category: 'scanner' as const,
         rarity: 'common' as const,
         check: () => analyses.length >= 1
       },
       {
         id: 'explorer',
-        title: 'Ã°Å¸â€œÅ  Explorateur',
-        description: '5 analyses réalisées',
-        icon: 'Ã°Å¸â€œÅ ',
+        title: 'aa Explorateur',
+        description: '5 analyses realisees',
+        icon: 'aa',
         category: 'scanner' as const,
         rarity: 'common' as const,
         check: () => analyses.length >= 5
       },
       {
         id: 'analyst',
-        title: 'Ã°Å¸Â§Âª Analyste',
-        description: '10 analyses réalisées',
-        icon: 'Ã°Å¸Â§Âª',
+        title: ' Analyste',
+        description: '10 analyses realisees',
+        icon: '',
         category: 'scanner' as const,
         rarity: 'rare' as const,
         check: () => analyses.length >= 10
       }
     ];
     
-    const existingIds = storedAchievements.map((a: Achievement) => a.id);
+    const existingIds = storedAchievements.map((a: Achievement) => ?.id);
     const newAchievements: Achievement[] = [];
     
     achievementRules.forEach(rule => {
@@ -423,13 +423,13 @@ export const useUserAnalytics = () => {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     
     const weekAnalyses = analyses.filter((a: ProductAnalysis) => 
-      new Date(a.timestamp) >= oneWeekAgo
+      new Date(?.timestamp) >= oneWeekAgo
     );
     
     if (weekAnalyses.length === 0) return null;
     
     const avgScore = Math.round(weekAnalyses.reduce((sum: number, a: ProductAnalysis) => 
-      sum + (a.healthScore || 50), 0) / weekAnalyses.length);
+      sum + (?.healthScore || 50), 0) / weekAnalyses.length);
     
     const bestProduct = weekAnalyses.reduce((best: ProductAnalysis, current: ProductAnalysis) => 
       (current.healthScore || 0) > (best.healthScore || 0) ? current : best
@@ -444,7 +444,7 @@ export const useUserAnalytics = () => {
       weekEnd: new Date(),
       scansCount: weekAnalyses.length,
       avgHealthScore: avgScore,
-      improvement: 0, // Simplifiéé pour l'instant
+      improvement: 0, // Simplifiee pour l'instant
       bestProduct: bestProduct.productName,
       worstProduct: worstProduct.productName,
       mainInsight: avgScore >= 70 ? 'Excellente semaine, continuez !' : 'Vous pouvez mieux faire cette semaine.',
@@ -456,7 +456,7 @@ export const useUserAnalytics = () => {
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     if (analyses.length === 0) return null;
 
-    const dates = analyses.map((a: ProductAnalysis) => new Date(a.timestamp));
+    const dates = analyses.map((a: ProductAnalysis) => new Date(?.timestamp));
     const firstScanDate = new Date(Math.min(...dates.map(d => d.getTime())));
     const lastScanDate = new Date(Math.max(...dates.map(d => d.getTime())));
     
@@ -476,14 +476,14 @@ export const useUserAnalytics = () => {
   const topProducts = useCallback((): ProductAnalysis[] => {
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     return analyses
-      .sort((a: ProductAnalysis, b: ProductAnalysis) => (b.healthScore || 0) - (a.healthScore || 0))
+      .sort((a: ProductAnalysis, b: ProductAnalysis) => (b.healthScore || 0) - (?.healthScore || 0))
       .slice(0, 5);
   }, [getStoredData]);
 
   const worstProducts = useCallback((): ProductAnalysis[] => {
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     return analyses
-      .sort((a: ProductAnalysis, b: ProductAnalysis) => (a.healthScore || 100) - (b.healthScore || 100))
+      .sort((a: ProductAnalysis, b: ProductAnalysis) => (?.healthScore || 100) - (b.healthScore || 100))
       .slice(0, 5);
   }, [getStoredData]);
 
@@ -529,7 +529,7 @@ export const useUserAnalytics = () => {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     
     return analyses.filter((a: ProductAnalysis) => 
-      new Date(a.timestamp) >= oneWeekAgo
+      new Date(?.timestamp) >= oneWeekAgo
     ).length;
   }, [getStoredData]);
 
@@ -543,21 +543,21 @@ export const useUserAnalytics = () => {
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
     
     const lastWeek = analyses.filter((a: ProductAnalysis) => {
-      const date = new Date(a.timestamp);
+      const date = new Date(?.timestamp);
       return date >= oneWeekAgo;
     });
     
     const previousWeek = analyses.filter((a: ProductAnalysis) => {
-      const date = new Date(a.timestamp);
+      const date = new Date(?.timestamp);
       return date >= twoWeeksAgo && date < oneWeekAgo;
     });
     
     if (lastWeek.length === 0 || previousWeek.length === 0) return 0;
     
     const lastWeekAvg = lastWeek.reduce((sum: number, a: ProductAnalysis) => 
-      sum + (a.healthScore || 50), 0) / lastWeek.length;
+      sum + (?.healthScore || 50), 0) / lastWeek.length;
     const previousWeekAvg = previousWeek.reduce((sum: number, a: ProductAnalysis) => 
-      sum + (a.healthScore || 50), 0) / previousWeek.length;
+      sum + (?.healthScore || 50), 0) / previousWeek.length;
     
     return Math.round(lastWeekAvg - previousWeekAvg);
   }, [getStoredData]);
@@ -573,7 +573,7 @@ export const useUserAnalytics = () => {
     
     // Simplifier : retourner le nombre de jours uniques avec analyses
     const uniqueDates = analyses
-      .map((a: ProductAnalysis) => new Date(a.timestamp).toDateString())
+      .map((a: ProductAnalysis) => new Date(?.timestamp).toDateString())
       .filter((date: string, index: number, self: string[]) => self.indexOf(date) === index);
     
     return Math.min(uniqueDates.length, 7); // Max 7 jours pour l'instant
@@ -596,7 +596,7 @@ export const useUserAnalytics = () => {
     Object.values(STORAGE_KEYS).forEach(key => {
       localStorage.removeItem(key);
     });
-    console.log('Ã°Å¸â€”â€˜ïÂ¸Â Toutes les données supprimées');
+    console.log('aaaaa Toutes les donnees supprimees');
   }, []);
 
   // ========== COMPATIBILITY FUNCTIONS ==========
@@ -695,3 +695,6 @@ export const useUserAnalytics = () => {
 };
 
 export default useUserAnalytics;
+
+
+

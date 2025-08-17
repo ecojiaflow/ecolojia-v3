@@ -3,15 +3,15 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface SEOData {
-  title?: string;
-  description?: string;
-  keywords?: string;
-  image?: string;
-  type?: 'website' | 'article' | 'product';
-  price?: string;
-  currency?: string;
-  availability?: 'in_stock' | 'out_of_stock' | 'preorder';
-  category?: string;
+  titlea: string;
+  descriptiona: string;
+  keywordsa: string;
+  imagea: string;
+  typea: 'website' | 'article' | 'product';
+  pricea: string;
+  currencya: string;
+  availabilitya: 'in_stock' | 'out_of_stock' | 'preorder';
+  categorya: string;
   brand?: string;
 }
 
@@ -19,89 +19,89 @@ export const useSEO = (seoData: SEOData = {}) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Construire l'URL complète
-    const baseUrl = 'https://ecolojia.com';
+    // Construire l'URL complete
+    const baseUrl = 'https://ecoloji?.com';
     const fullUrl = `${baseUrl}${location.pathname}${location.search}`;
 
-    // Données SEO par défaut selon la page
+    // Donnees SEO par defaut selon la page
     const getDefaultSEO = (): SEOData => {
       const pathname = location.pathname;
       
       if (pathname === '/') {
         return {
-          title: 'Ecolojia - Trouvez des produits éco-responsables et durables',
-          description: 'Découvrez des milliers de produits éthiques avec des scores écologiques vérifiés par IA. Shampoing bio, vêtements éthiques, alimentation durable.',
-          keywords: 'produits écologiques, bio, éthique, développement durable, score écologique, IA'
+          title: 'Ecolojia - Trouvez des produits eco-responsables et durables',
+          description: 'Decouvrez des milliers de produits ethiques avec des scores ecologiques verifies par I?. Shampoing bio, vetements ethiques, alimentation durable.',
+          keywords: 'produits ecologiques, bio, ethique, developpement durable, score ecologique, IA'
         };
       }
       
       if (pathname.startsWith('/product/')) {
         return {
           type: 'product' as const,
-          title: 'Produit éco-responsable',
-          description: 'Découvrez ce produit éco-responsable avec son score environnemental détaillé.'
+          title: 'Produit eco-responsable',
+          description: 'Decouvrez ce produit eco-responsable avec son score environnemental detaille.'
         };
       }
       
       if (pathname.startsWith('/category/')) {
         const category = pathname.split('/')[2];
         return {
-          title: `Produits ${category} éco-responsables - Ecolojia`,
-          description: `Découvrez notre sélection de produits ${category} éthiques et durables avec scores écologiques vérifiés.`
+          title: `Produits ${category} eco-responsables - Ecolojia`,
+          description: `Decouvrez notre selection de produits ${category} ethiques et durables avec scores ecologiques verifies.`
         };
       }
 
       return {
-        title: 'Ecolojia - Produits éco-responsables',
-        description: 'Plateforme de découverte de produits éthiques et durables.'
+        title: 'Ecolojia - Produits eco-responsables',
+        description: 'Plateforme de decouverte de produits ethiques et durables.'
       };
     };
 
-    // Merger les données par défaut avec celles fournies
+    // Merger les donnees par defaut avec celles fournies
     const finalSEOData = {
       ...getDefaultSEO(),
       ...seoData,
       url: fullUrl
     };
 
-    // Mettre ÃƒÂ  jour les meta tags
+    // Mettre  jour les meta tags
     updatePageSEO(finalSEOData);
 
   }, [location, seoData]);
 };
 
-const updatePageSEO = (data: SEOData & { url?: string }) => {
+const updatePageSEO = (data: SEOData & { urla: string }) => {
   // Title
-  if (data.title) {
-    document.title = data.title;
+  if (data?.title) {
+    document.title = data?.title;
   }
 
   // Meta description
-  if (data.description) {
-    updateOrCreateMeta('description', data.description);
+  if (data?.description) {
+    updateOrCreateMetaTag('description', data?.description);
   }
 
   // Meta keywords
-  if (data.keywords) {
-    updateOrCreateMeta('keywords', data.keywords);
+  if (data?.keywords) {
+    updateOrCreateMetaTag('keywords', data?.keywords);
   }
 
   // Canonical URL
-  if (data.url) {
-    updateOrCreateLink('canonical', data.url);
+  if (data?.url) {
+    updateOrCreateLink('canonical', data?.url);
   }
 };
 
-const updateOrCreateMeta = (name: string, content: string) => {
+const updateOrCreateMetaTag = (name: string, content: string) => {
   let meta = document.querySelector(`meta[name="${name}"]`);
   
   if (!meta) {
     meta = document.createElement('meta');
-    meta.setAttribute('name', name);
+    meta?.setAttribute('name', name);
     document.head.appendChild(meta);
   }
   
-  meta.setAttribute('content', content);
+  meta?.setAttribute('content', content);
 };
 
 const updateOrCreateLink = (rel: string, href: string) => {
@@ -115,3 +115,6 @@ const updateOrCreateLink = (rel: string, href: string) => {
   
   link.setAttribute('href', href);
 };
+
+
+

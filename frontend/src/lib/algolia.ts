@@ -8,7 +8,7 @@ export const ALGOLIA_INDEX_NAME = import.meta.env.VITE_ALGOLIA_INDEX_NAME || 'pr
 // Client Algolia
 const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY);
 
-// Configuration de recherche optimisée
+// Configuration de recherche optimisee
 export const searchConfig = {
   hitsPerPage: 12,
   attributesToRetrieve: [
@@ -43,21 +43,21 @@ export const cleanText = (text: string): string => {
   if (!text) return '';
   
   return text
-    .replace(/ïÂ¿Â½/g, 'é')
-    .replace(/ÃƒÂ /g, 'ÃƒÂ ')
-    .replace(/é/g, 'é')
-    .replace(/è/g, 'è')
-    .replace(/ç/g, 'ç')
-    .replace(/ô/g, 'ô')
-    .replace(/ÃƒÂ»/g, 'ÃƒÂ»')
-    .replace(/î/g, 'î')
-    .replace(/â/g, 'â')
-    .replace(/ÃƒÆ’â€Â°/g, 'Ãƒâ€°')
-    .replace(/ÃƒÆ’ââ€šÂ¬/g, 'Ãƒ€')
-    .replace(/ÃƒÂ¹/g, 'ÃƒÂ¹')
-    .replace(/ê/g, 'ê')
-    .replace(/ÃƒÆ’Ã‚Â«/g, 'ÃƒÂ«')
-    .replace(/ÃƒÆ’Ã‚Â¯/g, 'ÃƒÂ¯')
+    .replace(//g, 'e')
+    .replace(//g, '')
+    .replace(/e/g, 'e')
+    .replace(/e/g, 'e')
+    .replace(/c/g, 'c')
+    .replace(/o/g, 'o')
+    .replace(//g, '')
+    .replace(/i/g, 'i')
+    .replace(/a/g, 'a')
+    .replace(/aaa/g, 'aa')
+    .replace(/aaaa/g, 'a')
+    .replace(//g, '')
+    .replace(/e/g, 'e')
+    .replace(/aa/g, '')
+    .replace(/aa/g, '')
     .trim();
 };
 
@@ -75,3 +75,5 @@ export const cleanTags = (tags: string[]): string[] => {
 };
 
 export default searchClient;
+
+

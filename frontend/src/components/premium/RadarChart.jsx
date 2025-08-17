@@ -1,4 +1,4 @@
-// frontend/src/components/premium/RadarChart.jsx
+﻿// frontend/src/components/premium/RadarChart.jsx
 
 import React from 'react';
 
@@ -27,12 +27,12 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
     };
   };
 
-  // Générer les points du polygone
-  const points = data.map((item, index) => 
-    calculatePoint(item.value, index, data.length)
+  // Generer les points du polygone
+  const points = data?.map((item, index) => 
+    calculatePoint(item.value, index, data?.length)
   );
 
-  // Créer le path pour le polygone
+  // Creer le path pour le polygone
   const polygonPath = points.map((point, index) => 
     `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
   ).join(' ') + ' Z';
@@ -81,8 +81,8 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
         })}
 
         {/* Lignes radiales */}
-        {data.map((_, index) => {
-          const angle = (Math.PI * 2 * index) / data.length - Math.PI / 2;
+        {data?.map((_, index) => {
+          const angle = (Math.PI * 2 * index) / data?.length - Math.PI / 2;
           const endX = center + radius * Math.cos(angle);
           const endY = center + radius * Math.sin(angle);
           
@@ -99,7 +99,7 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
           );
         })}
 
-        {/* Polygone principal des données */}
+        {/* Polygone principal des donnees */}
         <path
           d={polygonPath}
           fill="url(#radarGradient)"
@@ -109,7 +109,7 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
           className="transition-all duration-1000 ease-out"
         />
 
-        {/* Points de données */}
+        {/* Points de donnees */}
         {points.map((point, index) => (
           <g key={index}>
             {/* Cercle de fond */}
@@ -133,8 +133,8 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
         ))}
 
         {/* Labels des axes */}
-        {data.map((item, index) => {
-          const labelPoint = calculateLabelPoint(index, data.length);
+        {data?.map((item, index) => {
+          const labelPoint = calculateLabelPoint(index, data?.length);
           return (
             <g key={index}>
               {/* Fond semi-transparent pour les labels */}
@@ -176,7 +176,7 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
         ))}
       </svg>
 
-      {/* Légende */}
+      {/* Legende */}
       <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -188,11 +188,11 @@ const RadarChart = ({ data, maxValue = 100, size = 300 }) => {
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span className="text-gray-300">&lt;40 Ãƒ€ améliorer</span>
+          <span className="text-gray-300">&lt;40  ameliorer</span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-          <span className="text-gray-300">Non évalué</span>
+          <span className="text-gray-300">Non evalue</span>
         </div>
       </div>
     </div>

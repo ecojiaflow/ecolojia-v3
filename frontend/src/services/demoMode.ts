@@ -1,5 +1,5 @@
-// PATH: frontend/src/services/demoMode.ts
-// Service de démonstration avec données complètes
+﻿// PATH: frontend/src/services/demoMode.ts
+// Service de demonstration avec donnees completes
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -7,11 +7,11 @@ export const demoMode = {
   isEnabled: () => true,
   
   toggle: (enabled) => {
-    console.log(enabled ? "Ã°Å¸Å½Â­ Mode démo activé" : "Ã°Å¸â€Å’ Mode démo désactivé");
+    console.log(enabled ? "Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ Mode demo active" : "Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Mode demo desactive");
   },
   
   analyzeBarcode: async (barcode) => {
-    console.log("Ã°Å¸Å½Â­ DEMO: Analyse barcode", barcode);
+    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse barcode", barcode);
     await delay(1000);
     
     return {
@@ -22,7 +22,7 @@ export const demoMode = {
         barcode: barcode,
         brand: barcode === "3017620422003" ? "Ferrero" : "Marque Demo",
         category: "food",
-        image: "https://via.placeholder.com/300",
+        image: "https://vi?.placeholder.com/300",
         quantity: "400g"
       },
       analysis: {
@@ -30,10 +30,10 @@ export const demoMode = {
         novaScore: 4,
         nutriScore: "E",
         ecoScore: "D",
-        additives: ["E322 - Lécithines", "E330 - Acide citrique"],
-        allergens: ["Lait", "Fruits ÃƒÂ  coque", "Soja"],
-        warnings: ["Teneur élevée en sucre", "Ultra-transformé"],
-        ingredients: "Sucre, huile de palme, NOISETTES 13%, cacao maigre, LAIT écrémé en poudre, lactoserum, lécithines, vanilline",
+        additives: ["E322 - Lecithines", "E330 - Acide citrique"],
+        allergens: ["Lait", "Fruits Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  coque", "Soja"],
+        warnings: ["Teneur elevee en sucre", "Ultra-transforme"],
+        ingredients: "Sucre, huile de palme, NOISETTES 13%, cacao maigre, LAIT ecreme en poudre, lactoserum, lecithines, vanilline",
         nutritionalValues: {
           energy: 539,
           energyKj: 2252,
@@ -49,19 +49,19 @@ export const demoMode = {
         alternatives: [
           {
             _id: "alt1",
-            name: "Pâte ÃƒÂ  tartiner bio sans huile de palme",
+            name: "Pate Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  tartiner bio sans huile de palme",
             brand: "Bio Brand",
             healthScore: 65,
             nutriScore: "C",
-            image: "https://via.placeholder.com/150"
+            image: "https://vi?.placeholder.com/150"
           },
           {
             _id: "alt2",
-            name: "Purée d''amandes complètes",
+            name: "Puree d''amandes completes",
             brand: "Nature",
             healthScore: 85,
             nutriScore: "A",
-            image: "https://via.placeholder.com/150"
+            image: "https://vi?.placeholder.com/150"
           }
         ],
         impactEnvironmental: {
@@ -79,38 +79,38 @@ export const demoMode = {
   },
   
   analyzeImage: async (file) => {
-    console.log("Ã°Å¸Å½Â­ DEMO: Analyse image", file.name);
+    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse image", file.name);
     await delay(2000);
     
     return {
       success: true,
       result: {
-        productName: "Produit Détecté par Vision",
+        productName: "Produit Detecte par Vision",
         confidence: 0.85,
         barcode: Math.random() > 0.5 ? "3017620422003" : null,
         extractedData: {
           name: "Produit Demo Vision",
-          ingredients: "Eau, sucre, arômes naturels, conservateurs",
+          ingredients: "Eau, sucre, aromes naturels, conservateurs",
           category: "food",
-          brand: "Marque Détectée"
+          brand: "Marque Detectee"
         }
       }
     };
   },
   
   analyzeManual: async (data) => {
-    console.log("Ã°Å¸Å½Â­ DEMO: Analyse manuelle", data);
+    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse manuelle", data);
     await delay(1500);
     
     return {
       success: true,
       product: {
         _id: "demo-manual-" + Date.now(),
-        name: data.name,
-        brand: data.brand || "Marque inconnue",
-        category: data.category || "food",
-        ingredients: data.ingredients,
-        image: "https://via.placeholder.com/300"
+        name: data?.name,
+        brand: data?.brand || "Marque inconnue",
+        category: data?.category || "food",
+        ingredients: data?.ingredients,
+        image: "https://vi?.placeholder.com/300"
       },
       analysis: {
         healthScore: 65,
@@ -202,9 +202,12 @@ export const demoMode = {
   }),
   
   incrementScans: () => {
-    console.log("Ã°Å¸Å½Â­ Scan comptabilisé");
+    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ Scan comptabilise");
   }
 };
 
 
 export default demoMode;
+
+
+

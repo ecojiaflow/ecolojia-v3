@@ -27,7 +27,7 @@ const CACHE_PATTERNS = {
     maxEntries: 100
   },
   
-  // API calls - cache 5 minutes pour les donnÃ©es non-critiques
+  // API calls - cache 5 minutes pour les données non-critiques
   api: {
     pattern: /\/api\/v1\/(products|categories|trending)/,
     cache: RUNTIME_CACHE,
@@ -54,7 +54,7 @@ const CACHE_PATTERNS = {
 };
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-// Ã‰VÃ‰NEMENTS DU SERVICE WORKER
+// ÉVÉNEMENTS DU SERVICE WORKER
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 // Installation
@@ -67,7 +67,7 @@ self.addEventListener('install', (event) => {
         console.log('[ServiceWorker] Pre-caching static assets');
         return cache.addAll(STATIC_CACHE_URLS);
       })
-      .then(() => self.skipWaiting()) // Active immÃ©diatement
+      .then(() => self.skipWaiting()) // Active immédiatement
   );
 });
 
@@ -87,29 +87,29 @@ self.addEventListener('activate', (event) => {
         })
       );
     })
-    .then(() => self.clients.claim()) // Prend le contrÃ´le immÃ©diatement
+    .then(() => self.clients.claim()) // Prend le contrôle immédiatement
   );
 });
 
-// Interception des requÃªtes
+// Interception des requêtes
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Ignorer les requÃªtes non-GET
+  // Ignorer les requêtes non-GET
   if (request.method !== 'GET') return;
 
-  // Ignorer les requÃªtes cross-origin (sauf CDN autorisÃ©s)
+  // Ignorer les requêtes cross-origin (sauf CDN autorisés)
   if (url.origin !== self.location.origin && 
       !url.origin.includes('cloudinary.com') &&
       !url.origin.includes('algolia.net')) {
     return;
   }
 
-  // Ignorer les requÃªtes de dÃ©veloppement
+  // Ignorer les requêtes de développement
   if (url.pathname.includes('hot-update')) return;
 
-  // DÃ©terminer la stratÃ©gie de cache
+  // Déterminer la stratégie de cache
   const cacheStrategy = getCacheStrategy(url, request);
   
   if (cacheStrategy) {
@@ -118,18 +118,18 @@ self.addEventListener('fetch', (event) => {
 });
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-// STRATÃ‰GIES DE CACHE
+// STRATÉGIES DE CACHE
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function getCacheStrategy(url, request) {
-  // VÃ©rifier chaque pattern
+  // Vérifier chaque pattern
   for (const [key, config] of Object.entries(CACHE_PATTERNS)) {
     if (config.pattern.test(url.pathname) || config.pattern.test(url.href)) {
       return config;
     }
   }
   
-  // StratÃ©gie par dÃ©faut pour les pages HTML
+  // Stratégie par défaut pour les pages HTML
   if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
     return {
       cache: RUNTIME_CACHE,
@@ -149,7 +149,7 @@ async function handleRequest(request, strategy) {
     try {
       const response = await fetchWithTimeout(request, 5000);
       
-      // Mettre en cache si succÃ¨s
+      // Mettre en cache si succès
       if (response && response.status === 200) {
         const responseToCache = response.clone();
         cache.put(request, responseToCache);
@@ -174,16 +174,16 @@ async function handleRequest(request, strategy) {
     }
   }
   
-  // Cache First Strategy (par dÃ©faut)
+  // Cache First Strategy (par défaut)
   const cachedResponse = await cache.match(request);
   
   if (cachedResponse) {
-    // VÃ©rifier l'Ã¢ge du cache
+    // Vérifier l'âge du cache
     const cachedDate = new Date(cachedResponse.headers.get('date'));
     const age = (Date.now() - cachedDate.getTime()) / 1000;
     
     if (!strategy.maxAge || age < strategy.maxAge) {
-      // RafraÃ®chir en arriÃ¨re-plan si > 50% du maxAge
+      // Rafraîchir en arrière-plan si > 50% du maxAge
       if (strategy.maxAge && age > strategy.maxAge * 0.5) {
         refreshCache(request, cache);
       }
@@ -191,14 +191,14 @@ async function handleRequest(request, strategy) {
     }
   }
   
-  // Pas de cache ou expirÃ© - fetch network
+  // Pas de cache ou expiré - fetch network
   try {
     const response = await fetchWithTimeout(request, 5000);
     
     if (response && response.status === 200) {
       const responseToCache = response.clone();
       
-      // Nettoyer le cache si trop d'entrÃ©es
+      // Nettoyer le cache si trop d'entrées
       if (strategy.maxEntries) {
         await cleanCache(strategy.cache, strategy.maxEntries);
       }
@@ -208,7 +208,7 @@ async function handleRequest(request, strategy) {
     
     return response;
   } catch (error) {
-    // Si Ã©chec et cache disponible (mÃªme expirÃ©), l'utiliser
+    // Si échec et cache disponible (même expiré), l'utiliser
     if (cachedResponse) {
       console.log('[ServiceWorker] Using stale cache after network failure');
       return cachedResponse;
@@ -256,7 +256,7 @@ async function cleanCache(cacheName, maxEntries) {
   const requests = await cache.keys();
   
   if (requests.length > maxEntries) {
-    // Supprimer les plus anciennes entrÃ©es
+    // Supprimer les plus anciennes entrées
     const toDelete = requests.slice(0, requests.length - maxEntries);
     await Promise.all(toDelete.map(request => cache.delete(request)));
   }
@@ -297,8 +297,8 @@ async function syncPendingAnalyses() {
         await store.delete(analysis.id);
         
         // Notifier l'utilisateur
-        self.registration.showNotification('Analyse synchronisÃ©e', {
-          body: `L'analyse de ${analysis.data.productName} a Ã©tÃ© envoyÃ©e`,
+        self.registration.showNotification('Analyse synchronisée', {
+          body: `L'analyse de ${analysis.data.productName} a été envoyée`,
           icon: '/images/icons/icon-192x192.png',
           badge: '/images/icons/badge-72x72.png'
         });
@@ -357,13 +357,13 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // Si une fenÃªtre est dÃ©jÃ  ouverte, focus
+        // Si une fenêtre est déjÃ  ouverte, focus
         for (const client of clientList) {
           if (client.url === url && 'focus' in client) {
             return client.focus();
           }
         }
-        // Sinon ouvrir une nouvelle fenÃªtre
+        // Sinon ouvrir une nouvelle fenêtre
         if (clients.openWindow) {
           return clients.openWindow(url);
         }

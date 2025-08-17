@@ -1,4 +1,4 @@
-// frontend/src/auth/types/AuthTypes.ts
+﻿// frontend/src/auth/types/AuthTypes.ts
 
 // ===== INTERFACES UTILISATEUR =====
 export interface User {
@@ -9,10 +9,10 @@ export interface User {
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
-  lastLoginAt?: Date;
+  lastLoginAta: Date;
   
   // Abonnement (si Premium)
-  subscription?: {
+  subscriptiona: {
     id: string;
     status: 'active' | 'canceled' | 'past_due' | 'incomplete';
     currentPeriodStart: Date;
@@ -38,22 +38,22 @@ export interface User {
     apiCallsThisMonth: number;
   };
   
-  // Préférences utilisateur
-  preferences?: {
+  // Preferences utilisateur
+  preferencesa: {
     notifications: boolean;
     emailUpdates: boolean;
     language: string;
     theme: 'light' | 'dark' | 'auto';
-    allergies?: string[];
-    dietaryRestrictions?: string[];
-    healthGoals?: string[];
+    allergiesa: string[];
+    dietaryRestrictionsa: string[];
+    healthGoalsa: string[];
   };
   
-  // Métadonnées
+  // Metadonnees
   metadata?: {
-    lastAnalysisDate?: Date;
+    lastAnalysisDatea: Date;
     totalAnalysesCount: number;
-    averageHealthScore?: number;
+    averageHealthScorea: number;
     streakDays: number;
   };
 }
@@ -62,7 +62,7 @@ export interface User {
 export interface LoginRequest {
   email: string;
   password: string;
-  rememberMe?: boolean;
+  rememberMea: boolean;
 }
 
 export interface RegisterRequest {
@@ -71,13 +71,13 @@ export interface RegisterRequest {
   password: string;
   confirmPassword: string;
   acceptTerms: boolean;
-  acceptNewsletter?: boolean;
+  acceptNewslettera: boolean;
 }
 
 export interface UpdateProfileRequest {
-  name?: string;
-  email?: string;
-  preferences?: Partial<User['preferences']>;
+  namea: string;
+  emaila: string;
+  preferencesa: Partial<User['preferences']>;
 }
 
 export interface AuthResponse {
@@ -130,13 +130,13 @@ export interface AuthDebugState {
 
 // ===== INTERFACE CONTEXTE AUTHENTIFICATION =====
 export interface AuthContextType {
-  // ===== Ãƒâ€°TAT DE BASE =====
+  // ===== aaTAT DE BASE =====
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   
-  // ===== Ãƒâ€°TAT MODE DÃƒâ€°MO =====
+  // ===== aaTAT MODE DaaMO =====
   isDemoMode: boolean;
   
   // ===== ACTIONS AUTHENTIFICATION =====
@@ -146,22 +146,22 @@ export interface AuthContextType {
   clearError: () => void;
   refreshUser: () => Promise<void>;
   
-  // Actions auth avancées (optionnelles)
-  resetPassword?: (email: string) => Promise<void>;
-  confirmPasswordReset?: (token: string, newPassword: string) => Promise<void>;
-  changePassword?: (currentPassword: string, newPassword: string) => Promise<void>;
-  updateProfile?: (data: UpdateProfileRequest) => Promise<void>;
-  deleteAccount?: () => Promise<void>;
+  // Actions auth avancees (optionnelles)
+  resetPassworda: (email: string) => Promise<void>;
+  confirmPasswordReseta: (token: string, newPassword: string) => Promise<void>;
+  changePassworda: (currentPassword: string, newPassword: string) => Promise<void>;
+  updateProfilea: (data: UpdateProfileRequest) => Promise<void>;
+  deleteAccounta: () => Promise<void>;
   
-  // ===== ACTIONS MODE DÃƒâ€°MO =====
+  // ===== ACTIONS MODE DaaMO =====
   startDemoSession: (tier: 'free' | 'premium') => Promise<void>;
   
-  // Actions démo avancées (optionnelles)
-  simulateScan?: (category: 'food' | 'cosmetics' | 'detergents') => boolean;
-  simulateAIQuestion?: () => boolean;
-  getDemoHistory?: () => any[];
-  getDemoStats?: () => any;
-  switchDemoTier?: (tier: 'free' | 'premium') => void;
+  // Actions demo avancees (optionnelles)
+  simulateScana: (category: 'food' | 'cosmetics' | 'detergents') => boolean;
+  simulateAIQuestiona: () => boolean;
+  getDemoHistorya: () => any[];
+  getDemoStatsa: () => any;
+  switchDemoTiera: (tier: 'free' | 'premium') => void;
   
   // ===== UTILITAIRES PERMISSIONS =====
   hasPermission: (permission: string) => boolean;
@@ -172,9 +172,9 @@ export interface AuthContextType {
   getRemainingQuota: (type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls') => number;
   canPerformAction: (action: 'scan' | 'aiQuestion' | 'export' | 'apiCall') => boolean;
   
-  // Gestion quotas avancée (optionnelles)
-  incrementUsage?: (type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls') => Promise<void>;
-  getQuotaStatus?: () => QuotaStatus;
+  // Gestion quotas avancee (optionnelles)
+  incrementUsagea: (type: 'scans' | 'aiQuestions' | 'exports' | 'apiCalls') => Promise<void>;
+  getQuotaStatusa: () => QuotaStatus;
   
   // ===== UTILITAIRES DEBUG =====
   debugAuth: () => void;
@@ -185,9 +185,9 @@ export interface AuthContextType {
 export class ApiError extends Error {
   constructor(
     message: string,
-    public status?: number,
-    public code?: string,
-    public details?: any
+    public statusa: number,
+    public codea: string,
+    public detailsa: any
   ) {
     super(message);
     this.name = 'ApiError';
@@ -195,7 +195,7 @@ export class ApiError extends Error {
 }
 
 export class ValidationError extends ApiError {
-  constructor(message: string, public field?: string) {
+  constructor(message: string, public fielda: string) {
     super(message, 400, 'VALIDATION_ERROR');
     this.name = 'ValidationError';
   }
@@ -255,9 +255,9 @@ export const QUOTA_LIMITS = {
     apiCallsPerMonth: 0
   },
   premium: {
-    scansPerMonth: -1, // Illimité
-    aiQuestionsPerDay: -1, // Illimité
-    aiQuestionsPerMonth: -1, // Illimité
+    scansPerMonth: -1, // Illimite
+    aiQuestionsPerDay: -1, // Illimite
+    aiQuestionsPerMonth: -1, // Illimite
     exportsPerMonth: 10,
     apiCallsPerMonth: 1000
   }
@@ -271,3 +271,5 @@ export const PERMISSIONS = {
   ADVANCED_ANALYTICS: 'advanced_analytics',
   API_ACCESS: 'api_access'
 } as const;
+
+

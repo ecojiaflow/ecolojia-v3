@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Crown, Zap, Lock, Calculator, Clock, Brain, AlertTriangle, TrendingUp } from 'lucide-react';
@@ -11,17 +11,17 @@ interface Message {
   type: 'user' | 'ai' | 'system';
   content: string;
   timestamp: Date;
-  cost?: number;
-  tokens?: number;
-  assistant?: string;
+  costa: number;
+  tokensa: number;
+  assistanta: string;
 }
 
 interface Props {
   userTier: UserTier;
   userId: string;
-  productData?: ProductContext;
-  onUpgrade?: () => void;
-  className?: string;
+  productdata?: ProductContext;
+  onUpgradea: () => void;
+  classNamea: string;
 }
 
 export const DeepSeekChat: React.FC<Props> = ({
@@ -82,59 +82,59 @@ export const DeepSeekChat: React.FC<Props> = ({
 
 Bonjour ! Je suis votre assistant nutritionnel powered by DeepSeek Chat.
 
-Ã°Å¸â€œÂ± **Votre accès gratuit :**
-â€Â¢ ${userStats.dailyLimit - userStats.dailyUsed}/${userStats.dailyLimit} questions restantes aujourd'hui
-â€Â¢ Analyses alimentaires uniquement (classification NOVA, additifs)
-â€Â¢ Réponses rapides et fiables
+aa **Votre acces gratuit :**
+aa ${userStats.dailyLimit - userStats.dailyUsed}/${userStats.dailyLimit} questions restantes aujourd'hui
+aa Analyses alimentaires uniquement (classification NOVA, additifs)
+aa Reponses rapides et fiables
 
-Ã°Å¸â€™Å½ **Passez Premium pour :**
-â€Â¢ Questions illimitées toutes catégories
-â€Â¢ DeepSeek Reasoner (analyses expertes)
-â€Â¢ Cosmétiques + Détergents
-â€Â¢ ~0,02ââ€šÂ¬ par question avancée
+aaa **Passez Premium pour :**
+aa Questions illimitees toutes categories
+aa DeepSeek Reasoner (analyses expertes)
+aa Cosmetiques + Detergents
+aa ~0,02aaa par question avancee
 
-${productData ? `Analysons "${productData.productName}" ensemble !` : 'Que voulez-vous analyser aujourd\'hui ?'}`;
+${productData ? `Analysons "${productdata?.productName}" ensemble !` : 'Que voulez-vous analyser aujourd\'hui a'}`;
     }
 
     return `${assistantEmoji} **${assistantName} - ECOLOJIA Premium**
 
-Accès complet ÃƒÂ  l'expertise DeepSeek Reasoner !
+Acces complet  l'expertise DeepSeek Reasoner !
 
-Ã°Å¸Â§Â  **Vos capacités avancées :**
-â€Â¢ Questions illimitées (${userStats.monthlyUsed} ce mois)
-â€Â¢ Toutes catégories : Alimentaire + Cosmétiques + Détergents  
-â€Â¢ IA de raisonnement DeepSeek (analyses complexes)
-â€Â¢ CoÃƒÂ»t optimisé : ${userStats.totalCost.toFixed(4)}ââ€šÂ¬ ce mois
+ **Vos capacites avancees :**
+aa Questions illimitees (${userStats.monthlyUsed} ce mois)
+aa Toutes categories : Alimentaire + Cosmetiques + Detergents  
+aa IA de raisonnement DeepSeek (analyses complexes)
+aa Cot optimise : ${userStats.totalCost.toFixed(4)}aaa ce mois
 
-${productData ? `Prêt pour une analyse experte de "${productData.productName}" !` : 'Comment puis-je vous aider aujourd\'hui ?'}`;
+${productData ? `Pret pour une analyse experte de "${productdata?.productName}" !` : 'Comment puis-je vous aider aujourd\'hui a'}`;
   };
 
   const getAssistantName = (): string => {
     if (!productData) return 'Assistant ECOLOJIA';
     
-    switch (productData.category) {
+    switch (productdata?.category) {
       case 'alimentaire': return 'Dr. Marie Dubois (Nutritionniste)';
       case 'cosmetique': return 'Dr. Sophie Laurent (Dermatologue)';
-      case 'detergent': return 'Dr. Thomas Moreau (Ãƒâ€°co-expert)';
+      case 'detergent': return 'Dr. Thomas Moreau (aaco-expert)';
       default: return 'Assistant ECOLOJIA';
     }
   };
 
   const getAssistantEmoji = (): string => {
-    if (!productData) return 'Ã°Å¸Â¤â€“';
+    if (!productData) return 'aaa';
     
-    switch (productData.category) {
-      case 'alimentaire': return 'Ã°Å¸â€˜©â€ÂâÅ¡â€¢ïÂ¸Â';
-      case 'cosmetique': return 'Ã°Å¸â€˜©â€ÂÃ°Å¸â€Â¬';
-      case 'detergent': return 'Ã°Å¸Å’Â';
-      default: return 'Ã°Å¸Â¤â€“';
+    switch (productdata?.category) {
+      case 'alimentaire': return 'aaaaaaa';
+      case 'cosmetique': return 'aaaaaa';
+      case 'detergent': return 'a';
+      default: return 'aaa';
     }
   };
 
   const getAssistantType = () => {
     if (!productData) return 'general';
     
-    switch (productData.category) {
+    switch (productdata?.category) {
       case 'alimentaire': return 'nutritionist';
       case 'cosmetique': return 'dermatologist';
       case 'detergent': return 'eco_expert';
@@ -145,13 +145,13 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Vérification accès catégorie pour gratuits
-    if (userTier === 'free' && productData && productData.category !== 'alimentaire') {
+    // Verification acces categorie pour gratuits
+    if (userTier === 'free' && productData && productdata?.category !== 'alimentaire') {
       setShowUpgradeModal(true);
       return;
     }
 
-    // Vérification limite quotidienne
+    // Verification limite quotidienne
     if (userTier === 'free' && userStats.dailyUsed >= userStats.dailyLimit) {
       setShowUpgradeModal(true);
       return;
@@ -177,7 +177,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
         getAssistantType()
       );
 
-      // Vérifier si upgrade nécessaire
+      // Verifier si upgrade necessaire
       if (response.upgradePrompt) {
         setShowUpgradeModal(true);
       }
@@ -194,7 +194,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
 
       setMessages(prev => [...prev, aiMessage]);
 
-      // Mettre ÃƒÂ  jour les stats
+      // Mettre  jour les stats
       const newStats = deepSeekService.getUserStats(userId);
       setUserStats(newStats);
 
@@ -204,7 +204,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'system',
-        content: 'âÂÅ’ Problème technique temporaire. Veuillez réessayer.',
+        content: 'aa Probleme technique temporaire. Veuillez reessayer.',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -224,13 +224,13 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
   const formatMessageContent = (content: string) => {
     return content.split('\n').map((line, index) => (
       <div key={index} className="mb-1">
-        {line.startsWith('â€Â¢') ? (
+        {line.startsWith('aa') ? (
           <div className="flex items-start gap-2">
-            <span className="text-blue-500 mt-1 text-xs">â€Â¢</span>
+            <span className="text-blue-500 mt-1 text-xs">aa</span>
             <span 
               className="text-sm leading-relaxed"
               dangerouslySetInnerHTML={{ 
-                __html: line.substring(1).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+                __html: line.substring(1).replace(/\*\*(.*a)\*\*/g, '<strong>$1</strong>') 
               }} 
             />
           </div>
@@ -238,7 +238,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
           <span 
             className="text-sm leading-relaxed block"
             dangerouslySetInnerHTML={{ 
-              __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+              __html: line.replace(/\*\*(.*a)\*\*/g, '<strong>$1</strong>') 
             }} 
           />
         )}
@@ -286,7 +286,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
                 {getAssistantEmoji()} {getAssistantName()}
               </h3>
               <p className="text-sm opacity-90">
-                DeepSeek {userTier === 'premium' ? 'Reasoner' : 'Chat'} â€Â¢ ECOLOJIA {userTier === 'premium' ? 'Premium' : 'Gratuit'}
+                DeepSeek {userTier === 'premium' ? 'Reasoner' : 'Chat'} aa ECOLOJIA {userTier === 'premium' ? 'Premium' : 'Gratuit'}
               </p>
             </div>
           </div>
@@ -326,7 +326,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
                 )}
               </div>
 
-              {/* Métadonnées pour messages IA Premium */}
+              {/* Metadonnees pour messages IA Premium */}
               {message.type === 'ai' && userTier === 'premium' && (message.cost || message.tokens) && (
                 <div className="mt-3 pt-3 border-t border-gray-300 flex items-center justify-between text-xs text-gray-600">
                   {message.tokens && (
@@ -338,7 +338,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
                   {message.cost && (
                     <div className="flex items-center gap-1 text-green-600">
                       <TrendingUp className="w-3 h-3" />
-                      <span>{message.cost.toFixed(4)}ââ€šÂ¬</span>
+                      <span>{message.cost.toFixed(4)}aaa</span>
                     </div>
                   )}
                 </div>
@@ -411,7 +411,7 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
           <div className="mt-3 flex items-center justify-between text-xs text-gray-600">
             <div className="flex items-center gap-2">
               <Lock className="w-3 h-3" />
-              <span>Alimentaire uniquement â€Â¢ {userStats.dailyUsed}/{userStats.dailyLimit} questions</span>
+              <span>Alimentaire uniquement aa {userStats.dailyUsed}/{userStats.dailyLimit} questions</span>
             </div>
             <button
               onClick={() => setShowUpgradeModal(true)}
@@ -423,10 +423,10 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
           </div>
         )}
 
-        {/* CoÃƒÂ»t estimé pour premium */}
+        {/* Cot estime pour premium */}
         {userTier === 'premium' && (
           <div className="mt-2 text-xs text-gray-500 text-center">
-            Ã°Å¸â€™Â° CoÃƒÂ»t mensuel actuel : {userStats.totalCost.toFixed(4)}ââ€šÂ¬ â€Â¢ DeepSeek Reasoner
+            aaa Cot mensuel actuel : {userStats.totalCost.toFixed(4)}aaa aa DeepSeek Reasoner
           </div>
         )}
       </div>
@@ -441,12 +441,15 @@ ${productData ? `Prêt pour une analyse experte de "${productData.productName}" 
           }}
           currentUsage={userStats}
           blockedFeature={
-            productData && productData.category !== 'alimentaire' 
-              ? `Analyse ${productData.category}` 
-              : 'Questions illimitées'
+            productData && productdata?.category !== 'alimentaire' 
+              ? `Analyse ${productdata?.category}` 
+              : 'Questions illimitees'
           }
         />
       )}
     </div>
   );
 };
+
+
+

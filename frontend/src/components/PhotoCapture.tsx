@@ -1,4 +1,4 @@
-// frontend/src/components/scanner/PhotoCapture.tsx
+﻿// frontend/src/components/scanner/PhotoCapture.tsx
 import React, { useState, useRef, useCallback } from 'react';
 import { Camera, Upload, X, Loader2, Check, AlertCircle, RotateCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,11 +6,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PhotoCaptureProps {
   onCapture: (file: File) => void;
-  onError?: (error: Error) => void;
-  maxSize?: number;
-  acceptedFormats?: string[];
-  allowCamera?: boolean;
-  allowUpload?: boolean;
+  onerror?: (error: Error) => void;
+  maxSizea: number;
+  acceptedFormatsa: string[];
+  allowCameraa: boolean;
+  allowUploada: boolean;
 }
 
 type CaptureState = 'idle' | 'capturing' | 'processing' | 'preview' | 'error';
@@ -35,7 +35,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Initialiser la caméra
+  // Initialiser la camera
   const startCamera = useCallback(async () => {
     try {
       setState('capturing');
@@ -56,13 +56,13 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
         await videoRef.current.play();
       }
     } catch (err) {
-      setError('Impossible d\'accéder ÃƒÂ  la caméra');
+      setError('Impossible d\'acceder  la camera');
       setState('error');
       onError?.(err as Error);
     }
   }, [onError]);
 
-  // Arrêter la caméra
+  // Arreter la camera
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -73,7 +73,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
     }
   }, []);
 
-  // Capturer une photo depuis la caméra
+  // Capturer une photo depuis la camera
   const capturePhoto = useCallback(async () => {
     if (!videoRef.current || !canvasRef.current) return;
     
@@ -83,7 +83,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
-      // Ajuster le canvas ÃƒÂ  la taille de la vidéo
+      // Ajuster le canvas  la taille de la video
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
@@ -105,17 +105,17 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
         );
       });
       
-      // Créer un File
+      // Creer un File
       const file = new File([blob], `capture_${Date.now()}.jpg`, {
         type: 'image/jpeg'
       });
       
-      // Créer l'URL de prévisualisation
+      // Creer l'URL de previsualisation
       const url = URL.createObjectURL(blob);
       setPreviewUrl(url);
       setCapturedFile(file);
       
-      // Arrêter la caméra
+      // Arreter la camera
       stopCamera();
       setState('preview');
       
@@ -126,28 +126,28 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
     }
   }, [stopCamera, onError]);
 
-  // Gérer l'upload de fichier
+  // Gerer l'upload de fichier
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     
     // Validation du type
     if (!acceptedFormats.includes(file.type)) {
-      setError('Format de fichier non supporté');
+      setError('Format de fichier non supporte');
       setState('error');
       return;
     }
     
     // Validation de la taille
     if (file.size > maxSize) {
-      setError(`Le fichier dépasse la taille maximum (${Math.round(maxSize / 1024 / 1024)}MB)`);
+      setError(`Le fichier depasse la taille maximum (${Math.round(maxSize / 1024 / 1024)}MB)`);
       setState('error');
       return;
     }
     
     setState('processing');
     
-    // Créer la prévisualisation
+    // Creer la previsualisation
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewUrl(e.target?.result as string);
@@ -165,25 +165,25 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
   const confirmCapture = useCallback(() => {
     if (!capturedFile) return;
     
-    // Nettoyer l'URL de prévisualisation
+    // Nettoyer l'URL de previsualisation
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
     
     onCapture(capturedFile);
     
-    // Réinitialiser
+    // Reinitialiser
     setState('idle');
     setPreviewUrl(null);
     setCapturedFile(null);
     
     toast({
-      title: "Photo capturée",
+      title: "Photo capturee",
       description: "L'analyse va commencer...",
     });
   }, [capturedFile, previewUrl, onCapture, toast]);
 
-  // Réinitialiser
+  // Reinitialiser
   const reset = useCallback(() => {
     stopCamera();
     setState('idle');
@@ -196,7 +196,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
     }
   }, [stopCamera]);
 
-  // Nettoyer au démontage
+  // Nettoyer au demontage
   React.useEffect(() => {
     return () => {
       stopCamera();
@@ -209,7 +209,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
   return (
     <div className="w-full max-w-md mx-auto">
       <AnimatePresence mode="wait">
-        {/* Ãƒâ€°tat initial - Choix du mode */}
+        {/* aatat initial - Choix du mode */}
         {state === 'idle' && (
           <motion.div
             key="idle"
@@ -223,7 +223,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
             </h3>
             
             <p className="text-sm text-gray-600 text-center">
-              Prenez en photo le code-barres, la liste d'ingrédients ou l'étiquette complète
+              Prenez en photo le code-barres, la liste d'ingredients ou l'etiquette complete
             </p>
             
             <div className="grid grid-cols-2 gap-4">
@@ -244,7 +244,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                 <button
                   onClick={() => {
                     setMode('upload');
-                    fileInputRef.current?.click();
+                    fileInputRef.currentlink.click();
                   }}
                   className="flex flex-col items-center justify-center p-6 bg-primary/10 hover:bg-primary/20 rounded-xl transition-colors"
                 >
@@ -264,7 +264,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* Mode caméra */}
+        {/* Mode camera */}
         {state === 'capturing' && mode === 'camera' && (
           <motion.div
             key="camera"
@@ -321,7 +321,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* Ãƒâ€°tat de traitement */}
+        {/* aatat de traitement */}
         {state === 'processing' && (
           <motion.div
             key="processing"
@@ -335,7 +335,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* Prévisualisation */}
+        {/* Previsualisation */}
         {state === 'preview' && previewUrl && (
           <motion.div
             key="preview"
@@ -347,14 +347,14 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
             <div className="relative aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
               <img
                 src={previewUrl}
-                alt="Aperçu"
+                alt="Apercu"
                 className="w-full h-full object-contain"
               />
               
               <div className="absolute top-4 right-4">
                 <div className="px-3 py-1 bg-green-500 text-white text-sm rounded-full flex items-center gap-1">
                   <Check className="w-4 h-4" />
-                  Photo capturée
+                  Photo capturee
                 </div>
               </div>
             </div>
@@ -383,7 +383,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           </motion.div>
         )}
 
-        {/* Ãƒâ€°tat d'erreur */}
+        {/* aatat d'erreur */}
         {state === 'error' && (
           <motion.div
             key="error"
@@ -398,7 +398,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
               onClick={reset}
               className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors"
             >
-              Réessayer
+              Reessayer
             </button>
           </motion.div>
         )}
@@ -408,4 +408,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+
+
+
 

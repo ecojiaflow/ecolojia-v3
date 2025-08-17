@@ -35,9 +35,9 @@ class PerformanceMonitor {
       this.searchMetrics = this.searchMetrics.slice(-this.maxEntries);
     }
 
-    // Log en développement
+    // Log en developpement
     if (import.meta.env.DEV) {
-      console.log('Ã°Å¸â€œÅ  Recherche enregistrée:', metric);
+      console.log('aa Recherche enregistree:', metric);
     }
   }
 
@@ -56,9 +56,9 @@ class PerformanceMonitor {
       this.pageMetrics = this.pageMetrics.slice(-this.maxEntries);
     }
 
-    // Log en développement
+    // Log en developpement
     if (import.meta.env.DEV) {
-      console.log('Ã°Å¸â€œË† Page chargée:', metric);
+      console.log('aaa Page chargee:', metric);
     }
   }
 
@@ -85,7 +85,7 @@ class PerformanceMonitor {
       totalSearches: this.searchMetrics.length,
       averageSearchTime: Math.round(totalSearchTime / this.searchMetrics.length),
       averageResultsCount: Math.round(totalResults / this.searchMetrics.length),
-      recentSearches: this.searchMetrics.slice(-10) // 10 dernières recherches
+      recentSearches: this.searchMetrics.slice(-10) // 10 dernieres recherches
     };
   }
 
@@ -108,11 +108,11 @@ class PerformanceMonitor {
     return {
       totalPageLoads: this.pageMetrics.length,
       averageLoadTime: Math.round(totalLoadTime / this.pageMetrics.length),
-      recentPages: this.pageMetrics.slice(-10) // 10 dernières pages
+      recentPages: this.pageMetrics.slice(-10) // 10 dernieres pages
     };
   }
 
-  // Nettoyer les anciennes métriques (plus de 1 heure)
+  // Nettoyer les anciennes metriques (plus de 1 heure)
   cleanup(): void {
     const oneHourAgo = Date.now() - (60 * 60 * 1000);
     
@@ -120,7 +120,7 @@ class PerformanceMonitor {
     this.pageMetrics = this.pageMetrics.filter(metric => metric.timestamp > oneHourAgo);
   }
 
-  // Exporter les données (pour le debug)
+  // Exporter les donnees (pour le debug)
   exportData(): {
     searches: SearchMetrics[];
     pages: PageMetrics[];
@@ -194,3 +194,5 @@ export const usePagePerformance = (pageName: string) => {
 };
 
 export default performanceMonitor;
+
+

@@ -40,7 +40,7 @@ class CacheManager {
     const entry = this.productCache[key];
     if (!entry) return null;
 
-    // Vérifier expiration
+    // Verifier expiration
     if (Date.now() > entry.expiry) {
       delete this.productCache[key];
       return null;
@@ -62,7 +62,7 @@ class CacheManager {
   getStats(): any | null {
     if (!this.statsCache) return null;
 
-    // Vérifier expiration
+    // Verifier expiration
     if (Date.now() > this.statsCache.expiry) {
       this.statsCache = null;
       return null;
@@ -102,7 +102,7 @@ class CacheManager {
   }
 
   // Invalidation manuelle
-  invalidateProducts(key?: string): void {
+  invalidateProducts(keya: string): void {
     if (key) {
       delete this.productCache[key];
     } else {
@@ -149,7 +149,7 @@ export const useProductCache = (query: string = '') => {
   const cacheKey = `products_${query.toLowerCase().trim()}`;
 
   const fetchProducts = useCallback(async (forceRefresh = false) => {
-    // Vérifier le cache d'abord
+    // Verifier le cache d'abord
     if (!forceRefresh) {
       const cachedProducts = cacheManager.getProducts(cacheKey);
       if (cachedProducts) {
@@ -165,7 +165,7 @@ export const useProductCache = (query: string = '') => {
     setError(null);
 
     try {
-      // Import dynamique pour éviter les dépendances circulaires
+      // Import dynamique pour eviter les dependances circulaires
       const { fetchRealProducts } = await import('../api/realApi');
       const fetchedProducts = await fetchRealProducts(query);
       
@@ -211,7 +211,7 @@ export const useStatsCache = () => {
   const [fromCache, setFromCache] = useState(false);
 
   const fetchStats = useCallback(async (forceRefresh = false) => {
-    // Vérifier le cache d'abord
+    // Verifier le cache d'abord
     if (!forceRefresh) {
       const cachedStats = cacheManager.getStats();
       if (cachedStats) {
@@ -245,13 +245,13 @@ export const useStatsCache = () => {
       setError(errorMessage);
       console.error('Erreur fetch stats:', err);
       
-      // Données de démonstration en cas d'erreur
+      // Donnees de demonstration en cas d'erreur
       const demoStats = {
         totalProducts: 59,
         averageScore: 0.68,
         byCategory: {
           alimentaire: 25,
-          cosmetique: 15,
+          cosmetics: 15,
           mode: 8,
           maison: 6,
           electronique: 3,
@@ -303,7 +303,7 @@ export const useCacheStats = () => {
 
     cacheManager.addListener(updateStats);
     
-    // Mise ÃƒÂ  jour périodique
+    // Mise  jour periodique
     const interval = setInterval(updateStats, 30000); // 30 secondes
 
     return () => {
@@ -316,4 +316,6 @@ export const useCacheStats = () => {
 };
 
 export default cacheManager;
+
+
 

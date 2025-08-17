@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/WeeklySummary.tsx
+﻿// frontend/src/components/dashboard/WeeklySummary.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Award, Target, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react';
@@ -79,9 +79,9 @@ export const WeeklySummary: React.FC = () => {
 
   const handleExportPDF = async () => {
     try {
-      toast.loading('Génération du rapport PDF...');
+      toast.loading('Generation du rapport PDF...');
       await dashboardService.exportWeeklySummaryPDF(currentWeek.toISOString());
-      toast.success('Rapport téléchargé !');
+      toast.success('Rapport telecharge !');
     } catch (error) {
       toast.error('Erreur lors de l\'export PDF');
     }
@@ -89,9 +89,9 @@ export const WeeklySummary: React.FC = () => {
 
   const handleEmailSummary = async () => {
     try {
-      toast.loading('Envoi du résumé par email...');
+      toast.loading('Envoi du resume par email...');
       await dashboardService.emailWeeklySummary(currentWeek.toISOString());
-      toast.success('Résumé envoyé par email !');
+      toast.success('Resume envoye par email !');
     } catch (error) {
       toast.error('Erreur lors de l\'envoi');
     }
@@ -99,11 +99,11 @@ export const WeeklySummary: React.FC = () => {
 
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'achievement': return 'Ã°Å¸Ââ€ ';
-      case 'improvement': return 'Ã°Å¸â€œË†';
-      case 'warning': return 'âÅ¡Â ïÂ¸Â';
-      case 'tip': return 'Ã°Å¸â€™Â¡';
-      default: return 'Ã°Å¸â€œÅ’';
+      case 'achievement': return 'aa';
+      case 'improvement': return 'aaa';
+      case 'warning': return 'a';
+      case 'tip': return 'aaa';
+      default: return 'aaa';
     }
   };
 
@@ -143,10 +143,10 @@ export const WeeklySummary: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-800 flex items-center">
             <Calendar className="w-6 h-6 mr-2 text-purple-600" />
-            Résumé Hebdomadaire
+            Resume Hebdomadaire
           </h2>
           <p className="text-gray-600 mt-1">
-            Semaine {summaryData.period.weekNumber} Ã‚Â· {format(new Date(summaryData.period.start), 'd MMM', { locale: fr })} - {format(new Date(summaryData.period.end), 'd MMM yyyy', { locale: fr })}
+            Semaine {summarydata?.period.weekNumber} ? {format(new Date(summarydata?.period.start), 'd MMM', { locale: fr })} - {format(new Date(summarydata?.period.end), 'd MMM yyyy', { locale: fr })}
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -184,9 +184,9 @@ export const WeeklySummary: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-blue-600 font-medium">Analyses</p>
-                    <p className="text-2xl font-bold text-gray-800">{summaryData.stats.totalScans}</p>
+                    <p className="text-2xl font-bold text-gray-800">{summarydata?.stats.totalScans}</p>
                   </div>
-                  <div className="text-3xl">Ã°Å¸â€œÅ </div>
+                  <div className="text-3xl">aa</div>
                 </div>
               </motion.div>
 
@@ -197,9 +197,9 @@ export const WeeklySummary: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-green-600 font-medium">Score moyen</p>
-                    <p className="text-2xl font-bold text-gray-800">{summaryData.stats.avgHealthScore}/100</p>
+                    <p className="text-2xl font-bold text-gray-800">{summarydata?.stats.avgHealthScore}/100</p>
                   </div>
-                  {getScoreChange(summaryData.stats.improvementFromLastWeek)}
+                  {getScoreChange(summarydata?.stats.improvementFromLastWeek)}
                 </div>
               </motion.div>
 
@@ -210,10 +210,10 @@ export const WeeklySummary: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-purple-600 font-medium">Meilleur score</p>
-                    <p className="text-lg font-bold text-gray-800 truncate">{summaryData.stats.bestProduct.name}</p>
-                    <p className="text-sm text-gray-600">{summaryData.stats.bestProduct.score}/100</p>
+                    <p className="text-lg font-bold text-gray-800 truncate">{summarydata?.stats.bestProduct.name}</p>
+                    <p className="text-sm text-gray-600">{summarydata?.stats.bestProduct.score}/100</p>
                   </div>
-                  <div className="text-3xl">âÂ­Â</div>
+                  <div className="text-3xl">a</div>
                 </div>
               </motion.div>
 
@@ -223,20 +223,20 @@ export const WeeklySummary: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-orange-600 font-medium">Ãƒ€ améliorer</p>
-                    <p className="text-lg font-bold text-gray-800 truncate">{summaryData.stats.worstProduct.name}</p>
-                    <p className="text-sm text-gray-600">{summaryData.stats.worstProduct.score}/100</p>
+                    <p className="text-sm text-orange-600 font-medium">a ameliorer</p>
+                    <p className="text-lg font-bold text-gray-800 truncate">{summarydata?.stats.worstProduct.name}</p>
+                    <p className="text-sm text-gray-600">{summarydata?.stats.worstProduct.score}/100</p>
                   </div>
-                  <div className="text-3xl">âÅ¡Â ïÂ¸Â</div>
+                  <div className="text-3xl">a</div>
                 </div>
               </motion.div>
             </div>
 
             {/* Insights */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Ã°Å¸â€œÅ  Insights de la semaine</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">aa Insights de la semaine</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {summaryData.insights.map((insight, index) => (
+                {summarydata?.insights.map((insight, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
@@ -270,8 +270,8 @@ export const WeeklySummary: React.FC = () => {
                   Objectifs atteints
                 </h3>
                 <div className="space-y-2">
-                  {summaryData.goals.achieved.length > 0 ? (
-                    summaryData.goals.achieved.map((goal, index) => (
+                  {summarydata?.goals.achieved.length > 0 ? (
+                    summarydata?.goals.achieved.map((goal, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0 }}
@@ -279,7 +279,7 @@ export const WeeklySummary: React.FC = () => {
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg"
                       >
-                        <span className="text-green-600">âÅ“â€œ</span>
+                        <span className="text-green-600">aaaa</span>
                         <div>
                           <p className="font-medium text-gray-800">{goal.title}</p>
                           <p className="text-sm text-gray-600">{goal.description}</p>
@@ -287,7 +287,7 @@ export const WeeklySummary: React.FC = () => {
                       </motion.div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-sm">Aucun objectif spécifique cette semaine</p>
+                    <p className="text-gray-500 text-sm">Aucun objectif specifique cette semaine</p>
                   )}
                 </div>
               </div>
@@ -299,7 +299,7 @@ export const WeeklySummary: React.FC = () => {
                   Objectifs semaine prochaine
                 </h3>
                 <div className="space-y-2">
-                  {summaryData.goals.nextWeek.map((goal, index) => (
+                  {summarydata?.goals.nextWeek.map((goal, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0 }}
@@ -307,7 +307,7 @@ export const WeeklySummary: React.FC = () => {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-start space-x-2 p-3 bg-blue-50 rounded-lg"
                     >
-                      <span className="text-blue-600">ââ€ â€™</span>
+                      <span className="text-blue-600">aaaaaa</span>
                       <div>
                         <p className="font-medium text-gray-800">{goal.title}</p>
                         <p className="text-sm text-gray-600">{goal.target}</p>
@@ -327,7 +327,7 @@ export const WeeklySummary: React.FC = () => {
                 className="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Télécharger PDF
+                Telecharger PDF
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -346,7 +346,10 @@ export const WeeklySummary: React.FC = () => {
   );
 };
 
-// âÅ“â€¦ Ãƒ€ ajouter ÃƒÂ  la toute fin :
+// aaaa ? ajouter  la toute fin :
 export default WeeklySummary;
 // EOF
+
+
+
 

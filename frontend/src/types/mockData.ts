@@ -1,4 +1,4 @@
-// frontend/src/types/mockData.ts
+﻿// frontend/src/types/mockdata?.ts
 
 // ===== INTERFACES DE BASE =====
 export interface MockUser {
@@ -38,22 +38,22 @@ export interface MockUser {
 export interface MockQuotas {
   scans: {
     used: number;
-    limit: number; // -1 = illimité
+    limit: number; // -1 = illimite
     resetDate: Date;
   };
   aiQuestions: {
     used: number;
-    limit: number; // -1 = illimité
+    limit: number; // -1 = illimite
     resetDate: Date;
   };
   exports: {
     used: number;
-    limit: number; // -1 = illimité
+    limit: number; // -1 = illimite
     resetDate: Date;
   };
   apiCalls: {
     used: number;
-    limit: number; // -1 = illimité
+    limit: number; // -1 = illimite
     resetDate: Date;
   };
 }
@@ -77,7 +77,7 @@ export const DEMO_CONFIG = {
   SESSION_DURATION_HOURS: 24
 };
 
-// ===== DONNÃƒâ€°ES FACTICES =====
+// ===== DONNÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ES FACTICES =====
 export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
   {
     id: 'scan-1',
@@ -85,8 +85,8 @@ export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
     brand: 'Coca-Cola',
     category: 'food',
     healthScore: 15,
-    scanDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // Il y a 2 jours
-    keyFindings: ['NOVA 4 - Ultra-transformé', 'Riche en sucre', '7 additifs E-numbers']
+    scanDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // Il y ? 2 jours
+    keyFindings: ['NOVA 4 - Ultra-transforme', 'Riche en sucre', '7 additifs E-numbers']
   },
   {
     id: 'scan-2',
@@ -95,34 +95,34 @@ export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
     category: 'food',
     healthScore: 92,
     scanDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // Hier
-    keyFindings: ['NOVA 1 - Non transformé', 'Bio certifié', 'Source complète protéines']
+    keyFindings: ['NOVA 1 - Non transforme', 'Bio certifie', 'Source complete proteines']
   },
   {
     id: 'scan-3',
-    productName: 'Crème Hydratante',
+    productName: 'Creme Hydratante',
     brand: 'Weleda',
     category: 'cosmetics',
     healthScore: 78,
-    scanDate: new Date(Date.now() - 3 * 60 * 60 * 1000), // Il y a 3h
-    keyFindings: ['Certifié bio', 'Sans sulfates', '95% ingrédients naturels']
+    scanDate: new Date(Date.now() - 3 * 60 * 60 * 1000), // Il y ? 3h
+    keyFindings: ['Certifie bio', 'Sans sulfates', '95% ingredients naturels']
   },
   {
     id: 'scan-4',
-    productName: 'Lessive Ãƒâ€°cologique',
+    productName: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
     brand: 'Ecover',
     category: 'detergents',
     healthScore: 85,
-    scanDate: new Date(Date.now() - 30 * 60 * 1000), // Il y a 30min
-    keyFindings: ['Ecolabel Européen', 'Biodégradable 100%', 'Sans phosphates']
+    scanDate: new Date(Date.now() - 30 * 60 * 1000), // Il y ? 30min
+    keyFindings: ['Ecolabel Europeen', 'Biodegradable 100%', 'Sans phosphates']
   },
   {
     id: 'scan-5',
-    productName: 'Plat Préparé Micro-ondes',
+    productName: 'Plat Prepare Micro-ondes',
     brand: 'Findus',
     category: 'food',
     healthScore: 28,
-    scanDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // Il y a 5 jours
-    keyFindings: ['NOVA 4 - Ultra-transformé', 'Riche en sel', '15 additifs détectés']
+    scanDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // Il y ? 5 jours
+    keyFindings: ['NOVA 4 - Ultra-transforme', 'Riche en sel', '15 additifs detectes']
   }
 ];
 
@@ -135,14 +135,14 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
   const quotaConfig = {
     free: {
       scansPerMonth: 25,
-      aiQuestionsPerDay: 0, // Bloqué en free
+      aiQuestionsPerDay: 0, // Bloque en free
       aiQuestionsPerMonth: 0,
       exportsPerMonth: 0,
       apiCallsPerMonth: 0
     },
     premium: {
-      scansPerMonth: -1, // Illimité
-      aiQuestionsPerDay: -1, // Illimité
+      scansPerMonth: -1, // Illimite
+      aiQuestionsPerDay: -1, // Illimite
       aiQuestionsPerMonth: -1,
       exportsPerMonth: 10,
       apiCallsPerMonth: 1000
@@ -151,14 +151,14 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
 
   const usageConfig = {
     free: {
-      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 déjÃƒÂ  utilisés
+      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 dejÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  utilises
       aiQuestionsToday: 0,
       aiQuestionsThisMonth: 0,
       exportsThisMonth: 0,
       apiCallsThisMonth: 0
     },
     premium: {
-      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 déjÃƒÂ  utilisés
+      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 dejÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  utilises
       aiQuestionsToday: Math.floor(Math.random() * 3) + 1, // 1-4 aujourd'hui
       aiQuestionsThisMonth: Math.floor(Math.random() * 25) + 10, // 10-35 ce mois
       exportsThisMonth: Math.floor(Math.random() * 3), // 0-3 ce mois
@@ -168,10 +168,10 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
 
   const user: MockUser = {
     id: 'demo-user-' + Math.random().toString(36).substr(2, 9),
-    name: tier === 'premium' ? 'Utilisateur Démo Premium' : 'Utilisateur Démo',
-    email: `demo-${tier}@ecolojia.com`,
+    name: tier === 'premium' ? 'Utilisateur Demo Premium' : 'Utilisateur Demo',
+    email: `demo-${tier}@ecoloji?.com`,
     tier,
-    createdAt: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), // Créé il y a 30 jours
+    createdAt: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), // Cree il y ? 30 jours
     lastLoginAt: now,
     subscription: tier === 'premium' ? {
       id: 'demo-sub-' + Math.random().toString(36).substr(2, 9),
@@ -213,7 +213,7 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
 
   const history = MOCK_ANALYSIS_HISTORY.map(item => ({
     ...item,
-    // Ajuster les dates pour qu'elles soient récentes
+    // Ajuster les dates pour qu'elles soient recentes
     scanDate: new Date(item.scanDate.getTime())
   }));
 
@@ -226,3 +226,6 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
     expiresAt
   };
 };
+
+
+

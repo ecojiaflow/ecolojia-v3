@@ -1,7 +1,7 @@
-// PATH: frontend/src/services/demoService.ts
-// Service pour gérer les données de démonstration
+﻿// PATH: frontend/src/services/demoService.ts
+// Service pour gerer les donnees de demonstration
 
-// Définir les couleurs localement
+// Definir les couleurs localement
 const COLORS = {
   primary: '#7DDE4A',
   secondary: '#4A90E2',
@@ -55,7 +55,7 @@ interface DemoAnalysis {
 class DemoService {
   private static instance: DemoService;
   
-  // Base de données demo
+  // Base de donnees demo
   private demoProducts: DemoProduct[] = [
     {
       _id: 'demo-1',
@@ -70,7 +70,7 @@ class DemoService {
     {
       _id: 'demo-2',
       name: 'Shampoing Doux Sans Sulfates',
-      brand: 'L\'Oréal',
+      brand: 'L\'Oreal',
       barcode: '3474636871179',
       category: 'cosmetic',
       images: ['https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=400'],
@@ -79,13 +79,13 @@ class DemoService {
     },
     {
       _id: 'demo-3',
-      name: 'Lessive Ãƒâ€°cologique',
+      name: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
       brand: 'Arbre Vert',
       barcode: '3450601030178',
       category: 'detergent',
       images: ['https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400'],
-      ingredients: ['Agents de surface d\'origine végétale', 'Enzymes'],
-      certifications: ['Ecolabel', 'Biodégradable']
+      ingredients: ['Agents de surface d\'origine vegetale', 'Enzymes'],
+      certifications: ['Ecolabel', 'Biodegradable']
     }
   ];
 
@@ -111,14 +111,14 @@ class DemoService {
           name: 'Yaourt Grec Nature',
           brand: 'Oikos',
           score: 90,
-          reason: 'Plus riche en protéines'
+          reason: 'Plus riche en proteines'
         }
       ]
     },
     'demo-2': {
       productId: 'demo-2',
       productName: 'Shampoing Doux Sans Sulfates',
-      productBrand: 'L\'Oréal',
+      productBrand: 'L\'Oreal',
       category: 'cosmetic',
       healthScore: 78,
       environmentScore: 72,
@@ -145,7 +145,7 @@ class DemoService {
     },
     'demo-3': {
       productId: 'demo-3',
-      productName: 'Lessive Ãƒâ€°cologique',
+      productName: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
       productBrand: 'Arbre Vert',
       category: 'detergent',
       healthScore: 85,
@@ -153,7 +153,7 @@ class DemoService {
       socialScore: 88,
       overallScore: 88,
       ecoScore: 'A',
-      ingredients: ['Agents de surface d\'origine végétale', 'Enzymes'],
+      ingredients: ['Agents de surface d\'origine vegetale', 'Enzymes'],
       additives: [],
       allergens: [],
       alternatives: [
@@ -162,7 +162,7 @@ class DemoService {
           name: 'Lessive en Feuilles',
           brand: 'Tru Earth',
           score: 95,
-          reason: 'Zéro déchet, ultra concentré'
+          reason: 'Zero dechet, ultra concentre'
         }
       ]
     }
@@ -179,7 +179,7 @@ class DemoService {
    * Rechercher des produits
    */
   async searchProducts(query: string): Promise<DemoProduct[]> {
-    // Simuler un délai
+    // Simuler un delai
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const lowercaseQuery = query.toLowerCase();
@@ -214,27 +214,27 @@ class DemoService {
   async analyzeProduct(productData: any): Promise<DemoAnalysis> {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Générer des scores aléatoires mais réalistes
+    // Generer des scores aleatoires mais realistes
     const healthScore = Math.floor(Math.random() * 30) + 70;
     const environmentScore = Math.floor(Math.random() * 30) + 65;
     const socialScore = Math.floor(Math.random() * 30) + 60;
     
     return {
       productId: `demo-${Date.now()}`,
-      productName: productData.name || 'Produit Analysé',
-      productBrand: productData.brand || 'Marque Inconnue',
-      category: productData.category || 'food',
+      productName: productdata?.name || 'Produit Analyse',
+      productBrand: productdata?.brand || 'Marque Inconnue',
+      category: productdata?.category || 'food',
       healthScore,
       environmentScore,
       socialScore,
       overallScore: Math.round((healthScore + environmentScore + socialScore) / 3),
       nutriScore: this.calculateNutriScore(healthScore),
-      novaGroup: this.calculateNovaGroup(productData.ingredients),
+      novaGroup: this.calculateNovaGroup(productdata?.ingredients),
       ecoScore: this.calculateEcoScore(environmentScore),
-      ingredients: productData.ingredients || [],
-      additives: this.extractAdditives(productData.ingredients || []),
-      allergens: this.extractAllergens(productData.ingredients || []),
-      alternatives: this.generateAlternatives(productData.category)
+      ingredients: productdata?.ingredients || [],
+      additives: this.extractAdditives(productdata?.ingredients || []),
+      allergens: this.extractAllergens(productdata?.ingredients || []),
+      alternatives: this.generateAlternatives(productdata?.category)
     };
   }
 
@@ -280,13 +280,13 @@ class DemoService {
       monthlyProgress: 15,
       topCategory: 'Alimentation',
       recentAnalyses: Object.values(this.demoAnalyses).map(a => ({
-        _id: a.productId,
-        productName: a.productName,
-        score: a.overallScore,
-        category: a.category,
+        _id: ?.productId,
+        productName: ?.productName,
+        score: ?.overallScore,
+        category: ?.category,
         date: new Date().toISOString(),
-        nutriScore: a.nutriScore,
-        ecoScore: a.ecoScore
+        nutriScore: ?.nutriScore,
+        ecoScore: ?.ecoScore
       })),
       weeklyTrend: [
         { day: 'Lun', scans: 7 },
@@ -301,7 +301,7 @@ class DemoService {
   }
 
   /**
-   * Démarrer une session de démonstration
+   * Demarrer une session de demonstration
    */
   async startDemoSession(): Promise<{
     token: string;
@@ -312,19 +312,19 @@ class DemoService {
     
     const demoUser = {
       _id: 'demo-user-' + Date.now(),
-      email: 'demo@ecolojia.app',
-      name: 'Utilisateur Démo',
+      email: 'demo@ecoloji?.app',
+      name: 'Utilisateur Demo',
       profile: {
         firstName: 'Utilisateur',
-        lastName: 'Démo',
+        lastName: 'Demo',
         avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=7DDE4A&color=fff',
         createdAt: new Date().toISOString()
       },
-      tier: 'premium', // Accès complet en mode démo
+      tier: 'premium', // Acces complet en mode demo
       emailVerified: true,
       quotas: {
         scansUsed: 15,
-        scansLimit: -1, // Illimité
+        scansLimit: -1, // Illimite
         aiChatsUsed: 10,
         aiChatsLimit: -1,
         lastReset: new Date().toISOString()
@@ -332,7 +332,7 @@ class DemoService {
       preferences: {
         allergies: [],
         dietaryRestrictions: [],
-        healthGoals: ['Manger sainement', 'Réduire les additifs'],
+        healthGoals: ['Manger sainement', 'Reduire les additifs'],
         notificationsEnabled: true,
         language: 'fr',
         theme: 'light'
@@ -347,10 +347,10 @@ class DemoService {
   }
 
   /**
-   * Terminer la session de démonstration
+   * Terminer la session de demonstration
    */
   async endDemoSession(): Promise<void> {
-    // Nettoyer les données locales
+    // Nettoyer les donnees locales
     localStorage.removeItem('ecolojia_token');
     localStorage.removeItem('ecolojia_refresh_token');
     localStorage.removeItem('ecolojia_user');
@@ -358,7 +358,7 @@ class DemoService {
   }
 
   /**
-   * Méthodes utilitaires privées
+   * Methodes utilitaires privees
    */
   private calculateNutriScore(healthScore: number): 'A' | 'B' | 'C' | 'D' | 'E' {
     if (healthScore >= 90) return 'A';
@@ -404,7 +404,7 @@ class DemoService {
   }
 
   private extractAllergens(ingredients: string[]): string[] {
-    const commonAllergens = ['gluten', 'lait', 'Ã…â€œuf', 'soja', 'fruits ÃƒÂ  coque', 'arachide'];
+    const commonAllergens = ['gluten', 'lait', 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œuf', 'soja', 'fruits Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  coque', 'arachide'];
     const found: string[] = [];
     
     ingredients.forEach(ingredient => {
@@ -422,15 +422,15 @@ class DemoService {
   private generateAlternatives(category: string): any[] {
     const alternatives = {
       food: [
-        { productId: 'alt-f1', name: 'Alternative Bio', brand: 'NatureBio', score: 95, reason: 'Meilleur pour la santé' },
+        { productId: 'alt-f1', name: 'Alternative Bio', brand: 'NatureBio', score: 95, reason: 'Meilleur pour la sante' },
         { productId: 'alt-f2', name: 'Option Locale', brand: 'Ferme du Coin', score: 92, reason: 'Circuit court' }
       ],
       cosmetic: [
-        { productId: 'alt-c1', name: 'Cosmétique Naturel', brand: 'Pure Nature', score: 88, reason: 'Ingrédients naturels' },
+        { productId: 'alt-c1', name: 'Cosmetique Naturel', brand: 'Pure Nature', score: 88, reason: 'Ingredients naturels' },
         { productId: 'alt-c2', name: 'Version Solide', brand: 'ZeroWaste', score: 90, reason: 'Sans emballage' }
       ],
       detergent: [
-        { productId: 'alt-d1', name: 'Détergent Ãƒâ€°cologique', brand: 'EcoClean', score: 94, reason: 'Biodégradable' },
+        { productId: 'alt-d1', name: 'Detergent Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique', brand: 'EcoClean', score: 94, reason: 'Biodegradable' },
         { productId: 'alt-d2', name: 'Alternative Maison', brand: 'DIY', score: 96, reason: 'Fait maison' }
       ]
     };
@@ -440,3 +440,6 @@ class DemoService {
 }
 
 export default DemoService.getInstance();
+
+
+

@@ -1,5 +1,5 @@
 // src/services/aiAnalysisService.ts
-// Service FRONTEND pour gérer l'historique et les analyses côté client
+// Service FRONTEND pour gerer l'historique et les analyses cote client
 
 interface AnalysisHistory {
   product: {
@@ -20,7 +20,7 @@ class AIAnalysisService {
   private readonly HISTORY_KEY = 'ecolojia_analysis_history';
   private readonly API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';
 
-  // Méthodes localStorage (pour mode offline/demo)
+  // Methodes localStorage (pour mode offline/demo)
   async getHistory(limit: number = 50): Promise<AnalysisHistory[]> {
     try {
       const historyStr = localStorage.getItem(this.HISTORY_KEY);
@@ -48,7 +48,7 @@ class AIAnalysisService {
     localStorage.removeItem(this.HISTORY_KEY);
   }
 
-  // Méthodes API (pour production)
+  // Methodes API (pour production)
   async analyzeWithAI(productData: any): Promise<any> {
     try {
       const response = await fetch(`${this.API_URL}/analyze/auto`, {
@@ -84,3 +84,5 @@ class AIAnalysisService {
 export const aiAnalysisService = new AIAnalysisService();
 
 export default aiAnalysisService;
+
+

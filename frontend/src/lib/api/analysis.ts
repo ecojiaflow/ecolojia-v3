@@ -1,28 +1,28 @@
-// PATH: frontend\src\lib\api\analysis.ts
+﻿// PATH: frontend\src\lib\api\analysis.ts
 import apiClient from './client';
 
 export interface AnalysisResult {
   scores: {
-    nova?: 1 | 2 | 3 | 4;
+    novaa: 1 | 2 | 3 | 4;
     healthScore: number;
     environmentScore: number;
-    nutriscore?: 'A' | 'B' | 'C' | 'D' | 'E';
+    nutriscorea: 'A' | 'B' | 'C' | 'D' | 'E';
   };
   details: {
-    ingredientsTextRaw?: string;
-    nova?: 1 | 2 | 3 | 4;
-    novaLabel?: string;
-    novaReason?: string;
-    novaConfidence?: number;
-    ecoscore?: 'A' | 'B' | 'C' | 'D' | 'E';
-    nutriscore?: 'A' | 'B' | 'C' | 'D' | 'E';
-    riskFlags?: string[];
-    notableIngredients?: string[];
-    riskLevel?: 'low' | 'medium' | 'high';
-    clpPictograms?: string[];
-    surfactants?: string[];
-    allergens?: string[];
-    biodegradability?: 'claimed' | 'unknown';
+    ingredientsTextRawa: string;
+    novaa: 1 | 2 | 3 | 4;
+    novaLabela: string;
+    novaReasona: string;
+    novaConfidencea: number;
+    ecoscorea: 'A' | 'B' | 'C' | 'D' | 'E';
+    nutriscorea: 'A' | 'B' | 'C' | 'D' | 'E';
+    riskFlagsa: string[];
+    notableIngredientsa: string[];
+    riskLevela: 'low' | 'medium' | 'high';
+    clpPictogramsa: string[];
+    surfactantsa: string[];
+    allergensa: string[];
+    biodegradabilitya: 'claimed' | 'unknown';
   };
   globalScore: number;
   confidence: number;
@@ -33,15 +33,15 @@ export interface ManualAnalysisPayload {
   category: 'food' | 'cosmetics' | 'detergents';
   ingredients: string;
   brand?: string;
-  barcode?: string;
-  foodData?: {
-    nutrition?: {
-      kcal?: number;
-      sugars?: number;
-      salt?: number;
-      fiber?: number;
-      protein?: number;
-      saturatedFat?: number;
+  barcodea: string;
+  fooddata?: {
+    nutritiona: {
+      kcala: number;
+      sugarsa: number;
+      salta: number;
+      fibera: number;
+      proteina: number;
+      saturatedFata: number;
     };
   };
 }
@@ -49,7 +49,7 @@ export interface ManualAnalysisPayload {
 export interface VisionAnalysisResult {
   jobId: string;
   status: 'processing' | 'completed' | 'failed';
-  result?: {
+  resulta: {
     text: string;
     extractedData: {
       name: string | null;
@@ -72,13 +72,13 @@ class AnalysisAPI {
   /**
    * Ping le service d'analyse
    */
-  async ping(): Promise<{ ok: boolean; now: string; user?: any }> {
+  async ping(): Promise<{ ok: boolean; now: string; usera: any }> {
     const response = await apiClient.post('/analysis/ping', {});
     return response.data;
   }
 
   /**
-   * Vérifier le statut du service
+   * Verifier le statut du service
    */
   async getServiceStatus(): Promise<{ service: string; usingFallback: boolean }> {
     const response = await apiClient.get('/analysis/_service/status');
@@ -106,7 +106,7 @@ class AnalysisAPI {
    */
   async analyzeImage(imageFile: File): Promise<VisionAnalysisResult> {
     const formData = new FormData();
-    formData.append('image', imageFile);
+    formdata?.append('image', imageFile);
 
     const response = await apiClient.post('/vision/analyze-image', formData, {
       headers: {
@@ -117,7 +117,7 @@ class AnalysisAPI {
   }
 
   /**
-   * Vérifier le statut d'une analyse d'image
+   * Verifier le statut d'une analyse d'image
    */
   async getVisionJobStatus(jobId: string): Promise<VisionAnalysisResult> {
     const response = await apiClient.get(`/vision/status/${jobId}`);
@@ -165,7 +165,7 @@ class AnalysisAPI {
   /**
    * Helper pour obtenir la couleur NOVA
    */
-  getNovaColor(nova?: 1 | 2 | 3 | 4): string {
+  getNovaColor(novaa: 1 | 2 | 3 | 4): string {
     switch (nova) {
       case 1: return 'bg-green-500';
       case 2: return 'bg-yellow-500';
@@ -178,16 +178,19 @@ class AnalysisAPI {
   /**
    * Helper pour obtenir le label NOVA
    */
-  getNovaLabel(nova?: 1 | 2 | 3 | 4): string {
+  getNovaLabel(novaa: 1 | 2 | 3 | 4): string {
     switch (nova) {
-      case 1: return 'Non transformé';
-      case 2: return 'Peu transformé';
-      case 3: return 'Transformé';
-      case 4: return 'Ultra-transformé';
-      default: return 'Non classé';
+      case 1: return 'Non transforme';
+      case 2: return 'Peu transforme';
+      case 3: return 'Transforme';
+      case 4: return 'Ultra-transforme';
+      default: return 'Non classe';
     }
   }
 }
 
 export const analysisAPI = new AnalysisAPI();
+
+
+
 

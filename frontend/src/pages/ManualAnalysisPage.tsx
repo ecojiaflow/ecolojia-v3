@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ManualAnalysisPage.tsx
+﻿// PATH: frontend/src/pages/ManualAnalysisPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -40,22 +40,22 @@ export const ManualAnalysisPage: React.FC = () => {
       icon: Package,
       color: 'bg-green-100 text-green-700',
       description: 'Analyse NOVA, additifs, ultra-transformation',
-      placeholder: 'Ex: Eau, sucre, huile de palme, cacao maigre, lait écrémé en poudre...'
+      placeholder: 'Ex: Eau, sucre, huile de palme, cacao maigre, lait ecreme en poudre...'
     },
     {
       id: 'cosmetics' as const,
-      name: 'Cosmétiques',
+      name: 'Cosmetiques',
       icon: Heart,
       color: 'bg-pink-100 text-pink-700',
-      description: 'Perturbateurs endocriniens, allergènes, INCI',
+      description: 'Perturbateurs endocriniens, allergenes, INCI',
       placeholder: 'Ex: Aqua, Glycerin, Cetearyl Alcohol, Parfum, Methylparaben...'
     },
     {
       id: 'detergents' as const,
-      name: 'Détergents',
+      name: 'Detergents',
       icon: Droplets,
       color: 'bg-blue-100 text-blue-700',
-      description: 'Impact environnemental, biodégradabilité',
+      description: 'Impact environnemental, biodegradabilite',
       placeholder: 'Ex: Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride...'
     }
   ];
@@ -65,7 +65,7 @@ export const ManualAnalysisPage: React.FC = () => {
     if (file) {
       setFormData({ ...formData, image: file });
       
-      // Créer preview
+      // Creer preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -77,7 +77,7 @@ export const ManualAnalysisPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.ingredients) {
+    if (!formdata?.name || !formdata?.ingredients) {
       setError('Veuillez remplir tous les champs obligatoires');
       return;
     }
@@ -87,14 +87,14 @@ export const ManualAnalysisPage: React.FC = () => {
 
     try {
       const result = await aiAnalysisService.analyzeProduct({
-        category: formData.category,
-        name: formData.name,
-        brand: formData.brand,
-        ingredients: formData.ingredients,
-        image: formData.image
+        category: formdata?.category,
+        name: formdata?.name,
+        brand: formdata?.brand,
+        ingredients: formdata?.ingredients,
+        image: formdata?.image
       });
 
-      // Naviguer vers la page de résultats
+      // Naviguer vers la page de resultats
       navigate('/results', { state: { result } });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'analyse');
@@ -103,7 +103,7 @@ export const ManualAnalysisPage: React.FC = () => {
     }
   };
 
-  const selectedCategory = categories.find(c => c.id === formData.category)!;
+  const selectedCategory = categories.find(c => c.id === formdata?.category)!;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -113,15 +113,15 @@ export const ManualAnalysisPage: React.FC = () => {
             Analyse Manuelle de Produit
           </h1>
           <p className="text-gray-600">
-            Entrez les informations du produit pour une analyse détaillée
+            Entrez les informations du produit pour une analyse detaillee
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Sélection de catégorie */}
+          {/* Selection de categorie */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <label className="block text-sm font-medium text-gray-700 mb-4">
-              Catégorie du produit
+              Categorie du produit
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {categories.map((category) => {
@@ -132,7 +132,7 @@ export const ManualAnalysisPage: React.FC = () => {
                     type="button"
                     onClick={() => setFormData({ ...formData, category: category.id })}
                     className={`p-4 rounded-lg border-2 transition-all ${
-                      formData.category === category.id
+                      formdata?.category === category.id
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
@@ -157,10 +157,10 @@ export const ManualAnalysisPage: React.FC = () => {
               <input
                 type="text"
                 id="name"
-                value={formData.name}
+                value={formdata?.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Ex: Nutella, Nivea Crème, Ariel..."
+                placeholder="Ex: Nutella, Nivea Creme, Ariel..."
               />
             </div>
 
@@ -171,7 +171,7 @@ export const ManualAnalysisPage: React.FC = () => {
               <input
                 type="text"
                 id="brand"
-                value={formData.brand}
+                value={formdata?.brand}
                 onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Ex: Ferrero, Nivea, Procter & Gamble..."
@@ -180,18 +180,18 @@ export const ManualAnalysisPage: React.FC = () => {
 
             <div>
               <label htmlFor="ingredients" className="block text-sm font-medium text-gray-700 mb-1">
-                {formData.category === 'cosmetics' ? 'Liste INCI' : 'Liste des ingrédients'} <span className="text-red-500">*</span>
+                {formdata?.category === 'cosmetics' ? 'Liste INCI' : 'Liste des ingredients'} <span className="text-red-500">*</span>
               </label>
               <textarea
                 id="ingredients"
-                value={formData.ingredients}
+                value={formdata?.ingredients}
                 onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
                 rows={6}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder={selectedCategory.placeholder}
               />
               <p className="mt-1 text-xs text-gray-500">
-                Copiez la liste complète depuis l'emballage du produit
+                Copiez la liste complete depuis l'emballage du produit
               </p>
             </div>
 
@@ -265,13 +265,13 @@ export const ManualAnalysisPage: React.FC = () => {
         <div className="mt-8 bg-blue-50 rounded-xl p-6">
           <h3 className="font-medium text-blue-900 mb-2 flex items-center">
             <Edit3 className="w-5 h-5 mr-2" />
-            Conseils pour une analyse précise
+            Conseils pour une analyse precise
           </h3>
           <ul className="space-y-1 text-sm text-blue-800">
-            <li>â€Â¢ Copiez la liste complète des ingrédients dans l'ordre exact</li>
-            <li>â€Â¢ Pour les cosmétiques, utilisez la liste INCI (noms internationaux)</li>
-            <li>â€Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
-            <li>â€Â¢ Séparez les ingrédients par des virgules</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Copiez la liste complete des ingredients dans l'ordre exact</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Pour les cosmetiques, utilisez la liste INCI (noms internationaux)</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Separez les ingredients par des virgules</li>
           </ul>
         </div>
       </div>
@@ -280,3 +280,6 @@ export const ManualAnalysisPage: React.FC = () => {
 };
 
 export default ManualAnalysisPage;
+
+
+

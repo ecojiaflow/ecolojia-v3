@@ -22,7 +22,7 @@ interface PerformanceMetrics {
   lastSearchTime: number;
 }
 
-// Cache en mémoire pour les métriques de performance
+// Cache en memoire pour les metriques de performance
 let performanceCache: PerformanceMetrics = {
   searches: [],
   pageLoads: [],
@@ -42,12 +42,12 @@ export const usePerformanceMonitoring = () => {
       timestamp: Date.now()
     };
     
-    // Ajouter aux métriques
+    // Ajouter aux metriques
     performanceCache.searches.push(searchMetric);
     performanceCache.totalSearches++;
     performanceCache.lastSearchTime = searchTime;
     
-    // Calculer la moyenne (garder seulement les 100 dernières recherches)
+    // Calculer la moyenne (garder seulement les 100 dernieres recherches)
     if (performanceCache.searches.length > 100) {
       performanceCache.searches = performanceCache.searches.slice(-100);
     }
@@ -55,9 +55,9 @@ export const usePerformanceMonitoring = () => {
     const totalTime = performanceCache.searches.reduce((sum, search) => sum + search.searchTime, 0);
     performanceCache.averageSearchTime = totalTime / performanceCache.searches.length;
     
-    // Log pour debug (en mode développement seulement)
+    // Log pour debug (en mode developpement seulement)
     if (import.meta.env.DEV) {
-      console.log('Ã°Å¸â€œÅ  Performance - Recherche enregistrée:', {
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Performance - Recherche enregistree:', {
         query,
         resultsCount,
         searchTime: `${searchTime}ms`,
@@ -83,7 +83,7 @@ export const usePerformanceMonitoring = () => {
     }
     
     if (import.meta.env.DEV) {
-      console.log('Ã°Å¸â€œÅ  Performance - Page chargée:', {
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Performance - Page chargee:', {
         url,
         loadTime: `${loadTime}ms`
       });
@@ -91,7 +91,7 @@ export const usePerformanceMonitoring = () => {
     
   }, []);
   
-  // Mesurer le temps d'exécution d'une fonction
+  // Mesurer le temps d'execution d'une fonction
   const measureTime = useCallback(async <T>(
     operation: () => Promise<T> | T,
     operationName: string = 'Operation'
@@ -104,7 +104,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.log(`âÂÂ±ïÂ¸Â Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
+        console.log(`aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â±Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
       }
       
       return { result, time: executionTime };
@@ -113,7 +113,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.error(`âÂÅ’ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
+        console.error(`aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
       }
       
       throw error;
@@ -125,7 +125,7 @@ export const usePerformanceMonitoring = () => {
     return { ...performanceCache };
   }, []);
   
-  // Réinitialiser les métriques
+  // Reinitialiser les metriques
   const resetMetrics = useCallback(() => {
     performanceCache = {
       searches: [],
@@ -136,21 +136,21 @@ export const usePerformanceMonitoring = () => {
     };
     
     if (import.meta.env.DEV) {
-      console.log('Ã°Å¸â€â€ž Performance - Métriques réinitialisées');
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Performance - Metriques reinitialisees');
     }
   }, []);
   
   // Obtenir les recherches les plus lentes
   const getSlowestSearches = useCallback((count: number = 5): SearchMetrics[] => {
     return [...performanceCache.searches]
-      .sort((a, b) => b.searchTime - a.searchTime)
+      .sort((a, b) => b.searchTime - ?.searchTime)
       .slice(0, count);
   }, []);
   
-  // Obtenir les recherches récentes
+  // Obtenir les recherches recentes
   const getRecentSearches = useCallback((count: number = 10): SearchMetrics[] => {
     return [...performanceCache.searches]
-      .sort((a, b) => b.timestamp - a.timestamp)
+      .sort((a, b) => b.timestamp - ?.timestamp)
       .slice(0, count);
   }, []);
   
@@ -188,3 +188,5 @@ export const usePagePerformanceMonitoring = () => {
   
   return { monitorPageLoad };
 };
+
+

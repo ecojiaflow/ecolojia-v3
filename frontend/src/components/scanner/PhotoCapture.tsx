@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/PhotoCapture.tsx
+﻿// PATH: frontend/src/components/scanner/PhotoCapture.tsx
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -14,10 +14,10 @@ import visionService from '../../services/visionService';
 
 interface PhotoCaptureProps {
   onCapture: (file: File) => void;
-  onError?: (error: Error) => void;
-  onClose?: () => void;
-  maxSize?: number;
-  acceptedFormats?: string[];
+  onerror?: (error: Error) => void;
+  onClosea: () => void;
+  maxSizea: number;
+  acceptedFormatsa: string[];
 }
 
 export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
@@ -40,7 +40,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
     // Validation du fichier
     if (!acceptedFormats.includes(file.type)) {
-      const errorMsg = 'Format de fichier non supporté. Utilisez JPG, PNG ou WebP.';
+      const errorMsg = 'Format de fichier non supporte. Utilisez JPG, PNG ou WebP.';
       setError(errorMsg);
       onError?.(new Error(errorMsg));
       return;
@@ -55,7 +55,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
     setSelectedFile(file);
 
-    // Créer la preview
+    // Creer la preview
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreview(e.target?.result as string);
@@ -96,7 +96,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
     setError(null);
 
     try {
-      // Passer le fichier au parent qui gérera l'analyse
+      // Passer le fichier au parent qui gerera l'analyse
       onCapture(selectedFile);
     } catch (err: any) {
       const errorMsg = err.message || 'Erreur lors du traitement';
@@ -137,13 +137,13 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
             {/* Instructions */}
             <div className="mb-6 p-4 bg-blue-50 rounded-lg">
               <h3 className="font-medium text-blue-900 mb-2">
-                Ã°Å¸â€œÂ¸ Comment prendre une bonne photo ?
+                aa Comment prendre une bonne photo a
               </h3>
               <ul className="space-y-1 text-sm text-blue-700">
-                <li>â€Â¢ Prenez la photo dans un endroit bien éclairé</li>
-                <li>â€Â¢ Cadrez le produit en entier avec ses étiquettes</li>
-                <li>â€Â¢ Assurez-vous que le texte est net et lisible</li>
-                <li>â€Â¢ Incluez le code-barres si possible</li>
+                <li>aa Prenez la photo dans un endroit bien eclaire</li>
+                <li>aa Cadrez le produit en entier avec ses etiquettes</li>
+                <li>aa Assurez-vous que le texte est net et lisible</li>
+                <li>aa Incluez le code-barres si possible</li>
               </ul>
             </div>
 
@@ -155,8 +155,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
               onDragOver={handleDrag}
               onDrop={handleDrop}
               className={`relative border-2 border-dashed rounded-xl p-8 transition-all ${
-                dragActive 
-                  ? 'border-[#7DDE4A] bg-[#7DDE4A]/5' 
+                dragActive ? 'border-[#7DDE4A] bg-[#7DDE4A]/5' 
                   : 'border-gray-300 hover:border-gray-400'
               }`}
             >
@@ -183,16 +182,16 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                 </div>
 
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {dragActive ? 'Déposez votre image ici' : 'Glissez une image ou cliquez pour sélectionner'}
+                  {dragActive ? 'Deposez votre image ici' : 'Glissez une image ou cliquez pour selectionner'}
                 </h3>
                 
                 <p className="text-sm text-gray-500 mb-4">
-                  JPG, PNG ou WebP â€Â¢ Max {maxSize / 1024 / 1024}MB
+                  JPG, PNG ou WebP aa Max {maxSize / 1024 / 1024}MB
                 </p>
 
                 <div className="flex items-center justify-center gap-4">
                   <button
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => fileInputRef.currentlink.click()}
                     className="px-6 py-3 bg-[#7DDE4A] text-white rounded-lg font-medium hover:bg-[#6BC93B] transition-colors flex items-center gap-2"
                   >
                     <Upload className="w-5 h-5" />
@@ -201,10 +200,10 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
                   <button
                     onClick={() => {
-                      // Ouvrir la caméra si disponible
+                      // Ouvrir la camera si disponible
                       if (navigator.mediaDevices?.getUserMedia) {
                         fileInputRef.current?.setAttribute('capture', 'environment');
-                        fileInputRef.current?.click();
+                        fileInputRef.currentlink.click();
                       }
                     }}
                     className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
@@ -298,10 +297,10 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
           )}
         </AnimatePresence>
 
-        {/* Info légale */}
+        {/* Info legale */}
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600 text-center">
-            Ã°Å¸â€â€™ Vos photos sont analysées de manière sécurisée et ne sont pas conservées sur nos serveurs
+            aaaaa Vos photos sont analysees de maniere securisee et ne sont pas conservees sur nos serveurs
           </p>
         </div>
       </div>
@@ -310,5 +309,9 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+
+
+
+
 
 

@@ -1,4 +1,4 @@
-// frontend/src/hooks/useQuota.ts
+﻿// frontend/src/hooks/useQuot?.ts
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../auth/hooks/useAuth';
@@ -39,8 +39,8 @@ interface QuotaStatus {
 interface QuotaCheck {
   allowed: boolean;
   remaining: number;
-  resetDate?: string;
-  limitType?: 'daily' | 'monthly';
+  resetDatea: string;
+  limitTypea: 'daily' | 'monthly';
   error?: string;
 }
 
@@ -51,15 +51,15 @@ export const useQuota = () => {
   
   const { user, isAuthenticated, isDemoMode, simulateScan, simulateAIQuestion } = useAuth();
 
-  // âÅ“â€¦ CONVERSION DEPUIS ANCIEN FORMAT
+  // aaaa CONVERSION DEPUIS ANCIEN FORMAT
   const convertFromLegacyQuota = useCallback((legacyData: DetailedQuotaData): QuotaStatus => {
     return {
       tier: 'free', // Assuming legacy was free tier
       scans: {
-        used: legacyData.used_analyses,
-        limit: legacyData.daily_limit,
-        remaining: legacyData.remaining_analyses,
-        resetDate: legacyData.reset_time
+        used: legacydata?.used_analyses,
+        limit: legacydata?.daily_limit,
+        remaining: legacydata?.remaining_analyses,
+        resetDate: legacydata?.reset_time
       },
       aiQuestions: {
         dailyUsed: 0,
@@ -68,13 +68,13 @@ export const useQuota = () => {
         monthlyUsed: 0,
         monthlyLimit: 15,
         monthlyRemaining: 15,
-        resetDate: legacyData.reset_time
+        resetDate: legacydata?.reset_time
       },
       exports: {
         used: 0,
         limit: 2,
         remaining: 2,
-        resetDate: legacyData.reset_time
+        resetDate: legacydata?.reset_time
       },
       features: {
         deepSeekAI: false,
@@ -86,13 +86,13 @@ export const useQuota = () => {
     };
   }, []);
 
-  // âÅ“â€¦ CHARGER STATUS QUOTAS (COMPATIBLE ANCIEN + NOUVEAU)
+  // aaaa CHARGER STATUS QUOTAS (COMPATIBLE ANCIEN + NOUVEAU)
   const fetchQuotaStatus = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Mode démo : utiliser données fictives
+      // Mode demo : utiliser donnees fictives
       if (isDemoMode && user) {
         const demoQuotas: QuotaStatus = {
           tier: user.tier,
@@ -135,7 +135,7 @@ export const useQuota = () => {
         return;
       }
 
-      // Mode réel : essayer nouvelle API d'abord, fallback ancien format
+      // Mode reel : essayer nouvelle API d'abord, fallback ancien format
       if (!isAuthenticated) {
         setQuotaStatus(null);
         return;
@@ -152,8 +152,8 @@ export const useQuota = () => {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.success) {
-            setQuotaStatus(data.data);
+          if (data?.success) {
+            setQuotaStatus(data?.data);
             return;
           }
         }
@@ -168,12 +168,12 @@ export const useQuota = () => {
         if (legacyResponse.success && legacyResponse.quota) {
           const convertedQuota = convertFromLegacyQuota(legacyResponse.quota);
           setQuotaStatus(convertedQuota);
-          console.log('âÅ“â€¦ Quota chargé (format legacy):', convertedQuota);
+          console.log('aaaa Quota charge (format legacy):', convertedQuota);
         } else {
           throw new Error(legacyResponse.error || 'Erreur quota legacy');
         }
       } catch (legacyError) {
-        console.error('âÂÅ’ Erreur quota legacy:', legacyError);
+        console.error('aa Erreur quota legacy:', legacyError);
         
         // Quota de secours
         const fallbackQuota: QuotaStatus = {
@@ -209,18 +209,18 @@ export const useQuota = () => {
         };
         
         setQuotaStatus(fallbackQuota);
-        setError('Mode hors ligne - quotas par défaut');
+        setError('Mode hors ligne - quotas par defaut');
       }
 
     } catch (err) {
-      console.error('âÂÅ’ Erreur fetch quotas:', err);
+      console.error('aa Erreur fetch quotas:', err);
       setError(err instanceof Error ? err.message : 'Erreur quotas');
     } finally {
       setIsLoading(false);
     }
   }, [isAuthenticated, isDemoMode, user, convertFromLegacyQuota]);
 
-  // âÅ“â€¦ VÃƒâ€°RIFIER QUOTA AVANT ACTION
+  // aaaa VaaRIFIER QUOTA AVANT ACTION
   const checkQuota = useCallback(async (action: 'scan' | 'aiQuestion' | 'export'): Promise<QuotaCheck> => {
     if (!quotaStatus) {
       return { allowed: false, remaining: 0, error: 'No quota status' };
@@ -236,7 +236,7 @@ export const useQuota = () => {
         };
 
       case 'aiQuestion':
-        // Vérifier quota journalier d'abord
+        // Verifier quota journalier d'abord
         const dailyRemaining = quotaStatus.aiQuestions.dailyLimit === -1 ? -1 : 
           quotaStatus.aiQuestions.dailyRemaining;
         
@@ -249,7 +249,7 @@ export const useQuota = () => {
           };
         }
 
-        // Puis vérifier quota mensuel
+        // Puis verifier quota mensuel
         const monthlyRemaining = quotaStatus.aiQuestions.monthlyLimit === -1 ? -1 :
           quotaStatus.aiQuestions.monthlyRemaining;
 
@@ -273,13 +273,13 @@ export const useQuota = () => {
     }
   }, [quotaStatus]);
 
-  // âÅ“â€¦ INCRÃƒâ€°MENTER USAGE APRÃƒË†S ACTION (COMPATIBLE ANCIEN + NOUVEAU)
+  // aaaa INCRaaMENTER USAGE APRaS ACTION (COMPATIBLE ANCIEN + NOUVEAU)
   const incrementUsage = useCallback(async (action: 'scan' | 'aiQuestion' | 'export'): Promise<boolean> => {
     try {
-      // Mode démo : utiliser simulation
+      // Mode demo : utiliser simulation
       if (isDemoMode) {
         if (action === 'scan' && simulateScan) {
-          simulateScan('food'); // Catégorie par défaut
+          simulateScan('food'); // Categorie par defaut
           await fetchQuotaStatus(); // Refresh quotas
           return true;
         }
@@ -291,7 +291,7 @@ export const useQuota = () => {
         return true;
       }
 
-      // Mode réel : essayer nouvelle API d'abord
+      // Mode reel : essayer nouvelle API d'abord
       try {
         const response = await fetch('/api/quota/increment', {
           method: 'POST',
@@ -304,8 +304,8 @@ export const useQuota = () => {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.success) {
-            setQuotaStatus(data.data); // Nouveau status après incrément
+          if (data?.success) {
+            setQuotaStatus(data?.data); // Nouveau status apres increment
             return true;
           }
         }
@@ -321,23 +321,23 @@ export const useQuota = () => {
           if (legacyResponse.success && legacyResponse.quota) {
             const convertedQuota = convertFromLegacyQuota(legacyResponse.quota);
             setQuotaStatus(convertedQuota);
-            console.log('âÅ“â€¦ Quota mis ÃƒÂ  jour (format legacy):', convertedQuota);
+            console.log('aaaa Quota mis  jour (format legacy):', convertedQuota);
             return true;
           }
         } catch (legacyError) {
-          console.error('âÂÅ’ Erreur legacy increment:', legacyError);
+          console.error('aa Erreur legacy increment:', legacyError);
         }
       }
 
       return false;
 
     } catch (err) {
-      console.error('âÂÅ’ Erreur increment usage:', err);
+      console.error('aa Erreur increment usage:', err);
       return false;
     }
   }, [isDemoMode, simulateScan, simulateAIQuestion, fetchQuotaStatus, convertFromLegacyQuota]);
 
-  // âÅ“â€¦ VÃƒâ€°RIFICATEURS RAPIDES
+  // aaaa VaaRIFICATEURS RAPIDES
   const canScan = useCallback((): boolean => {
     if (!quotaStatus) return false;
     return quotaStatus.scans.limit === -1 || quotaStatus.scans.remaining > 0;
@@ -358,7 +358,7 @@ export const useQuota = () => {
     return quotaStatus?.features[feature] || false;
   }, [quotaStatus]);
 
-  // âÅ“â€¦ MÃƒâ€°TRIQUES POUR UI
+  // aaaa MaaTRIQUES POUR UI
   const getScansProgress = useCallback((): number => {
     if (!quotaStatus || quotaStatus.scans.limit === -1) return 0;
     return (quotaStatus.scans.used / quotaStatus.scans.limit) * 100;
@@ -376,7 +376,7 @@ export const useQuota = () => {
     return { daily, monthly };
   }, [quotaStatus]);
 
-  // âÅ“â€¦ CHARGE INITIAL
+  // aaaa CHARGE INITIAL
   useEffect(() => {
     if (isAuthenticated || isDemoMode) {
       fetchQuotaStatus();
@@ -384,7 +384,7 @@ export const useQuota = () => {
   }, [isAuthenticated, isDemoMode, fetchQuotaStatus]);
 
   return {
-    // Ãƒâ€°tat
+    // aatat
     quotaStatus,
     isLoading,
     error,
@@ -394,13 +394,13 @@ export const useQuota = () => {
     checkQuota,
     incrementUsage,
     
-    // Vérificateurs
+    // Verificateurs
     canScan,
     canUseAI,
     canExport,
     hasFeature,
     
-    // Métriques UI
+    // Metriques UI
     getScansProgress,
     getAIQuestionsProgress,
     
@@ -408,7 +408,7 @@ export const useQuota = () => {
     isFreeTier: quotaStatus?.tier === 'free',
     isPremiumTier: quotaStatus?.tier === 'premium',
     
-    // âÅ“â€¦ COMPATIBILITÃƒâ€° ANCIEN FORMAT
+    // aaaa COMPATIBILITaa ANCIEN FORMAT
     quotaData: quotaStatus ? {
       used_analyses: quotaStatus.scans.used,
       remaining_analyses: quotaStatus.scans.remaining,
@@ -421,7 +421,7 @@ export const useQuota = () => {
     refreshQuota: fetchQuotaStatus
   };
 
-  // Helper pour calculer temps jusqu'au reset (compatibilité)
+  // Helper pour calculer temps jusqu'au reset (compatibilite)
   function getTimeUntilReset(resetTime: string): string {
     try {
       const reset = new Date(resetTime);
@@ -442,3 +442,6 @@ export const useQuota = () => {
     }
   }
 };
+
+
+

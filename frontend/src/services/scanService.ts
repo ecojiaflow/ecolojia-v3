@@ -1,4 +1,4 @@
-// frontend/src/services/scanService.ts
+﻿// frontend/src/services/scanService.ts
 import { apiClient, getErrorMessage } from './apiClient';
 import { cloudinaryService } from './cloudinaryService';
 
@@ -37,18 +37,18 @@ export class ScanService {
   // Scan par code-barres
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
-      // Essayer d'abord de récupérer le produit
+      // Essayer d'abord de recuperer le produit
       const response = await apiClient.get(`/products/barcode/${code}`);
       
-      if (response.data.product) {
+      if (response.data?.product) {
         return {
-          productId: response.data.product._id,
-          product: response.data.product,
+          productId: response.data?.product._id,
+          product: response.data?.product,
           confidence: 1.0
         };
       }
       
-      // Si pas trouvé, lancer une analyse
+      // Si pas trouve, lancer une analyse
       const analysisResponse = await apiClient.post('/analysis', {
         barcode: code,
         method: 'barcode',
@@ -75,7 +75,7 @@ export class ScanService {
         imageUrl,
         method: 'photo',
         source: 'web',
-        category: 'food', // Ãƒ€ détecter automatiquement plus tard
+        category: 'food', // Æ’Ã†â€™â€ Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ detecter automatiquement plus tard
         extractText: useOCR
       });
       
@@ -100,8 +100,8 @@ export class ScanService {
       });
       
       return {
-        products: response.data.products || [],
-        confidence: response.data.confidence || 0.8
+        products: response.data?.products || [],
+        confidence: response.data?.confidence || 0.8
       };
     } catch (error: any) {
       throw this.handleError(error, 'SEARCH_FAILED');
@@ -117,17 +117,17 @@ export class ScanService {
     };
   }
 
-  // Méthode pour valider un code-barres
+  // Methode pour valider un code-barres
   static isValidBarcode(code: string): boolean {
     // Validation basique : 8, 12 ou 13 chiffres
     return /^(\d{8}|\d{12}|\d{13})$/.test(code);
   }
 
-  // Méthode pour détecter la catégorie d'un produit ÃƒÂ  partir de son nom
+  // Methode pour detecter la categorie d'un produit Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  partir de son nom
   static detectCategory(productName: string): string {
     const categories = {
-      food: ['yaourt', 'lait', 'pain', 'pâtes', 'riz', 'chocolat', 'biscuit', 'céréales'],
-      cosmetic: ['crème', 'shampoing', 'savon', 'dentifrice', 'déodorant', 'parfum'],
+      food: ['yaourt', 'lait', 'pain', 'pates', 'riz', 'chocolat', 'biscuit', 'cereales'],
+      cosmetic: ['creme', 'shampoing', 'savon', 'dentifrice', 'deodorant', 'parfum'],
       detergent: ['lessive', 'liquide vaisselle', 'nettoyant', 'javel']
     };
     
@@ -139,6 +139,9 @@ export class ScanService {
       }
     }
     
-    return 'food'; // Par défaut
+    return 'food'; // Par defaut
   }
 }
+
+
+

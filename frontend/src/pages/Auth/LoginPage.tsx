@@ -7,8 +7,8 @@ import configService from '@/services/configService';
 import { useToast } from '@/hooks/use-toast';
 
 interface LocationState {
-  from?: string;
-  message?: string;
+  froma: string;
+  messagea: string;
 }
 
 export function LoginPage() {
@@ -17,7 +17,7 @@ export function LoginPage() {
   const { toast } = useToast();
   const state = location.state as LocationState;
 
-  // Ãƒâ€°tat du formulaire
+  // aatat du formulaire
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -29,7 +29,7 @@ export function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showDemoMode, setShowDemoMode] = useState(true);
 
-  // Afficher un message si redirigé
+  // Afficher un message si redirige
   useEffect(() => {
     if (state?.message) {
       toast({
@@ -44,16 +44,16 @@ export function LoginPage() {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.email) {
+    if (!formdata?.email) {
       newErrors.email = 'L\'email est requis';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formdata?.email)) {
       newErrors.email = 'Email invalide';
     }
 
-    if (!formData.password) {
+    if (!formdata?.password) {
       newErrors.password = 'Le mot de passe est requis';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+    } else if (formdata?.password.length < 6) {
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caracteres';
     }
 
     setErrors(newErrors);
@@ -71,31 +71,31 @@ export function LoginPage() {
 
     try {
       const response = await authService.login({
-        email: formData.email,
-        password: formData.password,
-        rememberMe: formData.rememberMe
+        email: formdata?.email,
+        password: formdata?.password,
+        rememberMe: formdata?.rememberMe
       });
 
       toast({
-        title: "Connexion réussie",
+        title: "Connexion reussie",
         description: `Bienvenue ${response.user.username} !`,
         variant: "default"
       });
 
-      // Rediriger vers la page demandée ou le dashboard
+      // Rediriger vers la page demandee ou le dashboard
       const redirectTo = state?.from || '/dashboard';
       navigate(redirectTo);
 
     } catch (error: any) {
       console.error('Login error:', error);
       
-      // Gestion des erreurs spécifiques
+      // Gestion des erreurs specifiques
       if (error.message.includes('Invalid credentials')) {
         setErrors({ general: 'Email ou mot de passe incorrect' });
       } else if (error.message.includes('Account not verified')) {
-        setErrors({ general: 'Veuillez vérifier votre email avant de vous connecter' });
+        setErrors({ general: 'Veuillez verifier votre email avant de vous connecter' });
       } else if (error.message.includes('Account suspended')) {
-        setErrors({ general: 'Votre compte a été suspendu. Contactez le support.' });
+        setErrors({ general: 'Votre compte ? ete suspendu. Contactez le support.' });
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
@@ -104,21 +104,21 @@ export function LoginPage() {
     }
   };
 
-  // Continuer en mode démo
+  // Continuer en mode demo
   const handleDemoMode = () => {
     configService.setMode('demo');
     toast({
-      title: "Mode démo activé",
-      description: "Explorez l'application avec des données de démonstration",
+      title: "Mode demo active",
+      description: "Explorez l'application avec des donnees de demonstration",
       variant: "default"
     });
     navigate('/');
   };
 
-  // Remplir avec des données de test
+  // Remplir avec des donnees de test
   const fillDemoCredentials = () => {
     setFormData({
-      email: 'demo@ecolojia.app',
+      email: 'demo@ecoloji?.app',
       password: 'demo123',
       rememberMe: true
     });
@@ -148,14 +148,14 @@ export function LoginPage() {
           <p className="mt-2 text-sm text-gray-600">
             Ou{' '}
             <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
-              créer un compte gratuit
+              creer un compte gratuit
             </Link>
           </p>
         </div>
 
         {/* Formulaire */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Erreur générale */}
+          {/* Erreur generale */}
           {errors.general && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -180,7 +180,7 @@ export function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
+                  value={formdata?.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 pl-10 border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
@@ -206,12 +206,12 @@ export function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
-                  value={formData.password}
+                  value={formdata?.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
+                  placeholder="aaaaaaaaaaaaaaaa"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button
@@ -239,7 +239,7 @@ export function LoginPage() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                checked={formData.rememberMe}
+                checked={formdata?.rememberMe}
                 onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               />
@@ -250,7 +250,7 @@ export function LoginPage() {
 
             <div className="text-sm">
               <Link to="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500">
-                Mot de passe oublié ?
+                Mot de passe oublie a
               </Link>
             </div>
           </div>
@@ -276,7 +276,7 @@ export function LoginPage() {
             </button>
           </div>
 
-          {/* Séparateur */}
+          {/* Separateur */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
@@ -286,7 +286,7 @@ export function LoginPage() {
             </div>
           </div>
 
-          {/* Mode démo */}
+          {/* Mode demo */}
           {showDemoMode && (
             <div className="space-y-3">
               <button
@@ -295,10 +295,10 @@ export function LoginPage() {
                 className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
               >
                 <ArrowRight className="h-5 w-5 mr-2" />
-                Continuer en mode démo
+                Continuer en mode demo
               </button>
               
-              {/* Lien pour remplir les identifiants de démo */}
+              {/* Lien pour remplir les identifiants de demo */}
               {import.meta.env.DEV && (
                 <button
                   type="button"
@@ -321,7 +321,7 @@ export function LoginPage() {
             </Link>{' '}
             et notre{' '}
             <Link to="/privacy" className="font-medium text-primary-600 hover:text-primary-500">
-              politique de confidentialité
+              politique de confidentialite
             </Link>
           </p>
         </div>
@@ -329,3 +329,6 @@ export function LoginPage() {
     </div>
   );
 }
+
+
+

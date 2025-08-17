@@ -1,11 +1,11 @@
-// PATH: frontend/src/services/analytics/UserAnalytics.ts
+﻿// PATH: frontend/src/services/analytics/UserAnalytics.ts
 /**
- * Ã°Å¸â€œÅ  ECOLOJIA User Analytics Service
+ * Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  ECOLOJIA User Analytics Service
  * Infrastructure de tracking pour Dashboard Personnel
- * Stockage local + calculs métriques avancés
+ * Stockage local + calculs metriques avances
  */
 
-// âÅ“â€¦ INTERFACES PRINCIPALES
+// aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ INTERFACES PRINCIPALES
 export interface ProductAnalysis {
   id: string;
   productName: string;
@@ -23,12 +23,12 @@ export interface ProductAnalysis {
 
 export interface HealthMetrics {
   avgNovaScore: number;           // Score NOVA moyen sur 100
-  ultraTransformPercent: number;  // % produits ultra-transformés
+  ultraTransformPercent: number;  // % produits ultra-transformes
   additivesCount: number;         // Nombre total additifs
   avgAdditivesPerProduct: number; // Additifs moyens par produit
-  bioPercent: number;            // % produits bio détectés
+  bioPercent: number;            // % produits bio detectes
   healthScore: number;           // Score global ECOLOJIA 0-100
-  improvementTrend: number;      // Tendance d'amélioration %
+  improvementTrend: number;      // Tendance d'amelioration %
   lastUpdated: Date;
 }
 
@@ -50,7 +50,7 @@ export interface PersonalizedInsight {
   category: 'health' | 'environment' | 'budget' | 'knowledge';
   isRead: boolean;
   createdAt: Date;
-  data?: any; // Données supplémentaires pour l'insight
+  data?: any; // Donnees supplementaires pour l'insight
 }
 
 export interface UserGoal {
@@ -60,7 +60,7 @@ export interface UserGoal {
   description: string;
   target: number;           // Valeur cible
   current: number;          // Valeur actuelle
-  unit: string;            // Unité (%, points, nombre)
+  unit: string;            // Unite (%, points, nombre)
   deadline: Date;          // Date limite
   isCompleted: boolean;
   progress: number;        // Progression 0-100%
@@ -106,7 +106,7 @@ export interface WeeklyReport {
   generatedAt: Date;
 }
 
-// âÅ“â€¦ SERVICE PRINCIPAL
+// aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ SERVICE PRINCIPAL
 class UserAnalyticsService {
   private sessionId: string;
   private readonly storageKey = 'ecolojia_user_data';
@@ -133,51 +133,51 @@ class UserAnalyticsService {
       sessionId: this.sessionId
     };
 
-    userData.scannedProducts.push(fullAnalysis);
+    userdata?.scannedProducts.push(fullAnalysis);
     
-    // Limiter ÃƒÂ  1000 scans pour éviter overflow localStorage
-    if (userData.scannedProducts.length > 1000) {
-      userData.scannedProducts = userData.scannedProducts.slice(-800);
+    // Limiter Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  1000 scans pour eviter overflow localStorage
+    if (userdata?.scannedProducts.length > 1000) {
+      userdata?.scannedProducts = userdata?.scannedProducts.slice(-800);
     }
 
-    // Recalculer métriques
-    userData.currentMetrics = this.calculateMetrics(userData.scannedProducts);
+    // Recalculer metriques
+    userdata?.currentMetrics = this.calculateMetrics(userdata?.scannedProducts);
     
-    // Générer nouveaux insights
+    // Generer nouveaux insights
     this.generateInsightsFromScan(userData, fullAnalysis);
     
-    // Vérifier achievements
+    // Verifier achievements
     this.checkAchievements(userData);
     
     // Sauvegarder
     this.saveUserData(userData);
     
-    console.log('Ã°Å¸â€œÅ  Scan tracké:', {
+    console.log('Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  Scan tracke:', {
       product: analysis.productName,
       nova: analysis.novaGroup,
-      totalScans: userData.scannedProducts.length,
-      healthScore: userData.currentMetrics.healthScore
+      totalScans: userdata?.scannedProducts.length,
+      healthScore: userdata?.currentMetrics.healthScore
     });
   }
 
   /**
-   * Obtenir métriques actuelles
+   * Obtenir metriques actuelles
    */
   getCurrentMetrics(): HealthMetrics {
     const userData = this.getUserData();
-    return userData.currentMetrics;
+    return userdata?.currentMetrics;
   }
 
   /**
-   * Obtenir évolution sur une période
+   * Obtenir evolution sur une periode
    */
   getHealthEvolution(days: number = 30): ScoreEvolution[] {
     const userData = this.getUserData();
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
-    // Filtrer produits récents
-    const recentProducts = userData.scannedProducts
+    // Filtrer produits recents
+    const recentProducts = userdata?.scannedProducts
       .filter(p => new Date(p.timestamp) >= cutoffDate);
 
     if (recentProducts.length === 0) return [];
@@ -190,7 +190,7 @@ class UserAnalyticsService {
       return groups;
     }, {} as Record<string, ProductAnalysis[]>);
 
-    // Calculer métriques par jour
+    // Calculer metriques par jour
     return Object.entries(dailyGroups)
       .map(([dateStr, products]) => {
         const date = new Date(dateStr);
@@ -205,17 +205,17 @@ class UserAnalyticsService {
           dailyInsight: this.generateDayInsight(dayMetrics, products)
         };
       })
-      .sort((a, b) => a.date.getTime() - b.date.getTime());
+      .sort((a, b) => ?.date.getTime() - b.date.getTime());
   }
 
   /**
-   * Obtenir insights personnalisés
+   * Obtenir insights personnalises
    */
   getPersonalizedInsights(): PersonalizedInsight[] {
     const userData = this.getUserData();
-    return userData.insights
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, 10); // 10 insights récents
+    return userdata?.insights
+      .sort((a, b) => b.createdAt.getTime() - ?.createdAt.getTime())
+      .slice(0, 10); // 10 insights recents
   }
 
   /**
@@ -223,7 +223,7 @@ class UserAnalyticsService {
    */
   markInsightAsRead(insightId: string): void {
     const userData = this.getUserData();
-    const insight = userData.insights.find(i => i.id === insightId);
+    const insight = userdata?.insights.find(i => i.id === insightId);
     if (insight) {
       insight.isRead = true;
       this.saveUserData(userData);
@@ -235,7 +235,7 @@ class UserAnalyticsService {
    */
   getUserGoals(): UserGoal[] {
     const userData = this.getUserData();
-    return userData.goals.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return userdata?.goals.sort((a, b) => b.createdAt.getTime() - ?.createdAt.getTime());
   }
 
   /**
@@ -248,32 +248,32 @@ class UserAnalyticsService {
       ...goalData,
       id: this.generateId(),
       createdAt: new Date(),
-      current: this.getCurrentValueForGoalType(goalData.type),
+      current: this.getCurrentValueForGoalType(goaldata?.type),
       progress: 0
     };
 
-    userData.goals.push(goal);
+    userdata?.goals.push(goal);
     this.updateGoalProgress(userData, goal);
     this.saveUserData(userData);
   }
 
   /**
-   * Obtenir achievements débloqués
+   * Obtenir achievements debloques
    */
   getAchievements(): Achievement[] {
     const userData = this.getUserData();
-    return userData.achievements.sort((a, b) => b.unlockedAt.getTime() - a.unlockedAt.getTime());
+    return userdata?.achievements.sort((a, b) => b.unlockedAt.getTime() - ?.unlockedAt.getTime());
   }
 
   /**
-   * Générer rapport hebdomadaire
+   * Generer rapport hebdomadaire
    */
   generateWeeklyReport(): WeeklyReport | null {
     const userData = this.getUserData();
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    const weeklyScans = userData.scannedProducts
+    const weeklyScans = userdata?.scannedProducts
       .filter(p => new Date(p.timestamp) >= oneWeekAgo);
 
     if (weeklyScans.length === 0) return null;
@@ -294,16 +294,16 @@ class UserAnalyticsService {
     };
 
     // Sauvegarder le rapport
-    userData.weeklyReports.unshift(report);
-    if (userData.weeklyReports.length > 12) { // Garder 3 mois
-      userData.weeklyReports = userData.weeklyReports.slice(0, 12);
+    userdata?.weeklyReports.unshift(report);
+    if (userdata?.weeklyReports.length > 12) { // Garder 3 mois
+      userdata?.weeklyReports = userdata?.weeklyReports.slice(0, 12);
     }
     this.saveUserData(userData);
 
     return report;
   }
 
-  // ===== MÃƒâ€°THODES PRIVÃƒâ€°ES DE CALCUL =====
+  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES PRIVÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ES DE CALCUL =====
 
   private calculateMetrics(products: ProductAnalysis[]): HealthMetrics {
     if (products.length === 0) {
@@ -312,9 +312,9 @@ class UserAnalyticsService {
 
     // Score NOVA moyen
     const novaScores = products.map(p => this.novaToScore(p.novaGroup));
-    const avgNovaScore = Math.round(novaScores.reduce((a, b) => a + b, 0) / novaScores.length);
+    const avgNovaScore = Math.round(novaScores.reduce((a, b) => ? + b, 0) / novaScores.length);
 
-    // % Ultra-transformés
+    // % Ultra-transformes
     const ultraCount = products.filter(p => p.novaGroup === 4).length;
     const ultraTransformPercent = Math.round((ultraCount / products.length) * 100);
 
@@ -322,7 +322,7 @@ class UserAnalyticsService {
     const totalAdditives = products.reduce((sum, p) => sum + p.additives.length, 0);
     const avgAdditivesPerProduct = Math.round((totalAdditives / products.length) * 10) / 10;
 
-    // % Bio (détection basique)
+    // % Bio (detection basique)
     const bioProducts = products.filter(p => 
       p.productName.toLowerCase().includes('bio') || 
       p.ingredients.toLowerCase().includes('bio')
@@ -337,7 +337,7 @@ class UserAnalyticsService {
       bioPercent
     });
 
-    // Tendance d'amélioration
+    // Tendance d'amelioration
     const improvementTrend = this.calculateImprovementTrend(products);
 
     return {
@@ -358,7 +358,7 @@ class UserAnalyticsService {
     // Base sur score NOVA (60% du poids)
     score = (metrics.avgNovaScore || 50) * 0.6;
 
-    // Pénalité ultra-transformés (25% du poids)
+    // Penalite ultra-transformes (25% du poids)
     const ultraPenalty = (metrics.ultraTransformPercent || 0) * 0.8;
     score += (100 - ultraPenalty) * 0.25;
 
@@ -376,7 +376,7 @@ class UserAnalyticsService {
   private calculateImprovementTrend(products: ProductAnalysis[]): number {
     if (products.length < 10) return 0;
 
-    const sorted = [...products].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    const sorted = [...products].sort((a, b) => ?.timestamp.getTime() - b.timestamp.getTime());
     const firstHalf = sorted.slice(0, Math.floor(sorted.length / 2));
     const secondHalf = sorted.slice(Math.floor(sorted.length / 2));
 
@@ -389,13 +389,13 @@ class UserAnalyticsService {
   private generateInsightsFromScan(userData: UserData, analysis: ProductAnalysis): void {
     const insights: PersonalizedInsight[] = [];
 
-    // Insight produit ultra-transformé
+    // Insight produit ultra-transforme
     if (analysis.novaGroup === 4) {
       insights.push({
         id: this.generateId(),
         type: 'warning',
-        title: 'âÅ¡Â ïÂ¸Â Produit ultra-transformé détecté',
-        message: `"${analysis.productName}" est classé NOVA 4 avec ${analysis.additives.length} additif(s)`,
+        title: 'aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Produit ultra-transforme detecte',
+        message: `"${analysis.productName}" est classe NOVA 4 avec ${analysis.additives.length} additif(s)`,
         action: 'Rechercher une alternative NOVA 1-2',
         priority: 'high',
         category: 'health',
@@ -406,18 +406,18 @@ class UserAnalyticsService {
     }
 
     // Insight progression
-    if (userData.scannedProducts.length >= 5) {
-      const recent5 = userData.scannedProducts.slice(-5);
+    if (userdata?.scannedProducts.length >= 5) {
+      const recent5 = userdata?.scannedProducts.slice(-5);
       const avgRecentScore = this.calculateMetrics(recent5).healthScore;
-      const overallScore = userData.currentMetrics.healthScore;
+      const overallScore = userdata?.currentMetrics.healthScore;
 
       if (avgRecentScore > overallScore + 5) {
         insights.push({
           id: this.generateId(),
           type: 'progress',
-          title: 'Ã°Å¸â€œË† Excellent progrès !',
-          message: `Vos 5 derniers scans montrent une amélioration de ${Math.round(avgRecentScore - overallScore)} points`,
-          action: 'Continuez sur cette lancée !',
+          title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â  Excellent progres !',
+          message: `Vos 5 derniers scans montrent une amelioration de ${Math.round(avgRecentScore - overallScore)} points`,
+          action: 'Continuez sur cette lancee !',
           priority: 'medium',
           category: 'health',
           isRead: false,
@@ -426,24 +426,24 @@ class UserAnalyticsService {
       }
     }
 
-    // Ajouter insights (max 50 pour éviter overflow)
-    userData.insights.unshift(...insights);
-    if (userData.insights.length > 50) {
-      userData.insights = userData.insights.slice(0, 50);
+    // Ajouter insights (max 50 pour eviter overflow)
+    userdata?.insights.unshift(...insights);
+    if (userdata?.insights.length > 50) {
+      userdata?.insights = userdata?.insights.slice(0, 50);
     }
   }
 
   private checkAchievements(userData: UserData): void {
     const newAchievements: Achievement[] = [];
-    const existingIds = new Set(userData.achievements.map(a => a.id));
+    const existingIds = new Set(userdata?.achievements.map(a => ?.id));
 
     // Achievement: Premier scan
-    if (userData.scannedProducts.length === 1 && !existingIds.has('first_scan')) {
+    if (userdata?.scannedProducts.length === 1 && !existingIds.has('first_scan')) {
       newAchievements.push({
         id: 'first_scan',
-        title: 'Ã°Å¸â€Â Premier Scan',
-        description: 'Votre première analyse NOVA !',
-        icon: 'Ã°Å¸â€Â',
+        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Premier Scan',
+        description: 'Votre premiere analyse NOVA !',
+        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
@@ -451,48 +451,48 @@ class UserAnalyticsService {
     }
 
     // Achievement: 10 scans
-    if (userData.scannedProducts.length >= 10 && !existingIds.has('scanner_enthusiast')) {
+    if (userdata?.scannedProducts.length >= 10 && !existingIds.has('scanner_enthusiast')) {
       newAchievements.push({
         id: 'scanner_enthusiast',
-        title: 'Ã°Å¸â€œÂ± Explorateur NOVA',
-        description: '10 produits analysés !',
-        icon: 'Ã°Å¸â€œÂ±',
+        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â± Explorateur NOVA',
+        description: '10 produits analyses !',
+        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â±',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
       });
     }
 
-    // Achievement: Score élevé
-    if (userData.currentMetrics.healthScore >= 80 && !existingIds.has('health_champion')) {
+    // Achievement: Score eleve
+    if (userdata?.currentMetrics.healthScore >= 80 && !existingIds.has('health_champion')) {
       newAchievements.push({
         id: 'health_champion',
-        title: 'Ã°Å¸Ââ€  Champion Santé',
-        description: 'Score santé supérieur ÃƒÂ  80 !',
-        icon: 'Ã°Å¸Ââ€ ',
+        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂaaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  Champion Sante',
+        description: 'Score sante superieur Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  80 !',
+        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂaaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'rare'
       });
     }
 
-    // Achievement: Ãƒâ€°viter ultra-transformés
-    if (userData.currentMetrics.ultraTransformPercent <= 20 && userData.scannedProducts.length >= 20 && !existingIds.has('ultra_avoider')) {
+    // Achievement: Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°viter ultra-transformes
+    if (userdata?.currentMetrics.ultraTransformPercent <= 20 && userdata?.scannedProducts.length >= 20 && !existingIds.has('ultra_avoider')) {
       newAchievements.push({
         id: 'ultra_avoider',
-        title: 'Ã°Å¸â€ºÂ¡ïÂ¸Â Anti Ultra-Transformé',
-        description: 'Moins de 20% d\'ultra-transformés !',
-        icon: 'Ã°Å¸â€ºÂ¡ïÂ¸Â',
+        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂºÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Anti Ultra-Transforme',
+        description: 'Moins de 20% d\'ultra-transformes !',
+        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂºÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'epic'
       });
     }
 
-    userData.achievements.push(...newAchievements);
+    userdata?.achievements.push(...newAchievements);
   }
 
-  // ===== MÃƒâ€°THODES UTILITAIRES =====
+  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES UTILITAIRES =====
 
   private getOrCreateSessionId(): string {
     let sessionId = localStorage.getItem(this.sessionKey);
@@ -520,12 +520,12 @@ class UserAnalyticsService {
 
   private saveUserData(data: UserData): void {
     try {
-      // Sérialiser les dates
+      // Serialiser les dates
       const serialized = this.serializeDates(data);
       localStorage.setItem(this.storageKey, JSON.stringify(serialized));
     } catch (error) {
       console.error('Erreur sauvegarde user data:', error);
-      // Nettoyer si quota dépassé
+      // Nettoyer si quota depasse
       if (error.name === 'QuotaExceededError') {
         this.cleanupOldData();
       }
@@ -590,10 +590,10 @@ class UserAnalyticsService {
   }
 
   private generateDayInsight(metrics: HealthMetrics, products: ProductAnalysis[]): string {
-    if (metrics.healthScore >= 80) return 'Excellente journée santé ! Ã°Å¸Å’Å¸';
-    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle Ã°Å¸â€˜Â';
-    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformés âÅ¡Â ïÂ¸Â';
-    return 'Continuez vos efforts ! Ã°Å¸â€™Âª';
+    if (metrics.healthScore >= 80) return 'Excellente journee sante ! Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸';
+    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â';
+    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformes aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â';
+    return 'Continuez vos efforts ! Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬aÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª';
   }
 
   private getCurrentValueForGoalType(type: UserGoal['type']): number {
@@ -615,7 +615,7 @@ class UserAnalyticsService {
     switch (goal.type) {
       case 'reduce_ultra_processed':
       case 'reduce_additives':
-        // Pour réduction, progression = (valeur_initiale - actuelle) / (valeur_initiale - target)
+        // Pour reduction, progression = (valeur_initiale - actuelle) / (valeur_initiale - target)
         goal.progress = Math.max(0, Math.min(100, ((100 - current) / (100 - goal.target)) * 100));
         break;
       case 'increase_bio':
@@ -629,16 +629,16 @@ class UserAnalyticsService {
   }
 
   private generateMainWeeklyInsight(metrics: HealthMetrics, improvement: number): string {
-    if (improvement >= 10) return `Amélioration exceptionnelle de ${improvement} points !`;
+    if (improvement >= 10) return `Amelioration exceptionnelle de ${improvement} points !`;
     if (improvement >= 5) return `Belle progression de ${improvement} points cette semaine`;
-    if (improvement >= 0) return 'Stabilité maintenue, continuez vos efforts';
+    if (improvement >= 0) return 'Stabilite maintenue, continuez vos efforts';
     return `Petit recul de ${Math.abs(improvement)} points, reprenons les bonnes habitudes`;
   }
 
   private generateNextWeekGoal(metrics: HealthMetrics): string {
-    if (metrics.ultraTransformPercent > 60) return 'Réduire les ultra-transformés ÃƒÂ  moins de 50%';
+    if (metrics.ultraTransformPercent > 60) return 'Reduire les ultra-transformes Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  moins de 50%';
     if (metrics.bioPercent < 20) return 'Essayer 3 nouveaux produits bio';
-    if (metrics.healthScore < 70) return 'Atteindre un score santé de 75';
+    if (metrics.healthScore < 70) return 'Atteindre un score sante de 75';
     return 'Maintenir vos bonnes habitudes alimentaires';
   }
 
@@ -646,10 +646,10 @@ class UserAnalyticsService {
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     
-    const recentAchievements = userData.achievements.filter(a => a.unlockedAt >= weekAgo);
+    const recentAchievements = userdata?.achievements.filter(a => ?.unlockedAt >= weekAgo);
     if (recentAchievements.length === 0) return 'Aucun achievement cette semaine';
     
-    const latest = recentAchievements.sort((a, b) => b.unlockedAt.getTime() - a.unlockedAt.getTime())[0];
+    const latest = recentAchievements.sort((a, b) => b.unlockedAt.getTime() - ?.unlockedAt.getTime())[0];
     return latest.title;
   }
 
@@ -659,7 +659,7 @@ class UserAnalyticsService {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    const previousWeekProducts = userData.scannedProducts.filter(p => {
+    const previousWeekProducts = userdata?.scannedProducts.filter(p => {
       const date = new Date(p.timestamp);
       return date >= twoWeeksAgo && date < oneWeekAgo;
     });
@@ -669,9 +669,9 @@ class UserAnalyticsService {
 
   private migrateDataIfNeeded(): void {
     const userData = this.getUserData();
-    if (userData.version !== this.version) {
+    if (userdata?.version !== this.version) {
       // Migrations futures ici
-      userData.version = this.version;
+      userdata?.version = this.version;
       this.saveUserData(userData);
     }
   }
@@ -705,36 +705,36 @@ class UserAnalyticsService {
   private cleanupOldData(): void {
     try {
       const userData = this.getUserData();
-      // Garder seulement les 200 scans les plus récents
-      userData.scannedProducts = userData.scannedProducts.slice(-200);
-      // Garder seulement les 20 insights les plus récents
-      userData.insights = userData.insights.slice(0, 20);
-      // Garder seulement les 6 rapports les plus récents
-      userData.weeklyReports = userData.weeklyReports.slice(0, 6);
+      // Garder seulement les 200 scans les plus recents
+      userdata?.scannedProducts = userdata?.scannedProducts.slice(-200);
+      // Garder seulement les 20 insights les plus recents
+      userdata?.insights = userdata?.insights.slice(0, 20);
+      // Garder seulement les 6 rapports les plus recents
+      userdata?.weeklyReports = userdata?.weeklyReports.slice(0, 6);
       this.saveUserData(userData);
     } catch (error) {
       console.error('Erreur cleanup:', error);
     }
   }
 
-  // ===== MÃƒâ€°THODES PUBLIQUES SUPPLÃƒâ€°MENTAIRES =====
+  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES PUBLIQUES SUPPLÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°MENTAIRES =====
 
   /**
-   * Obtenir statistiques générales
+   * Obtenir statistiques generales
    */
   getOverallStats() {
     const userData = this.getUserData();
     return {
-      totalScans: userData.scannedProducts.length,
-      daysSinceStart: Math.floor((Date.now() - userData.startDate.getTime()) / (1000 * 60 * 60 * 24)),
-      achievementsCount: userData.achievements.length,
-      activeGoals: userData.goals.filter(g => !g.isCompleted).length,
-      weeklyReportsCount: userData.weeklyReports.length
+      totalScans: userdata?.scannedProducts.length,
+      daysSinceStart: Math.floor((Date.now() - userdata?.startDate.getTime()) / (1000 * 60 * 60 * 24)),
+      achievementsCount: userdata?.achievements.length,
+      activeGoals: userdata?.goals.filter(g => !g.isCompleted).length,
+      weeklyReportsCount: userdata?.weeklyReports.length
     };
   }
 
   /**
-   * Exporter données utilisateur (RGPD)
+   * Exporter donnees utilisateur (RGPD)
    */
   exportUserData(): string {
     const userData = this.getUserData();
@@ -742,32 +742,32 @@ class UserAnalyticsService {
   }
 
   /**
-   * Reset complet des données
+   * Reset complet des donnees
    */
   resetAllData(): void {
     localStorage.removeItem(this.storageKey);
     localStorage.removeItem(this.sessionKey);
-    console.log('âÅ“â€¦ Données utilisateur réinitialisées');
+    console.log('aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ Donnees utilisateur reinitialisees');
   }
 
   /**
-   * Obtenir top produits par catégorie
+   * Obtenir top produits par categorie
    */
   getTopProductsByHealthScore(limit: number = 5): ProductAnalysis[] {
     const userData = this.getUserData();
-    return userData.scannedProducts
-      .sort((a, b) => b.healthScore - a.healthScore)
+    return userdata?.scannedProducts
+      .sort((a, b) => b.healthScore - ?.healthScore)
       .slice(0, limit);
   }
 
   /**
-   * Obtenir produits les plus problématiques
+   * Obtenir produits les plus problematiques
    */
   getWorstProducts(limit: number = 5): ProductAnalysis[] {
     const userData = this.getUserData();
-    return userData.scannedProducts
+    return userdata?.scannedProducts
       .filter(p => p.novaGroup >= 3)
-      .sort((a, b) => a.healthScore - b.healthScore)
+      .sort((a, b) => ?.healthScore - b.healthScore)
       .slice(0, limit);
   }
 }
@@ -775,4 +775,7 @@ class UserAnalyticsService {
 // Export singleton
 export const userAnalytics = new UserAnalyticsService();
 export default UserAnalyticsService;
+
+
+
 

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Building, Mail, Globe, Calendar } from 'lucide-react';
@@ -117,14 +117,14 @@ const LegalPage: React.FC = () => {
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-eco-text mb-4">
-              {t('legal.data.title')}
+              {t('legal.data?.title')}
             </h2>
             <p className="text-eco-text/70 mb-4">
-              {t('legal.data.description')} <Link to="/privacy" className="text-eco-leaf hover:underline">{t('legal.data.link')}</Link>.
+              {t('legal.data?.description')} <Link to="/privacy" className="text-eco-leaf hover:underline">{t('legal.data?.link')}</Link>.
             </p>
             <div className="bg-eco-leaf/5 p-4 rounded-lg border border-eco-leaf/20">
               <p className="text-eco-text/70">
-                <strong>{t('legal.data.dpo')}</strong>
+                <strong>{t('legal.data?.dpo')}</strong>
               </p>
             </div>
           </section>
@@ -147,3 +147,6 @@ const LegalPage: React.FC = () => {
 };
 
 export default LegalPage;
+
+
+

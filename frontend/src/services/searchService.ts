@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/searchService.ts
+﻿// PATH: frontend/src/services/searchService.ts
 import api from './api';
 import { SearchFilters, ProductHit } from '@/types';
 
@@ -29,21 +29,21 @@ class SearchService {
       // Extraire les produits du format { success: true, products: [...] }
       let products = [];
       if (response.data?.success && response.data?.products) {
-        products = response.data.products;
+        products = response.data?.products;
       } else if (response.data?.products) {
-        products = response.data.products;
+        products = response.data?.products;
       } else if (Array.isArray(response.data)) {
         products = response.data;
       }
       
       console.log(`Found ${products.length} products in total`);
       
-      // Filtrer seulement si une query spécifique est fournie
+      // Filtrer seulement si une query specifique est fournie
       let filteredProducts = products;
       if (params.query && params.query.trim() !== '') {
         const searchTerm = params.query.toLowerCase().trim();
         
-        // Si la recherche est vide ou générique, montrer tous les produits
+        // Si la recherche est vide ou generique, montrer tous les produits
         if (searchTerm === '' || searchTerm === 'tous' || searchTerm === 'all') {
           filteredProducts = products;
         } else {
@@ -70,7 +70,7 @@ class SearchService {
         console.log('No query provided, showing all products');
       }
       
-      // Mapper vers ProductHit avec toutes les données
+      // Mapper vers ProductHit avec toutes les donnees
       const hits = filteredProducts.map((product: any, index: number) => {
         console.log(`Mapping product ${index + 1}:`, product);
         
@@ -89,20 +89,20 @@ class SearchService {
         
         // Ajouter les scores depuis analysisData
         if (product.analysisData) {
-          hit.healthScore = product.analysisData.healthScore || 0;
-          hit.environmentScore = product.analysisData.environmentScore || 0;
-          hit.socialScore = product.analysisData.socialScore;
+          hit.healthScore = product.analysisdata?.healthScore || 0;
+          hit.environmentScore = product.analysisdata?.environmentScore || 0;
+          hit.socialScore = product.analysisdata?.socialScore;
           
-          // Si les scores détaillés existent
-          if (product.analysisData.scores) {
-            hit.healthScore = product.analysisData.scores.healthScore || hit.healthScore;
-            hit.environmentScore = product.analysisData.scores.environmentScore || hit.environmentScore;
+          // Si les scores detailles existent
+          if (product.analysisdata?.scores) {
+            hit.healthScore = product.analysisdata?.scores.healthScore || hit.healthScore;
+            hit.environmentScore = product.analysisdata?.scores.environmentScore || hit.environmentScore;
           }
           
           // Nutriscore et ecoscore depuis details
-          if (product.analysisData.details) {
-            hit.nutriScore = product.analysisData.details.nutriscore;
-            hit.ecoScore = product.analysisData.details.ecoscore;
+          if (product.analysisdata?.details) {
+            hit.nutriScore = product.analysisdata?.details.nutriscore;
+            hit.ecoScore = product.analysisdata?.details.ecoscore;
           }
         }
         
@@ -144,11 +144,11 @@ class SearchService {
     try {
       const response = await api.get(`/products/barcode/${barcode}`);
       
-      if (!response.data || response.data.success === false) {
+      if (!response.data || response.data?.success === false) {
         return null;
       }
       
-      const product = response.data.product || response.data;
+      const product = response.data?.product || response.data;
       
       return {
         objectID: product._id || product.id || product.barcode,
@@ -204,10 +204,10 @@ export function extractProducts(response: SearchResponse | any): ProductHit[] {
     return response.hits;
   }
   if (response?.data?.hits) {
-    return response.data.hits;
+    return response.data?.hits;
   }
   if (response?.data?.products) {
-    return response.data.products;
+    return response.data?.products;
   }
   if (response?.products) {
     return response.products;
@@ -218,3 +218,6 @@ export function extractProducts(response: SearchResponse | any): ProductHit[] {
 const searchService = new SearchService();
 export default searchService;
 export { searchService };
+
+
+

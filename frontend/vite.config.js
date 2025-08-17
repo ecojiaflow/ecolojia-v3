@@ -1,11 +1,10 @@
-// PATH: frontend/vite.config.js
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   css: {
-    postcss: './postcss.config.cjs',
+    postcss: "./postcss.config.cjs",
   },
   build: {
     rollupOptions: {
@@ -17,8 +16,11 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    hmr: {
+      overlay: false  // D?sactive les overlays d'erreur
+    }
   },
   resolve: {
-    alias: { '@': '/src' },
+    alias: { "@": "/src" },
   },
 });

@@ -1,7 +1,7 @@
 // PATH: frontend/src/services/apiClient.ts
 /**
- * Client API pour toutes les requÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªtes HTTP
- * GÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¨re automatiquement l'authentification et les erreurs
+ * Client API pour toutes les requÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Âªtes HTTP
+ * GÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¨re automatiquement l'authentification et les erreurs
  */
 
 import axios from 'axios';
@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
                           config.url?.includes('/auth/refresh');
     
     if (!isAuthEndpoint) {
-      // RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©cupÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rer le token depuis le localStorage avec la bonne clÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©
+      // RÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©cupÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©rer le token depuis le localStorage avec la bonne clÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©
       const token = localStorage.getItem('ecolojia_token');
       
       if (token) {
@@ -34,7 +34,7 @@ apiClient.interceptors.request.use(
     
     // Log en dev
     if (import.meta.env.DEV) {
-      console.log('ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸âââ€šÂ¬Ã‚Ââââ€šÂ¬Ã…Â¾ API Request:', {
+      console.log('ÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã‚Â¦ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÂ¢ÃƒÂ¢ÃƒÂ¢ââ€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÂ¢ÃƒÂ¢ÃƒÂ¢ââ€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’ââ‚¬Â¦Ãƒâ€šÃ‚Â¾ API Request:', {
         method: config.method?.toUpperCase(),
         url: config.url,
         hasToken: !!config.headers.Authorization,
@@ -45,17 +45,17 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('ÃƒÆ’Ã‚Â¢Ãƒâ€šÃ‚ÂÃƒâ€¦â€â„¢ Request error:', error);
+    console.error('ÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã‚Â¦ÃƒÂ¢ââ€šÂ¬ÃƒÂ¢ââ‚¬Å¾Ã‚Â¢ Request error:', error);
     return Promise.reject(error);
   }
 );
 
-// Intercepteur pour gÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rer les rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©ponses et erreurs
+// Intercepteur pour gÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©rer les rÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©ponses et erreurs
 apiClient.interceptors.response.use(
   (response) => {
     // Log en dev
     if (import.meta.env.DEV) {
-      console.log('ÃƒÆ’Ã‚Â¢Ãƒâ€¦â€Å“âââ€šÂ¬Ã‚Â¦ API Response:', response.config.url, response.status);
+      console.log('ÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã‚Â¦ÃƒÂ¢ââ€šÂ¬Ãƒâ€¦ââ‚¬Å“ÃƒÂ¢ÃƒÂ¢ÃƒÂ¢ââ€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¦ API Response:', response.config.url, response.status);
     }
     
     return response;
@@ -63,9 +63,9 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     
-    // Log dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©taillÃƒÆ’Ã†â€™Ãƒâ€šÃ‚© de l'erreur
+    // Log dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©taillÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â© de l'erreur
     if (import.meta.env.DEV) {
-      console.error('ÃƒÆ’Ã‚Â¢Ãƒâ€šÃ‚ÂÃƒâ€¦â€â„¢ API Error:', {
+      console.error('ÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã‚Â¦ÃƒÂ¢ââ€šÂ¬ÃƒÂ¢ââ‚¬Å¾Ã‚Â¢ API Error:', {
         url: originalRequest?.url,
         status: error.response?.status,
         message: error.message,
@@ -77,23 +77,23 @@ apiClient.interceptors.response.use(
     const isAuthEndpoint = originalRequest?.url?.includes('/auth/login') || 
                           originalRequest?.url?.includes('/auth/register');
     
-    // Gestion du token expirÃƒÆ’Ã†â€™Ãƒâ€šÃ‚© (401) - seulement pour les routes protÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©gÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©es
+    // Gestion du token expirÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â© (401) - seulement pour les routes protÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©gÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©es
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
       
-      // Si le message est "Token non fourni", c'est qu'on n'est pas connectÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©
+      // Si le message est "Token non fourni", c'est qu'on n'est pas connectÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©
       if (error.response?.data?.message === 'Token non fourni') {
-        // Basculer en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
+        // Basculer en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
         ConfigService.setMode('demo');
         
-        // CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©er une erreur personnalisÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©e qui indique qu'on est en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
-        const demoError = new Error('Mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©monstration activÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©') as any;
+        // CrÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©er une erreur personnalisÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©e qui indique qu'on est en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
+        const demoError = new Error('Mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©monstration activÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©') as any;
         demoError.isDemoMode = true;
         demoError.statusCode = 401;
         return Promise.reject(demoError);
       }
       
-      // Sinon, essayer de rafraÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â®chir le token
+      // Sinon, essayer de rafraÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â®chir le token
       try {
         const refreshToken = localStorage.getItem('ecolojia_refresh_token');
         if (refreshToken) {
@@ -104,25 +104,25 @@ apiClient.interceptors.response.use(
           
           const { token, refreshToken: newRefreshToken } = response.data;
           
-          // Sauvegarder les nouveaux tokens avec les bonnes clÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©s
+          // Sauvegarder les nouveaux tokens avec les bonnes clÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©s
           localStorage.setItem('ecolojia_token', token);
           localStorage.setItem('ecolojia_refresh_token', newRefreshToken);
           
-          // RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©essayer la requÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªte originale
+          // RÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©essayer la requÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Âªte originale
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return apiClient(originalRequest);
         }
       } catch (refreshError) {
-        // ÃƒÆ’Ã†â€™âââ€šÂ¬Ã‚Â°chec du refresh, dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©connecter l'utilisateur
+        // ÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÂ¢ÃƒÂ¢ÃƒÂ¢ââ€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’ââ‚¬Å¡Ãƒâ€šÃ‚Â°chec du refresh, dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©connecter l'utilisateur
         localStorage.removeItem('ecolojia_token');
         localStorage.removeItem('ecolojia_refresh_token');
         localStorage.removeItem('ecolojia_user');
         
-        // Basculer en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
+        // Basculer en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
         ConfigService.setMode('demo');
         
-        // CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©er une erreur qui indique qu'on est en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
-        const demoError = new Error('Session expirÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©e - Mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©monstration activÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©') as any;
+        // CrÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©er une erreur qui indique qu'on est en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
+        const demoError = new Error('Session expirÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©e - Mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©monstration activÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©') as any;
         demoError.isDemoMode = true;
         demoError.statusCode = 401;
         return Promise.reject(demoError);
@@ -163,7 +163,7 @@ apiClient.interceptors.response.use(
       }
     }
     
-    // CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©er une erreur personnalisÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©e
+    // CrÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©er une erreur personnalisÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©e
     const customError = new Error(errorMessage) as any;
     customError.originalError = error;
     customError.statusCode = error.response?.status;
@@ -173,9 +173,9 @@ apiClient.interceptors.response.use(
   }
 );
 
-// Wrapper pour gÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©rer le mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
+// Wrapper pour gÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©rer le mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
 const makeRequest = async (method: string, url: string, data?: any, config?: any) => {
-  // Si on est en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo, utiliser le ConfigService
+  // Si on est en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo, utiliser le ConfigService
   if (ConfigService.isDemo()) {
     try {
       const response = await ConfigService.makeRequest(url, {
@@ -200,7 +200,7 @@ const makeRequest = async (method: string, url: string, data?: any, config?: any
   }
 };
 
-// MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©thodes utilitaires
+// MÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©thodes utilitaires
 export const api = {
   // GET
   get: <T = any>(url: string, config?: any) => 
@@ -225,7 +225,7 @@ export const api = {
   // Upload de fichier
   upload: <T = any>(url: string, file: File, onProgress?: (progress: number) => void) => {
     if (ConfigService.isDemo()) {
-      // Simuler un upload en mode dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©mo
+      // Simuler un upload en mode dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©mo
       return new Promise<T>((resolve) => {
         let progress = 0;
         const interval = setInterval(() => {
@@ -260,10 +260,10 @@ export const api = {
   }
 };
 
-// Export du client axios pour les cas spÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©ciaux
+// Export du client axios pour les cas spÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©ciaux
 export { apiClient };
 
-// Export par dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚©faut
+// Export par dÃƒÆ’Ã†â€™Ãƒâ€ ââ‚¬â„¢ÃƒÆ’ââ‚¬Â ÃƒÂ¢ââ€šÂ¬ââ€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢ââ€šÂ¬Ã…Â¡ÃƒÆ’ââ‚¬Å¡Ã‚Â©faut
 export default api;
 
 

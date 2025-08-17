@@ -1,103 +1,58 @@
-Write-Host "`n=== Correction globale de l'encodage UTF-8 ===" -ForegroundColor Cyan
+﻿# Correction globale des problèmes d'encodage
+Write-Host "🔧 Correction globale des fichiers..." -ForegroundColor Cyan
 
-# Liste de tous les fichiers à corriger
-$files = Get-ChildItem -Path ".\src" -Include "*.tsx", "*.ts", "*.jsx", "*.js" -Recurse
-
-$totalFixed = 0
-
-foreach ($file in $files) {
-    $content = Get-Content $file.FullName -Raw -Encoding UTF8
-    $originalContent = $content
+# Fonction de correction
+function Fix-Encoding {
+    param($path, $pattern)
     
-    # Dictionnaire de toutes les corrections
-    $corrections = @{
-        # Caractères accentués
-        "Ã©" = "é"
-        "Ã¨" = "è"
-        "Ã " = "à"
-        "Ã¢" = "â"
-        "Ãª" = "ê"
-        "Ã´" = "ô"
-        "Ã®" = "î"
-        "Ã§" = "ç"
-        "Ã¹" = "ù"
-        "Ã»" = "û"
-        "Ã¼" = "ü"
-        "Ã¶" = "ö"
-        "Ã¤" = "ä"
-        
-        # Majuscules accentuées
-        "Ã‰" = "É"
-        "Ãˆ" = "È"
-        "Ã€" = "À"
-        "Ã‚" = "Â"
-        "ÃŠ" = "Ê"
-        "Ã"" = "Ô"
-        "ÃŽ" = "Î"
-        "Ã‡" = "Ç"
-        "Ã™" = "Ù"
-        
-        # Caractères spéciaux
-        "Å"" = "œ"
-        "Å'" = "Œ"
-        "Ã±" = "ñ"
-        "Ã'" = "Ñ"
-        
-        # Apostrophes et guillemets
-        "â€™" = "'"
-        "â€˜" = "'"
-        "â€œ" = '"'
-        "â€" = '"'
-        "â€"" = "–"
-        "â€"" = "—"
-        "â€¢" = "•"
-        "â€¦" = "…"
-        
-        # Symboles
-        "â‚¬" = "€"
-        "Â°" = "°"
-        "Â©" = "©"
-        "Â®" = "®"
-        "â„¢" = "™"
-        
-        # Corrections spécifiques ECOLOJIA
-        "ÃƒÂ©" = "é"
-        "ÃƒÂ¨" = "è"
-        "ÃƒÂ " = "à"
-        "ÃƒÂ¢" = "â"
-        "ÃƒÂª" = "ê"
-        "ÃƒÂ´" = "ô"
-        "ÃƒÂ®" = "î"
-        "ÃƒÂ§" = "ç"
-        "Ã‚Â©" = "©"
-        "Ãƒâ€¦" = "à"
-        "ÃƒÆ'" = "à"
-        "Ã¢â‚¬Å¡" = ""
-        "Ã¢â‚¬Å"" = '"'
-        "Ã¢â‚¬" = '"'
-        "Ã¢â€šÂ¬" = "€"
-        "Ã‚Â°" = "°"
-        
-        # Emojis mal encodés
-        "Ã°Å¸Å'Â±" = "🌱"
-        "Ã°Å¸Â¤â€" = "🤔"
-        "ðŸŒ±" = "🌱"
-    }
+    $files = Get-ChildItem -Path $path -Include $pattern -Recurse
+    $fixedCount = 0
     
-    # Appliquer toutes les corrections
-    foreach ($wrong in $corrections.Keys) {
-        if ($content -match [regex]::Escape($wrong)) {
-            $content = $content -replace [regex]::Escape($wrong), $corrections[$wrong]
+    foreach ($file in $files) {
+        if ($file.FullName -notmatch "node_modules|dist|build|.git") {
+            try {
+                $content = Get-Content $file.FullName -Raw -Encoding UTF8
+                $original = $content
+                
+                # Corrections
+                $content = $content -replace 'Ã©', 'e'
+                $content = $content -replace 'Ã¨', 'e'
+                $content = $content -replace 'Ãª', 'e'
+                $content = $content -replace 'Ã ', 'a'
+                $content = $content -replace 'Ã¢', 'a'
+                $content = $content -replace 'Ã´', 'o'
+                $content = $content -replace 'Ã®', 'i'
+                $content = $content -replace 'Ã¯', 'i'
+                $content = $content -replace 'Ã§', 'c'
+                $content = $content -replace 'Ã¹', 'u'
+                $content = $content -replace 'Ã»', 'u'
+                $content = $content -replace 'Ã¼', 'u'
+                $content = $content -replace 'Å"', 'oe'
+                $content = $content -replace 'Ã', ''
+                
+                if ($content -ne $original) {
+                    [System.IO.File]::WriteAllText($file.FullName, $content, [System.Text.UTF8Encoding]::new($false))
+                    Write-Host "  ✓ $($file.Name)" -ForegroundColor Green
+                    $fixedCount++
+                }
+            }
+            catch {
+                Write-Host "  ✗ Erreur avec $($file.Name)" -ForegroundColor Red
+            }
         }
     }
     
-    # Si le contenu a changé, sauvegarder
-    if ($content -ne $originalContent) {
-        [System.IO.File]::WriteAllText($file.FullName, $content, [System.Text.Encoding]::UTF8)
-        Write-Host "✓ Corrigé : $($file.Name)" -ForegroundColor Green
-        $totalFixed++
-    }
+    return $fixedCount
 }
 
-Write-Host "`n✅ Correction terminée ! $totalFixed fichiers corrigés." -ForegroundColor Green
-Write-Host "Rafraîchissez votre navigateur (F5) pour voir les changements." -ForegroundColor Cyan
+# Backend
+Write-Host "`nBackend:" -ForegroundColor Yellow
+$backendFixed = Fix-Encoding -path ".\backend\src" -pattern "*.js"
+Write-Host "  $backendFixed fichiers corrigés" -ForegroundColor Cyan
+
+# Frontend
+Write-Host "`nFrontend:" -ForegroundColor Yellow
+$frontendFixed = Fix-Encoding -path ".\frontend\src" -pattern @("*.ts", "*.tsx", "*.js", "*.jsx")
+Write-Host "  $frontendFixed fichiers corrigés" -ForegroundColor Cyan
+
+Write-Host "`n✨ Correction terminée!" -ForegroundColor Green

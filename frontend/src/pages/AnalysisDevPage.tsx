@@ -1,4 +1,4 @@
-// PATH: frontend\src\pages\AnalysisDevPage.tsx
+﻿// PATH: frontend\src\pages\AnalysisDevPage.tsx
 import React, { useState } from 'react';
 import { Loader2, Send, Beaker } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,12 @@ import { AnalysisResultCard } from '@/components/AnalysisResultCard';
 import { analysisAPI } from '@/lib/api/analysis';
 import type { AnalysisResult, ManualAnalysisPayload } from '@/lib/api/analysis';
 
-// Exemples prédéfinis pour tests rapides
+// Exemples predefinis pour tests rapides
 const EXAMPLES = {
   food_nova4: {
-    name: 'Céréales chocolat',
+    name: 'Cereales chocolat',
     category: 'food' as const,
-    ingredients: 'Céréales (blé, maÃƒÂ¯s), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arôme artificiel vanille, émulsifiant (lécithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
+    ingredients: 'Cereales (ble, mas), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arome artificiel vanille, emulsifiant (lecithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
     brand: 'Test Brand'
   },
   food_nova1: {
@@ -27,7 +27,7 @@ const EXAMPLES = {
     brand: 'Verger Bio'
   },
   cosmetics_risk: {
-    name: 'Crème visage anti-âge',
+    name: 'Creme visage anti-age',
     category: 'cosmetics' as const,
     ingredients: 'Aqua, Glycerin, Dimethicone, Cetearyl Alcohol, Parfum, Methylparaben, Propylparaben, BHT, Limonene, Linalool, Citral, CI 19140, CI 42090',
     brand: 'Beauty Lab'
@@ -39,9 +39,9 @@ const EXAMPLES = {
     brand: 'Nature Care'
   },
   detergent_harsh: {
-    name: 'Détergent surpuissant',
+    name: 'Detergent surpuissant',
     category: 'detergents' as const,
-    ingredients: '15-30% agents de blanchiment oxygénés, 5-15% tensioactifs anioniques, <5% tensioactifs non ioniques, phosphonates, parfums (Limonene)',
+    ingredients: '15-30% agents de blanchiment oxygenes, 5-15% tensioactifs anioniques, <5% tensioactifs non ioniques, phosphonates, parfums (Limonene)',
     brand: 'PowerClean'
   }
 };
@@ -86,14 +86,14 @@ export const AnalysisDevPage: React.FC = () => {
     try {
       const payload: ManualAnalysisPayload = {
         ...formData,
-        foodData: nutritionEnabled && formData.category === 'food' ? {
+        foodData: nutritionEnabled && formdata?.category === 'food' ? {
           nutrition: {
-            kcal: nutritionData.kcal ? Number(nutritionData.kcal) : undefined,
-            sugars: nutritionData.sugars ? Number(nutritionData.sugars) : undefined,
-            salt: nutritionData.salt ? Number(nutritionData.salt) : undefined,
-            fiber: nutritionData.fiber ? Number(nutritionData.fiber) : undefined,
-            protein: nutritionData.protein ? Number(nutritionData.protein) : undefined,
-            saturatedFat: nutritionData.saturatedFat ? Number(nutritionData.saturatedFat) : undefined,
+            kcal: nutritiondata?.kcal ? Number(nutritiondata?.kcal) : undefined,
+            sugars: nutritiondata?.sugars ? Number(nutritiondata?.sugars) : undefined,
+            salt: nutritiondata?.salt ? Number(nutritiondata?.salt) : undefined,
+            fiber: nutritiondata?.fiber ? Number(nutritiondata?.fiber) : undefined,
+            protein: nutritiondata?.protein ? Number(nutritiondata?.protein) : undefined,
+            saturatedFat: nutritiondata?.saturatedFat ? Number(nutritiondata?.saturatedFat) : undefined,
           }
         } : undefined
       };
@@ -120,7 +120,7 @@ export const AnalysisDevPage: React.FC = () => {
       const pong = await analysisAPI.ping();
       alert(`Ping OK: ${JSON.stringify(pong)}`);
     } catch (err) {
-      alert('Ping échoué');
+      alert('Ping echoue');
     }
   };
 
@@ -132,7 +132,7 @@ export const AnalysisDevPage: React.FC = () => {
           Test d'analyse manuelle
         </h1>
         <p className="text-gray-600 mt-2">
-          Page de développement pour tester le service d'analyse
+          Page de developpement pour tester le service d'analyse
         </p>
       </div>
 
@@ -182,21 +182,21 @@ export const AnalysisDevPage: React.FC = () => {
                 size="sm"
                 onClick={() => loadExample('cosmetics_risk')}
               >
-                Cosmétique risqué
+                Cosmetique risque
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => loadExample('cosmetics_clean')}
               >
-                Cosmétique clean
+                Cosmetique clean
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => loadExample('detergent_harsh')}
               >
-                Détergent agressif
+                Detergent agressif
               </Button>
             </div>
           </div>
@@ -207,9 +207,9 @@ export const AnalysisDevPage: React.FC = () => {
               <Label htmlFor="name">Nom du produit</Label>
               <Input
                 id="name"
-                value={formData.name}
+                value={formdata?.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Ex: Céréales chocolat"
+                placeholder="Ex: Cereales chocolat"
                 required
               />
             </div>
@@ -219,17 +219,17 @@ export const AnalysisDevPage: React.FC = () => {
               <Label htmlFor="brand">Marque (optionnel)</Label>
               <Input
                 id="brand"
-                value={formData.brand}
+                value={formdata?.brand}
                 onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                placeholder="Ex: Nestlé"
+                placeholder="Ex: Nestle"
               />
             </div>
 
-            {/* Catégorie */}
+            {/* Categorie */}
             <div>
-              <Label>Catégorie</Label>
+              <Label>Categorie</Label>
               <RadioGroup
-                value={formData.category}
+                value={formdata?.category}
                 onValueChange={(value) => setFormData({ ...formData, category: value as any })}
               >
                 <div className="flex items-center space-x-2">
@@ -238,30 +238,30 @@ export const AnalysisDevPage: React.FC = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="cosmetics" id="cosmetics" />
-                  <Label htmlFor="cosmetics">Cosmétique</Label>
+                  <Label htmlFor="cosmetics">Cosmetique</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="detergents" id="detergents" />
-                  <Label htmlFor="detergents">Détergent</Label>
+                  <Label htmlFor="detergents">Detergent</Label>
                 </div>
               </RadioGroup>
             </div>
 
-            {/* Ingrédients */}
+            {/* Ingredients */}
             <div>
-              <Label htmlFor="ingredients">Ingrédients</Label>
+              <Label htmlFor="ingredients">Ingredients</Label>
               <Textarea
                 id="ingredients"
-                value={formData.ingredients}
+                value={formdata?.ingredients}
                 onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
-                placeholder="Copiez-collez la liste des ingrédients..."
+                placeholder="Copiez-collez la liste des ingredients..."
                 rows={4}
                 required
               />
             </div>
 
             {/* Nutrition (food uniquement) */}
-            {formData.category === 'food' && (
+            {formdata?.category === 'food' && (
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <input
@@ -280,7 +280,7 @@ export const AnalysisDevPage: React.FC = () => {
                       <Input
                         id="kcal"
                         type="number"
-                        value={nutritionData.kcal}
+                        value={nutritiondata?.kcal}
                         onChange={(e) => setNutritionData({ ...nutritionData, kcal: e.target.value })}
                         placeholder="380"
                       />
@@ -291,7 +291,7 @@ export const AnalysisDevPage: React.FC = () => {
                         id="sugars"
                         type="number"
                         step="0.1"
-                        value={nutritionData.sugars}
+                        value={nutritiondata?.sugars}
                         onChange={(e) => setNutritionData({ ...nutritionData, sugars: e.target.value })}
                         placeholder="24"
                       />
@@ -302,7 +302,7 @@ export const AnalysisDevPage: React.FC = () => {
                         id="salt"
                         type="number"
                         step="0.01"
-                        value={nutritionData.salt}
+                        value={nutritiondata?.salt}
                         onChange={(e) => setNutritionData({ ...nutritionData, salt: e.target.value })}
                         placeholder="0.8"
                       />
@@ -313,29 +313,29 @@ export const AnalysisDevPage: React.FC = () => {
                         id="fiber"
                         type="number"
                         step="0.1"
-                        value={nutritionData.fiber}
+                        value={nutritiondata?.fiber}
                         onChange={(e) => setNutritionData({ ...nutritionData, fiber: e.target.value })}
                         placeholder="6"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="protein">Protéines (g)</Label>
+                      <Label htmlFor="protein">Proteines (g)</Label>
                       <Input
                         id="protein"
                         type="number"
                         step="0.1"
-                        value={nutritionData.protein}
+                        value={nutritiondata?.protein}
                         onChange={(e) => setNutritionData({ ...nutritionData, protein: e.target.value })}
                         placeholder="9"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="saturatedFat">Graisses saturées (g)</Label>
+                      <Label htmlFor="saturatedFat">Graisses saturees (g)</Label>
                       <Input
                         id="saturatedFat"
                         type="number"
                         step="0.1"
-                        value={nutritionData.saturatedFat}
+                        value={nutritiondata?.saturatedFat}
                         onChange={(e) => setNutritionData({ ...nutritionData, saturatedFat: e.target.value })}
                         placeholder="2.5"
                       />
@@ -362,7 +362,7 @@ export const AnalysisDevPage: React.FC = () => {
           </form>
         </Card>
 
-        {/* Résultats */}
+        {/* Resultats */}
         <div className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -373,9 +373,9 @@ export const AnalysisDevPage: React.FC = () => {
           {result && (
             <AnalysisResultCard
               result={result}
-              productName={formData.name}
-              productBrand={formData.brand}
-              category={formData.category}
+              productName={formdata?.name}
+              productBrand={formdata?.brand}
+              category={formdata?.category}
               showRawData={true}
             />
           )}
@@ -384,3 +384,6 @@ export const AnalysisDevPage: React.FC = () => {
     </div>
   );
 };
+
+
+

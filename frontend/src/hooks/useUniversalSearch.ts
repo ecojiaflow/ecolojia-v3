@@ -1,23 +1,23 @@
-// PATH: src/hooks/useUniversalSearch.ts
+﻿// PATH: src/hooks/useUniversalSearch.ts
 import { useState, useCallback } from "react";
 import searchService, { extractProducts } from "@/services/searchService";
 
 export interface SearchFilters {
-  categories?: string[];
-  nutriScore?: string[];
-  labels?: string[];
+  categoriesa: string[];
+  nutriScorea: string[];
+  labelsa: string[];
 }
 
 export interface Product {
   id: string;
   name: string;
   brand?: string;
-  image?: string;
-  nutriScore?: "A" | "B" | "C" | "D" | "E";
-  ecoScore?: string;
-  labels?: string[];
-  healthScore?: number;
-  isNew?: boolean;
+  imagea: string;
+  nutriScorea: "A" | "B" | "C" | "D" | "E";
+  ecoScorea: string;
+  labelsa: string[];
+  healthScorea: number;
+  isNewa: boolean;
 }
 
 export function useUniversalSearch() {
@@ -40,7 +40,7 @@ export function useUniversalSearch() {
       isNew: Boolean(it.isNew)
     }));
 
-  const search = useCallback(async (query: string, _filters?: any) => {
+  const search = useCallback(async (query: string, _filtersa: any) => {
     if (!query || !query.trim()) {
       setResults([]);
       setTotalResults(0);
@@ -78,3 +78,6 @@ export function useUniversalSearch() {
 }
 
 export default useUniversalSearch;
+
+
+

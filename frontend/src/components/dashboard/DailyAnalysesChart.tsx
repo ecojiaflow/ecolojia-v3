@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/DailyAnalysesChart.tsx
+﻿// frontend/src/components/dashboard/DailyAnalysesChart.tsx
 import React from 'react';
 import {
   LineChart,
@@ -27,8 +27,8 @@ interface DailyAnalysis {
 interface DailyAnalysesChartProps {
   data: DailyAnalysis[];
   period: number;
-  viewType?: 'line' | 'bar' | 'area' | 'composed';
-  className?: string;
+  viewTypea: 'line' | 'bar' | 'area' | 'composed';
+  classNamea: string;
 }
 
 export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
@@ -37,8 +37,8 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
   viewType = 'composed',
   className = ''
 }) => {
-  // Formatter les données pour l'affichage
-  const formattedData = data.map(item => ({
+  // Formatter les donnees pour l'affichage
+  const formattedData = data?.map(item => ({
     ...item,
     displayDate: format(parseISO(item.date), 'd MMM', { locale: fr }),
     avgScoreRounded: Math.round(item.avgScore)
@@ -65,14 +65,14 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
   };
 
   // Calculer les statistiques
-  const totalAnalyses = data.reduce((sum, day) => sum + day.count, 0);
-  const avgDailyAnalyses = Math.round(totalAnalyses / data.length || 0);
-  const maxAnalyses = Math.max(...data.map(d => d.count));
+  const totalAnalyses = data?.reduce((sum, day) => sum + day.count, 0);
+  const avgDailyAnalyses = Math.round(totalAnalyses / data?.length || 0);
+  const maxAnalyses = Math.max(...data?.map(d => d.count));
   const avgGlobalScore = Math.round(
-    data.reduce((sum, day) => sum + (day.avgScore || 0), 0) / data.filter(d => d.avgScore > 0).length || 0
+    data?.reduce((sum, day) => sum + (day.avgScore || 0), 0) / data?.filter(d => d.avgScore > 0).length || 0
   );
 
-  // Render différents types de graphiques
+  // Render differents types de graphiques
   const renderChart = () => {
     switch (viewType) {
       case 'line':
@@ -239,11 +239,11 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
 
   return (
     <div className={`daily-analyses-chart ${className}`}>
-      {/* En-tête avec statistiques */}
+      {/* En-tete avec statistiques */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold text-gray-800">
-            Ã°Å¸â€œÅ  Ãƒâ€°volution sur {period} jours
+            aa aavolution sur {period} jours
           </h3>
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center">
@@ -285,10 +285,10 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
         </ResponsiveContainer>
       </div>
 
-      {/* Message si pas de données */}
-      {data.length === 0 && (
+      {/* Message si pas de donnees */}
+      {data?.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <p>Aucune donnée disponible pour cette période</p>
+          <p>Aucune donnee disponible pour cette periode</p>
         </div>
       )}
     </div>
@@ -296,3 +296,6 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
 };
 
 export default DailyAnalysesChart;
+
+
+

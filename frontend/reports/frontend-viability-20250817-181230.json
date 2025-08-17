@@ -1,0 +1,100 @@
+[
+    {
+        "category":  "deps",
+        "name":  "node present",
+        "status":  "PASS",
+        "message":  "Version: v22.12.0",
+        "durationMs":  53
+    },
+    {
+        "category":  "deps",
+        "name":  "npm present",
+        "status":  "PASS",
+        "message":  "Version: 10.9.1",
+        "durationMs":  335
+    },
+    {
+        "category":  "config",
+        "name":  "VITE_API_URL (CLI)",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api",
+        "durationMs":  0
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics health",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/cosmetics/health -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4141
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents health",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/detergents/health -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4100
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics analyze",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/cosmetics/analyze -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4099
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents analyze",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/detergents/analyze -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4079
+    },
+    {
+        "category":  "api",
+        "name":  "Food analysis",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/analysis -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4098
+    },
+    {
+        "category":  "api",
+        "name":  "AI chat",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/ai/chat -\u003e Impossible de se connecter au serveur distant",
+        "durationMs":  4104
+    },
+    {
+        "category":  "build",
+        "name":  "npm ci",
+        "status":  "PASS",
+        "message":  "Dependencies OK",
+        "durationMs":  0
+    },
+    {
+        "category":  "build",
+        "name":  "npm run build",
+        "status":  "PASS",
+        "message":  "Vite build OK in 11,83s",
+        "durationMs":  11825
+    },
+    {
+        "category":  "i18n",
+        "name":  "UTF-8 encoding",
+        "status":  "FAIL",
+        "message":  "Encoding artifacts detected (U+00C2/U+00C3). Fix file encoding.",
+        "durationMs":  57
+    },
+    {
+        "category":  "config",
+        "name":  "Hardcoded URLs",
+        "status":  "PASS",
+        "message":  "None",
+        "durationMs":  55
+    },
+    {
+        "category":  "preview",
+        "name":  "vite preview",
+        "status":  "FAIL",
+        "message":  "Timeout waiting for readiness",
+        "durationMs":  0
+    }
+]

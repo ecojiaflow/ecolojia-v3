@@ -5,17 +5,17 @@ import { ShoppingCart, ExternalLink, Leaf, Check } from 'lucide-react';
 interface AffiliateButtonProps {
   productId: string;
   productName: string;
-  partners?: AffiliatePartner[];
-  className?: string;
-  source?: 'product_page' | 'alternatives' | 'chat_recommendation' | 'search_results';
+  partnersa: AffiliatePartner[];
+  classNamea: string;
+  sourcea: 'product_page' | 'alternatives' | 'chat_recommendation' | 'search_results';
 }
 
 interface AffiliatePartner {
   id: 'lafourche' | 'kazidomi' | 'greenweez';
   name: string;
-  logo?: string;
-  tagline?: string;
-  discount?: string;
+  logoa: string;
+  taglinea: string;
+  discounta: string;
   available: boolean;
 }
 
@@ -23,8 +23,8 @@ const DEFAULT_PARTNERS: AffiliatePartner[] = [
   {
     id: 'lafourche',
     name: 'La Fourche',
-    tagline: 'Bio en ligne ÃƒÂ  prix juste',
-    discount: '-10% première commande',
+    tagline: 'Bio en ligne  prix juste',
+    discount: '-10% premiere commande',
     available: true
   },
   {
@@ -38,7 +38,7 @@ const DEFAULT_PARTNERS: AffiliatePartner[] = [
     id: 'greenweez',
     name: 'Greenweez',
     tagline: 'Le leader du bio en ligne',
-    discount: 'Livraison offerte dès 49ââ€šÂ¬',
+    discount: 'Livraison offerte des 49aaa',
     available: true
   }
 ];
@@ -80,7 +80,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
         });
       }
 
-      // Fermer le menu après 2 secondes
+      // Fermer le menu apres 2 secondes
       setTimeout(() => {
         setShowPartners(false);
         setClickedPartner(null);
@@ -109,7 +109,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
           <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-200">
             <h3 className="font-semibold text-gray-800 flex items-center gap-2">
               <Leaf className="w-4 h-4 text-green-600" />
-              Partenaires éco-responsables
+              Partenaires eco-responsables
             </h3>
             <p className="text-sm text-gray-600 mt-1">
               Soutenez ECOLOJIA en achetant chez nos partenaires
@@ -154,7 +154,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
 
           <div className="p-3 bg-gray-50 text-center">
             <p className="text-xs text-gray-500">
-              Commission reversée pour soutenir ECOLOJIA
+              Commission reversee pour soutenir ECOLOJIA
             </p>
           </div>
         </div>
@@ -173,7 +173,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
 
 export default AffiliateButton;
 
-// Styles ÃƒÂ  ajouter dans index.css ou Tailwind config
+// Styles  ajouter dans index.css ou Tailwind config
 /*
 @keyframes fadeIn {
   from {
@@ -190,3 +190,5 @@ export default AffiliateButton;
   animation: fadeIn 0.2s ease-out;
 }
 */
+
+

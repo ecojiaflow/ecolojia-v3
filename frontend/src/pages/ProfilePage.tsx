@@ -1,539 +1,547 @@
-// PATH: frontend/src/pages/ProfilePage.tsx
-import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import {
-  User, Mail, Calendar, Shield, Save, Camera,
-  Award, TrendingUp, Package, Heart, Edit3,
-  Check, X, AlertCircle, Leaf, Star
-} from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import authService from '../services/authService';
-import LoadingSpinner from '../components/LoadingSpinner';
+﻿// PATH: frontend/src/pages/ProfilePage.tsx
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Settings, Shield, Bell, CreditCard, LogOut, ChevronDown, Check } from 'lucide-react';
+import { useAuth } from '../auth/hooks/useAuth';
+import api from '../services/api';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { Badge } from '../components/common/Badge';
+import { Button } from '../components/common/Button';
+import { toast } from 'react-hot-toast';
 
-interface ProfileFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  allergies: string[];
-  dietaryRestrictions: string[];
-  healthGoals: string[];
+interface UserProfile {
+  profile: {
+    id: string;
+    email: string;
+    name: string;
+    avatar?: string;
+    emailVerified: boolean;
+    createdAt: string;
+    lastLogin?: string;
+  };
+  plan: {
+    code: 'free' | 'premium' | 'family';
+    status: string;
+    periodEnd?: string;
+  };
+  limits: {
+    scansPerMonth: number;
+    aiChatsPerMonth: number;
+    exportPerMonth: number;
+    favoritesMax: number;
+  };
+  usage: {
+    scans: string;
+    aiChats: string;
+    exports: string;
+    favorites: string;
+    lastReset: string;
+  };
+  aiPreferences: {
+    tone?: string;
+    detailLevel?: string;
+    language?: string;
+    foodRestrictions?: string[];
+    allergens?: string[];
+    cosmeticPreferences?: {
+      avoidIngredients?: string[];
+      skinType?: string;
+    };
+    notificationPreferences?: {
+      emailAlerts?: boolean;
+      productRecalls?: boolean;
+      weeklyDigest?: boolean;
+    };
+  };
 }
 
-const ProfilePage: React.FC = () => {
-  const { user, refreshUser } = useAuth();
-  const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const [editing, setEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  
-  const [formData, setFormData] = useState<ProfileFormData>({
-    firstName: user?.profile?.firstName || '',
-    lastName: user?.profile?.lastName || '',
-    email: user?.email || '',
-    allergies: user?.preferences?.allergies || [],
-    dietaryRestrictions: user?.preferences?.dietaryRestrictions || [],
-    healthGoals: user?.preferences?.healthGoals || []
+function ProfilePage() {
+  const [activeTab, setActiveTab] = useState<'account' | 'preferences'>('account');
+  const { logout } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Fetch user profile
+  const { data: userProfile, isLoading, error } = useQuery<UserProfile>({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      try {
+        console.log('Fetching user profile...');
+        const token = localStorage.getItem('token');
+        console.log('Token exists:', !!token);
+        
+        const response = await api.get('/users/me'); // Essayons l'ancien endpoint
+        console.log('API Response:', response);
+        
+        // Si la reponse est directement l'objet user
+        if (response.data && !response.data?.data && !response.data?.user) {
+          // Adapter la structure pour correspondre Â  UserProfile
+          const userData = response.data;
+          return {
+            profile: {
+              id: userdata?._id || userdata?.id,
+              email: userdata?.email,
+              name: userdata?.name || userdata?.email.split('@')[0],
+              avatar: userdata?.avatar,
+              emailVerified: userdata?.emailVerified || false,
+              createdAt: userdata?.createdAt,
+              lastLogin: userdata?.lastLogin
+            },
+            plan: userdata?.subscription || {
+              code: 'free',
+              status: 'active',
+              periodEnd: undefined
+            },
+            limits: userdata?.limits || {
+              scansPerMonth: 30,
+              aiChatsPerMonth: 5,
+              exportPerMonth: 0,
+              favoritesMax: 10
+            },
+            usage: userdata?.usage || {
+              scans: '0/30',
+              aiChats: '0/5',
+              exports: '0/0',
+              favorites: '0/10',
+              lastReset: new Date().toISOString()
+            },
+            aiPreferences: userdata?.aiPreferences || {}
+          };
+        }
+        
+        // Si la structure est differente
+        return response.data?.data || response.data?.user || response.data;
+      } catch (error: any) {
+        console.error('Error fetching user profile:', error);
+        console.error('Error response:', error.response);
+        throw error;
+      }
+    },
+    retry: 1,
+    retryDelay: 1000
   });
 
-  // Suggestions prédéfinies
-  const allergySuggestions = ['Gluten', 'Lactose', 'Arachides', 'Oeufs', 'Soja', 'Fruits ÃƒÂ  coque', 'Poisson', 'Crustacés'];
-  const dietSuggestions = ['Végétarien', 'Vegan', 'Sans gluten', 'Sans lactose', 'Halal', 'Casher', 'Paléo', 'Keto'];
-  const goalSuggestions = ['Perdre du poids', 'Manger plus sain', 'Réduire le sucre', 'Plus de protéines', 'Manger bio', 'Réduire les additifs'];
-
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      await authService.updateProfile({
-        profile: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          avatar: avatarPreview || undefined
-        },
-        preferences: {
-          allergies: formData.allergies,
-          dietaryRestrictions: formData.dietaryRestrictions,
-          healthGoals: formData.healthGoals
-        }
-      });
-      
-      await refreshUser();
-      setEditing(false);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Erreur lors de la mise ÃƒÂ  jour du profil');
-    } finally {
-      setLoading(false);
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updates: Partial<UserProfile>) => {
+      const response = await api.put('/users/v2/me', updates);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      toast.success('Profil mis Â  jour avec succes');
+    },
+    onError: () => {
+      toast.error('Erreur lors de la mise Â  jour');
     }
-  };
+  });
 
-  const handleCancel = () => {
-    setFormData({
-      firstName: user?.profile?.firstName || '',
-      lastName: user?.profile?.lastName || '',
-      email: user?.email || '',
-      allergies: user?.preferences?.allergies || [],
-      dietaryRestrictions: user?.preferences?.dietaryRestrictions || [],
-      healthGoals: user?.preferences?.healthGoals || []
-    });
-    setAvatarPreview(null);
-    setEditing(false);
-    setError(null);
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const toggleItem = (list: 'allergies' | 'dietaryRestrictions' | 'healthGoals', item: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [list]: prev[list].includes(item)
-        ? prev[list].filter(i => i !== item)
-        : [...prev[list], item]
-    }));
-  };
-
-  const getMembershipDuration = () => {
-    if (!user?.profile?.createdAt) return 'Nouveau membre';
-    
-    const createdDate = new Date(user.profile.createdAt);
-    const now = new Date();
-    const months = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-    
-    if (months < 1) return 'Membre depuis moins d\'un mois';
-    if (months === 1) return 'Membre depuis 1 mois';
-    return `Membre depuis ${months} mois`;
-  };
-
-  const getProfileCompletionPercentage = () => {
-    let completed = 0;
-    const fields = [
-      user?.profile?.firstName,
-      user?.profile?.lastName,
-      user?.email,
-      user?.emailVerified,
-      user?.profile?.avatar,
-      (user?.preferences?.allergies?.length || 0) > 0,
-      (user?.preferences?.dietaryRestrictions?.length || 0) > 0,
-      (user?.preferences?.healthGoals?.length || 0) > 0
-    ];
-    
-    fields.forEach(field => {
-      if (field) completed++;
-    });
-    
-    return Math.round((completed / fields.length) * 100);
-  };
-
-  if (!user) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">Veuillez vous connecter pour accéder ÃƒÂ  votre profil</p>
-          <button
-            onClick={() => navigate('/login')}
-            className="mt-4 px-6 py-3 bg-[#7DDE4A] text-white rounded-full hover:bg-[#6bc93a] transition-all"
-          >
-            Se connecter
-          </button>
+          <p className="text-red-600 mb-4">Erreur lors du chargement du profil</p>
+          <Button onClick={() => window.location.reload()}>
+            Reessayer
+          </Button>
         </div>
       </div>
     );
   }
 
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Aucune donnee de profil disponible</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Header avec bannière */}
-      <div className="bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] h-48 relative">
-        <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-        <div className="max-w-4xl mx-auto px-4 h-full flex items-end pb-8">
-          <div className="flex items-end gap-6 relative z-10">
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-32 h-32 bg-white rounded-full p-1">
-                {avatarPreview || user.profile?.avatar ? (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-[#E9F8DF] rounded-full flex items-center justify-center">
+                {userProfile?.profile?.avatar ? (
                   <img
-                    src={avatarPreview || user.profile?.avatar}
-                    alt="Avatar"
+                    src={userProfile.profile.avatar}
+                    alt={userProfile.profile.name || 'User'}
                     className="w-full h-full rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-[#E9F8DF] rounded-full flex items-center justify-center">
-                    <User className="w-16 h-16 text-[#7DDE4A]" />
-                  </div>
+                  <User className="w-8 h-8 text-[#7DDE4A]" />
                 )}
               </div>
-              
-              {editing && (
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-all"
-                >
-                  <Camera className="w-5 h-5 text-gray-600" />
-                </button>
-              )}
-              
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarChange}
-                className="hidden"
-              />
-            </div>
-            
-            {/* Infos principales */}
-            <div className="text-white pb-2">
-              <h1 className="text-3xl font-bold mb-1">
-                {user.profile?.firstName} {user.profile?.lastName}
-              </h1>
-              <p className="text-white/80">{user.email}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Contenu principal */}
-      <div className="max-w-4xl mx-auto px-4 py-8 -mt-8">
-        {/* Carte de statut */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-[#3B3B3B]">Informations du compte</h2>
-            {!editing ? (
-              <button
-                onClick={() => setEditing(true)}
-                className="flex items-center px-4 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6bc93a] transition-all"
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                Modifier
-              </button>
-            ) : (
-              <div className="flex gap-2">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="flex items-center px-4 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6bc93a] transition-all disabled:opacity-50"
-                >
-                  {loading ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Messages */}
-          {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center gap-2">
-              <AlertCircle className="w-5 h-5" />
-              {error}
-            </div>
-          )}
-          
-          {success && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 flex items-center gap-2"
-            >
-              <Check className="w-5 h-5" />
-              Profil mis ÃƒÂ  jour avec succès !
-            </motion.div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Prénom */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <User className="w-4 h-4 mr-2" />
-                Prénom
-              </label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="w-full px-3 py-2 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
-                />
-              ) : (
-                <p className="text-[#3B3B3B]">{user.profile?.firstName || '-'}</p>
-              )}
-            </div>
-            
-            {/* Nom */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <User className="w-4 h-4 mr-2" />
-                Nom
-              </label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="w-full px-3 py-2 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
-                />
-              ) : (
-                <p className="text-[#3B3B3B]">{user.profile?.lastName || '-'}</p>
-              )}
-            </div>
-            
-            {/* Email */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <Mail className="w-4 h-4 mr-2" />
-                Email
-              </label>
-              <p className="text-[#3B3B3B] flex items-center gap-2">
-                {user.email}
-                {user.emailVerified && (
-                  <span className="text-green-600" title="Email vérifié">
-                    <Check className="w-4 h-4" />
-                  </span>
-                )}
-              </p>
-            </div>
-            
-            {/* Statut */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <Shield className="w-4 h-4 mr-2" />
-                Statut
-              </label>
-              <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                user.tier === 'premium' 
-                  ? 'bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] text-white' 
-                  : user.tier === 'family'
-                  ? 'bg-purple-100 text-purple-800'
-                  : 'bg-gray-100 text-gray-800'
-              }`}>
-                {user.tier === 'premium' && <Star className="w-4 h-4" />}
-                {user.tier === 'premium' ? 'Premium' : user.tier === 'family' ? 'Famille' : 'Gratuit'}
-              </span>
-            </div>
-            
-            {/* Membre depuis */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <Calendar className="w-4 h-4 mr-2" />
-                Ancienneté
-              </label>
-              <p className="text-[#3B3B3B]">{getMembershipDuration()}</p>
-            </div>
-            
-            {/* Progression profil */}
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Profil complété
-              </label>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-[#7DDE4A] h-2 rounded-full transition-all"
-                    style={{ width: `${getProfileCompletionPercentage()}%` }}
-                  />
-                </div>
-                <span className="text-sm text-gray-600">{getProfileCompletionPercentage()}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Préférences alimentaires */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">Préférences alimentaires</h3>
-          
-          <div className="space-y-6">
-            {/* Allergies */}
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Allergies et intolérances
-              </label>
-              {editing ? (
-                <div className="flex flex-wrap gap-2">
-                  {allergySuggestions.map(allergy => (
-                    <button
-                      key={allergy}
-                      onClick={() => toggleItem('allergies', allergy)}
-                      className={`px-3 py-1 rounded-full text-sm transition-all ${
-                        formData.allergies.includes(allergy)
-                          ? 'bg-red-100 text-red-800 border-2 border-red-300'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {allergy}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {user?.preferences?.allergies?.length ? (
-                    user.preferences.allergies.map((allergy, index) => (
-                      <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
-                        {allergy}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500">Aucune allergie déclarée</span>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            {/* Régimes alimentaires */}
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Régimes alimentaires
-              </label>
-              {editing ? (
-                <div className="flex flex-wrap gap-2">
-                  {dietSuggestions.map(diet => (
-                    <button
-                      key={diet}
-                      onClick={() => toggleItem('dietaryRestrictions', diet)}
-                      className={`px-3 py-1 rounded-full text-sm transition-all ${
-                        formData.dietaryRestrictions.includes(diet)
-                          ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {diet}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {user?.preferences?.dietaryRestrictions?.length ? (
-                    user.preferences.dietaryRestrictions.map((diet, index) => (
-                      <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                        {diet}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500">Aucun régime spécifique</span>
-                  )}
-                </div>
-              )}
-            </div>
-            
-            {/* Objectifs santé */}
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Objectifs santé
-              </label>
-              {editing ? (
-                <div className="flex flex-wrap gap-2">
-                  {goalSuggestions.map(goal => (
-                    <button
-                      key={goal}
-                      onClick={() => toggleItem('healthGoals', goal)}
-                      className={`px-3 py-1 rounded-full text-sm transition-all ${
-                        formData.healthGoals.includes(goal)
-                          ? 'bg-blue-100 text-blue-800 border-2 border-blue-300'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {goal}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {user?.preferences?.healthGoals?.length ? (
-                    user.preferences.healthGoals.map((goal, index) => (
-                      <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                        {goal}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500">Aucun objectif défini</span>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Statistiques du compte */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">Statistiques du compte</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#E9F8DF] rounded-lg p-4 text-center">
-              <Package className="w-8 h-8 text-[#7DDE4A] mx-auto mb-2" />
-              <div className="text-2xl font-bold text-[#3B3B3B]">
-                {user.quotas?.scansUsed || 0}
-              </div>
-              <p className="text-sm text-gray-600">Analyses effectuées</p>
-            </div>
-            
-            <div className="bg-blue-50 rounded-lg p-4 text-center">
-              <Heart className="w-8 h-8 text-red-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-[#3B3B3B]">
-                {user._stats?.favoritesCount || 0}
-              </div>
-              <p className="text-sm text-gray-600">Produits favoris</p>
-            </div>
-            
-            <div className="bg-purple-50 rounded-lg p-4 text-center">
-              <Award className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-[#3B3B3B]">
-                {user._stats?.badgesCount || 0}
-              </div>
-              <p className="text-sm text-gray-600">Badges obtenus</p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Premium si utilisateur gratuit */}
-        {user.tier === 'free' && (
-          <div className="mt-6 bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] rounded-2xl p-8 text-white">
-            <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold mb-2">
-                  Débloquez tout le potentiel d'ECOLOJIA
-                </h3>
-                <p className="text-white/90">
-                  Analyses illimitées, chat IA nutritionniste, export de données et bien plus !
-                </p>
+                <h1 className="text-2xl font-semibold text-[#3B3B3B]">
+                  {userProfile?.profile?.name || 'Utilisateur'}
+                </h1>
+                <p className="text-gray-500">{userProfile?.profile?.email || ''}</p>
               </div>
+            </div>
+            <Badge
+              variant={userProfile?.plan?.code === 'free' ? 'default' : 'success'}
+              className="text-sm"
+            >
+              {userProfile?.plan?.code?.toUpperCase() || 'FREE'}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="bg-white rounded-2xl shadow-sm">
+          <div className="border-b border-[#DDE9DA]">
+            <div className="flex">
               <button
-                onClick={() => navigate('/pricing')}
-                className="px-6 py-3 bg-white text-[#7DDE4A] rounded-full font-semibold hover:shadow-lg transition-all"
+                onClick={() => setActiveTab('account')}
+                className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+                  activeTab === 'account'
+                    ? 'text-[#7DDE4A] border-b-2 border-[#7DDE4A]'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
               >
-                Passer Premium
+                <div className="flex items-center justify-center space-x-2">
+                  <User className="w-5 h-5" />
+                  <span>Compte</span>
+                </div>
+              </button>
+              <button
+                onClick={() => setActiveTab('preferences')}
+                className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+                  activeTab === 'preferences'
+                    ? 'text-[#7DDE4A] border-b-2 border-[#7DDE4A]'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <div className="flex items-center justify-center space-x-2">
+                  <Settings className="w-5 h-5" />
+                  <span>IA & Preferences</span>
+                </div>
               </button>
             </div>
           </div>
-        )}
+
+          <AnimatePresence mode="wait">
+            {activeTab === 'account' ? (
+              <AccountTab
+                key="account"
+                userProfile={userProfile}
+                onLogout={logout}
+              />
+            ) : (
+              <PreferencesTab
+                key="preferences"
+                userProfile={userProfile}
+                onUpdate={updateProfileMutation.mutate}
+                isUpdating={updateProfileMutation.isLoading}
+              />
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
-};
+}
+
+// Account Tab Component
+function AccountTab({
+  userProfile,
+  onLogout
+}: {
+  userProfile: UserProfile;
+  onLogout: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="p-6 space-y-6"
+    >
+      {/* Plan & Usage */}
+      <div>
+        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
+          Abonnement & Utilisation
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-[#E9F8DF] rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600">Scans</span>
+              <span className="text-sm font-medium">{userProfile?.usage?.scans || '0/30'}</span>
+            </div>
+            <div className="w-full bg-white rounded-full h-2">
+              <div
+                className="bg-[#7DDE4A] h-2 rounded-full transition-all"
+                style={{
+                  width: `${
+                    userProfile?.usage?.scans
+                      ? (parseInt(userProfile.usage.scans.split('/')[0]) /
+                          parseInt(userProfile.usage.scans.split('/')[1])) *
+                        100
+                      : 0
+                  }%`
+                }}
+              />
+            </div>
+          </div>
+          <div className="bg-[#E9F8DF] rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600">Chats IA</span>
+              <span className="text-sm font-medium">{userProfile?.usage?.aiChats || '0/5'}</span>
+            </div>
+            <div className="w-full bg-white rounded-full h-2">
+              <div
+                className="bg-[#7DDE4A] h-2 rounded-full transition-all"
+                style={{
+                  width: `${
+                    userProfile?.usage?.aiChats
+                      ? (parseInt(userProfile.usage.aiChats.split('/')[0]) /
+                          parseInt(userProfile.usage.aiChats.split('/')[1])) *
+                        100
+                      : 0
+                  }%`
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        {userProfile?.plan?.code === 'free' && (
+          <div className="mt-4">
+            <Button
+              variant="primary"
+              className="w-full md:w-auto"
+              onClick={() => {
+                // Navigate to pricing
+                window.location.href = '/pricing';
+              }}
+            >
+              <CreditCard className="w-4 h-4 mr-2" />
+              Passer Â  Premium
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Security */}
+      <div>
+        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">Securite</h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between py-3 border-b border-[#DDE9DA]">
+            <div className="flex items-center space-x-3">
+              <Shield className="w-5 h-5 text-gray-400" />
+              <div>
+                <p className="font-medium text-[#3B3B3B]">Email verifie</p>
+                <p className="text-sm text-gray-500">{userProfile?.profile?.email || ''}</p>
+              </div>
+            </div>
+            {userProfile?.profile?.emailVerified ? (
+              <Badge variant="success">Verifie</Badge>
+            ) : (
+              <Button variant="outline" size="small">
+                Verifier
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center justify-between py-3">
+            <div className="flex items-center space-x-3">
+              <Bell className="w-5 h-5 text-gray-400" />
+              <div>
+                <p className="font-medium text-[#3B3B3B]">
+                  Authentification Â  deux facteurs
+                </p>
+                <p className="text-sm text-gray-500">
+                  Securisez votre compte avec la 2FA
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" size="small">
+              Configurer
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="pt-4 border-t border-[#DDE9DA]">
+        <Button
+          variant="outline"
+          className="text-red-600 border-red-200 hover:bg-red-50"
+          onClick={onLogout}
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Se deconnecter
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Preferences Tab Component
+function PreferencesTab({
+  userProfile,
+  onUpdate,
+  isUpdating
+}: {
+  userProfile: UserProfile;
+  onUpdate: (updates: Partial<UserProfile>) => void;
+  isUpdating: boolean;
+}) {
+  const [preferences, setPreferences] = useState(userProfile?.aiPreferences || {});
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const handleSave = () => {
+    onUpdate({ aiPreferences: preferences });
+    setHasChanges(false);
+  };
+
+  const updatePreference = (key: string, value: any) => {
+    setPreferences(prev => ({
+      ...prev,
+      [key]: value
+    }));
+    setHasChanges(true);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="p-6 space-y-6"
+    >
+      {/* AI Preferences */}
+      <div>
+        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
+          Preferences de l'IA
+        </h3>
+        <div className="space-y-4">
+          {/* Tone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Ton de l'assistant
+            </label>
+            <select
+              value={preferences.tone || 'friendly'}
+              onChange={(e) => updatePreference('tone', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7DDE4A]"
+            >
+              <option value="friendly">Amical</option>
+              <option value="professional">Professionnel</option>
+              <option value="concise">Concis</option>
+              <option value="detailed">Detaille</option>
+            </select>
+          </div>
+
+          {/* Detail Level */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Niveau de detail
+            </label>
+            <select
+              value={preferences.detailLevel || 'balanced'}
+              onChange={(e) => updatePreference('detailLevel', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7DDE4A]"
+            >
+              <option value="minimal">Minimal</option>
+              <option value="balanced">â€°quilibre</option>
+              <option value="comprehensive">Complet</option>
+            </select>
+          </div>
+
+          {/* Food Restrictions */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Restrictions alimentaires
+            </label>
+            <div className="space-y-2">
+              {['vegan', 'vegetarian', 'gluten-free', 'dairy-free'].map((restriction) => (
+                <label key={restriction} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={preferences.foodRestrictions?.includes(restriction) || false}
+                    onChange={(e) => {
+                      const current = preferences.foodRestrictions || [];
+                      if (e.target.checked) {
+                        updatePreference('foodRestrictions', [...current, restriction]);
+                      } else {
+                        updatePreference('foodRestrictions', current.filter(r => r !== restriction));
+                      }
+                    }}
+                    className="mr-2 text-[#7DDE4A] focus:ring-[#7DDE4A]"
+                  />
+                  <span className="text-sm">
+                    {restriction === 'vegan' && 'Vegan'}
+                    {restriction === 'vegetarian' && 'Vegetarien'}
+                    {restriction === 'gluten-free' && 'Sans gluten'}
+                    {restriction === 'dairy-free' && 'Sans lactose'}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      <div>
+        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
+          Notifications
+        </h3>
+        <div className="space-y-3">
+          <label className="flex items-center justify-between">
+            <span className="text-sm font-medium">Alertes email</span>
+            <input
+              type="checkbox"
+              checked={preferences.notificationPreferences?.emailAlerts || false}
+              onChange={(e) => updatePreference('notificationPreferences', {
+                ...preferences.notificationPreferences,
+                emailAlerts: e.target.checked
+              })}
+              className="text-[#7DDE4A] focus:ring-[#7DDE4A]"
+            />
+          </label>
+          <label className="flex items-center justify-between">
+            <span className="text-sm font-medium">Rappels de produits</span>
+            <input
+              type="checkbox"
+              checked={preferences.notificationPreferences?.productRecalls || false}
+              onChange={(e) => updatePreference('notificationPreferences', {
+                ...preferences.notificationPreferences,
+                productRecalls: e.target.checked
+              })}
+              className="text-[#7DDE4A] focus:ring-[#7DDE4A]"
+            />
+          </label>
+        </div>
+      </div>
+
+      {/* Save Button */}
+      {hasChanges && (
+        <div className="pt-4 border-t border-[#DDE9DA]">
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={isUpdating}
+            className="w-full md:w-auto"
+          >
+            {isUpdating ? 'Enregistrement...' : 'Enregistrer les modifications'}
+          </Button>
+        </div>
+      )}
+    </motion.div>
+  );
+}
 
 export default ProfilePage;
+

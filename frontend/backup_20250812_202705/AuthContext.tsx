@@ -50,19 +50,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       
-      // Vérifier si on est en mode démo
+      // VÃƒÂ©rifier si on est en mode dÃƒÂ©mo
       const demoMode = localStorage.getItem('ecolojia_demo_mode') === 'true';
       if (demoMode) {
         setIsDemoMode(true);
         ConfigService.setMode('demo');
         
-        // Charger l'utilisateur démo depuis le localStorage
+        // Charger l'utilisateur dÃƒÂ©mo depuis le localStorage
         const demoUser = localStorage.getItem('ecolojia_user');
         if (demoUser) {
           setUser(JSON.parse(demoUser));
         }
       } else {
-        // Vérifier l'authentification normale
+        // VÃƒÂ©rifier l'authentification normale
         const token = authService.getToken();
         if (token) {
           try {
@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await authService.login({ 
         email, 
         password,
-        rememberMe: true // Par défaut
+        rememberMe: true // Par dÃƒÂ©faut
       });
       setUser(response.user);
       setIsDemoMode(false);
@@ -125,16 +125,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       
-      // Utiliser demoService pour créer une session démo
+      // Utiliser demoService pour crÃƒÂ©er une session dÃƒÂ©mo
       const demoSession = await demoService.startDemoSession();
       
-      // Sauvegarder les données de démo
+      // Sauvegarder les donnÃƒÂ©es de dÃƒÂ©mo
       localStorage.setItem('ecolojia_demo_mode', 'true');
       localStorage.setItem('ecolojia_token', demoSession.token);
       localStorage.setItem('ecolojia_refresh_token', demoSession.refreshToken);
       localStorage.setItem('ecolojia_user', JSON.stringify(demoSession.user));
       
-      // Mettre ÃƒÂ  jour l'état
+      // Mettre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour l'ÃƒÂ©tat
       setUser(demoSession.user);
       setIsDemoMode(true);
       ConfigService.setMode('demo');
@@ -143,20 +143,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       navigate('/dashboard');
     } catch (error) {
       console.error('Failed to start demo mode:', error);
-      throw new Error('Impossible de démarrer le mode démo');
+      throw new Error('Impossible de dÃƒÂ©marrer le mode dÃƒÂ©mo');
     } finally {
       setIsLoading(false);
     }
   };
 
   const endDemoMode = () => {
-    // Nettoyer les données de démo
+    // Nettoyer les donnÃƒÂ©es de dÃƒÂ©mo
     localStorage.removeItem('ecolojia_demo_mode');
     localStorage.removeItem('ecolojia_token');
     localStorage.removeItem('ecolojia_refresh_token');
     localStorage.removeItem('ecolojia_user');
     
-    // Réinitialiser l'état
+    // RÃƒÂ©initialiser l'ÃƒÂ©tat
     setUser(null);
     setIsDemoMode(false);
     ConfigService.setMode('demo');

@@ -4,8 +4,8 @@ import BarcodeScanner from './BarcodeScanner';
 import { useNavigate } from 'react-router-dom';
 
 interface ScanFloatingButtonProps {
-  onScanResult?: (barcode: string, product?: any) => void;
-  className?: string;
+  onScanResulta: (barcode: string, producta: any) => void;
+  classNamea: string;
 }
 
 const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({ 
@@ -16,7 +16,7 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
   const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
-  // Gérer le résultat du scan
+  // Gerer le resultat du scan
   const handleScanSuccess = async (barcode: string) => {
     setIsSearching(true);
     
@@ -35,11 +35,11 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
           navigate(`/product/${product.slug || product.id}`);
         }
       } else {
-        // Produit non trouvé ââ€ â€™ Workflow enrichissement
+        // Produit non trouve aaaaaa Workflow enrichissement
         await handleProductNotFound(barcode);
       }
     } catch (error) {
-      console.error('âÂÅ’ Erreur recherche code-barres:', error);
+      console.error('aa Erreur recherche code-barres:', error);
       await handleProductNotFound(barcode);
     } finally {
       setIsSearching(false);
@@ -47,12 +47,12 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
     }
   };
 
-  // Gérer les produits non trouvés
+  // Gerer les produits non trouves
   const handleProductNotFound = async (barcode: string) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       
-      // Déclencher l'enrichissement automatique
+      // Declencher l'enrichissement automatique
       await fetch(`${apiUrl}/api/suggest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,15 +63,15 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
         })
       });
 
-      // Rediriger vers la page "produit non trouvé" avec workflow photo
-      navigate(`/scan/not-found?barcode=${barcode}`);
+      // Rediriger vers la page "produit non trouve" avec workflow photo
+      navigate(`/scan/not-foundabarcode=${barcode}`);
       
     } catch (error) {
-      console.error('âÂÅ’ Erreur enrichissement:', error);
+      console.error('aa Erreur enrichissement:', error);
       
       // Fallback : Alerte simple
-      alert(`âÂÅ’ Produit non trouvé (${barcode})\n\n` +
-            'Ce produit sera ajouté prochainement ÃƒÂ  notre base de données.');
+      alert(`aa Produit non trouve (${barcode})\n\n` +
+            'Ce produit sera ajoute prochainement  notre base de donnees.');
     }
   };
 
@@ -124,3 +124,5 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
 };
 
 export default ScanFloatingButton;
+
+

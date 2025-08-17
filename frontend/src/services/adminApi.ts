@@ -17,7 +17,7 @@ const adminApi = axios.create({
 adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('âÂÅ’ Erreur API Admin:', error.response?.data || error.message);
+    console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur API Admin:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
@@ -28,30 +28,30 @@ export class AdminApiService {
     try {
       const response = await adminApi.get<AdminApiResponse<AdminStats>>('/dashboard');
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la récupération des statistiques');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la recuperation des statistiques');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur getDashboardStats:', error);
-      throw new Error('Impossible de récupérer les statistiques du dashboard');
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getDashboardStats:', error);
+      throw new Error('Impossible de recuperer les statistiques du dashboard');
     }
   }
 
-  // Produits récents
+  // Produits recents
   static async getRecentProducts(limit: number = 10): Promise<RecentProduct[]> {
     try {
       const response = await adminApi.get<AdminApiResponse<RecentProduct[]>>(`/recent-products?limit=${limit}`);
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la récupération des produits');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la recuperation des produits');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur getRecentProducts:', error);
-      throw new Error('Impossible de récupérer les produits récents');
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getRecentProducts:', error);
+      throw new Error('Impossible de recuperer les produits recents');
     }
   }
 
@@ -60,48 +60,48 @@ export class AdminApiService {
     try {
       const response = await adminApi.get<AdminApiResponse<ImportLog[]>>('/import-logs');
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la récupération des logs');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la recuperation des logs');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur getImportLogs:', error);
-      throw new Error('Impossible de récupérer les logs d\'import');
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getImportLogs:', error);
+      throw new Error('Impossible de recuperer les logs d\'import');
     }
   }
 
-  // Déclencher nouvel import
+  // Declencher nouvel import
   static async triggerImport(maxProducts: number = 50): Promise<{ message: string; importId: string }> {
     try {
       const response = await adminApi.post<AdminApiResponse<{ message: string; importId: string }>>('/trigger-import', {
         maxProducts
       });
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors du déclenchement de l\'import');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors du declenchement de l\'import');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur triggerImport:', error);
-      throw new Error('Impossible de déclencher l\'import');
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur triggerImport:', error);
+      throw new Error('Impossible de declencher l\'import');
     }
   }
 
-  // Vérifier le statut d'un import en cours
+  // Verifier le statut d'un import en cours
   static async getImportProgress(importId: string): Promise<ImportProgress> {
     try {
       const response = await adminApi.get<AdminApiResponse<ImportProgress>>(`/import-progress/${importId}`);
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la récupération du progrès');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la recuperation du progres');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur getImportProgress:', error);
-      throw new Error('Impossible de récupérer le progrès de l\'import');
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getImportProgress:', error);
+      throw new Error('Impossible de recuperer le progres de l\'import');
     }
   }
 
@@ -110,13 +110,13 @@ export class AdminApiService {
     try {
       const response = await adminApi.delete<AdminApiResponse<{ message: string }>>(`/product/${productId}`);
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la suppression');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la suppression');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur deleteProduct:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur deleteProduct:', error);
       throw new Error('Impossible de supprimer le produit');
     }
   }
@@ -128,13 +128,13 @@ export class AdminApiService {
         verified_status: status
       });
       
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erreur lors de la validation');
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || 'Erreur lors de la validation');
       }
       
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
-      console.error('âÂÅ’ Erreur validateProduct:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur validateProduct:', error);
       throw new Error('Impossible de valider le produit');
     }
   }
@@ -142,3 +142,6 @@ export class AdminApiService {
 
 export default AdminApiService;
 // EOF
+
+
+

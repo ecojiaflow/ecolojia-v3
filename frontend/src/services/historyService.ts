@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/historyService.ts
+﻿// PATH: frontend/src/services/historyService.ts
 import { API_BASE_URL } from '../config/constants';
 
 interface HistoryOptions {
@@ -60,7 +60,7 @@ class HistoryService {
       }
 
       const data = await response.json();
-      return data.pagination?.total || data.total || 0;
+      return data?.pagination?.total || data?.total || 0;
     } catch (error) {
       console.error('Error fetching history count:', error);
       return 0;
@@ -71,3 +71,6 @@ class HistoryService {
 export const historyService = new HistoryService();
 
 export default historyService;
+
+
+

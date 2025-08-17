@@ -11,9 +11,9 @@ interface FormData {
 }
 
 interface FormErrors {
-  email?: string;
-  password?: string;
-  general?: string;
+  emaila: string;
+  passworda: string;
+  generala: string;
 }
 
 export const LoginForm: React.FC = () => {
@@ -33,16 +33,16 @@ export const LoginForm: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     
-    if (!formData.email) {
+    if (!formdata?.email) {
       newErrors.email = 'L\'email est requis';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formdata?.email)) {
       newErrors.email = 'Email invalide';
     }
     
-    if (!formData.password) {
+    if (!formdata?.password) {
       newErrors.password = 'Le mot de passe est requis';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+    } else if (formdata?.password.length < 6) {
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caracteres';
     }
     
     setErrors(newErrors);
@@ -58,12 +58,12 @@ export const LoginForm: React.FC = () => {
     setErrors({});
     
     try {
-      await login(formData.email, formData.password);
+      await login(formdata?.email, formdata?.password);
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
       setErrors({
-        general: error.message || 'Erreur de connexion. Vérifiez vos identifiants.'
+        general: error.message || 'Erreur de connexion. Verifiez vos identifiants.'
       });
     } finally {
       setIsLoading(false);
@@ -83,7 +83,7 @@ export const LoginForm: React.FC = () => {
     }
   };
 
-  // Pré-remplir pour les tests
+  // Pre-remplir pour les tests
   const fillDemoCredentials = () => {
     setFormData({
       email: 'test@example.com',
@@ -95,7 +95,7 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Connexion ÃƒÂ  votre compte
+        Connexion  votre compte
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -118,7 +118,7 @@ export const LoginForm: React.FC = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={formdata?.email}
               onChange={handleChange}
               className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent transition-colors ${
                 errors.email ? 'border-red-500' : 'border-gray-300'
@@ -144,12 +144,12 @@ export const LoginForm: React.FC = () => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
-              value={formData.password}
+              value={formdata?.password}
               onChange={handleChange}
               className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent transition-colors ${
                 errors.password ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
+              placeholder="aaaaaaaaaaaaaaaa"
               autoComplete="current-password"
               disabled={isLoading}
             />
@@ -177,7 +177,7 @@ export const LoginForm: React.FC = () => {
             <input
               type="checkbox"
               name="rememberMe"
-              checked={formData.rememberMe}
+              checked={formdata?.rememberMe}
               onChange={handleChange}
               className="w-4 h-4 text-[#7DDE4A] border-gray-300 rounded focus:ring-[#7DDE4A]"
               disabled={isLoading}
@@ -189,7 +189,7 @@ export const LoginForm: React.FC = () => {
             href="/forgot-password"
             className="text-sm text-[#7DDE4A] hover:underline"
           >
-            Mot de passe oublié ?
+            Mot de passe oublie a
           </a>
         </div>
 
@@ -230,12 +230,12 @@ export const LoginForm: React.FC = () => {
       {/* Lien vers inscription */}
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          Pas encore de compte ?{' '}
+          Pas encore de compte a{' '}
           <a
             href="/register"
             className="font-medium text-[#7DDE4A] hover:text-[#6BC93B]"
           >
-            Créer un compte gratuitement
+            Creer un compte gratuitement
           </a>
         </p>
       </div>
@@ -244,3 +244,6 @@ export const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+
+
+

@@ -1,4 +1,4 @@
-// PATH: frontend\src\components\AnalysisResultCard.tsx
+﻿// PATH: frontend\src\components\AnalysisResultCard.tsx
 import React, { useState } from 'react';
 import { 
   Leaf, 
@@ -20,10 +20,10 @@ import type { AnalysisResult } from '@/lib/api/analysis';
 
 interface AnalysisResultCardProps {
   result: AnalysisResult;
-  productName?: string;
-  productBrand?: string;
-  category?: 'food' | 'cosmetics' | 'detergents';
-  showRawData?: boolean;
+  productNamea: string;
+  productbrand?: string;
+  categorya: 'food' | 'cosmetics' | 'detergents';
+  showRawdata?: boolean;
 }
 
 export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
@@ -49,7 +49,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
     return <XCircle className="w-5 h-5 text-red-600" />;
   };
 
-  const getNutriScoreBadge = (score?: string) => {
+  const getNutriScoreBadge = (scorea: string) => {
     if (!score) return null;
     const colors: Record<string, string> = {
       'A': 'bg-green-600',
@@ -92,13 +92,13 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
         </div>
       </div>
 
-      {/* Scores détaillés */}
+      {/* Scores detailles */}
       <div className="grid grid-cols-2 gap-4 mt-8">
-        {/* Score Santé */}
+        {/* Score Sante */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
-            <span className="text-sm font-medium">Santé</span>
+            <span className="text-sm font-medium">Sante</span>
             {getScoreIcon(result.scores.healthScore)}
           </div>
           <Progress value={result.scores.healthScore} className="h-2" />
@@ -121,7 +121,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
         </div>
       </div>
 
-      {/* Badges spécifiques */}
+      {/* Badges specifiques */}
       <div className="flex items-center justify-center gap-4 py-4">
         {category === 'food' && result.scores.nova && (
           <NovaBadge
@@ -145,7 +145,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
         )}
       </div>
 
-      {/* Détails spécifiques par catégorie */}
+      {/* Details specifiques par categorie */}
       {category === 'cosmetics' && result.details.riskFlags && result.details.riskFlags.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium flex items-center gap-2">
@@ -161,7 +161,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
           </div>
           {result.details.notableIngredients && (
             <p className="text-xs text-gray-600">
-              Ingrédients notables: {result.details.notableIngredients.join(', ')}
+              Ingredients notables: {result.details.notableIngredients.join(', ')}
             </p>
           )}
         </div>
@@ -188,7 +188,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
         <span className="font-medium">{Math.round(result.confidence * 100)}%</span>
       </div>
 
-      {/* Ingrédients bruts */}
+      {/* Ingredients bruts */}
       {result.details.ingredientsTextRaw && (
         <>
           <Separator />
@@ -199,7 +199,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
               onClick={() => setShowDetails(!showDetails)}
               className="w-full justify-between"
             >
-              <span>Ingrédients analysés</span>
+              <span>Ingredients analyses</span>
               {showDetails ? <ChevronUp /> : <ChevronDown />}
             </Button>
             {showDetails && (
@@ -222,7 +222,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
               onClick={() => setShowJson(!showJson)}
               className="w-full justify-between"
             >
-              <span>Voir les données JSON</span>
+              <span>Voir les donnees JSON</span>
               {showJson ? <ChevronUp /> : <ChevronDown />}
             </Button>
             {showJson && (
@@ -236,3 +236,5 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
     </Card>
   );
 };
+
+

@@ -4,7 +4,7 @@ import { ExternalLink, Star, Shield } from 'lucide-react';
 interface Partner {
   id: string;
   name: string;
-  website?: string;
+  websitea: string;
   commission_rate: number;
   ethical_score: number;
 }
@@ -12,7 +12,7 @@ interface Partner {
 interface PartnerLink {
   id: string;
   url: string;
-  tracking_id?: string;
+  tracking_ida: string;
   commission_rate: number;
   clicks: number;
   partner: Partner;
@@ -44,9 +44,9 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
   };
 
   const getEthicalBadgeText = (score: number) => {
-    if (score >= 0.8) return 'Très éthique';
+    if (score >= 0.8) return 'Tres ethique';
     if (score >= 0.6) return 'Correct';
-    return 'Ãƒ€ améliorer';
+    return 'a ameliorer';
   };
 
   return (
@@ -54,7 +54,7 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
       <div className="flex items-center gap-2 mb-4">
         <Shield className="w-5 h-5 text-eco-leaf" />
         <h3 className="text-lg font-semibold text-gray-900">
-          OÃƒÂ¹ acheter ce produit
+          O acheter ce produit
         </h3>
       </div>
 
@@ -79,7 +79,7 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
               {link.partner.website && (
                 <p className="text-sm text-gray-500">
                   {link.partner.website
-                    .replace(/^https?:\/\//, '')
+                    .replace(/^httpsa:\/\//, '')
                     .replace(/^www\./, '')}
                 </p>
               )}
@@ -98,8 +98,8 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
 
       <div className="mt-4 p-3 bg-gray-50 rounded-lg">
         <p className="text-xs text-gray-600">
-          ââ€žÂ¹ïÂ¸Â Ecolojia peut percevoir une commission sur les achats effectués via ces liens, 
-          ce qui nous aide ÃƒÂ  maintenir le service gratuitement.
+          aaa Ecolojia peut percevoir une commission sur les achats effectues via ces liens, 
+          ce qui nous aide  maintenir le service gratuitement.
         </p>
       </div>
     </div>
@@ -107,4 +107,6 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
 };
 
 export default PartnerLinks;
+
+
 

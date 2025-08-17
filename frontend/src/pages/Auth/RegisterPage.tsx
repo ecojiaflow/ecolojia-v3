@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -27,7 +27,7 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Ãƒâ€°tat du formulaire
+  // aatat du formulaire
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -49,54 +49,54 @@ export function RegisterPage() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Prénom
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
-    } else if (formData.firstName.length < 2) {
-      newErrors.firstName = 'Le prénom doit contenir au moins 2 caractères';
+    // Prenom
+    if (!formdata?.firstName.trim()) {
+      newErrors.firstName = 'Le prenom est requis';
+    } else if (formdata?.firstName.length < 2) {
+      newErrors.firstName = 'Le prenom doit contenir au moins 2 caracteres';
     }
 
     // Nom
-    if (!formData.lastName.trim()) {
+    if (!formdata?.lastName.trim()) {
       newErrors.lastName = 'Le nom est requis';
-    } else if (formData.lastName.length < 2) {
-      newErrors.lastName = 'Le nom doit contenir au moins 2 caractères';
+    } else if (formdata?.lastName.length < 2) {
+      newErrors.lastName = 'Le nom doit contenir au moins 2 caracteres';
     }
 
     // Username
-    if (!formData.username.trim()) {
+    if (!formdata?.username.trim()) {
       newErrors.username = 'Le nom d\'utilisateur est requis';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Le nom d\'utilisateur doit contenir au moins 3 caractères';
-    } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.username)) {
+    } else if (formdata?.username.length < 3) {
+      newErrors.username = 'Le nom d\'utilisateur doit contenir au moins 3 caracteres';
+    } else if (!/^[a-zA-Z0-9_-]+$/.test(formdata?.username)) {
       newErrors.username = 'Le nom d\'utilisateur ne peut contenir que des lettres, chiffres, - et _';
     }
 
     // Email
-    if (!formData.email) {
+    if (!formdata?.email) {
       newErrors.email = 'L\'email est requis';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formdata?.email)) {
       newErrors.email = 'Email invalide';
     }
 
     // Mot de passe
-    if (!formData.password) {
+    if (!formdata?.password) {
       newErrors.password = 'Le mot de passe est requis';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 8 caractères';
+    } else if (formdata?.password.length < 8) {
+      newErrors.password = 'Le mot de passe doit contenir au moins 8 caracteres';
     } else if (passwordStrength < 2) {
       newErrors.password = 'Le mot de passe est trop faible';
     }
 
     // Confirmation mot de passe
-    if (!formData.confirmPassword) {
+    if (!formdata?.confirmPassword) {
       newErrors.confirmPassword = 'Veuillez confirmer votre mot de passe';
-    } else if (formData.password !== formData.confirmPassword) {
+    } else if (formdata?.password !== formdata?.confirmPassword) {
       newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
 
     // Conditions
-    if (!formData.acceptTerms) {
+    if (!formdata?.acceptTerms) {
       newErrors.acceptTerms = 'Vous devez accepter les conditions d\'utilisation';
     }
 
@@ -131,7 +131,7 @@ export function RegisterPage() {
       calculatePasswordStrength(value);
     }
 
-    // Effacer l'erreur du champ modifié
+    // Effacer l'erreur du champ modifie
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -152,18 +152,18 @@ export function RegisterPage() {
 
     try {
       const response = await authService.register({
-        email: formData.email,
-        password: formData.password,
-        username: formData.username,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        acceptTerms: formData.acceptTerms,
-        marketingOptIn: formData.marketingOptIn
+        email: formdata?.email,
+        password: formdata?.password,
+        username: formdata?.username,
+        firstName: formdata?.firstName,
+        lastName: formdata?.lastName,
+        acceptTerms: formdata?.acceptTerms,
+        marketingOptIn: formdata?.marketingOptIn
       });
 
       toast({
-        title: "Inscription réussie !",
-        description: "Bienvenue dans la communauté ECOLOJIA",
+        title: "Inscription reussie !",
+        description: "Bienvenue dans la communaute ECOLOJIA",
         variant: "default"
       });
 
@@ -173,12 +173,12 @@ export function RegisterPage() {
     } catch (error: any) {
       console.error('Register error:', error);
       
-      // Gestion des erreurs spécifiques
+      // Gestion des erreurs specifiques
       if (error.message.includes('already exists')) {
         if (error.message.includes('email')) {
-          setErrors({ email: 'Cet email est déjÃƒÂ  utilisé' });
+          setErrors({ email: 'Cet email est dej utilise' });
         } else if (error.message.includes('username')) {
-          setErrors({ username: 'Ce nom d\'utilisateur est déjÃƒÂ  pris' });
+          setErrors({ username: 'Ce nom d\'utilisateur est dej pris' });
         }
       } else {
         setErrors({ general: error.message || 'Erreur lors de l\'inscription' });
@@ -230,10 +230,10 @@ export function RegisterPage() {
             </motion.h1>
           </Link>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Créer un compte gratuit
+            Creer un compte gratuit
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            DéjÃƒÂ  inscrit ?{' '}
+            Dej inscrit a{' '}
             <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
               Se connecter
             </Link>
@@ -243,7 +243,7 @@ export function RegisterPage() {
         {/* Avantages */}
         <div className="bg-primary-50 rounded-lg p-4 space-y-2">
           <h3 className="font-semibold text-primary-900 mb-2">
-            Pourquoi créer un compte ?
+            Pourquoi creer un compte a
           </h3>
           <div className="flex items-center text-sm text-primary-700">
             <Shield className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -255,13 +255,13 @@ export function RegisterPage() {
           </div>
           <div className="flex items-center text-sm text-primary-700">
             <Gift className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span>Recommandations personnalisées</span>
+            <span>Recommandations personnalisees</span>
           </div>
         </div>
 
         {/* Formulaire */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Erreur générale */}
+          {/* Erreur generale */}
           {errors.general && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -274,18 +274,18 @@ export function RegisterPage() {
           )}
 
           <div className="space-y-4">
-            {/* Prénom et Nom */}
+            {/* Prenom et Nom */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  Prénom
+                  Prenom
                 </label>
                 <input
                   id="firstName"
                   name="firstName"
                   type="text"
                   required
-                  value={formData.firstName}
+                  value={formdata?.firstName}
                   onChange={handleChange}
                   className={`mt-1 appearance-none block w-full px-3 py-2 border ${
                     errors.firstName ? 'border-red-300' : 'border-gray-300'
@@ -305,7 +305,7 @@ export function RegisterPage() {
                   name="lastName"
                   type="text"
                   required
-                  value={formData.lastName}
+                  value={formdata?.lastName}
                   onChange={handleChange}
                   className={`mt-1 appearance-none block w-full px-3 py-2 border ${
                     errors.lastName ? 'border-red-300' : 'border-gray-300'
@@ -328,7 +328,7 @@ export function RegisterPage() {
                   name="username"
                   type="text"
                   required
-                  value={formData.username}
+                  value={formdata?.username}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 pl-10 border ${
                     errors.username ? 'border-red-300' : 'border-gray-300'
@@ -354,7 +354,7 @@ export function RegisterPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
+                  value={formdata?.email}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 pl-10 border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
@@ -379,12 +379,12 @@ export function RegisterPage() {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   required
-                  value={formData.password}
+                  value={formdata?.password}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
+                  placeholder="aaaaaaaaaaaaaaaa"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button
@@ -401,7 +401,7 @@ export function RegisterPage() {
               </div>
               
               {/* Indicateur de force */}
-              {formData.password && (
+              {formdata?.password && (
                 <div className="mt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-gray-600">Force du mot de passe</span>
@@ -434,12 +434,12 @@ export function RegisterPage() {
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   required
-                  value={formData.confirmPassword}
+                  value={formdata?.confirmPassword}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 pl-10 pr-10 border ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500`}
-                  placeholder="â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢â€Â¢"
+                  placeholder="aaaaaaaaaaaaaaaa"
                 />
                 <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 <button
@@ -467,7 +467,7 @@ export function RegisterPage() {
                 id="acceptTerms"
                 name="acceptTerms"
                 type="checkbox"
-                checked={formData.acceptTerms}
+                checked={formdata?.acceptTerms}
                 onChange={handleChange}
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
               />
@@ -478,7 +478,7 @@ export function RegisterPage() {
                 </Link>{' '}
                 et la{' '}
                 <Link to="/privacy" className="font-medium text-primary-600 hover:text-primary-500">
-                  politique de confidentialité
+                  politique de confidentialite
                 </Link>
               </label>
             </div>
@@ -491,12 +491,12 @@ export function RegisterPage() {
                 id="marketingOptIn"
                 name="marketingOptIn"
                 type="checkbox"
-                checked={formData.marketingOptIn}
+                checked={formdata?.marketingOptIn}
                 onChange={handleChange}
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
               />
               <label htmlFor="marketingOptIn" className="ml-2 block text-sm text-gray-900">
-                Je souhaite recevoir des conseils et actualités par email (optionnel)
+                Je souhaite recevoir des conseils et actualites par email (optionnel)
               </label>
             </div>
           </div>
@@ -511,12 +511,12 @@ export function RegisterPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  Création du compte...
+                  Creation du compte...
                 </>
               ) : (
                 <>
                   <CheckCircle className="h-5 w-5 mr-2" />
-                  Créer mon compte gratuit
+                  Creer mon compte gratuit
                   <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
@@ -527,13 +527,13 @@ export function RegisterPage() {
         {/* Footer */}
         <div className="text-center text-sm text-gray-600">
           <p>
-            En créant un compte, vous acceptez nos{' '}
+            En creant un compte, vous acceptez nos{' '}
             <Link to="/terms" className="font-medium text-[#7DDE4A] hover:text-[#6bc93a]">
               conditions d'utilisation
             </Link>{' '}
             et notre{' '}
             <Link to="/privacy" className="font-medium text-[#7DDE4A] hover:text-[#6bc93a]">
-              politique de confidentialité
+              politique de confidentialite
             </Link>
           </p>
         </div>
@@ -541,3 +541,6 @@ export function RegisterPage() {
     </div>
   );
 }
+
+
+

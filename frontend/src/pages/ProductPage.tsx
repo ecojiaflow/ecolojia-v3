@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import analysisService from '../services/analysisService';
 import { useAuth } from '../auth/context/AuthContext';
+import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
+import { ChatWidget } from '../components/chat/ChatWidget';
+import { createProductContext } from '../services/chat/ChatService';
 import { 
   ArrowLeft, 
   Download, 
@@ -11,7 +14,6 @@ import {
   Leaf, 
   Shield,
   AlertTriangle,
-  Info,
   Star
 } from 'lucide-react';
 
@@ -61,14 +63,14 @@ const ProductPage: React.FC = () => {
     ingredients: '', 
     barcode: '' 
   });
-  const [scanMethod, setScanMethod] = useState<'barcode' | 'photo' | 'manual' | 'direct'>('direct');
+  const [scanMethod, setscanMethod] = useState<'barcode' | 'photo' | 'manual' | 'direct'>('direct');
   const [ocrData, setOcrData] = useState<any>(null);
 
   useEffect(() => {
     const state = location.state as any;
     if (state?.analysis) {
       setAnalysis(state.analysis);
-      setScanMethod(state.scanMethod || 'direct');
+      setscanMethod(state.scanMethod || 'direct');
       setOcrData(state.ocrData || null);
       return;
     }
@@ -85,7 +87,7 @@ const ProductPage: React.FC = () => {
         ingredients: ingredients || '',
         barcode: barcode || '',
       });
-      setScanMethod(barcode ? 'barcode' : 'manual');
+      setscanMethod(barcode ? 'barcode' : 'manual');
     }
 
     if (id && !state?.analysis) {
@@ -101,7 +103,7 @@ const ProductPage: React.FC = () => {
       if (result.success && result.data) {
         setAnalysis(result.data);
       } else {
-        throw new Error(result.message || 'Analyse non trouvée');
+        throw new Error(result.message || 'Analyse non trouvee');
       }
     } catch (e: any) {
       setError(e.message || "Impossible de charger l'analyse");
@@ -131,9 +133,9 @@ const ProductPage: React.FC = () => {
       }
       if (result.success && result.data) {
         setAnalysis(result.data);
-        navigate(`/product/${result.data.productId}`, { replace: true });
+        navigate(`/product/${result.data?.productId}`, { replace: true });
       } else {
-        throw new Error(result.message || 'Analyse échouée');
+        throw new Error(result.message || 'Analyse echouee');
       }
     } catch (e: any) {
       setError(e.message || "Impossible d'analyser ce produit");
@@ -148,10 +150,10 @@ const ProductPage: React.FC = () => {
       const response = await analysisService.exportAnalysis(analysis.productId, 'pdf');
       const blob = new Blob([response], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `analyse-${analysis.name.replace(/\s+/g, '-')}.pdf`;
-      a.click();
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `analyse-${analysis.name.replace(/\s+/g, '-')}.pdf`;
+      link.click();
     } catch (e) {
       console.error('Export error:', e);
     }
@@ -181,6 +183,17 @@ const ProductPage: React.FC = () => {
     };
     return colors[score || ''] || 'bg-gray-400';
   };
+
+  // Preparer le contexte pour le chat
+  const chatProductContext = analysis ? createProductContext({
+    ...analysis,
+    productName: analysis.name,
+    additives: analysis.additives.map(a => ({
+      code: ?.code,
+      name: ?.name,
+      riskLevel: ?.risk
+    }))
+  }) : undefined;
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
@@ -233,7 +246,7 @@ const ProductPage: React.FC = () => {
             </div>
             <div className="text-xl font-semibold text-[#3B3B3B]">Analyse en cours...</div>
             <div className="text-gray-600 mt-2">
-              {scanMethod === 'photo' ? "Extraction des données de l'image..." : 'Classification et évaluation scientifique...'}
+              {scanMethod === 'photo' ? "Extraction des donnees de l'image..." : 'Classification et evaluation scientifique...'}
             </div>
           </div>
         )}
@@ -250,7 +263,7 @@ const ProductPage: React.FC = () => {
               onClick={() => navigate('/scan')} 
               className="bg-[#7DDE4A] text-white px-6 py-3 rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              Réessayer
+              Reessayer
             </button>
           </div>
         )}
@@ -262,9 +275,9 @@ const ProductPage: React.FC = () => {
             {scanMethod !== 'direct' && (
               <div className="mb-4 flex items-center justify-center">
                 <span className="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600 flex items-center gap-2">
-                  {scanMethod === 'barcode' && 'Ã°Å¸â€œÅ  Scanné par code-barres'}
-                  {scanMethod === 'photo' && 'Ã°Å¸â€œÂ¸ Analysé par photo avec IA'}
-                  {scanMethod === 'manual' && 'âÅ“ÂïÂ¸Â Saisi manuellement'}
+                  {scanMethod === 'barcode' && 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â± Scanne par code-barres'}
+                  {scanMethod === 'photo' && 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¸ Analyse par photo avec IA'}
+                  {scanMethod === 'manual' && 'ÃƒÂ¢Ã…â€œÃ‚ÂÃƒÂ¯Ã‚Â¸Ã‚Â Saisi manuellement'}
                 </span>
               </div>
             )}
@@ -279,9 +292,9 @@ const ProductPage: React.FC = () => {
                   )}
                   <div className="flex flex-wrap items-center gap-3 mt-4">
                     <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                      {analysis.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentaire' : 
-                       analysis.category === 'cosmetic' ? 'Ã°Å¸â€™â€ž Cosmétique' : 
-                       'Ã°Å¸Â§Â¼ Ménager'}
+                      {analysis.category === 'food' ? 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â½ Alimentaire' : 
+                       analysis.category === 'cosmetic' ? 'ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã¢â‚¬Å¾ cosmetics' : 
+                       'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¼ Menager'}
                     </span>
                     {analysis.barcode && (
                       <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-mono">
@@ -318,14 +331,14 @@ const ProductPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Heart className="w-5 h-5 text-red-500" />
-                      <span className="font-medium text-gray-700">Santé</span>
+                      <span className="font-medium text-gray-700">Sante</span>
                     </div>
                     <span className={`text-2xl font-bold ${getScoreColor(analysis.healthScore)}`}>
                       {analysis.healthScore}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Impact sur votre santé
+                    Impact sur votre sante
                   </div>
                 </div>
 
@@ -340,7 +353,7 @@ const ProductPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Empreinte écologique
+                    Empreinte ecologique
                   </div>
                 </div>
 
@@ -348,73 +361,26 @@ const ProductPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Shield className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-700">Ãƒâ€°thique</span>
+                      <span className="font-medium text-gray-700">Ã¢â‚¬Â°thique</span>
                     </div>
                     <span className={`text-2xl font-bold ${getScoreColor(analysis.ethicsScore)}`}>
                       {analysis.ethicsScore}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Responsabilité sociale
+                    Responsabilite sociale
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Ingredients */}
+            {/* Ingredients - remplace par le composant unique */}
             {analysis.ingredients && analysis.ingredients.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <h2 className="text-xl font-semibold text-[#3B3B3B] mb-4 flex items-center gap-2">
-                  <Info className="w-5 h-5" />
-                  Composition
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-gray-700 mb-2">Ingrédients</h3>
-                    <p className="text-gray-600">
-                      {analysis.ingredients.join(', ')}
-                    </p>
-                  </div>
-
-                  {/* Additives */}
-                  {analysis.additives && analysis.additives.length > 0 && (
-                    <div>
-                      <h3 className="font-medium text-gray-700 mb-2">Additifs détectés</h3>
-                      <div className="space-y-2">
-                        {analysis.additives.map((additive, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              additive.risk === 'high' ? 'bg-red-100 text-red-700' :
-                              additive.risk === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-green-100 text-green-700'
-                            }`}>
-                              {additive.code}
-                            </span>
-                            <span className="text-gray-600">{additive.name}</span>
-                            {additive.risk === 'high' && (
-                              <AlertTriangle className="w-4 h-4 text-red-500" />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Allergens */}
-                  {analysis.allergens && analysis.allergens.length > 0 && (
-                    <div>
-                      <h3 className="font-medium text-gray-700 mb-2">Allergènes</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {analysis.allergens.map((allergen, index) => (
-                          <span key={index} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
-                            {allergen}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ProductIngredientsSection
+                ingredients={analysis.ingredients}
+                category={analysis.category as 'food' | 'cosmetics' | 'detergents'}
+                className="bg-white rounded-xl shadow-sm p-6 mb-6"
+              />
             )}
 
             {/* Alternatives */}
@@ -422,7 +388,7 @@ const ProductPage: React.FC = () => {
               <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <h2 className="text-xl font-semibold text-[#3B3B3B] mb-4 flex items-center gap-2">
                   <Star className="w-5 h-5" />
-                  Alternatives recommandées
+                  Alternatives recommandees
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   {analysis.alternatives.slice(0, 4).map((alt: any, index: number) => (
@@ -444,7 +410,7 @@ const ProductPage: React.FC = () => {
             {/* OCR Debug (dev only) */}
             {ocrData && import.meta.env.DEV && (
               <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                <div className="font-medium mb-2">Données OCR extraites (debug)</div>
+                <div className="font-medium mb-2">Donnees OCR extraites (debug)</div>
                 <pre className="text-xs overflow-auto bg-white p-2 rounded">
                   {JSON.stringify(ocrData, null, 2)}
                 </pre>
@@ -453,8 +419,14 @@ const ProductPage: React.FC = () => {
           </>
         )}
       </div>
+
+      {/* Chat Widget - affiche seulement si analyse disponible */}
+      {analysis && chatProductContext && (
+        <ChatWidget productContext={chatProductContext} />
+      )}
     </div>
   );
 };
 
 export default ProductPage;
+

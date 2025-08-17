@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/ManualSearch.tsx
+﻿// PATH: frontend/src/components/scanner/ManualSearch.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -14,24 +14,24 @@ import { useDebounce } from '../../hooks/useDebounce';
 
 interface ManualSearchProps {
   onSubmit: (data: ManualSearchData) => void;
-  onClose?: () => void;
-  categories?: CategoryOption[];
-  suggestions?: boolean;
-  autoSave?: boolean;
+  onClosea: () => void;
+  categoriesa: CategoryOption[];
+  suggestionsa: boolean;
+  autoSavea: boolean;
 }
 
 interface ManualSearchData {
   name: string;
   brand: string;
   category: string;
-  ingredients?: string;
-  barcode?: string;
+  ingredientsa: string;
+  barcodea: string;
 }
 
 interface CategoryOption {
   value: string;
   label: string;
-  icon?: string;
+  icona: string;
 }
 
 interface SearchSuggestion {
@@ -39,13 +39,13 @@ interface SearchSuggestion {
   name: string;
   brand: string;
   category: string;
-  image?: string;
+  imagea: string;
 }
 
 const defaultCategories: CategoryOption[] = [
-  { value: 'food', label: 'Alimentation', icon: 'Ã°Å¸ÂÅ½' },
-  { value: 'cosmetic', label: 'Cosmétiques', icon: 'Ã°Å¸â€™â€ž' },
-  { value: 'detergent', label: 'Produits ménagers', icon: 'Ã°Å¸Â§Â¼' }
+  { value: 'food', label: 'Alimentation', icon: '' },
+  { value: 'cosmetic', label: 'Cosmetiques', icon: 'aaaaa' },
+  { value: 'detergent', label: 'Produits menagers', icon: '' }
 ];
 
 export const ManualSearch: React.FC<ManualSearchProps> = ({
@@ -68,11 +68,11 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
   const [searchSuggestions, setSearchSuggestions] = useState<SearchSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   
-  const debouncedSearchTerm = useDebounce(`${formData.name} ${formData.brand}`.trim(), 300);
+  const debouncedSearchTerm = useDebounce(`${formdata?.name} ${formdata?.brand}`.trim(), 300);
 
   // Auto-save dans localStorage
   useEffect(() => {
-    if (autoSave && formData.name) {
+    if (autoSave && formdata?.name) {
       localStorage.setItem('ecolojia_manual_search_draft', JSON.stringify(formData));
     }
   }, [formData, autoSave]);
@@ -106,7 +106,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
     try {
       const results = await searchService.searchProducts(debouncedSearchTerm, {
         hitsPerPage: 5,
-        facetFilters: formData.category ? [`category:${formData.category}`] : []
+        facetFilters: formdata?.category ? [`category:${formdata?.category}`] : []
       });
       
       if (results.success && results.hits) {
@@ -129,16 +129,16 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Partial<ManualSearchData> = {};
     
-    if (!formData.name.trim()) {
+    if (!formdata?.name.trim()) {
       newErrors.name = 'Le nom du produit est requis';
     }
     
-    if (!formData.brand.trim()) {
+    if (!formdata?.brand.trim()) {
       newErrors.brand = 'La marque est requise';
     }
     
-    if (!formData.category) {
-      newErrors.category = 'La catégorie est requise';
+    if (!formdata?.category) {
+      newErrors.category = 'La categorie est requise';
     }
     
     setErrors(newErrors);
@@ -157,8 +157,8 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
     
     onSubmit({
       ...formData,
-      ingredients: formData.ingredients.trim(),
-      barcode: formData.barcode.trim()
+      ingredients: formdata?.ingredients.trim(),
+      barcode: formdata?.barcode.trim()
     });
   };
 
@@ -203,9 +203,9 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-1">Conseils pour une meilleure analyse</p>
               <ul className="space-y-1">
-                <li>â€Â¢ Saisissez le nom exact tel qu'il apparaît sur l'emballage</li>
-                <li>â€Â¢ Incluez les ingrédients si possible pour une analyse plus précise</li>
-                <li>â€Â¢ Le code-barres permet d'identifier le produit plus rapidement</li>
+                <li>aa Saisissez le nom exact tel qu'il apparait sur l'emballage</li>
+                <li>aa Incluez les ingredients si possible pour une analyse plus precise</li>
+                <li>aa Le code-barres permet d'identifier le produit plus rapidement</li>
               </ul>
             </div>
           </div>
@@ -218,7 +218,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             <div className="relative">
               <input
                 type="text"
-                value={formData.name}
+                value={formdata?.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
                   errors.name ? 'border-red-500' : 'border-gray-300'
@@ -248,7 +248,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             </label>
             <input
               type="text"
-              value={formData.brand}
+              value={formdata?.brand}
               onChange={(e) => handleChange('brand', e.target.value)}
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
                 errors.brand ? 'border-red-500' : 'border-gray-300'
@@ -268,7 +268,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
               className="bg-gray-50 rounded-lg p-4"
             >
               <p className="text-sm font-medium text-gray-700 mb-3">
-                Produits similaires trouvés :
+                Produits similaires trouves :
               </p>
               <div className="space-y-2">
                 {searchSuggestions.map((suggestion) => (
@@ -296,13 +296,13 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             </motion.div>
           )}
 
-          {/* Catégorie */}
+          {/* Categorie */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Catégorie *
+              Categorie *
             </label>
             <select
-              value={formData.category}
+              value={formdata?.category}
               onChange={(e) => handleChange('category', e.target.value)}
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent ${
                 errors.category ? 'border-red-500' : 'border-gray-300'
@@ -326,7 +326,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             </label>
             <input
               type="text"
-              value={formData.barcode}
+              value={formdata?.barcode}
               onChange={(e) => handleChange('barcode', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
               placeholder="Ex: 3033710065967"
@@ -334,20 +334,20 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             />
           </div>
 
-          {/* Ingrédients */}
+          {/* Ingredients */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Liste des ingrédients (optionnel)
+              Liste des ingredients (optionnel)
             </label>
             <textarea
-              value={formData.ingredients}
+              value={formdata?.ingredients}
               onChange={(e) => handleChange('ingredients', e.target.value)}
               rows={4}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent resize-none"
-              placeholder="Copiez la liste des ingrédients telle qu'elle apparaît sur l'emballage..."
+              placeholder="Copiez la liste des ingredients telle qu'elle apparait sur l'emballage..."
             />
             <p className="mt-1 text-xs text-gray-500">
-              Plus la liste est complète, plus l'analyse sera précise
+              Plus la liste est complete, plus l'analyse sera precise
             </p>
           </div>
 
@@ -375,3 +375,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
 };
 
 export default ManualSearch;
+
+
+
+

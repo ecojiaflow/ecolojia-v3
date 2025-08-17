@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ChatPage.tsx (Version améliorée)
+﻿// PATH: frontend/src/pages/ChatPage.tsx (Version amelioree)
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Send, Bot, User, Package, Loader2, AlertCircle } from 'lucide-react';
@@ -9,7 +9,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  isStreaming?: boolean;
+  isStreaminga: boolean;
 }
 
 interface ProductContext {
@@ -37,7 +37,7 @@ export const ChatPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Récupérer le contexte produit si présent
+  // Recuperer le contexte produit si present
   useEffect(() => {
     if (location.state?.context) {
       setProductContext(location.state.context);
@@ -48,18 +48,18 @@ export const ChatPage: React.FC = () => {
         role: 'assistant',
         content: `Bonjour ! Je vois que vous souhaitez discuter de **${location.state.context.product.name}** (${location.state.context.product.category}).
 
-**Score santé : ${location.state.context.analysis.healthScore}/100**
+**Score sante : ${location.state.context.analysis.healthScore}/100**
 
-Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Que souhaitez-vous savoir ?`,
+Je suis l pour repondre  toutes vos questions sur ce produit. Que souhaitez-vous savoir a`,
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
     } else {
-      // Message de bienvenue général
+      // Message de bienvenue general
       const welcomeMessage: Message = {
         id: 'welcome',
         role: 'assistant',
-        content: 'Bonjour ! Je suis votre assistant IA spécialisé en analyse de produits. Posez-moi vos questions sur l\'alimentation, les cosmétiques ou les détergents.',
+        content: 'Bonjour ! Je suis votre assistant IA specialise en analyse de produits. Posez-moi vos questions sur l\'alimentation, les cosmetiques ou les detergents.',
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -71,7 +71,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, streamingContent]);
 
-  // Vérifier si l'utilisateur est Premium
+  // Verifier si l'utilisateur est Premium
   const checkPremiumStatus = (): boolean => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     return user.tier === 'premium';
@@ -80,7 +80,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Vérifier le statut Premium
+    // Verifier le statut Premium
     if (!checkPremiumStatus()) {
       setShowPremiumModal(true);
       return;
@@ -97,7 +97,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
     setInputMessage('');
     setIsLoading(true);
 
-    // Créer le message assistant avec streaming
+    // Creer le message assistant avec streaming
     const assistantMessage: Message = {
       id: `assistant-${Date.now()}`,
       role: 'assistant',
@@ -110,7 +110,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
     setStreamingContent('');
 
     try {
-      // Créer un AbortController pour pouvoir annuler la requête
+      // Creer un AbortController pour pouvoir annuler la requete
       abortControllerRef.current = new AbortController();
 
       const response = await fetch('https://ecolojia-backend-working.onrender.com/api/chat/deepseek', {
@@ -153,8 +153,8 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
             if (line.startsWith('data: ')) {
               try {
                 const data = JSON.parse(line.slice(6));
-                if (data.content) {
-                  fullContent += data.content;
+                if (data?.content) {
+                  fullContent += data?.content;
                   setStreamingContent(fullContent);
                 }
               } catch (e) {
@@ -165,7 +165,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
         }
       }
 
-      // Mettre ÃƒÂ  jour le message final
+      // Mettre  jour le message final
       setMessages(prev => prev.map(msg => 
         msg.id === assistantMessage.id 
           ? { ...msg, content: fullContent, isStreaming: false }
@@ -183,7 +183,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: 'Désolé, une erreur s\'est produite. Veuillez réessayer.',
+        content: 'Desole, une erreur s\'est produite. Veuillez reessayer.',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -201,17 +201,17 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
   };
 
   const suggestedQuestions = productContext ? [
-    `Pourquoi ce produit a-t-il un score de ${productContext.analysis.healthScore}/100 ?`,
-    "Quels sont les ingrédients les plus problématiques ?",
-    "Existe-t-il des alternatives plus saines ?",
-    "Ce produit convient-il aux enfants ?",
-    "Quel est l'impact environnemental ?"
+    `Pourquoi ce produit a-t-il un score de ${productContext.analysis.healthScore}/100 a`,
+    "Quels sont les ingredients les plus problematiques a",
+    "Existe-t-il des alternatives plus saines a",
+    "Ce produit convient-il aux enfants a",
+    "Quel est l'impact environnemental a"
   ] : [
-    "Comment reconnaître un produit ultra-transformé ?",
-    "Quels sont les perturbateurs endocriniens ÃƒÂ  éviter ?",
-    "Comment choisir des produits ménagers écologiques ?",
-    "Quelle est la différence entre bio et naturel ?",
-    "Comment lire une étiquette alimentaire ?"
+    "Comment reconnaitre un produit ultra-transforme a",
+    "Quels sont les perturbateurs endocriniens  eviter a",
+    "Comment choisir des produits menagers ecologiques a",
+    "Quelle est la difference entre bio et naturel a",
+    "Comment lire une etiquette alimentaire a"
   ];
 
   return (
@@ -280,7 +280,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
                       <span>{streamingContent}</span>
                     ) : (
                       <div dangerouslySetInnerHTML={{ 
-                        __html: message.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        __html: message.content.replace(/\*\*(.*a)\*\*/g, '<strong>$1</strong>')
                       }} />
                     )}
                   </div>
@@ -298,7 +298,7 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
             <div className="flex justify-start">
               <div className="flex items-center space-x-2 px-4 py-3 bg-gray-100 rounded-lg">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm text-gray-600">L'IA réfléchit...</span>
+                <span className="text-sm text-gray-600">L'IA reflechit...</span>
               </div>
             </div>
           )}
@@ -307,11 +307,11 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
         </div>
       </div>
 
-      {/* Questions suggérées */}
+      {/* Questions suggerees */}
       {messages.length <= 1 && (
         <div className="border-t bg-white">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            <p className="text-sm text-gray-600 mb-3">Questions suggérées :</p>
+            <p className="text-sm text-gray-600 mb-3">Questions suggerees :</p>
             <div className="flex flex-wrap gap-2">
               {suggestedQuestions.map((question, index) => (
                 <button
@@ -335,8 +335,8 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
             <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start">
               <AlertCircle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-amber-800">
-                <p className="font-medium">Chat IA réservé aux membres Premium</p>
-                <p className="mt-1">Passez ÃƒÂ  Premium pour poser des questions illimitées ÃƒÂ  notre IA experte.</p>
+                <p className="font-medium">Chat IA reserve aux membres Premium</p>
+                <p className="mt-1">Passez  Premium pour poser des questions illimitees  notre IA experte.</p>
               </div>
             </div>
           )}
@@ -346,9 +346,8 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={checkPremiumStatus() 
-                ? "Posez votre question..." 
-                : "Passez ÃƒÂ  Premium pour utiliser le chat IA"
+              placeholder={checkPremiumStatus() ? "Posez votre question..." 
+                : "Passez  Premium pour utiliser le chat IA"
               }
               disabled={isLoading || !checkPremiumStatus()}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -384,3 +383,6 @@ Je suis lÃƒÂ  pour répondre ÃƒÂ  toutes vos questions sur ce produit. Q
 };
 
 export default ChatPage;
+
+
+

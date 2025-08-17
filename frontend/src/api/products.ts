@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import { ProductCreateSchema } from './types';
 import prisma from '../lib/prisma';
 import axios from 'axios';
@@ -19,20 +19,20 @@ const validateApiKey = (req: express.Request, res: express.Response, next: expre
 router.post('/', validateApiKey, async (req: express.Request, res: express.Response) => {
   try {
     // Validate request body
-    const validatedData = ProductCreateSchema.parse(req.body);
+    const validatedData = ProductCreateSchem?.parse(req.body);
     
     // Create product in database
-    const product = await prisma.product.create({
+    const product = await prism?.product.create({
       data: {
-        name: validatedData.name,
-        description: validatedData.description,
-        price: validatedData.price,
-        currency: validatedData.currency,
+        name: validateddata?.name,
+        description: validateddata?.description,
+        price: validateddata?.price,
+        currency: validateddata?.currency,
         ethicalScore: 0, // Will be updated by AI enrichment
-        affiliateLink: validatedData.affiliate_url,
-        category: validatedData.category,
-        tags: validatedData.tags,
-        certifications: validatedData.certifications
+        affiliateLink: validateddata?.affiliate_url,
+        category: validateddata?.category,
+        tags: validateddata?.tags,
+        certifications: validateddata?.certifications
       }
     });
 
@@ -43,8 +43,8 @@ router.post('/', validateApiKey, async (req: express.Request, res: express.Respo
           productId: product.id,
           name: product.name,
           description: product.description,
-          lang: validatedData.lang,
-          zones_dispo: validatedData.zones_dispo
+          lang: validateddata?.lang,
+          zones_dispo: validateddata?.zones_dispo
         });
       } catch (error) {
         console.error('Failed to send product to n8n webhook:', error);
@@ -64,3 +64,6 @@ router.post('/', validateApiKey, async (req: express.Request, res: express.Respo
 });
 
 export default router;
+
+
+

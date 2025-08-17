@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/HistoryPage.tsx
+﻿// PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -88,17 +88,17 @@ const HistoryPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Vérifier si l'utilisateur est connecté
+      // Verifier si l'utilisateur est connecte
       const token = localStorage.getItem('ecolojia_token');
       
       if (!token && !ConfigService.isDemo()) {
-        // Basculer en mode démo
+        // Basculer en mode demo
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginPrompt(true);
       }
       
-      // Utiliser les services normalement (ils gèrent le mode démo en interne)
+      // Utiliser les services normalement (ils gerent le mode demo en interne)
       const [historyData, totalCount] = await Promise.all([
         historyService.getHistory(
           currentPage,
@@ -115,7 +115,7 @@ const HistoryPage: React.FC = () => {
       // Filtrer selon la recherche
       let filteredHistory = historyData;
       if (searchQuery) {
-        filteredHistory = historyData.filter(item =>
+        filteredHistory = historydata?.filter(item =>
           item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.productBrand.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -135,13 +135,13 @@ const HistoryPage: React.FC = () => {
     } catch (error: any) {
       console.error('Error fetching history:', error);
       
-      // Si on a une erreur isDemoMode, passer en mode démo
+      // Si on ? une erreur isDemoMode, passer en mode demo
       if (error.isDemoMode || error.statusCode === 401) {
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginPrompt(true);
         
-        // Réessayer en mode démo
+        // Reessayer en mode demo
         fetchHistory();
       } else {
         setError('Impossible de charger votre historique');
@@ -162,11 +162,11 @@ const HistoryPage: React.FC = () => {
 
   const handleDelete = async (ids: string[]) => {
     if (isDemo) {
-      alert('La suppression n\'est pas disponible en mode démonstration');
+      alert('La suppression n\'est pas disponible en mode demonstration');
       return;
     }
     
-    if (!confirm(`ÃƒÅ tes-vous sÃƒÂ»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+    if (!confirm(`Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â tes-vous sÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
       return;
     }
 
@@ -188,13 +188,13 @@ const HistoryPage: React.FC = () => {
 
     try {
       const data = await historyService.exportHistory('csv');
-      // Créer un blob et télécharger
+      // Creer un blob et telecharger
       const blob = new Blob([data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ecolojia-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-      a.click();
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ecolojia-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      link.click();
     } catch (error) {
       console.error('Error exporting history:', error);
       alert('Erreur lors de l\'export');
@@ -203,10 +203,10 @@ const HistoryPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'Ã°Å¸ÂÅ½';
-      case 'cosmetic': return 'Ã°Å¸â€™â€ž';
-      case 'detergent': return 'Ã°Å¸Â§Â¼';
-      default: return 'Ã°Å¸â€œÂ¦';
+      case 'food': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â½';
+      case 'cosmetic': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬aÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾';
+      case 'detergent': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼';
+      default: return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦';
     }
   };
 
@@ -218,7 +218,7 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Bannière mode démo */}
+      {/* Banniere mode demo */}
       <AnimatePresence>
         {showLoginPrompt && (
           <motion.div 
@@ -231,7 +231,7 @@ const HistoryPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
-                  Mode démonstration activé - Connectez-vous pour accéder ÃƒÂ  votre historique personnel
+                  Mode demonstration active - Connectez-vous pour acceder Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  votre historique personnel
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -263,8 +263,8 @@ const HistoryPage: React.FC = () => {
               </h1>
               <p className="text-gray-600 mt-2">
                 {isDemo 
-                  ? 'Découvrez des exemples d\'analyses de produits'
-                  : 'Retrouvez tous vos produits scannés'
+                  ? 'Decouvrez des exemples d\'analyses de produits'
+                  : 'Retrouvez tous vos produits scannes'
                 }
               </p>
             </div>
@@ -373,7 +373,7 @@ const HistoryPage: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">Catégorie top</p>
+                  <p className="text-gray-600 text-sm">Categorie top</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
                     {stats.topCategory}
                   </p>
@@ -396,10 +396,10 @@ const HistoryPage: React.FC = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* Catégorie */}
+                {/* Categorie */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie
+                    Categorie
                   </label>
                   <select
                     value={filters.category}
@@ -408,15 +408,15 @@ const HistoryPage: React.FC = () => {
                   >
                     <option value="all">Toutes</option>
                     <option value="food">Alimentation</option>
-                    <option value="cosmetic">Cosmétiques</option>
-                    <option value="detergent">Produits ménagers</option>
+                    <option value="cosmetic">Cosmetiques</option>
+                    <option value="detergent">Produits menagers</option>
                   </select>
                 </div>
 
-                {/* Période */}
+                {/* Periode */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Période
+                    Periode
                   </label>
                   <select
                     value={filters.dateRange}
@@ -427,7 +427,7 @@ const HistoryPage: React.FC = () => {
                     <option value="today">Aujourd'hui</option>
                     <option value="week">Cette semaine</option>
                     <option value="month">Ce mois</option>
-                    <option value="year">Cette année</option>
+                    <option value="year">Cette annee</option>
                   </select>
                 </div>
 
@@ -460,7 +460,7 @@ const HistoryPage: React.FC = () => {
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
                   >
-                    <option value="date-desc">Plus récent</option>
+                    <option value="date-desc">Plus recent</option>
                     <option value="date-asc">Plus ancien</option>
                     <option value="score-desc">Meilleur score</option>
                     <option value="score-asc">Moins bon score</option>
@@ -508,7 +508,7 @@ const HistoryPage: React.FC = () => {
               onClick={fetchHistory}
               className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              Réessayer
+              Reessayer
             </button>
           </div>
         ) : history.length === 0 ? (
@@ -617,7 +617,7 @@ const HistoryPage: React.FC = () => {
                   disabled={currentPage === 1}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                 >
-                  Précédent
+                  Precedent
                 </button>
                 
                 <div className="flex items-center gap-2">
@@ -671,3 +671,6 @@ const HistoryPage: React.FC = () => {
 };
 
 export default HistoryPage;
+
+
+

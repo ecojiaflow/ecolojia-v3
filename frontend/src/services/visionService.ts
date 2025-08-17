@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/visionService.ts
+﻿// PATH: frontend/src/services/visionService.ts
 import api, { ApiResponse } from './apiClient';
 
 export async function analyzeImage(file: File): Promise<{
@@ -9,13 +9,16 @@ export async function analyzeImage(file: File): Promise<{
   const form = new FormData();
   form.append('image', file);
 
-  // Conforme à tes logs Render: POST /api/vision/analyze-image
+  // Conforme Æ’Ã‚Â  tes logs Render: POST /api/vision/analyze-image
   const res: ApiResponse<any> = await api.post('/api/vision/analyze-image', form);
 
   if (!res.success) return { success: false, error: res.error || 'VISION_FAILED' };
 
-  const data = (res.data && res.data.data) ? res.data.data : res.data;
+  const data = (res.data && res.data?.data) ? res.data?.data : res.data;
   return { success: true, data };
 }
 
 export default { analyzeImage };
+
+
+

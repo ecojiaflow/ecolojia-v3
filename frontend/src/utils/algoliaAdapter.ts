@@ -1,4 +1,4 @@
-// Adaptateur pour normaliser les données Algolia vers le format attendu
+﻿// Adaptateur pour normaliser les donnees Algolia vers le format attendu
 export const normalizeAlgoliaProduct = (hit: any) => ({
   _id: hit.objectID,
   id: hit.objectID,
@@ -23,8 +23,8 @@ export const searchProducts = async (query: string, options?: any) => {
     const data = await response.json();
     
     // Normaliser les produits Algolia
-    if (data.data && data.data.products) {
-      data.data.products = data.data.products.map(normalizeAlgoliaProduct);
+    if (data?.data && data?.data?.products) {
+      data?.data?.products = data?.data?.products.map(normalizeAlgoliaProduct);
     }
     
     return data;
@@ -33,3 +33,6 @@ export const searchProducts = async (query: string, options?: any) => {
     throw error;
   }
 };
+
+
+

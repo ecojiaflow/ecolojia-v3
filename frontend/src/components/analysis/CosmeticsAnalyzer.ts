@@ -1,14 +1,14 @@
-// src/components/analysis/CosmeticsAnalyzer.ts
+﻿// src/components/analysis/CosmeticsAnalyzer.ts
 
 import { AnalysisResult, ProductCategory } from '../../types/types';
 
-// Interfaces pour l'analyse cosmétique
+// Interfaces pour l'analyse cosmetique
 export interface InciIngredient {
   name: string;
   function: string;
   riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY_HIGH';
   concerns: string[];
-  alternatives?: string[];
+  alternativesa: string[];
 }
 
 export interface EndocrineDisruptor {
@@ -27,7 +27,7 @@ export interface CosmeticAnalysisResult extends AnalysisResult {
   recommendations: string[];
 }
 
-// Interface pour les analyses détergents
+// Interface pour les analyses detergents
 export interface DetergentAnalysisResult extends AnalysisResult {
   aquaticToxicity: {
     level: 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
@@ -41,43 +41,43 @@ export interface DetergentAnalysisResult extends AnalysisResult {
   environmentalScore: number;
 }
 
-// Base de données d'ingrédients cosmétiques
+// Base de donnees d'ingredients cosmetiques
 const COSMETIC_INGREDIENTS_DB = {
-  // Perturbateurs endocriniens confirmés
+  // Perturbateurs endocriniens confirmes
   endocrineDisruptors: {
     'triclosan': {
       evidenceLevel: 'CONFIRMED' as const,
       riskLevel: 'VERY_HIGH' as const,
-      healthEffects: ['Perturbation thyroÃƒÂ¯dienne', 'Résistance antibiotique'],
+      healthEffects: ['Perturbation thyrodienne', 'Resistance antibiotique'],
       regulatoryStatus: 'Interdit dans l\'UE depuis 2017'
     },
     'bht': {
       evidenceLevel: 'CONFIRMED' as const,
       riskLevel: 'HIGH' as const,
-      healthEffects: ['Perturbation hormonale', 'Irritation cutanée'],
+      healthEffects: ['Perturbation hormonale', 'Irritation cutanee'],
       regulatoryStatus: 'Restriction concentration <0.1%'
     },
     'bha': {
       evidenceLevel: 'PROBABLE' as const,
       riskLevel: 'HIGH' as const,
-      healthEffects: ['Perturbation endocrinienne', 'Potentiel cancérigène'],
-      regulatoryStatus: 'Surveillé par l\'ANSES'
+      healthEffects: ['Perturbation endocrinienne', 'Potentiel cancerigene'],
+      regulatoryStatus: 'Surveille par l\'ANSES'
     },
     'parabens': {
       evidenceLevel: 'CONFIRMED' as const,
       riskLevel: 'MEDIUM' as const,
-      healthEffects: ['Mimétisme Ã…â€œstrogénique'],
+      healthEffects: ['Mimetisme aaastrogenique'],
       regulatoryStatus: 'Certains interdits (propyl-, butyl-)'
     },
     'phenoxyethanol': {
       evidenceLevel: 'SUSPECTED' as const,
       riskLevel: 'MEDIUM' as const,
-      healthEffects: ['Irritation cutanée', 'Toxicité système nerveux'],
+      healthEffects: ['Irritation cutanee', 'Toxicite systeme nerveux'],
       regulatoryStatus: 'Limite 1% sauf zones langes (<0.4%)'
     }
   },
 
-  // Allergènes obligatoirement déclarés
+  // Allergenes obligatoirement declares
   allergens: [
     'limonene', 'linalool', 'citronellol', 'geraniol', 'citral',
     'farnesol', 'benzyl alcohol', 'benzyl salicylate', 'alpha-isomethyl ionone',
@@ -85,7 +85,7 @@ const COSMETIC_INGREDIENTS_DB = {
     'benzyl cinnamate', 'cinnamyl alcohol', 'hexyl cinnamal', 'methyl 2-octynoate'
   ],
 
-  // Ingrédients naturels valorisés
+  // Ingredients naturels valorises
   naturalIngredients: [
     'aloe barbadensis', 'chamomilla recutita', 'calendula officinalis',
     'rosa damascena', 'lavandula angustifolia', 'argania spinosa',
@@ -93,7 +93,7 @@ const COSMETIC_INGREDIENTS_DB = {
   ]
 };
 
-// Base de données détergents
+// Base de donnees detergents
 const DETERGENT_INGREDIENTS_DB = {
   toxicSurfactants: [
     'sodium lauryl sulfate', 'sls', 'sodium laureth sulfate', 'sles',
@@ -108,7 +108,7 @@ const DETERGENT_INGREDIENTS_DB = {
   ]
 };
 
-// Analyseur principal cosmétiques
+// Analyseur principal cosmetiques
 export class CosmeticsAnalyzer {
   private ingredientsDb = COSMETIC_INGREDIENTS_DB;
 
@@ -116,17 +116,17 @@ export class CosmeticsAnalyzer {
     name: string,
     ingredients: string[],
     brand?: string,
-    category?: string
+    categorya: string
   ): Promise<CosmeticAnalysisResult> {
-    console.log('Ã°Å¸Â§Â´ Analyse cosmétique:', { name, ingredientsCount: ingredients.length });
+    console.log(' Analyse cosmetique:', { name, ingredientsCount: ingredients.length });
 
-    // Parsing et analyse des ingrédients INCI
+    // Parsing et analyse des ingredients INCI
     const inciIngredients = this.parseInciIngredients(ingredients);
 
-    // Détection perturbateurs endocriniens
+    // Detection perturbateurs endocriniens
     const endocrineDisruptors = this.detectEndocrineDisruptors(ingredients);
 
-    // Détection allergènes
+    // Detection allergenes
     const allergens = this.detectAllergens(ingredients);
 
     // Calcul scores
@@ -139,7 +139,7 @@ export class CosmeticsAnalyzer {
       naturalnessScore
     );
 
-    // Génération recommandations
+    // Generation recommandations
     const recommendations = this.generateCosmeticRecommendations(
       endocrineDisruptors,
       allergens,
@@ -148,7 +148,7 @@ export class CosmeticsAnalyzer {
 
     return {
       productName: name,
-      brand: brand || 'Non spécifié',
+      brand: brand || 'Non specifie',
       category: 'cosmetics' as ProductCategory,
       healthScore,
       riskLevel: this.determineRiskLevel(healthScore),
@@ -167,10 +167,10 @@ export class CosmeticsAnalyzer {
     return ingredients.map(ingredient => {
       const normalizedName = ingredient.toLowerCase().trim();
       
-      // Détection fonction ingrédient
+      // Detection fonction ingredient
       const ingredientFunction = this.detectIngredientFunction(normalizedName);
       
-      // Ãƒâ€°valuation risque
+      // aavaluation risque
       const riskAssessment = this.assessIngredientRisk(normalizedName);
       
       return {
@@ -192,7 +192,7 @@ export class CosmeticsAnalyzer {
     // Silicones
     if (ingredient.includes('siloxane') || ingredient.includes('silicone') || 
         ingredient.includes('dimethicone')) {
-      return 'Agent filmogène (silicone)';
+      return 'Agent filmogene (silicone)';
     }
     
     // Conservateurs
@@ -207,19 +207,19 @@ export class CosmeticsAnalyzer {
       return 'Parfum/Fragrance';
     }
     
-    // Ãƒâ€°mulsifiants
+    // aamulsifiants
     if (ingredient.includes('cetyl') || ingredient.includes('stearyl') ||
         ingredient.includes('glycol') || ingredient.includes('polysorbate')) {
-      return 'Ãƒâ€°mulsifiant';
+      return 'aamulsifiant';
     }
     
     // Huiles naturelles
     if (ingredient.includes('oil') || ingredient.includes('butter') ||
         this.ingredientsDb.naturalIngredients.some(natural => ingredient.includes(natural))) {
-      return 'Ãƒâ€°mollient naturel';
+      return 'aamollient naturel';
     }
     
-    return 'Fonction non identifiée';
+    return 'Fonction non identifiee';
   }
 
   private assessIngredientRisk(ingredient: string): {
@@ -227,13 +227,13 @@ export class CosmeticsAnalyzer {
     concerns: string[];
     alternatives: string[];
   } {
-    // Vérification perturbateurs endocriniens
+    // Verification perturbateurs endocriniens
     for (const [name, data] of Object.entries(this.ingredientsDb.endocrineDisruptors)) {
       if (ingredient.includes(name)) {
         return {
-          level: data.riskLevel,
-          concerns: [...data.healthEffects, data.regulatoryStatus],
-          alternatives: ['Alternatives naturelles certifiées bio', 'Ingrédients sans PE']
+          level: data?.riskLevel,
+          concerns: [...data?.healthEffects, data?.regulatoryStatus],
+          alternatives: ['Alternatives naturelles certifiees bio', 'Ingredients sans PE']
         };
       }
     }
@@ -242,8 +242,8 @@ export class CosmeticsAnalyzer {
     if (ingredient.includes('sodium lauryl sulfate') || ingredient.includes('sls')) {
       return {
         level: 'HIGH',
-        concerns: ['Irritation cutanée', 'Dessèchement peau'],
-        alternatives: ['Coco-glucoside', 'Décyl glucoside', 'Tensio-actifs doux']
+        concerns: ['Irritation cutanee', 'Dessechement peau'],
+        alternatives: ['Coco-glucoside', 'Decyl glucoside', 'Tensio-actifs doux']
       };
     }
     
@@ -252,20 +252,20 @@ export class CosmeticsAnalyzer {
       return {
         level: 'MEDIUM',
         concerns: ['Occlusion pores', 'Accumulation sur cheveux'],
-        alternatives: ['Huiles végétales', 'Beurres naturels']
+        alternatives: ['Huiles vegetales', 'Beurres naturels']
       };
     }
     
-    // Allergènes parfum
+    // Allergenes parfum
     if (this.ingredientsDb.allergens.some(allergen => ingredient.includes(allergen))) {
       return {
         level: 'MEDIUM',
-        concerns: ['Réaction allergique possible', 'Sensibilisation cutanée'],
-        alternatives: ['Parfums hypoallergéniques', 'Huiles essentielles diluées']
+        concerns: ['Reaction allergique possible', 'Sensibilisation cutanee'],
+        alternatives: ['Parfums hypoallergeniques', 'Huiles essentielles diluees']
       };
     }
     
-    // Ingrédients naturels
+    // Ingredients naturels
     if (this.ingredientsDb.naturalIngredients.some(natural => ingredient.includes(natural))) {
       return {
         level: 'LOW',
@@ -291,9 +291,9 @@ export class CosmeticsAnalyzer {
         if (normalized.includes(name)) {
           detected.push({
             name: ingredient,
-            evidenceLevel: data.evidenceLevel,
-            healthEffects: data.healthEffects,
-            regulatoryStatus: data.regulatoryStatus
+            evidenceLevel: data?.evidenceLevel,
+            healthEffects: data?.healthEffects,
+            regulatoryStatus: data?.regulatoryStatus
           });
         }
       }
@@ -325,13 +325,13 @@ export class CosmeticsAnalyzer {
     for (const ingredient of ingredients) {
       const normalized = ingredient.toLowerCase();
       
-      // Ingrédients naturels
+      // Ingredients naturels
       if (this.ingredientsDb.naturalIngredients.some(natural => normalized.includes(natural)) ||
           normalized.includes('oil') || normalized.includes('extract') ||
           normalized.includes('butter') || normalized.includes('wax')) {
         naturalCount++;
       }
-      // Ingrédients synthétiques
+      // Ingredients synthetiques
       else if (normalized.includes('sulfate') || normalized.includes('siloxane') ||
                normalized.includes('paraben') || normalized.includes('glycol') ||
                normalized.includes('peg-') || normalized.includes('polysorbate')) {
@@ -340,7 +340,7 @@ export class CosmeticsAnalyzer {
     }
     
     const totalRelevant = naturalCount + syntheticCount;
-    if (totalRelevant === 0) return 5; // Score neutre si aucun détecté
+    if (totalRelevant === 0) return 5; // Score neutre si aucun detecte
     
     const naturalRatio = naturalCount / totalRelevant;
     return Math.round(naturalRatio * 10);
@@ -361,7 +361,7 @@ export class CosmeticsAnalyzer {
           score -= 1;
           break;
         case 'LOW':
-          // Pas de pénalité
+          // Pas de penalite
           break;
       }
     }
@@ -377,7 +377,7 @@ export class CosmeticsAnalyzer {
   ): number {
     let score = 100;
     
-    // Pénalité perturbateurs endocriniens (très sévère)
+    // Penalite perturbateurs endocriniens (tres severe)
     for (const disruptor of endocrineDisruptors) {
       switch (disruptor.evidenceLevel) {
         case 'CONFIRMED':
@@ -392,13 +392,13 @@ export class CosmeticsAnalyzer {
       }
     }
     
-    // Pénalité allergènes
+    // Penalite allergenes
     score -= allergens.length * 5;
     
-    // Facteur compatibilité cutanée
+    // Facteur compatibilite cutanee
     score -= (10 - skinCompatibility) * 3;
     
-    // Bonus naturalité
+    // Bonus naturalite
     score += (naturalness - 5) * 2;
     
     return Math.max(0, Math.min(100, Math.round(score)));
@@ -412,18 +412,18 @@ export class CosmeticsAnalyzer {
     const recommendations = [];
     
     if (endocrineDisruptors.length > 0) {
-      recommendations.push('Ãƒâ€°viter les perturbateurs endocriniens identifiés');
-      recommendations.push('Privilégier les cosmétiques certifiés sans PE');
+      recommendations.push('aaviter les perturbateurs endocriniens identifies');
+      recommendations.push('Privilegier les cosmetiques certifies sans PE');
     }
     
     if (allergens.length > 0) {
-      recommendations.push('Tester le produit avant utilisation complète');
-      recommendations.push('Consulter un dermatologue en cas de réaction');
+      recommendations.push('Tester le produit avant utilisation complete');
+      recommendations.push('Consulter un dermatologue en cas de reaction');
     }
     
     if (naturalness < 5) {
       recommendations.push('Choisir des formules plus naturelles');
-      recommendations.push('Vérifier les certifications bio');
+      recommendations.push('Verifier les certifications bio');
     }
     
     return recommendations;
@@ -433,11 +433,11 @@ export class CosmeticsAnalyzer {
     const findings = [];
     
     if (endocrineDisruptors.length > 0) {
-      findings.push(`${endocrineDisruptors.length} perturbateur(s) endocrinien(s) détecté(s)`);
+      findings.push(`${endocrineDisruptors.length} perturbateur(s) endocrinien(s) detecte(s)`);
     }
     
     if (allergens.length > 0) {
-      findings.push(`${allergens.length} allergène(s) obligatoire(s) présent(s)`);
+      findings.push(`${allergens.length} allergene(s) obligatoire(s) present(s)`);
     }
     
     if (findings.length === 0) {
@@ -449,13 +449,13 @@ export class CosmeticsAnalyzer {
 
   private determineRiskLevel(score: number): string {
     if (score >= 80) return 'FAIBLE';
-    if (score >= 60) return 'MODÃƒâ€°RÃƒâ€°';
-    if (score >= 40) return 'Ãƒâ€°LEVÃƒâ€°';
-    return 'TRÃƒË†S Ãƒâ€°LEVÃƒâ€°';
+    if (score >= 60) return 'MODaaRaa';
+    if (score >= 40) return 'aaLEVaa';
+    return 'TRaS aaLEVaa';
   }
 }
 
-// Analyseur détergents
+// Analyseur detergents
 export class DetergentsAnalyzer {
   private ingredientsDb = DETERGENT_INGREDIENTS_DB;
 
@@ -464,15 +464,15 @@ export class DetergentsAnalyzer {
     ingredients: string[],
     brand?: string
   ): Promise<DetergentAnalysisResult> {
-    console.log('Ã°Å¸Â§Â½ Analyse détergent:', { name, ingredientsCount: ingredients.length });
+    console.log(' Analyse detergent:', { name, ingredientsCount: ingredients.length });
 
-    // Analyse toxicité aquatique
+    // Analyse toxicite aquatique
     const aquaticToxicity = this.analyzeAquaticToxicity(ingredients);
 
-    // Analyse biodégradabilité
+    // Analyse biodegradabilite
     const biodegradability = this.analyzeBiodegradability(ingredients);
 
-    // Détection labels écologiques
+    // Detection labels ecologiques
     const ecoLabels = this.detectEcoLabels(name);
 
     // Calcul scores
@@ -481,7 +481,7 @@ export class DetergentsAnalyzer {
 
     return {
       productName: name,
-      brand: brand || 'Non spécifié',
+      brand: brand || 'Non specifie',
       category: 'detergents' as ProductCategory,
       healthScore,
       environmentalScore,
@@ -553,13 +553,13 @@ export class DetergentsAnalyzer {
     const productText = productName.toLowerCase();
 
     if (productText.includes('ecolabel') || productText.includes('eco-label')) {
-      labels.push('Ecolabel Européen');
+      labels.push('Ecolabel Europeen');
     }
     if (productText.includes('ecocert')) {
       labels.push('Ecocert');
     }
     if (productText.includes('nature') || productText.includes('bio')) {
-      labels.push('Nature & Progrès');
+      labels.push('Nature & Progres');
     }
 
     return labels;
@@ -572,7 +572,7 @@ export class DetergentsAnalyzer {
   ): number {
     let score = 100;
 
-    // Pénalités toxicité aquatique
+    // Penalites toxicite aquatique
     const toxicityPenalties = {
       'LOW': 0,
       'MODERATE': -15,
@@ -581,19 +581,19 @@ export class DetergentsAnalyzer {
     };
     score += toxicityPenalties[aquaticToxicity.level];
 
-    // Bonus biodégradabilité
+    // Bonus biodegradabilite
     score += (biodegradability.score - 5) * 4;
 
-    // Bonus labels écologiques
+    // Bonus labels ecologiques
     score += ecoLabels.length * 10;
 
     return Math.max(0, Math.min(100, Math.round(score)));
   }
 
   private calculateDetergentHealthScore(aquaticToxicity: any, ingredients: string[]): number {
-    let score = 85; // Score de base plus élevé pour détergents
+    let score = 85; // Score de base plus eleve pour detergents
 
-    // Pénalités pour toxicité (impact indirect sur santé)
+    // Penalites pour toxicite (impact indirect sur sante)
     const healthPenalties = {
       'LOW': 0,
       'MODERATE': -5,
@@ -609,13 +609,13 @@ export class DetergentsAnalyzer {
     const findings = [];
     
     if (aquaticToxicity.level !== 'LOW') {
-      findings.push(`Toxicité aquatique ${aquaticToxicity.level.toLowerCase()}`);
+      findings.push(`Toxicite aquatique ${aquaticToxicity.level.toLowerCase()}`);
     }
     
     if (biodegradability.score < 5) {
-      findings.push('Biodégradabilité limitée');
+      findings.push('Biodegradabilite limitee');
     } else {
-      findings.push('Bonne biodégradabilité');
+      findings.push('Bonne biodegradabilite');
     }
     
     return findings;
@@ -623,8 +623,11 @@ export class DetergentsAnalyzer {
 
   private determineRiskLevel(score: number): string {
     if (score >= 80) return 'FAIBLE';
-    if (score >= 60) return 'MODÃƒâ€°RÃƒâ€°';
-    if (score >= 40) return 'Ãƒâ€°LEVÃƒâ€°';
-    return 'TRÃƒË†S Ãƒâ€°LEVÃƒâ€°';
+    if (score >= 60) return 'MODaaRaa';
+    if (score >= 40) return 'aaLEVaa';
+    return 'TRaS aaLEVaa';
   }
 }
+
+
+

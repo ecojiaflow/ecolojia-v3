@@ -1,12 +1,12 @@
-// src/components/CategoryCard.tsx
-// Composant carte pour afficher une catégorie et permettre l'analyse - VERSION SÃƒâ€°CURISÃƒâ€°E COMPLÃƒË†TE
+﻿// src/components/CategoryCard.tsx
+// Composant carte pour afficher une categorie et permettre l'analyse - VERSION SaaCURISaaE COMPLaTE
 
 import React, { useState } from 'react';
 import { Category, AnalysisResponse, multiCategoryApi } from '../services/multiCategoryApi';
 
 interface CategoryCardProps {
   category: Category | null | undefined;
-  onAnalysisComplete?: (result: AnalysisResponse) => void;
+  onAnalysisCompletea: (result: AnalysisResponse) => void;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplete }) => {
@@ -14,22 +14,22 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Ã°Å¸â€Â§ FIX: Vérification de sécurité pour category
+  // aa FIX: Verification de securite pour category
   if (!category) {
     return (
       <div className="bg-white rounded-3xl shadow-lg border-2 border-gray-200 p-6">
         <div className="text-center">
-          <div className="text-4xl mb-4">âÅ¡Â ïÂ¸Â</div>
-          <h3 className="text-lg font-bold text-gray-500 mb-2">Catégorie indisponible</h3>
+          <div className="text-4xl mb-4">a</div>
+          <h3 className="text-lg font-bold text-gray-500 mb-2">Categorie indisponible</h3>
           <p className="text-sm text-gray-400">
-            Les données de cette catégorie n'ont pas pu être chargées.
+            Les donnees de cette categorie n'ont pas pu etre chargees.
           </p>
         </div>
       </div>
     );
   }
 
-  // Couleurs par catégorie avec fallbacks
+  // Couleurs par categorie avec fallbacks
   const getThemeColors = (categoryId: string) => {
     const themes = {
       food: {
@@ -69,14 +69,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
       setError(null);
       setAnalysisResult(null);
 
-      // Récupérer les données de test pour cette catégorie
+      // Recuperer les donnees de test pour cette categorie
       const testData = multiCategoryApi.getTestData()[category.id];
       
       if (!testData) {
-        throw new Error(`Pas de données de test pour ${category.id}`);
+        throw new Error(`Pas de donnees de test pour ${category.id}`);
       }
 
-      console.log(`Ã°Å¸Â§Âª Test analyse ${category.id}:`, testData.product.title);
+      console.log(` Test analyse ${category.id}:`, testdata?.product.title);
       
       // Lancer l'analyse
       const result = await multiCategoryApi.analyzeProduct(testData);
@@ -87,24 +87,24 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
-      console.error(`âÂÅ’ Erreur analyse ${category.id}:`, errorMessage);
+      console.error(`aa Erreur analyse ${category.id}:`, errorMessage);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  // Réinitialiser les résultats
+  // Reinitialiser les resultats
   const handleReset = () => {
     setAnalysisResult(null);
     setError(null);
   };
 
-  // Ã°Å¸â€Â§ FIX: Sécurisation des données avec fallbacks
-  const categoryName = category.name || 'Catégorie inconnue';
+  // aa FIX: Securisation des donnees avec fallbacks
+  const categoryName = category.name || 'Categorie inconnue';
   const categoryDescription = category.description || 'Description non disponible';
-  const categoryIcon = category.icon || 'âÂâ€œ';
+  const categoryIcon = category.icon || 'aaa';
   const categoryFeatures = category.features || [];
-  const categoryAvailable = category.available ?? false;
+  const categoryAvailable = category.available aa false;
 
   return (
     <div 
@@ -132,7 +132,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                   style={{ backgroundColor: categoryAvailable ? theme.primary : '#9CA3AF' }}
                 />
                 <span className="text-sm text-gray-600">
-                  {categoryAvailable ? 'Disponible' : 'Bientôt disponible'}
+                  {categoryAvailable ? 'Disponible' : 'Bientot disponible'}
                 </span>
               </div>
             </div>
@@ -143,7 +143,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
           {categoryDescription}
         </p>
 
-        {/* Fonctionnalités - Ã°Å¸â€Â§ FIX: Sécurisation avec slice() */}
+        {/* Fonctionnalites - aa FIX: Securisation avec slice() */}
         <div className="grid grid-cols-2 gap-2">
           {categoryFeatures.slice(0, 4).map((feature, index) => (
             <div key={index} className="bg-white rounded-lg p-2 text-center">
@@ -152,7 +152,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
           ))}
           {categoryFeatures.length === 0 && (
             <div className="col-span-2 bg-white rounded-lg p-2 text-center">
-              <span className="text-xs text-gray-400">Fonctionnalités ÃƒÂ  venir</span>
+              <span className="text-xs text-gray-400">Fonctionnalites  venir</span>
             </div>
           )}
         </div>
@@ -165,8 +165,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
             onClick={handleTestAnalysis}
             disabled={isAnalyzing || !categoryAvailable}
             className={`w-full py-4 rounded-2xl font-bold text-white text-lg transition-all ${
-              isAnalyzing 
-                ? 'opacity-50 cursor-not-allowed' 
+              isAnalyzing ? 'opacity-50 cursor-not-allowed' 
                 : 'hover:shadow-lg transform hover:scale-105'
             }`}
             style={{ 
@@ -180,14 +179,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                 <span>Analyse en cours...</span>
               </div>
             ) : categoryAvailable ? (
-              `Ã°Å¸Â§Âª Tester l'analyse ${categoryName.toLowerCase()}`
+              ` Tester l'analyse ${categoryName.toLowerCase()}`
             ) : (
-              `âÂÂ³ ${categoryName} bientôt disponible`
+              `a ${categoryName} bientot disponible`
             )}
           </button>
         )}
 
-        {/* Résultat de l'analyse */}
+        {/* Resultat de l'analyse */}
         {analysisResult && (
           <div className="space-y-4">
             <div 
@@ -198,7 +197,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
               }}
             >
               <h4 className="font-bold text-lg mb-3" style={{ color: theme.text }}>
-                âÅ“â€¦ Analyse Terminée
+                aaaa Analyse Terminee
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -210,12 +209,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                   <div className="text-sm text-gray-600">Score Global</div>
                 </div>
 
-                {/* Catégorie détectée */}
+                {/* Categorie detectee */}
                 <div className="bg-white rounded-xl p-3 text-center">
                   <div className="text-lg font-bold text-gray-800 capitalize">
                     {analysisResult.category || 'Inconnue'}
                   </div>
-                  <div className="text-sm text-gray-600">Catégorie</div>
+                  <div className="text-sm text-gray-600">Categorie</div>
                 </div>
 
                 {/* Confiance */}
@@ -227,14 +226,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                 </div>
               </div>
 
-              {/* Métadonnées */}
+              {/* Metadonnees */}
               <div className="mt-3 text-xs text-gray-500 text-center">
-                Temps de traitement: {analysisResult.metadata?.processing_time_ms || 'N/A'}ms â€Â¢ 
+                Temps de traitement: {analysisResult.metadata?.processing_time_ms || 'N/A'}ms aa 
                 API: {analysisResult.metadata?.api_version || 'N/A'}
               </div>
             </div>
 
-            {/* Bouton réinitialiser */}
+            {/* Bouton reinitialiser */}
             <button
               onClick={handleReset}
               className="w-full py-3 rounded-2xl border-2 font-medium transition-all hover:shadow-md"
@@ -244,7 +243,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
                 backgroundColor: 'white'
               }}
             >
-              Ã°Å¸â€â€ž Nouveau Test
+              aaaa Nouveau Test
             </button>
           </div>
         )}
@@ -253,7 +252,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
         {error && (
           <div className="space-y-4">
             <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4">
-              <h4 className="font-bold text-red-800 mb-2">âÂÅ’ Erreur d'Analyse</h4>
+              <h4 className="font-bold text-red-800 mb-2">aa Erreur d'Analyse</h4>
               <p className="text-red-600 text-sm">{error}</p>
             </div>
             
@@ -261,7 +260,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
               onClick={handleReset}
               className="w-full py-3 rounded-2xl border-2 border-red-300 text-red-700 font-medium hover:bg-red-50 transition-all"
             >
-              Ã°Å¸â€â€ž Réessayer
+              aaaa Reessayer
             </button>
           </div>
         )}
@@ -271,3 +270,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
 };
 
 export default CategoryCard;
+
+
+

@@ -18,7 +18,7 @@ export async function streamDeepSeekResponse(
     const controller = new AbortController();
     const token = localStorage.getItem('token');
     
-    // Utiliser l'URL complète avec la base API_URL
+    // Utiliser l'URL complete avec la base API_URL
     const response = await fetch(`${API_URL}/api/chat/deepseek`, {
       method: 'POST',
       headers: {
@@ -30,20 +30,20 @@ export async function streamDeepSeekResponse(
     });
 
     if (!response.ok) {
-      // Gérer les différents codes d'erreur
+      // Gerer les differents codes d'erreur
       if (response.status === 401) {
-        throw new Error('Non autorisé - Veuillez vous reconnecter');
+        throw new Error('Non autorise - Veuillez vous reconnecter');
       } else if (response.status === 403) {
-        throw new Error('Accès refusé - Fonctionnalité Premium requise');
+        throw new Error('Acces refuse - Fonctionnalite Premium requise');
       } else if (response.status === 429) {
-        throw new Error('Limite de requêtes atteinte - Veuillez patienter');
+        throw new Error('Limite de requetes atteinte - Veuillez patienter');
       } else {
         throw new Error(`Erreur serveur (${response.status})`);
       }
     }
 
     if (!response.body) {
-      throw new Error('Pas de corps de réponse du serveur');
+      throw new Error('Pas de corps de reponse du serveur');
     }
 
     const reader = response.body.getReader();
@@ -56,7 +56,7 @@ export async function streamDeepSeekResponse(
       
       buffer += decoder.decode(value, { stream: true });
 
-      // Traiter les lignes complètes
+      // Traiter les lignes completes
       const lines = buffer.split('\n');
       buffer = lines.pop() || '';
 
@@ -73,7 +73,7 @@ export async function streamDeepSeekResponse(
             try {
               const parsed = JSON.parse(data);
               
-              // Support pour différents formats de réponse
+              // Support pour differents formats de reponse
               const content = parsed.token || 
                            parsed.content || 
                            parsed.choices?.[0]?.delta?.content ||
@@ -83,7 +83,7 @@ export async function streamDeepSeekResponse(
                 onToken(content);
               }
             } catch (err) {
-              console.warn('âÅ¡Â ïÂ¸Â Impossible de parser:', data);
+              console.warn('aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Impossible de parser:', data);
             }
           }
         }
@@ -92,13 +92,13 @@ export async function streamDeepSeekResponse(
 
     onDone?.();
   } catch (err: any) {
-    console.error('âÂÅ’ Erreur streaming IA:', err);
+    console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur streaming IA:', err);
     
-    // Message d'erreur plus détaillé selon le type d'erreur
+    // Message d'erreur plus detaille selon le type d'erreur
     let errorMessage = 'Erreur de connexion avec le serveur';
     
     if (err.name === 'AbortError') {
-      errorMessage = 'Requête annulée';
+      errorMessage = 'Requete annulee';
     } else if (err.message) {
       errorMessage = err.message;
     }
@@ -107,7 +107,7 @@ export async function streamDeepSeekResponse(
   }
 }
 
-// Fonction helper pour vérifier la disponibilité du service
+// Fonction helper pour verifier la disponibilite du service
 export async function checkDeepSeekAvailability(): Promise<boolean> {
   try {
     const token = localStorage.getItem('token');
@@ -124,3 +124,5 @@ export async function checkDeepSeekAvailability(): Promise<boolean> {
     return false;
   }
 }
+
+

@@ -9,7 +9,7 @@ function removeBom(filePath) {
   if (data[0] === 0xEF && data[1] === 0xBB && data[2] === 0xBF) {
     const cleanData = data.slice(3);
     fs.writeFileSync(filePath, cleanData);
-    console.log(`âœ… BOM supprimÃ© : ${filePath}`);
+    console.log(`âœ… BOM supprimé : ${filePath}`);
     count++;
   }
 }
@@ -28,4 +28,4 @@ function scanDir(directory) {
 
 console.log('ðŸ” Suppression des BOM...');
 scanDir(process.cwd());
-console.log(`âœ¨ Nettoyage BOM terminÃ© ! (${count} fichiers corrigÃ©s)`);
+console.log(`âœ¨ Nettoyage BOM terminé ! (${count} fichiers corrigés)`);

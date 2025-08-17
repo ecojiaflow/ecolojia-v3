@@ -1,0 +1,100 @@
+[
+    {
+        "category":  "deps",
+        "name":  "node present",
+        "status":  "PASS",
+        "message":  "Version: v22.12.0",
+        "durationMs":  50
+    },
+    {
+        "category":  "deps",
+        "name":  "npm present",
+        "status":  "PASS",
+        "message":  "Version: 10.9.1",
+        "durationMs":  328
+    },
+    {
+        "category":  "config",
+        "name":  "VITE_API_URL (CLI)",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api",
+        "durationMs":  0
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics health",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api/cosmetics/health",
+        "durationMs":  76
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents health",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api/detergents/health",
+        "durationMs":  4
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics analyze",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/cosmetics/analyze -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "durationMs":  56
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents analyze",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/detergents/analyze -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "durationMs":  8
+    },
+    {
+        "category":  "api",
+        "name":  "Food analysis",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/analysis -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "durationMs":  44
+    },
+    {
+        "category":  "api",
+        "name":  "AI chat",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/ai/chat -\u003e Le serveur distant a retourné une erreur : (401) Non autorisé.",
+        "durationMs":  15
+    },
+    {
+        "category":  "build",
+        "name":  "npm ci",
+        "status":  "PASS",
+        "message":  "Dependencies OK",
+        "durationMs":  0
+    },
+    {
+        "category":  "build",
+        "name":  "npm run build",
+        "status":  "PASS",
+        "message":  "Vite build OK in 11,22s",
+        "durationMs":  11216
+    },
+    {
+        "category":  "i18n",
+        "name":  "UTF-8 encoding",
+        "status":  "FAIL",
+        "message":  "Encoding artifacts detected (U+00C2/U+00C3). Fix file encoding.",
+        "durationMs":  5
+    },
+    {
+        "category":  "config",
+        "name":  "Hardcoded URLs",
+        "status":  "PASS",
+        "message":  "None",
+        "durationMs":  12
+    },
+    {
+        "category":  "preview",
+        "name":  "vite preview",
+        "status":  "FAIL",
+        "message":  "Timeout waiting for readiness",
+        "durationMs":  0
+    }
+]

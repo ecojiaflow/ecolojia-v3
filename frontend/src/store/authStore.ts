@@ -1,4 +1,4 @@
-// frontend/src/store/authStore.ts
+﻿// frontend/src/store/authStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import authService from '../services/authService';
@@ -101,13 +101,13 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           const response = await authService.register({
-            email: data.email,
-            password: data.password,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            name: `${data.firstName} ${data.lastName}`,
-            acceptTerms: data.acceptTerms,
-            marketingConsent: data.marketingConsent
+            email: data?.email,
+            password: data?.password,
+            firstName: data?.firstName,
+            lastName: data?.lastName,
+            name: `${data?.firstName} ${data?.lastName}`,
+            acceptTerms: data?.acceptTerms,
+            marketingConsent: data?.marketingConsent
           });
           
           if (response.success && response.user && response.token) {
@@ -145,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         set({ isLoading: true });
         try {
-          // Appeler l'API de logout si nécessaire
+          // Appeler l'API de logout si necessaire
           await authService.logout();
         } catch (error) {
           console.warn('Logout API error:', error);
@@ -182,7 +182,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true });
         
         try {
-          // Vérifier si le token est valide en récupérant le profil
+          // Verifier si le token est valide en recuperant le profil
           const user = await authService.getProfile();
           
           set({
@@ -196,9 +196,9 @@ export const useAuthStore = create<AuthState>()(
         } catch (error: any) {
           console.error('Auth check error:', error);
           
-          // Si le token est invalide ou expiré
+          // Si le token est invalide ou expire
           if (error.response?.status === 401) {
-            // Essayer de rafraîchir le token
+            // Essayer de rafraichir le token
             const refreshToken = localStorage.getItem('ecolojia_refresh_token');
             if (refreshToken) {
               try {
@@ -209,7 +209,7 @@ export const useAuthStore = create<AuthState>()(
                     localStorage.setItem('ecolojia_refresh_token', response.refreshToken);
                   }
                   
-                  // Réessayer de récupérer le profil
+                  // Reessayer de recuperer le profil
                   const user = await authService.getProfile();
                   
                   set({
@@ -228,7 +228,7 @@ export const useAuthStore = create<AuthState>()(
             }
           }
           
-          // Si on arrive ici, l'authentification a échoué
+          // Si on arrive ici, l'authentification ? echoue
           localStorage.removeItem('ecolojia_token');
           localStorage.removeItem('ecolojia_refresh_token');
           
@@ -264,3 +264,6 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
+
+

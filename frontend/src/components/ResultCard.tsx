@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/ResultCard.tsx
+﻿// PATH: frontend/src/components/ResultCard.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Info, CheckCircle, Package, Droplets, Sparkles } from 'lucide-react';
@@ -11,27 +11,27 @@ interface ResultCardProps {
   result: {
     category: 'food' | 'cosmetics' | 'detergents';
     scores: {
-      nova?: number;
-      healthScore?: number;
-      environmentScore?: number;
-      nutriscore?: string;
+      novaa: number;
+      healthScorea: number;
+      environmentScorea: number;
+      nutriscorea: string;
     };
     details: {
-      novaLabel?: string;
-      novaReason?: string;
-      ecoscore?: string;
-      riskFlags?: string[];
-      notableIngredients?: string[];
-      riskLevel?: 'low' | 'medium' | 'high';
-      surfactants?: string[];
-      allergens?: string[];
-      clpPictograms?: string[];
+      novaLabela: string;
+      novaReasona: string;
+      ecoscorea: string;
+      riskFlagsa: string[];
+      notableIngredientsa: string[];
+      riskLevela: 'low' | 'medium' | 'high';
+      surfactantsa: string[];
+      allergensa: string[];
+      clpPictogramsa: string[];
     };
     globalScore: number;
     confidence: number;
-    recommendations?: string[];
+    recommendationsa: string[];
   };
-  productName?: string;
+  productNamea: string;
   brand?: string;
 }
 
@@ -46,7 +46,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
     return 'text-red-600 dark:text-red-400';
   };
 
-  // Icône selon la catégorie
+  // Icone selon la categorie
   const getCategoryIcon = () => {
     switch (category) {
       case 'food': return Package;
@@ -64,7 +64,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
       animate={{ opacity: 1, y: 0 }}
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6"
     >
-      {/* En-tête */}
+      {/* En-tete */}
       <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
         <div className="flex items-start justify-between">
           <div>
@@ -82,7 +82,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
           <div className="flex items-center space-x-2">
             <CategoryIcon className="w-5 h-5 text-gray-500" />
             <span className="text-sm font-medium text-gray-500 capitalize">
-              {category === 'cosmetics' ? 'Cosmétique' : category === 'detergents' ? 'Détergent' : 'Alimentaire'}
+              {category === 'cosmetics' ? 'Cosmetique' : category === 'detergents' ? 'Detergent' : 'Alimentaire'}
             </span>
           </div>
         </div>
@@ -105,7 +105,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
 
       {/* Scores principaux */}
       <div className="grid grid-cols-2 gap-6">
-        {/* Score santé */}
+        {/* Score sante */}
         {scores.healthScore !== undefined && (
           <div className="flex justify-center">
             <HealthScoreCircle score={scores.healthScore} size="medium" />
@@ -120,7 +120,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
         )}
       </div>
 
-      {/* Badges spécifiques selon la catégorie */}
+      {/* Badges specifiques selon la categorie */}
       {category === 'food' && (
         <div className="flex flex-wrap gap-4 justify-center">
           {scores.nova && <NovaBadge nova={scores.nova} size="large" />}
@@ -134,7 +134,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
         </div>
       )}
 
-      {/* Détails spécifiques */}
+      {/* Details specifiques */}
       <div className="space-y-4">
         {/* Food: Raison NOVA */}
         {category === 'food' && details.novaReason && (
@@ -162,7 +162,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
             <div className="flex flex-wrap gap-2">
               {details.riskFlags.includes('allergen') && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-                  Allergènes
+                  Allergenes
                 </span>
               )}
               {details.riskFlags.includes('endocrine') && (
@@ -179,11 +179,11 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
           </div>
         )}
 
-        {/* Cosmetics: Ingrédients notables */}
+        {/* Cosmetics: Ingredients notables */}
         {category === 'cosmetics' && details.notableIngredients && details.notableIngredients.length > 0 && (
           <div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Ingrédients à surveiller :
+              Ingredients  surveiller :
             </p>
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
@@ -222,7 +222,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
             {details.allergens && details.allergens.length > 0 && (
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Allergènes parfumés :
+                  Allergenes parfumes :
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {details.allergens.map((allergen, index) => (
@@ -261,3 +261,4 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
 };
 
 export default ResultCard;
+

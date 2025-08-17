@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/CommunityComparison.tsx
+﻿// frontend/src/components/dashboard/CommunityComparison.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Award, BarChart3, Info } from 'lucide-react';
@@ -68,17 +68,17 @@ export const CommunityComparison: React.FC = () => {
   };
 
   const getRankIcon = (percentile: number) => {
-    if (percentile >= 90) return 'Ã°Å¸Ââ€ ';
-    if (percentile >= 75) return 'Ã°Å¸Â¥Ë†';
-    if (percentile >= 50) return 'Ã°Å¸Â¥â€°';
-    return 'Ã°Å¸â€œÅ ';
+    if (percentile >= 90) return 'aa';
+    if (percentile >= 75) return 'a';
+    if (percentile >= 50) return 'aa';
+    return 'aa';
   };
 
   const getRankTitle = (percentile: number) => {
     if (percentile >= 90) return 'Expert Ecolojia';
-    if (percentile >= 75) return 'Utilisateur Avancé';
-    if (percentile >= 50) return 'Utilisateur Régulier';
-    if (percentile >= 25) return 'Débutant Motivé';
+    if (percentile >= 75) return 'Utilisateur Avance';
+    if (percentile >= 50) return 'Utilisateur Regulier';
+    if (percentile >= 25) return 'Debutant Motive';
     return 'Nouvel Utilisateur';
   };
 
@@ -95,21 +95,21 @@ export const CommunityComparison: React.FC = () => {
   // Prepare radar chart data
   const radarData = [
     {
-      subject: 'Score Santé',
-      user: comparisonData.user.avgHealthScore,
-      community: comparisonData.community.avgHealthScore,
+      subject: 'Score Sante',
+      user: comparisondata?.user.avgHealthScore,
+      community: comparisondata?.community.avgHealthScore,
       fullMark: 100
     },
     {
       subject: 'Analyses/Mois',
-      user: Math.min(comparisonData.user.totalAnalyses, 100),
-      community: Math.min(comparisonData.community.avgAnalysesPerUser, 100),
+      user: Math.min(comparisondata?.user.totalAnalyses, 100),
+      community: Math.min(comparisondata?.community.avgAnalysesPerUser, 100),
       fullMark: 100
     },
     {
-      subject: 'Diversité',
-      user: comparisonData.user.categoriesAnalyzed * 33.33,
-      community: 66.67, // Moyenne communauté (2 catégories)
+      subject: 'Diversite',
+      user: comparisondata?.user.categoriesAnalyzed * 33.33,
+      community: 66.67, // Moyenne communaute (2 categories)
       fullMark: 100
     }
   ];
@@ -122,9 +122,9 @@ export const CommunityComparison: React.FC = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center">
           <Users className="w-6 h-6 mr-2 text-blue-600" />
-          Comparaison avec la Communauté
+          Comparaison avec la Communaute
         </h2>
-        <p className="text-gray-600 mt-1">Découvrez comment vous vous situez par rapport aux autres utilisateurs</p>
+        <p className="text-gray-600 mt-1">Decouvrez comment vous vous situez par rapport aux autres utilisateurs</p>
       </div>
 
       {/* Rank Badge */}
@@ -134,20 +134,20 @@ export const CommunityComparison: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <div className={`bg-gradient-to-r ${getRankColor(comparisonData.percentile)} rounded-2xl p-6 text-white`}>
+        <div className={`bg-gradient-to-r ${getRankColor(comparisondata?.percentile)} rounded-2xl p-6 text-white`}>
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center space-x-3 mb-2">
-                <span className="text-4xl">{getRankIcon(comparisonData.percentile)}</span>
+                <span className="text-4xl">{getRankIcon(comparisondata?.percentile)}</span>
                 <div>
-                  <h3 className="text-2xl font-bold">{getRankTitle(comparisonData.percentile)}</h3>
-                  <p className="text-white/80">Top {100 - comparisonData.percentile}% des utilisateurs</p>
+                  <h3 className="text-2xl font-bold">{getRankTitle(comparisondata?.percentile)}</h3>
+                  <p className="text-white/80">Top {100 - comparisondata?.percentile}% des utilisateurs</p>
                 </div>
               </div>
-              <p className="text-white/90">{comparisonData.message}</p>
+              <p className="text-white/90">{comparisondata?.message}</p>
             </div>
             <div className="text-right">
-              <div className="text-5xl font-bold">{comparisonData.percentile}Ã‚Â°</div>
+              <div className="text-5xl font-bold">{comparisondata?.percentile}a</div>
               <div className="text-sm text-white/80">Percentile</div>
             </div>
           </div>
@@ -158,15 +158,14 @@ export const CommunityComparison: React.FC = () => {
       <div className="flex space-x-2 mb-6">
         {[
           { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
-          { id: 'categories', label: 'Par catégorie', icon: TrendingUp },
+          { id: 'categories', label: 'Par categorie', icon: TrendingUp },
           { id: 'distribution', label: 'Distribution', icon: Award }
         ].map((view) => (
           <button
             key={view.id}
             onClick={() => setSelectedView(view.id as any)}
             className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all ${
-              selectedView === view.id
-                ? 'bg-blue-600 text-white'
+              selectedView === view.id ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -190,9 +189,9 @@ export const CommunityComparison: React.FC = () => {
                 <span className="text-sm text-gray-600">Votre score moyen</span>
                 <Info className="w-4 h-4 text-gray-400" />
               </div>
-              <div className="text-2xl font-bold text-gray-800">{comparisonData.user.avgHealthScore}/100</div>
+              <div className="text-2xl font-bold text-gray-800">{comparisondata?.user.avgHealthScore}/100</div>
               <div className="text-sm text-gray-500">
-                vs {comparisonData.community.avgHealthScore}/100 communauté
+                vs {comparisondata?.community.avgHealthScore}/100 communaute
               </div>
             </div>
 
@@ -201,9 +200,9 @@ export const CommunityComparison: React.FC = () => {
                 <span className="text-sm text-gray-600">Vos analyses</span>
                 <Info className="w-4 h-4 text-gray-400" />
               </div>
-              <div className="text-2xl font-bold text-gray-800">{comparisonData.user.totalAnalyses}</div>
+              <div className="text-2xl font-bold text-gray-800">{comparisondata?.user.totalAnalyses}</div>
               <div className="text-sm text-gray-500">
-                vs {Math.round(comparisonData.community.avgAnalysesPerUser)} en moyenne
+                vs {Math.round(comparisondata?.community.avgAnalysesPerUser)} en moyenne
               </div>
             </div>
 
@@ -212,9 +211,9 @@ export const CommunityComparison: React.FC = () => {
                 <span className="text-sm text-gray-600">Position globale</span>
                 <Info className="w-4 h-4 text-gray-400" />
               </div>
-              <div className="text-2xl font-bold text-blue-600">#{Math.round((100 - comparisonData.percentile) * comparisonData.community.totalUsers / 100)}</div>
+              <div className="text-2xl font-bold text-blue-600">#{Math.round((100 - comparisondata?.percentile) * comparisondata?.community.totalUsers / 100)}</div>
               <div className="text-sm text-gray-500">
-                sur {comparisonData.community.totalUsers} utilisateurs
+                sur {comparisondata?.community.totalUsers} utilisateurs
               </div>
             </div>
           </div>
@@ -227,7 +226,7 @@ export const CommunityComparison: React.FC = () => {
                 <PolarAngleAxis dataKey="subject" />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} />
                 <Radar name="Vous" dataKey="user" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                <Radar name="Communauté" dataKey="community" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
+                <Radar name="Communaute" dataKey="community" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
                 <Tooltip />
               </RadarChart>
             </ResponsiveContainer>
@@ -242,7 +241,7 @@ export const CommunityComparison: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="space-y-4">
-            {Object.entries(comparisonData.user.scoreByCategory || {}).map(([category, score]) => (
+            {Object.entries(comparisondata?.user.scoreByCategory || {}).map(([category, score]) => (
               <div key={category} className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium capitalize">{category}</span>
@@ -263,10 +262,10 @@ export const CommunityComparison: React.FC = () => {
                   </div>
                   <div 
                     className="absolute top-0 h-3 w-1 bg-gray-600"
-                    style={{ left: `${comparisonData.community.avgHealthScore}%` }}
+                    style={{ left: `${comparisondata?.community.avgHealthScore}%` }}
                   >
                     <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 whitespace-nowrap">
-                      Moy. communauté
+                      Moy. communaute
                     </span>
                   </div>
                 </div>
@@ -283,12 +282,12 @@ export const CommunityComparison: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="mb-4">
-            <h3 className="font-medium text-gray-700 mb-2">Distribution des scores dans la communauté</h3>
-            <p className="text-sm text-gray-600">Votre position est indiquée par la barre en surbrillance</p>
+            <h3 className="font-medium text-gray-700 mb-2">Distribution des scores dans la communaute</h3>
+            <p className="text-sm text-gray-600">Votre position est indiquee par la barre en surbrillance</p>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={comparisonData.community.scoreDistribution}>
+              <BarChart data={comparisondata?.community.scoreDistribution}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="range" />
                 <YAxis />
@@ -297,12 +296,11 @@ export const CommunityComparison: React.FC = () => {
                   labelFormatter={(label) => `Score ${label}`}
                 />
                 <Bar dataKey="percentage" name="% d'utilisateurs">
-                  {comparisonData.community.scoreDistribution.map((entry, index) => (
+                  {comparisondata?.community.scoreDistribution.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
                       fill={
-                        entry.range.includes(comparisonData.user.avgHealthScore.toString()) 
-                          ? '#3b82f6' 
+                        entry.range.includes(comparisondata?.user.avgHealthScore.toString()) ? '#3b82f6' 
                           : '#e5e7eb'
                       } 
                     />
@@ -318,4 +316,7 @@ export const CommunityComparison: React.FC = () => {
 };
 export default CommunityComparison;
 // EOF
+
+
+
 

@@ -1,18 +1,18 @@
 // PATH: frontend/src/config/api.config.ts
 /**
- * Configuration centralisée pour l'API
+ * Configuration centralisÃƒÂ©e pour l'API
  */
 
 // URLs de base selon l'environnement
 const API_URLS = {
   development: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
   production: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
-  demo: '/demo' // Mode démo local
+  demo: '/demo' // Mode dÃƒÂ©mo local
 } as const;
 
-// Déterminer l'environnement actuel
+// DÃƒÂ©terminer l'environnement actuel
 const getCurrentEnvironment = (): keyof typeof API_URLS => {
-  // Si on est en mode démo explicite
+  // Si on est en mode dÃƒÂ©mo explicite
   if (import.meta.env.VITE_APP_MODE === 'demo') return 'demo';
   
   // Si on est en production
@@ -20,7 +20,7 @@ const getCurrentEnvironment = (): keyof typeof API_URLS => {
     return 'production';
   }
   
-  // Sinon, développement
+  // Sinon, dÃƒÂ©veloppement
   return 'development';
 };
 
@@ -32,10 +32,10 @@ export const API_CONFIG = {
   // Fonction pour obtenir l'URL courante
   getCurrentUrl: () => API_URLS[getCurrentEnvironment()],
   
-  // Timeout des requêtes (en ms)
+  // Timeout des requÃƒÂªtes (en ms)
   TIMEOUT: 30000,
   
-  // Headers par défaut
+  // Headers par dÃƒÂ©faut
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -150,7 +150,7 @@ export const API_CONFIG = {
     }
   },
   
-  // Clés de stockage local
+  // ClÃƒÂ©s de stockage local
   STORAGE_KEYS: {
     TOKEN: 'ecolojia_token',
     REFRESH_TOKEN: 'ecolojia_refresh_token',
@@ -170,13 +170,13 @@ export const API_CONFIG = {
       ADVANCED_ANALYTICS: false,
     },
     PREMIUM: {
-      SCANS_PER_MONTH: -1, // Illimité
+      SCANS_PER_MONTH: -1, // IllimitÃƒÂ©
       AI_CHATS_PER_MONTH: 500,
       EXPORT_ENABLED: true,
       ADVANCED_ANALYTICS: true,
     },
     FAMILY: {
-      SCANS_PER_MONTH: -1, // Illimité
+      SCANS_PER_MONTH: -1, // IllimitÃƒÂ©
       AI_CHATS_PER_MONTH: 2500, // 500 par membre
       EXPORT_ENABLED: true,
       ADVANCED_ANALYTICS: true,
@@ -185,22 +185,22 @@ export const API_CONFIG = {
   }
 };
 
-// Messages d'erreur standardisés
+// Messages d'erreur standardisÃƒÂ©s
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Erreur de connexion. Vérifiez votre connexion internet.',
-  SERVER_ERROR: 'Erreur serveur. Veuillez réessayer plus tard.',
-  UNAUTHORIZED: 'Non autorisé. Veuillez vous reconnecter.',
-  FORBIDDEN: 'Accès refusé. Vous n\'avez pas les permissions nécessaires.',
+  NETWORK_ERROR: 'Erreur de connexion. VÃƒÂ©rifiez votre connexion internet.',
+  SERVER_ERROR: 'Erreur serveur. Veuillez rÃƒÂ©essayer plus tard.',
+  UNAUTHORIZED: 'Non autorisÃƒÂ©. Veuillez vous reconnecter.',
+  FORBIDDEN: 'AccÃƒÂ¨s refusÃƒÂ©. Vous n\'avez pas les permissions nÃƒÂ©cessaires.',
   NOT_FOUND: 'Ressource introuvable.',
-  INVALID_DATA: 'Les données fournies sont invalides.',
-  TIMEOUT: 'La requête a pris trop de temps. Veuillez réessayer.',
-  QUOTA_EXCEEDED: 'Quota dépassé. Passez Ã  Premium pour continuer.',
-  SESSION_EXPIRED: 'Votre session a expiré. Veuillez vous reconnecter.',
-  TOKEN_REFRESH_FAILED: 'Impossible de rafraîchir votre session.',
-  OFFLINE: 'Vous êtes hors ligne. Vérifiez votre connexion.',
+  INVALID_DATA: 'Les donnÃƒÂ©es fournies sont invalides.',
+  TIMEOUT: 'La requÃƒÂªte a pris trop de temps. Veuillez rÃƒÂ©essayer.',
+  QUOTA_EXCEEDED: 'Quota dÃƒÂ©passÃƒÂ©. Passez ÃƒÆ’Ã‚Â  Premium pour continuer.',
+  SESSION_EXPIRED: 'Votre session a expirÃƒÂ©. Veuillez vous reconnecter.',
+  TOKEN_REFRESH_FAILED: 'Impossible de rafraÃƒÂ®chir votre session.',
+  OFFLINE: 'Vous ÃƒÂªtes hors ligne. VÃƒÂ©rifiez votre connexion.',
 } as const;
 
-// Configuration des webhooks (si nécessaire)
+// Configuration des webhooks (si nÃƒÂ©cessaire)
 export const WEBHOOK_EVENTS = {
   USER_REGISTERED: 'user.registered',
   USER_UPGRADED: 'user.upgraded',

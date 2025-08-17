@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, X, AlertCircle, Loader } from 'lucide-react';
@@ -8,8 +8,8 @@ import Quagga from '@ericblade/quagga2';
 
 interface BarcodeScannerProps {
   onScanSuccess: (barcode: string) => void;
-  onError?: (error: string) => void;
-  onClose?: () => void;
+  onerror?: (error: string) => void;
+  onClosea: () => void;
 }
 
 export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
@@ -38,7 +38,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         startScanner();
       }
     } catch (err) {
-      console.error('Erreur permission caméra:', err);
+      console.error('Erreur permission camera:', err);
       requestCameraAccess();
     }
   };
@@ -51,8 +51,8 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       startScanner();
     } catch (err) {
       setCameraPermission('denied');
-      setError('Accès ÃƒÂ  la caméra refusé');
-      onError?.('Accès ÃƒÂ  la caméra refusé');
+      setError('Acces  la camera refuse');
+      onError?.('Acces  la camera refuse');
     }
   };
 
@@ -62,7 +62,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     setIsScanning(true);
     setError(null);
 
-    Quagga.init({
+    Quagg?.init({
       inputStream: {
         name: "Live",
         type: "LiveStream",
@@ -98,10 +98,10 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         return;
       }
       
-      Quagga.start();
+      Quagg?.start();
     });
 
-    Quagga.onDetected((result: any) => {
+    Quagg?.onDetected((result: any) => {
       const code = result.codeResult.code;
       
       // Validation du code-barres
@@ -116,21 +116,21 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         // Son de confirmation
         playBeep();
         
-        // Arrêter le scanner et notifier
+        // Arreter le scanner et notifier
         stopScanner();
         onScanSuccess(code);
       }
     });
 
-    Quagga.onProcessed((result: any) => {
-      const drawingCtx = Quagga.canvas.ctx.overlay;
-      const drawingCanvas = Quagga.canvas.dom.overlay;
+    Quagg?.onProcessed((result: any) => {
+      const drawingCtx = Quagg?.canvas.ctx.overlay;
+      const drawingCanvas = Quagg?.canvas.dom.overlay;
 
       if (result) {
         if (result.boxes) {
           drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
           result.boxes.filter((box: any) => box !== result.box).forEach((box: any) => {
-            Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+            Quagg?.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
               color: '#7DDE4A',
               lineWidth: 2
             });
@@ -138,14 +138,14 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         }
 
         if (result.box) {
-          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+          Quagg?.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
             color: '#7DDE4A',
             lineWidth: 3
           });
         }
 
         if (result.codeResult && result.codeResult.code) {
-          Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, {
+          Quagg?.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, {
             color: '#7DDE4A',
             lineWidth: 4
           });
@@ -156,7 +156,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 
   const stopScanner = () => {
     if (Quagga) {
-      Quagga.stop();
+      Quagg?.stop();
     }
     setIsScanning(false);
   };
@@ -207,9 +207,9 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         {cameraPermission === 'denied' ? (
           <div className="flex flex-col items-center justify-center h-full p-8">
             <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-            <h3 className="text-white text-xl font-semibold mb-2">Caméra non accessible</h3>
+            <h3 className="text-white text-xl font-semibold mb-2">Camera non accessible</h3>
             <p className="text-gray-300 text-center mb-6">
-              Veuillez autoriser l'accès ÃƒÂ  la caméra dans les paramètres de votre navigateur
+              Veuillez autoriser l'acces  la camera dans les parametres de votre navigateur
             </p>
             <button
               onClick={handleManualInput}
@@ -228,13 +228,13 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative">
                   <div className="w-64 h-48 border-2 border-[#7DDE4A] rounded-lg">
-                    {/* Coins animés */}
+                    {/* Coins animes */}
                     <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-4 border-l-4 border-[#7DDE4A] rounded-tl-lg" />
                     <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-4 border-r-4 border-[#7DDE4A] rounded-tr-lg" />
                     <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-4 border-l-4 border-[#7DDE4A] rounded-bl-lg" />
                     <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-4 border-r-4 border-[#7DDE4A] rounded-br-lg" />
                     
-                    {/* Ligne de scan animée */}
+                    {/* Ligne de scan animee */}
                     <motion.div
                       className="absolute left-0 right-0 h-0.5 bg-[#7DDE4A]"
                       animate={{
@@ -271,7 +271,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         </div>
       </div>
 
-      {/* Résultat détecté */}
+      {/* Resultat detecte */}
       <AnimatePresence>
         {detectedCode && (
           <motion.div
@@ -286,7 +286,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
                   <Camera className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-center mb-2">Code-barres détecté !</h3>
+              <h3 className="text-xl font-semibold text-center mb-2">Code-barres detecte !</h3>
               <p className="text-center text-gray-600 text-lg font-mono">{detectedCode}</p>
               <div className="flex items-center justify-center mt-4">
                 <Loader className="w-5 h-5 text-[#7DDE4A] animate-spin mr-2" />
@@ -318,4 +318,8 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
 };
 
 export default BarcodeScanner;
+
+
+
+
 

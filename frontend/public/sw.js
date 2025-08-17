@@ -16,11 +16,11 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('ðŸ“¦ SW: Cache statique crÃ©Ã©');
+        console.log('ðŸ“¦ SW: Cache statique créé');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        console.log('âœ… SW: Installation terminÃ©e');
+        console.log('âœ… SW: Installation terminée');
         self.skipWaiting();
       })
       .catch((error) => {
@@ -46,13 +46,13 @@ self.addEventListener('activate', (event) => {
         );
       })
       .then(() => {
-        console.log('âœ… SW: Activation terminÃ©e');
+        console.log('âœ… SW: Activation terminée');
         return self.clients.claim();
       })
   );
 });
 
-// Interception des requÃªtes
+// Interception des requêtes
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -75,7 +75,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Mettre en cache les rÃ©ponses API rÃ©ussies
+          // Mettre en cache les réponses API réussies
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(API_CACHE_NAME)
@@ -86,11 +86,11 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Fallback vers le cache en cas d'erreur rÃ©seau
+          // Fallback vers le cache en cas d'erreur réseau
           return caches.match(request);
         })
     );
   }
 });
 
-console.log('ðŸŒ± ECOLOJIA Service Worker chargÃ© et actif');
+console.log('ðŸŒ± ECOLOJIA Service Worker chargé et actif');
