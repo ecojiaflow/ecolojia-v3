@@ -7,6 +7,13 @@ export interface ManualAnalysisInput {
   category?: 'food' | 'cosmetic' | 'detergent' | string;
   brand?: string;
   barcode?: string;
+  language?: 'fr'|'en';
+}
+
+function normalizeApiResponse(res: ApiResponse<any>) {
+  if (!res.success) return { success: false, error: (res as any).error || 'ANALYSIS_FAILED' };
+  const data = (res.data && (res as any).data?.data) ? (res as any).data.data : (res as any).data;
+  return { success: true, data };
 }
 
 export async function analyzeManual(input: ManualAnalysisInput): Promise<{
@@ -14,16 +21,37 @@ export async function analyzeManual(input: ManualAnalysisInput): Promise<{
   data?: any;
   error?: string;
 }> {
-  const res: ApiResponse<any> = await api.post('/api/analysis', {
+  const category = (input.category || 'food').toLowerCase();
+
+  if (category === 'cosmetic') {
+    const res = await api.post('/cosmetics/analyze', {
+      name: input.name,
+      ingredients: input.ingredients,
+      barcode: input.barcode,
+      language: input.language || 'fr'
+    });
+    return normalizeApiResponse(res);
+  }
+
+  if (category === 'detergent') {
+    const res = await api.post('/detergents/analyze', {
+      name: input.name,
+      composition: input.ingredients,
+      barcode: input.barcode,
+      language: input.language || 'fr'
+    });
+    return normalizeApiResponse(res);
+  }
+
+  // Default → legacy unified analysis (food)
+  const res: ApiResponse<any> = await api.post('/analysis', {
     mode: 'manual',
-    ...input,
+    name: input.name,
+    ingredients: input.ingredients,
+    barcode: input.barcode
   });
 
-  if (!res.success) return { success: false, error: res.error || 'ANALYSIS_FAILED' };
-
-  // Tolérant: certains backends renvoient {data:{...}} d’autres directement l’objet
-  const data = (res.data && res.data.data) ? res.data.data : res.data;
-  return { success: true, data };
+  return normalizeApiResponse(res);
 }
 
 export async function analyzeByBarcode(barcode: string): Promise<{
@@ -31,15 +59,12 @@ export async function analyzeByBarcode(barcode: string): Promise<{
   data?: any;
   error?: string;
 }> {
-  const res: ApiResponse<any> = await api.post('/api/analysis', {
+  const res: ApiResponse<any> = await api.post('/analysis', {
     mode: 'barcode',
     barcode,
   });
 
-  if (!res.success) return { success: false, error: res.error || 'ANALYSIS_FAILED' };
-
-  const data = (res.data && res.data.data) ? res.data.data : res.data;
-  return { success: true, data };
+  return normalizeApiResponse(res);
 }
 
 export default { analyzeManual, analyzeByBarcode };
