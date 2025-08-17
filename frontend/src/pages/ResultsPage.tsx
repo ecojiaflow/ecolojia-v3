@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ResultsPage.tsx
+﻿// PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -82,10 +82,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
-  // Récupération des données depuis la navigation
+  // Recuperation des donnees depuis la navigation
   const { analysis, visionData, scanType, barcode, inputData } = location.state || {};
 
-  // Rediriger si pas de données
+  // Rediriger si pas de donnees
   useEffect(() => {
     if (!analysis) {
       navigate('/scan');
@@ -102,7 +102,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
   const saveToHistory = async () => {
     try {
       setIsSaving(true);
-      // TODO: Implémenter la sauvegarde dans l'historique
+      // TODO: Implementer la sauvegarde dans l'historique
       console.log('Saving to history:', { analysis, scanType });
     } catch (error) {
       console.error('Error saving to history:', error);
@@ -116,7 +116,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
       try {
         await navigator.share({
           title: `${analysis.name} - Analyse ECOLOJIA`,
-          text: `Découvrez l'analyse complète de ${analysis.name} sur ECOLOJIA`,
+          text: `Decouvrez l'analyse complete de ${analysis.name} sur ECOLOJIA`,
           url: window.location.href
         });
       } catch (error) {
@@ -145,10 +145,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ecolojia-${analysis.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.json`;
-    a.click();
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ecolojia-${analysis.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.json`;
+    link.click();
     URL.revokeObjectURL(url);
   };
 
@@ -176,7 +176,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'Moyen';
-    return 'Ãƒ€ éviter';
+    return 'A eviter';
   };
 
   const getNovaColor = (nova: number) => {
@@ -208,14 +208,14 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               </button>
               <div>
                 <h1 className="text-2xl font-bold text-[#3B3B3B]">
-                  Résultats de l'analyse
+                  Resultats de l'analyse
                 </h1>
                 <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                   {getScanTypeIcon()}
                   <span>
-                    Scanné via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
+                    Scanne via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
                   </span>
-                  <span className="text-gray-400">â€Â¢</span>
+                  <span className="text-gray-400">•</span>
                   <Clock className="w-4 h-4" />
                   <span>{new Date().toLocaleTimeString()}</span>
                 </div>
@@ -259,9 +259,9 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               )}
               <div className="flex items-center gap-4 mt-2">
                 <span className="text-sm px-3 py-1 bg-gray-100 rounded-full">
-                  {analysis.category === 'food' ? 'Ã°Å¸ÂÅ½ Alimentation' : 
-                   analysis.category === 'cosmetics' ? 'Ã°Å¸â€™â€ž Cosmétiques' : 
-                   'Ã°Å¸Â§Â¼ Produits ménagers'}
+                  {analysis.category === 'food' ? '🍽️ Alimentation' : 
+                   analysis.category === 'cosmetics' ? '💄 Cosmetiques' : 
+                   '🧼 Produits menagers'}
                 </span>
                 {analysis.barcode && (
                   <span className="text-sm text-gray-500 font-mono">
@@ -282,13 +282,13 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
 
           {/* Scores principaux */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Score santé */}
+            {/* Score sante */}
             {analysis.scores.healthScore !== undefined && (
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Heart className="w-5 h-5 text-red-500" />
-                    <span className="font-medium">Santé</span>
+                    <span className="font-medium">Sante</span>
                   </div>
                   <span className={`text-2xl font-bold ${getScoreColor(analysis.scores.healthScore)}`}>
                     {analysis.scores.healthScore}
@@ -366,7 +366,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </div>
         </motion.div>
 
-        {/* Badges spécifiques */}
+        {/* Badges specifiques */}
         {analysis.category === 'food' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -426,7 +426,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </motion.div>
         )}
 
-        {/* Détails de l'analyse */}
+        {/* Details de l'analyse */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -438,7 +438,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
             className="w-full flex items-center justify-between text-left"
           >
             <h3 className="text-lg font-semibold text-[#3B3B3B]">
-              Détails de l'analyse
+              Details de l'analyse
             </h3>
             {showDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
           </button>
@@ -461,7 +461,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Risques cosmétiques */}
+                  {/* Risques cosmetiques */}
                   {analysis.details.riskFlags && analysis.details.riskFlags.length > 0 && (
                     <div className="p-4 bg-red-50 rounded-lg">
                       <p className="font-medium mb-2 text-red-800">Points d'attention</p>
@@ -476,10 +476,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Ingrédients notables */}
+                  {/* Ingredients notables */}
                   {analysis.details.notableIngredients && analysis.details.notableIngredients.length > 0 && (
                     <div className="p-4 bg-blue-50 rounded-lg">
-                      <p className="font-medium mb-2 text-blue-800">Ingrédients notables</p>
+                      <p className="font-medium mb-2 text-blue-800">Ingredients notables</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.details.notableIngredients.map((ingredient, index) => (
                           <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
@@ -490,10 +490,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Allergènes */}
+                  {/* Allergenes */}
                   {analysis.details.allergens && analysis.details.allergens.length > 0 && (
                     <div className="p-4 bg-orange-50 rounded-lg">
-                      <p className="font-medium mb-2 text-orange-800">Allergènes détectés</p>
+                      <p className="font-medium mb-2 text-orange-800">Allergenes detectes</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.details.allergens.map((allergen, index) => (
                           <span key={index} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
@@ -509,7 +509,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Ingrédients */}
+        {/* Ingredients */}
         {analysis.details.ingredientsTextRaw && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -522,7 +522,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               className="w-full flex items-center justify-between text-left"
             >
               <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Liste des ingrédients
+                Liste des ingredients
               </h3>
               {showIngredients ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
@@ -547,7 +547,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </motion.div>
         )}
 
-        {/* Données Vision (si photo) */}
+        {/* Donnees Vision (si photo) */}
         {visionData && scanType === 'photo' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -560,7 +560,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               className="w-full flex items-center justify-between text-left"
             >
               <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Données extraites de l'image
+                Donnees extraites de l'image
               </h3>
               {showVisionData ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
@@ -575,13 +575,13 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                   className="overflow-hidden"
                 >
                   <div className="mt-4 space-y-3">
-                    {visionData.confidence && (
+                    {visionData?.confidence && (
                       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <span className="text-sm font-medium">Confiance OCR</span>
                         <span className="text-sm">{Math.round(visionData.confidence * 100)}%</span>
                       </div>
                     )}
-                    {visionData.text && (
+                    {visionData?.text && (
                       <div className="p-4 bg-gray-50 rounded-lg">
                         <p className="font-medium mb-2 text-sm">Texte brut extrait</p>
                         <p className="text-xs text-gray-600 font-mono whitespace-pre-wrap">
@@ -630,7 +630,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
             >
               <div className="bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5" />
-                <p>Lien copié dans le presse-papiers !</p>
+                <p>Lien copie dans le presse-papiers !</p>
               </div>
             </motion.div>
           )}

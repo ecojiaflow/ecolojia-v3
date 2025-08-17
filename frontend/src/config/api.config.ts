@@ -1,60 +1,55 @@
-// src/config/api.config.ts
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
-
+﻿// Configuration API
 export const API_CONFIG = {
-  BASE_URL: API_BASE_URL,
-  ENDPOINTS: {
-    // Auth - UN SEUL endpoint pour le profil
-    AUTH: {
-      LOGIN: '/api/auth/login',
-      REGISTER: '/api/auth/register',
-      ME: '/api/users/me',  // ou /api/auth/me selon ce qui marche
-      LOGOUT: '/api/auth/logout',
-      PROFILE: '/api/users/me', // alias pour compatibilité
-    },
-    // Products
-    PRODUCTS: {
-      SEARCH: '/api/algolia/search',
-      GET_BY_ID: '/api/products/:id',
-      GET_BY_BARCODE: '/api/products/barcode/:barcode',
-    },
-    // Analysis
-    ANALYSIS: {
-      ANALYZE: '/api/analysis',
-      BY_BARCODE: '/api/analysis/barcode',
-      HISTORY: '/api/history',
-    },
-    // Dashboard
-    DASHBOARD: {
-      STATS: '/api/dashboard/stats',
-      RECENT: '/api/dashboard/recent',
-    },
-    // Algolia
-    ALGOLIA: {
-      SEARCH: '/api/algolia/search',
-      STATS: '/api/algolia/stats',
-    }
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:10000/api',
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
   }
 };
 
-// Endpoints publics (pas besoin d'auth)
-export const PUBLIC_ENDPOINTS = [
-  '/api/algolia/search',
-  '/api/products/search',
-  '/api/analysis',
-  '/api/products/barcode',
-];
-
-export const buildApiUrl = (endpoint: string, params?: Record<string, string>): string => {
-  let url = `${API_BASE_URL}${endpoint}`;
-  if (params) {
-    Object.keys(params).forEach(key => {
-      url = url.replace(`:${key}`, params[key]);
-    });
+export const ENDPOINTS = {
+  // Auth
+  auth: {
+    login: '/auth/login',
+    register: '/auth/register',
+    logout: '/auth/logout',
+    refresh: '/auth/refresh'
+  },
+  
+  // Analysis
+  analysis: {
+    analyze: '/analysis',
+    barcode: '/analysis/barcode',
+    manual: '/analysis/manual',
+    batch: '/analysis/batch'
+  },
+  
+  // Products
+  products: {
+    search: '/products/search',
+    get: (id: string) => `/products/${id}`,
+    recent: '/products/recent'
+  },
+  
+  // Vision
+  vision: {
+    analyze: '/vision/analyze-image'
+  },
+  
+  // Cosmetics
+  cosmetics: {
+    analyze: '/cosmetics/analyze',
+    health: '/cosmetics/health'
+  },
+  
+  // Detergents
+  detergents: {
+    analyze: '/detergents/analyze',
+    health: '/detergents/health'
+  },
+  
+  // AI
+  ai: {
+    chat: '/ai/chat'
   }
-  return url;
-};
-
-export const isPublicEndpoint = (endpoint: string): boolean => {
-  return PUBLIC_ENDPOINTS.some(pe => endpoint.includes(pe));
 };

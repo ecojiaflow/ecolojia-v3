@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Mentions légales */}
+          {/* Mentions legales */}
           <div>
             <h3 className="text-sm font-semibold text-eco-text mb-4 uppercase tracking-wider">
               {t('footer.legal')}
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-eco-leaf/30 focus:border-eco-leaf"
               />
               <button className="px-4 py-2 bg-eco-leaf text-white rounded-r-lg hover:bg-eco-leaf/90 transition-colors">
-                <span className="text-sm">Ã°Å¸â€œÂ§</span>
+                <span className="text-sm">aa</span>
               </button>
             </div>
             <p className="text-xs text-eco-text/50 mt-2">
@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
         {/* Certifications */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <div className="flex items-center mb-4">
-            <span className="text-sm font-medium text-eco-text mr-4">Ã°Å¸Ââ€  {t('footer.certifications')}</span>
+            <span className="text-sm font-medium text-eco-text mr-4">aa {t('footer.certifications')}</span>
           </div>
           <div className="flex flex-wrap gap-3 mb-6">
             <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full border border-yellow-200">
@@ -128,7 +128,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-200 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-eco-text/60 text-sm">
-              Ã‚© 2025 Ecolojia. {t('footer.allRights')}
+              ? 2025 Ecoloji?. {t('footer.allRights')}
             </p>
             <div className="flex items-center mt-4 md:mt-0">
               <Heart className="h-4 w-4 text-red-500 mr-1" />
@@ -142,3 +142,5 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+
+

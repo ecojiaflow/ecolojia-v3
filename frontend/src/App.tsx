@@ -1,159 +1,43 @@
-﻿// PATH: frontend/src/App.tsx
-import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './auth/context/AuthContext';
-import TestLogin from './pages/TestLogin';
+﻿import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Pages d'authentification
-import { LoginPage } from './pages/Auth/LoginPage';
-import { RegisterPage } from './pages/Auth/RegisterPage';
+// Pages principales
+import HomePage from "./pages/HomePage";
+import ScanPage from "./pages/ScanPage";
+import SearchPage from "./pages/SearchPage";
+import DashboardPage from "./pages/DashboardPage";
+import ResultsPage from "./pages/ResultsPage";
 
-// Import des pages existantes
-import HomePage from './pages/HomePage';
-import Navbar from './components/Navbar';
-import SearchPage from './pages/SearchPage';
-import ScanPage from './pages/ScanPage';
-import ProductPage from './pages/ProductPage';
-import ChatPage from './pages/ChatPage';
-import DashboardPage from './pages/DashboardPage';
-import HistoryPage from './pages/HistoryPage';
-import ProfilePage from './pages/ProfilePage';
-import AiPreferencesPage from './pages/AiPreferencesPage';
-import SettingsPage from './pages/SettingsPage';
-import ResultsPage from './pages/ResultsPage';
+// Layout
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-// Import des composants d'authentification
-import { AuthPage } from './auth/components/AuthPage';
+const queryClient = new QueryClient();
 
-// Pages lÃ©gales & tests
-import AboutPage from './pages/AboutPage';
-import PrivacyPage from './pages/PrivacyPage';
-import TermsPage from './pages/TermsPage';
-import MultiScanPage from './pages/MultiScanPage';
-import FavoritesPage from './pages/FavoritesPage';
-import ManualAnalysisPage from './pages/ManualAnalysisPage';
-import CosmeticAnalysisPage from './pages/CosmeticAnalysisPage';
-import DetergentAnalysisPage from './pages/DetergentAnalysisPage';
-import AnalysisDevPage from './pages/AnalysisDevPage';
-import TestConnection from './pages/TestConnection';
-import TestPage from './pages/TestPage';
-import TestSearchPage from './pages/TestSearchPage';
-
-// Loader
-const PageLoader = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="text-6xl mb-4 animate-pulse">ðŸ”„</div>
-      <p className="text-gray-600">Chargement...</p>
-    </div>
-  </div>
-);
-
-// Route protÃ©gÃ©e
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) return <PageLoader />;
-  if (!isAuthenticated) return <Navigate to="/auth" replace />;
-  return <>{children}</>;
-};
-
-// Layout avec navbar + footer
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow">{children}</main>
-      <footer className="bg-gray-100 py-6 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-wrap justify-between items-center">
-            <div className="text-gray-600 text-sm">
-              Â© 2025 ECOLOJIA - L'assistant IA pour une consommation consciente
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <Link to="/about" className="text-gray-600 hover:text-green-600">Ã€ propos</Link>
-              <Link to="/privacy" className="text-gray-600 hover:text-green-600">ConfidentialitÃ©</Link>
-              <Link to="/terms" className="text-gray-600 hover:text-green-600">Conditions</Link>
-            </div>
-          </div>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/scan" element={<ScanPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/results/:id" element={<ResultsPage />} />
+              <Route path="/product/:id" element={<ResultsPage />} />
+              <Route path="/cosmetic/:id" element={<ResultsPage />} />
+              <Route path="/detergent/:id" element={<ResultsPage />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
-      </footer>
-    </div>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
-};
-
-// 404
-const NotFoundPage = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="text-8xl mb-4">ðŸ˜•</div>
-      <h1 className="text-4xl font-bold text-gray-800 mb-2">Page introuvable</h1>
-      <p className="text-gray-600 mb-6">La page que vous recherchez n'existe pas.</p>
-      <Link
-        to="/"
-        className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
-      >
-        Retour Ã  l'accueil
-      </Link>
-    </div>
-  </div>
-);
-
-// Contenu avec routes
-const AppContent = () => {
-  return (
-    <Layout>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* PUBLIQUES */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/auth/login" element={<AuthPage defaultMode="login" />} />
-          <Route path="/auth/register" element={<AuthPage defaultMode="register" />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/test-login" element={<TestLogin />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/test-connection" element={<TestConnection />} />
-          <Route path="/test" element={<TestPage />} />
-          <Route path="/test-search" element={<TestSearchPage />} />
-
-          {/* PROTÃ‰GÃ‰ES */}
-          <Route path="/scan" element={<ProtectedRoute><ScanPage /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
-          <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/profile/ai-preferences" element={<ProtectedRoute><AiPreferencesPage /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-          <Route path="/product/:id" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
-          <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
-          <Route path="/multi-scan" element={<ProtectedRoute><MultiScanPage /></ProtectedRoute>} />
-
-          {/* 404 */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Suspense>
-    </Layout>
-  );
-};
-
-// App root
-const App: React.FC = () => {
-  return (
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </BrowserRouter>
-  );
-};
+}
 
 export default App;
-
-
-
-

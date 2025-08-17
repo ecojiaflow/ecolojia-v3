@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ScanPage.tsx
+﻿// PATH: frontend/src/pages/ScanPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -50,13 +50,13 @@ const ScanPage: React.FC = () => {
     error: null
   });
 
-  // État pour les scans récents
+  // â€°tat pour les scans recents
   const [recentScans, setRecentScans] = useState<RecentScan[]>(() => {
     const stored = localStorage.getItem('recentScans');
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Auto-dismiss des erreurs après 5 secondes
+  // Auto-dismiss des erreurs apres 5 secondes
   useEffect(() => {
     if (analysisState.error) {
       const timer = setTimeout(() => {
@@ -66,14 +66,14 @@ const ScanPage: React.FC = () => {
     }
   }, [analysisState.error]);
 
-  // Sauvegarder un scan récent
+  // Sauvegarder un scan recent
   const addRecentScan = (scan: RecentScan) => {
     const updated = [scan, ...recentScans.filter((s) => s.id !== scan.id)].slice(0, 5);
     setRecentScans(updated);
     localStorage.setItem('recentScans', JSON.stringify(updated));
   };
 
-  // Gestionnaire — scan code-barres
+  // Gestionnaire aÃ¢â€šÂ¬Ã¢â‚¬Â scan code-barres
   const handleBarcodeScanned = async (barcode: string) => {
     try {
       setAnalysisState({
@@ -88,12 +88,12 @@ const ScanPage: React.FC = () => {
       if (result.success && result.data) {
         addRecentScan({
           id: `barcode-${barcode}-${Date.now()}`,
-          name: result.data.name || 'Produit',
-          brand: result.data.brand,
-          category: result.data.category || 'food',
+          name: result.data?.name || 'Produit',
+          brand: result.data?.brand,
+          category: result.data?.category || 'food',
           scanType: 'barcode',
           timestamp: Date.now(),
-          scores: result.data.scores
+          scores: result.data?.scores
         });
 
         navigate('/results', {
@@ -104,7 +104,7 @@ const ScanPage: React.FC = () => {
           }
         });
       } else {
-        throw new Error(result.error || 'Produit non trouvé');
+        throw new Error(result.error || 'Produit non trouve');
       }
     } catch (error: any) {
       setAnalysisState({
@@ -116,7 +116,7 @@ const ScanPage: React.FC = () => {
     }
   };
 
-  // Gestionnaire — capture photo (Vision → Analysis)
+  // Gestionnaire aÃ¢â€šÂ¬Ã¢â‚¬Â capture photo (Vision aÃ¢â‚¬Â Ã¢â‚¬â„¢ Analysis)
   const handlePhotoCapture = async (file: File) => {
     try {
       // 1) Upload & OCR
@@ -133,7 +133,7 @@ const ScanPage: React.FC = () => {
         throw new Error(visionResult.error || "Erreur lors de l'analyse de l'image");
       }
 
-      // 2) Extraction des données
+      // 2) Extraction des donnees
       setAnalysisState((prev) => ({
         ...prev,
         progress: 50,
@@ -142,7 +142,7 @@ const ScanPage: React.FC = () => {
 
       const extractedData = visionResult.data?.extractedData;
 
-      // 3) Si ingrédients présents, lancer l’analyse automatique
+      // 3) Si ingredients presents, lancer laÃ¢â€šÂ¬Ã¢â€žÂ¢analyse automatique
       if (extractedData?.ingredients) {
         setAnalysisState((prev) => ({
           ...prev,
@@ -151,22 +151,22 @@ const ScanPage: React.FC = () => {
         }));
 
         const analysisResult = await analysisService.analyzeManual({
-          name: extractedData.name || 'Produit analysé',
-          brand: extractedData.brand,
-          ingredients: extractedData.ingredients,
-          category: extractedData.category || 'food',
-          barcode: extractedData.barcode
+          name: extracteddata?.name || 'Produit analyse',
+          brand: extracteddata?.brand,
+          ingredients: extracteddata?.ingredients,
+          category: extracteddata?.category || 'food',
+          barcode: extracteddata?.barcode
         });
 
         if (analysisResult.success && analysisResult.data) {
           addRecentScan({
             id: `photo-${Date.now()}`,
-            name: extractedData.name || 'Produit analysé',
-            brand: extractedData.brand,
-            category: extractedData.category || 'food',
+            name: extracteddata?.name || 'Produit analyse',
+            brand: extracteddata?.brand,
+            category: extracteddata?.category || 'food',
             scanType: 'photo',
             timestamp: Date.now(),
-            scores: analysisResult.data.scores
+            scores: analysisResult.data?.scores
           });
 
           navigate('/results', {
@@ -181,7 +181,7 @@ const ScanPage: React.FC = () => {
           throw new Error(analysisResult.error || "Erreur lors de l'analyse");
         }
       } else {
-        // Pas assez d’infos → repasser en manuel, pré-remplissage géré par le formulaire
+        // Pas assez daÃ¢â€šÂ¬Ã¢â€žÂ¢infos aÃ¢â‚¬Â Ã¢â‚¬â„¢ repasser en manuel, pre-remplissage gere par le formulaire
         setAnalysisState({
           isAnalyzing: false,
           progress: 0,
@@ -200,7 +200,7 @@ const ScanPage: React.FC = () => {
     }
   };
 
-  // Gestionnaire — saisie manuelle
+  // Gestionnaire aÃ¢â€šÂ¬Ã¢â‚¬Â saisie manuelle
   const handleManualSubmit = async (data: any) => {
     try {
       setAnalysisState({
@@ -215,12 +215,12 @@ const ScanPage: React.FC = () => {
       if (result.success && result.data) {
         addRecentScan({
           id: `manual-${Date.now()}`,
-          name: data.name,
-          brand: data.brand,
-          category: data.category || 'food',
+          name: data?.name,
+          brand: data?.brand,
+          category: data?.category || 'food',
           scanType: 'manual',
           timestamp: Date.now(),
-          scores: result.data.scores
+          scores: result.data?.scores
         });
 
         navigate('/results', {
@@ -243,10 +243,10 @@ const ScanPage: React.FC = () => {
     }
   };
 
-  // Ouvrir un scan récent (placeholder)
+  // Ouvrir un scan recent (placeholder)
   const handleRecentScanClick = (scan: RecentScan) => {
-    // TODO: Implémenter la récupération des données complètes d’un scan historique si stockées côté backend
-    console.log('Ouvrir scan récent:', scan);
+    // TODO: Implementer la recuperation des donnees completes daÃ¢â€šÂ¬Ã¢â€žÂ¢un scan historique si stockees cote backend
+    console.log('Ouvrir scan recent:', scan);
   };
 
   const scanOptions = [
@@ -261,7 +261,7 @@ const ScanPage: React.FC = () => {
       id: 'photo' as ScanMode,
       icon: Camera,
       title: 'Prendre une photo',
-      description: 'Photographiez le produit et ses étiquettes',
+      description: 'Photographiez le produit et ses etiquettes',
       color: 'bg-purple-500'
     },
     {
@@ -316,7 +316,7 @@ const ScanPage: React.FC = () => {
                 Analysez vos produits en quelques secondes
               </h2>
               <p className="text-gray-600">
-                Découvrez leur impact sur votre santé et l'environnement
+                Decouvrez leur impact sur votre sante et l'environnement
               </p>
             </div>
 
@@ -346,7 +346,7 @@ const ScanPage: React.FC = () => {
             {/* Recent scans */}
             <div className="mt-12">
               <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-                Produits récemment scannés
+                Produits recemment scannes
               </h3>
               <div className="bg-white rounded-xl shadow-sm">
                 {recentScans.length > 0 ? (
@@ -385,9 +385,9 @@ const ScanPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="p-6 text-center">
-                    <p className="text-gray-500">Aucun produit scanné récemment</p>
+                    <p className="text-gray-500">Aucun produit scanne recemment</p>
                     <p className="text-sm text-gray-400 mt-2">
-                      Vos derniers scans apparaîtront ici
+                      Vos derniers scans apparaitront ici
                     </p>
                   </div>
                 )}
@@ -429,7 +429,7 @@ const ScanPage: React.FC = () => {
               </div>
 
               <p className="text-sm text-gray-500 mt-4">
-                {analysisState.progress}% complété
+                {analysisState.progress}% complete
               </p>
             </div>
           </motion.div>
@@ -499,3 +499,6 @@ const ScanPage: React.FC = () => {
 };
 
 export default ScanPage;
+
+
+

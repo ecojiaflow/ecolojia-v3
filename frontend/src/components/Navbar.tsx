@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/Navbar.tsx
+﻿// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -8,7 +8,8 @@ import {
   Bell, Settings, Heart, Shield, FileText, MessageCircle,
   History, Star
 } from 'lucide-react';
-import { useAuth } from '@/auth/context/AuthContext';
+import { useAuth } from '../auth/context/AuthContext';
+
 // Couleurs ECOLOJIA
 const COLORS = {
   primary: '#7DDE4A',
@@ -36,34 +37,34 @@ interface SearchSuggestion {
   score?: string;
 }
 
-// Service de recherche amélioré
+// Service de recherche ameliore
 class NavbarSearchService {
   private cache = new Map<string, SearchSuggestion[]>();
 
   async getSuggestions(query: string): Promise<SearchSuggestion[]> {
-    const popularSuggestions = [
+    const popularSuggestions: SearchSuggestion[] = [
       // Alimentaire
-      { query: 'nutella bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â«', category: 'Alimentaire', score: 'A' },
-      { query: 'yaourt nature danone', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥â€Âº', category: 'Alimentaire', score: 'A' },
-      { query: 'pain complet bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â¾', category: 'Alimentaire', score: 'A' },
-      { query: 'coca-cola zero', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã‚Â¤', category: 'Alimentaire', score: 'D' },
+      { query: 'nutella bio', icon: '🍫', category: 'Alimentaire', score: 'A' },
+      { query: 'yaourt nature danone', icon: '🥛', category: 'Alimentaire', score: 'A' },
+      { query: 'pain complet bio', icon: '🍞', category: 'Alimentaire', score: 'A' },
+      { query: 'coca-cola zero', icon: '🥤', category: 'Alimentaire', score: 'D' },
       
-      // Cosmétiques
-      { query: 'shampoing l\'oréal sans sulfate', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â´', category: 'Cosmétiques', score: 'B' },
-      { query: 'crème nivea sans parabènes', icon: 'âÃ…â€œÃ‚Â¨', category: 'Cosmétiques', score: 'B' },
-      { query: 'dentifrice signal bio', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¦Ã‚Â·', category: 'Cosmétiques', score: 'A' },
-      { query: 'déodorant dove', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¸', category: 'Cosmétiques', score: 'C' },
+      // Cosmetiques
+      { query: 'shampoing l\'oreal sans sulfate', icon: '🧴', category: 'Cosmetiques', score: 'B' },
+      { query: 'creme nivea sans parabenes', icon: '🧴', category: 'Cosmetiques', score: 'B' },
+      { query: 'dentifrice signal bio', icon: '🦷', category: 'Cosmetiques', score: 'A' },
+      { query: 'deodorant dove', icon: '🌸', category: 'Cosmetiques', score: 'C' },
       
-      // Détergents
-      { query: 'lessive ariel pods', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â½', category: 'Détergents', score: 'C' },
-      { query: 'liquide vaisselle paic', icon: 'ÃƒÂ°Ã…Â¸â€â„¢Ã‚Â§', category: 'Détergents', score: 'B' },
-      { query: 'nettoyant ajax', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â ', category: 'Détergents', score: 'C' },
-      { query: 'lessive écologique arbre vert', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¿', category: 'Détergents', score: 'A' },
+      // Detergents
+      { query: 'lessive ariel pods', icon: '🧺', category: 'Detergents', score: 'C' },
+      { query: 'liquide vaisselle paic', icon: '🧽', category: 'Detergents', score: 'B' },
+      { query: 'nettoyant ajax', icon: '🧹', category: 'Detergents', score: 'C' },
+      { query: 'lessive ecologique arbre vert', icon: '🌿', category: 'Detergents', score: 'A' },
       
       // Marques populaires
-      { query: 'produits bjorg', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¾', category: 'Marque Bio' },
-      { query: 'produits la vie claire', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±', category: 'Marque Bio' },
-      { query: 'produits carrefour bio', icon: 'ÃƒÂ°Ã…Â¸â€Âºâ€â„¢', category: 'Marque Bio' }
+      { query: 'produits bjorg', icon: '🌾', category: 'Marque Bio', score: 'A' },
+      { query: 'produits la vie claire', icon: '🌱', category: 'Marque Bio', score: 'A' },
+      { query: 'produits carrefour bio', icon: '🛒', category: 'Marque Bio', score: 'B' }
     ];
 
     if (!query.trim()) {
@@ -79,7 +80,7 @@ class NavbarSearchService {
     const queryLower = query.toLowerCase();
     const filtered = popularSuggestions.filter(p => 
       p.query.toLowerCase().includes(queryLower) ||
-      p.category.toLowerCase().includes(queryLower)
+      p.category?.toLowerCase().includes(queryLower)
     );
 
     // Suggestions contextuelles
@@ -87,15 +88,15 @@ class NavbarSearchService {
 
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
       contextual.push(
-        { query: `${query} NOVA 1`, icon: 'âÃ…â€œâ€Â¦', category: 'Alimentaire sain' },
-        { query: `${query} nutri-score A`, icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â¸', category: 'Top santé' }
+        { query: `${query} NOVA 1`, icon: '🌟', category: 'Alimentaire sain', score: 'A' },
+        { query: `${query} nutri-score A`, icon: '💚', category: 'Top sante', score: 'A' }
       );
     }
 
     if (queryLower.includes('shampoing') || queryLower.includes('savon')) {
       contextual.push(
-        { query: `${query} hypoallergénique`, icon: 'ÃƒÂ°Ã…Â¸â€â„¢Ã…Â¡', category: 'Peau sensible' },
-        { query: `${query} vegan`, icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±', category: 'ÃƒÆ’â€Â°thique' }
+        { query: `${query} hypoallergenique`, icon: '🍃', category: 'Peau sensible', score: 'A' },
+        { query: `${query} vegan`, icon: '🌱', category: 'Ethique', score: 'A' }
       );
     }
 
@@ -124,7 +125,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
   
-  // ÃƒÆ’â€Â°tat
+  // Etat
   const [isOpen, setIsOpen] = useState(false);
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -243,8 +244,10 @@ const Navbar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const getScoreColor = (score?: string) => {
-    switch(score) {
+  const getScoreColor = (scoreValue?: string) => {
+    if (!scoreValue) return COLORS.grayText;
+    
+    switch(scoreValue) {
       case 'A': return COLORS.primary;
       case 'B': return '#A8D5A8';
       case 'C': return COLORS.warning;
@@ -278,7 +281,7 @@ const Navbar: React.FC = () => {
                   value={quickSearchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={handleSearchFocus}
-                  placeholder="Rechercher parmi 2M+ produits (Nutella, L'Oréal, Ariel...)"
+                  placeholder="Rechercher parmi 2M+ produits (Nutella, L'Oreal, Ariel...)"
                   className="w-full pl-11 pr-32 py-3 border-2 border-[#DDE9DA] rounded-full 
                            focus:border-[#7DDE4A] focus:ring-4 focus:ring-[#E9F8DF] 
                            transition-all placeholder-gray-500 text-sm bg-[#F7F9F4]"
@@ -311,11 +314,11 @@ const Navbar: React.FC = () => {
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-gray-600">
                       <Zap className="w-3 h-3 text-[#7DDE4A]" />
-                      <span>IA Scientifique "Ã‚Â¢ Temps réel</span>
+                      <span>IA Scientifique • Temps reel</span>
                     </div>
                   </div>
                   
-                  {/* Métriques */}
+                  {/* Metriques */}
                   <div className="flex items-center space-x-4 text-xs text-gray-600">
                     <div className="flex items-center">
                       <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-1"></span>
@@ -323,11 +326,11 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="flex items-center">
                       <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-1"></span>
-                      Cosmétiques
+                      Cosmetiques
                     </div>
                     <div className="flex items-center">
                       <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-1"></span>
-                      Détergents
+                      Detergents
                     </div>
                   </div>
                 </div>
@@ -409,20 +412,20 @@ const Navbar: React.FC = () => {
                         </div>
                         
                         <div className="text-xs text-gray-500">
-                          Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">ââ€Â Ã‚Âµ</kbd> pour rechercher
+                          Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">↵</kbd> pour rechercher
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* ÃƒÆ’â€Â°tat vide */}
+                {/* Etat vide */}
                 {!isLoadingSuggestions && suggestions.length === 0 && quickSearchQuery && (
                   <div className="p-6 text-center">
                     <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <h3 className="font-medium text-[#3B3B3B] mb-2">Aucune suggestion</h3>
                     <p className="text-sm text-gray-500 mb-4">
-                      Appuyez Entrée pour rechercher "<span className="font-medium text-[#7DDE4A]">{quickSearchQuery}</span>"
+                      Appuyez Entree pour rechercher "<span className="font-medium text-[#7DDE4A]">{quickSearchQuery}</span>"
                     </p>
                   </div>
                 )}
@@ -440,8 +443,7 @@ const Navbar: React.FC = () => {
                   key={item.name}
                   to={item.href}
                   className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive(item.href)
-                      ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                    isActive(item.href) ? 'bg-[#E9F8DF] text-[#7DDE4A]'
                       : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
                   }`}
                 >
@@ -490,7 +492,7 @@ const Navbar: React.FC = () => {
                     <div className="px-4 py-2 border-b border-[#DDE9DA]">
                       <p className="text-sm font-medium text-[#3B3B3B]">{user?.email}</p>
                       <p className="text-xs text-gray-500">
-                        Plan {user?.plan === 'premium' ? 'Premium âÃ‚Â­Ã‚Â' : 'Gratuit'}
+                        Plan {user?.plan === 'premium' ? 'Premium ✨' : 'Gratuit'}
                       </p>
                     </div>
                     
@@ -518,7 +520,7 @@ const Navbar: React.FC = () => {
                       onClick={() => setShowProfileMenu(false)}
                     >
                       <Settings className="w-4 h-4 mr-2" />
-                      Paramètres
+                      Parametres
                     </Link>
                     
                     {user?.plan === 'free' && (
@@ -538,7 +540,7 @@ const Navbar: React.FC = () => {
                         className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
                       >
                         <LogOut className="w-4 h-4 mr-2" />
-                        Déconnexion
+                        Deconnexion
                       </button>
                     </div>
                   </div>
@@ -584,8 +586,7 @@ const Navbar: React.FC = () => {
                     key={item.name}
                     to={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg transition-all ${
-                      isActive(item.href)
-                        ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                      isActive(item.href) ? 'bg-[#E9F8DF] text-[#7DDE4A]'
                         : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
                     }`}
                     onClick={() => setIsOpen(false)}
@@ -599,7 +600,7 @@ const Navbar: React.FC = () => {
               {/* Section IA Mobile */}
               <div className="border-t border-[#DDE9DA] pt-3 mt-3">
                 <div className="px-3 py-2">
-                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">ÃƒÂ°Ã…Â¸â€ÂÃ‚Â¬ IA Scientifique</h3>
+                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">🧪 IA Scientifique</h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-2"></span>
@@ -607,15 +608,15 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2"></span>
-                      Score santé
+                      Score sante
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-2"></span>
-                      Impact éco
+                      Impact eco
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                      Validé ANSES
+                      Valide ANSES
                     </div>
                   </div>
                 </div>
