@@ -8,5 +8,6 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
+    exclude: ["tests/e2e/**"], // 👈 Empêche Vitest de ramasser les e2e Playwright
   },
 });
