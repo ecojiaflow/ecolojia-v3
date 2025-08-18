@@ -1,8 +1,8 @@
 // backend/src/data/efsaAdditivesDatabase.js
 
 /**
- * 🔬 Base de Données Additifs EFSA 2024
- * Sources: EFSA, ANSES, études scientifiques récentes
+ * ðŸ”¬ Base de Donnees Additifs EFSA 2024
+ * Sources: EFSA, ANSES, etudes scientifiques recentes
  */
 
 class EFSAAdditivesDatabase {
@@ -11,9 +11,9 @@ class EFSAAdditivesDatabase {
     this.lastUpdate = "2024-07-01";
     this.sources = [
       "EFSA - European Food Safety Authority",
-      "ANSES - Agence Nationale Sécurité Alimentaire", 
-      "Règlement UE 1333/2008",
-      "Études scientifiques peer-reviewed 2020-2024"
+      "ANSES - Agence Nationale Securite Alimentaire", 
+      "Reglement UE 1333/2008",
+      "‰tudes scientifiques peer-reviewed 2020-2024"
     ];
   }
 
@@ -23,20 +23,20 @@ class EFSAAdditivesDatabase {
       'E102': {
         name: 'Tartrazine',
         category: 'Colorant jaune',
-        origin: 'Synthétique',
+        origin: 'Synthetique',
         function: 'Colorant alimentaire',
-        efsaStatus: 'Autorisé avec DJA',
+        efsaStatus: 'Autorise avec DJA',
         dja: '7.5 mg/kg/jour',
         concerns: [
-          'Hyperactivité enfants (EFSA 2009)',
+          'Hyperactivite enfants (EFSA 2009)',
           'Allergies possible chez asthmatiques',
-          'Urticaire et eczéma rapportés'
+          'Urticaire et eczema rapportes'
         ],
         studies: [
           {
             title: 'Hyperactivity in children and artificial colors',
-            source: 'Lancet 2007, confirmé EFSA 2009',
-            finding: 'Lien possible hyperactivité + mélange colorants'
+            source: 'Lancet 2007, confirme EFSA 2009',
+            finding: 'Lien possible hyperactivite + melange colorants'
           }
         ],
         alternatives: ['Curcuma (E100)', 'Riboflavine (E101)', 'Safran naturel'],
@@ -46,22 +46,22 @@ class EFSAAdditivesDatabase {
       },
 
       'E110': {
-        name: 'Jaune orangé S',
+        name: 'Jaune orange S',
         category: 'Colorant orange',
-        origin: 'Synthétique',
+        origin: 'Synthetique',
         function: 'Colorant alimentaire',
-        efsaStatus: 'Autorisé avec DJA',
+        efsaStatus: 'Autorise avec DJA',
         dja: '4 mg/kg/jour',
         concerns: [
-          'Hyperactivité enfants',
-          'Allergies croisées avec aspirine',
+          'Hyperactivite enfants',
+          'Allergies croisees avec aspirine',
           'Asthme possible'
         ],
         studies: [
           {
             title: 'Southampton Six study follow-up',
             source: 'Food Additives & Contaminants 2010',
-            finding: 'Effets comportementaux confirmés'
+            finding: 'Effets comportementaux confirmes'
           }
         ],
         alternatives: ['Annatto (E160b)', 'Paprika (E160c)'],
@@ -74,21 +74,21 @@ class EFSAAdditivesDatabase {
       'E220': {
         name: 'Dioxyde de soufre',
         category: 'Conservateur',
-        origin: 'Synthétique',
+        origin: 'Synthetique',
         function: 'Antioxydant, conservateur',
-        efsaStatus: 'Autorisé avec DJA',
+        efsaStatus: 'Autorise avec DJA',
         dja: '0.7 mg/kg/jour',
         concerns: [
           'Destruction vitamine B1',
           'Crises d\'asthme',
-          'Maux de tête',
-          'Problèmes respiratoires'
+          'Maux de tete',
+          'Problemes respiratoires'
         ],
         studies: [
           {
             title: 'Sulfite sensitivity and asthma',
             source: 'Clinical Reviews in Allergy 2020',
-            finding: '3-10% population sensible, asthmatiques à risque'
+            finding: '3-10% population sensible, asthmatiques   risque'
           }
         ],
         alternatives: ['Vitamine C (E300)', 'Vitamine E (E306)', 'Extraits naturels'],
@@ -100,20 +100,20 @@ class EFSAAdditivesDatabase {
       'E249': {
         name: 'Nitrite de potassium',
         category: 'Conservateur',
-        origin: 'Synthétique',
+        origin: 'Synthetique',
         function: 'Conservation viandes',
-        efsaStatus: 'Autorisé avec restrictions',
+        efsaStatus: 'Autorise avec restrictions',
         dja: '0.07 mg/kg/jour',
         concerns: [
-          'Formation nitrosamines cancérigènes',
-          'Méthémoglobinémie nourrissons',
-          'Cancer colorectal suspecté'
+          'Formation nitrosamines cancerigenes',
+          'Methemoglobinemie nourrissons',
+          'Cancer colorectal suspecte'
         ],
         studies: [
           {
             title: 'Processed meat and cancer risk',
-            source: 'WHO/IARC 2015, confirmé études 2024',
-            finding: 'Nitrites = probablement cancérigène (2A)'
+            source: 'WHO/IARC 2015, confirme etudes 2024',
+            finding: 'Nitrites = probablement cancerigene (2A)'
           },
           {
             title: 'Nitrates, nitrites and colorectal cancer',
@@ -121,7 +121,7 @@ class EFSAAdditivesDatabase {
             finding: '+18% risque cancer colorectal avec charcuteries'
           }
         ],
-        alternatives: ['Sel de céleri', 'Extrait d\'acérola', 'Fumage naturel'],
+        alternatives: ['Sel de celeri', 'Extrait d\'acerola', 'Fumage naturel'],
         risk_level: 'high',
         microbiome_impact: 'negative',
         endocrine_disruptor: false
@@ -129,27 +129,27 @@ class EFSAAdditivesDatabase {
 
       // ANTIOXYDANTS (E300-E399)
       'E320': {
-        name: 'BHA (Hydroxyanisole butylé)',
+        name: 'BHA (Hydroxyanisole butyle)',
         category: 'Antioxydant',
-        origin: 'Synthétique',
+        origin: 'Synthetique',
         function: 'Antioxydant lipides',
-        efsaStatus: 'En réévaluation 2024',
+        efsaStatus: 'En reevaluation 2024',
         dja: '0.5 mg/kg/jour (provisoire)',
         concerns: [
-          'Perturbateur endocrinien suspecté',
-          'Cancérigène possible (CIRC 2B)',
+          'Perturbateur endocrinien suspecte',
+          'Cancerigene possible (CIRC 2B)',
           'Accumulation tissus adipeux'
         ],
         studies: [
           {
             title: 'BHA endocrine disruption evidence',
             source: 'Environmental Health Perspectives 2023',
-            finding: 'Perturbation hormonale confirmée études animales'
+            finding: 'Perturbation hormonale confirmee etudes animales'
           },
           {
             title: 'Food additive safety reassessment',
             source: 'EFSA Journal 2024',
-            finding: 'Réévaluation en cours, DJA pourrait baisser'
+            finding: 'Reevaluation en cours, DJA pourrait baisser'
           }
         ],
         alternatives: ['Vitamine E (E306)', 'Extrait romarin', 'Vitamine C (E300)'],
@@ -158,113 +158,113 @@ class EFSAAdditivesDatabase {
         endocrine_disruptor: true
       },
 
-      // ÉMULSIFIANTS (E400-E499)
+      // ‰MULSIFIANTS (E400-E499)
       'E471': {
-        name: 'Mono- et diglycérides',
-        category: 'Émulsifiant',
-        origin: 'Végétale/animale',
-        function: 'Émulsification, texture',
-        efsaStatus: 'Autorisé sans DJA',
-        dja: 'Non spécifiée (quantum satis)',
+        name: 'Mono- et diglycerides',
+        category: '‰mulsifiant',
+        origin: 'Vegetale/animale',
+        function: '‰mulsification, texture',
+        efsaStatus: 'Autorise sans DJA',
+        dja: 'Non specifiee (quantum satis)',
         concerns: [
           'Perturbation microbiote intestinal',
           'Inflammation intestinale',
-          'Syndrome métabolique'
+          'Syndrome metabolique'
         ],
         studies: [
           {
             title: 'Emulsifiers and gut microbiome disruption',
             source: 'Nature 2024',
-            finding: 'Dysbiose confirmée, inflammation +40%'
+            finding: 'Dysbiose confirmee, inflammation +40%'
           },
           {
             title: 'Food emulsifiers and metabolic syndrome',
             source: 'Cell Metabolism 2023',
-            finding: 'Résistance insuline, obésité viscérale'
+            finding: 'Resistance insuline, obesite viscerale'
           }
         ],
-        alternatives: ['Lécithine tournesol', 'Lécithine soja bio', 'Pas d\'émulsifiant'],
+        alternatives: ['Lecithine tournesol', 'Lecithine soja bio', 'Pas d\'emulsifiant'],
         risk_level: 'medium',
         microbiome_impact: 'negative_confirmed',
         endocrine_disruptor: false
       },
 
       'E472e': {
-        name: 'Esters mono- et diacétyltartriques',
-        category: 'Émulsifiant',
-        origin: 'Synthétique',
-        function: 'Amélioration texture',
-        efsaStatus: 'Autorisé avec DJA',
+        name: 'Esters mono- et diacetyltartriques',
+        category: '‰mulsifiant',
+        origin: 'Synthetique',
+        function: 'Amelioration texture',
+        efsaStatus: 'Autorise avec DJA',
         dja: '50 mg/kg/jour',
         concerns: [
           'Effet microbiote inconnu',
-          'Études sécurité limitées',
+          '‰tudes securite limitees',
           'Interaction autres additifs'
         ],
         studies: [
           {
             title: 'Food additives safety data gaps',
             source: 'EFSA Scientific Opinion 2024',
-            finding: 'Données insuffisantes effets long terme'
+            finding: 'Donnees insuffisantes effets long terme'
           }
         ],
-        alternatives: ['Pas d\'émulsifiant', 'Méthodes mécaniques'],
+        alternatives: ['Pas d\'emulsifiant', 'Methodes mecaniques'],
         risk_level: 'low',
         microbiome_impact: 'unknown',
         endocrine_disruptor: false
       },
 
-      // ÉDULCORANTS (E950-E999)
+      // ‰DULCORANTS (E950-E999)
       'E951': {
         name: 'Aspartame',
-        category: 'Édulcorant',
-        origin: 'Synthétique',
-        function: 'Édulcorant intense',
-        efsaStatus: 'Réévalué 2024',
+        category: '‰dulcorant',
+        origin: 'Synthetique',
+        function: '‰dulcorant intense',
+        efsaStatus: 'Reevalue 2024',
         dja: '40 mg/kg/jour',
         concerns: [
-          'Cancérigène possible (CIRC 2B)',
-          'Maux de tête',
+          'Cancerigene possible (CIRC 2B)',
+          'Maux de tete',
           'Perturbation microbiote'
         ],
         studies: [
           {
             title: 'Aspartame and cancer risk',
             source: 'WHO/IARC 2023',
-            finding: 'Classifié 2B (possiblement cancérigène)'
+            finding: 'Classifie 2B (possiblement cancerigene)'
           },
           {
             title: 'Artificial sweeteners and glucose intolerance',
             source: 'Nature Medicine 2024',
-            finding: 'Perturbation métabolisme glucose via microbiote'
+            finding: 'Perturbation metabolisme glucose via microbiote'
           }
         ],
-        alternatives: ['Stévia (E960)', 'Érythritol', 'Sucre modéré'],
+        alternatives: ['Stevia (E960)', '‰rythritol', 'Sucre modere'],
         risk_level: 'medium',
         microbiome_impact: 'negative_confirmed',
         endocrine_disruptor: false
       },
 
       'E952': {
-        name: 'Acésulfame K',
-        category: 'Édulcorant',
-        origin: 'Synthétique',
-        function: 'Édulcorant intense',
-        efsaStatus: 'Autorisé',
+        name: 'Acesulfame K',
+        category: '‰dulcorant',
+        origin: 'Synthetique',
+        function: '‰dulcorant intense',
+        efsaStatus: 'Autorise',
         dja: '9 mg/kg/jour',
         concerns: [
-          'Non métabolisé (excrétion inchangée)',
-          'Effet microbiote suspecté',
-          'Goût métallique'
+          'Non metabolise (excretion inchangee)',
+          'Effet microbiote suspecte',
+          'Gout metallique'
         ],
         studies: [
           {
             title: 'Non-nutritive sweeteners and microbiome',
             source: 'Gut Microbes 2024',
-            finding: 'Modification composition bactérienne intestinale'
+            finding: 'Modification composition bacterienne intestinale'
           }
         ],
-        alternatives: ['Stévia', 'Moine fruit', 'Réduction progressive sucre'],
+        alternatives: ['Stevia', 'Moine fruit', 'Reduction progressive sucre'],
         risk_level: 'low',
         microbiome_impact: 'negative_suspected',
         endocrine_disruptor: false
@@ -300,7 +300,7 @@ class EFSAAdditivesDatabase {
         // Comptage par niveau de risque
         analysis.byRiskLevel[additive.risk_level]++;
 
-        // Perturbateurs spécifiques
+        // Perturbateurs specifiques
         if (additive.microbiome_impact === 'negative_confirmed' || 
             additive.microbiome_impact === 'negative_suspected') {
           analysis.microbiomeDisruptors.push({
@@ -317,7 +317,7 @@ class EFSAAdditivesDatabase {
           });
         }
 
-        // Préoccupations
+        // Preoccupations
         analysis.concerns.push(...additive.concerns.map(concern => ({
           code: eCode,
           name: additive.name,
@@ -331,21 +331,21 @@ class EFSAAdditivesDatabase {
       }
     });
 
-    // Évaluation risque global
+    // ‰valuation risque global
     if (analysis.byRiskLevel.high > 0 || analysis.endocrineDisruptors.length > 0) {
       analysis.overallRisk = 'high';
     } else if (analysis.byRiskLevel.medium > 1 || analysis.microbiomeDisruptors.length > 2) {
       analysis.overallRisk = 'medium';
     }
 
-    // Dédoublonnage alternatives
+    // Dedoublonnage alternatives
     analysis.alternatives = [...new Set(analysis.alternatives)];
 
     return analysis;
   }
 
   /**
-   * Recherche par catégorie
+   * Recherche par categorie
    */
   getAdditivesByCategory(category) {
     return Object.entries(this.additives)
@@ -354,7 +354,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Additifs à éviter (risque élevé)
+   * Additifs   eviter (risque eleve)
    */
   getHighRiskAdditives() {
     return Object.entries(this.additives)
@@ -363,7 +363,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Perturbateurs microbiote confirmés
+   * Perturbateurs microbiote confirmes
    */
   getMicrobiomeDisruptors() {
     return Object.entries(this.additives)
@@ -372,7 +372,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Résumé pour interface utilisateur
+   * Resume pour interface utilisateur
    */
   generateUserFriendlyReport(eCodesList) {
     const analysis = this.analyzeAdditives(eCodesList);
@@ -381,13 +381,13 @@ class EFSAAdditivesDatabase {
     let alertLevel = "info";
 
     if (analysis.overallRisk === 'high') {
-      message = `⚠️ ${analysis.byRiskLevel.high} additif(s) à risque élevé détecté(s)`;
+      message = `âš ï¸ ${analysis.byRiskLevel.high} additif(s)   risque eleve detecte(s)`;
       alertLevel = "error";
     } else if (analysis.overallRisk === 'medium') {
-      message = `🟡 Présence d'additifs pouvant affecter votre santé`;
+      message = `ðŸŸ¡ Presence d'additifs pouvant affecter votre sante`;
       alertLevel = "warning";
     } else {
-      message = `✅ Additifs présents considérés comme sûrs`;
+      message = `âœ… Additifs presents consideres comme surs`;
       alertLevel = "success";
     }
 
@@ -400,7 +400,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Génération recommandations
+   * Generation recommandations
    */
   generateRecommendations(analysis) {
     const recommendations = [];
@@ -408,7 +408,7 @@ class EFSAAdditivesDatabase {
     if (analysis.endocrineDisruptors.length > 0) {
       recommendations.push({
         type: 'critical',
-        message: 'Éviter ce produit : contient des perturbateurs endocriniens',
+        message: '‰viter ce produit : contient des perturbateurs endocriniens',
         alternatives: analysis.alternatives.slice(0, 3)
       });
     }
@@ -417,14 +417,14 @@ class EFSAAdditivesDatabase {
       recommendations.push({
         type: 'warning',
         message: 'Impact possible sur votre microbiote intestinal',
-        alternatives: ['Produits sans émulsifiants', 'Versions artisanales', 'Fait maison']
+        alternatives: ['Produits sans emulsifiants', 'Versions artisanales', 'Fait maison']
       });
     }
 
     if (analysis.byRiskLevel.high > 0) {
       recommendations.push({
         type: 'important',
-        message: 'Consommation occasionnelle recommandée',
+        message: 'Consommation occasionnelle recommandee',
         alternatives: analysis.alternatives.slice(0, 2)
       });
     }
@@ -432,7 +432,7 @@ class EFSAAdditivesDatabase {
     if (recommendations.length === 0) {
       recommendations.push({
         type: 'info',
-        message: 'Additifs présents considérés comme sûrs selon EFSA',
+        message: 'Additifs presents consideres comme surs selon EFSA',
         alternatives: []
       });
     }
@@ -441,7 +441,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Export pour intégration
+   * Export pour integration
    */
   exportDatabase() {
     return {

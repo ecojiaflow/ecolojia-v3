@@ -7,7 +7,7 @@ const connectMongo = async () => {
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia';
     
     if (!uri || uri.includes('YOUR_MONGODB_PASSWORD')) {
-      console.error('⚠️  MONGODB_URI is not properly configured!');
+      console.error('âš ï¸  MONGODB_URI is not properly configured!');
       console.error('Please follow these steps:');
       console.error('1. Go to https://cloud.mongodb.com');
       console.error('2. Create a free cluster');
@@ -16,7 +16,7 @@ const connectMongo = async () => {
       throw new Error('MongoDB configuration required');
     }
 
-    // Options de connexion optimisées
+    // Options de connexion optimisees
     const options = {
       maxPoolSize: 20,
       minPoolSize: 5,
@@ -55,7 +55,7 @@ const connectMongo = async () => {
   }
 };
 
-// Helper pour vérifier la connexion
+// Helper pour verifier la connexion
 const isConnected = () => {
   return mongoose.connection.readyState === 1;
 };

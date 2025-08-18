@@ -10,7 +10,7 @@ class EnrichmentService {
 
   async processQueue(limit = 10) {
     try {
-      // Récupérer produits non enrichis
+      // Recuperer produits non enrichis
       const products = await this.prisma.product.findMany({
         where: {
           OR: [
@@ -25,7 +25,7 @@ class EnrichmentService {
         take: limit
       });
 
-      this.logger.info(`🤖 ${products.length} produits à enrichir`);
+      this.logger.info(`ðŸ¤– ${products.length} produits   enrichir`);
 
       let enriched = 0;
       let errors = 0;
@@ -43,11 +43,11 @@ class EnrichmentService {
         }
       }
 
-      this.logger.info(`✅ Enrichissement terminé: ${enriched} enrichis, ${errors} erreurs`);
+      this.logger.info(`âœ… Enrichissement termine: ${enriched} enrichis, ${errors} erreurs`);
       return { enriched, errors };
 
     } catch (error) {
-      this.logger.error('❌ Erreur processQueue:', error);
+      this.logger.error('âŒ Erreur processQueue:', error);
       throw error;
     }
   }
@@ -58,15 +58,15 @@ class EnrichmentService {
     });
 
     if (!product) {
-      throw new Error(`Produit ${productId} non trouvé`);
+      throw new Error(`Produit ${productId} non trouve`);
     }
 
-    this.logger.info(`🔍 Enrichissement: ${product.title}`);
+    this.logger.info(`ðŸ” Enrichissement: ${product.title}`);
 
     // Appel DeepSeek pour analyse
     const enrichmentData = await this.callDeepSeekAPI(product);
     
-    // Mise à jour produit
+    // Mise   jour produit
     const updated = await this.prisma.product.update({
       where: { id: productId },
       data: {
@@ -81,7 +81,7 @@ class EnrichmentService {
       }
     });
 
-    this.logger.info(`✅ Produit enrichi: ${updated.title}`);
+    this.logger.info(`âœ… Produit enrichi: ${updated.title}`);
     return updated;
   }
 
@@ -94,7 +94,7 @@ class EnrichmentService {
         messages: [
           {
             role: 'system',
-            content: 'Tu es un expert en analyse de produits écoresponsables. Réponds uniquement en JSON valide.'
+            content: 'Tu es un expert en analyse de produits ecoresponsables. Reponds uniquement en JSON valide.'
           },
           {
             role: 'user',
@@ -126,7 +126,7 @@ class EnrichmentService {
       
       // Fallback en cas d'erreur
       return {
-        resume_fr: `Analyse automatique du produit ${product.title}. Score basé sur la catégorie et les informations disponibles.`,
+        resume_fr: `Analyse automatique du produit ${product.title}. Score base sur la categorie et les informations disponibles.`,
         resume_en: `Automatic analysis of ${product.title}. Score based on category and available information.`,
         eco_score: 2.5,
         ai_confidence: 0.6
@@ -139,26 +139,26 @@ class EnrichmentService {
 Analyse ce produit et fournis un JSON avec cette structure exacte :
 
 {
-  "resume_fr": "Résumé en français (2-3 phrases sur l'impact écologique)",
+  "resume_fr": "Resume en francais (2-3 phrases sur l'impact ecologique)",
   "resume_en": "English summary (2-3 sentences about ecological impact)", 
   "eco_score": 3.2,
   "ai_confidence": 0.75
 }
 
-PRODUIT À ANALYSER :
+PRODUIT € ANALYSER :
 - Titre: ${product.title}
 - Description: ${product.description}
-- Marque: ${product.brand || 'Non spécifié'}
-- Catégorie: ${product.category}
+- Marque: ${product.brand || 'Non specifie'}
+- Categorie: ${product.category}
 - Tags: ${product.tags?.join(', ') || 'Aucun'}
 
-CRITÈRES D'ÉVALUATION :
-- eco_score: Note de 0 à 5 basée sur durabilité, composition, packaging
-- ai_confidence: Confiance de 0 à 1 selon qualité des données
-- resume_fr: Analyse critique et pédagogique
-- resume_en: Version anglaise équivalente
+CRITˆRES D'‰VALUATION :
+- eco_score: Note de 0   5 basee sur durabilite, composition, packaging
+- ai_confidence: Confiance de 0   1 selon qualite des donnees
+- resume_fr: Analyse critique et pedagogique
+- resume_en: Version anglaise equivalente
 
-Sois factuel et éducatif.`;
+Sois factuel et educatif.`;
   }
 
   validateScore(score) {

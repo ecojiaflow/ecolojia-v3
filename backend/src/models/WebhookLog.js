@@ -18,7 +18,7 @@ const webhookLogSchema = new mongoose.Schema({
     index: true
   },
   
-  // Type d'événement
+  // Type d'evenement
   eventType: {
     type: String,
     required: true,
@@ -34,9 +34,9 @@ const webhookLogSchema = new mongoose.Schema({
     index: true
   },
   
-  // Données du webhook
+  // Donnees du webhook
   payload: {
-    // Headers reçus
+    // Headers recus
     headers: {
       type: Map,
       of: String
@@ -45,7 +45,7 @@ const webhookLogSchema = new mongoose.Schema({
     // Body brut
     rawBody: String,
     
-    // Body parsé
+    // Body parse
     body: mongoose.Schema.Types.Mixed,
     
     // Query parameters
@@ -55,7 +55,7 @@ const webhookLogSchema = new mongoose.Schema({
     }
   },
   
-  // Validation et sécurité
+  // Validation et securite
   security: {
     // Signature
     signature: String,
@@ -77,7 +77,7 @@ const webhookLogSchema = new mongoose.Schema({
       default: false
     },
     
-    // Secret utilisé
+    // Secret utilise
     secretUsed: String
   },
   
@@ -92,7 +92,7 @@ const webhookLogSchema = new mongoose.Schema({
     startedAt: Date,
     completedAt: Date,
     
-    // Durées en ms
+    // Durees en ms
     validationDuration: Number,
     processingDuration: Number,
     totalDuration: Number,
@@ -110,10 +110,10 @@ const webhookLogSchema = new mongoose.Schema({
     // Prochaine tentative
     nextRetryAt: Date,
     
-    // Résultat
+    // Resultat
     result: mongoose.Schema.Types.Mixed,
     
-    // Actions effectuées
+    // Actions effectuees
     actions: [{
       type: {
         type: String,
@@ -134,42 +134,42 @@ const webhookLogSchema = new mongoose.Schema({
     stack: String,
     details: mongoose.Schema.Types.Mixed,
     
-    // Catégorie d'erreur
+    // Categorie d'erreur
     category: {
       type: String,
       enum: ['validation', 'signature', 'parsing', 'processing', 'database', 'network', 'business_logic', 'unknown']
     },
     
-    // Sévérité
+    // Severite
     severity: {
       type: String,
       enum: ['low', 'medium', 'high', 'critical'],
       default: 'medium'
     },
     
-    // Peut être retenté ?
+    // Peut etre retente ?
     retryable: {
       type: Boolean,
       default: true
     }
   },
   
-  // Relations avec d'autres entités
+  // Relations avec d'autres entites
   relations: {
-    // Utilisateur concerné
+    // Utilisateur concerne
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       index: true
     },
     
-    // Abonnement concerné
+    // Abonnement concerne
     subscriptionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Subscription'
     },
     
-    // Paiement concerné
+    // Paiement concerne
     paymentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PaymentLog'
@@ -186,7 +186,7 @@ const webhookLogSchema = new mongoose.Schema({
     }
   },
   
-  // Métadonnées spécifiques au provider
+  // Metadonnees specifiques au provider
   providerData: {
     // LemonSqueezy
     lemonsqueezy: {
@@ -212,7 +212,7 @@ const webhookLogSchema = new mongoose.Schema({
   
   // Monitoring et alertes
   monitoring: {
-    // Alertes déclenchées
+    // Alertes declenchees
     alerts: [{
       type: {
         type: String,
@@ -224,7 +224,7 @@ const webhookLogSchema = new mongoose.Schema({
       notified: Boolean
     }],
     
-    // Métriques
+    // Metriques
     metrics: {
       responseTime: Number,
       payloadSize: Number,
@@ -237,7 +237,7 @@ const webhookLogSchema = new mongoose.Schema({
   
   // Audit
   audit: {
-    // Qui a consulté ce log
+    // Qui a consulte ce log
     accessLog: [{
       userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -291,7 +291,7 @@ const webhookLogSchema = new mongoose.Schema({
     }
   },
   
-  // Métadonnées
+  // Metadonnees
   metadata: {
     environment: {
       type: String,
@@ -319,7 +319,7 @@ const webhookLogSchema = new mongoose.Schema({
   collection: 'webhook_logs'
 });
 
-// Index composés
+// Index composes
 webhookLogSchema.index({ provider: 1, eventType: 1, status: 1 });
 webhookLogSchema.index({ 'security.idempotencyKey': 1 }, { unique: true, sparse: true });
 webhookLogSchema.index({ 'processing.receivedAt': -1, status: 1 });
@@ -329,9 +329,9 @@ webhookLogSchema.index({ 'error.severity': 1, status: 1 });
 // Index TTL - Garder les logs 90 jours
 webhookLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 7776000 });
 
-// Méthodes d'instance
+// Methodes d'instance
 webhookLogSchema.methods = {
-  // Calculer les durées
+  // Calculer les durees
   calculateDurations() {
     if (this.processing.startedAt && this.processing.receivedAt) {
       this.processing.validationDuration = this.processing.startedAt - this.processing.receivedAt;
@@ -346,7 +346,7 @@ webhookLogSchema.methods = {
     }
   },
   
-  // Marquer comme traité
+  // Marquer comme traite
   markAsCompleted(result) {
     this.status = 'completed';
     this.processing.completedAt = new Date();
@@ -355,7 +355,7 @@ webhookLogSchema.methods = {
     return this.save();
   },
   
-  // Marquer comme échoué
+  // Marquer comme echoue
   markAsFailed(error) {
     this.status = 'failed';
     this.processing.completedAt = new Date();
@@ -388,7 +388,7 @@ webhookLogSchema.methods = {
     return this.save();
   },
   
-  // Calculer le délai de retry
+  // Calculer le delai de retry
   calculateRetryDelay() {
     const config = this.config.retryPolicy;
     const attempt = this.processing.attempts;
@@ -409,7 +409,7 @@ webhookLogSchema.methods = {
     return delay;
   },
   
-  // Vérifier si c'est un duplicate
+  // Verifier si c'est un duplicate
   async checkDuplicate() {
     if (!this.security.idempotencyKey) return false;
     
@@ -434,7 +434,7 @@ webhookLogSchema.methods = {
     return this.save();
   },
   
-  // Générer un rapport
+  // Generer un rapport
   generateReport() {
     return {
       id: this._id,
@@ -455,9 +455,9 @@ webhookLogSchema.methods = {
   }
 };
 
-// Méthodes statiques
+// Methodes statiques
 webhookLogSchema.statics = {
-  // Créer un nouveau log
+  // Creer un nouveau log
   async createLog(provider, eventType, payload, security) {
     const log = new this({
       webhookId: payload.body?.id || `${provider}_${Date.now()}`,
@@ -470,13 +470,13 @@ webhookLogSchema.statics = {
       }
     });
     
-    // Vérifier les duplicates
+    // Verifier les duplicates
     await log.checkDuplicate();
     
     return log.save();
   },
   
-  // Obtenir les webhooks en échec
+  // Obtenir les webhooks en echec
   async getFailedWebhooks(hours = 24) {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000);
     
@@ -488,7 +488,7 @@ webhookLogSchema.statics = {
     }).sort({ 'processing.receivedAt': -1 });
   },
   
-  // Obtenir les webhooks à retenter
+  // Obtenir les webhooks   retenter
   async getWebhooksToRetry() {
     return this.find({
       status: 'retrying',
@@ -570,11 +570,11 @@ webhookLogSchema.statics = {
     return result;
   },
   
-  // Détecter les anomalies
+  // Detecter les anomalies
   async detectAnomalies(hours = 1) {
     const since = new Date(Date.now() - hours * 60 * 60 * 1000);
     
-    // Taux d'échec élevé
+    // Taux d'echec eleve
     const failureRate = await this.aggregate([
       {
         $match: {
@@ -603,11 +603,11 @@ webhookLogSchema.statics = {
       anomalies.push({
         type: 'high_failure_rate',
         value: failureRate[0].failureRate,
-        message: `Taux d'échec élevé: ${(failureRate[0].failureRate * 100).toFixed(1)}%`
+        message: `Taux d'echec eleve: ${(failureRate[0].failureRate * 100).toFixed(1)}%`
       });
     }
     
-    // Webhooks bloqués
+    // Webhooks bloques
     const stuck = await this.countDocuments({
       status: 'processing',
       'processing.startedAt': { $lt: new Date(Date.now() - 10 * 60 * 1000) } // Plus de 10 min
@@ -617,7 +617,7 @@ webhookLogSchema.statics = {
       anomalies.push({
         type: 'stuck_webhooks',
         value: stuck,
-        message: `${stuck} webhook(s) bloqué(s) en traitement`
+        message: `${stuck} webhook(s) bloque(s) en traitement`
       });
     }
     
@@ -627,7 +627,7 @@ webhookLogSchema.statics = {
 
 // Middleware pre-save
 webhookLogSchema.pre('save', function(next) {
-  // Extraire les métadonnées selon le provider
+  // Extraire les metadonnees selon le provider
   if (this.provider === 'lemonsqueezy' && this.payload.body) {
     const body = this.payload.body;
     this.providerData.lemonsqueezy = {
@@ -662,7 +662,7 @@ webhookLogSchema.pre('save', function(next) {
 
 // Hook post-save pour les alertes
 webhookLogSchema.post('save', async function() {
-  // Alerter si échec critique
+  // Alerter si echec critique
   if (this.status === 'failed' && this.error?.severity === 'critical') {
     // TODO: Envoyer alerte
     console.error(`Critical webhook failure: ${this._id}`);

@@ -19,7 +19,7 @@ class OpenFoodFactsIngestion {
    * Ingestion principale
    */
   async run(options = {}) {
-    console.log('🚀 Démarrage ingestion OpenFoodFacts');
+    console.log('ðŸš€ Demarrage ingestion OpenFoodFacts');
     
     try {
       // Connexion DB
@@ -30,14 +30,14 @@ class OpenFoodFactsIngestion {
       const offset = options.offset || 0;
       const country = options.country || 'france';
       
-      // Récupérer les produits par batch
+      // Recuperer les produits par batch
       await this.processBatches(country, limit, offset);
       
       // Rapport final
       this.printReport();
       
     } catch (error) {
-      console.error('❌ Erreur ingestion:', error);
+      console.error('âŒ Erreur ingestion:', error);
       process.exit(1);
     }
   }
@@ -51,9 +51,9 @@ class OpenFoodFactsIngestion {
 
     while (hasMore && this.processedCount < totalLimit) {
       try {
-        console.log(`\n📦 Traitement batch offset=${offset}`);
+        console.log(`\nðŸ“¦ Traitement batch offset=${offset}`);
         
-        // Récupérer un batch de produits
+        // Recuperer un batch de produits
         const products = await this.fetchBatch(country, this.batchSize, offset);
         
         if (products.length === 0) {
@@ -75,17 +75,17 @@ class OpenFoodFactsIngestion {
         await this.sleep(1000);
         
       } catch (error) {
-        console.error(`❌ Erreur batch offset=${offset}:`, error.message);
+        console.error(`âŒ Erreur batch offset=${offset}:`, error.message);
         this.errorCount++;
         
-        // Continuer malgré l'erreur
+        // Continuer malgre l'erreur
         offset += this.batchSize;
       }
     }
   }
 
   /**
-   * Récupérer un batch depuis l'API OFF
+   * Recuperer un batch depuis l'API OFF
    */
   async fetchBatch(country, pageSize, page) {
     try {
@@ -123,12 +123,12 @@ class OpenFoodFactsIngestion {
         // Transformer le produit
         const transformed = await this.transformProduct(product);
         
-        // Détecter la catégorie
+        // Detecter la categorie
         const detection = await categoryDetection.detectCategory(transformed);
         transformed.category = detection.category;
         transformed.categoryConfidence = detection.confidence;
 
-        // Préparer l'opération upsert
+        // Preparer l'operation upsert
         operations.push({
           updateOne: {
             filter: { barcode: transformed.barcode },
@@ -145,11 +145,11 @@ class OpenFoodFactsIngestion {
       }
     }
 
-    // Exécuter les opérations en batch
+    // Executer les operations en batch
     if (operations.length > 0) {
       try {
         const result = await Product.bulkWrite(operations);
-        console.log(`✅ ${result.upsertedCount} nouveaux, ${result.modifiedCount} mis à jour`);
+        console.log(`âœ… ${result.upsertedCount} nouveaux, ${result.modifiedCount} mis   jour`);
       } catch (error) {
         console.error('Erreur bulkWrite:', error.message);
       }
@@ -157,7 +157,7 @@ class OpenFoodFactsIngestion {
   }
 
   /**
-   * Transformer un produit OFF vers notre modèle
+   * Transformer un produit OFF vers notre modele
    */
   async transformProduct(offProduct) {
     return {
@@ -172,7 +172,7 @@ class OpenFoodFactsIngestion {
       name_en: offProduct.product_name_en,
       brand: offProduct.brands || 'Marque inconnue',
       
-      // Catégories
+      // Categories
       categories: offProduct.categories_tags || [],
       
       // Images
@@ -190,7 +190,7 @@ class OpenFoodFactsIngestion {
         healthScore: this.calculateHealthScore(offProduct)
       },
       
-      // Ingrédients
+      // Ingredients
       ingredients: this.parseIngredients(offProduct.ingredients || []),
       
       // Nutrition
@@ -208,11 +208,11 @@ class OpenFoodFactsIngestion {
         }
       } : null,
       
-      // Allergènes et additifs
+      // Allergenes et additifs
       allergens: offProduct.allergens_tags || [],
       additives: offProduct.additives_tags || [],
       
-      // Métadonnées
+      // Metadonnees
       status: 'active',
       lastSyncedAt: new Date(),
       importedAt: new Date()
@@ -220,13 +220,13 @@ class OpenFoodFactsIngestion {
   }
 
   /**
-   * Parser les ingrédients
+   * Parser les ingredients
    */
   parseIngredients(ingredients) {
     if (!Array.isArray(ingredients)) return [];
     
     return ingredients.map(ing => ({
-      name: ing.text || ing.id || 'Ingrédient',
+      name: ing.text || ing.id || 'Ingredient',
       percentage: ing.percent_estimate,
       isAllergen: ing.allergen === 'yes',
       vegan: ing.vegan === 'yes',
@@ -235,7 +235,7 @@ class OpenFoodFactsIngestion {
   }
 
   /**
-   * Calculer le score santé
+   * Calculer le score sante
    */
   calculateHealthScore(product) {
     let score = 50; // Base
@@ -273,9 +273,9 @@ class OpenFoodFactsIngestion {
    */
   async syncToAlgolia() {
     try {
-      console.log('🔄 Synchronisation Algolia...');
+      console.log('ðŸ”„ Synchronisation Algolia...');
       
-      // Récupérer les produits non synchronisés
+      // Recuperer les produits non synchronises
       const products = await Product.find({
         'algolia.synced': { $ne: true }
       }).limit(1000);
@@ -287,14 +287,14 @@ class OpenFoodFactsIngestion {
       // Indexer dans Algolia
       await algoliaService.indexProducts(products);
       
-      // Marquer comme synchronisés
+      // Marquer comme synchronises
       const productIds = products.map(p => p._id);
       await Product.updateMany(
         { _id: { $in: productIds } },
         { $set: { 'algolia.synced': true, 'algolia.syncedAt': new Date() } }
       );
       
-      console.log(`✅ ${products.length} produits synchronisés avec Algolia`);
+      console.log(`âœ… ${products.length} produits synchronises avec Algolia`);
       
     } catch (error) {
       console.error('Erreur sync Algolia:', error.message);
@@ -311,13 +311,13 @@ class OpenFoodFactsIngestion {
   printReport() {
     const duration = (Date.now() - this.startTime) / 1000;
     
-    console.log('\n📊 RAPPORT D\'INGESTION');
-    console.log('═'.repeat(50));
-    console.log(`✅ Produits traités: ${this.processedCount}`);
-    console.log(`❌ Erreurs: ${this.errorCount}`);
-    console.log(`⏱️ Durée: ${Math.round(duration)}s`);
-    console.log(`📈 Vitesse: ${Math.round(this.processedCount / duration)} produits/s`);
-    console.log('═'.repeat(50));
+    console.log('\nðŸ“Š RAPPORT D\'INGESTION');
+    console.log('â•'.repeat(50));
+    console.log(`âœ… Produits traites: ${this.processedCount}`);
+    console.log(`âŒ Erreurs: ${this.errorCount}`);
+    console.log(`â±ï¸ Duree: ${Math.round(duration)}s`);
+    console.log(`ðŸ“ˆ Vitesse: ${Math.round(this.processedCount / duration)} produits/s`);
+    console.log('â•'.repeat(50));
   }
 }
 
@@ -337,10 +337,10 @@ if (require.main === module) {
   
   // Lancer l'ingestion
   ingestion.run(options).then(() => {
-    console.log('✅ Ingestion terminée');
+    console.log('âœ… Ingestion terminee');
     process.exit(0);
   }).catch(error => {
-    console.error('❌ Erreur fatale:', error);
+    console.error('âŒ Erreur fatale:', error);
     process.exit(1);
   });
 }
@@ -363,7 +363,7 @@ class AlgoliaSync {
   }
 
   async run(options = {}) {
-    console.log('🔄 Démarrage synchronisation Algolia');
+    console.log('ðŸ”„ Demarrage synchronisation Algolia');
     
     try {
       await connectDB();
@@ -377,13 +377,13 @@ class AlgoliaSync {
       this.printReport();
       
     } catch (error) {
-      console.error('❌ Erreur sync:', error);
+      console.error('âŒ Erreur sync:', error);
       process.exit(1);
     }
   }
 
   async clearIndex() {
-    console.log('⚠️ Suppression de l\'index Algolia...');
+    console.log('âš ï¸ Suppression de l\'index Algolia...');
     await algoliaService.clearIndex();
   }
 
@@ -396,7 +396,7 @@ class AlgoliaSync {
     };
 
     const totalProducts = await Product.countDocuments(query);
-    console.log(`📊 ${totalProducts} produits à synchroniser`);
+    console.log(`ðŸ“Š ${totalProducts} produits   synchroniser`);
 
     let offset = 0;
 
@@ -411,7 +411,7 @@ class AlgoliaSync {
 
         await algoliaService.indexProducts(products);
 
-        // Marquer comme synchronisés
+        // Marquer comme synchronises
         const productIds = products.map(p => p._id);
         await Product.updateMany(
           { _id: { $in: productIds } },
@@ -424,12 +424,12 @@ class AlgoliaSync {
         );
 
         this.totalSynced += products.length;
-        console.log(`✅ ${this.totalSynced}/${totalProducts} synchronisés`);
+        console.log(`âœ… ${this.totalSynced}/${totalProducts} synchronises`);
 
         offset += this.batchSize;
 
       } catch (error) {
-        console.error(`❌ Erreur batch ${offset}:`, error.message);
+        console.error(`âŒ Erreur batch ${offset}:`, error.message);
         this.errors++;
         offset += this.batchSize;
       }
@@ -437,14 +437,14 @@ class AlgoliaSync {
   }
 
   printReport() {
-    console.log('\n📊 RAPPORT DE SYNCHRONISATION');
-    console.log('═'.repeat(50));
-    console.log(`✅ Produits synchronisés: ${this.totalSynced}`);
-    console.log(`❌ Erreurs: ${this.errors}`);
+    console.log('\nðŸ“Š RAPPORT DE SYNCHRONISATION');
+    console.log('â•'.repeat(50));
+    console.log(`âœ… Produits synchronises: ${this.totalSynced}`);
+    console.log(`âŒ Erreurs: ${this.errors}`);
     
     algoliaService.getIndexStats().then(stats => {
-      console.log(`📍 Total dans Algolia: ${stats.totalRecords || 0}`);
-      console.log('═'.repeat(50));
+      console.log(`ðŸ“ Total dans Algolia: ${stats.totalRecords || 0}`);
+      console.log('â•'.repeat(50));
     });
   }
 }

@@ -1,19 +1,19 @@
-// TEST OPENFOODFACTS SIMPLIFIÉ - SANS FILTRES COMPLEXES
+// TEST OPENFOODFACTS SIMPLIFIÃ‰ - SANS FILTRES COMPLEXES
 // Fichier: /tests/test-openfoodfacts.js
 
 const axios = require('axios');
 const fs = require('fs');
 
-// ✅ Configuration simplifiée
+// âœ… Configuration simplifiée
 const CONFIG = {
   BASE_URL: 'https://world.openfoodfacts.org',
   MAX_PRODUCTS: 20
 };
 
-// ✅ Test 1: Recherche basique "bio"
+// âœ… Test 1: Recherche basique "bio"
 async function testBasicSearch() {
   try {
-    console.log('🔍 Test 1: Recherche basique "bio"...');
+    console.log('ðŸ” Test 1: Recherche basique "bio"...');
     
     const url = `${CONFIG.BASE_URL}/cgi/search.pl`;
     const params = {
@@ -31,19 +31,19 @@ async function testBasicSearch() {
       }
     });
 
-    console.log(`✅ Résultats: ${response.data.products?.length || 0} produits`);
+    console.log(`âœ… Résultats: ${response.data.products?.length || 0} produits`);
     return response.data.products || [];
 
   } catch (error) {
-    console.error('❌ Erreur test basique:', error.message);
+    console.error('âŒ Erreur test basique:', error.message);
     return [];
   }
 }
 
-// ✅ Test 2: Produits populaires français
+// âœ… Test 2: Produits populaires français
 async function testFrenchProducts() {
   try {
-    console.log('🔍 Test 2: Produits populaires français...');
+    console.log('ðŸ” Test 2: Produits populaires français...');
     
     const url = `${CONFIG.BASE_URL}/cgi/search.pl`;
     const params = {
@@ -64,19 +64,19 @@ async function testFrenchProducts() {
       }
     });
 
-    console.log(`✅ Résultats: ${response.data.products?.length || 0} produits français`);
+    console.log(`âœ… Résultats: ${response.data.products?.length || 0} produits français`);
     return response.data.products || [];
 
   } catch (error) {
-    console.error('❌ Erreur test français:', error.message);
+    console.error('âŒ Erreur test français:', error.message);
     return [];
   }
 }
 
-// ✅ Test 3: API différente - Catégories
+// âœ… Test 3: API différente - Catégories
 async function testCategories() {
   try {
-    console.log('🔍 Test 3: API Catégories...');
+    console.log('ðŸ” Test 3: API Catégories...');
     
     const url = `${CONFIG.BASE_URL}/api/v2/search`;
     const params = {
@@ -94,19 +94,19 @@ async function testCategories() {
       }
     });
 
-    console.log(`✅ Résultats: ${response.data.products?.length || 0} produits catégories`);
+    console.log(`âœ… Résultats: ${response.data.products?.length || 0} produits catégories`);
     return response.data.products || [];
 
   } catch (error) {
-    console.error('❌ Erreur test catégories:', error.message);
+    console.error('âŒ Erreur test catégories:', error.message);
     return [];
   }
 }
 
-// ✅ Test 4: Produits au hasard
+// âœ… Test 4: Produits au hasard
 async function testRandomProducts() {
   try {
-    console.log('🔍 Test 4: Produits aléatoires...');
+    console.log('ðŸ” Test 4: Produits aléatoires...');
     
     const url = `${CONFIG.BASE_URL}/cgi/search.pl`;
     const params = {
@@ -123,16 +123,16 @@ async function testRandomProducts() {
       }
     });
 
-    console.log(`✅ Résultats: ${response.data.products?.length || 0} produits aléatoires`);
+    console.log(`âœ… Résultats: ${response.data.products?.length || 0} produits aléatoires`);
     return response.data.products || [];
 
   } catch (error) {
-    console.error('❌ Erreur test aléatoire:', error.message);
+    console.error('âŒ Erreur test aléatoire:', error.message);
     return [];
   }
 }
 
-// ✅ Transformation simple pour Ecolojia
+// âœ… Transformation simple pour Ecolojia
 function transformProducts(products, source) {
   return products
     .filter(p => p.product_name && p.product_name.trim().length > 3)
@@ -157,7 +157,7 @@ function transformProducts(products, source) {
     }));
 }
 
-// ✅ Fonctions utilitaires simples
+// âœ… Fonctions utilitaires simples
 function generateSimpleDescription(product) {
   const brand = product.brands ? `de ${product.brands}` : '';
   const categories = product.categories ? ` - ${product.categories.split(',')[0]}` : '';
@@ -191,10 +191,10 @@ function extractSimpleTags(product) {
   return tags;
 }
 
-// ✅ Test principal simplifié
+// âœ… Test principal simplifié
 async function runOpenFoodFactsTest() {
-  console.log('🚀 TEST OPENFOODFACTS SIMPLIFIÉ');
-  console.log('🎯 Objectif: Trouver des produits avec différentes approches\n');
+  console.log('ðŸš€ TEST OPENFOODFACTS SIMPLIFIÃ‰');
+  console.log('ðŸŽ¯ Objectif: Trouver des produits avec différentes approches\n');
   
   const allProducts = [];
   
@@ -232,12 +232,12 @@ async function runOpenFoodFactsTest() {
     }
     
     // Résultats
-    console.log('\n📊 RÉSULTATS FINAUX:');
-    console.log(`✅ Total produits extraits: ${allProducts.length}`);
+    console.log('\nðŸ“Š RÃ‰SULTATS FINAUX:');
+    console.log(`âœ… Total produits extraits: ${allProducts.length}`);
     
     if (allProducts.length > 0) {
       // Affichage échantillon
-      console.log('\n📋 ÉCHANTILLON:');
+      console.log('\nðŸ“‹ Ã‰CHANTILLON:');
       allProducts.slice(0, 3).forEach((product, index) => {
         console.log(`${index + 1}. ${product.title}`);
         console.log(`   Marque: ${product.brand || 'N/A'}`);
@@ -248,10 +248,10 @@ async function runOpenFoodFactsTest() {
       // Sauvegarde
       const filename = `./openfoodfacts-simple-${Date.now()}.json`;
       fs.writeFileSync(filename, JSON.stringify(allProducts, null, 2));
-      console.log(`\n💾 Sauvegardé: ${filename}`);
+      console.log(`\nðŸ’¾ Sauvegardé: ${filename}`);
       
       // Format n8n
-      console.log('\n🔄 EXEMPLE POUR N8N:');
+      console.log('\nðŸ”„ EXEMPLE POUR N8N:');
       const example = allProducts[0];
       console.log(JSON.stringify({
         title: example.title,
@@ -261,22 +261,22 @@ async function runOpenFoodFactsTest() {
         zones_dispo: example.zones_dispo
       }, null, 2));
       
-      console.log('\n✅ SUCCÈS! OpenFoodFacts fonctionne');
+      console.log('\nâœ… SUCCÃˆS! OpenFoodFacts fonctionne');
       
     } else {
-      console.log('\n❌ ÉCHEC: Aucun produit trouvé avec toutes les méthodes');
-      console.log('🔄 Recommandation: Tester un autre site (Biocoop)');
+      console.log('\nâŒ Ã‰CHEC: Aucun produit trouvé avec toutes les méthodes');
+      console.log('ðŸ”„ Recommandation: Tester un autre site (Biocoop)');
     }
     
     return allProducts;
     
   } catch (error) {
-    console.error('💥 Erreur globale:', error.message);
+    console.error('ðŸ’¥ Erreur globale:', error.message);
     return [];
   }
 }
 
-// ✅ Exécution
+// âœ… Exécution
 if (require.main === module) {
   runOpenFoodFactsTest().catch(console.error);
 }

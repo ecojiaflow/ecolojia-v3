@@ -43,9 +43,9 @@ class EcolojiaOrchestrator {
     try {
       // Test connexion base
       await this.prisma.$connect();
-      this.logger.info('✅ Orchestrateur connecté à PostgreSQL');
+      this.logger.info('âœ… Orchestrateur connecte   PostgreSQL');
 
-      // Démarrer les tâches programmées
+      // Demarrer les taches programmees
       this.setupCronJobs();
       
       // API de monitoring
@@ -53,11 +53,11 @@ class EcolojiaOrchestrator {
       
       const PORT = process.env.ORCHESTRATOR_PORT || 3001;
       this.app.listen(PORT, () => {
-        this.logger.info(`🚀 Orchestrateur démarré sur port ${PORT}`);
+        this.logger.info(`ðŸš€ Orchestrateur demarre sur port ${PORT}`);
       });
 
     } catch (error) {
-      this.logger.error('❌ Erreur démarrage orchestrateur:', error);
+      this.logger.error('âŒ Erreur demarrage orchestrateur:', error);
       process.exit(1);
     }
   }
@@ -65,25 +65,25 @@ class EcolojiaOrchestrator {
   setupCronJobs() {
     // Import OpenFoodFacts quotidien (2h du matin)
     cron.schedule('0 2 * * *', async () => {
-      this.logger.info('🔄 Démarrage import OpenFoodFacts quotidien');
+      this.logger.info('ðŸ”„ Demarrage import OpenFoodFacts quotidien');
       const ingestion = new DataIngestion(this.prisma, this.logger);
       await ingestion.importNewProducts();
     });
 
     // Enrichissement IA (toutes les 4h)
     cron.schedule('0 */4 * * *', async () => {
-      this.logger.info('🤖 Démarrage enrichissement IA');
+      this.logger.info('ðŸ¤– Demarrage enrichissement IA');
       const enrichment = new EnrichmentService(this.prisma, this.logger);
       await enrichment.processQueue();
     });
 
     // Nettoyage base (dimanche 3h)
     cron.schedule('0 3 * * 0', async () => {
-      this.logger.info('🧹 Nettoyage base de données');
+      this.logger.info('ðŸ§¹ Nettoyage base de donnees');
       await this.cleanupDatabase();
     });
 
-    this.logger.info('⏰ Tâches programmées configurées');
+    this.logger.info('â° Taches programmees configurees');
   }
 
   setupAPI() {
@@ -117,7 +117,7 @@ class EcolojiaOrchestrator {
     this.app.post('/import', async (req, res) => {
       try {
         const ingestion = new DataIngestion(this.prisma, this.logger);
-        const imported = await ingestion.importNewProducts(50); // Limité à 50
+        const imported = await ingestion.importNewProducts(50); // Limite   50
         res.json({ success: true, imported });
       } catch (error) {
         res.status(500).json({ error: error.message });
@@ -127,7 +127,7 @@ class EcolojiaOrchestrator {
 
   async cleanupDatabase() {
     try {
-      // Supprimer les produits dupliqués
+      // Supprimer les produits dupliques
       const duplicates = await this.prisma.$queryRaw`
         DELETE FROM "Product" 
         WHERE id IN (
@@ -138,7 +138,7 @@ class EcolojiaOrchestrator {
         )
       `;
 
-      this.logger.info(`🧹 ${duplicates.count || 0} doublons supprimés`);
+      this.logger.info(`ðŸ§¹ ${duplicates.count || 0} doublons supprimes`);
     } catch (error) {
       this.logger.error('Erreur nettoyage:', error);
     }
@@ -146,18 +146,18 @@ class EcolojiaOrchestrator {
 
   async stop() {
     await this.prisma.$disconnect();
-    this.logger.info('⏹️ Orchestrateur arrêté');
+    this.logger.info('â¹ï¸ Orchestrateur arrete');
   }
 }
 
 module.exports = EcolojiaOrchestrator;
 
-// Démarrage automatique si exécuté directement
+// Demarrage automatique si execute directement
 if (require.main === module) {
   const orchestrator = new EcolojiaOrchestrator();
   orchestrator.start();
 
-  // Arrêt propre
+  // Arret propre
   process.on('SIGTERM', () => orchestrator.stop());
   process.on('SIGINT', () => orchestrator.stop());
 }

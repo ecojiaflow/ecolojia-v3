@@ -34,10 +34,10 @@ beforeAll(() => {
     // Afficher seulement les logs de test importants
     const message = args[0];
     if (typeof message === 'string' && (
-      message.includes('✅') || 
-      message.includes('❌') || 
-      message.includes('🎯') ||
-      message.includes('🚀') ||
+      message.includes('âœ…') || 
+      message.includes('âŒ') || 
+      message.includes('ðŸŽ¯') ||
+      message.includes('ðŸš€') ||
       message.includes('===') ||
       message.includes('Sprint 3')
     )) {
@@ -49,7 +49,7 @@ beforeAll(() => {
   console.error = originalError;
   console.warn = originalWarn;
   
-  console.log('🔧 Jest configuré pour Sprint 3 - IA + Prisma');
+  console.log('ðŸ”§ Jest configuré pour Sprint 3 - IA + Prisma');
 });
 
 afterAll(() => {
@@ -61,7 +61,7 @@ afterAll(() => {
 
 // Mock des services IA si pas de vraie clé API
 if (!process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY === 'test_key_sprint3') {
-  console.warn('⚠️ Mode test IA - Utilisation de mocks pour DeepSeek');
+  console.warn('âš ï¸ Mode test IA - Utilisation de mocks pour DeepSeek');
   
   // Mock axios pour DeepSeek API
   jest.mock('axios', () => ({
@@ -188,8 +188,8 @@ global.AI_SERVICES_AVAILABLE = !!(
   process.env.DEEPSEEK_API_KEY !== 'test_key_sprint3'
 );
 
-console.log('🔧 Setup complet:', {
-  prisma: '✅',
+console.log('ðŸ”§ Setup complet:', {
+  prisma: 'âœ…',
   ai_mocks: global.AI_SERVICES_AVAILABLE ? 'Vraie API' : 'Mocks de test',
   jest_timeout: '30s',
   sprint: '3.0'

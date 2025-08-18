@@ -1,6 +1,6 @@
 [
   {
-    "name": "Lessive Écologique Lavande",
+    "name": "Lessive Ã‰cologique Lavande",
     "brand": "EcoClean",
     "barcode": "3560070123456",
     "categories": ["laundry_detergent", "liquid"],
@@ -73,7 +73,7 @@
     "labels": ["effective_30c", "color_safe"],
     "certifications": [],
     "dosage": "75g pour eau douce, 100g pour eau dure",
-    "features": ["Anti-calcaire", "Efficace dès 30°C"]
+    "features": ["Anti-calcaire", "Efficace dès 30Â°C"]
   },
   {
     "name": "Spray Vitres et Miroirs",
@@ -94,7 +94,7 @@
     "labels": ["kills_bacteria_viruses", "en14476"],
     "certifications": [],
     "warnings": ["Inflammable", "Utiliser dans un endroit ventilé"],
-    "efficacy": "Élimine 99.99% des bactéries et virus enveloppés"
+    "efficacy": "Ã‰limine 99.99% des bactéries et virus enveloppés"
   },
   {
     "name": "Nettoyant Sol Parfum Provence",
@@ -147,7 +147,7 @@
     "composition": "Sodium Percarbonate >30%, Sodium Carbonate, TAED, enzymes, tensioactifs anioniques <5%",
     "labels": ["oxygen_bleach", "color_safe", "effective_30c"],
     "certifications": [],
-    "usage": "Ajouter 1 cuillère à la lessive ou faire tremper",
+    "usage": "Ajouter 1 cuillère Ã  la lessive ou faire tremper",
     "features": ["Sans chlore", "Respecte les couleurs"]
   },
   {

@@ -1,7 +1,7 @@
 // PATH: backend/src/scorers/cosmetic/cosmeticScorer.js
 /**
  * ECOLOJIA - Cosmetic Scorer v1.0 SIMPLE
- * Analyse scientifique des produits cosmétiques basée sur la base INCI
+ * Analyse scientifique des produits cosmetiques basee sur la base INCI
  */
 
 const { Logger } = require('../../utils/logger');
@@ -9,16 +9,16 @@ const logger = new Logger('CosmeticScorer');
 
 class CosmeticScorer {
   constructor() {
-    // Base de données INCI simplifiée mais fonctionnelle
+    // Base de donnees INCI simplifiee mais fonctionnelle
     this.endocrineDisruptors = {
-      'BUTYLPARABEN': { risk: 'high', source: 'ANSM 2024', effect: 'Mimétisme œstrogène' },
+      'BUTYLPARABEN': { risk: 'high', source: 'ANSM 2024', effect: 'Mimetisme Å“strogene' },
       'PROPYLPARABEN': { risk: 'medium', source: 'EFSA 2023', effect: 'Perturbation hormonale' },
-      'BENZOPHENONE-3': { risk: 'high', source: 'ANSES 2024', effect: 'Absorption cutanée élevée' },
-      'TRICLOSAN': { risk: 'high', source: 'OMS 2023', effect: 'Résistance antibiotique' },
+      'BENZOPHENONE-3': { risk: 'high', source: 'ANSES 2024', effect: 'Absorption cutanee elevee' },
+      'TRICLOSAN': { risk: 'high', source: 'OMS 2023', effect: 'Resistance antibiotique' },
       'BHT': { risk: 'medium', source: 'EFSA 2024', effect: 'Accumulation tissulaire' },
-      'BHA': { risk: 'high', source: 'IARC 2024', effect: 'Cancérogène possible' },
-      'PHENOXYETHANOL': { risk: 'low', source: 'ANSM 2024', effect: 'Toxique système nerveux >1%' },
-      'METHYLISOTHIAZOLINONE': { risk: 'high', source: 'SCCS 2024', effect: 'Allergisant sévère' }
+      'BHA': { risk: 'high', source: 'IARC 2024', effect: 'Cancerogene possible' },
+      'PHENOXYETHANOL': { risk: 'low', source: 'ANSM 2024', effect: 'Toxique systeme nerveux >1%' },
+      'METHYLISOTHIAZOLINONE': { risk: 'high', source: 'SCCS 2024', effect: 'Allergisant severe' }
     };
 
     this.allergens = {
@@ -34,8 +34,8 @@ class CosmeticScorer {
     this.beneficial = {
       'HYALURONIC ACID': { benefit: 'Hydratation', evidence: 'high' },
       'NIACINAMIDE': { benefit: 'Anti-inflammatoire', evidence: 'high' },
-      'RETINOL': { benefit: 'Anti-âge', evidence: 'high' },
-      'CERAMIDE': { benefit: 'Barrière cutanée', evidence: 'high' },
+      'RETINOL': { benefit: 'Anti-age', evidence: 'high' },
+      'CERAMIDE': { benefit: 'Barriere cutanee', evidence: 'high' },
       'ALOE BARBADENSIS': { benefit: 'Apaisant', evidence: 'medium' },
       'TOCOPHEROL': { benefit: 'Antioxydant', evidence: 'high' },
       'ASCORBIC ACID': { benefit: 'Antioxydant', evidence: 'high' },
@@ -49,25 +49,25 @@ class CosmeticScorer {
   }
 
   /**
-   * Analyse complète d'un produit cosmétique
+   * Analyse complete d'un produit cosmetique
    */
   async analyzeCosmetic(productData) {
     try {
-      logger.info('🧴 Démarrage analyse cosmétique', { 
+      logger.info('ðŸ§´ Demarrage analyse cosmetique', { 
         product: productData.name || 'Produit inconnu' 
       });
       
       const startTime = Date.now();
       
-      // 1. Extraction ingrédients INCI
+      // 1. Extraction ingredients INCI
       const ingredients = this.extractIngredients(productData);
-      logger.info('📋 Ingrédients extraits', { count: ingredients.length });
+      logger.info('ðŸ“‹ Ingredients extraits', { count: ingredients.length });
       
       if (ingredients.length === 0) {
-        throw new Error('Aucun ingrédient détecté dans les données');
+        throw new Error('Aucun ingredient detecte dans les donnees');
       }
       
-      // 2. Analyses spécialisées
+      // 2. Analyses specialisees
       const riskAnalysis = this.analyzeRisks(ingredients);
       const allergenAnalysis = this.analyzeAllergens(ingredients);
       const benefitAnalysis = this.analyzeBenefits(ingredients);
@@ -81,7 +81,7 @@ class CosmeticScorer {
       
       const processingTime = Date.now() - startTime;
       
-      logger.info('✅ Analyse cosmétique terminée', { 
+      logger.info('âœ… Analyse cosmetique terminee', { 
         score: finalScore,
         confidence: confidence.value,
         processingTime 
@@ -105,13 +105,13 @@ class CosmeticScorer {
       };
 
     } catch (error) {
-      logger.error('❌ Erreur analyse cosmétique', { error: error.message });
-      throw new Error(`Erreur analyse cosmétique: ${error.message}`);
+      logger.error('âŒ Erreur analyse cosmetique', { error: error.message });
+      throw new Error(`Erreur analyse cosmetique: ${error.message}`);
     }
   }
 
   /**
-   * Extraction des ingrédients INCI
+   * Extraction des ingredients INCI
    */
   extractIngredients(productData) {
     let ingredients = [];
@@ -129,7 +129,7 @@ class CosmeticScorer {
         const cleaned = source
           .toUpperCase()
           .replace(/INGREDIENTS?\s*[:;-]?\s*/i, '')
-          .replace(/\([^)]*\)/g, '') // Supprime parenthèses
+          .replace(/\([^)]*\)/g, '') // Supprime parentheses
           .replace(/\d+%?/g, '')     // Supprime pourcentages
           .split(/[,;]\s*/)
           .map(ing => ing.trim())
@@ -174,7 +174,7 @@ class CosmeticScorer {
         }
       }
 
-      // Ingrédients sensibles
+      // Ingredients sensibles
       if (this.sensitiveAvoid.includes(ingredient)) {
         risks.toxic_ingredients.push({
           name: ingredient,
@@ -195,7 +195,7 @@ class CosmeticScorer {
   }
 
   /**
-   * Analyse des allergènes
+   * Analyse des allergenes
    */
   analyzeAllergens(ingredients) {
     const analysis = {
@@ -234,7 +234,7 @@ class CosmeticScorer {
   }
 
   /**
-   * Analyse des bénéfices
+   * Analyse des benefices
    */
   analyzeBenefits(ingredients) {
     const benefits = {
@@ -267,7 +267,7 @@ class CosmeticScorer {
   }
 
   /**
-   * Calcul du breakdown détaillé
+   * Calcul du breakdown detaille
    */
   calculateBreakdown(riskAnalysis, allergenAnalysis, benefitAnalysis, ingredients) {
     return {
@@ -303,7 +303,7 @@ class CosmeticScorer {
   }
 
   /**
-   * Score final pondéré
+   * Score final pondere
    */
   calculateFinalScore(breakdown) {
     const weights = {
@@ -327,11 +327,11 @@ class CosmeticScorer {
   calculateConfidence(ingredients, breakdown) {
     let confidence = 0;
 
-    // Reconnaissance ingrédients
+    // Reconnaissance ingredients
     const recognizedRatio = this.countRecognizedIngredients(ingredients) / ingredients.length;
     confidence += recognizedRatio * 0.5;
 
-    // Données d'analyse
+    // Donnees d'analyse
     if (breakdown.safety.details.endocrine_disruptors > 0 || breakdown.allergens.details.total_detected > 0) {
       confidence += 0.3;
     }
@@ -345,9 +345,9 @@ class CosmeticScorer {
     }
 
     let label;
-    if (confidence >= 0.8) label = "Très fiable";
+    if (confidence >= 0.8) label = "Tres fiable";
     else if (confidence >= 0.6) label = "Fiable";
-    else if (confidence >= 0.4) label = "Modéré";
+    else if (confidence >= 0.4) label = "Modere";
     else label = "Faible";
 
     return {
@@ -357,7 +357,7 @@ class CosmeticScorer {
   }
 
   /**
-   * Méthodes utilitaires
+   * Methodes utilitaires
    */
   countRecognizedIngredients(ingredients) {
     return ingredients.filter(ingredient => 

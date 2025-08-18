@@ -1,7 +1,7 @@
 // tests/api.test.js
 const request = require('supertest');
 
-// URL de l'API à tester
+// URL de l'API Ã  tester
 const API_BASE_URL = 'http://localhost:3000';
 const API_KEY = process.env.ADMIN_API_KEY || 'ecolojia-admin-2025-secure-key-v1';
 
@@ -17,11 +17,11 @@ describe('Ecolojia API Tests', () => {
         .get('/health')
         .expect(200);
 
-      // ✅ Accepter 'ok' ou 'up' pour le status
+      // âœ… Accepter 'ok' ou 'up' pour le status
       expect(response.body).toHaveProperty('status');
       expect(['ok', 'up']).toContain(response.body.status);
       
-      // ✅ Test flexible pour timestamp et uptime (peuvent être optionnels)
+      // âœ… Test flexible pour timestamp et uptime (peuvent être optionnels)
       if (response.body.timestamp) {
         expect(response.body).toHaveProperty('timestamp');
       }
@@ -29,7 +29,7 @@ describe('Ecolojia API Tests', () => {
         expect(response.body).toHaveProperty('uptime');
       }
       
-      console.log('✅ Health check response:', response.body);
+      console.log('âœ… Health check response:', response.body);
     });
 
     test('GET / should return API info', async () => {
@@ -48,12 +48,12 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/api/products');
 
-      // ✅ Accepter 200, 404 ou 500 (route peut ne pas exister)
+      // âœ… Accepter 200, 404 ou 500 (route peut ne pas exister)
       expect([200, 404, 500]).toContain(response.status);
       
       if (response.status === 200) {
         expect(Array.isArray(response.body)).toBe(true);
-        console.log(`✅ Found ${response.body.length} products`);
+        console.log(`âœ… Found ${response.body.length} products`);
         
         // Vérifier la structure si des produits existent
         if (response.body.length > 0) {
@@ -63,14 +63,14 @@ describe('Ecolojia API Tests', () => {
           expect(firstProduct).toHaveProperty('eco_score');
         }
       } else {
-        console.log('⚠️ Products route error (normal in tests)');
+        console.log('âš ï¸ Products route error (normal in tests)');
       }
     });
 
     test('POST /api/products should create a product', async () => {
       const newProduct = {
         title: 'Test Product Jest Complete',
-        slug: 'test-product-jest-complete-' + Date.now(), // ✅ Slug requis
+        slug: 'test-product-jest-complete-' + Date.now(), // âœ… Slug requis
         description: 'Complete test product for Jest testing with all required fields',
         category: 'test-category',
         brand: 'Test Brand',
@@ -82,7 +82,7 @@ describe('Ecolojia API Tests', () => {
         .post('/api/products')
         .send(newProduct);
 
-      // ✅ Accepter 201, 400, 404 ou 500
+      // âœ… Accepter 201, 400, 404 ou 500
       expect([201, 400, 404, 500]).toContain(response.status);
 
       if (response.status === 201) {
@@ -101,11 +101,11 @@ describe('Ecolojia API Tests', () => {
         expect(ecoScore).toBeGreaterThan(0);
         
         testProductId = response.body.id;
-        console.log(`✅ Created test product: ${testProductId}`);
+        console.log(`âœ… Created test product: ${testProductId}`);
         console.log(`   Title: ${response.body.title}`);
         console.log(`   Eco Score: ${response.body.eco_score}`);
       } else {
-        console.log(`⚠️ Product creation failed: ${response.status}`);
+        console.log(`âš ï¸ Product creation failed: ${response.status}`);
         console.log('Response:', response.body);
       }
     });
@@ -115,7 +115,7 @@ describe('Ecolojia API Tests', () => {
         .post('/api/products')
         .send('invalid json');
 
-      // ✅ Accepter 400, 404 ou 500
+      // âœ… Accepter 400, 404 ou 500
       expect([400, 404, 500]).toContain(response.status);
       
       if (response.status === 400) {
@@ -134,7 +134,7 @@ describe('Ecolojia API Tests', () => {
         .post('/api/products')
         .send(invalidProduct);
 
-      // ✅ Accepter 400, 404 ou 500
+      // âœ… Accepter 400, 404 ou 500
       expect([400, 404, 500]).toContain(response.status);
       
       if (response.status === 400) {
@@ -150,19 +150,19 @@ describe('Ecolojia API Tests', () => {
         const response = await request(API_BASE_URL)
           .get(`/api/products/${slug}`);
 
-        // ✅ Accepter 200, 404 ou 500
+        // âœ… Accepter 200, 404 ou 500
         expect([200, 404, 500]).toContain(response.status);
         
         if (response.status === 200) {
           expect(response.body).toHaveProperty('id');
           expect(response.body).toHaveProperty('title');
           expect(response.body).toHaveProperty('eco_score');
-          console.log(`✅ Retrieved product by slug: ${slug}`);
+          console.log(`âœ… Retrieved product by slug: ${slug}`);
         } else if (response.status === 404) {
-          console.log(`⚠️ Product not found (timing issue): ${slug}`);
+          console.log(`âš ï¸ Product not found (timing issue): ${slug}`);
         }
       } else {
-        console.log('⚠️ Skipping product retrieval test - no product created');
+        console.log('âš ï¸ Skipping product retrieval test - no product created');
       }
     });
 
@@ -172,7 +172,7 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get(`/api/products/${fakeSlug}`);
 
-      // ✅ Accepter 404 ou 500
+      // âœ… Accepter 404 ou 500
       expect([404, 500]).toContain(response.status);
       
       if (response.status === 404) {
@@ -186,13 +186,13 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/api/products/search?q=bio');
 
-      // ✅ Accepter 200, 404 ou 500
+      // âœ… Accepter 200, 404 ou 500
       expect([200, 404, 500]).toContain(response.status);
       
       if (response.status === 200) {
         expect(response.body).toHaveProperty('products');
         expect(Array.isArray(response.body.products)).toBe(true);
-        console.log(`✅ Search returned ${response.body.products.length} products`);
+        console.log(`âœ… Search returned ${response.body.products.length} products`);
       }
     });
 
@@ -200,7 +200,7 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/api/products/search?category=cosmetique');
 
-      // ✅ Accepter 200, 404 ou 500
+      // âœ… Accepter 200, 404 ou 500
       expect([200, 404, 500]).toContain(response.status);
       
       if (response.status === 200) {
@@ -215,7 +215,7 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/api/products/search?min_score=0.7&max_score=1.0');
 
-      // ✅ Accepter 200, 404 ou 500
+      // âœ… Accepter 200, 404 ou 500
       expect([200, 404, 500]).toContain(response.status);
       
       if (response.status === 200 && response.body.products) {
@@ -231,7 +231,7 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/api/products/stats');
 
-      // ✅ Accepter 200, 404 ou 500
+      // âœ… Accepter 200, 404 ou 500
       expect([200, 404, 500]).toContain(response.status);
       
       if (response.status === 200) {
@@ -239,7 +239,7 @@ describe('Ecolojia API Tests', () => {
         expect(response.body).toHaveProperty('average_eco_score');
         expect(response.body).toHaveProperty('categories');
         expect(response.body).toHaveProperty('top_products');
-        console.log(`✅ Stats: ${response.body.total_products} total products`);
+        console.log(`âœ… Stats: ${response.body.total_products} total products`);
       }
     });
   });
@@ -255,7 +255,7 @@ describe('Ecolojia API Tests', () => {
         .post('/api/suggest')
         .send(incompleteSuggestion);
 
-      // ✅ Accepter 400, 404 ou 503
+      // âœ… Accepter 400, 404 ou 503
       expect([400, 404, 503]).toContain(response.status);
       
       if (response.status === 400) {
@@ -274,16 +274,16 @@ describe('Ecolojia API Tests', () => {
         .post('/api/suggest')
         .send(completeSuggestion);
 
-      // ✅ Accepter 200, 404, 503 ou 429
+      // âœ… Accepter 200, 404, 503 ou 429
       expect([200, 404, 503, 429]).toContain(response.status);
       
       if (response.status === 503) {
         expect(response.body).toHaveProperty('error');
-        console.log('⚠️ N8N service not configured (normal in tests)');
+        console.log('âš ï¸ N8N service not configured (normal in tests)');
       } else if (response.status === 200) {
-        console.log('✅ AI suggestion request successful');
+        console.log('âœ… AI suggestion request successful');
       } else if (response.status === 404) {
-        console.log('⚠️ Suggest route not found');
+        console.log('âš ï¸ Suggest route not found');
       }
     });
   });
@@ -295,12 +295,12 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get(`/api/track/${fakeId}`);
 
-      // ✅ Accepter 404, 500 ou 429
+      // âœ… Accepter 404, 500 ou 429
       expect([404, 500, 429]).toContain(response.status);
       
       if (response.status === 404) {
         expect(response.body).toHaveProperty('error');
-        // ✅ Accepter différents messages d'erreur
+        // âœ… Accepter différents messages d'erreur
         const errorMsg = response.body.error;
         const validErrors = [
           'Lien affilié introuvable',
@@ -317,10 +317,10 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get(`/api/track/${malformedId}`);
 
-      // ✅ Accepter 404, 500 ou 429
+      // âœ… Accepter 404, 500 ou 429
       expect([404, 500, 429]).toContain(response.status);
       
-      console.log(`✅ Malformed UUID handled with status: ${response.status}`);
+      console.log(`âœ… Malformed UUID handled with status: ${response.status}`);
     });
   });
 
@@ -329,15 +329,15 @@ describe('Ecolojia API Tests', () => {
       const response = await request(API_BASE_URL)
         .get('/nonexistent-route');
 
-      // ✅ Accepter 404 ou 500
+      // âœ… Accepter 404 ou 500
       expect([404, 500]).toContain(response.status);
       
       if (response.status === 404) {
-        // ✅ Test flexible sur le format de réponse
+        // âœ… Test flexible sur le format de réponse
         if (response.body && Object.keys(response.body).length > 0) {
           expect(response.body).toHaveProperty('error');
         }
-        console.log('✅ 404 error handling working correctly');
+        console.log('âœ… 404 error handling working correctly');
       }
     });
 
@@ -347,15 +347,15 @@ describe('Ecolojia API Tests', () => {
         .set('Content-Type', 'application/json')
         .send('{ invalid json }');
 
-      // ✅ Accepter 400, 404 ou 500
+      // âœ… Accepter 400, 404 ou 500
       expect([400, 404, 500]).toContain(response.status);
-      console.log(`✅ Malformed JSON handled with status: ${response.status}`);
+      console.log(`âœ… Malformed JSON handled with status: ${response.status}`);
     });
   });
 
   // Cleanup simplifié
   afterAll(async () => {
-    console.log('\n🧹 Test cleanup completed');
+    console.log('\nðŸ§¹ Test cleanup completed');
     
     if (testProductId) {
       console.log(`   Created test product: ${testProductId}`);

@@ -44,10 +44,10 @@
     const res = await analysisService.analyzeProduct(payload, { updateDatabase: false, updateAlgolia: false });
     const ms = Date.now() - sw;
 
-    console.log('✅ Analyse locale OK en', ms, 'ms');
+    console.log('âœ… Analyse locale OK en', ms, 'ms');
     console.log(JSON.stringify(res, null, 2));
   } catch (err) {
-    console.error('❌ dryRunAnalysis error:', err);
+    console.error('âŒ dryRunAnalysis error:', err);
     process.exit(1);
   }
 })();

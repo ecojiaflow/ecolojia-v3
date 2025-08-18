@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const gdprLogSchema = new mongoose.Schema({
-  // Utilisateur concerné
+  // Utilisateur concerne
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -37,7 +37,7 @@ const gdprLogSchema = new mongoose.Schema({
     index: true
   },
   
-  // Détails de l'action
+  // Details de l'action
   details: {
     // Pour le consentement
     consentTypes: [{
@@ -48,7 +48,7 @@ const gdprLogSchema = new mongoose.Schema({
     
     // Pour les demandes
     requestReason: String,
-    requestScope: [String], // Quelles données sont concernées
+    requestScope: [String], // Quelles donnees sont concernees
     
     // Pour les exports
     exportFormat: {
@@ -64,13 +64,13 @@ const gdprLogSchema = new mongoose.Schema({
     },
     deletedDataTypes: [String],
     
-    // Informations supplémentaires
+    // Informations supplementaires
     previousValue: mongoose.Schema.Types.Mixed,
     newValue: mongoose.Schema.Types.Mixed,
     affectedFields: [String]
   },
   
-  // Métadonnées légales
+  // Metadonnees legales
   legal: {
     basis: {
       type: String,
@@ -78,10 +78,10 @@ const gdprLogSchema = new mongoose.Schema({
       required: true
     },
     
-    // Justification pour les intérêts légitimes
+    // Justification pour les interets legitimes
     legitimateInterestsAssessment: String,
     
-    // Durée de conservation
+    // Duree de conservation
     retentionPeriod: Number, // En jours
     retentionReason: String
   },
@@ -103,13 +103,13 @@ const gdprLogSchema = new mongoose.Schema({
       default: 'web_app'
     },
     
-    // Si c'est via un tiers autorisé
+    // Si c'est via un tiers autorise
     requestedBy: {
       type: String,
       enum: ['user', 'parent', 'legal_guardian', 'authorized_representative']
     },
     
-    // Vérification d'identité
+    // Verification d'identite
     identityVerified: {
       type: Boolean,
       default: true
@@ -125,7 +125,7 @@ const gdprLogSchema = new mongoose.Schema({
       default: 'completed'
     },
     
-    // Délais légaux
+    // Delais legaux
     receivedAt: {
       type: Date,
       default: Date.now
@@ -136,7 +136,7 @@ const gdprLogSchema = new mongoose.Schema({
     // Temps de traitement en heures
     processingTime: Number,
     
-    // Si rejeté
+    // Si rejete
     rejectionReason: String,
     rejectionLegalBasis: String,
     
@@ -152,7 +152,7 @@ const gdprLogSchema = new mongoose.Schema({
   
   // Communication avec l'utilisateur
   communication: {
-    // Notifications envoyées
+    // Notifications envoyees
     notifications: [{
       type: {
         type: String,
@@ -171,12 +171,12 @@ const gdprLogSchema = new mongoose.Schema({
     confirmationMethod: String
   },
   
-  // Audit et conformité
+  // Audit et conformite
   compliance: {
-    // Références légales
-    legalReferences: [String], // Articles RGPD appliqués
+    // References legales
+    legalReferences: [String], // Articles RGPD appliques
     
-    // Transferts de données
+    // Transferts de donnees
     dataTransfers: [{
       destination: String,
       country: String,
@@ -185,7 +185,7 @@ const gdprLogSchema = new mongoose.Schema({
       transferredAt: Date
     }],
     
-    // Sous-traitants impliqués
+    // Sous-traitants impliques
     processors: [{
       name: String,
       purpose: String,
@@ -193,7 +193,7 @@ const gdprLogSchema = new mongoose.Schema({
       dpaReference: String // Data Processing Agreement
     }],
     
-    // Évaluation des risques
+    // ‰valuation des risques
     riskAssessment: {
       level: {
         type: String,
@@ -204,15 +204,15 @@ const gdprLogSchema = new mongoose.Schema({
     }
   },
   
-  // Sécurité
+  // Securite
   security: {
-    // Hash de vérification pour l'intégrité
+    // Hash de verification pour l'integrite
     dataHash: String,
     
     // Chiffrement
     encryptionMethod: String,
     
-    // Accès aux logs
+    // Acces aux logs
     accessLog: [{
       accessedBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -223,7 +223,7 @@ const gdprLogSchema = new mongoose.Schema({
     }]
   },
   
-  // Métadonnées
+  // Metadonnees
   metadata: {
     version: {
       type: String,
@@ -233,7 +233,7 @@ const gdprLogSchema = new mongoose.Schema({
     // Tags pour faciliter la recherche
     tags: [String],
     
-    // Référence à d'autres logs liés
+    // Reference   d'autres logs lies
     relatedLogs: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'GDPRLog'
@@ -252,16 +252,16 @@ const gdprLogSchema = new mongoose.Schema({
   collection: 'gdpr_logs'
 });
 
-// Index composés pour les recherches fréquentes
+// Index composes pour les recherches frequentes
 gdprLogSchema.index({ userId: 1, action: 1, createdAt: -1 });
 gdprLogSchema.index({ 'processing.status': 1, createdAt: -1 });
 gdprLogSchema.index({ 'legal.basis': 1, action: 1 });
 gdprLogSchema.index({ 'compliance.riskAssessment.level': 1 });
 
-// Index TTL pour l'archivage automatique (7 ans par défaut)
+// Index TTL pour l'archivage automatique (7 ans par defaut)
 gdprLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 220752000 });
 
-// Méthodes d'instance
+// Methodes d'instance
 gdprLogSchema.methods = {
   // Calculer le temps de traitement
   calculateProcessingTime() {
@@ -271,7 +271,7 @@ gdprLogSchema.methods = {
     }
   },
   
-  // Vérifier si dans les délais légaux (30 jours)
+  // Verifier si dans les delais legaux (30 jours)
   isWithinLegalDeadline() {
     if (!this.processing.receivedAt) return true;
     
@@ -281,7 +281,7 @@ gdprLogSchema.methods = {
     return new Date() <= deadline;
   },
   
-  // Anonymiser les données sensibles pour l'archivage
+  // Anonymiser les donnees sensibles pour l'archivage
   anonymizeForArchive() {
     this.context.ip = 'ANONYMIZED';
     this.context.userAgent = 'ANONYMIZED';
@@ -290,7 +290,7 @@ gdprLogSchema.methods = {
     this.security.accessLog = [];
   },
   
-  // Générer un rapport de conformité
+  // Generer un rapport de conformite
   generateComplianceReport() {
     return {
       action: this.action,
@@ -305,9 +305,9 @@ gdprLogSchema.methods = {
   }
 };
 
-// Méthodes statiques
+// Methodes statiques
 gdprLogSchema.statics = {
-  // Créer un log avec validation
+  // Creer un log avec validation
   async createLog(userId, action, details, context) {
     const log = new this({
       userId,
@@ -322,7 +322,7 @@ gdprLogSchema.statics = {
     return log.save();
   },
   
-  // Déterminer la base légale selon l'action
+  // Determiner la base legale selon l'action
   determineLegalBasis(action) {
     const basisMap = {
       'consent_given': 'consent',
@@ -371,7 +371,7 @@ gdprLogSchema.statics = {
     }).populate('userId', 'email profile.firstName profile.lastName');
   },
   
-  // Rapport de conformité mensuel
+  // Rapport de conformite mensuel
   async generateMonthlyComplianceReport(year, month) {
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0);
@@ -423,7 +423,7 @@ gdprLogSchema.post('save', async function() {
     console.log(`New GDPR request: ${this.action} for user ${this.userId}`);
   }
   
-  // Si la demande dépasse les délais, alerter
+  // Si la demande depasse les delais, alerter
   if (!this.isWithinLegalDeadline() && this.processing.status !== 'completed') {
     // TODO: Alerte urgente
     console.error(`GDPR request ${this._id} is overdue!`);

@@ -1,4 +1,4 @@
-﻿// POST /api/algolia/sync - Synchroniser MongoDB -> Algolia
+// POST /api/algolia/sync - Synchroniser MongoDB -> Algolia
 router.post('/sync', asyncHandler(async (req, res) => {
   const Product = require('../models/Product');
   const products = await Product.find({}).lean();

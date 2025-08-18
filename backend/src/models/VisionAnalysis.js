@@ -10,7 +10,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     index: true
   },
 
-  // Métadonnées de l'image
+  // Metadonnees de l'image
   imageMetadata: {
     size: Number,
     mimeType: String,
@@ -24,7 +24,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     }
   },
 
-  // Résultats de l'OCR
+  // Resultats de l'OCR
   ocrResult: {
     service: {
       type: String,
@@ -42,7 +42,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     language: String
   },
 
-  // Données extraites
+  // Donnees extraites
   extractedData: {
     productName: String,
     brand: String,
@@ -64,7 +64,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     allergens: [String]
   },
 
-  // Produit trouvé
+  // Produit trouve
   matchedProduct: {
     found: {
       type: Boolean,
@@ -81,7 +81,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     matchConfidence: Number
   },
 
-  // Analyse du produit (si trouvé ou créé)
+  // Analyse du produit (si trouve ou cree)
   productAnalysis: {
     healthScore: Number,
     environmentScore: Number,
@@ -104,7 +104,7 @@ const visionAnalysisSchema = new mongoose.Schema({
     timestamp: Date
   },
 
-  // Métadonnées
+  // Metadonnees
   metadata: {
     userAgent: String,
     ipAddress: String,
@@ -121,7 +121,7 @@ visionAnalysisSchema.index({ 'extractedData.barcode': 1 });
 visionAnalysisSchema.index({ 'matchedProduct.productId': 1 });
 visionAnalysisSchema.index({ status: 1 });
 
-// Méthodes virtuelles
+// Methodes virtuelles
 visionAnalysisSchema.virtual('isSuccessful').get(function() {
   return this.status === 'completed' && this.ocrResult.confidence > 0.5;
 });
@@ -142,7 +142,7 @@ visionAnalysisSchema.virtual('dataCompleteness').get(function() {
   return filledFields.length / fields.length;
 });
 
-// Méthodes statiques
+// Methodes statiques
 visionAnalysisSchema.statics.getUserStats = async function(userId) {
   const stats = await this.aggregate([
     { $match: { userId: mongoose.Types.ObjectId(userId) } },
@@ -171,7 +171,7 @@ visionAnalysisSchema.statics.getUserStats = async function(userId) {
   };
 };
 
-// Méthodes d'instance
+// Methodes d'instance
 visionAnalysisSchema.methods.toClientJSON = function() {
   return {
     id: this._id,

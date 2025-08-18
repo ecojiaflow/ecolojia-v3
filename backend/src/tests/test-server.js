@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const app = express();
 
-// Page de test intégrée
+// Page de test intÃ©grÃ©e
 app.get('/', (req, res) => {
   res.send(`
 <!DOCTYPE html>

@@ -7,7 +7,7 @@
           "why_better": "+40% antioxydants, zéro additifs, -60% coût, +300% fibres solubles",
           "difficulty": "facile",
           "time": "2min",
-          "cost_comparison": "-3.20€/semaine",
+          "cost_comparison": "-3.20â‚¬/semaine",
           "nutritional_advantage": "Bêta-glucanes intacts, vitamines B préservées",
           "environmental_benefit": "-70% emballage, transport local possible",
           "sources": ["Journal of Nutrition 2024", "Diabetes Care 2024"],
@@ -203,7 +203,7 @@
         "environmental_benefit": "Contenants réutilisables, ingrédients bruts",
         "sources": ["Applied Microbiology 2024", "Dermatitis Journal 2024"],
         "usage_guide": "/recettes/deodorant-maison",
-        "skin_types": ["Peaux normales", "Éviter peaux très sensibles"]
+        "skin_types": ["Peaux normales", "Ã‰viter peaux très sensibles"]
       }
     ]
   },
@@ -219,7 +219,7 @@
         "environmental_benefit": "Biodégradable immédiat, non-toxique aquatique",
         "sources": ["Environmental Chemistry 2024", "Cleaning Science 2024"],
         "usage_guide": "/guides/nettoyage-vinaigre-bicarbonate",
-        "surfaces": ["Sanitaires", "Cuisine", "Vitres", "Éviter marbre"]
+        "surfaces": ["Sanitaires", "Cuisine", "Vitres", "Ã‰viter marbre"]
       }
     ],
     "lessive": [
@@ -262,7 +262,7 @@
     ],
     "local_vs_bio": [
       {
-        "explanation": "Local conventionnel peut être préférable à bio lointain selon contexte",
+        "explanation": "Local conventionnel peut être préférable Ã  bio lointain selon contexte",
         "criteria": "Distance transport, saisonnalité, pratiques agricoles locales",
         "decision_framework": "Analyse cas par cas selon empreinte carbone totale",
         "sources": ["Sustainable Agriculture 2024", "Carbon Footprint Studies 2024"]

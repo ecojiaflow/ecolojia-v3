@@ -1,317 +1,160 @@
-// backend/src/models/User.js
-// FICHIER COMPLET CORRIGÉ - Sans index dupliqués - emailVerified par défaut à TRUE
+// PATH: backend/src/models/User.js
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const aiPreferencesSchema = new mongoose.Schema({
+  tone: {
+    type: String,
+    enum: ['concise', 'detailed', 'educational', 'friendly'],
+    default: 'friendly'
+  },
+  detailLevel: {
+    type: String,
+    enum: ['minimal', 'moderate', 'comprehensive'],
+    default: 'moderate'
+  },
+  language: {
+    type: String,
+    enum: ['fr', 'en', 'es', 'de'],
+    default: 'fr'
+  },
+  foodRestrictions: [{
+    type: String,
+    enum: ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'halal', 'kosher', 'low-sodium', 'diabetic']
+  }],
+  allergens: [{
+    type: String,
+    enum: ['peanuts', 'tree-nuts', 'milk', 'eggs', 'wheat', 'soy', 'fish', 'shellfish', 'sesame']
+  }],
+  cosmeticPreferences: {
+    avoidIngredients: [String],
+    skinType: {
+      type: String,
+      enum: ['normal', 'dry', 'oily', 'combination', 'sensitive']
+    }
+  },
+  notificationPreferences: {
+    emailAlerts: { type: Boolean, default: true },
+    productRecalls: { type: Boolean, default: true },
+    weeklyDigest: { type: Boolean, default: false }
+  }
+}, { _id: false });
 
-// Schéma utilisateur
 const userSchema = new mongoose.Schema({
-  // Informations de base
   email: {
     type: String,
-    required: [true, 'Email requis'],
+    required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Email invalide']
-  },
-  
-  password: {
-    type: String,
-    required: [true, 'Mot de passe requis'],
-    minlength: 6
-  },
-  
-  name: {
-    type: String,
-    required: [true, 'Nom requis'],
     trim: true
   },
-  
-  // Profil détaillé
-  profile: {
-    firstName: {
-      type: String,
-      trim: true
-    },
-    lastName: {
-      type: String,
-      trim: true
-    },
-    avatarUrl: String,
-    phone: String,
-    dateOfBirth: Date,
-    gender: {
-      type: String,
-      enum: ['male', 'female', 'other', 'prefer-not-to-say']
-    }
-  },
-  
-  // Abonnement
-  tier: {
+  password: {
     type: String,
-    enum: ['free', 'premium', 'pro'],
-    default: 'free'
+    required: true
   },
-  
-  subscription: {
-    plan: {
-      type: String,
-      enum: ['monthly', 'annual'],
-      default: null
-    },
-    status: {
-      type: String,
-      enum: ['active', 'cancelled', 'past_due', 'unpaid'],
-      default: null
-    },
-    currentPeriodEnd: Date,
-    lemonSqueezyCustomerId: {
-      type: String,
-      unique: true,
-      sparse: true
-    },
-    lemonSqueezySubscriptionId: {
-      type: String,
-      unique: true,
-      sparse: true
-    }
-  },
-  
-  // Quotas
-  quotas: {
-    scansRemaining: {
-      type: Number,
-      default: 30
-    },
-    scansResetDate: {
-      type: Date,
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    },
-    aiChatsRemaining: {
-      type: Number,
-      default: 5
-    },
-    aiChatsResetDate: {
-      type: Date,
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    },
-    exportsRemaining: {
-      type: Number,
-      default: 0
-    },
-    exportsResetDate: Date
-  },
-  
-  // Préférences
-  preferences: {
-    allergies: [{
-      type: String,
-      enum: ['gluten', 'lactose', 'eggs', 'nuts', 'peanuts', 'soy', 'fish', 'shellfish', 'sesame']
-    }],
-    diets: [{
-      type: String,
-      enum: ['vegetarian', 'vegan', 'halal', 'kosher', 'gluten-free', 'keto', 'paleo']
-    }],
-    healthGoals: [{
-      type: String,
-      enum: ['weight-loss', 'muscle-gain', 'health', 'energy', 'digestion']
-    }],
-    notifications: {
-      email: { type: Boolean, default: true },
-      push: { type: Boolean, default: true },
-      marketing: { type: Boolean, default: false }
-    }
-  },
-  
-  // Statut et sécurité
-  status: {
+  name: {
     type: String,
-    enum: ['active', 'suspended', 'deleted'],
-    default: 'active'
+    required: true,
+    trim: true
   },
-  
+  avatar: String,
   emailVerified: {
     type: Boolean,
-    default: true  // MODIFIÉ : Changé de false à true pour faciliter les tests
+    default: false
   },
-  
   emailVerificationToken: String,
-  emailVerificationExpires: Date,
-  
   passwordResetToken: String,
   passwordResetExpires: Date,
   
-  twoFactorSecret: String,
-  twoFactorEnabled: {
-    type: Boolean,
-    default: false
+  // Plan & Subscription
+  plan: {
+    code: {
+      type: String,
+      enum: ['free', 'premium', 'family'],
+      default: 'free'
+    },
+    status: {
+      type: String,
+      enum: ['active', 'canceled', 'past_due', 'trialing'],
+      default: 'active'
+    },
+    periodEnd: Date,
+    customerId: String,
+    subscriptionId: String
   },
   
-  // Métadonnées
-  referralCode: {
-    type: String,
-    unique: true,
-    sparse: true
+  // Quotas & Limits
+  limits: {
+    scansPerMonth: { type: Number, default: 30 },
+    aiChatsPerMonth: { type: Number, default: 5 },
+    exportPerMonth: { type: Number, default: 1 },
+    favoritesMax: { type: Number, default: 20 }
   },
   
-  referredBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+  // Usage tracking (current month)
+  usage: {
+    currentMonth: { type: Number, default: () => new Date().getMonth() },
+    scans: { type: Number, default: 0 },
+    aiChats: { type: Number, default: 0 },
+    exports: { type: Number, default: 0 },
+    lastReset: { type: Date, default: Date.now }
   },
   
-  lastLoginAt: Date,
-  lastLoginIp: String,
-  
-  // RGPD
-  gdpr: {
-    consentDate: Date,
-    consentVersion: String,
-    marketingConsent: { type: Boolean, default: false },
-    dataProcessingConsent: { type: Boolean, default: true }
+  // AI Preferences - NOUVEAU
+  aiPreferences: {
+    type: aiPreferencesSchema,
+    default: () => ({})
   },
   
-  // Admin
-  isAdmin: {
-    type: Boolean,
-    default: false
-  },
-  
-  role: {
-    type: String,
-    enum: ['user', 'moderator', 'admin'],
-    default: 'user'
-  }
-}, {
-  timestamps: true, // createdAt, updatedAt
-  toJSON: {
-    virtuals: true,
-    transform: function(doc, ret) {
-      delete ret.password;
-      delete ret.__v;
-      return ret;
-    }
-  }
+  // Timestamps
+  lastLogin: Date,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
-// Index pour les performances - SANS DOUBLONS
-// Commenté car 'unique: true' crée déjà un index sur email
-// userSchema.index({ email: 1 });
-userSchema.index({ tier: 1 });
-userSchema.index({ 'subscription.status': 1 });
-// Commenté car 'unique: true' crée déjà un index sur referralCode
-// userSchema.index({ referralCode: 1 });
-userSchema.index({ createdAt: -1 });
+// Indexes
+userSchema.index({ email: 1 });
+userSchema.index({ 'plan.customerId': 1 });
 
-// Virtuals
-userSchema.virtual('displayName').get(function() {
-  if (this.profile?.firstName && this.profile?.lastName) {
-    return `${this.profile.firstName} ${this.profile.lastName}`;
-  }
-  return this.name || this.email.split('@')[0];
-});
-
-userSchema.virtual('isPremium').get(function() {
-  return this.tier === 'premium' || this.tier === 'pro';
-});
-
-userSchema.virtual('hasActiveSubscription').get(function() {
-  return this.subscription?.status === 'active' && 
-         this.subscription?.currentPeriodEnd > new Date();
-});
-
-// Méthodes d'instance
+// Methods
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-userSchema.methods.generateReferralCode = function() {
-  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-  this.referralCode = `ECO-${code}`;
-  return this.referralCode;
-};
-
-userSchema.methods.resetQuotas = function() {
-  const now = new Date();
-  const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-  
-  if (this.tier === 'free') {
-    this.quotas.scansRemaining = 30;
-    this.quotas.aiChatsRemaining = 5;
-    this.quotas.exportsRemaining = 0;
-  } else if (this.tier === 'premium') {
-    this.quotas.scansRemaining = 999999;
-    this.quotas.aiChatsRemaining = 500;
-    this.quotas.exportsRemaining = 100;
-  }
-  
-  this.quotas.scansResetDate = thirtyDaysFromNow;
-  this.quotas.aiChatsResetDate = thirtyDaysFromNow;
-  this.quotas.exportsResetDate = thirtyDaysFromNow;
-};
-
-// Méthode pour vérifier les quotas (ajoutée pour compatibilité avec products.js)
-userSchema.methods.checkQuota = function(type) {
-  if (this.tier === 'premium') return true;
-  
-  const quotaField = type === 'analyses' ? 'scansRemaining' : 
-                     type === 'chat' ? 'aiChatsRemaining' :
-                     type === 'export' ? 'exportsRemaining' : null;
-  
-  if (!quotaField) return false;
-  
-  return this.quotas[quotaField] > 0;
-};
-
-// Méthode pour incrémenter l'usage (ajoutée pour compatibilité avec products.js)
-userSchema.methods.incrementUsage = async function(type) {
-  const quotaField = type === 'analyses' ? 'scansRemaining' : 
-                     type === 'chat' ? 'aiChatsRemaining' :
-                     type === 'export' ? 'exportsRemaining' : null;
-  
-  if (!quotaField) return;
-  
-  if (this.tier !== 'premium') {
-    this.quotas[quotaField] = Math.max(0, this.quotas[quotaField] - 1);
-    await this.save();
+userSchema.methods.resetMonthlyUsage = function() {
+  const currentMonth = new Date().getMonth();
+  if (this.usage.currentMonth !== currentMonth) {
+    this.usage.currentMonth = currentMonth;
+    this.usage.scans = 0;
+    this.usage.aiChats = 0;
+    this.usage.exports = 0;
+    this.usage.lastReset = new Date();
   }
 };
 
-// Méthodes statiques
-userSchema.statics.findByEmail = function(email) {
-  return this.findOne({ email: email.toLowerCase() });
+userSchema.methods.canScan = function() {
+  this.resetMonthlyUsage();
+  return this.plan.code === 'premium' || 
+         this.plan.code === 'family' || 
+         this.usage.scans < this.limits.scansPerMonth;
 };
 
-userSchema.statics.findActive = function() {
-  return this.find({ status: 'active' });
+userSchema.methods.canUseAI = function() {
+  this.resetMonthlyUsage();
+  return this.plan.code === 'premium' || 
+         this.plan.code === 'family' || 
+         this.usage.aiChats < this.limits.aiChatsPerMonth;
 };
 
-userSchema.statics.findPremiumUsers = function() {
-  return this.find({ tier: { $in: ['premium', 'pro'] } });
-};
-
-// Hooks
+// Pre-save middleware
 userSchema.pre('save', async function(next) {
-  // Hash le mot de passe seulement s'il a été modifié
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
   }
-});
-
-userSchema.pre('save', function(next) {
-  // Générer un code de parrainage si nécessaire
-  if (this.isNew && !this.referralCode) {
-    this.generateReferralCode();
-  }
+  this.updatedAt = new Date();
   next();
 });
 
-// Export du modèle
 const User = mongoose.model('User', userSchema);
-module.exports = User;
+
+export default User;

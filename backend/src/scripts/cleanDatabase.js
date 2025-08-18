@@ -3,24 +3,24 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /**
- * 🧹 NETTOYAGE BASE POSTGRESQL
+ * ðŸ§¹ NETTOYAGE BASE POSTGRESQL
  * Supprime tous les produits de test pour avoir une base propre
  */
 
-console.log('🧹 ECOLOJIA - Nettoyage base PostgreSQL');
-console.log('⚠️  ATTENTION: Cette opération va supprimer TOUS les produits !');
+console.log('ðŸ§¹ ECOLOJIA - Nettoyage base PostgreSQL');
+console.log('âš ï¸  ATTENTION: Cette operation va supprimer TOUS les produits !');
 console.log('='.repeat(60));
 
 async function cleanDatabase() {
   try {
-    console.log('🔍 Analyse de la base actuelle...\n');
+    console.log('ðŸ” Analyse de la base actuelle...\n');
 
     // 1. Compter les produits actuels
     const currentCount = await prisma.product.count();
-    console.log(`📊 Produits actuels en base: ${currentCount}`);
+    console.log(`ðŸ“Š Produits actuels en base: ${currentCount}`);
 
     if (currentCount === 0) {
-      console.log('✅ Base déjà vide - Aucun nettoyage nécessaire');
+      console.log('âœ… Base dej  vide - Aucun nettoyage necessaire');
       return;
     }
 
@@ -36,48 +36,48 @@ async function cleanDatabase() {
       }
     });
 
-    console.log('\n📋 Exemples de produits en base:');
+    console.log('\nðŸ“‹ Exemples de produits en base:');
     sampleProducts.forEach((product, index) => {
       console.log(`  ${index + 1}. ${product.title} (${product.barcode || 'Sans code-barres'})`);
     });
 
-    console.log('\n🗑️  Suppression de tous les produits...');
+    console.log('\nðŸ—‘ï¸  Suppression de tous les produits...');
 
     // 3. Supprimer TOUS les produits
     const deleteResult = await prisma.product.deleteMany({});
 
-    console.log(`✅ ${deleteResult.count} produits supprimés avec succès`);
+    console.log(`âœ… ${deleteResult.count} produits supprimes avec succes`);
 
-    // 4. Vérification finale
+    // 4. Verification finale
     const finalCount = await prisma.product.count();
-    console.log(`📊 Produits restants: ${finalCount}`);
+    console.log(`ðŸ“Š Produits restants: ${finalCount}`);
 
-    // 5. Reset des séquences (optionnel pour PostgreSQL)
+    // 5. Reset des sequences (optionnel pour PostgreSQL)
     try {
       await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('products', 'created_at'), 1, false);`;
-      console.log('🔄 Séquences réinitialisées');
+      console.log('ðŸ”„ Sequences reinitialisees');
     } catch (error) {
-      console.log('⚠️  Réinitialisation séquences ignorée');
+      console.log('âš ï¸  Reinitialisation sequences ignoree');
     }
 
     console.log('\n' + '='.repeat(60));
-    console.log('🎉 BASE NETTOYÉE AVEC SUCCÈS !');
-    console.log('💡 Vous pouvez maintenant lancer l\'import de produits réels');
-    console.log('🚀 Commande: node scripts/importDirectToDB.js');
+    console.log('ðŸŽ‰ BASE NETTOY‰E AVEC SUCCˆS !');
+    console.log('ðŸ’¡ Vous pouvez maintenant lancer l\'import de produits reels');
+    console.log('ðŸš€ Commande: node scripts/importDirectToDB.js');
     console.log('='.repeat(60));
 
   } catch (error) {
-    console.error('❌ Erreur lors du nettoyage:', error.message);
-    console.error('💡 Détails:', error);
+    console.error('âŒ Erreur lors du nettoyage:', error.message);
+    console.error('ðŸ’¡ Details:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-// Fonction de nettoyage sélectif (bonus)
+// Fonction de nettoyage selectif (bonus)
 async function cleanTestProducts() {
   try {
-    console.log('🧹 Nettoyage sélectif - Produits de test uniquement...\n');
+    console.log('ðŸ§¹ Nettoyage selectif - Produits de test uniquement...\n');
 
     // Supprimer uniquement les produits "test" ou mock
     const deleteResult = await prisma.product.deleteMany({
@@ -94,8 +94,8 @@ async function cleanTestProducts() {
               in: [
                 'Shampooing Bio Lavande',
                 'Dentifrice Menthe Naturel',
-                'Savon Artisanal Karité',
-                'Crème Visage Aloe Vera',
+                'Savon Artisanal Karite',
+                'Creme Visage Aloe Vera',
                 'Huile d\'Olive Extra Vierge'
               ]
             }
@@ -104,13 +104,13 @@ async function cleanTestProducts() {
       }
     });
 
-    console.log(`✅ ${deleteResult.count} produits de test supprimés`);
+    console.log(`âœ… ${deleteResult.count} produits de test supprimes`);
 
     const remainingCount = await prisma.product.count();
-    console.log(`📊 Produits réels conservés: ${remainingCount}`);
+    console.log(`ðŸ“Š Produits reels conserves: ${remainingCount}`);
 
   } catch (error) {
-    console.error('❌ Erreur nettoyage sélectif:', error.message);
+    console.error('âŒ Erreur nettoyage selectif:', error.message);
   } finally {
     await prisma.$disconnect();
   }
@@ -121,22 +121,22 @@ async function main() {
   const args = process.argv.slice(2);
   
   if (args.includes('--all')) {
-    console.log('🗑️  Mode: Suppression TOTALE\n');
+    console.log('ðŸ—‘ï¸  Mode: Suppression TOTALE\n');
     await cleanDatabase();
   } else if (args.includes('--test-only')) {
-    console.log('🧹 Mode: Suppression produits TEST uniquement\n');
+    console.log('ðŸ§¹ Mode: Suppression produits TEST uniquement\n');
     await cleanTestProducts();
   } else {
-    console.log('🔧 SCRIPT NETTOYAGE BASE POSTGRESQL');
+    console.log('ðŸ”§ SCRIPT NETTOYAGE BASE POSTGRESQL');
     console.log('\nCommandes disponibles:');
     console.log('  node scripts/cleanDatabase.js --all        # Supprime TOUS les produits');
     console.log('  node scripts/cleanDatabase.js --test-only  # Supprime uniquement les produits test');
-    console.log('\n⚠️  RECOMMANDÉ: Utilisez --all pour une base 100% propre');
-    console.log('💡 Puis lancez: node scripts/importDirectToDB.js');
+    console.log('\nâš ï¸  RECOMMAND‰: Utilisez --all pour une base 100% propre');
+    console.log('ðŸ’¡ Puis lancez: node scripts/importDirectToDB.js');
   }
 }
 
-// Confirmation interactive (sécurité)
+// Confirmation interactive (securite)
 function askConfirmation() {
   const readline = require('readline');
   const rl = readline.createInterface({
@@ -145,7 +145,7 @@ function askConfirmation() {
   });
 
   return new Promise((resolve) => {
-    rl.question('⚠️  Êtes-vous sûr de vouloir supprimer les produits ? (oui/non): ', (answer) => {
+    rl.question('âš ï¸  Štes-vous sur de vouloir supprimer les produits ? (oui/non): ', (answer) => {
       rl.close();
       resolve(answer.toLowerCase() === 'oui' || answer.toLowerCase() === 'yes');
     });

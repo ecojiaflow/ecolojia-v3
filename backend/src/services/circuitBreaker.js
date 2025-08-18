@@ -2,8 +2,8 @@
 const EventEmitter = require('events');
 
 /**
- * Circuit Breaker Pattern pour gérer les défaillances des services externes
- * États: CLOSED (normal) -> OPEN (erreur) -> HALF_OPEN (test) -> CLOSED/OPEN
+ * Circuit Breaker Pattern pour gerer les defaillances des services externes
+ * ‰tats: CLOSED (normal) -> OPEN (erreur) -> HALF_OPEN (test) -> CLOSED/OPEN
  */
 class CircuitBreaker extends EventEmitter {
   constructor(options = {}) {
@@ -11,21 +11,21 @@ class CircuitBreaker extends EventEmitter {
     
     // Configuration
     this.name = options.name || 'CircuitBreaker';
-    this.timeout = options.timeout || 5000; // Timeout de requête (ms)
+    this.timeout = options.timeout || 5000; // Timeout de requete (ms)
     this.errorThreshold = options.errorThreshold || 5; // Nombre d'erreurs avant ouverture
-    this.successThreshold = options.successThreshold || 2; // Succès requis en HALF_OPEN
-    this.resetTimeout = options.resetTimeout || 60000; // Temps avant de réessayer (ms)
-    this.volumeThreshold = options.volumeThreshold || 10; // Requêtes min pour calculer le taux
+    this.successThreshold = options.successThreshold || 2; // Succes requis en HALF_OPEN
+    this.resetTimeout = options.resetTimeout || 60000; // Temps avant de reessayer (ms)
+    this.volumeThreshold = options.volumeThreshold || 10; // Requetes min pour calculer le taux
     this.errorPercentageThreshold = options.errorPercentageThreshold || 50; // % d'erreur pour ouvrir
     
-    // État
+    // ‰tat
     this.state = 'CLOSED';
     this.failures = 0;
     this.successes = 0;
     this.nextAttempt = Date.now();
     this.requestCount = 0;
     
-    // Métriques
+    // Metriques
     this.metrics = {
       totalRequests: 0,
       totalFailures: 0,
@@ -38,23 +38,23 @@ class CircuitBreaker extends EventEmitter {
       stateChanges: []
     };
     
-    // Fenêtre glissante pour le calcul du taux d'erreur
+    // Fenetre glissante pour le calcul du taux d'erreur
     this.requestWindow = [];
     this.windowSize = 60000; // 1 minute
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODE PRINCIPALE
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODE PRINCIPALE
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Exécute une fonction avec protection du circuit breaker
-   * @param {Function} fn - Fonction à exécuter
+   * Execute une fonction avec protection du circuit breaker
+   * @param {Function} fn - Fonction   executer
    * @param {Function} fallback - Fonction de fallback optionnelle
-   * @returns {Promise} Résultat de la fonction ou du fallback
+   * @returns {Promise} Resultat de la fonction ou du fallback
    */
   async execute(fn, fallback) {
-    // Vérifier l'état du circuit
+    // Verifier l'etat du circuit
     if (!this.canAttempt()) {
       this.metrics.totalRequests++;
       
@@ -71,15 +71,15 @@ class CircuitBreaker extends EventEmitter {
     }
 
     try {
-      // Exécuter avec timeout
+      // Executer avec timeout
       const result = await this.executeWithTimeout(fn);
       
-      // Succès
+      // Succes
       this.onSuccess();
       return result;
       
     } catch (error) {
-      // Échec
+      // ‰chec
       this.onFailure(error);
       
       // Si fallback disponible et circuit ouvert, l'utiliser
@@ -91,16 +91,16 @@ class CircuitBreaker extends EventEmitter {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // GESTION DES ÉTATS
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // GESTION DES ‰TATS
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   canAttempt() {
     if (this.state === 'CLOSED' || this.state === 'HALF_OPEN') {
       return true;
     }
     
-    // En état OPEN, vérifier si on peut passer en HALF_OPEN
+    // En etat OPEN, verifier si on peut passer en HALF_OPEN
     if (this.state === 'OPEN' && Date.now() >= this.nextAttempt) {
       this.transitionTo('HALF_OPEN');
       return true;
@@ -116,7 +116,7 @@ class CircuitBreaker extends EventEmitter {
     this.metrics.consecutiveFailures = 0;
     this.metrics.lastSuccessTime = new Date();
     
-    // Ajouter à la fenêtre glissante
+    // Ajouter   la fenetre glissante
     this.updateRequestWindow(true);
     
     switch (this.state) {
@@ -149,14 +149,14 @@ class CircuitBreaker extends EventEmitter {
       this.metrics.totalTimeouts++;
     }
     
-    // Ajouter à la fenêtre glissante
+    // Ajouter   la fenetre glissante
     this.updateRequestWindow(false);
     
     switch (this.state) {
       case 'CLOSED':
         this.failures++;
         
-        // Vérifier le seuil basé sur le nombre OU le pourcentage
+        // Verifier le seuil base sur le nombre OU le pourcentage
         const shouldOpen = this.shouldOpenCircuit();
         
         if (shouldOpen) {
@@ -177,12 +177,12 @@ class CircuitBreaker extends EventEmitter {
   }
 
   shouldOpenCircuit() {
-    // Seuil basé sur le nombre d'erreurs consécutives
+    // Seuil base sur le nombre d'erreurs consecutives
     if (this.failures >= this.errorThreshold) {
       return true;
     }
     
-    // Seuil basé sur le pourcentage d'erreurs
+    // Seuil base sur le pourcentage d'erreurs
     const recentRequests = this.getRecentRequests();
     if (recentRequests.length >= this.volumeThreshold) {
       const errorRate = this.calculateErrorRate(recentRequests);
@@ -241,9 +241,9 @@ class CircuitBreaker extends EventEmitter {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // UTILITAIRES
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async executeWithTimeout(fn) {
     return new Promise(async (resolve, reject) => {
@@ -286,13 +286,13 @@ class CircuitBreaker extends EventEmitter {
   updateRequestWindow(success) {
     const now = Date.now();
     
-    // Ajouter la nouvelle requête
+    // Ajouter la nouvelle requete
     this.requestWindow.push({
       timestamp: now,
       success
     });
     
-    // Nettoyer les anciennes requêtes
+    // Nettoyer les anciennes requetes
     this.requestWindow = this.requestWindow.filter(
       req => now - req.timestamp < this.windowSize
     );
@@ -312,9 +312,9 @@ class CircuitBreaker extends EventEmitter {
     return (failures / requests.length) * 100;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODES PUBLIQUES
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODES PUBLIQUES
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   getStatus() {
     const recentRequests = this.getRecentRequests();
@@ -357,9 +357,9 @@ class CircuitBreaker extends EventEmitter {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// ERREUR PERSONNALISÉE
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ERREUR PERSONNALIS‰E
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class CircuitBreakerError extends Error {
   constructor(message, code, status) {
@@ -370,9 +370,9 @@ class CircuitBreakerError extends Error {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// FACTORY POUR CRÉER DES CIRCUIT BREAKERS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// FACTORY POUR CR‰ER DES CIRCUIT BREAKERS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class CircuitBreakerFactory {
   constructor() {
@@ -422,21 +422,21 @@ class CircuitBreakerFactory {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// CONFIGURATION SPÉCIFIQUE POUR DEEPSEEK
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// CONFIGURATION SP‰CIFIQUE POUR DEEPSEEK
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const deepSeekCircuitBreaker = new CircuitBreaker({
   name: 'DeepSeek_AI',
   timeout: 10000, // 10 secondes
-  errorThreshold: 3, // 3 erreurs consécutives
-  successThreshold: 2, // 2 succès pour fermer
+  errorThreshold: 3, // 3 erreurs consecutives
+  successThreshold: 2, // 2 succes pour fermer
   resetTimeout: 30000, // 30 secondes avant retry
-  volumeThreshold: 5, // Min 5 requêtes pour calculer le %
+  volumeThreshold: 5, // Min 5 requetes pour calculer le %
   errorPercentageThreshold: 60 // 60% d'erreur
 });
 
-// Événements spécifiques DeepSeek
+// ‰venements specifiques DeepSeek
 deepSeekCircuitBreaker.on('open', ({ resetTime }) => {
   console.error(`[CircuitBreaker] DeepSeek AI circuit OPEN. Retry at ${resetTime}`);
 });
@@ -449,9 +449,9 @@ deepSeekCircuitBreaker.on('close', () => {
   console.log('[CircuitBreaker] DeepSeek AI circuit CLOSED. Service recovered.');
 });
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // EXPORTS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 module.exports = {
   CircuitBreaker,

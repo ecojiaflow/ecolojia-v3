@@ -20,8 +20,8 @@ class Sprint2ValidationTests {
    * LANCEMENT COMPLET DES TESTS SPRINT 2
    */
   async runAllTests() {
-    console.log('🧪 ===== TESTS DE VALIDATION SPRINT 2 =====');
-    console.log('🎯 Objectif: Valider Nutri-Score + IG + Scoring enrichi\n');
+    console.log('ðŸ§ª ===== TESTS DE VALIDATION SPRINT 2 =====');
+    console.log('ðŸŽ¯ Objectif: Valider Nutri-Score + IG + Scoring enrichi\n');
 
     try {
       // Tests unitaires des nouveaux composants
@@ -41,7 +41,7 @@ class Sprint2ValidationTests {
       this.displayTestSummary();
       
     } catch (error) {
-      console.error('❌ Erreur lors des tests:', error);
+      console.error('âŒ Erreur lors des tests:', error);
       throw error;
     }
   }
@@ -50,7 +50,7 @@ class Sprint2ValidationTests {
    * TEST 1: NUTRI-SCORER STANDALONE
    */
   async testNutriScorer() {
-    console.log('🥗 === TEST 1: NUTRI-SCORER ===');
+    console.log('ðŸ¥— === TEST 1: NUTRI-SCORER ===');
     
     const testCases = [
       {
@@ -128,7 +128,7 @@ class Sprint2ValidationTests {
    * TEST 2: GLYCEMIC ESTIMATOR STANDALONE  
    */
   async testGlycemicEstimator() {
-    console.log('\n📊 === TEST 2: GLYCEMIC ESTIMATOR ===');
+    console.log('\nðŸ“Š === TEST 2: GLYCEMIC ESTIMATOR ===');
     
     const testCases = [
       {
@@ -199,10 +199,10 @@ class Sprint2ValidationTests {
   }
 
   /**
-   * TEST 3: SCORING ENRICHI INTÉGRÉ
+   * TEST 3: SCORING ENRICHI INTÃ‰GRÃ‰
    */
   async testEnhancedScoring() {
-    console.log('\n🚀 === TEST 3: SCORING ENRICHI INTÉGRÉ ===');
+    console.log('\nðŸš€ === TEST 3: SCORING ENRICHI INTÃ‰GRÃ‰ ===');
     
     const testCases = [
       {
@@ -277,10 +277,10 @@ class Sprint2ValidationTests {
   }
 
   /**
-   * TEST 4: DIFFÉRENCIATION CONCURRENTIELLE
+   * TEST 4: DIFFÃ‰RENCIATION CONCURRENTIELLE
    */
   async testCompetitiveDifferentiation() {
-    console.log('\n🥊 === TEST 4: DIFFÉRENCIATION VS CONCURRENCE ===');
+    console.log('\nðŸ¥Š === TEST 4: DIFFÃ‰RENCIATION VS CONCURRENCE ===');
     
     // Produit test: Galettes riz bio (piège ultra-transformation)
     const trapProduct = {
@@ -334,16 +334,16 @@ class Sprint2ValidationTests {
     });
 
     // Comparaison explicite
-    console.log('\n📊 COMPARAISON ECOLOJIA VS CONCURRENCE:');
-    console.log(`🆚 Yuka: ${result.differentiation.vs_yuka.concerns_detected}`);
-    console.log(`🆚 OpenFoodFacts: ${result.differentiation.vs_openfoodfacts.ecolojia_plus}`);
+    console.log('\nðŸ“Š COMPARAISON ECOLOJIA VS CONCURRENCE:');
+    console.log(`ðŸ†š Yuka: ${result.differentiation.vs_yuka.concerns_detected}`);
+    console.log(`ðŸ†š OpenFoodFacts: ${result.differentiation.vs_openfoodfacts.ecolojia_plus}`);
   }
 
   /**
-   * TEST 5: CAS D'USAGE RÉELS
+   * TEST 5: CAS D'USAGE RÃ‰ELS
    */
   async testRealWorldCases() {
-    console.log('\n🌍 === TEST 5: CAS D\'USAGE RÉELS ===');
+    console.log('\nðŸŒ === TEST 5: CAS D\'USAGE RÃ‰ELS ===');
     
     const realProducts = [
       {
@@ -380,7 +380,7 @@ class Sprint2ValidationTests {
     for (const product of realProducts) {
       const result = await this.foodScorer.analyzeFood(product);
       
-      console.log(`\n📦 ${product.name}:`);
+      console.log(`\nðŸ“¦ ${product.name}:`);
       console.log(`   Score: ${result.score}/100 (${result.grade})`);
       console.log(`   Confiance: ${(result.confidence * 100).toFixed(0)}%`);
       console.log(`   Préoccupations: ${result.insights.total_concerns}`);
@@ -421,24 +421,24 @@ class Sprint2ValidationTests {
     const totalWeight = Object.values(this.foodScorer.weights).reduce((sum, w) => sum + w, 0);
     const weightValid = Math.abs(totalWeight - 1.0) < 0.01;
     
-    console.log(`     📊 Poids total: ${totalWeight.toFixed(2)} ${weightValid ? '✅' : '❌'}`);
+    console.log(`     ðŸ“Š Poids total: ${totalWeight.toFixed(2)} ${weightValid ? 'âœ…' : 'âŒ'}`);
     
     // Vérification composants
     ['transformation', 'nutrition', 'glycemic', 'environmental'].forEach(component => {
       const hasData = components[component] && components[component].score !== undefined;
-      console.log(`     🔍 ${component}: ${hasData ? '✅' : '❌'} Score ${components[component]?.score || 'N/A'}`);
+      console.log(`     ðŸ” ${component}: ${hasData ? 'âœ…' : 'âŒ'} Score ${components[component]?.score || 'N/A'}`);
     });
     
     // Vérification confiance globale
     const confidenceValid = result.confidence >= 0 && result.confidence <= 1;
-    console.log(`     🎯 Confiance globale: ${(result.confidence * 100).toFixed(0)}% ${confidenceValid ? '✅' : '❌'}`);
+    console.log(`     ðŸŽ¯ Confiance globale: ${(result.confidence * 100).toFixed(0)}% ${confidenceValid ? 'âœ…' : 'âŒ'}`);
   }
 
   /**
-   * LOGGING DES RÉSULTATS
+   * LOGGING DES RÃ‰SULTATS
    */
   logTestResult(category, testName, success, details) {
-    const status = success ? '✅' : '❌';
+    const status = success ? 'âœ…' : 'âŒ';
     console.log(`   ${status} ${testName}: ${details}`);
     
     this.testResults.push({
@@ -450,19 +450,19 @@ class Sprint2ValidationTests {
   }
 
   /**
-   * RÉSUMÉ FINAL DES TESTS
+   * RÃ‰SUMÃ‰ FINAL DES TESTS
    */
   displayTestSummary() {
-    console.log('\n🎯 ===== RÉSUMÉ TESTS SPRINT 2 =====');
+    console.log('\nðŸŽ¯ ===== RÃ‰SUMÃ‰ TESTS SPRINT 2 =====');
     
     const totalTests = this.testResults.length;
     const successfulTests = this.testResults.filter(r => r.success).length;
     const successRate = ((successfulTests / totalTests) * 100).toFixed(1);
     
-    console.log(`📊 Tests réalisés: ${totalTests}`);
-    console.log(`✅ Tests réussis: ${successfulTests}`);
-    console.log(`❌ Tests échoués: ${totalTests - successfulTests}`);
-    console.log(`🎯 Taux de réussite: ${successRate}%`);
+    console.log(`ðŸ“Š Tests réalisés: ${totalTests}`);
+    console.log(`âœ… Tests réussis: ${successfulTests}`);
+    console.log(`âŒ Tests échoués: ${totalTests - successfulTests}`);
+    console.log(`ðŸŽ¯ Taux de réussite: ${successRate}%`);
     
     // Détail par catégorie
     const categories = [...new Set(this.testResults.map(r => r.category))];
@@ -470,32 +470,32 @@ class Sprint2ValidationTests {
     categories.forEach(category => {
       const categoryTests = this.testResults.filter(r => r.category === category);
       const categorySuccess = categoryTests.filter(r => r.success).length;
-      console.log(`\n📋 ${category}: ${categorySuccess}/${categoryTests.length} réussis`);
+      console.log(`\nðŸ“‹ ${category}: ${categorySuccess}/${categoryTests.length} réussis`);
       
       // Afficher les échecs
       const failures = categoryTests.filter(r => !r.success);
       failures.forEach(failure => {
-        console.log(`   ❌ ${failure.test}: ${failure.details}`);
+        console.log(`   âŒ ${failure.test}: ${failure.details}`);
       });
     });
     
     // Validation Sprint 2
     const sprintSuccess = successRate >= 85; // 85% minimum requis
     
-    console.log(`\n🚀 SPRINT 2 VALIDATION: ${sprintSuccess ? '✅ RÉUSSI' : '❌ ÉCHEC'}`);
+    console.log(`\nðŸš€ SPRINT 2 VALIDATION: ${sprintSuccess ? 'âœ… RÃ‰USSI' : 'âŒ Ã‰CHEC'}`);
     
     if (sprintSuccess) {
-      console.log('🎉 Nutri-Score + Index Glycémique opérationnels !');
-      console.log('🎯 Prêt pour SPRINT 3: Alternatives Naturelles');
+      console.log('ðŸŽ‰ Nutri-Score + Index Glycémique opérationnels !');
+      console.log('ðŸŽ¯ Prêt pour SPRINT 3: Alternatives Naturelles');
     } else {
-      console.log('⚠️ Corrections nécessaires avant passage Sprint 3');
+      console.log('âš ï¸ Corrections nécessaires avant passage Sprint 3');
     }
     
     return sprintSuccess;
   }
 }
 
-// EXÉCUTION DES TESTS
+// EXÃ‰CUTION DES TESTS
 async function runSprint2Tests() {
   const validator = new Sprint2ValidationTests();
   
@@ -503,15 +503,15 @@ async function runSprint2Tests() {
     const success = await validator.runAllTests();
     
     if (success) {
-      console.log('\n✅ SPRINT 2 VALIDÉ - Prêt pour la suite !');
+      console.log('\nâœ… SPRINT 2 VALIDÃ‰ - Prêt pour la suite !');
       process.exit(0);
     } else {
-      console.log('\n❌ SPRINT 2 INCOMPLET - Vérifications requises');
+      console.log('\nâŒ SPRINT 2 INCOMPLET - Vérifications requises');
       process.exit(1);
     }
     
   } catch (error) {
-    console.error('\n💥 ERREUR CRITIQUE lors des tests:', error);
+    console.error('\nðŸ’¥ ERREUR CRITIQUE lors des tests:', error);
     process.exit(1);
   }
 }

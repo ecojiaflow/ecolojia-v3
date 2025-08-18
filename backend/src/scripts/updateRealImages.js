@@ -1,19 +1,19 @@
 const axios = require('axios');
 
 /**
- * 🖼️ MISE À JOUR IMAGES RÉELLES
- * Script pour récupérer les vraies images OpenFoodFacts
+ * ðŸ–¼ï¸ MISE € JOUR IMAGES R‰ELLES
+ * Script pour recuperer les vraies images OpenFoodFacts
  */
 
 const CONFIG = {
-  DELAY_MS: 1000, // 1s entre requêtes OpenFoodFacts
+  DELAY_MS: 1000, // 1s entre requetes OpenFoodFacts
   OPENFOODFACTS_URL: 'https://world.openfoodfacts.org/api/v0/product'
 };
 
-console.log('🖼️ ECOLOJIA - Mise à jour images réelles OpenFoodFacts');
+console.log('ðŸ–¼ï¸ ECOLOJIA - Mise   jour images reelles OpenFoodFacts');
 console.log('='.repeat(60));
 
-// 📦 PRODUITS AVEC CODES-BARRES RÉELS (à mettre à jour dans app.js)
+// ðŸ“¦ PRODUITS AVEC CODES-BARRES R‰ELS (  mettre   jour dans app.js)
 const productsToUpdate = [
   {
     id: "real_1",
@@ -44,7 +44,7 @@ const productsToUpdate = [
 
 async function fetchOpenFoodFactsImage(barcode) {
   try {
-    console.log(`🔍 Recherche image pour: ${barcode}`);
+    console.log(`ðŸ” Recherche image pour: ${barcode}`);
     
     const response = await axios.get(`${CONFIG.OPENFOODFACTS_URL}/${barcode}.json`, {
       headers: {
@@ -56,7 +56,7 @@ async function fetchOpenFoodFactsImage(barcode) {
     const product = response.data.product;
     
     if (!product) {
-      console.log(`❌ Produit non trouvé: ${barcode}`);
+      console.log(`âŒ Produit non trouve: ${barcode}`);
       return null;
     }
 
@@ -69,7 +69,7 @@ async function fetchOpenFoodFactsImage(barcode) {
                     null;
 
     if (imageUrl) {
-      console.log(`✅ Image trouvée: ${imageUrl.substring(0, 50)}...`);
+      console.log(`âœ… Image trouvee: ${imageUrl.substring(0, 50)}...`);
       return {
         url: imageUrl,
         productName: product.product_name || 'Produit OpenFoodFacts',
@@ -77,12 +77,12 @@ async function fetchOpenFoodFactsImage(barcode) {
         categories: product.categories || ''
       };
     } else {
-      console.log(`⚠️  Aucune image disponible pour: ${barcode}`);
+      console.log(`âš ï¸  Aucune image disponible pour: ${barcode}`);
       return null;
     }
 
   } catch (error) {
-    console.error(`❌ Erreur API OpenFoodFacts pour ${barcode}:`, error.message);
+    console.error(`âŒ Erreur API OpenFoodFacts pour ${barcode}:`, error.message);
     return null;
   }
 }
@@ -92,14 +92,14 @@ async function updateAllImages() {
   let success = 0;
   let failed = 0;
 
-  console.log(`🚀 Mise à jour ${productsToUpdate.length} produits...\n`);
+  console.log(`ðŸš€ Mise   jour ${productsToUpdate.length} produits...\n`);
 
   for (let i = 0; i < productsToUpdate.length; i++) {
     const product = productsToUpdate[i];
     const progress = `[${i + 1}/${productsToUpdate.length}]`;
     
     try {
-      console.log(`${progress} 📦 ${product.title}`);
+      console.log(`${progress} ðŸ“¦ ${product.title}`);
       
       const imageData = await fetchOpenFoodFactsImage(product.barcode);
       
@@ -112,51 +112,51 @@ async function updateAllImages() {
           categories: imageData.categories
         });
         success++;
-        console.log(`${progress} ✅ Image récupérée`);
+        console.log(`${progress} âœ… Image recuperee`);
       } else {
-        // Garder l'image générique
+        // Garder l'image generique
         updatedProducts.push({
           ...product,
           real_image_url: `https://via.assets.so/img.jpg?w=300&h=200&tc=green&bg=%23f3f4f6&t=${encodeURIComponent(product.title)}`,
-          note: 'Image générique (pas trouvée sur OpenFoodFacts)'
+          note: 'Image generique (pas trouvee sur OpenFoodFacts)'
         });
         failed++;
-        console.log(`${progress} ⚠️  Image générique conservée`);
+        console.log(`${progress} âš ï¸  Image generique conservee`);
       }
 
     } catch (error) {
-      console.error(`${progress} ❌ Erreur: ${error.message}`);
+      console.error(`${progress} âŒ Erreur: ${error.message}`);
       failed++;
     }
 
-    // Délai entre requêtes pour respecter OpenFoodFacts
+    // Delai entre requetes pour respecter OpenFoodFacts
     if (i < productsToUpdate.length - 1) {
       await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_MS));
     }
   }
 
   console.log('\n' + '='.repeat(60));
-  console.log('📊 RÉSULTATS MISE À JOUR IMAGES:');
-  console.log(`✅ Images réelles: ${success}`);
-  console.log(`⚠️  Images génériques: ${failed}`);
-  console.log(`📦 Total traité: ${success + failed}`);
+  console.log('ðŸ“Š R‰SULTATS MISE € JOUR IMAGES:');
+  console.log(`âœ… Images reelles: ${success}`);
+  console.log(`âš ï¸  Images generiques: ${failed}`);
+  console.log(`ðŸ“¦ Total traite: ${success + failed}`);
   console.log('='.repeat(60));
 
   return updatedProducts;
 }
 
 async function generateUpdatedAppJs(updatedProducts) {
-  console.log('\n🔧 Génération du code app.js mis à jour...');
+  console.log('\nðŸ”§ Generation du code app.js mis   jour...');
   
-  // Code JavaScript à insérer dans app.js
+  // Code JavaScript   inserer dans app.js
   const jsCode = `
-// 📦 PRODUITS RÉELS AVEC VRAIES IMAGES (mis à jour OpenFoodFacts)
+// ðŸ“¦ PRODUITS R‰ELS AVEC VRAIES IMAGES (mis   jour OpenFoodFacts)
 const fallbackProducts = [
 ${updatedProducts.map(product => `  {
     id: "${product.id}",
     title: "${product.title}",
     slug: "${product.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}-${product.barcode.slice(-6)}",
-    description: "${product.openfoodfacts_name || product.title} - Produit bio avec image réelle",
+    description: "${product.openfoodfacts_name || product.title} - Produit bio avec image reelle",
     brand: "${product.brands?.split(',')[0] || 'Bio'}",
     category: "alimentaire",
     eco_score: "0.75",
@@ -168,40 +168,40 @@ ${updatedProducts.map(product => `  {
     zones_dispo: ["FR"],
     image_url: "${product.real_image_url}",
     prices: { default: 0 },
-    resume_fr: "Produit bio avec image réelle OpenFoodFacts",
+    resume_fr: "Produit bio avec image reelle OpenFoodFacts",
     barcode: "${product.barcode}"
   }`).join(',\n')},
-  // ... autres produits générés automatiquement
+  // ... autres produits generes automatiquement
 ];`;
 
-  console.log('✅ Code généré pour app.js');
-  console.log('\n📋 INSTRUCTIONS DE MISE À JOUR:');
+  console.log('âœ… Code genere pour app.js');
+  console.log('\nðŸ“‹ INSTRUCTIONS DE MISE € JOUR:');
   console.log('1. Ouvrir src/app.js');
   console.log('2. Chercher "const fallbackProducts = ["');
-  console.log('3. Remplacer les 5 premiers produits par le code généré');
-  console.log('4. Sauvegarder et déployer');
+  console.log('3. Remplacer les 5 premiers produits par le code genere');
+  console.log('4. Sauvegarder et deployer');
   
   return jsCode;
 }
 
-// 🔍 FONCTION DE TEST POUR QUELQUES CODES
+// ðŸ” FONCTION DE TEST POUR QUELQUES CODES
 async function testImageRetrieval() {
-  console.log('🧪 TEST - Récupération images pour quelques codes...\n');
+  console.log('ðŸ§ª TEST - Recuperation images pour quelques codes...\n');
   
   const testCodes = ['4260123456789', '5060853640124', '5014067133804'];
   
   for (const code of testCodes) {
     const imageData = await fetchOpenFoodFactsImage(code);
     if (imageData) {
-      console.log(`✅ ${code}: ${imageData.url}`);
+      console.log(`âœ… ${code}: ${imageData.url}`);
     } else {
-      console.log(`❌ ${code}: Pas d'image`);
+      console.log(`âŒ ${code}: Pas d'image`);
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 }
 
-// 🚀 LANCEMENT
+// ðŸš€ LANCEMENT
 async function main() {
   const args = process.argv.slice(2);
   
@@ -211,16 +211,16 @@ async function main() {
     const updatedProducts = await updateAllImages();
     const jsCode = await generateUpdatedAppJs(updatedProducts);
     
-    console.log('\n📄 CODE À COPIER DANS app.js:');
+    console.log('\nðŸ“„ CODE € COPIER DANS app.js:');
     console.log('='.repeat(60));
     console.log(jsCode);
     console.log('='.repeat(60));
   } else {
-    console.log('🔧 SCRIPT MISE À JOUR IMAGES OPENFOODFACTS');
+    console.log('ðŸ”§ SCRIPT MISE € JOUR IMAGES OPENFOODFACTS');
     console.log('\nCommandes disponibles:');
     console.log('  node scripts/updateRealImages.js --test    # Test sur 3 codes');
-    console.log('  node scripts/updateRealImages.js --update  # Mise à jour complète');
-    console.log('\n💡 Recommandé: Commencer par --test');
+    console.log('  node scripts/updateRealImages.js --update  # Mise   jour complete');
+    console.log('\nðŸ’¡ Recommande: Commencer par --test');
   }
 }
 

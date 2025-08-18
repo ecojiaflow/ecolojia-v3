@@ -2,23 +2,23 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-// Import des modèles
+// Import des modeles
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Analysis = require('../models/Analysis');
 const AffiliateClick = require('../models/AffiliateClick');
 
 async function testMongoDB() {
-  console.log('🔧 Test de connexion MongoDB...\n');
+  console.log('ðŸ”§ Test de connexion MongoDB...\n');
   
   try {
     // 1. Connexion
-    console.log('📡 Connexion à MongoDB...');
+    console.log('ðŸ“¡ Connexion   MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connecté à MongoDB Atlas!\n');
+    console.log('âœ… Connecte   MongoDB Atlas!\n');
 
-    // 2. Créer un utilisateur test
-    console.log('👤 Création utilisateur test...');
+    // 2. Creer un utilisateur test
+    console.log('ðŸ‘¤ Creation utilisateur test...');
     const testUser = await User.findOneAndUpdate(
       { email: 'test@ecolojia.app' },
       {
@@ -36,20 +36,20 @@ async function testMongoDB() {
       },
       { upsert: true, new: true }
     );
-    console.log('✅ Utilisateur créé:', testUser.email);
+    console.log('âœ… Utilisateur cree:', testUser.email);
 
-    // 3. Créer un produit test
-    console.log('\n📦 Création produit test...');
+    // 3. Creer un produit test
+    console.log('\nðŸ“¦ Creation produit test...');
     const testProduct = await Product.findOneAndUpdate(
       { barcode: '3017620422003' },
       {
         barcode: '3017620422003',
-        name: 'Nutella Pâte à Tartiner',
+        name: 'Nutella Pate   Tartiner',
         brand: 'Ferrero',
         category: 'food',
         imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.jpg',
         foodData: {
-          ingredients: ["Sucre", "huile de palme", "NOISETTES 13%", "cacao maigre 7.4%", "LAIT écrémé en poudre", "LACTOSÉRUM en poudre", "émulsifiants (lécithines E322)", "vanilline"],
+          ingredients: ["Sucre", "huile de palme", "NOISETTES 13%", "cacao maigre 7.4%", "LAIT ecreme en poudre", "LACTOS‰RUM en poudre", "emulsifiants (lecithines E322)", "vanilline"],
           novaScore: 4,
           nutriScore: 'E',
           allergens: ['lait', 'noisettes', 'soja']
@@ -63,10 +63,10 @@ async function testMongoDB() {
       },
       { upsert: true, new: true }
     );
-    console.log('✅ Produit créé:', testProduct.name);
+    console.log('âœ… Produit cree:', testProduct.name);
 
-    // 4. Créer une analyse test
-    console.log('\n📊 Création analyse test...');
+    // 4. Creer une analyse test
+    console.log('\nðŸ“Š Creation analyse test...');
     const testAnalysis = await Analysis.create({
       userId: testUser._id,
       productId: testProduct._id,
@@ -85,16 +85,16 @@ async function testMongoDB() {
           ultraTransformScore: 85
         },
         aiInsights: {
-          summary: "Produit ultra-transformé avec score nutritionnel faible",
-          recommendations: ["Préférer des pâtes à tartiner bio sans huile de palme"],
-          warnings: ["Teneur élevée en sucre et graisses saturées"]
+          summary: "Produit ultra-transforme avec score nutritionnel faible",
+          recommendations: ["Preferer des pates   tartiner bio sans huile de palme"],
+          warnings: ["Teneur elevee en sucre et graisses saturees"]
         }
       }
     });
-    console.log('✅ Analyse créée:', testAnalysis._id);
+    console.log('âœ… Analyse creee:', testAnalysis._id);
 
     // 5. Test affiliation
-    console.log('\n🔗 Test modèle affiliation...');
+    console.log('\nðŸ”— Test modele affiliation...');
     const testClick = await AffiliateClick.create({
       userId: testUser._id,
       productId: testProduct._id,
@@ -103,10 +103,10 @@ async function testMongoDB() {
       affiliateUrl: 'https://lafourche.fr/nutella-bio?aff=ecolojia-001',
       source: 'product_page' // Utiliser une valeur enum valide
     });
-    console.log('✅ Click affilié créé:', testClick.clickId);
+    console.log('âœ… Click affilie cree:', testClick.clickId);
 
     // 6. Statistiques
-    console.log('\n📈 Statistiques base de données:');
+    console.log('\nðŸ“ˆ Statistiques base de donnees:');
     const stats = {
       users: await User.countDocuments(),
       products: await Product.countDocuments(),
@@ -115,17 +115,17 @@ async function testMongoDB() {
     };
     console.table(stats);
 
-    console.log('\n✅ Tous les tests sont passés avec succès!');
-    console.log('🎉 MongoDB est opérationnel pour ECOLOJIA!\n');
+    console.log('\nâœ… Tous les tests sont passes avec succes!');
+    console.log('ðŸŽ‰ MongoDB est operationnel pour ECOLOJIA!\n');
 
   } catch (error) {
-    console.error('❌ Erreur:', error.message);
-    console.error('Détails:', error);
+    console.error('âŒ Erreur:', error.message);
+    console.error('Details:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('🔌 Connexion fermée');
+    console.log('ðŸ”Œ Connexion fermee');
   }
 }
 
-// Exécuter le test
+// Executer le test
 testMongoDB();

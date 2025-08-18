@@ -21,9 +21,9 @@ const name = getArg('name') || 'Test User';
 
 async function createTestUser() {
   try {
-    // Connexion à MongoDB
+    // Connexion Ã  MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connecté à MongoDB');
+    console.log('âœ… Connecté Ã  MongoDB');
 
     // Charger le modèle User
     const User = require('../../src/models/User');
@@ -32,7 +32,7 @@ async function createTestUser() {
     let user = await User.findOne({ email });
 
     if (user) {
-      console.log('ℹ️ Utilisateur existant trouvé');
+      console.log('â„¹ï¸ Utilisateur existant trouvé');
     } else {
       // Créer l'utilisateur
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -53,7 +53,7 @@ async function createTestUser() {
       });
 
       await user.save();
-      console.log('✅ Utilisateur de test créé');
+      console.log('âœ… Utilisateur de test créé');
     }
 
     // Générer un token JWT
@@ -71,16 +71,16 @@ async function createTestUser() {
     const tokenPath = path.join(__dirname, 'token.txt');
     await fs.writeFile(tokenPath, token);
     
-    console.log('\n✅ Token JWT généré avec succès!');
-    console.log('📧 Email:', email);
-    console.log('🔑 Password:', password);
-    console.log('🎫 Token:', token.substring(0, 50) + '...');
-    console.log('📁 Token sauvegardé dans:', tokenPath);
-    console.log('\n📋 Pour utiliser ce token:');
+    console.log('\nâœ… Token JWT généré avec succès!');
+    console.log('ðŸ“§ Email:', email);
+    console.log('ðŸ”‘ Password:', password);
+    console.log('ðŸŽ« Token:', token.substring(0, 50) + '...');
+    console.log('ðŸ“ Token sauvegardé dans:', tokenPath);
+    console.log('\nðŸ“‹ Pour utiliser ce token:');
     console.log(`$env:JWT_TOKEN = "${token}"`);
 
   } catch (error) {
-    console.error('❌ Erreur:', error.message);
+    console.error('âŒ Erreur:', error.message);
   } finally {
     await mongoose.disconnect();
   }

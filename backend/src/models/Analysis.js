@@ -15,7 +15,7 @@ const analysisSchema = new mongoose.Schema({
     index: true
   },
   
-  // Informations produit (dénormalisées pour historique)
+  // Informations produit (denormalisees pour historique)
   productSnapshot: {
     name: String,
     brand: String,
@@ -31,7 +31,7 @@ const analysisSchema = new mongoose.Schema({
     default: 'barcode_scan'
   },
   
-  // Résultats d'analyse
+  // Resultats d'analyse
   results: {
     healthScore: { 
       type: Number, 
@@ -40,7 +40,7 @@ const analysisSchema = new mongoose.Schema({
       required: true
     },
     
-    // Résultats spécifiques alimentaire
+    // Resultats specifiques alimentaire
     foodAnalysis: {
       novaScore: Number,
       novaDetails: mongoose.Schema.Types.Mixed,
@@ -50,7 +50,7 @@ const analysisSchema = new mongoose.Schema({
       ultraTransformScore: Number
     },
     
-    // Résultats spécifiques cosmétiques
+    // Resultats specifiques cosmetiques
     cosmeticsAnalysis: {
       endocrineRisk: Number,
       allergenCount: Number,
@@ -58,14 +58,14 @@ const analysisSchema = new mongoose.Schema({
       concerns: [String]
     },
     
-    // Résultats spécifiques détergents
+    // Resultats specifiques detergents
     detergentsAnalysis: {
       environmentalImpact: Number,
       aquaticToxicity: Number,
       biodegradabilityScore: Number
     },
     
-    // Alternatives suggérées
+    // Alternatives suggerees
     alternatives: [{
       productId: mongoose.Schema.Types.ObjectId,
       name: String,
@@ -83,7 +83,7 @@ const analysisSchema = new mongoose.Schema({
     }
   },
   
-  // Métadonnées
+  // Metadonnees
   metadata: {
     appVersion: String,
     platform: String, // ios, android, web
@@ -103,17 +103,17 @@ const analysisSchema = new mongoose.Schema({
   }
 });
 
-// Index composés pour requêtes fréquentes
+// Index composes pour requetes frequentes
 analysisSchema.index({ userId: 1, createdAt: -1 }); // Historique utilisateur
 analysisSchema.index({ userId: 1, productId: 1 }); // Analyses d'un produit par user
 analysisSchema.index({ userId: 1, 'results.healthScore': -1 }); // Meilleures analyses
 
-// Méthodes virtuelles
+// Methodes virtuelles
 analysisSchema.virtual('isHealthy').get(function() {
   return this.results.healthScore >= 70;
 });
 
-// Méthodes statiques
+// Methodes statiques
 analysisSchema.statics.getUserHistory = async function(userId, options = {}) {
   const {
     page = 1,

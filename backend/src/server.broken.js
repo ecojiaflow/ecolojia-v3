@@ -1,5 +1,5 @@
 // backend/src/server.js
-// VERSION PRODUCTION COMPL�TE ECOLOJIA V3 - AVEC VISION SERVICE & BULLMQ
+// VERSION PRODUCTION COMPLï¿½TE ECOLOJIA V3 - AVEC VISION SERVICE & BULLMQ
 
 require('dotenv').config();
 const fs = require('fs');
@@ -37,7 +37,7 @@ console.log('Quota file exists?', fs.existsSync(path.join(__dirname, 'routes', '
 // Import du middleware de quotas
 const { checkQuota, checkQuotaMiddleware } = require('./middleware/quotaMiddleware');
 
-// Import du syst�me de rate limiting robuste
+// Import du systï¿½me de rate limiting robuste
 let rateLimiters = {};
 try {
   const rateLimiterModule = require('./middleware/rateLimiter');
@@ -78,10 +78,10 @@ try {
   };
   
   rateLimiters = {
-    globalLimiter: createFallbackLimiter(15 * 60 * 1000, 1000, 'Trop de requ�tes, veuillez r�essayer plus tard'),
+    globalLimiter: createFallbackLimiter(15 * 60 * 1000, 1000, 'Trop de requï¿½tes, veuillez rï¿½essayer plus tard'),
     loginLimiter: createFallbackLimiter(15 * 60 * 1000, 5, 'Trop de tentatives de connexion'),
-    registerLimiter: createFallbackLimiter(60 * 60 * 1000, 3, 'Trop de cr�ations de compte'),
-    dashboardLimiter: createFallbackLimiter(60 * 1000, 60, 'Trop de requ�tes au dashboard'),
+    registerLimiter: createFallbackLimiter(60 * 60 * 1000, 3, 'Trop de crï¿½ations de compte'),
+    dashboardLimiter: createFallbackLimiter(60 * 1000, 60, 'Trop de requï¿½tes au dashboard'),
     analysisLimiter: createFallbackLimiter(60 * 60 * 1000, 30, 'Limite d\'analyses atteinte'),
     aiLimiter: createFallbackLimiter(60 * 60 * 1000, 5, 'Limite de questions IA atteinte'),
     exportLimiter: createFallbackLimiter(24 * 60 * 60 * 1000, 5, 'Limite d\'exports atteinte'),
@@ -100,11 +100,11 @@ app.set('trust proxy', 1);
 const JWT_SECRET = process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure';
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY || 'admin-secret-key-2024';
 
-// Redis client global - EXPORT� pour usage dans d'autres modules
+// Redis client global - EXPORTï¿½ pour usage dans d'autres modules
 let redisClient;
 let server; // Pour le graceful shutdown
 
-// ========== MIDDLEWARES DE S�CURIT� ==========
+// ========== MIDDLEWARES DE Sï¿½CURITï¿½ ==========
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -153,10 +153,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Middleware global pour ajouter les headers de quota
 app.use(rateLimiters.addQuotaHeaders);
 
-// Rate limiting global (appliqu� � toutes les routes)
+// Rate limiting global (appliquï¿½ ï¿½ toutes les routes)
 app.use(rateLimiters.globalLimiter);
 
-// Rate limiting sp�cifique pour l'authentification
+// Rate limiting spï¿½cifique pour l'authentification
 app.use('/api/auth/login', rateLimiters.loginLimiter);
 app.use('/api/auth/register', rateLimiters.registerLimiter);
 
@@ -219,7 +219,7 @@ async function connectRedis() {
         await queueService.initialize();
         logger.info('? Queue service initialized');
         
-        // D�marrer les workers
+        // Dï¿½marrer les workers
         if (process.env.NODE_ENV !== 'test') {
           await imageProcessingWorker.start();
           logger.info('? Image processing worker started');
@@ -321,7 +321,7 @@ const authMiddleware = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           success: false,
-          error: 'Utilisateur non trouv�'
+          error: 'Utilisateur non trouvï¿½'
         });
       }
       req.user = user;
@@ -335,7 +335,7 @@ const authMiddleware = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      error: 'Token invalide ou expir�'
+      error: 'Token invalide ou expirï¿½'
     });
   }
 };
@@ -348,7 +348,7 @@ const authMiddleware = async (req, res, next) => {
   } catch (error) {
     console.warn('  ?? Analysis routes error:', error.message);
     
-    // Cr�er des routes minimales de fallback
+    // Créer des routes minimales de fallback
     const fallbackRouter = express.Router();
     
     fallbackRouter.get('/', (req, res) => {
@@ -378,14 +378,14 @@ const authMiddleware = async (req, res, next) => {
     app.use('/api/analysis', authMiddleware, rateLimiters.analysisLimiter, checkQuotaMiddleware, fallbackRouter);
     logger.info('  ? Analysis routes loaded (fallback mode)');
   }
-    // Route analyse cosm�tique
+    // Route analyse cosmï¿½tique
     analysisRouter.post('/cosmetic', asyncHandler(async (req, res) => {
       const { productName, ingredients } = req.body;
       
       if (!productName || !ingredients) {
         return res.status(400).json({
           success: false,
-          error: 'Nom du produit et ingr�dients requis'
+          error: 'Nom du produit et ingrï¿½dients requis'
         });
       }
       
@@ -395,12 +395,12 @@ const authMiddleware = async (req, res, next) => {
       } else {
         res.status(500).json({
           success: false,
-          error: 'Service d\'analyse cosm�tique non disponible'
+          error: 'Service d\'analyse cosmï¿½tique non disponible'
         });
       }
     }));
     
-    // Route analyse d�tergent
+    // Route analyse dï¿½tergent
     analysisRouter.post('/detergent', asyncHandler(async (req, res) => {
       const { productName, ingredients } = req.body;
       
@@ -417,12 +417,12 @@ const authMiddleware = async (req, res, next) => {
       } else {
         res.status(500).json({
           success: false,
-          error: 'Service d\'analyse d�tergent non disponible'
+          error: 'Service d\'analyse dï¿½tergent non disponible'
         });
       }
     }));
     
-        // Cr�er le router ici si pas d�j� fait
+        // Créer le router ici si pas déjà fait
     if (typeof analysisRouter === 'undefined') {
       const analysisRouter = express.Router();
       analysisRouter.get('/', (req, res) => res.json({ message: 'Analysis routes temporary' }));
@@ -449,7 +449,7 @@ const authMiddleware = async (req, res, next) => {
     
     const uploadRouter = express.Router();
     
-    // Route pour g�n�rer une signature Cloudinary
+    // Route pour gï¿½nï¿½rer une signature Cloudinary
     uploadRouter.post('/signature', asyncHandler(async (req, res) => {
       try {
         const { folder, tags, context } = req.body;
@@ -470,7 +470,7 @@ const authMiddleware = async (req, res, next) => {
         logger.error('Upload signature error:', error);
         res.status(500).json({
           success: false,
-          error: 'Erreur lors de la g�n�ration de la signature'
+          error: 'Erreur lors de la gï¿½nï¿½ration de la signature'
         });
       }
     }));
@@ -504,7 +504,7 @@ const authMiddleware = async (req, res, next) => {
           const user = await User.findById(req.userId).select('quotas tier subscription');
           
           if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouv�' });
+            return res.status(404).json({ message: 'Utilisateur non trouvï¿½' });
           }
 
           // Calculer les limites selon le tier
@@ -551,7 +551,7 @@ const authMiddleware = async (req, res, next) => {
         }
       } catch (error) {
         logger.error('Error fetching quotas:', error);
-        res.status(500).json({ message: 'Erreur lors de la r�cup�ration des quotas' });
+        res.status(500).json({ message: 'Erreur lors de la rï¿½cupï¿½ration des quotas' });
       }
     });
     
@@ -611,7 +611,7 @@ const authMiddleware = async (req, res, next) => {
     console.warn('  ?? Algolia routes not found');
   }
 
-  // Route export avec rate limiter sp�cifique
+  // Route export avec rate limiter spï¿½cifique
   app.post('/api/export/*', authMiddleware, rateLimiters.exportLimiter, (req, res) => {
     res.status(501).json({ error: 'Export functionality not yet implemented' });
   });
@@ -623,7 +623,7 @@ const authMiddleware = async (req, res, next) => {
 function setupCronJobs() {
   const cron = require('node-cron');
   
-  // Reset des quotas quotidiens � minuit
+  // Reset des quotas quotidiens ï¿½ minuit
   cron.schedule('0 0 * * *', async () => {
     logger.info('?? Running daily quota reset...');
     try {
@@ -681,14 +681,14 @@ function setupCronJobs() {
 const gracefulShutdown = async (signal) => {
   logger.info(`${signal} signal received, starting graceful shutdown`);
   
-  // Arr�ter d'accepter de nouvelles connexions
+  // Arrï¿½ter d'accepter de nouvelles connexions
   if (server) {
     server.close(() => {
       logger.info('HTTP server closed');
     });
   }
   
-  // Arr�ter les workers
+  // Arrï¿½ter les workers
   try {
     await queueService.shutdown();
     logger.info('Queue service shut down');
@@ -707,7 +707,7 @@ const gracefulShutdown = async (signal) => {
     logger.info('Redis connection closed');
   }
   
-  // Arr�ter VisionService
+  // Arrï¿½ter VisionService
   try {
     const visionService = require('./services/vision/VisionService');
     await visionService.shutdown();
@@ -716,7 +716,7 @@ const gracefulShutdown = async (signal) => {
     logger.error('Error shutting down vision service:', error);
   }
 
-  // Arrêter ProductOCRService
+  // Arreter ProductOCRService
 try {
   await ProductOCRService.shutdown();
   logger.info('ProductOCRService shut down');
@@ -727,7 +727,7 @@ try {
   process.exit(0);
 };
 
-// ========== D�MARRAGE SERVEUR ==========
+// ========== Dï¿½MARRAGE SERVEUR ==========
 async function startServer() {
   try {
     await connectMongoDB();
@@ -749,12 +749,12 @@ async function startServer() {
     app.use((err, req, res, next) => {
       logger.error('Error:', err);
       
-      // Gestion sp�ciale pour les erreurs de rate limit
+      // Gestion spï¿½ciale pour les erreurs de rate limit
       if (err.status === 429) {
         return res.status(429).json({
           success: false,
           error: 'RATE_LIMIT_EXCEEDED',
-          message: err.message || 'Trop de requ�tes',
+          message: err.message || 'Trop de requï¿½tes',
           retryAfter: err.retryAfter || 60
         });
       }
@@ -768,33 +768,33 @@ async function startServer() {
 
     server = app.listen(PORT, () => {
       logger.info('+------------------------------------------------------------+');
-      logger.info('�             ECOLOJIA V3 SERVER STARTED                     �');
-      logger.info('�------------------------------------------------------------�');
-      logger.info(`� ?? Server:       http://localhost:${PORT}                      �`);
-      logger.info(`� ?? Environment:  ${(process.env.NODE_ENV || 'development').padEnd(41)}�`);
-      logger.info(`� ?? Frontend:     ${(process.env.FRONTEND_URL || 'http://localhost:3000').padEnd(41)}�`);
-      logger.info('�------------------------------------------------------------�');
-      logger.info(`� ???  MongoDB:      ${mongoose.connection.readyState === 1 ? '? Connected' : '? Not connected'}                              �`);
-      logger.info(`� ?? Redis:        ${redisClient?.isReady ? '? Connected' : '? Not connected'}                              �`);
-      logger.info(`� ?? Rate Limit:   ${redisClient?.isReady ? '? Redis' : '??  Memory'}                                 �`);
-      logger.info(`� ?? Algolia:      ${process.env.ALGOLIA_APP_ID ? '? Configured' : '? Not configured'}                             �`);
-      logger.info(`� ?? LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? '? Configured' : '? Not configured'}                             �`);
-      logger.info(`� ?? DeepSeek AI:  ${process.env.DEEPSEEK_API_KEY ? '? Configured' : '? Not configured'}                             �`);
-      logger.info(`� ?? Cloudinary:   ${process.env.CLOUDINARY_CLOUD_NAME ? '? Configured' : '? Not configured'}                             �`);
-      logger.info(`� ???  Google Vision:${process.env.GOOGLE_VISION_ENABLED === 'true' ? '? Configured' : '? Not configured'}                             �`);
-      logger.info('�------------------------------------------------------------�');
-      logger.info('� ?? Features:                                               �');
-      logger.info('�   � Food Analysis (NOVA, Nutri-Score)                     �');
-      logger.info('�   � Cosmetic Analysis (INCI, Safety)                      �');
-      logger.info('�   � Detergent Analysis (Eco, CDV)                         �');
-      logger.info('�   � AI Chat Assistant with Quotas                         �');
-      logger.info('�   � Advanced Rate Limiting (Per Tier)                     �');
-      logger.info('�   � Vision Analysis (OCR & Image Processing)              �');
-      logger.info('�   � Queue System (BullMQ)                                 �');
-      logger.info('�   � Cloud Storage (Cloudinary)                            �');
-      logger.info('�   � Secure API Proxy                                      �');
-      logger.info('�   � GDPR Compliance                                       �');
-      logger.info('�   � Payment Processing                                    �');
+      logger.info('ï¿½             ECOLOJIA V3 SERVER STARTED                     ï¿½');
+      logger.info('ï¿½------------------------------------------------------------ï¿½');
+      logger.info(`ï¿½ ?? Server:       http://localhost:${PORT}                      ï¿½`);
+      logger.info(`ï¿½ ?? Environment:  ${(process.env.NODE_ENV || 'development').padEnd(41)}ï¿½`);
+      logger.info(`ï¿½ ?? Frontend:     ${(process.env.FRONTEND_URL || 'http://localhost:3000').padEnd(41)}ï¿½`);
+      logger.info('ï¿½------------------------------------------------------------ï¿½');
+      logger.info(`ï¿½ ???  MongoDB:      ${mongoose.connection.readyState === 1 ? '? Connected' : '? Not connected'}                              ï¿½`);
+      logger.info(`ï¿½ ?? Redis:        ${redisClient?.isReady ? '? Connected' : '? Not connected'}                              ï¿½`);
+      logger.info(`ï¿½ ?? Rate Limit:   ${redisClient?.isReady ? '? Redis' : '??  Memory'}                                 ï¿½`);
+      logger.info(`ï¿½ ?? Algolia:      ${process.env.ALGOLIA_APP_ID ? '? Configured' : '? Not configured'}                             ï¿½`);
+      logger.info(`ï¿½ ?? LemonSqueezy: ${process.env.LEMONSQUEEZY_STORE_ID ? '? Configured' : '? Not configured'}                             ï¿½`);
+      logger.info(`ï¿½ ?? DeepSeek AI:  ${process.env.DEEPSEEK_API_KEY ? '? Configured' : '? Not configured'}                             ï¿½`);
+      logger.info(`ï¿½ ?? Cloudinary:   ${process.env.CLOUDINARY_CLOUD_NAME ? '? Configured' : '? Not configured'}                             ï¿½`);
+      logger.info(`ï¿½ ???  Google Vision:${process.env.GOOGLE_VISION_ENABLED === 'true' ? '? Configured' : '? Not configured'}                             ï¿½`);
+      logger.info('ï¿½------------------------------------------------------------ï¿½');
+      logger.info('ï¿½ ?? Features:                                               ï¿½');
+      logger.info('ï¿½   ï¿½ Food Analysis (NOVA, Nutri-Score)                     ï¿½');
+      logger.info('ï¿½   ï¿½ Cosmetic Analysis (INCI, Safety)                      ï¿½');
+      logger.info('ï¿½   ï¿½ Detergent Analysis (Eco, CDV)                         ï¿½');
+      logger.info('ï¿½   ï¿½ AI Chat Assistant with Quotas                         ï¿½');
+      logger.info('ï¿½   ï¿½ Advanced Rate Limiting (Per Tier)                     ï¿½');
+      logger.info('ï¿½   ï¿½ Vision Analysis (OCR & Image Processing)              ï¿½');
+      logger.info('ï¿½   ï¿½ Queue System (BullMQ)                                 ï¿½');
+      logger.info('ï¿½   ï¿½ Cloud Storage (Cloudinary)                            ï¿½');
+      logger.info('ï¿½   ï¿½ Secure API Proxy                                      ï¿½');
+      logger.info('ï¿½   ï¿½ GDPR Compliance                                       ï¿½');
+      logger.info('ï¿½   ï¿½ Payment Processing                                    ï¿½');
       logger.info('+------------------------------------------------------------+');
     });
 

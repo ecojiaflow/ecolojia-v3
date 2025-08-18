@@ -3,7 +3,7 @@
     "source": "ANSES - Agence nationale de sécurité sanitaire de l'alimentation",
     "version": "2024",
     "algorithm": "Nutri-Score officiel français",
-    "reference": "Arrêté du 31 octobre 2017 relatif à la déclaration nutritionnelle",
+    "reference": "Arrêté du 31 octobre 2017 relatif Ã  la déclaration nutritionnelle",
     "last_updated": "2024-01-15",
     "legal_disclaimer": "Calcul basé sur l'algorithme officiel Nutri-Score français - ANSES 2024"
   },
@@ -88,7 +88,7 @@
     "unit": "pour 100g ou 100ml de produit",
 
     "fruits_vegetables_nuts": {
-      "unit": "% fruits, légumes, légumineuses, fruits à coque, huiles d'olive/colza/noix",
+      "unit": "% fruits, légumes, légumineuses, fruits Ã  coque, huiles d'olive/colza/noix",
       "table": [
         {"min": 0, "max": 40, "points": 0},
         {"min": 40, "max": 60, "points": 1},
@@ -133,7 +133,7 @@
     "formula": "score_final = points_negatifs - points_positifs",
     "special_rules": {
       "beverages": "Règles spécifiques pour boissons selon réglementation",
-      "cheese": "Exception fromages: si points négatifs ≥ 11, points protéines comptent quand même",
+      "cheese": "Exception fromages: si points négatifs â‰¥ 11, points protéines comptent quand même",
       "added_fats": "Huiles et matières grasses: seuls points négatifs comptent"
     }
   },

@@ -10,7 +10,7 @@ const connectMongo = async () => {
       throw new Error('MONGODB_URI is required in environment variables');
     }
 
-    // Options de connexion optimisées pour production
+    // Options de connexion optimisees pour production
     const options = {
       maxPoolSize: 20,
       minPoolSize: 5,
@@ -50,7 +50,7 @@ const connectMongo = async () => {
   }
 };
 
-// Helper pour vérifier la connexion
+// Helper pour verifier la connexion
 const isConnected = () => {
   return mongoose.connection.readyState === 1;
 };

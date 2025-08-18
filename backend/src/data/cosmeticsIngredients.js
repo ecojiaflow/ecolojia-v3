@@ -1,5 +1,5 @@
 // backend/src/data/cosmeticsIngredients.js
-// Base de données étendue ingrédients cosmétiques INCI
+// Base de donnees etendue ingredients cosmetiques INCI
 
 class CosmeticsIngredientsDatabase {
   constructor() {
@@ -29,9 +29,9 @@ class CosmeticsIngredientsDatabase {
         function: 'Hydratant/Humectant',
         origin: 'natural_or_synthetic',
         safety_score: 95,
-        skin_compatibility: ['tous types', 'peau sèche'],
-        concerns: ['Peut être collant à forte concentration'],
-        benefits: ['Hydratation intense', 'Non comédogène', 'Anti-âge'],
+        skin_compatibility: ['tous types', 'peau seche'],
+        concerns: ['Peut etre collant   forte concentration'],
+        benefits: ['Hydratation intense', 'Non comedogene', 'Anti-age'],
         pregnancy_safe: true,
         vegan: true,
         alternatives: ['Hyaluronic acid', 'Sodium hyaluronate']
@@ -44,7 +44,7 @@ class CosmeticsIngredientsDatabase {
         safety_score: 75,
         skin_compatibility: ['peau normale', 'peau grasse'],
         concerns: ['Irritation possible peau sensible', 'Sensibilisation'],
-        benefits: ['Améliore pénétration', 'Texture agréable'],
+        benefits: ['Ameliore penetration', 'Texture agreable'],
         pregnancy_safe: true,
         alternatives: ['Butylene glycol', 'Pentylene glycol']
       },
@@ -56,10 +56,10 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 40,
         skin_compatibility: ['peau grasse'],
-        concerns: ['Irritation cutanée forte', 'Dessèchement', 'Eczéma', 'Barrière cutanée altérée'],
-        benefits: ['Mousse abondante', 'Nettoyage efficace', 'Économique'],
+        concerns: ['Irritation cutanee forte', 'Dessechement', 'Eczema', 'Barriere cutanee alteree'],
+        benefits: ['Mousse abondante', 'Nettoyage efficace', '‰conomique'],
         pregnancy_safe: true,
-        not_suitable_for: ['peau sensible', 'peau sèche', 'dermatite atopique'],
+        not_suitable_for: ['peau sensible', 'peau seche', 'dermatite atopique'],
         alternatives: ['Coco glucoside', 'Decyl glucoside', 'Sodium cocoyl isethionate']
       },
 
@@ -69,8 +69,8 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 55,
         skin_compatibility: ['peau normale', 'peau grasse'],
-        concerns: ['Irritation modérée', 'Possible contamination 1,4-dioxane'],
-        benefits: ['Mousse crémeuse', 'Moins irritant que SLS'],
+        concerns: ['Irritation moderee', 'Possible contamination 1,4-dioxane'],
+        benefits: ['Mousse cremeuse', 'Moins irritant que SLS'],
         pregnancy_safe: true,
         alternatives: ['Coco betaine', 'Sodium cocoyl glutamate']
       },
@@ -82,7 +82,7 @@ class CosmeticsIngredientsDatabase {
         safety_score: 90,
         skin_compatibility: ['tous types', 'peau sensible'],
         concerns: [],
-        benefits: ['Très doux', 'Biodégradable', 'Non irritant', 'Origine végétale'],
+        benefits: ['Tres doux', 'Biodegradable', 'Non irritant', 'Origine vegetale'],
         pregnancy_safe: true,
         vegan: true,
         certifications: ['Ecocert', 'Cosmos']
@@ -90,11 +90,11 @@ class CosmeticsIngredientsDatabase {
 
       'cocamidopropyl betaine': {
         name: 'Cocamidopropyl Betaine',
-        function: 'Tensioactif amphotère',
+        function: 'Tensioactif amphotere',
         origin: 'semi_synthetic',
         safety_score: 80,
         skin_compatibility: ['tous types'],
-        concerns: ['Allergies rares', 'Impuretés possibles'],
+        concerns: ['Allergies rares', 'Impuretes possibles'],
         benefits: ['Doux', 'Conditionneur', 'Antistatique'],
         pregnancy_safe: true
       },
@@ -106,8 +106,8 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 45,
         skin_compatibility: ['peau normale'],
-        concerns: ['Perturbateur endocrinien potentiel', 'Activité œstrogénique', 'Bioaccumulation'],
-        benefits: ['Très efficace', 'Spectre large', 'Stable'],
+        concerns: ['Perturbateur endocrinien potentiel', 'Activite Å“strogenique', 'Bioaccumulation'],
+        benefits: ['Tres efficace', 'Spectre large', 'Stable'],
         pregnancy_safe: false,
         endocrine_disruptor: true,
         alternatives: ['Phenoxyethanol', 'Benzyl alcohol', 'Potassium sorbate']
@@ -119,7 +119,7 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 50,
         skin_compatibility: ['peau normale'],
-        concerns: ['Perturbateur endocrinien léger', 'Photosensibilisation'],
+        concerns: ['Perturbateur endocrinien leger', 'Photosensibilisation'],
         benefits: ['Efficace champignons', 'Stable pH'],
         pregnancy_safe: false,
         concentration_limit: '0.4% EU',
@@ -132,8 +132,8 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 75,
         skin_compatibility: ['tous types'],
-        concerns: ['Irritation rare', 'Eczéma de contact possible'],
-        benefits: ['Alternative parabens', 'Efficace', 'Bien toléré'],
+        concerns: ['Irritation rare', 'Eczema de contact possible'],
+        benefits: ['Alternative parabens', 'Efficace', 'Bien tolere'],
         pregnancy_safe: true,
         concentration_limit: '1% EU'
       },
@@ -144,24 +144,24 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural_or_synthetic',
         safety_score: 80,
         skin_compatibility: ['tous types'],
-        concerns: ['Allergène obligatoire >10ppm'],
-        benefits: ['Naturellement présent', 'Doux', 'Multifonction'],
+        concerns: ['Allergene obligatoire >10ppm'],
+        benefits: ['Naturellement present', 'Doux', 'Multifonction'],
         pregnancy_safe: true,
         allergen_eu: true
       },
 
-      // === PARFUMS & ALLERGÈNES ===
+      // === PARFUMS & ALLERGˆNES ===
       'parfum': {
         name: 'Parfum/Fragrance',
         function: 'Parfum',
         origin: 'mixed',
         safety_score: 60,
         skin_compatibility: ['peau normale'],
-        concerns: ['Allergènes cachés', 'Sensibilisation', 'Irritation'],
-        benefits: ['Expérience sensorielle', 'Masque odeurs'],
+        concerns: ['Allergenes caches', 'Sensibilisation', 'Irritation'],
+        benefits: ['Experience sensorielle', 'Masque odeurs'],
         pregnancy_safe: true,
         allergen_potential: 'high',
-        alternatives: ['Huiles essentielles', 'Parfum sans allergènes']
+        alternatives: ['Huiles essentielles', 'Parfum sans allergenes']
       },
 
       'limonene': {
@@ -170,8 +170,8 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural',
         safety_score: 65,
         skin_compatibility: ['peau normale'],
-        concerns: ['Allergène obligatoire EU', 'Oxydation = irritation', 'Photosensibilisation'],
-        benefits: ['Parfum agrumes naturel', 'Antioxydant léger'],
+        concerns: ['Allergene obligatoire EU', 'Oxydation = irritation', 'Photosensibilisation'],
+        benefits: ['Parfum agrumes naturel', 'Antioxydant leger'],
         pregnancy_safe: true,
         allergen_eu: true,
         prevalence_allergy: '2-3%'
@@ -183,7 +183,7 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural',
         safety_score: 70,
         skin_compatibility: ['peau normale'],
-        concerns: ['Allergène obligatoire EU', 'Sensibilisation contact'],
+        concerns: ['Allergene obligatoire EU', 'Sensibilisation contact'],
         benefits: ['Parfum floral naturel', 'Relaxant'],
         pregnancy_safe: true,
         allergen_eu: true,
@@ -196,8 +196,8 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural',
         safety_score: 68,
         skin_compatibility: ['peau normale'],
-        concerns: ['Allergène obligatoire EU', 'Oxydation'],
-        benefits: ['Parfum rosé naturel', 'Répulsif insectes'],
+        concerns: ['Allergene obligatoire EU', 'Oxydation'],
+        benefits: ['Parfum rose naturel', 'Repulsif insectes'],
         pregnancy_safe: true,
         allergen_eu: true
       },
@@ -208,33 +208,33 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural',
         safety_score: 67,
         skin_compatibility: ['peau normale'],
-        concerns: ['Allergène obligatoire EU', 'Irritation possible'],
-        benefits: ['Parfum floral', 'Antimicrobien léger'],
+        concerns: ['Allergene obligatoire EU', 'Irritation possible'],
+        benefits: ['Parfum floral', 'Antimicrobien leger'],
         pregnancy_safe: true,
         allergen_eu: true
       },
 
-      // === ÉMOLLIENTS & HUILES ===
+      // === ‰MOLLIENTS & HUILES ===
       'dimethicone': {
         name: 'Dimethicone',
-        function: 'Émollient silicone',
+        function: '‰mollient silicone',
         origin: 'synthetic',
         safety_score: 75,
         skin_compatibility: ['tous types'],
-        concerns: ['Non biodégradable', 'Accumulation environnement'],
-        benefits: ['Protection barrière', 'Texture soyeuse', 'Non comédogène'],
+        concerns: ['Non biodegradable', 'Accumulation environnement'],
+        benefits: ['Protection barriere', 'Texture soyeuse', 'Non comedogene'],
         pregnancy_safe: true,
         environmental_impact: 'moderate'
       },
 
       'cyclopentasiloxane': {
         name: 'Cyclopentasiloxane',
-        function: 'Émollient volatile',
+        function: '‰mollient volatile',
         origin: 'synthetic',
         safety_score: 70,
         skin_compatibility: ['tous types'],
-        concerns: ['Bioaccumulation potentielle', 'Perturbateur endocrinien suspecté'],
-        benefits: ['Évaporation rapide', 'Texture légère'],
+        concerns: ['Bioaccumulation potentielle', 'Perturbateur endocrinien suspecte'],
+        benefits: ['‰vaporation rapide', 'Texture legere'],
         pregnancy_safe: true,
         environmental_impact: 'high',
         alternatives: ['Squalane', 'Caprylic/Capric triglyceride']
@@ -242,39 +242,39 @@ class CosmeticsIngredientsDatabase {
 
       'squalane': {
         name: 'Squalane',
-        function: 'Émollient',
+        function: '‰mollient',
         origin: 'natural_or_synthetic',
         safety_score: 95,
         skin_compatibility: ['tous types', 'peau sensible'],
         concerns: [],
-        benefits: ['Biomimétique', 'Anti-âge', 'Non comédogène', 'Stable'],
+        benefits: ['Biomimetique', 'Anti-age', 'Non comedogene', 'Stable'],
         pregnancy_safe: true,
         vegan: true,
-        source: 'Olive, canne à sucre ou requin (éviter)'
+        source: 'Olive, canne   sucre ou requin (eviter)'
       },
 
       'jojoba oil': {
         name: 'Simmondsia Chinensis (Jojoba) Seed Oil',
-        function: 'Émollient/Huile',
+        function: '‰mollient/Huile',
         origin: 'natural',
         safety_score: 95,
         skin_compatibility: ['tous types'],
         concerns: [],
-        benefits: ['97% similaire sébum humain', 'Régulatrice', 'Longue conservation'],
+        benefits: ['97% similaire sebum humain', 'Regulatrice', 'Longue conservation'],
         pregnancy_safe: true,
         vegan: true,
         comedogenic_rating: 2
       },
 
-      // === ACTIFS ANTI-ÂGE ===
+      // === ACTIFS ANTI-‚GE ===
       'retinol': {
         name: 'Retinol',
-        function: 'Anti-âge/Rénovateur cellulaire',
+        function: 'Anti-age/Renovateur cellulaire',
         origin: 'synthetic',
         safety_score: 60,
-        skin_compatibility: ['peau mature', 'peau acnéique'],
-        concerns: ['Irritation', 'Photosensibilisation', 'Tératogène'],
-        benefits: ['Anti-rides puissant', 'Stimule collagène', 'Unifie teint'],
+        skin_compatibility: ['peau mature', 'peau acneique'],
+        concerns: ['Irritation', 'Photosensibilisation', 'Teratogene'],
+        benefits: ['Anti-rides puissant', 'Stimule collagene', 'Unifie teint'],
         pregnancy_safe: false,
         breastfeeding_safe: false,
         usage_restrictions: 'Utilisation nocturne uniquement, SPF obligatoire'
@@ -282,7 +282,7 @@ class CosmeticsIngredientsDatabase {
 
       'hyaluronic acid': {
         name: 'Hyaluronic Acid',
-        function: 'Hydratant/Anti-âge',
+        function: 'Hydratant/Anti-age',
         origin: 'biotechnology',
         safety_score: 95,
         skin_compatibility: ['tous types'],
@@ -290,58 +290,58 @@ class CosmeticsIngredientsDatabase {
         benefits: ['Hydratation intense', 'Repulpe', '1000x son poids en eau'],
         pregnancy_safe: true,
         vegan: true,
-        molecular_weights: ['Bas poids: pénétration', 'Haut poids: film hydratant']
+        molecular_weights: ['Bas poids: penetration', 'Haut poids: film hydratant']
       },
 
       'niacinamide': {
         name: 'Niacinamide (Vitamin B3)',
-        function: 'Régulateur/Anti-inflammatoire',
+        function: 'Regulateur/Anti-inflammatoire',
         origin: 'synthetic',
         safety_score: 90,
         skin_compatibility: ['tous types', 'peau sensible'],
         concerns: ['Flush possible >10%'],
-        benefits: ['Régule sébum', 'Anti-inflammatoire', 'Éclaircit taches'],
+        benefits: ['Regule sebum', 'Anti-inflammatoire', '‰claircit taches'],
         pregnancy_safe: true,
         optimal_concentration: '5-10%'
       },
 
       'vitamin c': {
         name: 'L-Ascorbic Acid (Vitamin C)',
-        function: 'Antioxydant/Éclaircissant',
+        function: 'Antioxydant/‰claircissant',
         origin: 'synthetic',
         safety_score: 85,
         skin_compatibility: ['tous types'],
-        concerns: ['Instabilité', 'Irritation possible', 'Oxydation'],
-        benefits: ['Antioxydant puissant', 'Stimule collagène', 'Éclaircit teint'],
+        concerns: ['Instabilite', 'Irritation possible', 'Oxydation'],
+        benefits: ['Antioxydant puissant', 'Stimule collagene', '‰claircit teint'],
         pregnancy_safe: true,
         stability_forms: ['Magnesium ascorbyl phosphate', 'Sodium ascorbyl phosphate']
       },
 
-      // === INGRÉDIENTS PROBLÉMATIQUES ===
+      // === INGR‰DIENTS PROBL‰MATIQUES ===
       'triclosan': {
         name: 'Triclosan',
         function: 'Antimicrobien',
         origin: 'synthetic',
         safety_score: 25,
         skin_compatibility: [],
-        concerns: ['Perturbateur endocrinien majeur', 'Résistance bactérienne', 'Bioaccumulation'],
+        concerns: ['Perturbateur endocrinien majeur', 'Resistance bacterienne', 'Bioaccumulation'],
         benefits: ['Antimicrobien puissant'],
         pregnancy_safe: false,
         endocrine_disruptor: true,
-        regulatory_status: 'Interdit savons EU 2016, limité cosmétiques',
+        regulatory_status: 'Interdit savons EU 2016, limite cosmetiques',
         alternatives: ['Tea tree oil', 'Alcohol', 'Benzoic acid']
       },
 
       'hydroquinone': {
         name: 'Hydroquinone',
-        function: 'Dépigmentant',
+        function: 'Depigmentant',
         origin: 'synthetic',
         safety_score: 30,
         skin_compatibility: [],
-        concerns: ['Cancérogène potentiel', 'Ochronose', 'Absorption systémique'],
-        benefits: ['Dépigmentant efficace'],
+        concerns: ['Cancerogene potentiel', 'Ochronose', 'Absorption systemique'],
+        benefits: ['Depigmentant efficace'],
         pregnancy_safe: false,
-        regulatory_status: 'Interdit cosmétiques EU, limité 2% médicaments',
+        regulatory_status: 'Interdit cosmetiques EU, limite 2% medicaments',
         alternatives: ['Kojic acid', 'Arbutin', 'Vitamin C']
       },
 
@@ -351,17 +351,17 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 15,
         skin_compatibility: [],
-        concerns: ['Cancérogène groupe 1 IARC', 'Irritation sévère', 'Sensibilisation'],
+        concerns: ['Cancerogene groupe 1 IARC', 'Irritation severe', 'Sensibilisation'],
         benefits: ['Conservateur efficace'],
         pregnancy_safe: false,
-        regulatory_status: 'Interdit cosmétiques EU',
+        regulatory_status: 'Interdit cosmetiques EU',
         hidden_sources: ['DMDM hydantoin', 'Imidazolidinyl urea', 'Quaternium-15']
       }
     };
   }
 
   initializeAllergensDatabase() {
-    // 26 allergènes obligatoires EU + extensions
+    // 26 allergenes obligatoires EU + extensions
     return {
       'mandatory_eu': [
         'limonene', 'linalool', 'benzyl alcohol', 'citronellol', 'geraniol',
@@ -385,23 +385,23 @@ class CosmeticsIngredientsDatabase {
 
   initializeFunctionsDatabase() {
     return {
-      'solvant': 'Dissout autres ingrédients, base formulation',
-      'tensioactif': 'Nettoyage, mousse, émulsification',
-      'émollient': 'Adoucit, protège, texture',
+      'solvant': 'Dissout autres ingredients, base formulation',
+      'tensioactif': 'Nettoyage, mousse, emulsification',
+      'emollient': 'Adoucit, protege, texture',
       'hydratant': 'Retient eau dans peau',
-      'conservateur': 'Empêche développement microbien',
-      'parfum': 'Expérience sensorielle olfactive',
+      'conservateur': 'Empeche developpement microbien',
+      'parfum': 'Experience sensorielle olfactive',
       'colorant': 'Coloration produit ou peau',
-      'épaississant': 'Modifie viscosité, texture',
-      'antioxydant': 'Prévient oxydation, anti-âge',
-      'exfoliant': 'Élimine cellules mortes',
+      'epaississant': 'Modifie viscosite, texture',
+      'antioxydant': 'Previent oxydation, anti-age',
+      'exfoliant': '‰limine cellules mortes',
       'protection_solaire': 'Filtre UV, photoprotection',
-      'régulateur_ph': 'Ajuste acidité formulation',
-      'actif': 'Bénéfice ciblé peau (anti-âge, etc.)'
+      'regulateur_ph': 'Ajuste acidite formulation',
+      'actif': 'Benefice cible peau (anti-age, etc.)'
     };
   }
 
-  // === MÉTHODES DE RECHERCHE ===
+  // === M‰THODES DE RECHERCHE ===
   getIngredient(inci_name) {
     const normalizedName = inci_name.toLowerCase().trim();
     return this.ingredients[normalizedName] || null;
@@ -466,7 +466,7 @@ class CosmeticsIngredientsDatabase {
       .map(([key, ingredient]) => ({ inci: key, ...ingredient }));
   }
 
-  // === ANALYSES SPÉCIALISÉES ===
+  // === ANALYSES SP‰CIALIS‰ES ===
   analyzeIngredientSafety(ingredients_list) {
     const analysis = {
       total_ingredients: ingredients_list.length,
@@ -493,7 +493,7 @@ class CosmeticsIngredientsDatabase {
           analysis.concerning_count++;
         }
 
-        // Vérification allergènes
+        // Verification allergenes
         const allergenCheck = this.checkAllergen(ingredient);
         if (allergenCheck.is_allergen) {
           analysis.allergens_detected.push({
@@ -503,18 +503,18 @@ class CosmeticsIngredientsDatabase {
           });
         }
 
-        // Vérification perturbateurs endocriniens
+        // Verification perturbateurs endocriniens
         if (ingredientData.endocrine_disruptor) {
           analysis.endocrine_disruptors.push(ingredient);
         }
 
-        // Vérification sécurité grossesse
+        // Verification securite grossesse
         if (ingredientData.pregnancy_safe === false) {
           analysis.pregnancy_unsafe.push(ingredient);
         }
       } else {
         analysis.unknown_count++;
-        totalSafetyScore += 50; // Score neutre pour ingrédients inconnus
+        totalSafetyScore += 50; // Score neutre pour ingredients inconnus
       }
     }
 
@@ -537,19 +537,19 @@ class CosmeticsIngredientsDatabase {
     const recommendations = [];
 
     if (analysis.allergens_detected.length > 0) {
-      recommendations.push('Test cutané recommandé - allergènes détectés');
+      recommendations.push('Test cutane recommande - allergenes detectes');
     }
 
     if (analysis.endocrine_disruptors.length > 0) {
-      recommendations.push('Éviter pendant grossesse/allaitement - perturbateurs endocriniens');
+      recommendations.push('‰viter pendant grossesse/allaitement - perturbateurs endocriniens');
     }
 
     if (analysis.concerning_count > analysis.total_ingredients * 0.3) {
-      recommendations.push('Considérer alternative plus sûre - nombreux ingrédients préoccupants');
+      recommendations.push('Considerer alternative plus sure - nombreux ingredients preoccupants');
     }
 
     if (analysis.overall_safety_score < 60) {
-      recommendations.push('Produit à éviter - score sécurité faible');
+      recommendations.push('Produit   eviter - score securite faible');
     }
 
     return recommendations;

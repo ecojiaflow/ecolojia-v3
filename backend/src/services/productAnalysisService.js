@@ -11,18 +11,18 @@ const logger = new Logger('ProductAnalysisService');
 
 class ProductAnalysisService {
   constructor() {
-    // Initialisation des analyseurs spécialisés
+    // Initialisation des analyseurs specialises
     this.analyzers = {
       food: null,
       cosmetics: null,
       detergents: null
     };// PATH: backend/src/services/productAnalysisService.js
-// Service principal d'orchestration des analyses de produits - VERSION CORRIGÉE
+// Service principal d'orchestration des analyses de produits - VERSION CORRIG‰E
 
 const Analysis = require('../models/Analysis');
 const Product = require('../models/Product');
 
-// Logger simplifié si le module n'existe pas
+// Logger simplifie si le module n'existe pas
 let logger;
 try {
   const { Logger } = require('../utils/logger');
@@ -37,7 +37,7 @@ try {
   };
 }
 
-// Gestion des erreurs simplifiée
+// Gestion des erreurs simplifiee
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -58,20 +58,20 @@ const mongoose = require('mongoose');
 
 class ProductAnalysisService {
   constructor() {
-    // Initialisation des analyseurs spécialisés
+    // Initialisation des analyseurs specialises
     this.analyzers = {
       food: null,
       cosmetics: null,
       detergents: null
     };
     
-    // Chargement différé des analyseurs pour éviter les dépendances circulaires
+    // Chargement differe des analyseurs pour eviter les dependances circulaires
     this.loadAnalyzers();
   }
 
   loadAnalyzers() {
     try {
-      // Chargement sécurisé des analyseurs UNIQUEMENT s'ils existent
+      // Chargement securise des analyseurs UNIQUEMENT s'ils existent
       try {
         this.analyzers.food = require('../scorers/food/foodScorer');
         logger.info('Food analyzer loaded');
@@ -98,7 +98,7 @@ class ProductAnalysisService {
     }
   }
 
-  // NOUVELLE MÉTHODE SIMPLIFIÉE pour compatibilité avec products.js
+  // NOUVELLE M‰THODE SIMPLIFI‰E pour compatibilite avec products.js
   async analyzeProduct(product, options = {}) {
     const { userId, useAI, category } = options;
     
@@ -110,7 +110,7 @@ class ProductAnalysisService {
     });
 
     try {
-      // Utiliser la méthode complète si possible
+      // Utiliser la methode complete si possible
       if (product.name && (product.category || category)) {
         const params = {
           productId: product._id,
@@ -144,7 +144,7 @@ class ProductAnalysisService {
     });
     
     try {
-      // Validation des paramètres
+      // Validation des parametres
       if (!params.name || !params.category) {
         throw new ValidationError('Product name and category are required');
       }
@@ -153,13 +153,13 @@ class ProductAnalysisService {
         throw new ValidationError('Invalid category. Must be food, cosmetics, or detergents');
       }
 
-      // Créer ou récupérer le produit
+      // Creer ou recuperer le produit
       let product = await this.findOrCreateProduct(params);
 
-      // Analyser selon la catégorie
+      // Analyser selon la categorie
       const analysisResults = await this.performCategoryAnalysis(product, params);
 
-      // Créer l'enregistrement d'analyse
+      // Creer l'enregistrement d'analyse
       const analysis = await this.createAnalysisRecord({
         userId: params.userId,
         product,
@@ -167,7 +167,7 @@ class ProductAnalysisService {
         type: params.barcode ? 'barcode_scan' : 'manual_entry'
       });
 
-      // Mettre à jour le produit avec les derniers résultats
+      // Mettre   jour le produit avec les derniers resultats
       await this.updateProductWithAnalysis(product, analysisResults);
 
       logger.info('Analysis completed:', { 
@@ -206,7 +206,7 @@ class ProductAnalysisService {
       });
     }
 
-    // Créer le produit s'il n'existe pas
+    // Creer le produit s'il n'existe pas
     if (!product) {
       product = new Product({
         name: params.name,
@@ -215,7 +215,7 @@ class ProductAnalysisService {
         brand: params.brand || 'Unknown',
         ingredients: params.ingredients || '',
         imageUrl: params.imageUrl,
-        // Données spécifiques selon la catégorie
+        // Donnees specifiques selon la categorie
         [`${params.category}Data`]: params.specificData || {}
       });
       
@@ -232,22 +232,22 @@ class ProductAnalysisService {
     
     if (!analyzer) {
       console.warn(`No analyzer found for category: ${category}`);
-      // Analyse générique de fallback
+      // Analyse generique de fallback
       return this.generateGenericAnalysis(product);
     }
 
     try {
-      // Préparer les données pour l'analyseur
+      // Preparer les donnees pour l'analyseur
       const analysisData = {
         name: product.name,
         brand: product.brand,
         ingredients: product.ingredients || params.ingredients || '',
         category: product.category,
         barcode: product.barcode,
-        ...product[`${category}Data`] // Données spécifiques à la catégorie
+        ...product[`${category}Data`] // Donnees specifiques   la categorie
       };
 
-      // Exécuter l'analyse spécialisée selon le type d'analyseur
+      // Executer l'analyse specialisee selon le type d'analyseur
       let results;
       
       if (category === 'food' && analyzer.analyzeFood) {
@@ -266,7 +266,7 @@ class ProductAnalysisService {
         throw new Error('No suitable analyze method found');
       }
       
-      // Enrichir avec des méta-données
+      // Enrichir avec des meta-donnees
       return {
         ...results,
         analyzedAt: new Date(),
@@ -281,7 +281,7 @@ class ProductAnalysisService {
   }
 
   generateGenericAnalysis(product) {
-    // Analyse générique de base
+    // Analyse generique de base
     const healthScore = Math.floor(Math.random() * 40) + 40; // 40-80
     
     return {
@@ -291,12 +291,12 @@ class ProductAnalysisService {
       ethicsScore: Math.floor(Math.random() * 40) + 40,
       overallGrade: this.getGrade(healthScore),
       grade: this.getGrade(healthScore),
-      summary: `Analyse basique effectuée pour ${product.name || 'ce produit'}`,
-      concerns: ['Données insuffisantes pour une analyse complète'],
-      benefits: ['Produit analysé avec succès'],
+      summary: `Analyse basique effectuee pour ${product.name || 'ce produit'}`,
+      concerns: ['Donnees insuffisantes pour une analyse complete'],
+      benefits: ['Produit analyse avec succes'],
       recommendations: [
-        'Données insuffisantes pour une analyse complète',
-        'Vérifiez la liste des ingrédients',
+        'Donnees insuffisantes pour une analyse complete',
+        'Verifiez la liste des ingredients',
         'Consultez un professionnel pour plus d'informations'
       ],
       confidence: 0.3
@@ -325,7 +325,7 @@ class ProductAnalysisService {
         concerns: results.concerns,
         benefits: results.benefits,
         
-        // Résultats spécifiques selon la catégorie
+        // Resultats specifiques selon la categorie
         foodAnalysis: product.category === 'food' ? {
           novaScore: results.novaScore || results.nova?.score,
           nutriScore: results.nutriScore,
@@ -375,7 +375,7 @@ class ProductAnalysisService {
   calculateConfidence(product) {
     let confidence = 0.3; // Base
     
-    // Augmenter la confiance selon les données disponibles
+    // Augmenter la confiance selon les donnees disponibles
     if (product.ingredients && product.ingredients.length > 10) confidence += 0.2;
     if (product.barcode) confidence += 0.1;
     if (product.brand && product.brand !== 'Unknown') confidence += 0.1;
@@ -538,16 +538,16 @@ class ProductAnalysisService {
 // Export singleton
 module.exports = new ProductAnalysisService();
 
-// Export aussi la fonction simple pour compatibilité
+// Export aussi la fonction simple pour compatibilite
 module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.exports);
     
-    // Chargement différé des analyseurs pour éviter les dépendances circulaires
+    // Chargement differe des analyseurs pour eviter les dependances circulaires
     this.loadAnalyzers();
   }
 
   loadAnalyzers() {
     try {
-      // Chargement sécurisé des analyseurs
+      // Chargement securise des analyseurs
       this.analyzers.food = require('../scorers/food/foodScorer');
       this.analyzers.cosmetics = require('../scorers/cosmetics/cosmeticsScorer');
       this.analyzers.detergents = require('../scorers/detergents/detergentsScorer');
@@ -565,7 +565,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
     });
     
     try {
-      // Validation des paramètres
+      // Validation des parametres
       if (!params.name || !params.category) {
         throw new ValidationError('Product name and category are required');
       }
@@ -574,13 +574,13 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         throw new ValidationError('Invalid category. Must be food, cosmetics, or detergents');
       }
 
-      // Créer ou récupérer le produit
+      // Creer ou recuperer le produit
       let product = await this.findOrCreateProduct(params);
 
-      // Analyser selon la catégorie
+      // Analyser selon la categorie
       const analysisResults = await this.performCategoryAnalysis(product, params);
 
-      // Créer l'enregistrement d'analyse
+      // Creer l'enregistrement d'analyse
       const analysis = await this.createAnalysisRecord({
         userId: params.userId,
         product,
@@ -588,7 +588,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         type: params.barcode ? 'barcode_scan' : 'manual_entry'
       });
 
-      // Mettre à jour le produit avec les derniers résultats
+      // Mettre   jour le produit avec les derniers resultats
       await this.updateProductWithAnalysis(product, analysisResults);
 
       logger.info('Analysis completed:', { 
@@ -627,7 +627,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
       });
     }
 
-    // Créer le produit s'il n'existe pas
+    // Creer le produit s'il n'existe pas
     if (!product) {
       product = new Product({
         name: params.name,
@@ -636,7 +636,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         brand: params.brand || 'Unknown',
         ingredients: params.ingredients || '',
         imageUrl: params.imageUrl,
-        // Données spécifiques selon la catégorie
+        // Donnees specifiques selon la categorie
         [`${params.category}Data`]: params.specificData || {}
       });
       
@@ -653,25 +653,25 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
     
     if (!analyzer) {
       console.warn(`No analyzer found for category: ${category}`);
-      // Analyse générique de fallback
+      // Analyse generique de fallback
       return this.generateGenericAnalysis(product);
     }
 
     try {
-      // Préparer les données pour l'analyseur
+      // Preparer les donnees pour l'analyseur
       const analysisData = {
         name: product.name,
         brand: product.brand,
         ingredients: product.ingredients || params.ingredients || '',
         category: product.category,
         barcode: product.barcode,
-        ...product[`${category}Data`] // Données spécifiques à la catégorie
+        ...product[`${category}Data`] // Donnees specifiques   la categorie
       };
 
-      // Exécuter l'analyse spécialisée
+      // Executer l'analyse specialisee
       const results = await analyzer.analyze(analysisData);
       
-      // Enrichir avec des méta-données
+      // Enrichir avec des meta-donnees
       return {
         ...results,
         analyzedAt: new Date(),
@@ -686,7 +686,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
   }
 
   generateGenericAnalysis(product) {
-    // Analyse générique de base
+    // Analyse generique de base
     const healthScore = Math.floor(Math.random() * 40) + 40; // 40-80
     
     return {
@@ -694,10 +694,10 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
       environmentScore: Math.floor(Math.random() * 40) + 40,
       ethicsScore: Math.floor(Math.random() * 40) + 40,
       overallGrade: this.getGrade(healthScore),
-      summary: `Analyse basique effectuée pour ${product.name}`,
+      summary: `Analyse basique effectuee pour ${product.name}`,
       recommendations: [
-        'Données insuffisantes pour une analyse complète',
-        'Vérifiez la liste des ingrédients',
+        'Donnees insuffisantes pour une analyse complete',
+        'Verifiez la liste des ingredients',
         'Consultez un professionnel pour plus d'informations'
       ],
       confidence: 0.3
@@ -724,7 +724,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         summary: results.summary,
         recommendations: results.recommendations,
         
-        // Résultats spécifiques selon la catégorie
+        // Resultats specifiques selon la categorie
         foodAnalysis: product.category === 'food' ? {
           novaScore: results.novaScore,
           nutriScore: results.nutriScore,
@@ -774,7 +774,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
   calculateConfidence(product) {
     let confidence = 0.3; // Base
     
-    // Augmenter la confiance selon les données disponibles
+    // Augmenter la confiance selon les donnees disponibles
     if (product.ingredients && product.ingredients.length > 10) confidence += 0.2;
     if (product.barcode) confidence += 0.1;
     if (product.brand && product.brand !== 'Unknown') confidence += 0.1;

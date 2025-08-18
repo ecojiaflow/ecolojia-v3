@@ -30,7 +30,7 @@ const pool = new Pool(poolConfig);
 // Variable pour stocker l'état de la connexion
 let dbConnected = false;
 
-// ========== CONFIGURATION SÉCURITÉ ==========
+// ========== CONFIGURATION SÃ‰CURITÃ‰ ==========
 
 // 1. Compression
 app.use(compression());
@@ -119,11 +119,11 @@ async function testConnection() {
     const client = await pool.connect();
     const result = await client.query('SELECT NOW()');
     client.release();
-    console.log('✅ PostgreSQL connecté:', result.rows[0].now);
+    console.log('âœ… PostgreSQL connecté:', result.rows[0].now);
     dbConnected = true;
     return true;
   } catch (err) {
-    console.error('❌ Erreur connexion PostgreSQL:', err.message);
+    console.error('âŒ Erreur connexion PostgreSQL:', err.message);
     dbConnected = false;
     return false;
   }
@@ -132,7 +132,7 @@ async function testConnection() {
 // Créer les tables si elles n'existent pas
 async function createTables() {
   if (!dbConnected) {
-    console.log('⚠️ Base de données non connectée, tables non créées');
+    console.log('âš ï¸ Base de données non connectée, tables non créées');
     return;
   }
   
@@ -171,9 +171,9 @@ async function createTables() {
       CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode);
       CREATE INDEX IF NOT EXISTS idx_analyses_user_id ON analyses(user_id);
     `);
-    console.log('✅ Tables créées/vérifiées');
+    console.log('âœ… Tables créées/vérifiées');
   } catch (error) {
-    console.error('❌ Erreur création tables:', error.message);
+    console.error('âŒ Erreur création tables:', error.message);
   }
 }
 
@@ -254,7 +254,7 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
       );
 
       if (userCheck.rows.length > 0) {
-        throw new AppError('Email déjà utilisé', 409);
+        throw new AppError('Email déjÃ  utilisé', 409);
       }
 
       // Hash du mot de passe
@@ -282,7 +282,7 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
   if (!dbConnected) {
     // Vérifier si email existe
     if (memoryUsers.find(u => u.email === normalizedEmail)) {
-      throw new AppError('Email déjà utilisé', 409);
+      throw new AppError('Email déjÃ  utilisé', 409);
     }
 
     // Hash du mot de passe
@@ -443,41 +443,41 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ========== DÉMARRAGE ==========
+// ========== DÃ‰MARRAGE ==========
 async function start() {
   // Tenter la connexion DB
-  console.log('🔄 Tentative de connexion à PostgreSQL...');
+  console.log('ðŸ”„ Tentative de connexion Ã  PostgreSQL...');
   const connected = await testConnection();
   
   if (connected) {
     await createTables();
   } else {
-    console.log('⚠️ Démarrage en mode sans base de données (stockage mémoire)');
+    console.log('âš ï¸ Démarrage en mode sans base de données (stockage mémoire)');
   }
   
   app.listen(PORT, '0.0.0.0', () => {
-    console.log('\n🌱 ECOLOJIA API v2.0 - Serveur démarré');
+    console.log('\nðŸŒ± ECOLOJIA API v2.0 - Serveur démarré');
     console.log('================================================');
-    console.log(`📡 URL: http://localhost:${PORT}`);
-    console.log(`🔒 Mode: ${dbConnected ? 'PostgreSQL' : 'Stockage mémoire'}`);
-    console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-    console.log('\n📍 Endpoints disponibles:');
+    console.log(`ðŸ“¡ URL: http://localhost:${PORT}`);
+    console.log(`ðŸ”’ Mode: ${dbConnected ? 'PostgreSQL' : 'Stockage mémoire'}`);
+    console.log(`ðŸŒ Environnement: ${process.env.NODE_ENV || 'development'}`);
+    console.log('\nðŸ“ Endpoints disponibles:');
     console.log(`   - GET  http://localhost:${PORT}/`);
     console.log(`   - GET  http://localhost:${PORT}/health`);
     console.log(`   - POST http://localhost:${PORT}/api/auth/register`);
     console.log(`   - POST http://localhost:${PORT}/api/auth/login`);
     console.log(`   - GET  http://localhost:${PORT}/api/users`);
-    console.log('\n🔐 Sécurité activée:');
-    console.log('   ✅ Helmet (headers sécurisés)');
-    console.log('   ✅ CORS (origines contrôlées)');
-    console.log('   ✅ Sanitization des entrées');
-    console.log('   ✅ Validation complète');
-    console.log('   ✅ Gestion d\'erreurs centralisée');
+    console.log('\nðŸ” Sécurité activée:');
+    console.log('   âœ… Helmet (headers sécurisés)');
+    console.log('   âœ… CORS (origines contrôlées)');
+    console.log('   âœ… Sanitization des entrées');
+    console.log('   âœ… Validation complète');
+    console.log('   âœ… Gestion d\'erreurs centralisée');
     console.log('================================================\n');
   });
 }
 
-// ========== GESTION ARRÊT PROPRE ==========
+// ========== GESTION ARRÃŠT PROPRE ==========
 process.on('SIGTERM', () => {
   console.log('SIGTERM reçu, fermeture gracieuse...');
   pool.end().then(() => {

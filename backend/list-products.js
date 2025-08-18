@@ -13,13 +13,13 @@ async function listProducts() {
     .limit(20)
     .sort({ name: 1 });
   
-  console.log('\n📦 PRODUITS DANS LA BASE:');
+  console.log('\nðŸ“¦ PRODUITS DANS LA BASE:');
   console.log('========================');
   
   products.forEach(p => {
     console.log(`${p.name || 'Sans nom'} (${p.brand || 'Sans marque'})`);
-    console.log(`  📊 Nutri-Score: ${p.nutriscore_grade || 'N/A'} | NOVA: ${p.nova_group || 'N/A'}`);
-    console.log(`  🔢 Code: ${p.barcode}`);
+    console.log(`  ðŸ“Š Nutri-Score: ${p.nutriscore_grade || 'N/A'} | NOVA: ${p.nova_group || 'N/A'}`);
+    console.log(`  ðŸ”¢ Code: ${p.barcode}`);
     console.log('');
   });
   

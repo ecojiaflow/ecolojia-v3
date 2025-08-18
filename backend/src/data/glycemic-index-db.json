@@ -3,11 +3,11 @@
     "source": "International Table of Glycemic Index and Glycemic Load Values 2024",
     "references": [
       "University of Sydney - GI Database 2024",
-      "INSERM - Études glycémiques françaises",
+      "INSERM - Ã‰tudes glycémiques françaises",
       "Diabetes Care Journal - Meta-analyses 2024"
     ],
     "last_updated": "2024-01-15",
-    "methodology": "IG mesuré sur glucose = 100, seuil publication ≥ 10 sujets",
+    "methodology": "IG mesuré sur glucose = 100, seuil publication â‰¥ 10 sujets",
     "legal_disclaimer": "Estimations basées sur données scientifiques - Ne remplace pas avis médical"
   },
 
@@ -237,8 +237,8 @@
   },
 
   "legal_compliance": {
-    "scientific_basis": "Basé sur études cliniques publiées avec ≥ 10 sujets",
-    "estimation_disclaimer": "Estimations à titre informatif - Variabilité individuelle possible",
+    "scientific_basis": "Basé sur études cliniques publiées avec â‰¥ 10 sujets",
+    "estimation_disclaimer": "Estimations Ã  titre informatif - Variabilité individuelle possible",
     "medical_disclaimer": "Ne constitue pas un conseil médical - Consulter professionnel santé"
   }
 }

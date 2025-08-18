@@ -1,5 +1,5 @@
 // backend/src/data/detergentDatabase.js
-// Base de données de vrais produits détergents du marché français
+// Base de donnees de vrais produits detergents du marche francais
 
 const detergentProducts = [
   // === LESSIVES ===
@@ -24,10 +24,10 @@ const detergentProducts = [
   },
   {
     barcode: '3600540289643',
-    name: 'Le Chat Eco-Efficacité',
+    name: 'Le Chat Eco-Efficacite',
     brand: 'Le Chat',
     category: 'laundry_detergent',
-    composition: '5-15% tensioactifs anioniques d\'origine végétale, <5% tensioactifs non-ioniques, savon, enzymes, parfum',
+    composition: '5-15% tensioactifs anioniques d\'origine vegetale, <5% tensioactifs non-ioniques, savon, enzymes, parfum',
     labels: ['eco_friendly'],
     packaging: 'Flacon 2L (40 lavages)'
   },
@@ -45,7 +45,7 @@ const detergentProducts = [
     name: 'L\'Arbre Vert Lessive Liquide Peaux Sensibles',
     brand: "L'Arbre Vert",
     category: 'laundry_detergent',
-    composition: '5-15% tensioactifs anioniques et non-ioniques d\'origine végétale, <5% savon, citrate de sodium',
+    composition: '5-15% tensioactifs anioniques et non-ioniques d\'origine vegetale, <5% savon, citrate de sodium',
     labels: ['eu_ecolabel', 'hypoallergenic'],
     packaging: 'Flacon 1.5L (25 lavages)',
     certifications: ['EU Ecolabel']
@@ -57,7 +57,7 @@ const detergentProducts = [
     name: 'Paic Excel+ Citron',
     brand: 'Paic',
     category: 'dish_soap',
-    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphotères, conservateurs (methylchloroisothiazolinone, methylisothiazolinone), parfum, limonene, colorant',
+    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphoteres, conservateurs (methylchloroisothiazolinone, methylisothiazolinone), parfum, limonene, colorant',
     labels: [],
     packaging: 'Flacon 750ml'
   },
@@ -66,7 +66,7 @@ const detergentProducts = [
     name: 'Mir Vaisselle Secret de Brillance',
     brand: 'Mir',
     category: 'dish_soap',
-    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphotères, conservateurs, parfum, colorant',
+    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphoteres, conservateurs, parfum, colorant',
     labels: [],
     packaging: 'Flacon 500ml'
   },
@@ -75,7 +75,7 @@ const detergentProducts = [
     name: 'Fairy Original',
     brand: 'Fairy',
     category: 'dish_soap',
-    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphotères, conservateurs (phenoxyethanol), parfum',
+    composition: '15-30% tensioactifs anioniques, 5-15% tensioactifs amphoteres, conservateurs (phenoxyethanol), parfum',
     labels: [],
     packaging: 'Flacon 625ml'
   },
@@ -84,7 +84,7 @@ const detergentProducts = [
     name: 'L\'Arbre Vert Vaisselle Main Amande Douce',
     brand: "L'Arbre Vert",
     category: 'dish_soap',
-    composition: '5-15% tensioactifs anioniques et amphotères d\'origine végétale, conservateurs, parfum',
+    composition: '5-15% tensioactifs anioniques et amphoteres d\'origine vegetale, conservateurs, parfum',
     labels: ['eu_ecolabel', 'tested_dermatologically'],
     packaging: 'Flacon 500ml',
     certifications: ['EU Ecolabel']
@@ -98,16 +98,16 @@ const detergentProducts = [
     category: 'dishwasher_detergent',
     composition: 'Sodium Carbonate, Sodium Citrate, Sodium Percarbonate, TAED, enzymes (protease, amylase), Sodium Silicate, polycarboxylates, tensioactifs non-ioniques, parfum',
     labels: ['phosphate_free'],
-    packaging: 'Boîte 40 tablettes'
+    packaging: 'Boite 40 tablettes'
   },
   {
     barcode: '8001090310835',
     name: 'Sun Tout-en-1 Expert',
     brand: 'Sun',
     category: 'dishwasher_detergent',
-    composition: '15-30% phosphates, 5-15% agents de blanchiment oxygénés, <5% tensioactifs non-ioniques, phosphonates, polycarboxylates, enzymes, parfum',
+    composition: '15-30% phosphates, 5-15% agents de blanchiment oxygenes, <5% tensioactifs non-ioniques, phosphonates, polycarboxylates, enzymes, parfum',
     labels: [],
-    packaging: 'Boîte 52 tablettes'
+    packaging: 'Boite 52 tablettes'
   },
   {
     barcode: '3450601055577',
@@ -116,14 +116,14 @@ const detergentProducts = [
     category: 'dishwasher_detergent',
     composition: 'Carbonate de sodium, citrate de sodium, percarbonate de sodium, silicate de sodium, enzymes',
     labels: ['eu_ecolabel', 'phosphate_free'],
-    packaging: 'Boîte 30 tablettes',
+    packaging: 'Boite 30 tablettes',
     certifications: ['EU Ecolabel']
   },
 
   // === NETTOYANTS MULTI-SURFACES ===
   {
     barcode: '3178041360445',
-    name: 'Mr. Propre Fraîcheur du Matin',
+    name: 'Mr. Propre Fraicheur du Matin',
     brand: 'Mr. Propre',
     category: 'all_purpose_cleaner',
     composition: '<5% tensioactifs anioniques, tensioactifs non-ioniques, savon, conservateurs (methylchloroisothiazolinone, methylisothiazolinone), parfum, hexyl cinnamal, limonene',
@@ -132,7 +132,7 @@ const detergentProducts = [
   },
   {
     barcode: '8001090305268',
-    name: 'Ajax Fête des Fleurs',
+    name: 'Ajax Fete des Fleurs',
     brand: 'Ajax',
     category: 'all_purpose_cleaner',
     composition: '<5% tensioactifs anioniques, tensioactifs non-ioniques, conservateurs, parfum, colorant',
@@ -141,7 +141,7 @@ const detergentProducts = [
   },
   {
     barcode: '8710908950223',
-    name: 'Cif Crème Original',
+    name: 'Cif Creme Original',
     brand: 'Cif',
     category: 'all_purpose_cleaner',
     composition: '<5% tensioactifs anioniques, tensioactifs non-ioniques, savon, conservateurs, parfum',
@@ -173,7 +173,7 @@ const detergentProducts = [
     name: 'L\'Arbre Vert Gel WC',
     brand: "L'Arbre Vert",
     category: 'toilet_cleaner',
-    composition: 'Acide citrique 5-15%, tensioactifs anioniques <5%, épaississant naturel',
+    composition: 'Acide citrique 5-15%, tensioactifs anioniques <5%, epaississant naturel',
     labels: ['eu_ecolabel'],
     packaging: 'Flacon 740ml',
     certifications: ['EU Ecolabel']
@@ -195,12 +195,12 @@ function searchProducts(query) {
   );
 }
 
-// Fonction pour obtenir des produits par catégorie
+// Fonction pour obtenir des produits par categorie
 function getByCategory(category) {
   return detergentProducts.filter(p => p.category === category);
 }
 
-// Fonction pour obtenir des produits certifiés
+// Fonction pour obtenir des produits certifies
 function getCertifiedProducts() {
   return detergentProducts.filter(p => 
     p.labels?.includes('eu_ecolabel') || 

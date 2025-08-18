@@ -14,7 +14,7 @@ const favoriteSchema = new mongoose.Schema({
     required: true
   },
   
-  // Snapshot pour garder l'historique même si le produit change
+  // Snapshot pour garder l'historique meme si le produit change
   productSnapshot: {
     name: String,
     brand: String,
@@ -24,12 +24,12 @@ const favoriteSchema = new mongoose.Schema({
     healthScore: Number
   },
   
-  // Métadonnées personnelles
+  // Metadonnees personnelles
   notes: {
     type: String,
     maxlength: 500
   },
-  tags: [String], // ['petit-déjeuner', 'bio', 'enfants']
+  tags: [String], // ['petit-dejeuner', 'bio', 'enfants']
   
   // Notifications
   notifications: {
@@ -45,10 +45,10 @@ const favoriteSchema = new mongoose.Schema({
   lastViewedAt: Date
 });
 
-// Index unique pour éviter les doublons
+// Index unique pour eviter les doublons
 favoriteSchema.index({ userId: 1, productId: 1 }, { unique: true });
 
-// Méthodes statiques
+// Methodes statiques
 favoriteSchema.statics.toggleFavorite = async function(userId, productId, productData = {}) {
   const existing = await this.findOne({ userId, productId });
   

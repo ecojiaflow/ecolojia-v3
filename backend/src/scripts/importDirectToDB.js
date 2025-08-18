@@ -4,8 +4,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /**
- * 🚀 IMPORT OPTIMISÉ - 50+ PRODUITS GARANTIS
- * Version avec timeout augmenté (30s) + fonctions intégrées
+ * ðŸš€ IMPORT OPTIMIS‰ - 50+ PRODUITS GARANTIS
+ * Version avec timeout augmente (30s) + fonctions integrees
  */
 
 const CONFIG = {
@@ -14,8 +14,8 @@ const CONFIG = {
   MAX_RETRIES: 3
 };
 
-console.log('🌱 ECOLOJIA - Import optimisé OpenFoodFacts');
-console.log('🎯 Objectif: 50+ produits avec vrais codes-barres');
+console.log('ðŸŒ± ECOLOJIA - Import optimise OpenFoodFacts');
+console.log('ðŸŽ¯ Objectif: 50+ produits avec vrais codes-barres');
 console.log('='.repeat(60));
 
 async function importDirectToDatabase() {
@@ -28,11 +28,11 @@ async function importDirectToDatabase() {
       { search_terms: 'bio', tagtype_0: 'countries', tag_0: 'France', page_size: 50 },
       { search_terms: 'biologique', tagtype_0: 'countries', tag_0: 'France', page_size: 30 },
       { tagtype_0: 'labels', tag_0: 'AB Agriculture Biologique', page_size: 30 },
-      { search_terms: 'écologique naturel', tagtype_0: 'countries', tag_0: 'France', page_size: 25 },
+      { search_terms: 'ecologique naturel', tagtype_0: 'countries', tag_0: 'France', page_size: 25 },
       { tagtype_0: 'categories', tag_0: 'Produits biologiques', page_size: 40 }
     ];
 
-    console.log(`🔍 Lancement de ${searchQueries.length} requêtes parallèles...\n`);
+    console.log(`ðŸ” Lancement de ${searchQueries.length} requetes paralleles...\n`);
 
     const promises = searchQueries.map((params, index) =>
       fetchProductsFromOpenFoodFacts(params, index + 1)
@@ -42,26 +42,26 @@ async function importDirectToDatabase() {
 
     results.forEach((result, index) => {
       if (result.status === 'fulfilled' && result.value) {
-        console.log(`✅ Requête ${index + 1}: ${result.value.length} produits`);
+        console.log(`âœ… Requete ${index + 1}: ${result.value.length} produits`);
         allProducts = allProducts.concat(result.value);
       } else {
-        console.log(`❌ Requête ${index + 1}: échec`);
+        console.log(`âŒ Requete ${index + 1}: echec`);
       }
     });
 
     const uniqueProducts = removeDuplicates(allProducts);
-    console.log(`\n📦 Total collecté: ${allProducts.length} produits`);
-    console.log(`🔄 Après déduplication: ${uniqueProducts.length} produits uniques`);
+    console.log(`\nðŸ“¦ Total collecte: ${allProducts.length} produits`);
+    console.log(`ðŸ”„ Apres deduplication: ${uniqueProducts.length} produits uniques`);
 
     const finalProducts = uniqueProducts.slice(0, CONFIG.TARGET_PRODUCTS);
-    console.log(`🎯 À importer: ${finalProducts.length} produits\n`);
+    console.log(`ðŸŽ¯ € importer: ${finalProducts.length} produits\n`);
 
     for (let i = 0; i < finalProducts.length; i++) {
       const product = finalProducts[i];
       const progress = `[${i + 1}/${finalProducts.length}]`;
 
       try {
-        console.log(`${progress} 📦 ${product.product_name?.substring(0, 35) || 'Produit sans nom'}...`);
+        console.log(`${progress} ðŸ“¦ ${product.product_name?.substring(0, 35) || 'Produit sans nom'}...`);
 
         const exists = await prisma.product.findFirst({
           where: {
@@ -73,7 +73,7 @@ async function importDirectToDatabase() {
         });
 
         if (exists) {
-          console.log(`${progress} ⏭️  Déjà en base`);
+          console.log(`${progress} â­ï¸  Dej  en base`);
           skipped++;
           continue;
         }
@@ -103,35 +103,35 @@ async function importDirectToDatabase() {
           }
         });
 
-        console.log(`${progress} ✅ ${newProduct.title} (${Math.round(ecoScore.score * 100)}%)`);
+        console.log(`${progress} âœ… ${newProduct.title} (${Math.round(ecoScore.score * 100)}%)`);
         imported++;
 
         await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_MS));
 
       } catch (error) {
-        console.error(`${progress} ❌ ${error.message}`);
+        console.error(`${progress} âŒ ${error.message}`);
       }
     }
 
   } catch (error) {
-    console.error('💥 Erreur critique:', error.message);
+    console.error('ðŸ’¥ Erreur critique:', error.message);
   } finally {
     await prisma.$disconnect();
   }
 
   const total = imported + skipped;
   console.log('\n' + '='.repeat(60));
-  console.log('📊 RÉSULTATS IMPORT OPTIMISÉ:');
-  console.log(`✅ Nouveaux produits: ${imported}`);
-  console.log(`⏭️  Déjà en base: ${skipped}`);
-  console.log(`📦 Total traité: ${total}`);
-  console.log(`📈 Taux de nouveauté: ${total > 0 ? Math.round((imported / total) * 100) : 0}%`);
+  console.log('ðŸ“Š R‰SULTATS IMPORT OPTIMIS‰:');
+  console.log(`âœ… Nouveaux produits: ${imported}`);
+  console.log(`â­ï¸  Dej  en base: ${skipped}`);
+  console.log(`ðŸ“¦ Total traite: ${total}`);
+  console.log(`ðŸ“ˆ Taux de nouveaute: ${total > 0 ? Math.round((imported / total) * 100) : 0}%`);
   console.log('='.repeat(60));
 
   if (imported > 0) {
-    console.log('\n🎉 BASE ENRICHIE AVEC SUCCÈS !');
-    console.log('💡 Testez votre scanner avec les nouveaux codes-barres !');
-    console.log(`🔗 Backend: https://ecolojia-backend-working.onrender.com/api/products`);
+    console.log('\nðŸŽ‰ BASE ENRICHIE AVEC SUCCˆS !');
+    console.log('ðŸ’¡ Testez votre scanner avec les nouveaux codes-barres !');
+    console.log(`ðŸ”— Backend: https://ecolojia-backend-working.onrender.com/api/products`);
   }
 }
 
@@ -161,7 +161,7 @@ async function fetchProductsFromOpenFoodFacts(params, queryNumber) {
     );
 
   } catch (error) {
-    console.error(`❌ Erreur requête ${queryNumber}:`, error.message);
+    console.error(`âŒ Erreur requete ${queryNumber}:`, error.message);
     return [];
   }
 }
@@ -183,7 +183,7 @@ function transformProductData(product) {
   const tags = extractTags(product);
   const slug = generateSlug(title, product.code);
   const images = product.image_url ? [product.image_url] : [];
-  const resume = `${category} bio - Score écologique calculé par IA`;
+  const resume = `${category} bio - Score ecologique calcule par IA`;
 
   return { title, brand, description, category, tags, slug, images, resume };
 }
@@ -196,7 +196,7 @@ function calculateEcoScore(product) {
     const labels = product.labels.toLowerCase();
     if (labels.includes('bio') || labels.includes('biologique')) score += 0.15;
     if (labels.includes('ab') || labels.includes('agriculture biologique')) score += 0.1;
-    if (labels.includes('équitable')) score += 0.08;
+    if (labels.includes('equitable')) score += 0.08;
     if (labels.includes('sans additif')) score += 0.05;
   }
 
@@ -239,14 +239,14 @@ function generateDescription(product) {
 
   if (product.categories) {
     const mainCat = product.categories.split(',')[0];
-    desc.push(`Catégorie: ${mainCat}`);
+    desc.push(`Categorie: ${mainCat}`);
   }
 
   if (product.stores) {
     desc.push(`Disponible en magasin`);
   }
 
-  desc.push('Produit référencé OpenFoodFacts avec informations nutritionnelles');
+  desc.push('Produit reference OpenFoodFacts avec informations nutritionnelles');
 
   return desc.join('. ') + '.';
 }
@@ -257,10 +257,10 @@ function mapCategory(categories) {
   const cat = categories.toLowerCase();
   if (cat.includes('boisson')) return 'boissons';
   if (cat.includes('pain') || cat.includes('boulangerie')) return 'boulangerie';
-  if (cat.includes('biscuit') || cat.includes('gâteau')) return 'biscuiterie';
-  if (cat.includes('fruit') || cat.includes('légume')) return 'fruits-légumes';
+  if (cat.includes('biscuit') || cat.includes('gateau')) return 'biscuiterie';
+  if (cat.includes('fruit') || cat.includes('legume')) return 'fruits-legumes';
   if (cat.includes('lait') || cat.includes('yaourt')) return 'produits-laitiers';
-  if (cat.includes('céréale') || cat.includes('petit-déjeuner')) return 'petit-déjeuner';
+  if (cat.includes('cereale') || cat.includes('petit-dejeuner')) return 'petit-dejeuner';
 
   return 'alimentaire';
 }
@@ -270,8 +270,8 @@ function extractTags(product) {
 
   if (product.labels) {
     const labels = product.labels.toLowerCase();
-    if (labels.includes('ab')) tags.push('ab-certifié');
-    if (labels.includes('équitable')) tags.push('équitable');
+    if (labels.includes('ab')) tags.push('ab-certifie');
+    if (labels.includes('equitable')) tags.push('equitable');
     if (labels.includes('sans gluten')) tags.push('sans-gluten');
     if (labels.includes('vegan')) tags.push('vegan');
   }
@@ -294,14 +294,14 @@ function generateSlug(title, code) {
 
 // Lancement automatique
 if (require.main === module) {
-  console.log('🚀 Démarrage import optimisé...\n');
+  console.log('ðŸš€ Demarrage import optimise...\n');
   importDirectToDatabase()
     .then(() => {
-      console.log('\n🎉 Import terminé avec succès!');
+      console.log('\nðŸŽ‰ Import termine avec succes!');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('\n💥 Erreur fatale:', error.message);
+      console.error('\nðŸ’¥ Erreur fatale:', error.message);
       process.exit(1);
     });
 }

@@ -1,5 +1,5 @@
 // backend/src/models/AffiliateClick.js
-// FICHIER CORRIGÉ - Sans index dupliqués
+// FICHIER CORRIG‰ - Sans index dupliques
 
 const mongoose = require('mongoose');
 
@@ -18,7 +18,7 @@ const affiliateClickSchema = new mongoose.Schema({
     index: true
   },
   
-  // Détails affiliation
+  // Details affiliation
   partner: {
     type: String,
     enum: ['lafourche', 'kazidomi', 'greenweez'],
@@ -34,7 +34,7 @@ const affiliateClickSchema = new mongoose.Schema({
     required: true
   },
   
-  // Tracking avancé
+  // Tracking avance
   clickId: {
     type: String,
     unique: true,
@@ -77,7 +77,7 @@ const affiliateClickSchema = new mongoose.Schema({
     content: String
   },
   
-  // TTL pour conformité RGPD (12 mois)
+  // TTL pour conformite RGPD (12 mois)
   expiresAt: {
     type: Date,
     default: () => new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
@@ -87,19 +87,19 @@ const affiliateClickSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index composés pour analytics
+// Index composes pour analytics
 affiliateClickSchema.index({ partner: 1, createdAt: -1 });
 affiliateClickSchema.index({ userId: 1, partner: 1, createdAt: -1 });
-// Commenté car 'unique: true' crée déjà un index sur clickId
+// Commente car 'unique: true' cree dej  un index sur clickId
 // affiliateClickSchema.index({ clickId: 1 }, { unique: true });
 affiliateClickSchema.index({ converted: 1, partner: 1 });
 
-// Méthodes statiques
+// Methodes statiques
 affiliateClickSchema.statics.createClick = async function(data) {
   const click = new this(data);
   await click.save();
   
-  // Incrémenter le compteur de l'utilisateur si nécessaire
+  // Incrementer le compteur de l'utilisateur si necessaire
   // await User.findByIdAndUpdate(data.userId, { $inc: { 'stats.affiliateClicks': 1 } });
   
   return click;

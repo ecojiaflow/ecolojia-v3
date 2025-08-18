@@ -10,7 +10,7 @@ class EmailService {
     );
     
     if (!this.configured) {
-      console.log('📧 Service email non configuré - Mode simulation activé');
+      console.log('ðŸ“§ Service email non configure - Mode simulation active');
     }
   }
 
@@ -24,9 +24,9 @@ class EmailService {
       data
     } = options;
 
-    // En développement ou si pas configuré, simuler l'envoi
+    // En developpement ou si pas configure, simuler l'envoi
     if (process.env.NODE_ENV === 'development' || !this.configured) {
-      console.log('📧 Email simulé:');
+      console.log('ðŸ“§ Email simule:');
       console.log(`   To: ${to}`);
       console.log(`   Subject: ${subject}`);
       if (template) console.log(`   Template: ${template}`);
@@ -38,9 +38,9 @@ class EmailService {
       };
     }
 
-    // En production, utiliser le service configuré
+    // En production, utiliser le service configure
     try {
-      // Exemple avec Nodemailer (à adapter selon votre service)
+      // Exemple avec Nodemailer (  adapter selon votre service)
       if (process.env.SMTP_HOST) {
         const nodemailer = require('nodemailer');
         const transporter = nodemailer.createTransport({
@@ -67,7 +67,7 @@ class EmailService {
         };
       }
 
-      // Fallback simulation si aucun service configuré
+      // Fallback simulation si aucun service configure
       return this.sendEmail({ ...options, NODE_ENV: 'development' });
 
     } catch (error) {
@@ -82,38 +82,38 @@ class EmailService {
       welcome: `
         <h1>Bienvenue sur ECOLOJIA!</h1>
         <p>Bonjour ${data.name || 'Utilisateur'},</p>
-        <p>Merci de rejoindre ECOLOJIA. Commencez à scanner vos produits dès maintenant!</p>
+        <p>Merci de rejoindre ECOLOJIA. Commencez   scanner vos produits des maintenant!</p>
       `,
       
       premium_welcome: `
         <h1>Bienvenue Premium!</h1>
-        <p>Félicitations ${data.name || 'Utilisateur'}!</p>
-        <p>Votre compte Premium est maintenant actif. Profitez de toutes les fonctionnalités:</p>
+        <p>Felicitations ${data.name || 'Utilisateur'}!</p>
+        <p>Votre compte Premium est maintenant actif. Profitez de toutes les fonctionnalites:</p>
         <ul>
-          <li>Analyses illimitées</li>
-          <li>Export de données</li>
+          <li>Analyses illimitees</li>
+          <li>Export de donnees</li>
           <li>Chat IA nutritionniste</li>
           <li>Support prioritaire</li>
         </ul>
       `,
       
       subscription_cancelled: `
-        <h1>Abonnement annulé</h1>
-        <p>Votre abonnement Premium a été annulé.</p>
-        <p>Vous conservez l'accès jusqu'au ${data.endDate || 'fin de la période'}.</p>
+        <h1>Abonnement annule</h1>
+        <p>Votre abonnement Premium a ete annule.</p>
+        <p>Vous conservez l'acces jusqu'au ${data.endDate || 'fin de la periode'}.</p>
       `,
       
       payment_failed: `
-        <h1>Échec du paiement</h1>
-        <p>Le paiement de votre abonnement a échoué.</p>
-        <p>Veuillez mettre à jour vos informations de paiement.</p>
+        <h1>‰chec du paiement</h1>
+        <p>Le paiement de votre abonnement a echoue.</p>
+        <p>Veuillez mettre   jour vos informations de paiement.</p>
       `
     };
 
     return templates[template] || `<p>${JSON.stringify(data)}</p>`;
   }
 
-  // Méthodes spécifiques pour différents types d'emails
+  // Methodes specifiques pour differents types d'emails
   async sendWelcomeEmail(user) {
     return this.sendEmail({
       to: user.email,
@@ -126,7 +126,7 @@ class EmailService {
   async sendPremiumWelcomeEmail(user) {
     return this.sendEmail({
       to: user.email,
-      subject: 'Votre compte Premium est activé!',
+      subject: 'Votre compte Premium est active!',
       template: 'premium_welcome',
       data: { name: user.name }
     });
@@ -144,7 +144,7 @@ class EmailService {
   async sendPaymentFailedEmail(user) {
     return this.sendEmail({
       to: user.email,
-      subject: 'Échec du paiement - Action requise',
+      subject: '‰chec du paiement - Action requise',
       template: 'payment_failed',
       data: { name: user.name }
     });

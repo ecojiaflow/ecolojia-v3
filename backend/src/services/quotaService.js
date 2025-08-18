@@ -21,35 +21,35 @@ class QuotaService {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODES PRINCIPALES
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODES PRINCIPALES
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Vérifie et consomme un quota avec gestion de concurrence
+   * Verifie et consomme un quota avec gestion de concurrence
    */
   async checkAndConsumeQuota(userId, quotaType) {
     const lockKey = `quota_lock:${userId}:${quotaType}`;
     const lock = await this.acquireLock(lockKey);
 
     if (!lock) {
-      throw new Error('Opération de quota en cours, veuillez réessayer');
+      throw new Error('Operation de quota en cours, veuillez reessayer');
     }
 
     try {
-      // Récupérer l'utilisateur
+      // Recuperer l'utilisateur
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('Utilisateur non trouvé');
+        throw new Error('Utilisateur non trouve');
       }
 
-      // Déterminer les champs de quota
+      // Determiner les champs de quota
       const quotaConfig = this.getQuotaConfig(quotaType, user.tier);
       
-      // Vérifier si reset nécessaire
+      // Verifier si reset necessaire
       await this.checkAndResetIfNeeded(user, quotaType, quotaConfig);
 
-      // Vérifier le quota
+      // Verifier le quota
       const currentValue = this.getQuotaValue(user, quotaConfig.field);
       const limit = quotaConfig.limit;
 
@@ -87,12 +87,12 @@ class QuotaService {
   }
 
   /**
-   * Récupère l'état actuel des quotas d'un utilisateur
+   * Recupere l'etat actuel des quotas d'un utilisateur
    */
   async getQuotaStatus(userId) {
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error('Utilisateur non trouvé');
+      throw new Error('Utilisateur non trouve');
     }
 
     const isPremium = user.tier === 'premium';
@@ -166,9 +166,9 @@ class QuotaService {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODES PRIVÉES
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODES PRIV‰ES
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   getQuotaConfig(quotaType, tier) {
     const configs = {
@@ -183,7 +183,7 @@ class QuotaService {
         field: 'currentUsage.aiQuestionsToday',
         incrementField: 'currentUsage.aiQuestionsToday',
         resetField: 'quotas.aiChatsResetDate',
-        limit: tier === 'premium' ? 999999 : 0, // 0 pour gratuit = pas d'accès
+        limit: tier === 'premium' ? 999999 : 0, // 0 pour gratuit = pas d'acces
         resetPeriod: 'daily'
       },
       export: {
@@ -230,7 +230,7 @@ class QuotaService {
     const now = new Date();
 
     if (resetDate < now) {
-      // Le quota doit être réinitialisé
+      // Le quota doit etre reinitialise
       const newResetDate = config.resetPeriod === 'daily' 
         ? this.getNextDayReset() 
         : this.getNextMonthReset();
@@ -242,7 +242,7 @@ class QuotaService {
 
       await User.findByIdAndUpdate(user._id, { $set: updates });
       
-      // Mettre à jour l'objet user local
+      // Mettre   jour l'objet user local
       this.setNestedValue(user, config.field, 0);
       this.setNestedValue(user, config.resetField, newResetDate);
       

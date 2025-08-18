@@ -1,8 +1,8 @@
 // backend/src/data/chemicalDatabase.js
 
 /**
- * Base de données des composants chimiques pour détergents
- * Incluant biodégradabilité, toxicité, CDV, etc.
+ * Base de donnees des composants chimiques pour detergents
+ * Incluant biodegradabilite, toxicite, CDV, etc.
  */
 
 const chemicalDatabase = [
@@ -20,7 +20,7 @@ const chemicalDatabase = [
     irritant: "high",
     eyeIrritant: true,
     optimalConcentration: 10,
-    description: "Tensioactif anionique très moussant mais irritant"
+    description: "Tensioactif anionique tres moussant mais irritant"
   },
   {
     name: "Sodium Laureth Sulfate",
@@ -62,7 +62,7 @@ const chemicalDatabase = [
     cdvFactor: 80,
     irritant: "low",
     optimalConcentration: 5,
-    description: "Tensioactif doux d'origine végétale"
+    description: "Tensioactif doux d'origine vegetale"
   },
 
   // ===== TENSIOACTIFS NON-IONIQUES =====
@@ -78,7 +78,7 @@ const chemicalDatabase = [
     cdvFactor: 100,
     irritant: "low",
     optimalConcentration: 5,
-    description: "Tensioactif non-ionique biodégradable"
+    description: "Tensioactif non-ionique biodegradable"
   },
   {
     name: "Alkyl Polyglucoside",
@@ -92,7 +92,7 @@ const chemicalDatabase = [
     cdvFactor: 50,
     irritant: false,
     optimalConcentration: 8,
-    description: "Tensioactif très doux issu du sucre"
+    description: "Tensioactif tres doux issu du sucre"
   },
   {
     name: "Cocamidopropyl Betaine",
@@ -107,7 +107,7 @@ const chemicalDatabase = [
     irritant: "low",
     allergen: true,
     optimalConcentration: 3,
-    description: "Co-tensioactif amphotère"
+    description: "Co-tensioactif amphotere"
   },
 
   // ===== BUILDERS (AGENTS ANTI-CALCAIRE) =====
@@ -138,7 +138,7 @@ const chemicalDatabase = [
     cdvFactor: 5,
     irritant: false,
     optimalConcentration: 15,
-    description: "Chélateur biodégradable"
+    description: "Chelateur biodegradable"
   },
   {
     name: "Zeolite A",
@@ -152,7 +152,7 @@ const chemicalDatabase = [
     cdvFactor: 1,
     irritant: false,
     optimalConcentration: 25,
-    description: "Substitut écologique des phosphates"
+    description: "Substitut ecologique des phosphates"
   },
   {
     name: "EDTA",
@@ -161,13 +161,13 @@ const chemicalDatabase = [
     synonyms: ["Ethylenediaminetetraacetic acid"],
     category: "chelating",
     function: "builder",
-    biodegradability: 0, // Non biodégradable
+    biodegradability: 0, // Non biodegradable
     aquaticToxicity: "moderate",
     cdvFactor: 500,
     persistent: true,
     bioaccumulative: true,
     optimalConcentration: 0.5,
-    description: "Chélateur puissant mais non biodégradable"
+    description: "Chelateur puissant mais non biodegradable"
   },
 
   // ===== PHOSPHATES =====
@@ -217,7 +217,7 @@ const chemicalDatabase = [
     cdvFactor: 1,
     respiratorySensitizer: true,
     optimalConcentration: 0.5,
-    description: "Enzyme dégradant les protéines"
+    description: "Enzyme degradant les proteines"
   },
   {
     name: "Amylase",
@@ -232,7 +232,7 @@ const chemicalDatabase = [
     cdvFactor: 1,
     respiratorySensitizer: true,
     optimalConcentration: 0.3,
-    description: "Enzyme dégradant l'amidon"
+    description: "Enzyme degradant l'amidon"
   },
   {
     name: "Lipase",
@@ -247,7 +247,7 @@ const chemicalDatabase = [
     cdvFactor: 1,
     respiratorySensitizer: true,
     optimalConcentration: 0.2,
-    description: "Enzyme dégradant les graisses"
+    description: "Enzyme degradant les graisses"
   },
   {
     name: "Cellulase",
@@ -278,7 +278,7 @@ const chemicalDatabase = [
     cdvFactor: 5,
     irritant: "moderate",
     optimalConcentration: 10,
-    description: "Agent blanchissant à l'oxygène actif"
+    description: "Agent blanchissant   l'oxygene actif"
   },
   {
     name: "Sodium Hypochlorite",
@@ -287,14 +287,14 @@ const chemicalDatabase = [
     synonyms: ["Bleach", "Eau de Javel"],
     category: "bleach",
     function: "bleaching",
-    biodegradability: 100, // Se décompose rapidement
+    biodegradability: 100, // Se decompose rapidement
     aquaticToxicity: "high",
     cdvFactor: 1000,
     corrosive: true,
     irritant: "high",
     respiratoryIrritant: true,
     optimalConcentration: 2,
-    description: "Agent blanchissant chloré puissant"
+    description: "Agent blanchissant chlore puissant"
   },
   {
     name: "TAED",
@@ -308,7 +308,7 @@ const chemicalDatabase = [
     cdvFactor: 50,
     irritant: "low",
     optimalConcentration: 2,
-    description: "Activateur de blanchiment basse température"
+    description: "Activateur de blanchiment basse temperature"
   },
 
   // ===== SOLVANTS =====
@@ -327,7 +327,7 @@ const chemicalDatabase = [
     irritant: "low",
     flammable: true,
     optimalConcentration: 5,
-    description: "Solvant volatil biodégradable"
+    description: "Solvant volatil biodegradable"
   },
   {
     name: "Isopropanol",
@@ -344,7 +344,7 @@ const chemicalDatabase = [
     irritant: "moderate",
     flammable: true,
     optimalConcentration: 10,
-    description: "Solvant dégraissant volatil"
+    description: "Solvant degraissant volatil"
   },
   {
     name: "Propylene Glycol",
@@ -375,7 +375,7 @@ const chemicalDatabase = [
     irritant: "moderate",
     allergen: true,
     optimalConcentration: 2,
-    description: "Solvant naturel dégraissant d'agrumes"
+    description: "Solvant naturel degraissant d'agrumes"
   },
 
   // ===== ACIDES =====
@@ -438,7 +438,7 @@ const chemicalDatabase = [
     ph: 1.2,
     irritant: "high",
     optimalConcentration: 5,
-    description: "Acide détartrant puissant"
+    description: "Acide detartrant puissant"
   },
 
   // ===== CONSERVATEURS =====
@@ -456,7 +456,7 @@ const chemicalDatabase = [
     allergen: true,
     sensitizer: true,
     optimalConcentration: 0.01,
-    description: "Conservateur très allergisant"
+    description: "Conservateur tres allergisant"
   },
   {
     name: "Benzisothiazolinone",
@@ -505,7 +505,7 @@ const chemicalDatabase = [
     voc: true,
     vocCategory: "fragrance",
     optimalConcentration: 0.5,
-    description: "Mélange de substances odorantes"
+    description: "Melange de substances odorantes"
   },
 
   // ===== COLORANTS =====
@@ -521,7 +521,7 @@ const chemicalDatabase = [
     cdvFactor: 100,
     irritant: false,
     optimalConcentration: 0.001,
-    description: "Colorant bleu synthétique"
+    description: "Colorant bleu synthetique"
   },
 
   // ===== AGENTS ANTI-MOUSSE =====
@@ -532,16 +532,16 @@ const chemicalDatabase = [
     synonyms: ["Antifoam"],
     category: "antifoam",
     function: "antifoam",
-    biodegradability: 0, // Non biodégradable
+    biodegradability: 0, // Non biodegradable
     aquaticToxicity: "low",
     cdvFactor: 50,
     persistent: true,
     irritant: false,
     optimalConcentration: 0.1,
-    description: "Agent anti-mousse siliconé"
+    description: "Agent anti-mousse silicone"
   },
 
-  // ===== POLYMÈRES =====
+  // ===== POLYMˆRES =====
   {
     name: "Polycarboxylate",
     inci: "SODIUM POLYACRYLATE",
@@ -554,7 +554,7 @@ const chemicalDatabase = [
     cdvFactor: 150,
     irritant: false,
     optimalConcentration: 2,
-    description: "Polymère anti-redéposition"
+    description: "Polymere anti-redeposition"
   },
   {
     name: "PVP",
@@ -580,13 +580,13 @@ const chemicalDatabase = [
     category: "alkali",
     function: "ph_adjuster",
     biodegradability: 100,
-    aquaticToxicity: "low", // Après neutralisation
+    aquaticToxicity: "low", // Apres neutralisation
     cdvFactor: 20,
     ph: 14,
     corrosive: true,
     irritant: "high",
     optimalConcentration: 1,
-    description: "Base forte très caustique"
+    description: "Base forte tres caustique"
   },
   {
     name: "Potassium Hydroxide",
@@ -623,7 +623,7 @@ const chemicalDatabase = [
     description: "Nettoyant alcalin volatil"
   },
 
-  // ===== DÉSINFECTANTS =====
+  // ===== D‰SINFECTANTS =====
   {
     name: "Benzalkonium Chloride",
     inci: "BENZALKONIUM CHLORIDE",
@@ -637,22 +637,22 @@ const chemicalDatabase = [
     irritant: "high",
     corrosive: true,
     optimalConcentration: 0.1,
-    description: "Désinfectant quaternaire"
+    description: "Desinfectant quaternaire"
   },
   {
     name: "Hydrogen Peroxide",
     inci: "HYDROGEN PEROXIDE",
     cas: "7722-84-1",
-    synonyms: ["Peroxyde d'Hydrogène"],
+    synonyms: ["Peroxyde d'Hydrogene"],
     category: "disinfectant",
     function: "disinfectant",
     biodegradability: 100,
     aquaticToxicity: "very_low",
     cdvFactor: 1,
     irritant: "moderate",
-    corrosive: true, // À haute concentration
+    corrosive: true, // € haute concentration
     optimalConcentration: 3,
-    description: "Désinfectant oxydant écologique"
+    description: "Desinfectant oxydant ecologique"
   },
 
   // ===== CHARGES ET DILUANTS =====
@@ -705,7 +705,7 @@ module.exports = {
     return chemicalDatabase.find(chem => chem.cas === cas);
   },
   
-  // Obtenir les substances problématiques
+  // Obtenir les substances problematiques
   getProblematicChemicals: () => {
     return chemicalDatabase.filter(chem => 
       chem.biodegradability < 60 ||
@@ -716,7 +716,7 @@ module.exports = {
     );
   },
   
-  // Obtenir les alternatives écologiques
+  // Obtenir les alternatives ecologiques
   getEcoFriendlyAlternatives: (category) => {
     return chemicalDatabase.filter(chem => 
       chem.category === category &&

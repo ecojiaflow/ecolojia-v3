@@ -1,4 +1,4 @@
-﻿const vision = require('@google-cloud/vision');
+const vision = require('@google-cloud/vision');
 const https = require('https');
 const fs = require('fs');
 

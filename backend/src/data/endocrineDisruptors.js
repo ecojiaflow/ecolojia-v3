@@ -1,8 +1,8 @@
 // backend/src/data/endocrineDisruptors.js
-// Base de données des perturbateurs endocriniens confirmés et suspectés
+// Base de donnees des perturbateurs endocriniens confirmes et suspectes
 
 const endocrineDisruptors = [
-  // === PARABÈNES ===
+  // === PARABˆNES ===
   {
     name: 'Methylparaben',
     inci: 'METHYLPARABEN',
@@ -242,7 +242,7 @@ const endocrineDisruptors = [
     sources: ['Formaldehyde release', 'Patch test data']
   },
 
-  // === MUSCS SYNTHÉTIQUES ===
+  // === MUSCS SYNTH‰TIQUES ===
   {
     name: 'Galaxolide',
     inci: 'HHCB',
@@ -278,7 +278,7 @@ const endocrineDisruptors = [
   }
 ];
 
-// Fonction pour vérifier si un ingrédient est un perturbateur endocrinien
+// Fonction pour verifier si un ingredient est un perturbateur endocrinien
 function isEndocrineDisruptor(inci, cas) {
   return endocrineDisruptors.some(ed => 
     ed.inci === inci || 
@@ -287,7 +287,7 @@ function isEndocrineDisruptor(inci, cas) {
   );
 }
 
-// Fonction pour obtenir les détails d'un perturbateur endocrinien
+// Fonction pour obtenir les details d'un perturbateur endocrinien
 function getDisruptorDetails(inci, cas) {
   return endocrineDisruptors.find(ed => 
     ed.inci === inci || 
@@ -296,12 +296,12 @@ function getDisruptorDetails(inci, cas) {
   );
 }
 
-// Fonction pour obtenir tous les perturbateurs confirmés
+// Fonction pour obtenir tous les perturbateurs confirmes
 function getConfirmedDisruptors() {
   return endocrineDisruptors.filter(ed => ed.status === 'confirmed');
 }
 
-// Fonction pour obtenir les perturbateurs par catégorie
+// Fonction pour obtenir les perturbateurs par categorie
 function getDisruptorsByCategory(category) {
   return endocrineDisruptors.filter(ed => ed.category === category);
 }

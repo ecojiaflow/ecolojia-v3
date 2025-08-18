@@ -9,9 +9,9 @@ class DataIngestion {
 
   async importNewProducts(limit = 100) {
     try {
-      this.logger.info(`🔍 Import OpenFoodFacts (limite: ${limit})`);
+      this.logger.info(`ðŸ” Import OpenFoodFacts (limite: ${limit})`);
       
-      // Récupérer produits récents OpenFoodFacts
+      // Recuperer produits recents OpenFoodFacts
       const response = await axios.get(`${this.baseURL}/api/v2/search`, {
         params: {
           countries_tags: 'france',
@@ -37,17 +37,17 @@ class DataIngestion {
         }
       }
 
-      this.logger.info(`✅ Import terminé: ${imported} importés, ${errors} erreurs`);
+      this.logger.info(`âœ… Import termine: ${imported} importes, ${errors} erreurs`);
       return { imported, errors };
 
     } catch (error) {
-      this.logger.error('❌ Erreur import OpenFoodFacts:', error);
+      this.logger.error('âŒ Erreur import OpenFoodFacts:', error);
       throw error;
     }
   }
 
   async importProduct(offProduct) {
-    // Vérifier si produit existe déjà
+    // Verifier si produit existe dej 
     const existing = await this.prisma.product.findFirst({
       where: {
         OR: [
@@ -58,10 +58,10 @@ class DataIngestion {
     });
 
     if (existing) {
-      return null; // Déjà existant
+      return null; // Dej  existant
     }
 
-    // Convertir données OpenFoodFacts
+    // Convertir donnees OpenFoodFacts
     const productData = {
       id: `off_${offProduct.code}`,
       title: offProduct.product_name || 'Produit OpenFoodFacts',
@@ -74,7 +74,7 @@ class DataIngestion {
       zones_dispo: ['FR', 'EU'],
       prices: { default: 15.99, currency: 'EUR' },
       eco_score: this.convertScore(offProduct.ecoscore_grade),
-      ai_confidence: 0.7, // Score par défaut OpenFoodFacts
+      ai_confidence: 0.7, // Score par defaut OpenFoodFacts
       confidence_pct: 70,
       confidence_color: 'yellow',
       verified_status: 'ai_verified',
@@ -83,7 +83,7 @@ class DataIngestion {
     };
 
     const created = await this.prisma.product.create({ data: productData });
-    this.logger.info(`📦 Produit importé: ${created.title}`);
+    this.logger.info(`ðŸ“¦ Produit importe: ${created.title}`);
     
     return created;
   }
@@ -111,11 +111,11 @@ class DataIngestion {
     
     if (product.categories) {
       const cat = product.categories.split(',')[0]?.replace('en:', '').trim();
-      desc += `, catégorie ${cat}`;
+      desc += `, categorie ${cat}`;
     }
     
     if (product.ingredients_text) {
-      desc += `. Ingrédients: ${product.ingredients_text.substring(0, 200)}`;
+      desc += `. Ingredients: ${product.ingredients_text.substring(0, 200)}`;
     }
     
     return desc;
@@ -153,7 +153,7 @@ class DataIngestion {
       });
     }
     
-    return tags.slice(0, 8); // Limiter à 8 tags
+    return tags.slice(0, 8); // Limiter   8 tags
   }
 
   convertScore(grade) {

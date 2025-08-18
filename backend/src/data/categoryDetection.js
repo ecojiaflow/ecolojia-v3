@@ -1,5 +1,5 @@
 // backend/src/data/categoryDetection.js
-// Logique de détection automatique de catégorie de produit
+// Logique de detection automatique de categorie de produit
 
 class CategoryDetection {
   constructor() {
@@ -11,7 +11,7 @@ class CategoryDetection {
       cosmetics: {
         weight: 1.0,
         keywords: {
-          primary: ['inci', 'aqua', 'parfum', 'crème', 'shampooing', 'gel douche', 'déodorant'],
+          primary: ['inci', 'aqua', 'parfum', 'creme', 'shampooing', 'gel douche', 'deodorant'],
           secondary: ['sodium lauryl sulfate', 'glycerin', 'paraben', 'silicone', 'huile essentielle']
         },
         ingredients: {
@@ -19,51 +19,51 @@ class CategoryDetection {
           chemical: ['sodium lauryl sulfate', 'sodium laureth sulfate', 'cocamidopropyl betaine']
         },
         packaging: ['tube', 'flacon', 'pot', 'spray', 'pompe'],
-        categories: ['beauté', 'hygiène', 'cosmétique', 'soin', 'maquillage'],
-        brands: ['loreal', 'nivea', 'garnier', 'dove', 'palmolive'] // marques connues cosmétiques
+        categories: ['beaute', 'hygiene', 'cosmetique', 'soin', 'maquillage'],
+        brands: ['loreal', 'nivea', 'garnier', 'dove', 'palmolive'] // marques connues cosmetiques
       },
 
       detergents: {
         weight: 1.0,
         keywords: {
-          primary: ['lessive', 'nettoyant', 'détergent', 'liquide vaisselle', 'lave-linge'],
-          secondary: ['tensioactif', 'phosphate', 'enzymes', 'biodégradable', 'anti-calcaire']
+          primary: ['lessive', 'nettoyant', 'detergent', 'liquide vaisselle', 'lave-linge'],
+          secondary: ['tensioactif', 'phosphate', 'enzymes', 'biodegradable', 'anti-calcaire']
         },
         ingredients: {
           specific: ['tensioactifs', 'phosphonates', 'zeolites', 'enzymes', 'agent de blanchiment'],
           chemical: ['sodium carbonate', 'sodium percarbonate', 'sodium citrate']
         },
-        usage: ['laver', 'nettoyer', 'dégraisser', 'détacher', 'désinfecter', 'récurer'],
-        categories: ['entretien', 'ménage', 'nettoyage', 'hygiène maison'],
-        brands: ['ariel', 'persil', 'skip', 'paic', 'mir'] // marques connues détergents
+        usage: ['laver', 'nettoyer', 'degraisser', 'detacher', 'desinfecter', 'recurer'],
+        categories: ['entretien', 'menage', 'nettoyage', 'hygiene maison'],
+        brands: ['ariel', 'persil', 'skip', 'paic', 'mir'] // marques connues detergents
       },
 
       food: {
-        weight: 0.9, // Légèrement moins prioritaire car catégorie par défaut
+        weight: 0.9, // Legerement moins prioritaire car categorie par defaut
         keywords: {
-          primary: ['nutri-score', 'kcal', 'calories', 'protéines', 'glucides', 'lipides'],
+          primary: ['nutri-score', 'kcal', 'calories', 'proteines', 'glucides', 'lipides'],
           secondary: ['bio', 'sans gluten', 'vegan', 'additif', 'conservateur', 'colorant']
         },
         ingredients: {
           specific: ['eau', 'sucre', 'sel', 'farine', 'huile'],
-          additives: ['e100', 'e200', 'e300', 'conservateur', 'colorant', 'édulcorant']
+          additives: ['e100', 'e200', 'e300', 'conservateur', 'colorant', 'edulcorant']
         },
         nutritional: ['calories', 'fibres', 'sodium', 'sucres', 'gras', 'vitamines'],
-        categories: ['alimentaire', 'boisson', 'snack', 'petit-déjeuner', 'épicerie'],
-        nova_indicators: ['ultra-transformé', 'additifs', 'ingrédients industriels']
+        categories: ['alimentaire', 'boisson', 'snack', 'petit-dejeuner', 'epicerie'],
+        nova_indicators: ['ultra-transforme', 'additifs', 'ingredients industriels']
       }
     };
   }
 
-  // === DÉTECTION PRINCIPALE ===
+  // === D‰TECTION PRINCIPALE ===
   async detectCategory(productData) {
     try {
-      console.log('🔍 Détection catégorie pour:', productData?.title || 'Produit sans nom');
+      console.log('ðŸ” Detection categorie pour:', productData?.title || 'Produit sans nom');
 
-      // Calcul des scores pour chaque catégorie
+      // Calcul des scores pour chaque categorie
       const scores = await this.calculateCategoryScores(productData);
       
-      // Tri par score décroissant
+      // Tri par score decroissant
       scores.sort((a, b) => b.score - a.score);
 
       const bestMatch = scores[0];
@@ -71,7 +71,7 @@ class CategoryDetection {
 
       // Seuil minimum de confiance
       if (confidence < 0.15) {
-        console.log('⚠️ Confiance très faible, fallback vers food');
+        console.log('âš ï¸ Confiance tres faible, fallback vers food');
         return {
           category: 'food',
           confidence: 0.4,
@@ -80,7 +80,7 @@ class CategoryDetection {
         };
       }
 
-      console.log(`✅ Catégorie détectée: ${bestMatch.category} (confiance: ${Math.round(confidence * 100)}%)`);
+      console.log(`âœ… Categorie detectee: ${bestMatch.category} (confiance: ${Math.round(confidence * 100)}%)`);
 
       return {
         category: bestMatch.category,
@@ -91,7 +91,7 @@ class CategoryDetection {
       };
 
     } catch (error) {
-      console.error('Erreur détection catégorie:', error);
+      console.error('Erreur detection categorie:', error);
       return {
         category: 'food',
         confidence: 0.3,
@@ -101,7 +101,7 @@ class CategoryDetection {
     }
   }
 
-  // === CALCUL SCORES PAR CATÉGORIE ===
+  // === CALCUL SCORES PAR CAT‰GORIE ===
   async calculateCategoryScores(productData) {
     const scores = [];
     const productText = this.prepareProductText(productData);
@@ -119,7 +119,7 @@ class CategoryDetection {
     return scores;
   }
 
-  // === CALCUL SCORE POUR UNE CATÉGORIE ===
+  // === CALCUL SCORE POUR UNE CAT‰GORIE ===
   async calculateSingleCategoryScore(productText, productData, rules) {
     const breakdown = {
       keywords_primary: 0,
@@ -131,7 +131,7 @@ class CategoryDetection {
       special_indicators: 0
     };
 
-    // 1. Score mots-clés primaires (30% du poids)
+    // 1. Score mots-cles primaires (30% du poids)
     if (rules.keywords?.primary) {
       const matches = rules.keywords.primary.filter(kw => 
         productText.includes(kw.toLowerCase())
@@ -139,7 +139,7 @@ class CategoryDetection {
       breakdown.keywords_primary = (matches.length / rules.keywords.primary.length) * 0.30;
     }
 
-    // 2. Score mots-clés secondaires (20% du poids)
+    // 2. Score mots-cles secondaires (20% du poids)
     if (rules.keywords?.secondary) {
       const matches = rules.keywords.secondary.filter(kw => 
         productText.includes(kw.toLowerCase())
@@ -147,12 +147,12 @@ class CategoryDetection {
       breakdown.keywords_secondary = (matches.length / rules.keywords.secondary.length) * 0.20;
     }
 
-    // 3. Score ingrédients spécifiques (25% du poids)
+    // 3. Score ingredients specifiques (25% du poids)
     if (rules.ingredients) {
       let ingredientMatches = 0;
       let totalIngredients = 0;
 
-      // Ingrédients spécifiques
+      // Ingredients specifiques
       if (rules.ingredients.specific) {
         totalIngredients += rules.ingredients.specific.length;
         ingredientMatches += rules.ingredients.specific.filter(ing => 
@@ -160,7 +160,7 @@ class CategoryDetection {
         ).length;
       }
 
-      // Ingrédients chimiques/additifs
+      // Ingredients chimiques/additifs
       if (rules.ingredients.chemical) {
         totalIngredients += rules.ingredients.chemical.length;
         ingredientMatches += rules.ingredients.chemical.filter(ing => 
@@ -196,7 +196,7 @@ class CategoryDetection {
       breakdown.packaging += (matches.length / rules.usage.length) * 0.10;
     }
 
-    // 5. Score catégories (10% du poids)
+    // 5. Score categories (10% du poids)
     if (rules.categories) {
       const matches = rules.categories.filter(cat => 
         productText.includes(cat.toLowerCase())
@@ -222,7 +222,7 @@ class CategoryDetection {
     };
   }
 
-  // === PRÉPARATION TEXTE PRODUIT ===
+  // === PR‰PARATION TEXTE PRODUIT ===
   prepareProductText(productData) {
     const textFields = [
       productData.title || '',
@@ -238,14 +238,14 @@ class CategoryDetection {
     return textFields.join(' ').toLowerCase();
   }
 
-  // === DÉTECTION SPÉCIALISÉE PAR TYPE ===
+  // === D‰TECTION SP‰CIALIS‰E PAR TYPE ===
   async detectCosmetics(productData) {
     const text = this.prepareProductText(productData);
     
-    // Indicateurs forts cosmétiques
+    // Indicateurs forts cosmetiques
     const strongIndicators = [
       'inci', 'aqua', 'parfum', 'sodium lauryl sulfate',
-      'crème', 'shampooing', 'gel douche', 'déodorant'
+      'creme', 'shampooing', 'gel douche', 'deodorant'
     ];
 
     const matches = strongIndicators.filter(indicator => text.includes(indicator));
@@ -260,10 +260,10 @@ class CategoryDetection {
   async detectDetergents(productData) {
     const text = this.prepareProductText(productData);
     
-    // Indicateurs forts détergents
+    // Indicateurs forts detergents
     const strongIndicators = [
-      'lessive', 'nettoyant', 'détergent', 'tensioactif',
-      'vaisselle', 'ménage', 'enzymes', 'anti-calcaire'
+      'lessive', 'nettoyant', 'detergent', 'tensioactif',
+      'vaisselle', 'menage', 'enzymes', 'anti-calcaire'
     ];
 
     const matches = strongIndicators.filter(indicator => text.includes(indicator));
@@ -280,14 +280,14 @@ class CategoryDetection {
     
     // Indicateurs forts alimentaires
     const strongIndicators = [
-      'nutri-score', 'kcal', 'calories', 'protéines',
+      'nutri-score', 'kcal', 'calories', 'proteines',
       'glucides', 'additif', 'conservateur', 'bio'
     ];
 
     const matches = strongIndicators.filter(indicator => text.includes(indicator));
     
     return {
-      isFood: matches.length >= 1, // Seuil plus bas car catégorie par défaut
+      isFood: matches.length >= 1, // Seuil plus bas car categorie par defaut
       confidence: matches.length / strongIndicators.length,
       matched_indicators: matches
     };
@@ -295,7 +295,7 @@ class CategoryDetection {
 
   // === VALIDATION ET OVERRIDE ===
   async validateDetection(category, productData) {
-    // Validation croisée pour éviter les erreurs grossières
+    // Validation croisee pour eviter les erreurs grossieres
     const validations = {
       cosmetics: await this.detectCosmetics(productData),
       detergents: await this.detectDetergents(productData),
@@ -304,14 +304,14 @@ class CategoryDetection {
 
     const detectedCategory = validations[category];
     if (!detectedCategory || detectedCategory.confidence < 0.3) {
-      console.warn(`⚠️ Validation échouée pour ${category}, confidence: ${detectedCategory?.confidence || 0}`);
+      console.warn(`âš ï¸ Validation echouee pour ${category}, confidence: ${detectedCategory?.confidence || 0}`);
       return false;
     }
 
     return true;
   }
 
-  // === MÉTHODES UTILITAIRES ===
+  // === M‰THODES UTILITAIRES ===
   getDetectionStats() {
     return {
       available_categories: Object.keys(this.detectionRules),

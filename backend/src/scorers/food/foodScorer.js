@@ -1,16 +1,16 @@
 // ======================================
-// FICHIER COMPLET CORRIGÉ : foodScorer.js
+// FICHIER COMPLET CORRIG‰ : foodScorer.js
 // ======================================
 
-// 📁 Fichier : src/scorers/food/foodScorer.js
-// ✅ VERSION PRODUCTION - V3.0 RÉVOLUTIONNAIRE (sans fallback)
+// ðŸ“ Fichier : src/scorers/food/foodScorer.js
+// âœ… VERSION PRODUCTION - V3.0 R‰VOLUTIONNAIRE (sans fallback)
 
 const NovaClassifier = require('./novaClassifier');
 const AdditivesAnalyzer = require('./additivesAnalyzer');
 const NutriScorer = require('./nutriScorer');
 const GlycemicEstimator = require('./glycemicEstimator');
 
-// ✅ CORRECTION : Import correct d'alternativesEngine
+// âœ… CORRECTION : Import correct d'alternativesEngine
 const AlternativesEngine = require('../../services/ai/alternativesEngine');
 const alternativesEngine = new AlternativesEngine();
 
@@ -44,7 +44,7 @@ class FoodScorer {
     };
 
     this.baseScore = 80;
-    console.log('🚀 FoodScorer V3.0 initialisé - Sprint 3 avec IA Alternatives + Insights');
+    console.log('ðŸš€ FoodScorer V3.0 initialise - Sprint 3 avec IA Alternatives + Insights');
   }
 
   async analyzeFood(productData, userProfile = {}) {
@@ -73,7 +73,7 @@ class FoodScorer {
         packaging
       });
 
-      // ✅ CORRECTION : Utiliser la bonne méthode
+      // âœ… CORRECTION : Utiliser la bonne methode
       const alternatives = await alternativesEngine.generateAlternatives(productData, 'food');
       const insights = await insightsGenerator.getInsightsForProduct(productData, userProfile);
 
@@ -111,7 +111,7 @@ class FoodScorer {
         }
       };
     } catch (error) {
-      console.error('❌ Erreur dans analyzeFood:', error);
+      console.error('âŒ Erreur dans analyzeFood:', error);
       throw error;
     }
   }
@@ -191,11 +191,11 @@ class FoodScorer {
   }
 
   getImprovementMessage(score) {
-    if (score >= 85) return 'Excellent produit selon critères scientifiques';
-    if (score >= 70) return 'Bon produit avec quelques améliorations possibles';
-    if (score >= 55) return 'Produit moyen - Plusieurs améliorations recommandées';
-    if (score >= 40) return 'Produit à améliorer - Nombreux critères défavorables';
-    return 'Produit déconseillé - Critères scientifiques très défavorables';
+    if (score >= 85) return 'Excellent produit selon criteres scientifiques';
+    if (score >= 70) return 'Bon produit avec quelques ameliorations possibles';
+    if (score >= 55) return 'Produit moyen - Plusieurs ameliorations recommandees';
+    if (score >= 40) return 'Produit   ameliorer - Nombreux criteres defavorables';
+    return 'Produit deconseille - Criteres scientifiques tres defavorables';
   }
 }
 

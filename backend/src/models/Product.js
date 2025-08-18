@@ -62,7 +62,7 @@ const productSchema = new mongoose.Schema({
   },
   imageUrl: String,
   
-  // Données spécifiques alimentaire
+  // Donnees specifiques alimentaire
   foodData: {
     ingredients: [String],
     ingredientsParsed: mongoose.Schema.Types.Mixed,
@@ -74,7 +74,7 @@ const productSchema = new mongoose.Schema({
     ecoScore: { type: String, enum: ['A', 'B', 'C', 'D', 'E'] }
   },
   
-  // Données spécifiques cosmétiques  
+  // Donnees specifiques cosmetiques  
   cosmeticsData: {
     inciList: String,
     ingredients: [cosmeticIngredientSchema],
@@ -83,7 +83,7 @@ const productSchema = new mongoose.Schema({
     certifications: [String] // bio, vegan, cruelty-free
   },
   
-  // Données spécifiques détergents
+  // Donnees specifiques detergents
   detergentsData: {
     composition: [String],
     surfactants: [String],
@@ -92,7 +92,7 @@ const productSchema = new mongoose.Schema({
     ecoLabels: [String]
   },
   
-  // Métadonnées d'analyse
+  // Metadonnees d'analyse
   analysisData: {
     healthScore: { type: Number, min: 0, max: 100 },
     lastAnalyzedAt: Date,
@@ -109,7 +109,7 @@ const productSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-// Index composés pour performances
+// Index composes pour performances
 productSchema.index({ category: 1, 'analysisData.healthScore': -1 });
 productSchema.index({ name: 'text', brand: 'text' });
 
@@ -119,7 +119,7 @@ productSchema.pre('save', function(next) {
   next();
 });
 
-// Méthodes d'instance
+// Methodes d'instance
 productSchema.methods.incrementView = async function() {
   this.viewCount++;
   return this.save();
@@ -127,11 +127,11 @@ productSchema.methods.incrementView = async function() {
 
 productSchema.methods.getPublicData = function() {
   const obj = this.toObject();
-  // Retirer les données sensibles si nécessaire
+  // Retirer les donnees sensibles si necessaire
   return obj;
 };
 
-// Méthodes statiques
+// Methodes statiques
 productSchema.statics.findByBarcode = function(barcode) {
   return this.findOne({ barcode });
 };

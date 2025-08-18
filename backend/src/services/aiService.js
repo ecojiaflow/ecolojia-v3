@@ -19,24 +19,24 @@ class AIService {
       apiKey: process.env.OPENAI_API_KEY
     });
 
-    // Cache de réponses pour économiser les appels API
+    // Cache de reponses pour economiser les appels API
     this.responseCache = new Map();
     this.CACHE_TTL = 3600000; // 1 heure
 
-    // Fallback responses pour mode dégradé
+    // Fallback responses pour mode degrade
     this.fallbackResponses = {
-      productAnalysis: "Je suis temporairement limité dans mes capacités d'analyse. Basé sur les informations disponibles, ce produit semble contenir des ingrédients standards. Pour une analyse complète, veuillez réessayer dans quelques instants.",
-      nutritionAdvice: "Le service de conseil nutritionnel est temporairement indisponible. N'oubliez pas de privilégier une alimentation équilibrée et variée. Pour des conseils personnalisés, consultez un professionnel de santé.",
-      general: "Je rencontre actuellement des difficultés techniques. Veuillez réessayer dans quelques instants ou consulter notre FAQ pour les questions courantes."
+      productAnalysis: "Je suis temporairement limite dans mes capacites d'analyse. Base sur les informations disponibles, ce produit semble contenir des ingredients standards. Pour une analyse complete, veuillez reessayer dans quelques instants.",
+      nutritionAdvice: "Le service de conseil nutritionnel est temporairement indisponible. N'oubliez pas de privilegier une alimentation equilibree et variee. Pour des conseils personnalises, consultez un professionnel de sante.",
+      general: "Je rencontre actuellement des difficultes techniques. Veuillez reessayer dans quelques instants ou consulter notre FAQ pour les questions courantes."
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODE PRINCIPALE AVEC CIRCUIT BREAKER
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODE PRINCIPALE AVEC CIRCUIT BREAKER
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async chat(message, context = {}, userId) {
-    // Vérifier le cache
+    // Verifier le cache
     const cacheKey = this.generateCacheKey(message, context);
     const cachedResponse = this.getFromCache(cacheKey);
     if (cachedResponse) {
@@ -58,7 +58,7 @@ class AIService {
         async () => await this.fallbackStrategy(message, context, userId)
       );
 
-      // Mettre en cache si succès
+      // Mettre en cache si succes
       if (response.source === 'deepseek') {
         this.saveToCache(cacheKey, response.response);
       }
@@ -68,7 +68,7 @@ class AIService {
     } catch (error) {
       console.error('[AIService] All strategies failed:', error);
       
-      // Dernier recours : réponse statique
+      // Dernier recours : reponse statique
       return {
         response: this.getFallbackResponse(context.type),
         source: 'static_fallback',
@@ -77,9 +77,9 @@ class AIService {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // APPEL DEEPSEEK
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async callDeepSeek(message, context, userId) {
     console.log('[AIService] Calling DeepSeek API');
@@ -112,14 +112,14 @@ class AIService {
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // STRATÉGIES DE FALLBACK
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // STRAT‰GIES DE FALLBACK
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async fallbackStrategy(message, context, userId) {
     console.log('[AIService] Circuit breaker OPEN - Using fallback strategy');
     
-    // Stratégie 1 : Essayer OpenAI GPT-4
+    // Strategie 1 : Essayer OpenAI GPT-4
     if (process.env.OPENAI_API_KEY && context.allowGPT4 !== false) {
       try {
         return await this.callOpenAI(message, context, userId);
@@ -128,7 +128,7 @@ class AIService {
       }
     }
 
-    // Stratégie 2 : Utiliser une réponse en cache similaire
+    // Strategie 2 : Utiliser une reponse en cache similaire
     const similarResponse = this.findSimilarCachedResponse(message);
     if (similarResponse) {
       return {
@@ -138,7 +138,7 @@ class AIService {
       };
     }
 
-    // Stratégie 3 : Réponse générée localement
+    // Strategie 3 : Reponse generee localement
     return this.generateLocalResponse(message, context);
   }
 
@@ -176,7 +176,7 @@ class AIService {
   generateLocalResponse(message, context) {
     console.log('[AIService] Generating local response');
     
-    // Analyse simple basée sur des mots-clés
+    // Analyse simple basee sur des mots-cles
     const lowercaseMessage = message.toLowerCase();
     
     if (context.type === 'product_analysis') {
@@ -187,9 +187,9 @@ class AIService {
       };
     }
     
-    if (lowercaseMessage.includes('allergie') || lowercaseMessage.includes('allergène')) {
+    if (lowercaseMessage.includes('allergie') || lowercaseMessage.includes('allergene')) {
       return {
-        response: "Les informations sur les allergènes sont disponibles dans la section 'Ingrédients' du produit. Les allergènes majeurs sont mis en évidence. En cas de doute, consultez toujours l'emballage du produit.",
+        response: "Les informations sur les allergenes sont disponibles dans la section 'Ingredients' du produit. Les allergenes majeurs sont mis en evidence. En cas de doute, consultez toujours l'emballage du produit.",
         source: 'local',
         degraded: true
       };
@@ -197,13 +197,13 @@ class AIService {
     
     if (lowercaseMessage.includes('nova') || lowercaseMessage.includes('transformation')) {
       return {
-        response: "La classification NOVA évalue le degré de transformation des aliments de 1 (non transformé) à 4 (ultra-transformé). Privilégiez les produits NOVA 1 et 2 pour une alimentation plus saine.",
+        response: "La classification NOVA evalue le degre de transformation des aliments de 1 (non transforme)   4 (ultra-transforme). Privilegiez les produits NOVA 1 et 2 pour une alimentation plus saine.",
         source: 'local',
         degraded: true
       };
     }
     
-    // Réponse générique
+    // Reponse generique
     return {
       response: this.fallbackResponses.general,
       source: 'local',
@@ -219,31 +219,31 @@ class AIService {
     let response = `Analyse rapide de ${product.name || 'ce produit'} :\n\n`;
     
     if (product.nova) {
-      response += `• Classification NOVA : ${product.nova}/4\n`;
+      response += `â€¢ Classification NOVA : ${product.nova}/4\n`;
       response += product.nova >= 3 
-        ? "  ⚠️ Produit transformé à ultra-transformé\n"
-        : "  ✅ Produit peu transformé\n";
+        ? "  âš ï¸ Produit transforme   ultra-transforme\n"
+        : "  âœ… Produit peu transforme\n";
     }
     
     if (product.nutriscore) {
-      response += `• Nutri-Score : ${product.nutriscore}\n`;
+      response += `â€¢ Nutri-Score : ${product.nutriscore}\n`;
       response += product.nutriscore <= 'B'
-        ? "  ✅ Bonne qualité nutritionnelle\n"
-        : "  ⚠️ Qualité nutritionnelle à améliorer\n";
+        ? "  âœ… Bonne qualite nutritionnelle\n"
+        : "  âš ï¸ Qualite nutritionnelle   ameliorer\n";
     }
     
     if (product.allergens && product.allergens.length > 0) {
-      response += `• Allergènes : ${product.allergens.join(', ')}\n`;
+      response += `â€¢ Allergenes : ${product.allergens.join(', ')}\n`;
     }
     
-    response += "\nPour une analyse détaillée avec recommandations personnalisées, le service IA complet sera bientôt disponible.";
+    response += "\nPour une analyse detaillee avec recommandations personnalisees, le service IA complet sera bientot disponible.";
     
     return response;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // GESTION DU CACHE
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   generateCacheKey(message, context) {
     const contextStr = JSON.stringify({
@@ -262,7 +262,7 @@ class AIService {
       return cached.response;
     }
     
-    // Nettoyer l'entrée expirée
+    // Nettoyer l'entree expiree
     if (cached) {
       this.responseCache.delete(key);
     }
@@ -284,7 +284,7 @@ class AIService {
   }
 
   findSimilarCachedResponse(message) {
-    // Recherche simple basée sur les mots-clés
+    // Recherche simple basee sur les mots-cles
     const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
     
     for (const [key, value] of this.responseCache) {
@@ -299,46 +299,46 @@ class AIService {
     return null;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // PROMPTS SYSTÈME
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // PROMPTS SYSTˆME
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   buildSystemPrompt(context) {
-    const basePrompt = `Tu es l'assistant IA d'ECOLOJIA, expert en nutrition, santé et produits de consommation. 
-Tu analyses les produits alimentaires, cosmétiques et détergents selon des critères scientifiques.
-Tu fournis des conseils personnalisés, bienveillants et basés sur des données fiables.
-Réponds de manière concise mais informative, en utilisant des emojis pour rendre les réponses plus agréables.`;
+    const basePrompt = `Tu es l'assistant IA d'ECOLOJIA, expert en nutrition, sante et produits de consommation. 
+Tu analyses les produits alimentaires, cosmetiques et detergents selon des criteres scientifiques.
+Tu fournis des conseils personnalises, bienveillants et bases sur des donnees fiables.
+Reponds de maniere concise mais informative, en utilisant des emojis pour rendre les reponses plus agreables.`;
 
     const contextPrompts = {
       product_analysis: `
 Focus sur l'analyse du produit fourni. Mentionne:
 - La classification NOVA et ce que cela signifie
-- Le Nutri-Score et son interprétation
-- Les points positifs et négatifs
-- Des alternatives plus saines si nécessaire
+- Le Nutri-Score et son interpretation
+- Les points positifs et negatifs
+- Des alternatives plus saines si necessaire
 - Des conseils de consommation`,
       
       nutrition_advice: `
-Fournis des conseils nutritionnels personnalisés. Considère:
-- Les besoins nutritionnels généraux
-- L'équilibre alimentaire
+Fournis des conseils nutritionnels personnalises. Considere:
+- Les besoins nutritionnels generaux
+- L'equilibre alimentaire
 - Les recommandations officielles (PNNS)
-- Des suggestions pratiques et réalistes`,
+- Des suggestions pratiques et realistes`,
       
       allergen_check: `
-Analyse les allergènes avec précision. Mentionne:
-- Les allergènes majeurs présents
+Analyse les allergenes avec precision. Mentionne:
+- Les allergenes majeurs presents
 - Les traces possibles
-- Les risques de contamination croisée
-- Les précautions à prendre`
+- Les risques de contamination croisee
+- Les precautions   prendre`
     };
 
     return basePrompt + (contextPrompts[context.type] || '');
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MÉTHODES UTILITAIRES
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // M‰THODES UTILITAIRES
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   getFallbackResponse(type) {
     return this.fallbackResponses[type] || this.fallbackResponses.general;

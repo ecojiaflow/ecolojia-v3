@@ -1,4 +1,4 @@
-﻿// Script d'import MongoDB COMPLET pour ECOLOJIA
+// Script d'import MongoDB COMPLET pour ECOLOJIA
 // Import Food, Cosmetics et Detergents
 
 require('dotenv').config();

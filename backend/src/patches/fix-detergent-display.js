@@ -1,16 +1,16 @@
 // backend/src/patches/fix-detergent-display.js
-// Patch rapide pour corriger l'affichage de la biodégradabilité et CDV
+// Patch rapide pour corriger l'affichage de la biodegradabilite et CDV
 
 const fs = require('fs');
 const path = require('path');
 
-// Chemin vers le fichier à patcher
+// Chemin vers le fichier   patcher
 const filePath = path.join(__dirname, '../services/analysis/detergentAnalyzer.js');
 
 // Lire le fichier
 let content = fs.readFileSync(filePath, 'utf8');
 
-// Remplacer la partie problématique
+// Remplacer la partie problematique
 const oldCode = `        details: {
           biodegradability,
           cdv,
@@ -37,12 +37,12 @@ const newCode = `        details: {
 if (content.includes(oldCode)) {
   content = content.replace(oldCode, newCode);
   fs.writeFileSync(filePath, content);
-  console.log('✅ Patch appliqué avec succès !');
+  console.log('âœ… Patch applique avec succes !');
 } else {
-  console.log('⚠️  Le code semble déjà être corrigé ou différent.');
+  console.log('âš ï¸  Le code semble dej  etre corrige ou different.');
 }
 
 console.log('\nPour appliquer ce patch :');
 console.log('1. Sauvegardez ce fichier dans backend/src/patches/');
-console.log('2. Exécutez : node src/patches/fix-detergent-display.js');
-console.log('3. Redémarrez le serveur');
+console.log('2. Executez : node src/patches/fix-detergent-display.js');
+console.log('3. Redemarrez le serveur');

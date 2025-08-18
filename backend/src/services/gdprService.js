@@ -9,9 +9,9 @@ const PDFDocument = require('pdfkit');
 const { Parser } = require('json2csv');
 
 class GDPRService {
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // LOGGING DES DEMANDES RGPD
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async logGDPRRequest(userId, requestType, ip, details = {}) {
     try {
@@ -28,25 +28,25 @@ class GDPRService {
   }
 
   hashIP(ip) {
-    // Hash l'IP pour la confidentialité tout en gardant une trace
+    // Hash l'IP pour la confidentialite tout en gardant une trace
     return crypto.createHash('sha256').update(ip + process.env.IP_SALT).digest('hex').substring(0, 16);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // DROIT D'ACCÈS
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // DROIT D'ACCˆS
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async getAllUserData(userId) {
     const user = await User.findById(userId).select('-passwordHash').lean();
-    if (!user) throw new Error('Utilisateur non trouvé');
+    if (!user) throw new Error('Utilisateur non trouve');
 
-    // Récupérer toutes les données liées
+    // Recuperer toutes les donnees liees
     const [analyses, gdprLogs] = await Promise.all([
       Analysis.find({ userId }).lean(),
       GDPRLog.find({ userId }).lean()
     ]);
 
-    // Structurer les données
+    // Structurer les donnees
     return {
       profile: {
         id: user._id,
@@ -85,9 +85,9 @@ class GDPRService {
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // DROIT DE RECTIFICATION
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async rectifyUserData(userId, field, data) {
     const allowedFields = {
@@ -103,7 +103,7 @@ class GDPRService {
     const updatePath = field === 'healthData' ? `preferences.${Object.keys(data)[0]}` : field;
     const updateData = {};
 
-    // Valider et nettoyer les données
+    // Valider et nettoyer les donnees
     for (const [key, value] of Object.entries(data)) {
       if (allowedFields[field].includes(key)) {
         updateData[`${updatePath}.${key}`] = value;
@@ -118,9 +118,9 @@ class GDPRService {
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // DROIT À L'EFFACEMENT
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // DROIT € L'EFFACEMENT
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async verifyUserPassword(userId, password) {
     const user = await User.findById(userId).select('passwordHash');
@@ -141,7 +141,7 @@ class GDPRService {
       }
     });
 
-    // Désactiver immédiatement le compte
+    // Desactiver immediatement le compte
     await User.findByIdAndUpdate(userId, {
       $set: { 'status': 'pending_deletion' }
     });
@@ -175,7 +175,7 @@ class GDPRService {
   }
 
   async executeScheduledDeletions() {
-    // À exécuter via cron job quotidien
+    // € executer via cron job quotidien
     const usersToDelete = await User.find({
       'gdpr.deletionRequested': true,
       'gdpr.deletionScheduledDate': { $lte: new Date() }
@@ -198,7 +198,7 @@ class GDPRService {
       }
     );
 
-    // Supprimer les logs GDPR après export
+    // Supprimer les logs GDPR apres export
     const gdprLogs = await GDPRLog.find({ userId });
     if (gdprLogs.length > 0) {
       // Archiver avant suppression
@@ -212,14 +212,14 @@ class GDPRService {
     console.log(`[GDPR] User ${userId} permanently deleted`);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // DROIT À LA PORTABILITÉ
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // DROIT € LA PORTABILIT‰
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async exportUserData(userId, format, categories) {
     const userData = await this.getAllUserData(userId);
     
-    // Filtrer par catégories si nécessaire
+    // Filtrer par categories si necessaire
     let exportData = userData;
     if (!categories.includes('all')) {
       exportData = {};
@@ -241,7 +241,7 @@ class GDPRService {
         return this.generatePDF(exportData);
         
       default:
-        throw new Error('Format non supporté');
+        throw new Error('Format non supporte');
     }
   }
 
@@ -276,8 +276,8 @@ class GDPRService {
     doc.on('data', chunk => chunks.push(chunk));
     
     // Header
-    doc.fontSize(20).text('ECOLOJIA - Export de données personnelles', 50, 50);
-    doc.fontSize(10).text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, 50, 80);
+    doc.fontSize(20).text('ECOLOJIA - Export de donnees personnelles', 50, 50);
+    doc.fontSize(10).text(`Genere le ${new Date().toLocaleDateString('fr-FR')}`, 50, 80);
     
     // Contenu
     let y = 120;
@@ -305,9 +305,9 @@ class GDPRService {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // DROIT D'OPPOSITION
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async applyObjection(userId, processingTypes) {
     const objections = {};
@@ -349,9 +349,9 @@ class GDPRService {
     return { applied, refused };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // GESTION DU CONSENTEMENT
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async getUserConsents(userId) {
     const user = await User.findById(userId).select('gdpr preferences');
@@ -398,9 +398,9 @@ class GDPRService {
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // HISTORIQUE ET ARCHIVAGE
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async getGDPRRequestHistory(userId) {
     return GDPRLog.find({ userId })
@@ -411,27 +411,27 @@ class GDPRService {
   }
 
   async archiveGDPRLogs(userId, logs) {
-    // Archiver dans un système de stockage à long terme
-    // (S3, système de fichiers, etc.)
+    // Archiver dans un systeme de stockage   long terme
+    // (S3, systeme de fichiers, etc.)
     const archiveData = {
       userId,
       archivedAt: new Date(),
       logs: logs.map(log => ({
         ...log.toObject(),
-        ip: undefined // Supprimer l'IP même hashée
+        ip: undefined // Supprimer l'IP meme hashee
       }))
     };
 
-    // TODO: Implémenter l'archivage réel
+    // TODO: Implementer l'archivage reel
     console.log(`[GDPR] Archived ${logs.length} logs for user ${userId}`);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CONFORMITÉ ET MAINTENANCE
-  // ═══════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // CONFORMIT‰ ET MAINTENANCE
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   async enforceRetentionPolicies() {
-    // À exécuter via cron job mensuel
+    // € executer via cron job mensuel
     const now = new Date();
     
     // Supprimer les analyses de plus de 2 ans

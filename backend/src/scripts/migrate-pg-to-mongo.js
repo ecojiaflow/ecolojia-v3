@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const ora = require('ora');
 const chalk = require('chalk');
 
-// Importer les modèles MongoDB
+// Importer les modeles MongoDB
 const User = require('../src/models/User');
 const Product = require('../src/models/Product');
 const Analysis = require('../src/models/Analysis');
@@ -30,7 +30,7 @@ const stats = {
   favorites: { total: 0, migrated: 0, failed: 0 }
 };
 
-// Fonction helper pour créer des spinners
+// Fonction helper pour creer des spinners
 const createSpinner = (text) => ora({
   text,
   color: 'cyan',
@@ -43,7 +43,7 @@ async function migrateUsers() {
   spinner.start();
 
   try {
-    // Récupérer les utilisateurs depuis PostgreSQL
+    // Recuperer les utilisateurs depuis PostgreSQL
     const { rows: pgUsers } = await pgPool.query(`
       SELECT 
         id, email, password, name, created_at, updated_at,
@@ -65,10 +65,10 @@ async function migrateUsers() {
 
       for (const pgUser of batch) {
         try {
-          // Mapper les données PostgreSQL vers MongoDB
+          // Mapper les donnees PostgreSQL vers MongoDB
           const mongoUser = {
             _id: new mongoose.Types.ObjectId(),
-            pgId: pgUser.id, // Garder la référence pour les relations
+            pgId: pgUser.id, // Garder la reference pour les relations
             email: pgUser.email.toLowerCase(),
             password: pgUser.password,
             name: pgUser.name,
@@ -116,27 +116,27 @@ async function migrateUsers() {
 
           mongoUsers.push(mongoUser);
         } catch (error) {
-          console.error(chalk.red(`❌ Erreur mapping utilisateur ${pgUser.email}:`), error.message);
+          console.error(chalk.red(`âŒ Erreur mapping utilisateur ${pgUser.email}:`), error.message);
           stats.users.failed++;
         }
       }
 
-      // Insérer le batch dans MongoDB
+      // Inserer le batch dans MongoDB
       if (mongoUsers.length > 0) {
         try {
           await User.insertMany(mongoUsers, { ordered: false });
           stats.users.migrated += mongoUsers.length;
           spinner.text = `Migration utilisateurs: ${stats.users.migrated}/${stats.users.total}`;
         } catch (error) {
-          console.error(chalk.red('❌ Erreur insertion batch utilisateurs:'), error.message);
+          console.error(chalk.red('âŒ Erreur insertion batch utilisateurs:'), error.message);
           stats.users.failed += mongoUsers.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`✅ Utilisateurs migrés: ${stats.users.migrated}/${stats.users.total}`));
+    spinner.succeed(chalk.green(`âœ… Utilisateurs migres: ${stats.users.migrated}/${stats.users.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('❌ Erreur migration utilisateurs'));
+    spinner.fail(chalk.red('âŒ Erreur migration utilisateurs'));
     console.error(error);
   }
 }
@@ -147,7 +147,7 @@ async function migrateProducts() {
   spinner.start();
 
   try {
-    // Récupérer les produits depuis PostgreSQL
+    // Recuperer les produits depuis PostgreSQL
     const { rows: pgProducts } = await pgPool.query(`
       SELECT 
         p.*,
@@ -165,7 +165,7 @@ async function migrateProducts() {
     stats.products.total = pgProducts.length;
     spinner.text = `Migration de ${pgProducts.length} produits...`;
 
-    // Créer un mapping pgId -> mongoId pour les utilisateurs
+    // Creer un mapping pgId -> mongoId pour les utilisateurs
     const userMapping = {};
     const mongoUsers = await User.find({}, { pgId: 1, _id: 1 });
     mongoUsers.forEach(u => {
@@ -190,7 +190,7 @@ async function migrateProducts() {
             category: category,
             imageUrl: pgProduct.image_url,
             
-            // Données spécifiques selon la catégorie
+            // Donnees specifiques selon la categorie
             foodData: category === 'food' ? {
               ingredients: pgProduct.ingredients ? pgProduct.ingredients.split(',').map(i => i.trim()) : [],
               allergens: pgProduct.allergens || [],
@@ -232,27 +232,27 @@ async function migrateProducts() {
 
           mongoProducts.push(mongoProduct);
         } catch (error) {
-          console.error(chalk.red(`❌ Erreur mapping produit ${pgProduct.name}:`), error.message);
+          console.error(chalk.red(`âŒ Erreur mapping produit ${pgProduct.name}:`), error.message);
           stats.products.failed++;
         }
       }
 
-      // Insérer le batch dans MongoDB
+      // Inserer le batch dans MongoDB
       if (mongoProducts.length > 0) {
         try {
           await Product.insertMany(mongoProducts, { ordered: false });
           stats.products.migrated += mongoProducts.length;
           spinner.text = `Migration produits: ${stats.products.migrated}/${stats.products.total}`;
         } catch (error) {
-          console.error(chalk.red('❌ Erreur insertion batch produits:'), error.message);
+          console.error(chalk.red('âŒ Erreur insertion batch produits:'), error.message);
           stats.products.failed += mongoProducts.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`✅ Produits migrés: ${stats.products.migrated}/${stats.products.total}`));
+    spinner.succeed(chalk.green(`âœ… Produits migres: ${stats.products.migrated}/${stats.products.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('❌ Erreur migration produits'));
+    spinner.fail(chalk.red('âŒ Erreur migration produits'));
     console.error(error);
   }
 }
@@ -263,7 +263,7 @@ async function migrateAnalyses() {
   spinner.start();
 
   try {
-    // Récupérer les analyses depuis PostgreSQL
+    // Recuperer les analyses depuis PostgreSQL
     const { rows: pgAnalyses } = await pgPool.query(`
       SELECT 
         s.*,
@@ -286,7 +286,7 @@ async function migrateAnalyses() {
     stats.analyses.total = pgAnalyses.length;
     spinner.text = `Migration de ${pgAnalyses.length} analyses...`;
 
-    // Créer les mappings
+    // Creer les mappings
     const userMapping = {};
     const productMapping = {};
     
@@ -311,7 +311,7 @@ async function migrateAnalyses() {
           const productId = productMapping[pgAnalysis.product_id];
           
           if (!userId) {
-            console.warn(chalk.yellow(`⚠️  User ID ${pgAnalysis.user_id} non trouvé`));
+            console.warn(chalk.yellow(`âš ï¸  User ID ${pgAnalysis.user_id} non trouve`));
             stats.analyses.failed++;
             continue;
           }
@@ -332,7 +332,7 @@ async function migrateAnalyses() {
             
             analysisType: 'barcode_scan',
             
-            // Résultats
+            // Resultats
             results: {
               healthScore: pgAnalysis.health_score || 50,
               
@@ -345,7 +345,7 @@ async function migrateAnalyses() {
               alternatives: [],
               
               aiInsights: {
-                summary: 'Analyse migrée depuis l\'ancienne base de données',
+                summary: 'Analyse migree depuis l\'ancienne base de donnees',
                 recommendations: [],
                 warnings: []
               }
@@ -361,27 +361,27 @@ async function migrateAnalyses() {
 
           mongoAnalyses.push(mongoAnalysis);
         } catch (error) {
-          console.error(chalk.red(`❌ Erreur mapping analyse:`, error.message));
+          console.error(chalk.red(`âŒ Erreur mapping analyse:`, error.message));
           stats.analyses.failed++;
         }
       }
 
-      // Insérer le batch dans MongoDB
+      // Inserer le batch dans MongoDB
       if (mongoAnalyses.length > 0) {
         try {
           await Analysis.insertMany(mongoAnalyses, { ordered: false });
           stats.analyses.migrated += mongoAnalyses.length;
           spinner.text = `Migration analyses: ${stats.analyses.migrated}/${stats.analyses.total}`;
         } catch (error) {
-          console.error(chalk.red('❌ Erreur insertion batch analyses:'), error.message);
+          console.error(chalk.red('âŒ Erreur insertion batch analyses:'), error.message);
           stats.analyses.failed += mongoAnalyses.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`✅ Analyses migrées: ${stats.analyses.migrated}/${stats.analyses.total}`));
+    spinner.succeed(chalk.green(`âœ… Analyses migrees: ${stats.analyses.migrated}/${stats.analyses.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('❌ Erreur migration analyses'));
+    spinner.fail(chalk.red('âŒ Erreur migration analyses'));
     console.error(error);
   }
 }
@@ -392,7 +392,7 @@ async function migrateFavorites() {
   spinner.start();
 
   try {
-    // Récupérer les favoris depuis PostgreSQL
+    // Recuperer les favoris depuis PostgreSQL
     const { rows: pgFavorites } = await pgPool.query(`
       SELECT 
         uf.*,
@@ -411,7 +411,7 @@ async function migrateFavorites() {
     stats.favorites.total = pgFavorites.length;
     spinner.text = `Migration de ${pgFavorites.length} favoris...`;
 
-    // Créer les mappings
+    // Creer les mappings
     const userMapping = {};
     const productMapping = {};
     
@@ -436,7 +436,7 @@ async function migrateFavorites() {
           const productId = productMapping[pgFavorite.product_id];
           
           if (!userId) {
-            console.warn(chalk.yellow(`⚠️  User ID ${pgFavorite.user_id} non trouvé`));
+            console.warn(chalk.yellow(`âš ï¸  User ID ${pgFavorite.user_id} non trouve`));
             stats.favorites.failed++;
             continue;
           }
@@ -469,38 +469,38 @@ async function migrateFavorites() {
 
           mongoFavorites.push(mongoFavorite);
         } catch (error) {
-          console.error(chalk.red(`❌ Erreur mapping favori:`, error.message));
+          console.error(chalk.red(`âŒ Erreur mapping favori:`, error.message));
           stats.favorites.failed++;
         }
       }
 
-      // Insérer le batch dans MongoDB
+      // Inserer le batch dans MongoDB
       if (mongoFavorites.length > 0) {
         try {
           await Favorite.insertMany(mongoFavorites, { ordered: false });
           stats.favorites.migrated += mongoFavorites.length;
           spinner.text = `Migration favoris: ${stats.favorites.migrated}/${stats.favorites.total}`;
         } catch (error) {
-          console.error(chalk.red('❌ Erreur insertion batch favoris:'), error.message);
+          console.error(chalk.red('âŒ Erreur insertion batch favoris:'), error.message);
           stats.favorites.failed += mongoFavorites.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`✅ Favoris migrés: ${stats.favorites.migrated}/${stats.favorites.total}`));
+    spinner.succeed(chalk.green(`âœ… Favoris migres: ${stats.favorites.migrated}/${stats.favorites.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('❌ Erreur migration favoris'));
+    spinner.fail(chalk.red('âŒ Erreur migration favoris'));
     console.error(error);
   }
 }
 
 // Fonction principale de migration
 async function migrate() {
-  console.log(chalk.bold.cyan('\n🚀 ECOLOJIA - Migration PostgreSQL vers MongoDB\n'));
+  console.log(chalk.bold.cyan('\nðŸš€ ECOLOJIA - Migration PostgreSQL vers MongoDB\n'));
   
   try {
     // Connexion MongoDB
-    const mongoSpinner = createSpinner('Connexion à MongoDB...');
+    const mongoSpinner = createSpinner('Connexion   MongoDB...');
     mongoSpinner.start();
     
     await mongoose.connect(MONGODB_URI, {
@@ -508,43 +508,43 @@ async function migrate() {
       minPoolSize: 10
     });
     
-    mongoSpinner.succeed(chalk.green('✅ MongoDB connecté'));
+    mongoSpinner.succeed(chalk.green('âœ… MongoDB connecte'));
     
     // Test connexion PostgreSQL
     const pgSpinner = createSpinner('Test connexion PostgreSQL...');
     pgSpinner.start();
     
     const { rows } = await pgPool.query('SELECT COUNT(*) FROM users');
-    pgSpinner.succeed(chalk.green(`✅ PostgreSQL connecté - ${rows[0].count} utilisateurs trouvés`));
+    pgSpinner.succeed(chalk.green(`âœ… PostgreSQL connecte - ${rows[0].count} utilisateurs trouves`));
     
     // Demander confirmation
-    console.log(chalk.yellow('\n⚠️  Cette migration va :'));
+    console.log(chalk.yellow('\nâš ï¸  Cette migration va :'));
     console.log(chalk.yellow('   - Migrer tous les utilisateurs'));
     console.log(chalk.yellow('   - Migrer tous les produits'));
     console.log(chalk.yellow('   - Migrer toutes les analyses'));
     console.log(chalk.yellow('   - Migrer tous les favoris'));
-    console.log(chalk.yellow('\n   Les données existantes dans MongoDB seront conservées.\n'));
+    console.log(chalk.yellow('\n   Les donnees existantes dans MongoDB seront conservees.\n'));
     
-    // Migration séquentielle
+    // Migration sequentielle
     await migrateUsers();
     await migrateProducts();
     await migrateAnalyses();
     await migrateFavorites();
     
     // Rapport final
-    console.log(chalk.bold.cyan('\n📊 RAPPORT DE MIGRATION\n'));
+    console.log(chalk.bold.cyan('\nðŸ“Š RAPPORT DE MIGRATION\n'));
     console.log(chalk.white('Utilisateurs :'), 
-      chalk.green(`${stats.users.migrated} migrés`), 
-      chalk.red(`${stats.users.failed} échoués`));
+      chalk.green(`${stats.users.migrated} migres`), 
+      chalk.red(`${stats.users.failed} echoues`));
     console.log(chalk.white('Produits     :'), 
-      chalk.green(`${stats.products.migrated} migrés`), 
-      chalk.red(`${stats.products.failed} échoués`));
+      chalk.green(`${stats.products.migrated} migres`), 
+      chalk.red(`${stats.products.failed} echoues`));
     console.log(chalk.white('Analyses     :'), 
-      chalk.green(`${stats.analyses.migrated} migrées`), 
-      chalk.red(`${stats.analyses.failed} échouées`));
+      chalk.green(`${stats.analyses.migrated} migrees`), 
+      chalk.red(`${stats.analyses.failed} echouees`));
     console.log(chalk.white('Favoris      :'), 
-      chalk.green(`${stats.favorites.migrated} migrés`), 
-      chalk.red(`${stats.favorites.failed} échoués`));
+      chalk.green(`${stats.favorites.migrated} migres`), 
+      chalk.red(`${stats.favorites.failed} echoues`));
     
     const totalMigrated = stats.users.migrated + stats.products.migrated + 
                          stats.analyses.migrated + stats.favorites.migrated;
@@ -552,13 +552,13 @@ async function migrate() {
                        stats.analyses.failed + stats.favorites.failed;
     
     console.log(chalk.bold('\nTOTAL        :'), 
-      chalk.green(`${totalMigrated} entrées migrées`), 
-      chalk.red(`${totalFailed} échecs`));
+      chalk.green(`${totalMigrated} entrees migrees`), 
+      chalk.red(`${totalFailed} echecs`));
     
-    console.log(chalk.bold.green('\n✅ Migration terminée avec succès !\n'));
+    console.log(chalk.bold.green('\nâœ… Migration terminee avec succes !\n'));
     
   } catch (error) {
-    console.error(chalk.bold.red('\n❌ ERREUR FATALE DE MIGRATION\n'));
+    console.error(chalk.bold.red('\nâŒ ERREUR FATALE DE MIGRATION\n'));
     console.error(error);
     process.exit(1);
   } finally {
@@ -568,7 +568,7 @@ async function migrate() {
   }
 }
 
-// Vérifier si exécuté directement
+// Verifier si execute directement
 if (require.main === module) {
   migrate().then(() => {
     process.exit(0);

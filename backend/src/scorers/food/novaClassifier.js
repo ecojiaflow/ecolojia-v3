@@ -2,7 +2,7 @@
 const novaRules = require('../../data/nova-rules.json');
 
 /**
- * Classifie un produit selon NOVA (1 à 4) – méthodologie INSERM simplifiée
+ * Classifie un produit selon NOVA (1   4) â€“ methodologie INSERM simplifiee
  */
 class NovaClassifier {
   /**
@@ -32,7 +32,7 @@ class NovaClassifier {
       return {
         group: 1,
         confidence: 0.3,
-        reasoning: ['Erreur classification – groupe 1 par défaut'],
+        reasoning: ['Erreur classification â€“ groupe 1 par defaut'],
         detected_markers: {},
         ingredients_count: 0,
         classification_date: new Date().toISOString()
@@ -107,24 +107,24 @@ class NovaClassifier {
   generateReasoning(group, m) {
     const r = [];
     if (group === 4) {
-      if (m.additives_count >= 3) r.push(`${m.additives_count} additifs détectés`);
+      if (m.additives_count >= 3) r.push(`${m.additives_count} additifs detectes`);
       if (m.industrial_ingredients.length)
-        r.push(`Ingrédients industriels : ${m.industrial_ingredients.join(', ')}`);
+        r.push(`Ingredients industriels : ${m.industrial_ingredients.join(', ')}`);
       if (m.ultra_processed_terms.length)
-        r.push(`Termes ultra-transformés : ${m.ultra_processed_terms.join(', ')}`);
+        r.push(`Termes ultra-transformes : ${m.ultra_processed_terms.join(', ')}`);
     } else if (group === 3) {
-      if (m.additives_count) r.push(`${m.additives_count} additif(s) présent(s)`);
+      if (m.additives_count) r.push(`${m.additives_count} additif(s) present(s)`);
       if (m.process_indicators.length)
         r.push(`Processus industriels : ${m.process_indicators.join(', ')}`);
     } else if (group === 2) {
-      r.push('Produit peu transformé (3-7 ingrédients)');
+      r.push('Produit peu transforme (3-7 ingredients)');
     } else {
-      r.push('Produit non ou minimalement transformé');
+      r.push('Produit non ou minimalement transforme');
     }
     return r;
   }
 }
 
-/*  ✅ Exporter directement l’INSTANCE pour éviter
+/*  âœ… Exporter directement lâ€™INSTANCE pour eviter
     TypeError: novaClassifier.classify is not a function */
 module.exports = new NovaClassifier();

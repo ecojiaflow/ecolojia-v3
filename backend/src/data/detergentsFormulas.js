@@ -1,5 +1,5 @@
 // backend/src/data/detergentsFormulas.js
-// Base de données formules et ingrédients détergents
+// Base de donnees formules et ingredients detergents
 
 class DetergentsFormulasDatabase {
   constructor() {
@@ -19,8 +19,8 @@ class DetergentsFormulasDatabase {
         biodegradability: 'good',
         aquatic_toxicity: 'moderate',
         safety_score: 70,
-        concerns: ['Irritation cutanée', 'Toxicité poissons'],
-        benefits: ['Excellent dégraissant', 'Efficace eau dure', 'Économique'],
+        concerns: ['Irritation cutanee', 'Toxicite poissons'],
+        benefits: ['Excellent degraissant', 'Efficace eau dure', '‰conomique'],
         alternatives: ['Alkyl polyglucosides', 'Sodium cocoyl isethionate']
       },
 
@@ -31,8 +31,8 @@ class DetergentsFormulasDatabase {
         biodegradability: 'good',
         aquatic_toxicity: 'moderate',
         safety_score: 55,
-        concerns: ['Irritation cutanée forte', 'Irritation yeux'],
-        benefits: ['Mousse abondante', 'Bon dégraissant'],
+        concerns: ['Irritation cutanee forte', 'Irritation yeux'],
+        benefits: ['Mousse abondante', 'Bon degraissant'],
         alternatives: ['Coco glucoside', 'Decyl glucoside']
       },
 
@@ -43,7 +43,7 @@ class DetergentsFormulasDatabase {
         biodegradability: 'good',
         aquatic_toxicity: 'moderate',
         safety_score: 65,
-        concerns: ['Contamination 1,4-dioxane possible', 'Irritation modérée'],
+        concerns: ['Contamination 1,4-dioxane possible', 'Irritation moderee'],
         benefits: ['Moins irritant que SLS', 'Mousse stable'],
         alternatives: ['Alkyl ether carboxylates']
       },
@@ -57,7 +57,7 @@ class DetergentsFormulasDatabase {
         aquatic_toxicity: 'low',
         safety_score: 90,
         concerns: [],
-        benefits: ['Très doux', 'Biodégradable 100%', 'Origine végétale', 'Non irritant'],
+        benefits: ['Tres doux', 'Biodegradable 100%', 'Origine vegetale', 'Non irritant'],
         certifications: ['Ecocert', 'Nordic Swan', 'EU Ecolabel']
       },
 
@@ -69,8 +69,8 @@ class DetergentsFormulasDatabase {
         aquatic_toxicity: 'very_low',
         safety_score: 95,
         concerns: [],
-        benefits: ['Très doux', 'Hypoallergénique', 'Biodégradable rapide'],
-        suitable_for: ['Peaux sensibles', 'Produits bébé']
+        benefits: ['Tres doux', 'Hypoallergenique', 'Biodegradable rapide'],
+        suitable_for: ['Peaux sensibles', 'Produits bebe']
       },
 
       'alcohol ethoxylates': {
@@ -80,11 +80,11 @@ class DetergentsFormulasDatabase {
         biodegradability: 'good',
         aquatic_toxicity: 'moderate',
         safety_score: 75,
-        concerns: ['Résidus d\'éthoxylation possibles'],
+        concerns: ['Residus d\'ethoxylation possibles'],
         benefits: ['Excellent dans eau froide', 'Faible mousse']
       },
 
-      // === TENSIOACTIFS AMPHOTÈRES ===
+      // === TENSIOACTIFS AMPHOTˆRES ===
       'cocamidopropyl betaine': {
         name: 'Cocamidopropyl Betaine',
         type: 'amphoteric',
@@ -92,7 +92,7 @@ class DetergentsFormulasDatabase {
         biodegradability: 'good',
         aquatic_toxicity: 'low',
         safety_score: 80,
-        concerns: ['Allergies rares', 'Impuretés fabrication'],
+        concerns: ['Allergies rares', 'Impuretes fabrication'],
         benefits: ['Doux', 'Conditionneur', 'Compatible autres tensioactifs']
       },
 
@@ -104,7 +104,7 @@ class DetergentsFormulasDatabase {
         aquatic_toxicity: 'very_low',
         safety_score: 85,
         concerns: [],
-        benefits: ['Très doux', 'Hypoallergénique', 'Biodégradable']
+        benefits: ['Tres doux', 'Hypoallergenique', 'Biodegradable']
       }
     };
   }
@@ -117,8 +117,8 @@ class DetergentsFormulasDatabase {
         function: 'Builder/Anti-calcaire',
         safety_score: 30,
         environmental_impact: 'very_high',
-        concerns: ['Eutrophisation', 'Prolifération algues', 'Appauvrissement oxygène'],
-        benefits: ['Très efficace eau dure', 'Économique'],
+        concerns: ['Eutrophisation', 'Proliferation algues', 'Appauvrissement oxygene'],
+        benefits: ['Tres efficace eau dure', '‰conomique'],
         regulatory_status: 'Interdit lessives EU depuis 2013',
         alternatives: ['Zeolites', 'Polycarboxylates', 'MGDA']
       },
@@ -128,8 +128,8 @@ class DetergentsFormulasDatabase {
         function: 'Builder/Anti-calcaire',
         safety_score: 85,
         environmental_impact: 'low',
-        concerns: ['Résidus textiles possibles'],
-        benefits: ['Non toxique', 'Naturel', 'Biodégradable', 'Échange ionique'],
+        concerns: ['Residus textiles possibles'],
+        benefits: ['Non toxique', 'Naturel', 'Biodegradable', '‰change ionique'],
         certifications: ['EU Ecolabel compatible']
       },
 
@@ -138,9 +138,9 @@ class DetergentsFormulasDatabase {
         function: 'Builder/Alcalinisant',
         safety_score: 70,
         environmental_impact: 'low',
-        concerns: ['Irritation cutanée', 'Corrosif concentré'],
-        benefits: ['Naturel', 'Dégraissant', 'Anticalcaire'],
-        usage: 'Précautions manipulation'
+        concerns: ['Irritation cutanee', 'Corrosif concentre'],
+        benefits: ['Naturel', 'Degraissant', 'Anticalcaire'],
+        usage: 'Precautions manipulation'
       },
 
       'polycarboxylates': {
@@ -148,21 +148,21 @@ class DetergentsFormulasDatabase {
         function: 'Builder/Dispersant',
         safety_score: 75,
         environmental_impact: 'moderate',
-        concerns: ['Biodégradabilité lente'],
-        benefits: ['Efficace eau très dure', 'Faible dosage'],
+        concerns: ['Biodegradabilite lente'],
+        benefits: ['Efficace eau tres dure', 'Faible dosage'],
         alternatives: ['MGDA', 'Citrates']
       },
 
       // === ENZYMES ===
       'protease': {
         name: 'Protease',
-        function: 'Enzyme protéolytique',
+        function: 'Enzyme proteolytique',
         safety_score: 90,
         environmental_impact: 'very_low',
         concerns: ['Allergies respiratoires (manipulation poudre)'],
-        benefits: ['Biodégradable 100%', 'Efficace eau froide', 'Spécifique protéines'],
-        targets: ['Sang', 'Transpiration', 'Œuf', 'Lait'],
-        temperature_optimum: '40-60°C'
+        benefits: ['Biodegradable 100%', 'Efficace eau froide', 'Specifique proteines'],
+        targets: ['Sang', 'Transpiration', 'Å’uf', 'Lait'],
+        temperature_optimum: '40-60Â°C'
       },
 
       'lipase': {
@@ -171,9 +171,9 @@ class DetergentsFormulasDatabase {
         safety_score: 90,
         environmental_impact: 'very_low',
         concerns: [],
-        benefits: ['Décompose graisses', 'Écologique', 'Eau froide'],
+        benefits: ['Decompose graisses', '‰cologique', 'Eau froide'],
         targets: ['Huiles', 'Beurre', 'Mayonnaise', 'Maquillage'],
-        temperature_optimum: '30-50°C'
+        temperature_optimum: '30-50Â°C'
       },
 
       'amylase': {
@@ -182,9 +182,9 @@ class DetergentsFormulasDatabase {
         safety_score: 90,
         environmental_impact: 'very_low',
         concerns: [],
-        benefits: ['Décompose amidon', 'Efficace', 'Naturel'],
-        targets: ['Amidon', 'Pâtes', 'Pommes de terre', 'Riz'],
-        temperature_optimum: '60-70°C'
+        benefits: ['Decompose amidon', 'Efficace', 'Naturel'],
+        targets: ['Amidon', 'Pates', 'Pommes de terre', 'Riz'],
+        temperature_optimum: '60-70Â°C'
       },
 
       'cellulase': {
@@ -193,30 +193,30 @@ class DetergentsFormulasDatabase {
         safety_score: 90,
         environmental_impact: 'very_low',
         concerns: [],
-        benefits: ['Anti-boulochage', 'Rénovation textile', 'Adoucissant'],
+        benefits: ['Anti-boulochage', 'Renovation textile', 'Adoucissant'],
         targets: ['Fibres coton', 'Peluches', 'Aspect vieilli'],
-        temperature_optimum: '50-60°C'
+        temperature_optimum: '50-60Â°C'
       },
 
       // === AGENTS BLANCHISSANTS ===
       'sodium percarbonate': {
         name: 'Sodium Percarbonate',
-        function: 'Agent blanchissant oxygéné',
+        function: 'Agent blanchissant oxygene',
         safety_score: 80,
         environmental_impact: 'low',
         concerns: ['Irritation yeux/peau', 'Oxydant'],
-        benefits: ['Blanchiment doux', 'Se décompose en oxygène + eau', 'Désinfectant'],
+        benefits: ['Blanchiment doux', 'Se decompose en oxygene + eau', 'Desinfectant'],
         alternatives: ['Hydrogen peroxide', 'Ozone']
       },
 
       'sodium hypochlorite': {
         name: 'Sodium Hypochlorite (Eau de Javel)',
-        function: 'Agent blanchissant chloré',
+        function: 'Agent blanchissant chlore',
         safety_score: 40,
         environmental_impact: 'high',
         concerns: ['Toxique aquatique', 'Corrosif', 'Chloramines', 'Dioxines'],
-        benefits: ['Blanchiment puissant', 'Désinfectant', 'Rapide'],
-        precautions: 'Ne jamais mélanger avec autres produits'
+        benefits: ['Blanchiment puissant', 'Desinfectant', 'Rapide'],
+        precautions: 'Ne jamais melanger avec autres produits'
       },
 
       'optical brighteners': {
@@ -224,7 +224,7 @@ class DetergentsFormulasDatabase {
         function: 'Agent de blanchiment optique',
         safety_score: 40,
         environmental_impact: 'high',
-        concerns: ['Bioaccumulation', 'Persistance environnement', 'Toxicité aquatique'],
+        concerns: ['Bioaccumulation', 'Persistance environnement', 'Toxicite aquatique'],
         benefits: ['Effet blancheur visuel', 'Efficace'],
         alternatives: ['Percarbonate', 'Soleil naturel']
       },
@@ -235,17 +235,17 @@ class DetergentsFormulasDatabase {
         function: 'Parfum',
         safety_score: 60,
         environmental_impact: 'moderate',
-        concerns: ['Allergènes', 'COV', 'Sensibilisation respiratoire'],
-        benefits: ['Expérience utilisateur', 'Masque odeurs'],
-        alternatives: ['Huiles essentielles', 'Parfums hypoallergéniques']
+        concerns: ['Allergenes', 'COV', 'Sensibilisation respiratoire'],
+        benefits: ['Experience utilisateur', 'Masque odeurs'],
+        alternatives: ['Huiles essentielles', 'Parfums hypoallergeniques']
       },
 
       'edta': {
-        name: 'EDTA (Acide éthylènediaminetétraacétique)',
-        function: 'Chélateur/Séquestrant',
+        name: 'EDTA (Acide ethylenediaminetetraacetique)',
+        function: 'Chelateur/Sequestrant',
         safety_score: 50,
         environmental_impact: 'moderate',
-        concerns: ['Biodégradabilité très lente', 'Mobilise métaux lourds'],
+        concerns: ['Biodegradabilite tres lente', 'Mobilise metaux lourds'],
         benefits: ['Efficace eau dure', 'Stabilise formule'],
         alternatives: ['MGDA', 'Citrates', 'Gluconates']
       },
@@ -256,9 +256,9 @@ class DetergentsFormulasDatabase {
         function: 'Conservateur',
         safety_score: 30,
         environmental_impact: 'moderate',
-        concerns: ['Allergène contact fort', 'Sensibilisation cutanée'],
-        benefits: ['Très efficace', 'Large spectre'],
-        regulatory_status: 'Concentration limitée EU',
+        concerns: ['Allergene contact fort', 'Sensibilisation cutanee'],
+        benefits: ['Tres efficace', 'Large spectre'],
+        regulatory_status: 'Concentration limitee EU',
         alternatives: ['Phenoxyethanol', 'Benzyl alcohol']
       }
     };
@@ -271,62 +271,62 @@ class DetergentsFormulasDatabase {
         category: 'nettoyant_general',
         difficulty: 'facile',
         time: '5 minutes',
-        cost: '2,50€ pour 1L',
+        cost: '2,50â‚¬ pour 1L',
         improvement_score: 35,
         ingredients: [
-          { name: 'Vinaigre blanc 8%', quantity: '500ml', function: 'Dégraissant acide' },
-          { name: 'Eau déminéralisée', quantity: '500ml', function: 'Diluant' },
-          { name: 'Bicarbonate de sodium', quantity: '2 c.à.s', function: 'Abrasif doux' },
+          { name: 'Vinaigre blanc 8%', quantity: '500ml', function: 'Degraissant acide' },
+          { name: 'Eau demineralisee', quantity: '500ml', function: 'Diluant' },
+          { name: 'Bicarbonate de sodium', quantity: '2 c. .s', function: 'Abrasif doux' },
           { name: 'Huile essentielle citron', quantity: '10 gouttes', function: 'Parfum naturel' }
         ],
         instructions: [
-          'Mélanger vinaigre et eau dans pulvérisateur',
+          'Melanger vinaigre et eau dans pulverisateur',
           'Ajouter bicarbonate progressivement (mousse normale)',
           'Parfumer avec huile essentielle citron',
           'Bien agiter avant chaque usage',
-          'Conservation : 3 mois température ambiante'
+          'Conservation : 3 mois temperature ambiante'
         ],
         benefits: {
-          health: ['Zéro COV dangereux', 'Non irritant voies respiratoires', 'Sûr contact cutané'],
-          environment: ['100% biodégradable', 'Zéro microplastique', 'Emballage réutilisé'],
-          economic: ['75% moins cher', 'Ingrédients multiusages', 'Réduction déchets']
+          health: ['Zero COV dangereux', 'Non irritant voies respiratoires', 'Sur contact cutane'],
+          environment: ['100% biodegradable', 'Zero microplastique', 'Emballage reutilise'],
+          economic: ['75% moins cher', 'Ingredients multiusages', 'Reduction dechets']
         },
-        efficacy: 'Dégraisse et désinfecte naturellement grâce à acide acétique pH 2.4',
-        scientific_basis: 'Acide acétique efficace contre 99% bactéries (Journal Food Protection 2024)',
+        efficacy: 'Degraisse et desinfecte naturellement grace   acide acetique pH 2.4',
+        scientific_basis: 'Acide acetique efficace contre 99% bacteries (Journal Food Protection 2024)',
         safety_profile: 'Non toxique, comestible, classification non dangereuse'
       },
 
       'laundry_detergent': {
-        name: 'Lessive Écologique Maison',
+        name: 'Lessive ‰cologique Maison',
         category: 'lessive',
         difficulty: 'moyen',
         time: '15 minutes + 24h repos',
-        cost: '1,80€ pour 3L',
+        cost: '1,80â‚¬ pour 3L',
         improvement_score: 40,
         ingredients: [
-          { name: 'Savon Marseille 72% olive', quantity: '150g râpé', function: 'Tensioactif naturel' },
+          { name: 'Savon Marseille 72% olive', quantity: '150g rape', function: 'Tensioactif naturel' },
           { name: 'Eau chaude', quantity: '3L', function: 'Solvant' },
-          { name: 'Bicarbonate de sodium', quantity: '3 c.à.s', function: 'Adoucissant' },
-          { name: 'Cristaux de soude', quantity: '3 c.à.s', function: 'Dégraissant' },
+          { name: 'Bicarbonate de sodium', quantity: '3 c. .s', function: 'Adoucissant' },
+          { name: 'Cristaux de soude', quantity: '3 c. .s', function: 'Degraissant' },
           { name: 'Huile essentielle lavande', quantity: '20 gouttes', function: 'Parfum naturel' }
         ],
         instructions: [
-          'Râper finement le savon de Marseille',
+          'Raper finement le savon de Marseille',
           'Faire fondre dans 1L eau chaude en remuant',
           'Ajouter bicarbonate et cristaux de soude',
-          'Compléter avec 2L eau froide',
-          'Mixer 2 minutes pour homogénéiser',
+          'Completer avec 2L eau froide',
+          'Mixer 2 minutes pour homogeneiser',
           'Laisser reposer 24h (texture gel normal)',
-          'Parfumer avec huile essentielle si souhaité'
+          'Parfumer avec huile essentielle si souhaite'
         ],
         benefits: {
-          health: ['Hypoallergénique', 'Sans parfums synthétiques', 'pH physiologique'],
-          environment: ['Biodégradable 100%', 'Zéro phosphate', 'Packaging minimal'],
-          economic: ['70% économie vs marques', 'Efficace jusqu\'à 40°C', 'Longue conservation']
+          health: ['Hypoallergenique', 'Sans parfums synthetiques', 'pH physiologique'],
+          environment: ['Biodegradable 100%', 'Zero phosphate', 'Packaging minimal'],
+          economic: ['70% economie vs marques', 'Efficace jusqu\'  40Â°C', 'Longue conservation']
         },
         usage: 'Dosage : 100ml par machine, agiter avant usage',
-        efficacy: 'Nettoie efficacement grâce saponines naturelles',
-        scientific_basis: 'Saponification traditionnelle, tensioactifs végétaux doux'
+        efficacy: 'Nettoie efficacement grace saponines naturelles',
+        scientific_basis: 'Saponification traditionnelle, tensioactifs vegetaux doux'
       },
 
       'dishwashing_liquid': {
@@ -334,62 +334,62 @@ class DetergentsFormulasDatabase {
         category: 'vaisselle',
         difficulty: 'moyen',
         time: '20 minutes',
-        cost: '3,20€ pour 450ml',
+        cost: '3,20â‚¬ pour 450ml',
         improvement_score: 30,
         ingredients: [
           { name: 'Eau chaude', quantity: '300ml', function: 'Solvant' },
           { name: 'Savon Castille liquide', quantity: '150ml', function: 'Tensioactif doux' },
-          { name: 'Vinaigre blanc', quantity: '2 c.à.s', function: 'Dégraissant' },
-          { name: 'Zeste citrons bio', quantity: '2 citrons', function: 'Parfum + dégraissant' },
-          { name: 'Glycérine végétale', quantity: '1 c.à.s', function: 'Hydratant mains' }
+          { name: 'Vinaigre blanc', quantity: '2 c. .s', function: 'Degraissant' },
+          { name: 'Zeste citrons bio', quantity: '2 citrons', function: 'Parfum + degraissant' },
+          { name: 'Glycerine vegetale', quantity: '1 c. .s', function: 'Hydratant mains' }
         ],
         instructions: [
           'Chauffer eau sans bouillir',
           'Infuser zestes citron 10 minutes',
           'Filtrer et ajouter savon Castille',
-          'Incorporer vinaigre et glycérine',
-          'Mélanger délicatement (éviter mousse excessive)',
+          'Incorporer vinaigre et glycerine',
+          'Melanger delicatement (eviter mousse excessive)',
           'Conserver en flacon pompe'
         ],
         benefits: {
           health: ['Doux pour les mains', 'Hydratant naturel', 'Parfum naturel'],
-          environment: ['Eaux grises non polluées', 'Zéro microplastique', 'Agrumes locaux'],
-          economic: ['60% économie', 'Dégraisse efficacement', 'Multi-usage possible']
+          environment: ['Eaux grises non polluees', 'Zero microplastique', 'Agrumes locaux'],
+          economic: ['60% economie', 'Degraisse efficacement', 'Multi-usage possible']
         },
-        usage: 'Dosage : 1-2 pressions par évier, eau chaude recommandée',
-        efficacy: 'Dégraisse vaisselle et couverts, mousse contrôlée',
-        scientific_basis: 'Acides citriques naturels + saponines végétales douces'
+        usage: 'Dosage : 1-2 pressions par evier, eau chaude recommandee',
+        efficacy: 'Degraisse vaisselle et couverts, mousse controlee',
+        scientific_basis: 'Acides citriques naturels + saponines vegetales douces'
       },
 
       'toilet_cleaner': {
-        name: 'Nettoyant WC Désinfectant Naturel',
+        name: 'Nettoyant WC Desinfectant Naturel',
         category: 'sanitaire',
         difficulty: 'facile',
         time: '8 minutes',
-        cost: '2,80€ pour 500ml',
+        cost: '2,80â‚¬ pour 500ml',
         improvement_score: 45,
         ingredients: [
-          { name: 'Vinaigre blanc 12%', quantity: '400ml', function: 'Détartrant acide' },
+          { name: 'Vinaigre blanc 12%', quantity: '400ml', function: 'Detartrant acide' },
           { name: 'Eau', quantity: '100ml', function: 'Diluant' },
-          { name: 'Bicarbonate de sodium', quantity: '2 c.à.s', function: 'Abrasif doux' },
+          { name: 'Bicarbonate de sodium', quantity: '2 c. .s', function: 'Abrasif doux' },
           { name: 'Huile essentielle tea tree', quantity: '20 gouttes', function: 'Antimicrobien' },
-          { name: 'Liquide vaisselle maison', quantity: '1 c.à.s', function: 'Adhérence' }
+          { name: 'Liquide vaisselle maison', quantity: '1 c. .s', function: 'Adherence' }
         ],
         instructions: [
-          'Mélanger vinaigre et eau',
-          'Ajouter bicarbonate (réaction normale)',
+          'Melanger vinaigre et eau',
+          'Ajouter bicarbonate (reaction normale)',
           'Incorporer tea tree et liquide vaisselle',
-          'Transvaser en flacon pulvérisateur',
-          'Agiter énergiquement avant usage'
+          'Transvaser en flacon pulverisateur',
+          'Agiter energiquement avant usage'
         ],
         benefits: {
-          health: ['Désinfectant naturel', 'Zéro javel toxique', 'Anti-bactérien prouvé'],
-          environment: ['Biodégradable immédiat', 'Zéro chlore', 'Sûr fosses septiques'],
-          economic: ['80% économie vs marques', 'Détartre efficacement', 'Multi-surface']
+          health: ['Desinfectant naturel', 'Zero javel toxique', 'Anti-bacterien prouve'],
+          environment: ['Biodegradable immediat', 'Zero chlore', 'Sur fosses septiques'],
+          economic: ['80% economie vs marques', 'Detartre efficacement', 'Multi-surface']
         },
-        efficacy: 'Détartre + désinfecte + parfume naturellement',
-        scientific_basis: 'Tea tree : efficacité antibactérienne 99.9% (Antimicrob. Agents 2024)',
-        safety: 'Éviter mélange avec javel, bien ventiler'
+        efficacy: 'Detartre + desinfecte + parfume naturellement',
+        scientific_basis: 'Tea tree : efficacite antibacterienne 99.9% (Antimicrob. Agents 2024)',
+        safety: '‰viter melange avec javel, bien ventiler'
       }
     };
   }
@@ -398,25 +398,25 @@ class DetergentsFormulasDatabase {
     return {
       'eu_ecolabel': {
         name: 'EU Ecolabel',
-        description: 'Label écologique officiel Union Européenne',
+        description: 'Label ecologique officiel Union Europeenne',
         criteria: {
-          biodegradability: 'Dégradation >60% en 28 jours (OECD 301)',
-          aquatic_toxicity: 'Tests écotoxicité obligatoires',
-          packaging: 'Matériaux recyclables, concentration minimale',
+          biodegradability: 'Degradation >60% en 28 jours (OECD 301)',
+          aquatic_toxicity: 'Tests ecotoxicite obligatoires',
+          packaging: 'Materiaux recyclables, concentration minimale',
           phosphates: 'Interdits totalement',
-          optical_brighteners: 'Limités ou interdits selon catégorie'
+          optical_brighteners: 'Limites ou interdits selon categorie'
         },
         score_bonus: 25
       },
 
       'nordic_swan': {
         name: 'Nordic Swan Ecolabel',
-        description: 'Label écologique pays nordiques',
+        description: 'Label ecologique pays nordiques',
         criteria: {
-          ingredients: 'Liste positive ingrédients autorisés',
-          biodegradability: 'Standards stricts + tests complémentaires',
+          ingredients: 'Liste positive ingredients autorises',
+          biodegradability: 'Standards stricts + tests complementaires',
           emissions: 'Limitation COV + parfums',
-          efficacy: 'Tests efficacité obligatoires'
+          efficacy: 'Tests efficacite obligatoires'
         },
         score_bonus: 20
       },
@@ -425,8 +425,8 @@ class DetergentsFormulasDatabase {
         name: 'Cradle to Cradle Certified',
         description: 'Analyse cycle de vie complet',
         criteria: {
-          material_health: 'Évaluation toxicologique complète',
-          renewable_energy: 'Fabrication énergies renouvelables',
+          material_health: '‰valuation toxicologique complete',
+          renewable_energy: 'Fabrication energies renouvelables',
           water_stewardship: 'Gestion responsable eau',
           social_fairness: 'Standards sociaux'
         },
@@ -435,18 +435,18 @@ class DetergentsFormulasDatabase {
 
       'epa_safer_choice': {
         name: 'EPA Safer Choice',
-        description: 'Programme EPA États-Unis',
+        description: 'Programme EPA ‰tats-Unis',
         criteria: {
-          human_health: 'Critères sécurité humaine stricts',
-          environmental_safety: 'Impact environnemental réduit',
-          performance: 'Efficacité équivalente produits conventionnels'
+          human_health: 'Criteres securite humaine stricts',
+          environmental_safety: 'Impact environnemental reduit',
+          performance: 'Efficacite equivalente produits conventionnels'
         },
         score_bonus: 18
       }
     };
   }
 
-  // === MÉTHODES DE RECHERCHE ===
+  // === M‰THODES DE RECHERCHE ===
   getSurfactant(name) {
     const normalizedName = name.toLowerCase().trim();
     return this.surfactants[normalizedName] || null;
@@ -517,7 +517,7 @@ class DetergentsFormulasDatabase {
     return this.ecoStandards[normalizedName] || null;
   }
 
-  // === ANALYSES SPÉCIALISÉES ===
+  // === ANALYSES SP‰CIALIS‰ES ===
   analyzeFormulation(ingredients_list) {
     const analysis = {
       total_ingredients: ingredients_list.length,
@@ -574,7 +574,7 @@ class DetergentsFormulasDatabase {
       analysis.safety_score = Math.round(totalSafetyScore / scoredIngredients);
     }
 
-    // Évaluation niveau performance
+    // ‰valuation niveau performance
     const excellentSurfactants = analysis.surfactants_detected.filter(s => s.performance === 'excellent').length;
     if (excellentSurfactants > 0) {
       analysis.performance_level = 'excellent';
@@ -582,14 +582,14 @@ class DetergentsFormulasDatabase {
       analysis.performance_level = 'good';
     }
 
-    // Recommandations d'amélioration
+    // Recommandations d'amelioration
     if (analysis.safety_score < 70) {
-      analysis.improvements.push('Remplacer ingrédients préoccupants par alternatives plus sûres');
+      analysis.improvements.push('Remplacer ingredients preoccupants par alternatives plus sures');
     }
 
     const phosphatesDetected = analysis.additives_detected.some(a => a.name.includes('phosphate'));
     if (phosphatesDetected) {
-      analysis.improvements.push('Éliminer phosphates - impact eutrophisation majeur');
+      analysis.improvements.push('‰liminer phosphates - impact eutrophisation majeur');
     }
 
     return analysis;
@@ -623,7 +623,7 @@ class DetergentsFormulasDatabase {
       biocide_regulation: 'to_verify'
     };
 
-    // Vérification interdiction phosphates EU
+    // Verification interdiction phosphates EU
     const hasPhosphates = analysis.additives_detected.some(a =>
       a.name.includes('phosphate') && a.function.includes('Builder')
     );
@@ -639,7 +639,7 @@ class DetergentsFormulasDatabase {
     const recommendations = [];
 
     if (analysis.safety_score < 75) {
-      recommendations.push('Privilégier tensioactifs APG ou coco glucoside');
+      recommendations.push('Privilegier tensioactifs APG ou coco glucoside');
     }
 
     const hasOpticalBrighteners = analysis.additives_detected.some(a =>

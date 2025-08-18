@@ -54,7 +54,7 @@ const paymentLogSchema = new mongoose.Schema({
       default: 'EUR'
     },
     
-    // Montants détaillés
+    // Montants detailles
     subtotal: Number,
     tax: Number,
     taxRate: Number,
@@ -90,14 +90,14 @@ const paymentLogSchema = new mongoose.Schema({
       checkoutId: String
     },
     
-    // Méthode de paiement
+    // Methode de paiement
     paymentMethod: {
       type: {
         type: String,
         enum: ['card', 'paypal', 'sepa', 'bank_transfer', 'crypto', 'other']
       },
       
-      // Détails carte (masqués)
+      // Details carte (masques)
       card: {
         brand: String,
         last4: String,
@@ -107,7 +107,7 @@ const paymentLogSchema = new mongoose.Schema({
         funding: String // credit, debit, prepaid
       },
       
-      // Autres méthodes
+      // Autres methodes
       paypal: {
         email: String
       },
@@ -122,7 +122,7 @@ const paymentLogSchema = new mongoose.Schema({
     metadata: mongoose.Schema.Types.Mixed
   },
   
-  // Détails de l'abonnement
+  // Details de l'abonnement
   subscription: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -142,7 +142,7 @@ const paymentLogSchema = new mongoose.Schema({
       }
     },
     
-    // Période de facturation
+    // Periode de facturation
     billingPeriod: {
       start: Date,
       end: Date
@@ -240,18 +240,18 @@ const paymentLogSchema = new mongoose.Schema({
     updatedAt: Date
   },
   
-  // Échec de paiement
+  // ‰chec de paiement
   failure: {
     code: String,
     message: String,
     
-    // Type d'échec
+    // Type d'echec
     type: {
       type: String,
       enum: ['card_declined', 'insufficient_funds', 'expired_card', 'invalid_card', 'processing_error', 'authentication_required', 'other']
     },
     
-    // Peut être retenté ?
+    // Peut etre retente ?
     retryable: Boolean,
     nextRetryAt: Date,
     retryCount: {
@@ -299,26 +299,26 @@ const paymentLogSchema = new mongoose.Schema({
     }
   },
   
-  // Métriques
+  // Metriques
   metrics: {
     // Performance
     processingTime: Number, // ms
     
     // Conversion
-    checkoutDuration: Number, // Temps entre début et fin du checkout
-    attemptCount: Number, // Nombre de tentatives avant succès
+    checkoutDuration: Number, // Temps entre debut et fin du checkout
+    attemptCount: Number, // Nombre de tentatives avant succes
     
     // Risque
     riskScore: Number,
     riskFactors: [String],
     
-    // Fidélité
+    // Fidelite
     isFirstPayment: Boolean,
     totalPayments: Number,
     customerLifetimeValue: Number
   },
   
-  // Conformité
+  // Conformite
   compliance: {
     // PCI DSS
     pciCompliant: {
@@ -353,7 +353,7 @@ const paymentLogSchema = new mongoose.Schema({
   
   // Notifications
   notifications: {
-    // Emails envoyés
+    // Emails envoyes
     emails: [{
       type: {
         type: String,
@@ -364,7 +364,7 @@ const paymentLogSchema = new mongoose.Schema({
       messageId: String
     }],
     
-    // Webhooks déclenchés
+    // Webhooks declenches
     webhooks: [{
       url: String,
       event: String,
@@ -374,7 +374,7 @@ const paymentLogSchema = new mongoose.Schema({
     }]
   },
   
-  // Métadonnées
+  // Metadonnees
   metadata: {
     // Tags pour recherche/filtrage
     tags: [String],
@@ -382,7 +382,7 @@ const paymentLogSchema = new mongoose.Schema({
     // Notes internes
     internalNotes: String,
     
-    // Données custom
+    // Donnees custom
     customData: mongoose.Schema.Types.Mixed,
     
     // Version du schema
@@ -396,7 +396,7 @@ const paymentLogSchema = new mongoose.Schema({
   collection: 'payment_logs'
 });
 
-// Index composés
+// Index composes
 paymentLogSchema.index({ userId: 1, type: 1, createdAt: -1 });
 paymentLogSchema.index({ 'provider.name': 1, status: 1, createdAt: -1 });
 paymentLogSchema.index({ 'provider.externalIds.subscriptionId': 1 });
@@ -408,16 +408,16 @@ paymentLogSchema.index({ 'invoice.number': 1 });
 paymentLogSchema.index({ 'provider.externalIds.paymentId': 1 });
 paymentLogSchema.index({ 'amount.discountCode': 1 });
 
-// Méthodes d'instance
+// Methodes d'instance
 paymentLogSchema.methods = {
-  // Marquer comme complété
+  // Marquer comme complete
   markAsCompleted() {
     this.status = 'completed';
     this.metrics.processingTime = Date.now() - this.createdAt;
     return this.save();
   },
   
-  // Marquer comme échoué
+  // Marquer comme echoue
   markAsFailed(error) {
     this.status = 'failed';
     this.failure = {
@@ -437,7 +437,7 @@ paymentLogSchema.methods = {
     return this.save();
   },
   
-  // Créer un remboursement
+  // Creer un remboursement
   async createRefund(amount, reason) {
     this.status = 'refunded';
     this.refund = {
@@ -449,7 +449,7 @@ paymentLogSchema.methods = {
     
     await this.save();
     
-    // Créer un nouveau log pour le remboursement
+    // Creer un nouveau log pour le remboursement
     const refundLog = new this.constructor({
       userId: this.userId,
       type: 'refund',
@@ -487,7 +487,7 @@ paymentLogSchema.methods = {
     };
   },
   
-  // Générer un numéro de facture
+  // Generer un numero de facture
   generateInvoiceNumber() {
     const date = new Date();
     const year = date.getFullYear();
@@ -500,7 +500,7 @@ paymentLogSchema.methods = {
   
   // Envoyer une notification email
   async sendEmailNotification(type) {
-    // TODO: Implémenter l'envoi d'email
+    // TODO: Implementer l'envoi d'email
     this.notifications.emails.push({
       type,
       sentAt: new Date(),
@@ -510,7 +510,7 @@ paymentLogSchema.methods = {
     return this.save();
   },
   
-  // Vérifier si c'est le premier paiement
+  // Verifier si c'est le premier paiement
   async checkFirstPayment() {
     const previousPayments = await this.constructor.countDocuments({
       userId: this.userId,
@@ -526,9 +526,9 @@ paymentLogSchema.methods = {
   }
 };
 
-// Méthodes statiques
+// Methodes statiques
 paymentLogSchema.statics = {
-  // Créer un log de paiement
+  // Creer un log de paiement
   async createPaymentLog(userId, type, amount, provider, metadata = {}) {
     const log = new this({
       userId,
@@ -546,7 +546,7 @@ paymentLogSchema.statics = {
       }
     });
     
-    // Vérifier si c'est le premier paiement
+    // Verifier si c'est le premier paiement
     await log.checkFirstPayment();
     
     return log.save();
@@ -591,7 +591,7 @@ paymentLogSchema.statics = {
     return this.aggregate(pipeline);
   },
   
-  // Obtenir les métriques de paiement
+  // Obtenir les metriques de paiement
   async getPaymentMetrics(userId) {
     const [stats] = await this.aggregate([
       {
@@ -637,7 +637,7 @@ paymentLogSchema.statics = {
     };
   },
   
-  // Obtenir les paiements échoués à retenter
+  // Obtenir les paiements echoues   retenter
   async getPaymentsToRetry() {
     return this.find({
       status: 'failed',
@@ -646,7 +646,7 @@ paymentLogSchema.statics = {
     }).populate('userId', 'email profile.firstName profile.lastName');
   },
   
-  // Statistiques de taux d'échec
+  // Statistiques de taux d'echec
   async getFailureStats(days = 30) {
     const since = new Date();
     since.setDate(since.getDate() - days);
@@ -673,7 +673,7 @@ paymentLogSchema.statics = {
     return stats;
   },
   
-  // Détecter les comportements frauduleux
+  // Detecter les comportements frauduleux
   async detectFraudPatterns(userId) {
     const recentPayments = await this.find({
       userId,
@@ -712,13 +712,13 @@ paymentLogSchema.statics = {
         createdAt: { $gte: startDate, $lte: endDate }
       }),
       
-      // Résiliations
+      // Resiliations
       this.countDocuments({
         type: 'subscription_cancellation',
         createdAt: { $gte: startDate, $lte: endDate }
       }),
       
-      // Taux d'échec
+      // Taux d'echec
       this.aggregate([
         {
           $match: {
@@ -763,12 +763,12 @@ paymentLogSchema.statics = {
 
 // Middleware pre-save
 paymentLogSchema.pre('save', async function(next) {
-  // Générer un numéro de facture si nécessaire
+  // Generer un numero de facture si necessaire
   if (this.status === 'completed' && !this.invoice.number) {
     this.generateInvoiceNumber();
   }
   
-  // Calculer les métriques
+  // Calculer les metriques
   if (this.status === 'completed' && !this.metrics.customerLifetimeValue) {
     const ltv = await this.constructor.aggregate([
       {
@@ -803,22 +803,22 @@ paymentLogSchema.pre('save', async function(next) {
 
 // Hook post-save pour les actions automatiques
 paymentLogSchema.post('save', async function() {
-  // Envoyer un reçu pour les paiements complétés
+  // Envoyer un recu pour les paiements completes
   if (this.status === 'completed' && this.isNew) {
     await this.sendEmailNotification('receipt');
   }
   
-  // Alerter en cas d'échec de paiement récurrent
+  // Alerter en cas d'echec de paiement recurrent
   if (this.status === 'failed' && this.type === 'subscription_renewal') {
     // TODO: Envoyer alerte au client
     console.log(`Payment failed for user ${this.userId}: ${this.failure.message}`);
   }
   
-  // Détecter les patterns frauduleux
+  // Detecter les patterns frauduleux
   if (this.status === 'completed') {
     const fraud = await this.constructor.detectFraudPatterns(this.userId);
     if (fraud.flagged) {
-      // TODO: Alerte sécurité
+      // TODO: Alerte securite
       console.warn(`Potential fraud detected for user ${this.userId}`, fraud);
     }
   }

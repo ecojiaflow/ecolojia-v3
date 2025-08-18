@@ -1,10 +1,10 @@
 // backend/src/models/ChatHistory.js
-// Modèle pour l'historique des conversations avec l'IA
+// Modele pour l'historique des conversations avec l'IA
 
 const mongoose = require('mongoose');
 
 const chatHistorySchema = new mongoose.Schema({
-  // Référence utilisateur
+  // Reference utilisateur
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -26,7 +26,7 @@ const chatHistorySchema = new mongoose.Schema({
     maxlength: 2000
   },
   
-  // Réponse de l'IA
+  // Reponse de l'IA
   aiResponse: {
     type: String,
     required: true,
@@ -35,7 +35,7 @@ const chatHistorySchema = new mongoose.Schema({
   
   // Contexte de la conversation
   context: {
-    // Produit concerné si applicable
+    // Produit concerne si applicable
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product'
@@ -58,20 +58,20 @@ const chatHistorySchema = new mongoose.Schema({
       default: 'general'
     },
     
-    // Catégorie de produit concernée
+    // Categorie de produit concernee
     productCategory: {
       type: String,
       enum: ['food', 'cosmetics', 'detergents']
     },
     
-    // Métadonnées additionnelles
+    // Metadonnees additionnelles
     metadata: {
       type: Map,
       of: mongoose.Schema.Types.Mixed
     }
   },
   
-  // Tokens utilisés (pour tracking des coûts)
+  // Tokens utilises (pour tracking des couts)
   usage: {
     promptTokens: {
       type: Number,
@@ -91,7 +91,7 @@ const chatHistorySchema = new mongoose.Schema({
     }
   },
   
-  // Évaluation de la réponse par l'utilisateur
+  // ‰valuation de la reponse par l'utilisateur
   feedback: {
     rating: {
       type: Number,
@@ -103,7 +103,7 @@ const chatHistorySchema = new mongoose.Schema({
     reportedAt: Date
   },
   
-  // Actions suggérées extraites de la réponse
+  // Actions suggerees extraites de la reponse
   suggestedActions: [{
     type: {
       type: String,
@@ -127,7 +127,7 @@ const chatHistorySchema = new mongoose.Schema({
     default: 0.7
   },
   
-  // Erreurs éventuelles
+  // Erreurs eventuelles
   error: {
     occurred: {
       type: Boolean,
@@ -174,7 +174,7 @@ const chatHistorySchema = new mongoose.Schema({
   archivedAt: Date
 });
 
-// Index composés pour les requêtes fréquentes
+// Index composes pour les requetes frequentes
 chatHistorySchema.index({ userId: 1, timestamp: -1 });
 chatHistorySchema.index({ userId: 1, conversationId: 1, timestamp: 1 });
 chatHistorySchema.index({ userId: 1, 'context.productId': 1 });
@@ -187,13 +187,13 @@ chatHistorySchema.index({ userMessage: 'text', aiResponse: 'text' });
 chatHistorySchema.pre('save', function(next) {
   if (this.usage.promptTokens && this.usage.completionTokens) {
     this.usage.totalTokens = this.usage.promptTokens + this.usage.completionTokens;
-    // Estimation du coût (DeepSeek: ~$0.001 per 1K tokens)
+    // Estimation du cout (DeepSeek: ~$0.001 per 1K tokens)
     this.usage.estimatedCost = (this.usage.totalTokens / 1000) * 0.001;
   }
   next();
 });
 
-// Méthodes d'instance
+// Methodes d'instance
 chatHistorySchema.methods.addFeedback = async function(rating, helpful, comment) {
   this.feedback = {
     rating,
@@ -221,7 +221,7 @@ chatHistorySchema.methods.flag = async function(userId, reason) {
   return this.save();
 };
 
-// Méthodes statiques
+// Methodes statiques
 chatHistorySchema.statics.getConversation = function(userId, conversationId) {
   return this.find({
     userId,
@@ -349,7 +349,7 @@ chatHistorySchema.statics.getMostAskedTopics = function(period = 'month') {
   ]);
 };
 
-// Méthode pour nettoyer les anciennes conversations
+// Methode pour nettoyer les anciennes conversations
 chatHistorySchema.statics.cleanOldConversations = async function(daysToKeep = 90) {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
@@ -369,7 +369,7 @@ chatHistorySchema.statics.cleanOldConversations = async function(daysToKeep = 90
   );
 };
 
-// Virtual pour obtenir un résumé de la conversation
+// Virtual pour obtenir un resume de la conversation
 chatHistorySchema.virtual('summary').get(function() {
   return {
     question: this.userMessage.substring(0, 100) + (this.userMessage.length > 100 ? '...' : ''),

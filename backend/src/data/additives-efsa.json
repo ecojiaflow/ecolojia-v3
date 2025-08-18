@@ -7,7 +7,7 @@
       "e_number": "E471",
       "name": "Mono- et diglycérides d'acides gras",
       "common_names": ["mono et diglycérides", "émulsifiant", "e471"],
-      "function": "Émulsifiant",
+      "function": "Ã‰mulsifiant",
       "efsa_assessment": {
         "status": "Autorisé",
         "risk_level": "medium",
@@ -22,7 +22,7 @@
       "e_number": "E472e", 
       "name": "Esters mono- et diacétyltartriques",
       "common_names": ["e472e", "émulsifiant tartrique"],
-      "function": "Émulsifiant", 
+      "function": "Ã‰mulsifiant", 
       "efsa_assessment": {
         "status": "Autorisé",
         "risk_level": "medium",
@@ -52,7 +52,7 @@
       "e_number": "E951",
       "name": "Aspartame", 
       "common_names": ["aspartame", "e951"],
-      "function": "Édulcorant",
+      "function": "Ã‰dulcorant",
       "efsa_assessment": {
         "status": "En réévaluation",
         "risk_level": "high",

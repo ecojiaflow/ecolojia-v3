@@ -1,4 +1,4 @@
-﻿// server.js - Serveur principal Ecolojia
+// server.js - Serveur principal Ecolojia
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');

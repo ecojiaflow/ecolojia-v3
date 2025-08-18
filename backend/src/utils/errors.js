@@ -70,7 +70,7 @@ class QuotaExceededError extends AuthorizationError {
 }
 
 /**
- * Erreurs de ressource non trouvée (404)
+ * Erreurs de ressource non trouvee (404)
  */
 class NotFoundError extends AppError {
   constructor(resource, id = null) {
@@ -102,7 +102,7 @@ class DatabaseError extends InternalServerError {
 }
 
 /**
- * Helper pour vérifier si une erreur est opérationnelle
+ * Helper pour verifier si une erreur est operationnelle
  */
 const isOperationalError = (error) => {
   if (error instanceof AppError) {
@@ -124,7 +124,7 @@ const normalizeError = (error) => {
     return new InvalidTokenError(error.message);
   }
 
-  // Erreur générique
+  // Erreur generique
   return new InternalServerError(error.message || 'Unknown error', {
     originalError: error.toString(),
     stack: error.stack

@@ -1,12 +1,12 @@
 // backend/scripts/addDemoAnalyses.js
-// Script pour ajouter des analyses de démonstration via l'API
+// Script pour ajouter des analyses de demonstration via l'API
 
 const fetch = require('node-fetch');
 
 const API_URL = 'http://localhost:5001/api';
 const AUTH_TOKEN = 'test-token-507f1f77bcf86cd799439011';
 
-// Données de démonstration
+// Donnees de demonstration
 const demoAnalyses = [
   {
     productName: 'Yaourt Nature Bio Danone',
@@ -17,11 +17,11 @@ const demoAnalyses = [
     barcode: '3033710065967'
   },
   {
-    productName: 'Nutella Pâte à Tartiner',
+    productName: 'Nutella Pate   Tartiner',
     category: 'food',
     healthScore: 45,
     novaGroup: 4,
-    ingredients: 'Sucre, huile de palme, noisettes 13%, cacao maigre, lait écrémé en poudre',
+    ingredients: 'Sucre, huile de palme, noisettes 13%, cacao maigre, lait ecreme en poudre',
     barcode: '3017620422003'
   },
   {
@@ -29,7 +29,7 @@ const demoAnalyses = [
     category: 'food',
     healthScore: 38,
     novaGroup: 4,
-    ingredients: 'Eau gazéifiée, sucre, colorant E150d, acidifiant E338',
+    ingredients: 'Eau gazeifiee, sucre, colorant E150d, acidifiant E338',
     barcode: '5449000000996'
   },
   {
@@ -41,21 +41,21 @@ const demoAnalyses = [
     barcode: '3560070976394'
   },
   {
-    productName: 'Shampoing Doux Sans Sulfate L\'Oréal',
+    productName: 'Shampoing Doux Sans Sulfate L\'Oreal',
     category: 'cosmetics',
     healthScore: 78,
     ingredients: 'Aqua, Sodium Cocoyl Isethionate, Coco-Betaine, Sodium Lauryl Sulfoacetate',
     barcode: '3600523998647'
   },
   {
-    productName: 'Crème Hydratante Nivea',
+    productName: 'Creme Hydratante Nivea',
     category: 'cosmetics',
     healthScore: 72,
     ingredients: 'Aqua, Glycerin, Cetearyl Alcohol, Mineral Oil',
     barcode: '4005808119349'
   },
   {
-    productName: 'Lessive Écologique Arbre Vert',
+    productName: 'Lessive ‰cologique Arbre Vert',
     category: 'detergents',
     healthScore: 85,
     ingredients: 'Agents de surface anioniques, agents de surface non ioniques, savon',
@@ -72,11 +72,11 @@ const demoAnalyses = [
 ];
 
 async function addDemoAnalyses() {
-  console.log('🚀 Ajout des analyses de démonstration...\n');
+  console.log('ðŸš€ Ajout des analyses de demonstration...\n');
 
   for (const [index, analysis] of demoAnalyses.entries()) {
     try {
-      // Simuler un délai entre les analyses
+      // Simuler un delai entre les analyses
       const delay = index * 24 * 60 * 60 * 1000; // 1 jour entre chaque
       const analysisDate = new Date(Date.now() - delay);
 
@@ -95,32 +95,32 @@ async function addDemoAnalyses() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`✅ ${index + 1}. ${analysis.productName} - Score: ${analysis.healthScore}/100`);
+        console.log(`âœ… ${index + 1}. ${analysis.productName} - Score: ${analysis.healthScore}/100`);
       } else {
-        console.log(`❌ Erreur pour ${analysis.productName}: ${response.statusText}`);
+        console.log(`âŒ Erreur pour ${analysis.productName}: ${response.statusText}`);
       }
 
     } catch (error) {
-      console.error(`❌ Erreur pour ${analysis.productName}:`, error.message);
+      console.error(`âŒ Erreur pour ${analysis.productName}:`, error.message);
     }
 
-    // Petite pause entre les requêtes
+    // Petite pause entre les requetes
     await new Promise(resolve => setTimeout(resolve, 500));
   }
 
-  console.log('\n✨ Analyses de démonstration ajoutées !');
-  console.log('📊 Retournez sur le dashboard pour voir les résultats');
+  console.log('\nâœ¨ Analyses de demonstration ajoutees !');
+  console.log('ðŸ“Š Retournez sur le dashboard pour voir les resultats');
 }
 
-// Note: Pour l'instant, sans base de données, ces analyses ne seront pas persistées
-// Mais le dashboard affichera des données de démo intégrées
+// Note: Pour l'instant, sans base de donnees, ces analyses ne seront pas persistees
+// Mais le dashboard affichera des donnees de demo integrees
 
-console.log('ℹ️  Note: Sans MongoDB, les analyses ne sont pas persistées.');
-console.log('    Le dashboard affiche des données de démonstration intégrées.\n');
+console.log('â„¹ï¸  Note: Sans MongoDB, les analyses ne sont pas persistees.');
+console.log('    Le dashboard affiche des donnees de demonstration integrees.\n');
 
-// Si vous voulez quand même exécuter le script (pour tester l'API)
-// Décommentez la ligne suivante :
+// Si vous voulez quand meme executer le script (pour tester l'API)
+// Decommentez la ligne suivante :
 // addDemoAnalyses();
 
-console.log('📊 Votre dashboard devrait maintenant afficher des données de démo !');
-console.log('🔗 Accédez à: http://localhost:3000/dashboard');
+console.log('ðŸ“Š Votre dashboard devrait maintenant afficher des donnees de demo !');
+console.log('ðŸ”— Accedez  : http://localhost:3000/dashboard');

@@ -1,5 +1,5 @@
 // backend/src/data/inciDatabase.js
-// Base de données des ingrédients cosmétiques INCI avec scores de sécurité
+// Base de donnees des ingredients cosmetiques INCI avec scores de securite
 
 const inciDatabase = [
   // === TENSIOACTIFS ===
@@ -12,7 +12,7 @@ const inciDatabase = [
     comedogenic: 0,
     natural: false,
     environmental_hazard: true,
-    description: 'Tensioactif agressif, très irritant'
+    description: 'Tensioactif agressif, tres irritant'
   },
   {
     inci: 'SODIUM LAURETH SULFATE',
@@ -26,42 +26,42 @@ const inciDatabase = [
   },
   {
     inci: 'COCAMIDOPROPYL BETAINE',
-    name: 'Cocamidopropyl bétaïne',
+    name: 'Cocamidopropyl betaine',
     function: 'surfactant',
     irritant: 'low',
     comedogenic: 0,
     natural: false,
     derived_from_natural: true,
-    description: 'Tensioactif doux dérivé de la noix de coco'
+    description: 'Tensioactif doux derive de la noix de coco'
   },
   {
     inci: 'DECYL GLUCOSIDE',
-    name: 'Décyl glucoside',
+    name: 'Decyl glucoside',
     function: 'surfactant',
     irritant: 'very_low',
     comedogenic: 0,
     natural: false,
     derived_from_natural: true,
     biodegradable: true,
-    description: 'Tensioactif très doux, idéal peaux sensibles'
+    description: 'Tensioactif tres doux, ideal peaux sensibles'
   },
 
   // === CONSERVATEURS ===
   {
     inci: 'METHYLPARABEN',
-    name: 'Méthylparabène',
+    name: 'Methylparabene',
     cas: '99-76-3',
     function: 'preservative',
     irritant: 'low',
     comedogenic: 0,
     natural: false,
     endocrine_disruptor: true,
-    concerns: ['Perturbateur endocrinien suspecté'],
+    concerns: ['Perturbateur endocrinien suspecte'],
     max_concentration: 0.4
   },
   {
     inci: 'PROPYLPARABEN',
-    name: 'Propylparabène',
+    name: 'Propylparabene',
     cas: '94-13-3',
     function: 'preservative',
     irritant: 'low',
@@ -74,14 +74,14 @@ const inciDatabase = [
   },
   {
     inci: 'PHENOXYETHANOL',
-    name: 'Phénoxyéthanol',
+    name: 'Phenoxyethanol',
     cas: '122-99-6',
     function: 'preservative',
     irritant: 'medium',
     comedogenic: 0,
     natural: false,
     allergen: true,
-    concerns: ['Allergisant', 'Toxique à haute dose'],
+    concerns: ['Allergisant', 'Toxique   haute dose'],
     max_concentration: 1.0
   },
   {
@@ -105,13 +105,13 @@ const inciDatabase = [
     comedogenic: 0,
     natural: false,
     derived_from_natural: true,
-    description: 'Conservateur doux autorisé en bio'
+    description: 'Conservateur doux autorise en bio'
   },
 
-  // === ÉMOLLIENTS & HYDRATANTS ===
+  // === ‰MOLLIENTS & HYDRATANTS ===
   {
     inci: 'GLYCERIN',
-    name: 'Glycérine',
+    name: 'Glycerine',
     synonyms: ['Glycerol'],
     cas: '56-81-5',
     function: 'humectant',
@@ -119,7 +119,7 @@ const inciDatabase = [
     comedogenic: 0,
     natural: true,
     vegetable_origin: true,
-    description: 'Humectant naturel très sûr'
+    description: 'Humectant naturel tres sur'
   },
   {
     inci: 'HYALURONIC ACID',
@@ -129,44 +129,44 @@ const inciDatabase = [
     comedogenic: 0,
     natural: true,
     biotechnology: true,
-    benefits: ['Hydratation intense', 'Anti-âge'],
+    benefits: ['Hydratation intense', 'Anti-age'],
     description: 'Actif hydratant haute performance'
   },
   {
     inci: 'DIMETHICONE',
-    name: 'Diméthicone',
+    name: 'Dimethicone',
     function: 'emollient',
     irritant: 'very_low',
     comedogenic: 1,
     natural: false,
     silicone: true,
     environmental_hazard: true,
-    concerns: ['Non biodégradable', 'Occlusif'],
-    description: 'Silicone controversé mais sûr'
+    concerns: ['Non biodegradable', 'Occlusif'],
+    description: 'Silicone controverse mais sur'
   },
   {
     inci: 'SHEA BUTTER',
-    name: 'Beurre de karité',
+    name: 'Beurre de karite',
     inci_official: 'BUTYROSPERMUM PARKII BUTTER',
     function: 'emollient',
     irritant: 'very_low',
     comedogenic: 0,
     natural: true,
-    benefits: ['Nourrissant', 'Réparateur'],
-    description: 'Beurre végétal très nourrissant'
+    benefits: ['Nourrissant', 'Reparateur'],
+    description: 'Beurre vegetal tres nourrissant'
   },
 
   // === ACTIFS ===
   {
     inci: 'RETINOL',
-    name: 'Rétinol',
+    name: 'Retinol',
     synonyms: ['Vitamin A'],
     function: 'active',
     irritant: 'high',
     comedogenic: 0,
     natural: false,
     pregnancy_warning: true,
-    benefits: ['Anti-âge puissant', 'Renouvellement cellulaire'],
+    benefits: ['Anti-age puissant', 'Renouvellement cellulaire'],
     concerns: ['Photosensibilisant', 'Irritant'],
     max_concentration: 1.0
   },
@@ -178,8 +178,8 @@ const inciDatabase = [
     irritant: 'very_low',
     comedogenic: 0,
     natural: false,
-    benefits: ['Anti-inflammatoire', 'Régulateur sébum', 'Éclaircissant'],
-    description: 'Actif polyvalent très bien toléré'
+    benefits: ['Anti-inflammatoire', 'Regulateur sebum', '‰claircissant'],
+    description: 'Actif polyvalent tres bien tolere'
   },
   {
     inci: 'ASCORBIC ACID',
@@ -189,7 +189,7 @@ const inciDatabase = [
     irritant: 'medium',
     comedogenic: 0,
     natural: true,
-    benefits: ['Antioxydant', 'Éclaircissant', 'Stimule collagène'],
+    benefits: ['Antioxydant', '‰claircissant', 'Stimule collagene'],
     concerns: ['Instable', 'Peut irriter'],
     description: 'Vitamine C pure, puissante mais instable'
   },
@@ -202,7 +202,7 @@ const inciDatabase = [
     irritant: 'medium',
     comedogenic: 0,
     natural: true,
-    benefits: ['Exfoliant', 'Anti-acné', 'Pénètre les pores'],
+    benefits: ['Exfoliant', 'Anti-acne', 'Penetre les pores'],
     pregnancy_warning: true,
     max_concentration: 2.0
   },
@@ -210,7 +210,7 @@ const inciDatabase = [
   // === FILTRES UV ===
   {
     inci: 'OCTOCRYLENE',
-    name: 'Octocrylène',
+    name: 'Octocrylene',
     cas: '6197-30-4',
     function: 'uv_filter',
     irritant: 'low',
@@ -234,7 +234,7 @@ const inciDatabase = [
     environmental_hazard: true,
     coral_toxic: true,
     banned_in: ['Hawaii', 'Palau', 'US Virgin Islands'],
-    concerns: ['Perturbateur endocrinien', 'Détruit coraux']
+    concerns: ['Perturbateur endocrinien', 'Detruit coraux']
   },
   {
     inci: 'ZINC OXIDE',
@@ -246,8 +246,8 @@ const inciDatabase = [
     natural: true,
     mineral: true,
     nano: true,
-    benefits: ['Filtre minéral sûr', 'Large spectre'],
-    description: 'Filtre UV minéral, le plus sûr'
+    benefits: ['Filtre mineral sur', 'Large spectre'],
+    description: 'Filtre UV mineral, le plus sur'
   },
   {
     inci: 'TITANIUM DIOXIDE',
@@ -259,14 +259,14 @@ const inciDatabase = [
     natural: true,
     mineral: true,
     nano: true,
-    concerns: ['Nanoparticules controversées'],
-    description: 'Filtre minéral efficace'
+    concerns: ['Nanoparticules controversees'],
+    description: 'Filtre mineral efficace'
   },
 
   // === COLORANTS ===
   {
     inci: 'CI 15985',
-    name: 'Jaune orangé S',
+    name: 'Jaune orange S',
     synonyms: ['Yellow 6', 'Sunset Yellow'],
     function: 'colorant',
     irritant: 'low',
@@ -274,7 +274,7 @@ const inciDatabase = [
     natural: false,
     azo_dye: true,
     allergen: true,
-    concerns: ['Colorant azoïque', 'Allergisant']
+    concerns: ['Colorant azoique', 'Allergisant']
   },
   {
     inci: 'CI 42090',
@@ -284,7 +284,7 @@ const inciDatabase = [
     irritant: 'low',
     comedogenic: 0,
     natural: false,
-    description: 'Colorant synthétique bleu'
+    description: 'Colorant synthetique bleu'
   },
   {
     inci: 'CI 77891',
@@ -295,10 +295,10 @@ const inciDatabase = [
     comedogenic: 0,
     natural: true,
     mineral: true,
-    description: 'Pigment blanc minéral'
+    description: 'Pigment blanc mineral'
   },
 
-  // === PARFUMS & ALLERGÈNES ===
+  // === PARFUMS & ALLERGˆNES ===
   {
     inci: 'PARFUM',
     name: 'Parfum',
@@ -308,8 +308,8 @@ const inciDatabase = [
     comedogenic: 0,
     natural: false,
     allergen: true,
-    concerns: ['Mélange non détaillé', 'Allergisant potentiel'],
-    description: 'Composition parfumante non détaillée'
+    concerns: ['Melange non detaille', 'Allergisant potentiel'],
+    description: 'Composition parfumante non detaillee'
   },
   {
     inci: 'LINALOOL',
@@ -322,11 +322,11 @@ const inciDatabase = [
     allergen: true,
     allergen_type: 'fragrance',
     declaration_required: true,
-    description: 'Allergène du parfum à déclarer'
+    description: 'Allergene du parfum   declarer'
   },
   {
     inci: 'LIMONENE',
-    name: 'Limonène',
+    name: 'Limonene',
     cas: '138-86-3',
     function: 'fragrance',
     irritant: 'low',
@@ -335,11 +335,11 @@ const inciDatabase = [
     allergen: true,
     allergen_type: 'fragrance',
     declaration_required: true,
-    description: 'Composant d\'agrumes, allergène'
+    description: 'Composant d\'agrumes, allergene'
   },
   {
     inci: 'GERANIOL',
-    name: 'Géraniol',
+    name: 'Geraniol',
     cas: '106-24-1',
     function: 'fragrance',
     irritant: 'medium',
@@ -348,43 +348,43 @@ const inciDatabase = [
     allergen: true,
     allergen_type: 'fragrance',
     declaration_required: true,
-    description: 'Allergène du parfum, odeur de rose'
+    description: 'Allergene du parfum, odeur de rose'
   },
 
   // === SOLVANTS ===
   {
     inci: 'ALCOHOL DENAT.',
-    name: 'Alcool dénaturé',
+    name: 'Alcool denature',
     synonyms: ['Denatured Alcohol'],
     function: 'solvent',
     irritant: 'high',
     comedogenic: 0,
     natural: false,
-    concerns: ['Desséchant', 'Irritant'],
-    description: 'Alcool asséchant pour la peau'
+    concerns: ['Dessechant', 'Irritant'],
+    description: 'Alcool assechant pour la peau'
   },
   {
     inci: 'PROPYLENE GLYCOL',
-    name: 'Propylène glycol',
+    name: 'Propylene glycol',
     cas: '57-55-6',
     function: 'solvent',
     irritant: 'low',
     comedogenic: 0,
     natural: false,
     concerns: ['Irritant pour certains'],
-    description: 'Solvant et humectant controversé'
+    description: 'Solvant et humectant controverse'
   },
 
   // === AGENTS DE TEXTURE ===
   {
     inci: 'CARBOMER',
-    name: 'Carbomère',
+    name: 'Carbomere',
     function: 'viscosity_agent',
     irritant: 'very_low',
     comedogenic: 0,
     natural: false,
     polymer: true,
-    description: 'Gélifiant synthétique sûr'
+    description: 'Gelifiant synthetique sur'
   },
   {
     inci: 'XANTHAN GUM',
@@ -395,24 +395,24 @@ const inciDatabase = [
     comedogenic: 0,
     natural: true,
     biotechnology: true,
-    description: 'Épaississant naturel fermenté'
+    description: '‰paississant naturel fermente'
   },
 
   // === ANTIOXYDANTS ===
   {
     inci: 'TOCOPHEROL',
-    name: 'Tocophérol',
+    name: 'Tocopherol',
     synonyms: ['Vitamin E'],
     function: 'antioxidant',
     irritant: 'very_low',
     comedogenic: 0,
     natural: true,
-    benefits: ['Antioxydant', 'Protège la formule'],
+    benefits: ['Antioxydant', 'Protege la formule'],
     description: 'Vitamine E naturelle'
   },
   {
     inci: 'BHT',
-    name: 'Butylhydroxytoluène',
+    name: 'Butylhydroxytoluene',
     cas: '128-37-0',
     function: 'antioxidant',
     irritant: 'low',
@@ -420,11 +420,11 @@ const inciDatabase = [
     natural: false,
     endocrine_disruptor: true,
     concerns: ['Perturbateur endocrinien potentiel'],
-    description: 'Antioxydant synthétique controversé'
+    description: 'Antioxydant synthetique controverse'
   }
 ];
 
-// Fonction pour rechercher un ingrédient
+// Fonction pour rechercher un ingredient
 function findIngredient(searchTerm) {
   const normalized = searchTerm.toLowerCase().trim();
   
@@ -436,12 +436,12 @@ function findIngredient(searchTerm) {
   );
 }
 
-// Fonction pour obtenir tous les ingrédients d'une catégorie
+// Fonction pour obtenir tous les ingredients d'une categorie
 function getIngredientsByFunction(functionType) {
   return inciDatabase.filter(ing => ing.function === functionType);
 }
 
-// Fonction pour obtenir les ingrédients préoccupants
+// Fonction pour obtenir les ingredients preoccupants
 function getConcerningIngredients() {
   return inciDatabase.filter(ing => 
     ing.endocrine_disruptor || 

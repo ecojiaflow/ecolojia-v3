@@ -1,6 +1,6 @@
 /**
- * ESTIMATEUR INDEX GLYCÉMIQUE
- * Basé sur Table Internationale IG 2024 + modifications nutritionnelles
+ * ESTIMATEUR INDEX GLYC‰MIQUE
+ * Base sur Table Internationale IG 2024 + modifications nutritionnelles
  * Sources: University of Sydney + INSERM + Diabetes Care Journal
  */
 
@@ -10,26 +10,26 @@ class GlycemicEstimator {
   constructor() {
     this.database = glycemicDB;
     this.minConfidence = 0.4;
-    console.log('📊 GlycemicEstimator initialisé avec base internationale 2024');
+    console.log('ðŸ“Š GlycemicEstimator initialise avec base internationale 2024');
   }
 
   /**
-   * Estime l'index glycémique d'un produit
-   * @param {Object} productData - Données du produit (ingrédients + nutrition)
+   * Estime l'index glycemique d'un produit
+   * @param {Object} productData - Donnees du produit (ingredients + nutrition)
    * @param {Object} novaData - Classification NOVA pour modulation
-   * @returns {Object} Estimation IG complète
+   * @returns {Object} Estimation IG complete
    */
   estimateGlycemicIndex(productData, novaData = {}) {
     try {
-      console.log('🔬 Estimation IG démarrée');
+      console.log('ðŸ”¬ Estimation IG demarree');
       
       const { ingredients = [], nutrition = {} } = productData;
       
-      // 1. Recherche IG de base par matching ingrédients
+      // 1. Recherche IG de base par matching ingredients
       const baseEstimation = this.findBaseGlycemicIndex(ingredients);
       
       if (!baseEstimation.found) {
-        return this.createLowConfidenceResult('Ingrédients non reconnus dans base IG');
+        return this.createLowConfidenceResult('Ingredients non reconnus dans base IG');
       }
 
       // 2. Application des modificateurs nutritionnels
@@ -38,10 +38,10 @@ class GlycemicEstimator {
       // 3. Application modificateur transformation (NOVA)
       const finalGI = this.applyProcessingModifier(modifiedGI, novaData);
       
-      // 4. Calcul charge glycémique
+      // 4. Calcul charge glycemique
       const glycemicLoad = this.calculateGlycemicLoad(finalGI.value, nutrition);
       
-      // 5. Catégorisation et impact
+      // 5. Categorisation et impact
       const category = this.categorizeGlycemicImpact(finalGI.value, glycemicLoad);
       const scoringImpact = this.calculateScoringImpact(finalGI.value, category);
 
@@ -52,7 +52,7 @@ class GlycemicEstimator {
         confidence: finalGI.confidence,
         status: 'estimated',
         
-        // Détails calcul
+        // Details calcul
         breakdown: {
           base: {
             value: baseEstimation.gi,
@@ -66,29 +66,29 @@ class GlycemicEstimator {
         // Impact sur scoring ECOLOJIA
         impact: scoringImpact,
         
-        // Explication éducative
+        // Explication educative
         explanation: this.generateExplanation(finalGI.value, glycemicLoad, category),
         
-        // Métadonnées
+        // Metadonnees
         meta: {
-          algorithm: 'Estimation IG basée table internationale',
+          algorithm: 'Estimation IG basee table internationale',
           sources: this.database.meta.references,
           calculated_at: new Date().toISOString(),
           legal_disclaimer: this.database.meta.legal_disclaimer
         }
       };
 
-      console.log(`✅ IG estimé: ${result.index} (${category.level})`);
+      console.log(`âœ… IG estime: ${result.index} (${category.level})`);
       return result;
 
     } catch (error) {
-      console.error('❌ Erreur estimation IG:', error);
+      console.error('âŒ Erreur estimation IG:', error);
       return this.createLowConfidenceResult(`Erreur calcul: ${error.message}`);
     }
   }
 
   /**
-   * Recherche IG de base dans la database par matching ingrédients
+   * Recherche IG de base dans la database par matching ingredients
    */
   findBaseGlycemicIndex(ingredients) {
     if (!ingredients || ingredients.length === 0) {
@@ -98,13 +98,13 @@ class GlycemicEstimator {
     let bestMatch = null;
     let highestConfidence = 0;
 
-    console.log('🔍 Recherche IG pour ingrédients:', ingredients.slice(0, 3));
+    console.log('ðŸ” Recherche IG pour ingredients:', ingredients.slice(0, 3));
 
-    // Parcours toutes les catégories d'aliments
+    // Parcours toutes les categories d'aliments
     for (const [categoryName, categoryData] of Object.entries(this.database.categories)) {
       for (const [foodName, foodData] of Object.entries(categoryData.items)) {
         
-        // Test de matching avec chaque ingrédient
+        // Test de matching avec chaque ingredient
         for (const ingredient of ingredients) {
           const matchConfidence = this.calculateMatchConfidence(ingredient, foodName);
           
@@ -123,7 +123,7 @@ class GlycemicEstimator {
     }
 
     if (bestMatch) {
-      console.log(`✅ Match trouvé: ${bestMatch.source} (IG ${bestMatch.gi})`);
+      console.log(`âœ… Match trouve: ${bestMatch.source} (IG ${bestMatch.gi})`);
       return {
         found: true,
         gi: bestMatch.gi,
@@ -134,12 +134,12 @@ class GlycemicEstimator {
       };
     }
 
-    // Si aucun match, estimation par défaut selon type
+    // Si aucun match, estimation par defaut selon type
     return this.getDefaultEstimation(ingredients);
   }
 
   /**
-   * Calcule la confiance du matching ingrédient-aliment
+   * Calcule la confiance du matching ingredient-aliment
    */
   calculateMatchConfidence(ingredient, foodName) {
     const ingredientLower = ingredient.toLowerCase().trim();
@@ -150,12 +150,12 @@ class GlycemicEstimator {
       return 0.95;
     }
     
-    // L'un contient l'autre complètement
+    // L'un contient l'autre completement
     if (ingredientLower.includes(foodLower) || foodLower.includes(ingredientLower)) {
       return 0.85;
     }
     
-    // Match de mots-clés
+    // Match de mots-cles
     const ingredientWords = ingredientLower.split(/[\s,_-]+/);
     const foodWords = foodLower.split(/[\s,_-]+/);
     
@@ -181,24 +181,24 @@ class GlycemicEstimator {
   }
 
   /**
-   * Estimation par défaut selon type d'ingrédients
+   * Estimation par defaut selon type d'ingredients
    */
   getDefaultEstimation(ingredients) {
     const firstIngredient = ingredients[0]?.toLowerCase() || '';
     
-    // Heuristiques basées sur le premier ingrédient
+    // Heuristiques basees sur le premier ingredient
     const patterns = [
       { pattern: /sucre|glucose|sirop|miel/, gi: 70, confidence: 0.6, source: 'estimation sucre' },
-      { pattern: /farine|blé|avoine/, gi: 65, confidence: 0.5, source: 'estimation céréale' },
+      { pattern: /farine|ble|avoine/, gi: 65, confidence: 0.5, source: 'estimation cereale' },
       { pattern: /riz/, gi: 70, confidence: 0.6, source: 'estimation riz' },
       { pattern: /fruit|pomme|orange/, gi: 45, confidence: 0.4, source: 'estimation fruit' },
-      { pattern: /légume|carotte|tomate/, gi: 35, confidence: 0.4, source: 'estimation légume' },
+      { pattern: /legume|carotte|tomate/, gi: 35, confidence: 0.4, source: 'estimation legume' },
       { pattern: /lait|yaourt/, gi: 35, confidence: 0.5, source: 'estimation laitage' }
     ];
     
     for (const { pattern, gi, confidence, source } of patterns) {
       if (pattern.test(firstIngredient)) {
-        console.log(`📝 Estimation par défaut: ${source} (IG ${gi})`);
+        console.log(`ðŸ“ Estimation par defaut: ${source} (IG ${gi})`);
         return {
           found: true,
           gi,
@@ -233,17 +233,17 @@ class GlycemicEstimator {
     modifiedGI *= fatModifier;
     appliedModifiers.fat = { level: fatLevel, modifier: fatModifier };
     
-    // Modificateur protéines
+    // Modificateur proteines
     const proteinLevel = this.getProteinLevel(nutrition.proteins);
     const proteinModifier = modifiers.protein_content[proteinLevel]?.modifier || 1.0;
     modifiedGI *= proteinModifier;
     appliedModifiers.protein = { level: proteinLevel, modifier: proteinModifier };
     
-    console.log('🔧 Modificateurs nutritionnels appliqués:', appliedModifiers);
+    console.log('ðŸ”§ Modificateurs nutritionnels appliques:', appliedModifiers);
     
     return {
       value: modifiedGI,
-      confidence: baseEstimation.confidence * 0.95, // Légère réduction confiance
+      confidence: baseEstimation.confidence * 0.95, // Legere reduction confiance
       modifiers: appliedModifiers
     };
   }
@@ -276,7 +276,7 @@ class GlycemicEstimator {
       modifier: processingModifier
     };
     
-    console.log(`🏭 Modificateur transformation: NOVA ${novaGroup} → x${processingModifier}`);
+    console.log(`ðŸ­ Modificateur transformation: NOVA ${novaGroup} â†’ x${processingModifier}`);
     
     return {
       value: Math.min(finalGI, 100), // IG max = 100
@@ -286,7 +286,7 @@ class GlycemicEstimator {
   }
 
   /**
-   * Calcule la charge glycémique
+   * Calcule la charge glycemique
    */
   calculateGlycemicLoad(gi, nutrition) {
     const carbohydrates = nutrition.carbohydrates || nutrition.glucides || 0;
@@ -295,16 +295,16 @@ class GlycemicEstimator {
       return 0;
     }
     
-    // Formule: CG = (IG × glucides pour 100g) / 100
+    // Formule: CG = (IG — glucides pour 100g) / 100
     const glycemicLoad = (gi * carbohydrates) / 100;
     
-    console.log(`📊 Charge glycémique: (${gi} × ${carbohydrates}g) / 100 = ${glycemicLoad.toFixed(1)}`);
+    console.log(`ðŸ“Š Charge glycemique: (${gi} — ${carbohydrates}g) / 100 = ${glycemicLoad.toFixed(1)}`);
     
     return glycemicLoad;
   }
 
   /**
-   * Catégorise l'impact glycémique
+   * Categorise l'impact glycemique
    */
   categorizeGlycemicImpact(gi, gl) {
     const giRanges = this.database.classification_ranges;
@@ -313,21 +313,21 @@ class GlycemicEstimator {
     let giCategory = 'high_gi';
     let glCategory = 'high_gl';
     
-    // Détermination catégorie IG
+    // Determination categorie IG
     if (gi <= giRanges.low_gi.max) {
       giCategory = 'low_gi';
     } else if (gi <= giRanges.medium_gi.max) {
       giCategory = 'medium_gi';
     }
     
-    // Détermination catégorie CG
+    // Determination categorie CG
     if (gl <= glRanges.low_gl.max) {
       glCategory = 'low_gl';
     } else if (gl <= glRanges.medium_gl.max) {
       glCategory = 'medium_gl';
     }
     
-    // Catégorie finale (plus restrictive)
+    // Categorie finale (plus restrictive)
     const levelPriority = { 'low': 0, 'medium': 1, 'high': 2 };
     const giLevel = giCategory.split('_')[0];
     const glLevel = glCategory.split('_')[0];
@@ -353,19 +353,19 @@ class GlycemicEstimator {
     
     if (gi <= 35) {
       penalty = penalties.very_low_gi.penalty;
-      description = `IG très faible (${gi}) - Aucune pénalité`;
+      description = `IG tres faible (${gi}) - Aucune penalite`;
     } else if (gi <= 55) {
       penalty = penalties.low_gi.penalty;
-      description = `IG faible (${gi}) - Légère pénalité (${penalty} pts)`;
+      description = `IG faible (${gi}) - Legere penalite (${penalty} pts)`;
     } else if (gi <= 69) {
       penalty = penalties.medium_gi.penalty;
-      description = `IG modéré (${gi}) - Pénalité (${penalty} pts)`;
+      description = `IG modere (${gi}) - Penalite (${penalty} pts)`;
     } else if (gi <= 84) {
       penalty = penalties.high_gi.penalty;
-      description = `IG élevé (${gi}) - Forte pénalité (${penalty} pts)`;
+      description = `IG eleve (${gi}) - Forte penalite (${penalty} pts)`;
     } else {
       penalty = penalties.very_high_gi.penalty;
-      description = `IG très élevé (${gi}) - Pénalité maximale (${penalty} pts)`;
+      description = `IG tres eleve (${gi}) - Penalite maximale (${penalty} pts)`;
     }
     
     return {
@@ -377,31 +377,31 @@ class GlycemicEstimator {
   }
 
   /**
-   * Génère une explication éducative
+   * Genere une explication educative
    */
   generateExplanation(gi, gl, category) {
     const explanations = {
-      'low': `IG faible (${gi}) - Absorption lente du glucose, maintien glycémie stable`,
-      'medium': `IG modéré (${gi}) - Impact glycémique acceptable, à consommer avec modération`,
-      'high': `IG élevé (${gi}) - Pic glycémique rapide, risque hypoglycémie réactionnelle`
+      'low': `IG faible (${gi}) - Absorption lente du glucose, maintien glycemie stable`,
+      'medium': `IG modere (${gi}) - Impact glycemique acceptable,   consommer avec moderation`,
+      'high': `IG eleve (${gi}) - Pic glycemique rapide, risque hypoglycemie reactionnelle`
     };
     
-    const glExplanation = gl > 0 ? ` Charge glycémique: ${gl.toFixed(1)}.` : '';
+    const glExplanation = gl > 0 ? ` Charge glycemique: ${gl.toFixed(1)}.` : '';
     
     return explanations[category.level] + glExplanation;
   }
 
   /**
-   * Pertinence santé selon catégorie
+   * Pertinence sante selon categorie
    */
   getHealthRelevance(level) {
     const relevance = {
-      'low': 'Favorable pour régulation glycémique et contrôle du poids',
-      'medium': 'Acceptable dans alimentation équilibrée, surveiller quantités',
-      'high': 'Peut perturber glycémie, privilégier consommation occasionnelle'
+      'low': 'Favorable pour regulation glycemique et controle du poids',
+      'medium': 'Acceptable dans alimentation equilibree, surveiller quantites',
+      'high': 'Peut perturber glycemie, privilegier consommation occasionnelle'
     };
     
-    return relevance[level] || 'Impact glycémique non évalué';
+    return relevance[level] || 'Impact glycemique non evalue';
   }
 
   /**
@@ -409,16 +409,16 @@ class GlycemicEstimator {
    */
   getRecommendation(gi, level) {
     if (level === 'low') {
-      return 'Excellent choix pour maintenir une glycémie stable';
+      return 'Excellent choix pour maintenir une glycemie stable';
     } else if (level === 'medium') {
-      return 'Associer avec des fibres ou protéines pour modérer l\'impact';
+      return 'Associer avec des fibres ou proteines pour moderer l\'impact';
     } else {
-      return 'Consommer avec des aliments à IG faible pour équilibrer le repas';
+      return 'Consommer avec des aliments   IG faible pour equilibrer le repas';
     }
   }
 
   /**
-   * Méthodes utilitaires pour les niveaux nutritionnels
+   * Methodes utilitaires pour les niveaux nutritionnels
    */
   getFiberLevel(fiber) {
     if (!fiber || fiber < 3) return 'low_fiber';
@@ -439,7 +439,7 @@ class GlycemicEstimator {
   }
 
   /**
-   * Crée un résultat de faible confiance
+   * Cree un resultat de faible confiance
    */
   createLowConfidenceResult(reason) {
     return {
@@ -451,8 +451,8 @@ class GlycemicEstimator {
       message: reason,
       impact: {
         penalty: 0,
-        description: 'IG non estimable - Aucune pénalité appliquée',
-        health_relevance: 'Données insuffisantes pour évaluation glycémique'
+        description: 'IG non estimable - Aucune penalite appliquee',
+        health_relevance: 'Donnees insuffisantes pour evaluation glycemique'
       },
       meta: {
         algorithm: 'Estimation IG impossible',
@@ -465,12 +465,12 @@ class GlycemicEstimator {
    * Valide l'estimateur avec exemples
    */
   validateWithExamples() {
-    console.log('🧪 Validation estimateur IG...');
+    console.log('ðŸ§ª Validation estimateur IG...');
     
     const testCases = [
       {
         name: 'pain_blanc',
-        ingredients: ['farine de blé'],
+        ingredients: ['farine de ble'],
         nutrition: { fiber: 2, fat: 3, proteins: 8 },
         expected_range: [70, 80]
       },
@@ -488,7 +488,7 @@ class GlycemicEstimator {
       const inRange = result.index >= testCase.expected_range[0] && 
                      result.index <= testCase.expected_range[1];
       
-      console.log(`${inRange ? '✅' : '❌'} ${testCase.name}: IG ${result.index} (attendu ${testCase.expected_range[0]}-${testCase.expected_range[1]})`);
+      console.log(`${inRange ? 'âœ…' : 'âŒ'} ${testCase.name}: IG ${result.index} (attendu ${testCase.expected_range[0]}-${testCase.expected_range[1]})`);
     }
   }
 }

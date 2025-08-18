@@ -1,14 +1,14 @@
-// backend/src/utils/logger.js – version complète & finale
+// backend/src/utils/logger.js â€“ version complete & finale
 // -------------------------------------------------------------------
 const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 
-// ─── Préparation dossier logs ─────────────────────────────────────────
+// â”€â”€â”€ Preparation dossier logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const logsDir = path.join(process.cwd(), 'logs');
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
 
-// ─── Définition des niveaux & couleurs ───────────────────────────────
+// â”€â”€â”€ Definition des niveaux & couleurs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const logLevels = {
   levels: { error: 0, warn: 1, info: 2, http: 3, debug: 4, perf: 5 },
   colors: {
@@ -59,7 +59,7 @@ if (process.env.NODE_ENV !== 'production' || process.env.LOG_TO_CONSOLE === 'tru
   winstonLogger.add(new winston.transports.Console({ format: consoleFormat }));
 }
 
-// ─── Classe Logger (wrapper) ──────────────────────────────────────────
+// â”€â”€â”€ Classe Logger (wrapper) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class Logger {
   constructor(context = 'App') {
     this.context = context;
@@ -98,7 +98,7 @@ class Logger {
   }
 }
 
-// ─── Middleware Express ──────────────────────────────────────────────
+// â”€â”€â”€ Middleware Express â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const httpLogger = (req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -108,13 +108,13 @@ const httpLogger = (req, res, next) => {
   next();
 };
 
-// ─── Export principal ────────────────────────────────────────────────
+// â”€â”€â”€ Export principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const defaultLogger = new Logger('Default');
 module.exports = defaultLogger; // permet require('.../logger').info(...)
 
-// Exports complémentaires pour compatibilité
+// Exports complementaires pour compatibilite
 module.exports.Logger = Logger;
 module.exports.httpLogger = httpLogger;
 module.exports.winstonLogger = winstonLogger;
-// Ajout ESM default pour éviter logger.default
+// Ajout ESM default pour eviter logger.default
 module.exports.default = module.exports;

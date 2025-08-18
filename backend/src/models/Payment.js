@@ -1,10 +1,10 @@
 // backend/src/models/Payment.js
-// Modèle pour l'historique des paiements
+// Modele pour l'historique des paiements
 
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-  // Référence utilisateur
+  // Reference utilisateur
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -49,7 +49,7 @@ const paymentSchema = new mongoose.Schema({
     ]
   },
   
-  // Références LemonSqueezy
+  // References LemonSqueezy
   subscriptionId: {
     type: String,
     index: true
@@ -70,7 +70,7 @@ const paymentSchema = new mongoose.Schema({
     type: String
   },
   
-  // Méthode de paiement
+  // Methode de paiement
   paymentMethod: {
     type: {
       type: String,
@@ -82,7 +82,7 @@ const paymentSchema = new mongoose.Schema({
     expiryYear: Number
   },
   
-  // Détails de facturation
+  // Details de facturation
   billingAddress: {
     country: String,
     state: String,
@@ -92,7 +92,7 @@ const paymentSchema = new mongoose.Schema({
     line2: String
   },
   
-  // Métadonnées
+  // Metadonnees
   metadata: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,
@@ -107,7 +107,7 @@ const paymentSchema = new mongoose.Schema({
     refundId: String
   },
   
-  // Période de l'abonnement
+  // Periode de l'abonnement
   subscriptionPeriod: {
     start: Date,
     end: Date
@@ -143,7 +143,7 @@ const paymentSchema = new mongoose.Schema({
     default: 1
   },
   
-  // Dernière erreur
+  // Derniere erreur
   lastError: {
     code: String,
     message: String,
@@ -151,19 +151,19 @@ const paymentSchema = new mongoose.Schema({
   }
 });
 
-// Index composés pour les requêtes fréquentes
+// Index composes pour les requetes frequentes
 paymentSchema.index({ userId: 1, createdAt: -1 });
 paymentSchema.index({ userId: 1, status: 1 });
 paymentSchema.index({ subscriptionId: 1, createdAt: -1 });
 paymentSchema.index({ status: 1, createdAt: -1 });
 
-// Middleware pour mettre à jour updatedAt
+// Middleware pour mettre   jour updatedAt
 paymentSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();
 });
 
-// Méthodes d'instance
+// Methodes d'instance
 paymentSchema.methods.markAsCompleted = async function() {
   this.status = 'completed';
   this.processedAt = new Date();
@@ -192,7 +192,7 @@ paymentSchema.methods.processRefund = async function(amount, reason, refundId) {
   return this.save();
 };
 
-// Méthodes statiques
+// Methodes statiques
 paymentSchema.statics.findByUserId = function(userId, options = {}) {
   const query = this.find({ userId });
   
@@ -279,19 +279,19 @@ paymentSchema.statics.getUserPaymentStats = async function(userId) {
   };
 };
 
-// Méthode pour nettoyer les anciennes données
+// Methode pour nettoyer les anciennes donnees
 paymentSchema.statics.cleanOldPayments = async function(daysToKeep = 365 * 10) {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
   
-  // Ne supprimer que les paiements échoués ou annulés
+  // Ne supprimer que les paiements echoues ou annules
   return this.deleteMany({
     createdAt: { $lt: cutoffDate },
     status: { $in: ['failed', 'cancelled'] }
   });
 };
 
-// Virtual pour le montant formaté
+// Virtual pour le montant formate
 paymentSchema.virtual('formattedAmount').get(function() {
   const formatter = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -300,7 +300,7 @@ paymentSchema.virtual('formattedAmount').get(function() {
   return formatter.format(this.amount);
 });
 
-// Virtual pour vérifier si remboursable
+// Virtual pour verifier si remboursable
 paymentSchema.virtual('isRefundable').get(function() {
   if (this.status !== 'completed') return false;
   if (this.refund?.refundedAt) return false;
@@ -317,7 +317,7 @@ paymentSchema.set('toJSON', {
   virtuals: true,
   transform: function(doc, ret) {
     delete ret.__v;
-    delete ret.webhookData; // Données sensibles
+    delete ret.webhookData; // Donnees sensibles
     if (ret.paymentMethod?.last4) {
       ret.paymentMethod.last4 = '****' + ret.paymentMethod.last4;
     }

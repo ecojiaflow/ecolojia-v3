@@ -3,10 +3,10 @@
 
 const axios = require('axios');
 
-// ✅ Configuration backend direct
+// âœ… Configuration backend direct
 const CONFIG = {
   BACKEND_URL: 'https://ecolojia-backendv1.onrender.com',
-  API_KEY: 'ecolojia-admin-secret-key-2025', // CLÉ API CONFIGURÉE
+  API_KEY: 'ecolojia-admin-secret-key-2025', // CL‰ API CONFIGUR‰E
   TEST_PRODUCT: {
     id: `test_${Date.now()}`,
     title: 'Test Produit Bio Direct',
@@ -18,34 +18,34 @@ const CONFIG = {
     zones_dispo: ['FR'],
     eco_score: 0.8,
     ai_confidence: 0.9,
-    resume_fr: 'Produit test bio français',
+    resume_fr: 'Produit test bio francais',
     resume_en: 'French bio test product',
     affiliate_url: 'https://example.com/test'
   }
 };
 
-// ✅ Test santé API
+// âœ… Test sante API
 async function testHealthCheck() {
   try {
-    console.log('🔍 Test santé backend...');
+    console.log('ðŸ” Test sante backend...');
     
     const response = await axios.get(`${CONFIG.BACKEND_URL}/health`, {
       timeout: 10000
     });
     
-    console.log('✅ Backend accessible:', response.data);
+    console.log('âœ… Backend accessible:', response.data);
     return true;
     
   } catch (error) {
-    console.error('❌ Backend inaccessible:', error.message);
+    console.error('âŒ Backend inaccessible:', error.message);
     return false;
   }
 }
 
-// ✅ Test avec endpoint suggest (qui fonctionne)
+// âœ… Test avec endpoint suggest (qui fonctionne)
 async function testSuggestEndpoint() {
   try {
-    console.log('🧪 Test endpoint /api/suggest...');
+    console.log('ðŸ§ª Test endpoint /api/suggest...');
     
     const response = await axios.post(
       `${CONFIG.BACKEND_URL}/api/suggest`,
@@ -62,26 +62,26 @@ async function testSuggestEndpoint() {
       }
     );
     
-    console.log('✅ Suggest fonctionne:', response.data);
+    console.log('âœ… Suggest fonctionne:', response.data);
     return true;
     
   } catch (error) {
-    console.error('❌ Suggest échoué:', error.response?.data || error.message);
+    console.error('âŒ Suggest echoue:', error.response?.data || error.message);
     return false;
   }
 }
 
-// ✅ Test récupération produit
+// âœ… Test recuperation produit
 async function testGetProduct(slug) {
   try {
-    console.log(`🔍 Test récupération produit: ${slug}...`);
+    console.log(`ðŸ” Test recuperation produit: ${slug}...`);
     
     const response = await axios.get(
       `${CONFIG.BACKEND_URL}/api/products/${slug}`,
       { timeout: 10000 }
     );
     
-    console.log('✅ Produit récupéré:', {
+    console.log('âœ… Produit recupere:', {
       title: response.data.title,
       eco_score: response.data.eco_score,
       ai_confidence: response.data.ai_confidence
@@ -90,50 +90,50 @@ async function testGetProduct(slug) {
     return response.data;
     
   } catch (error) {
-    console.error('❌ Erreur récupération:', error.response?.status, error.message);
+    console.error('âŒ Erreur recuperation:', error.response?.status, error.message);
     return null;
   }
 }
 
-// ✅ Import OpenFoodFacts vers backend direct
+// âœ… Import OpenFoodFacts vers backend direct
 async function importDirectToBackend() {
-  console.log('🚀 IMPORT DIRECT VERS BACKEND');
-  console.log('⚠️  Bypass n8n - pas d\'enrichissement IA\n');
+  console.log('ðŸš€ IMPORT DIRECT VERS BACKEND');
+  console.log('âš ï¸  Bypass n8n - pas d\'enrichissement IA\n');
   
   try {
-    // 1. Test santé
+    // 1. Test sante
     const healthy = await testHealthCheck();
     if (!healthy) return;
     
-    // 2. Test suggest endpoint (plus réaliste)
+    // 2. Test suggest endpoint (plus realiste)
     const suggestWorks = await testSuggestEndpoint();
     if (!suggestWorks) return;
     
-    // 3. Test récupération produit existant
+    // 3. Test recuperation produit existant
     await testGetProduct('savon-alep-artisanal'); // Produit test existant
     
-    console.log('\n✅ SUCCÈS! Backend fonctionne parfaitement');
-    console.log('🔧 Le problème vient du webhook n8n');
-    console.log('💡 Solutions possibles:');
-    console.log('   1. Vérifier variables env n8n (DEEPSEEK_API_KEY, etc.)');
+    console.log('\nâœ… SUCCˆS! Backend fonctionne parfaitement');
+    console.log('ðŸ”§ Le probleme vient du webhook n8n');
+    console.log('ðŸ’¡ Solutions possibles:');
+    console.log('   1. Verifier variables env n8n (DEEPSEEK_API_KEY, etc.)');
     console.log('   2. Tester webhook manuellement dans n8n');
     console.log('   3. Utiliser import direct en attendant');
     
   } catch (error) {
-    console.error('💥 Erreur globale:', error.message);
+    console.error('ðŸ’¥ Erreur globale:', error.message);
   }
 }
 
-// ✅ Import OpenFoodFacts avec transformation simple
+// âœ… Import OpenFoodFacts avec transformation simple
 async function importOpenFoodFactsDirect() {
-  console.log('📦 IMPORT OPENFOODFACTS DIRECT\n');
+  console.log('ðŸ“¦ IMPORT OPENFOODFACTS DIRECT\n');
   
   try {
-    // Récupération produits (réutilise la fonction existante)
+    // Recuperation produits (reutilise la fonction existante)
     const { fetchOpenFoodFactsProducts } = require('./import-openfoodfacts.js');
     const products = await fetchOpenFoodFactsProducts();
     
-    console.log(`✅ ${products.length} produits OpenFoodFacts récupérés`);
+    console.log(`âœ… ${products.length} produits OpenFoodFacts recuperes`);
     
     if (products.length === 0) return;
     
@@ -150,37 +150,37 @@ async function importOpenFoodFactsDirect() {
         category: 'alimentation-bio',
         tags: ['bio', 'openfoodfacts'],
         zones_dispo: ['FR'],
-        eco_score: 0.6, // Score par défaut
+        eco_score: 0.6, // Score par defaut
         ai_confidence: 0.5, // Pas d'IA
         resume_fr: `Produit bio ${product.brands || ''} d'OpenFoodFacts`,
         resume_en: `Bio product ${product.brands || ''} from OpenFoodFacts`,
         affiliate_url: `https://world.openfoodfacts.org/product/${product.code}`
       };
       
-      console.log(`📦 ${i + 1}/5: ${directProduct.title.substring(0, 40)}...`);
+      console.log(`ðŸ“¦ ${i + 1}/5: ${directProduct.title.substring(0, 40)}...`);
       
       const result = await testCreateProduct();
       CONFIG.TEST_PRODUCT = directProduct; // Update for next iteration
       
       if (result) {
-        console.log('   ✅ Succès');
+        console.log('   âœ… Succes');
       } else {
-        console.log('   ❌ Échec');
+        console.log('   âŒ ‰chec');
       }
       
-      // Délai respectueux
+      // Delai respectueux
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
     
-    console.log('\n🎯 Import direct terminé!');
-    console.log('🔍 Vérification dans PostgreSQL recommandée');
+    console.log('\nðŸŽ¯ Import direct termine!');
+    console.log('ðŸ” Verification dans PostgreSQL recommandee');
     
   } catch (error) {
-    console.error('💥 Erreur import direct:', error.message);
+    console.error('ðŸ’¥ Erreur import direct:', error.message);
   }
 }
 
-// ✅ Menu principal
+// âœ… Menu principal
 async function main() {
   const args = process.argv.slice(2);
   
@@ -191,12 +191,12 @@ async function main() {
   } else if (args.includes('--import')) {
     await importOpenFoodFactsDirect();
   } else {
-    console.log('🔧 TEST BACKEND DIRECT');
+    console.log('ðŸ”§ TEST BACKEND DIRECT');
     console.log('\nCommandes:');
-    console.log('  --health    # Test santé backend');
-    console.log('  --test      # Test création produit');
+    console.log('  --health    # Test sante backend');
+    console.log('  --test      # Test creation produit');
     console.log('  --import    # Import 5 produits OpenFoodFacts');
-    console.log('\n⚠️  IMPORTANT: Configurer API_KEY dans le script!');
+    console.log('\nâš ï¸  IMPORTANT: Configurer API_KEY dans le script!');
   }
 }
 

@@ -6,7 +6,7 @@ const User = require('../models/User');
 const logger = {
   info: (...args) => console.log('[Migration]', ...args),
   error: (...args) => console.error('[Migration ERROR]', ...args),
-  success: (...args) => console.log('✅', ...args)
+  success: (...args) => console.log('âœ…', ...args)
 };
 
 async function migrateUsers() {
@@ -15,7 +15,7 @@ async function migrateUsers() {
     await mongoose.connect(process.env.MONGODB_URI);
     logger.info('Connected to MongoDB');
 
-    // Récupérer tous les utilisateurs
+    // Recuperer tous les utilisateurs
     const users = await User.find({});
     logger.info(`Found ${users.length} users to migrate`);
 
@@ -130,7 +130,7 @@ async function migrateUsers() {
           needsUpdate = true;
         }
 
-        // Sauvegarder si des modifications ont été faites
+        // Sauvegarder si des modifications ont ete faites
         if (needsUpdate) {
           await user.save();
           migrated++;
@@ -157,5 +157,5 @@ async function migrateUsers() {
   }
 }
 
-// Exécuter la migration
+// Executer la migration
 migrateUsers();

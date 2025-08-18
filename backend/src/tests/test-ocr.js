@@ -1,11 +1,11 @@
 // PATH: backend\src\tests\test-ocr.js
 /**
  * Script de validation OCR ECOLOJIA v5
- * ────────────────────────────────────────────────────────────────────────────
- * • Corrige l’envoi du fichier : on précise le **content-type image/jpeg**
- *   pour que Multer accepte le flux (sinon mimetype = octet/stream → rejeté).
- * • Si l’image provient d’un fichier local, on saute /analyze-url.
- * ────────────────────────────────────────────────────────────────────────────
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * â€¢ Corrige lâ€™envoi du fichier : on precise le **content-type image/jpeg**
+ *   pour que Multer accepte le flux (sinon mimetype = octet/stream â†’ rejete).
+ * â€¢ Si lâ€™image provient dâ€™un fichier local, on saute /analyze-url.
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
  */
 
 const axios    = require('axios');
@@ -24,7 +24,7 @@ const REMOTE_IMAGES = [
 const CRED  = { email: 'test@example.com', password: 'password123' };
 let   TOKEN = '';
 
-/* ─────────────────────────── Utilitaires ─────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Utilitaires â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const exists = (p) => fs.existsSync(p);
 
@@ -46,49 +46,49 @@ async function download (url, dest) {
 
 async function getImage () {
   if (exists(LOCAL_SAMPLE)) {
-    console.log('ℹ️  Image locale trouvée → sample.jpg');
+    console.log('â„¹ï¸  Image locale trouvee â†’ sample.jpg');
     return { local: true, path: LOCAL_SAMPLE };
   }
   for (const url of REMOTE_IMAGES) {
     if (await headOk(url)) {
-      console.log(`ℹ️  Image distante valide → ${url}`);
+      console.log(`â„¹ï¸  Image distante valide â†’ ${url}`);
       return { local: false, url };
     }
-    console.warn(`⚠️  Image indisponible → ${url}`);
+    console.warn(`âš ï¸  Image indisponible â†’ ${url}`);
   }
   throw new Error(
-    'Aucune image disponible : ajoutez « sample.jpg » dans backend/src/tests ou vérifiez votre connexion.'
+    'Aucune image disponible : ajoutez Â« sample.jpg Â» dans backend/src/tests ou verifiez votre connexion.'
   );
 }
 
-/* ─────────────────────────── Authentification ────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Authentification â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 async function login () {
   const { data } = await axios.post(`${API_URL}/api/auth/login`, CRED);
   TOKEN = data.token;
-  console.log('✅  Connexion réussie');
+  console.log('âœ…  Connexion reussie');
 }
 const authH = () => ({ Authorization: `Bearer ${TOKEN}` });
 
-/* ─────────────────────────── Tests Vision ────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Tests Vision â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 async function analyzeUrl (imageUrl) {
-  console.log('\n🔍  [1] /analyze-url');
+  console.log('\nðŸ”  [1] /analyze-url');
   const { data } = await axios.post(
     `${API_URL}/api/vision/analyze-url`,
     { imageUrl, useNewOCR: true },
     { headers: authH() }
   );
-  console.log('✅  Réponse:', data.result);
+  console.log('âœ…  Reponse:', data.result);
 }
 
 async function analyzeFile (filePath) {
-  console.log('\n🔍  [2] /analyze (upload)');
+  console.log('\nðŸ”  [2] /analyze (upload)');
 
   const form = new FormData();
   form.append('image', fs.createReadStream(filePath), {
     filename: path.basename(filePath),
-    contentType: 'image/jpeg'       // ← Correctif principal
+    contentType: 'image/jpeg'       // â† Correctif principal
   });
   form.append('useNewOCR', 'true');
 
@@ -97,11 +97,11 @@ async function analyzeFile (filePath) {
     form,
     { headers: { ...form.getHeaders(), ...authH() } }
   );
-  console.log('✅  Réponse:', data.result);
+  console.log('âœ…  Reponse:', data.result);
 }
 
 async function compareServices (filePath) {
-  console.log('\n🔍  [3] /compare');
+  console.log('\nðŸ”  [3] /compare');
   const form = new FormData();
   form.append('image', fs.createReadStream(filePath), {
     filename: path.basename(filePath),
@@ -115,10 +115,10 @@ async function compareServices (filePath) {
   console.dir(data.comparison, { depth: 2, colors: true });
 }
 
-/* ─────────────────────────── Lancement ───────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Lancement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 (async () => {
-  console.log('🚀  Lancement tests OCR');
+  console.log('ðŸš€  Lancement tests OCR');
   await login();
 
   const img = await getImage();
@@ -137,5 +137,5 @@ async function compareServices (filePath) {
     tmp && exists(tmp) && fs.unlinkSync(tmp);
   }
 
-  console.log('\n✅  Tous les tests terminés');
+  console.log('\nâœ…  Tous les tests termines');
 })();

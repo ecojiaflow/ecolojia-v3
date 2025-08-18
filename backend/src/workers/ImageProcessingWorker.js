@@ -30,18 +30,18 @@ class ImageProcessingWorker {
     try {
       logger.info('Starting ImageProcessingWorker...');
       
-      // Créer le dossier temp s'il n'existe pas
+      // Creer le dossier temp s'il n'existe pas
       await this.ensureTempDir();
       
       // Initialiser VisionService
       await visionService.initialize();
       
-      // Créer le worker
+      // Creer le worker
       const worker = await queueService.createWorker(
         'image-analysis',
         this.processJob.bind(this),
         {
-          concurrency: 3, // Traiter 3 images en parallèle max
+          concurrency: 3, // Traiter 3 images en parallele max
           maxStalledCount: 3,
           stalledInterval: 30000,
           removeOnComplete: {
@@ -54,7 +54,7 @@ class ImageProcessingWorker {
         }
       );
 
-      // Gérer les événements du worker
+      // Gerer les evenements du worker
       worker.on('completed', (job, result) => {
         logger.info(`Job ${job.id} completed successfully`);
       });
@@ -67,7 +67,7 @@ class ImageProcessingWorker {
         console.warn(`Job ${jobId} stalled and will be retried`);
       });
 
-      logger.info('✅ ImageProcessingWorker started successfully');
+      logger.info('âœ… ImageProcessingWorker started successfully');
       return worker;
     } catch (error) {
       logger.error('Failed to start ImageProcessingWorker:', error);
@@ -86,20 +86,20 @@ class ImageProcessingWorker {
     let optimizedImagePath = null;
     
     try {
-      // Vérifier les quotas utilisateur
+      // Verifier les quotas utilisateur
       await this.checkUserQuota(userId);
       
-      // Mettre à jour le statut de l'analyse
+      // Mettre   jour le statut de l'analyse
       if (analysisId) {
         await this.updateAnalysisStatus(analysisId, 'processing', {
           startedAt: new Date()
         });
       }
 
-      // Mettre à jour la progression
+      // Mettre   jour la progression
       await job.updateProgress(10);
 
-      // 1. Télécharger et optimiser l'image
+      // 1. Telecharger et optimiser l'image
       logger.info('Downloading image...');
       tempFilePath = await this.downloadImage(imageUrl, job.id);
       await job.updateProgress(20);
@@ -114,7 +114,7 @@ class ImageProcessingWorker {
       const visionResult = await this.analyzeWithVision(optimizedImagePath);
       await job.updateProgress(50);
 
-      // 4. Traiter les résultats Vision
+      // 4. Traiter les resultats Vision
       logger.info('Processing vision results...');
       const processedData = await this.processVisionResults(visionResult, {
         userId,
@@ -123,7 +123,7 @@ class ImageProcessingWorker {
       });
       await job.updateProgress(60);
 
-      // 5. Rechercher ou créer le produit
+      // 5. Rechercher ou creer le produit
       let product = null;
       if (processedData.barcode || processedData.productName) {
         logger.info('Finding or creating product...');
@@ -131,7 +131,7 @@ class ImageProcessingWorker {
         await job.updateProgress(70);
       }
 
-      // 6. Analyser avec UniversalAnalyzer si on a trouvé des données
+      // 6. Analyser avec UniversalAnalyzer si on a trouve des donnees
       let analysisResult = null;
       if (product && processedData.hasValidData) {
         logger.info('Running universal analysis...');
@@ -139,7 +139,7 @@ class ImageProcessingWorker {
         await job.updateProgress(85);
       }
 
-      // 7. Sauvegarder les résultats complets
+      // 7. Sauvegarder les resultats complets
       logger.info('Saving results...');
       const savedResult = await this.saveCompleteResults({
         analysisId,
@@ -152,7 +152,7 @@ class ImageProcessingWorker {
         processingTime: Date.now() - startTime
       });
 
-      // 8. Mettre à jour les quotas
+      // 8. Mettre   jour les quotas
       await this.updateUserQuota(userId, 'vision');
 
       // Nettoyer les fichiers temporaires
@@ -191,7 +191,7 @@ class ImageProcessingWorker {
     } catch (error) {
       logger.error(`Job ${job.id} failed:`, error);
       
-      // Mettre à jour le statut en cas d'erreur
+      // Mettre   jour le statut en cas d'erreur
       if (analysisId) {
         await this.updateAnalysisStatus(analysisId, 'failed', {
           error: error.message,
@@ -202,11 +202,11 @@ class ImageProcessingWorker {
       // Nettoyer les fichiers temporaires
       await this.cleanupTempFiles([tempFilePath, optimizedImagePath]);
 
-      // Analyser le type d'erreur pour décider si on retry
+      // Analyser le type d'erreur pour decider si on retry
       if (this.shouldRetry(error)) {
         throw error; // BullMQ va retry
       } else {
-        // Erreur non-récupérable
+        // Erreur non-recuperable
         return {
           success: false,
           error: error.message,
@@ -227,9 +227,9 @@ class ImageProcessingWorker {
   async checkUserQuota(userId) {
     try {
       const user = await User.findById(userId);
-      if (!user) throw new Error('Utilisateur non trouvé');
+      if (!user) throw new Error('Utilisateur non trouve');
 
-      // Vérifier les quotas de scans
+      // Verifier les quotas de scans
       if (user.tier === 'free' && user.quotas.scansUsed >= user.quotas.scansLimit) {
         throw new Error('QUOTA_EXCEEDED: Limite de scans atteinte');
       }
@@ -251,7 +251,7 @@ class ImageProcessingWorker {
       
       // Si c'est une URL Cloudinary
       if (imageUrl.includes('cloudinary.com')) {
-        // Ajouter des transformations pour optimiser le téléchargement
+        // Ajouter des transformations pour optimiser le telechargement
         const optimizedUrl = imageUrl.replace('/upload/', '/upload/f_jpg,q_auto:good/');
         
         const response = await axios({
@@ -304,12 +304,12 @@ class ImageProcessingWorker {
         await fs.writeFile(tempFilePath, response.data);
       }
       
-      // Vérifier que le fichier existe et est valide
+      // Verifier que le fichier existe et est valide
       const stats = await fs.stat(tempFilePath);
       logger.debug(`Image downloaded: ${stats.size} bytes`);
       
       if (stats.size === 0) {
-        throw new Error('Fichier téléchargé vide');
+        throw new Error('Fichier telecharge vide');
       }
       
       return tempFilePath;
@@ -318,14 +318,14 @@ class ImageProcessingWorker {
       logger.error('Failed to download image:', error);
       
       if (error.code === 'ECONNABORTED') {
-        throw new Error('Timeout lors du téléchargement de l\'image');
+        throw new Error('Timeout lors du telechargement de l\'image');
       } else if (error.response?.status === 404) {
-        throw new Error('Image non trouvée');
+        throw new Error('Image non trouvee');
       } else if (error.message.includes('maxContentLength')) {
         throw new Error('Image trop grande (max 10MB)');
       }
       
-      throw new Error(`Impossible de télécharger l'image: ${error.message}`);
+      throw new Error(`Impossible de telecharger l'image: ${error.message}`);
     }
   }
 
@@ -340,7 +340,7 @@ class ImageProcessingWorker {
         })
         .grayscale() // Convertir en niveaux de gris
         .normalize() // Normaliser le contraste
-        .sharpen() // Améliorer la netteté
+        .sharpen() // Ameliorer la nettete
         .jpeg({ 
           quality: 95,
           progressive: true 
@@ -384,7 +384,7 @@ class ImageProcessingWorker {
     const { extractedData, productType, confidence } = data;
     
     const processed = {
-      // Données extraites
+      // Donnees extraites
       productName: this.cleanText(extractedData.productName),
       brand: this.cleanText(extractedData.brand),
       barcode: this.validateBarcode(extractedData.barcode),
@@ -395,18 +395,18 @@ class ImageProcessingWorker {
       weight: extractedData.weight,
       expiryDate: this.parseDate(extractedData.expiryDate),
       
-      // Métadonnées
+      // Metadonnees
       confidence: confidence.overall,
       ocrConfidence: confidence.ocr,
       language: data.language,
       hasValidData: false,
       warnings: [],
       
-      // Données brutes pour référence
+      // Donnees brutes pour reference
       rawText: data.rawText
     };
     
-    // Validation de la qualité des données
+    // Validation de la qualite des donnees
     const validation = this.validateExtractedData(processed);
     processed.hasValidData = validation.isValid;
     processed.warnings = validation.warnings;
@@ -438,7 +438,7 @@ class ImageProcessingWorker {
     
     // Valider la longueur (EAN-8, EAN-13, UPC-A, UPC-E)
     if ([8, 12, 13, 14].includes(cleaned.length)) {
-      // Vérifier le checksum pour EAN-13
+      // Verifier le checksum pour EAN-13
       if (cleaned.length === 13) {
         const checksum = this.calculateEAN13Checksum(cleaned.substring(0, 12));
         if (checksum === parseInt(cleaned[12])) {
@@ -478,7 +478,7 @@ class ImageProcessingWorker {
     
     if (typeof ingredients === 'string') {
       return ingredients
-        .replace(/ingrédients?\s*:?\s*/i, '')
+        .replace(/ingredients?\s*:?\s*/i, '')
         .replace(/ingredients?\s*:?\s*/i, '')
         .trim();
     }
@@ -525,7 +525,7 @@ class ImageProcessingWorker {
   parseNutritionalValue(value) {
     if (typeof value === 'number') return value;
     if (typeof value === 'string') {
-      // Extraire la valeur numérique
+      // Extraire la valeur numerique
       const match = value.match(/(\d+(?:[.,]\d+)?)/);
       if (match) {
         return parseFloat(match[1].replace(',', '.'));
@@ -557,7 +557,7 @@ class ImageProcessingWorker {
     if (!dateStr) return null;
     
     try {
-      // Essayer différents formats de date
+      // Essayer differents formats de date
       const formats = [
         /(\d{2})\/(\d{2})\/(\d{4})/, // DD/MM/YYYY
         /(\d{2})-(\d{2})-(\d{4})/, // DD-MM-YYYY
@@ -584,30 +584,30 @@ class ImageProcessingWorker {
     const warnings = [];
     let quality = 100;
     
-    // Vérifier les champs essentiels
+    // Verifier les champs essentiels
     if (!data.productName) {
-      warnings.push('Nom du produit non détecté');
+      warnings.push('Nom du produit non detecte');
       quality -= 30;
     }
     
     if (!data.barcode && !data.ingredients) {
-      warnings.push('Ni code-barres ni ingrédients détectés');
+      warnings.push('Ni code-barres ni ingredients detectes');
       quality -= 40;
     }
     
-    // Vérifier la confiance OCR
+    // Verifier la confiance OCR
     if (data.ocrConfidence < 60) {
       warnings.push('Confiance OCR faible');
       quality -= 20;
     }
     
-    // Vérifier la catégorie
+    // Verifier la categorie
     if (!data.category) {
-      warnings.push('Catégorie du produit non identifiée');
+      warnings.push('Categorie du produit non identifiee');
       quality -= 10;
     }
     
-    // Déterminer si les données sont valides
+    // Determiner si les donnees sont valides
     const isValid = quality >= 30 && (data.productName || data.barcode || data.ingredients);
     
     return {
@@ -627,7 +627,7 @@ class ImageProcessingWorker {
         if (product) {
           logger.info(`Product found by barcode: ${processedData.barcode}`);
           
-          // Mettre à jour avec de nouvelles données si disponibles
+          // Mettre   jour avec de nouvelles donnees si disponibles
           if (processedData.ingredients && !product.ingredients?.text) {
             product.ingredients = {
               text: processedData.ingredients,
@@ -640,7 +640,7 @@ class ImageProcessingWorker {
         }
       }
       
-      // 2. Chercher par nom et marque (similarité)
+      // 2. Chercher par nom et marque (similarite)
       if (processedData.productName) {
         const searchQuery = {
           name: new RegExp(processedData.productName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
@@ -657,14 +657,14 @@ class ImageProcessingWorker {
         }
       }
       
-      // 3. Créer un nouveau produit
+      // 3. Creer un nouveau produit
       logger.info('Creating new product from vision data');
       
       const newProduct = new Product({
-        name: processedData.productName || 'Produit scanné',
+        name: processedData.productName || 'Produit scanne',
         brand: processedData.brand || 'Marque inconnue',
         barcode: processedData.barcode,
-        category: processedData.category || 'food', // Par défaut
+        category: processedData.category || 'food', // Par defaut
         ingredients: processedData.ingredients ? {
           text: processedData.ingredients,
           list: this.parseIngredientsList(processedData.ingredients)
@@ -709,7 +709,7 @@ class ImageProcessingWorker {
       .map((ing, index) => ({
         name: ing,
         position: index + 1,
-        percentage: null // À enrichir plus tard si possible
+        percentage: null // € enrichir plus tard si possible
       }));
   }
 
@@ -735,7 +735,7 @@ class ImageProcessingWorker {
       
     } catch (error) {
       logger.error('Universal analysis failed:', error);
-      // Ne pas faire échouer le job si l'analyse échoue
+      // Ne pas faire echouer le job si l'analyse echoue
       return null;
     }
   }
@@ -755,14 +755,14 @@ class ImageProcessingWorker {
     try {
       let analysis;
       
-      // Si on a un ID d'analyse existant, mettre à jour
+      // Si on a un ID d'analyse existant, mettre   jour
       if (analysisId) {
         analysis = await Analysis.findById(analysisId);
         if (!analysis) {
           throw new Error('Analysis not found');
         }
       } else {
-        // Créer une nouvelle analyse
+        // Creer une nouvelle analyse
         analysis = new Analysis({
           userId,
           productId: product?._id,
@@ -771,7 +771,7 @@ class ImageProcessingWorker {
         });
       }
       
-      // Construire les résultats complets
+      // Construire les resultats complets
       analysis.visionAnalysis = {
         status: 'completed',
         completedAt: new Date(),
@@ -797,7 +797,7 @@ class ImageProcessingWorker {
         warnings: processedData.warnings
       };
       
-      // Si on a des résultats d'analyse universelle
+      // Si on a des resultats d'analyse universelle
       if (analysisResult) {
         analysis.results = {
           category: analysisResult.metadata.category,
@@ -809,14 +809,14 @@ class ImageProcessingWorker {
           alternatives: analysisResult.alternatives
         };
       } else {
-        // Résultats minimaux si pas d'analyse
+        // Resultats minimaux si pas d'analyse
         analysis.results = {
           category: product?.category || 'unknown',
           scores: {},
           summary: {
             fr: processedData.hasValidData ? 
-              'Produit identifié, analyse détaillée non disponible' : 
-              'Données insuffisantes pour une analyse complète'
+              'Produit identifie, analyse detaillee non disponible' : 
+              'Donnees insuffisantes pour une analyse complete'
           },
           details: {},
           recommendations: []
@@ -825,7 +825,7 @@ class ImageProcessingWorker {
       
       await analysis.save();
       
-      // Mettre à jour les statistiques du produit
+      // Mettre   jour les statistiques du produit
       if (product) {
         await Product.findByIdAndUpdate(product._id, {
           $inc: { 'stats.scanCount': 1 },
@@ -883,7 +883,7 @@ class ImageProcessingWorker {
   }
 
   shouldRetry(error) {
-    // Erreurs qui méritent un retry
+    // Erreurs qui meritent un retry
     const retryableErrors = [
       'ECONNRESET',
       'ECONNABORTED', 
@@ -903,7 +903,7 @@ class ImageProcessingWorker {
       return 'quota_exceeded';
     } else if (error.message.includes('Image trop grande')) {
       return 'file_too_large';
-    } else if (error.message.includes('non trouvé')) {
+    } else if (error.message.includes('non trouve')) {
       return 'not_found';
     } else if (error.message.includes('timeout')) {
       return 'timeout';

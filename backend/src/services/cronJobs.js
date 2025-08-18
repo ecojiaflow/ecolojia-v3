@@ -16,11 +16,11 @@ class CronJobsManager {
    * Initialise tous les cron jobs
    */
   initializeJobs() {
-    console.log('⏰ Initialisation des cron jobs...');
+    console.log('â° Initialisation des cron jobs...');
 
-    // Job 1: Ingestion OpenFoodFacts (quotidien à 3h)
+    // Job 1: Ingestion OpenFoodFacts (quotidien   3h)
     this.scheduleJob('ingestion-off', '0 3 * * *', async () => {
-      console.log('[CRON] Démarrage ingestion OpenFoodFacts');
+      console.log('[CRON] Demarrage ingestion OpenFoodFacts');
       try {
         const ingestion = new OpenFoodFactsIngestion();
         await ingestion.run({ limit: 5000 }); // Limite quotidienne
@@ -31,7 +31,7 @@ class CronJobsManager {
 
     // Job 2: Synchronisation Algolia (toutes les 6h)
     this.scheduleJob('sync-algolia', '0 */6 * * *', async () => {
-      console.log('[CRON] Démarrage sync Algolia');
+      console.log('[CRON] Demarrage sync Algolia');
       try {
         const sync = new AlgoliaSync();
         await sync.run({ force: false });
@@ -40,7 +40,7 @@ class CronJobsManager {
       }
     });
 
-    // Job 3: Reset quotas mensuels (1er du mois à minuit)
+    // Job 3: Reset quotas mensuels (1er du mois   minuit)
     this.scheduleJob('reset-quotas', '0 0 1 * *', async () => {
       console.log('[CRON] Reset des quotas mensuels');
       try {
@@ -50,7 +50,7 @@ class CronJobsManager {
       }
     });
 
-    // Job 4: Nettoyage analyses anciennes (quotidien à 4h)
+    // Job 4: Nettoyage analyses anciennes (quotidien   4h)
     this.scheduleJob('cleanup-analyses', '0 4 * * *', async () => {
       console.log('[CRON] Nettoyage analyses anciennes');
       try {
@@ -62,23 +62,23 @@ class CronJobsManager {
           userId: null // Seulement les analyses anonymes
         });
         
-        console.log(`[CRON] ${result.deletedCount} analyses supprimées`);
+        console.log(`[CRON] ${result.deletedCount} analyses supprimees`);
       } catch (error) {
         console.error('[CRON] Erreur cleanup:', error);
       }
     });
 
-    // Job 5: Calcul popularité produits (toutes les heures)
+    // Job 5: Calcul popularite produits (toutes les heures)
     this.scheduleJob('calculate-popularity', '0 * * * *', async () => {
-      console.log('[CRON] Calcul popularité produits');
+      console.log('[CRON] Calcul popularite produits');
       try {
         await this.calculateProductPopularity();
       } catch (error) {
-        console.error('[CRON] Erreur calcul popularité:', error);
+        console.error('[CRON] Erreur calcul popularite:', error);
       }
     });
 
-    // Job 6: Backup MongoDB (quotidien à 2h) - Production seulement
+    // Job 6: Backup MongoDB (quotidien   2h) - Production seulement
     if (this.isProduction) {
       this.scheduleJob('backup-mongodb', '0 2 * * *', async () => {
         console.log('[CRON] Backup MongoDB');
@@ -99,7 +99,7 @@ class CronJobsManager {
       }
     });
 
-    console.log(`✅ ${this.jobs.size} cron jobs initialisés`);
+    console.log(`âœ… ${this.jobs.size} cron jobs initialises`);
   }
 
   /**
@@ -107,7 +107,7 @@ class CronJobsManager {
    */
   scheduleJob(name, schedule, handler) {
     if (this.jobs.has(name)) {
-      console.warn(`Job ${name} déjà existant, écrasement...`);
+      console.warn(`Job ${name} dej  existant, ecrasement...`);
       this.jobs.get(name).stop();
     }
 
@@ -117,14 +117,14 @@ class CronJobsManager {
     });
 
     this.jobs.set(name, job);
-    console.log(`✅ Job "${name}" programmé: ${schedule}`);
+    console.log(`âœ… Job "${name}" programme: ${schedule}`);
   }
 
   /**
-   * Calcule la popularité des produits
+   * Calcule la popularite des produits
    */
   async calculateProductPopularity() {
-    // Agrégation pour compter les scans par produit sur 30 jours
+    // Agregation pour compter les scans par produit sur 30 jours
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -149,7 +149,7 @@ class CronJobsManager {
       }
     ]);
 
-    // Mettre à jour les produits
+    // Mettre   jour les produits
     for (const item of popularProducts) {
       await Product.findByIdAndUpdate(item._id, {
         $set: { 
@@ -159,7 +159,7 @@ class CronJobsManager {
       });
     }
 
-    console.log(`[CRON] Popularité mise à jour pour ${popularProducts.length} produits`);
+    console.log(`[CRON] Popularite mise   jour pour ${popularProducts.length} produits`);
   }
 
   /**
@@ -180,7 +180,7 @@ class CronJobsManager {
           console.error('[CRON] Erreur backup MongoDB:', stderr);
           reject(error);
         } else {
-          console.log('[CRON] Backup MongoDB réussi:', backupPath);
+          console.log('[CRON] Backup MongoDB reussi:', backupPath);
           
           // Nettoyer les vieux backups (garder 7 jours)
           this.cleanOldBackups();
@@ -209,7 +209,7 @@ class CronJobsManager {
         
         if (stats.mtimeMs < sevenDaysAgo) {
           await fs.rmdir(filePath, { recursive: true });
-          console.log(`[CRON] Backup supprimé: ${file}`);
+          console.log(`[CRON] Backup supprime: ${file}`);
         }
       }
     } catch (error) {
@@ -270,20 +270,20 @@ class CronJobsManager {
       .map(([name]) => name);
 
     if (downServices.length > 0) {
-      console.error(`[HEALTH] ⚠️ Services down: ${downServices.join(', ')}`);
+      console.error(`[HEALTH] âš ï¸ Services down: ${downServices.join(', ')}`);
       // TODO: Envoyer alerte (email, Slack, etc.)
     }
   }
 
   /**
-   * Arrête tous les jobs
+   * Arrete tous les jobs
    */
   stopAllJobs() {
-    console.log('🛑 Arrêt de tous les cron jobs...');
+    console.log('ðŸ›‘ Arret de tous les cron jobs...');
     
     for (const [name, job] of this.jobs) {
       job.stop();
-      console.log(`❌ Job "${name}" arrêté`);
+      console.log(`âŒ Job "${name}" arrete`);
     }
     
     this.jobs.clear();
@@ -307,22 +307,22 @@ class CronJobsManager {
   }
 
   /**
-   * Exécute un job manuellement
+   * Execute un job manuellement
    */
   async runJob(jobName) {
     const job = this.jobs.get(jobName);
     
     if (!job) {
-      throw new Error(`Job "${jobName}" non trouvé`);
+      throw new Error(`Job "${jobName}" non trouve`);
     }
     
-    console.log(`🚀 Exécution manuelle du job "${jobName}"`);
+    console.log(`ðŸš€ Execution manuelle du job "${jobName}"`);
     
-    // Extraire et exécuter le handler
+    // Extraire et executer le handler
     if (job._callbacks && job._callbacks[0]) {
       await job._callbacks[0]();
     } else {
-      throw new Error(`Impossible d'exécuter le job "${jobName}"`);
+      throw new Error(`Impossible d'executer le job "${jobName}"`);
     }
   }
 }
@@ -348,13 +348,13 @@ router.get('/cron/jobs', (req, res) => {
   res.json({ jobs });
 });
 
-// Exécuter un job manuellement
+// Executer un job manuellement
 router.post('/cron/jobs/:jobName/run', async (req, res) => {
   try {
     await cronJobs.runJob(req.params.jobName);
     res.json({ 
       success: true, 
-      message: `Job "${req.params.jobName}" exécuté` 
+      message: `Job "${req.params.jobName}" execute` 
     });
   } catch (error) {
     res.status(400).json({ 

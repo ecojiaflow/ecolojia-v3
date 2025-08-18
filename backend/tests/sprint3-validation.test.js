@@ -1,25 +1,25 @@
 /**
- * TESTS SPRINT 3 SIMPLIFIÉS - ECOLOJIA
- * Version adaptée à la structure existante
+ * TESTS SPRINT 3 SIMPLIFIÃ‰S - ECOLOJIA
+ * Version adaptée Ã  la structure existante
  */
 
 const { describe, test, expect, beforeAll, afterAll } = require('@jest/globals');
 
 // Test direct des modules sans serveur complet
-describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
+describe('ðŸš€ SPRINT 3 - Tests Simplifiés Intégration IA', () => {
 
   beforeAll(() => {
-    console.log('🔧 Initialisation tests Sprint 3 simplifiés...');
+    console.log('ðŸ”§ Initialisation tests Sprint 3 simplifiés...');
     
     // Variables d'environnement pour tests
     process.env.NODE_ENV = 'test';
     if (!process.env.DEEPSEEK_API_KEY) {
       process.env.DEEPSEEK_API_KEY = 'test_key';
-      console.log('⚠️ Mode test avec clé IA simulée');
+      console.log('âš ï¸ Mode test avec clé IA simulée');
     }
   });
 
-  describe('📁 Test 1: Vérification structure fichiers Sprint 3', () => {
+  describe('ðŸ“ Test 1: Vérification structure fichiers Sprint 3', () => {
     test('Fichiers IA doivent exister', () => {
       // Test existence des nouveaux fichiers
       const fs = require('fs');
@@ -44,17 +44,17 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
       });
 
       if (missingFiles.length > 0) {
-        console.log('❌ Fichiers manquants:', missingFiles);
-        console.log('📋 À créer selon les artefacts fournis');
+        console.log('âŒ Fichiers manquants:', missingFiles);
+        console.log('ðŸ“‹ Ã€ créer selon les artefacts fournis');
       } else {
-        console.log('✅ Tous les fichiers Sprint 3 sont présents');
+        console.log('âœ… Tous les fichiers Sprint 3 sont présents');
       }
 
       expect(missingFiles).toEqual([]);
     });
   });
 
-  describe('🗄️ Test 2: Chargement bases de données IA', () => {
+  describe('ðŸ—„ï¸ Test 2: Chargement bases de données IA', () => {
     test('Base alternatives naturelles doit se charger', () => {
       try {
         const alternativesDB = require('../src/data/natural-alternatives-db.json');
@@ -68,13 +68,13 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(alternativesDB.alimentaire.cereales_petit_dejeuner).toBeDefined();
         expect(alternativesDB.alimentaire.produits_laitiers).toBeDefined();
 
-        console.log('✅ Base alternatives chargée:', {
+        console.log('âœ… Base alternatives chargée:', {
           categories_alimentaires: Object.keys(alternativesDB.alimentaire).length,
           categories_cosmetiques: Object.keys(alternativesDB.cosmetiques).length
         });
 
       } catch (error) {
-        console.error('❌ Erreur chargement base alternatives:', error.message);
+        console.error('âŒ Erreur chargement base alternatives:', error.message);
         throw error;
       }
     });
@@ -94,20 +94,20 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(insightsDB.nutrition_insights.microbiote).toBeDefined();
         expect(insightsDB.nutrition_insights.additifs).toBeDefined();
 
-        console.log('✅ Base insights chargée:', {
+        console.log('âœ… Base insights chargée:', {
           nutrition_insights: Object.keys(insightsDB.nutrition_insights).length,
           environmental_insights: Object.keys(insightsDB.environmental_insights).length,
           trending_topics: insightsDB.trending_topics_2024?.length || 0
         });
 
       } catch (error) {
-        console.error('❌ Erreur chargement base insights:', error.message);
+        console.error('âŒ Erreur chargement base insights:', error.message);
         throw error;
       }
     });
   });
 
-  describe('🤖 Test 3: Services IA - Chargement modules', () => {
+  describe('ðŸ¤– Test 3: Services IA - Chargement modules', () => {
     test('AlternativesEngine doit s\'initialiser', () => {
       try {
         const alternativesEngine = require('../src/services/ai/alternativesEngine');
@@ -115,10 +115,10 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(alternativesEngine).toBeDefined();
         expect(typeof alternativesEngine.getAlternativesForProduct).toBe('function');
 
-        console.log('✅ AlternativesEngine initialisé');
+        console.log('âœ… AlternativesEngine initialisé');
 
       } catch (error) {
-        console.error('❌ Erreur chargement AlternativesEngine:', error.message);
+        console.error('âŒ Erreur chargement AlternativesEngine:', error.message);
         throw error;
       }
     });
@@ -130,10 +130,10 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(insightsGenerator).toBeDefined();
         expect(typeof insightsGenerator.getInsightsForProduct).toBe('function');
 
-        console.log('✅ InsightsGenerator initialisé');
+        console.log('âœ… InsightsGenerator initialisé');
 
       } catch (error) {
-        console.error('❌ Erreur chargement InsightsGenerator:', error.message);
+        console.error('âŒ Erreur chargement InsightsGenerator:', error.message);
         throw error;
       }
     });
@@ -145,16 +145,16 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(conversationalAI).toBeDefined();
         expect(typeof conversationalAI.processUserQuestion).toBe('function');
 
-        console.log('✅ ConversationalAI initialisé');
+        console.log('âœ… ConversationalAI initialisé');
 
       } catch (error) {
-        console.error('❌ Erreur chargement ConversationalAI:', error.message);
+        console.error('âŒ Erreur chargement ConversationalAI:', error.message);
         throw error;
       }
     });
   });
 
-  describe('🔬 Test 4: Scoring alimentaire enrichi', () => {
+  describe('ðŸ”¬ Test 4: Scoring alimentaire enrichi', () => {
     test('FoodScorer doit intégrer services IA', () => {
       try {
         const FoodScorer = require('../src/scorers/food/foodScorer');
@@ -165,17 +165,17 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(foodScorer).toBeDefined();
         expect(typeof foodScorer.analyzeFood).toBe('function');
 
-        console.log('✅ FoodScorer enrichi chargé');
+        console.log('âœ… FoodScorer enrichi chargé');
 
       } catch (error) {
-        console.error('❌ Erreur chargement FoodScorer enrichi:', error.message);
-        console.log('📋 Vérifiez que foodScorer.js a été mis à jour avec version Sprint 3');
+        console.error('âŒ Erreur chargement FoodScorer enrichi:', error.message);
+        console.log('ðŸ“‹ Vérifiez que foodScorer.js a été mis Ã  jour avec version Sprint 3');
         throw error;
       }
     });
   });
 
-  describe('🛣️ Test 5: Routes chat IA', () => {
+  describe('ðŸ›£ï¸ Test 5: Routes chat IA', () => {
     test('Routes chat doivent se charger', () => {
       try {
         const chatRoutes = require('../src/routes/chat.routes');
@@ -183,16 +183,16 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         expect(chatRoutes).toBeDefined();
         expect(typeof chatRoutes).toBe('function'); // Router Express
 
-        console.log('✅ Routes chat chargées');
+        console.log('âœ… Routes chat chargées');
 
       } catch (error) {
-        console.error('❌ Erreur chargement routes chat:', error.message);
+        console.error('âŒ Erreur chargement routes chat:', error.message);
         throw error;
       }
     });
   });
 
-  describe('🧪 Test 6: Simulation analyse produit avec IA', () => {
+  describe('ðŸ§ª Test 6: Simulation analyse produit avec IA', () => {
     test('Analyse produit basique doit fonctionner', async () => {
       try {
         // Mock d'un produit simple pour test
@@ -200,7 +200,7 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
           name: "Test Nutella",
           ingredients: [
             "Sucre", "Huile de palme", "Noisettes 13%", 
-            "Cacao maigre en poudre 7.4%", "Émulsifiants: lécithines [soja] E322"
+            "Cacao maigre en poudre 7.4%", "Ã‰mulsifiants: lécithines [soja] E322"
           ],
           nutrition: {
             energy_kcal: 539,
@@ -223,42 +223,42 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
         // Test basique sans appel IA
         expect(alternativesEngine).toBeDefined();
         
-        console.log('✅ Structure produit test validée');
-        console.log('📊 Produit mock:', {
+        console.log('âœ… Structure produit test validée');
+        console.log('ðŸ“Š Produit mock:', {
           nom: mockProduct.name,
           ingrédients: mockProduct.ingredients.length,
           profil_utilisateur: mockUserProfile.experience_level
         });
 
       } catch (error) {
-        console.error('❌ Erreur test analyse produit:', error.message);
+        console.error('âŒ Erreur test analyse produit:', error.message);
         throw error;
       }
     }, 5000); // Timeout court
   });
 
-  describe('📊 Test 7: Métriques Sprint 3', () => {
+  describe('ðŸ“Š Test 7: Métriques Sprint 3', () => {
     test('Résumé fonctionnalités implémentées', () => {
       const features = {
-        'Base alternatives naturelles': '✅',
-        'Base insights éducatifs': '✅', 
-        'Service AlternativesEngine': '✅',
-        'Service InsightsGenerator': '✅',
-        'Service ConversationalAI': '✅',
-        'Routes Chat IA': '✅',
-        'FoodScorer enrichi': '✅'
+        'Base alternatives naturelles': 'âœ…',
+        'Base insights éducatifs': 'âœ…', 
+        'Service AlternativesEngine': 'âœ…',
+        'Service InsightsGenerator': 'âœ…',
+        'Service ConversationalAI': 'âœ…',
+        'Routes Chat IA': 'âœ…',
+        'FoodScorer enrichi': 'âœ…'
       };
 
-      const implemented = Object.values(features).filter(v => v === '✅').length;
+      const implemented = Object.values(features).filter(v => v === 'âœ…').length;
       const total = Object.keys(features).length;
 
-      console.log('\n🎯 === SPRINT 3 - RÉSUMÉ IMPLÉMENTATION ===');
+      console.log('\nðŸŽ¯ === SPRINT 3 - RÃ‰SUMÃ‰ IMPLÃ‰MENTATION ===');
       Object.entries(features).forEach(([feature, status]) => {
         console.log(`${status} ${feature}`);
       });
 
-      console.log(`\n📊 Progression: ${implemented}/${total} fonctionnalités`);
-      console.log(`🎉 Taux de réussite: ${Math.round(implemented/total*100)}%`);
+      console.log(`\nðŸ“Š Progression: ${implemented}/${total} fonctionnalités`);
+      console.log(`ðŸŽ‰ Taux de réussite: ${Math.round(implemented/total*100)}%`);
 
       expect(implemented).toBeGreaterThanOrEqual(total * 0.8); // Au moins 80% implémenté
     });
@@ -266,7 +266,7 @@ describe('🚀 SPRINT 3 - Tests Simplifiés Intégration IA', () => {
 });
 
 afterAll(() => {
-  console.log('\n🎯 Tests Sprint 3 simplifiés terminés !');
-  console.log('🔧 Pour tests complets avec IA: configurer DEEPSEEK_API_KEY');
-  console.log('🚀 ECOLOJIA prêt pour révolution IA !');
+  console.log('\nðŸŽ¯ Tests Sprint 3 simplifiés terminés !');
+  console.log('ðŸ”§ Pour tests complets avec IA: configurer DEEPSEEK_API_KEY');
+  console.log('ðŸš€ ECOLOJIA prêt pour révolution IA !');
 });

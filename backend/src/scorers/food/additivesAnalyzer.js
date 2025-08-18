@@ -1,14 +1,14 @@
 const additivesEfsa = require('../../data/additives-efsa.json');
 
 /**
- * Analyse les additifs alimentaires selon données EFSA
+ * Analyse les additifs alimentaires selon donnees EFSA
  */
 class AdditivesAnalyzer {
   
   /**
    * Analyse principale additifs
-   * @param {string|Array} ingredients - Liste ingrédients
-   * @returns {Object} Analyse détaillée
+   * @param {string|Array} ingredients - Liste ingredients
+   * @returns {Object} Analyse detaillee
    */
   analyze(ingredients) {
     try {
@@ -36,14 +36,14 @@ class AdditivesAnalyzer {
         microbiomeDisruptors: 0, // CORRECTION
         controversial: 0, // CORRECTION
         additives_count: 0,
-        confidence: 0.8, // CORRECTION: Pas d'additifs = confiance élevée
+        confidence: 0.8, // CORRECTION: Pas d'additifs = confiance elevee
         error: error.message
       };
     }
   }
   
   /**
-   * Détecte additifs dans ingrédients
+   * Detecte additifs dans ingredients
    */
   detectAdditives(ingredients) {
     if (!ingredients) return [];
@@ -60,7 +60,7 @@ class AdditivesAnalyzer {
       return [];
     }
     
-    // Détection E-codes
+    // Detection E-codes
     const ecodes = text.match(/e\s*(\d{3,4})/g) || [];
     ecodes.forEach(ecode => {
       const number = ecode.replace(/\D/g, '');
@@ -70,7 +70,7 @@ class AdditivesAnalyzer {
       }
     });
     
-    // Détection noms communs
+    // Detection noms communs
     additivesEfsa.additives.forEach(additive => {
       additive.common_names.forEach(name => {
         if (text.includes(name.toLowerCase())) {
@@ -85,14 +85,14 @@ class AdditivesAnalyzer {
   }
   
   /**
-   * Évalue niveau de risque global
+   * ‰value niveau de risque global
    */
   assessRisk(additives) {
     const riskFactors = [];
     let maxRiskLevel = 'low';
     
     additives.forEach(additive => {
-      // Priorité au niveau EFSA le plus élevé
+      // Priorite au niveau EFSA le plus eleve
       if (additive.efsa_assessment.risk_level === 'high') {
         maxRiskLevel = 'high';
       } else if (additive.efsa_assessment.risk_level === 'medium' && maxRiskLevel !== 'high') {
@@ -115,12 +115,12 @@ class AdditivesAnalyzer {
     
     return {
       level: maxRiskLevel,
-      factors: [...new Set(riskFactors)] // Déduplique
+      factors: [...new Set(riskFactors)] // Deduplique
     };
   }
   
   /**
-   * Évalue impact sur microbiote intestinal
+   * ‰value impact sur microbiote intestinal
    */
   assessMicrobiomeImpact(additives) {
     const impacts = [];
@@ -135,7 +135,7 @@ class AdditivesAnalyzer {
       }
     });
     
-    // Synthèse impact global
+    // Synthese impact global
     const severities = impacts.map(i => i.severity);
     let globalImpact = 'minimal';
     
@@ -151,7 +151,7 @@ class AdditivesAnalyzer {
       global_impact: globalImpact,
       affected_additives: impacts,
       research_note: impacts.length > 0 ? 
-        'Données basées sur études récentes 2020-2024' : null
+        'Donnees basees sur etudes recentes 2020-2024' : null
     };
   }
   
@@ -159,9 +159,9 @@ class AdditivesAnalyzer {
    * Calcule confiance analyse
    */
   calculateConfidence(additives) {
-    if (additives.length === 0) return 0.8; // Pas d'additifs = confiance élevée
+    if (additives.length === 0) return 0.8; // Pas d'additifs = confiance elevee
     
-    // Confiance basée sur couverture base EFSA
+    // Confiance basee sur couverture base EFSA
     const knownAdditives = additives.filter(a => a.efsa_assessment);
     const coverage = knownAdditives.length / additives.length;
     
@@ -169,7 +169,7 @@ class AdditivesAnalyzer {
   }
   
   /**
-   * Sources EFSA pour additifs détectés
+   * Sources EFSA pour additifs detectes
    */
   getEfsaSources(additives) {
     const sources = [];

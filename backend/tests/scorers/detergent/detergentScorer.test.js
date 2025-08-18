@@ -1,4 +1,4 @@
-// 📝 FICHIER À CRÉER : tests/scorers/detergent/detergentScorer.test.js
+// ðŸ“ FICHIER Ã€ CRÃ‰ER : tests/scorers/detergent/detergentScorer.test.js
 
 const { DetergentScorer } = require('../../../src/scorers/detergent/detergentScorer');
 
@@ -9,7 +9,7 @@ describe('DetergentScorer', () => {
     detergentScorer = new DetergentScorer();
   });
 
-  describe('Produits Écologiques (Score Élevé)', () => {
+  describe('Produits Ã‰cologiques (Score Ã‰levé)', () => {
     test('Lessive Bio Certifiée EU Ecolabel', async () => {
       const ingredients = "AQUA, COCO GLUCOSIDE, SODIUM BICARBONATE, CITRIC ACID, PROTEASE, LAVANDULA ANGUSTIFOLIA OIL";
       const productName = "Lessive Bio Concentrée";
@@ -123,7 +123,7 @@ describe('DetergentScorer', () => {
   });
 
   describe('Scoring Détaillé', () => {
-    test('Breakdown Écotoxicité', async () => {
+    test('Breakdown Ã‰cotoxicité', async () => {
       const ingredients = "SODIUM TRIPOLYPHOSPHATE, DICHLOROMETHANE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Test Toxique", []);
@@ -180,7 +180,7 @@ describe('DetergentScorer', () => {
       }
     });
 
-    test('Insights Éducatifs avec Sources', async () => {
+    test('Insights Ã‰ducatifs avec Sources', async () => {
       const ingredients = "SODIUM TRIPOLYPHOSPHATE, COCO GLUCOSIDE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Test Insights", []);
@@ -240,7 +240,7 @@ describe('DetergentScorer', () => {
   });
 });
 
-// ===== TESTS D'INTÉGRATION API =====
+// ===== TESTS D'INTÃ‰GRATION API =====
 
 describe('DetergentScorer - Tests API Integration', () => {
   test('Format Réponse API Compatible', async () => {
