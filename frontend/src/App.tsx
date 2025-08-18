@@ -1,43 +1,28 @@
-﻿import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// Pages principales
-import HomePage from "./pages/HomePage";
+﻿// PATH: frontend/src/App.tsx
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import ScanPage from "./pages/ScanPage";
-import SearchPage from "./pages/SearchPage";
-import DashboardPage from "./pages/DashboardPage";
-import ResultsPage from "./pages/ResultsPage";
+import ResultPage from "./pages/ResultPage";
 
-// Layout
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-
-const queryClient = new QueryClient();
-
-function App() {
+export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/scan" element={<ScanPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/results/:id" element={<ResultsPage />} />
-              <Route path="/product/:id" element={<ResultsPage />} />
-              <Route path="/cosmetic/:id" element={<ResultsPage />} />
-              <Route path="/detergent/:id" element={<ResultsPage />} />
-            </Routes>
-          </main>
-          <Footer />
+    <BrowserRouter>
+      <header className="border-b">
+        <div className="max-w-5xl mx-auto p-4 flex items-center gap-4">
+          <Link to="/" className="font-bold">ECOLOJIA</Link>
+          <nav className="text-sm">
+            <Link to="/scan" className="px-2">Scanner</Link>
+            <Link to="/result" className="px-2">Résultat</Link>
+          </nav>
         </div>
-      </BrowserRouter>
-    </QueryClientProvider>
+      </header>
+      <main className="max-w-5xl mx-auto p-4">
+        <Routes>
+          <Route path="/" element={<Navigate to="/scan" replace />} />
+          <Route path="/scan" element={<ScanPage />} />
+          <Route path="/result" element={<ResultPage />} />
+          <Route path="*" element={<div>404</div>} />
+        </Routes>
+      </main>
+    </BrowserRouter>
   );
 }
-
-export default App;
