@@ -26,17 +26,14 @@ function fallbackIfDemo(e: unknown): AnalysisResult {
 
 export async function analyzeByBarcode(barcode: string): Promise<AnalysisResult> {
   try {
-    const data = await get<ApiResponse<AnalysisResult>>("/api/analysis/by-barcode", { barcode });
+    const data = await post<ApiResponse<AnalysisResult>>("/api/analysis", { 
+      barcode,
+      mode: "barcode" 
+    });
     if (data?.success && data.data) return data.data;
-    throw new Error(data?.error?.message || "Échec GET /by-barcode");
-  } catch {
-    try {
-      const data = await post<ApiResponse<AnalysisResult>>("/api/analysis", { barcode });
-      if (data?.success && data.data) return data.data;
-      throw new Error(data?.error?.message || "Échec POST /analysis");
-    } catch (e) {
-      return fallbackIfDemo(e);
-    }
+    throw new Error(data?.error?.message || "Échec analyse code-barres");
+  } catch (e) {
+    return fallbackIfDemo(e);
   }
 }
 
@@ -46,12 +43,24 @@ export async function analyzeManual(payload: {
   ingredients: string[];
 }): Promise<AnalysisResult> {
   try {
-    const data = await post<ApiResponse<AnalysisResult>>("/api/analysis/manual", payload, {
-      "Content-Type": "application/json",
-    });
+    // Format pour l''endpoint unifié /api/analysis
+    const requestData = {
+      mode: "manual",
+      name: payload.name,
+      category: payload.category || "food",
+      ingredients: Array.isArray(payload.ingredients) 
+        ? payload.ingredients.join(", ") 
+        : payload.ingredients,
+      language: "fr"
+    };
+    
+    console.log("Envoi analyse manuelle:", requestData);
+    
+    const data = await post<ApiResponse<AnalysisResult>>("/api/analysis", requestData);
     if (data?.success && data.data) return data.data;
     throw new Error(data?.error?.message || "Analyse manuelle indisponible");
   } catch (e) {
+    console.error("Erreur analyse manuelle:", e);
     return fallbackIfDemo(e);
   }
 }
