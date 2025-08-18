@@ -1,6 +1,6 @@
 ﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 import { useEffect, useRef, useState } from "react";
-import Quagga from "quagga2";
+import Quagga from "@ericblade/quagga2";
 
 type Props = {
   onDetected: (barcode: string) => void;
@@ -79,13 +79,20 @@ export default function BarcodeScanner({
       try {
         Quagga.offDetected(() => {});
         Quagga.stop();
-      } catch { /* noop */ }
+      } catch {
+        /* noop */
+      }
     };
   }, [constraints, onDetected, onError]);
 
   return (
     <div className="relative w-full">
-      <div ref={containerRef} className="w-full aspect-video bg-black rounded-xl overflow-hidden" role="img" aria-label="Flux caméra" />
+      <div
+        ref={containerRef}
+        className="w-full aspect-video bg-black rounded-xl overflow-hidden"
+        role="img"
+        aria-label="Flux caméra"
+      />
       {showGuide && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="w-3/4 h-24 border-4 border-white/80 rounded-lg" />
