@@ -1,0 +1,21 @@
+// PATH: frontend/tests/fixtures/analysis.sample.json
+{
+  "success": true,
+  "data": {
+    "product": {
+      "name": "Yaourt nature",
+      "brand": "Ecolo",
+      "category": "food",
+      "ean": "3017620425035",
+      "ingredients": ["lait", "ferments lactiques"]
+    },
+    "score": {
+      "nutriScore": "A",
+      "novaGroup": 2,
+      "ecoScore": "B",
+      "warnings": []
+    },
+    "risks": [],
+    "alternatives": []
+  }
+}
