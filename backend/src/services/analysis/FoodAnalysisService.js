@@ -1,4 +1,4 @@
-// backend/src/services/analysis/foodAnalyzer.js
+// backend/src/services/analysis/FoodAnalyzer.js
 // Service d'analyse alimentaire complet
 
 const novaClassifier = require('./novaClassifier');
@@ -7,55 +7,72 @@ const mongoose = require('mongoose');
 
 class FoodAnalyzer {
   constructor() {
-    // Base de donnees d'additifs controverses
+    // Base de données d'additifs controversés
     this.controversialAdditives = {
-      'e102': { name: 'Tartrazine', risk: 'high', effects: ['Hyperactivite', 'Allergies'] },
-      'e110': { name: 'Sunset Yellow', risk: 'high', effects: ['Hyperactivite', 'Allergies'] },
-      'e124': { name: 'Ponceau 4R', risk: 'high', effects: ['Hyperactivite', 'Allergies'] },
-      'e211': { name: 'Benzoate de sodium', risk: 'medium', effects: ['Hyperactivite'] },
-      'e320': { name: 'BHA', risk: 'high', effects: ['Cancerogene possible'] },
-      'e321': { name: 'BHT', risk: 'high', effects: ['Cancerogene possible'] },
-      'e621': { name: 'Glutamate monosodique', risk: 'medium', effects: ['Maux de tete', 'Nausees'] },
+      'e102': { name: 'Tartrazine', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
+      'e110': { name: 'Sunset Yellow', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
+      'e124': { name: 'Ponceau 4R', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
+      'e211': { name: 'Benzoate de sodium', risk: 'medium', effects: ['Hyperactivité'] },
+      'e320': { name: 'BHA', risk: 'high', effects: ['Cancérogène possible'] },
+      'e321': { name: 'BHT', risk: 'high', effects: ['Cancérogène possible'] },
+      'e621': { name: 'Glutamate monosodique', risk: 'medium', effects: ['Maux de tête', 'Nausées'] },
       'e951': { name: 'Aspartame', risk: 'medium', effects: ['Controverse'] },
-      'e954': { name: 'Saccharine', risk: 'medium', effects: ['Cancerogene possible'] }
+      'e954': { name: 'Saccharine', risk: 'medium', effects: ['Cancérogène possible'] }
     };
     
-    // Allergenes majeurs (reglementation EU)
+    // Allergènes majeurs (réglementation EU)
     this.majorAllergens = {
-      'gluten': ['ble', 'seigle', 'orge', 'avoine', 'epeautre', 'kamut'],
-      'crustaces': ['crevette', 'homard', 'crabe', 'langouste', 'ecrevisse'],
-      'Å“ufs': ['Å“uf', 'albumine', 'ovalbumine', 'lysozyme'],
+      'gluten': ['blé', 'seigle', 'orge', 'avoine', 'épeautre', 'kamut'],
+      'crustacés': ['crevette', 'homard', 'crabe', 'langouste', 'écrevisse'],
+      'œufs': ['œuf', 'albumine', 'ovalbumine', 'lysozyme'],
       'poissons': ['poisson', 'anchois', 'saumon', 'thon', 'cabillaud'],
-      'arachides': ['arachide', 'cacahuete', 'huile d\'arachide'],
-      'soja': ['soja', 'lecithine de soja', 'proteine de soja'],
-      'lait': ['lait', 'lactose', 'caseine', 'lactoserum', 'beurre', 'creme'],
-      'fruits   coque': ['amande', 'noisette', 'noix', 'cajou', 'pecan', 'pistache'],
-      'celeri': ['celeri', 'celeri-rave'],
+      'arachides': ['arachide', 'cacahuète', 'huile d\'arachide'],
+      'soja': ['soja', 'lécithine de soja', 'protéine de soja'],
+      'lait': ['lait', 'lactose', 'caséine', 'lactosérum', 'beurre', 'crème'],
+      'fruits à coque': ['amande', 'noisette', 'noix', 'cajou', 'pécan', 'pistache'],
+      'céleri': ['céleri', 'céleri-rave'],
       'moutarde': ['moutarde', 'graines de moutarde'],
-      'sesame': ['sesame', 'huile de sesame', 'tahini'],
-      'sulfites': ['sulfite', 'bisulfite', 'metabisulfite', 'e220', 'e228'],
+      'sésame': ['sésame', 'huile de sésame', 'tahini'],
+      'sulfites': ['sulfite', 'bisulfite', 'métabisulfite', 'e220', 'e228'],
       'lupin': ['lupin', 'farine de lupin'],
-      'mollusques': ['huitre', 'moule', 'coquille', 'escargot', 'poulpe']
+      'mollusques': ['huître', 'moule', 'coquille', 'escargot', 'poulpe']
     };
   }
   
   /**
-   * Analyse complete d'un produit alimentaire
+   * Analyse complète d'un produit alimentaire
+   * @param {string|object} dataOrBarcode - Soit un barcode string, soit un objet avec les données
+   * @param {string} userId - ID de l'utilisateur
    */
-  async analyze(barcode, userId) {
+  async analyze(dataOrBarcode, userId) {
     try {
-      // Recuperer le produit depuis la base
-      const Product = mongoose.model('Product');
-      const product = await Product.findOne({ barcode });
+      let product = null;
+      let isManualAnalysis = false;
       
-      if (!product) {
-        // Essayer de recuperer depuis Open Food Facts
-        const offProduct = await this.fetchFromOpenFoodFacts(barcode);
-        if (!offProduct) {
-          throw new Error('Produit non trouve');
+      // Si c'est un objet avec des données (analyse manuelle)
+      if (typeof dataOrBarcode === 'object' && dataOrBarcode !== null) {
+        console.log('Analyse manuelle avec données:', dataOrBarcode.name);
+        isManualAnalysis = true;
+        product = dataOrBarcode; // Utiliser directement les données fournies
+        
+      } 
+      // Si c'est un barcode string
+      else if (typeof dataOrBarcode === 'string') {
+        console.log('Recherche par barcode:', dataOrBarcode);
+        const Product = mongoose.model('Product');
+        product = await Product.findOne({ barcode: dataOrBarcode });
+        
+        if (!product) {
+          // Essayer de récupérer depuis Open Food Facts
+          const offProduct = await this.fetchFromOpenFoodFacts(dataOrBarcode);
+          if (!offProduct) {
+            throw new Error('Produit non trouvé');
+          }
+          // Sauvegarder en base
+          product = await this.saveProduct(offProduct);
         }
-        // Sauvegarder en base
-        product = await this.saveProduct(offProduct);
+      } else {
+        throw new Error('Format de données invalide pour l\'analyse');
       }
       
       // Analyses
@@ -65,49 +82,62 @@ class FoodAnalyzer {
       const allergensAnalysis = this.detectAllergens(product);
       const healthScore = this.calculateHealthScore(product, novaAnalysis, nutriscoreAnalysis, additivesAnalysis);
       
-      // Sauvegarder l'analyse
-      const Analysis = mongoose.model('Analysis');
-      const analysis = new Analysis({
-        userId,
-        productId: product._id,
-        timestamp: new Date(),
-        method: 'barcode',
-        results: {
-          category: 'food',
-          scores: {
-            nova: novaAnalysis.group,
-            nutriscore: nutriscoreAnalysis.grade,
-            ecoscore: product.ecoscore_grade || 'N/A',
-            health: healthScore.score
-          },
-          summary: {
-            fr: this.generateSummary(product, novaAnalysis, nutriscoreAnalysis, healthScore),
-            en: 'Summary in English...' // TODO: Traduire
-          },
-          details: {
-            nova: novaAnalysis,
-            nutriscore: nutriscoreAnalysis,
-            additives: additivesAnalysis,
-            allergens: allergensAnalysis,
-            nutritionFacts: product.nutritionFacts
-          },
-          recommendations: await this.generateRecommendations(product, healthScore)
-        }
-      });
-      
-      await analysis.save();
+      // Ne sauvegarder l'analyse que si ce n'est pas manuel
+      if (!isManualAnalysis && product._id) {
+        const Analysis = mongoose.model('Analysis');
+        const analysis = new Analysis({
+          userId,
+          productId: product._id,
+          timestamp: new Date(),
+          method: 'barcode',
+          results: {
+            category: 'food',
+            scores: {
+              nova: novaAnalysis.group,
+              nutriscore: nutriscoreAnalysis.grade,
+              ecoscore: product.ecoscore_grade || 'N/A',
+              health: healthScore.score
+            },
+            summary: {
+              fr: this.generateSummary(product, novaAnalysis, nutriscoreAnalysis, healthScore),
+              en: 'Summary in English...' // TODO: Traduire
+            },
+            details: {
+              nova: novaAnalysis,
+              nutriscore: nutriscoreAnalysis,
+              additives: additivesAnalysis,
+              allergens: allergensAnalysis,
+              nutritionFacts: product.nutritionFacts
+            },
+            recommendations: await this.generateRecommendations(product, healthScore)
+          }
+        });
+        
+        await analysis.save();
+      }
       
       return {
         product: {
-          name: product.name,
+          name: product.name || 'Produit analysé',
           brand: product.brand,
           image: product.image_url,
           barcode: product.barcode
         },
-        scores: analysis.results.scores,
-        summary: analysis.results.summary.fr,
-        details: analysis.results.details,
-        recommendations: analysis.results.recommendations
+        scores: {
+          nova: novaAnalysis.group,
+          nutriscore: nutriscoreAnalysis.grade,
+          ecoscore: product.ecoscore_grade || 'N/A',
+          health: healthScore.score
+        },
+        summary: this.generateSummary(product, novaAnalysis, nutriscoreAnalysis, healthScore),
+        details: {
+          nova: novaAnalysis,
+          nutriscore: nutriscoreAnalysis,
+          additives: additivesAnalysis,
+          allergens: allergensAnalysis,
+          nutritionFacts: product.nutritionFacts
+        },
+        recommendations: await this.generateRecommendations(product, healthScore)
       };
       
     } catch (error) {
@@ -134,8 +164,8 @@ class FoodAnalyzer {
           ...this.controversialAdditives[code]
         });
       } else if (code.match(/^e[0-9]{3}[a-z]?$/)) {
-        // Additif connu mais non controverse
-        analysis.safe.push({ code, name: 'Additif autorise' });
+        // Additif connu mais non controversé
+        analysis.safe.push({ code, name: 'Additif autorisé' });
       } else {
         analysis.unknown.push({ code });
       }
@@ -149,7 +179,7 @@ class FoodAnalyzer {
     const ingredients = (product.ingredients || '').toLowerCase();
     const allergenTags = product.allergens_tags || [];
     
-    // Detection par tags
+    // Détection par tags
     for (const tag of allergenTags) {
       const allergen = tag.replace('en:', '');
       if (this.majorAllergens[allergen]) {
@@ -161,7 +191,7 @@ class FoodAnalyzer {
       }
     }
     
-    // Detection dans les ingredients
+    // Détection dans les ingrédients
     for (const [allergen, keywords] of Object.entries(this.majorAllergens)) {
       if (detected.find(d => d.type === allergen)) continue;
       
@@ -181,7 +211,7 @@ class FoodAnalyzer {
     return {
       detected,
       count: detected.length,
-      warning: detected.length > 0 ? 'Ce produit contient des allergenes' : null
+      warning: detected.length > 0 ? 'Ce produit contient des allergènes' : null
     };
   }
   
@@ -214,7 +244,7 @@ class FoodAnalyzer {
       score += 10;
     }
     
-    // Penalites
+    // Pénalités
     if (product.nutritionFacts?.sugars_100g > 15) score -= 5;
     if (product.nutritionFacts?.salt_100g > 1.5) score -= 5;
     if (product.nutritionFacts?.saturated_fat_100g > 5) score -= 5;
@@ -239,25 +269,25 @@ class FoodAnalyzer {
     const parts = [];
     
     // Score principal
-    parts.push(`${product.name} obtient un score sante de ${healthScore.score}/100.`);
+    parts.push(`${product.name || 'Ce produit'} obtient un score santé de ${healthScore.score}/100.`);
     
     // NOVA
     if (novaAnalysis.group === 4) {
-      parts.push(`âš ï¸ Produit ultra-transforme (NOVA ${novaAnalysis.group}).`);
+      parts.push(`⚠️ Produit ultra-transformé (NOVA ${novaAnalysis.group}).`);
     } else if (novaAnalysis.group <= 2) {
-      parts.push(`âœ… Transformation minimale (NOVA ${novaAnalysis.group}).`);
+      parts.push(`✅ Transformation minimale (NOVA ${novaAnalysis.group}).`);
     }
     
     // Nutri-Score
     if (['D', 'E'].includes(nutriscoreAnalysis.grade)) {
-      parts.push(`âš ï¸ Qualite nutritionnelle faible (Nutri-Score ${nutriscoreAnalysis.grade}).`);
+      parts.push(`⚠️ Qualité nutritionnelle faible (Nutri-Score ${nutriscoreAnalysis.grade}).`);
     } else if (['A', 'B'].includes(nutriscoreAnalysis.grade)) {
-      parts.push(`âœ… Bonne qualite nutritionnelle (Nutri-Score ${nutriscoreAnalysis.grade}).`);
+      parts.push(`✅ Bonne qualité nutritionnelle (Nutri-Score ${nutriscoreAnalysis.grade}).`);
     }
     
     // Points d'attention
     if (healthScore.factors.sugar > 15) {
-      parts.push(`ðŸ”´ Teneur elevee en sucre (${healthScore.factors.sugar}g/100g).`);
+      parts.push(`🔴 Teneur élevée en sucre (${healthScore.factors.sugar}g/100g).`);
     }
     
     return parts.join(' ');
@@ -270,22 +300,22 @@ class FoodAnalyzer {
       advice: []
     };
     
-    // Impact sante
+    // Impact santé
     if (healthScore.score >= 70) {
-      recommendations.healthImpact = 'Bon choix pour une alimentation equilibree';
+      recommendations.healthImpact = 'Bon choix pour une alimentation équilibrée';
     } else if (healthScore.score >= 40) {
-      recommendations.healthImpact = '€ consommer avec moderation';
+      recommendations.healthImpact = 'À consommer avec modération';
     } else {
-      recommendations.healthImpact = '€ limiter dans votre alimentation';
+      recommendations.healthImpact = 'À limiter dans votre alimentation';
     }
     
-    // Conseils personnalises
+    // Conseils personnalisés
     if (healthScore.factors.nova === 4) {
-      recommendations.advice.push('Privilegiez des alternatives moins transformees');
+      recommendations.advice.push('Privilégiez des alternatives moins transformées');
     }
     
     if (healthScore.factors.sugar > 15) {
-      recommendations.advice.push('Attention   la teneur en sucre, limitez la consommation');
+      recommendations.advice.push('Attention à la teneur en sucre, limitez la consommation');
     }
     
     // TODO: Chercher des alternatives dans la base
