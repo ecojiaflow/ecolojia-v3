@@ -1,8 +1,8 @@
-﻿// frontend/src/services/analysisService.ts - Version unifiee et robuste
+﻿// frontend/src/services/analysisService.ts - Version unifiée et robuste
 
 import { apiClient } from './apiClient';
 
-// Types unifies
+// Types unifiés
 export interface AnalysisRequest {
   mode?: 'manual' | 'barcode' | 'image';
   category?: 'food' | 'cosmetics' | 'detergents';
@@ -37,10 +37,10 @@ export interface AnalysisResponse {
     brand?: string;
     barcode?: string;
     
-    // Score principal unifie
+    // Score principal unifié
     score: UnifiedScore;
     
-    // Details specifiques par categorie
+    // Détails spécifiques par catégorie
     details: {
       // Alimentaire
       nova?: number;
@@ -48,12 +48,12 @@ export interface AnalysisResponse {
       nutriscore?: string;
       ecoscore?: string;
       
-      // Cosmetique
+      // Cosmétique
       inciScore?: number;
       riskFlags?: string[];
       notableIngredients?: string[];
       
-      // Detergent
+      // Détergent
       clpPictograms?: string[];
       surfactants?: string[];
       biodegradability?: string;
@@ -69,7 +69,7 @@ export interface AnalysisResponse {
     recommendations: string[];
     sources?: string[];
     
-    // Donnees brutes (optionnel)
+    // Données brutes (optionnel)
     raw?: any;
   };
   error?: {
@@ -81,37 +81,38 @@ export interface AnalysisResponse {
 
 class AnalysisService {
   private readonly endpoints = {
+    unified: '/analysis', // Endpoint unifié pour toutes les catégories
     food: '/analysis',
     cosmetics: '/cosmetics/analyze',
     detergents: '/detergents/analyze'
   };
 
   private readonly categoryDetection = {
-    cosmetics: ['creme', 'gel', 'shampoing', 'savon', 'lotion', 'serum', 'masque'],
-    detergents: ['lessive', 'detergent', 'nettoyant', 'javel', 'desinfectant'],
-    food: ['yaourt', 'biscuit', 'chocolat', 'cereales', 'conserve', 'plat']
+    cosmetics: ['crème', 'gel', 'shampoing', 'savon', 'lotion', 'sérum', 'masque'],
+    detergents: ['lessive', 'détergent', 'nettoyant', 'javel', 'désinfectant'],
+    food: ['yaourt', 'biscuit', 'chocolat', 'céréales', 'conserve', 'plat']
   };
 
   /**
-   * Analyse un produit avec detection automatique de categorie
+   * Analyse un produit avec détection automatique de catégorie
    */
   async analyzeProduct(request: AnalysisRequest): Promise<AnalysisResponse> {
     try {
-      // Detection automatique de categorie si non fournie
+      // Détection automatique de catégorie si non fournie
       if (!request.category && request.name) {
         request.category = this.detectCategory(request.name);
       }
 
-      // Normalisation des donnees selon la categorie
+      // Normalisation des données selon la catégorie
       const normalizedRequest = this.normalizeRequest(request);
       
-      // Selection de l'endpoint
-      const endpoint = this.endpoints[request.category || 'food'];
+      // Utiliser l'endpoint unifié pour toutes les catégories
+      const endpoint = this.endpoints.unified;
       
       // Appel API avec retry automatique
       const response = await this.callWithRetry(endpoint, normalizedRequest);
       
-      // Normalisation de la reponse
+      // Normalisation de la réponse
       return this.normalizeResponse(response.data, request.category || 'food');
       
     } catch (error: any) {
@@ -119,19 +120,19 @@ class AnalysisService {
       
       // Gestion des erreurs avec fallback
       if (error.response?.status === 429) {
-        throw new Error('Limite de requetes atteinte. Veuillez reessayer dans quelques instants.');
+        throw new Error('Limite de requêtes atteinte. Veuillez réessayer dans quelques instants.');
       }
       
       if (error.response?.data?.error) {
         throw new Error(error.response.data?.error.message || 'Erreur lors de l\'analyse');
       }
       
-      throw new Error('Impossible d\'analyser le produit. Verifiez votre connexion.');
+      throw new Error('Impossible d\'analyser le produit. Vérifiez votre connexion.');
     }
   }
 
   /**
-   * Detecte la categorie d'un produit base sur son nom
+   * Détecte la catégorie d'un produit basé sur son nom
    */
   private detectCategory(name: string): 'food' | 'cosmetics' | 'detergents' {
     const lowerName = name.toLowerCase();
@@ -142,18 +143,19 @@ class AnalysisService {
       }
     }
     
-    // Par defaut: alimentaire
+    // Par défaut: alimentaire
     return 'food';
   }
 
   /**
-   * Normalise la requete selon la categorie
+   * Normalise la requête selon la catégorie
    */
   private normalizeRequest(request: AnalysisRequest): any {
     const base = {
       name: request.name?.trim() || 'Produit sans nom',
       language: request.language || 'fr',
-      mode: request.mode || 'manual'
+      mode: request.mode || 'manual',
+      category: request.category || 'food' // Important pour l'endpoint unifié
     };
 
     switch (request.category) {
@@ -166,6 +168,7 @@ class AnalysisService {
       case 'detergents':
         return {
           ...base,
+          ingredients: request.composition || request.ingredients || '',
           composition: request.composition || request.ingredients || ''
         };
         
@@ -174,31 +177,32 @@ class AnalysisService {
           ...base,
           ingredients: request.ingredients || '',
           barcode: request.barcode,
-          category: 'food'
+          brand: request.brand
         };
     }
   }
 
   /**
-   * Normalise la reponse pour avoir une structure unifiee
+   * Normalise la réponse pour avoir une structure unifiée
    */
   private normalizeResponse(data: any, category: string): AnalysisResponse {
-    // Si la reponse est dejÂ  normalisee
+    // Si la réponse est déjà normalisée (nouvelle structure)
     if (data?.success !== undefined && data?.data?.score?.value !== undefined) {
       return data;
     }
 
-    // Conversion des anciennes structures
+    // Adaptation pour la structure actuelle du backend
     const score = this.extractUnifiedScore(data, category);
     const details = this.extractDetails(data, category);
     
     return {
       success: true,
-      timestamp: new Date().toISOString(),
+      timestamp: data?.timestamp || new Date().toISOString(),
+      analysisTime: data?.analysisTime,
       data: {
         id: data?.id || `${category}-${Date.now()}`,
-        category: category as any,
-        name: data?.name || data?.productName || 'Produit analyse',
+        category: data?.category || category as any,
+        name: data?.name || data?.productName || 'Produit analysé',
         brand: data?.brand,
         barcode: data?.barcode,
         score,
@@ -207,31 +211,42 @@ class AnalysisService {
         highlights: this.extractHighlights(data, category),
         recommendations: this.extractRecommendations(data, category),
         sources: data?.sources || [],
-        raw: data?.raw || data
+        raw: data
       }
     };
   }
 
   /**
-   * Extrait un score unifie depuis differentes structures
+   * Extrait un score unifié depuis différentes structures
    */
   private extractUnifiedScore(data: any, category: string): UnifiedScore {
     let value = 0;
     
-    switch (category) {
-      case 'cosmetics':
-        value = data?.score?.value || data?.healthScore || data?.safetyScore || 50;
-        break;
-        
-      case 'detergents':
-        value = data?.score?.value || data?.environmentScore || data?.ecoScore || 50;
-        break;
-        
-      default: // food
-        value = data?.globalScore || data?.score?.value || 50;
-        // Penalite pour NOVA eleve
-        if (data?.scores?.nova === 4) value = Math.min(value, 30);
-        else if (data?.scores?.nova === 3) value = Math.min(value, 50);
+    // Gestion de la structure actuelle du backend
+    if (data?.globalScore !== undefined) {
+      value = data.globalScore;
+    } else if (data?.score?.value !== undefined) {
+      value = data.score.value;
+    } else {
+      // Fallback par catégorie
+      switch (category) {
+        case 'cosmetics':
+          value = data?.healthScore || data?.safetyScore || 50;
+          break;
+          
+        case 'detergents':
+          value = data?.environmentScore || data?.ecoScore || 50;
+          break;
+          
+        default: // food
+          value = data?.scores?.healthScore || 50;
+      }
+    }
+    
+    // Pénalité pour NOVA élevé (alimentaire)
+    if (category === 'food' && data?.scores?.nova) {
+      if (data.scores.nova === 4) value = Math.min(value, 30);
+      else if (data.scores.nova === 3) value = Math.min(value, 50);
     }
     
     return {
@@ -252,11 +267,11 @@ class AnalysisService {
   }
 
   /**
-   * Extrait les details specifiques par categorie
+   * Extrait les détails spécifiques par catégorie
    */
   private extractDetails(data: any, category: string): any {
     const base = {
-      ingredientsText: data?.ingredients?.text || data?.ingredientsTextRaw || data?.ingredients,
+      ingredientsText: data?.details?.ingredientsTextRaw || data?.ingredients?.text || data?.ingredients,
       composition: data?.composition
     };
     
@@ -277,35 +292,50 @@ class AnalysisService {
           biodegradability: data?.details?.biodegradability
         };
         
-      default:
+      default: // food
         return {
           ...base,
           nova: data?.scores?.nova || data?.details?.nova,
-          novaLabel: data?.details?.novaLabel,
+          novaLabel: data?.details?.novaLabel || this.getNovaLabel(data?.scores?.nova),
           nutriscore: data?.scores?.nutriscore || data?.details?.nutriscore,
-          ecoscore: data?.details?.ecoscore
+          ecoscore: data?.scores?.ecoscore || data?.details?.ecoscore
         };
     }
+  }
+
+  /**
+   * Convertit un score NOVA en label
+   */
+  private getNovaLabel(nova?: number): string | undefined {
+    if (!nova) return undefined;
+    const labels = {
+      1: 'Non transformé',
+      2: 'Ingrédients culinaires',
+      3: 'Transformé',
+      4: 'Ultra-transformé'
+    };
+    return labels[nova as keyof typeof labels];
   }
 
   /**
    * Extrait les risques
    */
   private extractRisks(data: any, category: string): Risk[] {
-    if (data?.risks && Array.isArray(data?.risks)) {
-      return data?.risks;
+    // Si déjà présents dans le bon format
+    if (data?.risks && Array.isArray(data.risks)) {
+      return data.risks;
     }
     
     const risks: Risk[] = [];
     
-    // Risques specifiques par categorie
+    // Risques spécifiques par catégorie
     switch (category) {
       case 'cosmetics':
         if (data?.details?.riskLevel === 'high' || data?.healthScore < 40) {
           risks.push({
             code: 'HIGH_RISK_INGREDIENTS',
             severity: 'high',
-            message: 'Presence d\'ingredients Â  risque eleve'
+            message: 'Présence d\'ingrédients à risque élevé'
           });
         }
         break;
@@ -318,6 +348,13 @@ class AnalysisService {
             message: 'Produit corrosif'
           });
         }
+        if (data?.details?.clpPictograms?.includes('GHS09')) {
+          risks.push({
+            code: 'ENV_HAZARD',
+            severity: 'medium',
+            message: 'Dangereux pour l\'environnement'
+          });
+        }
         break;
         
       default: // food
@@ -325,7 +362,15 @@ class AnalysisService {
           risks.push({
             code: 'ULTRA_PROCESSED',
             severity: 'high',
-            message: 'Produit ultra-transforme'
+            message: 'Produit ultra-transformé',
+            evidence: data?.details?.novaReason ? [data.details.novaReason] : []
+          });
+        }
+        if (data?.scores?.nutriscore === 'E' || data?.scores?.nutriscore === 'D') {
+          risks.push({
+            code: 'POOR_NUTRITION',
+            severity: 'medium',
+            message: 'Qualité nutritionnelle faible'
           });
         }
     }
@@ -337,17 +382,28 @@ class AnalysisService {
    * Extrait les points positifs
    */
   private extractHighlights(data: any, category: string): string[] {
-    if (data?.highlights && Array.isArray(data?.highlights)) {
-      return data?.highlights;
+    // Si déjà présents
+    if (data?.highlights && Array.isArray(data.highlights)) {
+      return data.highlights;
     }
     
     const highlights: string[] = [];
     const score = this.extractUnifiedScore(data, category);
     
     if (score.value >= 80) {
-      highlights.push('Ã¢Å“Â¨ Excellente qualite globale');
+      highlights.push('✨ Excellente qualité globale');
     } else if (score.value >= 60) {
-      highlights.push('Ã°Å¸â€˜Â Bonne qualite generale');
+      highlights.push('👍 Bonne qualité générale');
+    }
+    
+    // Points positifs spécifiques
+    if (category === 'food') {
+      if (data?.scores?.nova <= 2) {
+        highlights.push('🥗 Peu ou pas transformé');
+      }
+      if (data?.scores?.nutriscore === 'A' || data?.scores?.nutriscore === 'B') {
+        highlights.push('💚 Bonne qualité nutritionnelle');
+      }
     }
     
     return highlights;
@@ -357,15 +413,20 @@ class AnalysisService {
    * Extrait les recommandations
    */
   private extractRecommendations(data: any, category: string): string[] {
-    if (data?.recommendations && Array.isArray(data?.recommendations)) {
-      return data?.recommendations;
+    // Si déjà présentes
+    if (data?.recommendations && Array.isArray(data.recommendations)) {
+      return data.recommendations;
     }
     
     const recommendations: string[] = [];
     const score = this.extractUnifiedScore(data, category);
     
     if (score.value < 40) {
-      recommendations.push('Envisager des alternatives de meilleure qualite');
+      recommendations.push('Envisager des alternatives de meilleure qualité');
+    }
+    
+    if (category === 'food' && data?.scores?.nova >= 3) {
+      recommendations.push('Privilégier des aliments moins transformés');
     }
     
     return recommendations;
@@ -397,7 +458,7 @@ class AnalysisService {
   }
 
   /**
-   * Obtient les details d'un produit
+   * Obtient les détails d'un produit
    */
   async getProductDetails(productId: string): Promise<any> {
     try {
@@ -405,11 +466,10 @@ class AnalysisService {
       return response.data;
     } catch (error) {
       console.error('Error fetching product details:', error);
-      throw new Error('Impossible de recuperer les details du produit');
+      throw new Error('Impossible de récupérer les détails du produit');
     }
   }
 }
 
 export const analysisService = new AnalysisService();
 export default analysisService;
-
