@@ -1,5 +1,4 @@
-// PATH: frontend/src/pages/ResultPage.tsx
-import { useLocation } from "react-router-dom";
+﻿import { useLocation } from "react-router-dom";
 import type { AnalysisResult } from "../types/api";
 import ScoreDisplay from "../components/analysis/ScoreDisplay";
 
@@ -26,9 +25,15 @@ export default function ResultPage() {
 
   const p = result.product;
   const s = result.score;
+  const isDemo = Boolean((result as any)?.raw?.demo);
 
   return (
     <div className="mx-auto max-w-3xl p-4">
+      {isDemo && (
+        <div className="mb-3 p-3 rounded-lg border bg-gray-200 text-sm">
+          Mode <strong>démo</strong> — résultat simulé (API indisponible).
+        </div>
+      )}
       <h1 className="text-2xl font-bold mb-2">{p.name}</h1>
       <p className="text-gray-600 mb-4">
         {p.brand ? `${p.brand} • ` : ""} {p.category || "—"} {p.ean ? `• EAN ${p.ean}` : ""}
