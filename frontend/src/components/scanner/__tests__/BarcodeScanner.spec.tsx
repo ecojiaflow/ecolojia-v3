@@ -3,7 +3,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import BarcodeScanner from "../../scanner/BarcodeScanner";
 
-vi.mock("quagga2", () => import("../../../__mocks__/quagga2"));
+// 🔁 MAJ: on mocke maintenant "@ericblade/quagga2"
+vi.mock("@ericblade/quagga2", () => import("../../../__mocks__/quagga2"));
 
 describe("BarcodeScanner", () => {
   it("déclenche onDetected quand Quagga détecte un code", async () => {
