@@ -1,5 +1,4 @@
-﻿// PATH: frontend/src/components/scanner/PhotoCapture.tsx
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { analyzeImage } from "../../services/visionService";
 
 type Props = {
@@ -23,33 +22,62 @@ export default function PhotoCapture({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    let stream: MediaStream | null = null;
+    let cancelled = false;
+
     async function start() {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-          setStreaming(true);
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false,
+        });
+        streamRef.current = stream;
+        const video = videoRef.current;
+        if (!video) return;
+
+        video.srcObject = stream;
+        const onLoaded = async () => {
+          try {
+            await video.play();
+          } catch {
+            // autoplay refusé: l''utilisateur devra cliquer "Capturer & analyser"
+          } finally {
+            if (!cancelled) setStreaming(true);
+          }
+        };
+        video.addEventListener("loadedmetadata", onLoaded, { once: true });
       } catch (e: any) {
         setError(e?.message || "Caméra indisponible");
         onError?.(e);
       }
     }
+
     start();
+
     return () => {
-      stream?.getTracks().forEach((t) => t.stop());
+      cancelled = true;
+      const s = streamRef.current;
+      if (s) {
+        for (const t of s.getTracks()) t.stop();
+        streamRef.current = null;
+      }
+      try {
+        const v = videoRef.current;
+        if (v) {
+          v.pause();
+          v.srcObject = null;
+        }
+      } catch { /* noop */ }
     };
   }, [onError]);
 
   function captureBlob(): Promise<Blob> {
     return new Promise((resolve, reject) => {
-      if (!videoRef.current || !canvasRef.current) return reject(new Error("Canvas/Video non prêt"));
       const video = videoRef.current;
       const canvas = canvasRef.current;
+      if (!video || !canvas) return reject(new Error("Canvas/Video non prêt"));
       const w = video.videoWidth || 1280;
       const h = video.videoHeight || 720;
       canvas.width = w;
