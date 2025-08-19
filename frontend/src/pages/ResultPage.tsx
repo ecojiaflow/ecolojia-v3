@@ -1,13 +1,17 @@
 ﻿// PATH: frontend/src/pages/ResultPage.tsx
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import type { AnalysisResult } from "../types/api";
 import ScoreDisplay from "../components/analysis/ScoreDisplay";
 import RiskCard from "../components/analysis/RiskCard";
 import AlternativesList from "../components/analysis/AlternativesList";
 import { ecoToTone, novaToTone, nutriToTone } from "../utils/scores";
+import { useHistoryStore } from "../hooks/useHistory";
 
 export default function ResultPage() {
   const location = useLocation();
+  const store = useHistoryStore();
+
   const result: AnalysisResult | null =
     (location.state as any)?.result ||
     (() => {
@@ -17,6 +21,11 @@ export default function ResultPage() {
         return null;
       }
     })();
+
+  useEffect(() => {
+    if (result) store.add(result);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!result) {
     return (
@@ -28,7 +37,7 @@ export default function ResultPage() {
   }
 
   const p = result.product;
-  const s = result.score;
+  const s: any = result.score;
   const isDemo = Boolean((result as any)?.raw?.demo);
 
   return (
@@ -61,7 +70,7 @@ export default function ResultPage() {
         <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Risques potentiels</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {result.risks.map((r, idx) => (
+            {result.risks.map((r: any, idx: number) => (
               <RiskCard key={r.id || idx} title={r.title} level={r.level} details={r.details} />
             ))}
           </div>
@@ -71,7 +80,7 @@ export default function ResultPage() {
       {result.alternatives && result.alternatives.length > 0 && (
         <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Alternatives</h2>
-          <AlternativesList items={result.alternatives} />
+          <AlternativesList items={result.alternatives as any} />
         </section>
       )}
     </div>
