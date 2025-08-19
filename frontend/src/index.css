@@ -84,3 +84,111 @@ a { color: inherit; text-decoration: none; }
 .card { border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1rem; }
 .badge { border-radius: 9999px; padding: .125rem .5rem; border: 1px solid #e5e7eb; font-size: .75rem; }
 .chip { border-radius: .5rem; padding: .25rem .5rem; font-size: .75rem; display: inline-block; }
+
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out both;
+}
+
+/* Amélioration des transitions */
+.transition-colors {
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover effects */
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.2s;
+}
+
+/* Focus styles pour accessibilité */
+button:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* PATH: frontend/src/index.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* === ECOLOJIA colors & simple components === */
+.bg-green-soft { background: #E9F8DF; }
+.text-green-strong { color: #1f7a1f; }
+.bg-yellow-soft { background: #FFF8E1; }
+.text-yellow-strong { color: #996c00; }
+.bg-red-soft { background: #FDE8E8; }
+.text-red-strong { color: #991B1B; }
+
+.card { 
+  @apply border border-gray-200 rounded-xl p-4 bg-white shadow-sm;
+}
+
+.chip { 
+  @apply rounded-full px-3 py-1 text-xs font-medium inline-block;
+}
+
+/* Tone-based utilities */
+.tone-success { @apply bg-green-soft text-green-strong; }
+.tone-warn { @apply bg-yellow-soft text-yellow-strong; }
+.tone-danger { @apply bg-red-soft text-red-strong; }
+.tone-neutral { @apply bg-gray-100 text-gray-700; }
+
+/* Button styles */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply btn bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95;
+}
+
+.btn-secondary {
+  @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 active:scale-95;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  @apply inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin;
+  animation: spin 0.8s linear infinite;
+}
