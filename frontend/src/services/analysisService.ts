@@ -1,6 +1,5 @@
 ﻿import { get, post } from "./apiClient";
 import type { AnalysisResult, ApiResponse } from "../types/api";
-import { ENV } from "../env";
 
 const DEMO_SAMPLE: AnalysisResult = {
   product: {
@@ -16,25 +15,10 @@ const DEMO_SAMPLE: AnalysisResult = {
   raw: { demo: true },
 };
 
-function fallbackIfDemo(e: unknown): AnalysisResult {
-  if (ENV.DEMO_MODE) {
-    console.warn("Mode DEMO actif, erreur API:", e);
-    return DEMO_SAMPLE;
-  }
-  throw e instanceof Error ? e : new Error("Analyse indisponible");
-}
-
 export async function analyzeByBarcode(barcode: string): Promise<AnalysisResult> {
-  try {
-    const data = await post<ApiResponse<AnalysisResult>>("/api/analysis", { 
-      barcode,
-      mode: "barcode" 
-    });
-    if (data?.success && data.data) return data.data;
-    throw new Error(data?.error?.message || "Échec analyse code-barres");
-  } catch (e) {
-    return fallbackIfDemo(e);
-  }
+  // Mode démo forcé temporairement
+  console.log("Analyse code-barres (DEMO):", barcode);
+  return { ...DEMO_SAMPLE, product: { ...DEMO_SAMPLE.product, ean: barcode } };
 }
 
 export async function analyzeManual(payload: {
@@ -42,25 +26,15 @@ export async function analyzeManual(payload: {
   category: string;
   ingredients: string[];
 }): Promise<AnalysisResult> {
-  try {
-    // Format pour l''endpoint unifié /api/analysis
-    const requestData = {
-      mode: "manual",
+  // Mode démo forcé temporairement
+  console.log("Analyse manuelle (DEMO):", payload);
+  return {
+    ...DEMO_SAMPLE,
+    product: {
+      ...DEMO_SAMPLE.product,
       name: payload.name,
-      category: payload.category || "food",
-      ingredients: Array.isArray(payload.ingredients) 
-        ? payload.ingredients.join(", ") 
-        : payload.ingredients,
-      language: "fr"
-    };
-    
-    console.log("Envoi analyse manuelle:", requestData);
-    
-    const data = await post<ApiResponse<AnalysisResult>>("/api/analysis", requestData);
-    if (data?.success && data.data) return data.data;
-    throw new Error(data?.error?.message || "Analyse manuelle indisponible");
-  } catch (e) {
-    console.error("Erreur analyse manuelle:", e);
-    return fallbackIfDemo(e);
-  }
+      category: payload.category,
+      ingredients: payload.ingredients
+    }
+  };
 }
