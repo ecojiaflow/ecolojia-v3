@@ -1,6 +1,10 @@
-﻿import { useLocation } from "react-router-dom";
+﻿// PATH: frontend/src/pages/ResultPage.tsx
+import { useLocation } from "react-router-dom";
 import type { AnalysisResult } from "../types/api";
 import ScoreDisplay from "../components/analysis/ScoreDisplay";
+import RiskCard from "../components/analysis/RiskCard";
+import AlternativesList from "../components/analysis/AlternativesList";
+import { ecoToTone, novaToTone, nutriToTone } from "../utils/scores";
 
 export default function ResultPage() {
   const location = useLocation();
@@ -34,50 +38,41 @@ export default function ResultPage() {
           Mode <strong>démo</strong> — résultat simulé (API indisponible).
         </div>
       )}
-      <h1 className="text-2xl font-bold mb-2">{p.name}</h1>
+
+      <h1 className="text-2xl font-bold mb-1">{p.name}</h1>
       <p className="text-gray-600 mb-4">
         {p.brand ? `${p.brand} • ` : ""} {p.category || "—"} {p.ean ? `• EAN ${p.ean}` : ""}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <ScoreDisplay label="Nutri-Score" value={s?.nutriScore} />
-        <ScoreDisplay label="NOVA" value={s?.novaGroup} />
-        <ScoreDisplay label="Eco-Score" value={s?.ecoScore} />
+        <ScoreDisplay label="Nutri-Score" value={s?.nutriScore} tone={nutriToTone(s?.nutriScore)} />
+        <ScoreDisplay label="NOVA" value={s?.novaGroup} tone={novaToTone(s?.novaGroup)} />
+        <ScoreDisplay label="Eco-Score" value={s?.ecoScore} tone={ecoToTone(s?.ecoScore)} />
       </div>
 
-      {result.risks && result.risks.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Risques potentiels</h2>
-          <ul className="list-disc pl-5 space-y-1">
-            {result.risks.map((r, idx) => (
-              <li key={r.id || idx}>
-                <span className="font-medium">{r.title}</span>{" "}
-                <span className="text-xs rounded px-2 py-0.5 border ml-2">{r.level}</span>
-                {r.details && <div className="text-sm text-gray-600">{r.details}</div>}
-              </li>
-            ))}
-          </ul>
-        </div>
+      {p.ingredients && p.ingredients.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Ingrédients</h2>
+          <div className="card text-sm text-gray-800">{p.ingredients.join(", ")}</div>
+        </section>
       )}
 
-      {p.ingredients && p.ingredients.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Ingrédients</h2>
-          <div className="text-sm text-gray-800">{p.ingredients.join(", ")}</div>
-        </div>
+      {result.risks && result.risks.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Risques potentiels</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {result.risks.map((r, idx) => (
+              <RiskCard key={r.id || idx} title={r.title} level={r.level} details={r.details} />
+            ))}
+          </div>
+        </section>
       )}
 
       {result.alternatives && result.alternatives.length > 0 && (
-        <div className="mb-6">
+        <section className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Alternatives</h2>
-          <ul className="list-disc pl-5">
-            {result.alternatives.map((a, idx) => (
-              <li key={a.id || a.ean || idx}>
-                {a.name} {a.brand ? `• ${a.brand}` : ""} {a.category ? `• ${a.category}` : ""}
-              </li>
-            ))}
-          </ul>
-        </div>
+          <AlternativesList items={result.alternatives} />
+        </section>
       )}
     </div>
   );
