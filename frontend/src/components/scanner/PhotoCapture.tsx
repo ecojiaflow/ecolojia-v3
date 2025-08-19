@@ -1,5 +1,7 @@
-﻿import { useEffect, useRef, useState } from "react";
+﻿// PATH: frontend/src/components/scanner/PhotoCapture.tsx
+import { useEffect, useRef, useState } from "react";
 import { analyzeImage } from "../../services/visionService";
+import { FLAGS } from "../../config/featureFlags";
 
 type Props = {
   onOcrDone: (data: { ingredients: string[]; barcode?: string; text?: string }) => void;
@@ -18,58 +20,52 @@ export default function PhotoCapture({
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [streaming, setStreaming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function start() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-          audio: false,
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
         streamRef.current = stream;
         const video = videoRef.current;
         if (!video) return;
-
         video.srcObject = stream;
-        const onLoaded = async () => {
-          try {
-            await video.play();
-          } catch {
-            // autoplay refusé: l''utilisateur devra cliquer "Capturer & analyser"
-          } finally {
-            if (!cancelled) setStreaming(true);
-          }
-        };
-        video.addEventListener("loadedmetadata", onLoaded, { once: true });
+        video.addEventListener(
+          "loadedmetadata",
+          async () => {
+            try {
+              await video.play();
+            } catch {
+              /* autoplay refusé */
+            } finally {
+              if (!cancelled) setStreaming(true);
+            }
+          },
+          { once: true }
+        );
       } catch (e: any) {
         setError(e?.message || "Caméra indisponible");
         onError?.(e);
       }
     }
-
     start();
-
     return () => {
       cancelled = true;
       const s = streamRef.current;
-      if (s) {
-        for (const t of s.getTracks()) t.stop();
-        streamRef.current = null;
-      }
-      try {
-        const v = videoRef.current;
-        if (v) {
+      if (s) s.getTracks().forEach((t) => t.stop());
+      const v = videoRef.current;
+      if (v) {
+        try {
           v.pause();
           v.srcObject = null;
-        }
-      } catch { /* noop */ }
+        } catch {}
+      }
     };
   }, [onError]);
 
@@ -106,14 +102,26 @@ export default function PhotoCapture({
       const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
       const preview = URL.createObjectURL(blob);
       setPreviewURL(preview);
-      const ocr = await analyzeImage(file);
-      onOcrDone({
-        ingredients: ocr.ingredients || [],
-        barcode: ocr.barcode,
-        text: ocr.text,
-      });
+
+      // Si l'OCR n'est pas activé, on ne fait pas d'appel → on renvoie une structure vide
+      if (!FLAGS.OCR_ENABLED) {
+        onOcrDone({ ingredients: [], text: "OCR désactivé (mode dev)", barcode: undefined });
+        return;
+      }
+
+      try {
+        const ocr = await analyzeImage(file); // Peut lever 401 en prod → catch
+        onOcrDone({
+          ingredients: ocr.ingredients || [],
+          barcode: ocr.barcode,
+          text: ocr.text,
+        });
+      } catch (e: any) {
+        setError("OCR indisponible (auth requise). Utilisez la saisie manuelle.");
+        onError?.(e);
+      }
     } catch (e: any) {
-      setError(e?.message || "Erreur de capture/OCR");
+      setError(e?.message || "Erreur de capture");
       onError?.(e);
     } finally {
       setBusy(false);
@@ -122,6 +130,12 @@ export default function PhotoCapture({
 
   return (
     <div className="w-full">
+      {FLAGS.OCR_ENABLED ? null : (
+        <div className="mb-3 p-3 rounded-lg border bg-gray-100 text-sm">
+          OCR désactivé en environnement actuel. Passez en saisie manuelle ou activez <code>VITE_OCR_ENABLED=1</code>.
+        </div>
+      )}
+
       <div className="relative">
         <video ref={videoRef} className="w-full rounded-xl bg-black" playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
