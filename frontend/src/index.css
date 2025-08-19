@@ -1,149 +1,4 @@
 ﻿/* PATH: frontend/src/index.css */
-/* Basique : si Tailwind est déjà configuré dans ton projet, ces classes utility fonctionneront.
-   Si Tailwind n'est pas présent, ce fichier garde un style neutre afin que l'app reste utilisable. */
-
-:root {
-  --font-sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-* { box-sizing: border-box; }
-html, body, #root { height: 100%; }
-body { margin: 0; font-family: var(--font-sans); background: #ffffff; color: #0f172a; }
-a { color: inherit; text-decoration: none; }
-.border { border: 1px solid #e5e7eb; }
-.border-b { border-bottom: 1px solid #e5e7eb; }
-.rounded-lg { border-radius: 0.5rem; }
-.rounded-xl { border-radius: 0.75rem; }
-.p-4 { padding: 1rem; }
-.px-2 { padding-left: .5rem; padding-right: .5rem; }
-.px-3 { padding-left: .75rem; padding-right: .75rem; }
-.py-2 { padding-top: .5rem; padding-bottom: .5rem; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-.max-w-5xl { max-width: 64rem; }
-.max-w-3xl { max-width: 48rem; }
-.mb-2 { margin-bottom: .5rem; }
-.mb-3 { margin-bottom: .75rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mt-1 { margin-top: .25rem; }
-.mt-3 { margin-top: .75rem; }
-.text-sm { font-size: .875rem; }
-.text-xs { font-size: .75rem; }
-.text-lg { font-size: 1.125rem; }
-.text-xl { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-.font-bold { font-weight: 700; }
-.font-medium { font-weight: 600; }
-.text-gray-500 { color: #6b7280; }
-.text-gray-600 { color: #4b5563; }
-.text-gray-800 { color: #1f2937; }
-.text-white { color: #fff; }
-.bg-black { background: #000; }
-.bg-white { background: #fff; }
-.bg-gray-200 { background: #e5e7eb; }
-.bg-gray-300 { background: #d1d5db; }
-.bg-emerald-600 { background: #059669; }
-.hover\:bg-gray-300:hover { background: #d1d5db; }
-.disabled\:opacity-50:disabled { opacity: .5; }
-.flex { display: flex; }
-.grid { display: grid; }
-.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.gap-2 { gap: .5rem; }
-.gap-3 { gap: .75rem; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.list-disc { list-style-type: disc; }
-.pl-5 { padding-left: 1.25rem; }
-.aspect-video { aspect-ratio: 16 / 9; }
-.pointer-events-none { pointer-events: none; }
-.inset-0 { inset: 0; position: absolute; }
-.absolute { position: absolute; }
-.relative { position: relative; }
-.overflow-hidden { overflow: hidden; }
-.w-full { width: 100%; }
-.h-24 { height: 6rem; }
-.w-3\/4 { width: 75%; }
-.rounded { border-radius: .25rem; }
-.max-h-64 { max-height: 16rem; }
-/* ... (tout le contenu EXISTANT reste identique au-dessus) ... */
-
-/* === Couleurs ECOLOJIA (sans Tailwind) === */
-.bg-green-soft { background: #E9F8DF; }
-.text-green-strong { color: #1f7a1f; }
-.border-green-strong { border: 1px solid #1f7a1f; }
-
-.bg-yellow-soft { background: #FFF8E1; }
-.text-yellow-strong { color: #996c00; }
-.border-yellow-strong { border: 1px solid #996c00; }
-
-.bg-red-soft { background: #FDE8E8; }
-.text-red-strong { color: #991B1B; }
-.border-red-strong { border: 1px solid #991B1B; }
-
-/* Badges & cartes simples */
-.card { border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1rem; }
-.badge { border-radius: 9999px; padding: .125rem .5rem; border: 1px solid #e5e7eb; font-size: .75rem; }
-.chip { border-radius: .5rem; padding: .25rem .5rem; font-size: .75rem; display: inline-block; }
-
-
-/* Animations */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.5s ease-out both;
-}
-
-/* Amélioration des transitions */
-.transition-colors {
-  transition: background-color 0.2s, color 0.2s;
-}
-
-/* Hover effects */
-.card:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  transition: box-shadow 0.2s;
-}
-
-/* Focus styles pour accessibilité */
-button:focus-visible {
-  outline: 2px solid #10b981;
-  outline-offset: 2px;
-}
-
-/* Loading spinner */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* PATH: frontend/src/index.css */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -156,6 +11,18 @@ button:focus-visible {
 .bg-red-soft { background: #FDE8E8; }
 .text-red-strong { color: #991B1B; }
 
+/* Additional color utilities */
+.text-green-600 { color: #059669; }
+.text-lime-600 { color: #65a30d; }
+.text-yellow-600 { color: #ca8a04; }
+.text-orange-600 { color: #ea580c; }
+.text-red-600 { color: #dc2626; }
+.text-gray-400 { color: #9ca3af; }
+.bg-gray-50 { background: #f9fafb; }
+.bg-gray-100 { background: #f3f4f6; }
+.text-gray-700 { color: #374151; }
+
+/* Component classes using Tailwind's @apply */
 .card { 
   @apply border border-gray-200 rounded-xl p-4 bg-white shadow-sm;
 }
@@ -189,6 +56,70 @@ button:focus-visible {
 }
 
 .spinner {
-  @apply inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin;
+  @apply inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full;
   animation: spin 0.8s linear infinite;
 }
+
+/* Focus styles for accessibility */
+button:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* Card hover effect */
+.card:hover {
+  @apply shadow-md transition-shadow duration-200;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out both;
+}
+
+/* Additional utility classes */
+.min-h-screen { min-height: 100vh; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+.transition-shadow { transition-property: box-shadow; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-200 { transition-duration: 200ms; }
+.max-w-4xl { max-width: 56rem; }
+.max-w-6xl { max-width: 72rem; }
+.shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+.ml-auto { margin-left: auto; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.hover\:text-emerald-600:hover { color: #059669; }
+.hover\:text-emerald-700:hover { color: #047857; }
+.flex-1 { flex: 1 1 0%; }
+.flex-wrap { flex-wrap: wrap; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.ml-4 { margin-left: 1rem; }
+.mt-8 { margin-top: 2rem; }
+.text-center { text-align: center; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.text-6xl { font-size: 3.75rem; line-height: 1; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
