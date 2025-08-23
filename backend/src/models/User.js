@@ -1,6 +1,6 @@
 // PATH: backend/src/models/User.js
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const aiPreferencesSchema = new mongoose.Schema({
   tone: {
@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema({
     lastReset: { type: Date, default: Date.now }
   },
   
-  // AI Preferences - NOUVEAU
+  // AI Preferences
   aiPreferences: {
     type: aiPreferencesSchema,
     default: () => ({})
@@ -113,7 +113,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Indexes
-userSchema.index({ email: 1 });
 userSchema.index({ 'plan.customerId': 1 });
 
 // Methods
@@ -157,4 +156,4 @@ userSchema.pre('save', async function(next) {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;
