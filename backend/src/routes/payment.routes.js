@@ -1,307 +1,209 @@
-// backend/src/routes/payment.routes.js
-// Routes de paiement utilisant le LemonSqueezyService cree
-
+// PATH: backend/src/routes/payment.routes.js
 const express = require('express');
 const router = express.Router();
-const { authenticateUser } = require('../middleware/auth');
-const LemonSqueezyService = require('../services/payment/LemonSqueezyService');
 
-/**
- * POST /api/payment/create-checkout
- * Creer une session de checkout
- */
-router.post('/create-checkout', authenticateUser, async (req, res) => {
+// Flags
+const ENABLE_PAYMENTS = process.env.ENABLE_PAYMENTS === '1';
+
+// Auth (no-op si indispo)
+let authenticateUser = null;
+try {
+  const mw = require('../middleware/auth');
+  authenticateUser = typeof mw.authenticateUser === 'function' ? mw.authenticateUser : null;
+} catch (_) {
   try {
-    const { plan = 'monthly' } = req.body;
-    const userId = req.userId;
-    const email = req.user.email;
-    
-    console.log('[Payment] Creating checkout for user:', userId, 'plan:', plan);
+    const mw2 = require('../middleware'); // parfois exporté ici
+    authenticateUser = typeof mw2.authenticateUser === 'function' ? mw2.authenticateUser : null;
+  } catch (_) {}
+}
+const authMw = authenticateUser || ((req, res, next) => next());
 
-    const result = await LemonSqueezyService.createCheckoutSession(userId, email, plan);
+// Service LemonSqueezy (peut être absent en dev)
+let LS = null;
+try {
+  LS = require('../services/payment/LemonSqueezyService');
+} catch (_) {
+  LS = null;
+}
 
-    res.json({
-      success: true,
-      checkoutUrl: result.checkoutUrl,
-      checkoutId: result.checkoutId,
-      expiresAt: result.expiresAt
-    });
+const has = (fn) => LS && typeof LS[fn] === 'function';
 
-  } catch (error) {
-    console.error('[Payment] Checkout error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Erreur lors de la creation du paiement'
-    });
-  }
-});
-
-/**
- * POST /api/payment/webhook
- * Webhook LemonSqueezy
- */
-router.post('/webhook', async (req, res) => {
-  try {
-    const signature = req.headers['x-signature'] || req.headers['x-lemonsqueezy-signature'];
-    
-    if (!signature) {
-      return res.status(400).json({
-        success: false,
-        error: 'Signature manquante'
-      });
-    }
-
-    // Traiter le webhook
-    await LemonSqueezyService.handleWebhook(req.body, signature);
-
-    res.json({ success: true });
-
-  } catch (error) {
-    console.error('[Payment] Webhook error:', error);
-    
-    // LemonSqueezy attend un 200 meme en cas d'erreur
-    res.status(200).json({ 
-      success: false,
-      error: error.message 
-    });
-  }
-});
-
-/**
- * POST /api/payment/cancel-subscription
- * Annuler un abonnement
- */
-router.post('/cancel-subscription', authenticateUser, async (req, res) => {
-  try {
-    const userId = req.userId;
-    
-    const result = await LemonSqueezyService.cancelSubscription(userId);
-
-    res.json({
-      success: true,
-      message: result.message,
-      endsAt: result.endsAt
-    });
-
-  } catch (error) {
-    console.error('[Payment] Cancel subscription error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Erreur lors de l\'annulation'
-    });
-  }
-});
-
-/**
- * POST /api/payment/resume-subscription
- * Reactiver un abonnement annule
- */
-router.post('/resume-subscription', authenticateUser, async (req, res) => {
-  try {
-    const userId = req.userId;
-    
-    const result = await LemonSqueezyService.resumeSubscription(userId);
-
-    res.json({
-      success: true,
-      message: result.message
-    });
-
-  } catch (error) {
-    console.error('[Payment] Resume subscription error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Erreur lors de la reactivation'
-    });
-  }
-});
-
-/**
- * POST /api/payment/change-plan
- * Changer de plan d'abonnement
- */
-router.post('/change-plan', authenticateUser, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { newPlan } = req.body;
-    
-    if (!['monthly', 'annual'].includes(newPlan)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Plan invalide'
-      });
-    }
-    
-    const result = await LemonSqueezyService.changeSubscriptionPlan(userId, newPlan);
-
-    res.json({
-      success: true,
-      message: result.message
-    });
-
-  } catch (error) {
-    console.error('[Payment] Change plan error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Erreur lors du changement de plan'
-    });
-  }
-});
-
-/**
- * GET /api/payment/subscription-status
- * Obtenir le statut de l'abonnement
- */
-router.get('/subscription-status', authenticateUser, async (req, res) => {
-  try {
-    const user = req.user;
-    
-    if (!user.subscription || user.tier !== 'premium') {
-      return res.json({
-        success: true,
-        hasSubscription: false,
-        tier: 'free'
-      });
-    }
-
-    // Si l'abonnement existe, recuperer les details
-    let subscriptionDetails = null;
-    if (user.subscription.id) {
-      try {
-        subscriptionDetails = await LemonSqueezyService.getSubscription(user.subscription.id);
-      } catch (error) {
-        console.warn('Could not fetch subscription details:', error);
-      }
-    }
-
-    res.json({
-      success: true,
-      hasSubscription: true,
-      tier: 'premium',
-      subscription: {
-        status: user.subscription.status,
-        currentPeriodEnd: user.subscription.currentPeriodEnd,
-        cancelAtPeriodEnd: user.subscription.cancelAtPeriodEnd,
-        planName: user.subscription.planName,
-        createdAt: user.subscription.createdAt,
-        details: subscriptionDetails
-      }
-    });
-
-  } catch (error) {
-    console.error('[Payment] Get subscription status error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la recuperation du statut'
-    });
-  }
-});
-
-/**
- * GET /api/payment/history
- * Historique des paiements
- */
-router.get('/history', authenticateUser, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { limit = 10 } = req.query;
-    
-    const history = await LemonSqueezyService.getPaymentHistory(userId, parseInt(limit));
-
-    res.json({
-      success: true,
-      payments: history,
-      count: history.length
-    });
-
-  } catch (error) {
-    console.error('[Payment] Get history error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la recuperation de l\'historique'
-    });
-  }
-});
-
-/**
- * GET /api/payment/customer-portal
- * Obtenir l'URL du portail client LemonSqueezy
- */
-router.get('/customer-portal', authenticateUser, async (req, res) => {
-  try {
-    const user = req.user;
-    
-    if (!user?.subscription?.customerId) {
-      return res.status(404).json({
-        success: false,
-        error: 'Aucun abonnement trouve'
-      });
-    }
-
-    // URL du portail client LemonSqueezy
-    const portalUrl = `https://app.lemonsqueezy.com/my-orders`;
-
-    res.json({
-      success: true,
-      portalUrl,
-      message: 'Vous allez etre redirige vers le portail client LemonSqueezy'
-    });
-
-  } catch (error) {
-    console.error('[Payment] Portal error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur acces portail'
-    });
-  }
-});
-
-/**
- * GET /api/payment/stats
- * Statistiques des abonnements (admin only)
- */
-router.get('/stats', authenticateUser, async (req, res) => {
-  try {
-    // Verifier si l'utilisateur est admin
-    if (!req.user.isAdmin) {
-      return res.status(403).json({
-        success: false,
-        error: 'Acces non autorise'
-      });
-    }
-    
-    const stats = await LemonSqueezyService.getSubscriptionStats();
-
-    res.json({
-      success: true,
-      stats
-    });
-
-  } catch (error) {
-    console.error('[Payment] Get stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la recuperation des statistiques'
-    });
-  }
-});
-
-/**
- * GET /api/payment/health
- * Health check
- */
+// Health: toujours dispo
 router.get('/health', (req, res) => {
   res.json({
     success: true,
     service: 'payment',
-    status: 'operational',
-    lemonSqueezy: {
-      configured: !!process.env.LEMONSQUEEZY_API_KEY,
-      storeId: !!process.env.LEMONSQUEEZY_STORE_ID,
-      webhookSecret: !!process.env.LEMONSQUEEZY_WEBHOOK_SECRET
+    enabled: ENABLE_PAYMENTS,
+    handlers: {
+      createCheckoutSession: has('createCheckoutSession'),
+      handleWebhook: has('handleWebhook'),
+      cancelSubscription: has('cancelSubscription'),
+      resumeSubscription: has('resumeSubscription'),
+      changeSubscriptionPlan: has('changeSubscriptionPlan'),
+      getSubscription: has('getSubscription'),
+      getPaymentHistory: has('getPaymentHistory'),
+      getSubscriptionStats: has('getSubscriptionStats'),
     },
-    timestamp: new Date()
+    env: {
+      apiKey: !!process.env.LEMONSQUEEZY_API_KEY,
+      storeId: !!process.env.LEMONSQUEEZY_STORE_ID,
+      webhookSecret: !!process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
+    },
+    timestamp: new Date().toISOString(),
   });
 });
+
+// Si paiements OFF ou handlers manquants -> stubs
+if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) {
+  console.warn('⚠️ Paiements désactivés ou handlers indisponibles — montage des stubs /api/payment/*');
+
+  router.post('/create-checkout', authMw, (req, res) => {
+    return res.status(501).json({
+      success: false,
+      message:
+        'Paiements indisponibles en dev. Activez ENABLE_PAYMENTS=1 et implémentez LemonSqueezyService pour utiliser cette route.',
+    });
+  });
+
+  router.post('/webhook', (req, res) => {
+    // LemonSqueezy préfère un 2xx pour éviter des retries agressifs
+    return res.status(200).json({ success: false, message: 'Webhook stub (paiements off).' });
+  });
+
+  router.post('/cancel-subscription', authMw, (req, res) => {
+    return res.status(501).json({ success: false, message: 'Non disponible en dev (paiements off).' });
+  });
+
+  router.post('/resume-subscription', authMw, (req, res) => {
+    return res.status(501).json({ success: false, message: 'Non disponible en dev (paiements off).' });
+  });
+
+  router.post('/change-plan', authMw, (req, res) => {
+    return res.status(501).json({ success: false, message: 'Non disponible en dev (paiements off).' });
+  });
+
+  router.get('/subscription-status', authMw, (req, res) => {
+    return res.json({ success: true, hasSubscription: false, tier: 'free' });
+  });
+
+  router.get('/history', authMw, (req, res) => {
+    return res.json({ success: true, payments: [], count: 0 });
+  });
+
+  router.get('/customer-portal', authMw, (req, res) => {
+    return res.status(404).json({ success: false, message: 'Portail indisponible en dev.' });
+  });
+
+  router.get('/stats', authMw, (req, res) => {
+    return res.status(403).json({ success: false, message: 'Stats indisponibles en dev.' });
+  });
+} else {
+  // Version réelle quand tout est prêt
+  router.post('/create-checkout', authMw, async (req, res) => {
+    try {
+      const { plan = 'monthly' } = req.body || {};
+      const userId = req.userId;
+      const email = req.user?.email;
+      const result = await LS.createCheckoutSession(userId, email, plan);
+      res.json({ success: true, checkoutUrl: result.checkoutUrl, checkoutId: result.checkoutId, expiresAt: result.expiresAt });
+    } catch (e) {
+      res.status(500).json({ success: false, error: e?.message || 'Erreur création checkout' });
+    }
+  });
+
+  router.post('/webhook', async (req, res) => {
+    try {
+      const signature = req.headers['x-lemonsqueezy-signature'] || req.headers['x-signature'];
+      if (!signature) return res.status(400).json({ success: false, error: 'Signature manquante' });
+      await LS.handleWebhook(req.body, signature);
+      res.json({ success: true });
+    } catch (e) {
+      // LemonSqueezy tolère un 200
+      res.status(200).json({ success: false, error: e?.message });
+    }
+  });
+
+  router.post('/cancel-subscription', authMw, async (req, res) => {
+    try {
+      const result = await LS.cancelSubscription(req.userId);
+      res.json({ success: true, message: result.message, endsAt: result.endsAt });
+    } catch (e) {
+      res.status(500).json({ success: false, error: e?.message || 'Erreur annulation' });
+    }
+  });
+
+  router.post('/resume-subscription', authMw, async (req, res) => {
+    try {
+      const result = await LS.resumeSubscription(req.userId);
+      res.json({ success: true, message: result.message });
+    } catch (e) {
+      res.status(500).json({ success: false, error: e?.message || 'Erreur réactivation' });
+    }
+  });
+
+  router.post('/change-plan', authMw, async (req, res) => {
+    try {
+      const { newPlan } = req.body || {};
+      if (!['monthly', 'annual'].includes(newPlan)) {
+        return res.status(400).json({ success: false, error: 'Plan invalide' });
+      }
+      const result = await LS.changeSubscriptionPlan(req.userId, newPlan);
+      res.json({ success: true, message: result.message });
+    } catch (e) {
+      res.status(500).json({ success: false, error: e?.message || 'Erreur changement de plan' });
+    }
+  });
+
+  router.get('/subscription-status', authMw, async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user?.subscription || user?.tier !== 'premium') {
+        return res.json({ success: true, hasSubscription: false, tier: 'free' });
+      }
+      let details = null;
+      try { if (user.subscription.id && has('getSubscription')) details = await LS.getSubscription(user.subscription.id); } catch (_) {}
+      res.json({
+        success: true,
+        hasSubscription: true,
+        tier: 'premium',
+        subscription: {
+          status: user.subscription.status,
+          currentPeriodEnd: user.subscription.currentPeriodEnd,
+          cancelAtPeriodEnd: user.subscription.cancelAtPeriodEnd,
+          planName: user.subscription.planName,
+          createdAt: user.subscription.createdAt,
+          details,
+        },
+      });
+    } catch (e) {
+      res.status(500).json({ success: false, error: 'Erreur récupération statut' });
+    }
+  });
+
+  router.get('/history', authMw, async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit || '10', 10);
+      const history = has('getPaymentHistory') ? await LS.getPaymentHistory(req.userId, limit) : [];
+      res.json({ success: true, payments: history, count: history.length });
+    } catch (e) {
+      res.status(500).json({ success: false, error: 'Erreur récupération historique' });
+    }
+  });
+
+  router.get('/customer-portal', authMw, (req, res) => {
+    if (!req.user?.subscription?.customerId) return res.status(404).json({ success: false, error: 'Aucun abonnement' });
+    res.json({ success: true, portalUrl: 'https://app.lemonsqueezy.com/my-orders' });
+  });
+
+  router.get('/stats', authMw, async (req, res) => {
+    try {
+      if (!req.user?.isAdmin) return res.status(403).json({ success: false, error: 'Accès non autorisé' });
+      const stats = has('getSubscriptionStats') ? await LS.getSubscriptionStats() : {};
+      res.json({ success: true, stats });
+    } catch (e) {
+      res.status(500).json({ success: false, error: 'Erreur récupération statistiques' });
+    }
+  });
+}
 
 module.exports = router;
