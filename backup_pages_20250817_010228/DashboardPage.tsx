@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/DashboardPage.tsx
+// PATH: frontend/src/pages/DashboardPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -63,8 +63,8 @@ interface DashboardStats {
     score: number;
     category: string;
     date: string;
-    nutriScorea: string;
-    ecoScorea: string;
+    nutriScore?: string;
+    ecoScore?: string;
   }>;
   weeklyTrend: Array<{
     day: string;
@@ -72,7 +72,7 @@ interface DashboardStats {
   }>;
 }
 
-// Valeurs par defaut pour eviter les erreurs
+// Valeurs par défaut pour éviter les erreurs
 const defaultStats: DashboardStats = {
   totalScans: 0,
   healthScoreAverage: 0,
@@ -108,7 +108,7 @@ const DashboardPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Verifier si l'utilisateur est connecte
+      // Vérifier si l'utilisateur est connecté
       const token = localStorage.getItem('ecolojia_token');
       
       if (!token && !ConfigService.isDemo()) {
@@ -118,13 +118,13 @@ const DashboardPage: React.FC = () => {
       }
       
       const data = await dashboardService.getStats();
-      // Fusionner avec les valeurs par defaut pour eviter les undefined
+      // Fusionner avec les valeurs par défaut pour éviter les undefined
       setStats({
         ...defaultStats,
         ...data,
         categoryBreakdown: {
           ...defaultStats.categoryBreakdown,
-          ...(data?.categoryBreakdown || {})
+          ...(data.categoryBreakdown || {})
         }
       });
       setIsDemo(ConfigService.isDemo());
@@ -132,13 +132,13 @@ const DashboardPage: React.FC = () => {
     } catch (error: any) {
       console.error('Error fetching dashboard data:', error);
       
-      // Si c'est une erreur de connexion ou mode demo, utiliser les donnees de demo
+      // Si c'est une erreur de connexion ou mode démo, utiliser les données de démo
       if (error.isDemoMode || error.statusCode === 401 || error.statusCode === 0 || error.message?.includes('ERR_CONNECTION_REFUSED')) {
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginBanner(true);
         
-        // Reessayer en mode demo
+        // Réessayer en mode démo
         try {
           const demoData = await dashboardService.getStats();
           setStats({
@@ -146,17 +146,17 @@ const DashboardPage: React.FC = () => {
             ...demoData,
             categoryBreakdown: {
               ...defaultStats.categoryBreakdown,
-              ...(demodata?.categoryBreakdown || {})
+              ...(demoData.categoryBreakdown || {})
             }
           });
         } catch (demoError) {
           console.error('Demo mode error:', demoError);
-          setError('Impossible de charger les donnees de demonstration');
-          setStats(defaultStats); // Utiliser les valeurs par defaut
+          setError('Impossible de charger les données de démonstration');
+          setStats(defaultStats); // Utiliser les valeurs par défaut
         }
       } else {
-        setError('Impossible de charger les donnees');
-        setStats(defaultStats); // Utiliser les valeurs par defaut
+        setError('Impossible de charger les données');
+        setStats(defaultStats); // Utiliser les valeurs par défaut
       }
     } finally {
       setLoading(false);
@@ -187,7 +187,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const doughnutData = {
-    labels: ['Alimentation', 'Cosmetiques', 'Produits menagers'],
+    labels: ['Alimentation', 'Cosmétiques', 'Produits ménagers'],
     datasets: [
       {
         data: [
@@ -226,7 +226,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Banniere mode demo */}
+      {/* Bannière mode démo */}
       {showLoginBanner && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -237,7 +237,7 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5" />
               <p className="font-medium">
-                Mode demonstration ? Connectez-vous pour voir vos vraies statistiques
+                Mode démonstration â€” Connectez-vous pour voir vos vraies statistiques
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -249,7 +249,7 @@ const DashboardPage: React.FC = () => {
                 Se connecter
               </button>
               <button
-                aria-label="Fermer la banniere"
+                aria-label="Fermer la bannière"
                 onClick={() => setShowLoginBanner(false)}
                 className="text-white hover:text-gray-200 p-2 rounded-lg hover:bg-white/10"
               >
@@ -266,11 +266,12 @@ const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-[#3B3B3B]">
-                {isDemo ? 'Tableau de bord demo' : `Bonjour ${user?.profile?.firstName || 'Utilisateur'} !`}
+                {isDemo ? 'Tableau de bord démo' : `Bonjour ${user?.profile?.firstName || 'Utilisateur'} !`}
               </h1>
               <p className="text-gray-600 mt-2">
-                {isDemo ? 'Decouvrez ce que ECOLOJIA peut vous offrir'
-                  : 'Voici un apercu de vos analyses de produits'
+                {isDemo 
+                  ? 'Découvrez ce que ECOLOJIA peut vous offrir'
+                  : 'Voici un aperçu de vos analyses de produits'
                 }
               </p>
             </div>
@@ -307,7 +308,7 @@ const DashboardPage: React.FC = () => {
               </span>
             </div>
             <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.totalScans || 0}</h3>
-            <p className="text-gray-600 text-sm mt-1">Produits scannes</p>
+            <p className="text-gray-600 text-sm mt-1">Produits scannés</p>
           </motion.div>
 
           {/* Score moyen */}
@@ -327,7 +328,7 @@ const DashboardPage: React.FC = () => {
               </span>
             </div>
             <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.healthScoreAverage || 0}%</h3>
-            <p className="text-gray-600 text-sm mt-1">Score sante moyen</p>
+            <p className="text-gray-600 text-sm mt-1">Score santé moyen</p>
           </motion.div>
 
           {/* Progression mensuelle */}
@@ -346,11 +347,11 @@ const DashboardPage: React.FC = () => {
                 {stats.monthlyProgress > 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-[#3B3B3B]">En progres</h3>
+            <h3 className="text-2xl font-bold text-[#3B3B3B]">En progrès</h3>
             <p className="text-gray-600 text-sm mt-1">Ce mois-ci</p>
           </motion.div>
 
-          {/* Categorie favorite */}
+          {/* Catégorie favorite */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -364,7 +365,7 @@ const DashboardPage: React.FC = () => {
               <ShoppingBag className="w-5 h-5 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.topCategory || 'Alimentation'}</h3>
-            <p className="text-gray-600 text-sm mt-1">Categorie preferee</p>
+            <p className="text-gray-600 text-sm mt-1">Catégorie préférée</p>
           </motion.div>
         </div>
 
@@ -378,14 +379,14 @@ const DashboardPage: React.FC = () => {
             className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm"
           >
             <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-              Activite de la semaine
+              Activité de la semaine
             </h3>
             <div className="h-64">
               <Line data={lineChartData} options={chartOptions} />
             </div>
           </motion.div>
 
-          {/* Repartition par categorie */}
+          {/* Répartition par catégorie */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -393,7 +394,7 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm"
           >
             <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-              Repartition
+              Répartition
             </h3>
             <div className="h-64 flex items-center justify-center">
               <div className="w-48 h-48">
@@ -411,14 +412,14 @@ const DashboardPage: React.FC = () => {
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-[#4A90E2] rounded-full"></span>
-                  Cosmetiques
+                  Cosmétiques
                 </span>
                 <span className="font-medium">{stats.categoryBreakdown?.cosmetics || 0}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-[#F5A623] rounded-full"></span>
-                  Produits menagers
+                  Produits ménagers
                 </span>
                 <span className="font-medium">{stats.categoryBreakdown?.detergents || 0}</span>
               </div>
@@ -426,7 +427,7 @@ const DashboardPage: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Analyses recentes */}
+        {/* Analyses récentes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -436,7 +437,7 @@ const DashboardPage: React.FC = () => {
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Analyses recentes
+                Analyses récentes
               </h3>
               <button
                 onClick={() => navigate('/history')}
@@ -495,12 +496,12 @@ const DashboardPage: React.FC = () => {
                 </motion.div>
               ))
             ) : (
-              <div className="p-6 text-center text-gray-500">Aucune analyse recente</div>
+              <div className="p-6 text-center text-gray-500">Aucune analyse récente</div>
             )}
           </div>
         </motion.div>
 
-        {/* CTA Mode demo */}
+        {/* CTA Mode démo */}
         {isDemo && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -509,16 +510,16 @@ const DashboardPage: React.FC = () => {
             className="mt-8 bg-gradient-to-r from-[#7DDE4A] to-[#6BC93B] rounded-xl p-8 text-white text-center"
           >
             <h3 className="text-2xl font-bold mb-4">
-              Pret  analyser vos propres produits a
+              Prêt Ã  analyser vos propres produits ?
             </h3>
             <p className="text-lg mb-6 opacity-90">
-              Creez votre compte gratuit et commencez  faire des choix eclaires
+              Créez votre compte gratuit et commencez Ã  faire des choix éclairés
             </p>
             <button
               onClick={() => navigate('/register')}
               className="bg-white text-[#7DDE4A] px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
             >
-              Creer mon compte
+              Créer mon compte
             </button>
           </motion.div>
         )}
@@ -528,8 +529,4 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-
-
-
-
 

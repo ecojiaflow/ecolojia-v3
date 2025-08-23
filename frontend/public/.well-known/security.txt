@@ -1,0 +1,5 @@
+// PATH: frontend/public/.well-known/security.txt
+Contact: mailto:security@ecolojia.app
+Expires: 2026-01-01T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://ecolojia.app/.well-known/security.txt

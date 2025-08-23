@@ -63,7 +63,7 @@ function extractSources(raw) {
   return Array.isArray(src) ? src : [];
 }
 
-const analyzeCosmeticController = async (req, res) => {
+exports.analyzeCosmeticController = async (req, res) => {
   try {
     const { barcode, name, ingredients, inciList, language = 'fr' } = req.body || {};
     const list = normalizeIngredients(ingredients || inciList);
@@ -96,9 +96,4 @@ const analyzeCosmeticController = async (req, res) => {
     logger.error('Cosmetic analysis failed', { error: err?.message });
     return res.status(500).json({ success: false, error: 'COSMETIC_ANALYSIS_FAILED', details: err?.message });
   }
-};
-
-// Export avec destructuring pour correspondre à l'import dans les routes
-module.exports = {
-  analyzeCosmeticController
 };

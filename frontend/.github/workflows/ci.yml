@@ -1,0 +1,267 @@
+// PATH: frontend/.github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run type check
+      run: npm run type-check
+    
+    - name: Run tests
+      run: npm run test:coverage
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/coverage-final.json
+    
+    - name: Build
+      run: npm run build
+    
+    - name: Install Playwright
+      run: npx playwright install --with-deps
+    
+    - name: Run E2E tests
+      run: npm run e2e
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: |
+          coverage/
+          playwright-report/
+          test-results/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install and Build
+      run: |
+        npm ci
+        npm run build
+    
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v2.0
+      with:
+        publish-dir: './dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+---
+
+// PATH: frontend/scripts/deploy.ps1
+# Script PowerShell pour déploiement local
+param(
+    [Parameter(Mandatory=$false)]
+    [string]$Environment = "production",
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$SkipTests = $false
+)
+
+Write-Host "🚀 Déploiement ECOLOJIA Frontend - $Environment" -ForegroundColor Green
+
+# Vérifier Node.js
+if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+    Write-Error "Node.js n'est pas installé"
+    exit 1
+}
+
+# Nettoyer
+Write-Host "🧹 Nettoyage..." -ForegroundColor Yellow
+Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force node_modules/.cache -ErrorAction SilentlyContinue
+
+# Installer les dépendances
+Write-Host "📦 Installation des dépendances..." -ForegroundColor Yellow
+npm ci
+
+# Tests
+if (!$SkipTests) {
+    Write-Host "🧪 Exécution des tests..." -ForegroundColor Yellow
+    npm run test:coverage
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Les tests ont échoué"
+        exit 1
+    }
+}
+
+# Build
+Write-Host "🔨 Build de production..." -ForegroundColor Yellow
+$env:NODE_ENV = "production"
+npm run build
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Le build a échoué"
+    exit 1
+}
+
+# Vérifier la taille du bundle
+$distSize = (Get-ChildItem -Recurse dist | Measure-Object -Property Length -Sum).Sum / 1MB
+Write-Host "📏 Taille du build: $([math]::Round($distSize, 2)) MB" -ForegroundColor Cyan
+
+# Déploiement selon l'environnement
+switch ($Environment) {
+    "production" {
+        Write-Host "🌍 Déploiement en production..." -ForegroundColor Green
+        # netlify deploy --prod --dir=dist
+    }
+    "staging" {
+        Write-Host "🌐 Déploiement en staging..." -ForegroundColor Blue
+        # netlify deploy --dir=dist
+    }
+    "local" {
+        Write-Host "💻 Prévisualisation locale..." -ForegroundColor Magenta
+        npm run preview
+    }
+}
+
+Write-Host "✅ Déploiement terminé!" -ForegroundColor Green
+
+---
+
+// PATH: frontend/scripts/check-health.ps1
+# Script de vérification de santé
+param(
+    [string]$ApiUrl = "https://ecolojia-backendvf.onrender.com/api",
+    [string]$FrontUrl = "http://localhost:5173"
+)
+
+Write-Host "🏥 Vérification de santé ECOLOJIA" -ForegroundColor Green
+
+# Fonction de test d'endpoint
+function Test-Endpoint {
+    param([string]$Url, [string]$Name)
+    
+    try {
+        $response = Invoke-WebRequest -Uri $Url -Method Head -TimeoutSec 10
+        if ($response.StatusCode -eq 200) {
+            Write-Host "✅ $Name : OK" -ForegroundColor Green
+            return $true
+        }
+    } catch {
+        Write-Host "❌ $Name : KO - $_" -ForegroundColor Red
+        return $false
+    }
+}
+
+# Tests
+$results = @{
+    "API Health" = Test-Endpoint "$ApiUrl/health" "API Health"
+    "Frontend" = Test-Endpoint $FrontUrl "Frontend"
+    "Cosmetics" = Test-Endpoint "$ApiUrl/cosmetics/health" "Cosmetics Service"
+    "Detergents" = Test-Endpoint "$ApiUrl/detergents/health" "Detergents Service"
+}
+
+# Résumé
+Write-Host "`n📊 Résumé:" -ForegroundColor Yellow
+$passed = ($results.Values | Where-Object { $_ }).Count
+$total = $results.Count
+Write-Host "$passed/$total services opérationnels" -ForegroundColor $(if ($passed -eq $total) { "Green" } else { "Yellow" })
+
+---
+
+// PATH: frontend/.env.production
+# Variables d'environnement de production
+VITE_API_URL=https://ecolojia-backendvf.onrender.com/api
+VITE_DEMO_MODE=0
+VITE_OCR_ENABLED=1
+VITE_SCANNER_PROVIDER=auto
+VITE_AI_CHAT_ENABLED=1
+VITE_AUTH_ENABLED=1
+VITE_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+VITE_GA_ID=G-XXXXXXXXXX
+
+---
+
+// PATH: frontend/netlify.toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+---
+
+// PATH: frontend/vercel.json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    }
+  ]
+}

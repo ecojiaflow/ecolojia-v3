@@ -1,0 +1,86 @@
+// PATH: backend/src/controllers/detergentController.js
+const crypto = require('crypto');
+const { Logger } = require('../utils/logger');
+const { DetergentScorer } = require('../scorers/detergent/detergentScorer');
+
+const logger = new Logger('DetergentController');
+
+function normalizeIngredients(input) {
+  if (!input) return [];
+  if (Array.isArray(input)) return input.map(s => String(s).toUpperCase().trim()).filter(Boolean);
+  return String(input)
+    .replace(/INGRÉDIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
+    .replace(/\([^)]*\)/g, '')
+    .split(/[,;]\s*|\n+/)
+    .map(s => s.trim().toUpperCase())
+    .filter(Boolean);
+}
+
+function labelFromScore(v) {
+  if (v >= 90) return 'A';
+  if (v >= 75) return 'B';
+  if (v >= 60) return 'C';
+  if (v >= 40) return 'D';
+  return 'E';
+}
+
+function mapRisksFromDetergent(raw) {
+  const risks = [];
+  try {
+    const det = raw || {};
+    const detected = det.detected_issues || [];
+    detected.forEach(issue => {
+      if (issue?.type && issue?.ingredient) {
+        risks.push({
+          code: String(issue.type).toUpperCase(),
+          ingredient: issue.ingredient,
+          severity: (issue.severity || 'medium').toLowerCase(),
+          evidence: [issue.source || 'ECHA/CLP']
+        });
+      }
+    });
+    // Also surface ecotoxicity penalties as risks
+    const eco = det.breakdown?.ecotoxicity?.penalties || [];
+    eco.forEach(p => {
+      risks.push({
+        code: 'ECOTOX',
+        ingredient: p.ingredient || 'unknown',
+        severity: p.penalty <= -30 ? 'high' : p.penalty <= -15 ? 'mid' : 'low',
+        evidence: [p.source || 'EU 648/2004']
+      });
+    });
+  } catch (_) {}
+  return risks;
+}
+
+exports.analyzeDetergentController = async (req, res) => {
+  try {
+    const { barcode, name, composition, ingredients, certifications = [], language = 'fr' } = req.body || {};
+    const list = normalizeIngredients(composition || ingredients);
+    if (!list.length) {
+      return res.status(400).json({ success: false, error: 'COMPOSITION_OR_INGREDIENTS_REQUIRED' });
+    }
+
+    const scorer = new DetergentScorer();
+    const raw = await scorer.analyzeDetergent(list, name || 'Produit ménager', certifications);
+
+    const value = Math.round(raw?.score ?? 0);
+    const out = {
+      id: crypto.randomUUID(),
+      category: 'detergent',
+      product: { name: name || 'Produit ménager', barcode: barcode || null },
+      score: { value, label: labelFromScore(value) },
+      risks: mapRisksFromDetergent(raw),
+      highlights: Array.isArray(raw?.insights) ? raw.insights.map(i => (i?.title || i?.content || JSON.stringify(i))) : [],
+      recommendations: Array.isArray(raw?.alternatives) ? raw.alternatives.map(a => a?.title || a) : [],
+      sources: ['REACH', 'ECHA 2024', 'EU Ecolabel'], // plus those in penalties
+      raw
+    };
+
+    logger.info('Detergent analyzed', { product: out?.product?.name, score: out?.score?.value });
+    return res.json({ success: true, data: out });
+  } catch (err) {
+    logger.error('Detergent analysis failed', { error: err?.message });
+    return res.status(500).json({ success: false, error: 'DETERGENT_ANALYSIS_FAILED', details: err?.message });
+  }
+};

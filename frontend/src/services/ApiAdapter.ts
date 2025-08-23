@@ -23,10 +23,9 @@ function toCategories(x: any): string[]|undefined {
   if (typeof x === 'string') return x.split(',').map(s => s.trim());
   return undefined;
 }
-
 function parseIngredients(s?: string): string[]|undefined {
   if (!s) return undefined;
-  return s.split(/[,;•\n]/).map(v => v.trim()).filter(Boolean);
+  return s.split(/[,;�\n]/).map(v => v.trim()).filter(Boolean);
 }
 
 export function normalizeScores(raw: any): ScoreBundle {
@@ -70,5 +69,5 @@ export function normalizeAnalysisResponse(raw: any): AnalysisResult {
   return { product: p, scores: s, label, details: raw?.details ?? {}, timestamp: new Date().toISOString() };
 }
 
-// Alias pour compatibilité
+// Alias pour compatibilit�
 export const adaptResponse = normalizeAnalysisResponse;
