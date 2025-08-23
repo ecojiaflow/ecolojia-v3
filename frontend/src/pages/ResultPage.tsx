@@ -6,11 +6,11 @@ import ScoreDisplay from "../components/analysis/ScoreDisplay";
 import RiskCard from "../components/analysis/RiskCard";
 import AlternativesList from "../components/analysis/AlternativesList";
 import { ecoToTone, novaToTone, nutriToTone } from "../utils/scores";
-import { useHistoryStore } from "../hooks/useHistory";
+import { useHistory } from "../hooks/useHistory";
 
 export default function ResultPage() {
   const location = useLocation();
-  const store = useHistoryStore();
+  const { save } = useHistory();
 
   const result: AnalysisResult | null =
     (location.state as any)?.result ||
@@ -23,7 +23,7 @@ export default function ResultPage() {
     })();
 
   useEffect(() => {
-    if (result) store.add(result);
+    if (result) save(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,3 +86,5 @@ export default function ResultPage() {
     </div>
   );
 }
+
+

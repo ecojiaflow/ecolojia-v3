@@ -45,6 +45,13 @@ interface HistoryItem {
   productImage?: string;
 }
 
+interface HistoryResponse {
+  items: HistoryItem[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
 interface FilterState {
   category: string;
   dateRange: string;
@@ -63,6 +70,7 @@ const HistoryPage: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [stats, setStats] = useState<any>(null);
   const [isDemo, setIsDemo] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -88,7 +96,7 @@ const HistoryPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Verifier si l'utilisateur est connecte
+      // Vérifier si l'utilisateur est connecté
       const token = localStorage.getItem('ecolojia_token');
       
       if (!token && !ConfigService.isDemo()) {
@@ -98,53 +106,76 @@ const HistoryPage: React.FC = () => {
         setShowLoginPrompt(true);
       }
       
-      // Utiliser les services normalement (ils gerent le mode demo en interne)
-      const [historyData, totalCount] = await Promise.all([
-        historyService.getHistory(
-          currentPage,
-          itemsPerPage,
-          filters.category !== 'all' ? filters.category : undefined,
-          filters.sortBy,
-          filters.sortOrder
-        ),
-        historyService.getHistoryCount(
-          filters.category !== 'all' ? filters.category : undefined
-        )
-      ]);
+      // Appeler le service
+      const response = await historyService.getHistory({
+        page: currentPage,
+        limit: itemsPerPage,
+        category: filters.category !== 'all' ? filters.category : undefined,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder
+      });
+
+      // Gérer la réponse selon sa structure
+      let historyData: HistoryItem[] = [];
+      let total = 0;
+      
+      if (Array.isArray(response)) {
+        // Ancien format : tableau direct
+        historyData = response;
+        total = response.length;
+      } else if (response && typeof response === 'object') {
+        // Nouveau format : objet avec items et métadonnées
+        historyData = response.items || response.data || [];
+        total = response.total || response.totalCount || historyData.length;
+        
+        // Mise à jour des pages si disponible
+        if (response.pages) {
+          setTotalPages(response.pages);
+        } else if (response.totalPages) {
+          setTotalPages(response.totalPages);
+        }
+      }
 
       // Filtrer selon la recherche
       let filteredHistory = historyData;
       if (searchQuery) {
-        filteredHistory = historydata?.filter(item =>
-          item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.productBrand.toLowerCase().includes(searchQuery.toLowerCase())
+        filteredHistory = historyData.filter(item =>
+          item.productName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.productBrand?.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
 
       // Filtrer selon le score minimum
       if (filters.minScore > 0) {
         filteredHistory = filteredHistory.filter(item =>
-          item.scores.overall >= filters.minScore
+          (item.scores?.overall || 0) >= filters.minScore
         );
       }
 
       setHistory(filteredHistory);
-      setTotalPages(Math.ceil(totalCount / itemsPerPage));
+      setTotalItems(total);
+      
+      // Calculer les pages si pas déjà fait
+      if (!response.pages && !response.totalPages) {
+        setTotalPages(Math.ceil(total / itemsPerPage));
+      }
+      
       setIsDemo(ConfigService.isDemo());
       
     } catch (error: any) {
       console.error('Error fetching history:', error);
       
-      // Si on ? une erreur isDemoMode, passer en mode demo
+      // Si on a une erreur isDemoMode, passer en mode demo
       if (error.isDemoMode || error.statusCode === 401) {
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginPrompt(true);
         
-        // Reessayer en mode demo
-        fetchHistory();
+        // Réessayer en mode demo
+        setTimeout(() => fetchHistory(), 100);
       } else {
         setError('Impossible de charger votre historique');
+        setHistory([]);
       }
     } finally {
       setLoading(false);
@@ -162,11 +193,11 @@ const HistoryPage: React.FC = () => {
 
   const handleDelete = async (ids: string[]) => {
     if (isDemo) {
-      alert('La suppression n\'est pas disponible en mode demonstration');
+      alert('La suppression n\'est pas disponible en mode démonstration');
       return;
     }
     
-    if (!confirm(`Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â tes-vous sÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${ids.length} analyse(s) ?`)) {
       return;
     }
 
@@ -188,7 +219,7 @@ const HistoryPage: React.FC = () => {
 
     try {
       const data = await historyService.exportHistory('csv');
-      // Creer un blob et telecharger
+      // Créer un blob et télécharger
       const blob = new Blob([data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -203,10 +234,10 @@ const HistoryPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â½';
-      case 'cosmetic': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬aÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾';
-      case 'detergent': return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¼';
-      default: return 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦';
+      case 'food': return '🍎';
+      case 'cosmetic': return '💄';
+      case 'detergent': return '🧼';
+      default: return '📦';
     }
   };
 
@@ -218,7 +249,7 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Banniere mode demo */}
+      {/* Bannière mode démo */}
       <AnimatePresence>
         {showLoginPrompt && (
           <motion.div 
@@ -231,7 +262,7 @@ const HistoryPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
-                  Mode demonstration active - Connectez-vous pour acceder Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  votre historique personnel
+                  Mode démonstration actif - Connectez-vous pour accéder à votre historique personnel
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -263,8 +294,8 @@ const HistoryPage: React.FC = () => {
               </h1>
               <p className="text-gray-600 mt-2">
                 {isDemo 
-                  ? 'Decouvrez des exemples d\'analyses de produits'
-                  : 'Retrouvez tous vos produits scannes'
+                  ? 'Découvrez des exemples d\'analyses de produits'
+                  : 'Retrouvez tous vos produits scannés'
                 }
               </p>
             </div>
@@ -324,7 +355,7 @@ const HistoryPage: React.FC = () => {
                 <div>
                   <p className="text-gray-600 text-sm">Total scans</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
-                    {stats.totalScans}
+                    {stats.totalScans || 0}
                   </p>
                 </div>
                 <Package className="w-10 h-10 text-[#7DDE4A]" />
@@ -341,7 +372,7 @@ const HistoryPage: React.FC = () => {
                 <div>
                   <p className="text-gray-600 text-sm">Score moyen</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
-                    {stats.healthScoreAverage}%
+                    {stats.healthScoreAverage || 0}%
                   </p>
                 </div>
                 <TrendingUp className="w-10 h-10 text-[#7DDE4A]" />
@@ -358,7 +389,7 @@ const HistoryPage: React.FC = () => {
                 <div>
                   <p className="text-gray-600 text-sm">Ce mois-ci</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
-                    +{stats.monthlyProgress}%
+                    +{stats.monthlyProgress || 0}%
                   </p>
                 </div>
                 <ArrowUpRight className="w-10 h-10 text-[#7DDE4A]" />
@@ -373,9 +404,9 @@ const HistoryPage: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">Categorie top</p>
+                  <p className="text-gray-600 text-sm">Catégorie top</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
-                    {stats.topCategory}
+                    {stats.topCategory || 'Alimentation'}
                   </p>
                 </div>
                 <Star className="w-10 h-10 text-[#7DDE4A]" />
@@ -396,10 +427,10 @@ const HistoryPage: React.FC = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* Categorie */}
+                {/* Catégorie */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Categorie
+                    Catégorie
                   </label>
                   <select
                     value={filters.category}
@@ -408,15 +439,15 @@ const HistoryPage: React.FC = () => {
                   >
                     <option value="all">Toutes</option>
                     <option value="food">Alimentation</option>
-                    <option value="cosmetic">Cosmetiques</option>
-                    <option value="detergent">Produits menagers</option>
+                    <option value="cosmetic">Cosmétiques</option>
+                    <option value="detergent">Produits ménagers</option>
                   </select>
                 </div>
 
-                {/* Periode */}
+                {/* Période */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Periode
+                    Période
                   </label>
                   <select
                     value={filters.dateRange}
@@ -427,7 +458,7 @@ const HistoryPage: React.FC = () => {
                     <option value="today">Aujourd'hui</option>
                     <option value="week">Cette semaine</option>
                     <option value="month">Ce mois</option>
-                    <option value="year">Cette annee</option>
+                    <option value="year">Cette année</option>
                   </select>
                 </div>
 
@@ -460,7 +491,7 @@ const HistoryPage: React.FC = () => {
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
                   >
-                    <option value="date-desc">Plus recent</option>
+                    <option value="date-desc">Plus récent</option>
                     <option value="date-asc">Plus ancien</option>
                     <option value="score-desc">Meilleur score</option>
                     <option value="score-asc">Moins bon score</option>
@@ -508,7 +539,7 @@ const HistoryPage: React.FC = () => {
               onClick={fetchHistory}
               className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              Reessayer
+              Réessayer
             </button>
           </div>
         ) : history.length === 0 ? (
@@ -525,7 +556,7 @@ const HistoryPage: React.FC = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {history.map((item, index) => (
+              {(Array.isArray(history) ? history : []).map((item, index) => (
                 <motion.div
                   key={item._id}
                   initial={{ opacity: 0, y: 20 }}
@@ -576,8 +607,8 @@ const HistoryPage: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Score global</span>
-                        <span className={`text-lg font-bold ${getScoreColor(item.scores.overall)}`}>
-                          {item.scores.overall}%
+                        <span className={`text-lg font-bold ${getScoreColor(item.scores?.overall || 0)}`}>
+                          {item.scores?.overall || 0}%
                         </span>
                       </div>
 
@@ -617,7 +648,7 @@ const HistoryPage: React.FC = () => {
                   disabled={currentPage === 1}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                 >
-                  Precedent
+                  Précédent
                 </button>
                 
                 <div className="flex items-center gap-2">
@@ -671,6 +702,3 @@ const HistoryPage: React.FC = () => {
 };
 
 export default HistoryPage;
-
-
-

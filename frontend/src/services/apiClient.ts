@@ -32,3 +32,6 @@ export async function post<T>(url: string, data?: unknown, headers?: Record<stri
 }
 
 export { api };
+
+// Export default pour compatibilité
+export default api;
