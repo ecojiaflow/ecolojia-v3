@@ -1,643 +1,502 @@
 ﻿// PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowLeft,
-  Download,
-  Share2,
-  AlertCircle,
-  Info,
-  Leaf,
-  Heart,
-  ShieldCheck,
-  Camera,
-  Barcode,
-  Search,
-  Eye,
-  EyeOff,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
-  TrendingUp,
-  Package,
-  Clock
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { 
+  AlertCircle, TrendingUp, Leaf, Shield, Package, 
+  Heart, Droplet, AlertTriangle, CheckCircle, Info
 } from 'lucide-react';
-import analysisService from '../services/analysisService';
-import { useAuth } from '../auth/context/AuthContext';
-
-interface ResultsPageProps {}
+import { productService, analysisService } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import { useQuota } from '../hooks/useQuota';
+import { toast } from 'react-hot-toast';
 
 interface AnalysisResult {
-  id?: string;
-  name: string;
-  brand?: string;
-  category: 'food' | 'cosmetics' | 'detergents';
-  barcode?: string;
-  scores: {
-    healthScore?: number;
-    environmentScore?: number;
-    nova?: number;
-    nutriscore?: string;
-    ecoscore?: string;
-  };
-  details: {
-    ingredientsTextRaw?: string;
-    novaLabel?: string;
-    novaReason?: string;
-    novaConfidence?: number;
-    riskFlags?: string[];
-    notableIngredients?: string[];
-    riskLevel?: 'low' | 'medium' | 'high';
-    clpPictograms?: string[];
-    surfactants?: string[];
-    allergens?: string[];
-    biodegradability?: string;
-  };
-  globalScore?: number;
-  confidence?: number;
-  timestamp?: number;
-}
-
-interface VisionData {
-  text?: string;
-  extractedData?: {
-    name?: string;
+  product: {
+    _id: string;
+    name: string;
     brand?: string;
-    ingredients?: string;
     barcode?: string;
-    category?: string;
+    category: 'food' | 'cosmetics' | 'detergents';
+    imageUrl?: string;
   };
-  confidence?: number;
+  scores: {
+    health?: number;
+    environment?: number;
+    social?: number;
+  };
+  // Alimentaire
+  nutriScore?: string;
+  novaGroup?: number;
+  ecoScore?: string;
+  additives?: Array<{
+    code: string;
+    name: string;
+    risk: 'low' | 'medium' | 'high';
+  }>;
+  allergens?: string[];
+  // Cosmétique
+  inci?: Array<{
+    name: string;
+    function?: string;
+    concerns?: string[];
+    ewgScore?: number;
+  }>;
+  endocrineDisruptors?: string[];
+  // Détergent
+  biodegradability?: number;
+  cdv?: number;
+  ecoLabels?: string[];
+  phosphateContent?: number;
+  // Commun
+  recommendations?: string[];
+  alternatives?: Array<{
+    _id: string;
+    name: string;
+    brand?: string;
+    reason: string;
+    improvement: number;
+  }>;
 }
 
-const ResultsPage: React.FC<ResultsPageProps> = () => {
-  const location = useLocation();
+const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const { isAuthenticated } = useAuth();
+  const { checkScanQuota, consumeScan } = useQuota();
   
-  const [showDetails, setShowDetails] = useState(false);
-  const [showIngredients, setShowIngredients] = useState(false);
-  const [showVisionData, setShowVisionData] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
 
-  // Recuperation des donnees depuis la navigation
-  const { analysis, visionData, scanType, barcode, inputData } = location.state || {};
+  const barcode = searchParams.get('barcode');
+  const productId = searchParams.get('id');
+  const category = searchParams.get('category') as 'food' | 'cosmetics' | 'detergents' | null;
 
-  // Rediriger si pas de donnees
   useEffect(() => {
-    if (!analysis) {
-      navigate('/scan');
+    if (!barcode && !productId) {
+      setError('Aucun produit spécifié');
+      setLoading(false);
+      return;
     }
-  }, [analysis, navigate]);
 
-  // Sauvegarder dans l'historique
-  useEffect(() => {
-    if (analysis && user) {
-      saveToHistory();
-    }
-  }, [analysis, user]);
+    analyzeProduct();
+  }, [barcode, productId]);
 
-  const saveToHistory = async () => {
+  const analyzeProduct = async () => {
     try {
-      setIsSaving(true);
-      // TODO: Implementer la sauvegarde dans l'historique
-      console.log('Saving to history:', { analysis, scanType });
-    } catch (error) {
-      console.error('Error saving to history:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+      setLoading(true);
+      setError(null);
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${analysis.name} - Analyse ECOLOJIA`,
-          text: `Decouvrez l'analyse complete de ${analysis.name} sur ECOLOJIA`,
-          url: window.location.href
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
+      // Vérifier les quotas si l'utilisateur est connecté
+      if (isAuthenticated && !checkScanQuota()) {
+        navigate('/premium');
+        return;
       }
-    } else {
-      // Copier le lien
-      navigator.clipboard.writeText(window.location.href);
-      setShareUrl(window.location.href);
-      setTimeout(() => setShareUrl(null), 3000);
+
+      // Obtenir le produit d'abord si nécessaire
+      let product;
+      if (barcode) {
+        product = await productService.getByBarcode(barcode);
+      } else if (productId) {
+        product = await productService.getById(productId);
+      }
+
+      if (!product) {
+        throw new Error('Produit introuvable');
+      }
+
+      // Analyser le produit
+      const analysisParams = {
+        barcode: product.barcode,
+        productId: product._id,
+        category: category || product.category || 'food',
+      };
+
+      const analysis = await analysisService.analyzeProduct(analysisParams);
+
+      // Consommer le quota si connecté
+      if (isAuthenticated) {
+        await consumeScan();
+      }
+
+      setResult({
+        product: {
+          ...product,
+          category: analysisParams.category as any,
+        },
+        ...analysis,
+      });
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message || 'Erreur lors de l\'analyse');
+      toast.error('Erreur lors de l\'analyse du produit');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleExport = () => {
-    const data = {
-      product: {
-        name: analysis.name,
-        brand: analysis.brand,
-        category: analysis.category,
-        barcode: analysis.barcode || barcode
-      },
-      analysis: analysis,
-      scanType: scanType,
-      date: new Date().toISOString()
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ecolojia-${analysis.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const getScanTypeIcon = () => {
-    switch (scanType) {
-      case 'barcode':
-        return <Barcode className="w-5 h-5" />;
-      case 'photo':
-        return <Camera className="w-5 h-5" />;
-      case 'manual':
-        return <Search className="w-5 h-5" />;
-      default:
-        return <Package className="w-5 h-5" />;
-    }
-  };
-
-  const getScoreColor = (score: number) => {
+  // Fonction pour obtenir la couleur selon le score
+  const getScoreColor = (score?: number) => {
+    if (!score) return 'text-gray-500';
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
     if (score >= 40) return 'text-orange-600';
     return 'text-red-600';
   };
 
-  const getScoreLabel = (score: number) => {
-    if (score >= 80) return 'Excellent';
-    if (score >= 60) return 'Bon';
-    if (score >= 40) return 'Moyen';
-    return 'A eviter';
+  // Fonction pour obtenir la couleur du Nutri-Score
+  const getNutriScoreColor = (score?: string) => {
+    const colors = {
+      'A': 'bg-green-600',
+      'B': 'bg-green-500',
+      'C': 'bg-yellow-500',
+      'D': 'bg-orange-500',
+      'E': 'bg-red-600',
+    };
+    return colors[score as keyof typeof colors] || 'bg-gray-400';
   };
 
-  const getNovaColor = (nova: number) => {
-    switch (nova) {
-      case 1: return 'bg-green-100 text-green-800';
-      case 2: return 'bg-yellow-100 text-yellow-800';
-      case 3: return 'bg-orange-100 text-orange-800';
-      case 4: return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  if (!analysis) {
-    return null;
-  }
-
-  return (
-    <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-[#DDE9DA]">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate(-1)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6 text-gray-700" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-[#3B3B3B]">
-                  Resultats de l'analyse
-                </h1>
-                <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                  {getScanTypeIcon()}
-                  <span>
-                    Scanne via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
-                  </span>
-                  <span className="text-gray-400">•</span>
-                  <Clock className="w-4 h-4" />
-                  <span>{new Date().toLocaleTimeString()}</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleShare}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title="Partager"
-              >
-                <Share2 className="w-5 h-5 text-gray-700" />
-              </button>
-              <button
-                onClick={handleExport}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title="Exporter"
-              >
-                <Download className="w-5 h-5 text-gray-700" />
-              </button>
-            </div>
-          </div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Analyse en cours...</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Product Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-sm p-6 mb-6"
-        >
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-[#3B3B3B]">
-                {analysis.name}
-              </h2>
-              {analysis.brand && (
-                <p className="text-gray-600 mt-1">{analysis.brand}</p>
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-center text-gray-800 mb-2">Erreur d'analyse</h2>
+          <p className="text-center text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => navigate('/search')}
+            className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+          >
+            Retour à la recherche
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!result) return null;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header produit */}
+        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-6">
+            {result.product.imageUrl && (
+              <img
+                src={result.product.imageUrl}
+                alt={result.product.name}
+                className="w-full md:w-48 h-48 object-cover rounded-lg"
+              />
+            )}
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">{result.product.name}</h1>
+              {result.product.brand && (
+                <p className="text-lg text-gray-600 mb-4">{result.product.brand}</p>
               )}
-              <div className="flex items-center gap-4 mt-2">
-                <span className="text-sm px-3 py-1 bg-gray-100 rounded-full">
-                  {analysis.category === 'food' ? '🍽️ Alimentation' : 
-                   analysis.category === 'cosmetics' ? '💄 Cosmetiques' : 
-                   '🧼 Produits menagers'}
-                </span>
-                {analysis.barcode && (
-                  <span className="text-sm text-gray-500 font-mono">
-                    {analysis.barcode}
-                  </span>
+              
+              {/* Scores principaux */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {result.scores.health !== undefined && (
+                  <div className="text-center">
+                    <Heart className="h-8 w-8 mx-auto mb-1 text-red-500" />
+                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.health)}`}>
+                      {result.scores.health}/100
+                    </div>
+                    <p className="text-sm text-gray-600">Score santé</p>
+                  </div>
+                )}
+                {result.scores.environment !== undefined && (
+                  <div className="text-center">
+                    <Leaf className="h-8 w-8 mx-auto mb-1 text-green-500" />
+                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.environment)}`}>
+                      {result.scores.environment}/100
+                    </div>
+                    <p className="text-sm text-gray-600">Score environnement</p>
+                  </div>
+                )}
+                {result.scores.social !== undefined && (
+                  <div className="text-center">
+                    <Shield className="h-8 w-8 mx-auto mb-1 text-blue-500" />
+                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.social)}`}>
+                      {result.scores.social}/100
+                    </div>
+                    <p className="text-sm text-gray-600">Score social</p>
+                  </div>
                 )}
               </div>
             </div>
-            {analysis.confidence && (
-              <div className="text-right">
-                <p className="text-sm text-gray-500">Confiance</p>
-                <p className="text-lg font-semibold text-gray-700">
-                  {Math.round(analysis.confidence * 100)}%
-                </p>
-              </div>
-            )}
           </div>
+        </div>
 
-          {/* Scores principaux */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Score sante */}
-            {analysis.scores.healthScore !== undefined && (
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-5 h-5 text-red-500" />
-                    <span className="font-medium">Sante</span>
+        {/* Analyse spécifique selon la catégorie */}
+        {result.product.category === 'food' && (
+          <div className="space-y-6">
+            {/* Scores nutritionnels */}
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse nutritionnelle</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {result.nutriScore && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Nutri-Score</p>
+                    <div className={`inline-block px-4 py-2 rounded-lg text-white text-2xl font-bold ${getNutriScoreColor(result.nutriScore)}`}>
+                      {result.nutriScore}
+                    </div>
                   </div>
-                  <span className={`text-2xl font-bold ${getScoreColor(analysis.scores.healthScore)}`}>
-                    {analysis.scores.healthScore}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      analysis.scores.healthScore >= 80 ? 'bg-green-500' :
-                      analysis.scores.healthScore >= 60 ? 'bg-yellow-500' :
-                      analysis.scores.healthScore >= 40 ? 'bg-orange-500' :
-                      'bg-red-500'
-                    }`}
-                    style={{ width: `${analysis.scores.healthScore}%` }}
-                  />
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  {getScoreLabel(analysis.scores.healthScore)}
-                </p>
+                )}
+                {result.novaGroup && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Groupe NOVA</p>
+                    <div className="text-2xl font-bold">
+                      {result.novaGroup}
+                      <span className="text-sm font-normal text-gray-600 ml-2">
+                        {result.novaGroup === 1 && '(Non transformé)'}
+                        {result.novaGroup === 2 && '(Peu transformé)'}
+                        {result.novaGroup === 3 && '(Transformé)'}
+                        {result.novaGroup === 4 && '(Ultra-transformé)'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {result.ecoScore && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Éco-Score</p>
+                    <div className={`inline-block px-4 py-2 rounded-lg text-white text-2xl font-bold ${getNutriScoreColor(result.ecoScore)}`}>
+                      {result.ecoScore}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-
-            {/* Score environnement */}
-            {analysis.scores.environmentScore !== undefined && (
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Leaf className="w-5 h-5 text-green-500" />
-                    <span className="font-medium">Environnement</span>
-                  </div>
-                  <span className={`text-2xl font-bold ${getScoreColor(analysis.scores.environmentScore)}`}>
-                    {analysis.scores.environmentScore}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      analysis.scores.environmentScore >= 80 ? 'bg-green-500' :
-                      analysis.scores.environmentScore >= 60 ? 'bg-yellow-500' :
-                      analysis.scores.environmentScore >= 40 ? 'bg-orange-500' :
-                      'bg-red-500'
-                    }`}
-                    style={{ width: `${analysis.scores.environmentScore}%` }}
-                  />
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  {getScoreLabel(analysis.scores.environmentScore)}
-                </p>
-              </div>
-            )}
-
-            {/* Score global */}
-            {analysis.globalScore !== undefined && (
-              <div className="bg-[#7DDE4A]/10 rounded-lg p-4 border-2 border-[#7DDE4A]">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
-                    <span className="font-medium">Score global</span>
-                  </div>
-                  <span className={`text-2xl font-bold ${getScoreColor(analysis.globalScore)}`}>
-                    {analysis.globalScore}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="h-full bg-[#7DDE4A] rounded-full transition-all"
-                    style={{ width: `${analysis.globalScore}%` }}
-                  />
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  {getScoreLabel(analysis.globalScore)}
-                </p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Badges specifiques */}
-        {analysis.category === 'food' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-sm p-6 mb-6"
-          >
-            <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-              Classifications nutritionnelles
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {/* NOVA */}
-              {analysis.scores.nova && (
-                <div className="text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full font-bold text-xl mb-2 ${getNovaColor(analysis.scores.nova)}`}>
-                    {analysis.scores.nova}
-                  </div>
-                  <p className="font-medium">NOVA</p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {analysis.details.novaLabel}
-                  </p>
-                </div>
-              )}
-
-              {/* Nutri-Score */}
-              {analysis.scores.nutriscore && (
-                <div className="text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full font-bold text-xl mb-2 ${
-                    analysis.scores.nutriscore === 'A' ? 'bg-green-500 text-white' :
-                    analysis.scores.nutriscore === 'B' ? 'bg-green-400 text-white' :
-                    analysis.scores.nutriscore === 'C' ? 'bg-yellow-400 text-white' :
-                    analysis.scores.nutriscore === 'D' ? 'bg-orange-500 text-white' :
-                    'bg-red-500 text-white'
-                  }`}>
-                    {analysis.scores.nutriscore}
-                  </div>
-                  <p className="font-medium">Nutri-Score</p>
-                </div>
-              )}
-
-              {/* Eco-Score */}
-              {analysis.scores.ecoscore && (
-                <div className="text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full font-bold text-xl mb-2 ${
-                    analysis.scores.ecoscore === 'A' ? 'bg-green-500 text-white' :
-                    analysis.scores.ecoscore === 'B' ? 'bg-green-400 text-white' :
-                    analysis.scores.ecoscore === 'C' ? 'bg-yellow-400 text-white' :
-                    analysis.scores.ecoscore === 'D' ? 'bg-orange-500 text-white' :
-                    'bg-red-500 text-white'
-                  }`}>
-                    {analysis.scores.ecoscore}
-                  </div>
-                  <p className="font-medium">Eco-Score</p>
-                </div>
-              )}
             </div>
-          </motion.div>
+
+            {/* Additifs */}
+            {result.additives && result.additives.length > 0 && (
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Additifs alimentaires</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {result.additives.map((additive, index) => (
+                    <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                      {additive.risk === 'high' && <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />}
+                      {additive.risk === 'medium' && <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />}
+                      {additive.risk === 'low' && <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />}
+                      <div>
+                        <p className="font-medium">{additive.code}</p>
+                        <p className="text-sm text-gray-600">{additive.name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Allergènes */}
+            {result.allergens && result.allergens.length > 0 && (
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Allergènes</h2>
+                <div className="flex flex-wrap gap-2">
+                  {result.allergens.map((allergen, index) => (
+                    <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
+                      {allergen}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Details de l'analyse */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-sm p-6 mb-6"
-        >
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="w-full flex items-center justify-between text-left"
-          >
-            <h3 className="text-lg font-semibold text-[#3B3B3B]">
-              Details de l'analyse
-            </h3>
-            {showDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-          </button>
-          
-          <AnimatePresence>
-            {showDetails && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                <div className="mt-4 space-y-4">
-                  {/* Raison NOVA */}
-                  {analysis.details.novaReason && (
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="font-medium mb-1">Classification NOVA</p>
-                      <p className="text-sm text-gray-600">{analysis.details.novaReason}</p>
-                    </div>
-                  )}
-
-                  {/* Risques cosmetiques */}
-                  {analysis.details.riskFlags && analysis.details.riskFlags.length > 0 && (
-                    <div className="p-4 bg-red-50 rounded-lg">
-                      <p className="font-medium mb-2 text-red-800">Points d'attention</p>
-                      <ul className="space-y-1">
-                        {analysis.details.riskFlags.map((flag, index) => (
-                          <li key={index} className="text-sm text-red-700 flex items-start gap-2">
-                            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            <span>{flag}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Ingredients notables */}
-                  {analysis.details.notableIngredients && analysis.details.notableIngredients.length > 0 && (
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <p className="font-medium mb-2 text-blue-800">Ingredients notables</p>
-                      <div className="flex flex-wrap gap-2">
-                        {analysis.details.notableIngredients.map((ingredient, index) => (
-                          <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                            {ingredient}
-                          </span>
-                        ))}
+        {result.product.category === 'cosmetics' && (
+          <div className="space-y-6">
+            {/* Analyse INCI */}
+            {result.inci && result.inci.length > 0 && (
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse des ingrédients (INCI)</h2>
+                <div className="space-y-3">
+                  {result.inci.slice(0, 10).map((ingredient, index) => (
+                    <div key={index} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium">{ingredient.name}</p>
+                        {ingredient.function && (
+                          <p className="text-sm text-gray-600">{ingredient.function}</p>
+                        )}
+                        {ingredient.concerns && ingredient.concerns.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {ingredient.concerns.map((concern, i) => (
+                              <span key={i} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
+                                {concern}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  )}
-
-                  {/* Allergenes */}
-                  {analysis.details.allergens && analysis.details.allergens.length > 0 && (
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <p className="font-medium mb-2 text-orange-800">Allergenes detectes</p>
-                      <div className="flex flex-wrap gap-2">
-                        {analysis.details.allergens.map((allergen, index) => (
-                          <span key={index} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
-                            {allergen}
+                      {ingredient.ewgScore && (
+                        <div className="ml-4">
+                          <span className={`text-lg font-bold ${ingredient.ewgScore <= 2 ? 'text-green-600' : ingredient.ewgScore <= 6 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {ingredient.ewgScore}/10
                           </span>
-                        ))}
-                      </div>
+                        </div>
+                      )}
                     </div>
+                  ))}
+                  {result.inci.length > 10 && (
+                    <p className="text-center text-gray-600 text-sm mt-4">
+                      Et {result.inci.length - 10} autres ingrédients...
+                    </p>
                   )}
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
-        </motion.div>
 
-        {/* Ingredients */}
-        {analysis.details.ingredientsTextRaw && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-sm p-6 mb-6"
-          >
-            <button
-              onClick={() => setShowIngredients(!showIngredients)}
-              className="w-full flex items-center justify-between text-left"
-            >
-              <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Liste des ingredients
-              </h3>
-              {showIngredients ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-            
-            <AnimatePresence>
-              {showIngredients && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                      {analysis.details.ingredientsTextRaw}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            {/* Perturbateurs endocriniens */}
+            {result.endocrineDisruptors && result.endocrineDisruptors.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+                <h2 className="text-xl font-semibold text-red-800 mb-4">
+                  ⚠️ Perturbateurs endocriniens suspectés
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {result.endocrineDisruptors.map((disruptor, index) => (
+                    <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
+                      {disruptor}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Donnees Vision (si photo) */}
-        {visionData && scanType === 'photo' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl shadow-sm p-6 mb-6"
-          >
-            <button
-              onClick={() => setShowVisionData(!showVisionData)}
-              className="w-full flex items-center justify-between text-left"
-            >
-              <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Donnees extraites de l'image
-              </h3>
-              {showVisionData ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-            
-            <AnimatePresence>
-              {showVisionData && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mt-4 space-y-3">
-                    {visionData?.confidence && (
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium">Confiance OCR</span>
-                        <span className="text-sm">{Math.round(visionData.confidence * 100)}%</span>
+        {result.product.category === 'detergents' && (
+          <div className="space-y-6">
+            {/* Impact environnemental */}
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Impact environnemental</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {result.biodegradability !== undefined && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Biodégradabilité</p>
+                    <div className="flex items-center">
+                      <div className="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                        <div
+                          className="bg-green-500 h-4 rounded-full"
+                          style={{ width: `${result.biodegradability}%` }}
+                        ></div>
                       </div>
-                    )}
-                    {visionData?.text && (
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <p className="font-medium mb-2 text-sm">Texte brut extrait</p>
-                        <p className="text-xs text-gray-600 font-mono whitespace-pre-wrap">
-                          {visionData.text}
-                        </p>
-                      </div>
-                    )}
+                      <span className="font-bold">{result.biodegradability}%</span>
+                    </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                )}
+                {result.cdv !== undefined && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">CDV (Critical Dilution Volume)</p>
+                    <div className="text-2xl font-bold">
+                      {result.cdv.toLocaleString()} L/kg
+                    </div>
+                  </div>
+                )}
+                {result.phosphateContent !== undefined && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Teneur en phosphates</p>
+                    <div className="text-2xl font-bold">
+                      {result.phosphateContent}%
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Éco-labels */}
+            {result.ecoLabels && result.ecoLabels.length > 0 && (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                <h2 className="text-xl font-semibold text-green-800 mb-4">
+                  ✓ Certifications écologiques
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {result.ecoLabels.map((label, index) => (
+                    <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Recommandations */}
+        {result.recommendations && result.recommendations.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
+            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+              <Info className="h-5 w-5 mr-2" />
+              Recommandations
+            </h2>
+            <ul className="space-y-2">
+              {result.recommendations.map((rec, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="text-blue-600 mr-2">•</span>
+                  <span className="text-gray-700">{rec}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Alternatives */}
+        {result.alternatives && result.alternatives.length > 0 && (
+          <div className="bg-white rounded-xl shadow-md p-6 mt-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Alternatives recommandées
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {result.alternatives.map((alt) => (
+                <div
+                  key={alt._id}
+                  onClick={() => navigate(`/result?id=${alt._id}`)}
+                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md cursor-pointer transition-shadow"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="font-semibold">{alt.name}</h3>
+                      {alt.brand && <p className="text-sm text-gray-600">{alt.brand}</p>}
+                    </div>
+                    <div className="text-green-600 font-bold">
+                      +{alt.improvement}%
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700">{alt.reason}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4"
-        >
-          <Link
-            to="/scan"
-            className="flex-1 px-6 py-3 bg-[#7DDE4A] text-white rounded-lg font-medium hover:bg-[#6BC93B] transition-colors text-center flex items-center justify-center gap-2"
+        <div className="flex gap-4 mt-8">
+          <button
+            onClick={() => navigate('/search')}
+            className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors"
           >
-            <Camera className="w-5 h-5" />
-            Scanner un autre produit
-          </Link>
-          
-          <Link
-            to="/dashboard"
-            className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-center"
-          >
-            Voir mon tableau de bord
-          </Link>
-        </motion.div>
-
-        {/* Toast de partage */}
-        <AnimatePresence>
-          {shareUrl && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              className="fixed bottom-4 left-4 right-4 max-w-md mx-auto z-50"
+            Nouvelle recherche
+          </button>
+          {isAuthenticated && (
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex-1 bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-colors"
             >
-              <div className="bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5" />
-                <p>Lien copie dans le presse-papiers !</p>
-              </div>
-            </motion.div>
+              Voir mon tableau de bord
+            </button>
           )}
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   );
 };
-
-export default ResultsPage;

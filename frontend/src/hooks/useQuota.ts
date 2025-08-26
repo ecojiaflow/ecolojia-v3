@@ -1,8 +1,8 @@
-﻿// frontend/src/hooks/useQuot?.ts
-
+﻿// PATH: frontend/src/hooks/useQuota.ts
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../auth/hooks/useAuth';
+import { useAuthContext } from '../contexts/AuthContext';
 import { fetchUserQuota, refreshQuotaAfterAnalysis, DetailedQuotaData, DetailedQuotaResponse } from '../api/realApi';
+import toast from 'react-hot-toast';
 
 interface QuotaStatus {
   tier: 'free' | 'premium';
@@ -39,8 +39,8 @@ interface QuotaStatus {
 interface QuotaCheck {
   allowed: boolean;
   remaining: number;
-  resetDatea: string;
-  limitTypea: 'daily' | 'monthly';
+  resetDate: string;
+  limitType?: 'daily' | 'monthly';
   error?: string;
 }
 
@@ -49,181 +49,114 @@ export const useQuota = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  const { user, isAuthenticated, isDemoMode, simulateScan, simulateAIQuestion } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
 
-  // aaaa CONVERSION DEPUIS ANCIEN FORMAT
+  // Conversion depuis l'ancien format
   const convertFromLegacyQuota = useCallback((legacyData: DetailedQuotaData): QuotaStatus => {
     return {
-      tier: 'free', // Assuming legacy was free tier
+      tier: (user?.subscription?.tier || 'free') as 'free' | 'premium',
       scans: {
-        used: legacydata?.used_analyses,
-        limit: legacydata?.daily_limit,
-        remaining: legacydata?.remaining_analyses,
-        resetDate: legacydata?.reset_time
+        used: legacyData?.used_analyses || 0,
+        limit: legacyData?.daily_limit || 30,
+        remaining: legacyData?.remaining_analyses || 30,
+        resetDate: legacyData?.reset_time || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       },
       aiQuestions: {
         dailyUsed: 0,
-        dailyLimit: 3,
-        dailyRemaining: 3,
+        dailyLimit: 5,
+        dailyRemaining: 5,
         monthlyUsed: 0,
-        monthlyLimit: 15,
-        monthlyRemaining: 15,
-        resetDate: legacydata?.reset_time
+        monthlyLimit: user?.subscription?.tier === 'premium' ? 500 : 5,
+        monthlyRemaining: user?.subscription?.tier === 'premium' ? 500 : 5,
+        resetDate: legacyData?.reset_time || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       },
       exports: {
         used: 0,
-        limit: 2,
-        remaining: 2,
-        resetDate: legacydata?.reset_time
+        limit: user?.subscription?.tier === 'premium' ? 50 : 0,
+        remaining: user?.subscription?.tier === 'premium' ? 50 : 0,
+        resetDate: legacyData?.reset_time || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       },
       features: {
-        deepSeekAI: false,
-        advancedAnalytics: false,
-        apiAccess: false,
-        coaching: false
+        deepSeekAI: user?.subscription?.tier === 'premium',
+        advancedAnalytics: user?.subscription?.tier === 'premium',
+        apiAccess: user?.subscription?.tier === 'premium',
+        coaching: user?.subscription?.tier === 'premium'
       },
       lastUpdated: new Date().toISOString()
     };
-  }, []);
+  }, [user]);
 
-  // aaaa CHARGER STATUS QUOTAS (COMPATIBLE ANCIEN + NOUVEAU)
+  // Charger le status des quotas
   const fetchQuotaStatus = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Mode demo : utiliser donnees fictives
-      if (isDemoMode && user) {
-        const demoQuotas: QuotaStatus = {
-          tier: user.tier,
-          scans: {
-            used: user.currentUsage?.scansThisMonth || 0,
-            limit: user.tier === 'premium' ? -1 : 25,
-            remaining: user.tier === 'premium' ? -1 : 
-              Math.max(0, 25 - (user.currentUsage?.scansThisMonth || 0)),
-            resetDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString()
-          },
-          aiQuestions: {
-            dailyUsed: user.currentUsage?.aiQuestionsToday || 0,
-            dailyLimit: user.tier === 'premium' ? -1 : 3,
-            dailyRemaining: user.tier === 'premium' ? -1 :
-              Math.max(0, 3 - (user.currentUsage?.aiQuestionsToday || 0)),
-            monthlyUsed: user.currentUsage?.aiQuestionsToday || 0,
-            monthlyLimit: user.tier === 'premium' ? -1 : 15,
-            monthlyRemaining: user.tier === 'premium' ? -1 :
-              Math.max(0, 15 - (user.currentUsage?.aiQuestionsToday || 0)),
-            resetDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString()
-          },
-          exports: {
-            used: user.currentUsage?.exportsThisMonth || 0,
-            limit: user.tier === 'premium' ? 50 : 2,
-            remaining: user.tier === 'premium' ? 
-              Math.max(0, 50 - (user.currentUsage?.exportsThisMonth || 0)) :
-              Math.max(0, 2 - (user.currentUsage?.exportsThisMonth || 0)),
-            resetDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString()
-          },
-          features: {
-            deepSeekAI: user.tier === 'premium',
-            advancedAnalytics: user.tier === 'premium',
-            apiAccess: user.tier === 'premium',
-            coaching: user.tier === 'premium'
-          },
-          lastUpdated: new Date().toISOString()
-        };
-        
-        setQuotaStatus(demoQuotas);
-        return;
-      }
-
-      // Mode reel : essayer nouvelle API d'abord, fallback ancien format
-      if (!isAuthenticated) {
+      if (!isAuthenticated || !user) {
         setQuotaStatus(null);
         return;
       }
 
-      try {
-        // Tentative nouvelle API
-        const response = await fetch('/api/quota/status', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('ecolojia_token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.success) {
-            setQuotaStatus(data?.data);
-            return;
-          }
-        }
-      } catch (newApiError) {
-        console.log('Nouvelle API non disponible, utilisation ancien format...');
-      }
-
-      // Fallback vers ancien format
-      try {
-        const legacyResponse: DetailedQuotaResponse = await fetchUserQuota();
-        
-        if (legacyResponse.success && legacyResponse.quota) {
-          const convertedQuota = convertFromLegacyQuota(legacyResponse.quota);
-          setQuotaStatus(convertedQuota);
-          console.log('aaaa Quota charge (format legacy):', convertedQuota);
-        } else {
-          throw new Error(legacyResponse.error || 'Erreur quota legacy');
-        }
-      } catch (legacyError) {
-        console.error('aa Erreur quota legacy:', legacyError);
-        
-        // Quota de secours
-        const fallbackQuota: QuotaStatus = {
-          tier: 'free',
+      // Essayer de récupérer les quotas depuis l'API
+      const response = await fetchUserQuota();
+      
+      if (response.success && response.quota) {
+        const convertedQuota = convertFromLegacyQuota(response.quota);
+        setQuotaStatus(convertedQuota);
+      } else {
+        // Utiliser les quotas par défaut basés sur le tier
+        const defaultQuota: QuotaStatus = {
+          tier: (user?.subscription?.tier || 'free') as 'free' | 'premium',
           scans: {
             used: 0,
-            limit: 25,
-            remaining: 25,
+            limit: user?.subscription?.tier === 'premium' ? -1 : 30,
+            remaining: user?.subscription?.tier === 'premium' ? -1 : 30,
             resetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
           },
           aiQuestions: {
             dailyUsed: 0,
-            dailyLimit: 3,
-            dailyRemaining: 3,
+            dailyLimit: 5,
+            dailyRemaining: 5,
             monthlyUsed: 0,
-            monthlyLimit: 15,
-            monthlyRemaining: 15,
+            monthlyLimit: user?.subscription?.tier === 'premium' ? 500 : 5,
+            monthlyRemaining: user?.subscription?.tier === 'premium' ? 500 : 5,
             resetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
           },
           exports: {
             used: 0,
-            limit: 2,
-            remaining: 2,
+            limit: user?.subscription?.tier === 'premium' ? 50 : 0,
+            remaining: user?.subscription?.tier === 'premium' ? 50 : 0,
             resetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
           },
           features: {
-            deepSeekAI: false,
-            advancedAnalytics: false,
-            apiAccess: false,
-            coaching: false
+            deepSeekAI: user?.subscription?.tier === 'premium',
+            advancedAnalytics: user?.subscription?.tier === 'premium',
+            apiAccess: user?.subscription?.tier === 'premium',
+            coaching: user?.subscription?.tier === 'premium'
           },
           lastUpdated: new Date().toISOString()
         };
         
-        setQuotaStatus(fallbackQuota);
-        setError('Mode hors ligne - quotas par defaut');
+        setQuotaStatus(defaultQuota);
       }
 
     } catch (err) {
-      console.error('aa Erreur fetch quotas:', err);
+      console.error('Erreur fetch quotas:', err);
       setError(err instanceof Error ? err.message : 'Erreur quotas');
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, isDemoMode, user, convertFromLegacyQuota]);
+  }, [isAuthenticated, user, convertFromLegacyQuota]);
 
-  // aaaa VaaRIFIER QUOTA AVANT ACTION
+  // Vérifier quota avant action
   const checkQuota = useCallback(async (action: 'scan' | 'aiQuestion' | 'export'): Promise<QuotaCheck> => {
     if (!quotaStatus) {
-      return { allowed: false, remaining: 0, error: 'No quota status' };
+      return { 
+        allowed: false, 
+        remaining: 0, 
+        resetDate: new Date().toISOString(),
+        error: 'No quota status' 
+      };
     }
 
     switch (action) {
@@ -236,7 +169,6 @@ export const useQuota = () => {
         };
 
       case 'aiQuestion':
-        // Verifier quota journalier d'abord
         const dailyRemaining = quotaStatus.aiQuestions.dailyLimit === -1 ? -1 : 
           quotaStatus.aiQuestions.dailyRemaining;
         
@@ -245,11 +177,10 @@ export const useQuota = () => {
             allowed: false,
             remaining: 0,
             limitType: 'daily',
-            resetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Demain
+            resetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
           };
         }
 
-        // Puis verifier quota mensuel
         const monthlyRemaining = quotaStatus.aiQuestions.monthlyLimit === -1 ? -1 :
           quotaStatus.aiQuestions.monthlyRemaining;
 
@@ -269,75 +200,67 @@ export const useQuota = () => {
         };
 
       default:
-        return { allowed: false, remaining: 0, error: 'Unknown action' };
+        return { 
+          allowed: false, 
+          remaining: 0, 
+          resetDate: new Date().toISOString(),
+          error: 'Unknown action' 
+        };
     }
   }, [quotaStatus]);
 
-  // aaaa INCRaaMENTER USAGE APRaS ACTION (COMPATIBLE ANCIEN + NOUVEAU)
+  // Incrémenter usage après action
   const incrementUsage = useCallback(async (action: 'scan' | 'aiQuestion' | 'export'): Promise<boolean> => {
     try {
-      // Mode demo : utiliser simulation
-      if (isDemoMode) {
-        if (action === 'scan' && simulateScan) {
-          simulateScan('food'); // Categorie par defaut
-          await fetchQuotaStatus(); // Refresh quotas
-          return true;
-        }
-        if (action === 'aiQuestion' && simulateAIQuestion) {
-          const success = simulateAIQuestion();
-          await fetchQuotaStatus(); // Refresh quotas
-          return success;
-        }
-        return true;
-      }
+      if (!quotaStatus) return false;
 
-      // Mode reel : essayer nouvelle API d'abord
-      try {
-        const response = await fetch('/api/quota/increment', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('ecolojia_token')}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ action })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.success) {
-            setQuotaStatus(data?.data); // Nouveau status apres increment
-            return true;
+      // Mise à jour optimiste locale
+      const newStatus = { ...quotaStatus };
+      
+      switch (action) {
+        case 'scan':
+          if (newStatus.scans.limit !== -1) {
+            newStatus.scans.used++;
+            newStatus.scans.remaining = Math.max(0, newStatus.scans.remaining - 1);
           }
-        }
-      } catch (newApiError) {
-        console.log('Nouvelle API non disponible, utilisation ancien format...');
-      }
-
-      // Fallback vers ancien format (pour scans seulement)
-      if (action === 'scan') {
-        try {
-          const legacyResponse = await refreshQuotaAfterAnalysis();
+          break;
           
-          if (legacyResponse.success && legacyResponse.quota) {
-            const convertedQuota = convertFromLegacyQuota(legacyResponse.quota);
-            setQuotaStatus(convertedQuota);
-            console.log('aaaa Quota mis  jour (format legacy):', convertedQuota);
-            return true;
+        case 'aiQuestion':
+          newStatus.aiQuestions.dailyUsed++;
+          newStatus.aiQuestions.monthlyUsed++;
+          if (newStatus.aiQuestions.dailyLimit !== -1) {
+            newStatus.aiQuestions.dailyRemaining = Math.max(0, newStatus.aiQuestions.dailyRemaining - 1);
           }
-        } catch (legacyError) {
-          console.error('aa Erreur legacy increment:', legacyError);
-        }
+          if (newStatus.aiQuestions.monthlyLimit !== -1) {
+            newStatus.aiQuestions.monthlyRemaining = Math.max(0, newStatus.aiQuestions.monthlyRemaining - 1);
+          }
+          break;
+          
+        case 'export':
+          if (newStatus.exports.limit !== -1) {
+            newStatus.exports.used++;
+            newStatus.exports.remaining = Math.max(0, newStatus.exports.remaining - 1);
+          }
+          break;
       }
+      
+      setQuotaStatus(newStatus);
 
-      return false;
+      // Rafraîchir depuis l'API
+      if (action === 'scan') {
+        await refreshQuotaAfterAnalysis();
+      }
+      
+      return true;
 
     } catch (err) {
-      console.error('aa Erreur increment usage:', err);
+      console.error('Erreur increment usage:', err);
+      toast.error('Erreur lors de la mise à jour des quotas');
       return false;
     }
-  }, [isDemoMode, simulateScan, simulateAIQuestion, fetchQuotaStatus, convertFromLegacyQuota]);
+  }, [quotaStatus]);
 
-  // aaaa VaaRIFICATEURS RAPIDES
+  // Vérificateurs rapides
   const canScan = useCallback((): boolean => {
     if (!quotaStatus) return false;
     return quotaStatus.scans.limit === -1 || quotaStatus.scans.remaining > 0;
@@ -358,71 +281,15 @@ export const useQuota = () => {
     return quotaStatus?.features[feature] || false;
   }, [quotaStatus]);
 
-  // aaaa MaaTRIQUES POUR UI
-  const getScansProgress = useCallback((): number => {
-    if (!quotaStatus || quotaStatus.scans.limit === -1) return 0;
-    return (quotaStatus.scans.used / quotaStatus.scans.limit) * 100;
-  }, [quotaStatus]);
-
-  const getAIQuestionsProgress = useCallback((): { daily: number; monthly: number } => {
-    if (!quotaStatus) return { daily: 0, monthly: 0 };
-    
-    const daily = quotaStatus.aiQuestions.dailyLimit === -1 ? 0 :
-      (quotaStatus.aiQuestions.dailyUsed / quotaStatus.aiQuestions.dailyLimit) * 100;
-    
-    const monthly = quotaStatus.aiQuestions.monthlyLimit === -1 ? 0 :
-      (quotaStatus.aiQuestions.monthlyUsed / quotaStatus.aiQuestions.monthlyLimit) * 100;
-    
-    return { daily, monthly };
-  }, [quotaStatus]);
-
-  // aaaa CHARGE INITIAL
+  // Charge initial
   useEffect(() => {
-    if (isAuthenticated || isDemoMode) {
+    if (isAuthenticated && user) {
       fetchQuotaStatus();
     }
-  }, [isAuthenticated, isDemoMode, fetchQuotaStatus]);
+  }, [isAuthenticated, user, fetchQuotaStatus]);
 
-  return {
-    // aatat
-    quotaStatus,
-    isLoading,
-    error,
-    
-    // Actions
-    fetchQuotaStatus,
-    checkQuota,
-    incrementUsage,
-    
-    // Verificateurs
-    canScan,
-    canUseAI,
-    canExport,
-    hasFeature,
-    
-    // Metriques UI
-    getScansProgress,
-    getAIQuestionsProgress,
-    
-    // Helpers
-    isFreeTier: quotaStatus?.tier === 'free',
-    isPremiumTier: quotaStatus?.tier === 'premium',
-    
-    // aaaa COMPATIBILITaa ANCIEN FORMAT
-    quotaData: quotaStatus ? {
-      used_analyses: quotaStatus.scans.used,
-      remaining_analyses: quotaStatus.scans.remaining,
-      daily_limit: quotaStatus.scans.limit === -1 ? 999 : quotaStatus.scans.limit,
-      reset_time: quotaStatus.scans.resetDate,
-      current_date: new Date().toISOString().split('T')[0]
-    } : null,
-    canAnalyze: canScan(),
-    timeUntilReset: quotaStatus ? getTimeUntilReset(quotaStatus.scans.resetDate) : '',
-    refreshQuota: fetchQuotaStatus
-  };
-
-  // Helper pour calculer temps jusqu'au reset (compatibilite)
-  function getTimeUntilReset(resetTime: string): string {
+  // Helpers pour calculer le temps jusqu'au reset
+  const getTimeUntilReset = useCallback((resetTime: string): string => {
     try {
       const reset = new Date(resetTime);
       const now = new Date();
@@ -440,8 +307,39 @@ export const useQuota = () => {
     } catch {
       return 'Inconnu';
     }
-  }
+  }, []);
+
+  return {
+    // État
+    quotas: quotaStatus,
+    isLoading,
+    error,
+    
+    // Actions
+    fetchQuotaStatus,
+    checkQuota,
+    incrementUsage,
+    
+    // Vérificateurs
+    canScan,
+    canUseAI,
+    canExport,
+    hasFeature,
+    
+    // Helpers
+    isFreeTier: quotaStatus?.tier === 'free',
+    isPremiumTier: quotaStatus?.tier === 'premium',
+    timeUntilReset: quotaStatus ? getTimeUntilReset(quotaStatus.scans.resetDate) : '',
+    
+    // Compatibilité avec l'ancienne interface
+    quotaData: quotaStatus ? {
+      used_analyses: quotaStatus.scans.used,
+      remaining_analyses: quotaStatus.scans.remaining,
+      daily_limit: quotaStatus.scans.limit === -1 ? 999 : quotaStatus.scans.limit,
+      reset_time: quotaStatus.scans.resetDate,
+      current_date: new Date().toISOString().split('T')[0]
+    } : null,
+    canAnalyze: canScan(),
+    refreshQuota: fetchQuotaStatus
+  };
 };
-
-
-

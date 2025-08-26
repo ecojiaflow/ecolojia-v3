@@ -1,33 +1,27 @@
+// PATH: frontend/src/components/common/LoadingSpinner.tsx
 import React from 'react';
 
 interface LoadingSpinnerProps {
-  sizea: 'small' | 'medium' | 'large';
-  colora: string;
-  messagea: string;
+  size?: 'small' | 'medium' | 'large';
+  className?: string;
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'medium', 
-  color = 'green',
-  message 
+  size = 'medium',
+  className = '' 
 }) => {
   const sizeClasses = {
-    small: 'h-8 w-8',
-    medium: 'h-12 w-12',
-    large: 'h-16 w-16'
+    small: 'w-4 h-4',
+    medium: 'w-8 h-8',
+    large: 'w-12 h-12'
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className={`${sizeClasses[size]} relative`}>
-        <div className={`absolute inset-0 border-4 border-gray-200 rounded-full`}></div>
-        <div className={`absolute inset-0 border-4 border-${color}-500 rounded-full border-t-transparent animate-spin`}></div>
-      </div>
-      {message && (
-        <p className="mt-4 text-gray-600 text-sm">{message}</p>
-      )}
+    <div className={`inline-block ${className}`}>
+      <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-gray-300 border-t-[#7DDE4A]`}></div>
     </div>
   );
 };
 
+// Ajout de l'export par défaut
 export default LoadingSpinner;

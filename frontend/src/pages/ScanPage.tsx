@@ -1,9 +1,9 @@
-﻿// PATH: frontend/src/pages/ScanPage.tsx
+// PATH: frontend/src/pages/ScanPage.tsx
 import { useState } from "react";
 import BarcodeScanner from "../components/scanner/BarcodeScanner";
 import PhotoCapture from "../components/scanner/PhotoCapture";
 import ManualInput from "../components/scanner/ManualInput";
-import { analyzeByBarcode, analyzeManual } from "../services/analysisService";
+import analysisService from "../services/analysisService";
 import { useNavigate } from "react-router-dom";
 import type { AnalysisResult } from "../types/api";
 
@@ -24,7 +24,7 @@ export default function ScanPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await analyzeByBarcode(code);
+      const res = await analysisService.analyzeByBarcode(code);
       goResult(res);
     } catch (e: any) {
       setError(e?.message || "Analyse par code-barres impossible");
@@ -42,7 +42,7 @@ export default function ScanPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await analyzeManual(payload);
+      const res = await analysisService.analyzeManual(payload);
       goResult(res);
     } catch (e: any) {
       setError(e?.message || "Analyse manuelle impossible");
@@ -90,7 +90,7 @@ export default function ScanPage() {
       )}
       {mode === "manual" && <ManualInput onSubmit={handleManual} onClose={() => setMode("barcode")} />}
 
-      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en cours…</div>}
+      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en cours�</div>}
     </div>
   );
 }

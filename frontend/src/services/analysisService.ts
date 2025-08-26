@@ -1,116 +1,210 @@
-﻿// PATH: frontend/src/services/analysisService.ts
-import { get, post } from "./apiClient";
-import type { AnalysisResult, ApiResponse } from "../types/api";
-import { adaptResponse } from "./ApiAdapter";
+// PATH: frontend/src/services/analysisService.ts
+import apiClient from "./apiClient";
+import type { Category, Product } from "./productService";
 
-const DEMO_SAMPLE: AnalysisResult = {
-  product: {
-    name: "Yaourt nature (démo)",
-    brand: "ECOLOJIA",
-    category: "food",
-    ean: "3017620425035",
-    ingredients: ["lait", "ferments lactiques", "sucre"],
-  },
-  score: { 
-    nutriScore: "A", 
-    novaGroup: 2, 
-    ecoScore: "B", 
-    warnings: [] as any 
-  },
-  risks: [],
-  alternatives: [],
-  raw: { demo: true },
-} as any;
-
-function isInDemoMode(): boolean {
-  return import.meta.env.VITE_DEMO_MODE === '1' || import.meta.env.VITE_DEMO_MODE === 'true';
-}
-
-function fallbackIfDemo(e: unknown): AnalysisResult {
-  if (isInDemoMode()) {
-    console.warn("[DEMO_MODE] API indisponible → renvoi d'un résultat simulé :", e);
-    return DEMO_SAMPLE;
-  }
-  throw e instanceof Error ? e : new Error("Analyse indisponible");
-}
-
-export async function analyzeByBarcode(barcode: string): Promise<AnalysisResult> {
-  try {
-    // Utilise l'endpoint d'analyse auto du backend
-    const data = await post<any>("/analyze/auto", { barcode });
-    return adaptResponse(data);
-  } catch (e) {
-    console.error("Erreur analyse barcode:", e);
-    return fallbackIfDemo(e);
-  }
-}
-
-export async function analyzeManual(payload: {
+export type ProductHit = {
+  id: string;
   name: string;
-  category: string;
-  ingredients: string[];
+  brand?: string;
+  score?: number;
+  category?: "food" | "cosmetics" | "detergents";
+  barcode?: string;
+};
+
+export type AnalysisResult = {
+  productId?: string;
+  productName?: string;
+  brand?: string;
+  barcode?: string;
+  category?: Category;
+  score?: number;
+  nutriScore?: "A" | "B" | "C" | "D" | "E";
+  ecoScore?: "A" | "B" | "C" | "D" | "E";
+  novaGroup?: 1 | 2 | 3 | 4;
+  risks?: Array<{ name: string; level: "low" | "medium" | "high" }>;
+  inci?: Array<{ name: string; function?: string; hazard?: string }>;
+  ecoLabels?: string[];
+  biodegradability?: string;
+  details?: Record<string, any>;
+};
+
+export type HistoryItem = {
+  _id: string;
+  productName: string;
+  category?: string;
+  date: string;
+  score?: number;
+};
+
+export type Paginated<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
+export async function analyzeByBarcode(barcode: string, category?: Category): Promise<AnalysisResult> {
+  try {
+    // Essayer d'abord l'analyse spécifique par catégorie
+    if (category === "cosmetics") {
+      const response = await apiClient.post("/cosmetics/analyze", { barcode, category });
+      return response.data || response;
+    }
+    if (category === "detergents") {
+      const response = await apiClient.post("/detergents/analyze", { barcode, category });
+      return response.data || response;
+    }
+    
+    // Essayer l'endpoint d'analyse générique
+    try {
+      const response = await apiClient.post("/analysis", { barcode, category: category || "food" });
+      return response.data || response;
+    } catch (e) {
+      // Si l'endpoint /analysis n'existe pas, essayer une autre variante
+      try {
+        const response = await apiClient.post(`/analyze/barcode/${encodeURIComponent(barcode)}`, {
+          category: category || "food"
+        });
+        return response.data || response;
+      } catch {
+        // Fallback final : récupérer le produit et créer une analyse basique
+        const productResponse = await apiClient.get(`/products/barcode/${encodeURIComponent(barcode)}`);
+        const product = productResponse.data || productResponse;
+        
+        return {
+          productId: product._id || product.id,
+          productName: product.productName || product.name || "Produit",
+          brand: product.brand,
+          barcode: product.barcode || barcode,
+          category: product.category || category || "food",
+          score: typeof product.score === "number" ? product.score : undefined,
+          nutriScore: product.nutriScore,
+          ecoScore: product.ecoScore,
+          novaGroup: product.novaGroup,
+          details: product
+        };
+      }
+    }
+  } catch (error) {
+    console.error('Error analyzing by barcode:', error);
+    throw error;
+  }
+}
+
+export async function analyzeByProduct(product: Product): Promise<AnalysisResult> {
+  try {
+    const category = (product.category as Category) || "food";
+    const pid = product.id || product._id;
+    
+    if (category === "cosmetics") {
+      const response = await apiClient.post("/cosmetics/analyze", { 
+        productId: pid, 
+        barcode: product.barcode, 
+        category 
+      });
+      return response.data || response;
+    }
+    
+    if (category === "detergents") {
+      const response = await apiClient.post("/detergents/analyze", { 
+        productId: pid, 
+        barcode: product.barcode, 
+        category 
+      });
+      return response.data || response;
+    }
+    
+    // Par défaut ou food
+    try {
+      const response = await apiClient.post("/analysis", { 
+        productId: pid, 
+        barcode: product.barcode, 
+        category: "food" 
+      });
+      return response.data || response;
+    } catch {
+      // Fallback : créer une analyse basique depuis les données du produit
+      return {
+        productId: pid,
+        productName: product.productName || product.name,
+        brand: product.brand,
+        barcode: product.barcode,
+        category: category,
+        score: product.score,
+        nutriScore: product.nutriScore,
+        ecoScore: product.ecoScore,
+        novaGroup: product.novaGroup,
+        details: product
+      };
+    }
+  } catch (error) {
+    console.error('Error analyzing product:', error);
+    throw error;
+  }
+}
+
+export async function analyzeManual(payload: { 
+  name: string; 
+  category: string; 
+  ingredients: string[] 
 }): Promise<AnalysisResult> {
   try {
-    const data = await post<any>("/analyze/auto", {
-      mode: "manual",
-      category: payload.category,
-      name: payload.name,
-      ingredients: payload.ingredients.join(", "),
-    });
-    return adaptResponse(data);
-  } catch (e) {
-    console.error("Erreur analyse manuelle:", e);
-    return fallbackIfDemo(e);
+    const response = await apiClient.post("/analysis/manual", payload);
+    return response.data || response;
+  } catch (error) {
+    console.error('Error manual analysis:', error);
+    throw error;
   }
 }
 
-export async function analyzeProduct(productId: string): Promise<AnalysisResult> {
-  try {
-    const data = await post<any>("/analyze/auto", { productId });
-    return adaptResponse(data);
-  } catch (e) {
-    console.error("Erreur analyse produit:", e);
-    return fallbackIfDemo(e);
-  }
-}
+const analysisService = {
+  async searchProducts(q: string): Promise<ProductHit[]> {
+    try {
+      const response = await apiClient.get("/products/search", {
+        params: { q },
+      });
+      
+      const items = response.data?.items || response.data?.products || response.items || response.products || [];
+      
+      return items.map((it: any) => ({
+        id: it._id ?? it.id,
+        name: it.productName ?? it.name,
+        brand: it.brand,
+        score: typeof it.score === "number" ? it.score : undefined,
+        category: it.category,
+        barcode: it.barcode,
+      }));
+    } catch (error) {
+      console.error('Search products error:', error);
+      return [];
+    }
+  },
 
-export async function analyzeFood(data: any): Promise<AnalysisResult> {
-  try {
-    const result = await post<any>("/analyze/food", data);
-    return adaptResponse(result);
-  } catch (e) {
-    console.error("Erreur analyse alimentaire:", e);
-    return fallbackIfDemo(e);
-  }
-}
+  async analyzeByBarcode(barcode: string, category?: Category): Promise<AnalysisResult> {
+    return analyzeByBarcode(barcode, category);
+  },
 
-export async function analyzeCosmetic(data: any): Promise<AnalysisResult> {
-  try {
-    const result = await post<any>("/cosmetics/analyze", data);
-    return adaptResponse(result);
-  } catch (e) {
-    console.error("Erreur analyse cosmétique:", e);
-    return fallbackIfDemo(e);
-  }
-}
+  async analyzeByProduct(product: Product): Promise<AnalysisResult> {
+    return analyzeByProduct(product);
+  },
 
-export async function analyzeDetergent(data: any): Promise<AnalysisResult> {
-  try {
-    const result = await post<any>("/detergents/analyze", data);
-    return adaptResponse(result);
-  } catch (e) {
-    console.error("Erreur analyse détergent:", e);
-    return fallbackIfDemo(e);
-  }
-}
+  async analyzeManual(payload: { name: string; category: string; ingredients: string[] }): Promise<AnalysisResult> {
+    return analyzeManual(payload);
+  },
 
-export const analysisService = {
-  analyzeByBarcode,
-  analyzeManual,
-  analyzeProduct,
-  analyzeFood,
-  analyzeCosmetic,
-  analyzeDetergent
+  async getHistory(page = 1, limit = 20, category?: string): Promise<Paginated<HistoryItem>> {
+    try {
+      const params: Record<string, any> = { page, limit };
+      if (category) params.category = category;
+      const response = await apiClient.get("/history", { params });
+      return response.data || response || { items: [], total: 0, page: 1, totalPages: 0 };
+    } catch (error) {
+      console.error('Get history error:', error);
+      return { items: [], total: 0, page: 1, totalPages: 0 };
+    }
+  },
 };
 
 export default analysisService;
+// Export manquant pour ResultsPage
+export const analyzeProduct = analyzeByProduct;

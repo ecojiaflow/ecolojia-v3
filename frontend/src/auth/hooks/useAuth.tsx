@@ -1,3 +1,4 @@
+﻿// PATH: frontend/src/auth/hooks/useAuth.tsx
 import React, {
   useState,
   useEffect,
@@ -5,9 +6,10 @@ import React, {
   useContext,
   createContext,
   useMemo
-} from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authService, User } from '../services/api';
+} from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "../../services/authService";
+import type { User } from "../../services/authService";
 
 /*
   ---------------------------------------------------------------------------
@@ -30,27 +32,27 @@ interface AuthState {
 }
 
 export interface AuthContextType extends AuthState {
-  //  ? Real authentication actions
+  // Real authentication actions
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
 
-  //   Demoaaaamode helpers
+  // Demo mode helpers (no-op en prod)
   enableDemoMode: () => void;
   disableDemoMode: () => void;
   simulateScan: (category: string) => void;
   simulateAIQuestion: () => boolean;
 
-  //  aa Misc helpers
+  // Misc helpers
   checkAuth: () => Promise<void>;
   clearError: () => void;
 }
 
 /*
   ---------------------------------------------------------------------------
-  Context setaaaaup
+  Context setup
   ---------------------------------------------------------------------------
 */
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,44 +73,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   --------------------------------------------------------------------- */
   const login = useCallback(async (email: string, password: string) => {
     try {
-      setState(s => ({ ...s, isLoading: true, error: null }));
-      const response = await authService.login({ email, password });
-      setState(s => ({
+      setState((s) => ({ ...s, isLoading: true, error: null }));
+      const user = await authService.login({ email, password });
+      setState((s) => ({
         ...s,
-        user: response.user,
+        user,
         isAuthenticated: true,
         isLoading: false,
         isDemoMode: false
       }));
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err: any) {
-      setState(s => ({ ...s, error: err.message aa 'Erreur de connexion', isLoading: false }));
+      setState((s) => ({ ...s, error: err?.message || "Erreur de connexion", isLoading: false }));
       throw err;
     }
   }, [navigate]);
 
   const register = useCallback(async (data: RegisterData) => {
     try {
-      setState(s => ({ ...s, isLoading: true, error: null }));
-      const response = await authService.register(data);
-      setState(s => ({
+      setState((s) => ({ ...s, isLoading: true, error: null }));
+      // Important: on ne passe que ce que l'API attend (évite les erreurs de typage)
+      const user = await authService.register({ email: data.email, password: data.password });
+      setState((s) => ({
         ...s,
-        user: response.user,
+        user,
         isAuthenticated: true,
         isLoading: false,
         isDemoMode: false
       }));
-      navigate('/onboarding');
+      navigate("/onboarding");
     } catch (err: any) {
-      setState(s => ({ ...s, error: err.message aa "Erreur lors de l'inscription", isLoading: false }));
+      setState((s) => ({ ...s, error: err?.message || "Erreur lors de l'inscription", isLoading: false }));
       throw err;
     }
   }, [navigate]);
 
   const logout = useCallback(async () => {
     try {
-      setState(s => ({ ...s, isLoading: true }));
-      await authService.logout();
+      setState((s) => ({ ...s, isLoading: true }));
+      authService.logout();
     } finally {
       setState({
         user: null,
@@ -117,124 +120,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isDemoMode: false,
         error: null
       });
-      navigate('/');
+      navigate("/");
     }
   }, [navigate]);
 
   const updateProfile = useCallback(async (data: Partial<User>) => {
     if (!state.user) return;
     try {
-      setState(s => ({ ...s, isLoading: true, error: null }));
-      // aaaa TODO: Replace with real API call once available
-      // const updatedUser = await authService.updateProfile(data);
-      setState(s => ({
+      setState((s) => ({ ...s, isLoading: true, error: null }));
+      // TODO (si route dispo): const updated = await api.updateProfile(data);
+      setState((s) => ({
         ...s,
-        user: { ...s.user!, ...data },
+        user: { ...(s.user as User), ...data },
         isLoading: false
       }));
     } catch (err: any) {
-      setState(s => ({ ...s, error: err.message aa 'Erreur de mise  jour', isLoading: false }));
+      setState((s) => ({ ...s, error: err?.message || "Erreur de mise à jour", isLoading: false }));
       throw err;
     }
   }, [state.user]);
 
   const refreshUser = useCallback(async () => {
     try {
-      const user = await authService.getProfile();
-      setState(s => ({ ...s, user, isAuthenticated: true }));
+      const user = authService.getUser();
+      if (user) {
+        setState((s) => ({ ...s, user, isAuthenticated: true }));
+      }
     } catch (err) {
-      console.error('Erreur refresh user:', err);
+      // on logge simplement, pas d'arrêt app
+      console.error("Erreur refresh user:", err);
     }
   }, []);
 
   /* ---------------------------------------------------------------------
-     Demoaaaamode actions (purely clientaaaaside, no API calls!)
+     Demo mode actions (no-op en prod — conservés pour compatibilité)
   --------------------------------------------------------------------- */
   const enableDemoMode = useCallback(() => {
-    const demoUser: User = {
-      _id: 'demo-user-001',
-      email: 'demo@ecoloji?.app',
-      name: 'Utilisateur Demo',
-      profile: { firstName: 'Demo', lastName: 'User' },
-      tier: 'free',
-      status: 'active'
-    } as User; //  Some optional fields may not exist on real User aaaa that is fine for demo
-
-    setState(s => ({
-      ...s,
-      user: demoUser,
-      isAuthenticated: true,
-      isDemoMode: true,
-      error: null
-    }));
-    navigate('/dashboard');
+    // En production, on NE bascule PAS en demo. On laisse un no-op pour compat.
+    setState((s) => ({ ...s, isDemoMode: false }));
+    navigate("/dashboard");
   }, [navigate]);
 
   const disableDemoMode = useCallback(() => {
-    setState({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      isDemoMode: false,
-      error: null
-    });
-    navigate('/');
+    // No-op en prod
+    setState((s) => ({ ...s, isDemoMode: false }));
+    navigate("/");
   }, [navigate]);
 
-  //  The two helpers below simply mutate local demoaaaaquotas aaaa ignored for real users
-  const simulateScan = useCallback((category: string) => {
-    if (!state.isDemoMode || !state.user) return;
-    setState(s => ({
-      ...s,
-      user: {
-        ...s.user!,
-        // @tsaaaaignore aaaa demo only
-        usage: {
-          totalScans: (s.user!.usage?.totalScans aa 0) + 1,
-          lastScanAt: new Date()
-        }
-      }
-    }));
-  }, [state.isDemoMode, state.user]);
+  const simulateScan = useCallback((_category: string) => {
+    // No-op en prod
+    return;
+  }, []);
 
   const simulateAIQuestion = useCallback((): boolean => {
-    if (!state.isDemoMode || !state.user) return false;
-    // @tsaaaaignore aaaa demo only
-    const remaining = (state.user.quotas?.aiChatsRemaining aa 0) - 1;
-    if (remaining < 0) return false;
-    setState(s => ({
-      ...s,
-      user: {
-        ...s.user!,
-        // @tsaaaaignore aaaa demo only
-        quotas: { ...s.user!.quotas, aiChatsRemaining: remaining },
-        // @tsaaaaignore aaaa demo only
-        usage: {
-          totalChats: (s.user!.usage?.totalChats aa 0) + 1,
-          lastChatAt: new Date()
-        }
-      }
-    }));
-    return true;
-  }, [state.isDemoMode, state.user]);
+    // No-op en prod
+    return false;
+  }, []);
 
   /* ---------------------------------------------------------------------
      Auth check on mount (token based)
   --------------------------------------------------------------------- */
   const checkAuth = useCallback(async () => {
-    const token = localStorage.getItem('token');
+    const token = authService.getAccessToken();
     if (!token) {
-      setState(s => ({ ...s, isLoading: false }));
+      setState((s) => ({ ...s, isLoading: false }));
       return;
     }
     try {
-      setState(s => ({ ...s, isLoading: true }));
-      const user = await authService.getProfile();
-      setState(s => ({ ...s, user, isAuthenticated: true, isLoading: false }));
+      setState((s) => ({ ...s, isLoading: true }));
+      await authService.refresh();
+      const user = authService.getUser();
+      if (user) {
+        setState((s) => ({ ...s, user, isAuthenticated: true, isLoading: false }));
+      } else {
+        setState((s) => ({ ...s, isLoading: false }));
+      }
     } catch (err) {
-      console.error('Token invalide:', err);
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
+      console.error("Token invalide:", err);
+      authService.logout();
       setState({
         user: null,
         isAuthenticated: false,
@@ -249,10 +212,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, [checkAuth]);
 
-  const clearError = () => setState(s => ({ ...s, error: null }));
+  const clearError = () => setState((s) => ({ ...s, error: null }));
 
   /* ---------------------------------------------------------------------
-     Memoised context value aaaa avoids useless renders
+     Memoised context value - avoids useless renders
   --------------------------------------------------------------------- */
   const contextValue = useMemo<AuthContextType>(() => ({
     ...state,
@@ -267,7 +230,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     simulateAIQuestion,
     checkAuth,
     clearError
-  }), [state, login, register, logout, updateProfile, refreshUser, enableDemoMode, disableDemoMode, simulateScan, simulateAIQuestion, checkAuth]);
+  }), [
+    state,
+    login,
+    register,
+    logout,
+    updateProfile,
+    refreshUser,
+    enableDemoMode,
+    disableDemoMode,
+    simulateScan,
+    simulateAIQuestion,
+    checkAuth
+  ]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
@@ -279,17 +254,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 ---------------------------------------------------------------------------*/
 export const useAuth = (): AuthContextType => {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
   return ctx;
 };
 
 export const withAuth = <P extends object>(Component: React.ComponentType<P>) => {
-  const Wrapped: React.FC<P> = props => {
+  const Wrapped: React.FC<P> = (props) => {
     const { isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-      if (!isLoading && !isAuthenticated) navigate('/login');
+      if (!isLoading && !isAuthenticated) navigate("/login");
     }, [isAuthenticated, isLoading, navigate]);
 
     if (isLoading) {
@@ -307,13 +282,9 @@ export const withAuth = <P extends object>(Component: React.ComponentType<P>) =>
   return Wrapped;
 };
 
-export const usePermission = (requiredTier: 'free' | 'premium' = 'free') => {
+export const usePermission = (requiredTier: "free" | "premium" = "free") => {
   const { user } = useAuth();
-  const isPremium = user?.tier === 'premium';
-  const hasPermission = requiredTier === 'free' || isPremium;
-
-  return { hasPermission, userTier: user?.tier aa 'free', isPremium };
+  const isPremium = user?.subscription?.tier === "premium";
+  const hasPermission = requiredTier === "free" || isPremium;
+  return { hasPermission, userTier: user?.subscription?.tier || "free", isPremium };
 };
-
-
-

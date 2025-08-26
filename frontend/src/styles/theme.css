@@ -1,0 +1,38 @@
+﻿/* PATH: frontend/src/styles/theme.css */
+:root{
+  --eco-primary:#7DDE4A;
+  --eco-primary-600:#6BC93B;
+  --eco-bg:#F7F9F4;
+  --eco-bg-soft:#E9F8DF;
+  --eco-text:#3B3B3B;
+  --eco-border:#DDE9DA;
+  --eco-white:#FFFFFF;
+  --eco-shadow:0 6px 20px rgba(0,0,0,0.06);
+  --eco-radius:16px;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  background:var(--eco-bg);
+  color:var(--eco-text);
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.eco-container{max-width:1120px;margin:0 auto;padding:0 16px}
+.eco-card{background:#fff;border:1px solid var(--eco-border);border-radius:16px;box-shadow:var(--eco-shadow)}
+.eco-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;
+  padding:10px 16px;font-weight:700;cursor:pointer;transition:box-shadow .2s,transform .05s
+}
+.eco-btn:active{transform:translateY(1px)}
+.eco-btn-primary{color:#15521c;background:var(--eco-primary);box-shadow:0 4px 14px rgba(125,222,74,.35)}
+.eco-btn-primary:hover{background:var(--eco-primary-600)}
+.eco-badge{display:inline-flex;align-items:center;gap:6px;background:var(--eco-bg-soft);color:#2c6e2f;border:1px solid var(--eco-border);border-radius:999px;font-size:12px;font-weight:700;padding:4px 8px}
+.eco-input{width:100%;padding:12px 14px;border:1px solid var(--eco-border);border-radius:12px;background:#fff;color:var(--eco-text);outline:0}
+.eco-input:focus{box-shadow:0 0 0 3px rgba(125,222,74,.25);border-color:var(--eco-primary)}
+.eco-section-title{font-size:20px;font-weight:800;margin:0 0 12px 0}
+

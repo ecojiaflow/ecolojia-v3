@@ -1,53 +1,68 @@
 // PATH: frontend/src/services/productService.ts
-import { get } from './apiClient';
+import apiClient from "./apiClient";
 
-export interface Product {
-  _id: string;
-  barcode: string;
-  name: string;
-  brand?: string;
-  category: 'food' | 'cosmetics' | 'detergents';
-  scores?: {
-    healthScore?: number;
-    environmentScore?: number;
-    nova?: number;
-    nutriscore?: string;
-    ecoscore?: string;
-  };
-  images?: {
-    front?: string;
-    ingredients?: string;
-    nutrition?: string;
-  };
+export type Category = "food" | "cosmetics" | "detergents";
+
+export type Product = {
+  _id?: string; 
+  id?: string; 
+  productName?: string; 
+  name?: string;
+  brand?: string; 
+  barcode?: string; 
+  category?: Category | string; 
+  imageUrl?: string;
+  score?: number;
+  nutriScore?: "A"|"B"|"C"|"D"|"E"; 
+  ecoScore?: "A"|"B"|"C"|"D"|"E";
+  novaGroup?: 1|2|3|4;
+  [k: string]: any;
+};
+
+export async function getProductByBarcode(barcode: string): Promise<Product> {
+  try {
+    const response = await apiClient.get(`/products/barcode/${encodeURIComponent(barcode)}`);
+    const data = response.data || response;
+    return { 
+      ...data, 
+      id: data?._id ?? data?.id, 
+      productName: data?.productName ?? data?.name 
+    };
+  } catch (error) {
+    console.error('Error fetching product by barcode:', error);
+    throw error;
+  }
 }
 
-export async function getByBarcode(code: string): Promise<Product> {
-  const clean = encodeURIComponent((code || '').trim());
-  return await get<Product>(`/products/barcode/${clean}`);
+export async function getProductById(id: string): Promise<Product> {
+  try {
+    const response = await apiClient.get(`/products/${encodeURIComponent(id)}`);
+    const data = response.data || response;
+    return { 
+      ...data, 
+      id: data?._id ?? data?.id, 
+      productName: data?.productName ?? data?.name 
+    };
+  } catch (error) {
+    console.error('Error fetching product by id:', error);
+    throw error;
+  }
 }
 
-export async function searchProducts(query: string) {
-  return await get(`/products/search?q=${encodeURIComponent(query)}`);
-}
-
-export async function getTrendingProducts() {
-  return await get('/products/trending');
-}
-
-export async function getProductById(id: string) {
-  return await get<Product>(`/products/${id}`);
-}
-
-export async function getAlternatives(productId: string) {
-  return await get(`/products/${productId}/alternatives`);
-}
-
-export const productService = { 
-  getByBarcode,
-  searchProducts,
-  getTrendingProducts,
-  getProductById,
-  getAlternatives
+const productService = {
+  async getByBarcode(barcode: string): Promise<Product> {
+    return getProductByBarcode(barcode);
+  },
+  async getById(id: string): Promise<Product> {
+    return getProductById(id);
+  },
 };
 
 export default productService;
+// Ajout des exports avec les noms attendus
+export const getByBarcode = getProductByBarcode;
+export const getById = getProductById;
+export const getAlternatives = async (productId: string) => {
+  const { data } = await apiClient.get(`/products/${encodeURIComponent(productId)}/alternatives`);
+  return data;
+};

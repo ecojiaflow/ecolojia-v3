@@ -1,388 +1,275 @@
-﻿// PATH: frontend/src/pages/ChatPage.tsx (Version amelioree)
-import React, { useState, useEffect, useRef } from 'react';
+﻿// PATH: frontend/src/pages/ChatPage.tsx
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, Loader } from 'lucide-react';
+import { chatService } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import { useQuota } from '../hooks/useQuota';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Send, Bot, User, Package, Loader2, AlertCircle } from 'lucide-react';
-import { PremiumUpgradeModal } from '../components/PremiumUpgradeModal';
+import { toast } from 'react-hot-toast';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  isStreaminga: boolean;
 }
 
-interface ProductContext {
-  product: {
-    name: string;
-    brand?: string;
-    category: string;
-  };
-  analysis: {
-    healthScore: number;
-    category: string;
-    recommendations: string[];
-  };
-}
-
-export const ChatPage: React.FC = () => {
-  const location = useLocation();
+const ChatPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const { canUseAI, incrementUsage, quotas } = useQuota();
+  
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [productContext, setProductContext] = useState<ProductContext | null>(null);
-  const [streamingContent, setStreamingContent] = useState('');
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Recuperer le contexte produit si present
+  // Contexte optionnel (produit analysé, etc.)
+  const context = location.state?.context || {};
+  const initialQuestion = location.state?.initialMessage;
+
   useEffect(() => {
-    if (location.state?.context) {
-      setProductContext(location.state.context);
+    // Message de bienvenue
+    setMessages([{
+      id: '1',
+      role: 'assistant',
+      content: `Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA. 
       
-      // Message de bienvenue avec contexte
-      const welcomeMessage: Message = {
-        id: 'welcome-context',
-        role: 'assistant',
-        content: `Bonjour ! Je vois que vous souhaitez discuter de **${location.state.context.product.name}** (${location.state.context.product.category}).
+Je peux vous aider à :
+• Comprendre les analyses de produits
+• Décoder les additifs et ingrédients
+• Suggérer des alternatives plus saines
+• Répondre à vos questions sur la nutrition
 
-**Score sante : ${location.state.context.analysis.healthScore}/100**
+Comment puis-je vous aider aujourd'hui ?`,
+      timestamp: new Date()
+    }]);
 
-Je suis l pour repondre  toutes vos questions sur ce produit. Que souhaitez-vous savoir a`,
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
-    } else {
-      // Message de bienvenue general
-      const welcomeMessage: Message = {
-        id: 'welcome',
-        role: 'assistant',
-        content: 'Bonjour ! Je suis votre assistant IA specialise en analyse de produits. Posez-moi vos questions sur l\'alimentation, les cosmetiques ou les detergents.',
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
+    // Si une question initiale est fournie
+    if (initialQuestion) {
+      setTimeout(() => {
+        handleSendMessage(initialQuestion);
+      }, 1000);
     }
-  }, [location.state]);
+  }, []);
 
-  // Auto-scroll vers le bas
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, streamingContent]);
+    scrollToBottom();
+  }, [messages]);
 
-  // Verifier si l'utilisateur est Premium
-  const checkPremiumStatus = (): boolean => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return user.tier === 'premium';
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+  const handleSendMessage = async (messageText?: string) => {
+    const text = messageText || input.trim();
+    if (!text) return;
 
-    // Verifier le statut Premium
-    if (!checkPremiumStatus()) {
-      setShowPremiumModal(true);
+    // Vérifier l'authentification
+    if (!isAuthenticated) {
+      toast.error('Veuillez vous connecter pour utiliser le chat');
+      navigate('/login');
       return;
     }
 
+    // Vérifier les quotas
+    if (!canUseAI()) {
+      toast.error('Quota de questions épuisé. Passez à Premium pour continuer !');
+      navigate('/premium');
+      return;
+    }
+
+    // Ajouter le message utilisateur
     const userMessage: Message = {
-      id: `user-${Date.now()}`,
+      id: Date.now().toString(),
       role: 'user',
-      content: inputMessage,
+      content: text,
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
-    setIsLoading(true);
-
-    // Creer le message assistant avec streaming
-    const assistantMessage: Message = {
-      id: `assistant-${Date.now()}`,
-      role: 'assistant',
-      content: '',
-      timestamp: new Date(),
-      isStreaming: true
-    };
-
-    setMessages(prev => [...prev, assistantMessage]);
-    setStreamingContent('');
+    setInput('');
+    setLoading(true);
 
     try {
-      // Creer un AbortController pour pouvoir annuler la requete
-      abortControllerRef.current = new AbortController();
-
-      const response = await fetch('https://ecolojia-backend-working.onrender.com/api/chat/deepseek', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          context: productContext ? {
-            product: productContext.product,
-            analysis: productContext.analysis
-          } : undefined,
-          conversationHistory: messages.slice(-5).map(m => ({
-            role: m.role,
-            content: m.content
-          }))
-        }),
-        signal: abortControllerRef.current.signal
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la communication avec l\'IA');
-      }
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullContent = '';
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.slice(6));
-                if (data?.content) {
-                  fullContent += data?.content;
-                  setStreamingContent(fullContent);
-                }
-              } catch (e) {
-                // Ignorer les erreurs de parsing
-              }
-            }
-          }
-        }
-      }
-
-      // Mettre  jour le message final
-      setMessages(prev => prev.map(msg => 
-        msg.id === assistantMessage.id 
-          ? { ...msg, content: fullContent, isStreaming: false }
-          : msg
-      ));
-      setStreamingContent('');
-
-    } catch (error) {
-      console.error('Chat error:', error);
+      // Envoyer le message avec le contexte
+      const response = await chatService.sendMessage(text, context);
       
-      // Supprimer le message assistant vide
-      setMessages(prev => prev.filter(msg => msg.id !== assistantMessage.id));
+      // Consommer le quota
+      await incrementUsage('aiQuestion');
+
+      // Ajouter la réponse
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: response.content || response.message || response,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Erreur lors de l\'envoi du message');
       
       // Ajouter un message d'erreur
       const errorMessage: Message = {
-        id: `error-${Date.now()}`,
+        id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Desole, une erreur s\'est produite. Veuillez reessayer.',
+        content: 'Désolé, je n\'ai pas pu traiter votre demande. Veuillez réessayer.',
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, errorMessage]);
     } finally {
-      setIsLoading(false);
-      abortControllerRef.current = null;
+      setLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSendMessage();
   };
 
-  const suggestedQuestions = productContext ? [
-    `Pourquoi ce produit a-t-il un score de ${productContext.analysis.healthScore}/100 a`,
-    "Quels sont les ingredients les plus problematiques a",
-    "Existe-t-il des alternatives plus saines a",
-    "Ce produit convient-il aux enfants a",
-    "Quel est l'impact environnemental a"
-  ] : [
-    "Comment reconnaitre un produit ultra-transforme a",
-    "Quels sont les perturbateurs endocriniens  eviter a",
-    "Comment choisir des produits menagers ecologiques a",
-    "Quelle est la difference entre bio et naturel a",
-    "Comment lire une etiquette alimentaire a"
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // Suggestions de questions
+  const suggestions = [
+    'Qu\'est-ce que le groupe NOVA ?',
+    'Comment lire un Nutri-Score ?',
+    'Quels additifs éviter ?',
+    'Comment améliorer mon alimentation ?'
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Bot className="w-6 h-6 text-white" />
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <Bot className="h-6 w-6 text-green-500" />
+              Assistant Nutritionnel IA
+            </h1>
+            {quotas && (
+              <div className="text-sm text-gray-600">
+                Questions restantes : {' '}
+                <span className="font-medium">
+                  {quotas.aiQuestions.monthlyRemaining === -1 
+                    ? '∞' 
+                    : `${quotas.aiQuestions.dailyRemaining} aujourd'hui / ${quotas.aiQuestions.monthlyRemaining} ce mois`
+                  }
+                </span>
               </div>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">Assistant IA ECOLOJIA</h1>
-                {productContext && (
-                  <p className="text-sm text-gray-600">
-                    Contexte : {productContext.product.name}
-                  </p>
-                )}
-              </div>
-            </div>
-            
-            {productContext && (
-              <button
-                onClick={() => navigate('/results', { state: { result: location.state.context } })}
-                className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <Package className="w-4 h-4" />
-                <span className="text-sm">Voir l'analyse</span>
-              </button>
             )}
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex items-start space-x-3 max-w-[80%] ${
-                message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-              }`}>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  message.role === 'user' ? 'bg-primary' : 'bg-gray-200'
-                }`}>
-                  {message.role === 'user' ? (
-                    <User className="w-5 h-5 text-white" />
-                  ) : (
-                    <Bot className="w-5 h-5 text-gray-700" />
-                  )}
-                </div>
-                
-                <div className={`rounded-lg px-4 py-3 ${
-                  message.role === 'user' 
-                    ? 'bg-primary text-white' 
-                    : 'bg-white border border-gray-200'
-                }`}>
-                  <div className={`prose prose-sm max-w-none ${
-                    message.role === 'user' ? 'prose-invert' : ''
+      <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6">
+        <div className="bg-white rounded-xl shadow-md h-full flex flex-col" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+          {/* Zone des messages */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`flex gap-3 max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  {/* Avatar */}
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    message.role === 'user' ? 'bg-blue-500' : 'bg-green-500'
                   }`}>
-                    {message.isStreaming ? (
-                      <span>{streamingContent}</span>
+                    {message.role === 'user' ? (
+                      <User className="h-5 w-5 text-white" />
                     ) : (
-                      <div dangerouslySetInnerHTML={{ 
-                        __html: message.content.replace(/\*\*(.*a)\*\*/g, '<strong>$1</strong>')
-                      }} />
+                      <Bot className="h-5 w-5 text-white" />
                     )}
                   </div>
-                  <p className={`text-xs mt-2 ${
-                    message.role === 'user' ? 'text-primary-light' : 'text-gray-500'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </p>
+
+                  {/* Message */}
+                  <div>
+                    <div className={`rounded-lg px-4 py-3 ${
+                      message.role === 'user' 
+                        ? 'bg-blue-500 text-white' 
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                    </div>
+                    <p className={`text-xs text-gray-500 mt-1 ${
+                      message.role === 'user' ? 'text-right' : ''
+                    }`}>
+                      {formatTime(message.timestamp)}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          
-          {isLoading && messages[messages.length - 1]?.isStreaming && !streamingContent && (
-            <div className="flex justify-start">
-              <div className="flex items-center space-x-2 px-4 py-3 bg-gray-100 rounded-lg">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm text-gray-600">L'IA reflechit...</span>
+            ))}
+
+            {loading && (
+              <div className="flex justify-start">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <Bot className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="bg-gray-100 rounded-lg px-4 py-3">
+                    <Loader className="h-5 w-5 animate-spin text-gray-600" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Suggestions (si pas de messages) */}
+          {messages.length === 1 && (
+            <div className="px-6 pb-4">
+              <p className="text-sm text-gray-600 mb-3">Suggestions de questions :</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSendMessage(suggestion)}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
               </div>
             </div>
           )}
-          
-          <div ref={messagesEndRef} />
+
+          {/* Formulaire d'envoi */}
+          <form onSubmit={handleSubmit} className="border-t p-4">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Posez votre question..."
+                disabled={loading}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              >
+                <Send className="h-5 w-5" />
+                <span className="hidden sm:inline">Envoyer</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-
-      {/* Questions suggerees */}
-      {messages.length <= 1 && (
-        <div className="border-t bg-white">
-          <div className="max-w-4xl mx-auto px-4 py-4">
-            <p className="text-sm text-gray-600 mb-3">Questions suggerees :</p>
-            <div className="flex flex-wrap gap-2">
-              {suggestedQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  onClick={() => setInputMessage(question)}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm text-gray-700 transition-colors"
-                  disabled={!checkPremiumStatus()}
-                >
-                  {question}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Input */}
-      <div className="border-t bg-white">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          {!checkPremiumStatus() && (
-            <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start">
-              <AlertCircle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-amber-800">
-                <p className="font-medium">Chat IA reserve aux membres Premium</p>
-                <p className="mt-1">Passez  Premium pour poser des questions illimitees  notre IA experte.</p>
-              </div>
-            </div>
-          )}
-          
-          <div className="flex space-x-3">
-            <textarea
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder={checkPremiumStatus() ? "Posez votre question..." 
-                : "Passez  Premium pour utiliser le chat IA"
-              }
-              disabled={isLoading || !checkPremiumStatus()}
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-              rows={2}
-            />
-            <button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isLoading || !checkPremiumStatus()}
-              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Modal Premium */}
-      <PremiumUpgradeModal
-        isOpen={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        trigger="feature"
-        onSuccess={() => {
-          setShowPremiumModal(false);
-          window.location.reload();
-        }}
-      />
     </div>
   );
 };
 
 export default ChatPage;
-
-
-

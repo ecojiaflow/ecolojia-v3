@@ -1,10 +1,37 @@
 ﻿// PATH: frontend/src/services/searchService.ts
-import api from './api';
-import { SearchFilters, ProductHit } from '@/types';
+import apiClient from './apiClient';
+
+// Export du type SearchItem pour visionService
+export interface SearchItem {
+  _id?: string;
+  id?: string;
+  objectID?: string;
+  name?: string;
+  productName?: string;
+  brand?: string;
+  barcode?: string;
+  category?: string;
+  score?: number;
+  imageUrl?: string;
+  [k: string]: any;
+}
+
+export interface ProductHit extends SearchItem {
+  image?: string;
+  ingredients?: string;
+  nova?: number;
+  additives?: any[];
+  healthScore?: number;
+  environmentScore?: number;
+  socialScore?: number;
+  globalScore?: number;
+  nutriScore?: string;
+  ecoScore?: string;
+}
 
 interface SearchParams {
   query: string;
-  filters?: SearchFilters;
+  filters?: any;
   page?: number;
   hitsPerPage?: number;
 }
@@ -18,15 +45,63 @@ interface SearchResponse {
 }
 
 class SearchService {
-  async search(params: SearchParams): Promise<SearchResponse> {
+  async search(query: string, options?: { limit?: number; page?: number; category?: string }): Promise<SearchItem[]> {
     const startTime = Date.now();
     
     try {
-      const response = await api.get('/products');
+      const response = await apiClient.get('/products/search', {
+        params: {
+          q: query,
+          limit: options?.limit || 20,
+          ...(options?.page && { page: options.page }),
+          ...(options?.category && { category: options.category })
+        }
+      });
       
-      console.log('API Response:', response);
+      // Extraire les produits selon différents formats possibles
+      let products = [];
+      if (response.data?.success && response.data?.products) {
+        products = response.data.products;
+      } else if (response.data?.products) {
+        products = response.data.products;
+      } else if (Array.isArray(response.data)) {
+        products = response.data;
+      } else if (response.products) {
+        products = response.products;
+      }
       
-      // Extraire les produits du format { success: true, products: [...] }
+      // Normaliser les produits en SearchItem
+      return products.map((p: any) => ({
+        _id: p._id || p.id,
+        id: p._id || p.id,
+        objectID: p._id || p.id || p.objectID,
+        name: p.name || p.productName || 'Produit sans nom',
+        productName: p.productName || p.name,
+        brand: p.brand,
+        barcode: p.barcode,
+        category: p.category,
+        score: p.score,
+        imageUrl: p.imageUrl || p.image
+      }));
+    } catch (error) {
+      console.error('Search error:', error);
+      return [];
+    }
+  }
+
+  async searchWithParams(params: SearchParams): Promise<SearchResponse> {
+    const startTime = Date.now();
+    
+    try {
+      const response = await apiClient.get('/products', {
+        params: {
+          q: params.query,
+          page: params.page,
+          limit: params.hitsPerPage
+        }
+      });
+      
+      // Utiliser la même logique d'extraction que dans search()
       let products = [];
       if (response.data?.success && response.data?.products) {
         products = response.data?.products;
@@ -34,49 +109,18 @@ class SearchService {
         products = response.data?.products;
       } else if (Array.isArray(response.data)) {
         products = response.data;
+      } else if (response.products) {
+        products = response.products;
       }
       
-      console.log(`Found ${products.length} products in total`);
-      
-      // Filtrer seulement si une query specifique est fournie
-      let filteredProducts = products;
-      if (params.query && params.query.trim() !== '') {
-        const searchTerm = params.query.toLowerCase().trim();
-        
-        // Si la recherche est vide ou generique, montrer tous les produits
-        if (searchTerm === '' || searchTerm === 'tous' || searchTerm === 'all') {
-          filteredProducts = products;
-        } else {
-          // Filtre plus flexible
-          filteredProducts = products.filter((p: any) => {
-            const name = (p.name || '').toLowerCase();
-            const brand = (p.brand || '').toLowerCase();
-            const barcode = (p.barcode || '').toLowerCase();
-            const category = (p.category || '').toLowerCase();
-            
-            // Recherche partielle dans tous les champs
-            return name.includes(searchTerm) || 
-                   brand.includes(searchTerm) || 
-                   barcode.includes(searchTerm) ||
-                   category.includes(searchTerm) ||
-                   // Recherche par mots individuels
-                   searchTerm.split(' ').some(word => 
-                     name.includes(word) || brand.includes(word)
-                   );
-          });
-        }
-        console.log(`Filtered to ${filteredProducts.length} products for query: "${params.query}"`);
-      } else {
-        console.log('No query provided, showing all products');
-      }
-      
-      // Mapper vers ProductHit avec toutes les donnees
-      const hits = filteredProducts.map((product: any, index: number) => {
-        console.log(`Mapping product ${index + 1}:`, product);
-        
+      // Mapper vers ProductHit
+      const hits = products.map((product: any, index: number) => {
         const hit: ProductHit = {
           objectID: product._id || product.id || `product-${index}`,
+          _id: product._id,
+          id: product.id || product._id,
           name: product.name || 'Produit sans nom',
+          productName: product.productName || product.name,
           brand: product.brand || 'Marque inconnue',
           image: product.imageUrl || product.image || '/placeholder.png',
           imageUrl: product.imageUrl || product.image || '/placeholder.png',
@@ -89,36 +133,18 @@ class SearchService {
         
         // Ajouter les scores depuis analysisData
         if (product.analysisData) {
-          hit.healthScore = product.analysisdata?.healthScore || 0;
-          hit.environmentScore = product.analysisdata?.environmentScore || 0;
-          hit.socialScore = product.analysisdata?.socialScore;
+          hit.healthScore = product.analysisData?.healthScore || 0;
+          hit.environmentScore = product.analysisData?.environmentScore || 0;
+          hit.socialScore = product.analysisData?.socialScore;
           
-          // Si les scores detailles existent
-          if (product.analysisdata?.scores) {
-            hit.healthScore = product.analysisdata?.scores.healthScore || hit.healthScore;
-            hit.environmentScore = product.analysisdata?.scores.environmentScore || hit.environmentScore;
-          }
-          
-          // Nutriscore et ecoscore depuis details
-          if (product.analysisdata?.details) {
-            hit.nutriScore = product.analysisdata?.details.nutriscore;
-            hit.ecoScore = product.analysisdata?.details.ecoscore;
+          if (product.analysisData?.details) {
+            hit.nutriScore = product.analysisData?.details.nutriscore;
+            hit.ecoScore = product.analysisData?.details.ecoscore;
           }
         }
-        
-        // Calculer un score global si non fourni
-        if (!hit.globalScore && (hit.healthScore || hit.environmentScore)) {
-          hit.globalScore = Math.round(
-            ((hit.healthScore || 0) + (hit.environmentScore || 0)) / 2
-          );
-        }
-        
-        console.log(`Mapped product:`, hit);
         
         return hit;
       });
-      
-      console.log('Final hits array:', hits);
       
       return {
         hits,
@@ -127,7 +153,6 @@ class SearchService {
         totalPages: 1,
         processingTimeMs: Date.now() - startTime
       };
-      
     } catch (error) {
       console.error('Search error:', error);
       return {
@@ -142,7 +167,7 @@ class SearchService {
 
   async searchByBarcode(barcode: string): Promise<ProductHit | null> {
     try {
-      const response = await api.get(`/products/barcode/${barcode}`);
+      const response = await apiClient.get(`/products/barcode/${barcode}`);
       
       if (!response.data || response.data?.success === false) {
         return null;
@@ -152,7 +177,10 @@ class SearchService {
       
       return {
         objectID: product._id || product.id || product.barcode,
+        _id: product._id,
+        id: product.id || product._id,
         name: product.name || 'Sans nom',
+        productName: product.productName || product.name,
         brand: product.brand || '',
         image: product.imageUrl || product.image || '/placeholder.png',
         imageUrl: product.imageUrl || product.image || '/placeholder.png',
@@ -175,8 +203,11 @@ class SearchService {
 
   async getSuggestions(query: string): Promise<string[]> {
     try {
-      const response = await api.get('/products');
-      const products = response.data?.products || [];
+      const response = await apiClient.get('/products/search', {
+        params: { q: query, limit: 10 }
+      });
+      
+      const products = response.data?.products || response.products || [];
       
       // Extraire les noms et marques uniques
       const suggestions = new Set<string>();
@@ -191,8 +222,29 @@ class SearchService {
     }
   }
 
-  async searchWithFacets(params: SearchParams): Promise<any> {
-    return this.search(params);
+  async getTrending(limit: number = 10): Promise<SearchItem[]> {
+    try {
+      const response = await apiClient.get('/products/trending', {
+        params: { limit }
+      });
+      
+      const products = response.data?.products || response.products || [];
+      return products.map((p: any) => ({
+        _id: p._id || p.id,
+        id: p._id || p.id,
+        objectID: p._id || p.id || p.objectID,
+        name: p.name || p.productName || 'Produit sans nom',
+        productName: p.productName || p.name,
+        brand: p.brand,
+        barcode: p.barcode,
+        category: p.category,
+        score: p.score,
+        imageUrl: p.imageUrl || p.image
+      }));
+    } catch (error) {
+      console.error('Get trending error:', error);
+      return [];
+    }
   }
 }
 
@@ -217,7 +269,3 @@ export function extractProducts(response: SearchResponse | any): ProductHit[] {
 
 const searchService = new SearchService();
 export default searchService;
-export { searchService };
-
-
-

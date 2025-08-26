@@ -6,21 +6,21 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf
 interface ApiOk<T> {
   success: true;
   data: T;
-  messagea: string;
+  message: string;
 }
 
 interface ApiErr {
   success: false;
   error: string;
-  messagea: string;
+  message: string;
 }
 
 type ApiResponse<T> = ApiOk<T> | ApiErr;
 
 export interface SearchFilters {
   category?: string;
-  pagea: number;
-  limita: number;
+  page: number;
+  limit: number;
 }
 
 export interface ProductItem {
@@ -29,7 +29,7 @@ export interface ProductItem {
   brand?: string;
   barcode?: string;
   category?: string;
-  imageUrla: string;
+  imageUrl: string;
 }
 
 export interface SearchPayload {
@@ -39,15 +39,15 @@ export interface SearchPayload {
 
 export async function searchProducts(
   query: string,
-  filters: SearchFilters = {}
+  filters: Partial<SearchFilters> = {}
 ): Promise<SearchPayload> {
   const params = new URLSearchParams();
   params.set('q', query);
   if (filters.category) params.set('category', filters.category);
-  params.set('page', String(filters.page aa 1));
-  params.set('limit', String(filters.limit aa 20));
+  params.set('page', String(filters.page ?? 1));
+  params.set('limit', String(filters.limit ?? 20));
 
-  const res = await fetch(`${API_BASE_URL}/api/algolia/searcha${params.toString()}`);
+  const res = await fetch(`${API_BASE_URL}/api/algolia/search?${params.toString()}`);
   if (!res.ok) throw new Error(`Search API error (${res.status})`);
   const json: ApiResponse<SearchPayload> = await res.json();
   if (!json.success) throw new Error(json.error || 'Search API error');
@@ -55,11 +55,11 @@ export async function searchProducts(
 }
 
 export interface ProductDetail extends ProductItem {
-  ingredientsa: string;
-  nova_groupa: number;
-  nutriscore_gradea: string;
-  ecoscore_gradea: string;
-  analysisdata?: { healthScorea: number };
+  ingredients: string;
+  nova_group: number;
+  nutriscore_grade: string;
+  ecoscore_grade: string;
+  analysisData?: { healthScore: number };
 }
 
 export async function getProductByBarcode(barcode: string): Promise<ProductDetail | null> {
@@ -72,7 +72,7 @@ export async function getProductByBarcode(barcode: string): Promise<ProductDetai
 }
 
 export interface ManualAnalysisInput {
-  namea: string;
+  name: string;
   brand?: string;
   barcode?: string;
   category?: 'food' | 'cosmetics' | 'detergents' | string;
@@ -80,7 +80,7 @@ export interface ManualAnalysisInput {
 }
 
 export async function analyzeProduct(input: ManualAnalysisInput): Promise<AnalysisResult> {
-  const res = await fetch(`${API_BASE_URL}/api/analysis`, {
+  const res = await fetch(`${API_BASE_URL}/api/analyze/auto`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input)
@@ -100,8 +100,8 @@ export interface DashboardStats {
     productName: string;
     category: string;
     score: number;
-    nutriScorea: string;
-    ecoScorea: string;
+    nutriScore: string;
+    ecoScore: string;
   }[];
   topProducts: ProductItem[];
 }
@@ -118,12 +118,11 @@ export async function getAnalysesHistory(page = 1, limit = 20): Promise<any> {
   const params = new URLSearchParams();
   params.set('page', String(page));
   params.set('limit', String(limit));
-  const res = await fetch(`${API_BASE_URL}/api/analysis/historya${params.toString()}`);
+  const res = await fetch(`${API_BASE_URL}/api/analyze/history?${params.toString()}`);
   if (!res.ok) throw new Error(`History API error (${res.status})`);
   const json = await res.json();
   return json.data || json;
 }
-
 
 // Historique
 export interface HistoryItem {
@@ -133,7 +132,7 @@ export interface HistoryItem {
   scores: {
     healthScore: number;
     environmentScore: number;
-    novaa: number;
+    nova: number;
   };
   createdAt: string;
 }
@@ -155,7 +154,7 @@ export async function getHistory(page = 1, limit = 12, sortBy = 'date', sortOrde
     headers['Authorization'] = `Bearer ${token}`;
   }
   
-  const res = await fetch(`${API_BASE_URL}/api/historya${params.toString()}`, {
+  const res = await fetch(`${API_BASE_URL}/api/analyze/history?${params.toString()}`, {
     headers
   });
   
@@ -174,7 +173,7 @@ export async function getHistoryCount(): Promise<number> {
     headers['Authorization'] = `Bearer ${token}`;
   }
   
-  const res = await fetch(`${API_BASE_URL}/api/history/count`, {
+  const res = await fetch(`${API_BASE_URL}/api/analyze/history/count`, {
     headers
   });
   
@@ -237,6 +236,48 @@ export async function getCurrentUser(): Promise<any> {
   return res.json();
 }
 
+// Quota functions
+export interface DetailedQuotaData {
+  used_analyses: number;
+  remaining_analyses: number;
+  daily_limit: number;
+  reset_time: string;
+  current_date: string;
+}
 
+export interface DetailedQuotaResponse {
+  success: boolean;
+  quota?: DetailedQuotaData;
+  error?: string;
+}
 
+export async function fetchUserQuota(): Promise<DetailedQuotaResponse> {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return { success: false, error: 'No auth token' };
+  }
 
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/user/quota`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!res.ok) {
+      return { success: false, error: `Quota API error (${res.status})` };
+    }
+    
+    const json = await res.json();
+    return {
+      success: true,
+      quota: json.data || json
+    };
+  } catch (error) {
+    return { success: false, error: 'Failed to fetch quota' };
+  }
+}
+
+export async function refreshQuotaAfterAnalysis(): Promise<DetailedQuotaResponse> {
+  return fetchUserQuota(); // Same endpoint for now
+}

@@ -1,93 +1,132 @@
 ﻿// PATH: frontend/src/pages/ResultPage.tsx
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import type { AnalysisResult } from "../types/api";
-import ScoreDisplay from "../components/analysis/ScoreDisplay";
-import RiskCard from "../components/analysis/RiskCard";
-import AlternativesList from "../components/analysis/AlternativesList";
-import { ecoToTone, novaToTone, nutriToTone } from "../utils/scores";
-// import { useHistory } from "../hooks/useHistory";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import analysisService, { AnalysisResult } from "../services/analysisService";
+import productService from "../services/productService";
 
-export default function ResultPage() {
-  const location = useLocation();
-  // const { save } = useHistory();
+type ViewModel = {
+  title: string;
+  brand?: string;
+  barcode?: string;
+  score?: number;
+  nutriScore?: string;
+  ecoScore?: string;
+  details?: Record<string, any>;
+};
 
-  const result: AnalysisResult | null =
-    (location.state as any)?.result ||
-    (() => {
-      try {
-        return JSON.parse(localStorage.getItem("lastAnalysis") || "null");
-      } catch {
-        return null;
-      }
-    })();
+const ResultPage: React.FC = () => {
+  const [sp] = useSearchParams();
+  const navigate = useNavigate();
+  const barcode = sp.get("barcode") || "";
+  const id = sp.get("id") || "";
+  const [loading, setLoading] = useState(false);
+  const [vm, setVm] = useState<ViewModel | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const hasInput = useMemo(() => !!barcode || !!id, [barcode, id]);
 
   useEffect(() => {
-    // if (result) save(result);
+    if (!hasInput) return;
+    void run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [barcode, id]);
 
-  if (!result) {
-    return (
-      <div className="p-4">
-        <h1 className="text-xl font-bold mb-2">Aucun résultat</h1>
-        <p>Revenez au scan pour analyser un produit.</p>
-      </div>
-    );
+  async function run() {
+    setLoading(true);
+    setError(null);
+    try {
+      if (barcode) {
+        const res: AnalysisResult = await analysisService.analyzeByBarcode(barcode);
+        setVm({
+          title: res.productName,
+          brand: res.brand,
+          barcode: res.barcode,
+          score: res.score,
+          nutriScore: res.nutriScore,
+          ecoScore: res.ecoScore,
+          details: res.details,
+        });
+      } else if (id) {
+        const p = await productService.getById(id);
+        setVm({
+          title: p.productName ?? p.name ?? "Produit",
+          brand: p.brand,
+          barcode: p.barcode,
+          score: typeof p.score === "number" ? p.score : undefined,
+          nutriScore: p.nutriScore as any,
+          ecoScore: p.ecoScore as any,
+          details: p as any,
+        });
+      }
+    } catch (e: any) {
+      setError(e?.message || "Analyse indisponible");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const p = result.product;
-  const s: any = result.score;
-  const isDemo = Boolean((result as any)?.raw?.demo);
-
   return (
-    <div className="mx-auto max-w-3xl p-4">
-      {isDemo && (
-        <div className="mb-3 p-3 rounded-lg border bg-gray-200 text-sm">
-          Mode <strong>démo</strong> — résultat simulé (API indisponible).
-        </div>
-      )}
+    <div style={{ minHeight: "100vh", background: "#F7F9F4" }}>
+      <div className="eco-container" style={{ paddingTop: 24, paddingBottom: 24 }}>
+        <header className="eco-card" style={{ padding: 24 }}>
+          <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, color: "#3B3B3B" }}>
+            Résultat d'analyse
+          </h1>
+          <p style={{ marginTop: 8, color: "#607069" }}>
+            {barcode ? `Code-barres : ${barcode}` : id ? `Produit #${id}` : "Aucun identifiant fourni"}
+          </p>
+        </header>
 
-      <h1 className="text-2xl font-bold mb-1">{p.name}</h1>
-      <p className="text-gray-600 mb-4">
-        {p.brand ? `${p.brand} • ` : ""} {p.category || "—"} {p.ean ? `• EAN ${p.ean}` : ""}
-      </p>
+        <main style={{ marginTop: 24 }}>
+          {loading && <div className="eco-card" style={{ padding: 24, textAlign: "center" }}>Analyse en cours…</div>}
+          {!loading && error && <div className="eco-card" style={{ padding: 24, color: "#7a2f2f" }}>{error}</div>}
+          {!loading && !error && vm && (
+            <div className="eco-card" style={{ padding: 24 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24 }}>
+                <div style={{ flex: 1 }}>
+                  <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: 24, fontWeight: 800, color: "#3B3B3B" }}>
+                    {vm.title}
+                  </h2>
+                  {vm.brand && <div className="eco-badge" style={{ marginBottom: 12 }}>{vm.brand}</div>}
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
+                    {typeof vm.score === "number" && (
+                      <span className="eco-badge">Score {vm.score}%</span>
+                    )}
+                    {vm.nutriScore && <span className="eco-badge">Nutri-Score {vm.nutriScore}</span>}
+                    {vm.ecoScore && <span className="eco-badge">Éco-Score {vm.ecoScore}</span>}
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <button className="eco-btn" style={{ background: "#E9F8DF", color: "#2c6e2f" }} onClick={() => navigate("/history")}>
+                    Voir l'historique
+                  </button>
+                </div>
+              </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <ScoreDisplay label="Nutri-Score" value={s?.nutriScore} tone={nutriToTone(s?.nutriScore)} />
-        <ScoreDisplay label="NOVA" value={s?.novaGroup} tone={novaToTone(s?.novaGroup)} />
-        <ScoreDisplay label="Eco-Score" value={s?.ecoScore} tone={ecoToTone(s?.ecoScore)} />
+              <div style={{ marginTop: 24 }}>
+                <h3 className="eco-section-title">Détails</h3>
+                <pre style={{
+                  background: "#fff",
+                  border: "1px solid #DDE9DA",
+                  borderRadius: 12,
+                  padding: 16,
+                  overflow: "auto",
+                  margin: 0
+                }}>
+{JSON.stringify(vm.details ?? {}, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
+          {!loading && !error && !vm && (
+            <div className="eco-card" style={{ padding: 24, textAlign: "center" }}>
+              Fournissez un <b>barcode</b> ou un <b>id</b> dans l'URL.
+            </div>
+          )}
+        </main>
       </div>
-
-      {p.ingredients && p.ingredients.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Ingrédients</h2>
-          <div className="card text-sm text-gray-800">{p.ingredients.join(", ")}</div>
-        </section>
-      )}
-
-      {result.risks && result.risks.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Risques potentiels</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {result.risks.map((r: any, idx: number) => (
-              <RiskCard key={r.id || idx} title={r.title} level={r.level} details={r.details} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {result.alternatives && result.alternatives.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Alternatives</h2>
-          <AlternativesList items={result.alternatives as any} />
-        </section>
-      )}
     </div>
   );
-}
+};
 
-
-
-
-
+export default ResultPage;
