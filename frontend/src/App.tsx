@@ -1,7 +1,7 @@
 ﻿// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthContext } from './contexts/AuthContext';
+import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 
@@ -110,3 +110,4 @@ const App: React.FC = () => {
   );
 };
 export default App;
+

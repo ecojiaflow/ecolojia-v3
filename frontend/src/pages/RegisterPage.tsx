@@ -1,8 +1,8 @@
-// PATH: frontend/src/pages/RegisterPage.tsx
+﻿// PATH: frontend/src/pages/RegisterPage.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Leaf, ArrowRight, Check } from 'lucide-react';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 const RegisterPage: React.FC = () => {
@@ -21,7 +21,7 @@ const RegisterPage: React.FC = () => {
   });
 
   const passwordRequirements = [
-    { regex: /.{8,}/, text: 'Au moins 8 caractères' },
+    { regex: /.{8,}/, text: 'Au moins 8 caractÃ¨res' },
     { regex: /[A-Z]/, text: 'Une majuscule' },
     { regex: /[a-z]/, text: 'Une minuscule' },
     { regex: /[0-9]/, text: 'Un chiffre' }
@@ -48,7 +48,7 @@ const RegisterPage: React.FC = () => {
     }
 
     if (!isPasswordValid(formData.password)) {
-      toast.error('Le mot de passe ne respecte pas les critères');
+      toast.error('Le mot de passe ne respecte pas les critÃ¨res');
       return;
     }
 
@@ -71,10 +71,10 @@ const RegisterPage: React.FC = () => {
         password: formData.password
       });
       
-      // Redirection vers l'onboarding après inscription
+      // Redirection vers l'onboarding aprÃ¨s inscription
       navigate('/onboarding');
     } catch (error) {
-      // L'erreur est déjà gérée dans le contexte
+      // L'erreur est dÃ©jÃ  gÃ©rÃ©e dans le contexte
     } finally {
       setIsLoading(false);
     }
@@ -89,17 +89,17 @@ const RegisterPage: React.FC = () => {
             <Leaf className="h-12 w-12 text-green-500" />
           </Link>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Créez votre compte ECOLOJIA
+            CrÃ©ez votre compte ECOLOJIA
           </h1>
           <p className="text-gray-600">
-            Rejoignez des milliers d'utilisateurs soucieux de leur santé
+            Rejoignez des milliers d'utilisateurs soucieux de leur santÃ©
           </p>
         </div>
 
         {/* Avantages */}
         <div className="bg-green-100 rounded-lg p-4 mb-6">
           <h3 className="font-semibold text-green-800 mb-2">
-            ✨ Avec un compte gratuit :
+            âœ¨ Avec un compte gratuit :
           </h3>
           <ul className="space-y-1 text-sm text-green-700">
             <li className="flex items-center">
@@ -108,7 +108,7 @@ const RegisterPage: React.FC = () => {
             </li>
             <li className="flex items-center">
               <Check className="w-4 h-4 mr-2 flex-shrink-0" />
-              Accès au chat IA nutritionnel
+              AccÃ¨s au chat IA nutritionnel
             </li>
             <li className="flex items-center">
               <Check className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -120,11 +120,11 @@ const RegisterPage: React.FC = () => {
         {/* Formulaire */}
         <div className="bg-white rounded-xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Prénom et Nom */}
+            {/* PrÃ©nom et Nom */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                  Prénom
+                  PrÃ©nom
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -194,7 +194,7 @@ const RegisterPage: React.FC = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
                 />
@@ -211,7 +211,7 @@ const RegisterPage: React.FC = () => {
                 </button>
               </div>
               
-              {/* Critères du mot de passe */}
+              {/* CritÃ¨res du mot de passe */}
               {formData.password && (
                 <div className="mt-2 space-y-1">
                   {passwordRequirements.map((req, index) => (
@@ -242,7 +242,7 @@ const RegisterPage: React.FC = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
                 />
@@ -265,7 +265,7 @@ const RegisterPage: React.FC = () => {
                 </Link>{' '}
                 et la{' '}
                 <Link to="/privacy" className="text-green-600 hover:underline">
-                  politique de confidentialité
+                  politique de confidentialitÃ©
                 </Link>
               </label>
             </div>
@@ -280,7 +280,7 @@ const RegisterPage: React.FC = () => {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  Créer mon compte
+                  CrÃ©er mon compte
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </>
               )}
@@ -290,7 +290,7 @@ const RegisterPage: React.FC = () => {
           {/* Lien connexion */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Déjà un compte ?{' '}
+              DÃ©jÃ  un compte ?{' '}
               <Link
                 to="/login"
                 className="text-green-600 font-medium hover:text-green-700"

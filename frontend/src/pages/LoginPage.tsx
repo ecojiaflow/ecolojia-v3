@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Leaf, ArrowRight } from 'lucide-react';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 const LoginPage: React.FC = () => {

@@ -1,8 +1,8 @@
-// PATH: frontend/src/pages/OnboardingPage.tsx
+﻿// PATH: frontend/src/pages/OnboardingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Heart, Leaf, Shield, Check } from 'lucide-react';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { userService } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -16,19 +16,19 @@ interface OnboardingStep {
 const steps: OnboardingStep[] = [  // Correction: utiliser des crochets [] au lieu de {}
   {
     id: 1,
-    title: 'Vos objectifs santé',
-    subtitle: 'Personnalisez votre expérience',
+    title: 'Vos objectifs santÃ©',
+    subtitle: 'Personnalisez votre expÃ©rience',
     icon: <Heart className="w-8 h-8" />
   },
   {
     id: 2,
-    title: 'Allergies & régimes',
-    subtitle: 'Pour des recommandations adaptées',
+    title: 'Allergies & rÃ©gimes',
+    subtitle: 'Pour des recommandations adaptÃ©es',
     icon: <Shield className="w-8 h-8" />
   },
   {
     id: 3,
-    title: 'Préférences',
+    title: 'PrÃ©fÃ©rences',
     subtitle: 'Finalisez votre profil',
     icon: <Leaf className="w-8 h-8" />
   }
@@ -40,7 +40,7 @@ const OnboardingPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  // État pour les données du formulaire
+  // Ã‰tat pour les donnÃ©es du formulaire
   const [formData, setFormData] = useState({
     healthGoals: [] as string[],
     allergies: [] as string[],
@@ -53,30 +53,30 @@ const OnboardingPage: React.FC = () => {
   });
 
   const healthGoalOptions = [
-    { value: 'weight-loss', label: 'Perdre du poids', icon: '⚖️' },
-    { value: 'muscle-gain', label: 'Prendre du muscle', icon: '💪' },
-    { value: 'health', label: 'Améliorer ma santé', icon: '❤️' },
-    { value: 'energy', label: 'Plus d\'énergie', icon: '⚡' },
-    { value: 'sleep', label: 'Mieux dormir', icon: '😴' },
-    { value: 'digestion', label: 'Meilleure digestion', icon: '🌿' }
+    { value: 'weight-loss', label: 'Perdre du poids', icon: 'âš–ï¸' },
+    { value: 'muscle-gain', label: 'Prendre du muscle', icon: 'ðŸ’ª' },
+    { value: 'health', label: 'AmÃ©liorer ma santÃ©', icon: 'â¤ï¸' },
+    { value: 'energy', label: 'Plus d\'Ã©nergie', icon: 'âš¡' },
+    { value: 'sleep', label: 'Mieux dormir', icon: 'ðŸ˜´' },
+    { value: 'digestion', label: 'Meilleure digestion', icon: 'ðŸŒ¿' }
   ];
 
   const allergyOptions = [
-    { value: 'gluten', label: 'Gluten', icon: '🌾' },
-    { value: 'lactose', label: 'Lactose', icon: '🥛' },
-    { value: 'nuts', label: 'Fruits à coque', icon: '🥜' },
-    { value: 'eggs', label: 'Œufs', icon: '🥚' },
-    { value: 'soy', label: 'Soja', icon: '🌱' },
-    { value: 'shellfish', label: 'Crustacés', icon: '🦐' }
+    { value: 'gluten', label: 'Gluten', icon: 'ðŸŒ¾' },
+    { value: 'lactose', label: 'Lactose', icon: 'ðŸ¥›' },
+    { value: 'nuts', label: 'Fruits Ã  coque', icon: 'ðŸ¥œ' },
+    { value: 'eggs', label: 'Å’ufs', icon: 'ðŸ¥š' },
+    { value: 'soy', label: 'Soja', icon: 'ðŸŒ±' },
+    { value: 'shellfish', label: 'CrustacÃ©s', icon: 'ðŸ¦' }
   ];
 
   const dietOptions = [
-    { value: 'vegetarian', label: 'Végétarien', icon: '🥗' },
-    { value: 'vegan', label: 'Végétalien', icon: '🌱' },
-    { value: 'halal', label: 'Halal', icon: '☪️' },
-    { value: 'kosher', label: 'Casher', icon: '✡️' },
-    { value: 'gluten-free', label: 'Sans gluten', icon: '🚫' },
-    { value: 'keto', label: 'Cétogène', icon: '🥑' }
+    { value: 'vegetarian', label: 'VÃ©gÃ©tarien', icon: 'ðŸ¥—' },
+    { value: 'vegan', label: 'VÃ©gÃ©talien', icon: 'ðŸŒ±' },
+    { value: 'halal', label: 'Halal', icon: 'â˜ªï¸' },
+    { value: 'kosher', label: 'Casher', icon: 'âœ¡ï¸' },
+    { value: 'gluten-free', label: 'Sans gluten', icon: 'ðŸš«' },
+    { value: 'keto', label: 'CÃ©togÃ¨ne', icon: 'ðŸ¥‘' }
   ];
 
   const toggleSelection = (field: 'healthGoals' | 'allergies' | 'diets', value: string) => {
@@ -118,7 +118,7 @@ const OnboardingPage: React.FC = () => {
         }
       });
 
-      toast.success('Profil configuré avec succès !');
+      toast.success('Profil configurÃ© avec succÃ¨s !');
       navigate('/dashboard');
     } catch (error) {
       toast.error('Erreur lors de la configuration du profil');
@@ -133,7 +133,7 @@ const OnboardingPage: React.FC = () => {
         return (
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-800 mb-4">
-              Quels sont vos objectifs santé ?
+              Quels sont vos objectifs santÃ© ?
             </h3>
             <div className="grid grid-cols-2 gap-3">
               {healthGoalOptions.map(option => (
@@ -191,7 +191,7 @@ const OnboardingPage: React.FC = () => {
 
             <div>
               <h3 className="text-lg font-medium text-gray-800 mb-4">
-                Suivez-vous un régime particulier ?
+                Suivez-vous un rÃ©gime particulier ?
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {dietOptions.map(option => (
@@ -222,12 +222,12 @@ const OnboardingPage: React.FC = () => {
         return (
           <div className="space-y-6">
             <h3 className="text-lg font-medium text-gray-800 mb-4">
-              Préférences de notifications
+              PrÃ©fÃ©rences de notifications
             </h3>
             <div className="space-y-4">
               <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer">
                 <div className="flex items-center space-x-3">
-                  <span className="text-xl">📧</span>
+                  <span className="text-xl">ðŸ“§</span>
                   <div>
                     <div className="font-medium text-gray-800">Email</div>
                     <div className="text-sm text-gray-500">Recevez vos analyses par email</div>
@@ -249,7 +249,7 @@ const OnboardingPage: React.FC = () => {
 
               <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer">
                 <div className="flex items-center space-x-3">
-                  <span className="text-xl">📱</span>
+                  <span className="text-xl">ðŸ“±</span>
                   <div>
                     <div className="font-medium text-gray-800">Notifications push</div>
                     <div className="text-sm text-gray-500">Alertes sur nouveaux produits</div>
@@ -271,7 +271,7 @@ const OnboardingPage: React.FC = () => {
 
               <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer">
                 <div className="flex items-center space-x-3">
-                  <span className="text-xl">🎯</span>
+                  <span className="text-xl">ðŸŽ¯</span>
                   <div>
                     <div className="font-medium text-gray-800">Offres partenaires</div>
                     <div className="text-sm text-gray-500">Bons plans produits sains</div>
@@ -294,7 +294,7 @@ const OnboardingPage: React.FC = () => {
 
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
               <p className="text-sm text-green-700">
-                🔒 Vos données sont sécurisées et ne seront jamais partagées sans votre consentement.
+                ðŸ”’ Vos donnÃ©es sont sÃ©curisÃ©es et ne seront jamais partagÃ©es sans votre consentement.
               </p>
             </div>
           </div>
@@ -305,10 +305,10 @@ const OnboardingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12">
       <div className="max-w-2xl mx-auto px-4">
-        {/* En-tête */}
+        {/* En-tÃªte */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Personnalisez votre expérience
+            Personnalisez votre expÃ©rience
           </h1>
           <p className="text-gray-600">
             Quelques questions pour mieux vous accompagner
@@ -362,7 +362,7 @@ const OnboardingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Contenu de l'étape */}
+        {/* Contenu de l'Ã©tape */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
           {renderStep()}
         </div>

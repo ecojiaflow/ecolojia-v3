@@ -1,6 +1,6 @@
 ﻿// PATH: frontend/src/hooks/useQuota.ts
 import { useState, useEffect, useCallback } from 'react';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { fetchUserQuota, refreshQuotaAfterAnalysis, DetailedQuotaData, DetailedQuotaResponse } from '../api/realApi';
 import toast from 'react-hot-toast';
 

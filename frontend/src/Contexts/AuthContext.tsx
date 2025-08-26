@@ -1,4 +1,4 @@
-// PATH: frontend/src/contexts/AuthContext.tsx
+﻿// PATH: frontend/sr./Contexts/AuthContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAuth, User } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await auth.login(email, password);
       navigate('/dashboard');
     } catch (error) {
-      // L'erreur est déjà gérée dans le hook
+      // L'erreur est dÃ©jÃ  gÃ©rÃ©e dans le hook
       throw error;
     }
   };
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await auth.register(userData);
       navigate('/onboarding');
     } catch (error) {
-      // L'erreur est déjà gérée dans le hook
+      // L'erreur est dÃ©jÃ  gÃ©rÃ©e dans le hook
       throw error;
     }
   };

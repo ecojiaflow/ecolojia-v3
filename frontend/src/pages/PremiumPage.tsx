@@ -1,8 +1,8 @@
-// PATH: frontend/src/pages/PremiumPage.tsx
+﻿// PATH: frontend/src/pages/PremiumPage.tsx
 import React from 'react';
 import { Check, X, Zap, Crown, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { paymentService } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -21,17 +21,17 @@ const PremiumPage: React.FC = () => {
       const response = await paymentService.createCheckout(plan);
       window.location.href = response.data.url;
     } catch (error) {
-      toast.error('Erreur lors de la création de la session de paiement');
+      toast.error('Erreur lors de la crÃ©ation de la session de paiement');
     }
   };
 
   const features = [
-    { free: true, premium: true, text: '30 analyses par mois', premiumText: 'Analyses illimitées' },
+    { free: true, premium: true, text: '30 analyses par mois', premiumText: 'Analyses illimitÃ©es' },
     { free: true, premium: true, text: '5 chats IA par mois', premiumText: '500 chats IA par mois' },
     { free: true, premium: true, text: 'Historique 7 jours', premiumText: 'Historique complet' },
     { free: false, premium: true, text: 'Export PDF des rapports' },
-    { free: false, premium: true, text: 'Comparateur avancé' },
-    { free: false, premium: true, text: 'Sans publicité' },
+    { free: false, premium: true, text: 'Comparateur avancÃ©' },
+    { free: false, premium: true, text: 'Sans publicitÃ©' },
     { free: false, premium: true, text: 'Support prioritaire' },
     { free: false, premium: true, text: 'Profils famille' }
   ];
@@ -43,13 +43,13 @@ const PremiumPage: React.FC = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-700 font-medium mb-4">
             <Zap className="w-4 h-4 mr-2" />
-            Passez à la vitesse supérieure
+            Passez Ã  la vitesse supÃ©rieure
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Choisissez votre plan ECOLOJIA
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Débloquez tout le potentiel d'ECOLOJIA pour une vie plus saine
+            DÃ©bloquez tout le potentiel d'ECOLOJIA pour une vie plus saine
           </p>
         </div>
 
@@ -58,8 +58,8 @@ const PremiumPage: React.FC = () => {
           {/* Free Plan */}
           <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Gratuit</h3>
-            <p className="text-gray-600 mb-6">Pour découvrir ECOLOJIA</p>
-            <div className="text-4xl font-bold text-gray-800 mb-6">0€</div>
+            <p className="text-gray-600 mb-6">Pour dÃ©couvrir ECOLOJIA</p>
+            <div className="text-4xl font-bold text-gray-800 mb-6">0â‚¬</div>
             
             <ul className="space-y-3 mb-8">
               {features.filter(f => f.free).map((feature, index) => (
@@ -81,7 +81,7 @@ const PremiumPage: React.FC = () => {
                 onClick={() => navigate('/register')}
                 className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200"
               >
-                Créer un compte
+                CrÃ©er un compte
               </button>
             )}
           </div>
@@ -94,7 +94,7 @@ const PremiumPage: React.FC = () => {
             </div>
             <p className="mb-6 opacity-90">Le choix populaire</p>
             <div className="mb-6">
-              <span className="text-4xl font-bold">2,49€</span>
+              <span className="text-4xl font-bold">2,49â‚¬</span>
               <span className="text-lg opacity-75">/mois</span>
             </div>
             
@@ -120,12 +120,12 @@ const PremiumPage: React.FC = () => {
           {/* Premium Annual */}
           <div className="bg-white rounded-xl shadow-lg p-8 border-2 border-green-500 relative">
             <div className="absolute -top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              -17% 🎉
+              -17% ðŸŽ‰
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Premium Annuel</h3>
             <p className="text-gray-600 mb-6">2 mois offerts</p>
             <div className="mb-6">
-              <span className="text-4xl font-bold text-gray-800">24,99€</span>
+              <span className="text-4xl font-bold text-gray-800">24,99â‚¬</span>
               <span className="text-lg text-gray-600">/an</span>
             </div>
             
@@ -143,7 +143,7 @@ const PremiumPage: React.FC = () => {
               disabled={isPremium}
               className="w-full py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isPremium ? 'Plan actuel' : 'Économiser 17%'}
+              {isPremium ? 'Plan actuel' : 'Ã‰conomiser 17%'}
               {!isPremium && <ArrowRight className="w-5 h-5 inline ml-2" />}
             </button>
           </div>
@@ -152,20 +152,20 @@ const PremiumPage: React.FC = () => {
         {/* FAQ Section */}
         <div className="bg-white rounded-xl shadow-md p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Questions fréquentes
+            Questions frÃ©quentes
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
-                Puis-je annuler à tout moment ?
+                Puis-je annuler Ã  tout moment ?
               </h3>
               <p className="text-gray-600">
-                Oui, vous pouvez annuler votre abonnement à tout moment depuis votre profil.
+                Oui, vous pouvez annuler votre abonnement Ã  tout moment depuis votre profil.
               </p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
-                Comment fonctionne la période d'essai ?
+                Comment fonctionne la pÃ©riode d'essai ?
               </h3>
               <p className="text-gray-600">
                 Profitez de 30 analyses gratuites pour tester ECOLOJIA sans engagement.
@@ -173,10 +173,10 @@ const PremiumPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
-                Les paiements sont-ils sécurisés ?
+                Les paiements sont-ils sÃ©curisÃ©s ?
               </h3>
               <p className="text-gray-600">
-                Oui, nous utilisons LemonSqueezy, une plateforme de paiement certifiée et sécurisée.
+                Oui, nous utilisons LemonSqueezy, une plateforme de paiement certifiÃ©e et sÃ©curisÃ©e.
               </p>
             </div>
             <div>
@@ -184,7 +184,7 @@ const PremiumPage: React.FC = () => {
                 Puis-je partager mon compte ?
               </h3>
               <p className="text-gray-600">
-                Le plan Premium permet de créer des profils famille pour partager votre compte.
+                Le plan Premium permet de crÃ©er des profils famille pour partager votre compte.
               </p>
             </div>
           </div>

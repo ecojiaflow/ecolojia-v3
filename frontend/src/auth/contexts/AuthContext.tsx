@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/contexts/AuthContext.tsx
+﻿// PATH: frontend/sr./Contexts/AuthContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAuth, User } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
