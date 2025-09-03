@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Sparkles, Zap, Shield, TrendingUp } from 'lucide-react';
 import { paymentService } from '../services/api';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 
 interface PricingFeature {
