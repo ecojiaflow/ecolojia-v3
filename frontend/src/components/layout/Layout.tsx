@@ -1,4 +1,4 @@
-﻿// ===== 2. Layout.tsx =====
+// ===== 2. Layout.tsx =====
 // PATH: frontend/src/components/layout/Layout.tsx
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -71,10 +71,10 @@ const Layout: React.FC = () => {
                   <div className="px-3 py-1 bg-gray-100 rounded-full">
                     <span className="text-gray-600">Scans: </span>
                     <span className="font-medium text-gray-800">
-                      {quotas.scansRemaining}/{user?.subscription.tier === 'premium' ? '∞' : '30'}
+                      {quotas.scansRemaining}/{user?.subscription?.tier === 'premium' ? '∞' : '30'}
                     </span>
                   </div>
-                  {user?.subscription.tier === 'free' && (
+                  {user?.subscription?.tier === 'free' && (
                     <Link
                       to="/premium"
                       className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:shadow-md transition-shadow"
