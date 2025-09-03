@@ -1,4 +1,4 @@
-// PATH: frontend/src/i18n/locales/fr.ts
+﻿// PATH: frontend/src/i18n/locales/fr.ts
 export const fr = {
   common: {
     home: 'Accueil',

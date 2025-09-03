@@ -1,4 +1,4 @@
-// /src/hooks/useProductCache.ts
+﻿// /src/hooks/useProductCache.ts
 import { useState, useEffect, useCallback } from 'react';
 import { Product } from '../types';
 

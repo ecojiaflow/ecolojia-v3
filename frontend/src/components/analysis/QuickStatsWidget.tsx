@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart3, TrendingUp, Target, Award } from 'lucide-react';

@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/OnboardingPage.tsx
+﻿// PATH: frontend/src/pages/OnboardingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Heart, Leaf, Shield, Check } from 'lucide-react';

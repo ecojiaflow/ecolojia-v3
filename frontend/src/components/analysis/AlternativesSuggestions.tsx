@@ -1,4 +1,4 @@
-// aa src/components/analysis/AlternativesSuggestions.tsx
+﻿// aa src/components/analysis/AlternativesSuggestions.tsx
 
 import React from 'react';
 import { Lightbulb, ArrowUpRight } from 'lucide-react';

@@ -1,4 +1,4 @@
-// src/services/aiAnalysisService.ts
+﻿// src/services/aiAnalysisService.ts
 // Service FRONTEND pour gerer l'historique et les analyses cote client
 
 interface AnalysisHistory {

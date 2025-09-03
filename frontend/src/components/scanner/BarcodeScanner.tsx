@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Camera, X, Loader } from 'lucide-react';
 import { productService } from '../../services/api';

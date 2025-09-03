@@ -1,4 +1,4 @@
-// PATH: frontend\src\components\NovaBadge.tsx
+﻿// PATH: frontend\src\components\NovaBadge.tsx
 import React from 'react';
 import { Info } from 'lucide-react';
 import {

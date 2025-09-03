@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { X, ExternalLink, CheckCircle, Tag, ArrowLeft } from 'lucide-react';
 import { Product } from '../types';
 import EthicalScoreBadge from './EthicalScoreBadge';

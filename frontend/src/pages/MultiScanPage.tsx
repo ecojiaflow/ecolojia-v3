@@ -1,4 +1,4 @@
-// frontend/src/pages/MultiScanPage.tsx
+﻿// frontend/src/pages/MultiScanPage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

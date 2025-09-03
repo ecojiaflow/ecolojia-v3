@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/PrivacyPage.tsx
+﻿// PATH: frontend/src/pages/PrivacyPage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, Shield, Eye, Lock, Mail, FileText } from 'lucide-react';

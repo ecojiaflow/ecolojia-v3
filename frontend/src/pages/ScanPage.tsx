@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ScanPage.tsx
+﻿// PATH: frontend/src/pages/ScanPage.tsx
 import { useState } from "react";
 import BarcodeScanner from "../components/scanner/BarcodeScanner";
 import PhotoCapture from "../components/scanner/PhotoCapture";

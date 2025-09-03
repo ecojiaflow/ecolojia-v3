@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ocrService.ts
+﻿// PATH: frontend/src/services/ocrService.ts
 import apiClient from './apiClient';
 
 export interface OcrResult {

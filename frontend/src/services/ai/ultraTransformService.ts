@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ai/ultraTransformService.ts
+﻿// PATH: frontend/src/services/ai/ultraTransformService.ts
 import { NovaResult } from './novaClassifier';
 
 export interface UltraTransformResult {

@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
+﻿// PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
 import { useState, useEffect, useCallback } from 'react';
 
 // aaaa INTERFACES COMPATIBLES DASHBOARDPAGE

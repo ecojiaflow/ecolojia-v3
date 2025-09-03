@@ -1,4 +1,4 @@
-// src/components/ui/LoadingStates.tsx
+﻿// src/components/ui/LoadingStates.tsx
 import React from 'react';
 
 export const AnalysisLoadingStates = {

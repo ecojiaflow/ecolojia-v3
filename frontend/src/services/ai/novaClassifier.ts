@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ai/novaClassifier.ts
+﻿// PATH: frontend/src/services/ai/novaClassifier.ts
 export interface NovaResult {
   productName: string;
   novaGroup: number;

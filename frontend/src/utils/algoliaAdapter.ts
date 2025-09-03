@@ -1,4 +1,4 @@
-// Adaptateur pour normaliser les donnees Algolia vers le format attendu
+﻿// Adaptateur pour normaliser les donnees Algolia vers le format attendu
 export const normalizeAlgoliaProduct = (hit: any) => ({
   _id: hit.objectID,
   id: hit.objectID,

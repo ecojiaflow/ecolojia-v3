@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/ScoreGauge.tsx
+﻿// PATH: frontend/src/components/analysis/ScoreGauge.tsx
 import React from 'react';
 
 interface ScoreGaugeProps {

@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/index.ts
+﻿// PATH: frontend/src/services/index.ts
 
 // Re-export API client
 export { http, get, post } from './api';

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { AlertCircle, CheckCircle, Info, TrendingUp, Leaf, Heart, Shield } from 'lucide-react';
 
 // Types

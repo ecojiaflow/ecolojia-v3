@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
 import React, { useState } from 'react';
 import { Apple, Droplets, Sparkles } from 'lucide-react';
 

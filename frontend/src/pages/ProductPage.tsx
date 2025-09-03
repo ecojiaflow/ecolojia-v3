@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ProductPage.tsx
+﻿// PATH: frontend/src/pages/ProductPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Heart, Leaf, Shield, AlertTriangle, Package, Info } from 'lucide-react';

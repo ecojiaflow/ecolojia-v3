@@ -1,4 +1,4 @@
-// frontend/src/types/mockdata?.ts
+﻿// frontend/src/types/mockdata?.ts
 
 // ===== INTERFACES DE BASE =====
 export interface MockUser {

@@ -1,4 +1,4 @@
-// frontend/src/pages/DetergentAnalysisPage.tsx
+﻿// frontend/src/pages/DetergentAnalysisPage.tsx
 
 // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
 import React, { useState } from 'react';

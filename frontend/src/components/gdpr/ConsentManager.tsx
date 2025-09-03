@@ -1,4 +1,4 @@
-// frontend/src/components/gdpr/ConsentManager.tsx
+﻿// frontend/src/components/gdpr/ConsentManager.tsx
 import React, { useState, useEffect } from 'react';
 import { Shield, Cookie, Eye, Settings, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 

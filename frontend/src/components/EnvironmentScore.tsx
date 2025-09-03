@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/EnvironmentScore.tsx
+﻿// PATH: frontend/src/components/EnvironmentScore.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, TreePine, Sprout, Factory } from 'lucide-react';

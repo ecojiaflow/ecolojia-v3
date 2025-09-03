@@ -1,4 +1,4 @@
-// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
+﻿// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, Info, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 

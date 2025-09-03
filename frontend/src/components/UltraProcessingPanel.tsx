@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/UltraProcessingPanel.tsx
+﻿// PATH: frontend/src/components/UltraProcessingPanel.tsx
 import React from 'react';
 
 interface UltraProcessingResult {

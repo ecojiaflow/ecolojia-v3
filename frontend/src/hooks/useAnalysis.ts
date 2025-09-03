@@ -1,4 +1,4 @@
-// aa src/hooks/useAnalysis.ts
+﻿// aa src/hooks/useAnalysis.ts
 
 import { useState, useCallback } from 'react';
 import { analyzeAuto, AnalyzeRequest, AnalyzeResponse } from '../services/api';

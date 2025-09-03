@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
+﻿// PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
 // Composant d'analyse progressive avec gestion des valeurs manquantes
 
 import React, { useState } from 'react';

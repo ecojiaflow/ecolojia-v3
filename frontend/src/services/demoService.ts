@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/demoService.ts
+﻿// PATH: frontend/src/services/demoService.ts
 // Service pour gerer les donnees de demonstration
 
 // Definir les couleurs localement

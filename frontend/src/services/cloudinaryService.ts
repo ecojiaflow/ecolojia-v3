@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/cloudinaryService.ts
+﻿// PATH: frontend/src/services/cloudinaryService.ts
 import axios from 'axios';
 
 // Configuration Cloudinary (à adapter selon votre compte)

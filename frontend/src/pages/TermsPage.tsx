@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/TermsPage.tsx
+﻿// PATH: frontend/src/pages/TermsPage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Users, AlertTriangle, Scale, Clock, Mail } from 'lucide-react';

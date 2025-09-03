@@ -1,4 +1,4 @@
-// PATH: frontend/src/hooks/useChat.ts
+﻿// PATH: frontend/src/hooks/useChat.ts
 
 import { useState, useCallback, useEffect } from 'react';
 import { chatService, ChatMessage, ProductContext } from '../services/chat/ChatService';

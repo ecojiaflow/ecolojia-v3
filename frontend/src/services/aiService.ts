@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/aiService.ts
+﻿// PATH: frontend/src/services/aiService.ts
 import api from './apiClient';
 export interface ChatMessage { role: 'user' | 'assistant' | 'system'; content: string; }
 export interface ChatResponse { messages: ChatMessage[]; answer?: string; [k: string]: any; }

@@ -1,4 +1,4 @@
-// PATH: frontend/src/App.tsx
+﻿// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './Contexts/AuthContext';

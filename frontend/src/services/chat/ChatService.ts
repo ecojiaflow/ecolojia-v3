@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/chat/ChatService.ts
+﻿// PATH: frontend/src/services/chat/ChatService.ts
 import api from '../api';
 
 export interface ChatMessage {

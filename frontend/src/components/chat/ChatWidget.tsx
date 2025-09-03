@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/chat/ChatWidget.tsx
+﻿// PATH: frontend/src/components/chat/ChatWidget.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

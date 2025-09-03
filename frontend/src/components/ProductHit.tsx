@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Shield, MapPin, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

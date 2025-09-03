@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/Results.tsx
+﻿// PATH: frontend/src/pages/Results.tsx
 import React, { useState } from 'react';
 import { useQuickNovaTest } from '../hooks/useNovaApi';
 import NovaResults from '../components/NovaResults';

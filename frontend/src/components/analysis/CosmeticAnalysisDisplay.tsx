@@ -1,4 +1,4 @@
-// frontend/ecolojiaFrontV3/src/components/analysis/CosmeticAnalysisDisplay.tsx
+﻿// frontend/ecolojiaFrontV3/src/components/analysis/CosmeticAnalysisDisplay.tsx
 import React from 'react';
 import { AlertTriangle, Shield, Leaf, Star, ExternalLink, Droplets } from 'lucide-react';
 

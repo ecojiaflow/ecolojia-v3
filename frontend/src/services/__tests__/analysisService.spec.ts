@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/__tests__/analysisService.spec.ts
+﻿// PATH: frontend/src/services/__tests__/analysisService.spec.ts
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as api from "../../services/apiClient";
 import { analyzeByBarcode, analyzeManual } from "../analysisService";

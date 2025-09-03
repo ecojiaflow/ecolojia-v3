@@ -1,4 +1,4 @@
-// PATH: src/hooks/useAuth.mock.ts
+﻿// PATH: src/hooks/useAuth.mock.ts
 export const useAuth = () => {
   return {
     user: {

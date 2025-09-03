@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/AlternativesList.tsx
+﻿// PATH: frontend/src/components/analysis/AlternativesList.tsx
 import type { ProductInfo } from "../../types/api";
 
 export default function AlternativesList({ items }: { items: ProductInfo[] }) {

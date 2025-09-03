@@ -1,4 +1,4 @@
-// PATH: frontend/src/utils/textParsing.ts
+﻿// PATH: frontend/src/utils/textParsing.ts
 export type CategoryGuess = "food" | "cosmetics" | "detergents";
 
 function normalizeText(t: string): string {

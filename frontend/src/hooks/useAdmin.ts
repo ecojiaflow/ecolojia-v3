@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/hooks/useAdmin.ts
+﻿// PATH: frontend/ecolojiaFrontV3/src/hooks/useAdmin.ts
 import { useState, useEffect, useCallback } from 'react';
 import AdminApiService from '../services/adminApi';
 import { AdminStats, RecentProduct, ImportLog, ImportProgress } from '../types/admin';

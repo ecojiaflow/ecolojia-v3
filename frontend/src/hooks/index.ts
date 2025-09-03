@@ -1,4 +1,4 @@
-// PATH: frontend/src/hooks/index.ts
+﻿// PATH: frontend/src/hooks/index.ts
 // Export des hooks custom de l'application
 
 // Hooks disponibles

@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/alternativesService.ts
+﻿// PATH: frontend/src/services/alternativesService.ts
 import { get } from "./apiClient";
 import type { ProductInfo } from "../types/api";
 

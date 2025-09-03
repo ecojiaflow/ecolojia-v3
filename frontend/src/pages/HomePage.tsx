@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/HomePage.tsx
+﻿// PATH: frontend/src/pages/HomePage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 

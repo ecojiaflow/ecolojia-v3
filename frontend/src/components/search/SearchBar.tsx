@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/search/SearchBar.tsx
+﻿// PATH: frontend/src/components/search/SearchBar.tsx
 import React, { useState, useEffect } from 'react';
 import { Search, TrendingUp, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

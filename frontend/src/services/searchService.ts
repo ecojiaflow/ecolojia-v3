@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/searchService.ts
+﻿// PATH: frontend/src/services/searchService.ts
 import apiClient from './apiClient';
 
 // Export du type SearchItem pour visionService

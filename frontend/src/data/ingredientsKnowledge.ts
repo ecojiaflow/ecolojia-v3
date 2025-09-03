@@ -1,4 +1,4 @@
-// PATH: frontend/src/data/ingredientsKnowledge.ts
+﻿// PATH: frontend/src/data/ingredientsKnowledge.ts
 export interface HazardInfo {
   name: string;
   synonyms: string[];

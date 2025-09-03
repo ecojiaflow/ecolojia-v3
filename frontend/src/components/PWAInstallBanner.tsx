@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone } from 'lucide-react';
 
 const PWAInstallBanner: React.FC = () => {

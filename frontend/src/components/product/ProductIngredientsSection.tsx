@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/product/ProductIngredientsSection.tsx
+﻿// PATH: frontend/src/components/product/ProductIngredientsSection.tsx
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Info, X, ExternalLink, ChevronDown } from 'lucide-react';

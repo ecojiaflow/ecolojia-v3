@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Category } from '../types';
 import { 
   Apple, Shirt, Sparkles, Home, Smartphone, Flower

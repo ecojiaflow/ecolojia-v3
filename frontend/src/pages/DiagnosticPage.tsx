@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/DiagnosticPage.tsx
+﻿// PATH: frontend/src/pages/DiagnosticPage.tsx
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, RefreshCw, Package, Database, Globe, Shield, Cpu } from 'lucide-react';
 import { MOCK_MODE } from '../config/mock.config';

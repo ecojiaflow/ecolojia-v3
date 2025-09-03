@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/offlineService.ts
+﻿// PATH: frontend/src/services/offlineService.ts
 type Task = { id: string; url: string; method: 'POST'|'PUT'|'DELETE'; body?: unknown };
 const KEY = 'ecolojia.queue';
 

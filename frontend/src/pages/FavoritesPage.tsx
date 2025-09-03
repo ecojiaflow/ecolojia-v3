@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/FavoritesPage.tsx
+﻿// PATH: frontend/src/pages/FavoritesPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';

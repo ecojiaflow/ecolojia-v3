@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/CommunityComparison.tsx
+﻿// frontend/src/components/dashboard/CommunityComparison.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Award, BarChart3, Info } from 'lucide-react';

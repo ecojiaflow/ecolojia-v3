@@ -1,4 +1,4 @@
-// aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
+﻿// aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
 import React, { useState } from 'react';
 import { CircleGauge, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 

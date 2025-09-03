@@ -1,4 +1,4 @@
-// frontend/src/components/AffiliateButton.tsx
+﻿// frontend/src/components/AffiliateButton.tsx
 import React, { useState } from 'react';
 import { ShoppingCart, ExternalLink, Leaf, Check } from 'lucide-react';
 

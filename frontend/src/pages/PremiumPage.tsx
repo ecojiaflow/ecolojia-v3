@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/PremiumPage.tsx
+﻿// PATH: frontend/src/pages/PremiumPage.tsx
 import React from 'react';
 import { Check, X, Zap, Crown, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

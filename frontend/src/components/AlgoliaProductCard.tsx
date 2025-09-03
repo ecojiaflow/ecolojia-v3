@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, ExternalLink, Star, MapPin, Shield, Zap } from 'lucide-react';
 

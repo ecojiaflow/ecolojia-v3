@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/HealthScoreCircle.tsx
+﻿// PATH: frontend/src/components/HealthScoreCircle.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, AlertCircle, CheckCircle, XCircle } from 'lucide-react';

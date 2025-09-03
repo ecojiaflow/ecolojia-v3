@@ -1,4 +1,4 @@
-// PATH: src/utils/setupMocks.ts
+﻿// PATH: src/utils/setupMocks.ts
 /**
  * Mocks optaâ‚¬â€˜in : actives SEULEMENT si VITE_MOCKS === '1'
  * - Par defaut: n'altere PAS window.fetch

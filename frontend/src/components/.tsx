@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/LoadingSpinner.tsx
+﻿// PATH: frontend/src/components/LoadingSpinner.tsx
 export default function LoadingSpinner({ label = 'Chargement...' }: { label?: string }) {
   return (
     <div className="flex items-center gap-2 text-sm">

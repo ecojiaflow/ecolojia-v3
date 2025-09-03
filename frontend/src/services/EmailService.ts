@@ -1,4 +1,4 @@
-// backend/src/services/EmailService.ts
+﻿// backend/src/services/EmailService.ts
 import nodemailer from 'nodemailer';
 import { Logger } from '../utils/Logger';
 

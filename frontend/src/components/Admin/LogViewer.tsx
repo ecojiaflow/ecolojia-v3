@@ -1,4 +1,4 @@
-// PATH: src/components/admin/LogViewer.tsx
+﻿// PATH: src/components/admin/LogViewer.tsx
 import React, { useState } from 'react';
 import { ImportLog } from '../../types/admin';
 import { FileText, CheckCircle, XCircle, Clock, ChevronDown, ChevronUp } from 'lucide-react';

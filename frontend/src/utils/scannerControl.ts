@@ -1,4 +1,4 @@
-// Controle global de la camera scanner
+﻿// Controle global de la camera scanner
 let currentVideoStream: MediaStream | null = null;
 
 export const setScannerStream = (stream: MediaStream | null) => {

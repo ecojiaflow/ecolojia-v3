@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Camera, Search } from 'lucide-react';
 import BarcodeScanner from './BarcodeScanner';
 import { useNavigate } from 'react-router-dom';

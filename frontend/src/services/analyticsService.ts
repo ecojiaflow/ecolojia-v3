@@ -1,4 +1,4 @@
-// src/services/analyticsService.ts
+﻿// src/services/analyticsService.ts
 class AnalyticsService {
   track(event: string, data?: any) {
     console.log(`[Analytics] ${event}:`, data);

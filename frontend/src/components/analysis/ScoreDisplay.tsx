@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/ScoreDisplay.tsx
+﻿// PATH: frontend/src/components/analysis/ScoreDisplay.tsx
 type Props = {
   label: string;
   value: string | number | undefined;

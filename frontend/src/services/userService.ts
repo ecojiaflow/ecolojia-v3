@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/userService.ts
+﻿// PATH: frontend/src/services/userService.ts
 import { api } from './api';
 import { User, AIPreferences } from '../types/user';
 

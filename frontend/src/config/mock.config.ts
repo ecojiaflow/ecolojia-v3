@@ -1,4 +1,4 @@
-// PATH: frontend/src/config/mock.config.ts
+﻿// PATH: frontend/src/config/mock.config.ts
 import { ENV } from "../env";
 
 // Mock mode contrôlé par l'environnement

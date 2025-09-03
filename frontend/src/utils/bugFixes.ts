@@ -1,4 +1,4 @@
-// PATH: frontend/src/utils/bugFixes.ts
+﻿// PATH: frontend/src/utils/bugFixes.ts
 /**
  * Solutions aux bugs courants d'ECOLOJIA
  */

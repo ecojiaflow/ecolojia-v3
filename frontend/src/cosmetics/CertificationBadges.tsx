@@ -1,4 +1,4 @@
-// frontend/src/components/cosmetics/CertificationBadges.tsx
+﻿// frontend/src/components/cosmetics/CertificationBadges.tsx
 
 import React from 'react';
 import { 

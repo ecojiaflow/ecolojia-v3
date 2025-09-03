@@ -1,4 +1,4 @@
-// PATH: src/hooks/useUniversalSearch.ts
+﻿// PATH: src/hooks/useUniversalSearch.ts
 import { useState, useCallback } from "react";
 import searchService, { extractProducts } from "@/services/searchService";
 

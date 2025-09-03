@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/__tests__/BarcodeScanner.spec.tsx
+﻿// PATH: frontend/src/components/scanner/__tests__/BarcodeScanner.spec.tsx
 import { describe, it, expect, vi } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import BarcodeScanner from "../../scanner/BarcodeScanner";

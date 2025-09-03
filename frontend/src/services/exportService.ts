@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/exportService.ts
+﻿// PATH: frontend/src/services/exportService.ts
 import { get } from "./apiClient";
 import { getToken } from "./authService";
 import type { AnalysisResult, FavoriteItem } from "../types/api";

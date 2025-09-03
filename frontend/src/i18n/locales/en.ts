@@ -1,4 +1,4 @@
-export const en = {
+﻿export const en = {
   common: {
     home: 'Home',
     products: 'Products',

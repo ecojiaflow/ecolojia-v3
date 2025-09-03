@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/NotificationContainer.tsx
+﻿// PATH: frontend/src/components/NotificationContainer.tsx
 import { useEffect, useState } from 'react';
 import { notifications, type Toast } from '../services/notificationService';
 

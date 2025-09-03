@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Crown, Zap, Lock, Calculator, Clock, Brain, AlertTriangle, TrendingUp } from 'lucide-react';

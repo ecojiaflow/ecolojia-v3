@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ExternalLink, CheckCircle, Tag, Shield, MapPin } from 'lucide-react';
 import { Product } from '../types';
 import { useTranslation } from 'react-i18next';

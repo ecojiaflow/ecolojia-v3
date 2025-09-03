@@ -1,4 +1,4 @@
-// PATH: frontend/src/hooks/useFavorites.ts
+﻿// PATH: frontend/src/hooks/useFavorites.ts
 import { useCallback, useState } from 'react';
 import type { ProductInfo } from '../types/api';
 

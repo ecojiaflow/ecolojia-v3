@@ -1,4 +1,4 @@
-// frontend/src/components/scanner/PhotoCapture.tsx
+﻿// frontend/src/components/scanner/PhotoCapture.tsx
 import React, { useState, useRef, useCallback } from 'react';
 import { Camera, Upload, X, Loader2, Check, AlertCircle, RotateCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

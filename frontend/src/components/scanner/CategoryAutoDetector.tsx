@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
 import React from 'react';
 
 export interface ProductCategory {

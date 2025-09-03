@@ -1,4 +1,4 @@
-// PATH: frontend/src/utils/scores.ts
+﻿// PATH: frontend/src/utils/scores.ts
 export function nutriToTone(nutri?: string): "success" | "warn" | "danger" | "neutral" {
   const v = String(nutri || "").toUpperCase();
   if (["A"].includes(v)) return "success";

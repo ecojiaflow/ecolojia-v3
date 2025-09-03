@@ -1,4 +1,4 @@
-// PATH: frontend/src/__mocks__/quagga2.ts
+﻿// PATH: frontend/src/__mocks__/quagga2.ts
 const Quagga = {
   init: (_cfg: any, cb: (err?: Error) => void) => cb(),
   start: () => {},

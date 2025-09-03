@@ -1,4 +1,4 @@
-// PATH: src/components/admin/StatsCard.tsx
+﻿// PATH: src/components/admin/StatsCard.tsx
 import React from 'react';
 
 interface StatsCardProps {

@@ -1,4 +1,4 @@
-// PATH: frontend/src/Contexts/AuthContext.tsx
+﻿// PATH: frontend/src/Contexts/AuthContext.tsx
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import authService, { RegisterPayload, User } from "../services/authService";
 import { getAccessToken, getUser, setUser as persistUser } from "../services/apiClient";

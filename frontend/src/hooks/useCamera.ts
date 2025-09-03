@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+﻿import { useRef, useState } from "react";
 
 export function useCamera() {
   const videoRef = useRef<HTMLVideoElement>(null);

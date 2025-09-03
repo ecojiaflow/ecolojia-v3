@@ -1,4 +1,4 @@
-// PATH: frontend/src/hooks/useHistory.ts
+﻿// PATH: frontend/src/hooks/useHistory.ts
 import { useCallback, useMemo, useState } from 'react';
 import type { AnalysisResult } from '../types/api';
 

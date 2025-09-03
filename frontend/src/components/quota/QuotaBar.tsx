@@ -1,4 +1,4 @@
-// frontend/src/components/quota/QuotaBar.tsx
+﻿// frontend/src/components/quota/QuotaBar.tsx
 
 import React from 'react';
 import { useQuota } from '../../hooks/useQuota';

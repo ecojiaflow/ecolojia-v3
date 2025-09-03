@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
 
 import React from 'react';
 import { Crown, Zap, TrendingUp, Calculator, X, Sparkles, Lock, Unlock } from 'lucide-react';

@@ -1,4 +1,4 @@
-// frontend/src/store/productStore.ts
+﻿// frontend/src/store/productStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

@@ -1,4 +1,4 @@
-// frontend/src/pages/CosmeticAnalysisPage.tsx
+﻿// frontend/src/pages/CosmeticAnalysisPage.tsx
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
