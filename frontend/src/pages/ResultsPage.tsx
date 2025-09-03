@@ -1,502 +1,313 @@
-﻿// PATH: frontend/src/pages/ResultsPage.tsx
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { 
-  AlertCircle, TrendingUp, Leaf, Shield, Package, 
-  Heart, Droplet, AlertTriangle, CheckCircle, Info
-} from 'lucide-react';
-import { productService, analysisService } from '../services/api';
-import { useAuth } from '../hooks/useAuth';
-import { useQuota } from '../hooks/useQuota';
+// PATH: frontend/src/pages/PricingPage.tsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Check, X, Sparkles, Zap, Shield, TrendingUp } from 'lucide-react';
+import { paymentService } from '../services/api';
+import { useAuthContext } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 
-interface AnalysisResult {
-  product: {
-    _id: string;
-    name: string;
-    brand?: string;
-    barcode?: string;
-    category: 'food' | 'cosmetics' | 'detergents';
-    imageUrl?: string;
-  };
-  scores: {
-    health?: number;
-    environment?: number;
-    social?: number;
-  };
-  // Alimentaire
-  nutriScore?: string;
-  novaGroup?: number;
-  ecoScore?: string;
-  additives?: Array<{
-    code: string;
-    name: string;
-    risk: 'low' | 'medium' | 'high';
-  }>;
-  allergens?: string[];
-  // Cosmétique
-  inci?: Array<{
-    name: string;
-    function?: string;
-    concerns?: string[];
-    ewgScore?: number;
-  }>;
-  endocrineDisruptors?: string[];
-  // Détergent
-  biodegradability?: number;
-  cdv?: number;
-  ecoLabels?: string[];
-  phosphateContent?: number;
-  // Commun
-  recommendations?: string[];
-  alternatives?: Array<{
-    _id: string;
-    name: string;
-    brand?: string;
-    reason: string;
-    improvement: number;
-  }>;
+interface PricingFeature {
+  text: string;
+  free: boolean;
+  premium: boolean;
 }
 
-const ResultsPage: React.FC = () => {
+const PricingPage: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { isAuthenticated } = useAuth();
-  const { checkScanQuota, consumeScan } = useQuota();
-  
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const { isAuthenticated, user } = useAuthContext();
+  const [loading, setLoading] = useState<'monthly' | 'annual' | null>(null);
 
-  const barcode = searchParams.get('barcode');
-  const productId = searchParams.get('id');
-  const category = searchParams.get('category') as 'food' | 'cosmetics' | 'detergents' | null;
+  const features: PricingFeature[] = [
+    { text: 'Scans de produits', free: true, premium: true },
+    { text: 'Analyses IA multi-critères', free: true, premium: true },
+    { text: 'Alternatives recommandées', free: true, premium: true },
+    { text: 'Nombre de scans par mois', free: false, premium: true },
+    { text: 'Chat IA nutritionnel', free: false, premium: true },
+    { text: 'Export PDF des rapports', free: false, premium: true },
+    { text: 'Historique complet', free: false, premium: true },
+    { text: 'Support prioritaire', free: false, premium: true },
+    { text: 'Sans publicité', free: false, premium: true },
+    { text: 'Profils famille', free: false, premium: true },
+  ];
 
-  useEffect(() => {
-    if (!barcode && !productId) {
-      setError('Aucun produit spécifié');
-      setLoading(false);
+  const handleSubscribe = async (plan: 'monthly' | 'annual') => {
+    if (!isAuthenticated) {
+      toast.error('Veuillez vous connecter pour souscrire');
+      navigate('/login', { state: { from: '/pricing' } });
       return;
     }
 
-    analyzeProduct();
-  }, [barcode, productId]);
-
-  const analyzeProduct = async () => {
     try {
-      setLoading(true);
-      setError(null);
-
-      // Vérifier les quotas si l'utilisateur est connecté
-      if (isAuthenticated && !checkScanQuota()) {
-        navigate('/premium');
-        return;
+      setLoading(plan);
+      const response = await paymentService.createCheckoutSession(plan);
+      
+      if (response.checkoutUrl) {
+        // Redirection vers LemonSqueezy
+        window.location.href = response.checkoutUrl;
+      } else {
+        throw new Error('URL de paiement non reçue');
       }
-
-      // Obtenir le produit d'abord si nécessaire
-      let product;
-      if (barcode) {
-        product = await productService.getByBarcode(barcode);
-      } else if (productId) {
-        product = await productService.getById(productId);
-      }
-
-      if (!product) {
-        throw new Error('Produit introuvable');
-      }
-
-      // Analyser le produit
-      const analysisParams = {
-        barcode: product.barcode,
-        productId: product._id,
-        category: category || product.category || 'food',
-      };
-
-      const analysis = await analysisService.analyzeProduct(analysisParams);
-
-      // Consommer le quota si connecté
-      if (isAuthenticated) {
-        await consumeScan();
-      }
-
-      setResult({
-        product: {
-          ...product,
-          category: analysisParams.category as any,
-        },
-        ...analysis,
-      });
     } catch (error: any) {
-      setError(error.response?.data?.message || error.message || 'Erreur lors de l\'analyse');
-      toast.error('Erreur lors de l\'analyse du produit');
+      console.error('Erreur création checkout:', error);
+      toast.error('Erreur lors de la création de la session de paiement');
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
-  // Fonction pour obtenir la couleur selon le score
-  const getScoreColor = (score?: number) => {
-    if (!score) return 'text-gray-500';
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
-
-  // Fonction pour obtenir la couleur du Nutri-Score
-  const getNutriScoreColor = (score?: string) => {
-    const colors = {
-      'A': 'bg-green-600',
-      'B': 'bg-green-500',
-      'C': 'bg-yellow-500',
-      'D': 'bg-orange-500',
-      'E': 'bg-red-600',
-    };
-    return colors[score as keyof typeof colors] || 'bg-gray-400';
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Analyse en cours...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-center text-gray-800 mb-2">Erreur d'analyse</h2>
-          <p className="text-center text-gray-600 mb-6">{error}</p>
-          <button
-            onClick={() => navigate('/search')}
-            className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
-          >
-            Retour à la recherche
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!result) return null;
+  const isPremium = user?.subscription?.tier === 'premium';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header produit */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-6">
-            {result.product.imageUrl && (
-              <img
-                src={result.product.imageUrl}
-                alt={result.product.name}
-                className="w-full md:w-48 h-48 object-cover rounded-lg"
-              />
-            )}
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">{result.product.name}</h1>
-              {result.product.brand && (
-                <p className="text-lg text-gray-600 mb-4">{result.product.brand}</p>
-              )}
-              
-              {/* Scores principaux */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {result.scores.health !== undefined && (
-                  <div className="text-center">
-                    <Heart className="h-8 w-8 mx-auto mb-1 text-red-500" />
-                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.health)}`}>
-                      {result.scores.health}/100
-                    </div>
-                    <p className="text-sm text-gray-600">Score santé</p>
-                  </div>
-                )}
-                {result.scores.environment !== undefined && (
-                  <div className="text-center">
-                    <Leaf className="h-8 w-8 mx-auto mb-1 text-green-500" />
-                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.environment)}`}>
-                      {result.scores.environment}/100
-                    </div>
-                    <p className="text-sm text-gray-600">Score environnement</p>
-                  </div>
-                )}
-                {result.scores.social !== undefined && (
-                  <div className="text-center">
-                    <Shield className="h-8 w-8 mx-auto mb-1 text-blue-500" />
-                    <div className={`text-2xl font-bold ${getScoreColor(result.scores.social)}`}>
-                      {result.scores.social}/100
-                    </div>
-                    <p className="text-sm text-gray-600">Score social</p>
-                  </div>
-                )}
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            Choisissez votre plan ECOLOJIA
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Débloquez tout le potentiel de l'analyse IA pour une consommation plus saine et responsable
+          </p>
+        </div>
+
+        {isPremium && (
+          <div className="bg-green-100 border border-green-300 rounded-xl p-4 mb-8 text-center">
+            <p className="text-green-800 font-medium">
+              ✅ Vous êtes déjà abonné Premium ! Profitez de toutes les fonctionnalités.
+            </p>
+          </div>
+        )}
+
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Free Plan */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 relative">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Gratuit</h2>
+              <p className="text-gray-600">Pour découvrir ECOLOJIA</p>
+              <div className="mt-4">
+                <span className="text-4xl font-bold">0€</span>
+                <span className="text-gray-600">/mois</span>
               </div>
             </div>
+
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                30 scans par mois
+              </li>
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                Analyses de base
+              </li>
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                3 alternatives par produit
+              </li>
+              <li className="flex items-center text-gray-400">
+                <X className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
+                Chat IA limité (5/mois)
+              </li>
+              <li className="flex items-center text-gray-400">
+                <X className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
+                Export PDF
+              </li>
+            </ul>
+
+            <button
+              onClick={() => navigate('/register')}
+              className="w-full py-3 px-6 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+              disabled={isAuthenticated}
+            >
+              {isAuthenticated ? 'Plan actuel' : 'Commencer gratuitement'}
+            </button>
+          </div>
+
+          {/* Premium Monthly */}
+          <div className="bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl shadow-xl p-8 relative transform scale-105">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-yellow-400 text-yellow-900 px-4 py-1 rounded-full text-sm font-bold">
+                POPULAIRE
+              </span>
+            </div>
+
+            <div className="mb-8 text-white">
+              <h2 className="text-2xl font-bold mb-2 flex items-center">
+                Premium <Sparkles className="w-6 h-6 ml-2" />
+              </h2>
+              <p className="opacity-90">L'expérience complète</p>
+              <div className="mt-4">
+                <span className="text-4xl font-bold">2,49€</span>
+                <span className="opacity-90">/mois</span>
+              </div>
+            </div>
+
+            <ul className="space-y-4 mb-8 text-white">
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                <strong>Scans illimités</strong>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                <strong>Chat IA illimité</strong>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                Analyses approfondies
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                Export PDF illimité
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                Historique complet
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+                Support prioritaire 24/7
+              </li>
+            </ul>
+
+            <button
+              onClick={() => handleSubscribe('monthly')}
+              disabled={loading !== null || isPremium}
+              className="w-full py-3 px-6 bg-white text-green-600 rounded-lg font-bold hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading === 'monthly' ? 'Chargement...' : 
+               isPremium ? 'Déjà abonné' : 'Choisir Premium'}
+            </button>
+          </div>
+
+          {/* Premium Annual */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 relative border-2 border-green-500">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+                2 MOIS OFFERTS
+              </span>
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                Premium Annuel <Zap className="w-6 h-6 ml-2 text-yellow-500" />
+              </h2>
+              <p className="text-gray-600">Économisez 17%</p>
+              <div className="mt-4">
+                <span className="text-4xl font-bold text-gray-800">24,90€</span>
+                <span className="text-gray-600">/an</span>
+              </div>
+              <p className="text-sm text-green-600 mt-1">
+                Soit 2,08€/mois
+              </p>
+            </div>
+
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                <strong>Tout Premium +</strong>
+              </li>
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                <strong>2 mois gratuits</strong>
+              </li>
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                Accès anticipé nouvelles features
+              </li>
+              <li className="flex items-center text-gray-700">
+                <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                Badge supporter
+              </li>
+            </ul>
+
+            <button
+              onClick={() => handleSubscribe('annual')}
+              disabled={loading !== null || isPremium}
+              className="w-full py-3 px-6 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading === 'annual' ? 'Chargement...' : 
+               isPremium ? 'Déjà abonné' : 'Économiser 17%'}
+            </button>
           </div>
         </div>
 
-        {/* Analyse spécifique selon la catégorie */}
-        {result.product.category === 'food' && (
-          <div className="space-y-6">
-            {/* Scores nutritionnels */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse nutritionnelle</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {result.nutriScore && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">Nutri-Score</p>
-                    <div className={`inline-block px-4 py-2 rounded-lg text-white text-2xl font-bold ${getNutriScoreColor(result.nutriScore)}`}>
-                      {result.nutriScore}
-                    </div>
-                  </div>
-                )}
-                {result.novaGroup && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">Groupe NOVA</p>
-                    <div className="text-2xl font-bold">
-                      {result.novaGroup}
-                      <span className="text-sm font-normal text-gray-600 ml-2">
-                        {result.novaGroup === 1 && '(Non transformé)'}
-                        {result.novaGroup === 2 && '(Peu transformé)'}
-                        {result.novaGroup === 3 && '(Transformé)'}
-                        {result.novaGroup === 4 && '(Ultra-transformé)'}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {result.ecoScore && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">Éco-Score</p>
-                    <div className={`inline-block px-4 py-2 rounded-lg text-white text-2xl font-bold ${getNutriScoreColor(result.ecoScore)}`}>
-                      {result.ecoScore}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+        {/* Features Comparison */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
+            Comparaison détaillée des fonctionnalités
+          </h2>
 
-            {/* Additifs */}
-            {result.additives && result.additives.length > 0 && (
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Additifs alimentaires</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {result.additives.map((additive, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                      {additive.risk === 'high' && <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />}
-                      {additive.risk === 'medium' && <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />}
-                      {additive.risk === 'low' && <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />}
-                      <div>
-                        <p className="font-medium">{additive.code}</p>
-                        <p className="text-sm text-gray-600">{additive.name}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Allergènes */}
-            {result.allergens && result.allergens.length > 0 && (
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Allergènes</h2>
-                <div className="flex flex-wrap gap-2">
-                  {result.allergens.map((allergen, index) => (
-                    <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
-                      {allergen}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {result.product.category === 'cosmetics' && (
-          <div className="space-y-6">
-            {/* Analyse INCI */}
-            {result.inci && result.inci.length > 0 && (
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse des ingrédients (INCI)</h2>
-                <div className="space-y-3">
-                  {result.inci.slice(0, 10).map((ingredient, index) => (
-                    <div key={index} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium">{ingredient.name}</p>
-                        {ingredient.function && (
-                          <p className="text-sm text-gray-600">{ingredient.function}</p>
-                        )}
-                        {ingredient.concerns && ingredient.concerns.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {ingredient.concerns.map((concern, i) => (
-                              <span key={i} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
-                                {concern}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {ingredient.ewgScore && (
-                        <div className="ml-4">
-                          <span className={`text-lg font-bold ${ingredient.ewgScore <= 2 ? 'text-green-600' : ingredient.ewgScore <= 6 ? 'text-yellow-600' : 'text-red-600'}`}>
-                            {ingredient.ewgScore}/10
-                          </span>
-                        </div>
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-4 text-left text-gray-700 font-medium">Fonctionnalité</th>
+                  <th className="px-6 py-4 text-center text-gray-700 font-medium">Gratuit</th>
+                  <th className="px-6 py-4 text-center text-gray-700 font-medium">Premium</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {features.map((feature, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-gray-700">{feature.text}</td>
+                    <td className="px-6 py-4 text-center">
+                      {feature.free ? (
+                        feature.text === 'Nombre de scans par mois' ? (
+                          <span className="text-gray-600">30/mois</span>
+                        ) : feature.text === 'Chat IA nutritionnel' ? (
+                          <span className="text-gray-600">5/mois</span>
+                        ) : (
+                          <Check className="w-5 h-5 text-green-500 mx-auto" />
+                        )
+                      ) : (
+                        <X className="w-5 h-5 text-gray-400 mx-auto" />
                       )}
-                    </div>
-                  ))}
-                  {result.inci.length > 10 && (
-                    <p className="text-center text-gray-600 text-sm mt-4">
-                      Et {result.inci.length - 10} autres ingrédients...
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Perturbateurs endocriniens */}
-            {result.endocrineDisruptors && result.endocrineDisruptors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-red-800 mb-4">
-                  ⚠️ Perturbateurs endocriniens suspectés
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {result.endocrineDisruptors.map((disruptor, index) => (
-                    <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
-                      {disruptor}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {feature.premium ? (
+                        feature.text === 'Nombre de scans par mois' ? (
+                          <span className="text-green-600 font-medium">Illimité</span>
+                        ) : feature.text === 'Chat IA nutritionnel' ? (
+                          <span className="text-green-600 font-medium">Illimité</span>
+                        ) : (
+                          <Check className="w-5 h-5 text-green-500 mx-auto" />
+                        )
+                      ) : (
+                        <X className="w-5 h-5 text-gray-400 mx-auto" />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
+        </div>
 
-        {result.product.category === 'detergents' && (
-          <div className="space-y-6">
-            {/* Impact environnemental */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Impact environnemental</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {result.biodegradability !== undefined && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">Biodégradabilité</p>
-                    <div className="flex items-center">
-                      <div className="flex-1 bg-gray-200 rounded-full h-4 mr-4">
-                        <div
-                          className="bg-green-500 h-4 rounded-full"
-                          style={{ width: `${result.biodegradability}%` }}
-                        ></div>
-                      </div>
-                      <span className="font-bold">{result.biodegradability}%</span>
-                    </div>
-                  </div>
-                )}
-                {result.cdv !== undefined && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">CDV (Critical Dilution Volume)</p>
-                    <div className="text-2xl font-bold">
-                      {result.cdv.toLocaleString()} L/kg
-                    </div>
-                  </div>
-                )}
-                {result.phosphateContent !== undefined && (
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">Teneur en phosphates</p>
-                    <div className="text-2xl font-bold">
-                      {result.phosphateContent}%
-                    </div>
-                  </div>
-                )}
-              </div>
+        {/* Trust Badges */}
+        <div className="mt-16 text-center">
+          <div className="flex flex-wrap justify-center gap-8 mb-8">
+            <div className="flex items-center gap-2 text-gray-600">
+              <Shield className="w-5 h-5" />
+              <span>Paiement sécurisé</span>
             </div>
-
-            {/* Éco-labels */}
-            {result.ecoLabels && result.ecoLabels.length > 0 && (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-green-800 mb-4">
-                  ✓ Certifications écologiques
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {result.ecoLabels.map((label, index) => (
-                    <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Recommandations */}
-        {result.recommendations && result.recommendations.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
-            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
-              <Info className="h-5 w-5 mr-2" />
-              Recommandations
-            </h2>
-            <ul className="space-y-2">
-              {result.recommendations.map((rec, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
-                  <span className="text-gray-700">{rec}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Alternatives */}
-        {result.alternatives && result.alternatives.length > 0 && (
-          <div className="bg-white rounded-xl shadow-md p-6 mt-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Alternatives recommandées
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {result.alternatives.map((alt) => (
-                <div
-                  key={alt._id}
-                  onClick={() => navigate(`/result?id=${alt._id}`)}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md cursor-pointer transition-shadow"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="font-semibold">{alt.name}</h3>
-                      {alt.brand && <p className="text-sm text-gray-600">{alt.brand}</p>}
-                    </div>
-                    <div className="text-green-600 font-bold">
-                      +{alt.improvement}%
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-700">{alt.reason}</p>
-                </div>
-              ))}
+            <div className="flex items-center gap-2 text-gray-600">
+              <TrendingUp className="w-5 h-5" />
+              <span>Annulation à tout moment</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <Sparkles className="w-5 h-5" />
+              <span>Satisfait ou remboursé 30j</span>
             </div>
           </div>
-        )}
 
-        {/* Actions */}
-        <div className="flex gap-4 mt-8">
-          <button
-            onClick={() => navigate('/search')}
-            className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors"
-          >
-            Nouvelle recherche
-          </button>
-          {isAuthenticated && (
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex-1 bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Voir mon tableau de bord
-            </button>
-          )}
+          <p className="text-sm text-gray-500 max-w-2xl mx-auto">
+            Les paiements sont sécurisés par LemonSqueezy. Vous pouvez annuler votre abonnement
+            à tout moment depuis votre espace personnel. Les prix sont en EUR et incluent la TVA.
+          </p>
         </div>
       </div>
     </div>
   );
 };
+
+export default PricingPage;

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/PremiumPage.tsx
+// PATH: frontend/src/pages/PremiumPage.tsx
 import React from 'react';
 import { Check, X, Zap, Crown, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,17 +21,17 @@ const PremiumPage: React.FC = () => {
       const response = await paymentService.createCheckout(plan);
       window.location.href = response.data.url;
     } catch (error) {
-      toast.error('Erreur lors de la crÃ©ation de la session de paiement');
+      toast.error('Erreur lors de la cr?ation de la session de paiement');
     }
   };
 
   const features = [
-    { free: true, premium: true, text: '30 analyses par mois', premiumText: 'Analyses illimitÃ©es' },
+    { free: true, premium: true, text: '30 analyses par mois', premiumText: 'Analyses illimit?es' },
     { free: true, premium: true, text: '5 chats IA par mois', premiumText: '500 chats IA par mois' },
     { free: true, premium: true, text: 'Historique 7 jours', premiumText: 'Historique complet' },
     { free: false, premium: true, text: 'Export PDF des rapports' },
-    { free: false, premium: true, text: 'Comparateur avancÃ©' },
-    { free: false, premium: true, text: 'Sans publicitÃ©' },
+    { free: false, premium: true, text: 'Comparateur avanc?' },
+    { free: false, premium: true, text: 'Sans publicit?' },
     { free: false, premium: true, text: 'Support prioritaire' },
     { free: false, premium: true, text: 'Profils famille' }
   ];
@@ -43,13 +43,13 @@ const PremiumPage: React.FC = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-700 font-medium mb-4">
             <Zap className="w-4 h-4 mr-2" />
-            Passez Ã  la vitesse supÃ©rieure
+            Passez Ã  la vitesse sup?rieure
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Choisissez votre plan ECOLOJIA
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            DÃ©bloquez tout le potentiel d'ECOLOJIA pour une vie plus saine
+            D?bloquez tout le potentiel d'ECOLOJIA pour une vie plus saine
           </p>
         </div>
 
@@ -58,7 +58,7 @@ const PremiumPage: React.FC = () => {
           {/* Free Plan */}
           <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Gratuit</h3>
-            <p className="text-gray-600 mb-6">Pour dÃ©couvrir ECOLOJIA</p>
+            <p className="text-gray-600 mb-6">Pour d?couvrir ECOLOJIA</p>
             <div className="text-4xl font-bold text-gray-800 mb-6">0â‚¬</div>
             
             <ul className="space-y-3 mb-8">
@@ -81,7 +81,7 @@ const PremiumPage: React.FC = () => {
                 onClick={() => navigate('/register')}
                 className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200"
               >
-                CrÃ©er un compte
+                Cr?er un compte
               </button>
             )}
           </div>
@@ -152,7 +152,7 @@ const PremiumPage: React.FC = () => {
         {/* FAQ Section */}
         <div className="bg-white rounded-xl shadow-md p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Questions frÃ©quentes
+            Questions fr?quentes
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
@@ -165,7 +165,7 @@ const PremiumPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
-                Comment fonctionne la pÃ©riode d'essai ?
+                Comment fonctionne la p?riode d'essai ?
               </h3>
               <p className="text-gray-600">
                 Profitez de 30 analyses gratuites pour tester ECOLOJIA sans engagement.
@@ -173,10 +173,10 @@ const PremiumPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
-                Les paiements sont-ils sÃ©curisÃ©s ?
+                Les paiements sont-ils s?curis?s ?
               </h3>
               <p className="text-gray-600">
-                Oui, nous utilisons LemonSqueezy, une plateforme de paiement certifiÃ©e et sÃ©curisÃ©e.
+                Oui, nous utilisons LemonSqueezy, une plateforme de paiement certifi?e et s?curis?e.
               </p>
             </div>
             <div>
@@ -184,7 +184,7 @@ const PremiumPage: React.FC = () => {
                 Puis-je partager mon compte ?
               </h3>
               <p className="text-gray-600">
-                Le plan Premium permet de crÃ©er des profils famille pour partager votre compte.
+                Le plan Premium permet de cr?er des profils famille pour partager votre compte.
               </p>
             </div>
           </div>

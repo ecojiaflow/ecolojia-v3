@@ -1,9 +1,10 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -19,21 +20,8 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PremiumPage = lazy(() => import('./pages/PremiumPage'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
-
-// Composant de route protégée
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuthContext();
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
+const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
+const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
@@ -41,16 +29,19 @@ const App: React.FC = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
-        {/* Routes publiques */}
+        {/* Routes avec Layout */}
         <Route path="/" element={<Layout />}>
+          {/* Routes publiques */}
           <Route index element={<HomePage />} />
           <Route path="search" element={<SearchPage />} />
-          <Route path="result" element={<ResultsPage />} />
+          <Route path="results" element={<ResultsPage />} />
           <Route path="product/:id" element={<ProductPage />} />
           <Route path="scan" element={<ScanPage />} />
+          <Route path="multi-scan" element={<MultiScanPage />} />
           <Route path="premium" element={<PremiumPage />} />
+          <Route path="diagnostic" element={<DiagnosticPage />} />
           
-          {/* Routes d'authentification */}
+          {/* Routes d'authentification - redirection si déjà connecté */}
           <Route
             path="login"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
@@ -60,54 +51,21 @@ const App: React.FC = () => {
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
           />
 
-          {/* Routes protégées */}
-          <Route
-            path="dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="chat"
-            element={
-              <ProtectedRoute>
-                <ChatPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="history"
-            element={
-              <ProtectedRoute>
-                <HistoryPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="onboarding"
-            element={
-              <ProtectedRoute>
-                <OnboardingPage />
-              </ProtectedRoute>
-            }
-          />
+          {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
+          </Route>
 
-          {/* 404 */}
+          {/* 404 - Redirection vers accueil */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </Suspense>
   );
 };
-export default App;
 
+export default App;

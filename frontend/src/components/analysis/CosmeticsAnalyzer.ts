@@ -1,4 +1,4 @@
-﻿// src/components/analysis/CosmeticsAnalyzer.ts
+// src/components/analysis/CosmeticsAnalyzer.ts
 
 import { AnalysisResult, ProductCategory } from '../../types/types';
 

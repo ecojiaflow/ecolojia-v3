@@ -1,4 +1,4 @@
-﻿// frontend/src/hooks/useProductAnalysis.ts
+// frontend/src/hooks/useProductAnalysis.ts
 // Hook personnalise pour gerer les analyses de produits
 
 import { useState, useCallback } from 'react';

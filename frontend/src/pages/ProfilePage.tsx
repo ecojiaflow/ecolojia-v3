@@ -1,9 +1,9 @@
-﻿// PATH: frontend/src/pages/ProfilePage.tsx
+// PATH: frontend/src/pages/ProfilePage.tsx
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Settings, Shield, Bell, CreditCard, LogOut, ChevronDown, Check } from 'lucide-react';
-import { useAuth } from '../auth/hooks/useAuth';
+import { useAuthContext } from '../Contexts/AuthContext';
 import api from '../services/api';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { Badge } from '../components/common/Badge';
@@ -58,7 +58,7 @@ interface UserProfile {
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState<'account' | 'preferences'>('account');
-  const { logout } = useAuth();
+  const { logout } = useAuthContext();
   const queryClient = useQueryClient();
 
   // Fetch user profile

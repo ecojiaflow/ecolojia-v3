@@ -1,7 +1,7 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
+// PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
 
 import algoliasearch from 'algoliasearch/lite';
-import { getProductByBarcode, getProductSuggestions } from '../api/realApi';
+import { productService } from '../../services/api';
 
 // ============================================================================
 // INTERFACES & TYPES (Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°TENDUES)
@@ -112,7 +112,7 @@ class OpenBeautyFactsAPI {
     }
   }
 
-  async getProductByBarcode(barcode: string): Promise<OpenBeautyFactsProduct | null> {
+  async productService.getByBarcode(barcode: string): Promise<OpenBeautyFactsProduct | null> {
     const cacheKey = `beauty_barcode_${barcode}`;
     
     if (this.cache.has(cacheKey)) {
@@ -345,7 +345,7 @@ class OpenProductsFactsAPI {
     }
   }
 
-  async getProductByBarcode(barcode: string): Promise<OpenProductsFactsProduct | null> {
+  async productService.getByBarcode(barcode: string): Promise<OpenProductsFactsProduct | null> {
     const cacheKey = `products_barcode_${barcode}`;
     
     if (this.cache.has(cacheKey)) {
@@ -584,7 +584,7 @@ export class UniversalSearchEngine {
         searchPromises.push(this.searchOpenProductsFacts(query, Math.floor(maxResults * 0.25)));
       }
 
-      // Base locale (realApi - toutes categories)
+      // Base locale (api - toutes categories)
       searchPromises.push(this.searchLocal(query, Math.floor(maxResults * 0.25)));
 
       // 2. aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â±Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ATTENDRE TOUTES LES RECHERCHES AVEC TIMEOUT
@@ -647,7 +647,7 @@ export class UniversalSearchEngine {
 
     try {
       // 1. Essayer base locale d'abord (plus rapide)
-      const localProduct = await getProductByBarcode(barcode);
+      const localProduct = await productService.getByBarcode(barcode);
       if (localProduct) {
         console.log('aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ Produit trouve en local');
         return {
@@ -665,9 +665,9 @@ export class UniversalSearchEngine {
 
       // 2. Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂaaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ ESSAYER EN PARALLÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â LE SUR LES 3 SOURCES OPEN*FACTS
       const barcodePromises = [
-        this.openFoodFacts.getProductByBarcode(barcode),
-        this.openBeautyFacts.getProductByBarcode(barcode), // Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢
-        this.openProductsFacts.getProductByBarcode(barcode) // Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢
+        this.openFoodFacts.productService.getByBarcode(barcode),
+        this.openBeautyFacts.productService.getByBarcode(barcode), // Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢
+        this.openProductsFacts.productService.getByBarcode(barcode) // Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢
       ];
 
       const barcodeResults = await Promise.allSettled(barcodePromises);
@@ -734,7 +734,7 @@ export class UniversalSearchEngine {
       suggestions.push(...historySuggestions);
 
       // 2. Suggestions de produits populaires
-      const productSuggestions = await this.getProductSuggestions(query);
+      const productSuggestions = await this.productService.search(query);
       suggestions.push(...productSuggestions);
 
       // 3. Suggestions d'ingredients/marques multi-categories
@@ -800,7 +800,7 @@ export class UniversalSearchEngine {
 
   private async searchLocal(query: string, limit: number): Promise<SearchResult[]> {
     try {
-      const suggestions = await getProductSuggestions(query);
+      const suggestions = await productService.search(query);
       return suggestions.slice(0, limit).map(product => ({
         id: product.id,
         name: product.title,
@@ -983,7 +983,7 @@ export class UniversalSearchEngine {
       }));
   }
 
-  private async getProductSuggestions(query: string): SearchSuggestion[] {
+  private async productService.search(query: string): SearchSuggestion[] {
     const suggestions: SearchSuggestion[] = [];
     const queryLower = query.toLowerCase();
     
@@ -1145,7 +1145,7 @@ class OpenFoodFactsAPI {
     }
   }
 
-  async getProductByBarcode(barcode: string): Promise<OpenFoodFactsProduct | null> {
+  async productService.getByBarcode(barcode: string): Promise<OpenFoodFactsProduct | null> {
     const cacheKey = `food_barcode_${barcode}`;
     
     if (this.cache.has(cacheKey)) {

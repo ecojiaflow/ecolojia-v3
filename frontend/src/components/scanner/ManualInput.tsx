@@ -9,8 +9,8 @@ type Props = {
 
 const CATEGORIES = [
   { value: "food", label: "Alimentation" },
-  { value: "cosmetics", label: "Cosmétiques" },
-  { value: "detergents", label: "Détergents" },
+  { value: "cosmetics", label: "Cosm?tiques" },
+  { value: "detergents", label: "D?tergents" },
 ];
 
 export default function ManualInput({ onSubmit, onClose, defaults }: Props) {
@@ -40,7 +40,7 @@ export default function ManualInput({ onSubmit, onClose, defaults }: Props) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium">Catégorie</label>
+        <label className="block text-sm font-medium">Cat?gorie</label>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -54,13 +54,13 @@ export default function ManualInput({ onSubmit, onClose, defaults }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium">Ingrédients (séparés par virgules)</label>
+        <label className="block text-sm font-medium">Ingr?dients (s?par?s par virgules)</label>
         <textarea
           value={ingredientsText}
           onChange={(e) => setIngredientsText(e.target.value)}
           rows={4}
           className="mt-1 w-full rounded-lg border px-3 py-2"
-          placeholder="lait, ferments lactiques, sucre…"
+          placeholder="lait, ferments lactiques, sucreâ€¦"
         />
       </div>
       <div className="flex gap-2">

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/PricingPage.tsx
+// PATH: frontend/src/pages/PricingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -7,7 +7,7 @@ import {
   CreditCard, Star, TrendingUp, Lock, Gift,
   ArrowRight, Info, HelpCircle
 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { paymentService } from '../services/paymentService';
 
 interface Plan {
@@ -29,7 +29,7 @@ interface Plan {
 
 const PricingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);

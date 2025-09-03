@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchRealProducts } from '../api/realApi';
+import { productService } from '../services/api';
 
 const SimilarProductsCarousel: React.FC<{ productId: string }> = ({ productId }) => {
   const [products, setProducts] = useState([]);
@@ -9,7 +9,7 @@ const SimilarProductsCarousel: React.FC<{ productId: string }> = ({ productId })
     const loadSimilarProducts = async () => {
       try {
         // Utiliser les memes mocks que l'API principale
-        const allProducts = await fetchRealProducts('');
+        const allProducts = await productService.search('');
         // Filtrer le produit actuel et prendre 3 autres
         const similar = allProducts.filter(p => p.id !== productId).slice(0, 3);
         setProducts(similar);

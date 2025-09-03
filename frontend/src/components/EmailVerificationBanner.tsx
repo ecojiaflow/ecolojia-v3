@@ -1,9 +1,9 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useEmailValidation } from '../hooks/useEmailValidation';
-import { useAuth } from '../auth/context/AuthContext';
+import { useAuthContext } from './Contexts/AuthContext';
 
 export const EmailVerificationBanner: React.FC = () => {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuthContext();
   const { resendVerificationEmail, isLoading } = useEmailValidation();
   const [showSuccess, setShowSuccess] = useState(false);
 

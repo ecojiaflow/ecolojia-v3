@@ -7,7 +7,7 @@ import {
   Heart, ShoppingCart, Share2, Trash2, Plus,
   TrendingUp, AlertCircle, Download, X
 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../Contexts/AuthContext';
 import api from '../services/apiClient';
 import { API_CONFIG } from '../config/api.config';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -47,7 +47,7 @@ interface FavoriteList {
 
 const FavoritesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isPremium } = useAuth();
+  const { user, isPremium } = useAuthContext();
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
   const [lists, setLists] = useState<FavoriteList[]>([]);
   const [selectedList, setSelectedList] = useState<string>('all');

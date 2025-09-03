@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuota } from '../../hooks/useQuota';
-import { useAuth } from '../../auth/hooks/useAuth';
+import { useAuthContext } from '../../Contexts/AuthContext';
 
 interface SmartUpgradeModalProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   
   const { quotaStatus } = useQuota();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   if (!isOpen) return null;
 

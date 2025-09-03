@@ -1,5 +1,5 @@
 // PATH: frontend/src/services/novaAdapter.ts
-import { AnalyzeResponse } from '../api/realApi';
+// AnalyzeResponse type moved inline
 import { NovaAnalysisResult } from './api';
 
 export interface NovaAdaptedResult {

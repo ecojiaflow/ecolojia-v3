@@ -9,10 +9,10 @@ export default function AlternativesList({ items }: { items: ProductInfo[] }) {
         <div key={a.id || a.ean || idx} className="card">
           <div className="font-medium">{a.name}</div>
           <div className="text-sm text-gray-600">
-            {a.brand ? `${a.brand} • ` : ""} {a.category || "—"} {a.ean ? `• EAN ${a.ean}` : ""}
+            {a.brand ? `${a.brand} â€¢ ` : ""} {a.category || "â€”"} {a.ean ? `â€¢ EAN ${a.ean}` : ""}
           </div>
           {a.ingredients && a.ingredients.length > 0 && (
-            <div className="text-xs text-gray-500 mt-1">Ingrédients: {a.ingredients.slice(0, 7).join(", ")}{a.ingredients.length > 7 ? "…" : ""}</div>
+            <div className="text-xs text-gray-500 mt-1">Ingr?dients: {a.ingredients.slice(0, 7).join(", ")}{a.ingredients.length > 7 ? "â€¦" : ""}</div>
           )}
         </div>
       ))}

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEmailValidation } from '../hooks/useEmailValidation';
-import { useAuth } from '../auth/context/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 
 export const EmailVerificationPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { verifyEmail, isLoading, error } = useEmailValidation();
-  const { refreshUser } = useAuth();
+  const { refreshUser } = useAuthContext();
   
   const [verificationResult, setVerificationResult] = useState<{
     success: boolean;

@@ -1,8 +1,8 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import PhotoCapture from '../components/PhotoCapture';
-import * as realApi from '../api/realApi';
+import { productService, analysisService } from '../services/api';
 
 const ProductNotFoundPage: React.FC = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const ProductNotFoundPage: React.FC = () => {
         nutritionSize: photos.nutrition.length
       });
       
-      const response = await realApi.analyzePhotos({
+      const response = await analyzePhotos({
         barcode: barcodeToSend,
         photos: {
           front: photos.front,

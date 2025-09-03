@@ -1,0 +1,223 @@
+// PATH: frontend/src/hooks/useAuth.ts
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { authService } from "../services/api";
+
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  profile?: {
+    language?: string;
+    theme?: string;
+    avatarUrl?: string;
+  };
+  subscription?: {
+    tier?: 'free' | 'premium';
+    status?: string;
+    currentPeriodEnd?: string;
+  };
+  quotas?: {
+    scansRemaining?: number;
+    aiChatsRemaining?: number;
+    scansResetDate?: string;
+    aiChatsResetDate?: string;
+  };
+}
+
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const isAuthenticated = useMemo(() => !!user && !!localStorage.getItem('token'), [user]);
+  const isPremium = useMemo(() => user?.subscription?.tier === 'premium', [user]);
+  const canScan = useMemo(() => {
+    if (isPremium) return true;
+    return (user?.quotas?.scansRemaining || 0) > 0;
+  }, [user, isPremium]);
+  const canChat = useMemo(() => {
+    if (isPremium) return true;
+    return (user?.quotas?.aiChatsRemaining || 0) > 0;
+  }, [user, isPremium]);
+
+  // Charger l'utilisateur depuis localStorage au démarrage
+  useEffect(() => {
+    const loadUser = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        
+        if (token && storedUser) {
+          // Vérifier si le token est valide en appelant l'API
+          try {
+            const userData = await authService.me();
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+          } catch (error) {
+            // Token invalide, nettoyer
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+            setUser(null);
+          }
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement de l\'utilisateur:', error);
+        setError('Erreur lors du chargement de l\'utilisateur');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await authService.login(email, password);
+      
+      // Stocker les tokens
+      if (response.accessToken) {
+        localStorage.setItem('token', response.accessToken);
+      }
+      if (response.refreshToken) {
+        localStorage.setItem('refreshToken', response.refreshToken);
+      }
+      
+      // Stocker l'utilisateur
+      const userData = response.user;
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      return userData;
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || 'Impossible de se connecter';
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const register = useCallback(async (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName?: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await authService.register(
+        userData.email,
+        userData.password,
+        userData.firstName,
+        userData.lastName
+      );
+      
+      // Stocker les tokens
+      if (response.accessToken) {
+        localStorage.setItem('token', response.accessToken);
+      }
+      if (response.refreshToken) {
+        localStorage.setItem('refreshToken', response.refreshToken);
+      }
+      
+      // Stocker l'utilisateur
+      const newUser = response.user;
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      
+      return newUser;
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || 'Inscription impossible';
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Appeler l'API de logout (optionnel, peut échouer)
+      await authService.logout();
+    } catch (error) {
+      // Ignorer les erreurs de logout côté serveur
+      console.log('Erreur logout serveur (ignorée):', error);
+    } finally {
+      // Nettoyer le localStorage dans tous les cas
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      setUser(null);
+      setLoading(false);
+    }
+  }, []);
+
+  const updateProfile = useCallback(async (updates: Partial<User>) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // TODO: Implémenter l'appel API pour mettre à jour le profil
+      // const updatedUser = await authService.updateProfile(updates);
+      
+      // Pour l'instant, mise à jour locale
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser as User);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      return updatedUser;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Impossible de mettre à jour le profil';
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const refreshProfile = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const userData = await authService.me();
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return userData;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Impossible de rafraîchir le profil';
+      setError(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return useMemo(
+    () => ({
+      user,
+      loading,
+      error,
+      isAuthenticated,
+      isPremium,
+      canScan,
+      canChat,
+      login,
+      register,
+      logout,
+      updateProfile,
+      refreshProfile,
+    }),
+    [user, loading, error, isAuthenticated, isPremium, canScan, canChat, login, register, logout, updateProfile, refreshProfile]
+  );
+}

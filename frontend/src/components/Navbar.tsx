@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/Navbar.tsx
+// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -8,7 +8,7 @@ import {
   Bell, Settings, Heart, Shield, FileText, MessageCircle,
   History, Star
 } from 'lucide-react';
-import { useAuth } from '../auth/context/AuthContext';
+import { useAuthContext } from './Contexts/AuthContext';
 
 // Couleurs ECOLOJIA
 const COLORS = {
@@ -123,7 +123,7 @@ const searchService = new NavbarSearchService();
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated } = useAuthContext();
   
   // Etat
   const [isOpen, setIsOpen] = useState(false);

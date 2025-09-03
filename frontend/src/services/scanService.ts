@@ -1,4 +1,4 @@
-﻿// frontend/src/services/scanService.ts
+// frontend/src/services/scanService.ts
 import { apiClient, getErrorMessage } from './apiClient';
 import { cloudinaryService } from './cloudinaryService';
 

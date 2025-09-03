@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/LoginPage.tsx
+// PATH: frontend/src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Leaf, ArrowRight } from 'lucide-react';

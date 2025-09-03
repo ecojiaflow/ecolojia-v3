@@ -1,110 +1,117 @@
-// mockService.ts - Donnees de fallback pour les routes manquantes
-class MockService {
-  private static instance: MockService;
+﻿// PATH: frontend/src/services/mockService.ts
+export interface DashboardStats {
+  totalScans: number;
+  healthScoreAverage: number;
+  categoryBreakdown: {
+    food: number;
+    cosmetics: number;
+    detergents: number;
+  };
+  monthlyProgress: number;
+  topCategory: string;
+  recentAnalyses: Array<{
+    _id: string;
+    productName: string;
+    productBrand?: string;
+    score: number;
+    category: string;
+    date: string;
+    nutriScore?: string;
+    ecoScore?: string;
+    novaGroup?: number;
+  }>;
+  weeklyTrend: Array<{
+    day: string;
+    scans: number;
+  }>;
+  achievements?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlockedAt?: string;
+    progress: number;
+  }>;
+}
 
-  static getInstance(): MockService {
-    if (!MockService.instance) {
-      MockService.instance = new MockService();
-    }
-    return MockService.instance;
-  }
-
-  getDashboardStats() {
+const mockService = {
+  getDashboardStats(): DashboardStats {
     return {
-      totalScans: 127,
-      healthScoreAverage: 72,
+      totalScans: 147,
+      healthScoreAverage: 73,
       categoryBreakdown: {
-        food: 65,
-        cosmetics: 38,
+        food: 89,
+        cosmetics: 34,
         detergents: 24
       },
       monthlyProgress: 15,
-      topCategory: 'food',
+      topCategory: 'Alimentation',
       recentAnalyses: [
         {
           _id: '1',
-          productName: 'Yaourt Nature Bio',
-          productBrand: 'Danone',
-          score: 85,
+          productName: 'Yaourt Bio Nature',
+          productBrand: 'Les 2 Vaches',
+          score: 92,
           category: 'food',
           date: new Date().toISOString(),
           nutriScore: 'A',
-          ecoScore: 'B',
+          ecoScore: 'A',
           novaGroup: 1
         },
         {
           _id: '2',
-          productName: 'Shampooing Doux',
-          productBrand: 'L\'Oreal',
-          score: 72,
+          productName: 'Shampoing Doux',
+          productBrand: 'L\'Oréal',  // Apostrophe échappée correctement
+          score: 68,
           category: 'cosmetics',
-          date: new Date(Date.now() - 86400000).toISOString()
+          date: new Date(Date.now() - 86400000).toISOString(),
+          ecoScore: 'C'
+        },
+        {
+          _id: '3',
+          productName: 'Lessive Écologique',
+          productBrand: 'Ecover',
+          score: 85,
+          category: 'detergents',
+          date: new Date(Date.now() - 172800000).toISOString(),
+          ecoScore: 'B'
         }
       ],
       weeklyTrend: [
-        { day: 'Lun', scans: 18 },
-        { day: 'Mar', scans: 22 },
+        { day: 'Lun', scans: 12 },
+        { day: 'Mar', scans: 19 },
         { day: 'Mer', scans: 15 },
         { day: 'Jeu', scans: 25 },
-        { day: 'Ven', scans: 20 },
-        { day: 'Sam', scans: 12 },
-        { day: 'Dim', scans: 15 }
+        { day: 'Ven', scans: 22 },
+        { day: 'Sam', scans: 31 },
+        { day: 'Dim', scans: 23 }
+      ],
+      achievements: [
+        {
+          id: '1',
+          name: 'Premier Scan',
+          description: 'Effectuez votre premier scan',
+          icon: '🎯',
+          unlockedAt: new Date().toISOString(),
+          progress: 100
+        },
+        {
+          id: '2',
+          name: 'Éco-Warrior',
+          description: 'Scannez 50 produits écologiques',
+          icon: '🌿',
+          progress: 34
+        },
+        {
+          id: '3',
+          name: 'Santé Avant Tout',
+          description: 'Maintenez un score santé moyen > 80',
+          icon: '❤️',
+          progress: 73
+        }
       ]
     };
   }
+};
 
-  getHistory() {
-    return {
-      analyses: [],
-      total: 0,
-      page: 1,
-      limit: 10
-    };
-  }
-
-  getProducts() {
-    return [
-      {
-        _id: '1',
-        name: 'Pates Completes Bio',
-        brand: 'Barilla',
-        category: 'food',
-        barcode: '8076800195057',
-        image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=200',
-        scores: {
-          healthScore: 82,
-          environmentScore: 78,
-          nova: 2,
-          nutriscore: 'A'
-        }
-      },
-      {
-        _id: '2',
-        name: 'Gel Douche Naturel',
-        brand: 'Dove',
-        category: 'cosmetics',
-        barcode: '8710908852268',
-        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200',
-        scores: {
-          healthScore: 75,
-          environmentScore: 70
-        }
-      },
-      {
-        _id: '3',
-        name: 'Lessive ‰cologique',
-        brand: 'Ariel',
-        category: 'detergents',
-        barcode: '8001090962805',
-        image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=200',
-        scores: {
-          healthScore: 68,
-          environmentScore: 85
-        }
-      }
-    ];
-  }
-}
-
-export default MockService.getInstance();
-
+export default mockService;

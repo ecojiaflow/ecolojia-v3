@@ -1,7 +1,7 @@
 // aa src/hooks/useAnalysis.ts
 
 import { useState, useCallback } from 'react';
-import { analyzeAuto, AnalyzeRequest, AnalyzeResponse } from '../api/realApi';
+import { analyzeAuto, AnalyzeRequest, AnalyzeResponse } from '../services/api';
 
 interface UseAnalysisReturn {
   isAnalyzing: boolean;

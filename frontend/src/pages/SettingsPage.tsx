@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/SettingsPage.tsx
+// PATH: frontend/src/pages/SettingsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -7,7 +7,7 @@ import {
   Lock, Trash2, Download, Eye, EyeOff, Sun,
   AlertTriangle, HelpCircle
 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
 import api from '../services/apiClient';
@@ -59,7 +59,7 @@ const Switch: React.FC<{
 };
 
 const SettingsPage: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
   const navigate = useNavigate();
   
   const [settings, setSettings] = useState<Settings>({

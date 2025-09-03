@@ -15,12 +15,12 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import { useAuth } from '../auth/hooks/useAuth';
+import { useAuthContext } from './Contexts/AuthContext';
 
 export function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout, user } = useAuth();
+  const { logout, user } = useAuthContext();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 

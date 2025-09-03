@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -31,9 +31,9 @@ import {
 } from 'lucide-react';
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ IMPORTS D'AUTHENTIFICATION
-import { AuthProvider } from './auth/context/AuthContext';
+import { AuthProvider } from './Contexts/AuthContext';
 import { AuthPage } from './auth/components/AuthPage';
-import { useAuth } from './auth/hooks/useAuth';
+import { useAuthContext } from './Contexts/AuthContext';
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ IMPORTS COMPOSANTS STATIQUES
 import LoadingSpinner from './components/LoadingSpinner';
@@ -393,7 +393,7 @@ const MultiProductScanPageBuiltIn: React.FC = () => {
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ DASHBOARD AVEC INFOS UTILISATEUR (FALLBACK)
 const DashboardPageBuiltIn: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   
   const [stats] = useState({
     totalAnalyses: user?.currentUsage?.scansThisMonth || 0,
@@ -567,7 +567,7 @@ const HistoryPageBuiltIn: React.FC = () => (
 );
 
 const ProfilePageBuiltIn: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">

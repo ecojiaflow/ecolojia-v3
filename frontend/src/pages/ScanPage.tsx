@@ -90,7 +90,7 @@ export default function ScanPage() {
       )}
       {mode === "manual" && <ManualInput onSubmit={handleManual} onClose={() => setMode("barcode")} />}
 
-      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en cours…</div>}
+      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en coursï¿½</div>}
     </div>
   );
 }

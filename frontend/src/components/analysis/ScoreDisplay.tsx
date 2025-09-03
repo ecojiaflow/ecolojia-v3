@@ -19,7 +19,7 @@ export default function ScoreDisplay({ label, value, tone = "neutral", hint }: P
   return (
     <div className={classes.wrap}>
       <div className="text-sm text-gray-500">{label}</div>
-      <div className={`text-2xl font-bold ${classes.value}`}>{value ?? "—"}</div>
+      <div className={`text-2xl font-bold ${classes.value}`}>{value ?? "â€”"}</div>
       {hint && <div className="text-xs text-gray-500 mt-1">{hint}</div>}
     </div>
   );

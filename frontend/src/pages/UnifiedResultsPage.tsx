@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/UnifiedResultsPage.tsx
+// PATH: frontend/src/pages/UnifiedResultsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 

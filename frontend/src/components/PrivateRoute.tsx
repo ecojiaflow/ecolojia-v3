@@ -1,11 +1,11 @@
 // frontend/src/components/PrivateRoute.tsx
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../auth/hooks/useAuth';
+import { useAuthContext } from './Contexts/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 
 export function PrivateRoute() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuthContext();
   const location = useLocation();
 
   // Afficher un loader pendant la verification de l'authentification

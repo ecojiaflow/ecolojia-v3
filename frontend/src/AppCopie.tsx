@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/App.tsx
+// PATH: frontend/ecolojiaFrontV3/src/App.tsx
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { 
@@ -28,9 +28,9 @@ import {
 } from 'lucide-react';
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ IMPORTS D'AUTHENTIFICATION
-import { AuthProvider } from './auth/context/AuthContext';
+import { AuthProvider } from './Contexts/AuthContext';
 import { AuthPage } from './auth/components/AuthPage';
-import { useAuth } from './auth/hooks/useAuth';
+import { useAuthContext } from './Contexts/AuthContext';
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ IMPORTS COMPOSANTS STATIQUES
 import Navbar from './components/Navbar';
@@ -303,7 +303,7 @@ const QuickUniversalSearch: React.FC<QuickSearchProps> = ({
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ NAVBAR AUTHENTIFIÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°E
 const AuthenticatedNavbar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
@@ -428,7 +428,7 @@ const AuthenticatedNavbar: React.FC = () => {
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ PAGE D'ACCUEIL AUTHENTIFIÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°E
 const AuthenticatedHomePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
@@ -702,7 +702,7 @@ const MultiProductScanPageBuiltIn: React.FC = () => {
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ DASHBOARD AVEC INFOS UTILISATEUR (FALLBACK)
 const DashboardPageBuiltIn: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   
   const [stats] = useState({
     totalAnalyses: user?.currentUsage?.scansThisMonth || 0,
@@ -867,7 +867,7 @@ const DashboardPageBuiltIn: React.FC = () => {
 
 // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ ROUTE PROTÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°E
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuthContext();
   
   if (isLoading) {
     return (

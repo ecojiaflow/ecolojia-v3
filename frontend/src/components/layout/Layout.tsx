@@ -1,4 +1,4 @@
-﻿// ===== 2. Layout.tsx =====
+// ===== 2. Layout.tsx =====
 // PATH: frontend/src/components/layout/Layout.tsx
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -71,7 +71,7 @@ const Layout: React.FC = () => {
                   <div className="px-3 py-1 bg-gray-100 rounded-full">
                     <span className="text-gray-600">Scans: </span>
                     <span className="font-medium text-gray-800">
-                      {quotas.scansRemaining}/{user?.subscription.tier === 'premium' ? 'âˆž' : '30'}
+                      {quotas.scansRemaining}/{user?.subscription.tier === 'premium' ? '∞' : '30'}
                     </span>
                   </div>
                   {user?.subscription.tier === 'free' && (
@@ -117,7 +117,7 @@ const Layout: React.FC = () => {
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <LogOut className="w-4 h-4 inline mr-2" />
-                        DÃ©connexion
+                        D?connexion
                       </button>
                     </div>
                   </div>
@@ -188,7 +188,7 @@ const Layout: React.FC = () => {
                     }}
                     className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
                   >
-                    DÃ©connexion
+                    D?connexion
                   </button>
                 </>
               )}
@@ -208,7 +208,7 @@ const Layout: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* About */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">Ã€ propos</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">À propos</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li><Link to="/about" className="hover:text-gray-900">Qui sommes-nous</Link></li>
                 <li><Link to="/mission" className="hover:text-gray-900">Notre mission</Link></li>
@@ -218,7 +218,7 @@ const Layout: React.FC = () => {
 
             {/* Features */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">FonctionnalitÃ©s</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Fonctionnalit?s</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li><Link to="/search" className="hover:text-gray-900">Recherche IA</Link></li>
                 <li><Link to="/scan" className="hover:text-gray-900">Scanner</Link></li>
@@ -228,10 +228,10 @@ const Layout: React.FC = () => {
 
             {/* Legal */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">LÃ©gal</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">L?gal</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li><Link to="/terms" className="hover:text-gray-900">CGU</Link></li>
-                <li><Link to="/privacy" className="hover:text-gray-900">ConfidentialitÃ©</Link></li>
+                <li><Link to="/privacy" className="hover:text-gray-900">Confidentialit?</Link></li>
                 <li><Link to="/cookies" className="hover:text-gray-900">Cookies</Link></li>
               </ul>
             </div>
@@ -247,7 +247,7 @@ const Layout: React.FC = () => {
           </div>
 
           <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-            <p>Â© 2025 ECOLOJIA. Tous droits rÃ©servÃ©s.</p>
+            <p>© 2025 ECOLOJIA. Tous droits r?serv?s.</p>
           </div>
         </div>
       </footer>

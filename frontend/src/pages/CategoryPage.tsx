@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Search, Filter, Grid, List } from 'lucide-react';
 import { CATEGORIES, CategoryType } from '../types/categories';
 import { Product } from '../types';
-import { fetchRealProducts } from '../api/realApi';
+import { fetchRealProducts } from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import AdvancedFilters from '../components/AdvancedFilters';

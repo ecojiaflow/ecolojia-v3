@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/HomePage.tsx
+// PATH: frontend/src/pages/HomePage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -30,28 +30,28 @@ const HomePage: React.FC = () => {
   const categories = [
     { 
       name: 'Alimentaire', 
-      icon: '🥗', 
+      icon: '??', 
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
       popular: ['Nutella', 'Yaourt', 'Pain bio']
     },
     { 
       name: 'Cosmetique', 
-      icon: '💄', 
+      icon: '??', 
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
       popular: ['Shampoing', 'Creme', 'Deodorant']
     },
     { 
       name: 'Entretien', 
-      icon: '🧹', 
+      icon: '??', 
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
       popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
     },
     { 
       name: 'Hygiene', 
-      icon: '🧼', 
+      icon: '??', 
       count: '180k produits',
       color: 'from-purple-400 to-purple-600',
       popular: ['Dentifrice', 'Savon', 'Gel douche']
@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
 
               {/* Suggestions */}
               <div className="flex flex-wrap gap-2 justify-center mt-4">
-                {['🍫 Nutella bio', '🧴 Shampoing sans sulfate', '🧽 Lessive ecologique', '🦷 Dentifrice naturel'].map((suggestion) => (
+                {['?? Nutella bio', '?? Shampoing sans sulfate', '?? Lessive ecologique', '?? Dentifrice naturel'].map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"

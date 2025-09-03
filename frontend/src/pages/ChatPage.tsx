@@ -1,11 +1,16 @@
-﻿// PATH: frontend/src/pages/ChatPage.tsx
+
+// ========================================
+// 1. ChatPage.tsx CORRIGÉ
+// ========================================
+// PATH: frontend/src/pages/ChatPage.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader } from 'lucide-react';
-import { chatService } from '../services/api';
-import { useAuth } from '../hooks/useAuth';
+import { chatService } from '../services/chatService';
+import { useAuthContext } from '../Contexts/AuthContext';
 import { useQuota } from '../hooks/useQuota';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { MOCK_MODE } from '../config/mock.config'; // AJOUT IMPORT
 
 interface Message {
   id: string;
@@ -17,7 +22,7 @@ interface Message {
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthContext();
   const { canUseAI, incrementUsage, quotas } = useQuota();
   
   const [messages, setMessages] = useState<Message[]>([]);
@@ -42,7 +47,7 @@ Je peux vous aider à :
 • Suggérer des alternatives plus saines
 • Répondre à vos questions sur la nutrition
 
-Comment puis-je vous aider aujourd'hui ?`,
+Comment puis-je vous aider aujourd'hui ?`, 
       timestamp: new Date()
     }]);
 
@@ -66,15 +71,15 @@ Comment puis-je vous aider aujourd'hui ?`,
     const text = messageText || input.trim();
     if (!text) return;
 
-    // Vérifier l'authentification
-    if (!isAuthenticated) {
+    // MODIFICATION : Vérifier l'authentification SEULEMENT si pas en mode mock
+    if (!MOCK_MODE && !isAuthenticated) {
       toast.error('Veuillez vous connecter pour utiliser le chat');
       navigate('/login');
       return;
     }
 
-    // Vérifier les quotas
-    if (!canUseAI()) {
+    // MODIFICATION : Vérifier les quotas SEULEMENT si pas en mode mock
+    if (!MOCK_MODE && !canUseAI()) {
       toast.error('Quota de questions épuisé. Passez à Premium pour continuer !');
       navigate('/premium');
       return;
@@ -96,8 +101,10 @@ Comment puis-je vous aider aujourd'hui ?`,
       // Envoyer le message avec le contexte
       const response = await chatService.sendMessage(text, context);
       
-      // Consommer le quota
-      await incrementUsage('aiQuestion');
+      // Consommer le quota SEULEMENT si pas en mode mock
+      if (!MOCK_MODE) {
+        await incrementUsage('aiQuestion');
+      }
 
       // Ajouter la réponse
       const assistantMessage: Message = {
@@ -154,14 +161,17 @@ Comment puis-je vous aider aujourd'hui ?`,
             <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
               <Bot className="h-6 w-6 text-green-500" />
               Assistant Nutritionnel IA
+              {MOCK_MODE && <span className="text-sm text-orange-500 ml-2">(Mode Demo)</span>}
             </h1>
             {quotas && (
               <div className="text-sm text-gray-600">
                 Questions restantes : {' '}
                 <span className="font-medium">
-                  {quotas.aiQuestions.monthlyRemaining === -1 
-                    ? '∞' 
-                    : `${quotas.aiQuestions.dailyRemaining} aujourd'hui / ${quotas.aiQuestions.monthlyRemaining} ce mois`
+                  {MOCK_MODE 
+                    ? 'Illimité (Demo)' 
+                    : quotas?.aiQuestions?.monthlyRemaining === -1 
+                      ? '8' 
+                      : `${quotas?.aiQuestions?.dailyRemaining || 0} aujourd'hui / ${quotas?.aiQuestions?.monthlyRemaining} ce mois`
                   }
                 </span>
               </div>

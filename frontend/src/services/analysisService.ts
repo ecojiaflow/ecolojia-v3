@@ -57,7 +57,7 @@ export async function analyzeByBarcode(barcode: string, category?: Category): Pr
     
     // Essayer l'endpoint d'analyse générique
     try {
-      const response = await apiClient.post("/analysis", { barcode, category: category || "food" });
+      const response = await apiClient.post("/products/analyze", { barcode, category: category || "food" });
       return response.data || response;
     } catch (e) {
       // Si l'endpoint /analysis n'existe pas, essayer une autre variante
@@ -116,7 +116,7 @@ export async function analyzeByProduct(product: Product): Promise<AnalysisResult
     
     // Par défaut ou food
     try {
-      const response = await apiClient.post("/analysis", { 
+      const response = await apiClient.post("/products/analyze", { 
         productId: pid, 
         barcode: product.barcode, 
         category: "food" 

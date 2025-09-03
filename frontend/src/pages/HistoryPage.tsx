@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/HistoryPage.tsx
+// PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 

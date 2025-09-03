@@ -69,5 +69,5 @@ export function normalizeAnalysisResponse(raw: any): AnalysisResult {
   return { product: p, scores: s, label, details: raw?.details ?? {}, timestamp: new Date().toISOString() };
 }
 
-// Alias pour compatibilité
+// Alias pour compatibilitï¿½
 export const adaptResponse = normalizeAnalysisResponse;

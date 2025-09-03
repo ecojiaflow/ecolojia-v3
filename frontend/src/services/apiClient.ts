@@ -1,105 +1,196 @@
-﻿// PATH: frontend/src/services/apiClient.ts
-import axios, { AxiosError, AxiosInstance } from "axios";
+// PATH: frontend/src/services/apiClient.ts
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import { API_BASE, ENV } from "../env";
 
-/** Normalise VITE_API_URL pour que la base se termine TOUJOURS par /api (sans doublon). */
-function normalizeApiBase(u?: string): string {
-  const fallback = "https://ecolojia-backendvf.onrender.com";
-  let base = (u && u.trim().length > 0 ? u.trim() : fallback).replace(/\/+$/, "");
-  if (!/\/api$/.test(base)) base = `${base}/api`;
-  return base;
-}
-
-// ---- Clés de stockage (compatibles avec ton existant)
+// ---- Clés de stockage
 export const ACCESS_KEY = "ecolojia_token";
 export const REFRESH_KEY = "ecolojia_refresh";
 export const USER_KEY = "ecolojia_user";
 
-export function getAccessToken() { try { return localStorage.getItem(ACCESS_KEY); } catch { return null; } }
-export function setAccessToken(t: string) { try { localStorage.setItem(ACCESS_KEY, t); } catch {} }
-export function getRefreshToken() { try { return localStorage.getItem(REFRESH_KEY); } catch { return null; } }
-export function setRefreshToken(t: string) { try { localStorage.setItem(REFRESH_KEY, t); } catch {} }
-export function setUser(u: any) { try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {} }
-export function getUser<T=any>(): T | null { try { const s = localStorage.getItem(USER_KEY); return s ? JSON.parse(s) as T : null; } catch { return null; } }
-export function clearAuth() { try { localStorage.removeItem(ACCESS_KEY); localStorage.removeItem(REFRESH_KEY); localStorage.removeItem(USER_KEY); } catch {} }
+// ---- Helpers pour les tokens
+export function getAccessToken(): string | null {
+  try {
+    return localStorage.getItem(ACCESS_KEY);
+  } catch {
+    return null;
+  }
+}
 
-// Helper d'erreur pour scanService
+export function setAccessToken(token: string) {
+  try {
+    localStorage.setItem(ACCESS_KEY, token);
+  } catch {
+    console.error("Failed to save access token");
+  }
+}
+
+export function getRefreshToken(): string | null {
+  try {
+    return localStorage.getItem(REFRESH_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setRefreshToken(token: string) {
+  try {
+    localStorage.setItem(REFRESH_KEY, token);
+  } catch {
+    console.error("Failed to save refresh token");
+  }
+}
+
+export function getUser<T = any>(): T | null {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setUser(user: any) {
+  try {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  } catch {
+    console.error("Failed to save user data");
+  }
+}
+
+export function clearAuth() {
+  try {
+    localStorage.removeItem(ACCESS_KEY);
+    localStorage.removeItem(REFRESH_KEY);
+    localStorage.removeItem(USER_KEY);
+  } catch {
+    console.error("Failed to clear auth data");
+  }
+}
+
+// ---- Helper pour les messages d'erreur
 export function getErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {
-    const ax = err as AxiosError<any>;
+    const axiosError = err as AxiosError<any>;
     const msg =
-      (ax.response?.data && (ax.response.data.message || ax.response.data.error)) ||
-      ax.message;
+      axiosError.response?.data?.message ||
+      axiosError.response?.data?.error ||
+      axiosError.response?.data?.detail ||
+      axiosError.message;
     return typeof msg === "string" ? msg : "Une erreur réseau est survenue";
   }
   if (err instanceof Error) return err.message;
   return "Erreur inconnue";
 }
 
-const API_BASE = normalizeApiBase((import.meta as any)?.env?.VITE_API_URL as string | undefined);
-
+// ---- Refresh token
 async function refreshToken(): Promise<string> {
   const refresh = getRefreshToken();
   if (!refresh) throw new Error("NO_REFRESH_TOKEN");
-  const { data } = await axios.post<{ accessToken: string }>(
-    `${API_BASE}/auth/refresh`,
-    { refreshToken: refresh },
-    { withCredentials: true }
-  );
-  setAccessToken(data.accessToken);
-  return data.accessToken;
+  
+  try {
+    const { data } = await axios.post<{ accessToken: string }>(
+      `${API_BASE}/auth/refresh`,
+      { refreshToken: refresh },
+      { 
+        withCredentials: true,
+        timeout: ENV.REQUEST_TIMEOUT_MS 
+      }
+    );
+    
+    setAccessToken(data.accessToken);
+    console.log("✅ Token refreshed successfully");
+    return data.accessToken;
+  } catch (error) {
+    console.error("❌ Token refresh failed:", error);
+    throw error;
+  }
 }
 
+// ---- Queue pour éviter les refresh multiples
 let refreshing = false;
-let waiters: Array<() => void> = [];
+let subscribers: Array<(token: string) => void> = [];
 
+function subscribeTokenRefresh(cb: (token: string) => void) {
+  subscribers.push(cb);
+}
+
+function onRefreshed(newToken: string) {
+  subscribers.forEach((cb) => cb(newToken));
+  subscribers = [];
+}
+
+// ---- Création de l'instance axios
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
-  timeout: 20000,
+  timeout: ENV.REQUEST_TIMEOUT_MS,
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
-apiClient.interceptors.request.use((config) => {
+// ---- Intercepteur de requête (ajoute le token)
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getAccessToken();
-  if (token) config.headers = { ...(config.headers || {}), Authorization: `Bearer ${token}` };
+  if (token) {
+    config.headers = config.headers ?? {};
+    (config.headers as any).Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
+// ---- Intercepteur de réponse (gère le refresh token)
 apiClient.interceptors.response.use(
-  (r) => r,
+  (response) => response,
   async (error: AxiosError) => {
-    const original: any = error.config || {};
-    if (error.response?.status === 401 && !original._retry) {
-      if (refreshing) {
-        await new Promise<void>((resolve) => waiters.push(resolve));
-        original.headers = { ...(original.headers || {}), Authorization: `Bearer ${getAccessToken()}` };
-        original._retry = true;
-        return apiClient(original);
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const status = error.response?.status;
+
+    // Si 401 et pas déjà en retry
+    if (status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      // Si pas déjà en train de refresh
+      if (!refreshing) {
+        refreshing = true;
+        
+        try {
+          const newToken = await refreshToken();
+          refreshing = false;
+          onRefreshed(newToken);
+          
+          // Retry la requête originale avec le nouveau token
+          originalRequest.headers = originalRequest.headers ?? {};
+          (originalRequest.headers as any).Authorization = `Bearer ${newToken}`;
+          return apiClient(originalRequest);
+          
+        } catch (refreshError) {
+          refreshing = false;
+          clearAuth();
+          // Redirection vers login
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+          }
+          return Promise.reject(refreshError);
+        }
       }
-      refreshing = true;
-      try {
-        const newToken = await refreshToken();
-        original.headers = { ...(original.headers || {}), Authorization: `Bearer ${newToken}` };
-        original._retry = true;
-        waiters.forEach((w) => w());
-        waiters = [];
-        return apiClient(original);
-      } catch (e) {
-        clearAuth();
-        return Promise.reject(e);
-      } finally {
-        refreshing = false;
-      }
+
+      // Si déjà en train de refresh, attendre
+      return new Promise((resolve) => {
+        subscribeTokenRefresh((newToken) => {
+          originalRequest.headers = originalRequest.headers ?? {};
+          (originalRequest.headers as any).Authorization = `Bearer ${newToken}`;
+          resolve(apiClient(originalRequest));
+        });
+      });
     }
+
     return Promise.reject(error);
   }
 );
 
-// Export par défaut
+// ---- Exports
 export default apiClient;
-
-// Named export pour scanService
 export { apiClient };
-
-// Autres exports pour compatibilité
-export const api = apiClient;
+export const api = apiClient; // Alias pour compatibilité
 export const API_BASE_URL = API_BASE;

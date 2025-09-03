@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/visionService.ts
+// PATH: frontend/src/services/visionService.ts
 import apiClient from "./apiClient";
 
 /**

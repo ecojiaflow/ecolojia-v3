@@ -1,288 +1,293 @@
+// ========================================
+// 2. chatService.ts CORRIGÉ
+// ========================================
 // PATH: frontend/src/services/chatService.ts
+import { MOCK_MODE } from '../config/mock.config'; // AJOUT IMPORT
+import { toast } from 'react-hot-toast';
 
-import { post } from './api';
-import { 
-  ChatMessage, 
-  ChatRequest, 
-  ChatResponse,
-  Product,
-  AnalysisResponse
-} from '../types/api';
-import { notifications } from './notificationService';
-import { authService } from './authService';
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  context?: any;
+}
+
+export interface ChatContext {
+  productId?: string;
+  productName?: string;
+  productType?: 'food' | 'cosmetic' | 'detergent';
+  scores?: {
+    nova?: number;
+    nutriscore?: string;
+    healthScore?: number;
+  };
+  analysis?: any;
+}
+
+// AJOUT : Réponses mockées pour le mode demo
+const MOCK_RESPONSES: { [key: string]: string } = {
+  'nova': `Le système NOVA est une classification scientifique des aliments basée sur leur degré de transformation :
+
+**NOVA 1** - Aliments non transformés ou peu transformés
+• Fruits, légumes, viandes, œufs, lait frais
+• Les meilleurs pour la santé
+
+**NOVA 2** - Ingrédients culinaires transformés
+• Huiles, beurre, sucre, sel
+• À utiliser avec modération
+
+**NOVA 3** - Aliments transformés
+• Conserves, fromages, pains
+• Acceptables en quantité raisonnable
+
+**NOVA 4** - Aliments ultra-transformés
+• Sodas, snacks, plats préparés
+• À limiter au maximum
+
+Les aliments NOVA 4 contiennent souvent des additifs, colorants et conservateurs qui peuvent avoir des effets négatifs sur la santé.`,
+
+  'nutri-score': `Le Nutri-Score est un système d'étiquetage nutritionnel de A à E :
+
+**A (vert foncé)** : Excellente qualité nutritionnelle
+**B (vert clair)** : Bonne qualité nutritionnelle
+**C (jaune)** : Qualité nutritionnelle moyenne
+**D (orange)** : Qualité nutritionnelle faible
+**E (rouge)** : Qualité nutritionnelle très faible
+
+Le calcul prend en compte :
+✅ Points positifs : fibres, protéines, fruits/légumes
+❌ Points négatifs : calories, sucres, graisses saturées, sel
+
+Un produit avec un Nutri-Score A ou B est généralement un bon choix pour une alimentation équilibrée.`,
+
+  'additifs': `Les additifs alimentaires à surveiller particulièrement :
+
+**🚫 À éviter absolument :**
+• E102, E110, E124, E129 : Colorants azoïques (hyperactivité chez les enfants)
+• E320, E321 : Antioxydants synthétiques (perturbateurs endocriniens suspectés)
+• E249-E252 : Nitrites/nitrates (cancérigènes probables)
+
+**⚠️ À limiter :**
+• E200-E203 : Conservateurs (allergies possibles)
+• E621 : Glutamate (maux de tête, addiction au goût)
+• E950-E955 : Édulcorants (effets sur le microbiote)
+
+**✅ Sans danger :**
+• E300 : Vitamine C
+• E330 : Acide citrique
+• E440 : Pectine
+
+Privilégiez les produits avec peu ou pas d'additifs !`,
+
+  'default': `Je comprends votre question. En tant qu'assistant nutritionnel ECOLOJIA, je suis là pour vous aider à faire des choix alimentaires plus sains.
+
+Voici quelques conseils généraux :
+
+1. **Privilégiez les aliments peu transformés** (NOVA 1 et 2)
+2. **Lisez les étiquettes** : moins d'ingrédients = mieux
+3. **Évitez les additifs controversés** (colorants, conservateurs synthétiques)
+4. **Choisissez des produits avec un bon Nutri-Score** (A ou B)
+5. **Variez votre alimentation** pour équilibrer les apports
+
+N'hésitez pas à me poser des questions plus spécifiques sur un produit ou un ingrédient !`
+};
 
 class ChatService {
-  private readonly CHAT_HISTORY_KEY = 'chatHistory';
-  private readonly MAX_HISTORY_MESSAGES = 50;
-  private currentConversation: ChatMessage[] = [];
+  private messages: ChatMessage[] = [];
+  private context: ChatContext = {};
 
-  // Envoyer un message au chat IA
-  async sendMessage(
-    message: string, 
-    context?: {
-      productId?: string;
-      analysisId?: string;
-      product?: Product;
-      analysis?: AnalysisResponse;
+  // MODIFICATION : Générer des réponses mockées intelligentes
+  private generateMockResponse(question: string): string {
+    const lowerQuestion = question.toLowerCase();
+    
+    // Recherche de mots-clés pour donner une réponse appropriée
+    if (lowerQuestion.includes('nova')) {
+      return MOCK_RESPONSES['nova'];
     }
-  ): Promise<ChatMessage> {
-    try {
-      // Vérifier les quotas si non premium
-      if (!authService.isPremium() && !authService.canChat()) {
-        notifications.push('error', 'Quota de chats IA dépassé. Passez à Premium pour continuer !');
-        throw new Error('QUOTA_EXCEEDED');
-      }
-
-      // Créer le message utilisateur
-      const userMessage: ChatMessage = {
-        id: `user-${Date.now()}`,
-        role: 'user',
-        content: message,
-        timestamp: new Date().toISOString(),
-        context: {
-          productId: context?.productId,
-          analysisId: context?.analysisId,
-        },
-      };
-
-      // Ajouter à la conversation
-      this.currentConversation.push(userMessage);
-      this.saveConversation();
-
-      // Préparer la requête
-      const request: ChatRequest = {
-        message,
-        context: {
-          productId: context?.productId,
-          analysisId: context?.analysisId,
-          previousMessages: this.getRecentMessages(5), // Envoyer les 5 derniers messages pour le contexte
-        },
-      };
-
-      // Envoyer au serveur
-      const response = await post<ChatResponse>('/ai/chat', request);
-      
-      // Ajouter la réponse à la conversation
-      this.currentConversation.push(response.message);
-      this.saveConversation();
-
-      // Mettre à jour les quotas localement
-      if (!authService.isPremium()) {
-        const user = authService.getCurrentUser();
-        if (user && user.quotas.aiChatsRemaining > 0) {
-          user.quotas.aiChatsRemaining--;
-          localStorage.setItem('user', JSON.stringify(user));
-        }
-      }
-
-      return response.message;
-    } catch (error: any) {
-      if (error.status === 429) {
-        notifications.push('error', 'Limite de messages atteinte. Veuillez patienter.');
-      } else if (error.message !== 'QUOTA_EXCEEDED') {
-        notifications.push('error', 'Erreur lors de l\'envoi du message');
-      }
-      throw error;
+    if (lowerQuestion.includes('nutri') || lowerQuestion.includes('score')) {
+      return MOCK_RESPONSES['nutri-score'];
     }
-  }
-
-  // Obtenir des suggestions de questions
-  async getSuggestions(context?: { product?: Product; analysis?: AnalysisResponse }): Promise<string[]> {
-    // Si on a un contexte produit, suggérer des questions pertinentes
-    if (context?.product) {
-      const suggestions: string[] = [];
-      
-      // Questions générales
-      suggestions.push(`Quels sont les risques de ${context.product.name} pour la santé ?`);
-      suggestions.push(`Existe-t-il des alternatives plus saines à ${context.product.name} ?`);
-      
-      // Questions spécifiques selon la catégorie
-      if (context.product.category === 'food') {
-        suggestions.push('Ce produit convient-il à un régime végétarien ?');
-        suggestions.push('Quelle est la valeur nutritionnelle de ce produit ?');
-        suggestions.push('Les additifs présents sont-ils dangereux ?');
-      } else if (context.product.category === 'cosmetics') {
-        suggestions.push('Ce produit contient-il des perturbateurs endocriniens ?');
-        suggestions.push('Est-il adapté aux peaux sensibles ?');
-        suggestions.push('Quelle est la composition INCI détaillée ?');
-      } else if (context.product.category === 'detergents') {
-        suggestions.push('Quel est l\'impact environnemental de ce produit ?');
-        suggestions.push('Est-il biodégradable ?');
-        suggestions.push('Existe-t-il une version écologique ?');
-      }
-      
-      // Questions basées sur les scores
-      if (context.analysis?.results.healthImpact.score < 50) {
-        suggestions.push('Comment améliorer mon score santé ?');
-      }
-      
-      return suggestions.slice(0, 4); // Retourner max 4 suggestions
+    if (lowerQuestion.includes('additif') || lowerQuestion.includes('e1') || lowerQuestion.includes('e2') || lowerQuestion.includes('e3')) {
+      return MOCK_RESPONSES['additifs'];
     }
     
-    // Suggestions générales sans contexte
-    return [
-      'Comment lire les étiquettes nutritionnelles ?',
-      'Quels additifs alimentaires éviter ?',
-      'Comment choisir des produits plus sains ?',
-      'Quelle est la différence entre bio et naturel ?',
-    ];
+    // Réponse contextuelle si un produit est mentionné
+    if (this.context.productName) {
+      return `Concernant ${this.context.productName}, voici mon analyse :
+
+${this.context.scores?.nova ? `• Classification NOVA : Groupe ${this.context.scores.nova}` : ''}
+${this.context.scores?.nutriscore ? `• Nutri-Score : ${this.context.scores.nutriscore}` : ''}
+${this.context.scores?.healthScore ? `• Score santé : ${this.context.scores.healthScore}/100` : ''}
+
+${this.context.scores?.nova === 4 ? 
+`⚠️ Ce produit est ultra-transformé (NOVA 4). Je recommande de limiter sa consommation et de chercher des alternatives moins transformées.` :
+`✅ Ce produit a un niveau de transformation acceptable. Vous pouvez le consommer avec modération dans le cadre d'une alimentation équilibrée.`}
+
+Avez-vous des questions spécifiques sur ce produit ?`;
+    }
+    
+    // Réponse par défaut
+    return MOCK_RESPONSES['default'];
   }
 
-  // Obtenir la conversation actuelle
-  getCurrentConversation(): ChatMessage[] {
-    return this.currentConversation;
+  // Initialiser le chat avec un contexte optionnel
+  initialize(context?: ChatContext) {
+    this.context = context || {};
+    this.messages = [{
+      id: 'welcome',
+      role: 'assistant',
+      content: this.getWelcomeMessage(context),
+      timestamp: new Date()
+    }];
   }
 
-  // Obtenir les messages récents
-  private getRecentMessages(count: number): ChatMessage[] {
-    return this.currentConversation.slice(-count * 2); // Prendre les derniers messages (user + assistant)
+  // Message de bienvenue personnalisé
+  private getWelcomeMessage(context?: ChatContext): string {
+    if (context?.productName) {
+      return `Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA. 
+
+Je vois que vous analysez **${context.productName}**. Je peux vous expliquer :
+• Son score et classification NOVA
+• Les ingrédients à surveiller
+• Des alternatives plus saines
+• Répondre à vos questions nutritionnelles
+
+Comment puis-je vous aider ?`;
+    }
+
+    return `Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA.
+
+Je peux vous aider à :
+• Comprendre les analyses de produits
+• Décoder les additifs et ingrédients
+• Suggérer des alternatives plus saines
+• Répondre à vos questions sur la nutrition
+
+Comment puis-je vous aider aujourd'hui ?`;
   }
 
-  // Nouvelle conversation
-  startNewConversation() {
-    this.currentConversation = [];
-    this.saveConversation();
-    notifications.push('info', 'Nouvelle conversation démarrée');
-  }
+  // Envoyer un message
+  async sendMessage(content: string, context?: any): Promise<ChatMessage> {
+    // Mettre à jour le contexte si fourni
+    if (context) {
+      this.context = { ...this.context, ...context };
+    }
 
-  // Sauvegarder la conversation
-  private saveConversation() {
+    // Ajouter le message utilisateur
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date()
+    };
+    this.messages.push(userMessage);
+
     try {
-      // Limiter la taille de l'historique
-      if (this.currentConversation.length > this.MAX_HISTORY_MESSAGES) {
-        this.currentConversation = this.currentConversation.slice(-this.MAX_HISTORY_MESSAGES);
+      // MODIFICATION : En mode mock, générer une réponse locale
+      if (MOCK_MODE) {
+        // Simuler un délai réseau
+        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+        
+        // Générer une réponse mockée
+        const mockResponse = this.generateMockResponse(content);
+        
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: mockResponse,
+          timestamp: new Date()
+        };
+
+        this.messages.push(assistantMessage);
+        return assistantMessage;
       }
+
+      // En mode production, appeler l'API réelle
+      const { aiService } = await import('./api');
+      const response = await aiService.chat(content, {
+        ...this.context,
+        conversationHistory: this.messages.slice(-5)
+      });
+
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: response.content || response.message || response,
+        timestamp: new Date()
+      };
+
+      this.messages.push(assistantMessage);
+      return assistantMessage;
+
+    } catch (error: any) {
+      console.error('Erreur chat:', error);
       
-      localStorage.setItem(this.CHAT_HISTORY_KEY, JSON.stringify(this.currentConversation));
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde de la conversation:', error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: this.getErrorMessage(error),
+        timestamp: new Date()
+      };
+
+      this.messages.push(errorMessage);
+      return errorMessage;
     }
   }
 
-  // Charger la conversation
-  loadConversation() {
-    try {
-      const saved = localStorage.getItem(this.CHAT_HISTORY_KEY);
-      if (saved) {
-        this.currentConversation = JSON.parse(saved);
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement de la conversation:', error);
-      this.currentConversation = [];
+  // Gestion des erreurs avec messages adaptés
+  private getErrorMessage(error: any): string {
+    if (error.response?.status === 401) {
+      return 'Veuillez vous connecter pour utiliser l\'assistant IA.';
     }
+    if (error.response?.status === 429) {
+      return 'Vous avez atteint votre limite de questions. Passez à Premium pour continuer !';
+    }
+    if (error.response?.data?.message) {
+      return `Désolé, une erreur s'est produite : ${error.response.data.message}`;
+    }
+    return 'Désolé, je n\'ai pas pu traiter votre demande. Veuillez réessayer.';
+  }
+
+  // Obtenir l'historique des messages
+  getMessages(): ChatMessage[] {
+    return this.messages;
   }
 
   // Effacer l'historique
   clearHistory() {
-    this.currentConversation = [];
-    localStorage.removeItem(this.CHAT_HISTORY_KEY);
-    notifications.push('success', 'Historique de chat effacé');
+    this.messages = [{
+      id: 'welcome-new',
+      role: 'assistant',
+      content: this.getWelcomeMessage(this.context),
+      timestamp: new Date()
+    }];
   }
 
-  // Obtenir le nombre de messages restants
-  getRemaining(): number {
-    const user = authService.getCurrentUser();
-    if (!user) return 0;
-    if (authService.isPremium()) return 999; // Illimité pour premium
-    return user.quotas.aiChatsRemaining;
-  }
-
-  // Messages prédéfinis pour démarrer une conversation
-  getStarterMessages(context?: { product?: Product; analysis?: AnalysisResponse }): string[] {
-    if (context?.product) {
+  // Obtenir des suggestions contextuelles
+  getSuggestions(): string[] {
+    if (this.context?.productName) {
       return [
-        `Bonjour ! Je viens d'analyser ${context.product.name}. Je suis votre assistant nutritionnel ECOLOJIA. 🌱\n\nQue souhaitez-vous savoir sur ce produit ?`,
+        `Pourquoi ${this.context.productName} a ce score ?`,
+        'Quels sont les ingrédients problématiques ?',
+        'Suggérez-moi des alternatives',
+        'Est-ce dangereux pour ma santé ?'
       ];
     }
-    
+
     return [
-      'Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA. 🌱\n\nJe peux vous aider à :\n• Comprendre les analyses de produits\n• Décoder les additifs et ingrédients\n• Trouver des alternatives plus saines\n• Répondre à vos questions nutrition\n\nComment puis-je vous aider aujourd\'hui ?',
+      'Comment fonctionne la classification NOVA ?',
+      'Qu\'est-ce que l\'ultra-transformation ?',
+      'Quels additifs éviter ?',
+      'Comment améliorer mon alimentation ?'
     ];
+  }
+
+  // Mettre à jour le contexte
+  updateContext(newContext: Partial<ChatContext>) {
+    this.context = { ...this.context, ...newContext };
   }
 }
 
-// Export d'une instance unique
+// Export singleton
 export const chatService = new ChatService();
-
-// Export direct pour compatibilité avec le code existant
-export const sendChatMessage = async (
-  message: string,
-  context?: {
-    productId?: string;
-    analysisId?: string;
-    product?: Product;
-    analysis?: AnalysisResponse;
-  }
-) => chatService.sendMessage(message, context);
-
-// Charger la conversation au démarrage
-chatService.loadConversation();
-
-// Hook React pour le chat
-import { useState, useEffect, useCallback } from 'react';
-
-export const useAIChat = (context?: { product?: Product; analysis?: AnalysisResponse }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [remaining, setRemaining] = useState(0);
-
-  // Charger la conversation et les suggestions
-  useEffect(() => {
-    setMessages(chatService.getCurrentConversation());
-    setRemaining(chatService.getRemaining());
-    
-    // Charger les suggestions
-    chatService.getSuggestions(context).then(setSuggestions);
-  }, [context]);
-
-  // Envoyer un message
-  const sendMessage = useCallback(async (message: string) => {
-    setLoading(true);
-    try {
-      await chatService.sendMessage(message, {
-        productId: context?.product?._id,
-        product: context?.product,
-        analysis: context?.analysis,
-      });
-      
-      // Mettre à jour l'état
-      setMessages(chatService.getCurrentConversation());
-      setRemaining(chatService.getRemaining());
-      
-      // Recharger les suggestions
-      const newSuggestions = await chatService.getSuggestions(context);
-      setSuggestions(newSuggestions);
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi du message:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [context]);
-
-  // Nouvelle conversation
-  const newConversation = useCallback(() => {
-    chatService.startNewConversation();
-    setMessages([]);
-    chatService.getSuggestions(context).then(setSuggestions);
-  }, [context]);
-
-  // Effacer l'historique
-  const clearHistory = useCallback(() => {
-    chatService.clearHistory();
-    setMessages([]);
-  }, []);
-
-  return {
-    messages,
-    suggestions,
-    loading,
-    remaining,
-    canChat: authService.canChat(),
-    isPremium: authService.isPremium(),
-    sendMessage,
-    newConversation,
-    clearHistory,
-    starterMessage: chatService.getStarterMessages(context)[0],
-  };
-};

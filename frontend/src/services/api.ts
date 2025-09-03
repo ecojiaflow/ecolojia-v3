@@ -1,99 +1,422 @@
-﻿// PATH: frontend/src/services/api.ts
-// Hub unique de services HTTP (compatibilité globale).
-import apiClient, { API_BASE_URL } from "./apiClient";
+// PATH: frontend/src/services/api.ts
+import axios, { AxiosError, AxiosInstance } from 'axios';
+import { ENV } from '../env';
+import { getAccessToken, setAccessToken, setRefreshToken, setUser, clearAuth } from './apiClient';
 
-export default apiClient;
-export const api = apiClient;
-export { API_BASE_URL };
+// Log de debug au chargement
+console.log('🔧 API Service loading...');
+console.log('📡 API URL configured:', ENV.API_URL);
+console.log('🎭 MOCK MODE:', ENV.MOCK_MODE);
 
+// Types TypeScript
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData extends LoginCredentials {
+  firstName: string;
+  lastName?: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName?: string;
+  profile: {
+    language: string;
+    theme: string;
+    avatarUrl?: string;
+  };
+  subscription: {
+    tier: 'free' | 'premium';
+    status: string;
+  };
+  quotas: {
+    scansRemaining: number;
+    aiChatsRemaining: number;
+  };
+}
+
+export interface Product {
+  _id: string;
+  barcode?: string;
+  name: string;
+  brand?: string;
+  category: 'food' | 'cosmetics' | 'detergents';
+  images?: {
+    front?: string;
+    ingredients?: string;
+    nutrition?: string;
+  };
+  image_url?: string;
+  imageUrl?: string;
+  scores?: {
+    nova?: number;
+    nutriscore?: string;
+    ecoscore?: string;
+    healthScore?: number;
+    environmentScore?: number;
+  };
+  nova_group?: number;
+  nutriscore_grade?: string;
+  ecoscore_grade?: string;
+  ingredients?: any[];
+  nutrition?: any;
+  allergens?: string[];
+  foodData?: any;
+  cosmeticsData?: any;
+  detergentsData?: any;
+}
+
+export interface Analysis {
+  productId: string;
+  summary: string;
+  healthImpact: {
+    score: number;
+    analysis: string;
+    concerns: string[];
+    benefits: string[];
+  };
+  environmentImpact: {
+    score: number;
+    analysis: string;
+  };
+  alternatives: any[];
+  personalizedAdvice: string;
+}
+
+// Utiliser l'instance apiClient depuis apiClient.ts
+import { apiClient } from './apiClient';
+
+// Service d'authentification
 export const authService = {
-  async login(email: string, password: string) {
-    const { data } = await apiClient.post<{ accessToken: string; refreshToken: string; user: any }>(
-      "/auth/login",
-      { email, password }
-    );
-    return data;
-  },
-  async register(email: string, password: string, firstName?: string, lastName?: string) {
-    const { data } = await apiClient.post<{ accessToken: string; refreshToken: string; user: any }>(
-      "/auth/register",
-      { email, password, firstName, lastName }
-    );
-    return data;
-  },
-  async refresh(refreshToken: string) {
-    const { data } = await apiClient.post<{ accessToken: string }>(
-      "/auth/refresh",
-      { refreshToken }
-    );
-    return data;
-  },
-  async me() {
-    const { data } = await apiClient.get<any>("/auth/me");
-    return (data && (data.user ?? data)) || null;
-  },
-  async logout() {
-    try { await apiClient.post("/auth/logout"); } catch { }
-  },
-};
-
-export const chatService = {
-  async sendMessage(message: string, context?: any) {
-    const payload = context ? { message, context } : { message };
-    const { data } = await apiClient.post<{ reply: string; [k: string]: any }>(
-      "/ai/chat",
-      payload
-    );
-    return data;
-  },
-  async history(limit = 20) {
+  async login(credentials: LoginCredentials) {
     try {
-      const { data } = await apiClient.get<any>(`/ai/history?limit=${encodeURIComponent(String(limit))}`);
-      return data;
-    } catch {
-      return [];
+      const response = await apiClient.post('/auth/login', credentials);
+      const { tokens, user } = response.data;
+      
+      setAccessToken(tokens.accessToken);
+      setRefreshToken(tokens.refreshToken);
+      setUser(user);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     }
   },
-};
 
-export const paymentService = {
-  async getPlans() {
-    const { data } = await apiClient.get<Array<{ id: string; name: string; price: number; interval?: "month"|"year"; description?: string; [k: string]: any }>>("/payments/plans");
-    return data ?? [];
+  async register(userData: RegisterData) {
+    try {
+      const response = await apiClient.post('/auth/register', userData);
+      const { tokens, user } = response.data;
+      
+      setAccessToken(tokens.accessToken);
+      setRefreshToken(tokens.refreshToken);
+      setUser(user);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error;
+    }
   },
-  async startCheckout(planId: string, returnUrl?: string) {
-    const { data } = await apiClient.post<{ url: string }>("/payments/checkout", { planId, returnUrl });
-    return data;
-  },
-  async getPortalUrl() {
-    const { data } = await apiClient.get<{ url: string }>("/payments/portal");
-    return data;
-  },
-  async getStatus() {
-    const { data } = await apiClient.get<{ active: boolean; tier?: string; currentPeriodEnd?: string; [k: string]: any }>("/payments/status");
-    return data;
-  },
-};
 
-export const userService = {
-  async updatePreferences(payload: { healthGoals?: string[]; allergies?: string[]; diets?: string[]; notifications?: { email?: boolean; push?: boolean; marketing?: boolean }; [k: string]: any; }) {
-    const { data } = await apiClient.put<any>("/users/preferences", payload);
-    return data;
+  async logout() {
+    try {
+      await apiClient.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      clearAuth();
+    }
   },
-  async updateProfile(update: any) {
-    const { data } = await apiClient.put<any>("/users/profile", update);
-    return data;
-  },
+
   async getProfile() {
-    const { data } = await apiClient.get<any>("/users/me");
-    return (data && (data.user ?? data)) || null;
+    const response = await apiClient.get('/auth/me');
+    return response.data;
+  },
+
+  async updateProfile(data: Partial<User>) {
+    const response = await apiClient.patch('/auth/profile', data);
+    return response.data;
+  },
+
+  async changePassword(oldPassword: string, newPassword: string) {
+    return apiClient.post('/auth/change-password', { oldPassword, newPassword });
   },
 };
 
-export * as productService from "./productService";
-export * as analysisService from "./analysisService";
-export * as visionService from "./visionService";
-export * as searchService from "./searchService";
-export * as dashboardService from "./dashboardService";
-export * as ocrService from "./ocrService";
-export * as scanService from "./scanService";
+// Service des produits - VERSION CORRIGÉE
+export const productService = {
+  async search(query: string, filters?: any) {
+    try {
+      console.log('🔍 Searching for:', query, 'with filters:', filters);
+      
+      const params = new URLSearchParams({ q: query });
+      const response = await apiClient.get(`/products/search?${params}`);
+      
+      console.log('📦 Search response received:', {
+        status: response.status,
+        productsCount: response.data?.products?.length || 0,
+        success: response.data?.success
+      });
+      
+      // Normaliser la réponse au cas où le backend retourne un format différent
+      if (response.data) {
+        return response.data;
+      }
+      
+      // Fallback si pas de data
+      return {
+        success: false,
+        products: [],
+        pagination: { total: 0, page: 1, pages: 1 }
+      };
+    } catch (error) {
+      console.error('❌ Search error:', error);
+      throw error;
+    }
+  },
+
+  async getByBarcode(barcode: string) {
+    try {
+      const response = await apiClient.get(`/products/barcode/${barcode}`);
+      return response.data;
+    } catch (error) {
+      console.error('Get by barcode error:', error);
+      throw error;
+    }
+  },
+
+  async getById(id: string) {
+    try {
+      const response = await apiClient.get(`/products/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Get by ID error:', error);
+      throw error;
+    }
+  },
+
+  async getTrending(category?: string) {
+    try {
+      const params = category ? `?category=${category}` : '';
+      const response = await apiClient.get(`/products/trending${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Get trending error:', error);
+      throw error;
+    }
+  },
+
+  async getAlternatives(productId: string) {
+    try {
+      const response = await apiClient.get(`/products/${productId}/alternatives`);
+      return response.data;
+    } catch (error) {
+      console.error('Get alternatives error:', error);
+      throw error;
+    }
+  },
+
+  async reportProduct(productId: string, reason: string) {
+    return apiClient.post(`/products/${productId}/report`, { reason });
+  },
+};
+
+// Service d'analyse
+export const analysisService = {
+  async analyzeProduct(data: { barcode?: string; name?: string; image?: string }) {
+    try {
+      const response = await apiClient.post('/products/analyze', data);
+      return response.data;
+    } catch (error) {
+      console.error('Analyze product error:', error);
+      throw error;
+    }
+  },
+
+  async analyzeFood(productData: any) {
+    const response = await apiClient.post('/analyze/food', productData);
+    return response.data;
+  },
+
+  async analyzeCosmetic(productData: any) {
+    const response = await apiClient.post('/analyze/cosmetic', productData);
+    return response.data;
+  },
+
+  async analyzeDetergent(productData: any) {
+    const response = await apiClient.post('/analyze/detergent', productData);
+    return response.data;
+  },
+
+  async getHistory(page = 1, limit = 20) {
+    const response = await apiClient.get(`/analyze/history?page=${page}&limit=${limit}`);
+    return response.data;
+  },
+};
+
+// Service IA / Chat
+export const aiService = {
+  async chat(message: string, context?: any) {
+    try {
+      const response = await apiClient.post('/ai/chat', { message, context });
+      return response.data;
+    } catch (error) {
+      console.error('AI chat error:', error);
+      throw error;
+    }
+  },
+
+  async getSuggestions(productId?: string) {
+    const params = productId ? `?productId=${productId}` : '';
+    const response = await apiClient.get(`/ai/suggestions${params}`);
+    return response.data;
+  },
+
+  async getPersonalizedAdvice(profile: any) {
+    const response = await apiClient.post('/ai/advice', { profile });
+    return response.data;
+  },
+};
+
+// Service Dashboard
+export const dashboardService = {
+  async getStats(period: 'week' | 'month' | 'year' = 'month') {
+    try {
+      const response = await apiClient.get(`/dashboard/stats?period=${period}`);
+      return response.data;
+    } catch (error) {
+      console.error('Dashboard stats error:', error);
+      throw error;
+    }
+  },
+
+  async getInsights() {
+    const response = await apiClient.get('/dashboard/insights');
+    return response.data;
+  },
+
+  async exportData(format: 'pdf' | 'json' = 'pdf') {
+    const response = await apiClient.get(`/dashboard/export?format=${format}`, {
+      responseType: format === 'pdf' ? 'blob' : 'json'
+    });
+    return response.data;
+  },
+
+  async getAchievements() {
+    const response = await apiClient.get('/dashboard/achievements');
+    return response.data;
+  },
+};
+
+// Service Paiement
+export const paymentService = {
+  async createCheckoutSession(plan: 'monthly' | 'annual') {
+    try {
+      const response = await apiClient.post('/payment/create-checkout', { plan });
+      return response.data;
+    } catch (error) {
+      console.error('Create checkout error:', error);
+      throw error;
+    }
+  },
+
+  async getSubscription() {
+    const response = await apiClient.get('/payment/subscription');
+    return response.data;
+  },
+
+  async cancelSubscription() {
+    const response = await apiClient.post('/payment/cancel-subscription');
+    return response.data;
+  },
+
+  async resumeSubscription() {
+    const response = await apiClient.post('/payment/resume-subscription');
+    return response.data;
+  },
+};
+
+// Service Affiliation
+export const affiliateService = {
+  async generateLink(productId: string, partner: string) {
+    const response = await apiClient.get(`/partners/affiliate-link`, {
+      params: { productId, partner }
+    });
+    return response.data;
+  },
+
+  async trackClick(linkId: string) {
+    return apiClient.post('/partners/track-click', { linkId });
+  },
+};
+
+// Service de recherche Algolia
+export const searchService = {
+  async searchProducts(query: string, options?: any) {
+    // Pour Algolia, on peut soit passer par le backend, soit utiliser directement
+    if (ENV.ALGOLIA.APP_ID && ENV.ALGOLIA.SEARCH_KEY) {
+      console.log('Algolia direct search not implemented yet');
+    }
+    
+    // Fallback sur l'API backend
+    const response = await apiClient.post('/algolia/search', {
+      query,
+      ...options
+    });
+    return response.data;
+  },
+
+  async getSearchConfig() {
+    const response = await apiClient.get('/algolia/config');
+    return response.data;
+  },
+};
+
+// Service historique
+export const historyService = {
+  getHistory: (page = 1, limit = 20) => analysisService.getHistory(page, limit),
+  
+  async exportHistory(format = 'json') {
+    const response = await apiClient.get('/analyze/history?limit=100');
+    return response.data;
+  },
+  
+  clearHistory: () => apiClient.delete('/analyze/history')
+};
+
+// Fonction utilitaire pour gérer les erreurs
+export function getErrorMessage(error: any): string {
+  if (axios.isAxiosError(error)) {
+    if (error.response?.data?.message) {
+      return error.response.data.message;
+    }
+    if (error.response?.data?.error) {
+      return error.response.data.error;
+    }
+    if (error.message) {
+      return error.message;
+    }
+  }
+  return 'Une erreur est survenue';
+}
+
+// Export default
+export default apiClient;
+
+// Alias pour compatibilité
+export const userService = authService;
+export const visionService = { 
+  analyzeImage: async (file: File) => {
+    console.warn('Vision service non implémenté');
+    return null;
+  }
+};
+
+// Log de confirmation
+console.log('✅ API Service loaded successfully');

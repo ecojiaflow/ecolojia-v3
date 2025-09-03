@@ -1,7 +1,7 @@
 // frontend/src/components/quotas/QuotaAlert.tsx
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, X, Zap, TrendingUp, Calendar } from 'lucide-react';
-import { useAuth } from '../../auth/hooks/useAuth';
+import { useAuthContext } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 interface QuotaAlertProps {
@@ -19,7 +19,7 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
   onClose,
   onUpgrade
 }) => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
@@ -224,7 +224,7 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
 
 // Hook pour gerer les alertes de quota
 export const useQuotaAlert = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [alerts, setAlerts] = useState<Array<{
     type: 'scans' | 'aiQuestions' | 'exports';
     usage: number;

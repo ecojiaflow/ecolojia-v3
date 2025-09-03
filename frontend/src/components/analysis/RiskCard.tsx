@@ -3,8 +3,8 @@ type Risk = { title: string; level: "low" | "medium" | "high"; details?: string 
 
 function levelToTone(level: Risk["level"]) {
   if (level === "low") return { label: "faible", classes: "chip bg-green-soft text-green-strong" };
-  if (level === "medium") return { label: "modéré", classes: "chip bg-yellow-soft text-yellow-strong" };
-  return { label: "élevé", classes: "chip bg-red-soft text-red-strong" };
+  if (level === "medium") return { label: "mod?r?", classes: "chip bg-yellow-soft text-yellow-strong" };
+  return { label: "?lev?", classes: "chip bg-red-soft text-red-strong" };
 }
 
 export default function RiskCard({ title, level, details }: Risk) {

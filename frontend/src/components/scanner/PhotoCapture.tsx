@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/scanner/PhotoCapture.tsx
+// PATH: frontend/src/components/scanner/PhotoCapture.tsx
 import { useEffect, useRef, useState } from "react";
 import { analyzeImage } from "../../services/visionService";
 import { FLAGS } from "../../config/featureFlags";

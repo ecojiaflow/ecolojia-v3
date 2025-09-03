@@ -1,38 +1,36 @@
-﻿// PATH: frontend/src/pages/DashboardPage.tsx
+// ========================================
+// 1. DashboardPage.tsx CORRIGÃ‰
+// ========================================
+// PATH: frontend/src/pages/DashboardPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  TrendingUp, 
-  Package, 
-  Star, 
-  AlertCircle,
-  ArrowUpRight,
-  ArrowDownRight,
-  Calendar,
-  ChevronRight,
-  Target,
-  Award,
-  ShoppingBag,
-  LogIn,
-  X
+  TrendingUp, Package, Star, AlertCircle,
+
+  ArrowUpRight, ArrowDownRight, Calendar,
+  ChevronRight, Target, Award, ShoppingBag,
+  LogIn, X, Download, Filter, RefreshCw
 } from 'lucide-react';
+import mockService from '../services/mockService';
 import { useNavigate } from 'react-router-dom';
-import { Line, Doughnut } from 'react-chartjs-2';
+import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   ArcElement,
   Title,
   Tooltip,
   Legend,
   Filler
 } from 'chart.js';
-import dashboardService from '../services/dashboardService';
-import authService from '../services/authService';
-import ConfigService from '../services/configService';
+import { dashboardService } from '../services/api';
+import { useAuthContext } from '../Contexts/AuthContext';
+import { toast } from 'react-hot-toast';
+import { MOCK_MODE } from '../config/mock.config';
 
 // Register ChartJS components
 ChartJS.register(
@@ -40,6 +38,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   ArcElement,
   Title,
   Tooltip,
@@ -60,126 +59,192 @@ interface DashboardStats {
   recentAnalyses: Array<{
     _id: string;
     productName: string;
+    productBrand?: string;
     score: number;
     category: string;
     date: string;
-    nutriScorea: string;
-    ecoScorea: string;
+    nutriScore?: string;
+    ecoScore?: string;
+    novaGroup?: number;
   }>;
   weeklyTrend: Array<{
     day: string;
     scans: number;
   }>;
+  achievements?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlockedAt?: string;
+    progress: number;
+  }>;
 }
 
-// Valeurs par defaut pour eviter les erreurs
-const defaultStats: DashboardStats = {
-  totalScans: 0,
-  healthScoreAverage: 0,
+// DonnÃ©es mockÃ©es pour le mode demo
+const MOCK_STATS: DashboardStats = {
+  totalScans: 147,
+  healthScoreAverage: 73,
   categoryBreakdown: {
-    food: 0,
-    cosmetics: 0,
-    detergents: 0
+    food: 89,
+    cosmetics: 34,
+    detergents: 24
   },
-  monthlyProgress: 0,
+  monthlyProgress: 15,
   topCategory: 'Alimentation',
-  recentAnalyses: [],
-  weeklyTrend: []
+  recentAnalyses: [
+    {
+      _id: '1',
+      productName: 'Yaourt Bio Nature',
+      productBrand: 'Les 2 Vaches',
+      score: 92,
+      category: 'food',
+      date: new Date().toISOString(),
+      nutriScore: 'A',
+      ecoScore: 'A',
+      novaGroup: 1
+    },
+    {
+      _id: '2',
+      productName: 'Shampoing Doux',
+      productBrand: 'L\'OrÃ©al',
+      score: 68,
+      category: 'cosmetics',
+      date: new Date(Date.now() - 86400000).toISOString(),
+      nutriScore: undefined,
+      ecoScore: 'C'
+    },
+    {
+      _id: '3',
+      productName: 'Lessive Ã‰cologique',
+      productBrand: 'Ecover',
+      score: 85,
+      category: 'detergents',
+      date: new Date(Date.now() - 172800000).toISOString(),
+      ecoScore: 'B'
+    }
+  ],
+  weeklyTrend: [
+    { day: 'Lun', scans: 12 },
+    { day: 'Mar', scans: 19 },
+    { day: 'Mer', scans: 15 },
+    { day: 'Jeu', scans: 25 },
+    { day: 'Ven', scans: 22 },
+    { day: 'Sam', scans: 31 },
+    { day: 'Dim', scans: 23 }
+  ],
+  achievements: [
+    {
+      id: '1',
+      name: 'Premier Scan',
+      description: 'Effectuez votre premier scan',
+      icon: 'ðŸŽ¯',
+      unlockedAt: new Date().toISOString(),
+      progress: 100
+    },
+    {
+      id: '2',
+      name: 'Ã‰co-Warrior',
+      description: 'Scannez 50 produits Ã©cologiques',
+      icon: 'ðŸŒ¿',
+      progress: 34
+    },
+    {
+      id: '3',
+      name: 'SantÃ© Avant Tout',
+      description: 'Maintenez un score santÃ© moyen > 80',
+      icon: 'â¤ï¸',
+      progress: 73
+    }
+  ]
 };
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState<DashboardStats>(defaultStats);
+  const { user, isAuthenticated } = useAuthContext();
+  const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isDemo, setIsDemo] = useState(false);
   const [showLoginBanner, setShowLoginBanner] = useState(false);
-  
-  const user = authService.getUser();
-  const isPremium = authService.isPremium();
+  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'year'>('month');
 
   useEffect(() => {
     fetchDashboardData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedPeriod]);
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Verifier si l'utilisateur est connecte
-      const token = localStorage.getItem('ecolojia_token');
-      
-      if (!token && !ConfigService.isDemo()) {
-        ConfigService.setMode('demo');
-        setIsDemo(true);
-        setShowLoginBanner(true);
+      // En mode mock ou non connectÃ©, utiliser les donnÃ©es mockÃ©es
+      if (MOCK_MODE || !isAuthenticated) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simuler dÃ©lai
+        setStats(MOCK_STATS);
+        if (!isAuthenticated) {
+          setShowLoginBanner(true);
+        }
+        return;
       }
       
-      const data = await dashboardService.getStats();
-      // Fusionner avec les valeurs par defaut pour eviter les undefined
-      setStats({
-        ...defaultStats,
-        ...data,
-        categoryBreakdown: {
-          ...defaultStats.categoryBreakdown,
-          ...(data?.categoryBreakdown || {})
-        }
-      });
-      setIsDemo(ConfigService.isDemo());
+      // Appel API rÃ©el
+      const data = await dashboardService.getStats(selectedPeriod);
+      setStats(data);
       
     } catch (error: any) {
-      console.error('Error fetching dashboard data:', error);
+      console.error('Erreur dashboard:', error);
+      setError('Impossible de charger les donnÃ©es');
+      // Fallback sur les donnÃ©es mockÃ©es
+      setStats(MOCK_STATS);
       
-      // Si c'est une erreur de connexion ou mode demo, utiliser les donnees de demo
-      if (error.isDemoMode || error.statusCode === 401 || error.statusCode === 0 || error.message?.includes('ERR_CONNECTION_REFUSED')) {
-        ConfigService.setMode('demo');
-        setIsDemo(true);
+      if (error.response?.status === 401) {
         setShowLoginBanner(true);
-        
-        // Reessayer en mode demo
-        try {
-          const demoData = await dashboardService.getStats();
-          setStats({
-            ...defaultStats,
-            ...demoData,
-            categoryBreakdown: {
-              ...defaultStats.categoryBreakdown,
-              ...(demodata?.categoryBreakdown || {})
-            }
-          });
-        } catch (demoError) {
-          console.error('Demo mode error:', demoError);
-          setError('Impossible de charger les donnees de demonstration');
-          setStats(defaultStats); // Utiliser les valeurs par defaut
-        }
-      } else {
-        setError('Impossible de charger les donnees');
-        setStats(defaultStats); // Utiliser les valeurs par defaut
       }
     } finally {
       setLoading(false);
     }
   };
 
+  const handleExport = async () => {
+    try {
+      if (MOCK_MODE || !isAuthenticated) {
+        toast.error('Connectez-vous pour exporter vos donnÃ©es');
+        return;
+      }
+
+      const blob = await dashboardService.exportData('pdf');
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ecolojia-dashboard-${new Date().toISOString().split('T')[0]}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      toast.success('Export rÃ©ussi !');
+    } catch (error) {
+      toast.error('Erreur lors de l\'export');
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7DDE4A]"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement du dashboard...</p>
+        </div>
       </div>
     );
   }
 
   // Configuration des graphiques
   const lineChartData = {
-    labels: stats.weeklyTrend?.map(d => d.day) || ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+    labels: stats.weeklyTrend.map(d => d.day),
     datasets: [
       {
         label: 'Scans',
-        data: stats.weeklyTrend?.map(d => d.scans) || [0, 0, 0, 0, 0, 0, 0],
-        borderColor: '#7DDE4A',
-        backgroundColor: 'rgba(125, 222, 74, 0.1)',
+        data: stats.weeklyTrend.map(d => d.scans),
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
         tension: 0.4,
         fill: true
       }
@@ -187,15 +252,15 @@ const DashboardPage: React.FC = () => {
   };
 
   const doughnutData = {
-    labels: ['Alimentation', 'Cosmetiques', 'Produits menagers'],
+    labels: ['Alimentation', 'CosmÃ©tiques', 'DÃ©tergents'],
     datasets: [
       {
         data: [
-          stats.categoryBreakdown?.food || 0,
-          stats.categoryBreakdown?.cosmetics || 0,
-          stats.categoryBreakdown?.detergents || 0
+          stats.categoryBreakdown.food,
+          stats.categoryBreakdown.cosmetics,
+          stats.categoryBreakdown.detergents
         ],
-        backgroundColor: ['#7DDE4A', '#4A90E2', '#F5A623'],
+        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
         borderWidth: 0
       }
     ]
@@ -222,36 +287,57 @@ const DashboardPage: React.FC = () => {
         }
       }
     }
-  } as const;
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'food': return 'ðŸŽ';
+      case 'cosmetics': return 'ðŸ’„';
+      case 'detergents': return 'ðŸ§½';
+      default: return 'ðŸ“¦';
+    }
+  };
+
+  const getNutriScoreColor = (score?: string) => {
+    const colors: Record<string, string> = {
+      'A': 'bg-green-100 text-green-700',
+      'B': 'bg-lime-100 text-lime-700',
+      'C': 'bg-yellow-100 text-yellow-700',
+      'D': 'bg-orange-100 text-orange-700',
+      'E': 'bg-red-100 text-red-700'
+    };
+    return colors[score || ''] || 'bg-gray-100 text-gray-700';
+  };
 
   return (
-    <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Banniere mode demo */}
+    <div className="min-h-screen bg-gray-50">
+      {/* BanniÃ¨re mode demo / non connectÃ© */}
       {showLoginBanner && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-[#7DDE4A] to-[#6BC93B] text-white p-4"
+          className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4"
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5" />
               <p className="font-medium">
-                Mode demonstration ? Connectez-vous pour voir vos vraies statistiques
+                {MOCK_MODE ? 'Mode dÃ©monstration actif' : 'Connectez-vous pour voir vos vraies statistiques'}
               </p>
             </div>
             <div className="flex items-center gap-4">
+              {!isAuthenticated && (
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Se connecter
+                </button>
+              )}
               <button
-                onClick={() => navigate('/login')}
-                className="bg-white text-[#7DDE4A] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center gap-2"
-              >
-                <LogIn className="w-4 h-4" />
-                Se connecter
-              </button>
-              <button
-                aria-label="Fermer la banniere"
                 onClick={() => setShowLoginBanner(false)}
-                className="text-white hover:text-gray-200 p-2 rounded-lg hover:bg-white/10"
+                className="text-white hover:text-gray-200"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -261,36 +347,56 @@ const DashboardPage: React.FC = () => {
       )}
 
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-[#DDE9DA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-[#3B3B3B]">
-                {isDemo ? 'Tableau de bord demo' : `Bonjour ${user?.profile?.firstName || 'Utilisateur'} !`}
+              <h1 className="text-3xl font-bold text-gray-800">
+                {isAuthenticated && user ? `Bonjour ${user.firstName || 'Utilisateur'} !` : 'Tableau de bord'}
               </h1>
-              <p className="text-gray-600 mt-2">
-                {isDemo ? 'Decouvrez ce que ECOLOJIA peut vous offrir'
-                  : 'Voici un apercu de vos analyses de produits'
-                }
+              <p className="text-gray-600 mt-1">
+                {MOCK_MODE ? 'DÃ©couvrez ce que ECOLOJIA peut vous offrir' : 'Voici un aperÃ§u de vos analyses de produits'}
               </p>
             </div>
             
-            {!isPremium && !isDemo && (
-              <button
-                onClick={() => navigate('/pricing')}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-white rounded-lg hover:shadow-lg transition-all"
+            <div className="flex gap-3">
+              {/* SÃ©lecteur de pÃ©riode */}
+              <select
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value as any)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
               >
-                <Award className="w-5 h-5" />
-                <span>Passer Premium</span>
+                <option value="week">Cette semaine</option>
+                <option value="month">Ce mois</option>
+                <option value="year">Cette annÃ©e</option>
+              </select>
+
+              {/* Bouton refresh */}
+              <button
+                onClick={fetchDashboardData}
+                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                title="Actualiser"
+              >
+                <RefreshCw className="w-5 h-5" />
               </button>
-            )}
+
+              {/* Bouton export */}
+              <button
+                onClick={handleExport}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export PDF
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Statistiques principales */}
+      {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Statistiques principales */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total scans */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -298,16 +404,16 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[#7DDE4A]/10 rounded-lg">
-                <Package className="w-6 h-6 text-[#7DDE4A]" />
+              <div className="p-3 bg-green-100 rounded-lg">
+                <Package className="w-6 h-6 text-green-600" />
               </div>
               <span className="text-sm text-green-600 font-medium flex items-center gap-1">
-                +15%
+                +{stats.monthlyProgress}%
                 <ArrowUpRight className="w-4 h-4" />
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.totalScans || 0}</h3>
-            <p className="text-gray-600 text-sm mt-1">Produits scannes</p>
+            <h3 className="text-2xl font-bold text-gray-800">{stats.totalScans}</h3>
+            <p className="text-gray-600 text-sm mt-1">Produits scannÃ©s</p>
           </motion.div>
 
           {/* Score moyen */}
@@ -318,16 +424,16 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[#4A90E2]/10 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-[#4A90E2]" />
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
               <span className="text-sm text-green-600 font-medium flex items-center gap-1">
                 +8%
                 <ArrowUpRight className="w-4 h-4" />
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.healthScoreAverage || 0}%</h3>
-            <p className="text-gray-600 text-sm mt-1">Score sante moyen</p>
+            <h3 className="text-2xl font-bold text-gray-800">{stats.healthScoreAverage}%</h3>
+            <p className="text-gray-600 text-sm mt-1">Score santÃ© moyen</p>
           </motion.div>
 
           {/* Progression mensuelle */}
@@ -338,19 +444,24 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[#F5A623]/10 rounded-lg">
-                <Target className="w-6 h-6 text-[#F5A623]" />
+              <div className="p-3 bg-amber-100 rounded-lg">
+                <Target className="w-6 h-6 text-amber-600" />
               </div>
-              <span className="text-sm text-green-600 font-medium flex items-center gap-1">
-                {stats.monthlyProgress > 0 ? '+' : ''}{stats.monthlyProgress || 0}%
-                {stats.monthlyProgress > 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+              <span className={`text-sm font-medium flex items-center gap-1 ${
+                stats.monthlyProgress > 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {stats.monthlyProgress > 0 ? '+' : ''}{stats.monthlyProgress}%
+                {stats.monthlyProgress > 0 ? 
+                  <ArrowUpRight className="w-4 h-4" /> : 
+                  <ArrowDownRight className="w-4 h-4" />
+                }
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-[#3B3B3B]">En progres</h3>
+            <h3 className="text-2xl font-bold text-gray-800">En progrÃ¨s</h3>
             <p className="text-gray-600 text-sm mt-1">Ce mois-ci</p>
           </motion.div>
 
-          {/* Categorie favorite */}
+          {/* CatÃ©gorie favorite */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -358,18 +469,18 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[#7DDE4A]/10 rounded-lg">
-                <Star className="w-6 h-6 text-[#7DDE4A]" />
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <Star className="w-6 h-6 text-purple-600" />
               </div>
               <ShoppingBag className="w-5 h-5 text-gray-400" />
             </div>
-            <h3 className="text-2xl font-bold text-[#3B3B3B]">{stats.topCategory || 'Alimentation'}</h3>
-            <p className="text-gray-600 text-sm mt-1">Categorie preferee</p>
+            <h3 className="text-2xl font-bold text-gray-800">{stats.topCategory}</h3>
+            <p className="text-gray-600 text-sm mt-1">CatÃ©gorie prÃ©fÃ©rÃ©e</p>
           </motion.div>
         </div>
 
         {/* Graphiques */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Tendance hebdomadaire */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -377,70 +488,116 @@ const DashboardPage: React.FC = () => {
             transition={{ delay: 0.4 }}
             className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-              Activite de la semaine
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              ActivitÃ© de la semaine
             </h3>
             <div className="h-64">
               <Line data={lineChartData} options={chartOptions} />
             </div>
           </motion.div>
 
-          {/* Repartition par categorie */}
+          {/* RÃ©partition par catÃ©gorie */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="bg-white rounded-xl p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-              Repartition
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              RÃ©partition
             </h3>
-            <div className="h-64 flex items-center justify-center">
+            <div className="h-48 flex items-center justify-center mb-4">
               <div className="w-48 h-48">
-                <Doughnut data={doughnutData} />
+                <Doughnut data={doughnutData} options={{ ...chartOptions, plugins: { legend: { display: false } } }} />
               </div>
             </div>
-            <div className="mt-4 space-y-2">
+            <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 bg-[#7DDE4A] rounded-full"></span>
+                  <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                   Alimentation
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown?.food || 0}</span>
+                <span className="font-medium">{stats.categoryBreakdown.food}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 bg-[#4A90E2] rounded-full"></span>
-                  Cosmetiques
+                  <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                  CosmÃ©tiques
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown?.cosmetics || 0}</span>
+                <span className="font-medium">{stats.categoryBreakdown.cosmetics}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 bg-[#F5A623] rounded-full"></span>
-                  Produits menagers
+                  <span className="w-3 h-3 bg-amber-500 rounded-full"></span>
+                  DÃ©tergents
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown?.detergents || 0}</span>
+                <span className="font-medium">{stats.categoryBreakdown.detergents}</span>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Analyses recentes */}
+        {/* Achievements / Badges */}
+        {stats.achievements && stats.achievements.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white rounded-xl p-6 shadow-sm mb-8"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Vos accomplissements
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {stats.achievements.map((achievement) => (
+                <div 
+                  key={achievement.id}
+                  className={`p-4 rounded-lg border-2 ${
+                    achievement.progress === 100 
+                      ? 'border-green-500 bg-green-50' 
+                      : 'border-gray-200 bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl">{achievement.icon}</span>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-800">{achievement.name}</h4>
+                      <p className="text-sm text-gray-600">{achievement.description}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600">Progression</span>
+                      <span className="font-medium">{achievement.progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-green-500 h-2 rounded-full transition-all"
+                        style={{ width: `${achievement.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Analyses rÃ©centes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 bg-white rounded-xl shadow-sm"
+          transition={{ delay: 0.7 }}
+          className="bg-white rounded-xl shadow-sm"
         >
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Analyses recentes
+              <h3 className="text-lg font-semibold text-gray-800">
+                Analyses rÃ©centes
               </h3>
               <button
                 onClick={() => navigate('/history')}
-                className="text-[#7DDE4A] hover:text-[#6BC93B] font-medium text-sm flex items-center gap-1"
+                className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center gap-1"
               >
                 Voir tout
                 <ChevronRight className="w-4 h-4" />
@@ -449,34 +606,46 @@ const DashboardPage: React.FC = () => {
           </div>
           
           <div className="divide-y divide-gray-100">
-            {stats.recentAnalyses && stats.recentAnalyses.length > 0 ? (
+            {stats.recentAnalyses.length > 0 ? (
               stats.recentAnalyses.map((analysis, index) => (
                 <motion.div
-                  key={analysis._id || `analysis-${index}`}
+                  key={analysis._id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + index * 0.1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
                   className="p-6 hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => navigate(`/product/${analysis._id}`)}
+                  onClick={() => navigate(`/results?id=${analysis._id}`)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h4 className="font-medium text-[#3B3B3B]">
-                        {analysis.productName}
-                      </h4>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{getCategoryIcon(analysis.category)}</span>
+                        <div>
+                          <h4 className="font-medium text-gray-800">
+                            {analysis.productName}
+                          </h4>
+                          {analysis.productBrand && (
+                            <p className="text-sm text-gray-600">{analysis.productBrand}</p>
+                          )}
+                        </div>
+                      </div>
                       <div className="flex items-center gap-4 mt-2">
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-500">
                           {new Date(analysis.date).toLocaleDateString('fr-FR')}
                         </span>
                         {analysis.nutriScore && (
-                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                            analysis.nutriScore === 'A' ? 'bg-green-100 text-green-700' :
-                            analysis.nutriScore === 'B' ? 'bg-lime-100 text-lime-700' :
-                            analysis.nutriScore === 'C' ? 'bg-yellow-100 text-yellow-700' :
-                            analysis.nutriScore === 'D' ? 'bg-orange-100 text-orange-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getNutriScoreColor(analysis.nutriScore)}`}>
                             Nutri-Score {analysis.nutriScore}
+                          </span>
+                        )}
+                        {analysis.novaGroup && (
+                          <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                            NOVA {analysis.novaGroup}
+                          </span>
+                        )}
+                        {analysis.ecoScore && (
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getNutriScoreColor(analysis.ecoScore)}`}>
+                            Ã‰co-Score {analysis.ecoScore}
                           </span>
                         )}
                       </div>
@@ -495,31 +664,49 @@ const DashboardPage: React.FC = () => {
                 </motion.div>
               ))
             ) : (
-              <div className="p-6 text-center text-gray-500">Aucune analyse recente</div>
+              <div className="p-12 text-center">
+                <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">Aucune analyse rÃ©cente</p>
+                <button
+                  onClick={() => navigate('/search')}
+                  className="mt-4 text-green-600 hover:text-green-700 font-medium"
+                >
+                  Scanner mon premier produit
+                </button>
+              </div>
             )}
           </div>
         </motion.div>
 
         {/* CTA Mode demo */}
-        {isDemo && (
+        {(MOCK_MODE || !isAuthenticated) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="mt-8 bg-gradient-to-r from-[#7DDE4A] to-[#6BC93B] rounded-xl p-8 text-white text-center"
+            transition={{ delay: 0.9 }}
+            className="mt-8 bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-8 text-white text-center"
           >
+            <Award className="w-16 h-16 mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-4">
-              Pret  analyser vos propres produits a
+              PrÃªt Ã  analyser vos propres produits ?
             </h3>
-            <p className="text-lg mb-6 opacity-90">
-              Creez votre compte gratuit et commencez  faire des choix eclaires
+            <p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+              CrÃ©ez votre compte gratuit et commencez Ã  faire des choix Ã©clairÃ©s pour votre santÃ© et l'environnement
             </p>
-            <button
-              onClick={() => navigate('/register')}
-              className="bg-white text-[#7DDE4A] px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
-            >
-              Creer mon compte
-            </button>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => navigate('/register')}
+                className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+              >
+                CrÃ©er mon compte
+              </button>
+              <button
+                onClick={() => navigate('/premium')}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all border border-white"
+              >
+                DÃ©couvrir Premium
+              </button>
+            </div>
           </motion.div>
         )}
       </div>
@@ -528,8 +715,4 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-
-
-
-
 

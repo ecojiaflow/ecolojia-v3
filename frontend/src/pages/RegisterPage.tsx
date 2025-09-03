@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/RegisterPage.tsx
+// PATH: frontend/src/pages/RegisterPage.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Leaf, ArrowRight, Check } from 'lucide-react';
@@ -74,7 +74,7 @@ const RegisterPage: React.FC = () => {
       // Redirection vers l'onboarding aprÃ¨s inscription
       navigate('/onboarding');
     } catch (error) {
-      // L'erreur est dÃ©jÃ  gÃ©rÃ©e dans le contexte
+      // L'erreur est d?jÃ  g?r?e dans le contexte
     } finally {
       setIsLoading(false);
     }
@@ -89,10 +89,10 @@ const RegisterPage: React.FC = () => {
             <Leaf className="h-12 w-12 text-green-500" />
           </Link>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            CrÃ©ez votre compte ECOLOJIA
+            Cr?ez votre compte ECOLOJIA
           </h1>
           <p className="text-gray-600">
-            Rejoignez des milliers d'utilisateurs soucieux de leur santÃ©
+            Rejoignez des milliers d'utilisateurs soucieux de leur sant?
           </p>
         </div>
 
@@ -120,11 +120,11 @@ const RegisterPage: React.FC = () => {
         {/* Formulaire */}
         <div className="bg-white rounded-xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* PrÃ©nom et Nom */}
+            {/* Pr?nom et Nom */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                  PrÃ©nom
+                  Pr?nom
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -265,7 +265,7 @@ const RegisterPage: React.FC = () => {
                 </Link>{' '}
                 et la{' '}
                 <Link to="/privacy" className="text-green-600 hover:underline">
-                  politique de confidentialitÃ©
+                  politique de confidentialit?
                 </Link>
               </label>
             </div>
@@ -280,7 +280,7 @@ const RegisterPage: React.FC = () => {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  CrÃ©er mon compte
+                  Cr?er mon compte
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </>
               )}
@@ -290,7 +290,7 @@ const RegisterPage: React.FC = () => {
           {/* Lien connexion */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              DÃ©jÃ  un compte ?{' '}
+              D?jÃ  un compte ?{' '}
               <Link
                 to="/login"
                 className="text-green-600 font-medium hover:text-green-700"

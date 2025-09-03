@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/ComparePage.tsx
+// PATH: frontend/src/pages/ComparePage.tsx
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';

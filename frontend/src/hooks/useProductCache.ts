@@ -166,8 +166,8 @@ export const useProductCache = (query: string = '') => {
 
     try {
       // Import dynamique pour eviter les dependances circulaires
-      const { fetchRealProducts } = await import('../api/realApi');
-      const fetchedProducts = await fetchRealProducts(query);
+      const { productService } = await import('../services/api');
+      const fetchedProducts = await productService.search(query);
       
       // Sauvegarder en cache
       cacheManager.setProducts(cacheKey, fetchedProducts);

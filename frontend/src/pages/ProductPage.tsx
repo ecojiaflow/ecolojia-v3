@@ -1,10 +1,11 @@
 // PATH: frontend/src/pages/ProductPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Heart, Leaf, Shield, AlertTriangle, Package, Info } from 'lucide-react';
 import { productService } from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { ENV } from '../env';
 
 interface Product {
   _id: string;
@@ -50,11 +51,11 @@ interface Product {
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alternatives, setAlternatives] = useState<Product[]>([]);
+  const [loadingAlternatives, setLoadingAlternatives] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -67,18 +68,31 @@ const ProductPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Charger le produit
-      const response = await productService.getById(productId);
-      setProduct(response.data);
+      // Appel API réel
+      const productData = await productService.getById(productId);
+      setProduct(productData);
       
-      // Charger les alternatives
-      const altResponse = await productService.getAlternatives(productId);
-      setAlternatives(altResponse.data.alternatives || []);
+      // Charger les alternatives en parallèle
+      loadAlternatives(productId);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Impossible de charger le produit');
+      console.error('Erreur chargement produit:', err);
+      setError(err.message || 'Impossible de charger le produit');
       toast.error('Erreur lors du chargement du produit');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAlternatives = async (productId: string) => {
+    try {
+      setLoadingAlternatives(true);
+      const altData = await productService.getAlternatives(productId);
+      setAlternatives(altData.alternatives || altData || []);
+    } catch (err) {
+      console.error('Erreur chargement alternatives:', err);
+      // Pas grave si les alternatives ne se chargent pas
+    } finally {
+      setLoadingAlternatives(false);
     }
   };
 
@@ -117,7 +131,14 @@ const ProductPage: React.FC = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="Chargement du produit..." />;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="large" />
+          <p className="mt-4 text-gray-600">Chargement du produit...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error || !product) {
@@ -142,6 +163,13 @@ const ProductPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Mode Demo Banner */}
+      {ENV.MOCK_MODE && (
+        <div className="bg-yellow-100 border-b border-yellow-400 text-yellow-800 px-4 py-2 text-center">
+          🔬 Mode Demo - Données de test
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -330,35 +358,42 @@ const ProductPage: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Alternatives recommandées
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {alternatives.slice(0, 6).map((alt) => (
-                <Link
-                  key={alt._id}
-                  to={`/product/${alt._id}`}
-                  className="block p-4 border border-gray-200 rounded-lg hover:border-green-500 transition-colors"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-gray-800">{alt.name}</h3>
-                    <span className={`font-bold ${getScoreColor(Math.round((alt.scores.healthScore + alt.scores.environmentScore) / 2))}`}>
-                      {Math.round((alt.scores.healthScore + alt.scores.environmentScore) / 2)}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">{alt.brand}</p>
-                  <div className="flex gap-2 mt-2">
-                    {alt.scores.nutriscore && (
-                      <span className={`px-2 py-1 text-white rounded text-xs ${getNutriScoreColor(alt.scores.nutriscore)}`}>
-                        {alt.scores.nutriscore}
+            {loadingAlternatives ? (
+              <div className="text-center py-8">
+                <LoadingSpinner />
+                <p className="mt-2 text-gray-600">Recherche d'alternatives...</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {alternatives.slice(0, 6).map((alt) => (
+                  <Link
+                    key={alt._id}
+                    to={`/product/${alt._id}`}
+                    className="block p-4 border border-gray-200 rounded-lg hover:border-green-500 transition-colors"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium text-gray-800">{alt.name}</h3>
+                      <span className={`font-bold ${getScoreColor(Math.round((alt.scores.healthScore + alt.scores.environmentScore) / 2))}`}>
+                        {Math.round((alt.scores.healthScore + alt.scores.environmentScore) / 2)}
                       </span>
-                    )}
-                    {alt.scores.nova && (
-                      <span className="px-2 py-1 bg-gray-600 text-white rounded text-xs">
-                        N{alt.scores.nova}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
+                    </div>
+                    <p className="text-sm text-gray-600">{alt.brand}</p>
+                    <div className="flex gap-2 mt-2">
+                      {alt.scores.nutriscore && (
+                        <span className={`px-2 py-1 text-white rounded text-xs ${getNutriScoreColor(alt.scores.nutriscore)}`}>
+                          {alt.scores.nutriscore}
+                        </span>
+                      )}
+                      {alt.scores.nova && (
+                        <span className="px-2 py-1 bg-gray-600 text-white rounded text-xs">
+                          N{alt.scores.nova}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

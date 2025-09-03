@@ -1,4 +1,4 @@
-﻿// frontend/src/services/security/SecureProxyService.ts
+// frontend/src/services/security/SecureProxyService.ts
 import api from '../api';
 
 export interface SecureSearchToken {

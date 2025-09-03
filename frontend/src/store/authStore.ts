@@ -1,4 +1,4 @@
-﻿// frontend/src/store/authStore.ts
+// frontend/src/store/authStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import authService from '../services/authService';

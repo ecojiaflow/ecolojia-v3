@@ -20,7 +20,7 @@ import {
 
 import { motion, AnimatePresence } from 'framer-motion';
 import analysisService from '../services/analysisService';
-import { useAuth } from '../auth/context/AuthContext';
+import { useAuthContext } from '../Contexts/AuthContext';
 
 interface Product {
   id: string;
@@ -34,7 +34,7 @@ interface Product {
 
 const MultiScanPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [products, setProducts] = useState<Product[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);

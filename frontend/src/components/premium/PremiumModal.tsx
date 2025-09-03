@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { X, Check, Zap, Infinity, Brain, Download, Users, Shield } from 'lucide-react';
 import { paymentService } from '../../services/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuthContext } from '../../Contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 
 interface PremiumModalProps {
@@ -12,7 +12,7 @@ interface PremiumModalProps {
 }
 
 const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
 
@@ -29,19 +29,19 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
       const { checkoutUrl } = await paymentService.createCheckout(selectedPlan);
       window.location.href = checkoutUrl;
     } catch (error) {
-      toast.error('Erreur lors de la création de la session de paiement');
+      toast.error('Erreur lors de la cr?ation de la session de paiement');
     } finally {
       setLoading(false);
     }
   };
 
   const features = [
-    { icon: Infinity, text: 'Scans illimités', free: '30/mois', premium: 'Illimité' },
+    { icon: Infinity, text: 'Scans illimit?s', free: '30/mois', premium: 'Illimit?' },
     { icon: Brain, text: 'Chat IA expert', free: '5/mois', premium: '500/mois' },
-    { icon: Download, text: 'Export des données', free: false, premium: true },
-    { icon: Users, text: 'Profils famille', free: '1', premium: 'Illimité' },
-    { icon: Shield, text: 'Sans publicité', free: false, premium: true },
-    { icon: Zap, text: 'Analyse instantanée', free: true, premium: true },
+    { icon: Download, text: 'Export des donn?es', free: false, premium: true },
+    { icon: Users, text: 'Profils famille', free: '1', premium: 'Illimit?' },
+    { icon: Shield, text: 'Sans publicit?', free: false, premium: true },
+    { icon: Zap, text: 'Analyse instantan?e', free: true, premium: true },
   ];
 
   return (
@@ -50,7 +50,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-2xl font-bold text-gray-800">
-            Passez à ECOLOJIA Premium
+            Passez Ã  ECOLOJIA Premium
           </h2>
           <button
             onClick={onClose}
@@ -82,10 +82,10 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
             >
               <h3 className="text-xl font-bold text-gray-800 mb-2">Mensuel</h3>
               <div className="mb-4">
-                <span className="text-3xl font-bold">2,49€</span>
+                <span className="text-3xl font-bold">2,49â‚¬</span>
                 <span className="text-gray-600">/mois</span>
               </div>
-              <p className="text-gray-600">Idéal pour essayer Premium</p>
+              <p className="text-gray-600">Id?al pour essayer Premium</p>
               {selectedPlan === 'monthly' && (
                 <div className="absolute top-4 right-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -111,10 +111,10 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Annuel</h3>
               <div className="mb-4">
-                <span className="text-3xl font-bold">24,99€</span>
+                <span className="text-3xl font-bold">24,99â‚¬</span>
                 <span className="text-gray-600">/an</span>
               </div>
-              <p className="text-gray-600">Économisez 17%</p>
+              <p className="text-gray-600">Ã‰conomisez 17%</p>
               {selectedPlan === 'annual' && (
                 <div className="absolute top-4 right-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -125,10 +125,10 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
             </div>
           </div>
 
-          {/* Comparaison des fonctionnalités */}
+          {/* Comparaison des fonctionnalit?s */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Comparaison des fonctionnalités
+              Comparaison des fonctionnalit?s
             </h3>
             <div className="space-y-3">
               {features.map((feature, index) => (
@@ -164,7 +164,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
             </div>
           </div>
 
-          {/* Avantages supplémentaires */}
+          {/* Avantages suppl?mentaires */}
           <div className="bg-blue-50 rounded-xl p-6 mb-8">
             <h3 className="font-semibold text-blue-800 mb-3">
               Pourquoi choisir Premium ?
@@ -176,15 +176,15 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
               </li>
               <li className="flex items-start gap-2">
                 <Check className="h-5 w-5 mt-0.5" />
-                <span>Conseils personnalisés illimités de notre IA nutritionnelle</span>
+                <span>Conseils personnalis?s illimit?s de notre IA nutritionnelle</span>
               </li>
               <li className="flex items-start gap-2">
                 <Check className="h-5 w-5 mt-0.5" />
-                <span>Suivez la santé de toute votre famille</span>
+                <span>Suivez la sant? de toute votre famille</span>
               </li>
               <li className="flex items-start gap-2">
                 <Check className="h-5 w-5 mt-0.5" />
-                <span>Annulation à tout moment, sans engagement</span>
+                <span>Annulation Ã  tout moment, sans engagement</span>
               </li>
             </ul>
           </div>
@@ -211,7 +211,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
                 <>
                   <Zap className="h-5 w-5" />
                   <span>
-                    S'abonner - {selectedPlan === 'monthly' ? '2,49€/mois' : '24,99€/an'}
+                    S'abonner - {selectedPlan === 'monthly' ? '2,49â‚¬/mois' : '24,99â‚¬/an'}
                   </span>
                 </>
               )}
@@ -220,8 +220,8 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
 
           {/* Informations de paiement */}
           <div className="mt-6 text-center text-sm text-gray-600">
-            <p>Paiement sécurisé via LemonSqueezy</p>
-            <p>Annulation possible à tout moment depuis votre compte</p>
+            <p>Paiement s?curis? via LemonSqueezy</p>
+            <p>Annulation possible Ã  tout moment depuis votre compte</p>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/ResultPage.tsx
+// PATH: frontend/src/pages/ResultPage.tsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import analysisService, { AnalysisResult } from "../services/analysisService";
