@@ -1,4 +1,4 @@
-﻿// frontend/src/components/quotas/QuotaAlert.tsx
+// frontend/src/components/quotas/QuotaAlert.tsx
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, X, Zap, TrendingUp, Calendar } from 'lucide-react';
 import { useAuthContext } from '../../Contexts/AuthContext';
@@ -240,22 +240,22 @@ export const useQuotaAlert = () => {
     const newAlerts = [];
 
     // Check scans
-    const scansUsed = user.currentUsage?.scansThisMonth || 0;
-    const scansLimit = user.quotas?.scansPerMonth || 30;
+    const scansUsed = user?.currentUsage?.scansThisMonth || 0;
+    const scansLimit = user?.quotas?.scansPerMonth || 30;
     if (scansUsed >= scansLimit * 0.8) {
       newAlerts.push({ type: 'scans' as const, usage: scansUsed, limit: scansLimit });
     }
 
     // Check AI questions
-    const aiUsed = user.currentUsage?.aiQuestionsToday || 0;
-    const aiLimit = user.quotas?.aiQuestionsPerDay || 0;
+    const aiUsed = user?.currentUsage?.aiQuestionsToday || 0;
+    const aiLimit = user?.quotas?.aiQuestionsPerDay || 0;
     if (aiLimit > 0 && aiUsed >= aiLimit * 0.8) {
       newAlerts.push({ type: 'aiQuestions' as const, usage: aiUsed, limit: aiLimit });
     }
 
     // Check exports
-    const exportsUsed = user.currentUsage?.exportsThisMonth || 0;
-    const exportsLimit = user.quotas?.exportsPerMonth || 0;
+    const exportsUsed = user?.currentUsage?.exportsThisMonth || 0;
+    const exportsLimit = user?.quotas?.exportsPerMonth || 0;
     if (exportsLimit > 0 && exportsUsed >= exportsLimit * 0.8) {
       newAlerts.push({ type: 'exports' as const, usage: exportsUsed, limit: exportsLimit });
     }
@@ -267,6 +267,5 @@ export const useQuotaAlert = () => {
 };
 
 export default QuotaAlert;
-
 
 

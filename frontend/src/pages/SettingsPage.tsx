@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/SettingsPage.tsx
+// PATH: frontend/src/pages/SettingsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -512,7 +512,7 @@ const SettingsPage: React.FC = () => {
                   </h3>
                   <p className="text-gray-600">
                     {user?.tier === 'free' 
-                      ? `${user.quotas?.scansUsed || 0} / ${user.quotas?.scansLimit || 30} analyses ce mois`
+                      ? `${user?.quotas?.scansUsed || 0} / ${user?.quotas?.scansLimit || 30} analyses ce mois`
                       : 'Analyses illimitees'
                     }
                   </p>
@@ -717,6 +717,5 @@ const SettingsPage: React.FC = () => {
 };
 
 export default SettingsPage;
-
 
 

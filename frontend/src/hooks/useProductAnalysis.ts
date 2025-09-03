@@ -1,4 +1,4 @@
-﻿// frontend/src/hooks/useProductAnalysis.ts
+// frontend/src/hooks/useProductAnalysis.ts
 // Hook personnalise pour gerer les analyses de produits
 
 import { useState, useCallback } from 'react';
@@ -135,7 +135,7 @@ export function useProductAnalysis(options: UseProductAnalysisOptions = {}) {
 
   const getRemainingScans = useCallback(() => {
     if (!user) return null;
-    return user.quotas?.scans || 0;
+    return user?.quotas?.scans || 0;
   }, [user]);
 
   return {
@@ -220,4 +220,3 @@ function getResultRoute(category: string, productId: string): string {
       return `/product/${productId}`;
   }
 }
-

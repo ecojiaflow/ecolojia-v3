@@ -1,4 +1,4 @@
-﻿// ========================================
+// ========================================
 // 1. DashboardPage.tsx CORRIGÃ‰
 // ========================================
 // PATH: frontend/src/pages/DashboardPage.tsx
@@ -352,7 +352,7 @@ const DashboardPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">
-                {isAuthenticated && user ? `Bonjour ${user.firstName || 'Utilisateur'} !` : 'Tableau de bord'}
+                {isAuthenticated && user ? `Bonjour ${user?.firstName || 'Utilisateur'} !` : 'Tableau de bord'}
               </h1>
               <p className="text-gray-600 mt-1">
                 {MOCK_MODE ? 'DÃ©couvrez ce que ECOLOJIA peut vous offrir' : 'Voici un aperÃ§u de vos analyses de produits'}
@@ -715,5 +715,4 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-
 

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useEmailValidation } from '../hooks/useEmailValidation';
 import { useAuthContext } from './Contexts/AuthContext';
 
@@ -8,7 +8,7 @@ export const EmailVerificationBanner: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Ne pas afficher si pas d'utilisateur, mode demo, ou email dej verifie
-  if (!user || user.email.includes('demo') || user.emailVerified) {
+  if (!user || user?.email.includes('demo') || user?.emailVerified) {
     return null;
   }
 
@@ -51,7 +51,7 @@ export const EmailVerificationBanner: React.FC = () => {
           </h3>
           <div className="mt-2 text-sm text-yellow-700">
             <p>
-              Verifiez votre email <strong>{user.email}</strong> pour activer toutes les fonctionnalites.
+              Verifiez votre email <strong>{user?.email}</strong> pour activer toutes les fonctionnalites.
             </p>
           </div>
           <div className="mt-4">
@@ -76,6 +76,5 @@ export const EmailVerificationBanner: React.FC = () => {
     </div>
   );
 };
-
 
 
