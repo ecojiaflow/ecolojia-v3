@@ -1,4 +1,8 @@
-﻿// PATH: frontend/src/Contexts/AuthContext.tsx
+﻿// ========================================
+// FICHIER 2: src/Contexts/AuthContext.tsx
+// ========================================
+// PATH: frontend/src/Contexts/AuthContext.tsx
+
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import authService, { RegisterPayload, User } from "../services/authService";
 import { getAccessToken, getUser, setUser as persistUser } from "../services/apiClient";
@@ -53,33 +57,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         setIsLoading(true);
         
-        // Mock mode
-        if (ENV.MOCK_MODE) {
-          console.log("🚨 Running in MOCK mode");
-          const mockUser: User = {
-            id: "mock-user",
-            email: "demo@ecolojia.app",
-            profile: { firstName: "Demo", lastName: "User" },
-            plan: "premium",
-            quotas: { scansRemaining: 999999, aiChatsRemaining: 999999 },
-          };
-          setUserState(mockUser);
-          persistUser(mockUser);
-        } 
-        // Real mode - check if we have a token
-        else if (getAccessToken()) {
-          console.log("🔄 Restoring session...");
-          await refreshUser();
-          console.log("✅ Session restored");
-        } 
-        // No token
-        else {
+        // Check if we have a token first
+        const token = getAccessToken() || localStorage.getItem('accessToken');
+        
+        if (token) {
+          console.log("🔄 Token found, restoring session...");
+          try {
+            const restoredUser = await authService.me();
+            if (mounted) {
+              setUserState(restoredUser);
+              console.log("✅ Session restored");
+            }
+          } catch (e) {
+            console.log("❌ Failed to restore session, clearing auth");
+            authService.logout();
+            if (mounted) setUserState(null);
+          }
+        } else {
           console.log("👤 No active session");
-          setUserState(null);
+          if (mounted) setUserState(null);
         }
       } catch (e) {
-        console.error("❌ Session restore failed:", e);
-        setUserState(null);
+        console.error("❌ Auth init failed:", e);
+        if (mounted) setUserState(null);
       } finally {
         if (mounted) setIsLoading(false);
       }
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => { 
       mounted = false; 
     };
-  }, [refreshUser]);
+  }, []);
 
   // Login
   const login = useCallback(async (email: string, password: string) => {
@@ -145,11 +145,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [user]);
 
+  // Check authentication status
+  const isAuthenticated = useMemo(() => {
+    const hasUser = !!user;
+    const hasToken = !!(getAccessToken() || localStorage.getItem('accessToken'));
+    return hasUser && hasToken;
+  }, [user]);
+
   // Context value
   const value = useMemo<AuthContextType>(
     () => ({
       user,
-      isAuthenticated: !!user && !!getAccessToken(),
+      isAuthenticated,
       isLoading,
       error,
       login,
@@ -160,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isPremium,
       quotas,
     }),
-    [user, isLoading, error, login, register, logout, refreshUser, clearError, isPremium, quotas]
+    [user, isAuthenticated, isLoading, error, login, register, logout, refreshUser, clearError, isPremium, quotas]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

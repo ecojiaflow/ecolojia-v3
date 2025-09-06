@@ -1,5 +1,9 @@
-﻿// PATH: frontend/src/pages/LoginPage.tsx
-import React, { useState } from 'react';
+﻿// ========================================
+// FICHIER 3: src/pages/LoginPage.tsx (avec redirection corrigée)
+// ========================================
+// PATH: frontend/src/pages/LoginPage.tsx
+
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Leaf, ArrowRight } from 'lucide-react';
 import { useAuthContext } from '../Contexts/AuthContext';
@@ -8,7 +12,7 @@ import toast from 'react-hot-toast';
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuthContext();
+  const { login, isAuthenticated } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -18,6 +22,13 @@ const LoginPage: React.FC = () => {
   });
 
   const from = location.state?.from?.pathname || '/dashboard';
+
+  // Redirection si déjà connecté
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -37,9 +48,12 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login(formData.email, formData.password);
-      navigate(from, { replace: true });
-    } catch (error) {
-      // L'erreur est déjà gérée dans le contexte
+      toast.success('Connexion réussie !');
+      
+      // La redirection se fera automatiquement via useEffect
+    } catch (error: any) {
+      console.error('Erreur de connexion:', error);
+      toast.error(error?.message || 'Email ou mot de passe incorrect');
     } finally {
       setIsLoading(false);
     }
@@ -55,9 +69,12 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login('demo@ecolojia.app', 'demo123');
-      navigate(from, { replace: true });
-    } catch (error) {
-      toast.error('Compte démo non disponible');
+      toast.success('Connexion démo réussie !');
+      
+      // La redirection se fera automatiquement via useEffect
+    } catch (error: any) {
+      console.error('Erreur connexion démo:', error);
+      toast.error(error?.message || 'Compte démo non disponible');
     } finally {
       setIsLoading(false);
     }
@@ -206,10 +223,18 @@ const LoginPage: React.FC = () => {
             <p className="text-sm text-gray-600">Chat Expert</p>
           </div>
         </div>
+
+        {/* Identifiants de test */}
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg text-center">
+          <p className="text-sm text-blue-800 font-semibold mb-2">🧪 Comptes de test disponibles :</p>
+          <div className="text-xs text-blue-700">
+            <p>Premium : demo@ecolojia.app / demo123</p>
+            <p>Gratuit : test@example.com / password123</p>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default LoginPage;
-

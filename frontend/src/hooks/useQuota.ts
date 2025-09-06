@@ -1,128 +1,125 @@
 ﻿// PATH: frontend/src/hooks/useQuota.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuthContext } from '../Contexts/AuthContext';
-import { toast } from 'react-hot-toast';
+import { mockService } from '../services/mockService';
+import { ENV } from '../env';
+import { apiClient } from '../services/apiClient';
 
-interface Quota {
+interface Quotas {
   scansRemaining: number;
   aiChatsRemaining: number;
-  scansResetDate?: Date;
-  aiChatsResetDate?: Date;
+  scansResetDate?: string;
+  aiChatsResetDate?: string;
 }
 
-export const useQuota = () => {
-  const { user, refreshUser } = useAuthContext();
+interface UseQuotaReturn {
+  quotas: Quotas | null;
+  isLoading: boolean;
+  error: string | null;
+  consumeQuota: (type: 'scan' | 'chat') => Promise<void>;
+  refreshQuotas: () => Promise<void>;
+  canScan: boolean;
+  canChat: boolean;
+}
+
+export function useQuota(): UseQuotaReturn {
+  const { user, isAuthenticated, isPremium } = useAuthContext();
+  const [quotas, setQuotas] = useState<Quotas | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Quotas par défaut selon le plan
-  const defaultQuotas = {
-    free: {
-      scansRemaining: 30,
-      aiChatsRemaining: 5,
-    },
-    premium: {
-      scansRemaining: 999999, // Illimité
-      aiChatsRemaining: 500,
+  // Load quotas on mount or when user changes
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      loadQuotas();
     }
-  };
+  }, [isAuthenticated, user?.id]);
 
-  // Récupérer les quotas depuis l'utilisateur ou utiliser les valeurs par défaut
-  const quotas: Quota = {
-    scansRemaining: user?.quotas?.scansRemaining ?? (user?.plan === 'premium' ? defaultQuotas.premium.scansRemaining : defaultQuotas.free.scansRemaining),
-    aiChatsRemaining: user?.quotas?.aiChatsRemaining ?? (user?.plan === 'premium' ? defaultQuotas.premium.aiChatsRemaining : defaultQuotas.free.aiChatsRemaining),
-    scansResetDate: user?.quotas?.scansResetDate ? new Date(user.quotas.scansResetDate) : undefined,
-    aiChatsResetDate: user?.quotas?.aiChatsResetDate ? new Date(user.quotas.aiChatsResetDate) : undefined,
-  };
-
-  // Vérifier si un quota est épuisé
-  const canScan = quotas.scansRemaining > 0;
-  const canChat = quotas.aiChatsRemaining > 0;
-
-  // Rafraîchir les quotas depuis le serveur
-  const refreshQuotas = async () => {
+  const loadQuotas = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      await refreshUser();
-    } catch (err: any) {
-      const message = err?.message || 'Erreur lors de la récupération des quotas';
-      setError(message);
-      toast.error(message);
+
+      if (ENV.MOCK_MODE) {
+        // Use mock service
+        const mockQuotas = await mockService.quota.getQuotas();
+        setQuotas(mockQuotas);
+      } else {
+        // Use real API
+        const response = await apiClient.get('/user/quotas');
+        setQuotas(response.data);
+      }
+    } catch (err) {
+      console.error('Error loading quotas:', err);
+      setError('Impossible de charger les quotas');
+      
+      // Fallback to user quotas if available
+      if (user?.quotas) {
+        setQuotas(user.quotas);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Vérifier et consommer un quota de scan
-  const consumeScanQuota = async (): Promise<boolean> => {
-    if (!canScan) {
-      toast.error('Quota de scans épuisé. Passez à Premium pour des scans illimités !');
-      return false;
+  const consumeQuota = useCallback(async (type: 'scan' | 'chat') => {
+    if (isPremium) {
+      console.log('Premium user - no quota consumption');
+      return;
     }
-    
-    // Le backend décrémentera automatiquement lors de l'appel API
-    // On rafraîchit juste les quotas après
+
     try {
-      await refreshQuotas();
-      return true;
-    } catch {
-      return false;
-    }
-  };
+      setError(null);
 
-  // Vérifier et consommer un quota de chat
-  const consumeChatQuota = async (): Promise<boolean> => {
-    if (!canChat) {
-      toast.error('Quota de chats IA épuisé. Passez à Premium pour plus de chats !');
-      return false;
+      if (ENV.MOCK_MODE) {
+        // Use mock service
+        const updatedQuotas = await mockService.quota.updateQuota(type);
+        setQuotas(updatedQuotas);
+      } else {
+        // Use real API
+        const response = await apiClient.post('/user/consume-quota', { type });
+        setQuotas(response.data.quotas);
+      }
+    } catch (err) {
+      console.error('Error consuming quota:', err);
+      setError('Erreur lors de la consommation du quota');
+      throw err;
     }
-    
-    try {
-      await refreshQuotas();
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  }, [isPremium]);
 
-  // Calculer le pourcentage utilisé
-  const getUsagePercentage = (type: 'scans' | 'chats'): number => {
-    const max = user?.plan === 'premium' 
-      ? (type === 'scans' ? defaultQuotas.premium.scansRemaining : defaultQuotas.premium.aiChatsRemaining)
-      : (type === 'scans' ? defaultQuotas.free.scansRemaining : defaultQuotas.free.aiChatsRemaining);
-    
-    const remaining = type === 'scans' ? quotas.scansRemaining : quotas.aiChatsRemaining;
-    const used = max - remaining;
-    
-    return Math.round((used / max) * 100);
-  };
+  const refreshQuotas = useCallback(async () => {
+    await loadQuotas();
+  }, []);
 
-  // Formater la date de reset
-  const formatResetDate = (date?: Date): string => {
-    if (!date) return 'Non définie';
-    
-    const now = new Date();
-    const diff = date.getTime() - now.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
-    if (days > 0) return `dans ${days} jour${days > 1 ? 's' : ''}`;
-    if (hours > 0) return `dans ${hours} heure${hours > 1 ? 's' : ''}`;
-    return 'bientôt';
-  };
+  // Compute if user can perform actions
+  const canScan = isPremium || (quotas?.scansRemaining ?? 0) > 0;
+  const canChat = isPremium || (quotas?.aiChatsRemaining ?? 0) > 0;
+
+  // For non-authenticated users, return default free quotas
+  if (!isAuthenticated) {
+    return {
+      quotas: {
+        scansRemaining: 30,
+        aiChatsRemaining: 5
+      },
+      isLoading: false,
+      error: null,
+      consumeQuota: async () => {
+        console.warn('Cannot consume quota - user not authenticated');
+      },
+      refreshQuotas: async () => {},
+      canScan: true,
+      canChat: true
+    };
+  }
 
   return {
     quotas,
-    canScan,
-    canChat,
     isLoading,
     error,
+    consumeQuota,
     refreshQuotas,
-    consumeScanQuota,
-    consumeChatQuota,
-    getUsagePercentage,
-    formatResetDate,
-    isPremium: user?.plan === 'premium',
+    canScan,
+    canChat
   };
-};
+}

@@ -5,7 +5,7 @@ export const ENV = {
     (import.meta.env.VITE_API_URL as string)?.replace(/\/+$/, "") ||
     "https://ecolojia-backendvf.onrender.com",
   REQUEST_TIMEOUT_MS: Number(import.meta.env.VITE_REQUEST_TIMEOUT_MS ?? 20000),
-  MOCK_MODE: false,
+  MOCK_MODE: true,
   LS: {
     STORE_ID: (import.meta.env.VITE_LS_STORE_ID as string) || "",
     VARIANT_MONTHLY: (import.meta.env.VITE_LS_VARIANT_ID_MONTHLY as string) || "",
@@ -27,3 +27,4 @@ if (ENV.MOCK_MODE) {
   console.log("✅ ECOLOJIA Connected to:", ENV.API_URL);
   console.log("📡 API Base URL:", API_BASE);
 }
+

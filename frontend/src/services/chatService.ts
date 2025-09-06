@@ -291,3 +291,7 @@ Comment puis-je vous aider aujourd'hui ?`;
 
 // Export singleton
 export const chatService = new ChatService();
+
+
+// Export default pour compatibilité avec ResultsPage
+export default chatService;

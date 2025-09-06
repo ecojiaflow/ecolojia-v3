@@ -15,15 +15,26 @@ import {
   ArrowUpRight,
   Clock,
   CheckSquare,
-  X
+  X,
+  FileText
 } from 'lucide-react';
-import historyService from '../services/historyService';
-import dashboardService from '../services/dashboardService';
-import authService from '../services/authService';
-import ConfigService from '../services/configService';
+import { historyService } from '../services/api';
+import { dashboardService } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { toast } from 'react-hot-toast';
+import { useAuthContext } from '../Contexts/AuthContext';
+import { MOCK_MODE } from '../config/mock.config';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+// Ajouter la déclaration pour TypeScript
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 // Types
 interface HistoryItem {
@@ -62,6 +73,7 @@ interface FilterState {
 
 const HistoryPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthContext();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +84,6 @@ const HistoryPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [stats, setStats] = useState<any>(null);
-  const [isDemo, setIsDemo] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   
   const [filters, setFilters] = useState<FilterState>({
@@ -84,99 +95,41 @@ const HistoryPage: React.FC = () => {
   });
 
   const itemsPerPage = 12;
-  const isPremium = authService.isPremium();
+  const isPremium = user?.subscription?.tier === 'premium';
 
   useEffect(() => {
     fetchHistory();
     fetchStats();
   }, [currentPage, filters]);
 
+  useEffect(() => {
+    if (!isAuthenticated && !MOCK_MODE) {
+      setShowLoginPrompt(true);
+    }
+  }, [isAuthenticated]);
+
   const fetchHistory = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Vérifier si l'utilisateur est connecté
-      const token = localStorage.getItem('ecolojia_token');
-      
-      if (!token && !ConfigService.isDemo()) {
-        // Basculer en mode demo
-        ConfigService.setMode('demo');
-        setIsDemo(true);
-        setShowLoginPrompt(true);
-      }
-      
-      // Appeler le service
       const response = await historyService.getHistory({
         page: currentPage,
         limit: itemsPerPage,
         category: filters.category !== 'all' ? filters.category : undefined,
         sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder
+        sortOrder: filters.sortOrder,
+        minScore: filters.minScore,
+        dateRange: filters.dateRange
       });
 
-      // Gérer la réponse selon sa structure
-      let historyData: HistoryItem[] = [];
-      let total = 0;
-      
-      if (Array.isArray(response)) {
-        // Ancien format : tableau direct
-        historyData = response;
-        total = response.length;
-      } else if (response && typeof response === 'object') {
-        // Nouveau format : objet avec items et métadonnées
-        historyData = response.items || response.data || [];
-        total = response.total || response.totalCount || historyData.length;
-        
-        // Mise à jour des pages si disponible
-        if (response.pages) {
-          setTotalPages(response.pages);
-        } else if (response.totalPages) {
-          setTotalPages(response.totalPages);
-        }
-      }
-
-      // Filtrer selon la recherche
-      let filteredHistory = historyData;
-      if (searchQuery) {
-        filteredHistory = historyData.filter(item =>
-          item.productName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.productBrand?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-
-      // Filtrer selon le score minimum
-      if (filters.minScore > 0) {
-        filteredHistory = filteredHistory.filter(item =>
-          (item.scores?.overall || 0) >= filters.minScore
-        );
-      }
-
-      setHistory(filteredHistory);
-      setTotalItems(total);
-      
-      // Calculer les pages si pas déjà fait
-      if (!response.pages && !response.totalPages) {
-        setTotalPages(Math.ceil(total / itemsPerPage));
-      }
-      
-      setIsDemo(ConfigService.isDemo());
+      setHistory(response.items || []);
+      setTotalItems(response.total || 0);
+      setTotalPages(response.pages || 1);
       
     } catch (error: any) {
-      console.error('Error fetching history:', error);
-      
-      // Si on a une erreur isDemoMode, passer en mode demo
-      if (error.isDemoMode || error.statusCode === 401) {
-        ConfigService.setMode('demo');
-        setIsDemo(true);
-        setShowLoginPrompt(true);
-        
-        // Réessayer en mode demo
-        setTimeout(() => fetchHistory(), 100);
-      } else {
-        setError('Impossible de charger votre historique');
-        setHistory([]);
-      }
+      console.error('Erreur lors du chargement de l\'historique:', error);
+      setError('Impossible de charger votre historique');
     } finally {
       setLoading(false);
     }
@@ -187,13 +140,13 @@ const HistoryPage: React.FC = () => {
       const dashboardStats = await dashboardService.getStats();
       setStats(dashboardStats);
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      console.error('Erreur lors du chargement des statistiques:', error);
     }
   };
 
   const handleDelete = async (ids: string[]) => {
-    if (isDemo) {
-      alert('La suppression n\'est pas disponible en mode démonstration');
+    if (MOCK_MODE) {
+      toast.error('La suppression n\'est pas disponible en mode démonstration');
       return;
     }
     
@@ -204,31 +157,110 @@ const HistoryPage: React.FC = () => {
     try {
       await Promise.all(ids.map(id => historyService.deleteHistoryItem(id)));
       setSelectedItems([]);
+      toast.success('Analyses supprimées avec succès');
       fetchHistory();
     } catch (error) {
-      console.error('Error deleting items:', error);
-      alert('Erreur lors de la suppression');
+      console.error('Erreur lors de la suppression:', error);
+      toast.error('Erreur lors de la suppression');
     }
   };
 
-  const handleExport = async () => {
-    if (!isPremium) {
-      navigate('/pricing');
+  const handleExportPDF = async () => {
+    if (!isPremium && !MOCK_MODE) {
+      navigate('/premium');
       return;
     }
 
     try {
-      const data = await historyService.exportHistory('csv');
+      // Créer un nouveau document PDF
+      const doc = new jsPDF();
+      
+      // Ajouter le titre
+      doc.setFontSize(20);
+      doc.text('ECOLOJIA - Historique des Analyses', 20, 20);
+      
+      // Ajouter les informations utilisateur
+      doc.setFontSize(12);
+      doc.text(`Utilisateur: ${user?.firstName || 'Demo'} ${user?.lastName || 'User'}`, 20, 35);
+      doc.text(`Date d'export: ${format(new Date(), 'dd/MM/yyyy', { locale: fr })}`, 20, 42);
+      
+      // Préparer les données pour le tableau
+      const tableData = history.map(item => [
+        format(new Date(item.analysisDate), 'dd/MM/yyyy', { locale: fr }),
+        item.productName,
+        item.productBrand,
+        getCategoryLabel(item.category),
+        `${item.scores.overall}%`,
+        item.nutriScore || '-',
+        item.novaGroup ? `NOVA ${item.novaGroup}` : '-'
+      ]);
+      
+      // Ajouter le tableau
+      doc.autoTable({
+        head: [['Date', 'Produit', 'Marque', 'Catégorie', 'Score', 'Nutri-Score', 'NOVA']],
+        body: tableData,
+        startY: 55,
+        headStyles: { fillColor: [125, 222, 74] }, // Couleur verte ECOLOJIA
+        alternateRowStyles: { fillColor: [240, 240, 240] },
+        margin: { top: 55 }
+      });
+      
+      // Ajouter les statistiques en bas
+      const finalY = (doc as any).lastAutoTable.finalY;
+      doc.text(`Total d'analyses: ${totalItems}`, 20, finalY + 20);
+      if (stats) {
+        doc.text(`Score moyen: ${stats.healthScoreAverage}%`, 20, finalY + 27);
+      }
+      
+      // Sauvegarder le PDF
+      doc.save(`ecolojia-historique-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+      toast.success('Export PDF réussi !');
+      
+    } catch (error) {
+      console.error('Erreur lors de l\'export PDF:', error);
+      toast.error('Erreur lors de l\'export');
+    }
+  };
+
+  const handleExportCSV = async () => {
+    if (!isPremium && !MOCK_MODE) {
+      navigate('/premium');
+      return;
+    }
+
+    try {
+      // Créer le contenu CSV
+      const headers = ['Date', 'Produit', 'Marque', 'Catégorie', 'Score Global', 'Score Santé', 'Score Environnement', 'Nutri-Score', 'NOVA'];
+      const rows = history.map(item => [
+        format(new Date(item.analysisDate), 'dd/MM/yyyy'),
+        item.productName,
+        item.productBrand,
+        getCategoryLabel(item.category),
+        item.scores.overall,
+        item.scores.health,
+        item.scores.environment,
+        item.nutriScore || '',
+        item.novaGroup || ''
+      ]);
+      
+      const csvContent = [
+        headers.join(';'),
+        ...rows.map(row => row.join(';'))
+      ].join('\n');
+      
       // Créer un blob et télécharger
-      const blob = new Blob([data], { type: 'text/csv' });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `ecolojia-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      link.download = `ecolojia-historique-${format(new Date(), 'yyyy-MM-dd')}.csv`;
       link.click();
+      URL.revokeObjectURL(url);
+      
+      toast.success('Export CSV réussi !');
     } catch (error) {
-      console.error('Error exporting history:', error);
-      alert('Erreur lors de l\'export');
+      console.error('Erreur lors de l\'export CSV:', error);
+      toast.error('Erreur lors de l\'export');
     }
   };
 
@@ -241,15 +273,35 @@ const HistoryPage: React.FC = () => {
     }
   };
 
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'food': return 'Alimentation';
+      case 'cosmetic': return 'Cosmétiques';
+      case 'detergent': return 'Détergents';
+      default: return 'Autre';
+    }
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
 
+  const filterHistoryBySearch = () => {
+    if (!searchQuery) return history;
+    
+    return history.filter(item =>
+      item.productName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.productBrand?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const filteredHistory = filterHistoryBySearch();
+
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Bannière mode démo */}
+      {/* Bannière mode démo / non connecté */}
       <AnimatePresence>
         {showLoginPrompt && (
           <motion.div 
@@ -262,16 +314,21 @@ const HistoryPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
-                  Mode démonstration actif - Connectez-vous pour accéder à votre historique personnel
+                  {MOCK_MODE 
+                    ? 'Mode démonstration actif - Données d\'exemple affichées' 
+                    : 'Connectez-vous pour accéder à votre historique personnel'
+                  }
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => navigate('/login')}
-                  className="bg-white text-[#7DDE4A] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-                >
-                  Se connecter
-                </button>
+                {!isAuthenticated && (
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="bg-white text-[#7DDE4A] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                  >
+                    Se connecter
+                  </button>
+                )}
                 <button
                   onClick={() => setShowLoginPrompt(false)}
                   className="text-white hover:text-gray-200"
@@ -293,7 +350,7 @@ const HistoryPage: React.FC = () => {
                 Historique des analyses
               </h1>
               <p className="text-gray-600 mt-2">
-                {isDemo 
+                {MOCK_MODE 
                   ? 'Découvrez des exemples d\'analyses de produits'
                   : 'Retrouvez tous vos produits scannés'
                 }
@@ -310,25 +367,48 @@ const HistoryPage: React.FC = () => {
                 <span>Filtrer</span>
               </button>
               
-              <button
-                onClick={handleExport}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  isPremium 
-                    ? 'bg-[#7DDE4A] text-white hover:bg-[#6BC93B]'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                }`}
-                disabled={!isPremium}
-              >
-                <Download className="w-5 h-5" />
-                <span>Exporter</span>
-                {!isPremium && (
-                  <span className="bg-[#FFD700] text-[#3B3B3B] text-xs px-2 py-0.5 rounded-full">
-                    Premium
-                  </span>
+              {/* Menu Export */}
+              <div className="relative group">
+                <button
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    isPremium || MOCK_MODE
+                      ? 'bg-[#7DDE4A] text-white hover:bg-[#6BC93B]'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                  disabled={!isPremium && !MOCK_MODE}
+                >
+                  <Download className="w-5 h-5" />
+                  <span>Exporter</span>
+                  {!isPremium && !MOCK_MODE && (
+                    <span className="bg-[#FFD700] text-[#3B3B3B] text-xs px-2 py-0.5 rounded-full">
+                      Premium
+                    </span>
+                  )}
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                
+                {/* Dropdown Export */}
+                {(isPremium || MOCK_MODE) && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                    <button
+                      onClick={handleExportPDF}
+                      className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      Export PDF
+                    </button>
+                    <button
+                      onClick={handleExportCSV}
+                      className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
+                    >
+                      <FileText className="w-4 h-4" />
+                      Export CSV
+                    </button>
+                  </div>
                 )}
-              </button>
+              </div>
               
-              {selectedItems.length > 0 && !isDemo && (
+              {selectedItems.length > 0 && !MOCK_MODE && (
                 <button
                   onClick={() => handleDelete(selectedItems)}
                   className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
@@ -406,7 +486,7 @@ const HistoryPage: React.FC = () => {
                 <div>
                   <p className="text-gray-600 text-sm">Catégorie top</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
-                    {stats.topCategory || 'Alimentation'}
+                    {getCategoryLabel(stats.topCategory || 'food')}
                   </p>
                 </div>
                 <Star className="w-10 h-10 text-[#7DDE4A]" />
@@ -542,21 +622,28 @@ const HistoryPage: React.FC = () => {
               Réessayer
             </button>
           </div>
-        ) : history.length === 0 ? (
+        ) : filteredHistory.length === 0 ? (
           <div className="text-center py-12">
             <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600">Aucun produit dans votre historique</p>
-            <button
-              onClick={() => navigate('/scan')}
-              className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
-            >
-              Scanner un produit
-            </button>
+            <p className="text-gray-600">
+              {searchQuery 
+                ? 'Aucun produit ne correspond à votre recherche'
+                : 'Aucun produit dans votre historique'
+              }
+            </p>
+            {!searchQuery && (
+              <button
+                onClick={() => navigate('/search')}
+                className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
+              >
+                Scanner un produit
+              </button>
+            )}
           </div>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(Array.isArray(history) ? history : []).map((item, index) => (
+              {filteredHistory.map((item, index) => (
                 <motion.div
                   key={item._id}
                   initial={{ opacity: 0, y: 20 }}
@@ -566,7 +653,7 @@ const HistoryPage: React.FC = () => {
                   onClick={() => navigate(`/product/${item.productId}`)}
                 >
                   {/* Header avec checkbox */}
-                  {!isDemo && (
+                  {!MOCK_MODE && isAuthenticated && (
                     <div className="px-6 pt-4 pb-2 border-b border-gray-100">
                       <div className="flex items-center justify-between">
                         <input

@@ -1,17 +1,13 @@
-// ========================================
-// 1. DashboardPage.tsx CORRIGÃ‰
-// ========================================
 // PATH: frontend/src/pages/DashboardPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, Package, Star, AlertCircle,
-
   ArrowUpRight, ArrowDownRight, Calendar,
   ChevronRight, Target, Award, ShoppingBag,
-  LogIn, X, Download, Filter, RefreshCw
+  LogIn, X, Download, Filter, RefreshCw,
+  FileText
 } from 'lucide-react';
-import mockService from '../services/mockService';
 import { useNavigate } from 'react-router-dom';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import {
@@ -31,6 +27,10 @@ import { dashboardService } from '../services/api';
 import { useAuthContext } from '../Contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { MOCK_MODE } from '../config/mock.config';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 // Register ChartJS components
 ChartJS.register(
@@ -81,7 +81,7 @@ interface DashboardStats {
   }>;
 }
 
-// DonnÃ©es mockÃ©es pour le mode demo
+// Données mockées pour le mode demo
 const MOCK_STATS: DashboardStats = {
   totalScans: 147,
   healthScoreAverage: 73,
@@ -107,7 +107,7 @@ const MOCK_STATS: DashboardStats = {
     {
       _id: '2',
       productName: 'Shampoing Doux',
-      productBrand: 'L\'OrÃ©al',
+      productBrand: 'L\'Oréal',
       score: 68,
       category: 'cosmetics',
       date: new Date(Date.now() - 86400000).toISOString(),
@@ -116,7 +116,7 @@ const MOCK_STATS: DashboardStats = {
     },
     {
       _id: '3',
-      productName: 'Lessive Ã‰cologique',
+      productName: 'Lessive Écologique',
       productBrand: 'Ecover',
       score: 85,
       category: 'detergents',
@@ -138,22 +138,22 @@ const MOCK_STATS: DashboardStats = {
       id: '1',
       name: 'Premier Scan',
       description: 'Effectuez votre premier scan',
-      icon: 'ðŸŽ¯',
+      icon: '🎯',
       unlockedAt: new Date().toISOString(),
       progress: 100
     },
     {
       id: '2',
-      name: 'Ã‰co-Warrior',
-      description: 'Scannez 50 produits Ã©cologiques',
-      icon: 'ðŸŒ¿',
+      name: 'Éco-Warrior',
+      description: 'Scannez 50 produits écologiques',
+      icon: '🌿',
       progress: 34
     },
     {
       id: '3',
-      name: 'SantÃ© Avant Tout',
-      description: 'Maintenez un score santÃ© moyen > 80',
-      icon: 'â¤ï¸',
+      name: 'Santé Avant Tout',
+      description: 'Maintenez un score santé moyen > 80',
+      icon: '❤️',
       progress: 73
     }
   ]
@@ -172,56 +172,138 @@ const DashboardPage: React.FC = () => {
     fetchDashboardData();
   }, [selectedPeriod]);
 
+  useEffect(() => {
+    if (!isAuthenticated && !MOCK_MODE) {
+      setShowLoginBanner(true);
+    }
+  }, [isAuthenticated]);
+
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // En mode mock ou non connectÃ©, utiliser les donnÃ©es mockÃ©es
+      // En mode mock ou non connecté, utiliser les données mockées
       if (MOCK_MODE || !isAuthenticated) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simuler dÃ©lai
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simuler délai
         setStats(MOCK_STATS);
-        if (!isAuthenticated) {
-          setShowLoginBanner(true);
-        }
         return;
       }
       
-      // Appel API rÃ©el
+      // Appel API réel
       const data = await dashboardService.getStats(selectedPeriod);
       setStats(data);
       
     } catch (error: any) {
       console.error('Erreur dashboard:', error);
-      setError('Impossible de charger les donnÃ©es');
-      // Fallback sur les donnÃ©es mockÃ©es
+      setError('Impossible de charger les données');
+      // Fallback sur les données mockées
       setStats(MOCK_STATS);
-      
-      if (error.response?.status === 401) {
-        setShowLoginBanner(true);
-      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExport = async () => {
+  const handleExportPDF = async () => {
     try {
-      if (MOCK_MODE || !isAuthenticated) {
-        toast.error('Connectez-vous pour exporter vos donnÃ©es');
+      const dashboardElement = document.getElementById('dashboard-content');
+      if (!dashboardElement) {
+        toast.error('Erreur lors de la génération du PDF');
         return;
       }
 
-      const blob = await dashboardService.exportData('pdf');
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ecolojia-dashboard-${new Date().toISOString().split('T')[0]}.pdf`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      toast.success('Export rÃ©ussi !');
+      // Afficher un message de chargement
+      toast.loading('Génération du PDF en cours...', { id: 'pdf-export' });
+
+      // Créer un nouveau document PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      // Ajouter le titre
+      pdf.setFontSize(20);
+      pdf.text('ECOLOJIA - Tableau de bord', pageWidth / 2, 20, { align: 'center' });
+      
+      // Ajouter les informations utilisateur
+      pdf.setFontSize(12);
+      pdf.text(`Utilisateur: ${user?.firstName || 'Demo'} ${user?.lastName || 'User'}`, 20, 35);
+      pdf.text(`Date d'export: ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: fr })}`, 20, 42);
+      pdf.text(`Période: ${selectedPeriod === 'week' ? 'Cette semaine' : selectedPeriod === 'month' ? 'Ce mois' : 'Cette année'}`, 20, 49);
+      
+      // Ajouter une ligne de séparation
+      pdf.line(20, 55, pageWidth - 20, 55);
+      
+      // Statistiques principales
+      let yPosition = 65;
+      pdf.setFontSize(16);
+      pdf.text('Statistiques principales', 20, yPosition);
+      
+      yPosition += 10;
+      pdf.setFontSize(12);
+      const statsData = [
+        ['Total de scans', `${stats.totalScans}`],
+        ['Score santé moyen', `${stats.healthScoreAverage}%`],
+        ['Progression mensuelle', `${stats.monthlyProgress > 0 ? '+' : ''}${stats.monthlyProgress}%`],
+        ['Catégorie favorite', stats.topCategory]
+      ];
+      
+      statsData.forEach(([label, value]) => {
+        pdf.text(`${label}:`, 20, yPosition);
+        pdf.text(value, 100, yPosition);
+        yPosition += 7;
+      });
+      
+      // Répartition par catégorie
+      yPosition += 10;
+      pdf.setFontSize(16);
+      pdf.text('Répartition par catégorie', 20, yPosition);
+      
+      yPosition += 10;
+      pdf.setFontSize(12);
+      const categoryData = [
+        ['Alimentation', `${stats.categoryBreakdown.food} produits`],
+        ['Cosmétiques', `${stats.categoryBreakdown.cosmetics} produits`],
+        ['Détergents', `${stats.categoryBreakdown.detergents} produits`]
+      ];
+      
+      categoryData.forEach(([label, value]) => {
+        pdf.text(`${label}:`, 20, yPosition);
+        pdf.text(value, 100, yPosition);
+        yPosition += 7;
+      });
+      
+      // Analyses récentes
+      if (stats.recentAnalyses.length > 0) {
+        yPosition += 10;
+        pdf.setFontSize(16);
+        pdf.text('Analyses récentes', 20, yPosition);
+        
+        yPosition += 10;
+        pdf.setFontSize(10);
+        stats.recentAnalyses.slice(0, 5).forEach((analysis) => {
+          const date = format(new Date(analysis.date), 'dd/MM/yyyy', { locale: fr });
+          pdf.text(`${date} - ${analysis.productName} (${analysis.score}%)`, 20, yPosition);
+          yPosition += 6;
+          
+          // Vérifier si on doit passer à la page suivante
+          if (yPosition > pageHeight - 20) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+        });
+      }
+      
+      // Ajouter un pied de page
+      pdf.setFontSize(8);
+      pdf.text('Généré par ECOLOJIA - www.ecolojia.app', pageWidth / 2, pageHeight - 10, { align: 'center' });
+      
+      // Sauvegarder le PDF
+      pdf.save(`ecolojia-dashboard-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+      
+      toast.success('Export PDF réussi !', { id: 'pdf-export' });
     } catch (error) {
-      toast.error('Erreur lors de l\'export');
+      console.error('Erreur lors de l\'export PDF:', error);
+      toast.error('Erreur lors de l\'export', { id: 'pdf-export' });
     }
   };
 
@@ -252,7 +334,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const doughnutData = {
-    labels: ['Alimentation', 'CosmÃ©tiques', 'DÃ©tergents'],
+    labels: ['Alimentation', 'Cosmétiques', 'Détergents'],
     datasets: [
       {
         data: [
@@ -291,10 +373,10 @@ const DashboardPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'ðŸŽ';
-      case 'cosmetics': return 'ðŸ’„';
-      case 'detergents': return 'ðŸ§½';
-      default: return 'ðŸ“¦';
+      case 'food': return '🍎';
+      case 'cosmetics': return '💄';
+      case 'detergents': return '🧽';
+      default: return '📦';
     }
   };
 
@@ -311,7 +393,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* BanniÃ¨re mode demo / non connectÃ© */}
+      {/* Bannière mode demo / non connecté */}
       {showLoginBanner && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -322,7 +404,7 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5" />
               <p className="font-medium">
-                {MOCK_MODE ? 'Mode dÃ©monstration actif' : 'Connectez-vous pour voir vos vraies statistiques'}
+                {MOCK_MODE ? 'Mode démonstration actif' : 'Connectez-vous pour voir vos vraies statistiques'}
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -355,12 +437,12 @@ const DashboardPage: React.FC = () => {
                 {isAuthenticated && user ? `Bonjour ${user?.firstName || 'Utilisateur'} !` : 'Tableau de bord'}
               </h1>
               <p className="text-gray-600 mt-1">
-                {MOCK_MODE ? 'DÃ©couvrez ce que ECOLOJIA peut vous offrir' : 'Voici un aperÃ§u de vos analyses de produits'}
+                {MOCK_MODE ? 'Découvrez ce que ECOLOJIA peut vous offrir' : 'Voici un aperçu de vos analyses de produits'}
               </p>
             </div>
             
             <div className="flex gap-3">
-              {/* SÃ©lecteur de pÃ©riode */}
+              {/* Sélecteur de période */}
               <select
                 value={selectedPeriod}
                 onChange={(e) => setSelectedPeriod(e.target.value as any)}
@@ -368,7 +450,7 @@ const DashboardPage: React.FC = () => {
               >
                 <option value="week">Cette semaine</option>
                 <option value="month">Ce mois</option>
-                <option value="year">Cette annÃ©e</option>
+                <option value="year">Cette année</option>
               </select>
 
               {/* Bouton refresh */}
@@ -382,7 +464,7 @@ const DashboardPage: React.FC = () => {
 
               {/* Bouton export */}
               <button
-                onClick={handleExport}
+                onClick={handleExportPDF}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
@@ -394,7 +476,7 @@ const DashboardPage: React.FC = () => {
       </div>
 
       {/* Contenu principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="dashboard-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Statistiques principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total scans */}
@@ -413,7 +495,7 @@ const DashboardPage: React.FC = () => {
               </span>
             </div>
             <h3 className="text-2xl font-bold text-gray-800">{stats.totalScans}</h3>
-            <p className="text-gray-600 text-sm mt-1">Produits scannÃ©s</p>
+            <p className="text-gray-600 text-sm mt-1">Produits scannés</p>
           </motion.div>
 
           {/* Score moyen */}
@@ -433,7 +515,7 @@ const DashboardPage: React.FC = () => {
               </span>
             </div>
             <h3 className="text-2xl font-bold text-gray-800">{stats.healthScoreAverage}%</h3>
-            <p className="text-gray-600 text-sm mt-1">Score santÃ© moyen</p>
+            <p className="text-gray-600 text-sm mt-1">Score santé moyen</p>
           </motion.div>
 
           {/* Progression mensuelle */}
@@ -457,11 +539,11 @@ const DashboardPage: React.FC = () => {
                 }
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-800">En progrÃ¨s</h3>
+            <h3 className="text-2xl font-bold text-gray-800">En progrès</h3>
             <p className="text-gray-600 text-sm mt-1">Ce mois-ci</p>
           </motion.div>
 
-          {/* CatÃ©gorie favorite */}
+          {/* Catégorie favorite */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -475,7 +557,7 @@ const DashboardPage: React.FC = () => {
               <ShoppingBag className="w-5 h-5 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800">{stats.topCategory}</h3>
-            <p className="text-gray-600 text-sm mt-1">CatÃ©gorie prÃ©fÃ©rÃ©e</p>
+            <p className="text-gray-600 text-sm mt-1">Catégorie préférée</p>
           </motion.div>
         </div>
 
@@ -489,14 +571,14 @@ const DashboardPage: React.FC = () => {
             className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm"
           >
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              ActivitÃ© de la semaine
+              Activité de la semaine
             </h3>
             <div className="h-64">
               <Line data={lineChartData} options={chartOptions} />
             </div>
           </motion.div>
 
-          {/* RÃ©partition par catÃ©gorie */}
+          {/* Répartition par catégorie */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -504,7 +586,7 @@ const DashboardPage: React.FC = () => {
             className="bg-white rounded-xl p-6 shadow-sm"
           >
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              RÃ©partition
+              Répartition
             </h3>
             <div className="h-48 flex items-center justify-center mb-4">
               <div className="w-48 h-48">
@@ -522,14 +604,14 @@ const DashboardPage: React.FC = () => {
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                  CosmÃ©tiques
+                  Cosmétiques
                 </span>
                 <span className="font-medium">{stats.categoryBreakdown.cosmetics}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-amber-500 rounded-full"></span>
-                  DÃ©tergents
+                  Détergents
                 </span>
                 <span className="font-medium">{stats.categoryBreakdown.detergents}</span>
               </div>
@@ -583,7 +665,7 @@ const DashboardPage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Analyses rÃ©centes */}
+        {/* Analyses récentes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -593,7 +675,7 @@ const DashboardPage: React.FC = () => {
           <div className="p-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-800">
-                Analyses rÃ©centes
+                Analyses récentes
               </h3>
               <button
                 onClick={() => navigate('/history')}
@@ -645,7 +727,7 @@ const DashboardPage: React.FC = () => {
                         )}
                         {analysis.ecoScore && (
                           <span className={`px-2 py-0.5 rounded text-xs font-medium ${getNutriScoreColor(analysis.ecoScore)}`}>
-                            Ã‰co-Score {analysis.ecoScore}
+                            Éco-Score {analysis.ecoScore}
                           </span>
                         )}
                       </div>
@@ -666,7 +748,7 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="p-12 text-center">
                 <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">Aucune analyse rÃ©cente</p>
+                <p className="text-gray-500">Aucune analyse récente</p>
                 <button
                   onClick={() => navigate('/search')}
                   className="mt-4 text-green-600 hover:text-green-700 font-medium"
@@ -688,23 +770,23 @@ const DashboardPage: React.FC = () => {
           >
             <Award className="w-16 h-16 mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-4">
-              PrÃªt Ã  analyser vos propres produits ?
+              Prêt à analyser vos propres produits ?
             </h3>
             <p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
-              CrÃ©ez votre compte gratuit et commencez Ã  faire des choix Ã©clairÃ©s pour votre santÃ© et l'environnement
+              Créez votre compte gratuit et commencez à faire des choix éclairés pour votre santé et l'environnement
             </p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => navigate('/register')}
                 className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
               >
-                CrÃ©er mon compte
+                Créer mon compte
               </button>
               <button
                 onClick={() => navigate('/premium')}
                 className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all border border-white"
               >
-                DÃ©couvrir Premium
+                Découvrir Premium
               </button>
             </div>
           </motion.div>
@@ -715,4 +797,3 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-
