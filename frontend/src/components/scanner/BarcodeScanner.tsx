@@ -1,4 +1,5 @@
 ﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+// UTF-8
 import React, { useEffect, useRef, useState } from 'react';
 import { Camera, X, Loader } from 'lucide-react';
 import { productService } from '../../services/api';
@@ -10,26 +11,41 @@ interface BarcodeScannerProps {
   isOpen: boolean;
 }
 
-// Déclaration globale pour BarcodeDetector
 declare global {
   interface Window {
     BarcodeDetector: any;
   }
 }
 
-const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScanSuccess, onClose, isOpen }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+export default function BarcodeScanner({ onScanSuccess, onClose, isOpen }: BarcodeScannerProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [scanning, setScanning] = useState(false);
-  const [manualCode, setManualCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSupported, setIsSupported] = useState(false);
   const [lookingUp, setLookingUp] = useState(false);
-  
+  const streamRef = useRef<MediaStream | null>(null);
+  const scanningRef = useRef(false);
+
+  // Vérifier le support du BarcodeDetector
   useEffect(() => {
-    // Vérifier le support de l'API BarcodeDetector
-    setIsSupported('BarcodeDetector' in window);
+    const checkSupport = async () => {
+      if ('BarcodeDetector' in window) {
+        try {
+          // Vérifier les formats supportés
+          const formats = await (window as any).BarcodeDetector.getSupportedFormats();
+          console.log('Formats supportés:', formats);
+          setIsSupported(true);
+        } catch {
+          setIsSupported(false);
+        }
+      } else {
+        setIsSupported(false);
+      }
+    };
+    checkSupport();
   }, []);
 
+  // Démarrer/arrêter le scan selon l'état
   useEffect(() => {
     if (isOpen && isSupported) {
       startScanning();
@@ -43,193 +59,247 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScanSuccess, onClose,
     try {
       setError(null);
       setScanning(true);
+      scanningRef.current = true;
 
+      // Demander l'accès à la caméra
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
       });
+
+      streamRef.current = stream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        
+        // Attendre que la vidéo soit prête
+        await new Promise((resolve) => {
+          if (videoRef.current) {
+            videoRef.current.onloadedmetadata = () => {
+              videoRef.current?.play().then(resolve);
+            };
+          }
+        });
+
+        // Démarrer la détection
         detectBarcode();
       }
     } catch (err) {
-      setError('Impossible d\'accéder à la caméra. Veuillez autoriser l\'accès ou utiliser la saisie manuelle.');
+      console.error('Erreur caméra:', err);
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        setError('Accès à la caméra refusé. Veuillez autoriser l\'accès dans les paramètres.');
+      } else {
+        setError('Impossible d\'activer la caméra. Vérifiez les permissions.');
+      }
       setScanning(false);
+      scanningRef.current = false;
     }
   };
 
   const stopScanning = () => {
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
+    setScanning(false);
+    scanningRef.current = false;
+
+    // Arrêter tous les tracks de la caméra
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+
+    if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-    setScanning(false);
   };
 
   const detectBarcode = async () => {
-    if (!videoRef.current || !scanning) return;
+    if (!videoRef.current || !scanningRef.current) return;
 
     try {
-      const barcodeDetector = new window.BarcodeDetector({
-        formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39']
+      const detector = new (window as any).BarcodeDetector({
+        formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'qr_code']
       });
 
       const detect = async () => {
-        if (!videoRef.current || !scanning) return;
+        if (!scanningRef.current || !videoRef.current) return;
 
         try {
-          const barcodes = await barcodeDetector.detect(videoRef.current);
+          const barcodes = await detector.detect(videoRef.current);
           
-          if (barcodes.length > 0) {
-            const barcode = barcodes[0].rawValue;
-            await handleBarcodeDetected(barcode);
-            return;
+          if (barcodes && barcodes.length > 0) {
+            const barcode = barcodes[0];
+            const value = barcode.rawValue || barcode.value;
+            
+            if (value) {
+              console.log('Code-barres détecté:', value);
+              handleBarcodeDetected(String(value));
+              return; // Arrêter la détection après le premier code
+            }
           }
         } catch (err) {
           console.error('Erreur détection:', err);
         }
 
-        // Continuer la détection
-        if (scanning) {
+        // Continuer la détection si toujours en scan
+        if (scanningRef.current) {
           requestAnimationFrame(detect);
         }
       };
 
+      // Démarrer la boucle de détection
       detect();
     } catch (err) {
-      setError('Erreur lors de la détection du code-barres');
+      console.error('Erreur BarcodeDetector:', err);
+      setError('Le scanner n\'est pas supporté sur ce navigateur.');
     }
   };
 
   const handleBarcodeDetected = async (barcode: string) => {
-    setLookingUp(true);
+    // Arrêter le scan immédiatement
     stopScanning();
+    setLookingUp(true);
 
     try {
-      // Essayer de récupérer le produit pour obtenir sa catégorie
-      const product = await productService.getByBarcode(barcode);
-      onScanSuccess(barcode, product.category);
+      // Rechercher le produit par code-barres
+      const result = await productService.getByBarcode(barcode);
+      
+      if (result) {
+        const category = result.category || 'food';
+        toast.success(`Produit trouvé: ${result.name || 'Sans nom'}`);
+        onScanSuccess(barcode, category);
+      } else {
+        // Produit non trouvé, proposer une analyse
+        toast.info('Produit non trouvé. Redirection vers l\'analyse...');
+        onScanSuccess(barcode);
+      }
     } catch (error) {
-      // Si le produit n'est pas trouvé, on envoie quand même le code-barres
+      console.error('Erreur recherche produit:', error);
+      toast.error('Erreur lors de la recherche du produit');
       onScanSuccess(barcode);
     } finally {
       setLookingUp(false);
     }
   };
 
-  const handleManualSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!manualCode.trim()) {
-      toast.error('Veuillez entrer un code-barres');
-      return;
+  // Fallback pour navigateurs non supportés
+  const handleManualInput = () => {
+    const barcode = prompt('Entrez le code-barres manuellement:');
+    if (barcode && barcode.trim()) {
+      handleBarcodeDetected(barcode.trim());
     }
-
-    if (manualCode.trim().length < 8) {
-      toast.error('Le code-barres semble trop court');
-      return;
-    }
-
-    await handleBarcodeDetected(manualCode.trim());
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl w-full max-w-md relative">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-semibold">Scanner un produit</h2>
+          <h2 className="text-lg font-semibold">Scanner un code-barres</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Fermer"
           >
-            <X className="h-5 w-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-4">
-          {lookingUp ? (
+        <div className="p-4">
+          {!isSupported ? (
             <div className="text-center py-8">
-              <Loader className="h-12 w-12 animate-spin mx-auto text-green-500 mb-4" />
-              <p className="text-gray-600">Recherche du produit...</p>
+              <p className="text-red-600 mb-4">
+                Le scanner n'est pas supporté sur ce navigateur.
+              </p>
+              <button
+                onClick={handleManualInput}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Entrer manuellement
+              </button>
             </div>
           ) : (
             <>
-              {/* Scanner vidéo */}
-              {isSupported ? (
-                <div className="space-y-4">
-                  <div className="relative bg-black rounded-lg overflow-hidden">
-                    <video
-                      ref={videoRef}
-                      className="w-full h-64 object-cover"
-                      playsInline
-                      muted
-                    />
-                    {scanning && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-64 h-32 border-2 border-green-500 rounded-lg">
-                          <div className="w-full h-0.5 bg-green-500 animate-pulse"></div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {error && (
-                    <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-                      {error}
-                    </div>
-                  )}
-
-                  {!scanning && (
-                    <button
-                      onClick={startScanning}
-                      className="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Camera className="h-5 w-5" />
-                      Démarrer le scan
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="p-4 bg-yellow-50 text-yellow-800 rounded-lg">
-                  <p className="font-medium mb-1">Scanner non disponible</p>
-                  <p className="text-sm">
-                    Votre navigateur ne supporte pas le scan de codes-barres. 
-                    Utilisez Chrome ou Edge sur mobile, ou saisissez le code manuellement.
-                  </p>
+              {error && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                  {error}
                 </div>
               )}
 
-              {/* Saisie manuelle */}
-              <div className="pt-4 border-t">
-                <h3 className="font-medium text-gray-700 mb-3">Saisie manuelle</h3>
-                <form onSubmit={handleManualSubmit} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={manualCode}
-                    onChange={(e) => setManualCode(e.target.value)}
-                    placeholder="Ex: 3017620422003"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
+              {/* Zone vidéo */}
+              <div className="relative bg-black rounded-lg overflow-hidden aspect-[4/3]">
+                <video
+                  ref={videoRef}
+                  className="w-full h-full object-cover"
+                  playsInline
+                  muted
+                  autoPlay
+                />
+                
+                {scanning && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {/* Zone de scan */}
+                    <div className="relative">
+                      <div className="w-64 h-32 border-2 border-green-500 rounded-lg">
+                        <div className="absolute inset-0 border-t-2 border-green-500 animate-pulse" />
+                      </div>
+                      <p className="text-white text-center mt-4 text-sm">
+                        Placez le code-barres dans le cadre
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {lookingUp && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <div className="bg-white rounded-lg p-4 flex items-center gap-3">
+                      <Loader className="w-5 h-5 animate-spin text-blue-600" />
+                      <span>Recherche du produit...</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="mt-4 flex gap-3">
+                {!scanning ? (
                   <button
-                    type="submit"
-                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    onClick={startScanning}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    Valider
+                    <Camera className="w-5 h-5" />
+                    Démarrer le scan
                   </button>
-                </form>
+                ) : (
+                  <button
+                    onClick={stopScanning}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Arrêter
+                  </button>
+                )}
+                
+                <button
+                  onClick={handleManualInput}
+                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Saisie manuelle
+                </button>
               </div>
 
               {/* Instructions */}
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>• Placez le code-barres dans le cadre</p>
-                <p>• Assurez-vous d'avoir un bon éclairage</p>
-                <p>• Le code sera détecté automatiquement</p>
+              <div className="mt-4 text-sm text-gray-600">
+                <p className="mb-1">💡 Conseils pour un scan réussi:</p>
+                <ul className="list-disc list-inside space-y-1 text-xs">
+                  <li>Placez le code-barres bien droit dans le cadre</li>
+                  <li>Assurez-vous d'avoir un bon éclairage</li>
+                  <li>Maintenez le téléphone stable</li>
+                  <li>Formats supportés: EAN-13, EAN-8, UPC, Code 128, QR Code</li>
+                </ul>
               </div>
             </>
           )}
@@ -237,5 +307,4 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScanSuccess, onClose,
       </div>
     </div>
   );
-};
-export default BarcodeScanner;
+}

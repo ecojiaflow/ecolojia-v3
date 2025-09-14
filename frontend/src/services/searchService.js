@@ -1,4 +1,4 @@
-// Service de recherche simplifi?
+﻿// Service de recherche simplifi?
 const API_URL = import.meta.env.VITE_API_URL || "https://ecolojia-backendvf.onrender.com/api";
 
 export const searchService = {

@@ -37,7 +37,7 @@ class QuotaService {
    */
   private async loadQuotas() {
     if (false) {
-      // En mode mock, quotas illimitÃ©s
+      // En mode mock, quotas illimités
       this.quotas = {
         scansRemaining: 999999,
         scansLimit: 999999,
@@ -61,7 +61,7 @@ class QuotaService {
       }
     }
 
-    // Synchroniser avec l'API si connectÃ©
+    // Synchroniser avec l'API si connecté
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -88,7 +88,7 @@ class QuotaService {
   }
 
   /**
-   * VÃ©rifier si on doit rÃ©initialiser les quotas mensuellement
+   * Vérifier si on doit réinitialiser les quotas mensuellement
    */
   private checkMonthlyReset() {
     const lastReset = localStorage.getItem(this.lastResetKey);
@@ -102,7 +102,7 @@ class QuotaService {
   }
 
   /**
-   * RÃ©initialiser les quotas
+   * Réinitialiser les quotas
    */
   private resetQuotas() {
     if (false) return;
@@ -131,7 +131,7 @@ class QuotaService {
   }
 
   /**
-   * VÃ©rifier si on peut scanner
+   * Vérifier si on peut scanner
    */
   canScan(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -139,7 +139,7 @@ class QuotaService {
   }
 
   /**
-   * VÃ©rifier si on peut utiliser le chat IA
+   * Vérifier si on peut utiliser le chat IA
    */
   canUseAI(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -147,7 +147,7 @@ class QuotaService {
   }
 
   /**
-   * VÃ©rifier si on peut exporter
+   * Vérifier si on peut exporter
    */
   canExport(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -161,13 +161,13 @@ class QuotaService {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
 
     if (this.quotas.scansRemaining <= 0) {
-      throw new Error('Quota de scans Ã©puisÃ©');
+      throw new Error('Quota de scans épuisé');
     }
 
     this.quotas.scansRemaining--;
     this.saveQuotas();
 
-    // Synchroniser avec l'API si connectÃ©
+    // Synchroniser avec l'API si connecté
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -187,13 +187,13 @@ class QuotaService {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
 
     if (this.quotas.aiChatsRemaining <= 0) {
-      throw new Error('Quota de chats IA Ã©puisÃ©');
+      throw new Error('Quota de chats IA épuisé');
     }
 
     this.quotas.aiChatsRemaining--;
     this.saveQuotas();
 
-    // Synchroniser avec l'API si connectÃ©
+    // Synchroniser avec l'API si connecté
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -213,13 +213,13 @@ class QuotaService {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
 
     if (this.quotas.exportsRemaining <= 0) {
-      throw new Error('Quota d\'exports Ã©puisÃ©');
+      throw new Error('Quota d\'exports épuisé');
     }
 
     this.quotas.exportsRemaining--;
     this.saveQuotas();
 
-    // Synchroniser avec l'API si connectÃ©
+    // Synchroniser avec l'API si connecté
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -280,7 +280,7 @@ class QuotaService {
    */
   getQuotaDisplay(type: 'scans' | 'ai' | 'exports'): string {
     if (MOCK_MODE || this.quotas.tier === 'premium') {
-      return 'IllimitÃ©';
+      return 'Illimité';
     }
 
     switch (type) {

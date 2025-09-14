@@ -70,7 +70,7 @@ const ProfilePage: React.FC = () => {
         email: user.email || ''
       });
       
-      // Charger les prÃ©fÃ©rences de l'utilisateur
+      // Charger les préférences de l'utilisateur
       if (user.preferences) {
         setPreferences(user.preferences);
       }
@@ -79,7 +79,7 @@ const ProfilePage: React.FC = () => {
 
   const handleUpdateProfile = async () => {
     if (false) {
-      toast.success('Profil mis Ã  jour (mode dÃ©mo)');
+      toast.success('Profil mis Ã  jour (mode démo)');
       setIsEditing(false);
       return;
     }
@@ -90,7 +90,7 @@ const ProfilePage: React.FC = () => {
         firstName: formData.firstName,
         lastName: formData.lastName
       });
-      toast.success('Profil mis Ã  jour avec succÃ¨s');
+      toast.success('Profil mis Ã  jour avec succès');
       setIsEditing(false);
     } catch (error) {
       toast.error('Erreur lors de la mise Ã  jour du profil');
@@ -106,7 +106,7 @@ const ProfilePage: React.FC = () => {
     }
 
     if (false) {
-      toast.success('Mot de passe mis Ã  jour (mode dÃ©mo)');
+      toast.success('Mot de passe mis Ã  jour (mode démo)');
       setFormData({ ...formData, currentPassword: '', newPassword: '', confirmPassword: '' });
       return;
     }
@@ -117,7 +117,7 @@ const ProfilePage: React.FC = () => {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword
       });
-      toast.success('Mot de passe mis Ã  jour avec succÃ¨s');
+      toast.success('Mot de passe mis Ã  jour avec succès');
       setFormData({ ...formData, currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
       toast.error('Erreur lors de la mise Ã  jour du mot de passe');
@@ -128,16 +128,16 @@ const ProfilePage: React.FC = () => {
 
   const handleUpdatePreferences = async () => {
     if (false) {
-      toast.success('PrÃ©fÃ©rences mises Ã  jour (mode dÃ©mo)');
+      toast.success('Préférences mises Ã  jour (mode démo)');
       return;
     }
 
     try {
       setLoading(true);
       await userService.updatePreferences(preferences);
-      toast.success('PrÃ©fÃ©rences mises Ã  jour avec succÃ¨s');
+      toast.success('Préférences mises Ã  jour avec succès');
     } catch (error) {
-      toast.error('Erreur lors de la mise Ã  jour des prÃ©fÃ©rences');
+      toast.error('Erreur lors de la mise Ã  jour des préférences');
     } finally {
       setLoading(false);
     }
@@ -150,19 +150,19 @@ const ProfilePage: React.FC = () => {
 
   const allergyOptions = [
     'Gluten', 'Lactose', 'Å’ufs', 'Fruits Ã  coque', 'Arachides', 
-    'Soja', 'Poisson', 'CrustacÃ©s', 'Mollusques', 'CÃ©leri',
-    'Moutarde', 'SÃ©same', 'Sulfites', 'Lupin'
+    'Soja', 'Poisson', 'Crustacés', 'Mollusques', 'Céleri',
+    'Moutarde', 'Sésame', 'Sulfites', 'Lupin'
   ];
 
   const dietOptions = [
-    'VÃ©gÃ©tarien', 'VÃ©gÃ©talien', 'Sans gluten', 'Sans lactose',
-    'Halal', 'Casher', 'PalÃ©o', 'Keto', 'MÃ©diterranÃ©en'
+    'Végétarien', 'Végétalien', 'Sans gluten', 'Sans lactose',
+    'Halal', 'Casher', 'Paléo', 'Keto', 'Méditerranéen'
   ];
 
   const healthGoalOptions = [
     'Perdre du poids', 'Prendre du muscle', 'Manger plus sainement',
-    'RÃ©duire le sucre', 'Augmenter les protÃ©ines', 'Plus de fibres',
-    'RÃ©duire le sel', 'Plus de vitamines'
+    'Réduire le sucre', 'Augmenter les protéines', 'Plus de fibres',
+    'Réduire le sel', 'Plus de vitamines'
   ];
 
   return (
@@ -194,7 +194,7 @@ const ProfilePage: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span className="hidden sm:inline">DÃ©connexion</span>
+              <span className="hidden sm:inline">Déconnexion</span>
             </button>
           </div>
         </div>
@@ -228,7 +228,7 @@ const ProfilePage: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                PrÃ©fÃ©rences
+                Préférences
               </div>
             </button>
             
@@ -242,7 +242,7 @@ const ProfilePage: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5" />
-                SÃ©curitÃ©
+                Sécurité
               </div>
             </button>
           </div>
@@ -272,7 +272,7 @@ const ProfilePage: React.FC = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  PrÃ©nom
+                  Prénom
                 </label>
                 <input
                   type="text"
@@ -404,11 +404,11 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
 
-            {/* RÃ©gimes */}
+            {/* Régimes */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <Heart className="w-5 h-5 text-red-500" />
-                RÃ©gimes alimentaires
+                Régimes alimentaires
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {dietOptions.map((diet) => (
@@ -437,9 +437,9 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Objectifs santÃ© */}
+            {/* Objectifs santé */}
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Objectifs santÃ©</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Objectifs santé</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {healthGoalOptions.map((goal) => (
                   <label key={goal} className="flex items-center gap-2 cursor-pointer">
@@ -526,7 +526,7 @@ const ProfilePage: React.FC = () => {
                 onChange={(e) => setPreferences({ ...preferences, language: e.target.value as 'fr' | 'en' })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option value="fr">FranÃ§ais</option>
+                <option value="fr">Français</option>
                 <option value="en">English</option>
               </select>
             </div>
@@ -536,7 +536,7 @@ const ProfilePage: React.FC = () => {
               disabled={loading}
               className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 font-medium"
             >
-              {loading ? 'Enregistrement...' : 'Enregistrer les prÃ©fÃ©rences'}
+              {loading ? 'Enregistrement...' : 'Enregistrer les préférences'}
             </button>
           </motion.div>
         )}
@@ -547,7 +547,7 @@ const ProfilePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-xl shadow-sm p-6"
           >
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">SÃ©curitÃ©</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Sécurité</h2>
 
             <div className="space-y-6">
               {/* Changement de mot de passe */}
@@ -611,7 +611,7 @@ const ProfilePage: React.FC = () => {
                       </div>
                       <div>
                         <p className="font-medium text-gray-800">Session actuelle</p>
-                        <p className="text-sm text-gray-600">ConnectÃ© maintenant</p>
+                        <p className="text-sm text-gray-600">Connecté maintenant</p>
                       </div>
                     </div>
                     <span className="text-sm text-green-600">Active</span>
@@ -624,13 +624,13 @@ const ProfilePage: React.FC = () => {
                 <h3 className="text-lg font-medium text-gray-800 mb-4">Zone dangereuse</h3>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <p className="text-sm text-gray-700 mb-3">
-                    La suppression de votre compte est irrÃ©versible. Toutes vos donnÃ©es seront dÃ©finitivement supprimÃ©es.
+                    La suppression de votre compte est irréversible. Toutes vos données seront définitivement supprimées.
                   </p>
                   <button
                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                     onClick={() => {
-                      if (confirm('ÃŠtes-vous sÃ»r de vouloir supprimer votre compte ? Cette action est irrÃ©versible.')) {
-                        toast.error('FonctionnalitÃ© en cours de dÃ©veloppement');
+                      if (confirm('ÃŠtes-vous sÃ»r de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                        toast.error('Fonctionnalité en cours de développement');
                       }
                     }}
                   >

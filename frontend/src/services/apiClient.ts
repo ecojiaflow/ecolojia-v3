@@ -1,8 +1,8 @@
-Ôªø// PATH: frontend/src/services/apiClient.ts
+// PATH: frontend/src/services/apiClient.ts
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { API_BASE, ENV } from "../env";
 
-// ---- Cl√©s de stockage
+// ---- ClÈs de stockage
 export const ACCESS_KEY = "ecolojia_token";
 export const REFRESH_KEY = "ecolojia_refresh";
 export const USER_KEY = "ecolojia_user";
@@ -76,7 +76,7 @@ export function getErrorMessage(err: unknown): string {
       axiosError.response?.data?.error ||
       axiosError.response?.data?.detail ||
       axiosError.message;
-    return typeof msg === "string" ? msg : "Une erreur r√©seau est survenue";
+    return typeof msg === "string" ? msg : "Une erreur rÈseau est survenue";
   }
   if (err instanceof Error) return err.message;
   return "Erreur inconnue";
@@ -98,15 +98,15 @@ async function refreshToken(): Promise<string> {
     );
     
     setAccessToken(data.accessToken);
-    console.log("‚úÖ Token refreshed successfully");
+    console.log("? Token refreshed successfully");
     return data.accessToken;
   } catch (error) {
-    console.error("‚ùå Token refresh failed:", error);
+    console.error("? Token refresh failed:", error);
     throw error;
   }
 }
 
-// ---- Queue pour √©viter les refresh multiples
+// ---- Queue pour Èviter les refresh multiples
 let refreshing = false;
 let subscribers: Array<(token: string) => void> = [];
 
@@ -119,10 +119,10 @@ function onRefreshed(newToken: string) {
   subscribers = [];
 }
 
-// ---- Cr√©ation de l'instance axios
+// ---- CrÈation de l'instance axios
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE,
-  timeout: 10000,
+  
   withCredentials: true,
   timeout: ENV.REQUEST_TIMEOUT_MS,
   headers: {
@@ -130,7 +130,7 @@ const apiClient: AxiosInstance = axios.create({
   }
 });
 
-// ---- Intercepteur de requ√™te (ajoute le token)
+// ---- Intercepteur de requÍte (ajoute le token)
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getAccessToken();
   if (token) {
@@ -140,18 +140,18 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// ---- Intercepteur de r√©ponse (g√®re le refresh token)
+// ---- Intercepteur de rÈponse (gËre le refresh token)
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const status = error.response?.status;
 
-    // Si 401 et pas d√©j√† en retry
+    // Si 401 et pas dÈj‡ en retry
     if (status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // Si pas d√©j√† en train de refresh
+      // Si pas dÈj‡ en train de refresh
       if (!refreshing) {
         refreshing = true;
         
@@ -160,7 +160,7 @@ apiClient.interceptors.response.use(
           refreshing = false;
           onRefreshed(newToken);
           
-          // Retry la requ√™te originale avec le nouveau token
+          // Retry la requÍte originale avec le nouveau token
           originalRequest.headers = originalRequest.headers ?? {};
           (originalRequest.headers as any).Authorization = `Bearer ${newToken}`;
           return apiClient(originalRequest);
@@ -176,7 +176,7 @@ apiClient.interceptors.response.use(
         }
       }
 
-      // Si d√©j√† en train de refresh, attendre
+      // Si dÈj‡ en train de refresh, attendre
       return new Promise((resolve) => {
         subscribeTokenRefresh((newToken) => {
           originalRequest.headers = originalRequest.headers ?? {};
@@ -193,6 +193,6 @@ apiClient.interceptors.response.use(
 // ---- Exports
 export default apiClient;
 export { apiClient };
-export const api = apiClient; // Alias pour compatibilit√©
+export const api = apiClient; // Alias pour compatibilitÈ
 export const API_BASE_URL = API_BASE;
 

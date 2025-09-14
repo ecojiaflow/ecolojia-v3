@@ -1,4 +1,4 @@
-// ===== 2. Layout.tsx =====
+﻿// ===== 2. Layout.tsx =====
 // PATH: frontend/src/components/layout/Layout.tsx
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';

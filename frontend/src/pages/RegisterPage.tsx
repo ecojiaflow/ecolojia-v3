@@ -21,7 +21,7 @@ const RegisterPage: React.FC = () => {
   });
 
   const passwordRequirements = [
-    { regex: /.{8,}/, text: 'Au moins 8 caractÃ¨res' },
+    { regex: /.{8,}/, text: 'Au moins 8 caractères' },
     { regex: /[A-Z]/, text: 'Une majuscule' },
     { regex: /[a-z]/, text: 'Une minuscule' },
     { regex: /[0-9]/, text: 'Un chiffre' }
@@ -48,7 +48,7 @@ const RegisterPage: React.FC = () => {
     }
 
     if (!isPasswordValid(formData.password)) {
-      toast.error('Le mot de passe ne respecte pas les critÃ¨res');
+      toast.error('Le mot de passe ne respecte pas les critères');
       return;
     }
 
@@ -71,7 +71,7 @@ const RegisterPage: React.FC = () => {
         password: formData.password
       });
       
-      // Redirection vers l'onboarding aprÃ¨s inscription
+      // Redirection vers l'onboarding après inscription
       navigate('/onboarding');
     } catch (error) {
       // L'erreur est d?jÃ  g?r?e dans le contexte
@@ -108,7 +108,7 @@ const RegisterPage: React.FC = () => {
             </li>
             <li className="flex items-center">
               <Check className="w-4 h-4 mr-2 flex-shrink-0" />
-              AccÃ¨s au chat IA nutritionnel
+              Accès au chat IA nutritionnel
             </li>
             <li className="flex items-center">
               <Check className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -211,7 +211,7 @@ const RegisterPage: React.FC = () => {
                 </button>
               </div>
               
-              {/* CritÃ¨res du mot de passe */}
+              {/* Critères du mot de passe */}
               {formData.password && (
                 <div className="mt-2 space-y-1">
                   {passwordRequirements.map((req, index) => (

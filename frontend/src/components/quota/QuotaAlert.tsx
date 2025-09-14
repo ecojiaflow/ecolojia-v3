@@ -1,4 +1,4 @@
-// frontend/src/components/quotas/QuotaAlert.tsx
+﻿// frontend/src/components/quotas/QuotaAlert.tsx
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, X, Zap, TrendingUp, Calendar } from 'lucide-react';
 import { useAuthContext } from '../../Contexts/AuthContext';
