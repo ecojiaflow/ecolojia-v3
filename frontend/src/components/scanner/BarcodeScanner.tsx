@@ -1,310 +1,396 @@
 ﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
-// UTF-8
-import React, { useEffect, useRef, useState } from 'react';
-import { Camera, X, Loader } from 'lucide-react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Camera, X, Loader, Upload, AlertCircle } from 'lucide-react';
 import { productService } from '../../services/api';
+import { analyzeImage, barcodeLiveSupported, cameraSupported } from '../../services/visionService';
 import { toast } from 'react-hot-toast';
+import './BarcodeScanner.css';
 
 interface BarcodeScannerProps {
-  onScanSuccess: (barcode: string, category?: string) => void;
-  onClose: () => void;
   isOpen: boolean;
+  onClose: () => void;
+  onScanSuccess: (result: { barcode?: string; name?: string; brand?: string; category?: string; data?: any }) => void;
 }
 
-declare global {
-  interface Window {
-    BarcodeDetector: any;
-  }
-}
+type ScanMode = 'camera' | 'manual' | 'photo';
 
-export default function BarcodeScanner({ onScanSuccess, onClose, isOpen }: BarcodeScannerProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [scanning, setScanning] = useState(false);
+const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScanSuccess }) => {
+  const [mode, setMode] = useState<ScanMode>('camera');
+  const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSupported, setIsSupported] = useState(false);
-  const [lookingUp, setLookingUp] = useState(false);
+  const [manualCode, setManualCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [permissionDenied, setPermissionDenied] = useState(false);
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const scanningRef = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const scanIntervalRef = useRef<number | null>(null);
+  const quaggaInitialized = useRef(false);
 
-  // Vérifier le support du BarcodeDetector
-  useEffect(() => {
-    const checkSupport = async () => {
-      if ('BarcodeDetector' in window) {
-        try {
-          // Vérifier les formats supportés
-          const formats = await (window as any).BarcodeDetector.getSupportedFormats();
-          console.log('Formats supportés:', formats);
-          setIsSupported(true);
-        } catch {
-          setIsSupported(false);
-        }
-      } else {
-        setIsSupported(false);
-      }
-    };
-    checkSupport();
-  }, []);
-
-  // Démarrer/arrêter le scan selon l'état
-  useEffect(() => {
-    if (isOpen && isSupported) {
-      startScanning();
-    }
-    return () => {
-      stopScanning();
-    };
-  }, [isOpen, isSupported]);
-
-  const startScanning = async () => {
-    try {
-      setError(null);
-      setScanning(true);
-      scanningRef.current = true;
-
-      // Demander l'accès à la caméra
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: 'environment',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
-      });
-
-      streamRef.current = stream;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        
-        // Attendre que la vidéo soit prête
-        await new Promise((resolve) => {
-          if (videoRef.current) {
-            videoRef.current.onloadedmetadata = () => {
-              videoRef.current?.play().then(resolve);
-            };
-          }
-        });
-
-        // Démarrer la détection
-        detectBarcode();
-      }
-    } catch (err) {
-      console.error('Erreur caméra:', err);
-      if (err instanceof DOMException && err.name === 'NotAllowedError') {
-        setError('Accès à la caméra refusé. Veuillez autoriser l\'accès dans les paramètres.');
-      } else {
-        setError('Impossible d\'activer la caméra. Vérifiez les permissions.');
-      }
-      setScanning(false);
-      scanningRef.current = false;
-    }
-  };
-
-  const stopScanning = () => {
-    setScanning(false);
-    scanningRef.current = false;
-
-    // Arrêter tous les tracks de la caméra
+  // Nettoyage du stream vidéo
+  const stopStream = useCallback(() => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
-
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
+    if (scanIntervalRef.current) {
+      clearInterval(scanIntervalRef.current);
+      scanIntervalRef.current = null;
     }
-  };
+    setIsScanning(false);
+  }, []);
 
-  const detectBarcode = async () => {
-    if (!videoRef.current || !scanningRef.current) return;
-
-    try {
-      const detector = new (window as any).BarcodeDetector({
-        formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'qr_code']
-      });
-
-      const detect = async () => {
-        if (!scanningRef.current || !videoRef.current) return;
-
-        try {
-          const barcodes = await detector.detect(videoRef.current);
-          
-          if (barcodes && barcodes.length > 0) {
-            const barcode = barcodes[0];
-            const value = barcode.rawValue || barcode.value;
-            
-            if (value) {
-              console.log('Code-barres détecté:', value);
-              handleBarcodeDetected(String(value));
-              return; // Arrêter la détection après le premier code
-            }
-          }
-        } catch (err) {
-          console.error('Erreur détection:', err);
-        }
-
-        // Continuer la détection si toujours en scan
-        if (scanningRef.current) {
-          requestAnimationFrame(detect);
-        }
-      };
-
-      // Démarrer la boucle de détection
-      detect();
-    } catch (err) {
-      console.error('Erreur BarcodeDetector:', err);
-      setError('Le scanner n\'est pas supporté sur ce navigateur.');
-    }
-  };
-
+  // Analyse du code-barres trouvé
   const handleBarcodeDetected = async (barcode: string) => {
-    // Arrêter le scan immédiatement
-    stopScanning();
-    setLookingUp(true);
+    if (!barcode || isLoading) return;
+    
+    setIsLoading(true);
+    stopStream();
+    
+    try {
+      // Recherche du produit par code-barres
+      const product = await productService.getByBarcode(barcode);
+      
+      if (product) {
+        onScanSuccess({
+          barcode,
+          name: product.name,
+          brand: product.brand,
+          category: product.category,
+          data: product
+        });
+        toast.success('Produit trouvé !');
+      } else {
+        // Si produit non trouvé, on peut quand même analyser
+        const analysisResult = await productService.analyze({ barcode });
+        onScanSuccess({
+          barcode,
+          data: analysisResult
+        });
+        toast.info('Nouveau produit - Analyse en cours');
+      }
+      
+      onClose();
+    } catch (error) {
+      console.error('Erreur analyse:', error);
+      toast.error('Erreur lors de l\'analyse du produit');
+      setError('Erreur lors de l\'analyse. Réessayez.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Scanner natif avec BarcodeDetector API
+  const startNativeScanner = useCallback(async () => {
+    if (!barcodeLiveSupported()) {
+      // Fallback vers Quagga
+      startQuaggaScanner();
+      return;
+    }
 
     try {
-      // Rechercher le produit par code-barres
-      const result = await productService.getByBarcode(barcode);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
+      });
       
-      if (result) {
-        const category = result.category || 'food';
-        toast.success(`Produit trouvé: ${result.name || 'Sans nom'}`);
-        onScanSuccess(barcode, category);
-      } else {
-        // Produit non trouvé, proposer une analyse
-        toast.info('Produit non trouvé. Redirection vers l\'analyse...');
-        onScanSuccess(barcode);
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
       }
-    } catch (error) {
-      console.error('Erreur recherche produit:', error);
-      toast.error('Erreur lors de la recherche du produit');
-      onScanSuccess(barcode);
+      
+      setIsScanning(true);
+      setError(null);
+      
+      // @ts-ignore
+      const detector = new BarcodeDetector({
+        formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39']
+      });
+      
+      scanIntervalRef.current = window.setInterval(async () => {
+        if (videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
+          try {
+            const barcodes = await detector.detect(videoRef.current);
+            if (barcodes.length > 0) {
+              const code = barcodes[0].rawValue;
+              if (code) {
+                handleBarcodeDetected(code);
+              }
+            }
+          } catch (err) {
+            console.error('Erreur détection:', err);
+          }
+        }
+      }, 100);
+      
+    } catch (err: any) {
+      console.error('Erreur caméra:', err);
+      if (err.name === 'NotAllowedError') {
+        setPermissionDenied(true);
+        setError('Accès à la caméra refusé');
+      } else {
+        setError('Impossible d\'accéder à la caméra');
+        // Essayer Quagga en fallback
+        startQuaggaScanner();
+      }
+    }
+  }, []);
+
+  // Scanner avec Quagga (fallback)
+  const startQuaggaScanner = useCallback(async () => {
+    try {
+      // Vérifier si Quagga est disponible
+      const Quagga = (window as any).Quagga;
+      if (!Quagga) {
+        // Charger Quagga dynamiquement
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@ericblade/quagga2@1.8.2/dist/quagga.min.js';
+        script.onload = () => initQuagga();
+        document.head.appendChild(script);
+        return;
+      }
+      
+      initQuagga();
+    } catch (err) {
+      console.error('Erreur Quagga:', err);
+      setError('Scanner non disponible sur ce navigateur');
+    }
+  }, []);
+
+  const initQuagga = useCallback(() => {
+    const Quagga = (window as any).Quagga;
+    if (!Quagga || quaggaInitialized.current) return;
+    
+    quaggaInitialized.current = true;
+    
+    Quagga.init({
+      inputStream: {
+        name: 'Live',
+        type: 'LiveStream',
+        target: videoRef.current,
+        constraints: {
+          facingMode: 'environment'
+        }
+      },
+      decoder: {
+        readers: ['ean_reader', 'ean_8_reader', 'upc_reader', 'upc_e_reader', 'code_128_reader']
+      },
+      locate: true
+    }, (err: any) => {
+      if (err) {
+        console.error('Erreur init Quagga:', err);
+        setError('Impossible d\'initialiser le scanner');
+        return;
+      }
+      
+      Quagga.start();
+      setIsScanning(true);
+      
+      Quagga.onDetected((result: any) => {
+        const code = result.codeResult.code;
+        if (code) {
+          Quagga.stop();
+          handleBarcodeDetected(code);
+        }
+      });
+    });
+  }, []);
+
+  // Gestion de l'upload de photo
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Analyse de l'image avec Vision API
+      const result = await analyzeImage(file);
+      
+      if (result.barcode) {
+        // Code-barres détecté dans l'image
+        handleBarcodeDetected(result.barcode);
+      } else if (result.text) {
+        // Texte extrait, on peut essayer d'analyser
+        const analysisResult = await productService.analyze({
+          name: result.text.substring(0, 100), // Prendre les 100 premiers caractères
+          ingredients: result.text
+        });
+        
+        onScanSuccess({
+          data: analysisResult
+        });
+        
+        toast.info('Produit analysé à partir du texte');
+        onClose();
+      } else {
+        setError('Aucun code-barres ou texte détecté dans l\'image');
+      }
+    } catch (err) {
+      console.error('Erreur analyse image:', err);
+      setError('Erreur lors de l\'analyse de l\'image');
     } finally {
-      setLookingUp(false);
+      setIsLoading(false);
     }
   };
 
-  // Fallback pour navigateurs non supportés
-  const handleManualInput = () => {
-    const barcode = prompt('Entrez le code-barres manuellement:');
-    if (barcode && barcode.trim()) {
-      handleBarcodeDetected(barcode.trim());
+  // Soumission manuelle
+  const handleManualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (manualCode.trim()) {
+      handleBarcodeDetected(manualCode.trim());
     }
   };
+
+  // Démarrage du scanner selon le mode
+  useEffect(() => {
+    if (isOpen && mode === 'camera' && !permissionDenied) {
+      startNativeScanner();
+    }
+    
+    return () => {
+      stopStream();
+      if ((window as any).Quagga) {
+        (window as any).Quagga.stop();
+      }
+    };
+  }, [isOpen, mode, startNativeScanner, stopStream]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl w-full max-w-md relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="barcode-scanner-container w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Scanner un code-barres</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="Fermer"
-          >
-            <X className="w-5 h-5" />
+        <div className="scanner-header">
+          <h3>Scanner un produit</h3>
+          <div className="mode-switcher">
+            <button
+              onClick={() => setMode('camera')}
+              className={`mode-btn ${mode === 'camera' ? 'active' : ''}`}
+              disabled={!cameraSupported() || permissionDenied}
+            >
+              <Camera className="w-4 h-4 mr-2" />
+              Caméra
+            </button>
+            <button
+              onClick={() => setMode('photo')}
+              className={`mode-btn ${mode === 'photo' ? 'active' : ''}`}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Photo
+            </button>
+            <button
+              onClick={() => setMode('manual')}
+              className={`mode-btn ${mode === 'manual' ? 'active' : ''}`}
+            >
+              Code manuel
+            </button>
+          </div>
+          <button onClick={onClose} className="close-btn">
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          {!isSupported ? (
-            <div className="text-center py-8">
-              <p className="text-red-600 mb-4">
-                Le scanner n'est pas supporté sur ce navigateur.
-              </p>
-              <button
-                onClick={handleManualInput}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Entrer manuellement
-              </button>
+        <div className="scanner-content">
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader className="w-12 h-12 text-green-600 animate-spin mb-4" />
+              <p className="text-gray-600">Analyse en cours...</p>
             </div>
-          ) : (
-            <>
-              {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                  {error}
-                </div>
-              )}
+          )}
 
-              {/* Zone vidéo */}
-              <div className="relative bg-black rounded-lg overflow-hidden aspect-[4/3]">
-                <video
-                  ref={videoRef}
-                  className="w-full h-full object-cover"
-                  playsInline
-                  muted
-                  autoPlay
-                />
-                
-                {scanning && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {/* Zone de scan */}
-                    <div className="relative">
-                      <div className="w-64 h-32 border-2 border-green-500 rounded-lg">
-                        <div className="absolute inset-0 border-t-2 border-green-500 animate-pulse" />
+          {!isLoading && mode === 'camera' && (
+            <>
+              {permissionDenied ? (
+                <div className="permission-denied">
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                  <h4 className="text-lg font-semibold mb-2">Accès à la caméra refusé</h4>
+                  <p className="text-gray-600 mb-4">
+                    Veuillez autoriser l'accès à la caméra dans les paramètres de votre navigateur
+                    ou utilisez l'upload de photo.
+                  </p>
+                </div>
+              ) : (
+                <div className="video-container">
+                  <video ref={videoRef} className="scanner-video" playsInline muted />
+                  {isScanning && (
+                    <div className="scanner-overlay">
+                      <div className="scanner-guide">
+                        <div className="scanner-corner top-left"></div>
+                        <div className="scanner-corner top-right"></div>
+                        <div className="scanner-corner bottom-left"></div>
+                        <div className="scanner-corner bottom-right"></div>
+                        <div className="scanner-line"></div>
                       </div>
-                      <p className="text-white text-center mt-4 text-sm">
+                      <p className="scanner-instructions">
                         Placez le code-barres dans le cadre
                       </p>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              )}
+            </>
+          )}
 
-                {lookingUp && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <div className="bg-white rounded-lg p-4 flex items-center gap-3">
-                      <Loader className="w-5 h-5 animate-spin text-blue-600" />
-                      <span>Recherche du produit...</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="mt-4 flex gap-3">
-                {!scanning ? (
-                  <button
-                    onClick={startScanning}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                  >
-                    <Camera className="w-5 h-5" />
-                    Démarrer le scan
-                  </button>
-                ) : (
-                  <button
-                    onClick={stopScanning}
-                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                  >
-                    Arrêter
-                  </button>
-                )}
-                
-                <button
-                  onClick={handleManualInput}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Saisie manuelle
+          {!isLoading && mode === 'manual' && (
+            <form onSubmit={handleManualSubmit} className="manual-form">
+              <p className="text-gray-600 mb-4 text-center">
+                Entrez le code-barres manuellement
+              </p>
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={manualCode}
+                  onChange={(e) => setManualCode(e.target.value)}
+                  placeholder="Ex: 3017620422003"
+                  className="barcode-input"
+                  pattern="[0-9]*"
+                  autoFocus
+                />
+                <button type="submit" className="submit-btn" disabled={!manualCode.trim()}>
+                  Valider
                 </button>
               </div>
+            </form>
+          )}
 
-              {/* Instructions */}
-              <div className="mt-4 text-sm text-gray-600">
-                <p className="mb-1">💡 Conseils pour un scan réussi:</p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>Placez le code-barres bien droit dans le cadre</li>
-                  <li>Assurez-vous d'avoir un bon éclairage</li>
-                  <li>Maintenez le téléphone stable</li>
-                  <li>Formats supportés: EAN-13, EAN-8, UPC, Code 128, QR Code</li>
-                </ul>
-              </div>
-            </>
+          {!isLoading && mode === 'photo' && (
+            <div className="photo-section">
+              <p className="text-gray-600 mb-4 text-center">
+                Prenez une photo du produit ou du code-barres
+              </p>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handlePhotoUpload}
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <Camera className="w-5 h-5" />
+                Prendre une photo
+              </button>
+            </div>
+          )}
+
+          {error && (
+            <div className="error-message">
+              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+              {error}
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default BarcodeScanner;
