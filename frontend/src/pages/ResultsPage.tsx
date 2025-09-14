@@ -7,6 +7,8 @@ import {
   Leaf, Heart, Globe, ChevronRight, Camera,
   Package, FileText, Sparkles
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { productSaveService } from '../services/productSaveService';
 
 interface AnalysisResult {
   product?: {
@@ -38,6 +40,10 @@ interface AnalysisResult {
     nova?: number;
     nutriscore?: string;
   };
+  // Ajout des champs qui peuvent venir de l'analyse
+  healthScore?: number;
+  environmentScore?: number;
+  productName?: string;
 }
 
 const ResultsPage: React.FC = () => {
@@ -46,6 +52,7 @@ const ResultsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
   const [capturedImages, setCapturedImages] = useState<any>({});
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     // Récupérer les données depuis la navigation
@@ -58,6 +65,37 @@ const ResultsPage: React.FC = () => {
       navigate('/scan');
     }
   }, [location, navigate]);
+
+  // Sauvegarder le produit après analyse
+  useEffect(() => {
+    const saveProduct = async () => {
+      if (location.state?.analysisData && location.state?.shouldSave && !isSaved) {
+        try {
+          console.log('Sauvegarde du produit...', location.state);
+          
+          await productSaveService.saveAnalyzedProduct(
+            location.state.analysisData,
+            {
+              barcode: location.state.barcode || location.state.analysisData.product?.barcode,
+              name: location.state.productName || location.state.analysisData.product?.name || location.state.analysisData.productName,
+              brand: location.state.analysisData.product?.brand,
+              category: location.state.analysisData.product?.category || 'food',
+              images: location.state.capturedImages,
+              ingredients: location.state.analysisData.insights?.ingredients?.join(', ') || ''
+            }
+          );
+          
+          setIsSaved(true);
+          toast.success('✅ Produit ajouté à la base de données !');
+        } catch (error) {
+          console.error('Erreur sauvegarde:', error);
+          toast.error('Impossible de sauvegarder le produit');
+        }
+      }
+    };
+    
+    saveProduct();
+  }, [location.state, isSaved]);
 
   if (loading) {
     return (
@@ -74,8 +112,9 @@ const ResultsPage: React.FC = () => {
     return null;
   }
 
-  const healthScore = analysisData.scores?.health || 0;
-  const envScore = analysisData.scores?.environment || 0;
+  // Gestion des scores avec fallback sur les champs directs
+  const healthScore = analysisData.scores?.health || analysisData.healthScore || 50;
+  const envScore = analysisData.scores?.environment || analysisData.environmentScore || 50;
   const overallScore = Math.round((healthScore + envScore) / 2);
 
   const getScoreColor = (score: number) => {
@@ -90,6 +129,9 @@ const ResultsPage: React.FC = () => {
     return 'bg-red-100';
   };
 
+  // Nom du produit avec fallback
+  const productName = analysisData.product?.name || analysisData.productName || location.state?.productName || 'Produit analysé';
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header avec score global */}
@@ -102,10 +144,15 @@ const ResultsPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">
-                {analysisData.product?.name || 'Produit analysé'}
+                {productName}
               </h1>
               {analysisData.product?.brand && (
                 <p className="text-gray-600">{analysisData.product.brand}</p>
+              )}
+              {isSaved && (
+                <p className="text-sm text-green-600 mt-1">
+                  ✓ Enregistré dans votre historique
+                </p>
               )}
             </div>
             <div className={`text-center ${getScoreBg(overallScore)} px-6 py-3 rounded-lg`}>
