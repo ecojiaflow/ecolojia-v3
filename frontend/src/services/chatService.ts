@@ -342,6 +342,22 @@ Que souhaitez-vous savoir sur ce produit ?`;
 
     } catch (error: any) {
       console.error('Erreur chat API:', error);
+
+      // Si timeout, utiliser directement la rÃ©ponse locale
+      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        console.log('Timeout API, utilisation immÃ©diate du fallback');
+        const localResponse = this.findBestResponse(content);
+        
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: localResponse,
+          timestamp: new Date()
+        };
+
+        this.messages.push(assistantMessage);
+        return assistantMessage;
+      }
       
       // Si erreur 500 spÃ©cifique au quota
       if (error.response?.status === 500 && 

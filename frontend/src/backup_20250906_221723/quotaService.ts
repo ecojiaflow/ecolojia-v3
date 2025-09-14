@@ -1,8 +1,5 @@
 ﻿// PATH: frontend/src/services/quotaService.ts
-import apiClient from './apiClient';
-
-// Ajouter la définition de MOCK_MODE
-const MOCK_MODE = false;
+import api from './api';
 
 export interface Quota {
   scansRemaining: number;
@@ -13,15 +10,6 @@ export interface Quota {
   exportsLimit: number;
   resetDate: string;
   tier: 'free' | 'premium';
-  
-  // Format alternatif pour compatibilité
-  aiQuestions?: {
-    dailyRemaining: number;
-    monthlyRemaining: number;
-    dailyLimit: number;
-    monthlyLimit: number;
-    nextReset: string;
-  };
 }
 
 class QuotaService {
@@ -48,8 +36,8 @@ class QuotaService {
    * Charger les quotas depuis le localStorage ou l'API
    */
   private async loadQuotas() {
-    if (MOCK_MODE) {
-      // En mode mock, quotas illimités
+    if (false) {
+      // En mode mock, quotas illimitÃ©s
       this.quotas = {
         scansRemaining: 999999,
         scansLimit: 999999,
@@ -73,16 +61,16 @@ class QuotaService {
       }
     }
 
-    // Synchroniser avec l'API si connecté
-    const token = localStorage.getItem('ecolojia_token');
+    // Synchroniser avec l'API si connectÃ©
+    const token = localStorage.getItem('token');
     if (token) {
       try {
-        const response = await apiClient.get('/auth/profile');
+        const response = await api.get('/auth/me');
         if (response.data) {
           // Extraire les quotas depuis la réponse user
-          const user = response.data.user || response.data;
-          if (user?.quotas) {
-            this.quotas = { ...this.quotas, ...user.quotas };
+          const quotas = response.data.user?.quotas || response.data.quotas;
+          if (quotas) {
+            this.quotas = { ...this.quotas, ...quotas };
           }
           this.saveQuotas();
         }
@@ -100,7 +88,7 @@ class QuotaService {
   }
 
   /**
-   * Vérifier si on doit réinitialiser les quotas mensuellement
+   * VÃ©rifier si on doit rÃ©initialiser les quotas mensuellement
    */
   private checkMonthlyReset() {
     const lastReset = localStorage.getItem(this.lastResetKey);
@@ -114,10 +102,10 @@ class QuotaService {
   }
 
   /**
-   * Réinitialiser les quotas
+   * RÃ©initialiser les quotas
    */
   private resetQuotas() {
-    if (MOCK_MODE) return;
+    if (false) return;
 
     const tier = this.quotas.tier;
     
@@ -136,26 +124,14 @@ class QuotaService {
   }
 
   /**
-   * Obtenir les quotas actuels - MÉTHODE ATTENDUE PAR useQuota
+   * Obtenir les quotas actuels
    */
-  async getQuotas(): Promise<Quota> {
-    await this.loadQuotas();
-    
-    // Ajouter le format alternatif pour compatibilité
-    return {
-      ...this.quotas,
-      aiQuestions: {
-        dailyRemaining: this.quotas.aiChatsRemaining,
-        monthlyRemaining: this.quotas.aiChatsRemaining,
-        dailyLimit: this.quotas.aiChatsLimit,
-        monthlyLimit: this.quotas.aiChatsLimit,
-        nextReset: this.quotas.resetDate
-      }
-    };
+  getQuotas(): Quota {
+    return { ...this.quotas };
   }
 
   /**
-   * Vérifier si on peut scanner
+   * VÃ©rifier si on peut scanner
    */
   canScan(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -163,7 +139,7 @@ class QuotaService {
   }
 
   /**
-   * Vérifier si on peut utiliser le chat IA
+   * VÃ©rifier si on peut utiliser le chat IA
    */
   canUseAI(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -171,7 +147,7 @@ class QuotaService {
   }
 
   /**
-   * Vérifier si on peut exporter
+   * VÃ©rifier si on peut exporter
    */
   canExport(): boolean {
     if (MOCK_MODE || this.quotas.tier === 'premium') return true;
@@ -179,103 +155,23 @@ class QuotaService {
   }
 
   /**
-   * MÉTHODE ATTENDUE PAR useQuota - consume générique
-   */
-  async consume(type: 'scan' | 'chat'): Promise<any> {
-    if (type === 'scan') {
-      return this.consumeScan();
-    } else if (type === 'chat') {
-      return this.consumeAIChat();
-    }
-    throw new Error(`Type de quota inconnu: ${type}`);
-  }
-
-  /**
    * Consommer un scan
    */
   async consumeScan() {
-    if (MOCK_MODE || this.quotas.tier === 'premium') {
-      return { success: true, quotas: this.quotas };
-    }
+    if (MOCK_MODE || this.quotas.tier === 'premium') return true;
 
     if (this.quotas.scansRemaining <= 0) {
-      throw new Error('Quota de scans épuisé');
+      throw new Error('Quota de scans Ã©puisÃ©');
     }
 
     this.quotas.scansRemaining--;
     this.saveQuotas();
 
-    // Synchroniser avec l'API si connecté
-    const token = localStorage.getItem('ecolojia_token');
+    // Synchroniser avec l'API si connectÃ©
+    const token = localStorage.getItem('token');
     if (token) {
       try {
-        const response = await apiClient.post('/quotas/consume', { type: 'scan' });
-        return response.data;
-      } catch (error: any) {
-        // Si l'endpoint n'existe pas, continuer quand même
-        if (error.response?.status === 404) {
-          console.log('Endpoint quota/consume not found, continuing anyway');
-          return { success: true, quotas: this.quotas };
-        }
-        console.warn('Quota endpoint not available'); return { success: true };
-      }
-    }
-
-    return { success: true, quotas: this.quotas };
-  }
-
-  /**
-   * Consommer un chat IA
-   */
-  async consumeAIChat() {
-    if (MOCK_MODE || this.quotas.tier === 'premium') {
-      return { success: true, quotas: this.quotas };
-    }
-
-    if (this.quotas.aiChatsRemaining <= 0) {
-      throw new Error('Quota de chats IA épuisé');
-    }
-
-    this.quotas.aiChatsRemaining--;
-    this.saveQuotas();
-
-    // Synchroniser avec l'API si connecté
-    const token = localStorage.getItem('ecolojia_token');
-    if (token) {
-      try {
-        const response = await apiClient.post('/quotas/consume', { type: 'ai_chat' });
-        return response.data;
-      } catch (error: any) {
-        // Si l'endpoint n'existe pas, continuer quand même
-        if (error.response?.status === 404) {
-          console.log('Endpoint quota/consume not found, continuing anyway');
-          return { success: true, quotas: this.quotas };
-        }
-        console.warn('Quota endpoint not available'); return { success: true };
-      }
-    }
-
-    return { success: true, quotas: this.quotas };
-  }
-
-  /**
-   * Consommer un export
-   */
-  async consumeExport() {
-    if (MOCK_MODE || this.quotas.tier === 'premium') return true;
-
-    if (this.quotas.exportsRemaining <= 0) {
-      throw new Error('Quota d\'exports épuisé');
-    }
-
-    this.quotas.exportsRemaining--;
-    this.saveQuotas();
-
-    // Synchroniser avec l'API si connecté
-    const token = localStorage.getItem('ecolojia_token');
-    if (token) {
-      try {
-        await apiClient.post('/quotas/consume', { type: 'export' });
+        await api.post('/quota/consume', { type: 'scan' });
       } catch (error) {
         console.error('Erreur lors de la consommation du quota:', error);
       }
@@ -285,7 +181,59 @@ class QuotaService {
   }
 
   /**
-   * Mettre à jour le tier de l'utilisateur
+   * Consommer un chat IA
+   */
+  async consumeAIChat() {
+    if (MOCK_MODE || this.quotas.tier === 'premium') return true;
+
+    if (this.quotas.aiChatsRemaining <= 0) {
+      throw new Error('Quota de chats IA Ã©puisÃ©');
+    }
+
+    this.quotas.aiChatsRemaining--;
+    this.saveQuotas();
+
+    // Synchroniser avec l'API si connectÃ©
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        await api.post('/quota/consume', { type: 'ai_chat' });
+      } catch (error) {
+        console.error('Erreur lors de la consommation du quota:', error);
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Consommer un export
+   */
+  async consumeExport() {
+    if (MOCK_MODE || this.quotas.tier === 'premium') return true;
+
+    if (this.quotas.exportsRemaining <= 0) {
+      throw new Error('Quota d\'exports Ã©puisÃ©');
+    }
+
+    this.quotas.exportsRemaining--;
+    this.saveQuotas();
+
+    // Synchroniser avec l'API si connectÃ©
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        await api.post('/quota/consume', { type: 'export' });
+      } catch (error) {
+        console.error('Erreur lors de la consommation du quota:', error);
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Mettre Ã  jour le tier de l'utilisateur
    */
   updateTier(tier: 'free' | 'premium') {
     this.quotas.tier = tier;
@@ -332,7 +280,7 @@ class QuotaService {
    */
   getQuotaDisplay(type: 'scans' | 'ai' | 'exports'): string {
     if (MOCK_MODE || this.quotas.tier === 'premium') {
-      return 'Illimité';
+      return 'IllimitÃ©';
     }
 
     switch (type) {
@@ -357,18 +305,7 @@ class QuotaService {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(0, diffDays);
   }
-
-  /**
-   * MÉTHODE ATTENDUE PAR useQuota - vérifier si on peut utiliser une fonctionnalité
-   */
-  async canUse(type: 'scan' | 'chat'): Promise<boolean> {
-    if (type === 'scan') {
-      return this.canScan();
-    } else if (type === 'chat') {
-      return this.canUseAI();
-    }
-    return true;
-  }
 }
 
 export default new QuotaService();
+

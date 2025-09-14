@@ -122,7 +122,6 @@ function onRefreshed(newToken: string) {
 // ---- Création de l'instance axios
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE,
-  timeout: 10000,
   withCredentials: true,
   timeout: ENV.REQUEST_TIMEOUT_MS,
   headers: {
@@ -195,4 +194,3 @@ export default apiClient;
 export { apiClient };
 export const api = apiClient; // Alias pour compatibilité
 export const API_BASE_URL = API_BASE;
-
