@@ -4,13 +4,17 @@
 // ========================================
 // PATH: frontend/src/pages/ChatPage.tsx
 import React, { useState, useRef, useEffect } from 'react';
+import quotaService from "../services/quotaService";
 import { Send, Bot, User, Loader } from 'lucide-react';
 import { chatService } from '../services/chatService';
 import { useAuthContext } from '../Contexts/AuthContext';
 import { useQuota } from '../hooks/useQuota';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { MOCK_MODE } from '../config/mock.config'; // AJOUT IMPORT
+
+
+// Mode démo désactivé - utilise la vraie API
+const MOCK_MODE = false;
 
 interface Message {
   id: string;
@@ -283,3 +287,5 @@ Comment puis-je vous aider aujourd'hui ?`,
 };
 
 export default ChatPage;
+
+

@@ -1,11 +1,10 @@
 ﻿// PATH: frontend/src/pages/SearchPage.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Camera, X, Package } from 'lucide-react';
-import { productService, visionService } from '../services/api';
+import { Search, Filter, Camera, X, Package, Loader2 } from 'lucide-react';
+import { productService } from '../services/api';
 import { toast } from 'react-hot-toast';
 import debounce from 'lodash/debounce';
-import LoadingSpinner from '../components/common/LoadingSpinner';
 
 type Category = 'food' | 'cosmetics' | 'detergents';
 
@@ -18,6 +17,8 @@ interface Product {
   images?: {
     front?: string;
   };
+  image_url?: string;
+  imageUrl?: string;
   scores?: {
     healthScore?: number;
     environmentScore?: number;
@@ -38,7 +39,6 @@ const SearchPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState<string | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
 
   const performSearch = useCallback(async (searchQuery: string, searchCategory: Category | '', searchPage: number) => {
     if (!searchQuery.trim()) {
@@ -50,27 +50,27 @@ const SearchPage: React.FC = () => {
     setError(null);
 
     try {
-      const filters = {
-        category: searchCategory || undefined,
+      // Créer les filtres en excluant les valeurs vides
+      const filters: Record<string, any> = {
         page: searchPage,
         limit: 20
       };
       
-      // Log pour debug
+      // Ajouter category seulement si elle a une valeur
+      if (searchCategory) {
+        filters.category = searchCategory;
+      }
+      
       console.log('🔍 Recherche:', searchQuery, 'Filtres:', filters);
       
       const response = await productService.search(searchQuery, filters);
       
-      // Log pour debug
-      console.log('📦 Réponse API:', response);
+      console.log('📦 Réponse complète:', response);
       
-      // La réponse est déjà la data, pas besoin de response.data
-      if (response && response.products) {
-        console.log('✅ Produits trouvés:', response.products.length);
+      if (response && response.success && response.products) {
         setProducts(response.products);
         setTotalPages(response.pagination?.pages || 1);
       } else {
-        console.log('❌ Aucun produit dans la réponse');
         setProducts([]);
         setError('Aucun produit trouvé');
       }
@@ -81,15 +81,26 @@ const SearchPage: React.FC = () => {
       if (searchCategory) newParams.set('category', searchCategory);
       if (searchPage > 1) newParams.set('page', searchPage.toString());
       setSearchParams(newParams);
+      
     } catch (error: any) {
       console.error('❌ Erreur recherche:', error);
       setError(error.message || 'Erreur lors de la recherche');
-      toast.error('Erreur lors de la recherche');
       setProducts([]);
     } finally {
       setLoading(false);
     }
   }, [setSearchParams]);
+
+  // Recherche au chargement de la page
+  useEffect(() => {
+    const urlQuery = searchParams.get('q') || '';
+    const urlCategory = (searchParams.get('category') as Category) || '';
+    const urlPage = Number(searchParams.get('page')) || 1;
+    
+    if (urlQuery) {
+      performSearch(urlQuery, urlCategory, urlPage);
+    }
+  }, []); // Une seule fois au montage
 
   const debouncedSearch = useCallback(
     debounce((q: string, cat: Category | '', p: number) => {
@@ -98,17 +109,15 @@ const SearchPage: React.FC = () => {
     [performSearch]
   );
 
-  useEffect(() => {
-    if (query) {
-      performSearch(query, category, page);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
     setPage(1);
-    debouncedSearch(newQuery, category, 1);
+    if (newQuery.trim()) {
+      debouncedSearch(newQuery, category, 1);
+    } else {
+      setProducts([]);
+    }
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -124,29 +133,6 @@ const SearchPage: React.FC = () => {
     setPage(newPage);
     performSearch(query, category, newPage);
     window.scrollTo(0, 0);
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingImage(true);
-    try {
-      const result = await visionService.analyzeImage(file);
-      
-      if (result?.barcode) {
-        navigate(`/results?barcode=${result.barcode}`);
-      } else if (result?.text) {
-        setQuery(result.text);
-        performSearch(result.text, category, 1);
-      } else {
-        toast.error('Aucun texte ou code-barres détecté dans l\'image');
-      }
-    } catch (error) {
-      toast.error('Erreur lors de l\'analyse de l\'image');
-    } finally {
-      setUploadingImage(false);
-    }
   };
 
   const handleProductClick = (product: Product) => {
@@ -188,10 +174,10 @@ const SearchPage: React.FC = () => {
     return 'bg-red-600';
   };
 
-  // Debug - afficher l'état actuel
-  useEffect(() => {
-    console.log('📊 État actuel - Produits:', products.length, 'Loading:', loading, 'Error:', error);
-  }, [products, loading, error]);
+  // Fonction pour obtenir l'URL de l'image
+  const getProductImage = (product: Product) => {
+    return product.images?.front || product.image_url || product.imageUrl;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -223,18 +209,6 @@ const SearchPage: React.FC = () => {
               <option value="cosmetics">💄 Cosmétiques</option>
               <option value="detergents">🧽 Détergents</option>
             </select>
-            
-            <label className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer flex items-center gap-2 transition-colors">
-              <Camera className="h-5 w-5" />
-              <span>{uploadingImage ? 'Analyse...' : 'Photo'}</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                disabled={uploadingImage}
-              />
-            </label>
           </div>
 
           {error && (
@@ -247,7 +221,8 @@ const SearchPage: React.FC = () => {
         {/* Résultats */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <LoadingSpinner size="large" />
+            <Loader2 className="animate-spin h-8 w-8 text-green-500" />
+            <span className="ml-3 text-gray-600">Recherche en cours...</span>
           </div>
         ) : products.length > 0 ? (
           <>
@@ -257,88 +232,96 @@ const SearchPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div
-                  key={product._id}
-                  onClick={() => handleProductClick(product)}
-                  className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden group"
-                >
-                  {/* Image produit */}
-                  <div className="h-48 overflow-hidden bg-gray-100">
-                    {product.images?.front ? (
-                      <img
-                        src={product.images.front}
-                        alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23f3f4f6"/%3E%3Ctext x="50" y="50" font-family="Arial" font-size="14" fill="%239ca3af" text-anchor="middle" dy=".3em"%3ENo image%3C/text%3E%3C/svg%3E';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Package className="w-24 h-24 text-gray-300" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Infos produit */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg text-gray-800 mb-1 line-clamp-2">
-                      {product.name}
-                    </h3>
-                    {product.brand && (
-                      <p className="text-gray-600 text-sm mb-3">{product.brand}</p>
-                    )}
-                    
-                    {/* Badges */}
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryBadge(product.category).color}`}>
-                        {getCategoryBadge(product.category).icon} {getCategoryBadge(product.category).label}
-                      </span>
-                      
-                      {product.scores?.nutriscore && (
-                        <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.nutriscore)}`}>
-                          {product.scores.nutriscore}
-                        </span>
-                      )}
-                      
-                      {product.scores?.nova && (
-                        <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNovaColor(product.scores.nova)}`}>
-                          NOVA {product.scores.nova}
-                        </span>
-                      )}
-                      
-                      {product.scores?.ecoscore && (
-                        <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.ecoscore)}`}>
-                          ECO {product.scores.ecoscore}
-                        </span>
+              {products.map((product) => {
+                const imageUrl = getProductImage(product);
+                
+                return (
+                  <div
+                    key={product._id}
+                    onClick={() => handleProductClick(product)}
+                    className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden group"
+                  >
+                    {/* Image produit */}
+                    <div className="h-48 overflow-hidden bg-gray-100">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={product.name}
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            const parent = (e.target as HTMLImageElement).parentElement;
+                            if (parent) {
+                              parent.innerHTML = '<div class="w-full h-full flex items-center justify-center"><svg class="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>';
+                            }
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Package className="w-24 h-24 text-gray-300" />
+                        </div>
                       )}
                     </div>
                     
-                    {/* Scores */}
-                    {product.scores && (
-                      <div className="flex gap-4 text-sm">
-                        {product.scores.healthScore !== undefined && (
-                          <div>
-                            <span className="text-gray-600">Santé:</span>
-                            <span className={`font-medium ml-1 ${getScoreColor(product.scores.healthScore)}`}>
-                              {product.scores.healthScore}/100
-                            </span>
-                          </div>
+                    {/* Infos produit */}
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg text-gray-800 mb-1 line-clamp-2">
+                        {product.name}
+                      </h3>
+                      {product.brand && (
+                        <p className="text-gray-600 text-sm mb-3">{product.brand}</p>
+                      )}
+                      
+                      {/* Badges */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryBadge(product.category).color}`}>
+                          {getCategoryBadge(product.category).icon} {getCategoryBadge(product.category).label}
+                        </span>
+                        
+                        {product.scores?.nutriscore && (
+                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.nutriscore)}`}>
+                            {product.scores.nutriscore}
+                          </span>
                         )}
-                        {product.scores.environmentScore !== undefined && (
-                          <div>
-                            <span className="text-gray-600">Environnement:</span>
-                            <span className={`font-medium ml-1 ${getScoreColor(product.scores.environmentScore)}`}>
-                              {product.scores.environmentScore}/100
-                            </span>
-                          </div>
+                        
+                        {product.scores?.nova && (
+                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNovaColor(product.scores.nova)}`}>
+                            NOVA {product.scores.nova}
+                          </span>
+                        )}
+                        
+                        {product.scores?.ecoscore && (
+                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.ecoscore)}`}>
+                            ECO {product.scores.ecoscore}
+                          </span>
                         )}
                       </div>
-                    )}
+                      
+                      {/* Scores */}
+                      {product.scores && (
+                        <div className="flex gap-4 text-sm">
+                          {product.scores.healthScore !== undefined && (
+                            <div>
+                              <span className="text-gray-600">Santé:</span>
+                              <span className={`font-medium ml-1 ${getScoreColor(product.scores.healthScore)}`}>
+                                {product.scores.healthScore}/100
+                              </span>
+                            </div>
+                          )}
+                          {product.scores.environmentScore !== undefined && (
+                            <div>
+                              <span className="text-gray-600">Environnement:</span>
+                              <span className={`font-medium ml-1 ${getScoreColor(product.scores.environmentScore)}`}>
+                                {product.scores.environmentScore}/100
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Pagination */}
@@ -376,7 +359,6 @@ const SearchPage: React.FC = () => {
           <div className="text-center py-12 bg-white rounded-xl shadow-sm p-8">
             <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg">Commencez à taper pour rechercher des produits</p>
-            <p className="text-gray-500 mt-2">Ou utilisez l'appareil photo pour scanner un produit</p>
           </div>
         )}
       </div>

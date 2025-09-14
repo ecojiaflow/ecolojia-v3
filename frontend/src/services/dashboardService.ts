@@ -2,7 +2,6 @@
 // PATH: frontend/src/services/dashboardService.ts
 import api from './apiClient';
 import { API_CONFIG } from '../config/api.config';
-import mockService from './mockService';
 
 export interface DashboardStats {
   totalScans: number;
@@ -82,6 +81,21 @@ class DashboardService {
    * Recuperer les statistiques du dashboard
    */
   async getStats(): Promise<DashboardStats> {
+    // Valeurs par défaut
+    const defaultStats: DashboardStats = {
+      totalScans: 0,
+      healthScoreAverage: 0,
+      categoryBreakdown: {
+        food: 0,
+        cosmetics: 0,
+        detergents: 0
+      },
+      monthlyProgress: 0,
+      topCategory: 'Aucune',
+      recentAnalyses: [],
+      weeklyTrend: [],
+      achievements: []
+    };
     try {
       // Verifier que l'endpoint existe
       if (!API_CONFIG?.ENDPOINTS?.DASHBOARD?.STATS) {
@@ -355,5 +369,6 @@ class DashboardService {
 }
 
 export default DashboardService.getInstance();
+
 
 

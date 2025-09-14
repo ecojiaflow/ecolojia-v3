@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/DashboardPage.tsx
+﻿// PATH: frontend/src/pages/DashboardPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -26,11 +26,13 @@ import {
 import { dashboardService } from '../services/api';
 import { useAuthContext } from '../Contexts/AuthContext';
 import { toast } from 'react-hot-toast';
-import { MOCK_MODE } from '../config/mock.config';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+
+// Mode démo désactivé - utilise la vraie API
+const MOCK_MODE = false;
 
 // Register ChartJS components
 ChartJS.register(
@@ -261,9 +263,9 @@ const DashboardPage: React.FC = () => {
       yPosition += 10;
       pdf.setFontSize(12);
       const categoryData = [
-        ['Alimentation', `${stats.categoryBreakdown.food} produits`],
-        ['Cosmétiques', `${stats.categoryBreakdown.cosmetics} produits`],
-        ['Détergents', `${stats.categoryBreakdown.detergents} produits`]
+        ['Alimentation', `${(stats?.categoryBreakdown?.food || 0)} produits`],
+        ['Cosmétiques', `${(stats?.categoryBreakdown?.cosmetics || 0)} produits`],
+        ['Détergents', `${(stats?.categoryBreakdown?.detergents || 0)} produits`]
       ];
       
       categoryData.forEach(([label, value]) => {
@@ -273,7 +275,7 @@ const DashboardPage: React.FC = () => {
       });
       
       // Analyses récentes
-      if (stats.recentAnalyses.length > 0) {
+      if (stats?.recentAnalyses?.length > 0) {
         yPosition += 10;
         pdf.setFontSize(16);
         pdf.text('Analyses récentes', 20, yPosition);
@@ -320,11 +322,11 @@ const DashboardPage: React.FC = () => {
 
   // Configuration des graphiques
   const lineChartData = {
-    labels: stats.weeklyTrend.map(d => d.day),
+    labels: stats.weeklyTrend?.map(d => d.day),
     datasets: [
       {
         label: 'Scans',
-        data: stats.weeklyTrend.map(d => d.scans),
+        data: stats.weeklyTrend?.map(d => d.scans),
         borderColor: '#10b981',
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         tension: 0.4,
@@ -338,9 +340,9 @@ const DashboardPage: React.FC = () => {
     datasets: [
       {
         data: [
-          stats.categoryBreakdown.food,
-          stats.categoryBreakdown.cosmetics,
-          stats.categoryBreakdown.detergents
+          (stats?.categoryBreakdown?.food || 0),
+          (stats?.categoryBreakdown?.cosmetics || 0),
+          (stats?.categoryBreakdown?.detergents || 0)
         ],
         backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
         borderWidth: 0
@@ -599,28 +601,28 @@ const DashboardPage: React.FC = () => {
                   <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                   Alimentation
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown.food}</span>
+                <span className="font-medium">{(stats?.categoryBreakdown?.food || 0)}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
                   Cosmétiques
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown.cosmetics}</span>
+                <span className="font-medium">{(stats?.categoryBreakdown?.cosmetics || 0)}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   <span className="w-3 h-3 bg-amber-500 rounded-full"></span>
                   Détergents
                 </span>
-                <span className="font-medium">{stats.categoryBreakdown.detergents}</span>
+                <span className="font-medium">{(stats?.categoryBreakdown?.detergents || 0)}</span>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Achievements / Badges */}
-        {stats.achievements && stats.achievements.length > 0 && (
+        {stats.achievements && stats?.achievements?.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -631,7 +633,7 @@ const DashboardPage: React.FC = () => {
               Vos accomplissements
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {stats.achievements.map((achievement) => (
+              {stats.achievements?.map((achievement) => (
                 <div 
                   key={achievement.id}
                   className={`p-4 rounded-lg border-2 ${
@@ -688,8 +690,8 @@ const DashboardPage: React.FC = () => {
           </div>
           
           <div className="divide-y divide-gray-100">
-            {stats.recentAnalyses.length > 0 ? (
-              stats.recentAnalyses.map((analysis, index) => (
+            {stats?.recentAnalyses?.length > 0 ? (
+              stats.recentAnalyses?.map((analysis, index) => (
                 <motion.div
                   key={analysis._id}
                   initial={{ opacity: 0, x: -20 }}

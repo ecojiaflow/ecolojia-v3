@@ -167,7 +167,7 @@ const ProductPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mode Demo Banner */}
-      {ENV.MOCK_MODE && (
+      {false && (
         <div className="bg-yellow-100 border-b border-yellow-400 text-yellow-800 px-4 py-2 text-center">
           🔬 Mode Demo - Données de test
         </div>

@@ -1,5 +1,6 @@
 ﻿// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense } from 'react';
+import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
@@ -69,3 +70,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

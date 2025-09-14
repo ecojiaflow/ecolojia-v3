@@ -2,7 +2,7 @@
 import { ENV } from "../env";
 
 // Mock mode contrôlé par l'environnement
-export const MOCK_MODE = ENV.MOCK_MODE;
+export const MOCK_MODE = false;
 
 // Mock user pour le mode démo
 export const MOCK_USER = {
@@ -36,6 +36,6 @@ export const MOCK_PRODUCTS = [
   }
 ];
 
-if (MOCK_MODE) {
+if (false) {
   console.warn("⚠️ ECOLOJIA en mode MOCK - Les données sont simulées");
 }

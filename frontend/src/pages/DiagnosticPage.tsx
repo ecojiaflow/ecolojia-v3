@@ -1,7 +1,6 @@
 ﻿// PATH: frontend/src/pages/DiagnosticPage.tsx
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, RefreshCw, Package, Database, Globe, Shield, Cpu } from 'lucide-react';
-import { MOCK_MODE } from '../config/mock.config';
 
 interface DiagnosticItem {
   id: string;
@@ -121,7 +120,7 @@ const DiagnosticPage: React.FC = () => {
 
     // Test 5: Mock Data
     await delay(500);
-    if (MOCK_MODE) {
+    if (false) {
       updateTest('mockData', {
         status: 'success',
         message: 'Services mock actifs',

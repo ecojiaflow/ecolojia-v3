@@ -25,7 +25,6 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { toast } from 'react-hot-toast';
 import { useAuthContext } from '../Contexts/AuthContext';
-import { MOCK_MODE } from '../config/mock.config';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -145,7 +144,7 @@ const HistoryPage: React.FC = () => {
   };
 
   const handleDelete = async (ids: string[]) => {
-    if (MOCK_MODE) {
+    if (false) {
       toast.error('La suppression n\'est pas disponible en mode démonstration');
       return;
     }

@@ -12,7 +12,6 @@ import quotaService from '../services/quotaService';
 import chatService from '../services/chatService';
 import { useAuthContext } from '../Contexts/AuthContext';
 import { toast } from 'react-hot-toast';
-import { MOCK_MODE } from '../config/mock.config';
 
 interface AnalysisResult {
   productId: string;
@@ -198,7 +197,7 @@ const ResultsPage: React.FC = () => {
 
       let result: AnalysisResult;
 
-      if (MOCK_MODE) {
+      if (false) {
         // Mode mock : utiliser les données mockées
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simuler délai
         result = MOCK_ANALYSIS;

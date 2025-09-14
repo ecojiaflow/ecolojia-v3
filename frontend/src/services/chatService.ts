@@ -1,9 +1,6 @@
-﻿// ========================================
-// 2. chatService.ts CORRIGÉ
-// ========================================
-// PATH: frontend/src/services/chatService.ts
-import { MOCK_MODE } from '../config/mock.config'; // AJOUT IMPORT
+﻿// PATH: frontend/src/services/chatService.ts
 import { toast } from 'react-hot-toast';
+import apiClient from './apiClient';
 
 export interface ChatMessage {
   id: string;
@@ -25,115 +22,242 @@ export interface ChatContext {
   analysis?: any;
 }
 
-// AJOUT : Réponses mockées pour le mode demo
-const MOCK_RESPONSES: { [key: string]: string } = {
-  'nova': `Le système NOVA est une classification scientifique des aliments basée sur leur degré de transformation :
+// Base de connaissances pour rÃ©pondre intelligemment
+const KNOWLEDGE_BASE: { [key: string]: string } = {
+  'nova': `Le systÃ¨me NOVA classe les aliments selon leur degrÃ© de transformation :
 
-**NOVA 1** - Aliments non transformés ou peu transformés
-• Fruits, légumes, viandes, œufs, lait frais
-• Les meilleurs pour la santé
+**Groupe 1 - Non transformÃ©s** ðŸ¥¬
+â€¢ Fruits et lÃ©gumes frais
+â€¢ Viandes et poissons frais
+â€¢ Å’ufs, lait frais
+â€¢ Grains entiers, lÃ©gumineuses
 
-**NOVA 2** - Ingrédients culinaires transformés
-• Huiles, beurre, sucre, sel
-• À utiliser avec modération
+**Groupe 2 - IngrÃ©dients culinaires** ðŸ§ˆ
+â€¢ Huiles vÃ©gÃ©tales
+â€¢ Beurre, sel, sucre
+â€¢ Miel, vinaigre
+â€¢ Ã‰pices et herbes
 
-**NOVA 3** - Aliments transformés
-• Conserves, fromages, pains
-• Acceptables en quantité raisonnable
+**Groupe 3 - TransformÃ©s** ðŸ¥«
+â€¢ Conserves de lÃ©gumes
+â€¢ Fromages
+â€¢ Pains artisanaux
+â€¢ Poissons fumÃ©s
 
-**NOVA 4** - Aliments ultra-transformés
-• Sodas, snacks, plats préparés
-• À limiter au maximum
+**Groupe 4 - Ultra-transformÃ©s** âš ï¸
+â€¢ Sodas et boissons sucrÃ©es
+â€¢ Plats prÃ©parÃ©s industriels
+â€¢ Snacks et confiseries
+â€¢ Charcuteries avec additifs
 
-Les aliments NOVA 4 contiennent souvent des additifs, colorants et conservateurs qui peuvent avoir des effets négatifs sur la santé.`,
+ðŸ’¡ Conseil : PrivilÃ©giez les groupes 1 et 2 pour une alimentation saine !`,
 
-  'nutri-score': `Le Nutri-Score est un système d'étiquetage nutritionnel de A à E :
+  'nutriscore': `Le Nutri-Score Ã©value la qualitÃ© nutritionnelle sur une Ã©chelle de A Ã  E :
 
-**A (vert foncé)** : Excellente qualité nutritionnelle
-**B (vert clair)** : Bonne qualité nutritionnelle
-**C (jaune)** : Qualité nutritionnelle moyenne
-**D (orange)** : Qualité nutritionnelle faible
-**E (rouge)** : Qualité nutritionnelle très faible
+**A (vert foncÃ©)** - Excellent choix nutritionnel âœ…
+**B (vert clair)** - Bon choix
+**C (jaune)** - QualitÃ© moyenne
+**D (orange)** - Ã€ consommer avec modÃ©ration
+**E (rouge)** - Ã€ limiter âŒ
 
 Le calcul prend en compte :
-✅ Points positifs : fibres, protéines, fruits/légumes
-❌ Points négatifs : calories, sucres, graisses saturées, sel
+ðŸ“ˆ **Ã‰lÃ©ments positifs** : fibres, protÃ©ines, fruits/lÃ©gumes/noix
+ðŸ“‰ **Ã‰lÃ©ments nÃ©gatifs** : Ã©nergie, sucres, graisses saturÃ©es, sel
 
-Un produit avec un Nutri-Score A ou B est généralement un bon choix pour une alimentation équilibrée.`,
+ðŸ’¡ Astuce : Un Nutri-Score A ou B est gÃ©nÃ©ralement recommandÃ© pour une consommation rÃ©guliÃ¨re.`,
 
-  'additifs': `Les additifs alimentaires à surveiller particulièrement :
+  'additifs': `Guide des additifs alimentaires (E-numbers) :
 
-**🚫 À éviter absolument :**
-• E102, E110, E124, E129 : Colorants azoïques (hyperactivité chez les enfants)
-• E320, E321 : Antioxydants synthétiques (perturbateurs endocriniens suspectés)
-• E249-E252 : Nitrites/nitrates (cancérigènes probables)
+**ðŸš« Additifs Ã  Ã©viter :**
+â€¢ **E102, E110, E124, E129** - Colorants azoÃ¯ques
+  â†’ Risque d'hyperactivitÃ© chez les enfants
+â€¢ **E320, E321** - BHA/BHT (antioxydants)
+  â†’ Perturbateurs endocriniens suspectÃ©s
+â€¢ **E249-E252** - Nitrites/nitrates
+  â†’ CancÃ©rigÃ¨nes probables (charcuteries)
+â€¢ **E621** - Glutamate monosodique
+  â†’ Maux de tÃªte, addiction au goÃ»t
 
-**⚠️ À limiter :**
-• E200-E203 : Conservateurs (allergies possibles)
-• E621 : Glutamate (maux de tête, addiction au goût)
-• E950-E955 : Édulcorants (effets sur le microbiote)
+**âš ï¸ Ã€ consommer avec modÃ©ration :**
+â€¢ **E200-E213** - Conservateurs benzoates
+â€¢ **E220-E228** - Sulfites (allergÃ¨nes)
+â€¢ **E950-E955** - Ã‰dulcorants artificiels
 
-**✅ Sans danger :**
-• E300 : Vitamine C
-• E330 : Acide citrique
-• E440 : Pectine
+**âœ… Additifs sans danger :**
+â€¢ **E300** - Vitamine C (acide ascorbique)
+â€¢ **E330** - Acide citrique (citron)
+â€¢ **E440** - Pectine (gÃ©lifiant naturel)
+â€¢ **E160a** - BÃªta-carotÃ¨ne (colorant naturel)`,
 
-Privilégiez les produits avec peu ou pas d'additifs !`,
+  'allergenes': `Les 14 allergÃ¨nes majeurs Ã  dÃ©claration obligatoire :
 
-  'default': `Je comprends votre question. En tant qu'assistant nutritionnel ECOLOJIA, je suis là pour vous aider à faire des choix alimentaires plus sains.
+1. **Gluten** ðŸŒ¾ - BlÃ©, seigle, orge, avoine
+2. **CrustacÃ©s** ðŸ¦ - Crevettes, crabes, homards
+3. **Å’ufs** ðŸ¥š - Et tous produits dÃ©rivÃ©s
+4. **Poissons** ðŸŸ - Tous types sauf crustacÃ©s
+5. **Arachides** ðŸ¥œ - CacahuÃ¨tes
+6. **Soja** ðŸŒ± - Et dÃ©rivÃ©s (tofu, sauce soja)
+7. **Lait** ðŸ¥› - Produits laitiers (lactose, casÃ©ine)
+8. **Fruits Ã  coque** ðŸŒ° - Amandes, noix, noisettes
+9. **CÃ©leri** ðŸŒ¿ - Y compris graines et sel de cÃ©leri
+10. **Moutarde** ðŸŒ­ - Graines et condiment
+11. **SÃ©same** - Graines et huile
+12. **Sulfites** (E220-228) - Vins, fruits secs
+13. **Lupin** - Farine dans pains/pÃ¢tisseries
+14. **Mollusques** ðŸ¦ª - HuÃ®tres, moules, escargots
 
-Voici quelques conseils généraux :
+âš¡ Ces allergÃ¨nes doivent Ãªtre mis en Ã©vidence sur l'Ã©tiquetage.`,
 
-1. **Privilégiez les aliments peu transformés** (NOVA 1 et 2)
-2. **Lisez les étiquettes** : moins d'ingrédients = mieux
-3. **Évitez les additifs controversés** (colorants, conservateurs synthétiques)
-4. **Choisissez des produits avec un bon Nutri-Score** (A ou B)
-5. **Variez votre alimentation** pour équilibrer les apports
+  'bio': `Labels et certifications bio en France :
 
-N'hésitez pas à me poser des questions plus spécifiques sur un produit ou un ingrédient !`
+**ðŸŒ¿ AB (Agriculture Biologique)**
+â€¢ Label franÃ§ais officiel
+â€¢ Min. 95% d'ingrÃ©dients bio
+â€¢ Sans OGM, pesticides chimiques
+â€¢ ContrÃ´les rÃ©guliers
+
+**ðŸ‡ªðŸ‡º Eurofeuille**
+â€¢ Label europÃ©en obligatoire
+â€¢ MÃªmes critÃ¨res que AB
+â€¢ Reconnu dans toute l'UE
+
+**ðŸŒ± Demeter**
+â€¢ Agriculture biodynamique
+â€¢ CritÃ¨res plus stricts que AB
+â€¢ Respect des cycles naturels
+
+**ðŸ“ Labels complÃ©mentaires :**
+â€¢ **Label Rouge** - QualitÃ© supÃ©rieure
+â€¢ **AOC/AOP** - Origine gÃ©ographique
+â€¢ **IGP** - Indication gÃ©ographique
+â€¢ **Bleu-Blanc-CÅ“ur** - OmÃ©ga 3
+
+ðŸ’¡ Le bio garantit l'absence de pesticides de synthÃ¨se et d'OGM.`,
+
+  'alternatives': `Alternatives saines aux produits ultra-transformÃ©s :
+
+**Au lieu de âž¡ï¸ Choisissez**
+
+ðŸ¥¤ **Sodas** âž¡ï¸ Eau pÃ©tillante + citron/fruits
+ðŸŸ **Chips** âž¡ï¸ LÃ©gumes crus + houmous
+ðŸ” **Plats prÃ©parÃ©s** âž¡ï¸ Batch cooking maison
+ðŸ­ **Confiseries** âž¡ï¸ Fruits secs, chocolat noir
+ðŸ¥£ **CÃ©rÃ©ales sucrÃ©es** âž¡ï¸ Flocons d'avoine + fruits
+ðŸ§ˆ **Margarine** âž¡ï¸ Beurre ou huiles vÃ©gÃ©tales
+ðŸž **Pain de mie** âž¡ï¸ Pain complet artisanal
+ðŸ¥› **Yaourts aromatisÃ©s** âž¡ï¸ Yaourt nature + miel
+
+ðŸ’¡ RÃ¨gle simple : Si la liste d'ingrÃ©dients dÃ©passe 5 lignes, cherchez une alternative !`,
+
+  'default': `Je suis votre assistant nutritionnel ECOLOJIA. Je peux vous aider avec :
+
+ðŸ“Š **Analyses de produits**
+â€¢ Classification NOVA (degrÃ© de transformation)
+â€¢ Nutri-Score (qualitÃ© nutritionnelle)
+â€¢ Additifs et ingrÃ©dients Ã  surveiller
+
+ðŸŽ¯ **Conseils personnalisÃ©s**
+â€¢ Alternatives plus saines
+â€¢ DÃ©cryptage des Ã©tiquettes
+â€¢ Recommandations selon vos besoins
+
+ðŸ’¡ **Tips nutrition**
+â€¢ Ã‰quilibre alimentaire
+â€¢ Labels et certifications
+â€¢ AllergÃ¨nes et intolÃ©rances
+
+Posez-moi vos questions sur l'alimentation et la nutrition !`
 };
 
 class ChatService {
   private messages: ChatMessage[] = [];
   private context: ChatContext = {};
+  private isInitialized: boolean = false;
 
-  // MODIFICATION : Générer des réponses mockées intelligentes
-  private generateMockResponse(question: string): string {
+  // Analyser la question et trouver la meilleure rÃ©ponse
+  private findBestResponse(question: string): string {
     const lowerQuestion = question.toLowerCase();
     
-    // Recherche de mots-clés pour donner une réponse appropriée
+    // Recherche par mots-clÃ©s
     if (lowerQuestion.includes('nova')) {
-      return MOCK_RESPONSES['nova'];
+      return KNOWLEDGE_BASE['nova'];
     }
     if (lowerQuestion.includes('nutri') || lowerQuestion.includes('score')) {
-      return MOCK_RESPONSES['nutri-score'];
+      return KNOWLEDGE_BASE['nutriscore'];
     }
-    if (lowerQuestion.includes('additif') || lowerQuestion.includes('e1') || lowerQuestion.includes('e2') || lowerQuestion.includes('e3')) {
-      return MOCK_RESPONSES['additifs'];
+    if (lowerQuestion.includes('additif') || lowerQuestion.match(/\be\d{3}/)) {
+      return KNOWLEDGE_BASE['additifs'];
+    }
+    if (lowerQuestion.includes('allerg') || lowerQuestion.includes('intol')) {
+      return KNOWLEDGE_BASE['allergenes'];
+    }
+    if (lowerQuestion.includes('bio') || lowerQuestion.includes('label')) {
+      return KNOWLEDGE_BASE['bio'];
+    }
+    if (lowerQuestion.includes('alternative') || lowerQuestion.includes('remplacer')) {
+      return KNOWLEDGE_BASE['alternatives'];
     }
     
-    // Réponse contextuelle si un produit est mentionné
+    // RÃ©ponse contextuelle si un produit est analysÃ©
     if (this.context.productName) {
-      return `Concernant ${this.context.productName}, voici mon analyse :
-
-${this.context.scores?.nova ? `• Classification NOVA : Groupe ${this.context.scores.nova}` : ''}
-${this.context.scores?.nutriscore ? `• Nutri-Score : ${this.context.scores.nutriscore}` : ''}
-${this.context.scores?.healthScore ? `• Score santé : ${this.context.scores.healthScore}/100` : ''}
-
-${this.context.scores?.nova === 4 ? 
-`⚠️ Ce produit est ultra-transformé (NOVA 4). Je recommande de limiter sa consommation et de chercher des alternatives moins transformées.` :
-`✅ Ce produit a un niveau de transformation acceptable. Vous pouvez le consommer avec modération dans le cadre d'une alimentation équilibrée.`}
-
-Avez-vous des questions spécifiques sur ce produit ?`;
+      return this.generateProductResponse();
     }
     
-    // Réponse par défaut
-    return MOCK_RESPONSES['default'];
+    // RÃ©ponse par dÃ©faut
+    return KNOWLEDGE_BASE['default'];
   }
 
-  // Initialiser le chat avec un contexte optionnel
+  // GÃ©nÃ©rer une rÃ©ponse spÃ©cifique au produit en contexte
+  private generateProductResponse(): string {
+    const { productName, scores } = this.context;
+    
+    let response = `ðŸ“¦ **Analyse de ${productName}**\n\n`;
+    
+    if (scores?.nova) {
+      response += `â€¢ **Classification NOVA** : Groupe ${scores.nova}\n`;
+      response += scores.nova === 4 
+        ? `  âš ï¸ Produit ultra-transformÃ© - Ã€ consommer occasionnellement\n`
+        : scores.nova <= 2
+        ? `  âœ… Produit peu transformÃ© - Bon choix !\n`
+        : `  âš¡ Transformation modÃ©rÃ©e - Acceptable\n`;
+    }
+    
+    if (scores?.nutriscore) {
+      response += `â€¢ **Nutri-Score** : ${scores.nutriscore}\n`;
+      const scoreMap: { [key: string]: string } = {
+        'A': 'âœ… Excellente qualitÃ© nutritionnelle',
+        'B': 'ðŸ‘ Bonne qualitÃ© nutritionnelle',
+        'C': 'âš¡ QualitÃ© nutritionnelle moyenne',
+        'D': 'âš ï¸ QualitÃ© nutritionnelle faible',
+        'E': 'âŒ Ã€ limiter'
+      };
+      response += `  ${scoreMap[scores.nutriscore] || ''}\n`;
+    }
+    
+    if (scores?.healthScore) {
+      response += `â€¢ **Score santÃ©** : ${scores.healthScore}/100\n`;
+    }
+    
+    response += `\nðŸ’¡ **Conseils** :\n`;
+    
+    if (scores?.nova === 4) {
+      response += `- PrivilÃ©giez des alternatives moins transformÃ©es\n`;
+      response += `- Consommez ce produit occasionnellement\n`;
+      response += `- VÃ©rifiez la liste des additifs\n`;
+    } else {
+      response += `- Ce produit peut faire partie d'une alimentation Ã©quilibrÃ©e\n`;
+      response += `- Variez avec d'autres produits de la mÃªme catÃ©gorie\n`;
+    }
+    
+    response += `\nAvez-vous des questions spÃ©cifiques sur ce produit ?`;
+    
+    return response;
+  }
+
+  // Initialiser le chat
   initialize(context?: ChatContext) {
     this.context = context || {};
+    this.isInitialized = true;
     this.messages = [{
       id: 'welcome',
       role: 'assistant',
@@ -142,34 +266,31 @@ Avez-vous des questions spécifiques sur ce produit ?`;
     }];
   }
 
-  // Message de bienvenue personnalisé
+  // Message de bienvenue
   private getWelcomeMessage(context?: ChatContext): string {
     if (context?.productName) {
-      return `Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA. 
+      return `ðŸ‘‹ Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA.
 
-Je vois que vous analysez **${context.productName}**. Je peux vous expliquer :
-• Son score et classification NOVA
-• Les ingrédients à surveiller
-• Des alternatives plus saines
-• Répondre à vos questions nutritionnelles
+Je vois que vous analysez **${context.productName}**. Je peux vous aider Ã  :
+â€¢ Comprendre ses scores et classifications
+â€¢ Identifier les ingrÃ©dients Ã  surveiller
+â€¢ Trouver des alternatives plus saines
+â€¢ RÃ©pondre Ã  vos questions nutritionnelles
 
-Comment puis-je vous aider ?`;
+Que souhaitez-vous savoir sur ce produit ?`;
     }
 
-    return `Bonjour ! Je suis votre assistant nutritionnel ECOLOJIA.
-
-Je peux vous aider à :
-• Comprendre les analyses de produits
-• Décoder les additifs et ingrédients
-• Suggérer des alternatives plus saines
-• Répondre à vos questions sur la nutrition
-
-Comment puis-je vous aider aujourd'hui ?`;
+    return KNOWLEDGE_BASE['default'];
   }
 
   // Envoyer un message
   async sendMessage(content: string, context?: any): Promise<ChatMessage> {
-    // Mettre à jour le contexte si fourni
+    // S'assurer que le chat est initialisÃ©
+    if (!this.isInitialized) {
+      this.initialize(context);
+    }
+
+    // Mettre Ã  jour le contexte si fourni
     if (context) {
       this.context = { ...this.context, ...context };
     }
@@ -184,36 +305,35 @@ Comment puis-je vous aider aujourd'hui ?`;
     this.messages.push(userMessage);
 
     try {
-      // MODIFICATION : En mode mock, générer une réponse locale
-      if (MOCK_MODE) {
-        // Simuler un délai réseau
-        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-        
-        // Générer une réponse mockée
-        const mockResponse = this.generateMockResponse(content);
-        
-        const assistantMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: mockResponse,
-          timestamp: new Date()
-        };
+      // PrÃ©parer la requÃªte pour l'API
+      const requestBody = {
+        message: content,
+        context: this.context,
+        // Limiter l'historique pour Ã©viter les requÃªtes trop grandes
+        history: this.messages.slice(-3).map(m => ({
+          role: m.role,
+          content: m.content
+        }))
+      };
 
-        this.messages.push(assistantMessage);
-        return assistantMessage;
+      // Appeler l'API backend
+      const response = await apiClient.post('/ai/chat', requestBody);
+
+      // Extraire la rÃ©ponse
+      const aiResponse = response.data?.content || 
+                       response.data?.message || 
+                       response.data?.response ||
+                       response.data;
+
+      if (!aiResponse || typeof aiResponse !== 'string') {
+        throw new Error('Format de rÃ©ponse invalide');
       }
 
-      // En mode production, appeler l'API réelle
-      const { aiService } = await import('./api');
-      const response = await aiService.chat(content, {
-        ...this.context,
-        conversationHistory: this.messages.slice(-5)
-      });
-
+      // CrÃ©er le message assistant
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.content || response.message || response,
+        content: aiResponse,
         timestamp: new Date()
       };
 
@@ -221,35 +341,76 @@ Comment puis-je vous aider aujourd'hui ?`;
       return assistantMessage;
 
     } catch (error: any) {
-      console.error('Erreur chat:', error);
+      console.error('Erreur chat API:', error);
       
-      const errorMessage: ChatMessage = {
+      // Si erreur 500 spÃ©cifique au quota
+      if (error.response?.status === 500 && 
+          error.response?.data?.error?.includes('aiQuestionsUsed')) {
+        
+        // Utiliser la base de connaissances locale
+        console.log('Erreur quota backend, utilisation de la base de connaissances locale');
+        const localResponse = this.findBestResponse(content);
+        
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: localResponse,
+          timestamp: new Date()
+        };
+
+        this.messages.push(assistantMessage);
+        
+        // Afficher un toast discret
+        toast('Assistant local activÃ©', { icon: 'ðŸ’¡' });
+        
+        return assistantMessage;
+      }
+      
+      // Si erreur 404 ou 500 gÃ©nÃ©rale
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        console.log('API chat non disponible, utilisation locale');
+        const localResponse = this.findBestResponse(content);
+        
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: localResponse,
+          timestamp: new Date()
+        };
+
+        this.messages.push(assistantMessage);
+        return assistantMessage;
+      }
+      
+      // Autres erreurs
+      const errorMessage = this.getErrorMessage(error);
+      const errorAssistant: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: this.getErrorMessage(error),
+        content: errorMessage,
         timestamp: new Date()
       };
 
-      this.messages.push(errorMessage);
-      return errorMessage;
+      this.messages.push(errorAssistant);
+      return errorAssistant;
     }
   }
 
-  // Gestion des erreurs avec messages adaptés
+  // Messages d'erreur personnalisÃ©s
   private getErrorMessage(error: any): string {
     if (error.response?.status === 401) {
-      return 'Veuillez vous connecter pour utiliser l\'assistant IA.';
+      return 'ðŸ”’ Veuillez vous connecter pour utiliser l\'assistant IA.';
+    }
+    if (error.response?.status === 403) {
+      return 'ðŸ“Š Vous avez atteint votre limite de questions. Passez Ã  Premium pour continuer !';
     }
     if (error.response?.status === 429) {
-      return 'Vous avez atteint votre limite de questions. Passez à Premium pour continuer !';
+      return 'â±ï¸ Trop de requÃªtes. Veuillez patienter quelques instants.';
     }
-    if (error.response?.data?.message) {
-      return `Désolé, une erreur s'est produite : ${error.response.data.message}`;
-    }
-    return 'Désolé, je n\'ai pas pu traiter votre demande. Veuillez réessayer.';
+    return 'ðŸ˜• DÃ©solÃ©, je n\'ai pas pu traiter votre demande. Veuillez rÃ©essayer.';
   }
 
-  // Obtenir l'historique des messages
+  // Obtenir l'historique
   getMessages(): ChatMessage[] {
     return this.messages;
   }
@@ -264,26 +425,26 @@ Comment puis-je vous aider aujourd'hui ?`;
     }];
   }
 
-  // Obtenir des suggestions contextuelles
+  // Suggestions contextuelles
   getSuggestions(): string[] {
     if (this.context?.productName) {
       return [
-        `Pourquoi ${this.context.productName} a ce score ?`,
-        'Quels sont les ingrédients problématiques ?',
-        'Suggérez-moi des alternatives',
-        'Est-ce dangereux pour ma santé ?'
+        `Analysez les additifs de ${this.context.productName}`,
+        'Quelles sont les alternatives plus saines ?',
+        'Ce produit est-il adaptÃ© aux enfants ?',
+        'Expliquez-moi son Nutri-Score'
       ];
     }
 
     return [
-      'Comment fonctionne la classification NOVA ?',
-      'Qu\'est-ce que l\'ultra-transformation ?',
-      'Quels additifs éviter ?',
-      'Comment améliorer mon alimentation ?'
+      'Qu\'est-ce que la classification NOVA ?',
+      'Comment lire le Nutri-Score ?',
+      'Quels additifs dois-je Ã©viter ?',
+      'Comment manger plus sainement ?'
     ];
   }
 
-  // Mettre à jour le contexte
+  // Mettre Ã  jour le contexte
   updateContext(newContext: Partial<ChatContext>) {
     this.context = { ...this.context, ...newContext };
   }
@@ -292,6 +453,5 @@ Comment puis-je vous aider aujourd'hui ?`;
 // Export singleton
 export const chatService = new ChatService();
 
-
-// Export default pour compatibilité avec ResultsPage
+// Export default
 export default chatService;
