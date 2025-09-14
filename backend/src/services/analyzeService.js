@@ -340,7 +340,7 @@ function formatAnalyzeResult(product, dataSource, insights) {
       ecoScore: product.ecoScore,
       additives: product.additives
     },
-    scores: product.scores,
+    scores: product.scores || { health: 50, eco: 50, global: 50 },
     insights: insights || product.insights || [],
     dataSource: dataSource
   };
