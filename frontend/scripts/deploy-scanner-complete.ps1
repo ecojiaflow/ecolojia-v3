@@ -1,4 +1,31 @@
-﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+# SCRIPT DE DEPLOIEMENT DU SCANNER COMPLET
+# ========================================
+
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host "  DEPLOIEMENT SCANNER COMPLET v2.0   " -ForegroundColor Cyan
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Configuration
+$FRONTEND_PATH = "C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend"
+Set-Location $FRONTEND_PATH
+
+# 1. SAUVEGARDER L'ANCIEN SCANNER
+Write-Host "[1/5] SAUVEGARDE DE L'ANCIEN SCANNER..." -ForegroundColor Yellow
+$backupPath = ".\src\components\scanner\BarcodeScanner.tsx.backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+if (Test-Path ".\src\components\scanner\BarcodeScanner.tsx") {
+    Copy-Item ".\src\components\scanner\BarcodeScanner.tsx" $backupPath
+    Write-Host "  [OK] Sauvegarde dans: $backupPath" -ForegroundColor Green
+}
+
+# 2. CREER LE NOUVEAU SCANNER COMPLET
+Write-Host ""
+Write-Host "[2/5] CREATION DU SCANNER COMPLET..." -ForegroundColor Yellow
+
+# Lire les deux parties depuis les artifacts et les combiner
+$scannerContent = @'
+// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 // SCANNER COMPLET AVEC TOUTES LES FONCTIONNALITES
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -436,7 +463,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'front' ? 'bg-green-600 text-white' : 
                     capturedPhotos.front ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.front ? 'âœ“' : '1'}
+                    {capturedPhotos.front ? '✓' : '1'}
                   </div>
                   <span className="text-xs">Face avant</span>
                 </div>
@@ -446,7 +473,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'ingredients' ? 'bg-green-600 text-white' : 
                     capturedPhotos.ingredients ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.ingredients ? 'âœ“' : '2'}
+                    {capturedPhotos.ingredients ? '✓' : '2'}
                   </div>
                   <span className="text-xs">Ingredients</span>
                 </div>
@@ -456,7 +483,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'barcode' ? 'bg-green-600 text-white' : 
                     capturedPhotos.barcode ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.barcode ? 'âœ“' : '3'}
+                    {capturedPhotos.barcode ? '✓' : '3'}
                   </div>
                   <span className="text-xs">Code-barres</span>
                 </div>
@@ -642,3 +669,78 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
 };
 
 export default BarcodeScanner;
+'@
+
+# Sauvegarder le nouveau scanner
+$scannerContent | Out-File -FilePath ".\src\components\scanner\BarcodeScanner.tsx" -Encoding UTF8
+Write-Host "  [OK] Scanner complet cree" -ForegroundColor Green
+
+# 3. VERIFIER SI QUAGGA EST INSTALLE
+Write-Host ""
+Write-Host "[3/5] VERIFICATION DE QUAGGA..." -ForegroundColor Yellow
+if (Test-Path ".\node_modules\@ericblade\quagga2") {
+    Write-Host "  [OK] Quagga deja installe" -ForegroundColor Green
+} else {
+    Write-Host "  [INFO] Installation de Quagga..." -ForegroundColor Yellow
+    npm install @ericblade/quagga2 --save
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  [OK] Quagga installe" -ForegroundColor Green
+    } else {
+        Write-Host "  [WARN] Quagga non installe - Scanner natif uniquement" -ForegroundColor Yellow
+    }
+}
+
+# 4. BUILD DE TEST
+Write-Host ""
+Write-Host "[4/5] BUILD DE TEST..." -ForegroundColor Yellow
+npm run build 2>&1 | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "  [OK] Build reussi" -ForegroundColor Green
+} else {
+    Write-Host "  [ERREUR] Build echoue" -ForegroundColor Red
+    Write-Host "  Restauration de l'ancien scanner..." -ForegroundColor Yellow
+    Copy-Item $backupPath ".\src\components\scanner\BarcodeScanner.tsx" -Force
+    exit 1
+}
+
+# 5. DEPLOIEMENT
+Write-Host ""
+Write-Host "[5/5] DEPLOIEMENT..." -ForegroundColor Yellow
+
+# Verifier s'il y a des changements
+$status = git status --porcelain
+if ($status) {
+    git add -A
+    git commit -m "feat: scanner complet avec camera, photos guidees et saisie manuelle" | Out-Null
+    git push origin main | Out-Null
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  [OK] Deploye sur GitHub" -ForegroundColor Green
+    } else {
+        Write-Host "  [ERREUR] Push echoue" -ForegroundColor Red
+    }
+} else {
+    Write-Host "  [INFO] Aucun changement a deployer" -ForegroundColor Gray
+}
+
+# RESUME
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host "     SCANNER COMPLET DEPLOYE         " -ForegroundColor Green
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "FONCTIONNALITES:" -ForegroundColor Cyan
+Write-Host "  1. Scanner camera (BarcodeDetector + Quagga)" -ForegroundColor White
+Write-Host "  2. Photos guidees (3 etapes)" -ForegroundColor White
+Write-Host "  3. Saisie manuelle" -ForegroundColor White
+Write-Host ""
+Write-Host "URLS:" -ForegroundColor Cyan
+Write-Host "  Frontend: https://frontendvf.netlify.app" -ForegroundColor White
+Write-Host "  Scanner: https://frontendvf.netlify.app/scan" -ForegroundColor White
+Write-Host ""
+Write-Host "TEST SUR MOBILE:" -ForegroundColor Yellow
+Write-Host "  - Chrome Android: Scanner natif rapide" -ForegroundColor White
+Write-Host "  - Autres: Quagga en fallback" -ForegroundColor White
+Write-Host "  - Photos: Fonctionne partout" -ForegroundColor White
+Write-Host ""
+Write-Host "ATTENDEZ 3-5 MINUTES pour le deploiement Netlify" -ForegroundColor Yellow
