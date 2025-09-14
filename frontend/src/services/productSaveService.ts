@@ -1,5 +1,5 @@
 ﻿// PATH: frontend/src/services/productSaveService.ts
-import { apiClient } from './api';
+import { productService } from './api';
 
 export const productSaveService = {
   async saveAnalyzedProduct(analysisResult: any, productData: any): Promise<any> {
@@ -18,8 +18,14 @@ export const productSaveService = {
         source: 'user_analysis',
         status: 'active'
       };
-      const response = await apiClient.post('/products', productToSave);
-      return response.data;
+      
+      // Utiliser la methode create si elle existe, sinon faire un POST direct
+      if (productService.create) {
+        return await productService.create(productToSave);
+      } else {
+        // Fallback - utiliser analyze qui existe deja
+        return await productService.analyze(productToSave);
+      }
     } catch (error) {
       console.error('Erreur sauvegarde:', error);
       return null;
