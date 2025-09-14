@@ -11,6 +11,7 @@ type Mode = "barcode" | "photo" | "manual";
 
 export default function ScanPage() {
   const [mode, setMode] = useState<Mode>("barcode");
+  const [showScanner, setShowScanner] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +59,10 @@ export default function ScanPage() {
       <div className="flex gap-2 mb-4">
         <button
           className={`px-3 py-2 rounded-lg ${mode === "barcode" ? "bg-emerald-600 text-white" : "bg-gray-200"}`}
-          onClick={() => setMode("barcode")}
+          onClick={() => {
+            setMode("barcode");
+            setShowScanner(true);
+          }}
         >
           Code-barres
         </button>
@@ -82,15 +86,39 @@ export default function ScanPage() {
         </div>
       )}
 
-      {mode === "barcode" && (
-        <BarcodeScanner onDetected={handleBarcode} onClose={() => setMode("manual")} onError={(e) => setError(e.message)} />
+      {/* Scanner de code-barres avec les bonnes props */}
+      {showScanner && (
+        <BarcodeScanner 
+          isOpen={showScanner}
+          onScanSuccess={(barcode: string) => {
+            setShowScanner(false);
+            handleBarcode(barcode);
+          }}
+          onClose={() => {
+            setShowScanner(false);
+            setMode("manual");
+          }}
+        />
       )}
-      {mode === "photo" && (
-        <PhotoCapture onOcrDone={handleOcrDone} onClose={() => setMode("manual")} onError={(e) => setError(e.message)} />
-      )}
-      {mode === "manual" && <ManualInput onSubmit={handleManual} onClose={() => setMode("barcode")} />}
 
-      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en cours�</div>}
+      {/* Photo capture */}
+      {mode === "photo" && !showScanner && (
+        <PhotoCapture 
+          onOcrDone={handleOcrDone} 
+          onClose={() => setMode("manual")} 
+          onError={(e) => setError(e.message)} 
+        />
+      )}
+
+      {/* Saisie manuelle */}
+      {mode === "manual" && !showScanner && (
+        <ManualInput 
+          onSubmit={handleManual} 
+          onClose={() => setMode("barcode")} 
+        />
+      )}
+
+      {busy && <div className="mt-4 text-sm text-gray-600">Analyse en cours...</div>}
     </div>
   );
 }
