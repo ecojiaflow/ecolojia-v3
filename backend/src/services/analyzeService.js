@@ -221,21 +221,7 @@ async function analyzeAutoSvc(input) {
   const { barcode, name, brand, category = 'food', ingredients, forceRefresh } = input;
   
   try {
-    // MongoDB cache check (avec gestion d'erreur)
-    if (!forceRefresh && barcode) {
-      try {
-        const Product = require('../models/Product');
-        const cached = await Product.findOne({ barcode }).lean();
-        if (cached && cached.scores && cached.scores.global) {
-          console.log('[CACHE] Found in MongoDB');
-          return formatAnalyzeResult(cached, 'cache');
-        }
-      } catch (dbError) {
-        console.log('[CACHE] MongoDB not available:', dbError.message);
-      }
-    }
-    
-    // Fetch external data
+    // Fetch external data TOUJOURS (pas de cache pour l'instant)
     let external = null;
     if (barcode) {
       external = await fetchExternalData(barcode, category);
@@ -263,87 +249,73 @@ async function analyzeAutoSvc(input) {
     });
     
     // Calculate scores based on category
-    let scores;
+    let calculatedScores;
     switch (category) {
       case 'food':
-        scores = scoreFood(merged);
+        calculatedScores = scoreFood(merged);
         break;
       case 'cosmetics':
-        scores = scoreCosmetics(merged);
+        calculatedScores = scoreCosmetics(merged);
         break;
       case 'detergents':
-        scores = scoreDetergent(merged);
+        calculatedScores = scoreDetergent(merged);
         break;
       default:
-        scores = { health: 50, eco: 50, global: 50 };
+        calculatedScores = { health: 50, eco: 50, global: 50 };
     }
     
     // Generate insights
-    const insights = generateInsights(merged, scores, category);
+    const insights = generateInsights(merged, calculatedScores, category);
     
-    // Save to DB if possible
+    // Prépare le document complet avec les scores calculés
+    const fullProductData = {
+      ...merged,
+      scores: calculatedScores,  // TOUJOURS utiliser les scores calculés
+      lastAnalyzedAt: new Date(),
+      insights: insights
+    };
+    
+    // Save to DB
+    let savedProduct;
     try {
       const Product = require('../models/Product');
-      const productData = Object.assign({}, merged, { 
-        scores, 
-        lastAnalyzedAt: new Date(),
-        insights: insights 
-      });
-      
       const filter = barcode ? { barcode } : { name: merged.name };
-      const saved = await Product.findOneAndUpdate(
+      
+      savedProduct = await Product.findOneAndUpdate(
         filter,
-        { $set: productData },
+        { $set: fullProductData },
         { new: true, upsert: true, lean: true }
       );
       
-      console.log('[DB] Saved to MongoDB');
-      return formatAnalyzeResult(saved, external ? 'external' : 'user_input', insights);
-      
+      console.log('[DB] Saved to MongoDB with new scores');
     } catch (dbError) {
       console.log('[DB] Save failed:', dbError.message);
-      
-      // Return without saving
-      return {
-        product: {
-          barcode: merged.barcode,
-          name: merged.name,
-          brand: merged.brand,
-          category: merged.category,
-          nutriScore: merged.nutriScore,
-          novaGroup: merged.novaGroup,
-          ecoScore: merged.ecoScore
-        },
-        scores: scores,
-        insights: insights,
-        dataSource: external ? 'external' : 'user_input'
-      };
+      // Continuer sans MongoDB
+      savedProduct = fullProductData;
     }
+    
+    // RETOURNER TOUJOURS LES SCORES CALCULÉS
+    return {
+      product: {
+        _id: savedProduct._id ? savedProduct._id.toString() : undefined,
+        barcode: savedProduct.barcode,
+        name: savedProduct.name,
+        brand: savedProduct.brand,
+        category: savedProduct.category,
+        nutriScore: savedProduct.nutriScore,
+        novaGroup: savedProduct.novaGroup,
+        ecoScore: savedProduct.ecoScore,
+        additives: savedProduct.additives
+      },
+      scores: calculatedScores,  // TOUJOURS les scores calculés, pas ceux de MongoDB
+      insights: insights,
+      dataSource: external ? 'external' : 'user_input'
+    };
     
   } catch (error) {
     console.error('[ERROR] analyzeAutoSvc failed:', error);
     throw error;
   }
-}
-
-// ========== FORMAT RESULT ==========
-function formatAnalyzeResult(product, dataSource, insights) {
-  return {
-    product: {
-      _id: product._id ? product._id.toString() : undefined,
-      barcode: product.barcode,
-      name: product.name,
-      brand: product.brand,
-      category: product.category,
-      nutriScore: product.nutriScore,
-      novaGroup: product.novaGroup,
-      ecoScore: product.ecoScore,
-      additives: product.additives
-    },
-    scores: product.scores || { health: 50, eco: 50, global: 50 },
-    insights: insights || product.insights || [],
-    dataSource: dataSource
-  };
 }
 
 // ========== EXPORTS ==========
