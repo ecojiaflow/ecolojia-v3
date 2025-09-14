@@ -91,7 +91,7 @@ function scoreFood(data) {
       4: 25   // Ultra-transformé
     };
     const novaValue = novaScoreMap[data.novaGroup] || 50;
-    healthScore = Math.round(healthScore * 0.6 + novaValue * 0.4);
+    healthScore = novaValue; // NOVA score devient le score principal
     console.log(`[SCORE] NOVA ${data.novaGroup} → ${novaValue}`);
   }
   
