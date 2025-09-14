@@ -1,4 +1,27 @@
-﻿import React, { useState } from 'react';
+# SCRIPT SIMPLE ECOLOJIA - SANS EMOJIS
+# =====================================
+
+param(
+    [string]$Command = "all"
+)
+
+# Configuration
+$FRONTEND_PATH = "C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend"
+$API_URL = "https://ecolojia-backendvf.onrender.com/api"
+
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host "     ECOLOJIA - CORRECTION AUTO      " -ForegroundColor Cyan
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host ""
+
+# ETAPE 1: CORRIGER LE SCANNER
+Write-Host "[1/3] CORRECTION DU SCANNER..." -ForegroundColor Yellow
+Set-Location $FRONTEND_PATH
+
+# Créer le nouveau scanner simple
+$scannerContent = @'
+import React, { useState } from 'react';
 import { X, Camera, Keyboard } from 'lucide-react';
 import { productService } from '../../services/api';
 import { toast } from 'react-hot-toast';
@@ -88,3 +111,51 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
 };
 
 export default BarcodeScanner;
+'@
+
+# Sauvegarder le fichier
+$scannerContent | Out-File -FilePath "src\components\scanner\BarcodeScanner.tsx" -Encoding UTF8
+Write-Host "  [OK] Scanner corrige" -ForegroundColor Green
+
+# ETAPE 2: BUILD DE TEST
+Write-Host ""
+Write-Host "[2/3] TEST DU BUILD..." -ForegroundColor Yellow
+npm run build 2>&1 | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "  [OK] Build reussi" -ForegroundColor Green
+} else {
+    Write-Host "  [ERREUR] Build echoue" -ForegroundColor Red
+    exit 1
+}
+
+# ETAPE 3: DEPLOIEMENT
+Write-Host ""
+Write-Host "[3/3] DEPLOIEMENT..." -ForegroundColor Yellow
+
+# Verifier s'il y a des changements
+$status = git status --porcelain
+if ($status) {
+    git add -A
+    git commit -m "fix: scanner simplifie avec recherche manuelle" | Out-Null
+    git push origin main | Out-Null
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  [OK] Deploye sur GitHub" -ForegroundColor Green
+    } else {
+        Write-Host "  [ERREUR] Push echoue" -ForegroundColor Red
+    }
+} else {
+    Write-Host "  [INFO] Aucun changement a deployer" -ForegroundColor Gray
+}
+
+# RESUME
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host "         TERMINE AVEC SUCCES         " -ForegroundColor Green
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "URLS:" -ForegroundColor Cyan
+Write-Host "  Frontend: https://frontendvf.netlify.app" -ForegroundColor White
+Write-Host "  Scanner: https://frontendvf.netlify.app/scan" -ForegroundColor White
+Write-Host ""
+Write-Host "ATTENDEZ 3-5 MINUTES pour le deploiement Netlify" -ForegroundColor Yellow
