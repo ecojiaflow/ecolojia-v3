@@ -56,7 +56,17 @@ export const productService = {
 
 export const dashboardService = {
   getStats: (period: "week" | "month" | "year" = "month") =>
-    api.get("/dashboard/stats", { params: { period } }).then((r) => r.data),
+    api.get("/dashboard/stats", { params: { period } }).then((r) => ({
+      totalScans: r.data.data?.totals?.scans || 0,
+      uniqueUsers: r.data.data?.totals?.products || 0,
+      avgGlobalScore: r.data.data?.averages?.health || 0,
+      scansByDay: r.data.data?.weeklyTrend?.map((item: any) => ({
+        date: item.day,
+        count: item.scans
+      })) || [],
+      topProducts: r.data.data?.topProducts?.slice(0, 5) || [],
+      topCategories: []
+    })),
 };
 
 export const visionService = {
