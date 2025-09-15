@@ -47,11 +47,3 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
-
-
-if (import.meta.env.DEV && 'serviceWorker' in navigator) {
-  // Désactive tout SW résiduel en dev pour éviter l'erreur 'sw.js:10'
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    for (const r of regs) { r.unregister().catch(()=>{}); }
-  }).catch(()=>{});
-}

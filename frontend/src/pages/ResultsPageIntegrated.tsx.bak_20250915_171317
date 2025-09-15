@@ -1,0 +1,102 @@
+﻿import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { ScoreGauge } from '../components/analysis/ScoreGauge';
+
+const ResultsPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [product, setProduct] = useState<any>(location.state?.product || null);
+  const [scores, setScores] = useState<any>(location.state?.scores || null);
+  const [insights, setInsights] = useState<any[]>(location.state?.insights || []);
+  const [loading, setLoading] = useState<boolean>(!product);
+
+  // Fallback depuis sessionStorage si on a perdu location.state (refresh, navigation directe, SW…)
+  useEffect(() => {
+    if (product) { setLoading(false); return; }
+    try {
+      const raw = sessionStorage.getItem('ecolojia:lastResult');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setProduct(parsed.product || null);
+        setScores(parsed.scores || null);
+        setInsights(parsed.insights || []);
+      }
+    } catch {}
+    setLoading(false);
+  }, []); // une fois
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center text-gray-600">⏳ Chargement…</div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Aucun résultat à afficher</p>
+          <Link to="/scan" className="text-emerald-600 hover:underline">Retour au scanner</Link>
+        </div>
+      </div>
+    );
+  }
+
+  const s = scores || { health: 50, eco: 50, global: 50 };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-5xl mx-auto p-4 space-y-6">
+        <div className="flex items-center gap-4 mb-6">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-xl font-semibold">Résultat d'analyse</h1>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 flex gap-4">
+          {product.imageUrl && (
+            <img src={product.imageUrl} alt={product.name} className="w-32 h-32 object-cover rounded" />
+          )}
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold">{product.name}</h2>
+            {product.brand && <div className="text-gray-600">{product.brand}</div>}
+            <div className="text-sm text-gray-500 mt-2">Code-barres: {product.barcode}</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ScoreGauge label="Score Santé" value={s.health} />
+          <ScoreGauge label="Score Environnement" value={s.eco} />
+          <ScoreGauge label="Score Global" value={s.global} />
+        </div>
+
+        {insights && insights.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h3 className="font-semibold mb-3">Analyse détaillée</h3>
+            <ul className="space-y-2">
+              {insights.map((insight: string, i: number) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-emerald-600 mt-1">•</span>
+                  <span className="text-gray-700">{insight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex gap-4">
+          <Link to="/scan" className="flex-1 py-3 bg-emerald-600 text-white rounded-lg text-center hover:bg-emerald-700">
+            Scanner un autre produit
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ResultsPage;

@@ -10,11 +10,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
-const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
-const ScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
+const ScanPage = lazy(() => import('./pages/ScanPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -70,7 +70,4 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
 

@@ -180,57 +180,7 @@ export const historyService = {
     catch { return { count: 0 }; }
   },
 };
-/** ---------- Auth Service ---------- */
-export const authService = {
-  // Connexion
-  login: async (payload: { email: string; password: string }) => {
-    // endpoints courants: /auth/login
-    return (await api.post("/auth/login", payload)).data;
-  },
-
-  // Inscription
-  register: async (payload: { name: string; email: string; password: string }) => {
-    return (await api.post("/auth/register", payload)).data;
-  },
-
-  // Profil courant
-  me: async () => {
-    try { return (await api.get("/auth/me")).data; }
-    catch { return (await api.get("/users/me")).data; } // fallback si backend expose /users/me
-  },
-
-  // Mise à jour profil
-  updateProfile: async (payload: { name?: string; avatarUrl?: string }) => {
-    try { return (await api.put("/auth/me", payload)).data; }
-    catch { return (await api.put("/users/me", payload)).data; }
-  },
-
-  // Déconnexion
-  logout: async () => {
-    try { return (await api.post("/auth/logout", {})).data; }
-    catch { return { ok: true }; }
-  },
-
-  // Rafraîchir le token (si dispo)
-  refresh: async () => {
-    try { return (await api.post("/auth/refresh", {})).data; }
-    catch { return null; }
-  },
-
-  // Demande de reset mot de passe
-  requestPasswordReset: async (email: string) => {
-    try { return (await api.post("/auth/password/request-reset", { email })).data; }
-    catch { return (await api.post("/auth/request-reset", { email })).data; }
-  },
-
-  // Réinitialisation mot de passe
-  resetPassword: async (payload: { token: string; password: string }) => {
-    try { return (await api.post("/auth/password/reset", payload)).data; }
-    catch { return (await api.post("/auth/reset", payload)).data; }
-  },
-};
 export { api as apiClient };
-
 
 
 

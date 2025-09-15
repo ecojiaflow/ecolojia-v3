@@ -1,0 +1,14 @@
+﻿// Dans frontend/src/App.tsx, REMPLACER les imports existants :
+
+// AVANT (chercher ces lignes) :
+const ScanPage = lazy(() => import('./pages/ScanPage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
+
+// APRÈS (remplacer par) :
+const ScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
+const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
+
+// VÉRIFIER que la route existe :
+<Route path="results" element={<ResultsPage />} />
+
+// Si elle n'existe pas, l'ajouter après la route "scan"

@@ -1,0 +1,186 @@
+﻿import React, { useEffect, useRef, useState } from 'react';
+import Quagga from '@ericblade/quagga2';
+import { BrowserMultiFormatReader } from '@zxing/browser';
+
+type Props = { 
+  onDetected: (code: string) => void; 
+  onCancel?: () => void;
+  className?: string;
+};
+
+const BarcodeScanner: React.FC<Props> = ({ onDetected, onCancel, className = '' }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string|null>(null);
+  const [engine, setEngine] = useState<'quagga'|'zxing'>('quagga');
+  const [isScanning, setIsScanning] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    let zxingReader: BrowserMultiFormatReader | null = null;
+    let stream: MediaStream | null = null;
+
+    const cleanup = () => {
+      try { 
+        Quagga.stop(); 
+      } catch {}
+      
+      if (zxingReader) { 
+        try { 
+          zxingReader.reset(); 
+        } catch {} 
+      }
+      
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      
+      if (ref.current) {
+        ref.current.innerHTML = '';
+      }
+    };
+
+    const startQuagga = async () => {
+      try {
+        await Quagga.init({
+          inputStream: {
+            name: 'Live', 
+            type: 'LiveStream', 
+            target: ref.current!,
+            constraints: { 
+              facingMode: 'environment', 
+              width: { ideal: 1280 }, 
+              height: { ideal: 720 } 
+            }
+          },
+          locator: { 
+            patchSize: 'medium', 
+            halfSample: true 
+          },
+          decoder: { 
+            readers: [
+              'ean_reader',
+              'ean_8_reader',
+              'upc_reader',
+              'upc_e_reader',
+              'code_128_reader'
+            ] 
+          },
+          locate: true,
+        }, (err) => { 
+          if (err) throw err; 
+          Quagga.start(); 
+        });
+
+        let last = ''; 
+        let lastTime = 0;
+        
+        Quagga.onDetected((data: any) => {
+          const code = data?.codeResult?.code; 
+          const now = Date.now();
+          if (!code || !mounted || !isScanning) return;
+          
+          if (code === last && (now - lastTime) < 1000) return;
+          
+          last = code; 
+          lastTime = now;
+          setIsScanning(false);
+          onDetected(code);
+        });
+      } catch (e: any) {
+        console.warn('Quagga failed, switching to ZXing:', e?.message);
+        setEngine('zxing');
+      }
+    };
+
+    const startZxing = async () => {
+      try {
+        zxingReader = new BrowserMultiFormatReader();
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: 'environment' } 
+        });
+        
+        const video = document.createElement('video');
+        video.setAttribute('playsinline', 'true'); 
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.srcObject = stream; 
+        
+        await video.play();
+        ref.current?.appendChild(video);
+        
+        const scan = async () => {
+          if (!mounted || !isScanning) return;
+          
+          try { 
+            const result = await zxingReader.decodeOnceFromVideoDevice(undefined, video); 
+            if (result?.getText()) {
+              setIsScanning(false);
+              onDetected(result.getText());
+            }
+          } catch { 
+            // Continue scanning
+          }
+          
+          if (mounted && isScanning) {
+            requestAnimationFrame(scan);
+          }
+        };
+        
+        scan();
+      } catch (e: any) { 
+        setError('Erreur caméra. Vérifiez les permissions.'); 
+      }
+    };
+
+    if (engine === 'quagga') {
+      startQuagga();
+    } else {
+      startZxing();
+    }
+
+    return cleanup;
+  }, [engine, onDetected, isScanning]);
+
+  return (
+    <div className={`space-y-3 ${className}`}>
+      <div className="w-full aspect-video bg-black rounded-xl overflow-hidden relative" ref={ref}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-2/3 h-1/3 border-2 border-white/70 rounded-md" />
+        </div>
+        {!isScanning && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="text-white text-lg">Code détecté !</div>
+          </div>
+        )}
+      </div>
+      
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      
+      <div className="flex items-center gap-3 text-sm text-gray-600">
+        <span>💡 Astuce: bonne lumière, cadrez le code dans le rectangle</span>
+        
+        <button 
+          className="ml-auto text-emerald-600 font-medium hover:underline" 
+          onClick={() => {
+            setIsScanning(true);
+            setEngine(engine === 'quagga' ? 'zxing' : 'quagga');
+          }}
+        >
+          Changer de moteur ({engine === 'quagga' ? 'ZXing' : 'Quagga'})
+        </button>
+        
+        {onCancel && (
+          <button 
+            onClick={onCancel}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            Annuler
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default BarcodeScanner;

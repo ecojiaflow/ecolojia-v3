@@ -1,0 +1,72 @@
+﻿import axios from "axios";
+import axiosRetry from "axios-retry";
+
+// Base URL: .env > fallback prod
+const API_URL =
+  import.meta?.env?.VITE_API_URL?.toString() ||
+  "https://ecolojia-backendvf.onrender.com/api";
+
+export const api = axios.create({
+  baseURL: API_URL,
+  headers: { "Content-Type": "application/json" },
+  timeout: 15000,
+});
+
+// Retry réseau + 5xx
+axiosRetry(api, {
+  retries: 2,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (err) =>
+    axiosRetry.isNetworkError(err) ||
+    !!(err.response && err.response.status >= 500),
+});
+
+// Auth header depuis localStorage si présent
+api.interceptors.request.use((config) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  } catch {}
+  return config;
+});
+
+// 🔴 IMPORTANT : toutes les méthodes retournent .data
+export const productService = {
+  analyze: (payload: {
+    barcode?: string;
+    category?: "food" | "cosmetics" | "detergents";
+    name?: string;
+    ingredients?: string;
+  }) => api.post("/analysis", payload).then((r) => r.data),
+
+  byBarcode: (barcode: string) =>
+    api.get(`/products/barcode/${barcode}`).then((r) => r.data),
+
+  search: (q: string) =>
+    api.get("/products/search", { params: { q } }).then((r) => r.data),
+
+  trending: () => api.get("/products/trending").then((r) => r.data),
+
+  alternatives: (productId: string) =>
+    api
+      .get(`/products/${productId}/alternatives`)
+      .then((r) => r.data)
+      .catch(() => api.get("/products/trending").then((r) => r.data)),
+};
+
+export const dashboardService = {
+  getStats: (period: "week" | "month" | "year" = "month") =>
+    api.get("/dashboard/stats", { params: { period } }).then((r) => r.data),
+};
+
+export const visionService = {
+  analyzeImage: (base64Image: string) =>
+    api.post("/vision/analyze-image", { image: base64Image }).then((r) => r.data),
+};
+
+export const aiService = {
+  chat: (message: string, context?: any) =>
+    api.post("/ai/chat", { message, context }).then((r) => r.data),
+};
+
+export { api as apiClient };
