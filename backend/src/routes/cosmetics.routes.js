@@ -9,7 +9,7 @@ function normalizeIngredients(input) {
   if (!input) return [];
   if (Array.isArray(input)) return input.map(s => String(s).toUpperCase().trim()).filter(Boolean);
   return String(input)
-    .replace(/INGRÉDIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
+    .replace(/INGRÃ‰DIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
     .replace(/\([^)]*\)/g, '')
     .split(/[,;]\s*|\n+/)
     .map(s => s.trim().toUpperCase())
@@ -98,7 +98,7 @@ const analyzeCosmeticController = async (req, res) => {
   }
 };
 
-// Export avec destructuring pour correspondre à l'import dans les routes
+// Export avec destructuring pour correspondre Ã  l'import dans les routes
 module.exports = {
   analyzeCosmeticController
 };

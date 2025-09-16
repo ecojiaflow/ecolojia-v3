@@ -39,11 +39,23 @@ export const productService = {
     ingredients?: string;
   }) => api.post("/analysis", payload).then((r) => r.data),
 
+  analyzeCosmetic: (payload: {
+    barcode?: string;
+    name?: string;
+    ingredients?: string;
+    photoUrl?: string;
+  }) => api.post("/cosmetics/analyze", payload).then((r) => r.data),
+
+  analyzeDetergent: (payload: {
+    barcode?: string;
+    name?: string;
+    category?: string;
+  }) => api.post("/detergents/analyze", payload).then((r) => r.data),
   byBarcode: (barcode: string) =>
     api.get(`/products/barcode/${barcode}`).then((r) => r.data),
 
-  search: (q: string) =>
-    api.get("/products/search", { params: { q } }).then((r) => r.data),
+  search: (q: string, filters?: any) =>
+    api.get("/products/search", { params: { q, ...filters } }).then((r) => r.data),
 
   trending: () => api.get("/products/trending").then((r) => r.data),
 

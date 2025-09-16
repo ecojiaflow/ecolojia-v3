@@ -1,129 +1,138 @@
-﻿import React, { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { ScoreGauge } from "../components/analysis/ScoreGauge";
-import { productService } from "../services/api";
+﻿import React from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { AlertTriangle, Leaf, Heart, Shield, Info } from "lucide-react";
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [search] = useSearchParams();
-  const barcodeFromUrl = useMemo(() => search.get("barcode") || undefined, [search]);
+  const [searchParams] = useSearchParams();
+  const barcode = searchParams.get("barcode");
 
-  const [product, setProduct] = useState<any>(location.state?.product || null);
-  const [scores, setScores] = useState<any>(location.state?.scores || null);
-  const [insights, setInsights] = useState<any[]>(location.state?.insights || []);
-  const [loading, setLoading] = useState<boolean>(!product);
-  const [error, setError] = useState<string | null>(null);
-
-  // 1) Fallback sessionStorage
-  useEffect(() => {
-    if (product) return;
+  // Récupérer les données depuis sessionStorage ou location state
+  const getResultData = () => {
+    if (location.state) return location.state;
     try {
-      const raw = sessionStorage.getItem("ecolojia:lastResult");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (!product) setProduct(parsed?.product || null);
-        if (!scores) setScores(parsed?.scores || null);
-        if (!insights?.length) setInsights(parsed?.insights || []);
-      }
-    } catch {}
-  }, []); // run once
+      const stored = sessionStorage.getItem("ecolojia:lastResult");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  };
 
-  // 2) Si pas de data et on a un ?barcode=..., re-fetch API
-  useEffect(() => {
-    const needFetch = !product && !!barcodeFromUrl;
-    if (!needFetch) { setLoading(false); return; }
+  const data = getResultData();
+  const category = sessionStorage.getItem("ecolojia:lastCategory") || "food";
 
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await productService.analyze({ barcode: barcodeFromUrl!, category: "food" });
-        setProduct(data?.product || null);
-        setScores(data?.scores || null);
-        setInsights(data?.insights || []);
-        try { sessionStorage.setItem("ecolojia:lastResult", JSON.stringify(data)); } catch {}
-      } catch (e: any) {
-        console.error("❌ Erreur fetch par barcode:", e);
-        setError("Impossible de récupérer le produit.");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [barcodeFromUrl, product]);
-
-  if (loading) {
+  if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center text-gray-600">⏳ Chargement…</div>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">{error || "Aucun résultat à afficher"}</p>
-          <Link to="/scan" className="text-emerald-600 hover:underline">Retour au scanner</Link>
+      <div className="max-w-2xl mx-auto p-4">
+        <div className="bg-yellow-50 border border-yellow-300 p-4 rounded-lg">
+          <p className="text-yellow-800">Aucune donnée d'analyse disponible.</p>
+          <a href="/scan" className="text-blue-600 underline mt-2 block">
+            Retour au scanner
+          </a>
         </div>
       </div>
     );
   }
 
-  const s = scores || { health: 50, eco: 50, global: 50 };
+  // Adapter l'affichage selon la catégorie
+  const getCategoryInfo = () => {
+    switch(category) {
+      case "cosmetics":
+        return {
+          title: "Analyse Cosmétique",
+          icon: "💄",
+          color: "purple",
+          description: "Analyse basée sur la composition INCI"
+        };
+      case "detergents":
+        return {
+          title: "Analyse Détergent",
+          icon: "🧽",
+          color: "blue",
+          description: "Évaluation de l'impact environnemental"
+        };
+      default:
+        return {
+          title: "Analyse Alimentaire",
+          icon: "🍕",
+          color: "green",
+          description: "Basée sur le Nutri-Score et NOVA"
+        };
+    }
+  };
+
+  const categoryInfo = getCategoryInfo();
+  const { product, scores } = data;
+  const healthScore = scores?.normalized?.value || scores?.healthScore || 50;
+  const environmentScore = scores?.environmentScore || 0;
+  const overallScore = scores?.globalScore || Math.round((healthScore + environmentScore) / 2);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto p-4 space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-xl font-semibold">Résultat d'analyse</h1>
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="bg-white rounded-lg shadow p-6">
+        <h1 className="text-2xl font-bold mb-4">Résultat d'analyse</h1>
+        
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+            <span className="text-2xl">{categoryInfo.icon}</span>
+            {product?.name || "Produit inconnu"}
+          </h2>
+          <p className="text-gray-600">
+            Code-barres: {barcode || product?.barcode || "Non disponible"}
+          </p>
         </div>
 
-        {/* Product card */}
-        <div className="bg-white rounded-xl shadow-sm p-6 flex gap-4">
-          {product.imageUrl && (
-            <img src={product.imageUrl} alt={product.name} className="w-32 h-32 object-cover rounded" />
+        {/* Scores simples sans gauge */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <div className="text-3xl font-bold text-green-600">{healthScore}%</div>
+            <p className="text-sm text-gray-600 mt-1">Score Santé</p>
+          </div>
+          
+          {environmentScore > 0 && (
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-3xl font-bold text-blue-600">{environmentScore}%</div>
+              <p className="text-sm text-gray-600 mt-1">Score Environnement</p>
+            </div>
           )}
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold">{product.name}</h2>
-            {product.brand && <div className="text-gray-600">{product.brand}</div>}
-            <div className="text-sm text-gray-500 mt-2">Code-barres: {product.barcode || barcodeFromUrl}</div>
+          
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <div className="text-3xl font-bold text-purple-600">{overallScore}%</div>
+            <p className="text-sm text-gray-600 mt-1">Score Global</p>
           </div>
         </div>
 
-        {/* Scores */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <ScoreGauge label="Score Santé" value={s.health ?? 0} />
-          <ScoreGauge label="Score Environnement" value={s.eco ?? 0} />
-          <ScoreGauge label="Score Global" value={s.global ?? 0} />
+        {/* Info catégorie */}
+        <div className={`bg-${categoryInfo.color}-50 p-4 rounded-lg`}>
+          <h3 className={`font-semibold text-${categoryInfo.color}-900 mb-2`}>
+            {categoryInfo.title}
+          </h3>
+          <p className={`text-sm text-${categoryInfo.color}-700`}>
+            {categoryInfo.description}
+          </p>
         </div>
 
-        {/* Insights */}
-        {Array.isArray(insights) && insights.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="font-semibold mb-3">Analyse détaillée</h3>
+        {/* Recommandations */}
+        {data.recommendations && data.recommendations.length > 0 && (
+          <div className="mt-6">
+            <h3 className="font-semibold mb-2">Recommandations</h3>
             <ul className="space-y-2">
-              {insights.map((ins: string, i: number) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-emerald-600 mt-1">•</span>
-                  <span className="text-gray-700">{ins}</span>
+              {data.recommendations.map((rec: string, idx: number) => (
+                <li key={idx} className="flex items-start gap-2 text-sm">
+                  <span className="text-green-500">•</span>
+                  <span>{rec}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        <div className="flex gap-4">
-          <Link to="/scan" className="flex-1 py-3 bg-emerald-600 text-white rounded-lg text-center hover:bg-emerald-700">
-            Scanner un autre produit
-          </Link>
-        </div>
+        <button
+          onClick={() => window.location.href = "/scan"}
+          className="w-full mt-6 bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+        >
+          Scanner un autre produit
+        </button>
       </div>
     </div>
   );

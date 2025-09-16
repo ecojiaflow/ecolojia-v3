@@ -4,13 +4,13 @@ import { Apple, Droplets, Sparkles } from 'lucide-react';
 
 interface CategorySelectorProps {
   selectedCategory: 'food' | 'cosmetics' | 'detergents';
-  onCategoryChange: (category: 'food' | 'cosmetics' | 'detergents') => void;
+  onChange: (category: 'food' | 'cosmetics' | 'detergents') => void;
   classNamea: string;
 }
 
 export const CategorySelector: React.FC<CategorySelectorProps> = ({
   selectedCategory,
-  onCategoryChange,
+  onChange,
   className = ''
 }) => {
   const categories = [
@@ -84,7 +84,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
             <div
               key={category.id}
               className={`category-card cursor-pointer p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${colors.border}`}
-              onClick={() => onCategoryChange(category.id)}
+              onClick={() => onChange(category.id)}
             >
               <div className="text-center">
                 {/* Icon */}
