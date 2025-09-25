@@ -6,6 +6,10 @@ import { productService } from '../services/api';
 import { toast } from 'react-hot-toast';
 import debounce from 'lodash/debounce';
 
+// Import des nouveaux composants M6
+import ScoreChip from '../components/ScoreChip';
+import DomainBadges, { mapCategoryToDomain } from '../components/DomainBadges';
+
 type Category = 'food' | 'cosmetics' | 'detergents';
 
 interface Product {
@@ -25,7 +29,11 @@ interface Product {
     nutriscore?: string;
     ecoscore?: string;
     nova?: number;
+    // Ajout scores M6
+    global?: number;
   };
+  // Compatibilité scores existants
+  ethicalScore?: number;
 }
 
 const SearchPage: React.FC = () => {
@@ -136,47 +144,30 @@ const SearchPage: React.FC = () => {
   };
 
   const handleProductClick = (product: Product) => {
-    navigate(`/product/${product._id}`);
-  };
-
-  const getCategoryBadge = (cat: Category) => {
-    const badges = {
-      food: { label: 'Alimentaire', color: 'bg-green-100 text-green-800', icon: '🍎' },
-      cosmetics: { label: 'Cosmétique', color: 'bg-pink-100 text-pink-800', icon: '💄' },
-      detergents: { label: 'Détergent', color: 'bg-blue-100 text-blue-800', icon: '🧽' },
-    };
-    return badges[cat] || { label: cat, color: 'bg-gray-100 text-gray-800', icon: '📦' };
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
-
-  const getNutriScoreColor = (score?: string) => {
-    const colors: Record<string, string> = {
-      'A': 'bg-green-600',
-      'B': 'bg-lime-500',
-      'C': 'bg-yellow-500',
-      'D': 'bg-orange-500',
-      'E': 'bg-red-600'
-    };
-    return colors[score || ''] || 'bg-gray-400';
-  };
-
-  const getNovaColor = (nova?: number) => {
-    if (!nova) return 'bg-gray-400';
-    if (nova === 1) return 'bg-green-600';
-    if (nova === 2) return 'bg-yellow-500';
-    if (nova === 3) return 'bg-orange-500';
-    return 'bg-red-600';
+    navigate(`/result?id=${product._id}`);
   };
 
   // Fonction pour obtenir l'URL de l'image
   const getProductImage = (product: Product) => {
     return product.images?.front || product.image_url || product.imageUrl;
+  };
+
+  // Calcul du score global pour M6
+  const getGlobalScore = (product: Product): number | null => {
+    // Priorité au score global s'il existe
+    if (product.scores?.global) return product.scores.global;
+    
+    // Conversion du score éthique si disponible
+    if (product.ethicalScore) return product.ethicalScore * 100;
+    
+    // Calcul basé sur les scores existants
+    if (product.scores?.healthScore || product.scores?.environmentScore) {
+      const health = product.scores.healthScore || 0;
+      const env = product.scores.environmentScore || 0;
+      return Math.round((health + env) / 2);
+    }
+    
+    return null;
   };
 
   return (
@@ -194,21 +185,38 @@ const SearchPage: React.FC = () => {
                 value={query}
                 onChange={handleQueryChange}
                 placeholder="Rechercher un produit, une marque..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 autoFocus
               />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  aria-label="Effacer la recherche"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
             
             <select
               value={category}
               onChange={handleCategoryChange}
-              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="">Toutes catégories</option>
               <option value="food">🍎 Alimentaire</option>
               <option value="cosmetics">💄 Cosmétiques</option>
               <option value="detergents">🧽 Détergents</option>
             </select>
+
+            <button
+              onClick={() => navigate('/scan')}
+              className="flex items-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              <Camera className="h-4 w-4" />
+              Scanner
+            </button>
           </div>
 
           {error && (
@@ -221,7 +229,7 @@ const SearchPage: React.FC = () => {
         {/* Résultats */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <Loader2 className="animate-spin h-8 w-8 text-green-500" />
+            <Loader2 className="animate-spin h-8 w-8 text-emerald-500" />
             <span className="ml-3 text-gray-600">Recherche en cours...</span>
           </div>
         ) : products.length > 0 ? (
@@ -234,6 +242,8 @@ const SearchPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => {
                 const imageUrl = getProductImage(product);
+                const globalScore = getGlobalScore(product);
+                const activeDomains = product.category ? [mapCategoryToDomain(product.category)] : ['food'];
                 
                 return (
                   <div
@@ -265,53 +275,85 @@ const SearchPage: React.FC = () => {
                     
                     {/* Infos produit */}
                     <div className="p-4">
-                      <h3 className="font-semibold text-lg text-gray-800 mb-1 line-clamp-2">
-                        {product.name}
-                      </h3>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 flex-1">
+                          {product.name}
+                        </h3>
+                        <ScoreChip 
+                          score={globalScore} 
+                          type={product.ethicalScore ? 'ethical' : 'percentage'}
+                          ariaLabel="Score global"
+                          className="flex-shrink-0" 
+                        />
+                      </div>
+                      
                       {product.brand && (
                         <p className="text-gray-600 text-sm mb-3">{product.brand}</p>
                       )}
                       
-                      {/* Badges */}
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryBadge(product.category).color}`}>
-                          {getCategoryBadge(product.category).icon} {getCategoryBadge(product.category).label}
-                        </span>
+                      {/* Badges domaines M6 + scores existants */}
+                      <div className="mb-3">
+                        <DomainBadges active={activeDomains} size="sm" className="mb-2" />
                         
-                        {product.scores?.nutriscore && (
-                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.nutriscore)}`}>
-                            {product.scores.nutriscore}
-                          </span>
-                        )}
-                        
-                        {product.scores?.nova && (
-                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNovaColor(product.scores.nova)}`}>
-                            NOVA {product.scores.nova}
-                          </span>
-                        )}
-                        
-                        {product.scores?.ecoscore && (
-                          <span className={`px-2 py-1 text-white rounded text-xs font-bold ${getNutriScoreColor(product.scores.ecoscore)}`}>
-                            ECO {product.scores.ecoscore}
-                          </span>
-                        )}
+                        {/* Badges scores existants */}
+                        <div className="flex flex-wrap gap-1">
+                          {product.scores?.nutriscore && (
+                            <span className={`px-2 py-1 text-white rounded text-xs font-bold ${
+                              product.scores.nutriscore === 'A' ? 'bg-green-600' :
+                              product.scores.nutriscore === 'B' ? 'bg-lime-500' :
+                              product.scores.nutriscore === 'C' ? 'bg-yellow-500' :
+                              product.scores.nutriscore === 'D' ? 'bg-orange-500' : 'bg-red-600'
+                            }`}>
+                              Nutri-Score {product.scores.nutriscore}
+                            </span>
+                          )}
+                          
+                          {product.scores?.nova && (
+                            <span className={`px-2 py-1 text-white rounded text-xs font-bold ${
+                              product.scores.nova === 1 ? 'bg-green-600' :
+                              product.scores.nova === 2 ? 'bg-yellow-500' :
+                              product.scores.nova === 3 ? 'bg-orange-500' : 'bg-red-600'
+                            }`}>
+                              NOVA {product.scores.nova}
+                            </span>
+                          )}
+                          
+                          {product.scores?.ecoscore && (
+                            <span className={`px-2 py-1 text-white rounded text-xs font-bold ${
+                              product.scores.ecoscore === 'A' ? 'bg-green-600' :
+                              product.scores.ecoscore === 'B' ? 'bg-lime-500' :
+                              product.scores.ecoscore === 'C' ? 'bg-yellow-500' :
+                              product.scores.ecoscore === 'D' ? 'bg-orange-500' : 'bg-red-600'
+                            }`}>
+                              Eco-Score {product.scores.ecoscore}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       
-                      {/* Scores */}
-                      {product.scores && (
-                        <div className="flex gap-4 text-sm">
+                      {/* Scores détaillés */}
+                      {product.scores && (product.scores.healthScore !== undefined || product.scores.environmentScore !== undefined) && (
+                        <div className="flex gap-4 text-sm text-gray-600">
                           {product.scores.healthScore !== undefined && (
                             <div>
-                              <span className="text-gray-600">Santé:</span>
-                              <span className={`font-medium ml-1 ${getScoreColor(product.scores.healthScore)}`}>
+                              <span>Santé:</span>
+                              <span className={`font-medium ml-1 ${
+                                product.scores.healthScore >= 80 ? 'text-green-600' :
+                                product.scores.healthScore >= 60 ? 'text-yellow-600' :
+                                product.scores.healthScore >= 40 ? 'text-orange-600' : 'text-red-600'
+                              }`}>
                                 {product.scores.healthScore}/100
                               </span>
                             </div>
                           )}
                           {product.scores.environmentScore !== undefined && (
                             <div>
-                              <span className="text-gray-600">Environnement:</span>
-                              <span className={`font-medium ml-1 ${getScoreColor(product.scores.environmentScore)}`}>
+                              <span>Environnement:</span>
+                              <span className={`font-medium ml-1 ${
+                                product.scores.environmentScore >= 80 ? 'text-green-600' :
+                                product.scores.environmentScore >= 60 ? 'text-yellow-600' :
+                                product.scores.environmentScore >= 40 ? 'text-orange-600' : 'text-red-600'
+                              }`}>
                                 {product.scores.environmentScore}/100
                               </span>
                             </div>
@@ -342,7 +384,8 @@ const SearchPage: React.FC = () => {
                 <button
                   onClick={() => handlePageChange(page + 1)}
                   disabled={page === totalPages}
-                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:cursor-not-allowed transition-colors"
+                  disabled={page === totalPages}
                 >
                   Suivant
                 </button>
@@ -354,11 +397,25 @@ const SearchPage: React.FC = () => {
             <Package className="w-24 h-24 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg">Aucun produit trouvé pour "{query}"</p>
             <p className="text-gray-500 mt-2">Essayez avec d'autres mots-clés ou changez de catégorie</p>
+            <button
+              onClick={() => navigate('/scan')}
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              <Camera className="h-4 w-4" />
+              Scanner un produit
+            </button>
           </div>
         ) : (
           <div className="text-center py-12 bg-white rounded-xl shadow-sm p-8">
             <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg">Commencez à taper pour rechercher des produits</p>
+            <button
+              onClick={() => navigate('/scan')}
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              <Camera className="h-4 w-4" />
+              Ou scanner un code-barre
+            </button>
           </div>
         )}
       </div>
@@ -367,3 +424,5 @@ const SearchPage: React.FC = () => {
 };
 
 export default SearchPage;
+
+
