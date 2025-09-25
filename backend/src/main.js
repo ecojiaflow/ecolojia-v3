@@ -64,3 +64,13 @@ try {
 module.exports = app;
 
 
+
+//
+// M7 public OCR mount (no auth, Google or stub)
+try {
+  app.use("/api/vision-ocr", require("./routes/vision.ocr.public"));
+  console.log("✓ Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
+} catch (e) {
+  console.warn("Vision OCR public mount failed:", e.message);
+}
+
