@@ -5,6 +5,9 @@ import DomainBadges from "../components/DomainBadges";
 
 type DomainKey = "food" | "beauty" | "detergent";
 
+// Route fiche produit configurable (ex. "/results" ou "/result")
+const RESULT_PATH = (import.meta.env.VITE_RESULT_PATH || "/results").replace(/\/+$/,"");
+
 function inferDomains(category: string, name: string, brand: string): DomainKey[] {
   const txt = `${category} ${name} ${brand}`.toLowerCase();
   if (/(cosm|beauty|cr[eè]me|shampoo|lotion|nivea|garnier)/i.test(txt)) return ["beauty"];
@@ -18,17 +21,12 @@ export default function SearchPage() {
   const [res, setRes] = React.useState<SearchResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  async function doSearch(e?: React.FormEvent) {
-    e?.preventDefault();
-    const query = q.trim();
-    if (!query) {
-      setRes({ items: [], source: "local" });
-      return;
-    }
-    setBusy(true);
-    setError(null);
+  async function doSearchQuery(query: string) {
+    const term = query.trim();
+    if (!term) { setRes({ items: [], source: "local" }); return; }
+    setBusy(true); setError(null);
     try {
-      const r = await searchProducts(query);
+      const r = await searchProducts(term);
       setRes(r);
     } catch (err: any) {
       setError(err?.message ?? "Erreur inconnue");
@@ -37,10 +35,28 @@ export default function SearchPage() {
     }
   }
 
-  function openAnalysis(code: string) {
-    if (code) {
-      window.location.href = `/result?code=${encodeURIComponent(code)}`;
+  async function doSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
+    await doSearchQuery(q);
+    // met l'URL à jour: /search?q=...
+    const url = new URL(window.location.href);
+    url.searchParams.set("q", q.trim());
+    window.history.replaceState(null, "", url.toString());
+  }
+
+  // Autorun si ?q= est présent (depuis la Home)
+  React.useEffect(() => {
+    const urlQ = new URLSearchParams(window.location.search).get("q") ?? "";
+    if (urlQ) {
+      setQ(urlQ);
+      // lance la recherche sans attendre l'utilisateur
+      doSearchQuery(urlQ);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function resultHref(code: string) {
+    return `${RESULT_PATH}?code=${encodeURIComponent(code)}`;
   }
 
   const items = (res?.items ?? []).map(toDisplayProduct);
@@ -49,7 +65,7 @@ export default function SearchPage() {
     <main className="mx-auto max-w-3xl p-4">
       <h1 className="text-2xl font-bold">Recherche</h1>
 
-      <form className="mt-4 flex gap-2" onSubmit={doSearch} role="search" aria-label="Recherche produit">
+      <form className="mt-4 flex gap-2" onSubmit={doSubmit} role="search" aria-label="Recherche produit">
         <label className="sr-only" htmlFor="q">Rechercher produit</label>
         <input
           id="q"
@@ -84,6 +100,7 @@ export default function SearchPage() {
       <section className="mt-4 grid grid-cols-1 gap-3" aria-live="polite">
         {items.map((p, idx) => {
           const domains = inferDomains(p.category, p.name, p.brand);
+          const href = resultHref(p.code);
           return (
             <article
               key={p.code || idx}
@@ -94,7 +111,7 @@ export default function SearchPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  openAnalysis(p.code);
+                  window.location.href = href;
                 }
               }}
             >
@@ -120,13 +137,13 @@ export default function SearchPage() {
                 <DomainBadges active={domains as any} className="mt-1" aria-label="Domaines" />
 
                 <div className="mt-2">
-                  <button
-                    onClick={() => openAnalysis(p.code)}
-                    className="rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  <a
+                    href={href}
+                    className="inline-block rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     aria-label="Voir analyse du produit"
                   >
                     Voir analyse
-                  </button>
+                  </a>
                 </div>
               </div>
             </article>
