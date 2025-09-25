@@ -55,3 +55,11 @@ if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) 
 app.listen(PORT, () => {
   console.log(`ECOLOJIA backend (bootstrap M1) on http://localhost:${PORT}`);
 });
+
+// M7: Vision OCR endpoint (analyze-image)
+try {
+  app.use('/api/vision', require('./routes/vision.analyze'));
+} catch(e){ console.warn('Vision analyze route load failed:', e.message); }
+
+module.exports = app;
+
