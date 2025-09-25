@@ -1,6 +1,6 @@
-﻿import React from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+﻿import { useLocation, useSearchParams } from "react-router-dom";
 import { AlertTriangle, Leaf, Heart, Shield, Info } from "lucide-react";
+import { inferDomain } from '../utils/domain';
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
@@ -20,6 +20,10 @@ const ResultsPage: React.FC = () => {
 
   const data = getResultData();
   const category = sessionStorage.getItem("ecolojia:lastCategory") || "food";
+
+  // Détection du domaine produit
+  const __domain = inferDomain(data);
+  const __isFood = __domain === 'food';
 
   if (!data) {
     return (
@@ -53,10 +57,10 @@ const ResultsPage: React.FC = () => {
         };
       default:
         return {
-          title: "Analyse Alimentaire",
+          title: __isFood ? "Analyse Alimentaire" : "Analyse du produit",
           icon: "🍕",
           color: "green",
-          description: "Basée sur le Nutri-Score et NOVA"
+          description: __isFood ? "Basée sur le Nutri-Score et NOVA" : "Synthèse non-alimentaire (composition, sécurité, environnement)"
         };
     }
   };
@@ -102,15 +106,26 @@ const ResultsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Info catégorie */}
-        <div className={`bg-${categoryInfo.color}-50 p-4 rounded-lg`}>
-          <h3 className={`font-semibold text-${categoryInfo.color}-900 mb-2`}>
-            {categoryInfo.title}
-          </h3>
-          <p className={`text-sm text-${categoryInfo.color}-700`}>
-            {categoryInfo.description}
-          </p>
-        </div>
+        {/* Info catégorie - masquer le bloc Nutri/NOVA pour non-alimentaire */}
+        {__isFood ? (
+          <div className={`bg-${categoryInfo.color}-50 p-4 rounded-lg`}>
+            <h3 className={`font-semibold text-${categoryInfo.color}-900 mb-2`}>
+              {categoryInfo.title}
+            </h3>
+            <p className={`text-sm text-${categoryInfo.color}-700`}>
+              {categoryInfo.description}
+            </p>
+          </div>
+        ) : (
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h3 className="font-semibold text-blue-900 mb-2">
+              {categoryInfo.title}
+            </h3>
+            <p className="text-sm text-blue-700">
+              {categoryInfo.description}
+            </p>
+          </div>
+        )}
 
         {/* Recommandations */}
         {data.recommendations && data.recommendations.length > 0 && (

@@ -1,0 +1,387 @@
+﻿// PATH: backend/src/server.js
+// Serveur ECOLOJIA robuste et prÃªt pour la production
+
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const path = require('path');
+const Redis = require('ioredis');
+
+// Import des modules de sécurité ECOLOJIA V3
+const { applySecurity } = require('./middleware/security');
+const ScoringV2Service = require('./services/scoring/ScoringV2Service');
+
+const app = express();
+
+
+const { reqId } = require('./utils/reqId');
+app.use(reqId());
+// Application de la sécurité ECOLOJIA V3
+applySecurity(app);
+
+// Instance du service de scoring V2
+const scoringService = new ScoringV2Service();
+app.locals.scoringService = scoringService;
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Configuration CORS optimisÃ©e
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://frontendvf.netlify.app',
+      'https://ecolojia.app',
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174',
+      process.env.FRONTEND_BASE_URL,
+    ].filter(Boolean);
+    
+    // En dÃ©veloppement, accepter toutes les origines
+    if (process.env.NODE_ENV === 'development') {
+      callback(null, true);
+      return;
+    }
+    
+    // En production, vÃ©rifier la liste blanche
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
+  maxAge: 86400 // Cache CORS preflight pendant 24h
+};
+
+app.use(cors(corsOptions));
+// FORCE UTF-8 ENCODING ON ALL RESPONSES
+app.use((req, res, next) => {
+  // Forcer UTF-8 pour toutes les réponses
+  res.charset = 'utf-8';
+  
+  // Override la méthode json pour forcer UTF-8
+  const originalJson = res.json;
+  res.json = function(data) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return originalJson.call(this, data);
+  };
+  
+  next();
+});
+
+// Headers de sÃ©curitÃ© supplÃ©mentaires
+app.use((req, res, next) => {
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'DENY');
+  res.header('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Middleware globaux
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Middleware pour forcer UTF-8 sur toutes les réponses
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
+
+// Fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Route de test racine avec info CORS
+app.get('/', (req, res) => {
+  res.json({
+    message: 'ECOLOJIA API V3.0',
+    status: 'running',
+    timestamp: new Date(),
+    cors: {
+      origin: req.headers.origin || 'No origin header',
+      allowed: corsOptions.origin instanceof Function ? 'Dynamic check' : corsOptions.origin
+    },
+    endpoints: {
+      auth: '/api/auth',
+      analysis: '/api/analysis',
+      vision: '/api/vision',
+      dashboard: '/api/dashboard',
+      cosmetics: '/api/cosmetics',  // NOUVEAU
+      detergents: '/api/detergents', // NOUVEAU
+      ai: '/api/ai',
+      gdpr: '/api/gdpr'
+    }
+  });
+});
+
+// Route de santÃ© pour monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    env: process.env.NODE_ENV || 'development'
+  });
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Fonction gÃ©nÃ©rique pour charger les routes - VERSION CORRIGÃ‰E
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const loadRoute = (name, modulePath, mountPath) => {
+  try {
+    const route = require(modulePath);
+    // VÃ©rifier si c'est un Router Express valide
+    // Un router Express a des propriÃ©tÃ©s comme 'stack' et des mÃ©thodes comme 'get', 'post', etc.
+    if (route && (typeof route === 'function' || (route.stack && route.use))) {
+      app.use(mountPath, route);
+      console.log(`âœ… Routes ${name} chargÃ©es sur ${mountPath}`);
+    } else {
+      console.log(`âš ï¸ Routes ${name} non valides - type: ${typeof route}`);
+    }
+  } catch (error) {
+    console.log(`âš ï¸ Routes ${name} non chargÃ©es: ${error.message}`);
+    // Afficher plus de dÃ©tails en dÃ©veloppement
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`   Stack trace:`, error.stack);
+    }
+  }
+};
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Chargement des routes
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+loadRoute('Auth', './routes/auth', '/api/auth');
+loadRoute('Analyse', './routes/analysis.routes', '/api/analysis');
+loadRoute('Vision', './routes/vision.routes', '/api/vision');
+loadRoute('Dashboard', './routes/dashboard', '/api/dashboard');
+
+// Routes cosmÃ©tiques et dÃ©tergents - NOUVEAU
+loadRoute('Cosmetics', './routes/cosmetics.routes', '/api/cosmetics');
+loadRoute('Detergents', './routes/detergents.routes', '/api/detergents');
+
+// Gestion spÃ©ciale pour les routes de paiement
+try {
+  const paymentRoutes = require('./routes/payment.routes');
+  app.use('/api/payment', paymentRoutes);
+  console.log('âœ… Routes Payment chargÃ©es');
+} catch (error) {
+  console.log('âš ï¸ Service Email non configurÃ© - Mode simulation activÃ©');
+  require.cache[require.resolve('./services/emailService')] = {
+    exports: {
+      sendEmail: async (options) => {
+        console.log('ðŸ“§ Email simulÃ©:', options.subject);
+        return { success: true, simulated: true };
+      }
+    }
+  };
+  const paymentRoutes = require('./routes/payment.routes');
+  app.use('/api/payment', paymentRoutes);
+  console.log('âœ… Routes Payment chargÃ©es (simulation email)');
+}
+
+loadRoute('GDPR', './routes/gdpr.routes', '/api/gdpr');
+loadRoute('AI', './routes/ai.routes', '/api/ai');
+loadRoute('User', './routes/user.routes', '/api/users');
+loadRoute('Users V2', './routes/v2/users', '/api/users/v2');
+loadRoute('Products', './routes/products', '/api/products');
+loadRoute('Products Search', './routes/products-search', '/api/products');
+loadRoute('Quota', './routes/quota', '/api/quota');
+loadRoute('Algolia', './routes/algolia-unified', '/api/algolia');
+loadRoute('Export', './routes/export', '/api/export');
+loadRoute('History', './routes/history', '/api/history');
+loadRoute('Favorites', './routes/favorites', '/api/favorites');
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Gestion des erreurs 404
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Endpoint non trouvÃ©',
+    path: req.path,
+    method: req.method,
+    suggestion: 'VÃ©rifiez l\'URL ou consultez GET / pour la liste des endpoints'
+  });
+});
+
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  // Gestion spÃ©ciale des erreurs CORS
+  if (err.message && err.message.includes('CORS')) {
+    return res.status(403).json({
+      error: 'CORS Policy Error',
+      message: 'Cette origine n\'est pas autorisÃ©e',
+      origin: req.headers.origin || 'No origin',
+      allowedOrigins: [
+        'https://frontendvf.netlify.app',
+        'http://localhost:5173',
+        'http://localhost:5174'
+      ]
+    });
+  }
+
+  console.error('Erreur serveur:', err.stack);
+  res.status(err.status || 500).json({
+    error: err.message || 'Erreur serveur interne',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Connexion MongoDB avec retry
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const connectMongoDB = async () => {
+  const maxRetries = 5;
+  let retries = 0;
+
+  while (retries < maxRetries) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log('âœ… MongoDB Atlas connectÃ©');
+      console.log(`ðŸ“Š Base de donnÃ©es: ${mongoose.connection.db.databaseName}`);
+      break;
+    } catch (err) {
+      retries++;
+      console.error(`âŒ Tentative ${retries}/${maxRetries} - Erreur MongoDB:`, err.message);
+      if (retries < maxRetries) {
+        console.log(`â³ Nouvelle tentative dans 5 secondes...`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
+  }
+};
+
+connectMongoDB();
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Connexion Redis avec fallback
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+let redisClient;
+
+try {
+  redisClient = new Redis({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD,
+    tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
+    retryStrategy: (times) => {
+      if (times > 3) {
+        console.log('âš ï¸ Redis indisponible, utilisation du cache mÃ©moire');
+        return null;
+      }
+      return Math.min(times * 50, 2000);
+    }
+  });
+
+  redisClient.on('connect', () => console.log('âœ… Redis connectÃ©'));
+  redisClient.on('error', (err) => console.error('âš ï¸ Redis erreur:', err.message));
+} catch (error) {
+  console.log('âš ï¸ Redis non configurÃ©, utilisation du cache mÃ©moire');
+}
+
+// Export du client Redis pour utilisation dans d'autres modules
+app.locals.redisClient = redisClient;
+global.redisClient = redisClient;
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Graceful shutdown
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+process.on('SIGTERM', async () => {
+  console.log('â„¹ï¸ SIGTERM reÃ§u, arrÃªt gracieux...');
+  
+  // Fermer les connexions
+  if (redisClient) await redisClient.quit();
+  await mongoose.connection.close();
+  
+  process.exit(0);
+});
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Lancement du serveur
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const PORT = process.env.PORT || 5001;
+const server = // Users V2 & Quota routes (mock auth)
+const usersV2Routes = require('./routes/users.v2.routes');
+const quotaRoutes = require('./routes/quota.routes');
+app.use('/api/users/v2', usersV2Routes);
+app.use('/api/quota', quotaRoutes);
+// === NOUVELLES ROUTES MOCK ===
+const usersV2Routes = require('./routes/users.v2.routes');
+const quotaRoutes = require('./routes/quota.routes');
+app.use('/api/users/v2', usersV2Routes);
+app.use('/api/quota', quotaRoutes);
+
+app.listen(PORT, () => {
+  console.log(`
+â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+â•‘                   ECOLOJIA Backend V3.0                       â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+â•‘  ðŸš€ Serveur:     http://localhost:${PORT}                     â•‘
+â•‘  ðŸ“Š Mode:        ${process.env.NODE_ENV || 'development'}                              â•‘
+â•‘  ðŸ”§ MongoDB:     ${mongoose.connection.readyState === 1 ? 'ConnectÃ© âœ…' : 'En attente â³'}              â•‘
+â•‘  ðŸ’¾ Redis:       ${redisClient && redisClient.status === 'ready' ? 'ConnectÃ© âœ…' : 'Cache mÃ©moire ðŸ“'}            â•‘
+â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+â•‘  ðŸ“ Endpoints principaux:                                     â•‘
+â•‘  â€¢ GET  /                          - Info API & endpoints     â•‘
+â•‘  â€¢ GET  /health                    - Ã‰tat du serveur          â•‘
+â•‘  â€¢ POST /api/auth/login            - Connexion               â•‘
+â•‘  â€¢ POST /api/auth/register         - Inscription             â•‘
+â•‘  â€¢ POST /api/analysis              - Analyse universelle     â•‘
+â•‘  â€¢ POST /api/cosmetics/analyze     - Analyse cosmÃ©tique ðŸ†•   â•‘
+â•‘  â€¢ POST /api/detergents/analyze    - Analyse dÃ©tergent ðŸ†•    â•‘
+â•‘  â€¢ POST /api/vision/analyze-image  - OCR sur image           â•‘
+â•‘  â€¢ GET  /api/dashboard/stats       - Statistiques            â•‘
+â•‘  â€¢ POST /api/payment/create-checkout - Paiement              â•‘
+â•‘  â€¢ GET  /api/gdpr/download-data    - Export RGPD             â•‘
+â•‘  â€¢ POST /api/ai/chat               - Chat IA                 â•‘
+â•‘  â€¢ GET  /api/users/v2/me           - Profil & PrÃ©fÃ©rences v2 â•‘
+â•‘  â€¢ PUT  /api/users/v2/me           - MAJ PrÃ©fÃ©rences IA      â•‘
+â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+ðŸ“‹ Ã‰tat des services externes:
+  ${process.env.MONGODB_URI ? 'âœ…' : 'âš ï¸'} MongoDB: ${process.env.MONGODB_URI ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.REDIS_URL || process.env.REDIS_HOST ? 'âœ…' : 'âš ï¸'} Redis: ${process.env.REDIS_URL || process.env.REDIS_HOST ? 'ConfigurÃ©' : 'Local'}
+  ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? 'âœ…' : 'âš ï¸'} Google Vision: ${process.env.GOOGLE_APPLICATION_CREDENTIALS ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.LEMONSQUEEZY_API_KEY ? 'âœ…' : 'âš ï¸'} LemonSqueezy: ${process.env.LEMONSQUEEZY_API_KEY ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.DEEPSEEK_API_KEY ? 'âœ…' : 'âš ï¸'} DeepSeek AI: ${process.env.DEEPSEEK_API_KEY ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.CLOUDINARY_CLOUD_NAME ? 'âœ…' : 'âš ï¸'} Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? 'ConfigurÃ©' : 'Non configurÃ©'}
+  ${process.env.ALGOLIA_APP_ID ? 'âœ…' : 'âš ï¸'} Algolia: ${process.env.ALGOLIA_APP_ID ? 'ConfigurÃ©' : 'Non configurÃ©'}
+
+ðŸŒ CORS configurÃ© pour:
+  â€¢ https://frontendvf.netlify.app (Production)
+  â€¢ http://localhost:5173 (Dev Vite)
+  â€¢ http://localhost:5174 (Dev Vite alt)
+  â€¢ ${process.env.NODE_ENV === 'development' ? 'Toutes origines (mode dev)' : 'Liste blanche uniquement'}
+
+ðŸŽ‰ Serveur ECOLOJIA prÃªt !
+ðŸ” Pour tester: curl http://localhost:${PORT}/health
+  `);
+});
+
+// Timeout pour les requÃªtes longues
+server.timeout = 30000; // 30 secondes
+
+module.exports = app;
+
+// Route test pour voir tous les produits
+app.get('/api/test-products', async (req, res) => {
+  const Product = require('./models/Product');
+  const products = await Product.find().limit(100);
+  res.json({ count: products.length, products });
+});
+
+
+
+
+
