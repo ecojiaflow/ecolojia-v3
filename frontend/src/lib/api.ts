@@ -1,99 +1,79 @@
-﻿// Adaptation à votre structure existante
-import { productService } from '../services/api'; // Utilise votre service existant
-
-const API_BASE = import.meta.env.VITE_API_BASE?.replace(/\/+$/, "") || "";
+﻿const API_BASE = (import.meta.env.VITE_API_URL?.replace(/\/+$/, "") || "");
 
 export type SearchResult = {
-  items: any[];     // produits pour la recherche
+  items: any[];
   source: "algolia" | "local";
-  total?: number;
 };
 
-async function fetchJSON(input: RequestInfo, init?: RequestInit) {
-  const res = await fetch(input, init);
+async function fetchJSON(url: string) {
+  const res = await fetch(url, { credentials: "include" as RequestCredentials });
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
 }
 
+function normalizeItemsFromAlgolia(payload: any): any[] {
+  if (!payload) return [];
+  if (Array.isArray(payload?.hits)) return payload.hits;
+  if (Array.isArray(payload?.data?.products)) return payload.data.products;
+  if (Array.isArray(payload?.products)) return payload.products;
+  return [];
+}
+
+function normalizeItemsFromLocal(payload: any): any[] {
+  if (!payload) return [];
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.products)) return payload.products;
+  if (Array.isArray(payload)) return payload;
+  return [];
+}
+
 /**
- * Service de recherche unifié qui tente Algolia puis fallback local
- * Compatible avec votre architecture existante
+ * Algolia-first → fallback local
+ * - Algolia: GET /api/algolia/search?q=
+ *   shape possible: { hits: [...] } OU { data: { products: [...] } } OU { products: [...] }
+ * - Local:   GET /api/products?query=
+ *   shape possible: { products: [...] } OU { items: [...] } OU [ ... ]
  */
-export async function searchProducts(query: string, filters?: {
-  category?: string;
-  limit?: number;
-}): Promise<SearchResult> {
-  const trimmedQuery = query.trim();
-  if (!trimmedQuery) return { items: [], source: "local" };
+export async function searchProducts(query: string): Promise<SearchResult> {
+  const q = encodeURIComponent(query.trim());
+  if (!q) return { items: [], source: "local" };
 
-  const { category, limit = 20 } = filters || {};
-
-  // 1) Tentative Algolia via votre backend existant
+  // 1) Tentative Algolia (unifiée)
   try {
-    const algoliaUrl = `${API_BASE}/api/algolia/search`;
-    const params = new URLSearchParams({ q: trimmedQuery });
-    if (category) params.append('category', category);
-    if (limit) params.append('limit', limit.toString());
-
-    const data = await fetchJSON(`${algoliaUrl}?${params}`);
-    
-    // Si Algolia retourne des résultats réels (pas un mock)
-    const hits = Array.isArray(data?.hits) ? data.hits : [];
-    if (hits.length > 0 && data?.source !== "mock") {
-      return { 
-        items: hits, 
-        source: "algolia",
-        total: data?.nbHits || hits.length 
-      };
-    }
-  } catch (error) {
-    console.warn('Algolia search failed, falling back to local:', error);
+    const data = await fetchJSON(`${API_BASE}/api/algolia/search?q=${q}`);
+    const items = normalizeItemsFromAlgolia(data);
+    if (items.length > 0) return { items, source: "algolia" };
+  } catch {
+    // ignore -> fallback
   }
 
-  // 2) Fallback vers votre productService existant
+  // 2) Fallback local
   try {
-    // Utilise votre méthode existante
-    const response = await productService.searchProducts({
-      query: trimmedQuery,
-      category,
-      limit
-    });
-    
-    // Adaptation selon la structure de votre réponse
-    const items = response?.products || response?.items || response || [];
-    
-    return { 
-      items: Array.isArray(items) ? items : [],
-      source: "local",
-      total: response?.total || items.length
-    };
-  } catch (error) {
-    console.error('Local search failed:', error);
+    const data = await fetchJSON(`${API_BASE}/api/products?query=${q}`);
+    const items = normalizeItemsFromLocal(data);
+    return { items, source: "local" };
+  } catch {
     return { items: [], source: "local" };
   }
 }
 
-/**
- * Recherche par code-barre (peut utiliser Algolia + OFF fallback)
- */
-export async function searchByBarcode(barcode: string): Promise<any> {
-  try {
-    // Utilise votre service existant qui gère déjà OFF
-    return await productService.getProductByBarcode(barcode);
-  } catch (error) {
-    console.error('Barcode search failed:', error);
-    throw error;
-  }
-}
+// Helpers de normalisation pour l'UI
+export function toDisplayProduct(p: any) {
+  const name = p?.name ?? p?.product_name ?? "Produit";
+  const brand = p?.brand ?? p?.brands ?? "Marque inconnue";
+  const code = p?.barcode ?? p?.code ?? p?._id ?? "";
+  const category = (p?.category ?? p?.categories_tags?.[0] ?? "").toString().toLowerCase();
+  const imageUrl =
+    p?.imageUrl ||
+    p?.image_front_url ||
+    p?.image_small_url ||
+    "/placeholder-product.png";
 
-/**
- * Obtenir les détails d'un produit par ID
- */
-export async function getProductDetails(id: string): Promise<any> {
-  try {
-    return await productService.getProductById(id);
-  } catch (error) {
-    console.error('Get product details failed:', error);
-    throw error;
-  }
+  const score =
+    p?.scores?.global ??
+    p?.globalScore ??
+    p?.healthScore ??
+    null;
+
+  return { name, brand, code, category, imageUrl, score, raw: p };
 }
