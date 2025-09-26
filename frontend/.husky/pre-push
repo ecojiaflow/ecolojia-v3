@@ -1,0 +1,6 @@
+git diff --cached --name-only | findstr /R /I "\.env$ \.pem$" && (
+  echo "? Fichiers sensibles détectés (.env/.pem). Annule le push." && exit 1
+)
+git diff --cached | findstr /R /I "ALGOLIA_ADMIN_KEY|MONGODB\+srv" && (
+  echo "? Motifs secrets détectés. Annule le push." && exit 1
+)
