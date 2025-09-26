@@ -1,17 +1,17 @@
-ï»¿import React from "react";
+import React from "react";
+import SearchBar from "../components/search/SearchBar";
+import FiltersPanel from "../components/search/FiltersPanel";
 import { searchProducts, toDisplayProduct, SearchResult } from "../lib/api";
 import ScoreChip from "../components/ScoreChip";
 import DomainBadges from "../components/DomainBadges";
 
 type DomainKey = "food" | "beauty" | "detergent";
-
-// Route fiche produit configurable (ex. "/results" ou "/result")
 const RESULT_PATH = (import.meta.env.VITE_RESULT_PATH || "/results").replace(/\/+$/,"");
 
 function inferDomains(category: string, name: string, brand: string): DomainKey[] {
   const txt = `${category} ${name} ${brand}`.toLowerCase();
-  if (/(cosm|beauty|cr[eÃ¨]me|shampoo|lotion|nivea|garnier)/i.test(txt)) return ["beauty"];
-  if (/(d[eÃ©]tergent|lessive|ariel|dash|omo|liquide vaisselle|cleaner)/i.test(txt)) return ["detergent"];
+  if (/(cosm|beauty|cr[eè]me|shampoo|lotion|nivea|garnier)/i.test(txt)) return ["beauty"];
+  if (/(d[eé]tergent|lessive|ariel|dash|omo|liquide vaisselle|cleaner)/i.test(txt)) return ["detergent"];
   return ["food"];
 }
 
@@ -21,139 +21,91 @@ export default function SearchPage() {
   const [res, setRes] = React.useState<SearchResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  async function doSearchQuery(query: string) {
-    const term = query.trim();
+  // 1) Hydrate depuis l'URL et lance la recherche automatiquement
+  React.useEffect(() => {
+    const urlQ = new URLSearchParams(window.location.search).get("q") ?? "";
+    setQ(urlQ);
+    if (urlQ) doSearch(urlQ);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2) Un seul endroit qui lance la recherche + met l'URL à jour
+  async function doSearch(query: string) {
+    const term = (query || "").trim();
+    // garde l'URL en phase
+    const url = new URL(window.location.href);
+    if (term) url.searchParams.set("q", term); else url.searchParams.delete("q");
+    window.history.replaceState(null, "", url.toString());
+
     if (!term) { setRes({ items: [], source: "local" }); return; }
     setBusy(true); setError(null);
     try {
       const r = await searchProducts(term);
       setRes(r);
-    } catch (err: any) {
-      setError(err?.message ?? "Erreur inconnue");
+    } catch (e: any) {
+      setError(e?.message ?? "Erreur inconnue");
     } finally {
       setBusy(false);
     }
   }
 
-  async function doSubmit(e?: React.FormEvent) {
-    e?.preventDefault();
-    await doSearchQuery(q);
-    // met l'URL Ã  jour: /search?q=...
-    const url = new URL(window.location.href);
-    url.searchParams.set("q", q.trim());
-    window.history.replaceState(null, "", url.toString());
-  }
-
-  // Autorun si ?q= est prÃ©sent (depuis la Home)
-  React.useEffect(() => {
-    const urlQ = new URLSearchParams(window.location.search).get("q") ?? "";
-    if (urlQ) {
-      setQ(urlQ);
-      // lance la recherche sans attendre l'utilisateur
-      doSearchQuery(urlQ);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   function resultHref(code: string) {
-    return `${RESULT_PATH}?code=${encodeURIComponent(code)}`;
+    return `${RESULT_PATH}/${encodeURIComponent(code)}`;
   }
-
-  const items = (res?.items ?? []).map(toDisplayProduct);
 
   return (
-    <main className="mx-auto max-w-3xl p-4">
-      <h1 className="text-2xl font-bold">Recherche</h1>
+    <div className="mx-auto max-w-5xl px-6 py-8">
+      <h1 className="text-2xl font-semibold mb-4">Recherche</h1>
 
-      <form className="mt-4 flex gap-2" onSubmit={doSubmit} role="search" aria-label="Recherche produit">
-        <label className="sr-only" htmlFor="q">Rechercher produit</label>
-        <input
-          id="q"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Ex.: nutella, nivea, arielâ€¦"
-          className="flex-1 rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-          aria-label="Saisir un nom de produit ou marque"
-        />
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-60"
-          aria-busy={busy}
-        >
-          {busy ? "Rechercheâ€¦" : "Chercher"}
-        </button>
-      </form>
+      {/* La même barre que sur l'accueil, mais ici elle exécute la recherche */}
+      <SearchBar
+        initialQuery={q} showSuggestions={false}
+        onSearch={(term) => { setQ(term); doSearch(term); }}
+        className="mb-4"
+      />
 
-      {error && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700" role="alert">
-          {error}
-        </div>
-      )}
+      {/* (Optionnel) Panneau de filtres si déjà implémenté */}
+      <FiltersPanel
+        onApply={(f) => {
+          // à brancher plus tard avec ton backend facetté
+          // pour l'instant on relance juste la même recherche
+          doSearch(q);
+        }}
+      />
 
-      {res && (
-        <p className="mt-3 text-sm text-gray-500">
-          Source: <strong>{res.source === "algolia" ? "Algolia" : "Base locale"}</strong> â€” {items.length} rÃ©sultat(s)
-        </p>
-      )}
-
-      <section className="mt-4 grid grid-cols-1 gap-3" aria-live="polite">
-        {items.map((p, idx) => {
-          const domains = inferDomains(p.category, p.name, p.brand);
-          const href = resultHref(p.code);
-          return (
-            <article
-              key={p.code || idx}
-              className="group relative grid grid-cols-[96px_1fr] gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md focus-within:ring-2 focus-within:ring-emerald-400"
-              tabIndex={0}
-              role="article"
-              aria-label={`${p.name} â€” ${p.brand}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  window.location.href = href;
-                }
-              }}
-            >
-              <img
-                src={p.imageUrl}
-                alt={p.name}
-                className="h-24 w-24 rounded-xl object-cover border border-gray-200"
-                loading="lazy"
-              />
-
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-base font-semibold leading-tight truncate" title={p.name}>
-                    {p.name}
-                  </h3>
-                  <ScoreChip score={p.score ?? undefined} ariaLabel="Score global" />
-                </div>
-
-                <p className="text-sm text-gray-600 truncate" title={p.brand}>
-                  {p.brand}
-                </p>
-
-                <DomainBadges active={domains as any} className="mt-1" aria-label="Domaines" />
-
-                <div className="mt-2">
-                  <a
-                    href={href}
-                    className="inline-block rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                    aria-label="Voir analyse du produit"
-                  >
-                    Voir analyse
-                  </a>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </section>
-
-      {!busy && items.length === 0 && q.trim() !== "" && (
-        <p className="mt-6 text-gray-600">Aucun rÃ©sultat. Essayez une autre recherche.</p>
-      )}
-    </main>
+      <div className="mt-6">
+        {busy && <div className="text-sm text-gray-500">Recherche en cours…</div>}
+        {error && <div className="text-sm text-red-600">{error}</div>}
+        {!busy && !error && res && (
+          <div className="space-y-3">
+            {res.items.length === 0 && <div className="text-sm text-gray-500">Aucun résultat.</div>}
+            {res.items.map((p, idx) => {
+              const d = toDisplayProduct(p);
+              const domains = inferDomains(d.category || "", d.name || "", d.brand || "");
+              return (
+                <a key={(p as any).objectID || (p as any)._id || d.id || d.barcode || String(idx)} href={resultHref(d.barcode || d.id)} className="block rounded-xl border p-4 hover:bg-gray-50">
+                  <div className="flex items-start justify-between">
+                    <div className="min-w-0">
+                      <div className="font-medium">{d.name || "(sans nom)"}</div>
+                      <div className="text-xs text-gray-500">
+                        {d.brand ? `${d.brand}` : ""} {d.category ? ` · ${d.category}` : ""}
+                      </div>
+                      <div className="mt-2">
+                        <DomainBadges domains={domains as any} />
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <ScoreChip score={typeof d.healthScore === "number" ? d.healthScore : undefined} />
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
+
+

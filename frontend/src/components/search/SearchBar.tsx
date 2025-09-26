@@ -1,7 +1,8 @@
-﻿// PATH: frontend/src/components/search/SearchBar.tsx
-import React, { useState, useEffect } from 'react';
-import { Search, TrendingUp, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+/** PATH: frontend/src/components/search/SearchBar.tsx */
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import SearchAutocomplete from "./SearchAutocomplete";
+import { Search, X } from "lucide-react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -14,21 +15,17 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  placeholder = "Recherchez parmi 2M+ produits (Nutella, L'Oréal, Ariel...)",
+  placeholder = "Recherchez parmi 2M+ produits (Nutella, L'Or�al, Ariel...)",
   initialQuery = "",
   showSuggestions = true,
   autoFocus = false,
-  className = ""
+  className = "",
 }) => {
   const [query, setQuery] = useState(initialQuery);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const popularSearches = [
-    { query: 'Nutella bio', icon: '🍫', category: 'Alimentaire' },
-    { query: 'Shampoing sans sulfate', icon: '🧴', category: 'Cosmétiques' },
-    { query: 'Lessive écologique', icon: '🧽', category: 'Détergents' },
-    { query: 'Dentifrice naturel', icon: '🦷', category: 'Hygiène' }
-  ];
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setQuery(initialQuery);
@@ -36,15 +33,29 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-      setShowDropdown(false);
+    const term = (query || "").trim();
+    if (!term) return;
+
+    if (location.pathname === "/") {
+      // Depuis la Home: on redirige vers /search?q=...
+      navigate("/search?q=" + encodeURIComponent(term));
+    } else {
+      // Depuis /search: on d�clenche la recherche fournie par la page
+      onSearch(term);
     }
+    setShowDropdown(false);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    onSearch(suggestion);
+    const term = (suggestion || "").trim();
+    if (!term) return;
+    setQuery(term);
+
+    if (location.pathname === "/") {
+      navigate("/search?q=" + encodeURIComponent(term));
+    } else {
+      onSearch(term);
+    }
     setShowDropdown(false);
   };
 
@@ -53,26 +64,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <form onSubmit={handleSubmit}>
         <div className="relative flex items-center bg-white rounded-2xl shadow-xl">
           <Search className="absolute left-6 w-5 h-5 text-gray-400" />
-          
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
             placeholder={placeholder}
-            className="w-full pl-14 pr-4 py-5 text-lg rounded-l-2xl focus:outline-none focus:ring-4 focus:ring-green-100"
             autoFocus={autoFocus}
+            className="w-full pl-14 pr-28 py-3 rounded-2xl outline-none"
           />
 
           {query && (
             <button
               type="button"
-              onClick={() => {
-                setQuery('');
-                setShowDropdown(false);
-              }}
-              className="absolute right-36 p-2 hover:bg-gray-100 rounded-full"
+              onClick={() => { setQuery(""); setShowDropdown(false); }}
+              className="absolute right-28 px-2 py-2"
+              aria-label="Effacer"
             >
               <X className="w-4 h-4 text-gray-400" />
             </button>
@@ -80,64 +87,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
           <button
             type="submit"
-            className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-5 
-                     rounded-r-2xl font-medium hover:from-green-600 hover:to-green-700 
-                     transition-all flex items-center gap-2 group"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-green-600 text-white px-4 py-2 text-sm"
           >
             Rechercher
-            <Search className="w-4 h-4" />
           </button>
         </div>
       </form>
 
-      {/* Dropdown de suggestions */}
-      <AnimatePresence>
-        {showDropdown && showSuggestions && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl z-50 overflow-hidden"
-          >
-            <div className="p-3 border-b bg-gray-50">
-              <span className="text-sm font-medium text-gray-700">Recherches populaires</span>
-            </div>
-            
-            <div className="py-2">
-              {popularSearches.map((item, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => handleSuggestionClick(item.query)}
-                  className="w-full flex items-center px-4 py-3 hover:bg-gray-50 transition-colors text-left group"
-                >
-                  <span className="text-2xl mr-3">{item.icon}</span>
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-800">{item.query}</div>
-                    <div className="text-xs text-gray-500">{item.category}</div>
-                  </div>
-                  <TrendingUp className="w-4 h-4 text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Suggestions sous la barre */}
-      {showSuggestions && !showDropdown && (
-        <div className="flex flex-wrap gap-2 justify-center mt-4">
-          {popularSearches.map((item) => (
-            <button
-              key={item.query}
-              type="button"
-              onClick={() => handleSuggestionClick(item.query)}
-              className="px-4 py-2 bg-white rounded-full text-sm hover:bg-green-50 
-                       transition-colors border border-gray-200 hover:border-green-300"
-            >
-              {item.icon} {item.query}
-            </button>
-          ))}
+      {showSuggestions && (
+        <div className="absolute left-0 right-0">
+          <SearchAutocomplete query={query} onPick={handleSuggestionClick} />
         </div>
       )}
     </div>

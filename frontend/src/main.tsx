@@ -1,4 +1,4 @@
-ï»¿// PATH: frontend/src/main.tsx
+// PATH: frontend/src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,7 +7,7 @@ import App from './App';
 import { AuthProvider } from './Contexts/AuthContext';
 import './index.css';
 
-// CrÃ©er le root element
+// Créer le root element
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
@@ -16,7 +16,7 @@ const root = ReactDOM.createRoot(rootElement);
 // Rendre l'application
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <App />
         <Toaster
@@ -50,8 +50,9 @@ root.render(
 
 
 if (import.meta.env.DEV && 'serviceWorker' in navigator) {
-  // DÃ©sactive tout SW rÃ©siduel en dev pour Ã©viter l'erreur 'sw.js:10'
+  // Désactive tout SW résiduel en dev pour éviter l'erreur 'sw.js:10'
   navigator.serviceWorker.getRegistrations().then(regs => {
     for (const r of regs) { r.unregister().catch(()=>{}); }
   }).catch(()=>{});
 }
+
