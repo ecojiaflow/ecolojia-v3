@@ -1,0 +1,3 @@
+﻿Front 5173 TcpTestSucceeded: False
+Back  10000 TcpTestSucceeded: False
+/api/health: unreachable (Le délai de l’opération a expiré.)

@@ -1,4 +1,4 @@
-require("dotenv").config();
+﻿require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -33,12 +33,12 @@ function safeMount(base, rel) {
     const router = require(rel);
     if (router && router.stack) {
       app.use(base, router);
-      console.log(`? Mounted ${base} -> ${rel}`);
+      console.log(`✓ Mounted ${base} -> ${rel}`);
     } else {
-      console.warn(`? ${rel} ne retourne pas un router Express`);
+      console.warn(`⚠ ${rel} ne retourne pas un router Express`);
     }
   } catch (e) {
-    console.warn(`� Route optionnelle ignor�e: ${rel} (${e.message})`);
+    console.warn(`• Route optionnelle ignorée: ${rel} (${e.message})`);
   }
 }
 
@@ -50,7 +50,7 @@ safeMount("/api/algolia",  path.join(__dirname, "routes/algolia-unified.js"));
 if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) {
   safeMount("/api/algolia", path.join(__dirname, "routes/algolia.js"));
 }
-// (paiements volontairement non mont�s en M1)
+// (paiements volontairement non montés en M1)
 
 app.listen(PORT, () => {
   console.log(`ECOLOJIA backend (bootstrap M1) on http://localhost:${PORT}`);
@@ -69,25 +69,8 @@ module.exports = app;
 // M7 public OCR mount (no auth, Google or stub)
 try {
   app.use("/api/vision-ocr", require("./routes/vision.ocr.public"));
-  console.log("? Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
+  console.log("✓ Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
 } catch (e) {
   console.warn("Vision OCR public mount failed:", e.message);
 }
 
-try {
-  const reindexRouter = require('./routes/algolia-reindex');
-  app.use('/api/algolia-reindex', reindexRouter);
-  console.log('? Mounted /api/algolia -> routes/algolia-reindex.js');
-} catch (e) {
-  console.error('?? Failed to mount algolia-reindex:', e && e.message);
-}
-
-try {
-  const reindexPath = require('path').join(__dirname, 'routes', 'algolia-reindex');
-  console.log('[REINDEX] Loading router from:', reindexPath);
-  const reindexRouter = require(reindexPath);
-  app.use('/api/algolia-reindex', reindexRouter);
-  console.log('? Mounted /api/algolia-reindex -> routes/algolia-reindex.js');
-} catch (e) {
-  console.error('? Failed to mount /api/algolia-reindex:', e && (e.stack || e.message));
-}

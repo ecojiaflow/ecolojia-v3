@@ -1,0 +1,349 @@
+﻿
+===== frontend package.json (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package.json) =====
+
+{
+  "name": "ecolojia-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest",
+    "test:e2e": "playwright test",
+    "type-check": "tsc --noEmit",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@ericblade/quagga2": "^1.8.4",
+    "@hookform/resolvers": "^3.3.4",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@tanstack/react-query": "^5.85.5",
+    "@zxing/browser": "^0.1.5",
+    "algoliasearch": "^4.22.0",
+    "axios": "^1.11.0",
+    "axios-retry": "^4.5.0",
+    "chart.js": "^4.5.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^10.18.0",
+    "html2canvas": "^1.4.1",
+    "i18next": "^23.7.16",
+    "jspdf": "^3.0.2",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.303.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.6.0",
+    "react-i18next": "^14.0.0",
+    "react-instantsearch": "^7.5.0",
+    "react-router-dom": "^6.21.1",
+    "recharts": "^2.15.4",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "workbox-window": "^7.0.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/jspdf": "^1.3.3",
+    "@types/node": "^20.19.11",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^1.1.3",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "jsdom": "^23.2.0",
+    "playwright": "^1.54.2",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-pwa": "^0.17.5",
+    "vite-tsconfig-paths": "^4.2.3",
+    "vitest": "^1.6.1"
+  }
+}
+
+
+===== vite.config.ts (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\vite.config.ts) =====
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      devOptions: { enabled: false },
+      selfDestroying: true,
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'ECOLOJIA',
+        short_name: 'ECOLOJIA',
+        description: "Assistant d'analyse de produits",
+        display: 'standalone',
+        start_url: '/',
+        theme_color: '#10b981',
+        background_color: '#ffffff',
+        icons: [
+          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/world\.(openfoodfacts|openbeautyfacts)\.org\//,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'openfacts-cache' }
+          }
+        ]
+      }
+    })
+  ]
+});
+
+
+
+===== vite.config.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\vite.config.js) =====
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  css: {
+    postcss: "./postcss.config.cjs",
+  },
+  build: {
+    rollupOptions: {
+      output: { manualChunks: undefined },
+    },
+    sourcemap: false,
+    chunkSizeWarningLimit: 1500,
+  },
+  server: {
+    port: 5173,
+    open: true,
+    hmr: {
+      overlay: false  // D?sactive les overlays d'erreur
+    }
+  },
+  resolve: {
+    alias: { "@": "/src" },
+  },
+});
+
+
+===== tailwind.config.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\tailwind.config.js) =====
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        emerald: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        }
+      }
+    },
+  },
+  plugins: [],
+}
+
+
+===== tsconfig.json (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\tsconfig.json) =====
+
+{
+    "files":  [
+
+              ],
+    "references":  [
+                       {
+                           "path":  "./tsconfig.app.json"
+                       },
+                       {
+                           "path":  "./tsconfig.node.json"
+                       }
+                   ]
+}
+
+
+===== src/main.tsx (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\main.tsx) =====
+
+// PATH: frontend/src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import App from './App';
+import { AuthProvider } from './Contexts/AuthContext';
+import './index.css';
+
+// Créer le root element
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = ReactDOM.createRoot(rootElement);
+
+// Rendre l'application
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+
+
+if (import.meta.env.DEV && 'serviceWorker' in navigator) {
+  // Désactive tout SW résiduel en dev pour éviter l'erreur 'sw.js:10'
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    for (const r of regs) { r.unregister().catch(()=>{}); }
+  }).catch(()=>{});
+}
+
+
+===== src/App.tsx (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx) =====
+
+// PATH: frontend/src/App.tsx
+import React, { lazy, Suspense } from 'react';
+import './utils/keepAlive';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthContext } from './Contexts/AuthContext';
+import Layout from './components/layout/Layout';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Lazy loading des pages
+const HomePage = lazy(() => import('./pages/HomePage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const ChatPage = lazy(() => import('./pages/ChatPage'));
+const ScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const PremiumPage = lazy(() => import('./pages/PremiumPage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
+const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
+const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
+
+const App: React.FC = () => {
+  const { isAuthenticated } = useAuthContext();
+
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        {/* Routes avec Layout */}
+        <Route path="/" element={<Layout />}>
+          {/* Routes publiques */}
+          <Route index element={<HomePage />} />
+          <Route path="search" element={<SearchPage />} />
+          <Route path="results" element={<ResultsPage />} />
+          <Route path="product/:id" element={<ProductPage />} />
+          <Route path="scan" element={<ScanPage />} />
+          <Route path="multi-scan" element={<MultiScanPage />} />
+          <Route path="premium" element={<PremiumPage />} />
+          <Route path="diagnostic" element={<DiagnosticPage />} />
+          
+          {/* Routes d'authentification - redirection si déjà connecté */}
+          <Route
+            path="login"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+          />
+          <Route
+            path="register"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
+          />
+
+          {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
+          </Route>
+
+          {/* 404 - Redirection vers accueil */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  );
+};
+
+export default App;
+
+
+
+
+

@@ -1,0 +1,4 @@
+﻿Front 5173 TcpTestSucceeded: True
+Back  10000 TcpTestSucceeded: True
+/api/health status: 200
+Body: {"ok":true,"service":"ecolojia-backend","env":"development","time":"2025-09-25T19:21:43.480Z"}

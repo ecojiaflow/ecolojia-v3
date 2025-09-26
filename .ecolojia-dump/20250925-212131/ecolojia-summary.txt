@@ -1,0 +1,2887 @@
+﻿Résumé généré le 2025-09-25 21:24:54Z depuis C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\.ecolojia-dump\20250925-212131
+
+
+==================== package.json (frontend & backend) ====================
+
+
+===== C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package.json =====
+
+{
+  "name": "ecolojia-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest",
+    "test:e2e": "playwright test",
+    "type-check": "tsc --noEmit",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@ericblade/quagga2": "^1.8.4",
+    "@hookform/resolvers": "^3.3.4",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@tanstack/react-query": "^5.85.5",
+    "@zxing/browser": "^0.1.5",
+    "algoliasearch": "^4.22.0",
+    "axios": "^1.11.0",
+    "axios-retry": "^4.5.0",
+    "chart.js": "^4.5.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^10.18.0",
+    "html2canvas": "^1.4.1",
+    "i18next": "^23.7.16",
+    "jspdf": "^3.0.2",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.303.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.6.0",
+    "react-i18next": "^14.0.0",
+    "react-instantsearch": "^7.5.0",
+    "react-router-dom": "^6.21.1",
+    "recharts": "^2.15.4",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "workbox-window": "^7.0.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/jspdf": "^1.3.3",
+    "@types/node": "^20.19.11",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^1.1.3",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "jsdom": "^23.2.0",
+    "playwright": "^1.54.2",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-pwa": "^0.17.5",
+    "vite-tsconfig-paths": "^4.2.3",
+    "vitest": "^1.6.1"
+  }
+}
+
+
+===== C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\package.json =====
+
+{
+  "name": "ecolojia-backend",
+  "version": "3.0.0",
+  "description": "Backend ECOLOJIA V3",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/main.js",
+    "verify": "node -e \"console.log(\\\"backend verify: OK (M1 placeholder)\\\");\""
+  },
+  "dependencies": {
+    "@google-cloud/vision": "^5.3.3",
+    "@types/jspdf": "^1.3.3",
+    "algoliasearch": "^4.25.2",
+    "archiver": "^7.0.1",
+    "axios": "^1.12.2",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.17.0",
+    "zod": "^4.1.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+
+
+==================== Configs FRONT (vite/tailwind/tsconfig...) ====================
+
+
+===== frontend package.json (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package.json) =====
+
+{
+  "name": "ecolojia-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest",
+    "test:e2e": "playwright test",
+    "type-check": "tsc --noEmit",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@ericblade/quagga2": "^1.8.4",
+    "@hookform/resolvers": "^3.3.4",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@tanstack/react-query": "^5.85.5",
+    "@zxing/browser": "^0.1.5",
+    "algoliasearch": "^4.22.0",
+    "axios": "^1.11.0",
+    "axios-retry": "^4.5.0",
+    "chart.js": "^4.5.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^10.18.0",
+    "html2canvas": "^1.4.1",
+    "i18next": "^23.7.16",
+    "jspdf": "^3.0.2",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.303.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.6.0",
+    "react-i18next": "^14.0.0",
+    "react-instantsearch": "^7.5.0",
+    "react-router-dom": "^6.21.1",
+    "recharts": "^2.15.4",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "workbox-window": "^7.0.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/jspdf": "^1.3.3",
+    "@types/node": "^20.19.11",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^1.1.3",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "jsdom": "^23.2.0",
+    "playwright": "^1.54.2",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-pwa": "^0.17.5",
+    "vite-tsconfig-paths": "^4.2.3",
+    "vitest": "^1.6.1"
+  }
+}
+
+
+===== vite.config.ts (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\vite.config.ts) =====
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      devOptions: { enabled: false },
+      selfDestroying: true,
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'ECOLOJIA',
+        short_name: 'ECOLOJIA',
+        description: "Assistant d'analyse de produits",
+        display: 'standalone',
+        start_url: '/',
+        theme_color: '#10b981',
+        background_color: '#ffffff',
+        icons: [
+          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/world\.(openfoodfacts|openbeautyfacts)\.org\//,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'openfacts-cache' }
+          }
+        ]
+      }
+    })
+  ]
+});
+
+
+
+===== vite.config.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\vite.config.js) =====
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  css: {
+    postcss: "./postcss.config.cjs",
+  },
+  build: {
+    rollupOptions: {
+      output: { manualChunks: undefined },
+    },
+    sourcemap: false,
+    chunkSizeWarningLimit: 1500,
+  },
+  server: {
+    port: 5173,
+    open: true,
+    hmr: {
+      overlay: false  // D?sactive les overlays d'erreur
+    }
+  },
+  resolve: {
+    alias: { "@": "/src" },
+  },
+});
+
+
+===== tailwind.config.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\tailwind.config.js) =====
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        emerald: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        }
+      }
+    },
+  },
+  plugins: [],
+}
+
+
+===== tsconfig.json (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\tsconfig.json) =====
+
+{
+    "files":  [
+
+              ],
+    "references":  [
+                       {
+                           "path":  "./tsconfig.app.json"
+                       },
+                       {
+                           "path":  "./tsconfig.node.json"
+                       }
+                   ]
+}
+
+
+===== src/main.tsx (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\main.tsx) =====
+
+// PATH: frontend/src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import App from './App';
+import { AuthProvider } from './Contexts/AuthContext';
+import './index.css';
+
+// Créer le root element
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = ReactDOM.createRoot(rootElement);
+
+// Rendre l'application
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+
+
+if (import.meta.env.DEV && 'serviceWorker' in navigator) {
+  // Désactive tout SW résiduel en dev pour éviter l'erreur 'sw.js:10'
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    for (const r of regs) { r.unregister().catch(()=>{}); }
+  }).catch(()=>{});
+}
+
+
+===== src/App.tsx (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx) =====
+
+// PATH: frontend/src/App.tsx
+import React, { lazy, Suspense } from 'react';
+import './utils/keepAlive';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthContext } from './Contexts/AuthContext';
+import Layout from './components/layout/Layout';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Lazy loading des pages
+const HomePage = lazy(() => import('./pages/HomePage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const ChatPage = lazy(() => import('./pages/ChatPage'));
+const ScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const PremiumPage = lazy(() => import('./pages/PremiumPage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
+const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
+const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
+
+const App: React.FC = () => {
+  const { isAuthenticated } = useAuthContext();
+
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        {/* Routes avec Layout */}
+        <Route path="/" element={<Layout />}>
+          {/* Routes publiques */}
+          <Route index element={<HomePage />} />
+          <Route path="search" element={<SearchPage />} />
+          <Route path="results" element={<ResultsPage />} />
+          <Route path="product/:id" element={<ProductPage />} />
+          <Route path="scan" element={<ScanPage />} />
+          <Route path="multi-scan" element={<MultiScanPage />} />
+          <Route path="premium" element={<PremiumPage />} />
+          <Route path="diagnostic" element={<DiagnosticPage />} />
+          
+          {/* Routes d'authentification - redirection si déjà connecté */}
+          <Route
+            path="login"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+          />
+          <Route
+            path="register"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
+          />
+
+          {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="history" element={<HistoryPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
+          </Route>
+
+          {/* 404 - Redirection vers accueil */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  );
+};
+
+export default App;
+
+
+
+
+
+
+
+==================== Configs BACK  (main.js/server.js...) ====================
+
+
+===== backend package.json (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\package.json) =====
+
+{
+  "name": "ecolojia-backend",
+  "version": "3.0.0",
+  "description": "Backend ECOLOJIA V3",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/main.js",
+    "verify": "node -e \"console.log(\\\"backend verify: OK (M1 placeholder)\\\");\""
+  },
+  "dependencies": {
+    "@google-cloud/vision": "^5.3.3",
+    "@types/jspdf": "^1.3.3",
+    "algoliasearch": "^4.25.2",
+    "archiver": "^7.0.1",
+    "axios": "^1.12.2",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.17.0",
+    "zod": "^4.1.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+
+===== backend src/main.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\main.js) =====
+
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+
+const PORT = process.env.PORT || 10000;
+const app = express();
+
+app.use(express.json({ limit: "2mb" }));
+app.use(cors({
+  origin: (origin, cb) => cb(null, true), // en dev: large
+  credentials: true
+}));
+
+// ---- /api/health + /api/version
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    service: "ecolojia-backend",
+    env: process.env.NODE_ENV || "development",
+    time: new Date().toISOString()
+  });
+});
+app.get("/api/version", (_req, res) => {
+  let version = "0.0.0";
+  try { version = require("../package.json").version; } catch {}
+  res.json({ version, commit: process.env.GIT_COMMIT_SHA || null });
+});
+
+// ---- Montage conditionnel des routes existantes
+function safeMount(base, rel) {
+  try {
+    const router = require(rel);
+    if (router && router.stack) {
+      app.use(base, router);
+      console.log(`✓ Mounted ${base} -> ${rel}`);
+    } else {
+      console.warn(`⚠ ${rel} ne retourne pas un router Express`);
+    }
+  } catch (e) {
+    console.warn(`• Route optionnelle ignorée: ${rel} (${e.message})`);
+  }
+}
+
+safeMount("/api/analysis", path.join(__dirname, "routes/analysis.routes.js"));
+safeMount("/api/vision",   path.join(__dirname, "routes/vision.routes.js"));
+safeMount("/api/products", path.join(__dirname, "routes/products.js"));
+safeMount("/api/algolia",  path.join(__dirname, "routes/algolia-unified.js"));
+// fallback possible:
+if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) {
+  safeMount("/api/algolia", path.join(__dirname, "routes/algolia.js"));
+}
+// (paiements volontairement non montés en M1)
+
+app.listen(PORT, () => {
+  console.log(`ECOLOJIA backend (bootstrap M1) on http://localhost:${PORT}`);
+});
+
+
+===== backend server.js (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\server.js) =====
+
+// server.js - Serveur principal Ecolojia
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Variable pour stocker l'Ã©tat de la connexion DB
+let dbConnected = false;
+
+// Stockage en mÃ©moire pour le mode sans DB
+const memoryUsers = [];
+
+// Routes de base
+app.get('/', (req, res) => {
+  res.json({
+    message: 'API Ecolojia',
+    version: '1.0.0',
+    status: 'operational',
+    database: dbConnected ? 'connected' : 'memory mode',
+    timestamp: new Date()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    uptime: process.uptime(),
+    database: dbConnected ? 'connected' : 'disconnected'
+  });
+});
+
+// Route inscription
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    
+    if (!email || !password || !name) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tous les champs sont requis'
+      });
+    }
+
+    // VÃ©rifier si email existe
+    if (memoryUsers.find(u => u.email === email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email dÃ©jÃ  utilisÃ©'
+      });
+    }
+
+    // Hash du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // CrÃ©er utilisateur
+    const user = {
+      id: Date.now().toString(),
+      email,
+      password: hashedPassword,
+      name,
+      tier: 'free',
+      createdAt: new Date()
+    };
+
+    memoryUsers.push(user);
+
+    res.json({
+      success: true,
+      message: 'Inscription rÃ©ussie',
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        tier: user.tier
+      }
+    });
+
+  } catch (error) {
+    console.error('Erreur inscription:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
+
+// Route connexion
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email et mot de passe requis'
+      });
+    }
+
+    const user = memoryUsers.find(u => u.email === email);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Email ou mot de passe incorrect'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Connexion rÃ©ussie',
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        tier: user.tier
+      }
+    });
+
+  } catch (error) {
+    console.error('Erreur connexion:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
+
+// Route 404
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Route non trouvÃ©e',
+    path: req.path
+  });
+});
+
+// Gestion erreurs
+app.use((err, req, res, next) => {
+  console.error('Erreur:', err);
+  res.status(500).json({
+    error: 'Erreur serveur interne',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Une erreur est survenue'
+  });
+});
+
+// Connexion MongoDB (optionnelle)
+async function connectDB() {
+  if (process.env.MONGODB_URI) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('âœ… MongoDB connectÃ©');
+      dbConnected = true;
+    } catch (error) {
+      console.log('âš ï¸ MongoDB non connectÃ©, mode mÃ©moire activÃ©');
+      dbConnected = false;
+    }
+  }
+}
+
+// DÃ©marrage serveur
+async function start() {
+  await connectDB();
+  
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`ðŸš€ Serveur Ecolojia dÃ©marrÃ© sur port ${PORT}`);
+    console.log(`ðŸ“¦ Mode: ${dbConnected ? 'MongoDB connectÃ©' : 'Stockage mÃ©moire'}`);
+    console.log(`ðŸŒ Environnement: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+
+start();
+
+===== render.yaml (C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\render.yaml) =====
+
+services:
+  - type: web
+    name: ecolojia-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 18.18.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+
+
+
+==================== Routes Express détectées ====================
+
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:93: this.app.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:103: this.app.post('/enrich/:productId', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:117: this.app.post('/import', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai\index.js:7: router.get('/test', ctrl.test);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai\index.js:10: router.post('/chat', ctrl.chat);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:14: router.get('/me', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:77: router.put('/me', authOptional, validateAIPreferences, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:140: router.delete('/me/ai-preferences/:key', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:40: router.get('/dashboard', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:66: router.get('/recent-products', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:74: router.get('/import-logs', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:81: router.post('/trigger-import', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:21: router.post('/food', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:101: router.post('/cosmetic', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:144: router.post('/detergent', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:187: router.post('/deepseek', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:281: router.post('/batch', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:360: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:386: router.get('/ingredients/search', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:33: router.post('/auto',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:203: router.post('/food',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:303: router.post('/cosmetic',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:408: router.post('/detergent',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:508: router.post('/ultra-transform',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:602: router.get('/stats',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:635: router.post('/cache/clear',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:669: router.get('/health', async (_req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:46: router.post('/',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:106: router.post('/batch',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:166: router.get('/',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:220: router.get('/:id',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:257: router.delete('/:id',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:294: router.get('/:id/alternatives',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:348: router.get('/stats/summary',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:378: router.post('/:id/feedback',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:71: router.post('/message', chatRateLimit, validateChatMessage, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:161: router.post('/quick/:questionType', quickResponseLimit, validateQuickResponse, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:214: router.get('/suggestions/:category', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:242: router.delete('/history/:sessionId', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:276: router.post('/context/alternatives', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:318: router.post('/context/insights', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:360: router.get('/health', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:72: router.post('/analyze', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:186: router.get('/ingredients/:ingredient', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:239: router.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:57: router.post('/analyze', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:148: router.get('/certifications', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:178: router.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:37: router.post('/calculate', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:80: router.post('/update-all', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:127: router.get('/product/:id', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:173: router.post('/product/:id/update', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:246: router.post('/batch', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:287: router.post('/test', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:328: router.get('/distribution', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:36: router.post('/verify', verifyTokenValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:74: router.post('/resend', resendEmailValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:112: router.get('/status/:email', statusEmailValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.routes - Copie.ts:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.routes.ts:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.ts:6: router.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:9: router.get('/categories', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:21: router.get('/health', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:30: router.post('/analyze', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:18: router.post(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:122: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:182: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:217: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:243: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:272: router.post(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\scan.routes.ts:8: router.post('/barcode', scanBarcodeController);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:126: router.post('/analyze', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:170: router.get('/check/:barcode', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:186: router.get('/additives', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:224: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:135: router.post('/chat', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:194: router.post('/product-question', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:231: router.post('/compare-products', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:274: router.get('/suggestions', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:318: router.get('/conversation/:conversationId', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:354: router.delete('/conversation', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:378: router.get('/quota-status', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:416: router.get('/faq', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:491: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:7: router.get('/search', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:76: router.post('/sync', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:141: router.post('/configure', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:150: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:16: router.post('/sync', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:68: router.get('/search', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:101: router.post('/configure', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:149: router.get('/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:176: router.get('/stats', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:4: router.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:12: router.post('/barcode', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:21: router.post('/manual', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis.routes.js:12: router.post('/', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analyze.routes.js:15: router.post('/auto', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analyze.ts:6: router.post('/auto', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:41: router.post('/register', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:117: router.post('/login', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:191: router.get('/profile', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:217: router.post('/refresh', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:265: router.get('/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:282: router.post('/logout', authMiddleware, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:37: router.post('/register', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:91: router.post('/login', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:129: router.post('/refresh', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:167: router.post('/logout', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:199: router.get('/me', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:238: router.put('/me', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:293: router.put('/password', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:337: router.post('/forgot-password', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:385: router.post('/reset-password', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:439: router.delete('/account', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:480: router.post('/demo', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:529: router.get('/validate', authOptional, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:552: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\dashboard.js:14: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\detergents.routes.js:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\detergents.routes.js:10: router.post('/analyze', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:169: router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:234: router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:315: router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:411: router.get('/templates', authenticateUser, checkPremium, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:11: router.get('/', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:29: router.post('/toggle', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:69: router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:102: router.get('/check/:productId', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:16: router.get('/download-data/:format?', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:80: router.get('/download/:exportId/:format', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:113: router.delete('/delete-account', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:176: router.post('/cancel-deletion', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:221: router.put('/update-consent', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:269: router.get('/privacy-settings', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:334: router.post('/data-breach-notification', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:380: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:449: router.get('/processing-activities', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\history.js:7: router.get('/', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\history.js:69: router.get('/count', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:58: router.get('/track/:id', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:180: router.get('/stats', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:222: router.post('/conversion', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:265: router.get('/test', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:296: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:32: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:60: router.post('/create-checkout', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:68: router.post('/webhook', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:73: router.post('/cancel-subscription', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:77: router.post('/resume-subscription', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:81: router.post('/change-plan', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:85: router.get('/subscription-status', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:89: router.get('/history', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:93: router.get('/customer-portal', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:97: router.get('/stats', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:102: router.post('/create-checkout', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:114: router.post('/webhook', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:126: router.post('/cancel-subscription', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:135: router.post('/resume-subscription', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:144: router.post('/change-plan', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:157: router.get('/subscription-status', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:183: router.get('/history', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:193: router.get('/customer-portal', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:198: router.get('/stats', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products-search.js:7: router.get('/search', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:98: router.get('/', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:140: router.get('/test', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:161: router.get('/search', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:227: router.get('/trending', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:256: router.get('/barcode/:barcode', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:289: router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:395: router.get('/:id/alternatives', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:434: router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:454: router.get('/:id', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:499: router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:89: router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:142: router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:204: router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:319: router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:380: router.post('/ai/chat', /* auth, */ async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:482: router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:532: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:44: router.get('/status', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:114: router.post('/increment', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:228: router.post('/scan', authMiddleware, checkQuotaMiddleware('scan'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:232: router.post('/ai-question', authMiddleware, checkQuotaMiddleware('aiQuestion'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\test-partner.js:8: router.get('/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\test-partner.js:17: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:7: router.get("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:19: router.put("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:36: router.delete("/", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:16: router.get("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:28: router.put("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:45: router.delete("/", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:56: router.get('/me', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:71: router.get('/v2/me', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:147: router.put('/v2/me',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:231: router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:290: router.get('/v2/me/quotas', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:363: router.post('/v2/me/reset-password',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:65: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:81: router.post('/analyze-image', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:89: router.post('/extract-test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:96: router.get('/status/:jobId', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:103: router.post('/analyze-image', authMw, upload.single('image'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:138: router.get('/status/:jobId', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:144: router.post('/extract-test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.ts:8: router.post('/analyze-image', upload.single('image'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:60: router.post('/lemonsqueezy', verifyWebhookSignature, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:516: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:529: router.post('/test', verifyWebhookSignature, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\scripts\start-free.ts:6: app.get('/', (req, res) => res.send(`✅ Serveur test actif sur http://localhost:${PORT}`));
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:346: router.get('/cron/jobs', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:352: router.post('/cron/jobs/:jobName/run', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:368: router.get('/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-server.js:6: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-server.js:61: app.post('/test/upload', upload.single('image'), (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-upload.js:26: app.post('/test/upload', upload.single('image'), (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\app.ts:48: app.get('/api/ping', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\index.ts:14: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\index.ts:23: app.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\main.js:16: app.get("/api/health", (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\main.js:24: app.get("/api/version", (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server-debug.js:29: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:237: app.get('/api/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:275: app.get('/api/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:615: app.post('/api/export/*', authMiddleware, rateLimiters.exportLimiter, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:69: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:92: app.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:333: app.get('/api/test-products', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.ts:55: app.get('/health', async (req, res) => {
+
+
+==================== Routes React détectées ====================
+
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\adminApi.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\aiService.ts:1: // PATH: frontend/src/services/aiService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\alternativesService.ts:1: // PATH: frontend/src/services/alternativesService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\analysisService.ts:1: // PATH: frontend/src/services/analysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\api.ts:1: // PATH: frontend/src/services/api.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\apiClient.ts:1: // PATH: frontend/src/services/apiClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\chatService.ts:4: // PATH: frontend/src/services/chatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\cloudinaryService.ts:1: // PATH: frontend/src/services/cloudinaryService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\configService.ts:1: // PATH: src/services/configService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\dashboardService.ts:2: // PATH: frontend/src/services/dashboardService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\demoMode.ts:1: // PATH: frontend/src/services/demoMode.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\demoService.ts:1: // PATH: frontend/src/services/demoService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\env.ts:1: // PATH: frontend/src/env.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\exportService.ts:1: // PATH: frontend/src/services/exportService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\historyService.ts:1: // PATH: frontend/src/services/historyService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\index.ts:1: // PATH: frontend/src/services/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\mockService.ts:1: // PATH: frontend/src/services/mockService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\notificationService.ts:1: // PATH: frontend/src/services/notificationService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\novaAdapter.ts:1: // PATH: frontend/src/services/novaAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\ocrService.ts:1: // PATH: frontend/src/services/ocrService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\offlineService.ts:1: // PATH: frontend/src/services/offlineService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\paymentService.ts:1: // PATH: frontend/src/services/paymentService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\productService.ts:1: // PATH: frontend/src/services/productService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\quotaService.ts:1: // PATH: frontend/src/services/quotaService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\searchService.ts:1: // PATH: frontend/src/services/searchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\UserAnalytics.ts:1: // PATH: frontend/src/services/analytics/UserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\userService.ts:1: // PATH: frontend/src/services/userService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\visionService.ts:1: // PATH: frontend/src/services/visionService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\DeepSeekChat.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\UpgradeModal.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\UpgradeModal.tsx:194: // PATH: frontend/ecolojiaFrontV3/src/components/chat/UsageTracker.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\ImportProgress.tsx:1: // PATH: src/components/admin/ImportProgress.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\LogViewer.tsx:1: // PATH: src/components/admin/LogViewer.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\ProductTable.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\StatsCard.tsx:1: // PATH: src/components/admin/StatsCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\AlternativesList.tsx:1: // PATH: frontend/src/components/analysis/AlternativesList.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\ProgressiveAnalysis.tsx:1: // PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\QuickStatsWidget.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\RiskCard.tsx:1: // PATH: frontend/src/components/analysis/RiskCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\ScoreDisplay.tsx:1: // PATH: frontend/src/components/analysis/ScoreDisplay.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\chat\ChatWidget.tsx:1: // PATH: frontend/src/components/chat/ChatWidget.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\common\Button.tsx:1: // PATH: frontend/src/components/common/Button.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\common\LoadingSpinner.tsx:1: // PATH: frontend/src/components/common/LoadingSpinner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\layout\Layout.tsx:2: // PATH: frontend/src/components/layout/Layout.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\layout\Layout.tsx:32: const isActive = (path: string) => location.pathname === path;
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\premium\PremiumModal.tsx:1: // PATH: frontend/src/components/premium/PremiumModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\product\ProductIngredientsSection.tsx:1: // PATH: frontend/src/components/product/ProductIngredientsSection.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\profile\PreferencesTab.tsx:1: // PATH: frontend/src/components/profile/PreferencesTab.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\__tests__\BarcodeScanner.spec.tsx:1: // PATH: frontend/src/components/scanner/__tests__/BarcodeScanner.spec.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\BarcodeScanner.tsx:1: // PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\CategoryAutoDetector.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\EnhancedBarcodeScanner.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\ManualInput.tsx:1: // PATH: frontend/src/components/scanner/ManualInput.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\ManualSearch.tsx:1: // PATH: frontend/src/components/scanner/ManualSearch.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\PhotoCapture.tsx:1: // PATH: frontend/src/components/scanner/PhotoCapture.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\search\SearchBar.tsx:1: // PATH: frontend/src/components/search/SearchBar.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\.tsx:1: // PATH: frontend/src/components/LoadingSpinner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\AnalysisResultCard.tsx:1: // PATH: frontend\src\components\AnalysisResultCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\CategorySelector.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\EnvironmentScore.tsx:1: // PATH: frontend/src/components/EnvironmentScore.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ErrorMessage.tsx:1: // PATH: frontend/src/components/ErrorMessage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\HealthScoreCircle.tsx:1: // PATH: frontend/src/components/HealthScoreCircle.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Layout.tsx:45: const isActiveRoute = (path: string) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Navbar.tsx:1: // PATH: frontend/src/components/Navbar.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Navbar.tsx:245: const isActive = (path: string) => location.pathname === path;
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NotificationContainer.tsx:1: // PATH: frontend/src/components/NotificationContainer.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaBadge.tsx:1: // PATH: frontend\src\components\NovaBadge.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaDetails.tsx:1: // PATH: frontend/src/components/NovaDetails.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaResults.tsx:1: // PATH: frontend/src/components/NovaResults.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\OfflineIndicator.tsx:1: // PATH: frontend/src/components/OfflineIndicator.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\PremiumUpgradeModal.tsx:1: // PATH: frontend/src/components/PremiumUpgradeModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ProtectedRoute.tsx:1: // PATH: frontend/src/components/ProtectedRoute.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ResultCard.tsx:1: // PATH: frontend/src/components/ResultCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\UltraProcessingPanel.tsx:1: // PATH: frontend/src/components/UltraProcessingPanel.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\UltraTransformResults.tsx:1: // PATH: src\components\UltraTransformResults.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\constants.ts:1: // PATH: frontend/src/config/constants.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\featureFlags.ts:1: // PATH: frontend/src/config/featureFlags.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\mock.config.ts:1: // PATH: frontend/src/config/mock.config.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\Contexts\AuthContext.tsx:4: // PATH: frontend/src/Contexts/AuthContext.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\data\ingredientsKnowledge.ts:1: // PATH: frontend/src/data/ingredientsKnowledge.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\data\mockProducts.ts:1: // PATH: frontend/src/data/mockProducts.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\index.ts:1: // PATH: frontend/src/hooks/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useAdmin.ts:1: // PATH: frontend/ecolojiaFrontV3/src/hooks/useAdmin.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useChat.ts:1: // PATH: frontend/src/hooks/useChat.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useFavorites.ts:1: // PATH: frontend/src/hooks/useFavorites.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useHistory.ts:1: // PATH: frontend/src/hooks/useHistory.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useIngredientsEnrichment.ts:1: // PATH: frontend/src/hooks/useIngredientsEnrichment.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useNotifications.ts:1: // PATH: frontend/src/hooks/useNotifications.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useNovaApi.ts:1: // PATH: frontend/src/hooks/useNovaApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useOfflineStatus.ts:1: // PATH: frontend/src/hooks/useOfflineStatus.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useQuota.ts:1: // PATH: frontend/src/hooks/useQuota.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useUniversalSearch.ts:1: // PATH: src/hooks/useUniversalSearch.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useUserAnalytics.ts:1: // PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\i18n\locales\fr.ts:1: // PATH: frontend/src/i18n/locales/fr.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\lib\api\analysis.ts:1: // PATH: frontend\src\lib\api\analysis.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AboutPage.tsx:1: // PATH: frontend/src/pages/AboutPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AdminDashboard.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AiPreferencesPage.tsx:1: // PATH: frontend/src/pages/AiPreferencesPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AnalysisDevPage.tsx:1: // PATH: frontend\src\pages\AnalysisDevPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ChatPage.tsx:5: // PATH: frontend/src/pages/ChatPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ComparePage.tsx:1: // PATH: frontend/src/pages/ComparePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\DetergentAnalysisPage.tsx:3: // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\DiagnosticPage.tsx:1: // PATH: frontend/src/pages/DiagnosticPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\FavoritesPage.tsx:1: // PATH: frontend/src/pages/FavoritesPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\HistoryPage.tsx:1: // PATH: frontend/src/pages/HistoryPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\HomePage.tsx:1: // PATH: frontend/src/pages/HomePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\LoginPage.tsx:4: // PATH: frontend/src/pages/LoginPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ManualAnalysisPage.tsx:1: // PATH: frontend/src/pages/ManualAnalysisPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\OnboardingPage.tsx:1: // PATH: frontend/src/pages/OnboardingPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PremiumPage.tsx:1: // PATH: frontend/src/pages/PremiumPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PricingPage.tsx:1: // PATH: frontend/src/pages/PricingPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PrivacyPage.tsx:1: // PATH: frontend/src/pages/PrivacyPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ProductPage.tsx:1: // PATH: frontend/src/pages/ProductPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ProfilePage.tsx:1: // PATH: frontend/src/pages/ProfilePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\RegisterPage.tsx:1: // PATH: frontend/src/pages/RegisterPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ResultPage.tsx:1: // PATH: frontend/src/pages/ResultPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\Results.tsx:1: // PATH: frontend/src/pages/Results.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ResultsPage.tsx:1: // PATH: frontend/src/pages/ResultsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\SearchPage.tsx:1: // PATH: frontend/src/pages/SearchPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\SettingsPage.tsx:1: // PATH: frontend/src/pages/SettingsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\TermsPage.tsx:1: // PATH: frontend/src/pages/TermsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UnifiedResultsPage.tsx:1: // PATH: frontend/src/pages/UnifiedResultsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:5: // PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMƒÆ’†â€™aaâ€šÂ¬‚Â°LIORƒÆ’†â€™aaâ€šÂ¬‚Â°E)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:88: // PATH: frontend/ecolojiaFrontV3/src/components/Navbar.tsx (VERSION SMART)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:161: // PATH: frontend/ecolojiaFrontV3/src/pages/HomePage.tsx (VERSION SEARCH-CENTRIC)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/pages/UniversalSearchPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:1: // PATH: frontend/src/router/AppRouter.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:21: <Route path="/" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:24: <Route path="/CATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIES" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:27: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:28: <Route path="/product/:slug" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:31: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:34: <Route path="/admin" element={<AdminDashboard />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:37: <Route path="/test-affiliate" element={<TestAffiliate />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:40: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\AIAnalysisService.ts:1: // PATH: backend/src/services/ai/AIAnalysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\DeepSeekClient.ts:1: // PATH: backend/src/services/ai/DeepSeekClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\DeepSeekECOLOJIAService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\novaClassifier.ts:1: // PATH: frontend/src/services/ai/novaClassifier.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\ultraTransformService.ts:1: // PATH: frontend/src/services/ai/ultraTransformService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\algolia\client.ts:1: // PATH: frontend/src/services/algolia/client.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\api\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\chat\ChatService.ts:1: // PATH: frontend/src/services/chat/ChatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\search\EnhancedSearchInterface.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\search\UniversalSearchService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\__tests__\analysisService.spec.ts:1: // PATH: frontend/src/services/__tests__/analysisService.spec.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\adminApi.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\aiService.ts:1: // PATH: frontend/src/services/aiService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\alternativesService.ts:1: // PATH: frontend/src/services/alternativesService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\analysisService.ts:1: // PATH: frontend/src/services/analysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\apiClient.ts:1: // PATH: frontend/src/services/apiClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\authService.ts:1: // PATH: frontend/src/services/authService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\chatService.ts:1: // PATH: frontend/src/services/chatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\cloudinaryService.ts:1: // PATH: frontend/src/services/cloudinaryService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\configService.ts:1: // PATH: src/services/configService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\dashboardService.ts:2: // PATH: frontend/src/services/dashboardService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\demoMode.ts:1: // PATH: frontend/src/services/demoMode.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\demoService.ts:1: // PATH: frontend/src/services/demoService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\exportService.ts:1: // PATH: frontend/src/services/exportService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\historyService.ts:1: // PATH: frontend/src/services/historyService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\index.ts:1: // PATH: frontend/src/services/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\notificationService.ts:1: // PATH: frontend/src/services/notificationService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\novaAdapter.ts:1: // PATH: frontend/src/services/novaAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ocrService.ts:1: // PATH: frontend/src/services/ocrService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\offlineService.ts:1: // PATH: frontend/src/services/offlineService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\paymentService.ts:1: // PATH: frontend/src/services/paymentService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\productSaveService.ts:1: // PATH: frontend/src/services/productSaveService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\productService.ts:1: // PATH: frontend/src/services/productService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\quotaService.ts:1: // PATH: frontend/src/services/quotaService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\searchService.ts:1: // PATH: frontend/src/services/searchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\UserAnalytics.ts:1: // PATH: frontend/src/services/analytics/UserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\userService.ts:1: // PATH: frontend/src/services/userService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\visionService.ts:1: // PATH: frontend/src/services/visionService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\admin.ts:1: // PATH: frontend/ecolojiaFrontV3/src/types/admin.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\api.ts:1: // PATH: frontend/src/types/api.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\chat.types.ts:1: // PATH: frontend/src/types/chat.types.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\quagga.d.ts:1: // PATH: frontend/src/types/quagga.d.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\user.ts:1: // PATH: frontend/src/types/user.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\bugFixes.ts:1: // PATH: frontend/src/utils/bugFixes.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\localScoring.ts:1: // PATH: frontend/src/utils/localScoring.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\scores.ts:1: // PATH: frontend/src/utils/scores.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\setupMocks.ts:1: // PATH: src/utils/setupMocks.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\textParsing.ts:1: // PATH: frontend/src/utils/textParsing.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\__mocks__\quagga2.ts:1: // PATH: frontend/src/__mocks__/quagga2.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:187: <Route path="/" element={<HomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:188: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:189: <Route path="/search" element={<HomePage />} /> {/* HomePage ? dejƒÆ’†â€™ƒâ€š‚Â  une recherche */}
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:190: <Route path="/dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:191: <Route path="/history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:192: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:193: <Route path="/profile" element={<ProfilePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:194: <Route path="/settings" element={<SettingsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:197: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:198: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:199: <Route path="/results" element={<Results />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:200: <Route path="/unified-results" element={<UnifiedResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:201: <Route path="/analyze/manual" element={<ManualAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:202: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:205: <Route path="/multi-scan" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:206: <Route path="/stats" element={<StatsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:209: <Route path="/products/:productId/cosmetic" element={<CosmeticAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:210: <Route path="/products/:productId/detergent" element={<DetergentAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:211: <Route path="/cosmetics" element={<CosmeticAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:212: <Route path="/detergents" element={<DetergentAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:215: <Route path="/about" element={<AboutPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:216: <Route path="/privacy" element={<PrivacyPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:217: <Route path="/terms" element={<TermsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:220: <Route path="/premium" element={<PremiumPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:223: <Route path="*" element={<NotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:626: <Route path="/auth" element={<AuthPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:632: <Route path="/" element={<HomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:635: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:636: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:637: <Route path="/multi-scan" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:644: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:645: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:646: <Route path="/product-not-found" element={<ProductNotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:647: <Route path="/results" element={<Results />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:648: <Route path="/unified-results" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:653: <Route path="/analyze/manual" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:658: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:661: <Route path="/products/:productId/cosmetic" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:666: <Route path="/products/:productId/detergent" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:671: <Route path="/cosmetics" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:676: <Route path="/detergents" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:683: <Route path="/dashboard" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:688: <Route path="/history" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:695: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:698: <Route path="/profile" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:703: <Route path="/settings" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:710: <Route path="/about" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:740: <Route path="/privacy" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:770: <Route path="/terms" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:798: <Route path="/premium" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:892: <Route path="/demo" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:897: <Route path="/test-affiliate" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:904: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:921: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:10: <Route path="/" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:20: <Route path="/scan" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:26: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:34: <Route path="/" element={<Layout />}>
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:37: <Route path="search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:38: <Route path="results" element={<ResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:39: <Route path="product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:40: <Route path="scan" element={<ScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:41: <Route path="multi-scan" element={<MultiScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:42: <Route path="premium" element={<PremiumPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:43: <Route path="diagnostic" element={<DiagnosticPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:57: <Route path="dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:58: <Route path="chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:59: <Route path="profile" element={<ProfilePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:60: <Route path="history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:61: <Route path="onboarding" element={<OnboardingPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:65: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:905: <Route path="/auth" element={<AuthPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:908: <Route path="/*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:922: <Route path="/" element={<AuthenticatedHomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:925: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:926: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:927: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:928: <Route path="/product-not-found" element={<ProductNotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:929: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:932: <Route path="/results" element={<UnifiedResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:933: <Route path="/analyze/manual" element={<ManualAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:934: <Route path="/history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:937: <Route path="/dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:940: <Route path="/multi-scan" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:941: <Route path="/cosmetics" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:942: <Route path="/detergents" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:945: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:946: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:949: <Route path="/demo" element={<Demo />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:952: <Route path="/about" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:970: <Route path="/privacy" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:983: <Route path="/terms" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:997: <Route path="/premium" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1034: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1054: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\env.ts:1: // PATH: frontend/src/env.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\main.tsx:1: // PATH: frontend/src/main.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\server.js:341: path: req.path,
+
+
+==================== ENV (sanitisés) ====================
+
+
+====================  - backend-.env.example.sanitized ====================
+
+# ── Mode & Serveur
+NODE_ENV=REDACTED
+PORT=REDACTED
+
+# ── Sécurité / Auth
+JWT_SECRET=REDACTED
+JWT_EXPIRES=REDACTED
+
+# ── CORS (liste blanche)
+CORS_ORIGINS=REDACTED
+
+# ── MongoDB
+MONGODB_URI=REDACTED
+
+# ── Redis (optionnel)
+REDIS_HOST=REDACTED
+REDIS_PORT=REDACTED
+REDIS_PASSWORD=REDACTED
+REDIS_TLS=REDACTED
+
+# ── Paiement (LemonSqueezy)
+LEMONSQUEEZY_API_KEY=REDACTED
+LEMONSQUEEZY_STORE_ID=REDACTED
+LEMONSQUEEZY_VARIANT_ID=REDACTED
+LEMONSQUEEZY_WEBHOOK_SECRET=REDACTED
+FRONTEND_BASE_URL=REDACTED
+
+# ── Google Vision (OCR)
+GOOGLE_APPLICATION_CREDENTIALS=REDACTED
+
+# ── Algolia
+ALGOLIA_APP_ID=REDACTED
+ALGOLIA_API_KEY=REDACTED
+ALGOLIA_INDEX_PRODUCTS=REDACTED
+
+# ── Quotas
+FREE_DAILY_ANALYSES=REDACTED
+
+# ── Cloudinary
+CLOUDINARY_CLOUD_NAME=REDACTED
+CLOUDINARY_API_KEY=REDACTED
+CLOUDINARY_API_SECRET=REDACTED
+
+# ── AI
+DEEPSEEK_API_KEY=REDACTED
+
+
+====================  - backend-.env.sanitized ====================
+
+NODE_ENV=REDACTED
+PORT=REDACTED
+
+# URI MongoDB Atlas complète :
+MONGODB_URI=REDACTED
+
+# CORS - séparé par virgules pour prod
+CORS_ALLOWED_ORIGINS=REDACTED
+
+# JWT - Secrets forts pour production
+JWT_SECRET=REDACTED
+JWT_REFRESH_SECRET=REDACTED
+
+# Redis (prod : URL complète)
+REDIS_HOST=REDACTED
+REDIS_PORT=REDACTED
+
+# Sécurité
+ALLOW_UNAUTH_AI=REDACTED
+RATE_LIMIT_ENABLED=REDACTED
+SECURE_COOKIES=REDACTED
+
+
+====================  - backend.env.sanitized ====================
+
+NODE_ENV=REDACTED
+PORT=REDACTED
+
+# URI MongoDB Atlas complète :
+MONGODB_URI=REDACTED
+
+# CORS - séparé par virgules pour prod
+CORS_ALLOWED_ORIGINS=REDACTED
+
+# JWT - Secrets forts pour production
+JWT_SECRET=REDACTED
+JWT_REFRESH_SECRET=REDACTED
+
+# Redis (prod : URL complète)
+REDIS_HOST=REDACTED
+REDIS_PORT=REDACTED
+
+# Sécurité
+ALLOW_UNAUTH_AI=REDACTED
+RATE_LIMIT_ENABLED=REDACTED
+SECURE_COOKIES=REDACTED
+
+
+====================  - frontend-.env.example.sanitized ====================
+
+// PATH: frontend/.env.example
+VITE_APP_NAME=REDACTED
+VITE_API_BASE=REDACTED
+VITE_ALGOLIA_APP_ID=REDACTED
+VITE_ALGOLIA_SEARCH_KEY=REDACTED
+
+
+====================  - frontend-.env.local.sanitized ====================
+
+VITE_APP_NAME=REDACTED
+VITE_API_URL=REDACTED
+VITE_MOCK_MODE=REDACTED
+VITE_REQUEST_TIMEOUT_MS=REDACTED
+
+
+====================  - frontend-.env.sanitized ====================
+
+VITE_APP_NAME=REDACTED
+VITE_API_URL=REDACTED
+VITE_REQUEST_TIMEOUT_MS=REDACTED
+
+
+====================  - frontend.env.local.sanitized ====================
+
+VITE_APP_NAME=REDACTED
+VITE_API_URL=REDACTED
+VITE_MOCK_MODE=REDACTED
+VITE_REQUEST_TIMEOUT_MS=REDACTED
+
+
+====================  - frontend.env.sanitized ====================
+
+VITE_APP_NAME=REDACTED
+VITE_API_URL=REDACTED
+VITE_REQUEST_TIMEOUT_MS=REDACTED
+
+
+==================== Listing FRONTEND (début) ====================
+
+frontend\.env
+frontend\.env.example
+frontend\.env.local
+frontend\.gitignore
+frontend\clean-bom.ps1
+frontend\clean-en-file.js
+frontend\clean-encoding-radical.ps1
+frontend\clean-simple.ps1
+frontend\clean_project.py
+frontend\convert-utf8.ps1
+frontend\diagnostic-fix-ecolojia.ps1
+frontend\ECOLOJIA_BACKEND.txt
+frontend\ECOLOJIA_COMPLETE_CODE.txt
+frontend\ECOLOJIA_PAGES.txt
+frontend\ECOLOJIA_SERVICES.txt
+frontend\eslint.config.js
+frontend\fix-all-encoding-v2.ps1
+frontend\fix-all-encoding.ps1
+frontend\fix-all.ps1
+frontend\fix-app-layout.ps1
+frontend\fix-bom.js
+frontend\fix-chatservice.ps1
+frontend\fix-ecolojia.ps1
+frontend\fix-en-es6.mjs
+frontend\fix-encoding-final.ps1
+frontend\fix-encoding-v2.ps1
+frontend\fix-encoding.ps1
+frontend\fix-final-issues.ps1
+frontend\fix-i18n.ps1
+frontend\fix-js-files.ps1
+frontend\fix-login.ps1
+frontend\fix-met-errors.ps1
+frontend\fix-nav-only.ps1
+frontend\fix-navbar-colors.ps1
+frontend\fix-searchpage-imports.ps1
+frontend\fix-simple.ps1
+frontend\fix-syntax.ps1
+frontend\fix_encoding.py
+frontend\fix_encoding_simple.py
+frontend\frontend-structure.txt
+frontend\h origin main
+frontend\index.html
+frontend\inject-user.js
+frontend\integrate-navbar.ps1
+frontend\ion
+frontend\modifications-app-tsx.txt
+frontend\package-lock.json
+frontend\package.json
+frontend\package.json.safe
+frontend\playwright.config.ts
+frontend\postcss.config.mjs
+frontend\products-response.json
+frontend\PROGRESS.md
+frontend\README.md
+frontend\repo-files.txt
+frontend\RUN-ALL.ps1
+frontend\success-status.ps1
+frontend\tailwind.config.cjs
+frontend\tailwind.config.js
+frontend\tailwind.config.mjs
+frontend\test-backend.js
+frontend\test-chat-endpoint.ps1
+frontend\test-chat-service.js
+frontend\test-chat.html
+frontend\test-dashboard-complete.cjs
+frontend\test-dashboard-fix.cjs
+frontend\test-ecolojia-complete.ps1
+frontend\test-frontend.js
+frontend\test-login.js
+frontend\test-production.ps1
+frontend\test-setup.ps1
+frontend\transforms basic Algolia search into revolutionary ethical discovery engine!
+frontend\TRIGGER_BUILD.txt
+frontend\tsconfig.app.json
+frontend\tsconfig.json
+frontend\tsconfig.node.json
+frontend\update-app-auto.ps1
+frontend\upgrade-ui.ps1
+frontend\verify-ecolojia.js
+frontend\verify-search.ps1
+frontend\vite.config.js
+frontend\vite.config.ts
+frontend\vite.config.ts.backup
+frontend\vite.config.ts.bak_20250915_170103
+frontend\vitest.config.ts
+frontend\vitest.setup.ts
+frontend\.bolt\config.json
+frontend\.bolt\prompt
+frontend\.github\workflows\ci.yml
+frontend\.netlify\netlify.toml
+frontend\.netlify\state.json
+frontend\.vscode\settings.json
+frontend\backup_20250812_202705\api.config.ts
+frontend\backup_20250812_202705\apiClient.ts
+frontend\backup_20250812_202705\AuthContext.tsx
+frontend\backup_20250812_202705\StatsPage.tsx
+frontend\backup_20250818003243\src\App.backup-3.tsx
+frontend\backup_20250818003243\src\App.complex.tsx
+frontend\backup_20250818003243\src\App.minimal.tsx
+frontend\backup_20250818003243\src\App.tsx
+frontend\backup_20250818003243\src\App.tsx.backup
+frontend\backup_20250818003243\src\App.tsx.backup_20250714_163625
+frontend\backup_20250818003243\src\App.tsx.backup_20250809_224023
+frontend\backup_20250818003243\src\App.tsx.backup_20250809_224642
+frontend\backup_20250818003243\src\AppCopie.tsx
+frontend\backup_20250818003243\src\i18n.ts
+frontend\backup_20250818003243\src\index.css
+frontend\backup_20250818003243\src\main.tsx
+frontend\backup_20250818003243\src\server.js
+frontend\backup_20250818003243\src\vite-env.d.ts
+frontend\backup_20250818003243\src\_headers
+frontend\backup_20250818003243\src\api\products.ts
+frontend\backup_20250818003243\src\api\realApi.ts
+frontend\backup_20250818003243\src\api\realApi.ts.backup
+frontend\backup_20250818003243\src\api\realApi.ts.backup2
+frontend\backup_20250818003243\src\api\types.ts
+frontend\backup_20250818003243\src\api\products\[id].ts
+frontend\backup_20250818003243\src\auth\IMPLEMENTATION_NOTES.md
+frontend\backup_20250818003243\src\auth\components\AuthPage.tsx
+frontend\backup_20250818003243\src\auth\components\LoginForm.tsx
+frontend\backup_20250818003243\src\auth\components\RegisterForm.tsx
+frontend\backup_20250818003243\src\auth\context\AuthContext.tsx
+frontend\backup_20250818003243\src\auth\hooks\useAuth.ts
+frontend\backup_20250818003243\src\auth\hooks\useAuth.tsx
+frontend\backup_20250818003243\src\auth\types\AuthTypes.ts
+frontend\backup_20250818003243\src\chat\DeepSeekChat.tsx
+frontend\backup_20250818003243\src\chat\UpgradeModal.tsx
+frontend\backup_20250818003243\src\components\AdvancedFilters.tsx
+frontend\backup_20250818003243\src\components\AffiliateButton.tsx
+frontend\backup_20250818003243\src\components\AlgoliaProductCard.tsx
+frontend\backup_20250818003243\src\components\AlternativeCard.jsx
+frontend\backup_20250818003243\src\components\AnalysisResultCard.tsx
+frontend\backup_20250818003243\src\components\CategoryCard.tsx
+frontend\backup_20250818003243\src\components\CategoryFilter.tsx
+frontend\backup_20250818003243\src\components\CategoryNavigation.tsx
+frontend\backup_20250818003243\src\components\CategorySelector.tsx
+frontend\backup_20250818003243\src\components\ChatBot.tsx
+frontend\backup_20250818003243\src\components\CircularScoreGaugeLight.jsx
+frontend\backup_20250818003243\src\components\ConfidenceBadge.tsx
+frontend\backup_20250818003243\src\components\CookieBanner.tsx
+frontend\backup_20250818003243\src\components\EcoScoreBadge.tsx
+frontend\backup_20250818003243\src\components\EmailVerificationBanner.tsx
+frontend\backup_20250818003243\src\components\EnvironmentScore.tsx
+frontend\backup_20250818003243\src\components\ErrorBoundary.tsx
+frontend\backup_20250818003243\src\components\ErrorMessage.tsx
+frontend\backup_20250818003243\src\components\EthicalScoreBadge.tsx
+frontend\backup_20250818003243\src\components\Footer.tsx
+frontend\backup_20250818003243\src\components\HealthIndicator.jsx
+frontend\backup_20250818003243\src\components\HealthScoreCircle.tsx
+frontend\backup_20250818003243\src\components\LanguageSelector.tsx
+frontend\backup_20250818003243\src\components\Layout.tsx
+frontend\backup_20250818003243\src\components\NaturalAlternatives.jsx
+frontend\backup_20250818003243\src\components\Navbar.tsx
+frontend\backup_20250818003243\src\components\NoResultsFound.tsx
+frontend\backup_20250818003243\src\components\NovaBadge.tsx
+frontend\backup_20250818003243\src\components\NovaClassificationBadge.jsx
+frontend\backup_20250818003243\src\components\NovaDetails.tsx
+frontend\backup_20250818003243\src\components\NovaResults.tsx
+frontend\backup_20250818003243\src\components\PartnerLinks.tsx
+frontend\backup_20250818003243\src\components\PhotoCapture.tsx
+frontend\backup_20250818003243\src\components\PremiumUpgradeModal.tsx
+frontend\backup_20250818003243\src\components\PrivateRoute.tsx
+frontend\backup_20250818003243\src\components\ProductCard.tsx
+frontend\backup_20250818003243\src\components\ProductCardSkeleton.tsx
+frontend\backup_20250818003243\src\components\ProductDetail.tsx
+frontend\backup_20250818003243\src\components\ProductHit.tsx
+frontend\backup_20250818003243\src\components\PWAInstallBanner.tsx
+frontend\backup_20250818003243\src\components\ResultCard.tsx
+frontend\backup_20250818003243\src\components\ScanFloatingButton.tsx
+frontend\backup_20250818003243\src\components\ScoreComparison.jsx
+frontend\backup_20250818003243\src\components\SEOHead.tsx
+frontend\backup_20250818003243\src\components\SimilarProductsCarousel.tsx
+frontend\backup_20250818003243\src\components\TranslatedContent.tsx
+frontend\backup_20250818003243\src\components\UltraProcessingAlert.jsx
+frontend\backup_20250818003243\src\components\UltraProcessingPanel.tsx
+frontend\backup_20250818003243\src\components\UltraTransformResults.tsx
+frontend\backup_20250818003243\src\components\Admin\ImportProgress.tsx
+frontend\backup_20250818003243\src\components\Admin\LogViewer.tsx
+frontend\backup_20250818003243\src\components\Admin\ProductTable.tsx
+frontend\backup_20250818003243\src\components\Admin\StatsCard.tsx
+frontend\backup_20250818003243\src\components\analysis\AIChat.tsx
+frontend\backup_20250818003243\src\components\analysis\AlternativesSuggestions.tsx
+frontend\backup_20250818003243\src\components\analysis\CosmeticAnalysisDisplay.tsx
+frontend\backup_20250818003243\src\components\analysis\CosmeticsAnalyzer.ts
+frontend\backup_20250818003243\src\components\analysis\index.ts
+frontend\backup_20250818003243\src\components\analysis\NovaAlert.tsx
+frontend\backup_20250818003243\src\components\analysis\ProgressiveAnalysis.tsx
+frontend\backup_20250818003243\src\components\analysis\QuickStatsWidget.tsx
+frontend\backup_20250818003243\src\components\analysis\ScientificScore.tsx
+frontend\backup_20250818003243\src\components\analysis\ScoreGauge.tsx
+frontend\backup_20250818003243\src\components\analysis\UnifiedAnalysisResult.tsx
+frontend\backup_20250818003243\src\components\chat\ChatWidget.tsx
+frontend\backup_20250818003243\src\components\common\Badge.tsx
+frontend\backup_20250818003243\src\components\common\Button.tsx
+frontend\backup_20250818003243\src\components\common\LoadingSpinner.tsx
+frontend\backup_20250818003243\src\components\dashboard\CommunityComparison.tsx
+frontend\backup_20250818003243\src\components\dashboard\DailyAnalysesChart.tsx
+frontend\backup_20250818003243\src\components\dashboard\RecommendationsSection.tsx
+frontend\backup_20250818003243\src\components\dashboard\WeeklySummary.tsx
+frontend\backup_20250818003243\src\components\gdpr\ConsentManager.tsx
+frontend\backup_20250818003243\src\components\premium\BatteryProgress.jsx
+frontend\backup_20250818003243\src\components\premium\CircularScoreGauge.jsx
+frontend\backup_20250818003243\src\components\premium\DualBadgeCard.jsx
+frontend\backup_20250818003243\src\components\premium\PremiumAlternatives.jsx
+frontend\backup_20250818003243\src\components\premium\PremiumChat.jsx
+frontend\backup_20250818003243\src\components\premium\RadarChart.jsx
+frontend\backup_20250818003243\src\components\premium\ThermoMeter.jsx
+frontend\backup_20250818003243\src\components\product\ProductIngredientsSection.tsx
+frontend\backup_20250818003243\src\components\profile\PreferencesTab.tsx
+frontend\backup_20250818003243\src\components\quota\QuotaAlert.tsx
+frontend\backup_20250818003243\src\components\quota\QuotaBanner.tsx
+frontend\backup_20250818003243\src\components\quota\QuotaBar.tsx
+frontend\backup_20250818003243\src\components\scanner\BarcodeScanner.css
+frontend\backup_20250818003243\src\components\scanner\BarcodeScanner.tsx
+frontend\backup_20250818003243\src\components\scanner\BarcodeScanner.tsx.backup
+frontend\backup_20250818003243\src\components\scanner\CategoryAutoDetector.tsx
+frontend\backup_20250818003243\src\components\scanner\EnhancedBarcodeScanner.tsx
+frontend\backup_20250818003243\src\components\scanner\ManualSearch.tsx
+frontend\backup_20250818003243\src\components\scanner\PhotoCapture.tsx
+frontend\backup_20250818003243\src\components\scanner\PhotoCapture.tsx.backup
+frontend\backup_20250818003243\src\components\search\SearchExperience.tsx
+frontend\backup_20250818003243\src\components\ui\LoadingStates.tsx
+frontend\backup_20250818003243\src\components\upgrade\SmartUpgradeModal.tsx
+frontend\backup_20250818003243\src\config\api.config.ts
+frontend\backup_20250818003243\src\config\api.config.ts.backup
+frontend\backup_20250818003243\src\config\constants.ts
+frontend\backup_20250818003243\src\cosmetics\CertificationBadges.tsx
+frontend\backup_20250818003243\src\cosmetics\IngredientsList.tsx
+frontend\backup_20250818003243\src\data\ingredientsKnowledge.ts
+frontend\backup_20250818003243\src\data\mockData.ts
+frontend\backup_20250818003243\src\dev\devTools.ts
+frontend\backup_20250818003243\src\hooks\index.ts
+frontend\backup_20250818003243\src\hooks\use-debounce.ts
+frontend\backup_20250818003243\src\hooks\use-toast.ts
+frontend\backup_20250818003243\src\hooks\useAdmin.ts
+frontend\backup_20250818003243\src\hooks\useAnalysis.ts
+frontend\backup_20250818003243\src\hooks\useAuth.tsx
+frontend\backup_20250818003243\src\hooks\useCamera.ts
+frontend\backup_20250818003243\src\hooks\useChat.ts
+frontend\backup_20250818003243\src\hooks\useDebounce.ts
+frontend\backup_20250818003243\src\hooks\useEmailValidation.ts
+frontend\backup_20250818003243\src\hooks\useIngredientsEnrichment.ts
+frontend\backup_20250818003243\src\hooks\useIntersectionObserver.ts
+frontend\backup_20250818003243\src\hooks\useNovaApi.ts
+frontend\backup_20250818003243\src\hooks\useProductAnalysis.ts
+frontend\backup_20250818003243\src\hooks\useProductCache.ts
+frontend\backup_20250818003243\src\hooks\usePWA.ts
+frontend\backup_20250818003243\src\hooks\useQuota.ts
+frontend\backup_20250818003243\src\hooks\useScanner.ts
+frontend\backup_20250818003243\src\hooks\useSEO.ts
+frontend\backup_20250818003243\src\hooks\useSimilarProducts.ts
+frontend\backup_20250818003243\src\hooks\useUniversalSearch.ts
+frontend\backup_20250818003243\src\hooks\useUserAnalytics.ts
+frontend\backup_20250818003243\src\i18n\index.ts
+frontend\backup_20250818003243\src\i18n\locales\en.ts
+frontend\backup_20250818003243\src\i18n\locales\fr.json
+frontend\backup_20250818003243\src\i18n\locales\fr.ts
+frontend\backup_20250818003243\src\lib\algolia.ts
+frontend\backup_20250818003243\src\lib\api\analysis.ts
+frontend\backup_20250818003243\src\pages\AboutPage.tsx
+frontend\backup_20250818003243\src\pages\AdminDashboard.tsx
+frontend\backup_20250818003243\src\pages\AiPreferencesPage.tsx
+frontend\backup_20250818003243\src\pages\AnalysisDevPage.tsx
+frontend\backup_20250818003243\src\pages\CategoryPage.tsx
+frontend\backup_20250818003243\src\pages\ChatPage.tsx
+frontend\backup_20250818003243\src\pages\CosmeticAnalysisPage.tsx
+frontend\backup_20250818003243\src\pages\DashboardPage.tsx
+frontend\backup_20250818003243\src\pages\DetergentAnalysisPage.tsx
+frontend\backup_20250818003243\src\pages\EmailVerificationPage.tsx
+frontend\backup_20250818003243\src\pages\FavoritesPage.tsx
+frontend\backup_20250818003243\src\pages\HistoryPage.tsx
+frontend\backup_20250818003243\src\pages\HomePage.tsx
+frontend\backup_20250818003243\src\pages\LegalPage.tsx
+frontend\backup_20250818003243\src\pages\LoginPage.tsx
+frontend\backup_20250818003243\src\pages\ManualAnalysisPage.tsx
+frontend\backup_20250818003243\src\pages\MultiCategoriesPage.tsx
+frontend\backup_20250818003243\src\pages\MultiScanPage.tsx
+frontend\backup_20250818003243\src\pages\PricingPage.tsx
+frontend\backup_20250818003243\src\pages\PrivacyPage.tsx
+frontend\backup_20250818003243\src\pages\ProductDetailPage.tsx
+frontend\backup_20250818003243\src\pages\ProductNotFoundPage.tsx
+frontend\backup_20250818003243\src\pages\ProductPage.tsx
+frontend\backup_20250818003243\src\pages\ProfilePage.tsx
+frontend\backup_20250818003243\src\pages\RegisterPage.tsx
+frontend\backup_20250818003243\src\pages\Results.tsx
+frontend\backup_20250818003243\src\pages\ResultsPage.tsx
+frontend\backup_20250818003243\src\pages\ScanPage.tsx
+frontend\backup_20250818003243\src\pages\SearchPage.tsx
+frontend\backup_20250818003243\src\pages\SettingsPage.tsx
+frontend\backup_20250818003243\src\pages\TermsPage.tsx
+frontend\backup_20250818003243\src\pages\UnifiedResultsPage.tsx
+frontend\backup_20250818003243\src\pages\UniversalSearchPage.tsx
+frontend\backup_20250818003243\src\pages\UniversalSearchService.ts
+frontend\backup_20250818003243\src\pages\Auth\LoginPage.tsx
+frontend\backup_20250818003243\src\pages\Auth\RegisterPage.tsx
+frontend\backup_20250818003243\src\router\AppRouter.tsx
+frontend\backup_20250818003243\src\services\.ts
+frontend\backup_20250818003243\src\services\adminApi.ts
+frontend\backup_20250818003243\src\services\aiAnalysisService.ts
+frontend\backup_20250818003243\src\services\aiService.ts
+frontend\backup_20250818003243\src\services\analysisService.js
+frontend\backup_20250818003243\src\services\analysisService.ts
+frontend\backup_20250818003243\src\services\analyticsService.ts
+frontend\backup_20250818003243\src\services\api.ts
+frontend\backup_20250818003243\src\services\apiClient.ts
+frontend\backup_20250818003243\src\services\apiClient.ts.backup
+frontend\backup_20250818003243\src\services\authService.js
+frontend\backup_20250818003243\src\services\cloudinaryService.ts
+frontend\backup_20250818003243\src\services\configService.ts
+frontend\backup_20250818003243\src\services\dashboardService.ts
+frontend\backup_20250818003243\src\services\demoMode.ts
+frontend\backup_20250818003243\src\services\demoService.ts
+frontend\backup_20250818003243\src\services\EmailService.ts
+frontend\backup_20250818003243\src\services\emailValidationService.ts
+frontend\backup_20250818003243\src\services\errorHandling.ts
+frontend\backup_20250818003243\src\services\fallbackService.ts
+frontend\backup_20250818003243\src\services\historyService.ts
+frontend\backup_20250818003243\src\services\historyService.ts.backup
+frontend\backup_20250818003243\src\services\mockService.ts
+frontend\backup_20250818003243\src\services\multiCategoryApi.ts
+frontend\backup_20250818003243\src\services\novaAdapter.ts
+frontend\backup_20250818003243\src\services\ocrService.ts
+frontend\backup_20250818003243\src\services\paymentService.ts
+frontend\backup_20250818003243\src\services\productService.ts
+frontend\backup_20250818003243\src\services\scanService.ts
+frontend\backup_20250818003243\src\services\searchService.js
+frontend\backup_20250818003243\src\services\searchService.ts
+frontend\backup_20250818003243\src\services\UserAnalytics.ts
+frontend\backup_20250818003243\src\services\userService.ts
+frontend\backup_20250818003243\src\services\visionService.ts
+frontend\backup_20250818003243\src\services\ai\AIAnalysisService.ts
+frontend\backup_20250818003243\src\services\ai\DeepSeekChat.tsx
+frontend\backup_20250818003243\src\services\ai\DeepSeekClient.ts
+frontend\backup_20250818003243\src\services\ai\DeepSeekECOLOJIAService.ts
+frontend\backup_20250818003243\src\services\ai\novaClassifier.ts
+frontend\backup_20250818003243\src\services\ai\novaClassifier.ts.backup
+frontend\backup_20250818003243\src\services\ai\ultraTransformService.ts
+frontend\backup_20250818003243\src\services\algolia\client.ts
+frontend\backup_20250818003243\src\services\algolia\client.ts.backup
+frontend\backup_20250818003243\src\services\chat\ChatService.ts
+frontend\backup_20250818003243\src\services\search\EnhancedSearchInterface.tsx
+frontend\backup_20250818003243\src\services\search\UniversalSearchService.ts
+frontend\backup_20250818003243\src\services\security\SecureProxyService.ts
+frontend\backup_20250818003243\src\store\authStore.ts
+frontend\backup_20250818003243\src\store\productStore.ts
+frontend\backup_20250818003243\src\styles\animations.css
+frontend\backup_20250818003243\src\types\admin.ts
+frontend\backup_20250818003243\src\types\categories.ts
+frontend\backup_20250818003243\src\types\chat.types.ts
+frontend\backup_20250818003243\src\types\index.ts
+frontend\backup_20250818003243\src\types\mockData.ts
+frontend\backup_20250818003243\src\types\quagga2.d.ts
+frontend\backup_20250818003243\src\types\search.ts
+frontend\backup_20250818003243\src\types\user.ts
+frontend\backup_20250818003243\src\utils\algoliaAdapter.ts
+frontend\backup_20250818003243\src\utils\bugFixes.ts
+frontend\backup_20250818003243\src\utils\normalizeAlgoliaProduct.ts
+frontend\backup_20250818003243\src\utils\performance.ts
+frontend\backup_20250818003243\src\utils\scannerControl.ts
+frontend\backup_20250818003243\src\utils\setupMocks.ts
+frontend\ECOLOJIA_PRODUCTION_PACKAGE\README_PRODUCTION.md
+frontend\ECOLOJIA_PRODUCTION_PACKAGE\SWITCH_DEMO_PROD.txt
+frontend\public\apple-touch-icon.png
+frontend\public\browserconfig.xml
+frontend\public\fallback.png
+frontend\public\favicon-32x32.png
+frontend\public\favicon.ico
+frontend\public\favicon.svg
+frontend\public\icon-192.png
+frontend\public\icon-192.svg
+frontend\public\icon-512.png
+frontend\public\icon-512.svg
+frontend\public\icon.svg
+frontend\public\manifest.json
+frontend\public\robots.txt
+frontend\public\service-worker.js
+frontend\public\sitemap.xml
+frontend\public\sw.js
+frontend\public\_redirects
+frontend\public\.well-known\security.txt
+frontend\public\icons\icon-192x192.png
+frontend\public\icons\icon-512x512.png
+frontend\reports\frontend-viability-20250817-181037.log
+frontend\reports\frontend-viability-20250817-181230.json
+frontend\reports\frontend-viability-20250817-181230.log
+frontend\reports\frontend-viability-20250817-181626.json
+frontend\reports\frontend-viability-20250817-181626.log
+frontend\reports\frontend-viability-20250817-183020.json
+frontend\reports\frontend-viability-20250817-183020.log
+frontend\reports\frontend-viability-20250817-183020.md
+frontend\scripts\complete-fix-scanner.ps1
+frontend\scripts\create-icons.ps1
+frontend\scripts\deploy-scanner-complete.ps1
+frontend\scripts\ecolojia-master.ps1
+frontend\scripts\fix-build-error.ps1
+frontend\scripts\quick-setup.ps1
+frontend\scripts\setup-complete.ps1
+frontend\scripts\Test-Frontend.ps1
+frontend\src\App.backup-3.tsx
+frontend\src\App.complex.tsx
+frontend\src\App.minimal.tsx
+frontend\src\App.tsx
+frontend\src\App.tsx.backup
+frontend\src\App.tsx.backup_20250714_163625
+frontend\src\App.tsx.backup_20250809_224023
+frontend\src\App.tsx.backup_20250809_224642
+frontend\src\App.tsx.backup_20250915_162238
+frontend\src\App.tsx.backup_routes_20250915_172401
+frontend\src\App.tsx.bak_20250915_171318
+frontend\src\App.tsx.bak_dashboardRoute_20250915_204604
+frontend\src\AppCopie.tsx
+frontend\src\env.ts
+frontend\src\i18n.ts
+frontend\src\index.css
+frontend\src\main.tsx
+frontend\src\main.tsx.bak_20250915_165333
+frontend\src\main.tsx.bak_20250915_170102
+frontend\src\server.js
+frontend\src\vite-env.d.ts
+frontend\src\_headers
+frontend\src\api\products.ts
+frontend\src\api\types.ts
+frontend\src\api\products\[id].ts
+frontend\src\backup_20250906_221723\.ts
+frontend\src\backup_20250906_221723\adminApi.ts
+frontend\src\backup_20250906_221723\aiAnalysisService.ts
+frontend\src\backup_20250906_221723\aiService.ts
+frontend\src\backup_20250906_221723\alternativesService.ts
+frontend\src\backup_20250906_221723\analysisService.ts
+frontend\src\backup_20250906_221723\analyticsService.ts
+frontend\src\backup_20250906_221723\api.ts
+frontend\src\backup_20250906_221723\ApiAdapter.ts
+frontend\src\backup_20250906_221723\apiClient.ts
+frontend\src\backup_20250906_221723\authService.ts
+frontend\src\backup_20250906_221723\chatService.ts
+frontend\src\backup_20250906_221723\cloudinaryService.ts
+frontend\src\backup_20250906_221723\configService.ts
+frontend\src\backup_20250906_221723\dashboardService.ts
+frontend\src\backup_20250906_221723\demoMode.ts
+frontend\src\backup_20250906_221723\demoService.ts
+frontend\src\backup_20250906_221723\EmailService.ts
+frontend\src\backup_20250906_221723\emailValidationService.ts
+frontend\src\backup_20250906_221723\env.ts
+frontend\src\backup_20250906_221723\errorHandling.ts
+frontend\src\backup_20250906_221723\exportService.ts
+frontend\src\backup_20250906_221723\fallbackService.ts
+frontend\src\backup_20250906_221723\favoritesService.ts
+frontend\src\backup_20250906_221723\historyService.ts
+frontend\src\backup_20250906_221723\historySyncService.ts
+frontend\src\backup_20250906_221723\index.ts
+frontend\src\backup_20250906_221723\mockService.ts
+frontend\src\backup_20250906_221723\multiCategoryApi.ts
+frontend\src\backup_20250906_221723\notificationService.ts
+frontend\src\backup_20250906_221723\novaAdapter.ts
+frontend\src\backup_20250906_221723\ocrService.ts
+frontend\src\backup_20250906_221723\offlineService.ts
+frontend\src\backup_20250906_221723\paymentService.ts
+frontend\src\backup_20250906_221723\productService.ts
+frontend\src\backup_20250906_221723\quotaService.ts
+frontend\src\backup_20250906_221723\scanService.ts
+frontend\src\backup_20250906_221723\searchService.ts
+frontend\src\backup_20250906_221723\UserAnalytics.ts
+frontend\src\backup_20250906_221723\userService.ts
+frontend\src\backup_20250906_221723\visionService.ts
+frontend\src\chat\DeepSeekChat.tsx
+frontend\src\chat\UpgradeModal.tsx
+frontend\src\components\.tsx
+frontend\src\components\AdvancedFilters.tsx
+frontend\src\components\AffiliateButton.tsx
+frontend\src\components\AlgoliaProductCard.tsx
+frontend\src\components\AlternativeCard.jsx
+frontend\src\components\AnalysisResultCard.tsx
+frontend\src\components\CategoryCard.tsx
+frontend\src\components\CategoryFilter.tsx
+frontend\src\components\CategoryNavigation.tsx
+frontend\src\components\CategorySelector.tsx
+frontend\src\components\CircularScoreGaugeLight.jsx
+frontend\src\components\ConfidenceBadge.tsx
+frontend\src\components\CookieBanner.tsx
+frontend\src\components\DomainBadges.tsx
+frontend\src\components\EcoScoreBadge.tsx
+frontend\src\components\EmailVerificationBanner.tsx
+frontend\src\components\EnvironmentScore.tsx
+frontend\src\components\ErrorBoundary.tsx
+frontend\src\components\ErrorMessage.tsx
+frontend\src\components\EthicalScoreBadge.tsx
+frontend\src\components\Footer.tsx
+frontend\src\components\HealthIndicator.jsx
+frontend\src\components\HealthScoreCircle.tsx
+frontend\src\components\LanguageSelector.tsx
+frontend\src\components\Layout.tsx
+frontend\src\components\MockTestPanel.tsx
+frontend\src\components\NaturalAlternatives.jsx
+frontend\src\components\Navbar.tsx
+frontend\src\components\NoResultsFound.tsx
+frontend\src\components\NotificationContainer.tsx
+frontend\src\components\NovaBadge.tsx
+frontend\src\components\NovaClassificationBadge.jsx
+frontend\src\components\NovaDetails.tsx
+frontend\src\components\NovaResults.tsx
+frontend\src\components\OfflineIndicator.tsx
+frontend\src\components\PartnerLinks.tsx
+frontend\src\components\PhotoAnalyzerEnhanced.tsx
+frontend\src\components\PhotoCapture.tsx
+frontend\src\components\PremiumUpgradeModal.tsx
+frontend\src\components\PrivateRoute.tsx
+frontend\src\components\ProductCard.tsx
+frontend\src\components\ProductCardSkeleton.tsx
+frontend\src\components\ProductDetail.tsx
+frontend\src\components\ProductHit.tsx
+frontend\src\components\ProtectedRoute.tsx
+frontend\src\components\PWAInstallBanner.tsx
+frontend\src\components\ResultCard.tsx
+frontend\src\components\ScanFloatingButton.tsx
+frontend\src\components\ScoreChip.tsx
+frontend\src\components\ScoreComparison.jsx
+frontend\src\components\SEOHead.tsx
+frontend\src\components\SimilarProductsCarousel.tsx
+frontend\src\components\TranslatedContent.tsx
+frontend\src\components\UltraProcessingAlert.jsx
+frontend\src\components\UltraProcessingPanel.tsx
+frontend\src\components\UltraTransformResults.tsx
+frontend\src\components\Admin\ImportProgress.tsx
+frontend\src\components\Admin\LogViewer.tsx
+frontend\src\components\Admin\ProductTable.tsx
+frontend\src\components\Admin\StatsCard.tsx
+frontend\src\components\analysis\AIChat.tsx
+frontend\src\components\analysis\AlternativesList.tsx
+frontend\src\components\analysis\AlternativesSuggestions.tsx
+frontend\src\components\analysis\CosmeticAnalysisDisplay.tsx
+frontend\src\components\analysis\CosmeticsAnalyzer.ts
+frontend\src\components\analysis\index.ts
+frontend\src\components\analysis\NovaAlert.tsx
+frontend\src\components\analysis\ProgressiveAnalysis.tsx
+frontend\src\components\analysis\QuickStatsWidget.tsx
+frontend\src\components\analysis\RiskCard.tsx
+frontend\src\components\analysis\ScientificScore.tsx
+frontend\src\components\analysis\ScoreDisplay.tsx
+frontend\src\components\analysis\ScoreGauge.tsx
+frontend\src\components\analysis\ScoreGauge.tsx.bak_20250915_203114
+frontend\src\components\analysis\ScoreGaugeEnhanced.tsx
+frontend\src\components\analysis\UnifiedAnalysisResult.tsx
+frontend\src\components\chat\ChatBubble.tsx
+frontend\src\components\chat\ChatWidget.tsx
+frontend\src\components\common\Badge.tsx
+frontend\src\components\common\Button.tsx
+frontend\src\components\common\LoadingSpinner.tsx
+frontend\src\components\dashboard\CommunityComparison.tsx
+frontend\src\components\dashboard\DailyAnalysesChart.tsx
+frontend\src\components\dashboard\RecommendationsSection.tsx
+frontend\src\components\dashboard\StatsCard.tsx
+frontend\src\components\dashboard\TrendSparkline.tsx
+frontend\src\components\dashboard\WeeklySummary.tsx
+frontend\src\components\gdpr\ConsentManager.tsx
+frontend\src\components\layout\Layout.tsx
+frontend\src\components\premium\BatteryProgress.jsx
+frontend\src\components\premium\CircularScoreGauge.jsx
+frontend\src\components\premium\DualBadgeCard.jsx
+frontend\src\components\premium\PremiumAlternatives.jsx
+frontend\src\components\premium\PremiumChat.jsx
+frontend\src\components\premium\PremiumModal.tsx
+frontend\src\components\premium\RadarChart.jsx
+frontend\src\components\premium\ThermoMeter.jsx
+frontend\src\components\product\ProductIngredientsSection.tsx
+frontend\src\components\profile\PreferencesTab.tsx
+frontend\src\components\quota\QuotaAlert.tsx
+frontend\src\components\quota\QuotaBanner.tsx
+frontend\src\components\quota\QuotaBar.tsx
+frontend\src\components\scanner\BarcodeScanner.css
+frontend\src\components\scanner\BarcodeScanner.tsx
+frontend\src\components\scanner\BarcodeScanner.tsx.backup
+frontend\src\components\scanner\BarcodeScanner.tsx.backup3
+frontend\src\components\scanner\BarcodeScanner.tsx.backup_20250914_213348
+frontend\src\components\scanner\BarcodeScannerEnhanced.tsx
+frontend\src\components\scanner\BarcodeScannerEnhanced.tsx.bak_20250915_170615
+frontend\src\components\scanner\CategoryAutoDetector.tsx
+frontend\src\components\scanner\EnhancedBarcodeScanner.tsx
+frontend\src\components\scanner\ManualInput.tsx
+frontend\src\components\scanner\ManualSearch.tsx
+frontend\src\components\scanner\PhotoCapture.tsx
+frontend\src\components\scanner\PhotoCapture.tsx.backup
+frontend\src\components\scanner\__tests__\BarcodeScanner.spec.tsx
+frontend\src\components\search\SearchBar.tsx
+frontend\src\components\search\SearchExperience.tsx
+frontend\src\components\ui\LoadingStates.tsx
+frontend\src\components\upgrade\SmartUpgradeModal.tsx
+frontend\src\config\api.config.ts
+frontend\src\config\api.config.ts.backup
+frontend\src\config\constants.ts
+frontend\src\config\featureFlags.ts
+frontend\src\config\mock.config.ts
+frontend\src\Contexts\AuthContext.tsx
+frontend\src\cosmetics\CertificationBadges.tsx
+frontend\src\cosmetics\IngredientsList.tsx
+frontend\src\data\ingredientsKnowledge.ts
+frontend\src\data\mockData.ts
+frontend\src\data\mockProducts.ts
+frontend\src\dev\devTools.ts
+frontend\src\hooks\index.ts
+frontend\src\hooks\use-debounce.ts
+frontend\src\hooks\use-toast.ts
+frontend\src\hooks\useAdmin.ts
+frontend\src\hooks\useAIChat.ts
+frontend\src\hooks\useAnalysis.ts
+frontend\src\hooks\useCamera.ts
+frontend\src\hooks\useChat.ts
+frontend\src\hooks\useDebounce.ts
+frontend\src\hooks\useEmailValidation.ts
+frontend\src\hooks\useFavorites.ts
+frontend\src\hooks\useHistory.ts
+frontend\src\hooks\useIngredientsEnrichment.ts
+frontend\src\hooks\useIntersectionObserver.ts
+frontend\src\hooks\useNotifications.ts
+frontend\src\hooks\useNovaApi.ts
+frontend\src\hooks\useOfflineStatus.ts
+frontend\src\hooks\useProductAnalysis.ts
+frontend\src\hooks\useProductCache.ts
+frontend\src\hooks\usePWA.ts
+frontend\src\hooks\useQuota.ts
+frontend\src\hooks\useScanner.ts
+frontend\src\hooks\useSEO.ts
+frontend\src\hooks\useSimilarProducts.ts
+frontend\src\hooks\useUniversalSearch.ts
+frontend\src\hooks\useUserAnalytics.ts
+frontend\src\i18n\config.ts
+frontend\src\i18n\index.ts
+frontend\src\i18n\locales\en.ts
+frontend\src\i18n\locales\fr.json
+frontend\src\i18n\locales\fr.ts
+frontend\src\lib\algolia.ts
+frontend\src\lib\api.ts
+frontend\src\lib\api\analysis.ts
+frontend\src\pages\AboutPage.tsx
+frontend\src\pages\AdminDashboard.tsx
+frontend\src\pages\AiPreferencesPage.tsx
+frontend\src\pages\AnalysisDevPage.tsx
+frontend\src\pages\CategoryPage.tsx
+frontend\src\pages\ChatPage.tsx
+frontend\src\pages\ComparePage.tsx
+frontend\src\pages\CosmeticAnalysisPage.tsx
+frontend\src\pages\DashboardPage.tsx
+frontend\src\pages\DashboardPage.tsx.bak_20250915_204603
+frontend\src\pages\DetergentAnalysisPage.tsx
+frontend\src\pages\DiagnosticPage.tsx
+frontend\src\pages\EmailVerificationPage.tsx
+frontend\src\pages\FavoritesPage.tsx
+frontend\src\pages\HistoryPage.tsx
+frontend\src\pages\HomePage.tsx
+frontend\src\pages\LegalPage.tsx
+frontend\src\pages\LoginPage.tsx
+frontend\src\pages\ManualAnalysisPage.tsx
+frontend\src\pages\MultiCategoriesPage.tsx
+frontend\src\pages\MultiScanPage.tsx
+frontend\src\pages\OnboardingPage.tsx
+frontend\src\pages\PremiumPage.tsx
+frontend\src\pages\PricingPage.tsx
+frontend\src\pages\PrivacyPage.tsx
+frontend\src\pages\ProductDetailPage.tsx
+frontend\src\pages\ProductNotFoundPage.tsx
+frontend\src\pages\ProductPage.tsx
+frontend\src\pages\ProductPage.tsx.backup
+frontend\src\pages\ProfilePage.tsx
+frontend\src\pages\RegisterPage.tsx
+frontend\src\pages\ResultPage.tsx
+frontend\src\pages\Results.tsx
+frontend\src\pages\ResultsPage.tsx
+frontend\src\pages\ResultsPageIntegrated.tsx
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_20250915_164606
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_20250915_165332
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_20250915_171317
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_afterApi_20250915_201331
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_fetch_20250915_173432
+frontend\src\pages\ResultsPageIntegrated.tsx.bak_full_20250915_201549
+frontend\src\pages\ScanPage.tsx
+frontend\src\pages\ScanPage.tsx.backup2
+frontend\src\pages\ScanPageIntegrated.tsx
+frontend\src\pages\ScanPageIntegrated.tsx.bak_20250915_165331
+frontend\src\pages\ScanPageIntegrated.tsx.bak_20250915_171312
+frontend\src\pages\ScanPageIntegrated.tsx.bak_afterApi_20250915_201330
+frontend\src\pages\ScanPageIntegrated.tsx.bak_forceNav_20250915_173431
+frontend\src\pages\SearchPage.tsx
+frontend\src\pages\SearchPage.tsx.backup_original
+frontend\src\pages\SettingsPage.tsx
+frontend\src\pages\TermsPage.tsx
+frontend\src\pages\TestPage.tsx
+frontend\src\pages\UnifiedResultsPage.tsx
+frontend\src\pages\UniversalSearchPage.tsx
+frontend\src\pages\UniversalSearchService.ts
+frontend\src\router\AppRouter.tsx
+frontend\src\services\.ts
+frontend\src\services\adminApi.ts
+frontend\src\services\aiAnalysisService.ts
+frontend\src\services\aiService.ts
+frontend\src\services\alternativesService.ts
+frontend\src\services\analysisService.ts
+frontend\src\services\analyticsService.ts
+frontend\src\services\api.ts
+frontend\src\services\api.ts.backup
+frontend\src\services\api.ts.bak_20250915_201330
+frontend\src\services\api.ts.bak_auth_20250915_202447
+frontend\src\services\api.ts.bak_history_20250915_202146
+frontend\src\services\api.ts.bak_payments_20250915_201942
+frontend\src\services\api.ts.bak_usersvc_20250915_201808
+frontend\src\services\ApiAdapter.ts
+frontend\src\services\apiClient.ts
+frontend\src\services\apiClient.ts.backup
+frontend\src\services\apiEnhanced.ts
+frontend\src\services\apiIntegrated.ts
+frontend\src\services\authService.ts
+frontend\src\services\chatService.ts
+frontend\src\services\chatService.ts.backup-20250907-012023
+frontend\src\services\cloudinaryService.ts
+frontend\src\services\configService.ts
+frontend\src\services\dashboardService.ts
+frontend\src\services\demoMode.ts
+frontend\src\services\demoService.ts
+frontend\src\services\EmailService.ts
+frontend\src\services\emailValidationService.ts
+frontend\src\services\errorHandling.ts
+frontend\src\services\exportService.ts
+frontend\src\services\fallbackService.ts
+frontend\src\services\favoritesService.ts
+frontend\src\services\historyService.ts
+frontend\src\services\historyService.ts.backup
+frontend\src\services\historySyncService.ts
+frontend\src\services\index.ts
+frontend\src\services\multiCategoryApi.ts
+frontend\src\services\notificationService.ts
+frontend\src\services\novaAdapter.ts
+frontend\src\services\ocrService.ts
+frontend\src\services\offlineService.ts
+frontend\src\services\paymentService.ts
+frontend\src\services\productSaveService.ts
+frontend\src\services\productService.ts
+frontend\src\services\quotaService.ts
+frontend\src\services\scanService.ts
+frontend\src\services\searchService.js
+frontend\src\services\searchService.ts
+frontend\src\services\UserAnalytics.ts
+frontend\src\services\userService.ts
+frontend\src\services\visionService.ts
+frontend\src\services\ai\AIAnalysisService.ts
+frontend\src\services\ai\DeepSeekChat.tsx
+frontend\src\services\ai\DeepSeekClient.ts
+frontend\src\services\ai\DeepSeekECOLOJIAService.ts
+frontend\src\services\ai\novaClassifier.ts
+frontend\src\services\ai\novaClassifier.ts.backup
+frontend\src\services\ai\ultraTransformService.ts
+frontend\src\services\algolia\client.ts
+frontend\src\services\algolia\client.ts.backup
+frontend\src\services\api\ApiAdapter.ts
+frontend\src\services\chat\ChatService.ts
+frontend\src\services\search\EnhancedSearchInterface.tsx
+frontend\src\services\search\UniversalSearchService.ts
+frontend\src\services\security\SecureProxyService.ts
+frontend\src\services\__tests__\analysisService.spec.ts
+frontend\src\store\productStore.ts
+frontend\src\styles\animations.css
+frontend\src\styles\theme.css
+frontend\src\types\admin.ts
+frontend\src\types\api.ts
+frontend\src\types\categories.ts
+frontend\src\types\chat.types.ts
+frontend\src\types\index.ts
+frontend\src\types\mockData.ts
+frontend\src\types\quagga.d.ts
+frontend\src\types\quagga2.d.ts
+frontend\src\types\search.ts
+frontend\src\types\user.ts
+frontend\src\utils\algoliaAdapter.ts
+frontend\src\utils\bugFixes.ts
+frontend\src\utils\domain.ts
+frontend\src\utils\keepAlive.js
+frontend\src\utils\keepAlive.ts
+frontend\src\utils\localScoring.ts
+frontend\src\utils\normalizeAlgoliaProduct.ts
+frontend\src\utils\performance.ts
+frontend\src\utils\scannerControl.ts
+frontend\src\utils\scores.ts
+frontend\src\utils\setupMocks.ts
+frontend\src\utils\textParsing.ts
+frontend\src\__mocks__\quagga2.ts
+frontend\test-results\.last-run.json
+frontend\tests\testAllFeatures.ts
+frontend\tests\e2e\scan-manual.spec.ts
+frontend\tests\fixtures\analysis.sample.json
+
+
+==================== Listing FRONTEND (100 premières lignes) ====================
+
+frontend\.env
+frontend\.env.example
+frontend\.env.local
+frontend\.gitignore
+frontend\clean-bom.ps1
+frontend\clean-en-file.js
+frontend\clean-encoding-radical.ps1
+frontend\clean-simple.ps1
+frontend\clean_project.py
+frontend\convert-utf8.ps1
+frontend\diagnostic-fix-ecolojia.ps1
+frontend\ECOLOJIA_BACKEND.txt
+frontend\ECOLOJIA_COMPLETE_CODE.txt
+frontend\ECOLOJIA_PAGES.txt
+frontend\ECOLOJIA_SERVICES.txt
+frontend\eslint.config.js
+frontend\fix-all-encoding-v2.ps1
+frontend\fix-all-encoding.ps1
+frontend\fix-all.ps1
+frontend\fix-app-layout.ps1
+frontend\fix-bom.js
+frontend\fix-chatservice.ps1
+frontend\fix-ecolojia.ps1
+frontend\fix-en-es6.mjs
+frontend\fix-encoding-final.ps1
+frontend\fix-encoding-v2.ps1
+frontend\fix-encoding.ps1
+frontend\fix-final-issues.ps1
+frontend\fix-i18n.ps1
+frontend\fix-js-files.ps1
+frontend\fix-login.ps1
+frontend\fix-met-errors.ps1
+frontend\fix-nav-only.ps1
+frontend\fix-navbar-colors.ps1
+frontend\fix-searchpage-imports.ps1
+frontend\fix-simple.ps1
+frontend\fix-syntax.ps1
+frontend\fix_encoding.py
+frontend\fix_encoding_simple.py
+frontend\frontend-structure.txt
+frontend\h origin main
+frontend\index.html
+frontend\inject-user.js
+frontend\integrate-navbar.ps1
+frontend\ion
+frontend\modifications-app-tsx.txt
+frontend\package-lock.json
+frontend\package.json
+frontend\package.json.safe
+frontend\playwright.config.ts
+frontend\postcss.config.mjs
+frontend\products-response.json
+frontend\PROGRESS.md
+frontend\README.md
+frontend\repo-files.txt
+frontend\RUN-ALL.ps1
+frontend\success-status.ps1
+frontend\tailwind.config.cjs
+frontend\tailwind.config.js
+frontend\tailwind.config.mjs
+frontend\test-backend.js
+frontend\test-chat-endpoint.ps1
+frontend\test-chat-service.js
+frontend\test-chat.html
+frontend\test-dashboard-complete.cjs
+frontend\test-dashboard-fix.cjs
+frontend\test-ecolojia-complete.ps1
+frontend\test-frontend.js
+frontend\test-login.js
+frontend\test-production.ps1
+frontend\test-setup.ps1
+frontend\transforms basic Algolia search into revolutionary ethical discovery engine!
+frontend\TRIGGER_BUILD.txt
+frontend\tsconfig.app.json
+frontend\tsconfig.json
+frontend\tsconfig.node.json
+frontend\update-app-auto.ps1
+frontend\upgrade-ui.ps1
+frontend\verify-ecolojia.js
+frontend\verify-search.ps1
+frontend\vite.config.js
+frontend\vite.config.ts
+frontend\vite.config.ts.backup
+frontend\vite.config.ts.bak_20250915_170103
+frontend\vitest.config.ts
+frontend\vitest.setup.ts
+frontend\.bolt\config.json
+frontend\.bolt\prompt
+frontend\.github\workflows\ci.yml
+frontend\.netlify\netlify.toml
+frontend\.netlify\state.json
+frontend\.vscode\settings.json
+frontend\backup_20250812_202705\api.config.ts
+frontend\backup_20250812_202705\apiClient.ts
+frontend\backup_20250812_202705\AuthContext.tsx
+frontend\backup_20250812_202705\StatsPage.tsx
+frontend\backup_20250818003243\src\App.backup-3.tsx
+frontend\backup_20250818003243\src\App.complex.tsx
+frontend\backup_20250818003243\src\App.minimal.tsx
+frontend\backup_20250818003243\src\App.tsx
+
+... (tronqué à 100 lignes) ...
+
+
+==================== Listing BACKEND  (début) ====================
+
+backend\.env
+backend\.env.example
+backend\.gitignore
+backend\.node-version
+backend\.nvmrc
+backend\analysisController.js
+backend\auto-fix.js
+backend\BACKEND-README.md
+backend\backend-structure.txt
+backend\build-20250628141724.js
+backend\check-api.js
+backend\check-nutella.js
+backend\check-product.js
+backend\configure-fix.js
+backend\cosmetic.jpg
+backend\create-test-account.js
+backend\debug-analyze.js
+backend\detergents-sample.json
+backend\diagnose-ocr.ps1
+backend\diagnostic.js
+backend\fix-all-errors.ps1
+backend\fix-errors.ps1
+backend\fix-quotas.js
+backend\fix-syntax-errors.ps1
+backend\fix-user.js
+backend\import-direct-log-1750103243838.json
+backend\import-direct-log-1750103317162.json
+backend\import-direct-log-1750103771592.json
+backend\import-direct-log-1750104306440.json
+backend\import-direct-log-1755284502787.json
+backend\index.js
+backend\list-products.js
+backend\netlify.toml
+backend\nutella-analysis-result.json
+backend\nutella-text.txt
+backend\nutella.jpg
+backend\openfoodfacts-simple-1750099768864.json
+backend\package-lock.json
+backend\package.backup.m1.json
+backend\package.json
+backend\package.json.backup
+backend\README.md
+backend\render.yaml
+backend\repo-files.txt
+backend\server-postgres-fixed.js
+backend\server-postgres.js
+backend\server.js
+backend\show-text.js
+backend\sync-fix.js
+backend\test-analysis.ps1
+backend\test-analyze-direct.js
+backend\test-api-routes.js
+backend\test-api.js
+backend\test-auth-flow.js
+backend\test-chat-direct.js
+backend\test-complete.js
+backend\test-detergent.js
+backend\test-ecolojia.js
+backend\test-final-m4.js
+backend\test-fixed-service.js
+backend\test-google.js
+backend\test-login.js
+backend\test-multiple-images.js
+backend\test-production-api.js
+backend\test-real-product.js
+backend\test-real-products-debug.js
+backend\test-real-products.js
+backend\test-retry.js
+backend\test-scoring-v2.js
+backend\test-simple-vision.js
+backend\test-vision-detailed.js
+backend\test-vision-ecolojia-fixed.js
+backend\test-vision-ecolojia.js
+backend\test-vision.js
+backend\tsconfig.json
+backend\update.json
+backend\VisionServiceFixed.js
+backend\VisionServiceSimple.js
+backend\logs\combined.log
+backend\logs\error.log
+backend\middleware\auth.js
+backend\schemas\partnerLink.js
+backend\scripts\check-products.js
+backend\scripts\create-test-user.js
+backend\scripts\fix-search-index.js
+backend\scripts\import-products.js
+backend\scripts\seed-openfoodfacts.js
+backend\scripts\test-search-route.js
+backend\scripts\dev\dryRunAnalysis.js
+backend\scripts\dev\seedUserAndToken.js
+backend\scripts\dev\token.txt
+backend\scripts\win\auth-seed-login.ps1
+backend\scripts\win\smoke-test.ps1
+backend\src\$null
+backend\src\app.ts
+backend\src\index.ts
+backend\src\main.js
+backend\src\server-debug.js
+backend\src\server.broken.js
+backend\src\server.js
+backend\src\server.js.backup
+backend\src\server.js.broken_20250923_172145
+backend\src\server.js.duplicates_20250923_173027
+backend\src\server.ts
+backend\src\testUltra.ts
+backend\src\auth\middleware\auth.ts
+backend\src\auth\repositories\SessionRepository.ts
+backend\src\auth\repositories\UserRepository.ts
+backend\src\auth\services\AuthService.ts
+backend\src\auth\services\EmailService.ts
+backend\src\auth\services\EmailValidationService.ts
+backend\src\auth\types\AuthTypes.ts
+backend\src\auth\utils\jwt.ts
+backend\src\config\db.js
+backend\src\config\mongodb.ts
+backend\src\config\redis.ts
+backend\src\controllers\analysisController.js
+backend\src\controllers\cosmeticController.js
+backend\src\controllers\cosmeticController.js.old
+backend\src\controllers\cosmeticController.ts
+backend\src\controllers\detergentController.js
+backend\src\controllers\detergentController.js.old
+backend\src\controllers\detergentController.ts
+backend\src\controllers\product.controller.ts
+backend\src\controllers\scanController.ts
+backend\src\controllers\similar.controller.ts
+backend\src\controllers\track.controller.ts
+backend\src\controllers\vision.controller.js
+backend\src\controllers\ai\chatController.js
+backend\src\data\additives-efsa.json
+backend\src\data\categoryDetection.js
+backend\src\data\chemicalDatabase.js
+backend\src\data\cosmeticsIngredients.js
+backend\src\data\detergentDatabase.js
+backend\src\data\detergentsFormulas.js
+backend\src\data\educational-insights-db.json
+backend\src\data\efsaAdditivesDatabase.js
+backend\src\data\endocrineDisruptors.js
+backend\src\data\glycemic-index-db.json
+backend\src\data\inciDatabase.js
+backend\src\data\natural-alternatives-db.json
+backend\src\data\nova-rules.json
+backend\src\data\nutri-score-tables.json
+backend\src\data\scientificSources2024.ts
+backend\src\db\db.js
+backend\src\db\pool.ts
+backend\src\docs\swagger.ts
+backend\src\lib\algolia.ts
+backend\src\lib\deepseek.ts
+backend\src\lib\http.ts
+backend\src\lib\prisma.ts
+backend\src\middleware\auth.js
+backend\src\middleware\authDisabled.js
+backend\src\middleware\authenticateToken.js
+backend\src\middleware\authMiddleware.js
+backend\src\middleware\authSimple.js
+backend\src\middleware\cacheAuthMiddleware.ts
+backend\src\middleware\errorHandler.js
+backend\src\middleware\index.js
+backend\src\middleware\quotaMiddleware.js
+backend\src\middleware\rateLimit.ts
+backend\src\middleware\rateLimiter.js
+backend\src\middleware\security (2).ts
+backend\src\middleware\security.ts
+backend\src\middleware\validation.js
+backend\src\middleware\validation.js.backup
+backend\src\middleware\validation.ts
+backend\src\models\AffiliateClick.js
+backend\src\models\Analysis.js
+backend\src\models\AnalysisCache.ts
+backend\src\models\ChatHistory.js
+backend\src\models\ChatHistory.ts
+backend\src\models\Favorite.js
+backend\src\models\GDPRLog.js
+backend\src\models\Payment.js
+backend\src\models\PaymentLog.js
+backend\src\models\Product.js
+backend\src\models\Product.js.backup
+backend\src\models\Product.ts
+backend\src\models\ProductAnalysis.ts
+backend\src\models\User.js
+backend\src\models\User.ts
+backend\src\models\UserAnalytics.ts
+backend\src\models\VisionAnalysis.js
+backend\src\models\WebhookLog.js
+backend\src\orchestrator\index.js
+backend\src\orchestrator\index.ts
+backend\src\orchestrator\jobs\dataIngestion.js
+backend\src\orchestrator\jobs\dataIngestion.ts
+backend\src\orchestrator\jobs\enrichment.js
+backend\src\patches\fix-detergent-display.js
+backend\src\repositories\SessionRepository.ts
+backend\src\repositories\UserRepository.ts
+backend\src\routes\ai.routes.js
+backend\src\routes\algolia-unified.js
+backend\src\routes\algolia.js
+backend\src\routes\analysis-simple.js
+backend\src\routes\analysis.routes.backup
+backend\src\routes\analysis.routes.js
+backend\src\routes\analysis.routes.old
+backend\src\routes\analyze.routes.js
+backend\src\routes\analyze.ts
+backend\src\routes\auth.js
+backend\src\routes\auth.routes.js
+backend\src\routes\cosmetics.routes.js
+backend\src\routes\dashboard.js
+backend\src\routes\detergents.routes.js
+backend\src\routes\export.js
+backend\src\routes\favorites.js
+backend\src\routes\gdpr.routes.js
+backend\src\routes\history.js
+backend\src\routes\partner.routes.js
+backend\src\routes\payment.routes.js
+backend\src\routes\products-search.js
+backend\src\routes\products.js
+backend\src\routes\products.js.backup
+backend\src\routes\products.js.backup2
+backend\src\routes\proxy.js
+backend\src\routes\quota.js
+backend\src\routes\test-minimal.js
+backend\src\routes\test-partner.js
+backend\src\routes\user.routes.backup.js
+backend\src\routes\user.routes.js
+backend\src\routes\vision.routes.js
+backend\src\routes\vision.ts
+backend\src\routes\webhooks.js
+backend\src\routes\ai\chatController.js
+backend\src\routes\ai\index.js
+backend\src\routes\v2\users.js
+backend\src\routes\_archive_old_routes\admin.routes.ts
+backend\src\routes\_archive_old_routes\analysis.js
+backend\src\routes\_archive_old_routes\analyze.routes.cached.ts
+backend\src\routes\_archive_old_routes\analyzeDev.routes.js
+backend\src\routes\_archive_old_routes\chat.routes.ts
+backend\src\routes\_archive_old_routes\cosmetic.routes.js
+backend\src\routes\_archive_old_routes\detergent.routes.js
+backend\src\routes\_archive_old_routes\eco-score.routes.ts
+backend\src\routes\_archive_old_routes\emailValidation.ts
+backend\src\routes\_archive_old_routes\health.routes - Copie.ts
+backend\src\routes\_archive_old_routes\health.routes.ts
+backend\src\routes\_archive_old_routes\health.ts
+backend\src\routes\_archive_old_routes\multiCategory.routes.ts
+backend\src\routes\_archive_old_routes\productAnalysis.ts
+backend\src\routes\_archive_old_routes\scan.routes.ts
+backend\src\routes\_archive_old_routes\ultraProcessing.routes.js
+backend\src\scorers\cosmeticsScorer.ts
+backend\src\scorers\detergentScorer.ts
+backend\src\scorers\foodScorer.ts
+backend\src\scorers\common\confidenceCalculator.js
+backend\src\scorers\cosmetic\allergenScanner.js
+backend\src\scorers\cosmetic\benefitEvaluator.js
+backend\src\scorers\cosmetic\cosmeticScorer.js
+backend\src\scorers\cosmetic\endocrineDetector.js
+backend\src\scorers\cosmetic\inciAnalyzer.js
+backend\src\scorers\detergent\detergentScorer.js
+backend\src\scorers\food\additivesAnalyzer.js
+backend\src\scorers\food\foodScorer.js
+backend\src\scorers\food\glycemicEstimator.js
+backend\src\scorers\food\novaClassifier.js
+backend\src\scorers\food\nutriScorer.js
+backend\src\scripts\addDemoAnalyses.js
+backend\src\scripts\cleanDatabase.js
+backend\src\scripts\direct-import-final.js
+backend\src\scripts\fixRoutesTypes.js
+backend\src\scripts\import-complet-mongodb.js
+backend\src\scripts\importDirectToDB.js
+backend\src\scripts\importOpenFoodFactsAdapted.ts
+backend\src\scripts\ingestOpenFoodFacts.js
+backend\src\scripts\migrate-pg-to-mongo.js
+backend\src\scripts\migrateUsersV2.js
+backend\src\scripts\seed-affiliation.ts
+backend\src\scripts\start-free.ts
+backend\src\scripts\syncAlgolia.ts
+backend\src\scripts\test-backend-direct.js
+backend\src\scripts\test-mongodb.js
+backend\src\scripts\testInsert.ts
+backend\src\scripts\testRedis.ts
+backend\src\scripts\testRedisDebug.ts
+backend\src\scripts\updateRealImages.js
+backend\src\services\aiService.js
+backend\src\services\analyzeService.bad
+backend\src\services\analyzeService.js
+backend\src\services\analyzeService.ts
+backend\src\services\CacheService.ts
+backend\src\services\circuitBreaker.js
+backend\src\services\cosmeticsService.js
+backend\src\services\cronJobs.js
+backend\src\services\dedupService.ts
+backend\src\services\eco-score.service.ts
+backend\src\services\emailService.js
+backend\src\services\EnhancedOFFClient.js
+backend\src\services\gdprService.js
+backend\src\services\LemonSqueezyService.ts
+backend\src\services\MongoDBService.ts
+backend\src\services\offClient.backup.js
+backend\src\services\offClient.enhanced.js
+backend\src\services\offClient.js
+backend\src\services\offClient.ts
+backend\src\services\product.service.ts
+backend\src\services\productAnalysisService.js
+backend\src\services\productAnalysisService.ts
+backend\src\services\QuotaManager.ts
+backend\src\services\quotaService.js
+backend\src\services\ScoringV2Service.js
+backend\src\services\similar.service.ts
+backend\src\services\user.service.ts
+backend\src\services\vision.ts
+backend\src\services\webhookService.js
+backend\src\services\ai\AIAnalysisService.ts
+backend\src\services\ai\alternativesEngine.js
+backend\src\services\ai\barcodeAnalyzer - Copie.ts
+backend\src\services\ai\barcodeAnalyzer.ts
+backend\src\services\ai\categoryDetector - Copie.ts
+backend\src\services\ai\categoryDetector.ts
+backend\src\services\ai\conversationalAI - Copie.ts
+backend\src\services\ai\conversationalAI.js
+backend\src\services\ai\conversationalAI.ts
+backend\src\services\ai\cosmeticClassifier - Copie.ts
+backend\src\services\ai\cosmeticClassifier.ts
+backend\src\services\ai\cosmeticsAnalyzer - Copie.ts
+backend\src\services\ai\cosmeticsAnalyzer.ts
+backend\src\services\ai\DeepSeekClient - Copie.ts
+backend\src\services\ai\DeepSeekClient.ts
+backend\src\services\ai\deepseekEnhanced - Copie.ts
+backend\src\services\ai\deepseekEnhanced.ts
+backend\src\services\ai\deepSeekService.js
+backend\src\services\ai\detergentClassifier - Copie.ts
+backend\src\services\ai\detergentClassifier.ts
+backend\src\services\ai\detergentsAnalyzer - Copie.ts
+backend\src\services\ai\detergentsAnalyzer.ts
+backend\src\services\ai\eco-score.service.js
+backend\src\services\ai\educationalInsights - Copie.ts
+backend\src\services\ai\educationalInsights.ts
+backend\src\services\ai\HealthScoreCalculator - Copie.ts
+backend\src\services\ai\HealthScoreCalculator.ts
+backend\src\services\ai\insightsGenerator.js
+backend\src\services\ai\novaClassifier - Copie.ts
+backend\src\services\ai\novaClassifier.ts
+backend\src\services\ai\NutritionistChatService.js
+backend\src\services\ai\productTypeDetector - Copie.ts
+backend\src\services\ai\productTypeDetector.js
+backend\src\services\ai\ultraTransformAnalyzer.ts
+backend\src\services\algolia\algoliaService.js
+backend\src\services\algolia\algoliaSync.js
+backend\src\services\analysis\analysisService.js
+backend\src\services\analysis\CosmeticAnalysisService.js
+backend\src\services\analysis\cosmetics.js
+backend\src\services\analysis\DetergentAnalysisService.js
+backend\src\services\analysis\detergents.js
+backend\src\services\analysis\food.js
+backend\src\services\analysis\FoodAnalysisService.js
+backend\src\services\analysis\index.js
+backend\src\services\analysis\novaClassifier.js
+backend\src\services\analysis\nutriscoreCalculator.js
+backend\src\services\analysis\universalAnalyzer.js
+backend\src\services\auth\authService.js
+backend\src\services\auth\tokenService.js
+backend\src\services\cache\AnalysisCache.ts
+backend\src\services\cache\CacheManager.ts
+backend\src\services\cache\SessionCache.ts
+backend\src\services\external\openBeautyFactsService.js
+backend\src\services\external\openFoodFactsService.js
+backend\src\services\external\openFoodFactsService.ts
+backend\src\services\gdpr\DataExportService.js
+backend\src\services\ocr\visionOCR.js
+backend\src\services\payment\LemonSqueezyService.js
+backend\src\services\queue\QueueService.js
+backend\src\services\upload\CloudinaryService.js
+backend\src\services\vision\ProductOCRService.js
+backend\src\services\vision\VisionService.js
+backend\src\services\vision\VisionServiceSave.js
+backend\src\tests\sample.jpg
+backend\src\tests\test-ocr-backup.js
+backend\src\tests\test-ocr-direct.js
+backend\src\tests\test-ocr.js
+backend\src\tests\test-server.js
+backend\src\tests\test-upload.html
+backend\src\tests\test-upload.js
+backend\src\types\cacheTypes.ts
+backend\src\types\express.d.ts
+backend\src\types\scientific-analysis.types.ts
+backend\src\types\swagger-jsdoc.d.ts
+backend\src\types\ultra-transform.types.ts
+backend\src\types\user.types.ts
+backend\src\utils\errors.js
+backend\src\utils\errors.ts
+backend\src\utils\logger.js
+backend\src\utils\RetryService.js
+backend\src\validators\product.schema.ts
+backend\src\validators\userValidators.js
+backend\src\workers\ImageProcessingWorker.js
+backend\tests\api.test.js
+backend\tests\products.test.ts
+backend\tests\quick-test.js
+backend\tests\scrape-greenweez-test.js
+backend\tests\setup.js
+backend\tests\sprint3-validation.test.js
+backend\tests\test-openfoodfacts.js
+backend\tests\test-results-1750098897572.json
+backend\tests\test-sprint2-validation.js
+backend\tests\scorers\cosmetic\cosmeticScorer.test.js
+backend\tests\scorers\detergent\detergentScorer.test.js
+
+
+==================== Listing BACKEND  (100 premières lignes) ====================
+
+backend\.env
+backend\.env.example
+backend\.gitignore
+backend\.node-version
+backend\.nvmrc
+backend\analysisController.js
+backend\auto-fix.js
+backend\BACKEND-README.md
+backend\backend-structure.txt
+backend\build-20250628141724.js
+backend\check-api.js
+backend\check-nutella.js
+backend\check-product.js
+backend\configure-fix.js
+backend\cosmetic.jpg
+backend\create-test-account.js
+backend\debug-analyze.js
+backend\detergents-sample.json
+backend\diagnose-ocr.ps1
+backend\diagnostic.js
+backend\fix-all-errors.ps1
+backend\fix-errors.ps1
+backend\fix-quotas.js
+backend\fix-syntax-errors.ps1
+backend\fix-user.js
+backend\import-direct-log-1750103243838.json
+backend\import-direct-log-1750103317162.json
+backend\import-direct-log-1750103771592.json
+backend\import-direct-log-1750104306440.json
+backend\import-direct-log-1755284502787.json
+backend\index.js
+backend\list-products.js
+backend\netlify.toml
+backend\nutella-analysis-result.json
+backend\nutella-text.txt
+backend\nutella.jpg
+backend\openfoodfacts-simple-1750099768864.json
+backend\package-lock.json
+backend\package.backup.m1.json
+backend\package.json
+backend\package.json.backup
+backend\README.md
+backend\render.yaml
+backend\repo-files.txt
+backend\server-postgres-fixed.js
+backend\server-postgres.js
+backend\server.js
+backend\show-text.js
+backend\sync-fix.js
+backend\test-analysis.ps1
+backend\test-analyze-direct.js
+backend\test-api-routes.js
+backend\test-api.js
+backend\test-auth-flow.js
+backend\test-chat-direct.js
+backend\test-complete.js
+backend\test-detergent.js
+backend\test-ecolojia.js
+backend\test-final-m4.js
+backend\test-fixed-service.js
+backend\test-google.js
+backend\test-login.js
+backend\test-multiple-images.js
+backend\test-production-api.js
+backend\test-real-product.js
+backend\test-real-products-debug.js
+backend\test-real-products.js
+backend\test-retry.js
+backend\test-scoring-v2.js
+backend\test-simple-vision.js
+backend\test-vision-detailed.js
+backend\test-vision-ecolojia-fixed.js
+backend\test-vision-ecolojia.js
+backend\test-vision.js
+backend\tsconfig.json
+backend\update.json
+backend\VisionServiceFixed.js
+backend\VisionServiceSimple.js
+backend\logs\combined.log
+backend\logs\error.log
+backend\middleware\auth.js
+backend\schemas\partnerLink.js
+backend\scripts\check-products.js
+backend\scripts\create-test-user.js
+backend\scripts\fix-search-index.js
+backend\scripts\import-products.js
+backend\scripts\seed-openfoodfacts.js
+backend\scripts\test-search-route.js
+backend\scripts\dev\dryRunAnalysis.js
+backend\scripts\dev\seedUserAndToken.js
+backend\scripts\dev\token.txt
+backend\scripts\win\auth-seed-login.ps1
+backend\scripts\win\smoke-test.ps1
+backend\src\$null
+backend\src\app.ts
+backend\src\index.ts
+backend\src\main.js
+backend\src\server-debug.js
+backend\src\server.broken.js
+backend\src\server.js
+
+... (tronqué à 100 lignes) ...
+
+
+==================== Probes locaux ====================
+
+Front 5173 TcpTestSucceeded: True
+Back  10000 TcpTestSucceeded: True
+/api/health status: 200
+Body: {"ok":true,"service":"ecolojia-backend","env":"development","time":"2025-09-25T19:21:43.480Z"}
+

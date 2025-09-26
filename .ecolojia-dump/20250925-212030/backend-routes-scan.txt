@@ -1,0 +1,231 @@
+﻿C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:93: this.app.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:103: this.app.post('/enrich/:productId', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\orchestrator\index.js:117: this.app.post('/import', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai\index.js:7: router.get('/test', ctrl.test);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai\index.js:10: router.post('/chat', ctrl.chat);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:14: router.get('/me', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:77: router.put('/me', authOptional, validateAIPreferences, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\v2\users.js:140: router.delete('/me/ai-preferences/:key', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:40: router.get('/dashboard', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:66: router.get('/recent-products', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:74: router.get('/import-logs', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\admin.routes.ts:81: router.post('/trigger-import', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:21: router.post('/food', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:101: router.post('/cosmetic', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:144: router.post('/detergent', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:187: router.post('/deepseek', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:281: router.post('/batch', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:360: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analysis.js:386: router.get('/ingredients/search', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:33: router.post('/auto',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:203: router.post('/food',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:303: router.post('/cosmetic',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:408: router.post('/detergent',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:508: router.post('/ultra-transform',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:602: router.get('/stats',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:635: router.post('/cache/clear',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyze.routes.cached.ts:669: router.get('/health', async (_req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:46: router.post('/',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:106: router.post('/batch',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:166: router.get('/',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:220: router.get('/:id',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:257: router.delete('/:id',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:294: router.get('/:id/alternatives',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:348: router.get('/stats/summary',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\analyzeDev.routes.js:378: router.post('/:id/feedback',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:71: router.post('/message', chatRateLimit, validateChatMessage, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:161: router.post('/quick/:questionType', quickResponseLimit, validateQuickResponse, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:214: router.get('/suggestions/:category', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:242: router.delete('/history/:sessionId', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:276: router.post('/context/alternatives', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:318: router.post('/context/insights', [
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\chat.routes.ts:360: router.get('/health', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:72: router.post('/analyze', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:186: router.get('/ingredients/:ingredient', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\cosmetic.routes.js:239: router.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:57: router.post('/analyze', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:148: router.get('/certifications', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\detergent.routes.js:178: router.get('/status', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:37: router.post('/calculate', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:80: router.post('/update-all', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:127: router.get('/product/:id', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:173: router.post('/product/:id/update', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:246: router.post('/batch', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:287: router.post('/test', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\eco-score.routes.ts:328: router.get('/distribution', async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:36: router.post('/verify', verifyTokenValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:74: router.post('/resend', resendEmailValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\emailValidation.ts:112: router.get('/status/:email', statusEmailValidation, async (req: Request, res: Response) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.routes - Copie.ts:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.routes.ts:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\health.ts:6: router.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:9: router.get('/categories', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:21: router.get('/health', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\multiCategory.routes.ts:30: router.post('/analyze', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:18: router.post(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:122: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:182: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:217: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:243: router.get(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\productAnalysis.ts:272: router.post(
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\scan.routes.ts:8: router.post('/barcode', scanBarcodeController);
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:126: router.post('/analyze', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:170: router.get('/check/:barcode', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:186: router.get('/additives', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\_archive_old_routes\ultraProcessing.routes.js:224: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:135: router.post('/chat', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:194: router.post('/product-question', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:231: router.post('/compare-products', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:274: router.get('/suggestions', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:318: router.get('/conversation/:conversationId', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:354: router.delete('/conversation', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:378: router.get('/quota-status', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:416: router.get('/faq', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ai.routes.js:491: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:7: router.get('/search', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:76: router.post('/sync', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:141: router.post('/configure', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia-unified.js:150: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:16: router.post('/sync', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:68: router.get('/search', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:101: router.post('/configure', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:149: router.get('/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\algolia.js:176: router.get('/stats', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:4: router.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:12: router.post('/barcode', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis-simple.js:21: router.post('/manual', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analysis.routes.js:12: router.post('/', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analyze.routes.js:15: router.post('/auto', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\analyze.ts:6: router.post('/auto', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:41: router.post('/register', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:117: router.post('/login', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:191: router.get('/profile', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:217: router.post('/refresh', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:265: router.get('/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.js:282: router.post('/logout', authMiddleware, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:37: router.post('/register', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:91: router.post('/login', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:129: router.post('/refresh', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:167: router.post('/logout', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:199: router.get('/me', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:238: router.put('/me', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:293: router.put('/password', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:337: router.post('/forgot-password', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:385: router.post('/reset-password', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:439: router.delete('/account', /* auth, */ async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:480: router.post('/demo', async (req, res, next) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:529: router.get('/validate', authOptional, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\auth.routes.js:552: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\dashboard.js:14: router.get('/stats', asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\detergents.routes.js:5: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\detergents.routes.js:10: router.post('/analyze', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:169: router.post('/pdf', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:234: router.get('/csv', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:315: router.post('/report', authenticateUser, checkPremium, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\export.js:411: router.get('/templates', authenticateUser, checkPremium, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:11: router.get('/', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:29: router.post('/toggle', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:69: router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\favorites.js:102: router.get('/check/:productId', authenticateUser, asyncHandler(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:16: router.get('/download-data/:format?', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:80: router.get('/download/:exportId/:format', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:113: router.delete('/delete-account', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:176: router.post('/cancel-deletion', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:221: router.put('/update-consent', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:269: router.get('/privacy-settings', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:334: router.post('/data-breach-notification', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:380: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\gdpr.routes.js:449: router.get('/processing-activities', authenticateUser, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\history.js:7: router.get('/', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\history.js:69: router.get('/count', authOptional, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:58: router.get('/track/:id', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:180: router.get('/stats', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:222: router.post('/conversion', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:265: router.get('/test', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\partner.routes.js:296: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:32: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:60: router.post('/create-checkout', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:68: router.post('/webhook', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:73: router.post('/cancel-subscription', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:77: router.post('/resume-subscription', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:81: router.post('/change-plan', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:85: router.get('/subscription-status', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:89: router.get('/history', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:93: router.get('/customer-portal', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:97: router.get('/stats', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:102: router.post('/create-checkout', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:114: router.post('/webhook', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:126: router.post('/cancel-subscription', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:135: router.post('/resume-subscription', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:144: router.post('/change-plan', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:157: router.get('/subscription-status', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:183: router.get('/history', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:193: router.get('/customer-portal', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\payment.routes.js:198: router.get('/stats', authMw, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products-search.js:7: router.get('/search', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:98: router.get('/', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:140: router.get('/test', (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:161: router.get('/search', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:227: router.get('/trending', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:256: router.get('/barcode/:barcode', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:289: router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:395: router.get('/:id/alternatives', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:434: router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:454: router.get('/:id', handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:499: router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:89: router.post('/algolia/search-token', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:142: router.post('/algolia/search', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:204: router.post('/lemonsqueezy/checkout', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:319: router.get('/lemonsqueezy/subscription', /* auth, */ async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:380: router.post('/ai/chat', /* auth, */ async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:482: router.post('/upload/signature', /* auth, */ rateLimitMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\proxy.js:532: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:44: router.get('/status', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:114: router.post('/increment', authMiddleware, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:228: router.post('/scan', authMiddleware, checkQuotaMiddleware('scan'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\quota.js:232: router.post('/ai-question', authMiddleware, checkQuotaMiddleware('aiQuestion'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\test-partner.js:8: router.get('/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\test-partner.js:17: router.get('/info', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:7: router.get("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:19: router.put("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.backup.js:36: router.delete("/", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:16: router.get("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:28: router.put("/profile", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:45: router.delete("/", authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:56: router.get('/me', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:71: router.get('/v2/me', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:147: router.put('/v2/me',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:231: router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:290: router.get('/v2/me/quotas', authenticateToken, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\user.routes.js:363: router.post('/v2/me/reset-password',
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:65: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:81: router.post('/analyze-image', authMw, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:89: router.post('/extract-test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:96: router.get('/status/:jobId', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:103: router.post('/analyze-image', authMw, upload.single('image'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:138: router.get('/status/:jobId', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.routes.js:144: router.post('/extract-test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\vision.ts:8: router.post('/analyze-image', upload.single('image'), async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:60: router.post('/lemonsqueezy', verifyWebhookSignature, async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:516: router.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\webhooks.js:529: router.post('/test', verifyWebhookSignature, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\scripts\start-free.ts:6: app.get('/', (req, res) => res.send(`✅ Serveur test actif sur http://localhost:${PORT}`));
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:346: router.get('/cron/jobs', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:352: router.post('/cron/jobs/:jobName/run', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\services\cronJobs.js:368: router.get('/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-server.js:6: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-server.js:61: app.post('/test/upload', upload.single('image'), (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\tests\test-upload.js:26: app.post('/test/upload', upload.single('image'), (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\app.ts:48: app.get('/api/ping', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\index.ts:14: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\index.ts:23: app.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\main.js:16: app.get("/api/health", (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\main.js:24: app.get("/api/version", (_req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server-debug.js:29: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:237: app.get('/api/health', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:275: app.get('/api/test', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.broken.js:615: app.post('/api/export/*', authMiddleware, rateLimiters.exportLimiter, (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:69: app.get('/', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:92: app.get('/health', (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.js:333: app.get('/api/test-products', async (req, res) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\server.ts:55: app.get('/health', async (req, res) => {

@@ -81,13 +81,3 @@ try {
 } catch (e) {
   console.error('?? Failed to mount algolia-reindex:', e && e.message);
 }
-
-try {
-  const reindexPath = require('path').join(__dirname, 'routes', 'algolia-reindex');
-  console.log('[REINDEX] Loading router from:', reindexPath);
-  const reindexRouter = require(reindexPath);
-  app.use('/api/algolia-reindex', reindexRouter);
-  console.log('? Mounted /api/algolia-reindex -> routes/algolia-reindex.js');
-} catch (e) {
-  console.error('? Failed to mount /api/algolia-reindex:', e && (e.stack || e.message));
-}

@@ -1,0 +1,289 @@
+﻿C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\adminApi.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\aiService.ts:1: // PATH: frontend/src/services/aiService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\alternativesService.ts:1: // PATH: frontend/src/services/alternativesService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\analysisService.ts:1: // PATH: frontend/src/services/analysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\api.ts:1: // PATH: frontend/src/services/api.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\apiClient.ts:1: // PATH: frontend/src/services/apiClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\chatService.ts:4: // PATH: frontend/src/services/chatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\cloudinaryService.ts:1: // PATH: frontend/src/services/cloudinaryService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\configService.ts:1: // PATH: src/services/configService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\dashboardService.ts:2: // PATH: frontend/src/services/dashboardService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\demoMode.ts:1: // PATH: frontend/src/services/demoMode.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\demoService.ts:1: // PATH: frontend/src/services/demoService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\env.ts:1: // PATH: frontend/src/env.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\exportService.ts:1: // PATH: frontend/src/services/exportService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\historyService.ts:1: // PATH: frontend/src/services/historyService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\index.ts:1: // PATH: frontend/src/services/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\mockService.ts:1: // PATH: frontend/src/services/mockService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\notificationService.ts:1: // PATH: frontend/src/services/notificationService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\novaAdapter.ts:1: // PATH: frontend/src/services/novaAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\ocrService.ts:1: // PATH: frontend/src/services/ocrService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\offlineService.ts:1: // PATH: frontend/src/services/offlineService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\paymentService.ts:1: // PATH: frontend/src/services/paymentService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\productService.ts:1: // PATH: frontend/src/services/productService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\quotaService.ts:1: // PATH: frontend/src/services/quotaService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\searchService.ts:1: // PATH: frontend/src/services/searchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\UserAnalytics.ts:1: // PATH: frontend/src/services/analytics/UserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\userService.ts:1: // PATH: frontend/src/services/userService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\backup_20250906_221723\visionService.ts:1: // PATH: frontend/src/services/visionService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\DeepSeekChat.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\UpgradeModal.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\chat\UpgradeModal.tsx:194: // PATH: frontend/ecolojiaFrontV3/src/components/chat/UsageTracker.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\ImportProgress.tsx:1: // PATH: src/components/admin/ImportProgress.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\LogViewer.tsx:1: // PATH: src/components/admin/LogViewer.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\ProductTable.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Admin\StatsCard.tsx:1: // PATH: src/components/admin/StatsCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\AlternativesList.tsx:1: // PATH: frontend/src/components/analysis/AlternativesList.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\ProgressiveAnalysis.tsx:1: // PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\QuickStatsWidget.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\RiskCard.tsx:1: // PATH: frontend/src/components/analysis/RiskCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\analysis\ScoreDisplay.tsx:1: // PATH: frontend/src/components/analysis/ScoreDisplay.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\chat\ChatWidget.tsx:1: // PATH: frontend/src/components/chat/ChatWidget.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\common\Button.tsx:1: // PATH: frontend/src/components/common/Button.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\common\LoadingSpinner.tsx:1: // PATH: frontend/src/components/common/LoadingSpinner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\layout\Layout.tsx:2: // PATH: frontend/src/components/layout/Layout.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\layout\Layout.tsx:32: const isActive = (path: string) => location.pathname === path;
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\premium\PremiumModal.tsx:1: // PATH: frontend/src/components/premium/PremiumModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\product\ProductIngredientsSection.tsx:1: // PATH: frontend/src/components/product/ProductIngredientsSection.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\profile\PreferencesTab.tsx:1: // PATH: frontend/src/components/profile/PreferencesTab.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\__tests__\BarcodeScanner.spec.tsx:1: // PATH: frontend/src/components/scanner/__tests__/BarcodeScanner.spec.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\BarcodeScanner.tsx:1: // PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\CategoryAutoDetector.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\EnhancedBarcodeScanner.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\ManualInput.tsx:1: // PATH: frontend/src/components/scanner/ManualInput.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\ManualSearch.tsx:1: // PATH: frontend/src/components/scanner/ManualSearch.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner\PhotoCapture.tsx:1: // PATH: frontend/src/components/scanner/PhotoCapture.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\search\SearchBar.tsx:1: // PATH: frontend/src/components/search/SearchBar.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\.tsx:1: // PATH: frontend/src/components/LoadingSpinner.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\AnalysisResultCard.tsx:1: // PATH: frontend\src\components\AnalysisResultCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\CategorySelector.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\EnvironmentScore.tsx:1: // PATH: frontend/src/components/EnvironmentScore.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ErrorMessage.tsx:1: // PATH: frontend/src/components/ErrorMessage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\HealthScoreCircle.tsx:1: // PATH: frontend/src/components/HealthScoreCircle.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Layout.tsx:45: const isActiveRoute = (path: string) => {
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Navbar.tsx:1: // PATH: frontend/src/components/Navbar.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\Navbar.tsx:245: const isActive = (path: string) => location.pathname === path;
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NotificationContainer.tsx:1: // PATH: frontend/src/components/NotificationContainer.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaBadge.tsx:1: // PATH: frontend\src\components\NovaBadge.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaDetails.tsx:1: // PATH: frontend/src/components/NovaDetails.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\NovaResults.tsx:1: // PATH: frontend/src/components/NovaResults.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\OfflineIndicator.tsx:1: // PATH: frontend/src/components/OfflineIndicator.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\PremiumUpgradeModal.tsx:1: // PATH: frontend/src/components/PremiumUpgradeModal.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ProtectedRoute.tsx:1: // PATH: frontend/src/components/ProtectedRoute.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\ResultCard.tsx:1: // PATH: frontend/src/components/ResultCard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\UltraProcessingPanel.tsx:1: // PATH: frontend/src/components/UltraProcessingPanel.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\UltraTransformResults.tsx:1: // PATH: src\components\UltraTransformResults.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\constants.ts:1: // PATH: frontend/src/config/constants.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\featureFlags.ts:1: // PATH: frontend/src/config/featureFlags.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\config\mock.config.ts:1: // PATH: frontend/src/config/mock.config.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\Contexts\AuthContext.tsx:4: // PATH: frontend/src/Contexts/AuthContext.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\data\ingredientsKnowledge.ts:1: // PATH: frontend/src/data/ingredientsKnowledge.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\data\mockProducts.ts:1: // PATH: frontend/src/data/mockProducts.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\index.ts:1: // PATH: frontend/src/hooks/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useAdmin.ts:1: // PATH: frontend/ecolojiaFrontV3/src/hooks/useAdmin.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useChat.ts:1: // PATH: frontend/src/hooks/useChat.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useFavorites.ts:1: // PATH: frontend/src/hooks/useFavorites.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useHistory.ts:1: // PATH: frontend/src/hooks/useHistory.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useIngredientsEnrichment.ts:1: // PATH: frontend/src/hooks/useIngredientsEnrichment.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useNotifications.ts:1: // PATH: frontend/src/hooks/useNotifications.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useNovaApi.ts:1: // PATH: frontend/src/hooks/useNovaApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useOfflineStatus.ts:1: // PATH: frontend/src/hooks/useOfflineStatus.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useQuota.ts:1: // PATH: frontend/src/hooks/useQuota.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useUniversalSearch.ts:1: // PATH: src/hooks/useUniversalSearch.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks\useUserAnalytics.ts:1: // PATH: frontend/ecolojiaFrontV3/src/hooks/useUserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\i18n\locales\fr.ts:1: // PATH: frontend/src/i18n/locales/fr.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\lib\api\analysis.ts:1: // PATH: frontend\src\lib\api\analysis.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AboutPage.tsx:1: // PATH: frontend/src/pages/AboutPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AdminDashboard.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AiPreferencesPage.tsx:1: // PATH: frontend/src/pages/AiPreferencesPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\AnalysisDevPage.tsx:1: // PATH: frontend\src\pages\AnalysisDevPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ChatPage.tsx:5: // PATH: frontend/src/pages/ChatPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ComparePage.tsx:1: // PATH: frontend/src/pages/ComparePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\DetergentAnalysisPage.tsx:3: // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\DiagnosticPage.tsx:1: // PATH: frontend/src/pages/DiagnosticPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\FavoritesPage.tsx:1: // PATH: frontend/src/pages/FavoritesPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\HistoryPage.tsx:1: // PATH: frontend/src/pages/HistoryPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\HomePage.tsx:1: // PATH: frontend/src/pages/HomePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\LoginPage.tsx:4: // PATH: frontend/src/pages/LoginPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ManualAnalysisPage.tsx:1: // PATH: frontend/src/pages/ManualAnalysisPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\OnboardingPage.tsx:1: // PATH: frontend/src/pages/OnboardingPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PremiumPage.tsx:1: // PATH: frontend/src/pages/PremiumPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PricingPage.tsx:1: // PATH: frontend/src/pages/PricingPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\PrivacyPage.tsx:1: // PATH: frontend/src/pages/PrivacyPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ProductPage.tsx:1: // PATH: frontend/src/pages/ProductPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ProfilePage.tsx:1: // PATH: frontend/src/pages/ProfilePage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\RegisterPage.tsx:1: // PATH: frontend/src/pages/RegisterPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ResultPage.tsx:1: // PATH: frontend/src/pages/ResultPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\Results.tsx:1: // PATH: frontend/src/pages/Results.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\ResultsPage.tsx:1: // PATH: frontend/src/pages/ResultsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\SearchPage.tsx:1: // PATH: frontend/src/pages/SearchPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\SettingsPage.tsx:1: // PATH: frontend/src/pages/SettingsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\TermsPage.tsx:1: // PATH: frontend/src/pages/TermsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UnifiedResultsPage.tsx:1: // PATH: frontend/src/pages/UnifiedResultsPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:5: // PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMƒÆ’†â€™aaâ€šÂ¬‚Â°LIORƒÆ’†â€™aaâ€šÂ¬‚Â°E)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:88: // PATH: frontend/ecolojiaFrontV3/src/components/Navbar.tsx (VERSION SMART)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchPage.tsx:161: // PATH: frontend/ecolojiaFrontV3/src/pages/HomePage.tsx (VERSION SEARCH-CENTRIC)
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages\UniversalSearchService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/pages/UniversalSearchPage.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:1: // PATH: frontend/src/router/AppRouter.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:21: <Route path="/" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:24: <Route path="/CATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIES" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:27: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:28: <Route path="/product/:slug" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:31: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:34: <Route path="/admin" element={<AdminDashboard />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:37: <Route path="/test-affiliate" element={<TestAffiliate />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\router\AppRouter.tsx:40: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\AIAnalysisService.ts:1: // PATH: backend/src/services/ai/AIAnalysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\DeepSeekClient.ts:1: // PATH: backend/src/services/ai/DeepSeekClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\DeepSeekECOLOJIAService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\novaClassifier.ts:1: // PATH: frontend/src/services/ai/novaClassifier.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ai\ultraTransformService.ts:1: // PATH: frontend/src/services/ai/ultraTransformService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\algolia\client.ts:1: // PATH: frontend/src/services/algolia/client.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\api\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\chat\ChatService.ts:1: // PATH: frontend/src/services/chat/ChatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\search\EnhancedSearchInterface.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\search\UniversalSearchService.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\__tests__\analysisService.spec.ts:1: // PATH: frontend/src/services/__tests__/analysisService.spec.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\adminApi.ts:1: // PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\aiService.ts:1: // PATH: frontend/src/services/aiService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\alternativesService.ts:1: // PATH: frontend/src/services/alternativesService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\analysisService.ts:1: // PATH: frontend/src/services/analysisService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ApiAdapter.ts:1: // PATH: frontend/src/services/ApiAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\apiClient.ts:1: // PATH: frontend/src/services/apiClient.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\authService.ts:1: // PATH: frontend/src/services/authService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\chatService.ts:1: // PATH: frontend/src/services/chatService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\cloudinaryService.ts:1: // PATH: frontend/src/services/cloudinaryService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\configService.ts:1: // PATH: src/services/configService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\dashboardService.ts:2: // PATH: frontend/src/services/dashboardService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\demoMode.ts:1: // PATH: frontend/src/services/demoMode.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\demoService.ts:1: // PATH: frontend/src/services/demoService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\exportService.ts:1: // PATH: frontend/src/services/exportService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\historyService.ts:1: // PATH: frontend/src/services/historyService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\index.ts:1: // PATH: frontend/src/services/index.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\notificationService.ts:1: // PATH: frontend/src/services/notificationService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\novaAdapter.ts:1: // PATH: frontend/src/services/novaAdapter.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\ocrService.ts:1: // PATH: frontend/src/services/ocrService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\offlineService.ts:1: // PATH: frontend/src/services/offlineService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\paymentService.ts:1: // PATH: frontend/src/services/paymentService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\productSaveService.ts:1: // PATH: frontend/src/services/productSaveService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\productService.ts:1: // PATH: frontend/src/services/productService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\quotaService.ts:1: // PATH: frontend/src/services/quotaService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\searchService.ts:1: // PATH: frontend/src/services/searchService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\UserAnalytics.ts:1: // PATH: frontend/src/services/analytics/UserAnalytics.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\userService.ts:1: // PATH: frontend/src/services/userService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services\visionService.ts:1: // PATH: frontend/src/services/visionService.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\admin.ts:1: // PATH: frontend/ecolojiaFrontV3/src/types/admin.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\api.ts:1: // PATH: frontend/src/types/api.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\chat.types.ts:1: // PATH: frontend/src/types/chat.types.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\quagga.d.ts:1: // PATH: frontend/src/types/quagga.d.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\types\user.ts:1: // PATH: frontend/src/types/user.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\bugFixes.ts:1: // PATH: frontend/src/utils/bugFixes.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\localScoring.ts:1: // PATH: frontend/src/utils/localScoring.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\scores.ts:1: // PATH: frontend/src/utils/scores.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\setupMocks.ts:1: // PATH: src/utils/setupMocks.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils\textParsing.ts:1: // PATH: frontend/src/utils/textParsing.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\__mocks__\quagga2.ts:1: // PATH: frontend/src/__mocks__/quagga2.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:187: <Route path="/" element={<HomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:188: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:189: <Route path="/search" element={<HomePage />} /> {/* HomePage ? dejƒÆ’†â€™ƒâ€š‚Â  une recherche */}
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:190: <Route path="/dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:191: <Route path="/history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:192: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:193: <Route path="/profile" element={<ProfilePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:194: <Route path="/settings" element={<SettingsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:197: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:198: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:199: <Route path="/results" element={<Results />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:200: <Route path="/unified-results" element={<UnifiedResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:201: <Route path="/analyze/manual" element={<ManualAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:202: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:205: <Route path="/multi-scan" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:206: <Route path="/stats" element={<StatsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:209: <Route path="/products/:productId/cosmetic" element={<CosmeticAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:210: <Route path="/products/:productId/detergent" element={<DetergentAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:211: <Route path="/cosmetics" element={<CosmeticAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:212: <Route path="/detergents" element={<DetergentAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:215: <Route path="/about" element={<AboutPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:216: <Route path="/privacy" element={<PrivacyPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:217: <Route path="/terms" element={<TermsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:220: <Route path="/premium" element={<PremiumPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.backup-3.tsx:223: <Route path="*" element={<NotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:626: <Route path="/auth" element={<AuthPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:632: <Route path="/" element={<HomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:635: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:636: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:637: <Route path="/multi-scan" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:644: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:645: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:646: <Route path="/product-not-found" element={<ProductNotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:647: <Route path="/results" element={<Results />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:648: <Route path="/unified-results" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:653: <Route path="/analyze/manual" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:658: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:661: <Route path="/products/:productId/cosmetic" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:666: <Route path="/products/:productId/detergent" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:671: <Route path="/cosmetics" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:676: <Route path="/detergents" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:683: <Route path="/dashboard" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:688: <Route path="/history" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:695: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:698: <Route path="/profile" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:703: <Route path="/settings" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:710: <Route path="/about" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:740: <Route path="/privacy" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:770: <Route path="/terms" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:798: <Route path="/premium" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:892: <Route path="/demo" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:897: <Route path="/test-affiliate" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:904: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.complex.tsx:921: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:10: <Route path="/" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:20: <Route path="/scan" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.minimal.tsx:26: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:1: // PATH: frontend/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:34: <Route path="/" element={<Layout />}>
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:37: <Route path="search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:38: <Route path="results" element={<ResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:39: <Route path="product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:40: <Route path="scan" element={<ScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:41: <Route path="multi-scan" element={<MultiScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:42: <Route path="premium" element={<PremiumPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:43: <Route path="diagnostic" element={<DiagnosticPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:57: <Route path="dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:58: <Route path="chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:59: <Route path="profile" element={<ProfilePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:60: <Route path="history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:61: <Route path="onboarding" element={<OnboardingPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\App.tsx:65: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1: // PATH: frontend/ecolojiaFrontV3/src/App.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:905: <Route path="/auth" element={<AuthPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:908: <Route path="/*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:922: <Route path="/" element={<AuthenticatedHomePage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:925: <Route path="/search" element={<SearchPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:926: <Route path="/product/:id" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:927: <Route path="/product" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:928: <Route path="/product-not-found" element={<ProductNotFoundPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:929: <Route path="/chat" element={<ChatPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:932: <Route path="/results" element={<UnifiedResultsPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:933: <Route path="/analyze/manual" element={<ManualAnalysisPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:934: <Route path="/history" element={<HistoryPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:937: <Route path="/dashboard" element={<DashboardPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:940: <Route path="/multi-scan" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:941: <Route path="/cosmetics" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:942: <Route path="/detergents" element={<MultiProductScanPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:945: <Route path="/scan" element={<Scan />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:946: <Route path="/analyze" element={<ProductPage />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:949: <Route path="/demo" element={<Demo />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:952: <Route path="/about" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:970: <Route path="/privacy" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:983: <Route path="/terms" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:997: <Route path="/premium" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1034: <Route path="*" element={
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\AppCopie.tsx:1054: <Route path="*" element={<Navigate to="/" replace />} />
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\env.ts:1: // PATH: frontend/src/env.ts
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\main.tsx:1: // PATH: frontend/src/main.tsx
+C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\server.js:341: path: req.path,
