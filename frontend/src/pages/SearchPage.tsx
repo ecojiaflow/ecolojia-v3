@@ -1,159 +1,183 @@
-﻿import React from "react";
-import { searchProducts, toDisplayProduct, SearchResult } from "../lib/api";
-import ScoreChip from "../components/ScoreChip";
-import DomainBadges from "../components/DomainBadges";
+﻿import React, { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import FiltersPanel from "@/components/FiltersPanel";
+import { searchAlgolia } from "@/lib/algoliaClient";
 
-type DomainKey = "food" | "beauty" | "detergent";
+type Hit = {
+  objectID: string;
+  name?: string;
+  brand?: string;
+  category?: string;
+  barcode?: string;
+  healthScore?: number;
+  imageUrl?: string;
+};
 
-// Route fiche produit configurable (ex. "/results" ou "/result")
-const RESULT_PATH = (import.meta.env.VITE_RESULT_PATH || "/results").replace(/\/+$/,"");
-
-function inferDomains(category: string, name: string, brand: string): DomainKey[] {
-  const txt = `${category} ${name} ${brand}`.toLowerCase();
-  if (/(cosm|beauty|cr[eè]me|shampoo|lotion|nivea|garnier)/i.test(txt)) return ["beauty"];
-  if (/(d[eé]tergent|lessive|ariel|dash|omo|liquide vaisselle|cleaner)/i.test(txt)) return ["detergent"];
-  return ["food"];
+function useQueryParams() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
 }
 
 export default function SearchPage() {
-  const [q, setQ] = React.useState("");
-  const [busy, setBusy] = React.useState(false);
-  const [res, setRes] = React.useState<SearchResult | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const navigate = useNavigate();
+  const qs = useQueryParams();
 
-  async function doSearchQuery(query: string) {
-    const term = query.trim();
-    if (!term) { setRes({ items: [], source: "local" }); return; }
-    setBusy(true); setError(null);
-    try {
-      const r = await searchProducts(term);
-      setRes(r);
-    } catch (err: any) {
-      setError(err?.message ?? "Erreur inconnue");
-    } finally {
-      setBusy(false);
-    }
+  const [q, setQ] = useState(qs.get("q") || "");
+  const [brands, setBrands] = useState<string[]>(qs.get("brands") ? qs.get("brands")!.split(",").filter(Boolean) : []);
+  const [categories, setCategories] = useState<string[]>(qs.get("categories") ? qs.get("categories")!.split(",").filter(Boolean) : []);
+  const [hsMin, setHsMin] = useState<number>(qs.get("hsMin") ? Number(qs.get("hsMin")) : 0);
+  const [hsMax, setHsMax] = useState<number>(qs.get("hsMax") ? Number(qs.get("hsMax")) : 100);
+
+  const [hits, setHits] = useState<Hit[]>([]);
+  const [nbHits, setNbHits] = useState(0);
+  const [page, setPage] = useState(0);
+  const [nbPages, setNbPages] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const qParam = qs.get("q") || "";
+    setQ(qParam);
+    setBrands(qs.get("brands") ? qs.get("brands")!.split(",").filter(Boolean) : []);
+    setCategories(qs.get("categories") ? qs.get("categories")!.split(",").filter(Boolean) : []);
+    setHsMin(qs.get("hsMin") ? Number(qs.get("hsMin")) : 0);
+    setHsMax(qs.get("hsMax") ? Number(qs.get("hsMax")) : 100);
+    setPage(qs.get("page") ? Number(qs.get("page")) : 0);
+  }, [qs]);
+
+  const facetFilters = useMemo(() => {
+    const out: (string | string[])[] = [];
+    if (brands.length) out.push(brands.map((b) => `brand:${b}`));
+    if (categories.length) out.push(categories.map((c) => `category:${c}`));
+    return out.length ? out : undefined;
+  }, [brands.join(","), categories.join(",")]);
+
+  const numericFilters = useMemo(() => {
+    // IMPORTANT: aucun filtre tant que l'utilisateur n'a pas resserré la plage
+    if (hsMin <= 0 && hsMax >= 100) return undefined;
+    return [`healthScore>=${hsMin}`, `healthScore<=${hsMax}`];
+  }, [hsMin, hsMax]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const resp = await searchAlgolia<Hit>({
+          query: q || "",
+          page,
+          hitsPerPage: 20,
+          facetFilters,
+          numericFilters,
+        });
+        if (!cancelled) {
+          setHits(resp.hits);
+          setNbHits(resp.nbHits);
+          setNbPages(resp.nbPages);
+        }
+      } catch (e) {
+        console.error("Search error", e);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [q, page, JSON.stringify(facetFilters), JSON.stringify(numericFilters)]);
+
+  function updateURL(next: { q?: string; page?: number; brands?: string[]; categories?: string[]; hsMin?: number; hsMax?: number }) {
+    const params = new URLSearchParams();
+    const _q = next.q ?? q;
+    if (_q) params.set("q", _q);
+
+    const _brands = next.brands ?? brands;
+    const _categories = next.categories ?? categories;
+    const _hsMin = Number.isFinite(next.hsMin as number) ? (next.hsMin as number) : hsMin;
+    const _hsMax = Number.isFinite(next.hsMax as number) ? (next.hsMax as number) : hsMax;
+    const _page = Number.isFinite(next.page as number) ? (next.page as number) : page;
+
+    if (_brands.length) params.set("brands", _brands.join(","));
+    if (_categories.length) params.set("categories", _categories.join(","));
+    params.set("hsMin", String(_hsMin));
+    params.set("hsMax", String(_hsMax));
+    if (_page > 0) params.set("page", String(_page));
+
+    navigate({ pathname: "/search", search: `?${params.toString()}` }, { replace: true });
   }
 
-  async function doSubmit(e?: React.FormEvent) {
-    e?.preventDefault();
-    await doSearchQuery(q);
-    // met l'URL à jour: /search?q=...
-    const url = new URL(window.location.href);
-    url.searchParams.set("q", q.trim());
-    window.history.replaceState(null, "", url.toString());
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setPage(0);
+    updateURL({ q, page: 0 });
   }
-
-  // Autorun si ?q= est présent (depuis la Home)
-  React.useEffect(() => {
-    const urlQ = new URLSearchParams(window.location.search).get("q") ?? "";
-    if (urlQ) {
-      setQ(urlQ);
-      // lance la recherche sans attendre l'utilisateur
-      doSearchQuery(urlQ);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function resultHref(code: string) {
-    return `${RESULT_PATH}?code=${encodeURIComponent(code)}`;
-  }
-
-  const items = (res?.items ?? []).map(toDisplayProduct);
 
   return (
-    <main className="mx-auto max-w-3xl p-4">
-      <h1 className="text-2xl font-bold">Recherche</h1>
-
-      <form className="mt-4 flex gap-2" onSubmit={doSubmit} role="search" aria-label="Recherche produit">
-        <label className="sr-only" htmlFor="q">Rechercher produit</label>
-        <input
-          id="q"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Ex.: nutella, nivea, ariel…"
-          className="flex-1 rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-          aria-label="Saisir un nom de produit ou marque"
-        />
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-60"
-          aria-busy={busy}
-        >
-          {busy ? "Recherche…" : "Chercher"}
-        </button>
+    <div className="container mx-auto px-3 py-4">
+      <form onSubmit={onSubmit} className="mb-4">
+        <div className="flex gap-2">
+          <input
+            className="flex-1 border rounded-lg px-3 py-2"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Rechercher un produit…"
+            aria-label="Rechercher"
+          />
+          <button type="submit" className="px-4 py-2 rounded-lg bg-black text-white">Rechercher</button>
+        </div>
+        <div className="text-xs text-gray-500 mt-1">Entrée pour relancer — mise à jour auto.</div>
       </form>
 
-      {error && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700" role="alert">
-          {error}
-        </div>
-      )}
+      <div className="flex flex-col md:flex-row gap-4">
+        <FiltersPanel
+          q={q}
+          selectedBrands={brands}
+          selectedCategories={categories}
+          hsMin={hsMin}
+          hsMax={hsMax}
+          onChange={(next) => {
+            setPage(0);
+            setBrands(next.brands);
+            setCategories(next.categories);
+            setHsMin(next.hsMin);
+            setHsMax(next.hsMax);
+            updateURL({ brands: next.brands, categories: next.categories, hsMin: next.hsMin, hsMax: next.hsMax, page: 0 });
+          }}
+        />
 
-      {res && (
-        <p className="mt-3 text-sm text-gray-500">
-          Source: <strong>{res.source === "algolia" ? "Algolia" : "Base locale"}</strong> — {items.length} résultat(s)
-        </p>
-      )}
+        <main className="flex-1">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-sm text-gray-700">
+              {loading ? "Recherche…" : `${nbHits} résultats`}
+            </div>
+            <div className="text-xs text-gray-500">Page {page + 1} / {Math.max(nbPages, 1)}</div>
+          </div>
 
-      <section className="mt-4 grid grid-cols-1 gap-3" aria-live="polite">
-        {items.map((p, idx) => {
-          const domains = inferDomains(p.category, p.name, p.brand);
-          const href = resultHref(p.code);
-          return (
-            <article
-              key={p.code || idx}
-              className="group relative grid grid-cols-[96px_1fr] gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md focus-within:ring-2 focus-within:ring-emerald-400"
-              tabIndex={0}
-              role="article"
-              aria-label={`${p.name} — ${p.brand}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  window.location.href = href;
-                }
-              }}
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {hits.map((h) => (
+              <li key={h.objectID} className="border rounded-xl p-3 bg-white">
+                <div className="text-sm text-gray-500 mb-1">{h.brand || "—"} • {h.category || "—"}</div>
+                <div className="font-medium">{h.name || h.barcode || "Produit"}</div>
+                <div className="text-xs text-gray-500 mt-1">Health: {Number.isFinite(h.healthScore as number) ? h.healthScore : "—"}</div>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-2 mt-4">
+            <button
+              disabled={page <= 0}
+              onClick={() => { const p = Math.max(0, page - 1); setPage(p); updateURL({ page: p }); }}
+              className="px-3 py-1 border rounded disabled:opacity-50"
             >
-              <img
-                src={p.imageUrl}
-                alt={p.name}
-                className="h-24 w-24 rounded-xl object-cover border border-gray-200"
-                loading="lazy"
-              />
-
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-base font-semibold leading-tight truncate" title={p.name}>
-                    {p.name}
-                  </h3>
-                  <ScoreChip score={p.score ?? undefined} ariaLabel="Score global" />
-                </div>
-
-                <p className="text-sm text-gray-600 truncate" title={p.brand}>
-                  {p.brand}
-                </p>
-
-                <DomainBadges active={domains as any} className="mt-1" aria-label="Domaines" />
-
-                <div className="mt-2">
-                  <a
-                    href={href}
-                    className="inline-block rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                    aria-label="Voir analyse du produit"
-                  >
-                    Voir analyse
-                  </a>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </section>
-
-      {!busy && items.length === 0 && q.trim() !== "" && (
-        <p className="mt-6 text-gray-600">Aucun résultat. Essayez une autre recherche.</p>
-      )}
-    </main>
+              Précédent
+            </button>
+            <button
+              disabled={page >= nbPages - 1}
+              onClick={() => { const p = Math.min(nbPages - 1, page + 1); setPage(p); updateURL({ page: p }); }}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Suivant
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 }

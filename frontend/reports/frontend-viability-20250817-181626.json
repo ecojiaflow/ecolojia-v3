@@ -38,28 +38,28 @@
         "category":  "api",
         "name":  "Cosmetics analyze",
         "status":  "FAIL",
-        "message":  "http://localhost:10000/api/cosmetics/analyze -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "message":  "http://localhost:10000/api/cosmetics/analyze -\u003e La propriÃƒÂ©tÃƒÂ© Ã‚Â«Ã‚Â okÃ‚Â Ã‚Â» est introuvable dans cet objet. VÃƒÂ©rifiez quÃ¢â‚¬â„¢elle existe.",
         "durationMs":  56
     },
     {
         "category":  "api",
         "name":  "Detergents analyze",
         "status":  "FAIL",
-        "message":  "http://localhost:10000/api/detergents/analyze -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "message":  "http://localhost:10000/api/detergents/analyze -\u003e La propriÃƒÂ©tÃƒÂ© Ã‚Â«Ã‚Â okÃ‚Â Ã‚Â» est introuvable dans cet objet. VÃƒÂ©rifiez quÃ¢â‚¬â„¢elle existe.",
         "durationMs":  8
     },
     {
         "category":  "api",
         "name":  "Food analysis",
         "status":  "FAIL",
-        "message":  "http://localhost:10000/api/analysis -\u003e La propriété « ok » est introuvable dans cet objet. Vérifiez qu’elle existe.",
+        "message":  "http://localhost:10000/api/analysis -\u003e La propriÃƒÂ©tÃƒÂ© Ã‚Â«Ã‚Â okÃ‚Â Ã‚Â» est introuvable dans cet objet. VÃƒÂ©rifiez quÃ¢â‚¬â„¢elle existe.",
         "durationMs":  44
     },
     {
         "category":  "api",
         "name":  "AI chat",
         "status":  "FAIL",
-        "message":  "http://localhost:10000/api/ai/chat -\u003e Le serveur distant a retourné une erreur : (401) Non autorisé.",
+        "message":  "http://localhost:10000/api/ai/chat -\u003e Le serveur distant a retournÃƒÂ© une erreurÃ‚Â : (401) Non autorisÃƒÂ©.",
         "durationMs":  15
     },
     {

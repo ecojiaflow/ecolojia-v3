@@ -1,37 +1,10 @@
-﻿import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { VitePWA } from 'vite-plugin-pwa';
+﻿import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    VitePWA({
-      devOptions: { enabled: false },
-      selfDestroying: true,
-      registerType: 'autoUpdate',
-      manifest: {
-        name: 'ECOLOJIA',
-        short_name: 'ECOLOJIA',
-        description: "Assistant d'analyse de produits",
-        display: 'standalone',
-        start_url: '/',
-        theme_color: '#10b981',
-        background_color: '#ffffff',
-        icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
-        ]
-      },
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/world\.(openfoodfacts|openbeautyfacts)\.org\//,
-            handler: 'StaleWhileRevalidate',
-            options: { cacheName: 'openfacts-cache' }
-          }
-        ]
-      }
-    })
-  ]
+  plugins: [react(), tsconfigPaths()],
+  server: {
+    port: 5173
+  }
 });
-
