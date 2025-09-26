@@ -6,6 +6,7 @@ import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
+
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
@@ -14,6 +15,7 @@ const ProductPage = lazy(() => import('./pages/ProductPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
 const ScanPage = lazy(() => import('./pages/ScanPage'));
+const ScannerChoicePage = lazy(() => import('./components/ScannerChoice'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
@@ -24,8 +26,10 @@ const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
 const OCRPage = lazy(() => import('./pages/OCRPage'));
+
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
@@ -36,11 +40,12 @@ const App: React.FC = () => {
           <Route path="search" element={<SearchPage />} />
           <Route path="results" element={<ResultsPage />} />
           <Route path="product/:id" element={<ProductPage />} />
-          <Route path="scan" element={<BarcodeScanPage />} />
+          <Route path="scan" element={<ScannerChoicePage />} />`n          <Route path="scan/barcode" element={<BarcodeScanPage />} />
           <Route path="ocr" element={<OCRPage />} />
           <Route path="multi-scan" element={<MultiScanPage />} />
           <Route path="premium" element={<PremiumPage />} />
           <Route path="diagnostic" element={<DiagnosticPage />} />
+          
           {/* Routes d'authentification - redirection si déjà connecté */}
           <Route
             path="login"
@@ -50,6 +55,7 @@ const App: React.FC = () => {
             path="register"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
           />
+
           {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<DashboardPage />} />
@@ -58,6 +64,7 @@ const App: React.FC = () => {
             <Route path="history" element={<HistoryPage />} />
             <Route path="onboarding" element={<OnboardingPage />} />
           </Route>
+
           {/* 404 - Redirection vers accueil */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
@@ -65,4 +72,11 @@ const App: React.FC = () => {
     </Suspense>
   );
 };
+
 export default App;
+
+
+
+
+
+
