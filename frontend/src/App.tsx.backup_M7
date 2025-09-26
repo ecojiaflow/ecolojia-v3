@@ -23,7 +23,6 @@ const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
-const OCRPage = lazy(() => import('./pages/OCRPage'));
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
@@ -39,7 +38,6 @@ const App: React.FC = () => {
           <Route path="results" element={<ResultsPage />} />
           <Route path="product/:id" element={<ProductPage />} />
           <Route path="scan" element={<ScanPage />} />
-          <Route path="ocr" element={<OCRPage />} />
           <Route path="multi-scan" element={<MultiScanPage />} />
           <Route path="premium" element={<PremiumPage />} />
           <Route path="diagnostic" element={<DiagnosticPage />} />
@@ -72,8 +70,6 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
 
 
 

@@ -1,0 +1,152 @@
+import React, { useState } from 'react';
+import { ArrowLeft, Camera, Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { OCRUpload } from '../components/OCRUpload';
+import { OCRPanel } from '../components/OCRPanel';
+
+interface VisionResult {
+  success: boolean;
+  source: 'google' | 'stub';
+  ingredients: string[];
+  warnings: string[];
+  rawText: string;
+  confidence?: number;
+}
+
+export function OCRPage() {
+  const navigate = useNavigate();
+  const [result, setResult] = useState<VisionResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const handleAnalysis = (analysisResult: VisionResult) => {
+    setIsAnalyzing(false);
+    setResult(analysisResult);
+    
+    // Scroll vers les résultats
+    setTimeout(() => {
+      document.getElementById('ocr-results')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleNewAnalysis = () => {
+    setResult(null);
+    setIsAnalyzing(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <ArrowLeft size={20} className="text-gray-600" />
+            </button>
+            <div className="flex items-center gap-3">
+              <Camera className="text-blue-600" size={24} />
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Analyse d'image par OCR
+                </h1>
+                <p className="text-sm text-gray-600">
+                  Analysez les ingrédients et informations de vos produits
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Info panel */}
+        <div className="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <Info className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
+            <div>
+              <h3 className="font-medium text-blue-900 mb-2">Comment ça marche ?</h3>
+              <ul className="text-blue-800 text-sm space-y-1">
+                <li>• Prenez une photo claire de la liste d'ingrédients</li>
+                <li>• L'IA extrait automatiquement le texte et identifie les ingrédients</li>
+                <li>• Vous obtenez une analyse structurée avec les allergènes détectés</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Zone d'upload */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {result ? 'Image analysée' : 'Ajouter une image'}
+            </h2>
+            {result && (
+              <button
+                onClick={handleNewAnalysis}
+                className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
+              >
+                Nouvelle analyse
+              </button>
+            )}
+          </div>
+
+          {!result && (
+            <OCRUpload 
+              onAnalysis={handleAnalysis}
+              isLoading={isAnalyzing}
+            />
+          )}
+        </div>
+
+        {/* Résultats */}
+        {result && (
+          <div id="ocr-results" className="space-y-6">
+            <OCRPanel result={result} />
+            
+            {/* Actions sur les résultats */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="font-semibold text-gray-900 mb-4">Que faire ensuite ?</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <button
+                  onClick={() => navigate('/search')}
+                  className="p-4 text-left bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors"
+                >
+                  <h4 className="font-medium text-blue-900 mb-1">
+                    Rechercher ce produit
+                  </h4>
+                  <p className="text-blue-700 text-sm">
+                    Trouvez des informations détaillées et des scores
+                  </p>
+                </button>
+                
+                <button
+                  onClick={handleNewAnalysis}
+                  className="p-4 text-left bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors"
+                >
+                  <h4 className="font-medium text-green-900 mb-1">
+                    Analyser un autre produit
+                  </h4>
+                  <p className="text-green-700 text-sm">
+                    Comparez avec d'autres ingrédients
+                  </p>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading state */}
+        {isAnalyzing && (
+          <div className="text-center py-12">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-blue-700 font-medium">Analyse en cours...</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
