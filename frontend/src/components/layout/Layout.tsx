@@ -25,6 +25,7 @@ const Layout: React.FC = () => {
     { name: 'Accueil', href: '/', icon: null },
     { name: 'Rechercher', href: '/search', icon: Search },
     { name: 'Scanner', href: '/scan', icon: Camera },
+    { name: 'OCR', href: '/ocr', icon: Camera },
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3, requiresAuth: true },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle, requiresAuth: true }
   ];
@@ -117,7 +118,7 @@ const Layout: React.FC = () => {
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <LogOut className="w-4 h-4 inline mr-2" />
-                        D?connexion
+                        Déconnexion
                       </button>
                     </div>
                   </div>
@@ -188,7 +189,7 @@ const Layout: React.FC = () => {
                     }}
                     className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
                   >
-                    D?connexion
+                    Déconnexion
                   </button>
                 </>
               )}
@@ -218,20 +219,21 @@ const Layout: React.FC = () => {
 
             {/* Features */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">Fonctionnalit?s</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Fonctionnalités</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li><Link to="/search" className="hover:text-gray-900">Recherche IA</Link></li>
                 <li><Link to="/scan" className="hover:text-gray-900">Scanner</Link></li>
+                <li><Link to="/ocr" className="hover:text-gray-900">OCR</Link></li>
                 <li><Link to="/premium" className="hover:text-gray-900">Premium</Link></li>
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">L?gal</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Légal</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li><Link to="/terms" className="hover:text-gray-900">CGU</Link></li>
-                <li><Link to="/privacy" className="hover:text-gray-900">Confidentialit?</Link></li>
+                <li><Link to="/privacy" className="hover:text-gray-900">Confidentialité</Link></li>
                 <li><Link to="/cookies" className="hover:text-gray-900">Cookies</Link></li>
               </ul>
             </div>
@@ -247,7 +249,7 @@ const Layout: React.FC = () => {
           </div>
 
           <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-            <p>© 2025 ECOLOJIA. Tous droits r?serv?s.</p>
+            <p>© 2025 ECOLOJIA. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
@@ -256,4 +258,3 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
-
