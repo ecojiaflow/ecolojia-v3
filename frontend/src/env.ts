@@ -3,7 +3,7 @@ export const ENV = {
   APP_NAME: (import.meta.env.VITE_APP_NAME as string) || "ECOLOJIA",
   API_URL:
     (import.meta.env.VITE_API_URL as string)?.replace(/\/+$/, "") ||
-    "https://ecolojia-backendvf.onrender.com",
+    "http://localhost:10000",
   REQUEST_TIMEOUT_MS: Number(import.meta.env.VITE_REQUEST_TIMEOUT_MS ?? 20000),
   MOCK_MODE: false,
   LS: {
@@ -27,5 +27,7 @@ if (false) {
   console.log("✅ ECOLOJIA Connected to:", ENV.API_URL);
   console.log("📡 API Base URL:", API_BASE);
 }
+
+
 
 
