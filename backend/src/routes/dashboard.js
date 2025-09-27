@@ -1,6 +1,15 @@
-// PATH: backend/src/routes/dashboard.js
+﻿// PATH: backend/src/routes/dashboard.js
 const express = require('express');
 const router = express.Router();
+
+function __dbReady() {
+  try {
+    const mongoose = require('mongoose');
+    return !!(mongoose && mongoose.connection && mongoose.connection.readyState === 1);
+  } catch (_) { return false; }
+}
+const mongoose = require('mongoose');
+function __dbReady() { return mongoose.connection && mongoose.connection.readyState === 1; }
 
 // Modeles (avec fallback console si absent)
 let Analysis, Product;
@@ -12,6 +21,8 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 
 // GET /api/dashboard/stats
 router.get('/stats', asyncHandler(async (req, res) => {
+  if (!__dbReady()) { return res.json({ success: true, data: { totalProducts: 0, totalUsers: 0, todayScans: 0, monthlyScans: 0, avgHealthScore: 0 } }); }
+
   // userId facultatif : si non fourni, on agrege globalement (ou user 'demo' si tu preferes)
   const userId = req.user?.id || null;
 
@@ -108,7 +119,7 @@ router.get('/stats', asyncHandler(async (req, res) => {
       totals: {
         scans: agg?.scans || 0,
         products: await Product.countDocuments({}),
-        favorites: 0 //   brancher si favoris
+        favorites: 0 // Â  brancher si favoris
       },
       averages: {
         health: Math.round(agg?.avgHealth || 0),
@@ -130,3 +141,6 @@ router.get('/stats', asyncHandler(async (req, res) => {
 }));
 
 module.exports = router;
+
+
+

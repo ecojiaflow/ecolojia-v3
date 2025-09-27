@@ -1,4 +1,4 @@
-require("dotenv").config();
+ï»¿require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -38,7 +38,7 @@ function safeMount(base, rel) {
       console.warn(`? ${rel} ne retourne pas un router Express`);
     }
   } catch (e) {
-    console.warn(`• Route optionnelle ignorée: ${rel} (${e.message})`);
+    console.warn(`â€¢ Route optionnelle ignorÃ©e: ${rel} (${e.message})`);
   }
 }
 
@@ -47,6 +47,7 @@ safeMount("/api/vision",   path.join(__dirname, "routes/vision.routes.js"));
 safeMount("/api/products", path.join(__dirname, "routes/products.js"));
 safeMount("/api/algolia",  path.join(__dirname, "routes/algolia-unified.js"));
 safeMount("/api/auth", path.join(__dirname, "routes/auth.simple.js"));
+safeMount("/api/dashboard", path.join(__dirname, "routes/dashboard.js"));
 // Fallback auth si auth.routes.js ne fonctionne pas:
 if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/auth"))) {
 // auth.js fallback disabled - using auth.simple.js
@@ -55,7 +56,7 @@ if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/auth"))) {
 if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) {
   safeMount("/api/algolia", path.join(__dirname, "routes/algolia.js"));
 }
-// (paiements volontairement non montés en M1)
+// (paiements volontairement non montÃ©s en M1)
 
 app.listen(PORT, () => {
   console.log(`ECOLOJIA backend (bootstrap M1) on http://localhost:${PORT}`);
@@ -78,4 +79,6 @@ try {
 } catch (e) {
   console.warn("Vision OCR public mount failed:", e.message);
 }
+
+
 
