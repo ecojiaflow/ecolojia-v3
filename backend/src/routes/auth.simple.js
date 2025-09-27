@@ -1,65 +1,70 @@
 ﻿const express = require('express');
 const router = express.Router();
 
-console.log('🔐 Auth simple router loaded');
-
-// Utilisateur test pour Chat IA
-const TEST_USER = {
-  _id: '1',
-  email: 'test@ecolojia.com', 
-  firstName: 'Test',
-  lastName: 'User',
-  subscription: { tier: 'premium', status: 'active' },
-  quotas: { scansRemaining: 100 }
-};
-
-// GET /api/auth (test endpoint)
+// Auth simple pour développement et production
 router.get('/', (req, res) => {
-  console.log('✅ GET /api/auth called');
-  res.json({ message: 'Auth endpoint accessible', routes: ['GET /', 'POST /login', 'POST /register'] });
+  res.json({ 
+    message: 'Auth API available', 
+    status: 'ready',
+    endpoints: ['/login', '/logout', '/verify']
+  });
 });
 
-// POST /api/auth/login
 router.post('/login', (req, res) => {
-  console.log('🔐 Login attempt:', req.body?.email);
+  const { email, password } = req.body;
   
-  const { email, password } = req.body || {};
-  
-  // Accepter n'importe quel email/password pour test
+  // Auth simple : accepter n'importe quels identifiants
   if (email && password) {
-    const token = 'mock-token-' + Date.now();
+    const user = {
+      id: 1,
+      email: email,
+      name: email.split('@')[0],
+      plan: 'premium' // Donner accès premium pour tests
+    };
     
-    console.log('✅ Login success for:', email);
+    const token = 'dev-token-' + Date.now();
     
     res.json({
       success: true,
-      message: 'Login successful',
-      user: { ...TEST_USER, email },
-      token
+      user,
+      token,
+      message: 'Connexion réussie'
     });
   } else {
-    res.status(400).json({ error: 'Email and password required' });
+    res.status(400).json({
+      success: false,
+      message: 'Email et mot de passe requis'
+    });
   }
 });
 
-// POST /api/auth/register
-router.post('/register', (req, res) => {
-  console.log('📝 Register attempt:', req.body?.email);
+router.post('/logout', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Déconnexion réussie' 
+  });
+});
+
+// Middleware de vérification token
+router.get('/verify', (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
   
-  const { email, password, firstName } = req.body || {};
-  
-  if (email && password && firstName) {
-    res.status(201).json({
+  if (token && token.startsWith('dev-token-')) {
+    res.json({
       success: true,
-      message: 'Registration successful',
-      user: { ...TEST_USER, email, firstName },
-      token: 'mock-token-' + Date.now()
+      user: {
+        id: 1,
+        email: 'user@test.com',
+        name: 'Test User',
+        plan: 'premium'
+      }
     });
   } else {
-    res.status(400).json({ error: 'Email, password and firstName required' });
+    res.status(401).json({
+      success: false,
+      message: 'Token invalide'
+    });
   }
 });
-
-console.log('🔐 Auth routes configured: GET /, POST /login, POST /register');
 
 module.exports = router;
