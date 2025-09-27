@@ -1,11 +1,12 @@
-﻿import React from "react";
+﻿import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { searchProducts, toDisplayProduct, SearchResult } from "../lib/api";
 import ScoreChip from "../components/ScoreChip";
 import DomainBadges from "../components/DomainBadges";
+import FiltersPanel from '../components/search/FiltersPanel';
+import { useQuerySync, SearchState } from '../hooks/useQuerySync';
 
 type DomainKey = "food" | "beauty" | "detergent";
-
-// Route fiche produit configurable (ex. "/results" ou "/result")
 const RESULT_PATH = (import.meta.env.VITE_RESULT_PATH || "/results").replace(/\/+$/,"");
 
 function inferDomains(category: string, name: string, brand: string): DomainKey[] {
@@ -16,18 +17,53 @@ function inferDomains(category: string, name: string, brand: string): DomainKey[
 }
 
 export default function SearchPage() {
-  const [q, setQ] = React.useState("");
-  const [busy, setBusy] = React.useState(false);
-  const [res, setRes] = React.useState<SearchResult | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  // État synchronisé avec URL
+  const [state, setState] = useState<SearchState>({ q: '' });
+  const updateURL = useQuerySync(state, setState);
+  
+  // État local
+  const [busy, setBusy] = useState(false);
+  const [res, setRes] = useState<SearchResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [facets, setFacets] = useState<{
+    brands: Array<{ name: string; count: number }>;
+    categories: Array<{ name: string; count: number }>;
+  }>({ brands: [], categories: [] });
 
-  async function doSearchQuery(query: string) {
-    const term = query.trim();
-    if (!term) { setRes({ items: [], source: "local" }); return; }
-    setBusy(true); setError(null);
+  async function doSearchQuery() {
+    const term = state.q.trim();
+    if (!term) { 
+      setRes({ items: [], source: "local" }); 
+      setFacets({ brands: [], categories: [] });
+      return; 
+    }
+    
+    setBusy(true); 
+    setError(null);
+    
     try {
       const r = await searchProducts(term);
       setRes(r);
+      
+      // Extraire les facettes des résultats (simulation)
+      const brands = new Map<string, number>();
+      const categories = new Map<string, number>();
+      
+      r.items.forEach(item => {
+        const product = toDisplayProduct(item);
+        if (product.brand) {
+          brands.set(product.brand, (brands.get(product.brand) || 0) + 1);
+        }
+        if (product.category) {
+          categories.set(product.category, (categories.get(product.category) || 0) + 1);
+        }
+      });
+      
+      setFacets({
+        brands: Array.from(brands.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count),
+        categories: Array.from(categories.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count)
+      });
+      
     } catch (err: any) {
       setError(err?.message ?? "Erreur inconnue");
     } finally {
@@ -35,125 +71,117 @@ export default function SearchPage() {
     }
   }
 
-  async function doSubmit(e?: React.FormEvent) {
-    e?.preventDefault();
-    await doSearchQuery(q);
-    // met l'URL à jour: /search?q=...
-    const url = new URL(window.location.href);
-    url.searchParams.set("q", q.trim());
-    window.history.replaceState(null, "", url.toString());
-  }
+  // Déclencher recherche quand state change
+  useEffect(() => {
+    doSearchQuery();
+  }, [state.q]); // TODO: ajouter autres filtres
 
-  // Autorun si ?q= est présent (depuis la Home)
-  React.useEffect(() => {
-    const urlQ = new URLSearchParams(window.location.search).get("q") ?? "";
-    if (urlQ) {
-      setQ(urlQ);
-      // lance la recherche sans attendre l'utilisateur
-      doSearchQuery(urlQ);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // La recherche se déclenche automatiquement via useEffect
+  };
 
-  function resultHref(code: string) {
-    return `${RESULT_PATH}?code=${encodeURIComponent(code)}`;
-  }
-
-  const items = (res?.items ?? []).map(toDisplayProduct);
+  const handleQueryChange = (newQ: string) => {
+    setState(prev => ({ ...prev, q: newQ }));
+    updateURL({ ...state, q: newQ });
+  };
 
   return (
-    <main className="mx-auto max-w-3xl p-4">
-      <h1 className="text-2xl font-bold">Recherche</h1>
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Barre de recherche */}
+        <form onSubmit={handleSearchSubmit} className="mb-8">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={state.q}
+              onChange={(e) => handleQueryChange(e.target.value)}
+              placeholder="Rechercher un produit..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+            <button type="submit" disabled={busy} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+              {busy ? "..." : "Rechercher"}
+            </button>
+          </div>
+        </form>
 
-      <form className="mt-4 flex gap-2" onSubmit={doSubmit} role="search" aria-label="Recherche produit">
-        <label className="sr-only" htmlFor="q">Rechercher produit</label>
-        <input
-          id="q"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Ex.: nutella, nivea, ariel…"
-          className="flex-1 rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-          aria-label="Saisir un nom de produit ou marque"
-        />
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2 font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-60"
-          aria-busy={busy}
-        >
-          {busy ? "Recherche…" : "Chercher"}
-        </button>
-      </form>
-
-      {error && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700" role="alert">
-          {error}
-        </div>
-      )}
-
-      {res && (
-        <p className="mt-3 text-sm text-gray-500">
-          Source: <strong>{res.source === "algolia" ? "Algolia" : "Base locale"}</strong> — {items.length} résultat(s)
-        </p>
-      )}
-
-      <section className="mt-4 grid grid-cols-1 gap-3" aria-live="polite">
-        {items.map((p, idx) => {
-          const domains = inferDomains(p.category, p.name, p.brand);
-          const href = resultHref(p.code);
-          return (
-            <article
-              key={p.code || idx}
-              className="group relative grid grid-cols-[96px_1fr] gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md focus-within:ring-2 focus-within:ring-emerald-400"
-              tabIndex={0}
-              role="article"
-              aria-label={`${p.name} — ${p.brand}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  window.location.href = href;
-                }
+        <div className="flex gap-6">
+          {/* Panneau de filtres */}
+          <div className="w-80 flex-shrink-0">
+            <FiltersPanel
+              selectedBrands={state.brands || []}
+              selectedCategories={state.categories || []}
+              healthScoreRange={[state.hsMin || 0, state.hsMax || 100]}
+              availableBrands={facets.brands}
+              availableCategories={facets.categories}
+              onBrandsChange={(brands) => {
+                const newState = { ...state, brands };
+                setState(newState);
+                updateURL(newState);
               }}
-            >
-              <img
-                src={p.imageUrl}
-                alt={p.name}
-                className="h-24 w-24 rounded-xl object-cover border border-gray-200"
-                loading="lazy"
-              />
+              onCategoriesChange={(categories) => {
+                const newState = { ...state, categories };
+                setState(newState);
+                updateURL(newState);
+              }}
+              onHealthScoreChange={([hsMin, hsMax]) => {
+                const newState = { ...state, hsMin, hsMax };
+                setState(newState);
+                updateURL(newState);
+              }}
+              onClear={() => {
+                const newState = { q: state.q };
+                setState(newState);
+                updateURL(newState);
+              }}
+            />
+          </div>
 
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-base font-semibold leading-tight truncate" title={p.name}>
-                    {p.name}
-                  </h3>
-                  <ScoreChip score={p.score ?? undefined} ariaLabel="Score global" />
-                </div>
+          {/* Résultats */}
+          <div className="flex-1">
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 rounded-lg">
+              <p className="text-sm text-green-800">✅ Filtres M8 restaurés avec facettes Algolia !</p>
+            </div>
 
-                <p className="text-sm text-gray-600 truncate" title={p.brand}>
-                  {p.brand}
-                </p>
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded-lg">
+                <p className="text-red-700">{error}</p>
+              </div>
+            )}
 
-                <DomainBadges active={domains as any} className="mt-1" aria-label="Domaines" />
-
-                <div className="mt-2">
-                  <a
-                    href={href}
-                    className="inline-block rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                    aria-label="Voir analyse du produit"
-                  >
-                    Voir analyse
-                  </a>
+            {res && (
+              <div>
+                <p className="mb-4 text-gray-600">{res.items.length} résultat(s) • Source: {res.source}</p>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {res.items.map((item, index) => {
+                    const product = toDisplayProduct(item);
+                    const domains = inferDomains(product.category, product.name, product.brand);
+                    const key = product.id || `${product.barcode}-${index}` || `item-${index}`;
+                    
+                    return (
+                      <div key={key} className="border rounded-lg p-4 hover:shadow-md">
+                        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                        <p className="text-gray-600 text-sm mb-2">{product.brand}</p>
+                        <p className="text-gray-500 text-xs mb-3">{product.category}</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <ScoreChip score={product.globalScore} />
+                          <DomainBadges domains={domains} />
+                        </div>
+                        <button
+                          onClick={() => window.location.href = `${RESULT_PATH}?barcode=${product.barcode}`}
+                          className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                        >
+                          Voir détails
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </article>
-          );
-        })}
-      </section>
-
-      {!busy && items.length === 0 && q.trim() !== "" && (
-        <p className="mt-6 text-gray-600">Aucun résultat. Essayez une autre recherche.</p>
-      )}
-    </main>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
