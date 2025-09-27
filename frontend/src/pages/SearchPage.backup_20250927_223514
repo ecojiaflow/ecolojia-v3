@@ -16,28 +16,6 @@ function inferDomains(category: string, name: string, brand: string): DomainKey[
   return ["food"];
 }
 
-// Helper pour extraire un ID valide d'un produit
-function getValidProductId(item: any, product: any): string | null {
-  // Essayer différentes sources d'ID dans l'ordre de priorité
-  const candidates = [
-    (item as any)?.objectID,           // Algolia objectID (priorité 1)
-    (item as any)?._id,                // MongoDB _id
-    (item as any)?.id,                 // ID générique
-    product?.id,                       // ID du produit transformé
-    product?._id,                      // MongoDB _id du produit transformé
-    product?.barcode,                  // Code-barres en dernier recours
-    (item as any)?.barcode             // Code-barres de l'item brut
-  ];
-
-  for (const candidate of candidates) {
-    if (candidate && candidate !== 'undefined' && typeof candidate === 'string' && candidate.trim() !== '') {
-      return candidate.trim();
-    }
-  }
-
-  return null;
-}
-
 export default function SearchPage() {
   // État synchronisé avec URL
   const [state, setState] = useState<SearchState>({ q: '' });
@@ -108,29 +86,6 @@ export default function SearchPage() {
     updateURL({ ...state, q: newQ });
   };
 
-  const handleProductClick = (item: any, product: any) => {
-    const productId = getValidProductId(item, product);
-    
-    // Debug logs pour identifier les problèmes
-    console.log('Debug click produit:', {
-      productId,
-      item: item,
-      product: product,
-      objectID: (item as any)?.objectID,
-      itemId: (item as any)?.id,
-      itemBarcode: (item as any)?.barcode,
-      productId_field: product?.id,
-      productBarcode: product?.barcode
-    });
-
-    if (productId) {
-      window.location.href = `/product/${productId}`;
-    } else {
-      alert('Impossible de trouver un identifiant valide pour ce produit. Données de debug dans la console.');
-      console.error('Aucun ID valide trouvé:', { item, product });
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
@@ -185,7 +140,7 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="flex-1">
             <div className="mb-4 p-3 bg-green-100 border border-green-400 rounded-lg">
-              <p className="text-sm text-green-800">✅ Navigation produit corrigée - M9 fonctionnel !</p>
+              <p className="text-sm text-green-800">✅ Filtres M8 restaurés avec facettes Algolia !</p>
             </div>
 
             {error && (
@@ -201,7 +156,7 @@ export default function SearchPage() {
                   {res.items.map((item, index) => {
                     const product = toDisplayProduct(item);
                     const domains = inferDomains(product.category, product.name, product.brand);
-                    const key = getValidProductId(item, product) || `item-${index}`;
+                    const key = product.id || `${product.barcode}-${index}` || `item-${index}`;
                     
                     return (
                       <div key={key} className="border rounded-lg p-4 hover:shadow-md">
@@ -213,7 +168,7 @@ export default function SearchPage() {
                           <DomainBadges domains={domains} />
                         </div>
                         <button
-                          onClick={() => handleProductClick(item, product)}
+                          onClick={() => window.location.href = `/product/${(item as any)?.objectID || (product as any)?.id || product.barcode}`}
                           className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
                         >
                           Voir détails
@@ -230,3 +185,7 @@ export default function SearchPage() {
     </div>
   );
 }
+
+
+
+

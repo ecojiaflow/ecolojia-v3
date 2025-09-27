@@ -1,27 +1,15 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿// PATH: frontend/src/pages/ProductPage.tsx
+import React, { useEffect, useState } from 'react';
+import { getJSON } from '@/lib/api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Heart, Leaf, AlertTriangle, Package, Info } from 'lucide-react';
+import { ArrowLeft, Heart, Leaf, Shield, AlertTriangle, Package, Info } from 'lucide-react';
+import { getJSON } from '@/lib/api';
+import { productService } from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { getJSON } from '@/lib/api';
 import toast from 'react-hot-toast';
-
-// Helper pour API calls
-const getJSON = async (endpoint: string): Promise<any> => {
-  const url = endpoint.startsWith('http') 
-    ? endpoint 
-    : `https://ecolojia-backendvf.onrender.com${endpoint}`;
-  
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include'
-  });
-  
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
-  
-  return response.json();
-};
+import { ENV } from '../env';
+import { getJSON } from '@/lib/api';
 
 interface Product {
   _id: string;
@@ -74,45 +62,39 @@ const ProductPage: React.FC = () => {
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!id || id === 'undefined') {
-        setError('ID produit manquant ou invalide');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Appel direct à l'API REST
-        const productData = await getJSON(`/api/products/${id}`);
-        setProduct(productData);
-        
-        // Charger les alternatives en parallèle (optionnel)
-        loadAlternatives(id, productData);
-      } catch (err: any) {
-        console.error('Erreur chargement produit:', err);
-        setError(err.message || 'Impossible de charger le produit');
-        toast.error('Erreur lors du chargement du produit');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
+    if (id) {
+      loadProduct(id);
+    }
   }, [id]);
 
-  const loadAlternatives = async (productId: string, currentProduct: Product) => {
+  const loadProduct = async (productId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Appel API réel
+      const productData = await safeGetById(productId);
+      setProduct(productData);
+      
+      // Charger les alternatives en parallèle
+      loadAlternatives(productId);
+    } catch (err: any) {
+      console.error('Erreur chargement produit:', err);
+      setError(err.message || 'Impossible de charger le produit');
+      toast.error('Erreur lors du chargement du produit');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadAlternatives = async (productId: string) => {
     try {
       setLoadingAlternatives(true);
-      // Appel API alternatives (si disponible)
-      const altData = await getJSON(`/api/products/${productId}/alternatives`);
+      const altData = await productService.getAlternatives(productId);
       setAlternatives(altData.alternatives || altData || []);
     } catch (err) {
-      console.error('Alternatives non disponibles:', err);
+      console.error('Erreur chargement alternatives:', err);
       // Pas grave si les alternatives ne se chargent pas
-      setAlternatives([]);
     } finally {
       setLoadingAlternatives(false);
     }
@@ -188,6 +170,13 @@ const ProductPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Mode Demo Banner */}
+      {false && (
+        <div className="bg-yellow-100 border-b border-yellow-400 text-yellow-800 px-4 py-2 text-center">
+          🔬 Mode Demo - Données de test
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">

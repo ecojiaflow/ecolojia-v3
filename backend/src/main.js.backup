@@ -33,9 +33,9 @@ function safeMount(base, rel) {
     const router = require(rel);
     if (router && router.stack) {
       app.use(base, router);
-      console.log(`✓ Mounted ${base} -> ${rel}`);
+      console.log(`? Mounted ${base} -> ${rel}`);
     } else {
-      console.warn(`⚠ ${rel} ne retourne pas un router Express`);
+      console.warn(`? ${rel} ne retourne pas un router Express`);
     }
   } catch (e) {
     console.warn(`• Route optionnelle ignorée: ${rel} (${e.message})`);
@@ -46,6 +46,11 @@ safeMount("/api/analysis", path.join(__dirname, "routes/analysis.routes.js"));
 safeMount("/api/vision",   path.join(__dirname, "routes/vision.routes.js"));
 safeMount("/api/products", path.join(__dirname, "routes/products.js"));
 safeMount("/api/algolia",  path.join(__dirname, "routes/algolia-unified.js"));
+safeMount("/api/auth", path.join(__dirname, "routes/auth.simple.js"));
+// Fallback auth si auth.routes.js ne fonctionne pas:
+if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/auth"))) {
+// auth.js fallback disabled - using auth.simple.js
+}
 // fallback possible:
 if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) {
   safeMount("/api/algolia", path.join(__dirname, "routes/algolia.js"));
@@ -69,8 +74,9 @@ module.exports = app;
 // M7 public OCR mount (no auth, Google or stub)
 try {
   app.use("/api/vision-ocr", require("./routes/vision.ocr.public"));
-  console.log("✓ Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
+  console.log("? Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
 } catch (e) {
   console.warn("Vision OCR public mount failed:", e.message);
 }
+
 
