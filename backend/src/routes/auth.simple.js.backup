@@ -67,28 +67,4 @@ router.get('/verify', (req, res) => {
   }
 });
 
-
-// Route profile (pour le frontend)
-router.get('/profile', (req, res) => {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-  
-  if (token && token.startsWith('dev-token-')) {
-    res.json({
-      success: true,
-      user: {
-        id: 1,
-        email: 'user@test.com',
-        name: 'Test User',
-        plan: 'premium'
-      }
-    });
-  } else {
-    res.status(401).json({
-      success: false,
-      message: 'Token invalide'
-    });
-  }
-});
-
 module.exports = router;
-
