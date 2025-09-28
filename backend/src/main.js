@@ -1,26 +1,28 @@
-// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+ï»¿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
-// ?? CHARGEMENT .ENV EN PREMIER (avant tout autre import)
+// âš ï¸ CHARGEMENT ENVIRONNEMENT (dÃ©veloppement + production)
+
 const path = require('path');
 const fs = require('fs');
 
-// Déterminer le chemin absolu du .env
-const envPath = path.resolve(__dirname, '../.env');
-
-// Vérifier que le fichier .env existe
-if (!fs.existsSync(envPath)) {
-  console.error('? [FATAL] Fichier .env introuvable:', envPath);
-  console.error('Vérifiez que .env existe dans le dossier backend/');
-  console.log("?? [DB] Mode dégradé - serveur continue sans DB"); return false;
+// En dÃ©veloppement, charger .env si disponible
+if (process.env.NODE_ENV !== 'production') {
+  const envPath = path.resolve(__dirname, '../.env');
+  
+  if (fs.existsSync(envPath)) {
+    require('dotenv').config({ path: envPath });
+    console.log('ğŸ”§ [ENV] Fichier .env chargÃ© depuis:', envPath);
+  } else {
+    console.log('âš ï¸ [ENV] Fichier .env non trouvÃ©, utilisation des variables systÃ¨me');
+  }
+} else {
+  console.log('ğŸš€ [PROD] Mode production - variables d\'environnement Render');
 }
 
-// Charger dotenv avec le chemin explicite
-require('dotenv').config({ path: envPath });
-
-// VÉRIFICATIONS CRITIQUES des variables d'environnement
-console.log('?? [ENV] Chargement des variables d\'environnement...');
-console.log('?? [ENV] Fichier .env:', envPath);
+// VÃ‰RIFICATIONS CRITIQUES des variables d'environnement
+console.log('ğŸ”§ [ENV] VÃ©rification des variables d\'environnement...');
+console.log('ğŸ“ [ENV] NODE_ENV:', process.env.NODE_ENV || 'development');
 
 const requiredVars = ['MONGODB_URI'];
 const missingVars = [];
@@ -29,52 +31,68 @@ requiredVars.forEach(varName => {
   if (!process.env[varName]) {
     missingVars.push(varName);
   } else {
-    console.log(`? [ENV] ${varName}: présent`);
+    console.log(`âœ… [ENV] ${varName}: prÃ©sent`);
   }
 });
 
 if (missingVars.length > 0) {
-  console.error('? [FATAL] Variables d\'environnement manquantes:', missingVars);
-  console.error('Vérifiez votre fichier .env');
-  console.log("?? [DB] Mode dégradé - serveur continue sans DB"); return false;
+  console.error('âŒ [FATAL] Variables d\'environnement manquantes:', missingVars);
+  if (process.env.NODE_ENV === 'production') {
+    console.error('ğŸ”§ [PROD] VÃ©rifiez la configuration Render Dashboard');
+  } else {
+    console.error('ğŸ”§ [DEV] VÃ©rifiez votre fichier .env local');
+  }
+  process.exit(1);
 }
 
-// Log de la connexion MongoDB (URI masquée pour sécurité)
+// Log de la connexion MongoDB (URI masquÃ©e pour sÃ©curitÃ©)
 const maskedUri = process.env.MONGODB_URI.replace(/:[^:\/]+@/, ':***@');
-console.log('?? [ENV] MongoDB URI (masquée):', maskedUri);
+console.log('ğŸ”— [ENV] MongoDB URI (masquÃ©e):', maskedUri);
 
-// Maintenant on peut charger les modules qui dépendent de .env
-console.log('?? [MAIN] Démarrage du serveur ECOLOJIA V3...');
+// ================================================================
+// MAINTENANT on peut charger les modules de monitoring (aprÃ¨s dotenv)
+// ================================================================
+
+let sentryInitialized = false;
+let logInfo = console.log;
+let logError = console.error;
+
+// Modules de monitoring (avec fallback si non disponibles)
+try {
+  const { initSentry, sentryMiddleware, sentryErrorHandler } = require('./monitoring/sentry');
+  const { initLogging, httpLogger, logInfo: logInfoModule, logError: logErrorModule } = require('./monitoring/logs');
+  const { startMetricsCollection, metricsMiddleware } = require('./monitoring/metrics');
+
+  // Initialiser le monitoring
+  sentryInitialized = initSentry();
+  initLogging();
+  startMetricsCollection();
+  logInfo = logInfoModule;
+  logError = logErrorModule;
+
+  logInfo('ECOLOJIA V3 Backend dÃ©marrage', {
+    module: 'M12',
+    monitoring: {
+      sentry: sentryInitialized,
+      logging: true,
+      metrics: process.env.METRICS_ENABLED === 'true'
+    }
+  });
+} catch (err) {
+  console.log('âš ï¸ [MONITORING] Modules de monitoring non disponibles, utilisation des logs basiques');
+}
+
+// ================================================================
+// IMPORTS PRINCIPAUX
+// ================================================================
 
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-// Configuration et middleware
+// Configuration
 const app = express();
 const PORT = process.env.PORT || 10000;
-
-// Logger (si disponible)
-let logger;
-try {
-  logger = require('./config/logger').logger;
-  console.log('?? [LOGGER] Logger configuré');
-} catch (err) {
-  console.log('?? [LOGGER] Logger non disponible, utilisation de console');
-  logger = console;
-}
-
-// Sentry (si configuré)
-if (process.env.SENTRY_ENABLED === 'true') {
-  try {
-    require('./config/sentry');
-    console.log('?? [SENTRY] Sentry activé');
-  } catch (err) {
-    console.log('?? [SENTRY] Sentry non configuré:', err.message);
-  }
-} else {
-  console.log('?? Sentry désactivé (SENTRY_ENABLED=false)');
-}
 
 // Configuration CORS
 const corsOrigins = process.env.CORS_ORIGINS 
@@ -89,18 +107,21 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Middleware de logging
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
-  next();
-});
+// Middleware de monitoring (si disponible)
+if (sentryInitialized) {
+  try {
+    const { sentryMiddleware } = require('./monitoring/sentry');
+    app.use(sentryMiddleware);
+  } catch (err) {
+    console.log('âš ï¸ [SENTRY] Middleware non disponible');
+  }
+}
 
 // ================================
-// ROUTES PRINCIPALES
+// CHARGEMENT DES ROUTES
 // ================================
 
-// Route de santé (toujours disponible)
+// Route de santÃ© (toujours disponible)
 app.get('/api/health', async (req, res) => {
   try {
     const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
@@ -109,9 +130,14 @@ app.get('/api/health', async (req, res) => {
       timestamp: new Date().toISOString(),
       version: '3.0.0',
       database: dbStatus,
-      environment: process.env.NODE_ENV || 'development'
+      environment: process.env.NODE_ENV || 'development',
+      monitoring: {
+        sentry: sentryInitialized,
+        metrics: process.env.METRICS_ENABLED === 'true'
+      }
     });
   } catch (error) {
+    logError('Health check failed', error);
     res.status(500).json({
       status: 'unhealthy',
       error: error.message,
@@ -127,41 +153,48 @@ app.get('/', (req, res) => {
     version: '3.0.0',
     status: 'running',
     timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
     endpoints: [
       '/api/health',
       '/api/analysis',
       '/api/vision',
       '/api/products',
       '/api/auth',
-      '/api/dashboard'
+      '/api/dashboard',
+      '/api/algolia'
     ]
   });
 });
 
-// Chargement des routes (avec gestion d'erreur)
+// Chargement des routes principales avec gestion d'erreur
 const routesToLoad = [
-  { path: '/api/analysis', file: './routes/analysis.routes.js' },
-  { path: '/api/vision', file: './routes/vision.routes.js' },
-  { path: '/api/products', file: './routes/products.js' },
-  { path: '/api/auth', file: './routes/auth.simple.js' },
-  { path: '/api/dashboard', file: './routes/dashboard.js' },
-  { path: '/api/algolia', file: './routes/algolia-unified.js' }
+  { path: '/api/analysis', file: './routes/analysis.routes.js', name: 'Analysis' },
+  { path: '/api/vision', file: './routes/vision.routes.js', name: 'Vision' },
+  { path: '/api/products', file: './routes/products.js', name: 'Products' },
+  { path: '/api/auth', file: './routes/auth.simple.js', name: 'Auth' },
+  { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
+  { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
+  { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' }
 ];
 
 routesToLoad.forEach(route => {
   try {
     const routeModule = require(route.file);
     app.use(route.path, routeModule);
-    console.log(`? [ROUTE] ${route.path} montée`);
+    console.log(`âœ… [ROUTE] ${route.name} montÃ©e sur ${route.path}`);
+    logInfo(`Route montÃ©e: ${route.path}`, {
+      path: path.resolve(__dirname, route.file)
+    });
   } catch (err) {
-    console.log(`?? [ROUTE] ${route.path} non disponible:`, err.message);
+    console.log(`âš ï¸ [ROUTE] ${route.name} non disponible:`, err.message);
+    logError(`Erreur de chargement de route ${route.path}`, err);
   }
 });
 
 // Middleware d'erreur global
 app.use((error, req, res, next) => {
-  console.error('? [ERROR] Erreur non gérée:', error.message);
-  logger.error('Erreur non gérée:', error);
+  console.error('âŒ [ERROR] Erreur non gÃ©rÃ©e:', error.message);
+  logError('Erreur non gÃ©rÃ©e', error);
   
   res.status(500).json({
     error: 'Erreur interne du serveur',
@@ -170,14 +203,24 @@ app.use((error, req, res, next) => {
   });
 });
 
+// Sentry error handler (si disponible et doit Ãªtre en dernier)
+if (sentryInitialized) {
+  try {
+    const { sentryErrorHandler } = require('./monitoring/sentry');
+    app.use(sentryErrorHandler);
+  } catch (err) {
+    console.log('âš ï¸ [SENTRY] Error handler non disponible');
+  }
+}
+
 // ================================
-// CONNEXION BASE DE DONNÉES
+// CONNEXION BASE DE DONNÃ‰ES
 // ================================
 
 async function connectDatabase() {
   try {
-    console.log('?? [DB] Tentative de connexion MongoDB...');
-    console.log('?? [DB] URI (masquée):', maskedUri);
+    console.log('ğŸ”— [DB] Tentative de connexion MongoDB...');
+    console.log('ğŸ”— [DB] URI (masquÃ©e):', maskedUri);
     
     // Options de connexion robustes
     const options = {
@@ -189,76 +232,87 @@ async function connectDatabase() {
     
     await mongoose.connect(process.env.MONGODB_URI, options);
     
-    console.log('? [DB] MongoDB connecté avec succès');
-    console.log('?? [DB] Base de données:', mongoose.connection.name);
-    logger.info('MongoDB connecté');
+    console.log('âœ… [DB] MongoDB connectÃ© avec succÃ¨s');
+    console.log('ğŸ“Š [DB] Base de donnÃ©es:', mongoose.connection.name);
+    logInfo('MongoDB connectÃ©', {
+      database: mongoose.connection.name,
+      host: mongoose.connection.host
+    });
     
     return true;
   } catch (error) {
-    console.error('? [DB] Erreur de connexion MongoDB:');
+    console.error('âŒ [DB] Erreur de connexion MongoDB:');
     console.error('    Message:', error.message);
     console.error('    Code:', error.code);
-    logger.error('Erreur MongoDB:', error);
+    logError('Erreur MongoDB', error);
     
-    // En développement, on peut continuer sans DB pour certains tests
-    if (process.env.NODE_ENV === 'development') {
-      console.log('?? [DB] Mode développement - serveur démarré sans DB');
-      return false;
-    } else {
-      console.log("?? [DB] Mode dégradé - serveur continue sans DB"); return false;
-    }
+    // Mode dÃ©gradÃ© - continuer sans DB
+    console.log('âš ï¸ [DB] Mode dÃ©gradÃ© activÃ© - serveur dÃ©marrÃ© sans base de donnÃ©es');
+    console.log('ğŸ“ [DB] Les routes nÃ©cessitant la DB utiliseront des mocks');
+    console.log('ğŸ”§ [DB] Pour rÃ©parer la DB : vÃ©rifier les identifiants MongoDB Atlas');
+    return false;
   }
 }
 
 // ================================
-// DÉMARRAGE DU SERVEUR
+// DÃ‰MARRAGE DU SERVEUR
 // ================================
 
 async function startServer() {
   try {
+    logInfo('Tentative de dÃ©marrage du serveur', {
+      port: PORT,
+      env: process.env.NODE_ENV || 'development'
+    });
+
     // Connexion DB
     const dbConnected = await connectDatabase();
     
-    // Démarrage du serveur HTTP
+    // DÃ©marrage du serveur HTTP
     const server = app.listen(PORT, () => {
-      console.log('?? [SERVER] ===================================');
-      console.log(`?? [SERVER] ECOLOJIA V3 Backend démarré`);
-      console.log(`?? [SERVER] Port: ${PORT}`);
-      console.log(`?? [SERVER] Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`?? [SERVER] Base de données: ${dbConnected ? 'connectée' : 'non connectée'}`);
-      console.log(`?? [SERVER] Health check: http://localhost:${PORT}/api/health`);
-      console.log(`?? [SERVER] API Root: http://localhost:${PORT}/`);
-      console.log('?? [SERVER] ===================================');
+      console.log('ğŸš€ [SERVER] ===================================');
+      console.log(`ğŸš€ [SERVER] ECOLOJIA V3 Backend dÃ©marrÃ©`);
+      console.log(`ğŸš€ [SERVER] Port: ${PORT}`);
+      console.log(`ğŸš€ [SERVER] Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`ğŸš€ [SERVER] Base de donnÃ©es: ${dbConnected ? 'connectÃ©e' : 'non connectÃ©e'}`);
+      console.log(`ğŸš€ [SERVER] Monitoring: ${sentryInitialized ? 'Sentry activÃ©' : 'Sentry dÃ©sactivÃ©'}`);
+      console.log(`ğŸš€ [SERVER] Health check: http://localhost:${PORT}/api/health`);
+      console.log(`ğŸš€ [SERVER] API Root: http://localhost:${PORT}/`);
+      console.log('ğŸš€ [SERVER] ===================================');
       
-      logger.info(`Serveur démarré sur le port ${PORT}`);
+      logInfo(`Serveur dÃ©marrÃ© sur le port ${PORT}`, {
+        database: dbConnected,
+        monitoring: sentryInitialized
+      });
     });
 
-    // Gestion gracieuse de l'arrêt
+    // Gestion gracieuse de l'arrÃªt
     process.on('SIGINT', async () => {
-      console.log('\n?? [SERVER] Arrêt en cours...');
+      console.log('\nğŸ›‘ [SERVER] ArrÃªt en cours...');
       server.close();
       if (mongoose.connection.readyState === 1) {
         await mongoose.connection.close();
-        console.log('?? [DB] Connexion MongoDB fermée');
+        console.log('ğŸ”— [DB] Connexion MongoDB fermÃ©e');
       }
-      console.log('?? [SERVER] Arrêt terminé');
+      console.log('ğŸ‘‹ [SERVER] ArrÃªt terminÃ©');
       process.exit(0);
     });
 
     process.on('SIGTERM', async () => {
-      console.log('\n?? [SERVER] Arrêt demandé...');
+      console.log('\nğŸ›‘ [SERVER] ArrÃªt demandÃ©...');
       server.close();
       if (mongoose.connection.readyState === 1) {
         await mongoose.connection.close();
-        console.log('?? [DB] Connexion MongoDB fermée');
+        console.log('ğŸ”— [DB] Connexion MongoDB fermÃ©e');
       }
-      console.log('?? [SERVER] Arrêt terminé');
+      console.log('ğŸ‘‹ [SERVER] ArrÃªt terminÃ©');
       process.exit(0);
     });
 
   } catch (error) {
-    console.error('? [SERVER] Erreur de démarrage:', error.message);
-    console.log("?? [DB] Mode dégradé - serveur continue sans DB"); return false;
+    console.error('âŒ [SERVER] Erreur de dÃ©marrage:', error.message);
+    logError('Erreur de dÃ©marrage serveur', { error });
+    process.exit(1);
   }
 }
 
