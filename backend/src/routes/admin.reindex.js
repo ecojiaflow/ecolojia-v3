@@ -9,29 +9,30 @@ const router = express.Router();
 
 router.post('/reindex', async (req, res) => {
   try {
-    const ADMIN_KEY = process.env.ADMIN_KEY;
-    if (!ADMIN_KEY || req.headers['x-admin-key'] !== ADMIN_KEY) {
+    const ADMIN_KEY = (process.env.ADMIN_KEY || '').trim();
+    if (!ADMIN_KEY || (req.headers['x-admin-key'] || '').trim() !== ADMIN_KEY) {
       return res.status(401).json({ ok:false, error:'unauthorized' });
     }
 
-    const { ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY, ALGOLIA_INDEX_NAME } = process.env;
-    if (!ALGOLIA_APP_ID || !ALGOLIA_ADMIN_API_KEY) {
-      return res.status(500).json({ ok:false, error:'missing env vars' });
-    }
-    const indexName = ALGOLIA_INDEX_NAME || 'products';
+    const appId     = (process.env.ALGOLIA_APP_ID || '').trim();
+    const adminKey  = (process.env.ALGOLIA_ADMIN_API_KEY || '').trim();
+    const indexName = (process.env.ALGOLIA_INDEX_NAME || 'products').trim();
 
-    // Assurer la connexion mongoose prête
+    if (!appId || !adminKey) {
+      return res.status(500).json({ ok:false, error:'missing env vars (appId/adminKey)' });
+    }
+
+    // S'assurer que mongoose est connecté et utiliser la connexion existante
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connection.asPromise();
     }
     const nativeDb = mongoose.connection.db;
     const docs = await nativeDb.collection('products').find({}).toArray();
-
     if (!docs.length) {
       return res.json({ ok:true, indexed:0, message:'no docs in Mongo' });
     }
 
-    const ag = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY);
+    const ag = algoliasearch(appId, adminKey);
     const index = ag.initIndex(indexName);
 
     const payload = docs.map(d => ({ objectID: String(d._id), ...d }));
