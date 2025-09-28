@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const PORT = process.env.PORT || 10000;
 const app = express();
 
 app.use(express.json({ limit: "2mb" }));
@@ -72,56 +73,54 @@ try {
   console.warn("?? Vision OCR public mount failed:", e.message);
 }
 
-//
+// === ROUTES M11 PAYMENTS ===
+try {
+  const paymentsRoutes = require('./payments/routes/payments.routes');
+  app.use('/api/payments', paymentsRoutes);
+  console.log('? Routes M11 Payments chargées sur /api/payments');
+} catch (error) {
+  console.log('? Routes M11 Payments non chargées:', error.message);
+}
 
-//
-// === SERVER STARTUP ===
-// NB: Mode "no DB" contrôlé par ALLOW_NO_DB=true dans .env
+try {
+  const webhookRoutes = require('./payments/routes/webhook.routes');
+  app.use('/api/webhooks', webhookRoutes);
+  console.log('? Routes M11 Webhooks chargées sur /api/webhooks');
+} catch (error) {
+  console.log('? Routes M11 Webhooks non chargées:', error.message);
+}
 
-const SERVER_PORT = process.env.PORT || 10000;
-const ALLOW_NO_DB = process.env.ALLOW_NO_DB === 'true';
+// === DÉMARRAGE SERVEUR ===
+
+  console.log(`?? Health: http://localhost:${PORT}/api/health`);
+  console.log(`?? Payments: http://localhost:${PORT}/api/payments`);
+  console.log(`?? Webhooks: http://localhost:${PORT}/api/webhooks`);
+});
+
+module.exports = app;const webhookRoutes = require('./payments/routes/webhook.routes');
+app.use('/api/webhooks', webhookRoutes);
+const paymentsRoutes = require('./payments/routes/payments.routes');
+app.use('/api/payments', paymentsRoutes);
+
+const PORT = process.env.PORT || 10000;
 
 (async () => {
   try {
     const mongoose = require('mongoose');
 
-    // Si la DB n'est pas prête :
+    // Attendre la connexion si non prête
     if (!mongoose.connection || mongoose.connection.readyState !== 1) {
-      if (ALLOW_NO_DB) {
-        // Tentative rapide mais non bloquante (3s)
-        try {
-          await mongoose.connect(process.env.MONGO_URI, { autoIndex: true, serverSelectionTimeoutMS: 3000 });
-        } catch (_e) {
-          console.warn('Mongo non disponible, passage en mode dégradé');
-        }
-      } else {
-        // Mode strict (prod): on exige la DB
-        await mongoose.connect(process.env.MONGO_URI, { autoIndex: true });
-      }
+      await mongoose.connect(process.env.MONGO_URI, { autoIndex: true });
     }
+
+    app.listen(PORT, () => {
+      console.log(\🚀 ECOLOJIA backend (M11-Payments) on http://localhost:\\);
+      console.log(\✅ Health:   http://localhost:\/api/health\);
+      console.log(\✅ Payments: http://localhost:\/api/payments\);
+      console.log(\✅ Webhooks: http://localhost:\/api/webhooks\);
+    });
   } catch (e) {
-    if (!ALLOW_NO_DB) {
-      console.error('Mongo connect failed:', e && e.message ? e.message : e);
-      process.exit(1);
-    } else {
-      console.warn('Mongo non disponible, démarrage en mode dégradé');
-    }
+    console.error('❌ Mongo connect failed:', e?.message || e);
+    process.exit(1);
   }
-
-  // Démarrage serveur
-  const paymentsRoutes = require('./payments/routes/payments.routes');
-app.use('/api/payments', paymentsRoutes);
-
-const webhookRoutes = require('./payments/routes/webhook.routes');
-app.use('/api/webhooks', webhookRoutes);
-app.listen(SERVER_PORT, () => {
-    console.log('ECOLOJIA backend (M11-Payments) on http://localhost:' + SERVER_PORT);
-    console.log('Health:   http://localhost:' + SERVER_PORT + '/api/health');
-    console.log('Payments: http://localhost:' + SERVER_PORT + '/api/payments');
-    console.log('Webhooks: http://localhost:' + SERVER_PORT + '/api/webhooks');
-    if (ALLOW_NO_DB) console.warn('Running WITHOUT MongoDB (degraded mode)');
-  });
 })();
-
-
-

@@ -1,4 +1,4 @@
-ï»¿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ const App: React.FC = () => {
           <Route path="multi-scan" element={<MultiScanPage />} />
           <Route path="premium" element={<PremiumPage />} />
           <Route path="diagnostic" element={<DiagnosticPage />} />
-          {/* Routes d'authentification - redirection si dÃ©jÃ  connectÃ© */}
+          {/* Routes d'authentification - redirection si déjà connecté */}
           <Route
             path="login"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
@@ -50,7 +50,7 @@ const App: React.FC = () => {
             path="register"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
           />
-          {/* Routes protÃ©gÃ©es - VRAIMENT PROTÃ‰GÃ‰ES maintenant ! */}
+          {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="chat" element={<ChatPage />} />
@@ -61,7 +61,7 @@ const App: React.FC = () => {
           {/* 404 - Redirection vers accueil */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
-        <Route path="/premium" element={<PremiumPage />} />`r`n  </Routes>
+      </Routes>
     </Suspense>
   );
 };

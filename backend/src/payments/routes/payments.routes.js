@@ -1,22 +1,42 @@
 ﻿"use strict";
 
 const express = require("express");
-const ctrl = require("../controllers/subscription.controller");
-
+const { paymentsEnabled } = require("../config");
 const router = express.Router();
 
-/**
- * M11 Payments routes
- * Base mount (main.js) : app.use("/api/payments", router)
- */
+if (!paymentsEnabled) {
+  // ====== PAYMENTS OFF ======
+  router.post("/create-checkout", (_req, res) => {
+    return res.status(501).json({
+      success: false,
+      message: "Payments disabled (feature flag).",
+      mode: "disabled",
+    });
+  });
 
-// Crée une session de checkout LemonSqueezy
-router.post("/create-checkout", ctrl.createCheckout);
+  router.get("/check-premium/:userId", (req, res) => {
+    return res.status(200).json({
+      success: true,
+      premium: false,
+      userId: req.params.userId,
+      mode: "disabled",
+    });
+  });
 
-// Vérifie si un user est premium
-router.get("/check-premium/:userId", ctrl.checkPremium);
+  router.get("/subscriptions", (_req, res) => {
+    return res.status(200).json({
+      success: true,
+      subscriptions: [],
+      mode: "disabled",
+    });
+  });
 
-// (Optionnel) Récupère les abonnements de l'utilisateur courant (401 si non auth)
-router.get("/subscriptions", ctrl.getUserSubscriptions);
-
-module.exports = router;
+  module.exports = router;
+} else {
+  // ====== PAYMENTS ON ======
+  const ctrl = require("../controllers/subscription.controller");
+  router.post("/create-checkout", ctrl.createCheckout);
+  router.get("/check-premium/:userId", ctrl.checkPremium);
+  router.get("/subscriptions", ctrl.getUserSubscriptions);
+  module.exports = router;
+}

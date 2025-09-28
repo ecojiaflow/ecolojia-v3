@@ -98,4 +98,7 @@ app.listen(PORT, () => {
   console.log(`?? Webhooks: http://localhost:${PORT}/api/webhooks`);
 });
 
-module.exports = app;
+module.exports = app;const webhookRoutes = require('./payments/routes/webhook.routes');
+app.use('/api/webhooks', webhookRoutes);
+const paymentsRoutes = require('./payments/routes/payments.routes');
+app.use('/api/payments', paymentsRoutes);
