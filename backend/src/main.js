@@ -318,3 +318,4 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+app.use('/api/admin', require('./routes/admin.reindex'));
