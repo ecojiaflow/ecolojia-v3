@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const algoliasearch = require('algoliasearch').default.default; // âœ… Correction de l'import pour v5
+const algoliasearch = require('algoliasearch').default; // âœ… Correction de l'import pour v5
 
 // Initialiser Algolia
 const client = algoliasearch(

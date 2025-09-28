@@ -1,0 +1,4 @@
+MONGODB_URI=mongodb+srv://Ecolojia:Ecolojia122331@ecolojia.gnfz2k8.mongodb.net/ecolojia-prod?retryWrites=true&w=majority&appName=Ecolojia
+ALGOLIA_APP_ID=A2K3GZ2811
+ALGOLIA_ADMIN_API_KEY=8a6393c1ff95165413e7f0bfea804357
+ALGOLIA_SEARCH_API_KEY=085aeee2b3ec8efa66dabb7691a01b67

@@ -1,6 +1,6 @@
-const express = require('express');
+﻿const express = require('express');
 const { MongoClient } = require('mongodb');
-const algoliasearch = require('algoliasearch').default;
+const algoliasearch = require('algoliasearch');
 
 const router = express.Router();
 

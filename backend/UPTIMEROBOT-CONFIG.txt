@@ -1,0 +1,11 @@
+Backend Health: https://ecolojia-backendvf.onrender.com/api/health
+- Keyword monitoring: "healthy"
+- Check interval: 5 minutes
+
+API Analysis: https://ecolojia-backendvf.onrender.com/api/analysis  
+- HTTP POST test
+- Check interval: 15 minutes
+
+Frontend (à configurer): https://votre-frontend.netlify.app
+- Keyword monitoring: "ECOLOJIA"
+- Check interval: 5 minutes

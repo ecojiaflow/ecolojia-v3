@@ -4,7 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const { auth } = require('../middleware/auth');
 const redis = require('redis');
-const algoliasearch = require('algoliasearch').default;
+const algoliasearch = require('algoliasearch');
 const axios = require('axios');
 
 // Clients
