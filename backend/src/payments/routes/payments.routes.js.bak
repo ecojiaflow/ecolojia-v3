@@ -1,0 +1,176 @@
+const express = require('express');
+const { body, param } = require('express-validator');
+const subscriptionController = require('../controllers/subscription.controller');
+const authMiddleware = require('../../middleware/auth'); // Assume existing auth middleware
+const router = express.Router();
+
+// Validators
+const createCheckoutValidator = [
+  body('userEmail')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Email valide requis'),
+  body('userId')
+    .isMongoId()
+    .withMessage('ID utilisateur valide requis'),
+  body('customData')
+    .optional()
+    .isObject()
+    .withMessage('customData doit être un objet')
+];
+
+const userIdValidator = [
+  param('userId')
+    .isMongoId()
+    .withMessage('ID utilisateur valide requis')
+];
+
+const cancelSubscriptionValidator = [
+  body('userId')
+    .isMongoId()
+    .withMessage('ID utilisateur valide requis'),
+  body('reason')
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Raison doit être une chaîne de moins de 500 caractères')
+];
+
+const syncSubscriptionValidator = [
+  body('lemonSqueezyId')
+    .isString()
+    .trim()
+    .notEmpty()
+    .withMessage('ID LemonSqueezy requis')
+];
+
+const trackUsageValidator = [
+  body('userId')
+    .isMongoId()
+    .withMessage('ID utilisateur valide requis'),
+  body('usageType')
+    .isIn(['scans', 'apiRequests'])
+    .withMessage('Type d\'utilisation invalide (scans ou apiRequests)'),
+  body('amount')
+    .optional()
+    .isInt({ min: 1, max: 1000 })
+    .withMessage('Montant doit être entre 1 et 1000')
+];
+
+// Routes publiques (accessibles sans authentification)
+
+/**
+ * @route   POST /api/payments/create-checkout
+ * @desc    Créer une session de checkout LemonSqueezy
+ * @access  Public (mais avec validation email/userId)
+ */
+router.post(
+  '/create-checkout',
+  createCheckoutValidator,
+  subscriptionController.createCheckout
+);
+
+// Routes protégées (authentification requise)
+
+/**
+ * @route   GET /api/payments/subscription/:userId
+ * @desc    Récupérer le statut d'abonnement d'un utilisateur
+ * @access  Private
+ */
+router.get(
+  '/subscription/:userId',
+  authMiddleware,
+  userIdValidator,
+  subscriptionController.getSubscriptionStatus
+);
+
+/**
+ * @route   GET /api/payments/check-premium/:userId
+ * @desc    Vérifier l'accès premium d'un utilisateur
+ * @access  Private
+ */
+router.get(
+  '/check-premium/:userId',
+  authMiddleware,
+  userIdValidator,
+  subscriptionController.checkPremiumAccess
+);
+
+/**
+ * @route   POST /api/payments/cancel-subscription
+ * @desc    Annuler un abonnement
+ * @access  Private
+ */
+router.post(
+  '/cancel-subscription',
+  authMiddleware,
+  cancelSubscriptionValidator,
+  subscriptionController.cancelSubscription
+);
+
+/**
+ * @route   POST /api/payments/sync-subscription
+ * @desc    Synchroniser un abonnement avec LemonSqueezy
+ * @access  Private
+ */
+router.post(
+  '/sync-subscription',
+  authMiddleware,
+  syncSubscriptionValidator,
+  subscriptionController.syncSubscription
+);
+
+/**
+ * @route   POST /api/payments/track-usage
+ * @desc    Enregistrer l'utilisation d'une fonctionnalité premium
+ * @access  Private
+ */
+router.post(
+  '/track-usage',
+  authMiddleware,
+  trackUsageValidator,
+  subscriptionController.trackUsage
+);
+
+// Routes administrateur (accès admin requis)
+
+/**
+ * @route   GET /api/payments/admin/stats
+ * @desc    Récupérer les statistiques d'abonnements
+ * @access  Private (Admin only)
+ */
+router.get(
+  '/admin/stats',
+  authMiddleware,
+  // adminMiddleware, // Uncomment when admin middleware is available
+  subscriptionController.getSubscriptionStats
+);
+
+// Middleware de gestion d'erreurs pour les routes payments
+router.use((error, req, res, next) => {
+  console.error('❌ Erreur dans routes payments:', error);
+  
+  if (error.name === 'ValidationError') {
+    return res.status(400).json({
+      success: false,
+      message: 'Erreur de validation',
+      errors: Object.values(error.errors).map(err => err.message)
+    });
+  }
+  
+  if (error.name === 'CastError') {
+    return res.status(400).json({
+      success: false,
+      message: 'Format d\'ID invalide'
+    });
+  }
+  
+  res.status(500).json({
+    success: false,
+    message: 'Erreur interne du serveur',
+    error: process.env.NODE_ENV === 'development' ? error.message : 'Erreur interne'
+  });
+});
+
+module.exports = router;

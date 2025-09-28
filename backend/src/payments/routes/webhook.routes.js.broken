@@ -1,0 +1,62 @@
+'use strict';
+
+const express = require('express');
+const webhookController = require('../controllers/webhook.controller');
+
+const router = express.Router();
+
+/**
+ * IMPORTANT :
+ *  - On utilise express.raw() pour capter le corps "brut" (utile pour signature HMAC).
+ *  - On fournit aussi req.rawBody (string) au controller.
+ */
+router.post(
+  '/lemonsqueezy',
+  express.raw({ type: 'application/json' }),
+  (req, _res, next) => {
+    try {
+      // Construit rawBody lisible par le controller
+      req.rawBody = Buffer.isBuffer(req.body) ? req.body.toString('utf8') : '';
+      // Si on veut aussi un req.body parsé JSON :
+      if (req.rawBody && typeof req.body !== 'object') {
+        try {
+          req.body = JSON.parse(req.rawBody);
+        } catch {
+          // Laisse tel quel si JSON invalide, le controller gérera.
+        }
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  },
+  webhookController.handleLemonSqueezyWebhook
+);
+
+// Healthcheck simple
+router.get('/health', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Webhooks M11 opérationnels',
+    timestamp: new Date().toISOString(),
+    service: 'lemonsqueezy-webhooks',
+  });
+});
+
+// Endpoint de test en dev uniquement
+if (process.env.NODE_ENV === 'development') {
+  router.post('/test', webhookController.testWebhook);
+}
+
+// Gestion d'erreurs spécifique webhooks
+// (Répond 200 pour éviter les retries agressifs côté provider)
+router.use((error, _req, res, _next) => {
+  console.error('❌ Erreur dans routes webhook:', error);
+  res.status(200).json({
+    success: false,
+    message: 'Webhook error handled',
+    error: process.env.NODE_ENV === 'development' ? String(error?.message || error) : 'Internal error',
+  });
+});
+
+module.exports = router;

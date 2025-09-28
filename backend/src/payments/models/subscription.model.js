@@ -1,0 +1,192 @@
+const mongoose = require('mongoose');
+
+const subscriptionSchema = new mongoose.Schema({
+  // LemonSqueezy IDs
+  lemonSqueezyId: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true
+  },
+  lemonSqueezyOrderId: {
+    type: String,
+    required: true
+  },
+  lemonSqueezyCustomerId: {
+    type: String,
+    required: true
+  },
+  lemonSqueezyProductId: {
+    type: String,
+    required: true
+  },
+  
+  // User reference
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
+  userEmail: {
+    type: String,
+    required: true,
+    lowercase: true
+  },
+  
+  // Subscription details
+  status: {
+    type: String,
+    enum: ['active', 'cancelled', 'expired', 'paused', 'past_due', 'unpaid'],
+    default: 'active',
+    index: true
+  },
+  planName: {
+    type: String,
+    required: true,
+    default: 'ECOLOJIA Premium'
+  },
+  planPrice: {
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true, default: 'EUR' },
+    interval: { type: String, enum: ['month', 'year'], default: 'month' }
+  },
+  
+  // Dates
+  startDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  currentPeriodStart: {
+    type: Date,
+    required: true
+  },
+  currentPeriodEnd: {
+    type: Date,
+    required: true,
+    index: true
+  },
+  cancelledAt: {
+    type: Date,
+    default: null
+  },
+  pausedAt: {
+    type: Date,
+    default: null
+  },
+  
+  // Features & Limits
+  features: {
+    chatAI: { type: Boolean, default: true },
+    advancedAnalysis: { type: Boolean, default: true },
+    exportData: { type: Boolean, default: true },
+    prioritySupport: { type: Boolean, default: true }
+  },
+  limits: {
+    monthlyScans: { type: Number, default: -1 }, // -1 = unlimited
+    monthlyAPIRequests: { type: Number, default: -1 },
+    storageGB: { type: Number, default: 10 }
+  },
+  
+  // Usage tracking
+  usage: {
+    currentMonthScans: { type: Number, default: 0 },
+    currentMonthAPIRequests: { type: Number, default: 0 },
+    lastResetDate: { type: Date, default: Date.now }
+  },
+  
+  // Payment tracking
+  lastPaymentDate: {
+    type: Date,
+    default: Date.now
+  },
+  nextPaymentDate: {
+    type: Date,
+    required: true
+  },
+  
+  // Metadata
+  metadata: {
+    source: { type: String, default: 'web' }, // web, mobile, api
+    promocode: { type: String, default: null },
+    referralCode: { type: String, default: null }
+  }
+}, {
+  timestamps: true,
+  collection: 'subscriptions'
+});
+
+// Indexes for performance
+subscriptionSchema.index({ userId: 1, status: 1 });
+subscriptionSchema.index({ currentPeriodEnd: 1 });
+subscriptionSchema.index({ status: 1, nextPaymentDate: 1 });
+
+// Virtual for active subscription check
+subscriptionSchema.virtual('isActive').get(function() {
+  return this.status === 'active' && this.currentPeriodEnd > new Date();
+});
+
+// Instance methods
+subscriptionSchema.methods.hasFeature = function(featureName) {
+  return this.features[featureName] === true;
+};
+
+subscriptionSchema.methods.isWithinLimits = function(usageType) {
+  const limit = this.limits[usageType];
+  const usage = this.usage[`currentMonth${usageType.charAt(0).toUpperCase() + usageType.slice(1)}`];
+  return limit === -1 || usage < limit;
+};
+
+subscriptionSchema.methods.incrementUsage = function(usageType, amount = 1) {
+  const usageField = `usage.currentMonth${usageType.charAt(0).toUpperCase() + usageType.slice(1)}`;
+  this[usageField] = (this[usageField] || 0) + amount;
+  return this.save();
+};
+
+// Static methods
+subscriptionSchema.statics.findActiveByUserId = function(userId) {
+  return this.findOne({ 
+    userId, 
+    status: 'active', 
+    currentPeriodEnd: { $gt: new Date() } 
+  });
+};
+
+subscriptionSchema.statics.findExpiringInDays = function(days) {
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + days);
+  
+  return this.find({
+    status: 'active',
+    currentPeriodEnd: { 
+      $gte: new Date(), 
+      $lte: futureDate 
+    }
+  });
+};
+
+// Pre-save middleware
+subscriptionSchema.pre('save', function(next) {
+  // Auto-update status based on dates
+  const now = new Date();
+  
+  if (this.currentPeriodEnd < now && this.status === 'active') {
+    this.status = 'expired';
+  }
+  
+  // Reset usage monthly
+  const lastReset = this.usage.lastResetDate;
+  const currentMonth = now.getMonth();
+  const lastResetMonth = lastReset.getMonth();
+  
+  if (currentMonth !== lastResetMonth) {
+    this.usage.currentMonthScans = 0;
+    this.usage.currentMonthAPIRequests = 0;
+    this.usage.lastResetDate = now;
+  }
+  
+  next();
+});
+
+module.exports = mongoose.model('Subscription', subscriptionSchema);

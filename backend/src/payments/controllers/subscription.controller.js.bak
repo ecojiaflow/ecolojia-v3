@@ -1,0 +1,127 @@
+'use strict';
+
+/**
+ * M11 Payments — Subscription Controller
+ * - Import "safe" du modèle User (évite le "Cannot overwrite 'User' model once compiled")
+ * - Endpoints: createCheckout, getUserSubscriptions, checkPremium
+ */
+
+const mongoose = require('mongoose');
+const Subscription = require('../models/subscription.model');
+const lemon = require('../services/lemonsqueezy.service');
+
+// Récupère le modèle User déjà compilé si présent, sinon charge la définition locale une seule fois.
+let User;
+try {
+  User = mongoose.model('User'); // existe déjà ?
+} catch (err) {
+  // Fallback : charge le modèle depuis le projet (NE LE RE-DECLARE PAS ailleurs)
+  User = require('../../models/user.model');
+}
+
+/**
+ * Helpers basiques de validation
+ */
+const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
+
+/**
+ * POST /api/payments/create-checkout
+ * Body attendu (minimal) : { userId: string }
+ * Optionnel : { priceId, productId, metadata }
+ */
+exports.createCheckout = async (req, res) => {
+  try {
+    const { userId, priceId, productId, metadata } = req.body || {};
+
+    // Validation simple (doit retourner 400 si invalide → demandé dans tes tests)
+    if (!isNonEmptyString(userId)) {
+      return res.status(400).json({
+        success: false,
+        errors: [{ field: 'userId', message: 'userId est requis' }],
+      });
+    }
+
+    // Vérifie que l'utilisateur existe (sécurité minimale)
+    const user = await User.findById(userId).lean().exec();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        errors: [{ field: 'userId', message: 'Utilisateur introuvable' }],
+      });
+    }
+
+    // Appel au service LemonSqueezy (supposé déjà configuré)
+    const checkout = await lemon.createCheckoutSession({
+      userId,
+      priceId,
+      productId,
+      metadata,
+    });
+
+    return res.status(201).json({
+      success: true,
+      checkoutUrl: checkout?.url || null,
+      provider: 'lemonsqueezy',
+    });
+  } catch (err) {
+    console.error('createCheckout error:', err);
+    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+};
+
+/**
+ * GET /api/payments/subscriptions
+ * (Probablement protégé par auth middleware côté routes → renverra 401 si non authentifié)
+ */
+exports.getUserSubscriptions = async (req, res) => {
+  try {
+    // Selon ton middleware d'auth, userId peut venir de req.user.id
+    const userId = req.user?.id || req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Auth requise' });
+    }
+
+    const subs = await Subscription.find({ userId }).lean().exec();
+    return res.status(200).json({ success: true, subscriptions: subs });
+  } catch (err) {
+    console.error('getUserSubscriptions error:', err);
+    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+};
+
+/**
+ * GET /api/payments/check-premium/:userId
+ * Renvoie true/false selon statut et période courante
+ */
+exports.checkPremium = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!isNonEmptyString(userId)) {
+      return res.status(400).json({
+        success: false,
+        errors: [{ field: 'userId', message: 'userId invalide' }],
+      });
+    }
+
+    const now = new Date();
+    const active = await Subscription.exists({
+      userId,
+      status: { $in: ['active', 'on_trial', 'paused', 'resumed'] },
+      $or: [
+        { currentPeriodEnd: { $gte: now } },
+        { trialEndsAt: { $gte: now } },
+      ],
+    });
+
+    return res.status(200).json({
+      success: true,
+      premium: !!active,
+      userId,
+      checkedAt: now.toISOString(),
+    });
+  } catch (err) {
+    console.error('checkPremium error:', err);
+    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+};

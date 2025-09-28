@@ -1,24 +1,43 @@
 {
   "name": "ECOLOJIA - Assistant consommation responsable",
   "short_name": "ECOLOJIA",
-  "description": "Analysez vos produits pour une consommation plus saine",
+  "description": "Analysez vos produits pour une consommation plus saine et responsable",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#10b981",
   "background_color": "#ffffff",
   "orientation": "portrait",
+  "scope": "/",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Page de recherche ECOLOJIA"
+    },
+    {
+      "src": "/screenshot-desktop.png", 
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Interface desktop ECOLOJIA"
+    }
+  ],
+  "categories": ["shopping", "health", "lifestyle"],
+  "lang": "fr-FR"
 }

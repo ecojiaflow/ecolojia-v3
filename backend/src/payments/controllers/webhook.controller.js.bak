@@ -1,0 +1,441 @@
+const Subscription = require('../models/subscription.model');
+const User = require('../../models/user.model');
+const lemonSqueezyService = require('../services/lemonsqueezy.service');
+const asyncHandler = require('../../utils/asyncHandler');
+
+class WebhookController {
+  /**
+   * Handler principal pour tous les webhooks LemonSqueezy
+   * POST /api/webhooks/lemonsqueezy
+   */
+  handleLemonSqueezyWebhook = asyncHandler(async (req, res) => {
+    console.log('🔗 Webhook LemonSqueezy reçu');
+    
+    try {
+      // Récupérer la signature pour vérification
+      const signature = req.headers['x-signature'];
+      const payload = JSON.stringify(req.body);
+      
+      // Vérifier la signature du webhook
+      if (!lemonSqueezyService.verifyWebhookSignature(payload, signature)) {
+        console.error('❌ Signature webhook invalide');
+        return res.status(401).json({
+          success: false,
+          message: 'Signature webhook invalide'
+        });
+      }
+
+      const { meta, data } = req.body;
+      const eventName = meta.event_name;
+      
+      console.log(`📨 Événement webhook: ${eventName}`);
+
+      // Router vers le handler approprié selon l'événement
+      switch (eventName) {
+        case 'subscription_created':
+          await this.handleSubscriptionCreated(data);
+          break;
+          
+        case 'subscription_updated':
+          await this.handleSubscriptionUpdated(data);
+          break;
+          
+        case 'subscription_cancelled':
+          await this.handleSubscriptionCancelled(data);
+          break;
+          
+        case 'subscription_resumed':
+          await this.handleSubscriptionResumed(data);
+          break;
+          
+        case 'subscription_expired':
+          await this.handleSubscriptionExpired(data);
+          break;
+          
+        case 'subscription_paused':
+          await this.handleSubscriptionPaused(data);
+          break;
+          
+        case 'subscription_unpaused':
+          await this.handleSubscriptionUnpaused(data);
+          break;
+          
+        case 'subscription_payment_failed':
+          await this.handlePaymentFailed(data);
+          break;
+          
+        case 'subscription_payment_success':
+          await this.handlePaymentSuccess(data);
+          break;
+          
+        default:
+          console.log(⚠️ Événement webhook non géré: ${eventName}`);
+      }
+
+      // Répondre rapidement à LemonSqueezy
+      res.status(200).json({
+        success: true,
+        message: 'Webhook traité avec succès'
+      });
+
+    } catch (error) {
+      console.error('❌ Erreur traitement webhook:', error);
+      
+      // Retourner 200 pour éviter les nouvelles tentatives automatiques
+      // (on logge l'erreur mais on ne veut pas que LemonSqueezy ressaie indéfiniment)
+      res.status(200).json({
+        success: false,
+        message: 'Erreur traitée',
+        error: error.message
+      });
+    }
+  });
+
+  /**
+   * Gérer la création d'un nouvel abonnement
+   */
+  async handleSubscriptionCreated(subscriptionData) {
+    console.log('🆕 Création nouvel abonnement');
+    
+    try {
+      const attrs = subscriptionData.attributes;
+      const lemonSqueezyId = subscriptionData.id;
+      
+      // Vérifier si l'abonnement existe déjà
+      const existingSubscription = await Subscription.findOne({ lemonSqueezyId });
+      if (existingSubscription) {
+        console.log('⚠️ Abonnement déjà existant, mise à jour');
+        return await this.handleSubscriptionUpdated(subscriptionData);
+      }
+
+      // Trouver ou créer l'utilisateur
+      let user = await User.findOne({ email: attrs.user_email.toLowerCase() });
+      if (!user) {
+        // Créer un utilisateur minimal si n'existe pas
+        user = new User({
+          email: attrs.user_email.toLowerCase(),
+          name: attrs.user_name || 'Utilisateur Premium',
+          isEmailVerified: true,
+          registrationSource: 'lemonsqueezy'
+        });
+        await user.save();
+        console.log('👤 Nouvel utilisateur créé:', user.email);
+      }
+
+      // Créer l'abonnement
+      const subscription = new Subscription({
+        lemonSqueezyId: lemonSqueezyId,
+        lemonSqueezyOrderId: attrs.order_id,
+        lemonSqueezyCustomerId: attrs.customer_id,
+        lemonSqueezyProductId: attrs.product_id,
+        
+        userId: user._id,
+        userEmail: attrs.user_email.toLowerCase(),
+        
+        status: this.mapLemonStatus(attrs.status),
+        planName: attrs.product_name || 'ECOLOJIA Premium',
+        planPrice: {
+          amount: parseFloat(attrs.subtotal) / 100, // Convert cents to euros
+          currency: attrs.currency?.toUpperCase() || 'EUR',
+          interval: 'month'
+        },
+        
+        startDate: new Date(attrs.created_at),
+        currentPeriodStart: new Date(attrs.current_period_start),
+        currentPeriodEnd: new Date(attrs.current_period_end),
+        lastPaymentDate: new Date(attrs.created_at),
+        nextPaymentDate: new Date(attrs.renews_at || attrs.current_period_end),
+        
+        features: {
+          chatAI: true,
+          advancedAnalysis: true,
+          exportData: true,
+          prioritySupport: true
+        },
+        
+        metadata: {
+          source: 'webhook',
+          webhookEventId: attrs.id,
+          lemonSqueezyOrderId: attrs.order_id
+        }
+      });
+
+      await subscription.save();
+      console.log('✅ Abonnement créé avec succès:', subscription._id);
+
+      // Optionnel: envoyer email de bienvenue
+      await this.sendWelcomeEmail(user, subscription);
+
+    } catch (error) {
+      console.error('❌ Erreur création abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer la mise à jour d'un abonnement
+   */
+  async handleSubscriptionUpdated(subscriptionData) {
+    console.log('🔄 Mise à jour abonnement');
+    
+    try {
+      const attrs = subscriptionData.attributes;
+      const lemonSqueezyId = subscriptionData.id;
+      
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      if (!subscription) {
+        console.log('⚠️ Abonnement introuvable, création');
+        return await this.handleSubscriptionCreated(subscriptionData);
+      }
+
+      // Mettre à jour les champs
+      subscription.status = this.mapLemonStatus(attrs.status);
+      subscription.currentPeriodStart = new Date(attrs.current_period_start);
+      subscription.currentPeriodEnd = new Date(attrs.current_period_end);
+      subscription.nextPaymentDate = new Date(attrs.renews_at || attrs.current_period_end);
+      
+      if (attrs.cancelled_at) {
+        subscription.cancelledAt = new Date(attrs.cancelled_at);
+      }
+      
+      if (attrs.paused_at) {
+        subscription.pausedAt = new Date(attrs.paused_at);
+      }
+
+      await subscription.save();
+      console.log('✅ Abonnement mis à jour:', subscription._id);
+
+    } catch (error) {
+      console.error('❌ Erreur mise à jour abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer l'annulation d'un abonnement
+   */
+  async handleSubscriptionCancelled(subscriptionData) {
+    console.log('❌ Annulation abonnement');
+    
+    try {
+      const attrs = subscriptionData.attributes;
+      const lemonSqueezyId = subscriptionData.id;
+      
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      if (!subscription) {
+        console.error('⚠️ Abonnement à annuler introuvable');
+        return;
+      }
+
+      subscription.status = 'cancelled';
+      subscription.cancelledAt = new Date(attrs.cancelled_at || Date.now());
+      
+      await subscription.save();
+      console.log('✅ Abonnement annulé:', subscription._id);
+
+      // Optionnel: envoyer email d'annulation
+      await this.sendCancellationEmail(subscription);
+
+    } catch (error) {
+      console.error('❌ Erreur annulation abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer la reprise d'un abonnement
+   */
+  async handleSubscriptionResumed(subscriptionData) {
+    console.log('▶️ Reprise abonnement');
+    
+    try {
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'active';
+        subscription.cancelledAt = null;
+        subscription.pausedAt = null;
+        await subscription.save();
+        console.log('✅ Abonnement repris:', subscription._id);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur reprise abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer l'expiration d'un abonnement
+   */
+  async handleSubscriptionExpired(subscriptionData) {
+    console.log('⏰ Expiration abonnement');
+    
+    try {
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'expired';
+        await subscription.save();
+        console.log('✅ Abonnement expiré:', subscription._id);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur expiration abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer la pause d'un abonnement
+   */
+  async handleSubscriptionPaused(subscriptionData) {
+    console.log('⏸️ Pause abonnement');
+    
+    try {
+      const attrs = subscriptionData.attributes;
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'paused';
+        subscription.pausedAt = new Date(attrs.paused_at || Date.now());
+        await subscription.save();
+        console.log('✅ Abonnement mis en pause:', subscription._id);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur pause abonnement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer la reprise après pause
+   */
+  async handleSubscriptionUnpaused(subscriptionData) {
+    console.log('▶️ Reprise après pause');
+    
+    try {
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'active';
+        subscription.pausedAt = null;
+        await subscription.save();
+        console.log('✅ Abonnement repris après pause:', subscription._id);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur reprise après pause:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer l'échec de paiement
+   */
+  async handlePaymentFailed(subscriptionData) {
+    console.log('💳 Échec de paiement');
+    
+    try {
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'past_due';
+        await subscription.save();
+        console.log('⚠️ Abonnement en retard de paiement:', subscription._id);
+        
+        // Optionnel: envoyer email d'alerte paiement
+        await this.sendPaymentFailedEmail(subscription);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur échec paiement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gérer le succès de paiement
+   */
+  async handlePaymentSuccess(subscriptionData) {
+    console.log('💰 Succès de paiement');
+    
+    try {
+      const attrs = subscriptionData.attributes;
+      const lemonSqueezyId = subscriptionData.id;
+      const subscription = await Subscription.findOne({ lemonSqueezyId });
+      
+      if (subscription) {
+        subscription.status = 'active';
+        subscription.lastPaymentDate = new Date();
+        subscription.nextPaymentDate = new Date(attrs.renews_at || attrs.current_period_end);
+        await subscription.save();
+        console.log('✅ Paiement réussi pour:', subscription._id);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur succès paiement:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mapper les statuts LemonSqueezy vers nos statuts internes
+   */
+  mapLemonStatus(lemonStatus) {
+    const statusMap = {
+      'active': 'active',
+      'cancelled': 'cancelled',
+      'expired': 'expired',
+      'paused': 'paused',
+      'past_due': 'past_due',
+      'unpaid': 'unpaid',
+      'on_trial': 'active'
+    };
+    return statusMap[lemonStatus] || 'expired';
+  }
+
+  /**
+   * Envoyer email de bienvenue (mock - à implémenter selon service email)
+   */
+  async sendWelcomeEmail(user, subscription) {
+    try {
+      console.log(`📧 Email bienvenue à envoyer à: ${user.email}`);
+      // TODO: Implémenter avec service email (Nodemailer, SendGrid, etc.)
+    } catch (error) {
+      console.error('⚠️ Erreur envoi email bienvenue:', error);
+    }
+  }
+
+  /**
+   * Envoyer email d'annulation (mock)
+   */
+  async sendCancellationEmail(subscription) {
+    try {
+      console.log(`📧 Email annulation à envoyer à: ${subscription.userEmail}`);
+      // TODO: Implémenter avec service email
+    } catch (error) {
+      console.error('⚠️ Erreur envoi email annulation:', error);
+    }
+  }
+
+  /**
+   * Envoyer email d'échec de paiement (mock)
+   */
+  async sendPaymentFailedEmail(subscription) {
+    try {
+      console.log(`📧 Email échec paiement à envoyer à: ${subscription.userEmail}`);
+      // TODO: Implémenter avec service email
+    } catch (error) {
+      console.error('⚠️ Erreur envoi email échec paiement:', error);
+    }
+  }
+}
+
+module.exports = new WebhookController();

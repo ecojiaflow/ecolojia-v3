@@ -1,4 +1,4 @@
-ï»¿require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -18,9 +18,11 @@ app.get("/api/health", (_req, res) => {
     ok: true,
     service: "ecolojia-backend",
     env: process.env.NODE_ENV || "development",
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
+    module: "M11-Payments"
   });
 });
+
 app.get("/api/version", (_req, res) => {
   let version = "0.0.0";
   try { version = require("../package.json").version; } catch {}
@@ -35,50 +37,68 @@ function safeMount(base, rel) {
       app.use(base, router);
       console.log(`? Mounted ${base} -> ${rel}`);
     } else {
-      console.warn(`? ${rel} ne retourne pas un router Express`);
+      console.warn(`?? ${rel} ne retourne pas un router Express`);
     }
   } catch (e) {
-    console.warn(`â€¢ Route optionnelle ignorÃ©e: ${rel} (${e.message})`);
+    console.warn(`• Route optionnelle ignorée: ${rel} (${e.message})`);
   }
 }
 
+// Routes existantes
 safeMount("/api/analysis", path.join(__dirname, "routes/analysis.routes.js"));
-safeMount("/api/vision",   path.join(__dirname, "routes/vision.routes.js"));
+safeMount("/api/vision", path.join(__dirname, "routes/vision.routes.js"));
 safeMount("/api/products", path.join(__dirname, "routes/products.js"));
-safeMount("/api/algolia",  path.join(__dirname, "routes/algolia-unified.js"));
+safeMount("/api/algolia", path.join(__dirname, "routes/algolia-unified.js"));
 safeMount("/api/auth", path.join(__dirname, "routes/auth.simple.js"));
 safeMount("/api/dashboard", path.join(__dirname, "routes/dashboard.js"));
-// Fallback auth si auth.routes.js ne fonctionne pas:
-if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/auth"))) {
-// auth.js fallback disabled - using auth.simple.js
-}
-// fallback possible:
+
+// Fallback algolia si algolia-unified ne fonctionne pas
 if (!app._router.stack.find(s => s?.route?.path?.startsWith?.("/api/algolia"))) {
   safeMount("/api/algolia", path.join(__dirname, "routes/algolia.js"));
 }
-// (paiements volontairement non montÃ©s en M1)
-
-app.listen(PORT, () => {
-  console.log(`ECOLOJIA backend (bootstrap M1) on http://localhost:${PORT}`);
-});
 
 // M7: Vision OCR endpoint (analyze-image)
 try {
   app.use('/api/vision', require('./routes/vision.analyze'));
-} catch(e){ console.warn('Vision analyze route load failed:', e.message); }
+  console.log('? Vision analyze route loaded');
+} catch(e){ 
+  console.warn('?? Vision analyze route load failed:', e.message); 
+}
 
-module.exports = app;
-
-
-
-//
 // M7 public OCR mount (no auth, Google or stub)
 try {
   app.use("/api/vision-ocr", require("./routes/vision.ocr.public"));
   console.log("? Mounted /api/vision-ocr -> routes/vision.ocr.public.js");
 } catch (e) {
-  console.warn("Vision OCR public mount failed:", e.message);
+  console.warn("?? Vision OCR public mount failed:", e.message);
 }
 
+// === ROUTES M11 PAYMENTS ===
+try {
+  const paymentsRoutes = require('./payments/routes/payments.routes');
+  app.use('/api/payments', paymentsRoutes);
+  console.log('? Routes M11 Payments chargées sur /api/payments');
+} catch (error) {
+  console.log('? Routes M11 Payments non chargées:', error.message);
+}
 
+try {
+  const webhookRoutes = require('./payments/routes/webhook.routes');
+  app.use('/api/webhooks', webhookRoutes);
+  console.log('? Routes M11 Webhooks chargées sur /api/webhooks');
+} catch (error) {
+  console.log('? Routes M11 Webhooks non chargées:', error.message);
+}
 
+// === DÉMARRAGE SERVEUR ===
+app.listen(PORT, () => {
+  console.log(`?? ECOLOJIA backend (M11-Payments) on http://localhost:${PORT}`);
+  console.log(`?? Health: http://localhost:${PORT}/api/health`);
+  console.log(`?? Payments: http://localhost:${PORT}/api/payments`);
+  console.log(`?? Webhooks: http://localhost:${PORT}/api/webhooks`);
+});
+
+module.exports = app;const webhookRoutes = require('./payments/routes/webhook.routes');
+app.use('/api/webhooks', webhookRoutes);
+const paymentsRoutes = require('./payments/routes/payments.routes');
+app.use('/api/payments', paymentsRoutes);
