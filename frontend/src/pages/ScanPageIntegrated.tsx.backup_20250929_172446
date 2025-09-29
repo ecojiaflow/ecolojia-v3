@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+ï»¿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BarcodeScanner from "../components/scanner/BarcodeScannerEnhanced";
 import CategorySelector from "../components/CategorySelector";
@@ -34,7 +34,7 @@ const ScanPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      console.log("?? Analyse du code:", code, "Catégorie:", selectedCategory);
+      console.log("ğŸ” Analyse du code:", code, "CatÃ©gorie:", selectedCategory);
       
       // UTILISER UNIQUEMENT LA ROUTE /analysis POUR TOUT
       const result = await productService.analyze({ 
@@ -46,13 +46,13 @@ const ScanPage: React.FC = () => {
         ? (result as any).data 
         : result;
         
-      console.log("? Résultat API (normalisé):", normalizedResult);
+      console.log("âœ… RÃ©sultat API (normalisÃ©):", normalizedResult);
       setShowScanner(false);
       persistAndGo(normalizedResult, code);
 
     } catch (err: any) {
-      console.error("? Erreur:", err);
-      setError(err?.response?.data?.error || err?.message || "Erreur lors de l'analyse. Réessayez.");
+      console.error("âŒ Erreur:", err);
+      setError(err?.response?.data?.error || err?.message || "Erreur lors de l'analyse. RÃ©essayez.");
       setLoading(false);
     }
   };
@@ -78,7 +78,7 @@ const ScanPage: React.FC = () => {
         {showScanner && (
           <div className="mb-4">
             <BarcodeScanner
-
+              defaultEngine="zxing"
               onDetected={handleBarcodeDetected}
               onCancel={() => setShowScanner(false)}
             />
@@ -101,17 +101,17 @@ const ScanPage: React.FC = () => {
               disabled={loading || !manualCode.trim()}
               className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
             >
-              {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Analyse…</>) : "Analyser"}
+              {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Analyseâ€¦</>) : "Analyser"}
             </button>
           </form>
         </div>
 
         {selectedCategory !== "auto" && (
           <div className="bg-blue-50 border border-blue-200 p-3 rounded text-sm">
-            <strong>Catégorie sélectionnée :</strong> {
-              selectedCategory === "food" ? "?? Alimentaire" :
-              selectedCategory === "cosmetics" ? "?? Cosmétiques" :
-              "?? Détergents"
+            <strong>CatÃ©gorie sÃ©lectionnÃ©e :</strong> {
+              selectedCategory === "food" ? "ğŸ• Alimentaire" :
+              selectedCategory === "cosmetics" ? "ğŸ’„ CosmÃ©tiques" :
+              "ğŸ§½ DÃ©tergents"
             }
           </div>
         )}
@@ -121,8 +121,8 @@ const ScanPage: React.FC = () => {
         )}
 
         <div className="text-sm text-gray-600 mt-4">
-          <p>?? Conseil : Sélectionnez la catégorie appropriée pour une analyse plus précise.</p>
-          <p>Le mode "Auto" tentera de détecter automatiquement le type de produit.</p>
+          <p>ğŸ’¡ Conseil : SÃ©lectionnez la catÃ©gorie appropriÃ©e pour une analyse plus prÃ©cise.</p>
+          <p>Le mode "Auto" tentera de dÃ©tecter automatiquement le type de produit.</p>
         </div>
       </div>
     </div>

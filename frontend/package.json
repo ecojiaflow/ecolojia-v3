@@ -40,6 +40,7 @@
         "date-fns": "^4.1.0",
         "framer-motion": "^10.18.0",
         "html2canvas": "^1.4.1",
+        "html5-qrcode": "^2.3.8",
         "i18next": "^23.7.16",
         "jspdf": "^3.0.2",
         "jspdf-autotable": "^5.0.2",
