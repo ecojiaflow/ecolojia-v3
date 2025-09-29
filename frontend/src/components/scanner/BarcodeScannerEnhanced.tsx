@@ -40,42 +40,43 @@ const BarcodeScanner: React.FC<Props> = ({
     const startZXing = async () => {
       try {
         if (!ref.current) throw new Error("container-missing");
+        
         zxingReader = new BrowserMultiFormatReader();
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" } },
-          audio: false,
-        });
-
+        
         const video = document.createElement("video");
         video.setAttribute("playsinline", "true");
+        video.setAttribute("autoplay", "true");
         video.style.width = "100%";
         video.style.height = "100%";
         video.style.objectFit = "cover";
-        video.srcObject = stream;
-        await video.play();
-
-        // S’assure que le conteneur a bien une taille (évite null/0)
+        
         ref.current.style.minHeight = "240px";
         ref.current.appendChild(video);
 
-        const loop = async () => {
-          if (!mounted || !isScanning) return;
-          try {
-            const res = await zxingReader!.decodeOnceFromVideoDevice(undefined, video);
-            const code = res?.getText?.();
-            if (code) {
-              setIsScanning(false);
-              onDetected(code);
-              return;
+        // ✅ CORRECTION: Utiliser decodeFromVideoDevice avec callback continu
+        await zxingReader.decodeFromVideoDevice(
+          undefined, // deviceId (auto-select caméra arrière)
+          video,
+          (result, error) => {
+            if (!mounted || !isScanning) return;
+            
+            if (result) {
+              const code = result.getText();
+              if (code && code.length > 0) {
+                console.log("✅ Code-barres détecté (ZXing):", code);
+                setIsScanning(false);
+                onDetected(code);
+              }
             }
-          } catch {
-            // continue scanning
+            // Ignorer les erreurs (frames sans code-barres)
           }
-          if (mounted && isScanning) requestAnimationFrame(loop);
-        };
-        loop();
+        );
+        
+        console.log("📷 ZXing scanner démarré avec succès");
+        
       } catch (e: any) {
-        console.warn("ZXing failed, falling back to Quagga:", e?.message);
+        console.error("❌ ZXing error:", e?.message);
+        setError("Erreur caméra ZXing, essai Quagga...");
         if (mounted) setEngine("quagga");
       }
     };
@@ -134,6 +135,7 @@ const BarcodeScanner: React.FC<Props> = ({
           if (!code || !mounted || !isScanning) return;
           if (code === last && now - lastTime < 900) return;
           last = code; lastTime = now;
+          console.log("✅ Code-barres détecté (Quagga):", code);
           setIsScanning(false);
           onDetected(code);
         });
@@ -142,7 +144,8 @@ const BarcodeScanner: React.FC<Props> = ({
           // no-op; garde la boucle en vie
         });
       } catch (e: any) {
-        console.warn("Quagga failed, falling back to ZXing:", e?.message);
+        console.error("❌ Quagga error:", e?.message);
+        setError("Erreur caméra Quagga, essai ZXing...");
         if (mounted) setEngine("zxing");
       }
     };
