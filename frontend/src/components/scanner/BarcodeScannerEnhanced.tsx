@@ -13,24 +13,21 @@ const BarcodeScannerPro: React.FC<Props> = ({
   className = "",
 }) => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("Initialisation...");
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const hasDetectedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
-    let mounted = true;
     const scannerId = "barcode-scanner-pro";
+    let cleanupDone = false;
 
     const startScanner = async () => {
       try {
-        if (!mounted) return;
-
-        setStatus("Démarrage du scanner...");
-        console.log("📷 Initialisation scanner PRO");
-
-        // Créer l'instance du scanner
-        scannerRef.current = new Html5Qrcode(scannerId, {
+        console.log("📷 Démarrage scanner html5-qrcode");
+        
+        // Créer instance
+        const scanner = new Html5Qrcode(scannerId, {
           verbose: false,
           formatsToSupport: [
             Html5QrcodeSupportedFormats.EAN_13,
@@ -38,84 +35,77 @@ const BarcodeScannerPro: React.FC<Props> = ({
             Html5QrcodeSupportedFormats.UPC_A,
             Html5QrcodeSupportedFormats.UPC_E,
             Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.CODE_39,
           ],
         });
+        
+        scannerRef.current = scanner;
 
-        // Configuration OPTIMALE (secret des apps pro)
+        // Configuration simplifiée et robuste
         const config = {
-          fps: 30, // 30 images/sec pour détection ultra-rapide
-          qrbox: { width: 300, height: 150 }, // Zone de scan optimisée codes-barres
-          aspectRatio: 1.777778, // 16:9 pour mobile
-          disableFlip: false, // Permet scan même si code à l'envers
-          videoConstraints: {
-            facingMode: { ideal: "environment" },
-            advanced: [
-              { zoom: 2.0 }, // Zoom pour meilleure lecture
-              { focusMode: "continuous" }, // Auto-focus continu
-              { whiteBalanceMode: "continuous" },
-            ],
-          },
+          fps: 10, // Réduit pour stabilité mobile
+          qrbox: { width: 250, height: 150 },
+          aspectRatio: 1.777778,
         };
 
-        // Callback de succès
-        const onScanSuccess = (decodedText: string, decodedResult: any) => {
-          if (!mounted || !isScanning) return;
+        // Callback succès
+        const onSuccess = (decodedText: string) => {
+          // Éviter détections multiples
+          if (hasDetectedRef.current || !isMountedRef.current) return;
 
-          console.log("✅ CODE DÉTECTÉ:", decodedText);
-          console.log("📊 Format:", decodedResult?.result?.format?.formatName);
+          console.log("✅ Code détecté:", decodedText);
 
-          // Validation : code-barres valide (8-13 caractères numériques)
+          // Valider format
           if (/^\d{8,13}$/.test(decodedText)) {
-            setStatus("Code validé !");
-            setIsScanning(false);
+            hasDetectedRef.current = true;
+            setStatus("✓ Code validé !");
             
-            // Arrêter le scanner
-            if (scannerRef.current) {
+            // Arrêter scanner proprement
+            if (scannerRef.current?.isScanning) {
               scannerRef.current.stop().catch(console.error);
             }
             
-            // Callback avec délai pour UX fluide
-            setTimeout(() => onDetected(decodedText), 300);
-          } else {
-            console.warn("⚠️ Code invalide ignoré:", decodedText);
+            // Appeler callback
+            setTimeout(() => {
+              if (isMountedRef.current) {
+                onDetected(decodedText);
+              }
+            }, 100);
           }
         };
 
-        // Callback d'erreur (normal, appelé à chaque frame sans code)
-        const onScanError = (errorMessage: string) => {
-          // Ne rien faire - c'est normal de ne pas détecter à chaque frame
+        // Callback erreur (ignoré silencieusement)
+        const onError = () => {
+          // Normal - appelé à chaque frame sans code
         };
 
-        // Démarrer le scan avec la caméra arrière
-        await scannerRef.current.start(
+        // Démarrer
+        await scanner.start(
           { facingMode: "environment" },
           config,
-          onScanSuccess,
-          onScanError
+          onSuccess,
+          onError
         );
 
-        if (mounted) {
-          setIsScanning(true);
-          setStatus("Scanner actif - Cadrez le code-barres");
-          console.log("✅ Scanner démarré avec succès");
+        if (isMountedRef.current) {
+          setStatus("Scanner actif");
+          console.log("✅ Scanner opérationnel");
         }
 
       } catch (err: any) {
         console.error("❌ Erreur scanner:", err);
         
-        if (mounted) {
-          let errorMsg = "Erreur d'accès à la caméra";
+        if (isMountedRef.current) {
+          let msg = "Erreur caméra";
           
           if (err.name === "NotAllowedError") {
-            errorMsg = "Autorisez l'accès à la caméra pour scanner";
+            msg = "Autorisez l'accès caméra";
           } else if (err.name === "NotFoundError") {
-            errorMsg = "Aucune caméra détectée sur cet appareil";
+            msg = "Aucune caméra détectée";
           } else if (err.name === "NotReadableError") {
-            errorMsg = "Caméra utilisée par une autre application";
+            msg = "Caméra déjà utilisée";
           }
           
-          setError(errorMsg);
+          setError(msg);
           setStatus("Erreur");
         }
       }
@@ -123,114 +113,131 @@ const BarcodeScannerPro: React.FC<Props> = ({
 
     startScanner();
 
-    // Cleanup
+    // Cleanup robuste
     return () => {
-      mounted = false;
+      isMountedRef.current = false;
       
-      if (scannerRef.current) {
-        scannerRef.current
-          .stop()
-          .then(() => {
-            console.log("🛑 Scanner arrêté");
-            scannerRef.current?.clear();
-          })
-          .catch(console.error);
+      if (!cleanupDone && scannerRef.current) {
+        cleanupDone = true;
+        
+        const scanner = scannerRef.current;
+        
+        // Vérifier état avant stop
+        if (scanner.isScanning) {
+          scanner
+            .stop()
+            .then(() => {
+              console.log("🛑 Scanner arrêté");
+              scanner.clear();
+            })
+            .catch(() => {
+              // Ignorer erreurs cleanup
+            });
+        }
       }
     };
   }, [onDetected]);
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Container du scanner */}
+      {/* Container scanner */}
       <div className="relative w-full bg-black rounded-xl overflow-hidden">
         <div
           id="barcode-scanner-pro"
-          ref={containerRef}
           className="w-full"
-          style={{ minHeight: "320px" }}
+          style={{ minHeight: "340px" }}
         />
 
         {/* Overlay succès */}
-        {!isScanning && !error && (
-          <div className="absolute inset-0 bg-emerald-500/90 flex items-center justify-center z-50">
-            <div className="text-white text-center p-6">
-              <div className="text-6xl mb-3 animate-bounce">✓</div>
-              <div className="text-2xl font-bold">Code détecté !</div>
-              <div className="text-sm mt-2 opacity-90">Analyse en cours...</div>
+        {hasDetectedRef.current && (
+          <div className="absolute inset-0 bg-emerald-500/95 flex items-center justify-center z-50">
+            <div className="text-white text-center">
+              <div className="text-6xl mb-2">✓</div>
+              <div className="text-xl font-bold">Code validé</div>
+            </div>
+          </div>
+        )}
+
+        {/* Cadre de visée */}
+        {!hasDetectedRef.current && !error && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <div className="border-4 border-emerald-400 rounded-lg w-64 h-32 relative">
+              {/* Coins */}
+              <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-white"></div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-white"></div>
+              <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-white"></div>
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-white"></div>
+              
+              {/* Ligne scan */}
+              <div 
+                className="absolute w-full h-0.5 bg-emerald-300"
+                style={{
+                  top: "50%",
+                  animation: "scan 2s ease-in-out infinite",
+                  boxShadow: "0 0 8px rgba(52, 211, 153, 0.8)"
+                }}
+              />
             </div>
           </div>
         )}
       </div>
 
-      {/* Barre de statut */}
-      <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          {isScanning && !error ? (
-            <>
-              <div className="relative">
-                <div className="w-3 h-3 bg-emerald-500 rounded-full animate-ping absolute"></div>
-                <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{status}</p>
-                <p className="text-xs text-gray-600 mt-0.5">
-                  Maintenez le code-barres dans le cadre
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-              <p className="text-sm text-gray-700">{status}</p>
-            </>
+      {/* Statut */}
+      <div className={`rounded-lg p-3 text-sm ${
+        error ? "bg-red-50 text-red-800" : "bg-emerald-50 text-emerald-800"
+      }`}>
+        <div className="flex items-center gap-2">
+          {!error && !hasDetectedRef.current && (
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
           )}
+          <span className="font-medium">{status}</span>
         </div>
       </div>
 
-      {/* Message d'erreur */}
+      {/* Erreur détaillée */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
-          <div className="flex items-start gap-3">
-            <div className="text-2xl">⚠️</div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-red-900 mb-1">Erreur</p>
-              <p className="text-sm text-red-700">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="mt-3 text-xs font-medium text-red-600 hover:text-red-800 underline"
-              >
-                Réessayer
-              </button>
-            </div>
-          </div>
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+          <p className="text-red-900 font-medium mb-2">Problème détecté</p>
+          <p className="text-red-700 text-sm mb-3">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-sm text-red-600 underline hover:text-red-800"
+          >
+            Réessayer
+          </button>
         </div>
       )}
 
-      {/* Conseils d'utilisation */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-xs font-semibold text-blue-900 mb-2">💡 Conseils pour un scan rapide :</p>
-        <ul className="text-xs text-blue-800 space-y-1">
-          <li>• Bonne luminosité (évitez les reflets)</li>
-          <li>• Tenez le téléphone stable</li>
-          <li>• Distance : 10-20 cm du code-barres</li>
-          <li>• Le scan fonctionne même si le code est de travers</li>
-        </ul>
-      </div>
+      {/* Instructions */}
+      {!error && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <p className="text-xs font-semibold text-blue-900 mb-1">
+            Instructions :
+          </p>
+          <ul className="text-xs text-blue-800 space-y-0.5">
+            <li>• Placez le code-barres dans le cadre vert</li>
+            <li>• Distance : 10-15 cm de la caméra</li>
+            <li>• Bon éclairage, évitez les reflets</li>
+          </ul>
+        </div>
+      )}
 
       {/* Bouton annuler */}
       {onCancel && (
         <button
           onClick={onCancel}
-          className="w-full px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+          className="w-full py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
         >
-          Saisir manuellement
+          Utiliser la saisie manuelle
         </button>
       )}
 
-      {/* Info technique */}
-      <p className="text-xs text-center text-gray-500">
-        Scanner professionnel • Détection multi-formats
-      </p>
+      <style>{`
+        @keyframes scan {
+          0%, 100% { top: 10%; }
+          50% { top: 90%; }
+        }
+      `}</style>
     </div>
   );
 };
