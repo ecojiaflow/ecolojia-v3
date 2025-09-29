@@ -11,7 +11,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    VitePWA({
+    // VitePWA({
       devOptions: { enabled: false },
       selfDestroying: true,
       registerType: 'autoUpdate',
@@ -40,5 +40,6 @@ export default defineConfig({
     })
   ]
 });
+
 
 
