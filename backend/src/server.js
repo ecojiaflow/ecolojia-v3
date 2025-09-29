@@ -119,7 +119,7 @@ app.get('/health', (req, res) => {
 loadRoute('Payments', './payments/routes/payments.routes', '/api/payments');
 loadRoute('Auth', './routes/auth', '/api/auth');
 loadRoute('Analyse', './routes/analysis.routes', '/api/analysis');
-loadRoute('Vision', './routes/vision.routes', '/api/vision');
+loadRoute('Vision', './routes/vision.ocr.public', '/api/vision');
 loadRoute('Dashboard', './routes/dashboard', '/api/dashboard');
 loadRoute('Cosmetics', './routes/cosmetics.routes', '/api/cosmetics');
 loadRoute('Detergents', './routes/detergents.routes', '/api/detergents');
