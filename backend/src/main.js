@@ -31,7 +31,7 @@ requiredVars.forEach(varName => {
   if (!process.env[varName]) {
     missingVars.push(varName);
   } else {
-    console.log(`? [ENV] ${varName}: présent`);
+    console.log('? [ENV] ' + varName + ': présent');
   }
 });
 
@@ -161,7 +161,8 @@ app.get('/', (req, res) => {
       '/api/products',
       '/api/auth',
       '/api/dashboard',
-      '/api/algolia'
+      '/api/algolia',
+      '/api/chat'
     ]
   });
 });
@@ -176,20 +177,21 @@ const routesToLoad = [
   { path: '/api/auth', file: './routes/auth.simple.js', name: 'Auth' },
   { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
-  { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' }
+  { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
+  { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' }
 ];
 
 routesToLoad.forEach(route => {
   try {
     const routeModule = require(route.file);
     app.use(route.path, routeModule);
-    console.log(`? [ROUTE] ${route.name} montée sur ${route.path}`);
-    logInfo(`Route montée: ${route.path}`, {
+    console.log('? [ROUTE] ' + route.name + ' montée sur ' + route.path);
+    logInfo('Route montée: ' + route.path, {
       path: path.resolve(__dirname, route.file)
     });
   } catch (err) {
-    console.log(`?? [ROUTE] ${route.name} non disponible:`, err.message);
-    logError(`Erreur de chargement de route ${route.path}`, err);
+    console.log('?? [ROUTE] ' + route.name + ' non disponible:', err.message);
+    logError('Erreur de chargement de route ' + route.path, err);
   }
 });
 
@@ -273,16 +275,16 @@ async function startServer() {
     // Démarrage du serveur HTTP
     const server = app.listen(PORT, () => {
       console.log('?? [SERVER] ===================================');
-      console.log(`?? [SERVER] ECOLOJIA V3 Backend démarré`);
-      console.log(`?? [SERVER] Port: ${PORT}`);
-      console.log(`?? [SERVER] Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`?? [SERVER] Base de données: ${dbConnected ? 'connectée' : 'non connectée'}`);
-      console.log(`?? [SERVER] Monitoring: ${sentryInitialized ? 'Sentry activé' : 'Sentry désactivé'}`);
-      console.log(`?? [SERVER] Health check: http://localhost:${PORT}/api/health`);
-      console.log(`?? [SERVER] API Root: http://localhost:${PORT}/`);
+      console.log('?? [SERVER] ECOLOJIA V3 Backend démarré');
+      console.log('?? [SERVER] Port: ' + PORT);
+      console.log('?? [SERVER] Environment: ' + (process.env.NODE_ENV || 'development'));
+      console.log('?? [SERVER] Base de données: ' + (dbConnected ? 'connectée' : 'non connectée'));
+      console.log('?? [SERVER] Monitoring: ' + (sentryInitialized ? 'Sentry activé' : 'Sentry désactivé'));
+      console.log('?? [SERVER] Health check: http://localhost:' + PORT + '/api/health');
+      console.log('?? [SERVER] API Root: http://localhost:' + PORT + '/');
       console.log('?? [SERVER] ===================================');
       
-      logInfo(`Serveur démarré sur le port ${PORT}`, {
+      logInfo('Serveur démarré sur le port ' + PORT, {
         database: dbConnected,
         monitoring: sentryInitialized
       });
@@ -320,4 +322,3 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
-

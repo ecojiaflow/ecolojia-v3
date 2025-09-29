@@ -10,31 +10,42 @@ if (!DEEPSEEK_API_KEY) {
 async function deepseekChat(req, res) {
   try {
     const { messages = [], productContext } = req.body || {};
-
+    
     const systemPrompt =
-      "Tu es l'assistant nutritionnel d’ECOLOJIA.\n" +
+      "Tu es l'assistant nutritionnel d'ECOLOJIA.\n" +
       "Réponds en français, clairement, sans avis médical.\n" +
       "Utilise le contexte produit si fourni (ingrédients, labels, score).\n" +
       "Si tu n'es pas sûr, dis-le honnêtement.";
-
+    
     const chatMessages = [
       { role: 'system', content: systemPrompt },
-      ...(productContext ? [{ role: 'system', content: Contexte produit:\n }] : []),
+      ...(productContext ? [{ role: 'system', content: 'Contexte produit:\n' + JSON.stringify(productContext) }] : []),
       ...messages
     ];
-
-    const payload = { model: 'deepseek-chat', messages: chatMessages, temperature: 0.3 };
-
-    const r = await axios.post(${DEEPSEEK_BASE}/chat/completions, payload, {
-      headers: { 'Authorization': Bearer , 'Content-Type': 'application/json' },
+    
+    const payload = {
+      model: 'deepseek-chat',
+      messages: chatMessages,
+      temperature: 0.3
+    };
+    
+    const r = await axios.post(DEEPSEEK_BASE + '/chat/completions', payload, {
+      headers: {
+        'Authorization': 'Bearer ' + DEEPSEEK_API_KEY,
+        'Content-Type': 'application/json'
+      },
       timeout: 30000
     });
-
+    
     const reply = r.data?.choices?.[0]?.message?.content ?? 'Désolé, aucune réponse.';
     res.json({ reply });
+    
   } catch (err) {
     console.error('[DeepSeek]', err?.response?.status, err?.response?.data || err?.message || err);
-    res.status(500).json({ error: 'Chat DeepSeek indisponible', detail: err?.response?.data || err?.message || String(err) });
+    res.status(500).json({
+      error: 'Chat DeepSeek indisponible',
+      detail: err?.response?.data || err?.message || String(err)
+    });
   }
 }
 
