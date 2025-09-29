@@ -22,6 +22,18 @@ router.post('/reindex', async (req, res) => {
       return res.status(500).json({ ok:false, error:'missing env vars (appId/adminKey)' });
     }
 
+    // ---- NOUVEAU: ping simple Algolia (sans toucher à Mongo) ----
+    const ag = algoliasearch(appId, adminKey);
+    if ((req.query.ping || '').trim() === '1') {
+      try {
+        await ag.listIndices();
+        return res.json({ ok:true, ping:'algolia-ok', appId });
+      } catch (e) {
+        return res.status(500).json({ ok:false, ping:'fail', error: e.message, appId });
+      }
+    }
+    // -------------------------------------------------------------
+
     // S'assurer que mongoose est connecté et utiliser la connexion existante
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connection.asPromise();
@@ -32,9 +44,7 @@ router.post('/reindex', async (req, res) => {
       return res.json({ ok:true, indexed:0, message:'no docs in Mongo' });
     }
 
-    const ag = algoliasearch(appId, adminKey);
     const index = ag.initIndex(indexName);
-
     const payload = docs.map(d => ({ objectID: String(d._id), ...d }));
     const r = await index.saveObjects(payload, { autoGenerateObjectIDIfNotExist: true });
 
