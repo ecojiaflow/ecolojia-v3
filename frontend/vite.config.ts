@@ -11,7 +11,9 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    // VitePWA({
+    // PWA DÉSACTIVÉ TEMPORAIREMENT POUR BUILD NETLIFY
+    /*
+    VitePWA({
       devOptions: { enabled: false },
       selfDestroying: true,
       registerType: 'autoUpdate',
@@ -38,8 +40,6 @@ export default defineConfig({
         ]
       }
     })
+    */
   ]
 });
-
-
-
