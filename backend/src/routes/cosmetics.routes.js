@@ -1,104 +1,48 @@
-// PATH: backend/src/controllers/cosmeticController.js
-const crypto = require('crypto');
-const { Logger } = require('../utils/logger');
-const CosmeticScorer = require('../scorers/cosmetic/cosmeticScorer');
+﻿const express = require('express');
+const router = express.Router();
 
-const logger = new Logger('CosmeticController');
+// Health check
+router.get('/health', (req, res) => {
+  res.json({ ok: true, service: 'cosmetics', timestamp: new Date().toISOString() });
+});
 
-function normalizeIngredients(input) {
-  if (!input) return [];
-  if (Array.isArray(input)) return input.map(s => String(s).toUpperCase().trim()).filter(Boolean);
-  return String(input)
-    .replace(/INGRÃ‰DIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
-    .replace(/\([^)]*\)/g, '')
-    .split(/[,;]\s*|\n+/)
-    .map(s => s.trim().toUpperCase())
-    .filter(Boolean);
-}
-
-function labelFromScore(v) {
-  if (v >= 90) return 'A';
-  if (v >= 75) return 'B';
-  if (v >= 60) return 'C';
-  if (v >= 40) return 'D';
-  return 'E';
-}
-
-function mapRisksFromCosmetic(raw) {
-  const risks = [];
-  try {
-    const ra = raw?.risk_analysis || {};
-    const allerg = raw?.allergen_analysis || {};
-    if (Array.isArray(ra.endocrine_disruptors)) {
-      ra.endocrine_disruptors.forEach(item => {
-        const name = (item?.ingredient || item?.name || item || '').toString();
-        const sev = (item?.risk || item?.severity || 'high').toString().toLowerCase();
-        risks.push({ code: 'ENDOCRINE', ingredient: name, severity: sev, evidence: [item?.source || 'INCI/SCCS'] });
-      });
-    }
-    if (Array.isArray(ra.toxic_ingredients)) {
-      ra.toxic_ingredients.forEach(item => {
-        const name = (item?.ingredient || item?.name || item || '').toString();
-        const sev = (item?.risk || item?.severity || 'medium').toString().toLowerCase();
-        risks.push({ code: 'TOXICITY', ingredient: name, severity: sev, evidence: [item?.source || 'EFSA/ANSES'] });
-      });
-    }
-    if (Array.isArray(allerg.detected)) {
-      allerg.detected.forEach(name => {
-        risks.push({ code: 'ALLERGEN', ingredient: String(name), severity: 'medium', evidence: [allerg?.source || 'REVIDAL/SCCS'] });
-      });
-    }
-  } catch (_) {}
-  return risks;
-}
-
-function mapHighlights(raw) {
-  const arr = raw?.highlights || [];
-  return arr.map(h => (typeof h === 'string' ? h : (h?.message || h?.title || JSON.stringify(h))));
-}
-
-function extractSources(raw) {
-  const meta = raw?.meta || {};
-  const src = meta.sources || [];
-  return Array.isArray(src) ? src : [];
-}
-
-const analyzeCosmeticController = async (req, res) => {
-  try {
-    const { barcode, name, ingredients, inciList, language = 'fr' } = req.body || {};
-    const list = normalizeIngredients(ingredients || inciList);
-    if (!list.length) {
-      return res.status(400).json({ success: false, error: 'INGREDIENTS_REQUIRED' });
-    }
-
-    const scorer = new CosmeticScorer();
-    const raw = await scorer.analyzeCosmetic({
-      name: name || 'Produit',
-      ingredients: list.join(', ')
-    });
-
-    const value = Math.round(raw?.score ?? 0);
-    const out = {
-      id: crypto.randomUUID(),
+// Route d'analyse simplifiée
+router.post('/analyze', async (req, res) => {
+  console.log('Cosmetics analyze endpoint hit!');
+  
+  const { barcode } = req.body;
+  
+  // Mock temporaire - scoring basique
+  res.json({
+    success: true,
+    data: {
       category: 'cosmetic',
-      product: { name: name || 'Produit', barcode: barcode || null },
-      score: { value, label: raw?.grade || labelFromScore(value) },
-      risks: mapRisksFromCosmetic(raw),
-      highlights: mapHighlights(raw),
-      recommendations: Array.isArray(raw?.recommendations) ? raw.recommendations : [],
-      sources: extractSources(raw),
-      raw
-    };
+      product: { 
+        name: 'Test Cosmetic Product',
+        barcode: barcode 
+      },
+      score: { 
+        value: 70, 
+        label: 'B' 
+      },
+      risk_analysis: {
+        endocrine_disruptors: [],
+        irritants: [],
+        controversial: []
+      },
+      message: 'Cosmetics analysis working! (mock mode)'
+    }
+  });
+});
 
-    logger.info('Cosmetic analyzed', { product: out?.product?.name, score: out?.score?.value });
-    return res.json({ success: true, data: out });
-  } catch (err) {
-    logger.error('Cosmetic analysis failed', { error: err?.message });
-    return res.status(500).json({ success: false, error: 'COSMETIC_ANALYSIS_FAILED', details: err?.message });
-  }
-};
+// Status
+router.get('/status', (req, res) => {
+  res.json({
+    status: 'operational',
+    service: 'cosmetics',
+    mode: 'mock',
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Export avec destructuring pour correspondre Ã  l'import dans les routes
-module.exports = {
-  analyzeCosmeticController
-};
+module.exports = router;
