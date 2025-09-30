@@ -9,6 +9,21 @@ try {
   console.error('Failed to load analyzeService:', err.message);
 }
 
+
+// Route racine
+router.get('/', (req, res) => {
+  res.json({
+    service: 'analysis',
+    status: 'operational',
+    endpoints: [
+      'POST / - Analyser un produit (barcode ou image)',
+      'POST /barcode - Analyse par code-barre',
+      'POST /image - Analyse par image'
+    ],
+    timestamp: new Date().toISOString()
+  });
+});
+
 router.post('/', async (req, res) => {
   try {
     const { barcode, name, category = 'food' } = req.body;
