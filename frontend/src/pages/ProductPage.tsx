@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Heart, Leaf, AlertTriangle, Package, Info } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { ChatWidget } from '../components/chat/ChatWidget';
 
 // Helper pour API calls
 const getJSON = async (endpoint: string): Promise<any> => {
@@ -421,6 +422,18 @@ const ProductPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Chat Assistant IA */}
+      {product && (
+        <ChatWidget
+          productContext={{
+            productName: product.name || product.name_fr || 'Produit',
+            category: product.category || 'food',
+            barcode: product.barcode,
+            brand: product.brand
+          }}
+        />
+      )}
     </div>
   );
 };

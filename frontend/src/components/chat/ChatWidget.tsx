@@ -8,8 +8,8 @@ import { Button } from '../common/Button';
 import { ProductContext } from '../../services/chat/ChatService';
 
 interface ChatWidgetProps {
-  productContexta: ProductContext;
-  classNamea: string;
+  productContext?: ProductContext;
+  className?: string;
 }
 
 export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) {
@@ -31,7 +31,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus sur l'input  l'ouverture
+  // Focus sur l'input à l'ouverture
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
@@ -63,9 +63,9 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
       .split('\n')
       .map((line, index) => {
         // Gras
-        line = line.replace(/\*\*(.*a)\*\*/g, '<strong>$1</strong>');
+        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         // Bullet points
-        if (line.trim().startsWith('')) {
+        if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
           return <li key={index} className="ml-4" dangerouslySetInnerHTML={{ __html: line.substring(1).trim() }} />;
         }
         return <p key={index} className="mb-1" dangerouslySetInnerHTML={{ __html: line }} />;
@@ -107,7 +107,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
                   <h3 className="font-semibold">Assistant ECOLOJIA</h3>
                   {productContext && (
                     <p className="text-sm text-white/80">
-                       propos de {productContext.productName}
+                      À propos de {productContext.productName}
                     </p>
                   )}
                 </div>
@@ -135,7 +135,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
                 <div className="text-center text-gray-500 mt-8">
                   <Bot className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                   <p className="text-sm">
-                     Je suis votre assistant nutritionnel ECOLOJIA !
+                    👋 Je suis votre assistant nutritionnel ECOLOJIA !
                     {productContext && ` Posez-moi vos questions sur ${productContext.productName}.`}
                   </p>
                 </div>

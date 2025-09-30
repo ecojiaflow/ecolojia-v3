@@ -1,5 +1,5 @@
-﻿// PATH: frontend/src/services/chat/ChatService.ts
-import api from '../api';
+// PATH: frontend/src/services/chat/ChatService.ts
+import * as api from '../api';
 
 export interface ChatMessage {
   id: string;
@@ -39,12 +39,12 @@ class ChatService {
     message: string, 
     context?: ProductContext
   ): Promise<ChatResponse> {
-    // Mettre   jour le contexte si fourni
+    // Mettre � jour le contexte si fourni
     if (context) {
       this.currentContext = context;
     }
 
-    // Ajouter le message utilisateur   l'historique
+    // Ajouter le message utilisateur � l'historique
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
@@ -67,7 +67,7 @@ class ChatService {
         const suggestions = payload.response?.suggestions || payload.suggestions || [];
         const confidence = payload.response?.confidence ?? payload.confidence ?? 0.8;
 
-        // Ajouter reponse IA   l'historique
+        // Ajouter reponse IA � l'historique
         const aiMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'ai',
@@ -105,7 +105,7 @@ class ChatService {
     // Reponses generales par mots-cles
     if (msg.includes('nova')) {
       return {
-        reply: "ðŸ“Š **Classification NOVA** - Niveau de transformation :\n\nðŸŸ¢ **NOVA 1** : Aliments naturels (fruits, legumes, viandes)\nðŸŸ¡ **NOVA 2** : Ingredients culinaires (huile, sel, sucre)\nðŸŸ  **NOVA 3** : Aliments transformes (pain, fromage)\nðŸ”´ **NOVA 4** : Ultra-transformes (sodas, plats prepares)\n\nðŸ’¡ **Conseil** : Limitez NOVA 4, privilegiez NOVA 1-2 !",
+        reply: "📊 **Classification NOVA** - Niveau de transformation :\n\n🟢 **NOVA 1** : Aliments naturels (fruits, legumes, viandes)\n🟡 **NOVA 2** : Ingredients culinaires (huile, sel, sucre)\n🟠 **NOVA 3** : Aliments transformes (pain, fromage)\n🔴 **NOVA 4** : Ultra-transformes (sodas, plats prepares)\n\n💡 **Conseil** : Limitez NOVA 4, privilegiez NOVA 1-2 !",
         suggestions: ["Pourquoi eviter NOVA 4", "Exemples NOVA 1", "Analyser un produit"],
         confidence: 0.9
       };
@@ -113,7 +113,7 @@ class ChatService {
 
     if (msg.includes('additif')) {
       return {
-        reply: "âš ï¸ Les additifs alimentaires les plus preoccupants :\n\nâ€¢ **E150d** (Caramel IV) - Colorant potentiellement problematique\nâ€¢ **E621** (Glutamate) - Exhausteur de gout\nâ€¢ **E211** (Benzoate) - Conservateur\nâ€¢ **E320/E321** (BHA/BHT) - Antioxydants synthetiques\n\nðŸ’¡ **Conseil** : Moins d'additifs = mieux !",
+        reply: "⚠️ Les additifs alimentaires les plus preoccupants :\n\n• **E150d** (Caramel IV) - Colorant potentiellement problematique\n• **E621** (Glutamate) - Exhausteur de gout\n• **E211** (Benzoate) - Conservateur\n• **E320/E321** (BHA/BHT) - Antioxydants synthetiques\n\n💡 **Conseil** : Moins d'additifs = mieux !",
         suggestions: ["Rechercher produit sans additifs", "Classification des additifs", "Alternatives naturelles"],
         confidence: 0.85
       };
@@ -121,7 +121,7 @@ class ChatService {
 
     if (msg.includes('sante') || msg.includes('sain')) {
       return {
-        reply: "ðŸ¥— **Pour une alimentation plus saine** :\n\nâœ… **Privilegier NOVA 1-2** (aliments peu transformes)\nâœ… **Lire les etiquettes** (moins d'ingredients = mieux)\nâœ… **Cuisiner maison** quand possible\nâœ… **Varier les sources** de nutriments\nâœ… **Limiter les produits ultra-transformes**\n\nVoulez-vous analyser vos produits actuels ?",
+        reply: "🥗 **Pour une alimentation plus saine** :\n\n✅ **Privilegier NOVA 1-2** (aliments peu transformes)\n✅ **Lire les etiquettes** (moins d'ingredients = mieux)\n✅ **Cuisiner maison** quand possible\n✅ **Varier les sources** de nutriments\n✅ **Limiter les produits ultra-transformes**\n\nVoulez-vous analyser vos produits actuels ?",
         suggestions: ["Analyser mes produits", "Groupes NOVA", "Recettes simples"],
         confidence: 0.9
       };
@@ -129,7 +129,7 @@ class ChatService {
 
     if (msg.includes('bio')) {
       return {
-        reply: "ðŸŒ¿ **Avantages du bio** :\n\nâœ… **Sans pesticides de synthese**\nâœ… **Plus de nutriments** (etudes montrent +20-40% antioxydants)\nâœ… **Meilleur pour l'environnement**\nâœ… **Bien-etre animal**\n\nLe bio se marie parfaitement avec NOVA 1-2 !",
+        reply: "🌿 **Avantages du bio** :\n\n✅ **Sans pesticides de synthese**\n✅ **Plus de nutriments** (etudes montrent +20-40% antioxydants)\n✅ **Meilleur pour l'environnement**\n✅ **Bien-etre animal**\n\nLe bio se marie parfaitement avec NOVA 1-2 !",
         suggestions: ["Rechercher produits bio", "Bio vs conventionnel", "Labels qualite"],
         confidence: 0.8
       };
@@ -137,7 +137,7 @@ class ChatService {
 
     if (msg.includes('alternative') || msg.includes('remplacer')) {
       return {
-        reply: "ðŸ”„ **Trouver des alternatives saines** :\n\nâ€¢ **Utiliser notre recherche** pour comparer\nâ€¢ **Viser NOVA 1-2** maximum\nâ€¢ **Choisir moins d'ingredients**\nâ€¢ **Preferer le fait-maison**\nâ€¢ **Lire les compositions**\n\nQue souhaitez-vous remplacer ?",
+        reply: "🔄 **Trouver des alternatives saines** :\n\n• **Utiliser notre recherche** pour comparer\n• **Viser NOVA 1-2** maximum\n• **Choisir moins d'ingredients**\n• **Preferer le fait-maison**\n• **Lire les compositions**\n\nQue souhaitez-vous remplacer ?",
         suggestions: ["Rechercher des produits", "Cuisiner maison", "Decoder etiquettes"],
         confidence: 0.8
       };
@@ -145,7 +145,7 @@ class ChatService {
 
     // Reponse par defaut
     return {
-      reply: "ðŸ¤– Je suis votre assistant nutritionnel ECOLOJIA !\n\nJe peux vous aider   :\nâ€¢ ðŸ“Š Comprendre les analyses NOVA\nâ€¢ âš ï¸ Decoder les additifs alimentaires\nâ€¢ ðŸ¥— Donner des conseils nutritionnels\nâ€¢ ðŸ” Trouver des alternatives saines\n\nQue voulez-vous savoir ?",
+      reply: "🤖 Je suis votre assistant nutritionnel ECOLOJIA !\n\nJe peux vous aider � :\n• 📊 Comprendre les analyses NOVA\n• ⚠️ Decoder les additifs alimentaires\n• 🥗 Donner des conseils nutritionnels\n• 🔍 Trouver des alternatives saines\n\nQue voulez-vous savoir ?",
       suggestions: this.getBaseSuggestions(),
       confidence: 0.7
     };
@@ -161,19 +161,19 @@ class ChatService {
     if (msg.includes('sain') || msg.includes('sante')) {
       if (context.novaGroup === 1) {
         return {
-          reply: `âœ… **"${productName}"** est un excellent choix !\n\nðŸŸ¢ **NOVA 1** - Aliment naturel peu transforme\nðŸ“Š **Score sante** : ${context.healthScore}/100\nðŸŒ± **Recommandation** : Parfait pour une alimentation saine\n\nContinuez comme ca !`,
+          reply: `✅ **"${productName}"** est un excellent choix !\n\n🟢 **NOVA 1** - Aliment naturel peu transforme\n📊 **Score sante** : ${context.healthScore}/100\n🌱 **Recommandation** : Parfait pour une alimentation saine\n\nContinuez comme ca !`,
           suggestions: ["Autres produits NOVA 1", "Conseils nutrition", "Recettes avec ce produit"],
           confidence: 0.95
         };
       } else if (context.novaGroup === 4) {
         return {
-          reply: `âš ï¸ **"${productName}"** est   consommer avec moderation.\n\nðŸ”´ **NOVA 4** - Produit ultra-transforme\nðŸ“Š **Score sante** : ${context.healthScore}/100\n${context.additives && context.additives.length > 0 ? `âš ï¸ **Additifs detectes** : ${context.additives.length}` : ''}\n\nðŸ’¡ **Conseil** : Consommation occasionnelle recommandee.`,
+          reply: `⚠️ **"${productName}"** est � consommer avec moderation.\n\n🔴 **NOVA 4** - Produit ultra-transforme\n📊 **Score sante** : ${context.healthScore}/100\n${context.additives && context.additives.length > 0 ? `⚠️ **Additifs detectes** : ${context.additives.length}` : ''}\n\n💡 **Conseil** : Consommation occasionnelle recommandee.`,
           suggestions: ["Voir les additifs", "Trouver des alternatives", "Pourquoi eviter NOVA 4"],
           confidence: 0.9
         };
       } else {
         return {
-          reply: `ðŸŸ¡ **"${productName}"** est acceptable en consommation moderee.\n\nðŸŸ¡ **NOVA ${context.novaGroup}** - Produit transforme\nðŸ“Š **Score sante** : ${context.healthScore}/100\nðŸ’¡ **Conseil** : Privilegiez la version maison quand possible.`,
+          reply: `🟡 **"${productName}"** est acceptable en consommation moderee.\n\n🟡 **NOVA ${context.novaGroup}** - Produit transforme\n📊 **Score sante** : ${context.healthScore}/100\n💡 **Conseil** : Privilegiez la version maison quand possible.`,
           suggestions: ["Recettes maison", "Alternatives plus saines", "Conseils nutrition"],
           confidence: 0.8
         };
@@ -182,26 +182,26 @@ class ChatService {
 
     if (msg.includes('additif')) {
       if (context.additives && context.additives.length > 0) {
-        const highRiskAdditives = context.additives.filter(a => ?.riskLevel === 'high');
-        const mediumRiskAdditives = context.additives.filter(a => ?.riskLevel === 'medium');
+        const highRiskAdditives = context.additives.filter(a => a?.riskLevel === 'high');
+        const mediumRiskAdditives = context.additives.filter(a => a?.riskLevel === 'medium');
         
-        let response = `âš ï¸ **Additifs dans "${productName}"** :\n\n`;
+        let response = `⚠️ **Additifs dans "${productName}"** :\n\n`;
         
         if (highRiskAdditives.length > 0) {
-          response += `ðŸ”´ **Risque eleve** :\n`;
+          response += `🔴 **Risque eleve** :\n`;
           highRiskAdditives.forEach(additive => {
-            response += `â€¢ ${additive.code} (${additive.name})\n`;
+            response += `• ${additive.code} (${additive.name})\n`;
           });
         }
         
         if (mediumRiskAdditives.length > 0) {
-          response += `ðŸŸ¡ **Risque modere** :\n`;
+          response += `🟡 **Risque modere** :\n`;
           mediumRiskAdditives.forEach(additive => {
-            response += `â€¢ ${additive.code} (${additive.name})\n`;
+            response += `• ${additive.code} (${additive.name})\n`;
           });
         }
         
-        response += `\nðŸ’¡ **Conseil** : ${highRiskAdditives.length > 0 ? 'Limitez la consommation' : 'Consommation moderee acceptable'}`;
+        response += `\n💡 **Conseil** : ${highRiskAdditives.length > 0 ? 'Limitez la consommation' : 'Consommation moderee acceptable'}`;
         
         return {
           reply: response,
@@ -210,7 +210,7 @@ class ChatService {
         };
       } else {
         return {
-          reply: `âœ… **"${productName}"** ne contient pas d'additifs preoccupants detectes !\n\nðŸŒ± C'est un bon point pour la naturalite du produit.\nðŸ’¡ **Conseil** : Continuez   privilegier ce type de produits.`,
+          reply: `✅ **"${productName}"** ne contient pas d'additifs preoccupants detectes !\n\n🌱 C'est un bon point pour la naturalite du produit.\n💡 **Conseil** : Continuez � privilegier ce type de produits.`,
           suggestions: ["Autres produits naturels", "Conseils nutrition", "Recettes saines"],
           confidence: 0.85
         };
@@ -219,7 +219,7 @@ class ChatService {
 
     if (msg.includes('alternative') || msg.includes('remplacer')) {
       return {
-        reply: `ðŸ”„ **Alternatives   "${productName}"** :\n\nâ€¢ **Rechercher** des produits similaires NOVA 1-2\nâ€¢ **Version bio** si disponible\nâ€¢ **Fait maison** pour controler les ingredients\nâ€¢ **Produits** avec moins d'additifs\n\nVoulez-vous que je vous aide   chercher ?`,
+        reply: `🔄 **Alternatives � "${productName}"** :\n\n• **Rechercher** des produits similaires NOVA 1-2\n• **Version bio** si disponible\n• **Fait maison** pour controler les ingredients\n• **Produits** avec moins d'additifs\n\nVoulez-vous que je vous aide � chercher ?`,
         suggestions: ["Rechercher alternatives", "Recettes maison", "Produits bio similaires"],
         confidence: 0.8
       };
@@ -227,7 +227,7 @@ class ChatService {
 
     // Reponse contextuelle par defaut
     return {
-      reply: `ðŸ“Š **Analyse de "${productName}"** :\n\nðŸ“ˆ **Groupe NOVA** : ${context.novaGroup || 'N/A'}\nðŸ’¯ **Score sante** : ${context.healthScore || 'N/A'}/100\nâš ï¸ **Additifs** : ${context.additives?.length || 0} detecte(s)\n\nQue voulez-vous savoir de plus ?`,
+      reply: `📊 **Analyse de "${productName}"** :\n\n📈 **Groupe NOVA** : ${context.novaGroup || 'N/A'}\n💯 **Score sante** : ${context.healthScore || 'N/A'}/100\n⚠️ **Additifs** : ${context.additives?.length || 0} detecte(s)\n\nQue voulez-vous savoir de plus ?`,
       suggestions: ["Ce produit est-il sain ?", "Voir les additifs", "Trouver des alternatives", "Conseils nutrition"],
       confidence: 0.8
     };

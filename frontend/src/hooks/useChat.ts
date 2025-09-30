@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useChat.ts
+// PATH: frontend/src/hooks/useChat.ts
 
 import { useState, useCallback, useEffect } from 'react';
 import { chatService, ChatMessage, ProductContext } from '../services/chat/ChatService';
@@ -26,10 +26,10 @@ export function useChat(options: UseChatOptions = {}) {
     if (productContext) {
       chatService.setProductContext(productContext);
       // Mettre  jour les suggestions selon le contexte
-      setSuggestions(chatService.getSuggestedQuestions(productContext));
+      setSuggestions(["Pourquoi ce score ?", "Quels sont les risques ?", "Des alternatives ?"]);
     } else {
       // Suggestions generales
-      setSuggestions(chatService.getSuggestedQuestions());
+      setSuggestions(["Comment lire les scores ?", "Que signifie NOVA ?", "Conseils nutrition"]);
     }
   }, [productContext]);
 
@@ -84,7 +84,7 @@ export function useChat(options: UseChatOptions = {}) {
     chatService.clearHistory();
     setMessages([]);
     // Reinitialiser les suggestions
-    setSuggestions(chatService.getSuggestedQuestions(productContext));
+    setSuggestions(["Pourquoi ce score ?", "Quels sont les risques ?", "Des alternatives ?"]);
   }, [productContext]);
 
   // Obtenir l'historique complet depuis le service
@@ -103,3 +103,4 @@ export function useChat(options: UseChatOptions = {}) {
     currentContext: chatService.getCurrentContext()
   };
 }
+
