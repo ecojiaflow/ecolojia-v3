@@ -1,10 +1,10 @@
-// PATH: backend/src/routes/products-search-fix.js
+﻿// PATH: backend/src/routes/products-search-fix.js
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 
 // Route de recherche qui utilise l'index MongoDB
-router.get('/search', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { q = '', page = 1, limit = 20, category } = req.query;
     const pageNum = parseInt(page) || 1;
