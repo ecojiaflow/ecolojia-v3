@@ -1,0 +1,5 @@
+﻿[OK] https://ecolojia-backendvf.onrender.com/api/health
+{"status":"healthy","timestamp":"2025-10-02T16:32:50.590Z","version":"3.0.0","database":"connected","environment":"production","monitoring":{"sentry":false,"metrics":false}}
+
+[FAIL] https://ecolojia-backendvf.onrender.com/api/version
+Le serveur distant a retourné une erreur : (404) Introuvable.

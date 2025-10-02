@@ -1,0 +1,20 @@
+﻿=== DIAGNOSTIC ECOLOJIA V3 ===
+Date: 09/30/2025 18:34:53
+
+Node.js: v22.12.0
+npm: 10.9.1
+Git: git version 2.49.0.windows.1
+
+Backend existe: False
+Frontend existe: False
+
+Backend node_modules: False
+Frontend node_modules: False
+
+Backend .env: False
+Frontend .env: False
+
+Git initialisé: False
+Branche actuelle: main
+
+=== FIN DU DIAGNOSTIC ===

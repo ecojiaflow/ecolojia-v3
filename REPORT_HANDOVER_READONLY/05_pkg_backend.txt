@@ -1,0 +1,5 @@
+﻿name:    ecolojia-backend
+version: 3.0.0
+scripts: dev, start, verify
+dep_count: 27
+devdep_count: 1

@@ -1,0 +1,5 @@
+﻿name:    ecolojia-frontend
+version: 1.0.0
+scripts: build, dev, e2e, format, lint, preview, test, test:e2e, test:ui, type-check
+deps:    43
+devDeps: 26

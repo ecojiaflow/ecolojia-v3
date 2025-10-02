@@ -1,0 +1,8 @@
+﻿Branch courante: main
+
+Derniers commits:
+c224d521 docs: ajout README + CHANGELOG + PLAN_BETA pour beta publique
+d03cbea5 fix: complete backend routes validation - 100% health score
+f7a75439 fix: add missing /api/search route - search module operational
+8a93858a feat: Chat IA int├®gr├® sur fiches produits
+b40e8011 feat: Chat DeepSeek IA fonctionnel et test├®

@@ -1,0 +1,1077 @@
+﻿=== DIAGNOSTIC ECOLOJIA V3 ===
+Racine: C:\Users\salim\Desktop\ECOLOJIA VF CLEAN
+[2025-09-30 19:53:45] INFO  ========== PRÉREQUIS ==========
+[2025-09-30 19:53:45] INFO  Node: v22.12.0 | npm: 10.9.1 | Git: git version 2.49.0.windows.1
+[2025-09-30 19:53:46] INFO  ========== STRUCTURE ==========
+[2025-09-30 19:53:46] INFO  backend/: True | frontend/: True
+[2025-09-30 19:53:46] INFO  ========== BACKEND — ENV & INSTALL & ENCODAGE ==========
+[2025-09-30 19:53:46] INFO  backend : .env présent
+[2025-09-30 19:53:46] INFO  backend : node_modules présent (skip install)
+[2025-09-30 19:53:46] INFO  Conversion UTF-8 (No BOM) sur 143 fichier(s) dans backend...
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:2:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:3:     "name": "Lessive Ãƒâ€°cologique Lavande",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:3:     "name": "Lessive Ãƒâ€°cologique Lavande",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:4:     "brand": "EcoClean",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:5:     "barcode": "3560070123456",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:6:     "categories": ["laundry_detergent", "liquid"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:7:     "composition": "5-15% tensioactifs anioniques d'origine vÃ©gÃ©tale (Sodium Coco-Sulfate), <5% tensioactifs non-ioniques (Coco Glucoside), savon, enzymes (protÃ©ase, amylase), parfum naturel de lavande, conservateur (Sodium Benzoate), eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:7:     "composition": "5-15% tensioactifs anioniques d'origine vÃ©gÃ©tale (Sodium Coco-Sulfate), <5% tensioactifs non-ioniques (Coco Glucoside), savon, enzymes (protÃ©ase, amylase), parfum naturel de lavande, conservateur (Sodium Benzoate), eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:8:     "labels": ["eu_ecolabel", "vegan", "cruelty_free"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:9:     "certifications": ["eu_ecolabel"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:10:     "dosage": "30ml pour 4-5kg de linge",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:11:     "packaging": "Flacon 100% recyclÃ© et recyclable"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:11:     "packaging": "Flacon 100% recyclÃ© et recyclable"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:12:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:13:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:14:     "name": "Tablettes Lave-Vaisselle All-in-One",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:15:     "brand": "BrightDish",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:16:     "barcode": "3560070234567",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:17:     "categories": ["dishwasher_detergent", "tablets"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:18:     "composition": "Sodium Carbonate, Sodium Citrate, Sodium Percarbonate, TAED, enzymes (protÃ©ase, amylase), Sodium Silicate, polycarboxylates, parfum",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:18:     "composition": "Sodium Carbonate, Sodium Citrate, Sodium Percarbonate, TAED, enzymes (protÃ©ase, amylase), Sodium Silicate, polycarboxylates, parfum",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:19:     "labels": ["phosphate_free", "soluble_film"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:20:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:21:     "dosage": "1 tablette par cycle",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:22:     "features": ["Sel rÃ©gÃ©nÃ©rant intÃ©grÃ©", "Liquide de rinÃ§age intÃ©grÃ©", "Protection verre"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:22:     "features": ["Sel rÃ©gÃ©nÃ©rant intÃ©grÃ©", "Liquide de rinÃ§age intÃ©grÃ©", "Protection verre"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:23:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:24:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:25:     "name": "Nettoyant Multi-Surfaces Citron",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:26:     "brand": "FreshHome",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:27:     "barcode": "3560070345678",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:28:     "categories": ["all_purpose_cleaner", "spray"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:29:     "composition": "<5% tensioactifs non-ioniques (Decyl Glucoside), acide citrique, parfum naturel citron, conservateur (Sodium Benzoate), eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:30:     "labels": ["99_natural", "biodegradable"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:31:     "certifications": ["ecocert"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:32:     "usage": "Vaporiser sur la surface, essuyer avec un chiffon propre",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:33:     "ph": 4.5
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:34:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:35:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:36:     "name": "DÃ©tergent WC Power Gel",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:36:     "name": "DÃ©tergent WC Power Gel",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:37:     "brand": "SaniClean",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:38:     "barcode": "3560070456789",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:39:     "categories": ["toilet_cleaner", "gel"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:40:     "composition": "Acide chlorhydrique 9%, tensioactifs anioniques <5%, Ã©paississant, parfum, colorant",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:40:     "composition": "Acide chlorhydrique 9%, tensioactifs anioniques <5%, Ã©paississant, parfum, colorant",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:41:     "labels": ["kills_99_9_germs"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:42:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:43:     "warnings": ["Corrosif", "Porter des gants", "Ne pas mÃ©langer avec d'autres produits"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:43:     "warnings": ["Corrosif", "Porter des gants", "Ne pas mÃ©langer avec d'autres produits"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:44:     "features": ["Formule gel adhÃ©rente", "Col coudÃ©"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:44:     "features": ["Formule gel adhÃ©rente", "Col coudÃ©"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:45:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:46:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:47:     "name": "Liquide Vaisselle Main Aloe Vera",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:48:     "brand": "GentleClean",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:49:     "barcode": "3560070567890",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:50:     "categories": ["dish_soap", "hand_wash"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:51:     "composition": "15-30% tensioactifs anioniques (Sodium Laureth Sulfate), 5-15% tensioactifs amphotÃ¨res (Cocamidopropyl Betaine), glycÃ©rine, extrait d'aloe vera, sel, conservateur (Methylisothiazolinone, Methylchloroisothiazolinone), parfum, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:51:     "composition": "15-30% tensioactifs anioniques (Sodium Laureth Sulfate), 5-15% tensioactifs amphotÃ¨res (Cocamidopropyl Betaine), glycÃ©rine, extrait d'aloe vera, sel, conservateur (Methylisothiazolinone, Methylchloroisothiazolinone), parfum, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:52:     "labels": ["dermatologically_tested", "gentle_hands"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:53:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:54:     "features": ["Formule concentrÃ©e", "pH neutre pour la peau"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:54:     "features": ["Formule concentrÃ©e", "pH neutre pour la peau"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:55:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:56:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:57:     "name": "DÃ©tartrant Salle de Bain",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:57:     "name": "DÃ©tartrant Salle de Bain",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:58:     "brand": "LimeAway",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:59:     "barcode": "3560070678901",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:60:     "categories": ["bathroom_cleaner", "descaler"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:61:     "composition": "Acide citrique 15%, tensioactifs non-ioniques <5%, Ã©paississant, parfum, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:61:     "composition": "Acide citrique 15%, tensioactifs non-ioniques <5%, Ã©paississant, parfum, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:62:     "labels": ["natural_acids", "biodegradable"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:63:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:64:     "usage": "Appliquer, laisser agir 5 minutes, rincer",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:65:     "ph": 2.5
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:66:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:67:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:68:     "name": "Lessive Poudre Universelle",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:69:     "brand": "WhiteWash",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:70:     "barcode": "3560070789012",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:71:     "categories": ["laundry_detergent", "powder"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:72:     "composition": "Zeolite, Sodium Carbonate, Sodium Percarbonate, Linear Alkylbenzene Sulfonate 5-15%, enzymes, azurant optique, parfum",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:73:     "labels": ["effective_30c", "color_safe"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:74:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:75:     "dosage": "75g pour eau douce, 100g pour eau dure",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:76:     "features": ["Anti-calcaire", "Efficace dÃ¨s 30Ã‚Â°C"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:76:     "features": ["Anti-calcaire", "Efficace dÃ¨s 30Ã‚Â°C"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:77:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:78:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:79:     "name": "Spray Vitres et Miroirs",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:80:     "brand": "CrystalClear",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:81:     "barcode": "3560070890123",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:82:     "categories": ["glass_cleaner", "spray"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:83:     "composition": "Alcool isopropylique <5%, tensioactifs non-ioniques <1%, vinaigre blanc, eau dÃ©minÃ©ralisÃ©e",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:83:     "composition": "Alcool isopropylique <5%, tensioactifs non-ioniques <1%, vinaigre blanc, eau dÃ©minÃ©ralisÃ©e",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:84:     "labels": ["streak_free", "quick_dry"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:85:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:86:     "features": ["Sans traces", "SÃ©chage rapide", "Brillance Ã©clatante"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:86:     "features": ["Sans traces", "SÃ©chage rapide", "Brillance Ã©clatante"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:87:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:88:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:89:     "name": "DÃ©sinfectant Surfaces",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:89:     "name": "DÃ©sinfectant Surfaces",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:90:     "brand": "HygieneMax",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:91:     "barcode": "3560070901234",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:92:     "categories": ["disinfectant", "spray"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:93:     "composition": "Ethanol 70%, Chlorure de benzalkonium 0.1%, eau, parfum",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:94:     "labels": ["kills_bacteria_viruses", "en14476"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:95:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:96:     "warnings": ["Inflammable", "Utiliser dans un endroit ventilÃ©"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:96:     "warnings": ["Inflammable", "Utiliser dans un endroit ventilÃ©"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:97:     "efficacy": "Ãƒâ€°limine 99.99% des bactÃ©ries et virus enveloppÃ©s"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:97:     "efficacy": "Ãƒâ€°limine 99.99% des bactÃ©ries et virus enveloppÃ©s"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:98:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:99:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:100:     "name": "Nettoyant Sol Parfum Provence",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:101:     "brand": "FloorFresh",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:102:     "barcode": "3560070012345",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:103:     "categories": ["floor_cleaner", "concentrated"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:104:     "composition": "Tensioactifs non-ioniques 5-15% (Alcohol Ethoxylate), solvant (Propylene Glycol), parfum lavande, conservateur, colorant, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:105:     "labels": ["concentrated_formula", "suitable_all_floors"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:106:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:107:     "dosage": "1 bouchon pour 5L d'eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:108:     "features": ["Ne nÃ©cessite pas de rinÃ§age", "Laisse un parfum frais"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:108:     "features": ["Ne nÃ©cessite pas de rinÃ§age", "Laisse un parfum frais"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:109:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:110:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:111:     "name": "Lessive BÃ©bÃ© HypoallergÃ©nique",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:111:     "name": "Lessive BÃ©bÃ© HypoallergÃ©nique",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:112:     "brand": "BabySoft",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:113:     "barcode": "3560070123457",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:114:     "categories": ["laundry_detergent", "baby"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:115:     "composition": "Savon vÃ©gÃ©tal, Sodium Coco-Sulfate <5%, Sodium Carbonate, enzymes, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:115:     "composition": "Savon vÃ©gÃ©tal, Sodium Coco-Sulfate <5%, Sodium Carbonate, enzymes, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:116:     "labels": ["hypoallergenic", "fragrance_free", "pediatrician_tested"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:117:     "certifications": ["dermatologically_tested"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:118:     "features": ["Sans parfum", "Sans colorant", "TestÃ© sous contrÃ´le pÃ©diatrique"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:118:     "features": ["Sans parfum", "Sans colorant", "TestÃ© sous contrÃ´le pÃ©diatrique"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:119:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:120:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:121:     "name": "DÃ©boucheur Canalisations",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:121:     "name": "DÃ©boucheur Canalisations",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:122:     "brand": "DrainPower",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:123:     "barcode": "3560070234568",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:124:     "categories": ["drain_cleaner", "gel"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:125:     "composition": "Hydroxyde de sodium 30%, Ã©paississants, inhibiteurs de corrosion, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:125:     "composition": "Hydroxyde de sodium 30%, Ã©paississants, inhibiteurs de corrosion, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:126:     "labels": ["professional_strength"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:127:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:128:     "warnings": ["TrÃ¨s corrosif", "Ne jamais mÃ©langer avec des acides", "Porter gants et lunettes"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:128:     "warnings": ["TrÃ¨s corrosif", "Ne jamais mÃ©langer avec des acides", "Porter gants et lunettes"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:129:     "usage": "Verser lentement 250ml, laisser agir 30 min, rincer abondamment"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:130:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:131:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:132:     "name": "Adoucissant Textile Fleur de Coton",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:133:     "brand": "SoftTouch",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:134:     "barcode": "3560070345679",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:135:     "categories": ["fabric_softener", "concentrated"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:136:     "composition": "Cationic surfactants 5-15%, parfum, conservateur (Benzisothiazolinone), colorant, eau",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:137:     "labels": ["long_lasting_fragrance", "anti_static"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:138:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:139:     "dosage": "35ml pour une charge normale",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:140:     "features": ["Facilite le repassage", "RÃ©duit l'Ã©lectricitÃ© statique"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:140:     "features": ["Facilite le repassage", "RÃ©duit l'Ã©lectricitÃ© statique"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:141:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:142:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:143:     "name": "DÃ©tachant Textile Oxy-Action",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:143:     "name": "DÃ©tachant Textile Oxy-Action",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:144:     "brand": "StainGone",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:145:     "barcode": "3560070456780",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:146:     "categories": ["stain_remover", "powder"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:147:     "composition": "Sodium Percarbonate >30%, Sodium Carbonate, TAED, enzymes, tensioactifs anioniques <5%",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:148:     "labels": ["oxygen_bleach", "color_safe", "effective_30c"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:149:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:150:     "usage": "Ajouter 1 cuillÃ¨re ÃƒÂ  la lessive ou faire tremper",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:150:     "usage": "Ajouter 1 cuillÃ¨re ÃƒÂ  la lessive ou faire tremper",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:151:     "features": ["Sans chlore", "Respecte les couleurs"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:152:   },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:153:   {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:154:     "name": "Nettoyant Four et Grilles",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:155:     "brand": "OvenClean",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:156:     "barcode": "3560070567891",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:157:     "categories": ["oven_cleaner", "foam"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:158:     "composition": "Hydroxyde de potassium <5%, tensioactifs non-ioniques, Ã©paississants, solvants, propulseur (butane/propane)",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:158:     "composition": "Hydroxyde de potassium <5%, tensioactifs non-ioniques, Ã©paississants, solvants, propulseur (butane/propane)",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:159:     "labels": ["powerful_degreaser", "self_acting_foam"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:160:     "certifications": [],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:161:     "warnings": ["Corrosif", "AÃ©rer pendant utilisation", "Porter des gants"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:161:     "warnings": ["Corrosif", "AÃ©rer pendant utilisation", "Porter des gants"],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:162:     "features": ["Mousse auto-active", "AdhÃ¨re aux parois verticales"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:162:     "features": ["Mousse auto-active", "AdhÃ¨re aux parois verticales"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\detergents-sample.json:163:   }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:2:   "timestamp": "2025-06-16T19:47:23.838Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:3:   "imported": 0,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:4:   "total": 49,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:5:   "products": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:6:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:7:       "id": "off_7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:8:       "title": "Organic 70% Dark Chocolate Bar",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:10:       "slug": "organic-70-dark-chocolate-bar-off-0-1750103242358",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:11:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:12:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:13:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:14:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:15:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:16:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:17:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:18:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:19:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:20:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:21:         "https://images.openfoodfacts.org/images/products/762/221/057/8464/front_en.29.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:22:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:23:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:24:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:25:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:26:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:27:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:28:           "amount": 15,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:29:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:30:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:31:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:32:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:33:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:34:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:35:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:36:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:37:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:39:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:40:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:41:       "external_id": "7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:42:       "enriched_at": "2025-06-16T19:47:22.359Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:43:       "created_at": "2025-06-16T19:47:22.361Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:44:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:45:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:46:       "id": "off_7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:47:       "title": "Dark chocolate",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:48:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:48:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:49:       "slug": "dark-chocolate-off-1-1750103242361",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:50:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:51:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:52:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:53:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:54:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:55:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:56:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:57:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:58:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:59:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:60:         "https://images.openfoodfacts.org/images/products/762/221/058/4724/front_en.95.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:61:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:62:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:63:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:64:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:65:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:66:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:67:           "amount": 20,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:68:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:69:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:70:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:71:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:72:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:73:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:74:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:75:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:76:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:77:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:77:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:78:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:79:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:80:       "external_id": "7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:81:       "enriched_at": "2025-06-16T19:47:22.361Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:82:       "created_at": "2025-06-16T19:47:22.361Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:83:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:84:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:85:       "id": "off_8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:86:       "title": "Nocciolata bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:87:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:87:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:88:       "slug": "nocciolata-bio-off-2-1750103242361",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:89:       "brand": "Rigoni di Asiago",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:90:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:91:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:92:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:93:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:94:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:95:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:96:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:97:         "https://images.openfoodfacts.org/images/products/805/257/509/0254/front_en.43.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:98:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:99:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:100:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:101:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:102:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:103:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:104:           "amount": 12,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:105:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:106:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:107:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:108:       "affiliate_url": "https://world.openfoodfacts.org/product/8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:109:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:110:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:111:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:112:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:113:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:114:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:114:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:115:       "resume_en": "Rigoni di Asiago - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:116:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:117:       "external_id": "8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:118:       "enriched_at": "2025-06-16T19:47:22.361Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:119:       "created_at": "2025-06-16T19:47:22.361Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:120:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:121:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:122:       "id": "off_3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:123:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:123:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:124:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:124:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:125:       "slug": "primev-re-bio-doux-tartine-cuisson-off-3-1750103242361",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:126:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:126:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:127:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:128:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:129:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:130:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:131:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:132:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:133:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:134:         "https://images.openfoodfacts.org/images/products/315/525/035/8788/front_en.166.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:135:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:136:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:137:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:138:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:139:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:140:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:141:           "amount": 16,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:142:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:143:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:144:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:145:       "affiliate_url": "https://world.openfoodfacts.org/product/3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:146:       "eco_score": 0.9,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:147:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:148:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:149:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:150:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:151:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:151:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:152:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:152:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:153:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:154:       "external_id": "3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:155:       "enriched_at": "2025-06-16T19:47:22.361Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:156:       "created_at": "2025-06-16T19:47:22.361Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:157:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:158:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:159:       "id": "off_5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:160:       "title": "Organic Vegetable Stock Cubes",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:161:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:161:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:162:       "slug": "organic-vegetable-stock-cubes-off-4-1750103242361",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:163:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:163:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:164:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:165:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:166:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:167:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:168:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:169:         "boisson"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:170:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:171:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:172:         "https://images.openfoodfacts.org/images/products/501/366/511/2273/front_en.62.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:173:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:174:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:175:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:176:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:177:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:178:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:179:           "amount": 16,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:180:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:181:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:182:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:183:       "affiliate_url": "https://world.openfoodfacts.org/product/5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:184:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:185:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:186:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:187:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:188:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:189:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:189:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:190:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:190:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:191:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:192:       "external_id": "5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:193:       "enriched_at": "2025-06-16T19:47:22.361Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:194:       "created_at": "2025-06-16T19:47:22.361Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:195:     }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103243838.json:196:   ]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:2:   "timestamp": "2025-06-16T19:48:37.162Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:3:   "imported": 0,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:4:   "total": 49,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:5:   "products": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:6:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:7:       "id": "off_7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:8:       "title": "Organic 70% Dark Chocolate Bar",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:10:       "slug": "organic-70-dark-chocolate-bar-off-0-1750103315672",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:11:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:12:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:13:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:14:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:15:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:16:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:17:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:18:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:19:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:20:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:21:         "https://images.openfoodfacts.org/images/products/762/221/057/8464/front_en.29.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:22:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:23:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:24:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:25:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:26:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:27:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:28:           "amount": 22,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:29:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:30:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:31:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:32:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:33:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:34:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:35:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:36:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:37:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:39:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:40:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:41:       "external_id": "7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:42:       "enriched_at": "2025-06-16T19:48:35.672Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:43:       "created_at": "2025-06-16T19:48:35.673Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:44:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:45:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:46:       "id": "off_7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:47:       "title": "Dark chocolate",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:48:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:48:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:49:       "slug": "dark-chocolate-off-1-1750103315673",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:50:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:51:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:52:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:53:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:54:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:55:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:56:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:57:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:58:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:59:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:60:         "https://images.openfoodfacts.org/images/products/762/221/058/4724/front_en.95.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:61:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:62:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:63:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:64:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:65:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:66:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:67:           "amount": 12,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:68:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:69:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:70:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:71:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:72:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:73:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:74:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:75:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:76:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:77:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:77:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:78:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:79:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:80:       "external_id": "7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:81:       "enriched_at": "2025-06-16T19:48:35.673Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:82:       "created_at": "2025-06-16T19:48:35.673Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:83:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:84:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:85:       "id": "off_8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:86:       "title": "Nocciolata bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:87:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:87:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:88:       "slug": "nocciolata-bio-off-2-1750103315673",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:89:       "brand": "Rigoni di Asiago",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:90:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:91:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:92:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:93:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:94:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:95:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:96:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:97:         "https://images.openfoodfacts.org/images/products/805/257/509/0254/front_en.43.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:98:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:99:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:100:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:101:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:102:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:103:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:104:           "amount": 16,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:105:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:106:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:107:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:108:       "affiliate_url": "https://world.openfoodfacts.org/product/8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:109:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:110:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:111:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:112:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:113:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:114:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:114:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:115:       "resume_en": "Rigoni di Asiago - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:116:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:117:       "external_id": "8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:118:       "enriched_at": "2025-06-16T19:48:35.673Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:119:       "created_at": "2025-06-16T19:48:35.673Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:120:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:121:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:122:       "id": "off_3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:123:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:123:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:124:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:124:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:125:       "slug": "primev-re-bio-doux-tartine-cuisson-off-3-1750103315673",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:126:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:126:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:127:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:128:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:129:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:130:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:131:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:132:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:133:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:134:         "https://images.openfoodfacts.org/images/products/315/525/035/8788/front_en.166.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:135:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:136:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:137:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:138:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:139:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:140:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:141:           "amount": 16,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:142:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:143:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:144:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:145:       "affiliate_url": "https://world.openfoodfacts.org/product/3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:146:       "eco_score": 0.9,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:147:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:148:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:149:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:150:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:151:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:151:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:152:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:152:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:153:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:154:       "external_id": "3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:155:       "enriched_at": "2025-06-16T19:48:35.673Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:156:       "created_at": "2025-06-16T19:48:35.673Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:157:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:158:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:159:       "id": "off_5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:160:       "title": "Organic Vegetable Stock Cubes",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:161:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:161:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:162:       "slug": "organic-vegetable-stock-cubes-off-4-1750103315673",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:163:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:163:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:164:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:165:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:166:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:167:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:168:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:169:         "boisson"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:170:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:171:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:172:         "https://images.openfoodfacts.org/images/products/501/366/511/2273/front_en.62.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:173:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:174:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:175:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:176:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:177:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:178:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:179:           "amount": 24,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:180:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:181:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:182:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:183:       "affiliate_url": "https://world.openfoodfacts.org/product/5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:184:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:185:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:186:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:187:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:188:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:189:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:189:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:190:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:190:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:191:       "source": "OpenFoodFacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:192:       "external_id": "5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:193:       "enriched_at": "2025-06-16T19:48:35.673Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:194:       "created_at": "2025-06-16T19:48:35.673Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:195:     }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103317162.json:196:   ]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:2:   "timestamp": "2025-06-16T19:56:11.591Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:3:   "imported": 1,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:4:   "total": 49,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:5:   "products": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:6:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:7:       "id": "off_7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:8:       "title": "Organic 70% Dark Chocolate Bar",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:10:       "slug": "organic-70-dark-chocolate-bar-off-0-1750103770353",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:11:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:12:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:13:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:14:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:15:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:16:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:17:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:18:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:19:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:20:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:21:         "https://images.openfoodfacts.org/images/products/762/221/057/8464/front_en.29.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:22:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:23:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:24:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:25:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:26:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:27:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:28:           "amount": 22,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:29:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:30:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:31:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:32:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:33:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:34:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:35:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:36:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:37:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:39:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:40:       "enriched_at": "2025-06-16T19:56:10.353Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:41:       "created_at": "2025-06-16T19:56:10.354Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:42:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:43:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:44:       "id": "off_7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:45:       "title": "Dark chocolate",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:46:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:46:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:47:       "slug": "dark-chocolate-off-1-1750103770354",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:48:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:49:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:50:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:51:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:52:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:53:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:54:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:55:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:56:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:57:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:58:         "https://images.openfoodfacts.org/images/products/762/221/058/4724/front_en.95.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:59:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:60:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:61:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:62:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:63:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:64:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:65:           "amount": 12,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:66:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:67:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:68:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:69:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:70:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:71:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:72:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:73:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:74:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:75:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:75:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:76:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:77:       "enriched_at": "2025-06-16T19:56:10.354Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:78:       "created_at": "2025-06-16T19:56:10.354Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:79:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:80:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:81:       "id": "off_8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:82:       "title": "Nocciolata bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:83:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:83:       "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:84:       "slug": "nocciolata-bio-off-2-1750103770354",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:85:       "brand": "Rigoni di Asiago",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:86:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:87:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:88:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:89:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:90:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:91:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:92:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:93:         "https://images.openfoodfacts.org/images/products/805/257/509/0254/front_en.43.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:94:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:95:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:96:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:97:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:98:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:99:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:100:           "amount": 19,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:101:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:102:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:103:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:104:       "affiliate_url": "https://world.openfoodfacts.org/product/8052575090254",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:105:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:106:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:107:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:108:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:109:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:110:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:110:       "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:111:       "resume_en": "Rigoni di Asiago - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:112:       "enriched_at": "2025-06-16T19:56:10.354Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:113:       "created_at": "2025-06-16T19:56:10.354Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:114:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:115:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:116:       "id": "off_3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:117:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:117:       "title": "PrimevÃ¨re bio doux tartine & cuisson",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:118:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:118:       "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:119:       "slug": "primev-re-bio-doux-tartine-cuisson-off-3-1750103770354",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:120:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:120:       "brand": "PrimevÃ¨re",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:121:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:122:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:123:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:124:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:125:         "openfoodfacts"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:126:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:127:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:128:         "https://images.openfoodfacts.org/images/products/315/525/035/8788/front_en.166.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:129:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:130:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:131:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:132:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:133:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:134:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:135:           "amount": 9,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:136:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:137:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:138:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:139:       "affiliate_url": "https://world.openfoodfacts.org/product/3155250358788",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:140:       "eco_score": 0.9,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:141:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:142:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:143:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:144:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:145:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:145:       "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:146:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:146:       "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:147:       "enriched_at": "2025-06-16T19:56:10.354Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:148:       "created_at": "2025-06-16T19:56:10.354Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:149:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:150:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:151:       "id": "off_5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:152:       "title": "Organic Vegetable Stock Cubes",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:153:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:153:       "description": "Produit bio KallÃƒÂ¸. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: Sea salt, potato starch, sustainable palm oil, sugar, vegetables 6.8% (_celery_, onion, parsnip, tomato), sunflower oil, yeast extract, caramelised su...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:154:       "slug": "organic-vegetable-stock-cubes-off-4-1750103770354",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:155:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:155:       "brand": "KallÃƒÂ¸",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:156:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:157:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:158:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:159:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:160:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:161:         "boisson"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:162:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:163:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:164:         "https://images.openfoodfacts.org/images/products/501/366/511/2273/front_en.62.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:165:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:166:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:167:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:168:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:169:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:170:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:171:           "amount": 13,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:172:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:173:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:174:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:175:       "affiliate_url": "https://world.openfoodfacts.org/product/5013665112273",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:176:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:177:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:178:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:179:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:180:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:181:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:181:       "resume_fr": "KallÃƒÂ¸ - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:182:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:182:       "resume_en": "KallÃƒÂ¸ - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:183:       "enriched_at": "2025-06-16T19:56:10.354Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:184:       "created_at": "2025-06-16T19:56:10.354Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:185:     }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750103771592.json:186:   ]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:2:   "timestamp": "2025-06-16T20:05:06.440Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:3:   "imported": 48,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:4:   "total": 49,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:5:   "products": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:6:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:7:       "id": "off_7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:8:       "title": "Organic 70% Dark Chocolate Bar",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:9:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: cocoa mass #, cane sugar #, cocoa butter #, vanilla extract #, may contain nuts, milk,...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:10:       "slug": "organic-70-dark-chocolate-bar-off-0-1750104251107",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:11:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:12:       "category": "alimentation-bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:13:       "tags": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:14:         "bio",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:15:         "alimentaire",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:16:         "openfoodfacts",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:17:         "vegan",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:18:         "collation"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:19:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:20:       "images": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:21:         "https://images.openfoodfacts.org/images/products/762/221/057/8464/front_en.29.400.jpg"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:22:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:23:       "zones_dispo": [
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:24:         "FR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:25:       ],
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:26:       "prices": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:27:         "FR": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:28:           "amount": 7,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:29:           "currency": "EUR"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:30:         }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:31:       },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:32:       "affiliate_url": "https://world.openfoodfacts.org/product/7622210578464",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:33:       "eco_score": 0.8,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:34:       "ai_confidence": 0.75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:35:       "confidence_pct": 75,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:36:       "confidence_color": "yellow",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:37:       "verified_status": "manual_review",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:38:       "resume_fr": "Green & Black's - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:39:       "resume_en": "Green & Black's - Certified organic product from OpenFoodFacts, environmentally friendly.",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:40:       "enriched_at": "2025-06-16T20:04:11.107Z",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:41:       "created_at": "2025-06-16T20:04:11.108Z"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:42:     },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:43:     {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:44:       "id": "off_7622210584724",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:45:       "title": "Dark chocolate",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:46:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:46:       "description": "Produit bio Green & Black's. CatÃ©gorie: Snacks. IngrÃ©dients: pÃ¢te de cacao*, beurre de cacao*, cacao maigre en poudre*, sucre de canne*, extrait de vanille*, * ingrÃ©dients issus de l'agriculture biologique...",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:47:       "slug": "dark-chocolate-off-1-1750104251108",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:48:       "brand": "Green & Black's",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\import-direct-log-1750104306440.json:49:       "category": "alimentation-bio",
+[2025-09-30 19:54:28] INFO  ========== FRONTEND — ENV & INSTALL & ENCODAGE ==========
+[2025-09-30 19:54:28] INFO  frontend : .env présent
+[2025-09-30 19:54:28] INFO  frontend : node_modules présent (skip install)
+[2025-09-30 19:54:30] INFO  Conversion UTF-8 (No BOM) sur 318 fichier(s) dans frontend...
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\lint-staged.config.json:2:   "*.{ts,tsx,js,jsx,json,css,md}": ["prettier --write"]
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:2:     "name": "ecolojia-frontend",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:3:     "version": "1.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:4:     "lockfileVersion": 3,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:5:     "requires": true,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:6:     "packages": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:7:         "": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:8:             "name": "ecolojia-frontend",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:9:             "version": "1.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:10:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:11:                 "@ericblade/quagga2": "^1.8.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:12:                 "@hookform/resolvers": "^3.3.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:13:                 "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:14:                 "@radix-ui/react-alert-dialog": "^1.0.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:15:                 "@radix-ui/react-dialog": "^1.0.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:16:                 "@radix-ui/react-dropdown-menu": "^2.0.6",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:17:                 "@radix-ui/react-label": "^2.0.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:18:                 "@radix-ui/react-select": "^2.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:19:                 "@radix-ui/react-slot": "^1.0.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:20:                 "@radix-ui/react-tabs": "^1.0.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:21:                 "@radix-ui/react-toast": "^1.1.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:22:                 "@sentry/react": "^10.15.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:23:                 "@sentry/tracing": "^7.120.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:24:                 "@tanstack/react-query": "^5.85.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:25:                 "@zxing/browser": "^0.1.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:26:                 "algoliasearch": "^4.22.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:27:                 "axios": "^1.11.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:28:                 "axios-retry": "^4.5.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:29:                 "chart.js": "^4.5.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:30:                 "class-variance-authority": "^0.7.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:31:                 "clsx": "^2.1.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:32:                 "date-fns": "^4.1.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:33:                 "framer-motion": "^10.18.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:34:                 "html2canvas": "^1.4.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:35:                 "html5-qrcode": "^2.3.8",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:36:                 "i18next": "^23.7.16",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:37:                 "jspdf": "^3.0.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:38:                 "jspdf-autotable": "^5.0.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:39:                 "lucide-react": "^0.303.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:40:                 "react": "^18.2.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:41:                 "react-chartjs-2": "^5.3.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:42:                 "react-dom": "^18.2.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:43:                 "react-hook-form": "^7.48.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:44:                 "react-hot-toast": "^2.6.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:45:                 "react-i18next": "^14.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:46:                 "react-instantsearch": "^7.5.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:47:                 "react-router-dom": "^6.21.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:48:                 "recharts": "^2.15.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:49:                 "tailwind-merge": "^2.2.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:50:                 "tailwindcss-animate": "^1.0.7",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:51:                 "workbox-window": "^7.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:52:                 "zod": "^3.22.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:53:                 "zustand": "^4.5.7"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:54:             },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:55:             "devDependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:56:                 "@playwright/test": "^1.54.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:57:                 "@testing-library/jest-dom": "^6.7.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:58:                 "@testing-library/react": "^14.3.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:59:                 "@testing-library/user-event": "^14.6.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:60:                 "@types/jest": "^30.0.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:61:                 "@types/jspdf": "^1.3.3",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:62:                 "@types/node": "^20.19.11",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:63:                 "@types/react": "^18.2.47",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:64:                 "@types/react-dom": "^18.2.18",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:65:                 "@typescript-eslint/eslint-plugin": "^6.17.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:66:                 "@typescript-eslint/parser": "^6.17.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:67:                 "@vitejs/plugin-react": "^4.2.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:68:                 "@vitest/ui": "^1.1.3",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:69:                 "autoprefixer": "^10.4.16",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:70:                 "eslint": "^8.56.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:71:                 "eslint-plugin-react-hooks": "^4.6.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:72:                 "eslint-plugin-react-refresh": "^0.4.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:73:                 "jsdom": "^23.2.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:74:                 "playwright": "^1.54.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:75:                 "postcss": "^8.4.33",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:76:                 "tailwindcss": "^3.4.0",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:77:                 "typescript": "^5.3.3",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:78:                 "vite": "^5.0.11",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:79:                 "vite-plugin-pwa": "^0.17.5",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:80:                 "vite-tsconfig-paths": "^4.2.3",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:81:                 "vitest": "^1.6.1"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:82:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:83:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:84:         "node_modules/@adobe/css-tools": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:85:             "version": "4.4.4",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:86:             "resolved": "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.4.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:87:             "integrity": "sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:88:             "dev": true,
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:89:             "license": "MIT"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:90:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:91:         "node_modules/@algolia/cache-browser-local-storage": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:92:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:93:             "resolved": "https://registry.npmjs.org/@algolia/cache-browser-local-storage/-/cache-browser-local-storage-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:94:             "integrity": "sha512-tA1rqAafI+gUdewjZwyTsZVxesl22MTgLWRKt1+TBiL26NiKx7SjRqTI3pzm8ngx1ftM5LSgXkVIgk2+SRgPTg==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:95:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:96:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:97:                 "@algolia/cache-common": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:98:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:99:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:100:         "node_modules/@algolia/cache-common": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:101:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:102:             "resolved": "https://registry.npmjs.org/@algolia/cache-common/-/cache-common-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:103:             "integrity": "sha512-E+aZwwwmhvZXsRA1+8DhH2JJIwugBzHivASTnoq7bmv0nmForLyH7rMG5cOTiDK36DDLnKq1rMGzxWZZ70KZag==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:104:             "license": "MIT"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:105:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:106:         "node_modules/@algolia/cache-in-memory": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:107:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:108:             "resolved": "https://registry.npmjs.org/@algolia/cache-in-memory/-/cache-in-memory-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:109:             "integrity": "sha512-KYcenhfPKgR+WJ6IEwKVEFMKKCWLZdnYuw08+3Pn1cxAXbJcTIKjoYgEXzEW6gJmDaau2l55qNrZo6MBbX7+sw==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:110:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:111:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:112:                 "@algolia/cache-common": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:113:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:114:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:115:         "node_modules/@algolia/client-account": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:116:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:117:             "resolved": "https://registry.npmjs.org/@algolia/client-account/-/client-account-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:118:             "integrity": "sha512-IfRGhBxvjli9mdexrCxX2N4XT9NBN3tvZK5zCaL8zkDcgsthiM9WPvGIZS/pl/FuXB7hA0lE5kqOzsQDP6OmGQ==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:119:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:120:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:121:                 "@algolia/client-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:122:                 "@algolia/client-search": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:123:                 "@algolia/transporter": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:124:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:125:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:126:         "node_modules/@algolia/client-analytics": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:127:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:128:             "resolved": "https://registry.npmjs.org/@algolia/client-analytics/-/client-analytics-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:129:             "integrity": "sha512-4Yxxhxh+XjXY8zPyo+h6tQuyoJWDBn8E3YLr8j+YAEy5p+r3/5Tp+ANvQ+hNaQXbwZpyf5d4ViYOBjJ8+bWNEg==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:130:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:131:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:132:                 "@algolia/client-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:133:                 "@algolia/client-search": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:134:                 "@algolia/requester-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:135:                 "@algolia/transporter": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:136:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:137:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:138:         "node_modules/@algolia/client-common": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:139:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:140:             "resolved": "https://registry.npmjs.org/@algolia/client-common/-/client-common-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:141:             "integrity": "sha512-HXX8vbJPYW29P18GxciiwaDpQid6UhpPP9nW9WE181uGUgFhyP5zaEkYWf9oYBrjMubrGwXi5YEzJOz6Oa4faA==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:142:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:143:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:144:                 "@algolia/requester-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:145:                 "@algolia/transporter": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:146:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:147:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:148:         "node_modules/@algolia/client-personalization": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:149:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:150:             "resolved": "https://registry.npmjs.org/@algolia/client-personalization/-/client-personalization-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:151:             "integrity": "sha512-K81PRaHF77mHv2u8foWTHnIf5c+QNf/SnKNM7rB8JPi7TMYi4E5o2mFbgdU1ovd8eg9YMOEAuLkl1Nz1vbM3zQ==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:152:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:153:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:154:                 "@algolia/client-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:155:                 "@algolia/requester-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:156:                 "@algolia/transporter": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:157:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:158:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:159:         "node_modules/@algolia/client-search": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:160:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:161:             "resolved": "https://registry.npmjs.org/@algolia/client-search/-/client-search-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:162:             "integrity": "sha512-pO/LpVnQlbJpcHRk+AroWyyFnh01eOlO6/uLZRUmYvr/hpKZKxI6n7ufgTawbo0KrAu2CePfiOkStYOmDuRjzQ==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:163:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:164:             "dependencies": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:165:                 "@algolia/client-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:166:                 "@algolia/requester-common": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:167:                 "@algolia/transporter": "4.25.2"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:168:             }
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:169:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:170:         "node_modules/@algolia/events": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:171:             "version": "4.0.1",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:172:             "resolved": "https://registry.npmjs.org/@algolia/events/-/events-4.0.1.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:173:             "integrity": "sha512-FQzvOCgoFXAbf5Y6mYozw2aj5KCJoA3m4heImceldzPSMbdyS4atVjJzXKMsfX3wnZTFYwkkt8/z8UesLHlSBQ==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:174:             "license": "MIT"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:175:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:176:         "node_modules/@algolia/logger-common": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:177:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:178:             "resolved": "https://registry.npmjs.org/@algolia/logger-common/-/logger-common-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:179:             "integrity": "sha512-aUXpcodoIpLPsnVc2OHgC9E156R7yXWLW2l+Zn24Cyepfq3IvmuVckBvJDpp7nPnXkEzeMuvnVxQfQsk+zP/BA==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:180:             "license": "MIT"
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:181:         },
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:182:         "node_modules/@algolia/logger-console": {
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:183:             "version": "4.25.2",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:184:             "resolved": "https://registry.npmjs.org/@algolia/logger-console/-/logger-console-4.25.2.tgz",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:185:             "integrity": "sha512-H3Y+UB0Ty0htvMJ6zDSufhFTSDlg3Pyj3AXilfDdDRcvfhH4C/cJNVm+CTaGORxL5uKABGsBp+SZjsEMTyAunQ==",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:186:             "license": "MIT",
+ENCODING? C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\package-lock.json:187:             "dependencies": {
+[2025-09-30 19:54:42] INFO  ========== PORTS ==========
+[2025-09-30 19:54:42] WARN  Impossible de libérer le port 10000 : Impossible de remplacer la variable PID, car elle est constante ou en lecture seule.
+[2025-09-30 19:54:43] WARN  Impossible de libérer le port 5173 : Impossible de remplacer la variable PID, car elle est constante ou en lecture seule.
+[2025-09-30 19:54:43] INFO  ========== DÉMARRAGE ==========
+[2025-09-30 19:54:43] INFO  Démarrage backend (fenêtre séparée)...
+[2025-09-30 19:54:46] INFO  Démarrage frontend (fenêtre séparée)...
+[2025-09-30 19:54:54] INFO  Test santé backend : http://localhost:10000/api/health
+[2025-09-30 19:54:58] WARN  Échec health check backend : Impossible de se connecter au serveur distant
+=== FIN DU DIAGNOSTIC ===
+[2025-09-30 19:54:58] INFO  Terminé. Ouvre les deux fenêtres PowerShell lancées pour voir les logs de dev.
+[2025-09-30 19:54:58] INFO  Rapport : C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\DIAGNOSTIC.txt

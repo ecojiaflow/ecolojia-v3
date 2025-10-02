@@ -1,0 +1,13 @@
+﻿Import nommé manquant: Layout depuis ./components/layout/Layout
+Import nommé manquant: ProtectedRoute depuis ./components/ProtectedRoute
+Import nommé manquant: HomePage depuis ./pages/HomePage
+Import nommé manquant: SearchPage depuis ./pages/SearchPage
+Import nommé manquant: ResultsPageIntegrated as ResultsPage depuis ./pages/ResultsPageIntegrated
+Import nommé manquant: DashboardPage depuis ./pages/DashboardPage
+Import nommé manquant: ScanPageIntegrated as BarcodeScanPage depuis ./pages/ScanPageIntegrated
+Import nommé manquant: LoginPage depuis ./pages/LoginPage
+Import nommé manquant: RegisterPage depuis ./pages/RegisterPage
+Import nommé manquant: HistoryPage depuis ./pages/HistoryPage
+Import nommé manquant: OnboardingPage depuis ./pages/OnboardingPage
+Import nommé manquant: DiagnosticPage depuis ./pages/DiagnosticPage
+Import nommé manquant: MultiScanPage depuis ./pages/MultiScanPage

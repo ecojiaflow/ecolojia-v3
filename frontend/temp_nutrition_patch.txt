@@ -1,0 +1,13 @@
+﻿            {/* Barres nutritionnelles détaillées */}
+            <div className="mt-6 space-y-4">
+              <div className="space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium">Sucres</span>
+                  <span className="font-bold">{product.nutrition.per100g.sugars} g/100g</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="h-2 rounded-full bg-red-500" style={{ width: `${Math.min((product.nutrition.per100g.sugars / 25) * 100, 100)}%` }} />
+                </div>
+                <p className="text-xs text-gray-500">Élevé • Recommandé: {"<"}25g/100g</p>
+              </div>
+            </div>
