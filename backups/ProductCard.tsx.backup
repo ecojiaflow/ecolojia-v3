@@ -24,39 +24,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   const productName = product.nameKey ? t(product.nameKey) : product.nameKey || t('common.unavailable');
   const productBrand = product.brandKey ? t(product.brandKey) : product.brandKey || t('common.unavailable');
   const productDescription = product.descriptionKey ? t(product.descriptionKey) : product.descriptionKey || t('common.noDescription');
-  const translatedTags = Array.isArray(product.tagsKeys)
+  const translatedTags = Array.isArray(product.tagsKeys) 
     ? product.tagsKeys.map(tagKey => t(tagKey) || tagKey || t('common.unknownTag'))
     : [];
 
-  // Fonction améliorée pour obtenir l'image avec fallback OpenFoodFacts
-  const getProductImage = (product: Product) => {
-    // Si on a une vraie image et qu'elle n'est pas un placeholder
-    if (product.image_url?.trim() && !product.image_url.includes('placeholder')) {
-      return product.image_url;
-    }
-    
-    if (product.images?.[0] && !product.images[0].includes('placeholder')) {
-      return product.images[0];
-    }
-    
-    // Si on a un barcode, utiliser OpenFoodFacts comme fallback
-    if (product.barcode) {
-      return `https://images.openfoodfacts.org/images/products/${product.barcode}/front_fr.200.jpg`;
-    }
-    
-    // En dernier recours, utiliser le placeholder
-    return '/placeholder-image.jpg';
-  };
-
-  const imageUrl = getProductImage(product);
+  const imageUrl = product.image_url?.trim() || product.images?.[0] || '/placeholder-image.jpg';
 
   const linkId = product.partnerLinks?.[0]?.id;
-  const trackingUrl = linkId
-    ? `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/track/${linkId}`
+  const trackingUrl = linkId 
+    ? `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/track/${linkId}` 
     : null;
 
   return (
-    <div
+    <div 
       className="bg-white/90 backdrop-blur rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer flex flex-col h-full border border-eco-text/5"
       onClick={() => onClick(product.id)}
       onKeyPress={(e) => e.key === 'Enter' && onClick(product.id)}
@@ -65,18 +45,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
       aria-label={t('accessibility.openProductDetails', { name: productName })}
     >
       <div className="relative h-48 overflow-hidden">
-        <img
+        <img 
           src={imageUrl}
           alt={t('accessibility.productImage', { name: productName })}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            // Si OpenFoodFacts échoue aussi, utiliser le placeholder
-            if (target.src.includes('openfoodfacts.org')) {
-              target.src = '/placeholder-image.jpg';
-            } else {
-              target.src = '/placeholder-image.jpg';
-            }
+            target.src = '/placeholder-image.jpg';
           }}
           loading="lazy"
         />
@@ -136,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
 
       <div className="px-6 pb-6 pt-0 mt-auto">
         {trackingUrl ? (
-          
+          <a
             href={trackingUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -159,3 +134,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
 };
 
 export default ProductCard;
+
+
+
+
+
+
+
