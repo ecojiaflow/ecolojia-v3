@@ -1,9 +1,15 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Heart, Leaf, AlertTriangle, Package, Info } from 'lucide-react';
+import { ArrowLeft, AlertTriangle } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
 import { ChatWidget } from '../components/chat/ChatWidget';
+import { ProductHeader } from '../components/product/ProductHeader';
+import { ProductScoresCard } from '../components/product/ProductScoresCard';
+import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
+import { ProductIngredients } from '../components/product/ProductIngredients';
+import { ProductNutrition } from '../components/product/ProductNutrition';
+import { ProductAlternatives } from '../components/product/ProductAlternatives';
 
 // Helper pour API calls
 const getJSON = async (endpoint: string): Promise<any> => {
@@ -50,7 +56,6 @@ interface Product {
     isAllergen: boolean;
     concerns: string[];
   }>;
-  allergens?: string[];
   nutrition?: {
     per100g: {
       energy: number;
@@ -85,13 +90,9 @@ const ProductPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
-        // Appel direct à l'API REST
         const productData = await getJSON(`/api/products/${id}`);
         setProduct(productData);
-        
-        // Charger les alternatives en parallèle (optionnel)
-        loadAlternatives(id, productData);
+        loadAlternatives(id);
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
         setError(err.message || 'Impossible de charger le produit');
@@ -104,55 +105,20 @@ const ProductPage: React.FC = () => {
     fetchProduct();
   }, [id]);
 
-  const loadAlternatives = async (productId: string, currentProduct: Product) => {
+  const loadAlternatives = async (productId: string) => {
     try {
       setLoadingAlternatives(true);
-      // Appel API alternatives (si disponible)
       const altData = await getJSON(`/api/products/${productId}/alternatives`);
       setAlternatives(altData.alternatives || altData || []);
     } catch (err) {
       console.error('Alternatives non disponibles:', err);
-      // Pas grave si les alternatives ne se chargent pas
       setAlternatives([]);
     } finally {
       setLoadingAlternatives(false);
     }
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
-
-  const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-50 border-green-200';
-    if (score >= 60) return 'bg-yellow-50 border-yellow-200';
-    if (score >= 40) return 'bg-orange-50 border-orange-200';
-    return 'bg-red-50 border-red-200';
-  };
-
-  const getNutriScoreColor = (score?: string) => {
-    const colors: Record<string, string> = {
-      'A': 'bg-green-600',
-      'B': 'bg-lime-500',
-      'C': 'bg-yellow-500',
-      'D': 'bg-orange-500',
-      'E': 'bg-red-600'
-    };
-    return colors[score || ''] || 'bg-gray-400';
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'food': return '🍎';
-      case 'cosmetics': return '💄';
-      case 'detergents': return '🧽';
-      default: return '📦';
-    }
-  };
-
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -164,6 +130,7 @@ const ProductPage: React.FC = () => {
     );
   }
 
+  // Error state
   if (error || !product) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -182,14 +149,22 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Valeurs par défaut sécurisées
+  // Calcul scores avec valeurs par défaut
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
   const overallScore = Math.round((healthScore + environmentScore) / 2);
 
+  // Mock breakdown (en attendant backend amélioré)
+  const mockBreakdown = [
+    { factor: 'Additifs préoccupants', impact: -10, reason: 'Colorant caramel E150c détecté' },
+    { factor: 'Ultra-transformé', impact: -20, reason: 'Produit NOVA groupe 4' },
+    { factor: 'Nutri-Score E', impact: -15, reason: 'Trop de sucres et graisses saturées' },
+    { factor: 'Huile de palme', impact: -5, reason: 'Impact environnemental négatif' }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header Navigation */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <button
@@ -204,223 +179,46 @@ const ProductPage: React.FC = () => {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Product Header */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Product Image */}
-            <div className="md:col-span-1">
-              {product.images?.front ? (
-                <img
-                  src={product.images.front}
-                  alt={product.name}
-                  className="w-full h-64 object-contain rounded-lg bg-gray-50"
-                />
-              ) : (
-                <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <Package className="w-24 h-24 text-gray-300" />
-                </div>
-              )}
-              
-              {product.barcode && (
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">Code-barres</p>
-                  <p className="font-mono text-lg">{product.barcode}</p>
-                </div>
-              )}
-            </div>
+        {/* Header with image, name, badges */}
+        <ProductHeader
+          name={product.name}
+          brand={product.brand}
+          barcode={product.barcode}
+          category={product.category}
+          imageFront={product.images?.front}
+          overallScore={overallScore}
+          nutriscore={product.scores?.nutriscore}
+          nova={product.scores?.nova}
+          ecoscore={product.scores?.ecoscore}
+        />
 
-            {/* Product Info */}
-            <div className="md:col-span-2">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-                  <p className="text-xl text-gray-600 mt-1">{product.brand}</p>
-                  <div className="flex items-center gap-3 mt-3">
-                    <span className="inline-flex items-center px-3 py-1 bg-gray-100 rounded-full text-sm">
-                      {getCategoryIcon(product.category)} {' '}
-                      {product.category === 'food' ? 'Alimentaire' :
-                       product.category === 'cosmetics' ? 'Cosmétique' :
-                       'Détergent'}
-                    </span>
-                  </div>
-                </div>
+        {/* Score cards (Health + Environment) */}
+        <ProductScoresCard
+          healthScore={healthScore}
+          environmentScore={environmentScore}
+        />
 
-                {/* Overall Score */}
-                <div className="text-center">
-                  <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
-                    {overallScore}
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">Score global</p>
-                </div>
-              </div>
+        {/* Score Breakdown - Explications détaillées */}
+        <ScoreBreakdown
+          score={overallScore}
+          factors={mockBreakdown}
+        />
 
-              {/* Badges */}
-              <div className="flex flex-wrap gap-3 mb-6">
-                {product.scores?.nutriscore && (
-                  <span className={`px-4 py-2 text-white rounded-lg font-bold ${getNutriScoreColor(product.scores.nutriscore)}`}>
-                    Nutri-Score {product.scores.nutriscore}
-                  </span>
-                )}
-                {product.scores?.nova && (
-                  <span className="px-4 py-2 bg-gray-600 text-white rounded-lg font-bold">
-                    NOVA {product.scores.nova}
-                  </span>
-                )}
-                {product.scores?.ecoscore && (
-                  <span className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold">
-                    Eco-Score {product.scores.ecoscore}
-                  </span>
-                )}
-              </div>
-
-              {/* Score Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className={`p-4 rounded-lg border ${getScoreBgColor(healthScore)}`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Heart className="w-5 h-5 text-red-500" />
-                      <span className="font-medium">Santé</span>
-                    </div>
-                    <span className={`text-2xl font-bold ${getScoreColor(healthScore)}`}>
-                      {healthScore}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">Impact sur votre santé</p>
-                </div>
-
-                <div className={`p-4 rounded-lg border ${getScoreBgColor(environmentScore)}`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Leaf className="w-5 h-5 text-green-600" />
-                      <span className="font-medium">Environnement</span>
-                    </div>
-                    <span className={`text-2xl font-bold ${getScoreColor(environmentScore)}`}>
-                      {environmentScore}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">Empreinte écologique</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Ingredients */}
+        {/* Ingredients section */}
         {product.ingredients && product.ingredients.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <Info className="w-5 h-5 mr-2" />
-              Ingrédients
-            </h2>
-            <div className="space-y-2">
-              {product.ingredients.map((ingredient, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center justify-between p-3 rounded-lg ${
-                    ingredient.isAllergen ? 'bg-red-50 border border-red-200' :
-                    ingredient.concerns.length > 0 ? 'bg-yellow-50 border border-yellow-200' :
-                    'bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{ingredient.name}</span>
-                    {ingredient.percentage && (
-                      <span className="text-sm text-gray-500">({ingredient.percentage}%)</span>
-                    )}
-                    {ingredient.isAllergen && (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">
-                        Allergène
-                      </span>
-                    )}
-                  </div>
-                  {ingredient.concerns.length > 0 && (
-                    <span className="text-sm text-orange-600">
-                      ⚠️ {ingredient.concerns.join(', ')}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProductIngredients ingredients={product.ingredients} />
         )}
 
-        {/* Nutrition */}
+        {/* Nutrition section (food only) */}
         {product.nutrition?.per100g && product.category === 'food' && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Valeurs nutritionnelles (pour 100g)
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-gray-800">{product.nutrition.per100g.energy}</p>
-                <p className="text-sm text-gray-600">kcal</p>
-              </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-gray-800">{product.nutrition.per100g.protein}g</p>
-                <p className="text-sm text-gray-600">Protéines</p>
-              </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-gray-800">{product.nutrition.per100g.carbohydrates}g</p>
-                <p className="text-sm text-gray-600">Glucides</p>
-              </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-gray-800">{product.nutrition.per100g.fat}g</p>
-                <p className="text-sm text-gray-600">Lipides</p>
-              </div>
-            </div>
-          </div>
+          <ProductNutrition nutrition={product.nutrition.per100g} />
         )}
 
         {/* Alternatives */}
-        {alternatives.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Alternatives recommandées
-            </h2>
-            {loadingAlternatives ? (
-              <div className="text-center py-8">
-                <LoadingSpinner />
-                <p className="mt-2 text-gray-600">Recherche d'alternatives...</p>
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {alternatives.slice(0, 6).map((alt) => {
-                  const altHealthScore = alt.scores?.healthScore || 50;
-                  const altEnvironmentScore = alt.scores?.environmentScore || 50;
-                  const altOverallScore = Math.round((altHealthScore + altEnvironmentScore) / 2);
-                  
-                  return (
-                    <Link
-                      key={alt._id}
-                      to={`/product/${alt._id}`}
-                      className="block p-4 border border-gray-200 rounded-lg hover:border-green-500 transition-colors"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-medium text-gray-800">{alt.name}</h3>
-                        <span className={`font-bold ${getScoreColor(altOverallScore)}`}>
-                          {altOverallScore}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600">{alt.brand}</p>
-                      <div className="flex gap-2 mt-2">
-                        {alt.scores?.nutriscore && (
-                          <span className={`px-2 py-1 text-white rounded text-xs ${getNutriScoreColor(alt.scores.nutriscore)}`}>
-                            {alt.scores.nutriscore}
-                          </span>
-                        )}
-                        {alt.scores?.nova && (
-                          <span className="px-2 py-1 bg-gray-600 text-white rounded text-xs">
-                            N{alt.scores.nova}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
+        <ProductAlternatives
+          alternatives={alternatives}
+          loading={loadingAlternatives}
+        />
       </div>
 
       {/* Chat Assistant IA */}

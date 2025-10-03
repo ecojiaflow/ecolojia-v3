@@ -1,35 +1,44 @@
-﻿/* PATH: frontend/src/components/scanner/BarcodeScanner.css */
+﻿/* BarcodeScanner.css */
 .scanner-overlay {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .scanner-frame {
   position: relative;
-  animation: pulse 2s infinite;
+  animation: scanner-pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { opacity: 0.8; }
+@keyframes scanner-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
-.scanner-line {
+.scanner-frame::after {
+  content: '';
   position: absolute;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2px;
   background: linear-gradient(to right, transparent, #10b981, transparent);
-  top: 50%;
-  animation: scan 2s linear infinite;
+  animation: scanner-line 2s infinite;
 }
 
-@keyframes scan {
-  0% { transform: translateY(-24px); }
-  100% { transform: translateY(24px); }
-}
-
-.scanner-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+@keyframes scanner-line {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
 }
