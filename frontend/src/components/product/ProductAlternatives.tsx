@@ -95,3 +95,4 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
     </div>
   );
 };
+
