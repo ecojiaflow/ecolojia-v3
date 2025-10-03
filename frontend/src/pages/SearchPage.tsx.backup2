@@ -38,14 +38,6 @@ function getValidProductId(item: any, product: any): string | null {
   return null;
 }
 
-// Fonction pour obtenir l'image du produit avec fallback
-function getProductImage(product: any): string {
-  if (product.imageUrl) return product.imageUrl;
-  if (product.image_url) return product.image_url;
-  if (product.barcode) return `https://images.openfoodfacts.org/images/products/${product.barcode}/front_fr.200.jpg`;
-  return '/placeholder.jpg';
-}
-
 export default function SearchPage() {
   // État synchronisé avec URL
   const [state, setState] = useState<SearchState>({ q: '' });
@@ -212,31 +204,20 @@ export default function SearchPage() {
                     const key = getValidProductId(item, product) || `item-${index}`;
                     
                     return (
-                      <div key={key} className="border rounded-lg overflow-hidden hover:shadow-md">
-                        <img 
-                          src={getProductImage(product)} 
-                          alt={product.name} 
-                          className="w-full h-48 object-cover bg-gray-100" 
-                          onError={(e) => {
-                            const img = e.target as HTMLImageElement;
-                            img.src = '/placeholder.jpg';
-                          }}
-                        />
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                          <p className="text-gray-600 text-sm mb-2">{product.brand}</p>
-                          <p className="text-gray-500 text-xs mb-3">{product.category}</p>
-                          <div className="flex items-center gap-2 mb-3">
-                            <ScoreChip score={product.globalScore} />
-                            <DomainBadges domains={domains} />
-                          </div>
-                          <button
-                            onClick={() => handleProductClick(item, product)}
-                            className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                          >
-                            Voir détails
-                          </button>
+                      <div key={key} className="border rounded-lg p-4 hover:shadow-md">
+                        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                        <p className="text-gray-600 text-sm mb-2">{product.brand}</p>
+                        <p className="text-gray-500 text-xs mb-3">{product.category}</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <ScoreChip score={product.globalScore} />
+                          <DomainBadges domains={domains} />
                         </div>
+                        <button
+                          onClick={() => handleProductClick(item, product)}
+                          className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                        >
+                          Voir détails
+                        </button>
                       </div>
                     );
                   })}

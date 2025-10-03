@@ -77,3 +77,4 @@ export function toDisplayProduct(p: any) {
 
   return { name, brand, code, category, imageUrl, score, raw: p };
 }
+
