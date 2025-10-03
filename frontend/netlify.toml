@@ -1,60 +1,12 @@
-﻿S C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend> # Vérifier la config Render backend
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend> Set-Location "C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend"
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend> Test-Path "render.yaml"
-True
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend> Get-Content "package.json" | Select-String -Pattern "start"
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
 
-                    "start":  "node src/main.js",
+[build.environment]
+  NODE_VERSION = "20"
 
-
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend> Set-Location "C:\Users\salim\Desktop\ECOLOJIA VF CLEAN"
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git add .
-warning: in the working copy of 'frontend/netlify.toml', CRLF will be replaced by LF the next time Git touches it
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git commit -m "feat(m12): production ready
->>
->> - render.yaml exists for backend
->> - netlify.toml configured for frontend
->> - All modules completed (M1-M12)
->> - Ready for deployment"
-[feat/m05-scoring c7107d72] feat(m12): production ready
- 1 file changed, 55 insertions(+)
- create mode 100644 frontend/netlify.toml
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git tag v3-m12-validated
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git tag v3-complete
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git push origin feat/m05-scoring
-Enumerating objects: 99, done.
-Counting objects: 100% (99/99), done.
-Delta compression using up to 12 threads
-Compressing objects: 100% (73/73), done.
-Writing objects: 100% (74/74), 29.06 KiB | 437.00 KiB/s, done.
-Total 74 (delta 43), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (43/43), completed with 18 local objects.
-remote:
-remote: Create a pull request for 'feat/m05-scoring' on GitHub by visiting:
-remote:      https://github.com/ecojiaflow/ecolojia-v3/pull/new/feat/m05-scoring
-remote:
-To https://github.com/ecojiaflow/ecolojia-v3.git
- * [new branch]        feat/m05-scoring -> feat/m05-scoring
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> git push origin --tags
-Enumerating objects: 120, done.
-Counting objects: 100% (120/120), done.
-Delta compression using up to 12 threads
-Compressing objects: 100% (103/103), done.
-Writing objects: 100% (106/106), 746.08 KiB | 2.20 MiB/s, done.
-Total 106 (delta 25), reused 1 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (25/25), completed with 12 local objects.
-To https://github.com/ecojiaflow/ecolojia-v3.git
- * [new tag]           v3-complete -> v3-complete
- * [new tag]           v3-etape1-ui-validated -> v3-etape1-ui-validated
- * [new tag]           v3-m02-scanner -> v3-m02-scanner
- * [new tag]           v3-m03-validated -> v3-m03-validated
- * [new tag]           v3-m04-validated -> v3-m04-validated
- * [new tag]           v3-m05-validated -> v3-m05-validated
- * [new tag]           v3-m06-validated -> v3-m06-validated
- * [new tag]           v3-m07-vision-ocr -> v3-m07-vision-ocr
- * [new tag]           v3-m08-validated -> v3-m08-validated
- * [new tag]           v3-m09-validated -> v3-m09-validated
- * [new tag]           v3-m10-validated -> v3-m10-validated
- * [new tag]           v3-m12-validated -> v3-m12-validated
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
