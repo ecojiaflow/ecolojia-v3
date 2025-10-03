@@ -57,14 +57,14 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {alternatives.slice(0, 6).map((alt) => {
+          {alternatives.slice(0, 6).map((alt, index) => {
             const altHealthScore = alt.scores?.healthScore || 50;
             const altEnvironmentScore = alt.scores?.environmentScore || 50;
             const altOverallScore = Math.round((altHealthScore + altEnvironmentScore) / 2);
             
             return (
               <Link
-                key={alt._id}
+                key={alt._id || index}
                 to={`/product/${alt._id}`}
                 className="block p-4 border border-gray-200 rounded-lg hover:border-green-500 transition-colors"
               >

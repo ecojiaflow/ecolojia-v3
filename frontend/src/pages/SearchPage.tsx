@@ -40,9 +40,23 @@ function getValidProductId(item: any, product: any): string | null {
 
 // Fonction pour obtenir l'image du produit avec fallback
 function getProductImage(product: any): string {
-  if (product.imageUrl) return product.imageUrl;
-  if (product.image_url) return product.image_url;
-  if (product.barcode) return `https://images.openfoodfacts.org/images/products/${product.barcode}/front_fr.200.jpg`;
+  // Si on a déjà une imageUrl valide, l'utiliser
+  if (product.imageUrl && product.imageUrl.includes('openfoodfacts.org')) {
+    return product.imageUrl;
+  }
+  
+  // Sinon, essayer image_url
+  if (product.image_url && product.image_url.includes('openfoodfacts.org')) {
+    return product.image_url;
+  }
+  
+  // Sinon, construire l'URL à partir du barcode
+  if (product.barcode) {
+    // Formater le barcode pour OpenFoodFacts (avec les /)
+    const formattedBarcode = product.barcode.match(/.{1,3}/g)?.join('/') || product.barcode;
+    return `https://images.openfoodfacts.org/images/products/${formattedBarcode}/front_fr.400.jpg`;
+  }
+  
   return '/placeholder.jpg';
 }
 
