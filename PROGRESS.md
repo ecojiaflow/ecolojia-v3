@@ -92,3 +92,33 @@ Status: COMPL�T� ET VALID�
 - Module 10: Payments
 - Module 11: Monitoring
 - Module 12: Production
+
+## ✅ MODULE 5 - SCORING SYSTEM (03/10/2025)
+Date: 2025-10-03 13:30
+Status: COMPLÉTÉ ET VALIDÉ
+
+### Réalisé :
+- ✅ Service de scoring unifié (scoring.service.js)
+- ✅ Routes scoring montées sur /api/scoring
+- ✅ Calculs par catégorie (food, cosmetics, detergents)
+- ✅ Score global pondéré fonctionnel
+- ✅ Bug NOVA corrigé (priorité aux données DB)
+
+### Endpoints créés :
+- GET /api/scoring/:productId
+- GET /api/scoring/barcode/:barcode
+- POST /api/scoring/:productId/calculate
+- POST /api/scoring/calculate-all
+
+### Tests validés :
+- Nutella (3017620422003) : NOVA 4, Score global 27/100
+- Route /api/scoring fonctionnelle
+- 15 produits en base avec scores calculables
+
+### Fichiers créés/modifiés :
+- backend/src/services/scoring.service.js
+- backend/src/routes/scoring.routes.js
+- backend/src/scorers/food/foodScorer.js (corrigé encodage)
+- backend/src/scorers/detergent/detergentScorer.js (simplifié)
+- backend/src/main.js (route ajoutée ligne 178)
+
