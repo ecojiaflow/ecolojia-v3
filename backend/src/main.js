@@ -175,6 +175,7 @@ const routesToLoad = [
   { path: '/api/vision', file: './routes/vision.simple.js', name: 'Vision' },
   { path: '/api/products', file: './routes/products.js', name: 'Products' },
   { path: '/api/products', file: './routes/enrich.routes.js', name: 'Products Enrich' },
+  { path: '/api/scoring', file: './routes/scoring.routes.js', name: 'Scoring' },
   { path: '/api/search', file: './routes/products-search.js', name: 'Search' },
   { path: '/api/cosmetics', file: './routes/cosmetics.routes.js', name: 'Cosmetics' },
   { path: '/api/detergents', file: './routes/detergents.routes.js', name: 'Detergents' },
@@ -326,7 +327,3 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
-
-
-
-
