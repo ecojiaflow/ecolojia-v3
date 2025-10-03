@@ -1,0 +1,55 @@
+﻿# netlify.toml - Configuration de déploiement pour ECOLOJIA Frontend
+
+[build]
+  # Répertoire de base
+  base = ""
+  
+  # Commande de build
+  command = "npm run build"
+  
+  # Répertoire de publication
+  publish = "dist"
+
+[build.environment]
+  # Version Node.js pour le build
+  NODE_VERSION = "20"
+
+# Configuration des redirects pour la SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  
+# Headers de sécurité
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Variables d'environnement de production
+[context.production.environment]
+  VITE_API_BASE = "https://api-vf.onrender.com"
+  VITE_ENV = "production"
