@@ -76,7 +76,7 @@ router.get('/search', asyncHandler(async (req, res) => {
       brand: hit.brand || '',
       category: hit.category || 'food',
       barcode: hit.barcode || '',
-      imageUrl: hit.images?.[0] || hit.imageUrl || hit.image_url || '/images/default-product.jpg',
+      imageUrl: hit.imageUrl || hit.image_url || '/images/default-product.jpg',
       ingredients: {
         text: hit.ingredients || ''
       },

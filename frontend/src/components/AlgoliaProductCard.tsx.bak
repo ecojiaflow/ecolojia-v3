@@ -1,5 +1,4 @@
-﻿PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Get-Content "frontend\src\components\AlgoliaProductCard.tsx" -Head 80
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, ExternalLink, Star, MapPin, Shield, Zap } from 'lucide-react';
 
@@ -57,7 +56,7 @@ const AlgoliaProductCard: React.FC<AlgoliaProductCardProps> = ({ hit }) => {
             <span className="text-xs">Image bientot disponible</span>
           </div>
         )}
-
+        
         {/* Badge de confiance IA */}
         <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium border ${confidenceBadge.color} flex items-center gap-1`}>
           <ConfidenceIcon className="h-3 w-3" />
@@ -79,4 +78,86 @@ const AlgoliaProductCard: React.FC<AlgoliaProductCardProps> = ({ hit }) => {
       <div className="p-6">
         {/* Titre et description */}
         <h3 className="font-semibold text-lg text-eco-text mb-2 line-clamp-2 group-hover:text-eco-leaf transition-colors">
-PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+          {hit.title}
+        </h3>
+        
+        <p className="text-eco-text/70 text-sm mb-4 line-clamp-3">
+          {hit.description}
+        </p>
+
+        {/* Tags */}
+        {hit.tags && hit.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-4">
+            {hit.tags.slice(0, 3).map((tag: string, index: number) => (
+              <span
+                key={index}
+                className="px-2 py-1 bg-eco-leaf/10 text-eco-leaf text-xs rounded-full font-medium"
+              >
+                {tag}
+              </span>
+            ))}
+            {hit.tags.length > 3 && (
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                +{hit.tags.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Zones et score detaille */}
+        <div className="flex items-center justify-between mb-4 text-sm">
+          {/* Zones disponibles */}
+          {hit.zones_dispo && hit.zones_dispo.length > 0 && (
+            <div className="flex items-center gap-1 text-eco-text/60">
+              <MapPin className="h-4 w-4" />
+              <span>{hit.zones_dispo.join(', ')}</span>
+            </div>
+          )}
+
+          {/* Score detaille */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-eco-text/60">Score eco:</span>
+            <span className={`font-bold text-sm ${getEcoScoreColor(ecoScore)}`}>
+              {(ecoScore * 100).toFixed(0)}%
+            </span>
+          </div>
+        </div>
+
+        {/* Boutons d'action */}
+        <div className="flex gap-2">
+          <Link 
+            to={`/product/${hit.objectID || hit.id}`}
+            className="flex-1 bg-eco-leaf hover:bg-eco-leaf/90 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Voir le produit
+          </Link>
+          
+          <button className="px-3 py-2 border border-eco-leaf/20 text-eco-leaf hover:bg-eco-leaf/10 rounded-lg transition-colors">
+            <Leaf className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Indicateur de confiance detaille */}
+        {confidence > 0 && (
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="flex items-center justify-between text-xs text-eco-text/60">
+              <span>Confiance IA</span>
+              <span className="font-medium">{(confidence * 100).toFixed(0)}%</span>
+            </div>
+            <div className="mt-1 w-full bg-gray-200 rounded-full h-1">
+              <div 
+                className="bg-eco-leaf h-1 rounded-full transition-all duration-300"
+                style={{ width: `${confidence * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AlgoliaProductCard;
+
+
