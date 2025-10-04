@@ -1,0 +1,4 @@
+﻿// Modification à ajouter après la ligne où on appelle algoliaService.searchProducts
+// Remplacer cette partie dans algolia-unified.js (lignes ~65-68)
+
+    const results = await algoliaService.searchProducts(q, {}, searchOptions);
