@@ -1,4 +1,4 @@
-﻿// backend/src/services/algoliaService.js
+// backend/src/services/algoliaService.js
 
 const algoliasearch = require('algoliasearch');
 
@@ -10,9 +10,9 @@ class AlgoliaService {
     this.indexName = process.env.ALGOLIA_INDEX_NAME || 'ecolojia_products';
     this.stagingIndexName = process.env.ALGOLIA_INDEX_STAGING || 'ecolojia_products_staging';
 
-    console.log('🔍 Configuration Algolia:', {
-      APP_ID: this.appId ? '✅ Present' : '❌ Manquant',
-      ADMIN_KEY: this.adminKey ? '✅ Present' : '❌ Manquant',
+    console.log('ðŸ” Configuration Algolia:', {
+      APP_ID: this.appId ? 'âœ… Present' : 'âŒ Manquant',
+      ADMIN_KEY: this.adminKey ? 'âœ… Present' : 'âŒ Manquant',
       INDEX: this.indexName,
       STAGING: this.stagingIndexName
     });
@@ -23,13 +23,13 @@ class AlgoliaService {
         this.client = algoliasearch(this.appId, this.adminKey);
         this.productsIndex = this.client.initIndex(this.indexName);
         this.stagingIndex = this.client.initIndex(this.stagingIndexName);
-        console.log('✅ Client Algolia initialise');
+        console.log('âœ… Client Algolia initialise');
       } catch (error) {
-        console.error('❌ Erreur initialisation Algolia:', error);
+        console.error('âŒ Erreur initialisation Algolia:', error);
         this.client = null;
       }
     } else {
-      console.warn('⚠️ Algolia non configure - mode degrade active');
+      console.warn('âš ï¸ Algolia non configure - mode degrade active');
       this.client = null;
     }
   }
@@ -123,7 +123,7 @@ class AlgoliaService {
   }
 
   /**
-   * Genere un slug à partir d'un texte
+   * Genere un slug   partir d'un texte
    */
   generateSlug(text) {
     if (!text) return 'product-' + Date.now();
@@ -131,13 +131,13 @@ class AlgoliaService {
     return text
       .toLowerCase()
       .trim()
-      .replace(/[àáäa]/g, 'a')
-      .replace(/[éèëe]/g, 'e')
-      .replace(/[íìïi]/g, 'i')
-      .replace(/[óòöo]/g, 'o')
-      .replace(/[úùüu]/g, 'u')
-      .replace(/[ñ]/g, 'n')
-      .replace(/[ç]/g, 'c')
+      .replace(/[ ¡¤a]/g, 'a')
+      .replace(/[ee«e]/g, 'e')
+      .replace(/[¬­ii]/g, 'i')
+      .replace(/[²³¶o]/g, 'o')
+      .replace(/[uºuu]/g, 'u')
+      .replace(/[±]/g, 'n')
+      .replace(/[c]/g, 'c')
       .replace(/[^\w\s-]/g, '')
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
@@ -179,18 +179,18 @@ class AlgoliaService {
   }
 
   /**
-   * Retourne l'icone associee à une categorie
+   * Retourne l'icone associee   une categorie
    */
   getCategoryIcon(category) {
     const icons = {
-      'food': '🍎',
-      'alimentaire': '🍎',
-      'cosmetics': '💄',
-      'cosmetique': '💄',
-      'detergents': '🧽',
-      'detergent': '🧽',
-      'hygiene': '🧼',
-      'other': '📦'
+      'food': 'ðŸŽ',
+      'alimentaire': 'ðŸŽ',
+      'cosmetics': 'ðŸ’„',
+      'cosmetique': 'ðŸ’„',
+      'detergents': 'ðŸ§½',
+      'detergent': 'ðŸ§½',
+      'hygiene': 'ðŸ§¼',
+      'other': 'ðŸ“¦'
     };
     return icons[category] || icons.other;
   }
@@ -259,7 +259,7 @@ class AlgoliaService {
           'filterOnly(environmentScore)'
         ],
         
-        // Attributs à recuperer
+        // Attributs   recuperer
         attributesToRetrieve: [
           'objectID',
           'title',
@@ -343,9 +343,9 @@ class AlgoliaService {
         ]
       });
       
-      console.log(`✅ Configuration index ${useStaging ? 'staging' : 'production'} mise à jour`);
+      console.log(`âœ… Configuration index ${useStaging ? 'staging' : 'production'} mise   jour`);
     } catch (error) {
-      console.error('❌ Erreur configuration index:', error);
+      console.error('âŒ Erreur configuration index:', error);
       throw error;
     }
   }
@@ -364,11 +364,11 @@ class AlgoliaService {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       
       const result = await index.saveObject(algoliaProduct);
-      console.log(`✅ Produit "${product.name || product.title}" indexe (${algoliaProduct.objectID})`);
+      console.log(`âœ… Produit "${product.name || product.title}" indexe (${algoliaProduct.objectID})`);
       
       return result;
     } catch (error) {
-      console.error(`❌ Erreur indexation produit:`, error);
+      console.error(`âŒ Erreur indexation produit:`, error);
       throw error;
     }
   }
@@ -394,13 +394,13 @@ class AlgoliaService {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       const result = await index.saveObjects(algoliaProducts);
       
-      console.log(`✅ Batch indexe: ${products.length} produits`);
+      console.log(`âœ… Batch indexe: ${products.length} produits`);
       return { 
         success: result.objectIDs.length, 
         failed: products.length - result.objectIDs.length 
       };
     } catch (error) {
-      console.error('❌ Erreur indexation batch:', error);
+      console.error('âŒ Erreur indexation batch:', error);
       return { success: 0, failed: products.length };
     }
   }
@@ -454,16 +454,7 @@ class AlgoliaService {
         maxValuesPerFacet: 50
       };
       
-      // MODIFICATION IMPORTANTE : Ajouter les filtres passés directement
-      if (options.facetFilters) {
-        searchOptions.facetFilters = options.facetFilters;
-      }
-      if (options.numericFilters) {
-        searchOptions.numericFilters = options.numericFilters;
-      }
-      
-      // Si pas de filtres directs, utiliser l'ancien système
-      if (!options.facetFilters && !options.numericFilters && algoliaFilters.length > 0) {
+      if (algoliaFilters.length > 0) {
         searchOptions.filters = algoliaFilters.join(' AND ');
       }
       
@@ -473,16 +464,13 @@ class AlgoliaService {
         searchOptions.clickAnalytics = true;
       }
       
-      // DEBUG: Voir exactement ce qui est envoyé à Algolia
-      console.log('DEBUG searchOptions:', JSON.stringify(searchOptions, null, 2));
-      
       const result = await index.search(query, searchOptions);
       
-      console.log(`🔍 Recherche "${query}": ${result.nbHits} resultats`);
+      console.log(`ðŸ” Recherche "${query}": ${result.nbHits} resultats`);
       return result;
       
     } catch (error) {
-      console.error('❌ Erreur recherche Algolia:', error);
+      console.error('âŒ Erreur recherche Algolia:', error);
       return { hits: [], nbHits: 0, facets: {}, error: error.message };
     }
   }
@@ -503,15 +491,15 @@ class AlgoliaService {
     try {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       await index.deleteObject(String(productId));
-      console.log(`✅ Produit ${productId} supprime de l'index`);
+      console.log(`âœ… Produit ${productId} supprime de l'index`);
     } catch (error) {
-      console.error(`❌ Erreur suppression produit ${productId}:`, error);
+      console.error(`âŒ Erreur suppression produit ${productId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Met à jour partiellement un produit
+   * Met   jour partiellement un produit
    */
   async updateProduct(productId, updates, useStaging = false) {
     if (!this.isConfigured()) return;
@@ -525,9 +513,9 @@ class AlgoliaService {
         updatedAt: Math.floor(Date.now() / 1000)
       });
       
-      console.log(`✅ Produit ${productId} mis à jour dans Algolia`);
+      console.log(`âœ… Produit ${productId} mis   jour dans Algolia`);
     } catch (error) {
-      console.error(`❌ Erreur mise à jour produit ${productId}:`, error);
+      console.error(`âŒ Erreur mise   jour produit ${productId}:`, error);
       throw error;
     }
   }
@@ -545,9 +533,9 @@ class AlgoliaService {
     try {
       const index = useStaging ? this.stagingIndex : this.productsIndex;
       await index.clearObjects();
-      console.log(`⚠️ Index ${useStaging ? 'staging' : 'production'} vide completement`);
+      console.log(`âš ï¸ Index ${useStaging ? 'staging' : 'production'} vide completement`);
     } catch (error) {
-      console.error('❌ Erreur vidage index:', error);
+      console.error('âŒ Erreur vidage index:', error);
       throw error;
     }
   }
@@ -587,7 +575,7 @@ class AlgoliaService {
       };
 
     } catch (error) {
-      console.error('❌ Erreur stats Algolia:', error);
+      console.error('âŒ Erreur stats Algolia:', error);
       return { 
         configured: false, 
         error: error.message 
@@ -600,26 +588,26 @@ class AlgoliaService {
    */
   async testConnection() {
     if (!this.client) {
-      console.error('❌ Client Algolia non initialise');
+      console.error('âŒ Client Algolia non initialise');
       return false;
     }
 
     try {
-      console.log('🔍 Test de connexion Algolia...');
+      console.log('ðŸ”Œ Test de connexion Algolia...');
       
       // Test avec l'index staging
       const stats = await this.getIndexStats(true);
       
       if (stats.configured) {
-        console.log('✅ Connexion Algolia OK');
-        console.log(`📊 Produits dans staging: ${stats.totalRecords || 0}`);
+        console.log('âœ… Connexion Algolia OK');
+        console.log(`ðŸ“Š Produits dans staging: ${stats.totalRecords || 0}`);
         return true;
       } else {
-        console.error('❌ Index non configure');
+        console.error('âŒ Index non configure');
         return false;
       }
     } catch (error) {
-      console.error('❌ Test connexion Algolia echoue:', error);
+      console.error('âŒ Test connexion Algolia echoue:', error);
       return false;
     }
   }
@@ -633,7 +621,7 @@ class AlgoliaService {
     }
 
     try {
-      console.log('📋 Copie staging → production...');
+      console.log('ðŸ“‹ Copie staging â†’ production...');
       
       // Utiliser la methode native Algolia de copie
       await this.client.copyIndex(
@@ -644,9 +632,9 @@ class AlgoliaService {
         }
       );
       
-      console.log('✅ Staging promu en production avec succes');
+      console.log('âœ… Staging promu en production avec succes');
     } catch (error) {
-      console.error('❌ Erreur promotion staging:', error);
+      console.error('âŒ Erreur promotion staging:', error);
       throw error;
     }
   }

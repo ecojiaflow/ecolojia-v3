@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { searchProducts, toDisplayProduct, SearchResult, SearchFilters } from "../lib/api";
+import { searchProducts, toDisplayProduct, SearchResult } from "../lib/api";
 import ScoreChip from "../components/ScoreChip";
 import DomainBadges from "../components/DomainBadges";
 import FiltersPanel from '../components/search/FiltersPanel';
@@ -86,16 +86,7 @@ export default function SearchPage() {
     setError(null);
     
     try {
-      // Construire les filtres à partir de l'état
-      const filters: SearchFilters = {
-        brands: state.brands || [],
-        categories: state.categories || [],
-        minScore: state.hsMin,
-        maxScore: state.hsMax
-      };
-      
-      // Appeler searchProducts avec les filtres
-      const r = await searchProducts(term, filters);
+      const r = await searchProducts(term);
       setRes(r);
       
       // Extraire les facettes des résultats (simulation)
@@ -124,10 +115,10 @@ export default function SearchPage() {
     }
   }
 
-  // Déclencher recherche quand state change (incluant les filtres maintenant)
+  // Déclencher recherche quand state change
   useEffect(() => {
     doSearchQuery();
-  }, [state.q, state.brands, state.categories, state.hsMin, state.hsMax]);
+  }, [state.q]); // TODO: ajouter autres filtres
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,7 +207,7 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="flex-1">
             <div className="mb-4 p-3 bg-green-100 border border-green-400 rounded-lg">
-              <p className="text-sm text-green-800">✅ Navigation produit corrigée - M9 fonctionnel ! ✅ Filtres Algolia activés !</p>
+              <p className="text-sm text-green-800">✅ Navigation produit corrigée - M9 fonctionnel !</p>
             </div>
 
             {error && (

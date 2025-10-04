@@ -1,8 +1,4 @@
-﻿const express = require('express');
-const router = express.Router();
-const algoliaService = require('../services/algolia/algoliaService');
-const { asyncHandler } = require('../middleware');
-
+﻿// Remplacer la route GET /api/algolia/search (lignes 6-69)
 // GET /api/algolia/search - avec support complet des filtres
 router.get('/search', asyncHandler(async (req, res) => {
   const { 
@@ -67,7 +63,7 @@ router.get('/search', asyncHandler(async (req, res) => {
     
     console.log('Algolia search:', { query: q, options: searchOptions });
     
-    const results = await algoliaService.searchProducts(q, {}, searchOptions);
+    const results = await algoliaService.searchProducts(q, searchOptions);
     
     // Normaliser TOUS les champs
     const normalizedProducts = (results.hits || []).map(hit => ({
@@ -125,90 +121,3 @@ router.get('/search', asyncHandler(async (req, res) => {
     });
   }
 }));
-
-// POST /api/algolia/sync - CORRIGÉ pour inclure TOUS les champs
-router.post('/sync', asyncHandler(async (req, res) => {
-  const Product = require('../models/Product');
-  const products = await Product.find({}).lean();
-  
-  if (!algoliaService.isConfigured()) {
-    return res.status(500).json({ error: 'Service Algolia non configuré' });
-  }
-  
-  // Transformation complète avec TOUS les champs
-  const transformProduct = (product) => {
-    const obj = {
-      objectID: product._id.toString(),
-      // Dupliquer les champs pour la compatibilité
-      name: product.name || '',
-      title: product.name || '',
-      brand: product.brand || '',
-      category: product.category || '',
-      barcode: product.barcode || '',
-      // Inclure le texte des ingrédients directement
-      ingredients: product.ingredients?.text || product.ingredients || '',
-      // Scores
-      healthScore: product.analysisData?.healthScore || 0,
-      environmentScore: product.analysisData?.environmentScore || 0,
-      nova_group: product.nova_group || product.nova || 0,
-      novaGroup: product.nova_group || product.nova || 0,
-      nutriscore_grade: product.nutriscore_grade || '',
-      nutriscoreGrade: product.nutriscore_grade || '',
-      // Images
-      imageUrl: product.imageUrl || product.image_url || product.images?.front || '',
-      image_url: product.imageUrl || product.image_url || product.images?.front || ''
-    };
-    
-    // Log pour debug
-    if (!obj.name) {
-      console.log('⚠️ Produit sans nom:', product._id, product);
-    }
-    
-    return obj;
-  };
-  
-  const batchSize = 100;
-  let totalIndexed = 0;
-  let productsWithoutName = 0;
-  
-  for (let i = 0; i < products.length; i += batchSize) {
-    const batch = products.slice(i, i + batchSize);
-    const transformed = batch.map(transformProduct);
-    
-    // Compter les produits sans nom
-    productsWithoutName += transformed.filter(p => !p.name).length;
-    
-    await algoliaService.productsIndex.saveObjects(transformed);
-    totalIndexed += transformed.length;
-    console.log(`Indexé: ${totalIndexed}/${products.length}`);
-  }
-  
-  res.json({ 
-    success: true, 
-    message: `${totalIndexed} produits synchronisés`,
-    total: products.length,
-    warnings: productsWithoutName > 0 ? `${productsWithoutName} produits sans nom` : null
-  });
-}));
-
-// Les autres routes...
-router.post('/configure', asyncHandler(async (req, res) => {
-  try {
-    await algoliaService.configureIndex();
-    res.json({ success: true, message: 'Index configuré' });
-  } catch (error) {
-    res.json({ success: true, message: 'Index utilisable', warning: error.message });
-  }
-}));
-
-router.get('/stats', asyncHandler(async (req, res) => {
-  const stats = await algoliaService.getIndexStats();
-  res.json({
-    success: true,
-    totalProducts: stats.entries || 0,
-    indexName: algoliaService.indexName,
-    stats: stats
-  });
-}));
-
-module.exports = router;

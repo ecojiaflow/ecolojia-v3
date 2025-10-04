@@ -1,73 +1,19 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const algoliaService = require('../services/algolia/algoliaService');
 const { asyncHandler } = require('../middleware');
 
-// GET /api/algolia/search - avec support complet des filtres
+// GET /api/algolia/search - avec normalisation complète
 router.get('/search', asyncHandler(async (req, res) => {
-  const { 
-    q = '', 
-    page = 0, 
-    limit = 20,
-    // Nouveaux paramètres de filtres
-    brands,
-    categories,
-    productType,
-    minScore,
-    maxScore
-  } = req.query;
+  const { q = '', category, page = 0, limit = 20 } = req.query;
   
   try {
-    // Construire les filtres Algolia
-    const facetFilters = [];
-    const numericFilters = [];
-    
-    // Filtres par marques (peut être un array ou une string)
-    if (brands) {
-      const brandList = Array.isArray(brands) ? brands : [brands];
-      brandList.forEach(brand => {
-        facetFilters.push([`brand:${brand}`]);
-      });
-    }
-    
-    // Filtres par catégories
-    if (categories) {
-      const categoryList = Array.isArray(categories) ? categories : [categories];
-      categoryList.forEach(category => {
-        facetFilters.push([`category:${category}`]);
-      });
-    }
-    
-    // Filtre par type de produit
-    if (productType) {
-      facetFilters.push([`productType:${productType}`]);
-    }
-    
-    // Filtres numériques pour le score
-    if (minScore) {
-      numericFilters.push(`healthScore>=${minScore}`);
-    }
-    if (maxScore) {
-      numericFilters.push(`healthScore<=${maxScore}`);
-    }
-    
-    // Options de recherche Algolia
-    const searchOptions = {
+    const filters = category ? `category:${category}` : '';
+    const results = await algoliaService.searchProducts(q, {
+      filters,
       page: parseInt(page),
       hitsPerPage: parseInt(limit)
-    };
-    
-    if (facetFilters.length > 0) {
-      searchOptions.facetFilters = facetFilters;
-    }
-    
-    if (numericFilters.length > 0) {
-      searchOptions.numericFilters = numericFilters;
-    }
-    
-    console.log('Algolia search:', { query: q, options: searchOptions });
-    
-    const results = await algoliaService.searchProducts(q, {}, searchOptions);
+    });
     
     // Normaliser TOUS les champs
     const normalizedProducts = (results.hits || []).map(hit => ({

@@ -1,79 +1,76 @@
-﻿import algoliasearch from 'algoliasearch';
+﻿// frontend/src/lib/algolia.ts
+import algoliasearch from 'algoliasearch/lite';
+import { buildAlgoliaFilters, FilterState } from '../utils/buildAlgoliaFilters';
 
-// Configuration Algolia pour Ecolojia
-const ALGOLIA_APP_ID = import.meta.env.VITE_ALGOLIA_APP_ID || 'A2KJGZ2811';
-const ALGOLIA_SEARCH_KEY = import.meta.env.VITE_ALGOLIA_SEARCH_KEY || '085aeee2b3ec8efa66dabb7691a01b67';
-export const ALGOLIA_INDEX_NAME = import.meta.env.VITE_ALGOLIA_INDEX_NAME || 'products';
+const client = algoliasearch(
+  import.meta.env.VITE_ALGOLIA_APP_ID || 'A2KJGZ2811',
+  import.meta.env.VITE_ALGOLIA_SEARCH_KEY || '8a6393c1ff95165413e7f0bfea804357'
+);
 
-// Client Algolia
-const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY);
+const index = client.initIndex(import.meta.env.VITE_ALGOLIA_INDEX || 'products');
 
-// Configuration de recherche optimisee
-export const searchConfig = {
-  hitsPerPage: 12,
-  attributesToRetrieve: [
-    'objectID',
-    'title',
-    'description', 
-    'slug',
-    'eco_score',
-    'ai_confidence',
-    'confidence_color',
-    'confidence_pct',
-    'tags',
-    'zones_dispo',
-    'images',
-    'resume_fr',
-    'verified_status'
-  ],
-  attributesToHighlight: [
-    'title',
-    'description',
-    'tags'
-  ],
-  highlightPreTag: '<mark class="bg-eco-leaf/20 text-eco-text">',
-  highlightPostTag: '</mark>',
-  typoTolerance: 'min',
-  minWordSizefor1Typo: 4,
-  minWordSizefor2Typos: 8
+export interface SearchParams {
+  query: string;
+  filters?: FilterState;
+  page?: number;
+  hitsPerPage?: number;
+}
+
+export const searchProducts = async ({ 
+  query, 
+  filters = {}, 
+  page = 0, 
+  hitsPerPage = 20 
+}: SearchParams) => {
+  try {
+    const { facetFilters, numericFilters } = buildAlgoliaFilters(filters);
+    
+    const searchParams: any = {
+      query,
+      page,
+      hitsPerPage,
+      attributesToRetrieve: [
+        'barcode',
+        'name',
+        'brands',
+        'categories',
+        'productType',
+        'imageUrl',
+        'score',
+        'nutriScore',
+        'novaGroup',
+        'ecoScore'
+      ],
+      facets: ['brands', 'categories.lvl0', 'productType', 'score']
+    };
+    
+    if (facetFilters) {
+      searchParams.facetFilters = facetFilters;
+    }
+    
+    if (numericFilters) {
+      searchParams.numericFilters = numericFilters;
+    }
+    
+    console.log('Algolia search params:', searchParams);
+    
+    const results = await index.search(query, searchParams);
+    
+    return {
+      hits: results.hits,
+      nbHits: results.nbHits,
+      page: results.page,
+      nbPages: results.nbPages,
+      facets: results.facets || {}
+    };
+  } catch (error) {
+    console.error('Algolia search error:', error);
+    return {
+      hits: [],
+      nbHits: 0,
+      page: 0,
+      nbPages: 0,
+      facets: {}
+    };
+  }
 };
-
-// Fonction de nettoyage des textes
-export const cleanText = (text: string): string => {
-  if (!text) return '';
-  
-  return text
-    .replace(//g, 'e')
-    .replace(//g, '')
-    .replace(/e/g, 'e')
-    .replace(/e/g, 'e')
-    .replace(/c/g, 'c')
-    .replace(/o/g, 'o')
-    .replace(//g, '')
-    .replace(/i/g, 'i')
-    .replace(/a/g, 'a')
-    .replace(/aaa/g, 'aa')
-    .replace(/aaaa/g, 'a')
-    .replace(//g, '')
-    .replace(/e/g, 'e')
-    .replace(/aa/g, '')
-    .replace(/aa/g, '')
-    .trim();
-};
-
-// Fonction pour filtrer les tags
-export const cleanTags = (tags: string[]): string[] => {
-  if (!tags || !Array.isArray(tags)) return [];
-  
-  return tags.filter(tag => {
-    const lowerTag = tag.toLowerCase();
-    return !lowerTag.includes('recherche') && 
-           !lowerTag.includes('search') && 
-           tag.length > 1 &&
-           tag.length < 25;
-  });
-};
-
-export default searchClient;
-
-
