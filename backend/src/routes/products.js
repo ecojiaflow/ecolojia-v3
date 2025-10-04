@@ -493,7 +493,25 @@ router.get('/:id', handleAsync(async (req, res) => {
         try {
           const scores = await scoringService.calculateScores(enrichedProduct);
           enrichedProduct.scores = scores;
-          logger.info('✅ Scores calculated for:', id);
+
+        // 3. Mapper les scores de details vers scores si nécessaire
+        if (enrichedProduct.details) {
+          // Nutri-Score
+          if (enrichedProduct.details.nutriscore?.grade && !enrichedProduct.scores.nutriScore) {
+            enrichedProduct.scores.nutriScore = enrichedProduct.details.nutriscore.grade.toUpperCase();
+          }
+          
+          // Eco-Score (si dans details)
+          if (enrichedProduct.details.ecoscore?.grade && !enrichedProduct.scores.ecoScore) {
+            enrichedProduct.scores.ecoScore = enrichedProduct.details.ecoscore.grade.toUpperCase();
+          }
+          
+          // NOVA (si dans details mais pas dans scores)
+          if (enrichedProduct.details.nova && !enrichedProduct.scores.nova) {
+            enrichedProduct.scores.nova = enrichedProduct.details.nova;
+          }
+        }
+        logger.info('✅ Scores calculated for:', id);
         } catch (scoringError) {
           logger.error('⚠️ Scoring error:', scoringError.message);
         }
