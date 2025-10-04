@@ -451,84 +451,83 @@ router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
 }));
 
 /* Obtenir un produit par ID */
+// PATCH pour la route GET /:id
+// Remplacer la fonction à partir de la ligne 454
+
 router.get('/:id', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get product by ID:', id);
 
-  // Essayer la vraie base de donnÃ©es d'abord
+  // Essayer la vraie base de données d'abord
   if (mongoose.connection.readyState === 1) {
     try {
       let product = null;
-      
+
       // Si c'est un ObjectId valide
       if (mongoose.Types.ObjectId.isValid(id)) {
         product = await Product.findById(id);
       }
-      
+
       // Sinon essayer par barcode
       if (!product && /^\d{8,13}$/.test(id)) {
         product = await Product.findOne({ barcode: id });
       }
-      
+
       if (product) {
-        return res.json({ success: true, product });
+        // 🔥 NOUVEAU : Charger les services d'analyse
+        const analysisService = require('../services/analysis/analysisService');
+        const scoringService = require('../services/scoring.service');
+        
+        let enrichedProduct = product.toObject();
+        
+        // 1. Analyser le produit
+        try {
+          const analysis = await analysisService.analyzeProduct(enrichedProduct);
+          enrichedProduct = { ...enrichedProduct, ...analysis };
+          logger.info('✅ Analysis completed for:', id);
+        } catch (analysisError) {
+          logger.error('⚠️ Analysis error:', analysisError.message);
+        }
+        
+        // 2. Calculer les scores
+        try {
+          const scores = await scoringService.calculateScores(enrichedProduct);
+          enrichedProduct.scores = scores;
+          logger.info('✅ Scores calculated for:', id);
+        } catch (scoringError) {
+          logger.error('⚠️ Scoring error:', scoringError.message);
+        }
+        
+        return res.json({ success: true, product: enrichedProduct });
       }
     } catch (error) {
       logger.error('Database product lookup error:', error);
     }
   }
 
-    // Fallback: générer des données mock si produit pas trouvé
-    console.log("Produit non trouvé en base, génération mock pour ID:", id);
-    const mockProduct = {
-      _id: id,
-      name: `Produit Test ${id.substring(0, 8)}`,
-      brand: "Marque Test", 
-      category: "food",
-      barcode: id,
-      scores: {
-        healthScore: 75,
-        environmentScore: 65,
-        nutriscore: "B",
-        nova: 2,
-        ecoscore: "C"
-      },
-      images: {
-        front: "https://via.placeholder.com/300x400?text=Produit+Test"
-      },
-      ingredients: [
-        { name: "Eau", percentage: 40, isAllergen: false, concerns: [] },
-        { name: "Sucre", percentage: 30, isAllergen: false, concerns: ["Additif"] }
-      ],
-      nutrition: {
-        per100g: {
-          energy: 200,
-          protein: 4,
-          carbohydrates: 35,
-          fat: 6,
-          salt: 0.3
-        }
-      }
-    };
+  // Fallback: générer des données mock si produit pas trouvé
+  console.log("Produit non trouvé en base, génération mock pour ID:", id);
+  const mockProduct = {
+    _id: id,
+    name: `Produit Test ${id.substring(0, 8)}`,
+    brand: "Marque Test",
+    category: "food",
+    barcode: id,
+    scores: {
+      healthScore: 75,
+      environmentScore: 65,
+      nutriscore: "B",
+      nova: 2,
+      ecoscore: "C"
+    },
+    images: {
+      front: "https://via.placeholder.com/300x400?text=Produit+Test"
+    }
+  };
 
-    return res.json({ success: true, product: mockProduct });
-
-  // Fallback sur mock
-  let product = Object.values(mockProducts).find(p => p._id === id) || 
-                (/^\d{8,13}$/.test(id) ? mockProducts[id] : null);
-
-  if (product) {
-    return res.json({ 
-      success: true, 
-      product: { 
-        ...product, 
-        viewCount: Math.floor(Math.random() * 200) + 50 
-      } 
-    });
-  }
-
-  res.status(404).json({ success: false, error: 'Produit non trouvÃ©', id });
+  return res.json({ success: true, product: mockProduct });
 }));
+
 
 /* CrÃ©er un produit manuellement */
 router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
