@@ -49,7 +49,7 @@ const AlgoliaProductCard: React.FC<AlgoliaProductCardProps> = ({ hit }) => {
             src={hit.images[0]}
             alt={hit.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          onError={(e) => { const target = e.target as HTMLImageElement; target.src = '/placeholder-image.jpg'; }} />
         ) : (
           <div className="flex flex-col items-center justify-center text-eco-leaf/50">
             <Leaf className="h-16 w-16 mb-2" />
