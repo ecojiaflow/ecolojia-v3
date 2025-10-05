@@ -1,6 +1,6 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BarcodeScanner from "../components/scanner/BarcodeScanner";
+import BarcodeScanner from "../components/scanner/BarcodeScannerEnhanced";
 import CategorySelector from "../components/CategorySelector";
 import { productService } from "../services/api";
 import { Loader2 } from "lucide-react";
@@ -9,17 +9,10 @@ import { useDeviceContext } from "../hooks/useDeviceContext";
 const ScanPage: React.FC = () => {
   const navigate = useNavigate();
   const { isMobile } = useDeviceContext();
-  const [showScanner, setShowScanner] = useState(true);
   const [manualCode, setManualCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"food" | "cosmetics" | "detergents" | "auto">("auto");
-
-  const handleScanSuccess = async (result: any) => {
-    if (result?.barcode) {
-      await handleBarcodeDetected(result.barcode);
-    }
-  };
 
   const handleBarcodeDetected = async (code: string) => {
     setLoading(true);
@@ -34,7 +27,6 @@ const ScanPage: React.FC = () => {
         ? result.data
         : result;
 
-      // Navigate vers ProductPage avec l'ID produit (scoring complet)
       if (normalizedResult?.product?._id) {
         navigate(`/product/${normalizedResult.product._id}`);
       } else {
@@ -58,12 +50,10 @@ const ScanPage: React.FC = () => {
 
   if (isMobile) {
     return (
-      <div className="fixed inset-0 bg-gray-900">
+      <div className="fixed inset-0 bg-black">
         <BarcodeScanner
-          isOpen={showScanner}
-          onClose={() => navigate('/')}
-          onScanSuccess={handleScanSuccess}
-          autoStartCamera={true}
+          onDetected={handleBarcodeDetected}
+          onCancel={() => navigate('/')}
         />
       </div>
     );
@@ -80,33 +70,30 @@ const ScanPage: React.FC = () => {
           />
         </div>
 
-        {showScanner && (
-          <div className="mb-4">
-            <BarcodeScanner
-              isOpen={showScanner}
-              onClose={() => setShowScanner(false)}
-              onScanSuccess={handleScanSuccess}
-            />
-          </div>
-        )}
+        <div className="mb-4">
+          <BarcodeScanner
+            onDetected={handleBarcodeDetected}
+            onCancel={() => {}}
+          />
+        </div>
 
         <div className="bg-white rounded-xl p-4">
-          <h3 className="text-sm font-medium mb-2">Saisie manuelle du code-barres</h3>
+          <h3 className="text-sm font-medium mb-2">Saisie manuelle</h3>
           <form onSubmit={handleManualSubmit} className="flex gap-2">
             <input
               type="text"
               value={manualCode}
               onChange={(e) => setManualCode(e.target.value)}
               placeholder="Ex: 3017620422003"
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="flex-1 px-4 py-2 border rounded-lg"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !manualCode.trim()}
-              className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-emerald-600 text-white rounded-lg"
             >
-              {loading ? (<><Loader2 className="w-4 h-4 animate-spin" /> Analyse…</>) : "Analyser"}
+              {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyse</> : "Analyser"}
             </button>
           </form>
         </div>
