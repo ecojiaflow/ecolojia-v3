@@ -26,10 +26,10 @@ export function useChat(options: UseChatOptions = {}) {
     if (productContext) {
       chatService.setProductContext(productContext);
       // Mettre  jour les suggestions selon le contexte
-      setSuggestions(["Pourquoi ce score ?", "Quels sont les risques ?", "Des alternatives ?"]);
+      setSuggestions(["Pourquoi ce score ?", "C'est quoi NOVA ?", "Quels additifs à risque ?", "À quelle fréquence consommer ?"]);
     } else {
       // Suggestions generales
-      setSuggestions(["Comment lire les scores ?", "Que signifie NOVA ?", "Conseils nutrition"]);
+      setSuggestions(["Comment lire les scores ?", "Classification NOVA", "Nutri-Score vs Eco-Score", "Sources scientifiques"]);
     }
   }, [productContext]);
 
@@ -84,7 +84,7 @@ export function useChat(options: UseChatOptions = {}) {
     chatService.clearHistory();
     setMessages([]);
     // Reinitialiser les suggestions
-    setSuggestions(["Pourquoi ce score ?", "Quels sont les risques ?", "Des alternatives ?"]);
+    setSuggestions(["Pourquoi ce score ?", "C'est quoi NOVA ?", "Quels additifs à risque ?", "À quelle fréquence consommer ?"]);
   }, [productContext]);
 
   // Obtenir l'historique complet depuis le service
@@ -103,5 +103,6 @@ export function useChat(options: UseChatOptions = {}) {
     currentContext: chatService.getCurrentContext()
   };
 }
+
 
 

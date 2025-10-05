@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ï»¿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -110,12 +110,12 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores réels depuis l'API
+  // Scores rÃ©els depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
   const overallScore = product.scores?.overallScore || Math.round((healthScore + environmentScore) / 2);
 
-  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown rÃ©el depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -134,7 +134,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: 'Éco-Score', 
+      factor: 'Ã‰co-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -149,11 +149,11 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: 'Éthique', 
+      factor: 'Ã‰thique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score éthique: ${breakdown.ethics.score}/100` 
+      reason: `Score Ã©thique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les éléments null/undefined
+  ].filter(Boolean); // Retirer les Ã©lÃ©ments null/undefined
 
   if (isMobile) {
     return (
@@ -190,12 +190,12 @@ const ProductPage: React.FC = () => {
             <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
             <div className="p-4">{product.ingredients && product.ingredients.length > 0 ? <ProductIngredients ingredients={product.ingredients} /> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
-          <details className="bg-white">
-            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+          <details className="bg-white" open>
+            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
-            <details className="bg-white">
+            <details className="bg-white" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Valeurs nutritionnelles</summary>
               <div className="p-4"><ProductNutrition nutrition={product.nutrition.per100g} /></div>
             </details>
@@ -229,3 +229,4 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+

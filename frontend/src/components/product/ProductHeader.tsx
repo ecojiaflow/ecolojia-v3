@@ -32,10 +32,10 @@ const getCategoryLabel = (category: string) => {
 };
 
 const getScoreColor = (score: number) => {
-  if (score >= 80) return 'text-green-600';
-  if (score >= 60) return 'text-yellow-600';
-  if (score >= 40) return 'text-orange-600';
-  return 'text-red-600';
+  if (score >= 70) return 'text-green-700';  // Vert foncé 70-100
+  if (score >= 50) return 'text-green-500';  // Vert clair 50-69
+  if (score >= 30) return 'text-orange-500'; // Orange 30-49
+  return 'text-red-600';                     // Rouge 0-29
 };
 
 const getNutriScoreColor = (score?: string) => {
@@ -130,3 +130,4 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
     </div>
   );
 };
+
