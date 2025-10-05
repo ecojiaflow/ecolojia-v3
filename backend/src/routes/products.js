@@ -372,37 +372,52 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get alternatives for product:', id);
 
-  const alternatives = [
-    { 
-      id: '3', 
-      name: 'Pâte à tartiner bio sans huile de palme', 
-      brand: 'Bio Nature', 
-      healthScore: 65, 
-      environmentScore: 80, 
-      improvement: '+40%' 
-    },
-    { 
-      id: '4', 
-      name: 'Purée d\'amandes complètes', 
-      brand: 'Jean Hervé', 
-      healthScore: 85, 
-      environmentScore: 90, 
-      improvement: '+60%' 
-    },
-    { 
-      id: '5', 
-      name: 'Pâte à tartiner noisettes bio', 
-      brand: 'Mamie Bio', 
-      healthScore: 70, 
-      environmentScore: 75, 
-      improvement: '+45%' 
+  // Trouver produit actuel
+  let product = null;
+  if (mongoose.connection.readyState === 1) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      product = await Product.findById(id);
     }
-  ];
+    if (!product && /^\d{8,13}$/.test(id)) {
+      product = await Product.findOne({ barcode: id });
+    }
+  }
+
+  if (!product) {
+    return res.status(404).json({ success: false, error: 'Produit introuvable' });
+  }
+
+  // Chercher alternatives r�elles
+  const alternatives = await Product.find({
+    category: product.category,
+    'scores.overallScore': { $gt: product.scores?.overallScore || 50 },
+    _id: { $ne: product._id }
+  })
+    .sort({ 'scores.overallScore': -1 })
+    .limit(5)
+    .select('name brand barcode imageUrl scores category');
+
+  const formattedAlternatives = alternatives.map(alt => ({
+    _id: alt._id,
+    barcode: alt.barcode,
+    name: alt.name,
+    brand: alt.brand,
+    imageUrl: alt.imageUrl,
+    category: alt.category,
+    healthScore: alt.scores?.healthScore || alt.scores?.overallScore || 50,
+    environmentScore: alt.scores?.environmentScore || 50,
+    overallScore: alt.scores?.overallScore || 50,
+    improvement: `+${Math.round(((alt.scores?.overallScore || 50) - (product.scores?.overallScore || 50)))}%`
+  }));
 
   res.json({ 
     success: true, 
-    currentProduct: { id, name: 'Produit original', healthScore: 25 }, 
-    alternatives 
+    currentProduct: { 
+      id: product._id, 
+      name: product.name, 
+      overallScore: product.scores?.overallScore || 50 
+    }, 
+    alternatives: formattedAlternatives 
   });
 }));
 
