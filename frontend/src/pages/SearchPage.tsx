@@ -30,7 +30,7 @@ export default function SearchPage() {
             <div key={i} className="border rounded p-4">
               <h3 className="font-bold">{p.name}</h3>
               <p className="text-sm text-gray-600">{p.brand}</p>
-              <button onClick={() => window.location.href = `/product/${item.objectID || item._id}`} className="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Voir</button>
+              <button onClick={() => window.location.href = `/product/${item._id || item.objectID}`} className="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Voir</button>
             </div>
           );
         })}
@@ -38,3 +38,4 @@ export default function SearchPage() {
     </div>
   );
 }
+
