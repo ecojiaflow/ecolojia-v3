@@ -26,9 +26,9 @@ interface ChatResponse {
 class ChatService {
   private conversationHistory: ChatMessage[] = [];
   private currentProduct: string | null = null;
-  
+
   async sendMessage(
-    message: string, 
+    message: string,
     productBarcode?: string,
     productContext?: ProductContext
   ): Promise<ChatResponse> {
@@ -37,34 +37,41 @@ class ChatService {
         this.clearHistory();
         this.currentProduct = productBarcode;
       }
-      
+
       this.conversationHistory.push({ role: 'user', content: message });
-      
+
       const response = await axios.post<ChatResponse>(`${API_URL}/api/chat/deepseek`, {
         messages: this.conversationHistory,
         productContext
       });
-      
+
       if (response.data.reply) {
         this.conversationHistory.push({
           role: 'assistant',
           content: response.data.reply
         });
       }
-      
+
       return response.data;
-      
+
     } catch (error) {
       console.error('[Chat Service]', error);
       throw new Error('Service chat temporairement indisponible');
     }
   }
-  
+
+  getCurrentContext() {
+    return {
+      messages: this.conversationHistory,
+      productBarcode: this.currentProduct
+    };
+  }
+
   clearHistory() {
     this.conversationHistory = [];
     this.currentProduct = null;
   }
-  
+
   getHistory(): ChatMessage[] {
     return [...this.conversationHistory];
   }
