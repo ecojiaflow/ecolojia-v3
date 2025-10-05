@@ -6,6 +6,7 @@ import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
+
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
@@ -24,24 +25,26 @@ const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
 const OCRPage = lazy(() => import('./pages/OCRPage'));
+const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
+
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
-        {/* Routes avec Layout */}
         <Route path="/" element={<Layout />}>
-          {/* Routes publiques */}
           <Route index element={<HomePage />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="results" element={<ResultsPage />} />
           <Route path="product/:id" element={<ProductPage />} />
-          <Route path="scan" element={<BarcodeScanPage />} />
+          <Route path="scan" element={<ScanPage />} />
           <Route path="ocr" element={<OCRPage />} />
+          <Route path="favorites" element={<FavoritesPage />} />
           <Route path="multi-scan" element={<MultiScanPage />} />
           <Route path="premium" element={<PremiumPage />} />
           <Route path="diagnostic" element={<DiagnosticPage />} />
-          {/* Routes d'authentification - redirection si déjà connecté */}
+          
           <Route
             path="login"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
@@ -50,7 +53,7 @@ const App: React.FC = () => {
             path="register"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
           />
-          {/* Routes protégées - VRAIMENT PROTÉGÉES maintenant ! */}
+          
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="chat" element={<ChatPage />} />
@@ -58,13 +61,13 @@ const App: React.FC = () => {
             <Route path="history" element={<HistoryPage />} />
             <Route path="onboarding" element={<OnboardingPage />} />
           </Route>
-          {/* 404 - Redirection vers accueil */}
+          
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
-        <Route path="/premium" element={<PremiumPage />} />`r`n  </Routes>
+      </Routes>
     </Suspense>
   );
 };
-export default App;
 
+export default App;
 

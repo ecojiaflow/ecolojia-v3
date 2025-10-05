@@ -1,10 +1,10 @@
-import { Home, Camera, MessageCircle, Clock } from 'lucide-react';
+﻿import { Home, Camera, MessageCircle, Clock } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export const MobileBottomNav = () => {
   const navItems = [
     { icon: Home, label: 'Accueil', to: '/' },
-    { icon: Camera, label: 'Scanner', to: '/scan', primary: true },
+    { icon: Camera, label: 'Scanner', to: '/scan?mode=camera', primary: true },
     { icon: MessageCircle, label: 'Chat IA', to: '/chat' },
     { icon: Clock, label: 'Historique', to: '/history' }
   ];

@@ -20,20 +20,21 @@ interface BarcodeScannerProps {
   isOpen: boolean;
   onClose: () => void;
   onScanSuccess: (result: any) => void;
+  autoStartCamera?: boolean;
 }
 
 type ScanMode = 'menu' | 'camera' | 'photo' | 'manual';
 type PhotoStep = 'front' | 'ingredients' | 'barcode' | 'complete';
 
-const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScanSuccess }) => {
+const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScanSuccess, autoStartCamera = false }) => {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<ScanMode>('menu');
+  const [mode, setMode] = useState<ScanMode>(autoStartCamera ? 'camera' : 'menu');
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [manualCode, setManualCode] = useState('');
   const [productName, setProductName] = useState('');
-  
+
   // Etat pour les photos guidees
   const [photoStep, setPhotoStep] = useState<PhotoStep>('front');
   const [capturedPhotos, setCapturedPhotos] = useState<{
@@ -41,7 +42,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
     ingredients?: string;
     barcode?: string;
   }>({});
-  
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -80,7 +81,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
 
       // Appeler l'API d'analyse
       const result = await productService.analyze(payload);
-      
+
       if (result) {
         // Naviguer vers la page de resultats avec toutes les donnees
         navigate('/results', {
@@ -143,10 +144,10 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
         setError('Impossible d\'initialiser le scanner');
         return;
       }
-      
+
       Quagga.start();
       setIsScanning(true);
-      
+
       Quagga.onDetected((result: any) => {
         if (result?.codeResult?.code) {
           const code = result.codeResult.code;
@@ -165,29 +166,29 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
   const startNativeScanner = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
+        video: {
           facingMode: 'environment',
           width: { ideal: 1280 },
           height: { ideal: 720 }
         }
       });
-      
+
       streamRef.current = stream;
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       }
-      
+
       setIsScanning(true);
       setError(null);
-      
+
       // Verifier si BarcodeDetector existe (Chrome Android)
       if ('BarcodeDetector' in window && (window as any).BarcodeDetector) {
         const barcodeDetector = new (window as any).BarcodeDetector({
           formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_39', 'code_128']
         });
-        
+
         const detectLoop = async () => {
           if (videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA && isScanning) {
             try {
@@ -202,7 +203,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
             } catch (err) {
               console.error('Erreur detection:', err);
             }
-            
+
             if (isScanning) {
               setTimeout(detectLoop, 100);
             }
@@ -210,7 +211,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
             setTimeout(detectLoop, 100);
           }
         };
-        
+
         setTimeout(detectLoop, 1000); // Attendre que la video soit prete
       } else {
         // Fallback vers Quagga si BarcodeDetector n'est pas disponible
@@ -237,7 +238,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
   // Arreter le scanner complet
   const stopScanner = useCallback(() => {
     stopStream();
-    
+
     if (scannerRef.current && Quagga) {
       Quagga.stop();
       scannerRef.current = null;
@@ -248,17 +249,17 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
   const handlePhotoCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const imageData = reader.result as string;
-      
+
       // Sauvegarder la photo
       setCapturedPhotos(prev => ({
         ...prev,
         [photoStep]: imageData
       }));
-      
+
       // Passer a l'etape suivante
       if (photoStep === 'front') {
         setPhotoStep('ingredients');
@@ -276,7 +277,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
       }
     };
     reader.readAsDataURL(file);
-    
+
     // Reinitialiser l'input pour permettre de reprendre la meme photo
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -306,7 +307,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
         startNativeScanner();
       }, 300);
     }
-    
+
     return () => {
       stopScanner();
     };
@@ -325,8 +326,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
             {mode === 'photo' && 'Photographier le produit'}
             {mode === 'manual' && 'Saisie manuelle'}
           </h3>
-          <button 
-            onClick={() => { stopScanner(); onClose(); }} 
+          <button
+            onClick={() => { stopScanner(); onClose(); }}
             className="p-2 hover:bg-green-700 rounded-lg transition-colors"
           >
             <X className="w-6 h-6" />
@@ -342,7 +343,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 Choisissez comment identifier votre produit
               </p>
 
-              <button 
+              <button
                 onClick={() => setMode('camera')}
                 className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all flex items-center space-x-4"
               >
@@ -355,7 +356,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 </div>
               </button>
 
-              <button 
+              <button
                 onClick={() => { setMode('photo'); setPhotoStep('front'); }}
                 className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center space-x-4"
               >
@@ -368,7 +369,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 </div>
               </button>
 
-              <button 
+              <button
                 onClick={() => setMode('manual')}
                 className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all flex items-center space-x-4"
               >
@@ -386,14 +387,14 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
           {/* Mode Scanner Camera */}
           {mode === 'camera' && !isLoading && (
             <div className="relative h-full bg-black">
-              <video 
-                ref={videoRef} 
+              <video
+                ref={videoRef}
                 className="w-full h-full object-cover"
                 playsInline
                 muted
                 autoPlay
               />
-              
+
               {isScanning && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="scanner-overlay">
@@ -409,15 +410,15 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   </div>
                 </div>
               )}
-              
+
               {error && (
                 <div className="absolute bottom-20 left-4 right-4 bg-red-500 text-white p-4 rounded-lg flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
                   <span className="text-sm">{error}</span>
                 </div>
               )}
-              
-              <button 
+
+              <button
                 onClick={() => { stopScanner(); setMode('menu'); }}
                 className="absolute bottom-4 left-4 right-4 bg-white text-gray-800 py-3 px-6 rounded-lg font-medium"
               >
@@ -433,30 +434,30 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
               <div className="flex justify-between mb-8">
                 <div className={`flex-1 text-center ${photoStep === 'front' ? 'text-green-600' : capturedPhotos.front ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
-                    photoStep === 'front' ? 'bg-green-600 text-white' : 
+                    photoStep === 'front' ? 'bg-green-600 text-white' :
                     capturedPhotos.front ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.front ? 'âœ“' : '1'}
+                    {capturedPhotos.front ? '✓' : '1'}
                   </div>
                   <span className="text-xs">Face avant</span>
                 </div>
-                
+
                 <div className={`flex-1 text-center ${photoStep === 'ingredients' ? 'text-green-600' : capturedPhotos.ingredients ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
-                    photoStep === 'ingredients' ? 'bg-green-600 text-white' : 
+                    photoStep === 'ingredients' ? 'bg-green-600 text-white' :
                     capturedPhotos.ingredients ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.ingredients ? 'âœ“' : '2'}
+                    {capturedPhotos.ingredients ? '✓' : '2'}
                   </div>
                   <span className="text-xs">Ingredients</span>
                 </div>
-                
+
                 <div className={`flex-1 text-center ${photoStep === 'barcode' ? 'text-green-600' : capturedPhotos.barcode ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
-                    photoStep === 'barcode' ? 'bg-green-600 text-white' : 
+                    photoStep === 'barcode' ? 'bg-green-600 text-white' :
                     capturedPhotos.barcode ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.barcode ? 'âœ“' : '3'}
+                    {capturedPhotos.barcode ? '✓' : '3'}
                   </div>
                   <span className="text-xs">Code-barres</span>
                 </div>
@@ -473,7 +474,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     </p>
                   </>
                 )}
-                
+
                 {photoStep === 'ingredients' && (
                   <>
                     <List className="w-20 h-20 text-blue-600 mx-auto mb-4" />
@@ -483,7 +484,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     </p>
                   </>
                 )}
-                
+
                 {photoStep === 'barcode' && (
                   <>
                     <Camera className="w-20 h-20 text-purple-600 mx-auto mb-4" />
@@ -501,22 +502,22 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   <h5 className="text-sm font-semibold text-gray-700 mb-3">Photos capturees :</h5>
                   <div className="flex gap-3 justify-center">
                     {capturedPhotos.front && (
-                      <img 
-                        src={capturedPhotos.front} 
+                      <img
+                        src={capturedPhotos.front}
                         alt="Face avant"
                         className="w-20 h-20 object-cover rounded-lg border-2 border-green-500"
                       />
                     )}
                     {capturedPhotos.ingredients && (
-                      <img 
-                        src={capturedPhotos.ingredients} 
+                      <img
+                        src={capturedPhotos.ingredients}
                         alt="Ingredients"
                         className="w-20 h-20 object-cover rounded-lg border-2 border-blue-500"
                       />
                     )}
                     {capturedPhotos.barcode && (
-                      <img 
-                        src={capturedPhotos.barcode} 
+                      <img
+                        src={capturedPhotos.barcode}
                         alt="Code-barres"
                         className="w-20 h-20 object-cover rounded-lg border-2 border-purple-500"
                       />
@@ -534,7 +535,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 onChange={handlePhotoCapture}
                 className="hidden"
               />
-              
+
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center mb-3"
@@ -542,7 +543,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 <Camera className="w-6 h-6 mr-2" />
                 Prendre la photo
               </button>
-              
+
               <div className="flex gap-3">
                 <button
                   onClick={() => {
@@ -556,7 +557,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 >
                   Passer
                 </button>
-                
+
                 <button
                   onClick={() => { setMode('menu'); resetPhotos(); }}
                   className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
