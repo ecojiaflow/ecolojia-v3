@@ -26,6 +26,7 @@ interface ChatResponse {
 class ChatService {
   private conversationHistory: ChatMessage[] = [];
   private currentProduct: string | null = null;
+  private productContext: ProductContext | null = null;
 
   async sendMessage(
     message: string,
@@ -42,7 +43,7 @@ class ChatService {
 
       const response = await axios.post<ChatResponse>(`${API_URL}/api/chat/deepseek`, {
         messages: this.conversationHistory,
-        productContext
+        productContext: productContext || this.productContext
       });
 
       if (response.data.reply) {
@@ -60,10 +61,15 @@ class ChatService {
     }
   }
 
+  setProductContext(context: ProductContext | null) {
+    this.productContext = context;
+  }
+
   getCurrentContext() {
     return {
       messages: this.conversationHistory,
-      productBarcode: this.currentProduct
+      productBarcode: this.currentProduct,
+      productContext: this.productContext
     };
   }
 
@@ -74,6 +80,7 @@ class ChatService {
   clearHistory() {
     this.conversationHistory = [];
     this.currentProduct = null;
+    this.productContext = null;
   }
 
   getHistory(): ChatMessage[] {
