@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/FavoritesPage.tsx
+﻿// PATH: frontend/src/pages/FavoritesPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -67,10 +67,10 @@ const FavoritesPage: React.FC = () => {
     name: '',
     description: '',
     color: '#7DDE4A',
-    icon: 'aƒâ€š‚Â­ƒâ€š‚Â'
+    icon: 'aÆ’Ã¢â‚¬Å¡â€šÃ‚Â­Æ’Ã¢â‚¬Å¡â€šÃ‚Â'
   });
 
-  const listIcons = ['aƒâ€š‚Â­ƒâ€š‚Â', 'aƒâ€š‚Âƒâ€š‚Â¤ƒÂ¯ƒâ€š‚Â¸ƒâ€š‚Â', 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âºaaâ€šÂ¬aâ€žÂ¢', 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â¥aaâ€šÂ¬aâ‚¬Â', 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢aaâ€šÂ¬…Â¾', 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â§ƒâ€š‚Â¹', 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‹Å“ƒâ€š‚Â¶', 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€š‚Â '];
+  const listIcons = ['aÆ’Ã¢â‚¬Å¡â€šÃ‚Â­Æ’Ã¢â‚¬Å¡â€šÃ‚Â', 'aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¤Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂºaaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¥aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â€šÂ¬Ã‚Â', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â¹', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¹Ã…â€œÆ’Ã¢â‚¬Å¡â€šÃ‚Â¶', 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â '];
   const listColors = ['#7DDE4A', '#4A90E2', '#F5A623', '#D0021B', '#9013FE', '#50E3C2'];
 
   useEffect(() => {
@@ -121,11 +121,11 @@ const FavoritesPage: React.FC = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'date':
-          return new Date(b.addedAt).getTime() - new Date(?.addedAt).getTime();
+          return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
         case 'score':
-          return b.scores.overall - ?.scores.overall;
+          return b.scores.overall - a.scores.overall;
         case 'name':
-          return ?.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name);
         default:
           return 0;
       }
@@ -136,7 +136,7 @@ const FavoritesPage: React.FC = () => {
 
   const handleRemoveFavorite = async (productId: string) => {
     try {
-      await api.delete(/api/favorites/${productId});
+      await api.delete(`/api/favorites/${productId}`);
       setFavorites(prev => prev.filter(item => item.productId !== productId));
     } catch (err) {
       console.error('Error removing favorite:', err);
@@ -150,7 +150,7 @@ const FavoritesPage: React.FC = () => {
     try {
       await Promise.all(
         Array.from(selectedItems).map(productId =>
-          api.delete(/api/favorites/${productId})
+          api.delete(`/api/favorites/${productId}`)
         )
       );
       setFavorites(prev => prev.filter(item => !selectedItems.has(item.productId)));
@@ -167,7 +167,7 @@ const FavoritesPage: React.FC = () => {
       const newList = await api.post(`${API_CONFIG.ENDPOINTS.FAVORITES.LIST}/lists`, newListForm);
       setLists(prev => [...prev, newList]);
       setShowCreateList(false);
-      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: 'aƒâ€š‚Â­ƒâ€š‚Â' });
+      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: 'aÆ’Ã¢â‚¬Å¡â€šÃ‚Â­Æ’Ã¢â‚¬Å¡â€šÃ‚Â' });
     } catch (err) {
       console.error('Error creating list:', err);
     }
@@ -189,7 +189,7 @@ const FavoritesPage: React.FC = () => {
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `favoris-ecoloji?.csv`);
+      link.setAttribute('download', `favoris-ecolojia.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -228,10 +228,10 @@ const FavoritesPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â½';
-      case 'cosmetic': return 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢aaâ€šÂ¬…Â¾';
-      case 'household': return 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â§ƒâ€š‚Â¹';
-      default: return 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬…â€œƒâ€š‚Â¦';
+      case 'food': return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½';
+      case 'cosmetic': return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾';
+      case 'household': return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â¹';
+      default: return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â¦';
     }
   };
 
@@ -496,7 +496,7 @@ const FavoritesPage: React.FC = () => {
                       
                       {item.price && (
                         <div className="text-lg font-semibold text-[#3B3B3B]">
-                          {item.price}aaaâ€šÂ¬…Â¡ƒâ€š‚Â¬
+                          {item.price}aaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â¬
                         </div>
                       )}
                     </div>
@@ -531,7 +531,7 @@ const FavoritesPage: React.FC = () => {
                         onClick={() => navigate(`/product/${item.productId}`)}
                         className="text-[#7DDE4A] hover:text-[#6bc93a] font-medium text-sm"
                       >
-                        Voir details aaaâ€šÂ¬‚Â aaâ€šÂ¬aâ€žÂ¢
+                        Voir details aaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢
                       </button>
                       
                       <div className="flex gap-2">
@@ -699,6 +699,9 @@ const FavoritesPage: React.FC = () => {
 };
 
 export default FavoritesPage;
+
+
+
 
 
 
