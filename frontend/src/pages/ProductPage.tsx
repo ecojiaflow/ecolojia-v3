@@ -1,4 +1,4 @@
-ï»¿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -60,7 +60,7 @@ const ProductPage: React.FC = () => {
         setLoading(true);
         setError(null);
         const productData = await getJSON(`/api/products/${id}`);
-        setProduct(productData);
+        setProduct(productData.product || productData);
         loadAlternatives(id);
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
@@ -110,16 +110,50 @@ const ProductPage: React.FC = () => {
     );
   }
 
+  // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
-  const overallScore = Math.round((healthScore + environmentScore) / 2);
+  const overallScore = product.scores?.overallScore || Math.round((healthScore + environmentScore) / 2);
 
-  const mockBreakdown = [
-    { factor: 'Additifs prÃ©occupants', impact: -10, reason: 'Colorant caramel E150c dÃ©tectÃ©' },
-    { factor: 'Ultra-transformÃ©', impact: -20, reason: 'Produit NOVA groupe 4' },
-    { factor: 'Nutri-Score E', impact: -15, reason: 'Trop de sucres et graisses saturÃ©es' },
-    { factor: 'Huile de palme', impact: -5, reason: 'Impact environnemental nÃ©gatif' }
-  ];
+  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
+  const breakdown = product.scores?.breakdown || {};
+  const realBreakdown = [
+    breakdown.nova && { 
+      factor: 'Transformation (NOVA)', 
+      impact: breakdown.nova.score - 50, 
+      reason: `Score NOVA: ${breakdown.nova.score}/100` 
+    },
+    breakdown.nutriscore && { 
+      factor: 'Nutri-Score', 
+      impact: breakdown.nutriscore.score - 50, 
+      reason: `Score nutritionnel: ${breakdown.nutriscore.score}/100` 
+    },
+    breakdown.additives && { 
+      factor: 'Additifs', 
+      impact: breakdown.additives.score - 50, 
+      reason: `Score additifs: ${breakdown.additives.score}/100` 
+    },
+    breakdown.ecoscore && { 
+      factor: 'Éco-Score', 
+      impact: breakdown.ecoscore.score - 50, 
+      reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
+    },
+    breakdown.packaging && { 
+      factor: 'Emballage', 
+      impact: breakdown.packaging.score - 50, 
+      reason: `Score emballage: ${breakdown.packaging.score}/100` 
+    },
+    breakdown.origin && { 
+      factor: 'Origine', 
+      impact: breakdown.origin.score - 50, 
+      reason: `Score origine: ${breakdown.origin.score}/100` 
+    },
+    breakdown.ethics && { 
+      factor: 'Éthique', 
+      impact: breakdown.ethics.score - 50, 
+      reason: `Score éthique: ${breakdown.ethics.score}/100` 
+    }
+  ].filter(Boolean); // Retirer les éléments null/undefined
 
   if (isMobile) {
     return (
@@ -157,8 +191,8 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.ingredients && product.ingredients.length > 0 ? <ProductIngredients ingredients={product.ingredients} /> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white">
-            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
-            <div className="p-4"><ScoreBreakdown score={overallScore} factors={mockBreakdown} /></div>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-white">
@@ -184,7 +218,7 @@ const ProductPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        <ScoreBreakdown score={overallScore} factors={mockBreakdown} />
+        <ScoreBreakdown score={overallScore} factors={realBreakdown} />
         {product.ingredients && product.ingredients.length > 0 && <ProductIngredients ingredients={product.ingredients} />}
         {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
         <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
