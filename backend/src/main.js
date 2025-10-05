@@ -329,3 +329,11 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+// Stats endpoint
+try {
+  const statsRoutes = require('./routes/stats.routes');
+  app.use('/api/stats', statsRoutes);
+  console.log('✅ [ROUTE] Stats montée sur /api/stats');
+} catch (err) {
+  console.log('⚠️ Stats routes non disponibles');
+}

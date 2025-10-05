@@ -1,0 +1,114 @@
+﻿{
+  "en:milk": {
+    "name": "Lait",
+    "category": "Produits laitiers",
+    "riskLevel": "HIGH",
+    "description": "Contient des protéines de lait",
+    "concerns": ["Intolérance au lactose", "Allergie aux protéines de lait"],
+    "icon": "🥛"
+  },
+  "en:eggs": {
+    "name": "Œufs",
+    "category": "Protéines animales",
+    "riskLevel": "HIGH",
+    "description": "Contient des œufs ou dérivés",
+    "concerns": ["Allergie courante chez enfants"],
+    "icon": "🥚"
+  },
+  "en:nuts": {
+    "name": "Fruits à coque",
+    "category": "Fruits à coque",
+    "riskLevel": "VERY_HIGH",
+    "description": "Noix, noisettes, amandes, etc.",
+    "concerns": ["Allergies graves possibles", "Choc anaphylactique"],
+    "icon": "🌰"
+  },
+  "en:peanuts": {
+    "name": "Arachides",
+    "category": "Légumineuses",
+    "riskLevel": "VERY_HIGH",
+    "description": "Cacahuètes et dérivés",
+    "concerns": ["Allergie très grave", "Choc anaphylactique fréquent"],
+    "icon": "🥜"
+  },
+  "en:soybeans": {
+    "name": "Soja",
+    "category": "Légumineuses",
+    "riskLevel": "MEDIUM",
+    "description": "Soja et dérivés",
+    "concerns": ["Allergie courante", "Peut contenir des OGM"],
+    "icon": "🫘"
+  },
+  "en:gluten": {
+    "name": "Gluten",
+    "category": "Céréales",
+    "riskLevel": "HIGH",
+    "description": "Protéine du blé, orge, seigle",
+    "concerns": ["Maladie cœliaque", "Sensibilité au gluten"],
+    "icon": "🌾"
+  },
+  "en:fish": {
+    "name": "Poisson",
+    "category": "Produits de la mer",
+    "riskLevel": "HIGH",
+    "description": "Poissons et dérivés",
+    "concerns": ["Allergie fréquente", "Métaux lourds possibles"],
+    "icon": "🐟"
+  },
+  "en:crustaceans": {
+    "name": "Crustacés",
+    "category": "Produits de la mer",
+    "riskLevel": "VERY_HIGH",
+    "description": "Crevettes, crabes, homards, etc.",
+    "concerns": ["Allergie grave", "Réactions sévères"],
+    "icon": "🦐"
+  },
+  "en:molluscs": {
+    "name": "Mollusques",
+    "category": "Produits de la mer",
+    "riskLevel": "HIGH",
+    "description": "Huîtres, moules, calmars, etc.",
+    "concerns": ["Allergie possible", "Contamination bactérienne"],
+    "icon": "🦪"
+  },
+  "en:celery": {
+    "name": "Céleri",
+    "category": "Légumes",
+    "riskLevel": "MEDIUM",
+    "description": "Céleri et dérivés",
+    "concerns": ["Allergie croisée possible"],
+    "icon": "🥬"
+  },
+  "en:mustard": {
+    "name": "Moutarde",
+    "category": "Condiments",
+    "riskLevel": "MEDIUM",
+    "description": "Graines de moutarde",
+    "concerns": ["Allergie respiratoire possible"],
+    "icon": "🌭"
+  },
+  "en:sesame-seeds": {
+    "name": "Graines de sésame",
+    "category": "Graines",
+    "riskLevel": "HIGH",
+    "description": "Sésame et dérivés",
+    "concerns": ["Allergie en augmentation", "Réactions graves possibles"],
+    "icon": "🌱"
+  },
+  "en:lupin": {
+    "name": "Lupin",
+    "category": "Légumineuses",
+    "riskLevel": "MEDIUM",
+    "description": "Farine de lupin",
+    "concerns": ["Allergie croisée avec arachides"],
+    "icon": "🌸"
+  },
+  "en:sulphur-dioxide-and-sulphites": {
+    "name": "Sulfites",
+    "category": "Additifs",
+    "riskLevel": "MEDIUM",
+    "description": "Conservateurs soufrés (>10mg/kg)",
+    "concerns": ["Asthme", "Maux de tête", "Allergies"],
+    "icon": "⚗️"
+  }
+}
