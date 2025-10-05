@@ -1,47 +1,29 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
+const Product = require('../models/Product');
 
 // Health check
 router.get('/health', (req, res) => {
   res.json({ ok: true, service: 'cosmetics', timestamp: new Date().toISOString() });
 });
 
-// Route d'analyse simplifiée
-router.post('/analyze', async (req, res) => {
-  console.log('Cosmetics analyze endpoint hit!');
-  
-  const { barcode } = req.body;
-  
-  // Mock temporaire - scoring basique
-  res.json({
-    success: true,
-    data: {
-      category: 'cosmetic',
-      product: { 
-        name: 'Test Cosmetic Product',
-        barcode: barcode 
-      },
-      score: { 
-        value: 70, 
-        label: 'B' 
-      },
-      risk_analysis: {
-        endocrine_disruptors: [],
-        irritants: [],
-        controversial: []
-      },
-      message: 'Cosmetics analysis working! (mock mode)'
-    }
-  });
+// Liste produits cosm�tiques
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find({ category: 'cosmetics' }).limit(20);
+    res.json({ success: true, products, count: products.length });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
-// Status
-router.get('/status', (req, res) => {
+// Route d'analyse
+router.post('/analyze', async (req, res) => {
+  console.log('Cosmetics analyze endpoint hit!');
+  const { barcode } = req.body;
   res.json({
-    status: 'operational',
-    service: 'cosmetics',
-    mode: 'mock',
-    timestamp: new Date().toISOString()
+    success: true,
+    data: { category: 'cosmetic', product: { barcode }, message: 'Analysis working!' }
   });
 });
 
