@@ -7,11 +7,10 @@ interface ProductScoresCardProps {
 }
 
 const getScoreColor = (score: number) => {
-  if (score >= 80) return 'text-green-600';
-  if (score >= 60) return 'text-yellow-600';
-  if (score >= 40) return 'text-orange-600';
-  return 'text-red-600';
-};
+  if (score >= 70) return 'text-green-700';
+  if (score >= 50) return 'text-green-500';
+  if (score >= 30) return 'text-orange-500';
+  return 'text-red-600';};
 
 const getScoreBgColor = (score: number) => {
   if (score >= 80) return 'bg-green-50 border-green-200';
@@ -58,3 +57,4 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
     </div>
   );
 };
+
