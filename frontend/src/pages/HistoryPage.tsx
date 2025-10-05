@@ -1,4 +1,4 @@
-ï»¿// PATH: frontend/src/pages/HistoryPage.tsx
+// PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,8 +18,8 @@ import {
   X,
   FileText
 } from 'lucide-react';
-import { historyService } from '../services/api';
-import { dashboardService } from '../services/api';
+import { getHistory, clearHistory } from '../services/history.service';
+
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -28,7 +28,7 @@ import { useAuthContext } from '../Contexts/AuthContext';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-// Ajouter la dÃ©claration pour TypeScript
+// Ajouter la déclaration pour TypeScript
 declare module 'jspdf' {
   interface jsPDF {
     autoTable: (options: any) => jsPDF;
@@ -112,15 +112,7 @@ const HistoryPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await historyService.getHistory({
-        page: currentPage,
-        limit: itemsPerPage,
-        category: filters.category !== 'all' ? filters.category : undefined,
-        sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder,
-        minScore: filters.minScore,
-        dateRange: filters.dateRange
-      });
+      const history = getHistory(); setHistory(history);
 
       setHistory(response.items || []);
       setTotalItems(response.total || 0);
@@ -145,18 +137,18 @@ const HistoryPage: React.FC = () => {
 
   const handleDelete = async (ids: string[]) => {
     if (false) {
-      toast.error('La suppression n\'est pas disponible en mode dÃ©monstration');
+      toast.error('La suppression n\'est pas disponible en mode démonstration');
       return;
     }
     
-    if (!confirm(`ÃŠtes-vous sÃ»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${ids.length} analyse(s) ?`)) {
       return;
     }
 
     try {
       await Promise.all(ids.map(id => historyService.deleteHistoryItem(id)));
       setSelectedItems([]);
-      toast.success('Analyses supprimÃ©es avec succÃ¨s');
+      toast.success('Analyses supprimées avec succès');
       fetchHistory();
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
@@ -171,7 +163,7 @@ const HistoryPage: React.FC = () => {
     }
 
     try {
-      // CrÃ©er un nouveau document PDF
+      // Créer un nouveau document PDF
       const doc = new jsPDF();
       
       // Ajouter le titre
@@ -183,7 +175,7 @@ const HistoryPage: React.FC = () => {
       doc.text(`Utilisateur: ${user?.firstName || 'Demo'} ${user?.lastName || 'User'}`, 20, 35);
       doc.text(`Date d'export: ${format(new Date(), 'dd/MM/yyyy', { locale: fr })}`, 20, 42);
       
-      // PrÃ©parer les donnÃ©es pour le tableau
+      // Préparer les données pour le tableau
       const tableData = history.map(item => [
         format(new Date(item.analysisDate), 'dd/MM/yyyy', { locale: fr }),
         item.productName,
@@ -196,7 +188,7 @@ const HistoryPage: React.FC = () => {
       
       // Ajouter le tableau
       doc.autoTable({
-        head: [['Date', 'Produit', 'Marque', 'CatÃ©gorie', 'Score', 'Nutri-Score', 'NOVA']],
+        head: [['Date', 'Produit', 'Marque', 'Catégorie', 'Score', 'Nutri-Score', 'NOVA']],
         body: tableData,
         startY: 55,
         headStyles: { fillColor: [125, 222, 74] }, // Couleur verte ECOLOJIA
@@ -213,7 +205,7 @@ const HistoryPage: React.FC = () => {
       
       // Sauvegarder le PDF
       doc.save(`ecolojia-historique-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
-      toast.success('Export PDF rÃ©ussi !');
+      toast.success('Export PDF réussi !');
       
     } catch (error) {
       console.error('Erreur lors de l\'export PDF:', error);
@@ -228,8 +220,8 @@ const HistoryPage: React.FC = () => {
     }
 
     try {
-      // CrÃ©er le contenu CSV
-      const headers = ['Date', 'Produit', 'Marque', 'CatÃ©gorie', 'Score Global', 'Score SantÃ©', 'Score Environnement', 'Nutri-Score', 'NOVA'];
+      // Créer le contenu CSV
+      const headers = ['Date', 'Produit', 'Marque', 'Catégorie', 'Score Global', 'Score Santé', 'Score Environnement', 'Nutri-Score', 'NOVA'];
       const rows = history.map(item => [
         format(new Date(item.analysisDate), 'dd/MM/yyyy'),
         item.productName,
@@ -247,7 +239,7 @@ const HistoryPage: React.FC = () => {
         ...rows.map(row => row.join(';'))
       ].join('\n');
       
-      // CrÃ©er un blob et tÃ©lÃ©charger
+      // Créer un blob et télécharger
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -256,7 +248,7 @@ const HistoryPage: React.FC = () => {
       link.click();
       URL.revokeObjectURL(url);
       
-      toast.success('Export CSV rÃ©ussi !');
+      toast.success('Export CSV réussi !');
     } catch (error) {
       console.error('Erreur lors de l\'export CSV:', error);
       toast.error('Erreur lors de l\'export');
@@ -265,18 +257,18 @@ const HistoryPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'ðŸŽ';
-      case 'cosmetic': return 'ðŸ’„';
-      case 'detergent': return 'ðŸ§¼';
-      default: return 'ðŸ“¦';
+      case 'food': return '??';
+      case 'cosmetic': return '??';
+      case 'detergent': return '??';
+      default: return '??';
     }
   };
 
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'food': return 'Alimentation';
-      case 'cosmetic': return 'CosmÃ©tiques';
-      case 'detergent': return 'DÃ©tergents';
+      case 'cosmetic': return 'Cosmétiques';
+      case 'detergent': return 'Détergents';
       default: return 'Autre';
     }
   };
@@ -300,7 +292,7 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* BanniÃ¨re mode dÃ©mo / non connectÃ© */}
+      {/* Bannière mode démo / non connecté */}
       <AnimatePresence>
         {showLoginPrompt && (
           <motion.div 
@@ -314,8 +306,8 @@ const HistoryPage: React.FC = () => {
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
                   {MOCK_MODE 
-                    ? 'Mode dÃ©monstration actif - DonnÃ©es d\'exemple affichÃ©es' 
-                    : 'Connectez-vous pour accÃ©der Ã  votre historique personnel'
+                    ? 'Mode démonstration actif - Données d\'exemple affichées' 
+                    : 'Connectez-vous pour accéder à votre historique personnel'
                   }
                 </p>
               </div>
@@ -350,8 +342,8 @@ const HistoryPage: React.FC = () => {
               </h1>
               <p className="text-gray-600 mt-2">
                 {MOCK_MODE 
-                  ? 'DÃ©couvrez des exemples d\'analyses de produits'
-                  : 'Retrouvez tous vos produits scannÃ©s'
+                  ? 'Découvrez des exemples d\'analyses de produits'
+                  : 'Retrouvez tous vos produits scannés'
                 }
               </p>
             </div>
@@ -483,7 +475,7 @@ const HistoryPage: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">CatÃ©gorie top</p>
+                  <p className="text-gray-600 text-sm">Catégorie top</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
                     {getCategoryLabel(stats.topCategory || 'food')}
                   </p>
@@ -506,10 +498,10 @@ const HistoryPage: React.FC = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* CatÃ©gorie */}
+                {/* Catégorie */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CatÃ©gorie
+                    Catégorie
                   </label>
                   <select
                     value={filters.category}
@@ -518,15 +510,15 @@ const HistoryPage: React.FC = () => {
                   >
                     <option value="all">Toutes</option>
                     <option value="food">Alimentation</option>
-                    <option value="cosmetic">CosmÃ©tiques</option>
-                    <option value="detergent">Produits mÃ©nagers</option>
+                    <option value="cosmetic">Cosmétiques</option>
+                    <option value="detergent">Produits ménagers</option>
                   </select>
                 </div>
 
-                {/* PÃ©riode */}
+                {/* Période */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    PÃ©riode
+                    Période
                   </label>
                   <select
                     value={filters.dateRange}
@@ -537,7 +529,7 @@ const HistoryPage: React.FC = () => {
                     <option value="today">Aujourd'hui</option>
                     <option value="week">Cette semaine</option>
                     <option value="month">Ce mois</option>
-                    <option value="year">Cette annÃ©e</option>
+                    <option value="year">Cette année</option>
                   </select>
                 </div>
 
@@ -570,7 +562,7 @@ const HistoryPage: React.FC = () => {
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
                   >
-                    <option value="date-desc">Plus rÃ©cent</option>
+                    <option value="date-desc">Plus récent</option>
                     <option value="date-asc">Plus ancien</option>
                     <option value="score-desc">Meilleur score</option>
                     <option value="score-asc">Moins bon score</option>
@@ -618,7 +610,7 @@ const HistoryPage: React.FC = () => {
               onClick={fetchHistory}
               className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              RÃ©essayer
+              Réessayer
             </button>
           </div>
         ) : filteredHistory.length === 0 ? (
@@ -626,7 +618,7 @@ const HistoryPage: React.FC = () => {
             <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600">
               {searchQuery 
-                ? 'Aucun produit ne correspond Ã  votre recherche'
+                ? 'Aucun produit ne correspond à votre recherche'
                 : 'Aucun produit dans votre historique'
               }
             </p>
@@ -734,7 +726,7 @@ const HistoryPage: React.FC = () => {
                   disabled={currentPage === 1}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                 >
-                  PrÃ©cÃ©dent
+                  Précédent
                 </button>
                 
                 <div className="flex items-center gap-2">
