@@ -279,7 +279,9 @@ function calculateEfficacyScore(ingredients) {
   let score = 40; // Base faible
   
   ingredients.forEach(ing => {
-    const i = ing.toLowerCase();
+    // Support both string and object format
+    const ingredient = typeof ing === 'string' ? ing : (ing.inci || ing.name || '');
+    const i = ingredient.toLowerCase();
     if (activesList.some(a => i.includes(a))) score += 15;
   });
 
