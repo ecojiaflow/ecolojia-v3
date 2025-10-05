@@ -107,7 +107,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-center text-gray-900">Scannez vos produits</h1>
-            <button onClick={() => navigate('/scan')} className="w-full flex flex-col items-center justify-center bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-3xl h-64 shadow-2xl active:scale-95 transition-transform">
+            <button onClick={() => navigate('/scan?mode=camera')} className="w-full flex flex-col items-center justify-center bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-3xl h-64 shadow-2xl active:scale-95 transition-transform">
               <Camera size={80} strokeWidth={1.5} />
               <span className="text-2xl font-bold mt-4">Scanner</span>
               <span className="text-sm opacity-90 mt-2">Analysez instantanément</span>
@@ -163,7 +163,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </form>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <button onClick={() => navigate('/scan')} className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"><Camera className="w-5 h-5 text-green-600" /><span className="font-medium">Scanner un produit</span><ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" /></button>
+                  <button onClick={() => navigate('/scan?mode=camera')} className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"><Camera className="w-5 h-5 text-green-600" /><span className="font-medium">Scanner un produit</span><ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" /></button>
                   <button onClick={() => navigate('/auth')} className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"><Sparkles className="w-5 h-5" /><span className="font-medium">Essai gratuit Premium</span></button>
                 </div>
               </motion.div>
@@ -217,3 +217,4 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+

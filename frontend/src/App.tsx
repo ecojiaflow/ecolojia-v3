@@ -38,7 +38,7 @@ const App: React.FC = () => {
           <Route path="search" element={<SearchPage />} />
           <Route path="results" element={<ResultsPage />} />
           <Route path="product/:id" element={<ProductPage />} />
-          <Route path="scan" element={<ScanPage />} />
+          <Route path="scan" element={<BarcodeScanPage />} />
           <Route path="ocr" element={<OCRPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
           <Route path="multi-scan" element={<MultiScanPage />} />
@@ -70,4 +70,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 
