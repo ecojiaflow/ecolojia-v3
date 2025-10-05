@@ -1,6 +1,4 @@
-﻿// ===== 2. Layout.tsx =====
-// PATH: frontend/src/components/layout/Layout.tsx
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Leaf, Menu, X, User, BarChart3, Search, 
@@ -8,6 +6,8 @@ import {
 } from 'lucide-react';
 import { useAuthContext } from '../../Contexts/AuthContext';
 import { useQuota } from '../../hooks/useQuota';
+import { MobileBottomNav } from './MobileBottomNav';
+import { useDeviceContext } from '../../hooks/useDeviceContext';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Layout: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuthContext();
   const { quotas } = useQuota();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isMobile } = useDeviceContext();
 
   const handleLogout = () => {
     logout();
@@ -34,8 +35,8 @@ const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      {/* Header - masqué sur mobile */}
+      <header className={`bg-white border-b border-gray-200 ${isMobile ? 'hidden' : 'block'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -198,13 +199,13 @@ const Layout: React.FC = () => {
         )}
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1">
+      {/* Main Content - padding bottom pour mobile */}
+      <main className={`flex-1 ${isMobile ? 'pb-20' : ''}`}>
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-100 border-t border-gray-200">
+      {/* Footer - masqué sur mobile */}
+      <footer className={`bg-gray-100 border-t border-gray-200 ${isMobile ? 'hidden' : 'block'}`}>
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* About */}
@@ -253,6 +254,9 @@ const Layout: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };
