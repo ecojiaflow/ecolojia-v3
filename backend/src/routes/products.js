@@ -387,15 +387,26 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     return res.status(404).json({ success: false, error: 'Produit introuvable' });
   }
 
-  // Chercher alternatives réelles
+  // Extraire mots-clés du nom pour similarité
+  const keywords = product.name.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+  
+  // Chercher alternatives réelles - même subcategory OU mots similaires
   const alternatives = await Product.find({
-    category: product.category,
-    'scores.overallScore': { $gt: product.scores?.overallScore || 50 },
-    _id: { $ne: product._id }
+    $and: [
+      { category: product.category },
+      { 'scores.overallScore': { $gt: product.scores?.overallScore || 50 } },
+      { _id: { $ne: product._id } },
+      {
+        $or: [
+          { subcategory: product.subcategory },
+          { name: { $regex: keywords.slice(0, 2).join('|'), $options: 'i' } }
+        ]
+      }
+    ]
   })
     .sort({ 'scores.overallScore': -1 })
     .limit(5)
-    .select('name brand barcode imageUrl scores category');
+    .select('name brand barcode imageUrl scores category subcategory');
 
   const formattedAlternatives = alternatives.map(alt => ({
     _id: alt._id,
@@ -619,3 +630,4 @@ function mockModel() {
 console.log('[Products] Router crÃ©Ã© avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
+

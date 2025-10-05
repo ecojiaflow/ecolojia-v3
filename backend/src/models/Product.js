@@ -1,4 +1,4 @@
-﻿// backend/src/models/Product.js
+// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -69,8 +69,11 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['food', 'cosmetics', 'detergents'],
     required: true,
+    enum: ['food', 'cosmetics', 'detergents']
+  },
+  subcategory: {
+    type: String,
     index: true
   },
   imageUrl: String,
@@ -79,7 +82,7 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ✅ Modifié en objets
+    allergens: [allergenSchema],  // ? Modifi� en objets
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },
@@ -148,3 +151,4 @@ productSchema.statics.searchProducts = async function(query, category = null) {
 };
 
 module.exports = mongoose.model('Product', productSchema);
+
