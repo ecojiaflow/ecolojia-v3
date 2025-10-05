@@ -67,6 +67,10 @@ class ChatService {
     };
   }
 
+  getConversationHistory(): ChatMessage[] {
+    return [...this.conversationHistory];
+  }
+
   clearHistory() {
     this.conversationHistory = [];
     this.currentProduct = null;
