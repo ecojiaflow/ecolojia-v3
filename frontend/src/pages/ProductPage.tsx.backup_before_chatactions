@@ -13,7 +13,6 @@ import { ProductNutrition } from '../components/product/ProductNutrition';
 import { ProductAlternatives } from '../components/product/ProductAlternatives';
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
-import { ProductChatActions } from '../components/product/ProductChatActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 
 const getJSON = async (endpoint: string): Promise<any> => {
@@ -315,8 +314,7 @@ const ProductPage: React.FC = () => {
             </div>
           </div>
         )}
-        <ProductChatActions product={product} />
-                <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
+        <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
     </div>
@@ -324,7 +322,6 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
-
 
 
 

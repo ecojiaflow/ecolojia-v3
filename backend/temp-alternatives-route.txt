@@ -1,0 +1,63 @@
+/* Obtenir alternatives */
+router.get('/:id/alternatives', handleAsync(async (req, res) => {
+  const { id } = req.params;
+  logger.info('Get alternatives for product:', id);
+
+  // Trouver produit actuel
+  let product = null;
+  if (mongoose.connection.readyState === 1) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      product = await Product.findById(id);
+    } else {
+      product = await Product.findOne({ barcode: id });
+    }
+  }
+
+  if (!product) {
+    return res.status(404).json({ success: false, error: 'Produit introuvable' });
+  }
+
+  const currentScore = product.scores?.overallScore || 0;
+
+  // Si score >= 70, produit déjà excellent
+  if (currentScore >= 70) {
+    return res.json({ 
+      success: true, 
+      alternatives: [], 
+      message: 'Ce produit est déjà excellent, pas d\'alternatives nécessaires' 
+    });
+  }
+
+  // Chercher alternatives avec score STRICTEMENT SUPÉRIEUR
+  const alternatives = await Product.find({
+    category: product.category,
+    subcategory: product.subcategory,
+    _id: { $ne: product._id },
+    'scores.overallScore': { $gt: currentScore, $ne: null }
+  })
+  .sort({ 'scores.overallScore': -1 })
+  .limit(5)
+  .select('name brand barcode imageUrl images scores category subcategory');
+
+  const formattedAlternatives = alternatives.map(alt => ({
+    _id: alt._id,
+    barcode: alt.barcode,
+    name: alt.name,
+    brand: alt.brand,
+    imageUrl: alt.imageUrl || alt.images?.front,
+    images: alt.images,
+    category: alt.category,
+    subcategory: alt.subcategory,
+    scores: alt.scores
+  }));
+
+  res.json({
+    success: true,
+    currentProduct: {
+      id: product._id,
+      name: product.name,
+      overallScore: currentScore
+    },
+    alternatives: formattedAlternatives
+  });
+}));
