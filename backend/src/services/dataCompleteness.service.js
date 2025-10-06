@@ -25,10 +25,10 @@ class DataCompletenessService {
         score += this._calculateFoodCompleteness(product.foodData);
         break;
       case 'cosmetics':
-        score += this._calculateCosmeticCompleteness(product.cosmeticData);
+        score += this._calculateCosmeticCompleteness(product.cosmeticsData);
         break;
       case 'detergents':
-        score += this._calculateDetergentCompleteness(product.detergentData);
+        score += this._calculateDetergentCompleteness(product.detergentsData);
         break;
     }
     
@@ -132,13 +132,13 @@ class DataCompletenessService {
     }
     
     if (product.category === 'cosmetics') {
-      if (!product.cosmeticData || !product.cosmeticData.ingredients || product.cosmeticData.ingredients.length === 0) {
+      if (!product.cosmeticsData || !product.cosmeticsData.ingredients || product.cosmeticsData.ingredients.length === 0) {
         warnings.push('no_inci');
       }
     }
     
     if (product.category === 'detergents') {
-      if (!product.detergentData || !product.detergentData.biodegradability) {
+      if (!product.detergentsData || !product.detergentsData.biodegradability) {
         warnings.push('missing_biodegradability');
       }
     }
@@ -148,3 +148,4 @@ class DataCompletenessService {
 }
 
 module.exports = new DataCompletenessService();
+

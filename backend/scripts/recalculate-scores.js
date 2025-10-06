@@ -1,14 +1,14 @@
-require('dotenv').config();
+ï»¿require('dotenv').config();
 const mongoose = require('mongoose');
 const Product = require('../src/models/Product');
-const { calculateFoodScores } = require('../src/services/scoringEngine');
+const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../src/services/scoringEngine');
 
 async function recalculateAll() {
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log('? MongoDB connecté');
+  console.log('? MongoDB connectÃ©');
 
-  const products = await Product.find({ category: 'food' });
-  console.log(`?? ${products.length} produits food\n`);
+  const products = await Product.find({ 'scores.overallScore': { $exists: false } });
+  console.log(`?? ${products.length} produits sans scores\n`);
   
   let success = 0;
   
@@ -27,7 +27,9 @@ async function recalculateAll() {
         }
       }
       
-      const scores = calculateFoodScores({
+      let scores;
+      if (product.category === 'food') {
+        scores = calculateFoodScores({
         novaGroup: product.foodData?.novaGroup,
         nutriScore: product.foodData?.nutriScore,
         ecoScore: product.foodData?.ecoScore,
@@ -37,19 +39,34 @@ async function recalculateAll() {
         packaging: product.packaging,
         origin: product.origin
       });
-      
+      } else if (product.category === 'cosmetics') {
+        scores = calculateCosmeticScores({
+          ingredients: product.cosmeticsData?.ingredients || [],
+          endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
+          allergens: product.cosmeticsData?.allergens || [],
+          certifications: product.cosmeticsData?.certifications || []
+        });
+      } else if (product.category === 'detergents') {
+        scores = calculateDetergentScores({
+          surfactants: product.detergentsData?.surfactants || [],
+          composition: product.detergentsData?.composition || [],
+          ecoLabels: product.detergentsData?.ecoLabels || [],
+          phosphates: product.detergentsData?.phosphates || false
+        });
+      }
       product.scores = scores;
       await product.save();
       
       success++;
       if (success % 500 === 0) console.log(`  ? ${success}/${products.length}`);
     } catch (err) {
-      // Ignorer échecs silencieusement
+      // Ignorer Ã©checs silencieusement
     }
   }
   
-  console.log(`\n?? ${success}/${products.length} produits mis à jour`);
+  console.log(`\n?? ${success}/${products.length} produits mis Ã  jour`);
   process.exit(0);
 }
 
 recalculateAll().catch(console.error);
+

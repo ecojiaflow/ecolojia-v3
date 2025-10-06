@@ -1,11 +1,11 @@
 ﻿// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
-const enrichProduct = require('../middleware/enrichProduct');
+// const enrichProduct = require('../middleware/enrichProduct');
 const mongoose = require('mongoose');
 
 // Middleware enrichissement métadonnées global
-router.use(enrichProduct);
+// router.use(enrichProduct);
 
 // SCORING ENGINE SCIENTIFIQUE
 const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
