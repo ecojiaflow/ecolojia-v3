@@ -122,3 +122,49 @@ Status: COMPLÃ‰TÃ‰ ET VALIDÃ‰
 - backend/src/scorers/detergent/detergentScorer.js (simplifiÃ©)
 - backend/src/main.js (route ajoutÃ©e ligne 178)
 
+
+## ? MODULE 1.1 - Alternatives Same-Category (VALIDÉ)
+**Date** : 2025-10-06 15:22
+**Durée** : 1h
+
+### Modifications
+- Fichier : ackend/src/routes/products.js
+- Ligne 294-300 : Requête alternatives avec subcategory optionnelle
+
+### Logique implémentée
+- Score >= 70 ? Aucune alternative (message "Ce produit est déjà excellent")
+- Score < 70 ? Alternatives same-category avec meilleur score
+- Subcategory optionnelle (ne bloque plus si undefined)
+
+### Tests validation
+- Produit 3017620422003 (Nutella) ? Alternatives retournées ?
+- Filtrage catégorie : food ? food ?
+- Score supérieur : alternatives triées par score DESC ?
+
+### Fichiers modifiés
+- ackend/src/routes/products.js (sauvegarde: products.js.backup_before_fix)
+
+---
+
+## ? MODULE 1.2 - Sections ProductPage Tri-Catégories (VALIDÉ)
+**Date** : 2025-10-06 20:36
+**Durée** : 20 min
+
+### Modifications
+- Fichier : rontend/src/pages/ProductPage.tsx
+- Imports ajoutés : CosmeticAnalysisDisplay, ProductIngredientsSection
+- 4 sections conditionnelles ajoutées (mobile + desktop)
+
+### Logique implémentée
+- Food ? ProductNutrition (valeurs nutritionnelles)
+- Cosmetics ? CosmeticAnalysisDisplay (perturbateurs endocriniens, score santé)
+- Detergents ? Analyse impact environnemental (biodégradabilité, toxicité aquatique)
+
+### Tests validation
+- Build TypeScript : 0 erreurs ?
+- Sections conditionnelles selon category ?
+
+### Fichiers modifiés
+- rontend/src/pages/ProductPage.tsx (sauvegarde: ProductPage.tsx.backup_before_categories)
+
+---

@@ -1,27 +1,22 @@
-// PATH: backend/src/routes/products.js
+﻿// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
 const enrichProduct = require('../middleware/enrichProduct');
-
-// Middleware enrichissement m�tadonn�es global
-router.use(enrichProduct);
-
-
-
-// Middleware enrichissement m�tadonn�es (appliqu� � TOUTES les routes)
-router.use(enrichProduct);
 const mongoose = require('mongoose');
 
-// ✅ SCORING ENGINE SCIENTIFIQUE
+// Middleware enrichissement métadonnées global
+router.use(enrichProduct);
+
+// SCORING ENGINE SCIENTIFIQUE
 const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
 
-/* ─────────── Middleware debug ─────────── */
+/* Middleware debug */
 router.use((req, _res, next) => {
   console.log(`[Products Router] ${req.method} ${req.originalUrl} - Path: ${req.path}`);
   next();
 });
 
-/* ─────────── Auth middlewares (fallbacks inclus) ─────────── */
+/* Auth middlewares (fallbacks inclus) */
 let authenticateUser, checkPremium;
 try {
   const auth = require('../middleware/auth');
@@ -40,7 +35,7 @@ try {
   checkPremium = (_req, _res, next) => { next(); };
 }
 
-/* ─────────── Models (fallback mocks) ─────────── */
+/* Models (fallback mocks) */
 let Product, Analysis;
 try { 
   Product = require('../models/Product'); 
@@ -56,7 +51,7 @@ try {
   Analysis = mockModel(); 
 }
 
-/* ─────────── Nova classifier (sécurisé) ─────────── */
+/* Nova classifier (sécurisé) */
 let novaClassifier;
 try {
   novaClassifier = require('../services/analysis/novaClassifier');
@@ -65,40 +60,14 @@ try {
   novaClassifier = { classify: () => ({ group: null }) };
 }
 
-/* ─────────── Logger ─────────── */
+/* Logger */
 const logger = {
   info: (...a) => console.log('[Products]', ...a),
   warn: (...a) => console.warn('[Products WARN]', ...a),
   error: (...a) => console.error('[Products ERROR]', ...a)
 };
 
-/* ─────────── Mocks pour dev offline ─────────── */
-const mockProducts = {
-  '3017620422003': { 
-    _id: '1', 
-    barcode: '3017620422003', 
-    name: 'Nutella', 
-    brand: 'Ferrero', 
-    category: 'food',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/301/762/042/2003/front_fr.4.400.jpg',
-    ingredients: 'Sucre, huile de palme, noisettes 13%, cacao maigre 7,4%, lait écrémé en poudre 6,6%, lactosérum en poudre, émulsifiants: lécithines (soja), vanilline.',
-    nova: 4, 
-    additives: ['E322'],
-    analysisData: { healthScore: 25, environmentScore: 30, socialScore: 40 } 
-  },
-  '5000159407236': { 
-    _id: '2', 
-    barcode: '5000159407236', 
-    name: 'Mars', 
-    brand: 'Mars', 
-    category: 'food',
-    imageUrl: 'https://images.openfoodfacts.org/images/products/500/015/940/7236/front_fr.4.400.jpg',
-    nova: 4, 
-    analysisData: { healthScore: 20 } 
-  }
-};
-
-/* ─────────── Helper async ─────────── */
+/* Helper async */
 const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(err => {
   logger.error('Async error:', err); 
   res.status(500).json({ success: false, error: err.message });
@@ -110,7 +79,7 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 router.get('/', (_req, res) => {
   res.json({
     success: true,
-    products: Object.values(mockProducts)
+    message: 'Products API - Use /test to see available routes'
   });
 });
 
@@ -125,11 +94,10 @@ router.get('/test', (_req, res) => {
       'GET /api/products/test',
       'GET /api/products/search',
       'GET /api/products/trending',
-      'GET /api/products/barcode/:barcode',
-      'POST /api/products/analyze',
       'GET /api/products/:id/alternatives',
       'POST /api/products/:id/report',
       'GET /api/products/:id',
+      'POST /api/products/analyze',
       'POST /api/products'
     ]
   });
@@ -144,7 +112,6 @@ router.get('/search', handleAsync(async (req, res) => {
     return res.status(400).json({ success: false, error: 'La requête doit contenir au moins 2 caractères' });
   }
 
-  // D'abord essayer la vraie base de données
   if (mongoose.connection.readyState === 1) {
     try {
       const searchQuery = {
@@ -179,25 +146,7 @@ router.get('/search', handleAsync(async (req, res) => {
     }
   }
 
-  // Fallback sur les données mockées
-  const searchTerm = q.toLowerCase();
-  const filteredProducts = Object.values(mockProducts).filter(product =>
-    product.name.toLowerCase().includes(searchTerm) ||
-    product.brand.toLowerCase().includes(searchTerm) ||
-    product.barcode.includes(searchTerm)
-  );
-
-  res.json({
-    success: true,
-    products: filteredProducts,
-    pagination: {
-      total: filteredProducts.length,
-      page: parseInt(page),
-      pages: Math.ceil(filteredProducts.length / limit),
-      hasNext: false,
-      hasPrev: false
-    }
-  });
+  res.status(500).json({ success: false, error: 'Database not available' });
 }));
 
 /* Produits tendance */
@@ -205,7 +154,6 @@ router.get('/trending', handleAsync(async (req, res) => {
   const { limit = 10 } = req.query;
   logger.info('Getting trending products', { limit });
 
-  // Essayer la vraie base de données
   if (mongoose.connection.readyState === 1) {
     try {
       const products = await Product.find({})
@@ -220,46 +168,7 @@ router.get('/trending', handleAsync(async (req, res) => {
     }
   }
 
-  // Fallback
-  const trendingProducts = [
-    { ...mockProducts['3017620422003'], viewCount: 150, scanCount: 45 },
-    { ...mockProducts['5000159407236'], viewCount: 200, scanCount: 80 }
-  ];
-
-  res.json({ success: true, products: trendingProducts.slice(0, parseInt(limit)) });
-}));
-
-/* Recherche par code-barres */
-router.get('/barcode/:barcode', handleAsync(async (req, res) => {
-  const { barcode } = req.params;
-  logger.info('Barcode lookup:', barcode);
-
-  // Essayer la vraie base de données
-  if (mongoose.connection.readyState === 1) {
-    try {
-      const product = await Product.findOne({ barcode });
-      if (product) {
-        return res.json({ success: true, product });
-      }
-    } catch (error) {
-      logger.error('Database barcode lookup error:', error);
-    }
-  }
-
-  // Fallback sur mock
-  const product = mockProducts[barcode];
-  if (product) {
-    return res.json({
-      success: true,
-      product: { 
-        ...product, 
-        viewCount: Math.floor(Math.random() * 200) + 50, 
-        scanCount: Math.floor(Math.random() * 100) + 10 
-      }
-    });
-  }
-
-  res.status(404).json({ success: false, error: 'Produit non trouvé', barcode });
+  res.json({ success: true, products: [] });
 }));
 
 /* Analyse produit */
@@ -268,7 +177,6 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   const { productId, barcode, manualData, category = 'food' } = req.body;
   logger.info('Analysis request:', { userId, productId, barcode, category });
 
-  // Vérifier les quotas
   if (req.user && req.user.quotas && req.user.quotas.scansRemaining <= 0) {
     return res.status(403).json({ 
       success: false, 
@@ -277,14 +185,13 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     });
   }
 
-  /* ---------- 1. Chercher le produit ---------- */
   let product = null;
   if (mongoose.connection.readyState === 1) {
     product = barcode ? await Product.findOne({ barcode }).lean()
              : productId ? await Product.findById(productId).lean()
              : null;
   }
-  if (!product) product = mockProducts[barcode] || mockProducts[productId] || null;
+  
   if (!product) {
     product = { 
       _id: Date.now().toString(), 
@@ -296,11 +203,9 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     };
   }
 
-  /* ---------- 2. Calculs – NOVA, Nutri-Score, Eco-Score ---------- */
   const ingredientsText = product.ingredients || '';
   let novaGroup = product.nova_group || product.foodData?.nova || product.nova || null;
   
-  // Calcul automatique du NOVA si absent et ingrédients disponibles
   if (!novaGroup && ingredientsText.length > 3) {
     try { 
       novaGroup = novaClassifier.classify(ingredientsText, product.name).group; 
@@ -312,7 +217,6 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   const nutriScore = product.nutriscore_grade || product.foodData?.nutriscore || null;
   const ecoScore = product.ecoscore_grade || product.foodData?.ecoscore || null;
 
-  /* ---------- 3. Construction résultat ---------- */
   const analysisResult = {
     scores: {
       nova: novaGroup,
@@ -324,9 +228,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
       additives: product.additives_tags || product.additives || [],
       allergens: product.allergens_tags || [],
       nutritionFacts: product.nutritionFacts || {},
-      ingredients: ingredientsText,
-      biodegradability: product.detergentData?.biodegradability || null,
-      cdv: product.detergentData?.cdv || null
+      ingredients: ingredientsText
     },
     summary: { 
       fr: generateSummary(novaGroup, nutriScore), 
@@ -335,7 +237,6 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     recommendations: generateRecommendations(novaGroup, nutriScore)
   };
 
-  /* ---------- 4. Sauvegarde éventuelle ---------- */
   if (Analysis && mongoose.connection.readyState === 1) {
     try { 
       await Analysis.create({ 
@@ -349,7 +250,6 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     }
   }
 
-  /* ---------- 5. Réponse ---------- */
   res.json({ 
     success: true,
     data: { 
@@ -376,7 +276,8 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   if (mongoose.connection.readyState === 1) {
     if (mongoose.Types.ObjectId.isValid(id)) {
       product = await Product.findById(id);
-    } else {
+    }
+    if (!product) {
       product = await Product.findOne({ barcode: id });
     }
   }
@@ -388,7 +289,7 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const currentScore = product.scores?.overallScore || 0;
 
   if (currentScore >= 70) {
-    return res.json({ success: true, alternatives: [], message: 'Ce produit est d�j� excellent' });
+    return res.json({ success: true, alternatives: [], message: 'Ce produit est déjà excellent' });
   }
 
   const alternatives = await Product.find({
@@ -414,17 +315,6 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   res.json({ success: true, alternatives: formattedAlternatives });
 }));
 
-  res.json({ 
-    success: true, 
-    currentProduct: { 
-      id: product._id, 
-      name: product.name, 
-      overallScore: product.scores?.overallScore || 50 
-    }, 
-    alternatives: formattedAlternatives 
-  });
-}));
-
 /* Signaler un produit */
 router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
   const { reason } = req.body;
@@ -445,54 +335,41 @@ router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
   });
 }));
 
-/* ✅ ROUTE PRINCIPALE - GET PRODUCT BY ID AVEC SCORING SCIENTIFIQUE */
+/* GET PRODUCT BY ID - Accepte barcode OU _id MongoDB */
 router.get('/:id', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get product by ID:', id);
 
-  // Essayer la vraie base de données d'abord
   let product = null;
+  
   if (mongoose.connection.readyState === 1) {
-    try {
-      // Si c'est un ObjectId valide
-      if (mongoose.Types.ObjectId.isValid(id)) {
-        product = await Product.findById(id);
-      }
-      
-      // Sinon essayer par barcode
-      if (!product && /^\d{8,13}$/.test(id)) {
-        product = await Product.findOne({ barcode: id });
-      }
-    } catch (error) {
-      logger.error('Database product lookup error:', error);
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      product = await Product.findById(id);
+    }
+    
+    if (!product) {
+      product = await Product.findOne({ barcode: id });
     }
   }
-
-  // Fallback sur mock
+  
   if (!product) {
-    product = Object.values(mockProducts).find(p => p._id === id) || 
-              (/^\d{8,13}$/.test(id) ? mockProducts[id] : null);
+    return res.status(404).json({ success: false, error: 'Produit introuvable' });
   }
 
-  if (!product) {
-    return res.status(404).json({ success: false, error: 'Produit non trouvé', id });
-  }
-
-  // ✅ CALCUL SCORES SCIENTIFIQUES SELON CATÉGORIE
-  let scores = {};
   const category = product.category || 'food';
+  let scores = {};
 
   try {
     if (category === 'food') {
       scores = calculateFoodScores({
-        novaGroup: product.foodData?.novaGroup || product.nova_group || product.nova,
+        novaGroup: product.foodData?.novaGroup || product.nova_group,
         nutriScore: product.foodData?.nutriScore || product.nutriscore_grade,
         ecoScore: product.foodData?.ecoScore || product.ecoscore_grade,
-        additives: product.foodData?.additives || product.additives_tags || [],
-        allergens: product.foodData?.allergens || product.allergens_tags || [],
-        labels: product.foodData?.labels || product.labels_tags || [],
-        packaging: product.packaging || product.packaging_text,
-        origin: product.origin || product.origins || product.countries
+        additives: product.foodData?.additives || [],
+        allergens: product.foodData?.allergens || [],
+        labels: product.foodData?.labels || [],
+        packaging: product.packaging,
+        origin: product.origin
       });
     } else if (category === 'cosmetics') {
       scores = calculateCosmeticScores({
@@ -509,25 +386,18 @@ router.get('/:id', handleAsync(async (req, res) => {
         phosphates: product.detergentsData?.phosphates || false
       });
     }
-  } catch (scoringError) {
-    logger.error('Scoring calculation error:', scoringError);
-    // Fallback scores si erreur
-    scores = {
-      overallScore: 50,
-      healthScore: 50,
-      environmentScore: 50
-    };
+  } catch (err) {
+    logger.error('Scoring error:', err);
+    scores = { overallScore: 50, healthScore: 50, environmentScore: 50 };
   }
 
-  // Retourner produit enrichi avec scores calculés
   const productObj = product.toObject ? product.toObject() : product;
   
   res.json({ 
     success: true, 
     product: { 
       ...productObj,
-      scores, // ✅ Scores calculés dynamiquement
-      viewCount: productObj.viewCount || Math.floor(Math.random() * 200) + 50 
+      scores
     } 
   });
 }));
@@ -584,9 +454,9 @@ function calculateHealthScore(prod, nova, nutri) {
 
 function generateSummary(nova, nutri) {
   const arr = [];
-  if (nova === 4) arr.push('⚠️ Produit ultra-transformé.');
+  if (nova === 4) arr.push('?? Produit ultra-transformé.');
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
-    arr.push('⚠️ Mauvais Nutri-Score.');
+    arr.push('?? Mauvais Nutri-Score.');
   }
   return arr.join(' ') || 'Analyse complète du produit.';
 }
@@ -623,6 +493,3 @@ function mockModel() {
 console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
-
-
-

@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
@@ -11,12 +11,14 @@ import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
 import { ProductAlternatives } from '../components/product/ProductAlternatives';
+import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
+import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 
 const getJSON = async (endpoint: string): Promise<any> => {
   const url = endpoint.startsWith('http') 
     ? endpoint 
-    : `https://ecolojia-backendvf.onrender.com${endpoint}`;
+    : `${import.meta.env.VITE_API_URL || 'http://localhost:10000'}${endpoint}`;
   const response = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -111,12 +113,12 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores r�els depuis l'API
+  // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
   const overallScore = product.scores?.overallScore || Math.round((healthScore + environmentScore) / 2);
 
-  // Breakdown r�el depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -135,7 +137,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: '�co-Score', 
+      factor: 'Éco-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -150,11 +152,11 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: '�thique', 
+      factor: 'Éthique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score �thique: ${breakdown.ethics.score}/100` 
+      reason: `Score éthique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les �l�ments null/undefined
+  ].filter(Boolean); // Retirer les éléments null/undefined
 
   if (isMobile) {
     return (
@@ -192,7 +194,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.ingredients && product.ingredients.length > 0 ? <ProductIngredients ingredients={product.ingredients} /> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">D�tails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
@@ -202,9 +204,46 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           
+
+          {/* Section Cosmétiques */}
+          {product.category === 'cosmetics' && (
+            <details className="bg-white" open>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
+              <div className="p-4">
+                <CosmeticAnalysisDisplay 
+                  analysis={{ 
+                    healthScore: product.scores?.healthScore || 50,
+                    endocrineRisk: { level: 'NONE' },
+                    category: 'cosmetics'
+                  }} 
+                  productName={product.name} 
+                />
+              </div>
+            </details>
+          )}
+
+          {/* Section Détergents */}
+          {product.category === 'detergents' && (
+            <details className="bg-white" open>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
+              <div className="p-4">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">Score environnemental</span>
+                    <span className="text-2xl font-bold text-green-600">
+                      {product.scores?.environmentScore || 'N/A'}/100
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Impact aquatique, biodégradabilité et composition évalués
+                  </p>
+                </div>
+              </div>
+            </details>
+          )}
           {/* Alternatives section */}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommand�es</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -245,6 +284,36 @@ const ProductPage: React.FC = () => {
         <ScoreBreakdown score={overallScore} factors={realBreakdown} />
         {product.ingredients && product.ingredients.length > 0 && <ProductIngredients ingredients={product.ingredients} />}
         {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
+
+        {/* Section Cosmétiques Desktop */}
+        {product.category === 'cosmetics' && (
+          <CosmeticAnalysisDisplay 
+            analysis={{ 
+              healthScore: product.scores?.healthScore || 50,
+              endocrineRisk: { level: 'NONE' },
+              category: 'cosmetics'
+            }} 
+            productName={product.name} 
+          />
+        )}
+
+        {/* Section Détergents Desktop */}
+        {product.category === 'detergents' && (
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                <span className="text-gray-700 font-medium">Score environnemental</span>
+                <span className="text-3xl font-bold text-green-600">
+                  {product.scores?.environmentScore || 'N/A'}/100
+                </span>
+              </div>
+              <p className="text-gray-600">
+                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
+              </p>
+            </div>
+          </div>
+        )}
         <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
@@ -253,6 +322,8 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
 
 
 
