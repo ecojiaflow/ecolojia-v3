@@ -171,7 +171,7 @@ const ProductPage: React.FC = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
               {product.brand && <p className="text-gray-600 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center ${getScoreBgColor(overallScore)} text-white rounded-2xl p-6">
+              <div className="inline-flex items-center justify-center bg-white text-white rounded-2xl p-6">
                 <div className="text-center">
                   <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
@@ -183,7 +183,7 @@ const ProductPage: React.FC = () => {
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
-            <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Quelles sont les alternatives plus saines ?")}`)} className="w-full border-2 border-green-600 text-green-600 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
+            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-600 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
@@ -253,6 +253,7 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
 
 
 
