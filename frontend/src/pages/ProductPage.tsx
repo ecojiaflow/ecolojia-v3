@@ -41,6 +41,7 @@ interface Product {
   scores?: { nova?: number; nutriscore?: string; ecoscore?: string; healthScore?: number; environmentScore?: number };
   ingredients?: Array<{ name: string; percentage?: number; isAllergen: boolean; concerns: string[] }>;
   nutrition?: { per100g: { energy: number; fat: number; saturatedFat: number; carbohydrates: number; sugars: number; protein: number; salt: number; fiber?: number } };
+  foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
 const ProductPage: React.FC = () => {
@@ -192,7 +193,7 @@ const ProductPage: React.FC = () => {
           </div>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
-            <div className="p-4">{product.ingredients && product.ingredients.length > 0 ? <ProductIngredients ingredients={product.ingredients} /> : <p className="text-gray-500">Non disponible</p>}</div>
+            <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
@@ -283,7 +284,7 @@ const ProductPage: React.FC = () => {
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} />
-        {product.ingredients && product.ingredients.length > 0 && <ProductIngredients ingredients={product.ingredients} />}
+        {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
 
         {/* Section Cosmétiques Desktop */}
@@ -324,6 +325,8 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
 
 
 
