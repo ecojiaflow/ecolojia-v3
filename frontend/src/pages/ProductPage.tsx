@@ -171,7 +171,7 @@ const ProductPage: React.FC = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
               {product.brand && <p className="text-gray-600 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center {`getScoreBgColor(overallScore)`} text-white rounded-2xl p-6">
+              <div className="inline-flex items-center justify-center ${getScoreBgColor(overallScore)} text-white rounded-2xl p-6">
                 <div className="text-center">
                   <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
@@ -201,6 +201,29 @@ const ProductPage: React.FC = () => {
               <div className="p-4"><ProductNutrition nutrition={product.nutrition.per100g} /></div>
             </details>
           )}
+          
+          {/* Alternatives section */}
+          <div id="alternatives-section" className="bg-white p-4">
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
+            {loadingAlternatives ? (
+              <p className="text-gray-500">Chargement...</p>
+            ) : alternatives.length > 0 ? (
+              <div className="space-y-3">
+                {alternatives.slice(0, 5).map(alt => (
+                  <div key={alt._id} onClick={() => navigate(`/product/${alt.barcode}`)} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                    {alt.images?.front && <img src={alt.images.front} alt={alt.name} className="w-12 h-12 object-contain" />}
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{alt.name}</p>
+                      <p className="text-xs text-gray-500">{alt.brand}</p>
+                    </div>
+                    <div className={`text-lg font-bold ${getScoreColor(alt.scores?.overallScore || 50)}`}>{alt.scores?.overallScore || 50}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">Aucune alternative disponible</p>
+            )}
+          </div>
         </div>
         {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
       </div>
@@ -230,5 +253,6 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
 
 
