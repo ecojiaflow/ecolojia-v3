@@ -267,7 +267,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   });
 }));
 
-/* Obtenir alternatives */
+/* Obtenir alternatives - CORRIGÉ */
 router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get alternatives for product:', id);
@@ -286,22 +286,33 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     return res.status(404).json({ success: false, error: 'Produit introuvable' });
   }
 
-  const currentScore = product.scores?.overallScore || 0;
+  // FIX: Support scores.global OU scores.overallScore
+  const currentScore = product.scores?.overallScore || product.scores?.global || 0;
 
   if (currentScore >= 70) {
     return res.json({ success: true, alternatives: [], message: 'Ce produit est déjà excellent' });
   }
 
-  const alternatives = await Product.find({
+  // FIX: Requête flexible avec subcategory optionnelle
+  const query = {
     category: product.category,
-    subcategory: product.subcategory,
     _id: { $ne: product._id },
-    'scores.overallScore': { $gt: currentScore, $ne: null }
-  })
-  .sort({ 'scores.overallScore': -1 })
-  .limit(5)
-  .select('name brand barcode imageUrl images scores category subcategory');
+    $or: [
+      { 'scores.global': { $gt: currentScore } },
+      { 'scores.overallScore': { $gt: currentScore } }
+    ]
+  };
 
+  if (product.subcategory) {
+    query.subcategory = product.subcategory;
+  }
+
+  const alternatives = await Product.find(query)
+    .sort({ 'scores.global': -1, 'scores.overallScore': -1 })
+    .limit(5)
+    .lean();
+
+  // FIX: Mapping score avec fallback
   const formattedAlternatives = alternatives.map(alt => ({
     _id: alt._id,
     barcode: alt.barcode,
@@ -309,7 +320,10 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     brand: alt.brand,
     imageUrl: alt.imageUrl || alt.images?.front,
     images: alt.images,
-    scores: alt.scores
+    scores: {
+      overallScore: alt.scores?.overallScore || alt.scores?.global || 75,
+      global: alt.scores?.global || alt.scores?.overallScore || 75
+    }
   }));
 
   res.json({ success: true, alternatives: formattedAlternatives });
@@ -454,9 +468,9 @@ function calculateHealthScore(prod, nova, nutri) {
 
 function generateSummary(nova, nutri) {
   const arr = [];
-  if (nova === 4) arr.push('?? Produit ultra-transformé.');
+  if (nova === 4) arr.push('⚠ Produit ultra-transformé.');
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
-    arr.push('?? Mauvais Nutri-Score.');
+    arr.push('⚠ Mauvais Nutri-Score.');
   }
   return arr.join(' ') || 'Analyse complète du produit.';
 }
