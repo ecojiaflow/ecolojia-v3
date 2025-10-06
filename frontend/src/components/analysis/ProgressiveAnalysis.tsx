@@ -1,4 +1,5 @@
-﻿// PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+// PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
 // Composant d'analyse progressive avec gestion des valeurs manquantes
 
 import React, { useState } from 'react';
@@ -55,12 +56,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
   };
 
   // Fonction pour obtenir la couleur selon le score
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
+  
 
   const getScoreBgColor = (score: number) => {
     if (score >= 80) return 'bg-green-100';
@@ -490,5 +486,6 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
 };
 
 export default ProgressiveAnalysis;
+
 
 

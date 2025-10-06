@@ -1,4 +1,5 @@
-﻿// frontend/src/pages/CosmeticAnalysisPage.tsx
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+// frontend/src/pages/CosmeticAnalysisPage.tsx
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -103,12 +104,7 @@ const CosmeticAnalysisPage: React.FC = () => {
     setExpandedSections(newExpanded);
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
+  
 
   const getScoreBgColor = (score: number) => {
     if (score >= 80) return 'bg-green-50';
@@ -463,6 +459,7 @@ const CosmeticAnalysisPage: React.FC = () => {
 };
 
 export default CosmeticAnalysisPage;
+
 
 
 

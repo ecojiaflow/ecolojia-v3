@@ -1,4 +1,5 @@
-ï»¿import React from 'react';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import React from 'react';
 import { Heart, Leaf } from 'lucide-react';
 
 interface ProductScoresCardProps {
@@ -6,18 +7,8 @@ interface ProductScoresCardProps {
   environmentScore: number;
 }
 
-const getScoreColor = (score: number) => {
-  if (score >= 70) return 'text-green-700';
-  if (score >= 50) return 'text-green-500';
-  if (score >= 30) return 'text-orange-500';
-  return 'text-red-600';};
 
-const getScoreBgColor = (score: number) => {
-  if (score >= 80) return 'bg-green-50 border-green-200';
-  if (score >= 60) return 'bg-yellow-50 border-yellow-200';
-  if (score >= 40) return 'bg-orange-50 border-orange-200';
-  return 'bg-red-50 border-red-200';
-};
+
 
 export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
   healthScore,
@@ -31,13 +22,13 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-red-500" />
-              <span className="font-medium">SantÃ©</span>
+              <span className="font-medium">Santé</span>
             </div>
             <span className={`text-2xl font-bold ${getScoreColor(healthScore)}`}>
               {healthScore}
             </span>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Impact sur votre santÃ©</p>
+          <p className="text-sm text-gray-600 mt-1">Impact sur votre santé</p>
         </div>
 
         {/* Environment Score */}
@@ -51,10 +42,11 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
               {environmentScore}
             </span>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Empreinte Ã©cologique</p>
+          <p className="text-sm text-gray-600 mt-1">Empreinte écologique</p>
         </div>
       </div>
     </div>
   );
 };
+
 

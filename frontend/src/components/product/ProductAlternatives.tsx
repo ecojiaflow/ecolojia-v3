@@ -1,4 +1,5 @@
-﻿import React from 'react';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -19,12 +20,7 @@ interface ProductAlternativesProps {
   loading: boolean;
 }
 
-const getScoreColor = (score: number) => {
-  if (score >= 70) return 'text-green-700';  // Vert foncé 70-100
-  if (score >= 50) return 'text-green-500';  // Vert clair 50-69
-  if (score >= 30) return 'text-orange-500'; // Orange 30-49
-  return 'text-red-600';                     // Rouge 0-29
-};
+
 
 const getNutriScoreColor = (score?: string) => {
   const colors: Record<string, string> = {
@@ -48,7 +44,7 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Alternatives recommandées
+        Alternatives recommand�es
       </h2>
       {loading ? (
         <div className="text-center py-8">
@@ -95,5 +91,6 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
     </div>
   );
 };
+
 
 

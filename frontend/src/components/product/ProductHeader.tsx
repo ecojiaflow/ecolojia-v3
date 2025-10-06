@@ -1,4 +1,5 @@
-﻿import React from 'react';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import React from 'react';
 import { Package } from 'lucide-react';
 
 interface ProductHeaderProps {
@@ -15,28 +16,23 @@ interface ProductHeaderProps {
 
 const getCategoryIcon = (category: string) => {
   switch (category) {
-    case 'food': return '🍎';
-    case 'cosmetics': return '💄';
-    case 'detergents': return '🧽';
-    default: return '📦';
+    case 'food': return '??';
+    case 'cosmetics': return '??';
+    case 'detergents': return '??';
+    default: return '??';
   }
 };
 
 const getCategoryLabel = (category: string) => {
   switch (category) {
     case 'food': return 'Alimentaire';
-    case 'cosmetics': return 'Cosmétique';
-    case 'detergents': return 'Détergent';
+    case 'cosmetics': return 'Cosm�tique';
+    case 'detergents': return 'D�tergent';
     default: return 'Produit';
   }
 };
 
-const getScoreColor = (score: number) => {
-  if (score >= 70) return 'text-green-700';  // Vert foncé 70-100
-  if (score >= 50) return 'text-green-500';  // Vert clair 50-69
-  if (score >= 30) return 'text-orange-500'; // Orange 30-49
-  return 'text-red-600';                     // Rouge 0-29
-};
+
 
 const getNutriScoreColor = (score?: string) => {
   const colors: Record<string, string> = {
@@ -130,4 +126,5 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
     </div>
   );
 };
+
 

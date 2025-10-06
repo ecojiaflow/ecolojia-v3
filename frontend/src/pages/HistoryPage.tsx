@@ -1,3 +1,4 @@
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -273,11 +274,7 @@ const HistoryPage: React.FC = () => {
     }
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
+  
 
   const filterHistoryBySearch = () => {
     if (!searchQuery) return history;
@@ -780,3 +777,4 @@ const HistoryPage: React.FC = () => {
 };
 
 export default HistoryPage;
+

@@ -1,4 +1,5 @@
-﻿// PATH: frontend/src/pages/UnifiedResultsPage.tsx
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+// PATH: frontend/src/pages/UnifiedResultsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -194,12 +195,12 @@ export const UnifiedResultsPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500">Aucun resultat Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  afficher</p>
+          <p className="text-gray-500">Aucun resultat ƒÆ’†â€™ƒâ€š‚Â  afficher</p>
           <button
             onClick={() => navigate('/')}
             className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
           >
-            Retour Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'accueil
+            Retour ƒÆ’†â€™ƒâ€š‚Â  l'accueil
           </button>
         </div>
       </div>
@@ -266,7 +267,7 @@ export const UnifiedResultsPage: React.FC = () => {
             className="w-full bg-primary text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-primary-dark transition-colors"
           >
             <MessageCircle className="w-5 h-5" />
-            <span>Poser des questions Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'IA sur ce produit</span>
+            <span>Poser des questions ƒÆ’†â€™ƒâ€š‚Â  l'IA sur ce produit</span>
           </button>
         </div>
 
@@ -293,7 +294,7 @@ export const UnifiedResultsPage: React.FC = () => {
               <ul className="space-y-2">
                 {result.analysis.recommendations.map((rec, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-primary mr-2">aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢</span>
+                    <span className="text-primary mr-2">aaâ€šÂ¬ƒâ€š‚Â¢</span>
                     <span className="text-gray-700">{rec}</span>
                   </li>
                 ))}
@@ -460,7 +461,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
           'bg-red-100 text-red-700'
         }`}>
           {analysis.aquaticToxicity === 'low' ? 'Faible' :
-           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°levee'}
+           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'ƒÆ’†â€™aaâ€šÂ¬‚Â°levee'}
         </span>
       </div>
     )}
@@ -468,5 +469,6 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
 );
 
 export default UnifiedResultsPage;
+
 
 

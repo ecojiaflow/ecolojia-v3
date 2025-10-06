@@ -1,4 +1,5 @@
-ï»¿import React, { useEffect, useState } from 'react';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -110,12 +111,12 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores rÃ©els depuis l'API
+  // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
   const overallScore = product.scores?.overallScore || Math.round((healthScore + environmentScore) / 2);
 
-  // Breakdown rÃ©el depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -134,7 +135,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: 'Ã‰co-Score', 
+      factor: 'Éco-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -149,11 +150,11 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: 'Ã‰thique', 
+      factor: 'Éthique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score Ã©thique: ${breakdown.ethics.score}/100` 
+      reason: `Score éthique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les Ã©lÃ©ments null/undefined
+  ].filter(Boolean); // Retirer les éléments null/undefined
 
   if (isMobile) {
     return (
@@ -170,9 +171,9 @@ const ProductPage: React.FC = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
               {product.brand && <p className="text-gray-600 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-2xl p-6">
+              <div className="inline-flex items-center justify-center {`getScoreBgColor(overallScore)`} text-white rounded-2xl p-6">
                 <div className="text-center">
-                  <div className="text-5xl font-bold">{overallScore}</div>
+                  <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
                 </div>
               </div>
@@ -191,7 +192,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.ingredients && product.ingredients.length > 0 ? <ProductIngredients ingredients={product.ingredients} /> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
@@ -229,4 +230,5 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
 

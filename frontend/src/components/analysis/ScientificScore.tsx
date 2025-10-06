@@ -1,4 +1,5 @@
-﻿// aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+// aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
 import React, { useState } from 'react';
 import { CircleGauge, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
@@ -341,5 +342,6 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
     </div>
   );
 };
+
 
 
