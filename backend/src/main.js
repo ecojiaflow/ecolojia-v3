@@ -88,6 +88,7 @@ try {
 
 const express = require('express');
 const mongoSanitize = require('express-mongo-sanitize');
+const { generalLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -107,6 +108,7 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(generalLimiter);
 
 // Middleware de monitoring (si disponible)
 if (sentryInitialized) {

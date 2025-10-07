@@ -1,4 +1,5 @@
-﻿const express = require('express');
+const express = require('express');
+const { aiLimiter } = require('../middleware/rateLimiter');
 const { deepseekChat } = require('../controllers/deepseek.controller');
 
 const router = express.Router();
@@ -16,6 +17,6 @@ router.get('/health', (_req, res) => {
   });
 });
 
-router.post('/deepseek', deepseekChat);
+router.post('/deepseek', aiLimiter, deepseekChat);
 
 module.exports = router;
