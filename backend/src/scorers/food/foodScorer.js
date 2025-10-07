@@ -22,12 +22,15 @@ class FoodScorer {
       const additivesScore = await this.calculateAdditivesScore(product);
 
       // Score global pondéré
-      const globalScore = this.calculateGlobalScore({
-        nova,
-        nutriScore,
-        ecoScore,
-        additivesScore
-      });
+      // Détecter labels bio depuis OpenFoodFacts
+        const isBio = product.labels_tags?.some(label => 
+          label.includes('bio') || 
+          label.includes('organic') || 
+          label.includes('ab-agriculture-biologique')
+        ) || false;
+
+        const isBio = product.labels_tags?.some(label => label.includes('bio') || label.includes('organic')) || false;
+        const globalScore = this.calculateGlobalScore({ nova, nutriScore, ecoScore, additivesScore, bio: isBio });
 
       return {
         global: globalScore,

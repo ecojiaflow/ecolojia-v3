@@ -1,20 +1,20 @@
+ï»¿// ============================================================================
+// ECOLOJIA SCORING ENGINE v3.0 - Approche Scientifique Multi-CritÃ¨res
 // ============================================================================
-// ECOLOJIA SCORING ENGINE v3.0 - Approche Scientifique Multi-Critères
-// ============================================================================
-// Différenciation vs Yuka :
-// - 3 catégories au lieu de 2 (food + cosmetics + detergents)
-// - 4 dimensions par catégorie (santé, environnement, éthique, efficacité)
-// - Pondérations basées sur études scientifiques
+// DiffÃ©renciation vs Yuka :
+// - 3 catÃ©gories au lieu de 2 (food + cosmetics + detergents)
+// - 4 dimensions par catÃ©gorie (santÃ©, environnement, Ã©thique, efficacitÃ©)
+// - PondÃ©rations basÃ©es sur Ã©tudes scientifiques
 // ============================================================================
 
 // ============================================================================
-// 1. ALIMENTAIRE - 4 critères pondérés
+// 1. ALIMENTAIRE - 4 critÃ¨res pondÃ©rÃ©s
 // ============================================================================
 
 function calculateFoodScores(product) {
   const { novaGroup, nutriScore, ecoScore, additives = [], allergens = [], labels = [] } = product;
 
-  // SANTÉ (60% du score global)
+  // SANTÃ‰ (60% du score global)
   const novaScore = novaToHealthScore(novaGroup);           // 40%
   const nutriScoreValue = nutriToHealthScore(nutriScore);   // 40% 
   const additivePenalty = calculateAdditivePenalty(additives); // 20%
@@ -36,15 +36,19 @@ function calculateFoodScores(product) {
     originImpact * 0.15
   );
 
-  // ÉTHIQUE (10% du score global)
+  // Ã‰THIQUE (10% du score global)
   const ethicsScore = calculateEthicsScore(labels);
 
-  // Score global pondéré
-  const overallScore = Math.round(
-    healthScore * 0.6 + 
-    environmentScore * 0.3 + 
-    ethicsScore * 0.1
-  );
+  // Score global pondÃ©rÃ©
+  // Bonus bio/vÃ©gÃ©tal
+    const bioBonus = (labels.some(l => l.includes('bio') || l.includes('organic')) || product.product_name?.toLowerCase().includes('bio') || product.product_name?.toLowerCase().includes('vegetal')) ? 15 : 0;
+    
+    const overallScore = Math.min(100, Math.round(
+      healthScore * 0.6 +
+      environmentScore * 0.3 +
+      ethicsScore * 0.1 +
+      bioBonus
+    ));
 
   return {
     healthScore,
@@ -64,25 +68,25 @@ function calculateFoodScores(product) {
 }
 
 // ============================================================================
-// 2. COSMÉTIQUE - Approche EWG + INCI
+// 2. COSMÃ‰TIQUE - Approche EWG + INCI
 // ============================================================================
 
 function calculateCosmeticScores(product) {
   const { ingredients = [], endocrineDisruptors = [], allergens = [], certifications = [] } = product;
 
-  // SÉCURITÉ (50%)
+  // SÃ‰CURITÃ‰ (50%)
   const inciScore = calculateINCI_Score(ingredients);              // 50%
   const endoPenalty = endocrineDisruptors.length * 15;            // -15 par perturbateur
-  const allergenPenalty = allergens.length * 10;                  // -10 par allergène
+  const allergenPenalty = allergens.length * 10;                  // -10 par allergÃ¨ne
 
   const safetyScore = Math.max(0, Math.round(
     inciScore * 0.5 - endoPenalty - allergenPenalty
   ));
 
-  // EFFICACITÉ (30%) - Basé sur actifs prouvés
+  // EFFICACITÃ‰ (30%) - BasÃ© sur actifs prouvÃ©s
   const efficacyScore = calculateEfficacyScore(ingredients);
 
-  // ÉTHIQUE (20%)
+  // Ã‰THIQUE (20%)
   const ethicsScore = calculateCosmeticEthics(certifications, product);
 
   const overallScore = Math.round(
@@ -107,7 +111,7 @@ function calculateCosmeticScores(product) {
 }
 
 // ============================================================================
-// 3. DÉTERGENT - Impact aquatique + biodégradabilité
+// 3. DÃ‰TERGENT - Impact aquatique + biodÃ©gradabilitÃ©
 // ============================================================================
 
 function calculateDetergentScores(product) {
@@ -116,7 +120,7 @@ function calculateDetergentScores(product) {
   // ENVIRONNEMENT (60%)
   const biodegScore = calculateBiodegradability(surfactants);     // 50%
   const aquaticImpact = calculateAquaticImpact(composition);      // 30%
-  const phosphatePenalty = phosphates ? 30 : 0;                   // -30 si présents
+  const phosphatePenalty = phosphates ? 30 : 0;                   // -30 si prÃ©sents
   
   const environmentScore = Math.max(0, Math.round(
     biodegScore * 0.5 + 
@@ -124,10 +128,10 @@ function calculateDetergentScores(product) {
     (100 - phosphatePenalty) * 0.2
   ));
 
-  // EFFICACITÉ (25%)
+  // EFFICACITÃ‰ (25%)
   const cleaningScore = calculateCleaningPower(surfactants, composition);
 
-  // SÉCURITÉ (15%)
+  // SÃ‰CURITÃ‰ (15%)
   const skinSafetyScore = calculateSkinSafety(composition);
 
   const overallScore = Math.round(
@@ -157,10 +161,10 @@ function calculateDetergentScores(product) {
 
 function novaToHealthScore(nova) {
   const mapping = {
-    1: 100, // Non transformé
-    2: 75,  // Ingrédients culinaires
-    3: 50,  // Transformé
-    4: 25   // Ultra-transformé
+    1: 100, // Non transformÃ©
+    2: 75,  // IngrÃ©dients culinaires
+    3: 50,  // TransformÃ©
+    4: 25   // Ultra-transformÃ©
   };
   return mapping[nova] || 50;
 }
@@ -194,7 +198,7 @@ function calculateAdditivePenalty(additives) {
     'E250', 'E251', 'E252', // Nitrites/Nitrates
     'E320', 'E321', // BHA/BHT
     'E951', // Aspartame
-    'E104', 'E110', 'E122', 'E124', 'E129' // Colorants azoïques
+    'E104', 'E110', 'E122', 'E124', 'E129' // Colorants azoÃ¯ques
   ];
 
   const orangeList = ['E330', 'E202', 'E211', 'E212'];
@@ -217,7 +221,7 @@ function calculatePackagingScore(product) {
   if (packaging.includes('plastique recyclable')) return 50;
   if (packaging.includes('plastique')) return 30;
   
-  return 50; // Défaut
+  return 50; // DÃ©faut
 }
 
 function calculateOriginScore(product) {
@@ -226,7 +230,7 @@ function calculateOriginScore(product) {
   if (origin.includes('France') || origin.includes('fr:')) return 100;
   if (origin.includes('Europe') || origin.includes('EU')) return 80;
   if (origin.includes('Afrique') || origin.includes('Maghreb')) return 70;
-  if (origin.includes('Asie') || origin.includes('Amérique')) return 40;
+  if (origin.includes('Asie') || origin.includes('AmÃ©rique')) return 40;
   
   return 60;
 }
@@ -245,11 +249,11 @@ function calculateEthicsScore(labels) {
 }
 
 // ============================================================================
-// FONCTIONS UTILITAIRES - COSMÉTIQUE
+// FONCTIONS UTILITAIRES - COSMÃ‰TIQUE
 // ============================================================================
 
 function calculateINCI_Score(ingredients) {
-  // Score basé EWG (Environmental Working Group)
+  // Score basÃ© EWG (Environmental Working Group)
   const greenList = ['aqua', 'glycerin', 'aloe', 'shea butter', 'argan oil'];
   const yellowList = ['alcohol', 'fragrance', 'parfum'];
   const redList = ['paraben', 'sulfate', 'peg-', 'phenoxyethanol', 'triclosan'];
@@ -266,7 +270,7 @@ function calculateINCI_Score(ingredients) {
     if (redList.some(r => i.includes(r))) score -= 15;
   });
 
-  score += greenCount * 2; // Bonus ingrédients naturels
+  score += greenCount * 2; // Bonus ingrÃ©dients naturels
   return Math.max(0, Math.min(100, score));
 }
 
@@ -304,7 +308,7 @@ function calculateCosmeticEthics(certifications, product) {
 }
 
 // ============================================================================
-// FONCTIONS UTILITAIRES - DÉTERGENT
+// FONCTIONS UTILITAIRES - DÃ‰TERGENT
 // ============================================================================
 
 function calculateBiodegradability(surfactants) {

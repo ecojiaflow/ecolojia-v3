@@ -383,7 +383,8 @@ router.get('/:id', handleAsync(async (req, res) => {
         allergens: product.foodData?.allergens || [],
         labels: product.foodData?.labels || [],
         packaging: product.packaging,
-        origin: product.origin
+        origin: product.origin,
+        product_name: product.name || product.product_name
       });
     } else if (category === 'cosmetics') {
       scores = calculateCosmeticScores({
