@@ -87,6 +87,7 @@ try {
 // ================================================================
 
 const express = require('express');
+const mongoSanitize = require('express-mongo-sanitize');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -269,6 +270,11 @@ async function connectDatabase() {
 // ================================
 // DÉMARRAGE DU SERVEUR
 // ================================
+
+// === GDPR Routes (RGPD Art. 15-22) ===
+const gdprRoutes = require('./routes/gdpr.routes');
+app.use('/api/gdpr', gdprRoutes);
+console.log('? [ROUTE] GDPR montée sur /api/gdpr');
 
 async function startServer() {
   try {

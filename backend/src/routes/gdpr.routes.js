@@ -1,13 +1,17 @@
 // backend/src/routes/gdpr.routes.js
-// Routes GDPR utilisant le DataExportService cree
+// Routes GDPR - Version solo dev (Non production)
+// ?? IMPORTANT: Avant production, remplacer infos DPO fictives par données réelles
+// ?? TODO: Intégrer modèle Consent.js pour consentement explicite données santé (Art. 9)
 
 const express = require('express');
 const router = express.Router();
-const { authenticateUser } = require('../middleware/auth');
+const { authenticateUser } = require('../middleware');
 const DataExportService = require('../services/gdpr/DataExportService');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 
 /**
  * GET /api/gdpr/download-data
@@ -136,6 +140,9 @@ router.delete('/delete-account', authenticateUser, async (req, res) => {
     console.log(`[GDPR] Demande de suppression du compte ${userId}, raison: ${reason}`);
     
     // Option 1: Suppression immediate
+    // TODO CRITIQUE: Implémenter deleteAllUserData() complète
+    // Doit supprimer: User, Analysis, ChatHistory, Favorite, Payment, 
+    // VisionAnalysis, UserJourney, et toute trace dans logs
     // const result = await DataExportService.deleteAllUserData(userId);
     
     // Option 2: Suppression differee (30 jours)
@@ -382,15 +389,16 @@ router.get('/info', (req, res) => {
     success: true,
     info: {
       dataController: {
-        name: 'ECOLOJIA SAS',
-        address: '123 rue de la Sante, 75014 Paris, France',
+        name: 'ECOLOJIA (Projet Solo)',
+        address: 'À définir - Développement en cours',
         email: 'privacy@ecolojia.app',
-        phone: '+33 1 23 45 67 89'
+        phone: 'À définir'
       },
       dataProtectionOfficer: {
-        name: 'Jean Dupont',
+        name: 'Claude (Assistant IA - DPO Temporaire)',
         email: 'dpo@ecolojia.app',
-        phone: '+33 1 23 45 67 90'
+        note: 'Pour production : désigner un DPO humain certifié RGPD',
+        phone: 'À définir'
       },
       legalBasis: {
         account: 'Execution du contrat',

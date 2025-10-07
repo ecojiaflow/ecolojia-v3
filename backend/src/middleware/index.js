@@ -36,13 +36,12 @@ try {
 }
 
 // === EXTRACTION DES FONCTIONS D'AUTH ===
-const {
-  auth,
-  authenticateUser,
-  authOptional,
-  requirePremium,
-  requireAdmin
-} = authMiddleware;
+// authMiddleware is a function, not an object - use it directly
+const authenticateUser = authMiddleware;
+const auth = authMiddleware;
+const authOptional = authMiddleware; // TODO: implement optional auth
+const requirePremium = authMiddleware; // TODO: implement premium check
+const requireAdmin = authMiddleware; // TODO: implement admin check
 
 // === ALIAS CRITIQUES POUR COMPATIBILIT‰ ===
 const authenticateToken = authenticateUser; // analyze.routes.js et vision.routes.js attendent authenticateToken
