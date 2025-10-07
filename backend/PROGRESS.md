@@ -83,3 +83,40 @@
 - backend/src/routes/journey.routes.js [CRÉÉ]
 - backend/src/main.js [MODIFIÉ - route montée]
 
+
+---
+
+## ? MODULE 3 - CHAT PRODUIT CONTEXTUEL [COMPLETED]
+
+**Status:** ? Opérationnel
+**Date:** 07 octobre 2025 - 14:24
+**Durée:** 1h
+
+### Fonctionnalités
+
+#### 1. ChatHistory Model
+- Historique conversations par produit
+- Pseudonymisation userHash
+- TTL 90 jours RGPD
+
+#### 2. Service Enrichissement Prompts
+- Données produit complètes dans contexte IA
+- Nutri-Score, NOVA, Éco-Score
+- Ingrédients, additifs, allergènes
+- Disclaimer légal obligatoire
+
+#### 3. Route /product-chat
+- Chat contextuel par produit
+- Historique 5 derniers messages
+- Protection rate limiting (10 req/15min)
+
+#### 4. Tests validés
+- ? Chat IA fonctionnel
+- ? Réponse contextuelle produit
+- ? Rate limiting actif
+
+### Fichiers créés
+- backend/src/models/ChatHistory.js
+- backend/src/services/productPrompt.service.js
+- backend/src/routes/chat.routes.js [MODIFIÉ]
+
