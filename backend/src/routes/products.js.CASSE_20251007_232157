@@ -1,0 +1,168 @@
+﻿// PATH: backend/src/routes/products.js
+const express = require('express');
+const router = express.Router();
+// const enrichProduct = require('../middleware/enrichProduct');
+const mongoose = require('mongoose');
+
+// Middleware enrichissement métadonnées global
+// router.use(enrichProduct);
+
+// SCORING ENGINE SCIENTIFIQUE
+const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
+
+/* Middleware debug */
+router.use((req, _res, next) => {
+  console.log(`[Products Router] ${req.method} ${req.originalUrl} - Path: ${req.path}`);
+  next();
+});
+
+/* Auth middlewares (fallbacks inclus) */
+let authenticateUser, checkPremium;
+// RECALCUL FORCÉ DES SCORES (ignorer ceux en DB)
+  try {
+    if (category === 'food') {
+      scores = calculateFoodScores({
+        novaGroup: product.foodData?.novaGroup || product.nova_group,
+        nutriScore: product.foodData?.nutriScore || product.nutriscore_grade,
+        ecoScore: product.foodData?.ecoScore || product.ecoscore_grade,
+        additives: product.foodData?.additives || product.additives_tags || [],
+        allergens: product.foodData?.allergens || product.allergens_tags || [],
+        labels: product.foodData?.labels || product.labels_tags || [],
+        packaging: product.packaging || product.packaging_tags,
+        origin: product.origin || product.countries || product.manufacturing_places,
+        product_name: product.name || product.product_name,
+        nutrition: {
+          per100g: {
+            sugars: product.nutriments?.sugars_100g || product.nutrition?.per100g?.sugars || 0,
+            salt: product.nutriments?.salt_100g || product.nutrition?.per100g?.salt || 0,
+            saturatedFat: product.nutriments?.['saturated-fat_100g'] || product.nutrition?.per100g?.saturatedFat || 0,
+            energy: product.nutriments?.['energy-kcal_100g'] || product.nutrition?.per100g?.energy || 0,
+            fiber: product.nutriments?.fiber_100g || product.nutrition?.per100g?.fiber || 0,
+            protein: product.nutriments?.proteins_100g || product.nutrition?.per100g?.protein || 0
+          }
+        },
+        ingredients_text: product.ingredients_text || product.foodData?.ingredients || ''
+      });
+    } else if (category === 'cosmetics') {
+      scores = calculateCosmeticScores({
+        ingredients: product.cosmeticsData?.ingredients || [],
+        endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
+        allergens: product.cosmeticsData?.allergens || [],
+        certifications: product.cosmeticsData?.certifications || []
+      });
+    } else if (category === 'detergents') {
+      scores = calculateDetergentScores({
+        surfactants: product.detergentsData?.surfactants || [],
+        composition: product.detergentsData?.composition || [],
+        ecoLabels: product.detergentsData?.ecoLabels || [],
+        phosphates: product.detergentsData?.phosphates || false
+      });
+    }
+  } catch (err) {
+    logger.error('Scoring error:', err);
+    scores = { overallScore: 50, healthScore: 50, environmentScore: 50 };
+  };
+  }
+
+  const productObj = product.toObject ? product.toObject() : product;
+  
+  res.json({ 
+    success: true, 
+    product: { 
+      ...productObj,
+      scores
+    } 
+  });
+}));
+
+/* Créer un produit manuellement */
+router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
+  const { name, brand, category, barcode, specificData } = req.body;
+  logger.info('Create product manually:', { name, brand, category });
+
+  if (!name || !category) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Le nom et la catégorie sont requis' 
+    });
+  }
+
+  if (!['food', 'cosmetics', 'detergents'].includes(category)) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Catégorie invalide. Doit être: food, cosmetics, ou detergents' 
+    });
+  }
+
+  const product = {
+    _id: new Date().getTime().toString(),
+    name,
+    brand: brand || 'Sans marque',
+    category,
+    barcode: barcode || `manual-${Date.now()}`,
+    specificData,
+    viewCount: 0,
+    scanCount: 0,
+    createdAt: new Date(),
+    createdBy: req.userId
+  };
+
+  res.status(201).json({ success: true, product });
+}));
+
+/* ========== HELPERS ========== */
+function calculateHealthScore(prod, nova, nutri) {
+  let score = 50;
+  if (nova) score += (5 - nova) * 6;
+  if (nutri) score += ({ a: 30, b: 22, c: 15, d: 7, e: 0 }[nutri.toLowerCase()] || 0);
+  
+  if (prod.nutritionFacts) {
+    if (prod.nutritionFacts.sugars_100g > 20) score -= 5;
+    if (prod.nutritionFacts.saturated_fat_100g > 5) score -= 5;
+    if (prod.nutritionFacts.salt_100g > 1.5) score -= 5;
+  }
+  
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function generateSummary(nova, nutri) {
+  const arr = [];
+  if (nova === 4) arr.push('⚠ Produit ultra-transformé.');
+  if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
+    arr.push('⚠ Mauvais Nutri-Score.');
+  }
+  return arr.join(' ') || 'Analyse complète du produit.';
+}
+
+function generateRecommendations(nova, nutri) {
+  const rec = { 
+    healthImpact: 'À consommer avec modération', 
+    alternatives: [], 
+    advice: [] 
+  };
+  
+  if (nova === 4) { 
+    rec.healthImpact = 'À limiter – ultra-transformé'; 
+    rec.advice.push('Privilégiez des alternatives moins transformées'); 
+  }
+  
+  if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
+    rec.advice.push('Cherchez des alternatives avec un meilleur Nutri-Score');
+  }
+  
+  return rec;
+}
+
+function mockModel() { 
+  return { 
+    find: async () => [], 
+    findOne: async () => null, 
+    findById: async () => null, 
+    create: async d => d,
+    countDocuments: async () => 0
+  }; 
+}
+
+console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
+
+module.exports = router;

@@ -106,7 +106,7 @@ function calculateNovaScore(novaGroup) {
     3: 10,  // Aliments transformés
     4: 0    // Produits ultra-transformés
   };
-  return novaGroup in mapping ? mapping[novaGroup] : 12; // Défaut si inconnu
+  return mapping[novaGroup] || 12; // Défaut si inconnu
 }
 
 /**

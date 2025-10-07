@@ -1,5 +1,4 @@
 ﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
-import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
@@ -182,7 +181,6 @@ const ProductPage: React.FC = () => {
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
                 </div>
               </div>
-              <ScoreProgressBar score={overallScore} />
             </div>
           </div>
           <div className="bg-white p-4 space-y-2">
@@ -284,7 +282,6 @@ const ProductPage: React.FC = () => {
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
-        <ScoreProgressBar score={overallScore} />
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
@@ -328,7 +325,6 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
-
 
 
 

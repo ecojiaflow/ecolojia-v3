@@ -1,0 +1,37 @@
+[
+  {
+    "barcode": "040320435861",
+    "productId": "68e2ea09f3a66643b86d7571",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "40267654",
+    "productId": "68e2c6ba46db866b232c5d8b",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "6118000040354",
+    "productId": "68e2c69946db866b232c58d6",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "6118000090762",
+    "productId": "68e2c66146db866b232c50e3",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "7000526479611",
+    "productId": "68e2e471f3a66643b86d756f",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "7640154260474",
+    "productId": "68e2c6a646db866b232c5a93",
+    "error": "Request failed with status code 404"
+  },
+  {
+    "barcode": "8718951254183",
+    "productId": "68e4121cccfa19739c086063",
+    "error": "Request failed with status code 404"
+  }
+]
