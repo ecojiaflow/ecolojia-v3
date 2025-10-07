@@ -184,6 +184,7 @@ const routesToLoad = [
   { path: '/api/cosmetics', file: './routes/cosmetics.routes.js', name: 'Cosmetics' },
   { path: '/api/detergents', file: './routes/detergents.routes.js', name: 'Detergents' },
     { path: '/api/favorites', file: './routes/favorites.routes.js', name: 'Favorites' },
+  { path: '/api/journey', file: './routes/journey.routes.js', name: 'Journey' },
   { path: '/api/auth', file: './routes/auth.simple.js', name: 'Auth' },
   { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },

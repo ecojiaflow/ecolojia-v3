@@ -52,3 +52,34 @@
 - ? Protection anti-abus IA active
 - ? Coûts DeepSeek contrôlés
 
+
+---
+
+## ? MODULE 2 - USER JOURNEY [COMPLETED]
+
+**Status:** ? Opérationnel
+**Date:** 07 octobre 2025 - 14:12
+**Durée:** 45 minutes
+
+### Fonctionnalités
+
+#### 1. UserJourney Model
+- Tracking scans utilisateurs (pseudonymisé)
+- TTL automatique 90 jours (RGPD)
+- Index optimisés
+
+#### 2. Routes Journey
+- POST /api/journey/scan - Enregistrer scan
+- GET /api/journey/stats/:userId - Stats utilisateur
+- GET /api/journey/history/:userId - Historique
+
+#### 3. Tests validés
+- ? Scan enregistré (ID: 68e50374115547ea39a9e9fb)
+- ? Stats: 1 scan, 1 produit unique
+- ? Historique: 1 scan récent
+
+### Fichiers créés
+- backend/src/models/UserJourney.js [CRÉÉ]
+- backend/src/routes/journey.routes.js [CRÉÉ]
+- backend/src/main.js [MODIFIÉ - route montée]
+
