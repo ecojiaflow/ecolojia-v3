@@ -17,24 +17,33 @@ function detectWarnings(text) {
   return keywords.filter(k => t.includes(k));
 }
 
-// Construire credentials depuis variables séparées (Render) ou JSON unique
 function getGoogleCredentials() {
-  // Option 1: JSON complet dans une variable
+  // Option 1: Credentials en Base64 (Render)
+  if (process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64) {
+    try {
+      const decoded = Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64, 'base64').toString('utf8');
+      return JSON.parse(decoded);
+    } catch (e) {
+      console.warn('[Vision] Erreur décodage Base64:', e.message);
+    }
+  }
+  
+  // Option 2: JSON complet
   if (process.env.GOOGLE_VISION_CREDENTIALS_JSON) {
     return JSON.parse(process.env.GOOGLE_VISION_CREDENTIALS_JSON);
   }
   
-  // Option 2: Variables séparées (Render)
+  // Option 3: Variables séparées (avec fix \n)
   if (process.env.GOOGLE_PRIVATE_KEY && process.env.GOOGLE_CLIENT_EMAIL) {
     return {
       type: "service_account",
       project_id: process.env.GOOGLE_PROJECT_ID,
       private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // FIX \n
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
       client_id: process.env.GOOGLE_CLIENT_ID,
-      auth_uri: process.env.GOOGLE_AUTH_URI,
-      token_uri: process.env.GOOGLE_TOKEN_URI,
+      auth_uri: process.env.GOOGLE_AUTH_URI || "https://accounts.google.com/o/oauth2/auth",
+      token_uri: process.env.GOOGLE_TOKEN_URI || "https://oauth2.googleapis.com/token",
       auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
       client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
       universe_domain: process.env.GOOGLE_UNIVERSE_DOMAIN || "googleapis.com"
@@ -52,6 +61,7 @@ async function analyzeWithGoogle(buffer) {
     throw new Error("NO_GOOGLE_CREDS");
   }
   
+  console.log('[Vision] Utilisation credentials Google Vision');
   const client = new vision.ImageAnnotatorClient({ credentials: creds });
   const [result] = await client.textDetection({ image: { content: buffer } });
   const rawText = result?.fullTextAnnotation?.text || (result?.textAnnotations?.[0]?.description ?? "");
@@ -71,7 +81,7 @@ async function analyze(buffer) {
   try {
     return await analyzeWithGoogle(buffer);
   } catch (e) {
-    console.warn("[Vision] Fallback to stub:", e.message);
+    console.warn('[Vision] Fallback to stub:', e.message);
     return await analyzeStub(buffer);
   }
 }
