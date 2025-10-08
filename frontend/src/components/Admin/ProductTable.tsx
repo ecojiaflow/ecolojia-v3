@@ -174,7 +174,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                         <button
                           onClick={() => handleValidate(product.id, 'verified')}
                           disabled={actionLoading === `${product.id}-verified`}
-                          className="text-green-600 hover:text-green-900 disabled:opacity-50"
+                          className="text-green-700 hover:text-green-900 disabled:opacity-50"
                           title="Valider"
                         >
                           <Check className="h-4 w-4" />
@@ -229,5 +229,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
 export default ProductTable;
 // EOF
+
 
 

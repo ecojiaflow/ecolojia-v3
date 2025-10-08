@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/CosmeticAnalysisPage.tsx
 
 import React, { useState } from 'react';
@@ -107,9 +107,9 @@ const CosmeticAnalysisPage: React.FC = () => {
   
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-50';
-    if (score >= 60) return 'bg-yellow-50';
-    if (score >= 40) return 'bg-orange-50';
+    if (score >= 70) return 'bg-green-50';
+    if (score >= 50) return 'bg-yellow-50';
+    if (score >= 30) return 'bg-orange-50';
     return 'bg-red-50';
   };
 
@@ -120,7 +120,7 @@ const CosmeticAnalysisPage: React.FC = () => {
       case 'high':
         return <AlertTriangle className="w-5 h-5 text-orange-600" />;
       case 'medium':
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />;
+        return <AlertCircle className="w-5 h-5 text-green-500" />;
       default:
         return <Info className="w-5 h-5 text-blue-600" />;
     }
@@ -258,7 +258,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                     <p className="text-sm text-gray-600">Ingredients totaux</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-green-600">{analysis.analysis.naturalIngredients}</p>
+                    <p className="text-2xl font-bold text-green-700">{analysis.analysis.naturalIngredients}</p>
                     <p className="text-sm text-gray-600">Naturels</p>
                   </div>
                   <div>
@@ -446,7 +446,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                   <p className="text-sm text-gray-600">{alt.brand}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-green-600">{alt.cosmeticAnalysis?.scores.overall}%</p>
+                  <p className="text-lg font-bold text-green-700">{alt.cosmeticAnalysis?.scores.overall}%</p>
                   <p className="text-xs text-gray-500">Score global</p>
                 </div>
               </button>
@@ -459,6 +459,7 @@ const CosmeticAnalysisPage: React.FC = () => {
 };
 
 export default CosmeticAnalysisPage;
+
 
 
 

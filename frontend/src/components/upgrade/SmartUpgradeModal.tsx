@@ -207,7 +207,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
             
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-3 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-green-700">
                   {economicValue.annualSavings}aaa
                 </div>
                 <div className="text-xs text-green-700">aaconomies/an estimees</div>
@@ -325,6 +325,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
     </div>
   );
 };
+
 
 
 

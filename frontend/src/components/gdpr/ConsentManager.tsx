@@ -315,7 +315,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
             </button>
             <button
               onClick={handleAcceptSelected}
-              className="px-6 py-3 bg-white border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium flex-1"
+              className="px-6 py-3 bg-white border border-green-500 text-green-700 rounded-lg hover:bg-green-50 transition-colors font-medium flex-1"
             >
               Accepter la selection
             </button>
@@ -329,7 +329,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
           
           <p className="text-xs text-center text-gray-500 mt-4">
             En cliquant sur "Accepter", vous consentez  l'utilisation de cookies et au traitement de vos donnees conformement  notre{' '}
-            <a href="/privacy" className="text-green-600 hover:underline">politique de confidentialite</a>.
+            <a href="/privacy" className="text-green-700 hover:underline">politique de confidentialite</a>.
           </p>
         </div>
       </div>
@@ -338,5 +338,6 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
 };
 
 export default ConsentManager;
+
 
 

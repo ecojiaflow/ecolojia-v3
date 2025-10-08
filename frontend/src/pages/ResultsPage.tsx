@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -56,18 +56,18 @@ const ResultsPage: React.FC = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    // Récupérer les données depuis la navigation
+    // Rï¿½cupï¿½rer les donnï¿½es depuis la navigation
     if (location.state?.analysisData) {
       setAnalysisData(location.state.analysisData);
       setCapturedImages(location.state.capturedImages || {});
       setLoading(false);
     } else {
-      // Rediriger si pas de données
+      // Rediriger si pas de donnï¿½es
       navigate('/scan');
     }
   }, [location, navigate]);
 
-  // Sauvegarder le produit après analyse
+  // Sauvegarder le produit aprï¿½s analyse
   useEffect(() => {
     const saveProduct = async () => {
       if (location.state?.analysisData && location.state?.shouldSave && !isSaved) {
@@ -87,7 +87,7 @@ const ResultsPage: React.FC = () => {
           );
           
           setIsSaved(true);
-          toast.success('? Produit ajouté à la base de données !');
+          toast.success('? Produit ajoutï¿½ ï¿½ la base de donnï¿½es !');
         } catch (error) {
           console.error('Erreur sauvegarde:', error);
           toast.error('Impossible de sauvegarder le produit');
@@ -121,13 +121,13 @@ const ResultsPage: React.FC = () => {
   
 
   const getScoreBg = (score: number) => {
-    if (score >= 80) return 'bg-green-100';
-    if (score >= 60) return 'bg-yellow-100';
+    if (score >= 70) return 'bg-green-100';
+    if (score >= 50) return 'bg-yellow-100';
     return 'bg-red-100';
   };
 
   // Nom du produit avec fallback
-  const productName = analysisData.product?.name || analysisData.productName || location.state?.productName || 'Produit analysé';
+  const productName = analysisData.product?.name || analysisData.productName || location.state?.productName || 'Produit analysï¿½';
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -147,8 +147,8 @@ const ResultsPage: React.FC = () => {
                 <p className="text-gray-600">{analysisData.product.brand}</p>
               )}
               {isSaved && (
-                <p className="text-sm text-green-600 mt-1">
-                  ? Enregistré dans votre historique
+                <p className="text-sm text-green-700 mt-1">
+                  ? Enregistrï¿½ dans votre historique
                 </p>
               )}
             </div>
@@ -162,7 +162,7 @@ const ResultsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Images capturées */}
+      {/* Images capturï¿½es */}
       {Object.keys(capturedImages).length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -172,7 +172,7 @@ const ResultsPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-sm p-4">
             <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
               <Camera className="w-5 h-5 mr-2" />
-              Photos analysées
+              Photos analysï¿½es
             </h3>
             <div className="grid grid-cols-3 gap-3">
               {capturedImages.barcode && (
@@ -203,11 +203,11 @@ const ResultsPage: React.FC = () => {
                 <div className="relative">
                   <img 
                     src={capturedImages.ingredients} 
-                    alt="Ingrédients"
+                    alt="Ingrï¿½dients"
                     className="w-full h-24 object-cover rounded-lg"
                   />
                   <span className="absolute bottom-1 left-1 text-xs bg-black bg-opacity-50 text-white px-2 py-1 rounded">
-                    Ingrédients
+                    Ingrï¿½dients
                   </span>
                 </div>
               )}
@@ -217,7 +217,7 @@ const ResultsPage: React.FC = () => {
       )}
 
       <div className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
-        {/* Scores détaillés */}
+        {/* Scores dï¿½taillï¿½s */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -228,7 +228,7 @@ const ResultsPage: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-800 flex items-center">
                 <Heart className="w-5 h-5 mr-2 text-red-500" />
-                Impact Santé
+                Impact Santï¿½
               </h3>
               <span className={`text-2xl font-bold ${getScoreColor(healthScore)}`}>
                 {healthScore}/100
@@ -240,8 +240,8 @@ const ResultsPage: React.FC = () => {
                 animate={{ width: `${healthScore}%` }}
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className={`h-3 rounded-full ${
-                  healthScore >= 80 ? 'bg-green-500' :
-                  healthScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                  healthscore >= 70 ? 'bg-green-500' :
+                  healthscore >= 50 ? 'bg-yellow-500' : 'bg-red-500'
                 }`}
               />
             </div>
@@ -263,8 +263,8 @@ const ResultsPage: React.FC = () => {
                 animate={{ width: `${envScore}%` }}
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className={`h-3 rounded-full ${
-                  envScore >= 80 ? 'bg-green-500' :
-                  envScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                  envscore >= 70 ? 'bg-green-500' :
+                  envscore >= 50 ? 'bg-yellow-500' : 'bg-red-500'
                 }`}
               />
             </div>
@@ -281,7 +281,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2" />
-              Informations détectées
+              Informations dï¿½tectï¿½es
             </h3>
             
             <div className="grid md:grid-cols-2 gap-4">
@@ -314,7 +314,7 @@ const ResultsPage: React.FC = () => {
 
             {analysisData.insights.additives && analysisData.insights.additives.length > 0 && (
               <div className="mt-4">
-                <h4 className="font-medium text-gray-700 mb-2">Additifs détectés</h4>
+                <h4 className="font-medium text-gray-700 mb-2">Additifs dï¿½tectï¿½s</h4>
                 <div className="flex flex-wrap gap-2">
                   {analysisData.insights.additives.map((additive, index) => (
                     <span key={index} className="px-2 py-1 bg-orange-100 text-orange-700 rounded text-sm">
@@ -327,7 +327,7 @@ const ResultsPage: React.FC = () => {
 
             {analysisData.insights.allergens && analysisData.insights.allergens.length > 0 && (
               <div className="mt-4">
-                <h4 className="font-medium text-gray-700 mb-2">Allergènes</h4>
+                <h4 className="font-medium text-gray-700 mb-2">Allergï¿½nes</h4>
                 <div className="flex flex-wrap gap-2">
                   {analysisData.insights.allergens.map((allergen, index) => (
                     <span key={index} className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
@@ -340,7 +340,7 @@ const ResultsPage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Analyse détaillée */}
+        {/* Analyse dï¿½taillï¿½e */}
         {analysisData.analysis && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -350,7 +350,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <Sparkles className="w-5 h-5 mr-2" />
-              Analyse IA détaillée
+              Analyse IA dï¿½taillï¿½e
             </h3>
 
             {/* Points positifs */}
@@ -371,7 +371,7 @@ const ResultsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Points négatifs */}
+            {/* Points nï¿½gatifs */}
             {analysisData.analysis.negatives && analysisData.analysis.negatives.length > 0 && (
               <div className="mb-6">
                 <h4 className="font-medium text-red-700 mb-3 flex items-center">
@@ -381,7 +381,7 @@ const ResultsPage: React.FC = () => {
                 <ul className="space-y-2">
                   {analysisData.analysis.negatives.map((point, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-red-500 mr-2 mt-1">•</span>
+                      <span className="text-red-500 mr-2 mt-1">ï¿½</span>
                       <span className="text-gray-700">{point}</span>
                     </li>
                   ))}
@@ -418,7 +418,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <TrendingUp className="w-5 h-5 mr-2" />
-              Alternatives recommandées
+              Alternatives recommandï¿½es
             </h3>
             
             <div className="space-y-3">
@@ -476,3 +476,4 @@ const ResultsPage: React.FC = () => {
 };
 
 export default ResultsPage;
+

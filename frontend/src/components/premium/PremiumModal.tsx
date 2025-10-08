@@ -155,7 +155,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
                       {typeof feature.premium === 'boolean' ? (
                         <Check className="h-5 w-5 text-green-500 mx-auto" />
                       ) : (
-                        <span className="text-sm font-medium text-green-600">{feature.premium}</span>
+                        <span className="text-sm font-medium text-green-700">{feature.premium}</span>
                       )}
                     </div>
                   </div>
@@ -228,3 +228,4 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
     </div>
   );
 };
+

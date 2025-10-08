@@ -6,7 +6,7 @@ interface ScoreProgressBarProps {
 
 export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ score }) => {
   const getScoreLabel = (score: number): string => {
-    if (score >= 80) return 'Excellent';
+    if (score >= 70) return 'Excellent';
     if (score >= 65) return 'Bon';
     if (score >= 45) return 'Moyen';
     if (score >= 25) return 'Médiocre';
@@ -14,7 +14,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ score }) => 
   };
 
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return 'bg-green-600';
+    if (score >= 70) return 'bg-green-600';
     if (score >= 65) return 'bg-green-400';
     if (score >= 45) return 'bg-yellow-500';
     if (score >= 25) return 'bg-orange-500';
@@ -39,8 +39,9 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ score }) => 
         <span className='text-orange-500 font-medium'>25</span>
         <span className='text-yellow-500 font-medium'>45 Moyen</span>
         <span className='text-green-400 font-medium'>65 Bon</span>
-        <span className='text-green-600 font-medium'>80 Excellent</span>
+        <span className='text-green-700 font-medium'>80 Excellent</span>
       </div>
     </div>
   );
 };
+

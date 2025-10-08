@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-green-600 hover:text-green-700"
+                  className="text-sm text-green-700 hover:text-green-700"
                 >
                   Mot de passe oublié ?
                 </Link>
@@ -200,7 +200,7 @@ const LoginPage: React.FC = () => {
               Pas encore de compte ?{' '}
               <Link
                 to="/register"
-                className="text-green-600 font-medium hover:text-green-700"
+                className="text-green-700 font-medium hover:text-green-700"
               >
                 Créer un compte gratuit
               </Link>

@@ -17,7 +17,7 @@ export const MobileBottomNav = () => {
           to={to}
           className={({ isActive }) => `
             flex flex-col items-center justify-center py-2 px-3 transition-all
-            ${isActive ? 'text-green-600' : 'text-gray-600'}
+            ${isActive ? 'text-green-700' : 'text-gray-600'}
             ${primary ? 'scale-110' : ''}
           `}
         >
@@ -28,3 +28,4 @@ export const MobileBottomNav = () => {
     </nav>
   );
 };
+

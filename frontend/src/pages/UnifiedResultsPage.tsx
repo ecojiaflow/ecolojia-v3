@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/UnifiedResultsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -71,16 +71,16 @@ export const UnifiedResultsPage: React.FC = () => {
   }, [location, navigate]);
 
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
+    if (score >= 70) return 'text-green-700';
+    if (score >= 50) return 'text-green-500';
+    if (score >= 30) return 'text-orange-600';
     return 'text-red-600';
   };
 
   const getScoreBgColor = (score: number): string => {
-    if (score >= 80) return 'bg-green-100';
-    if (score >= 60) return 'bg-yellow-100';
-    if (score >= 40) return 'bg-orange-100';
+    if (score >= 70) return 'bg-green-100';
+    if (score >= 50) return 'bg-yellow-100';
+    if (score >= 30) return 'bg-orange-100';
     return 'bg-red-100';
   };
 
@@ -229,7 +229,7 @@ export const UnifiedResultsPage: React.FC = () => {
               <button
                 onClick={saveToHistory}
                 className={`p-2 rounded-lg transition-colors ${
-                  isSaved ? 'bg-green-100 text-green-600' : 'bg-gray-100 hover:bg-gray-200'
+                  isSaved ? 'bg-green-100 text-green-700' : 'bg-gray-100 hover:bg-gray-200'
                 }`}
                 title="Sauvegarder"
               >
@@ -306,7 +306,7 @@ export const UnifiedResultsPage: React.FC = () => {
           {result.analysis.alternatives && result.analysis.alternatives.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Leaf className="w-5 h-5 mr-2 text-green-600" />
+                <Leaf className="w-5 h-5 mr-2 text-green-700" />
                 Alternatives plus saines
               </h2>
               <div className="grid gap-4">
@@ -343,7 +343,7 @@ const FoodAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
         <div className="flex items-center justify-between">
           <span className="text-gray-700">Score NOVA</span>
           <span className={`text-lg font-semibold ${
-            analysis.novaScore <= 2 ? 'text-green-600' : 'text-red-600'
+            analysis.novaScore <= 2 ? 'text-green-700' : 'text-red-600'
           }`}>
             {analysis.novaScore}/4
           </span>
@@ -433,7 +433,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
         <div className="flex items-center justify-between">
           <span className="text-gray-700">Biodegradabilite</span>
           <span className={`text-lg font-semibold ${
-            analysis.biodegradability >= 80 ? 'text-green-600' : 'text-orange-600'
+            analysis.biodegradability >= 80 ? 'text-green-700' : 'text-orange-600'
           }`}>
             {analysis.biodegradability}%
           </span>
@@ -469,6 +469,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
 );
 
 export default UnifiedResultsPage;
+
 
 
 

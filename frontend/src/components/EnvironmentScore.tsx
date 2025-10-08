@@ -20,25 +20,25 @@ const EnvironmentScore: React.FC<EnvironmentScoreProps> = ({
 }) => {
   // Couleur selon le score
   const getColor = (score: number) => {
-    if (score >= 80) return '#22c55e'; // green-500
-    if (score >= 60) return '#84cc16'; // lime-500
-    if (score >= 40) return '#eab308'; // yellow-500
+    if (score >= 70) return '#22c55e'; // green-500
+    if (score >= 50) return '#84cc16'; // lime-500
+    if (score >= 30) return '#eab308'; // yellow-500
     return '#ef4444'; // red-500
   };
 
   // Icone selon le score
   const getIcon = (score: number) => {
-    if (score >= 80) return TreePine;
-    if (score >= 60) return Leaf;
-    if (score >= 40) return Sprout;
+    if (score >= 70) return TreePine;
+    if (score >= 50) return Leaf;
+    if (score >= 30) return Sprout;
     return Factory;
   };
 
   // Label selon le score
   const getLabel = (score: number) => {
-    if (score >= 80) return 'Tres ecologique';
-    if (score >= 60) return 'cologique';
-    if (score >= 40) return 'Impact modere';
+    if (score >= 70) return 'Tres ecologique';
+    if (score >= 50) return 'cologique';
+    if (score >= 30) return 'Impact modere';
     return 'Impact eleve';
   };
 
@@ -205,4 +205,5 @@ const EnvironmentScore: React.FC<EnvironmentScoreProps> = ({
 };
 
 export default EnvironmentScore;
+
 

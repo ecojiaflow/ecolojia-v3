@@ -245,7 +245,7 @@ export const CommunityComparison: React.FC = () => {
               <div key={category} className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium capitalize">{category}</span>
-                  <span className={`font-bold ${score > 70 ? 'text-green-600' : score > 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                  <span className={`font-bold ${score > 70 ? 'text-green-700' : score > 50 ? 'text-green-500' : 'text-red-600'}`}>
                     {score}/100
                   </span>
                 </div>
@@ -316,6 +316,7 @@ export const CommunityComparison: React.FC = () => {
 };
 export default CommunityComparison;
 // EOF
+
 
 
 

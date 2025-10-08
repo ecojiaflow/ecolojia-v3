@@ -55,7 +55,7 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
           </p>
           {payload[1] && (
             <p className="text-sm text-gray-600">
-              Score moyen : <span className="font-medium text-green-600">{payload[1]?.value || 0}/100</span>
+              Score moyen : <span className="font-medium text-green-700">{payload[1]?.value || 0}/100</span>
             </p>
           )}
         </div>
@@ -273,7 +273,7 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-xs text-gray-500">Score moyen</p>
-            <p className="text-lg font-semibold text-green-600">{avgGlobalScore}/100</p>
+            <p className="text-lg font-semibold text-green-700">{avgGlobalScore}/100</p>
           </div>
         </div>
       </div>
@@ -296,6 +296,7 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
 };
 
 export default DailyAnalysesChart;
+
 
 
 

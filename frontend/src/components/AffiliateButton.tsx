@@ -108,7 +108,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-50 overflow-hidden animate-fadeIn">
           <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-200">
             <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-              <Leaf className="w-4 h-4 text-green-600" />
+              <Leaf className="w-4 h-4 text-green-700" />
               Partenaires eco-responsables
             </h3>
             <p className="text-sm text-gray-600 mt-1">
@@ -128,7 +128,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-800 group-hover:text-green-600 transition-colors">
+                    <h4 className="font-medium text-gray-800 group-hover:text-green-700 transition-colors">
                       {partner.name}
                     </h4>
                     {partner.tagline && (
@@ -142,9 +142,9 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
                   </div>
                   <div className="ml-4 flex items-center">
                     {clickedPartner === partner.id ? (
-                      <Check className="w-5 h-5 text-green-600" />
+                      <Check className="w-5 h-5 text-green-700" />
                     ) : (
-                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors" />
+                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-green-700 transition-colors" />
                     )}
                   </div>
                 </div>
@@ -190,5 +190,6 @@ export default AffiliateButton;
   animation: fadeIn 0.2s ease-out;
 }
 */
+
 
 

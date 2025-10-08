@@ -189,7 +189,7 @@ const ProductPage: React.FC = () => {
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
-            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-600 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
+            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-700 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
@@ -199,7 +199,7 @@ const ProductPage: React.FC = () => {
           </details>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
-            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} /></div>
+            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-white" open>
@@ -234,7 +234,7 @@ const ProductPage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">Score environnemental</span>
-                    <span className="text-2xl font-bold text-green-600">
+                    <span className="text-2xl font-bold text-green-700">
                       {product.scores?.environmentScore || 'N/A'}/100
                     </span>
                   </div>
@@ -286,7 +286,7 @@ const ProductPage: React.FC = () => {
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ScoreProgressBar score={overallScore} />
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        <ScoreBreakdown score={overallScore} factors={realBreakdown} />
+        <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
 
@@ -309,7 +309,7 @@ const ProductPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
-                <span className="text-3xl font-bold text-green-600">
+                <span className="text-3xl font-bold text-green-700">
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>
@@ -328,6 +328,10 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
+
+
 
 
 

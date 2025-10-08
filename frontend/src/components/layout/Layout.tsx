@@ -55,7 +55,7 @@ const Layout: React.FC = () => {
                     to={item.href}
                     className={`flex items-center space-x-1 text-sm font-medium transition-colors ${
                       isActive(item.href)
-                        ? 'text-green-600'
+                        ? 'text-green-700'
                         : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
@@ -165,7 +165,7 @@ const Layout: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block px-4 py-2 rounded-lg ${
                       isActive(item.href)
-                        ? 'bg-green-50 text-green-600'
+                        ? 'bg-green-50 text-green-700'
                         : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >

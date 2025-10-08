@@ -12,17 +12,17 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
   productName
 }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 65) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    if (score >= 70) return 'text-green-700 bg-green-50 border-green-200';
+    if (score >= 65) return 'text-green-500 bg-yellow-50 border-yellow-200';
     if (score >= 50) return 'text-orange-600 bg-orange-50 border-orange-200';
     return 'text-red-600 bg-red-50 border-red-200';
   };
 
   const getEndocrineRiskColor = (level: string) => {
     switch (level) {
-      case 'NONE': return 'text-green-600 bg-green-50';
+      case 'NONE': return 'text-green-700 bg-green-50';
       case 'LOW': return 'text-blue-600 bg-blue-50';
-      case 'MODERATE': return 'text-yellow-600 bg-yellow-50';
+      case 'MODERATE': return 'text-green-500 bg-yellow-50';
       case 'HIGH': return 'text-orange-600 bg-orange-50';
       case 'VERY_HIGH': return 'text-red-600 bg-red-50';
       default: return 'text-gray-600 bg-gray-50';
@@ -99,8 +99,8 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
                 Allergenes Declares ({analysis.allergens.count})
               </h3>
               <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                analysis.allergens.severity === 'LOW' ? 'bg-green-50 text-green-600' :
-                analysis.allergens.severity === 'MODERATE' ? 'bg-yellow-50 text-yellow-600' :
+                analysis.allergens.severity === 'LOW' ? 'bg-green-50 text-green-700' :
+                analysis.allergens.severity === 'MODERATE' ? 'bg-yellow-50 text-green-500' :
                 'bg-red-50 text-red-600'
               }`}>
                 Risque allergique : {analysis.allergens.severity === 'LOW' ? 'Faible' :
@@ -128,7 +128,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
       {/* Naturalite */}
       <div className="bg-white p-6 rounded-xl border border-gray-200">
         <div className="flex items-start space-x-4">
-          <div className={`p-3 rounded-full ${analysis.naturalness?.score >= 7 ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'}`}>
+          <div className={`p-3 rounded-full ${analysis.naturalness?.score >= 7 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-600'}`}>
             <Leaf className="w-6 h-6" />
           </div>
           <div className="flex-1">
@@ -138,7 +138,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
             
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <div className="text-2xl font-bold text-green-600">{analysis.naturalness?.score || 0}/10</div>
+                <div className="text-2xl font-bold text-green-700">{analysis.naturalness?.score || 0}/10</div>
                 <div className="text-sm text-gray-600">Score naturalite</div>
               </div>
               <div>
@@ -148,7 +148,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
             </div>
 
             {analysis.naturalness?.bioIngredients > 0 && (
-              <div className="flex items-center space-x-2 text-green-600">
+              <div className="flex items-center space-x-2 text-green-700">
                 <Star className="w-4 h-4" />
                 <span className="text-sm font-medium">
                   {analysis.naturalness.bioIngredients} ingredient(s) bio detecte(s)
@@ -191,7 +191,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
                     <p className="text-sm text-gray-600">{alt.brand}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-green-600">{alt.score}/100</div>
+                    <div className="text-lg font-bold text-green-700">{alt.score}/100</div>
                     <div className="text-xs text-gray-500">+{alt.score - analysis.healthScore} points</div>
                   </div>
                 </div>
@@ -240,16 +240,16 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
   productName
 }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 65) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    if (score >= 70) return 'text-green-700 bg-green-50 border-green-200';
+    if (score >= 65) return 'text-green-500 bg-yellow-50 border-yellow-200';
     if (score >= 50) return 'text-orange-600 bg-orange-50 border-orange-200';
     return 'text-red-600 bg-red-50 border-red-200';
   };
 
   const getToxicityColor = (level: string) => {
     switch (level) {
-      case 'LOW': return 'text-green-600 bg-green-50';
-      case 'MODERATE': return 'text-yellow-600 bg-yellow-50';
+      case 'LOW': return 'text-green-700 bg-green-50';
+      case 'MODERATE': return 'text-green-500 bg-yellow-50';
       case 'HIGH': return 'text-orange-600 bg-orange-50';
       case 'VERY_HIGH': return 'text-red-600 bg-red-50';
       default: return 'text-gray-600 bg-gray-50';
@@ -312,7 +312,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
       {/* Biodegradabilite */}
       <div className="bg-white p-6 rounded-xl border border-gray-200">
         <div className="flex items-start space-x-4">
-          <div className={`p-3 rounded-full ${analysis.biodegradability?.score >= 7 ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'}`}>
+          <div className={`p-3 rounded-full ${analysis.biodegradability?.score >= 7 ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-600'}`}>
             <Leaf className="w-6 h-6" />
           </div>
           <div className="flex-1">
@@ -322,7 +322,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-2xl font-bold text-green-600">{analysis.biodegradability?.score || 0}/10</div>
+                <div className="text-2xl font-bold text-green-700">{analysis.biodegradability?.score || 0}/10</div>
                 <div className="text-sm text-gray-600">Score biodegradabilite</div>
               </div>
               <div>
@@ -383,7 +383,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
                     <p className="text-sm text-gray-600">{alt.brand}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-green-600">{alt.score}/100</div>
+                    <div className="text-lg font-bold text-green-700">{alt.score}/100</div>
                     <div className="text-xs text-gray-500">+{alt.score - (analysis.environmentalScore || 0)} points</div>
                   </div>
                 </div>
@@ -405,5 +405,6 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
 };
 
 export default { CosmeticAnalysisDisplay, DetergentAnalysisDisplay };
+
 
 

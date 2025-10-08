@@ -218,7 +218,7 @@ const RegisterPage: React.FC = () => {
                     <div
                       key={index}
                       className={`text-xs flex items-center ${
-                        req.regex.test(formData.password) ? 'text-green-600' : 'text-gray-400'
+                        req.regex.test(formData.password) ? 'text-green-700' : 'text-gray-400'
                       }`}
                     >
                       <Check className="w-3 h-3 mr-1" />
@@ -260,11 +260,11 @@ const RegisterPage: React.FC = () => {
               />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                 J'accepte les{' '}
-                <Link to="/terms" className="text-green-600 hover:underline">
+                <Link to="/terms" className="text-green-700 hover:underline">
                   conditions d'utilisation
                 </Link>{' '}
                 et la{' '}
-                <Link to="/privacy" className="text-green-600 hover:underline">
+                <Link to="/privacy" className="text-green-700 hover:underline">
                   politique de confidentialit?
                 </Link>
               </label>
@@ -293,7 +293,7 @@ const RegisterPage: React.FC = () => {
               D?jÃ  un compte ?{' '}
               <Link
                 to="/login"
-                className="text-green-600 font-medium hover:text-green-700"
+                className="text-green-700 font-medium hover:text-green-700"
               >
                 Se connecter
               </Link>
@@ -306,4 +306,5 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+
 

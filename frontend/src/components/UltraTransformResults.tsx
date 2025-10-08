@@ -29,7 +29,7 @@ const getNovaLabel = (novaa: number) => {
 };
 
 const getScoreColour = (score: number) => {
-  if (score <= 40) return 'text-green-600';
+  if (score <= 40) return 'text-green-700';
   if (score <= 70) return 'text-orange-500';
   return 'text-red-600';
 };
@@ -65,5 +65,6 @@ const UltraTransformResults: React.FC<UltraTransformResultsProps> = ({
 
 export default UltraTransformResults;
 // EOF
+
 
 

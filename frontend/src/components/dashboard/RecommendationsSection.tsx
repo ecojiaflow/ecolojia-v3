@@ -100,7 +100,7 @@ export const RecommendationsSection: React.FC = () => {
       {/* Filters */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-          <Leaf className="w-5 h-5 mr-2 text-green-600" />
+          <Leaf className="w-5 h-5 mr-2 text-green-700" />
           Recommandations Personnalisees
         </h3>
         <div className="flex items-center space-x-2">
@@ -204,7 +204,7 @@ export const RecommendationsSection: React.FC = () => {
                                 <span className="text-sm font-medium">{product.name}</span>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-xs text-gray-500">Score: {product.healthScore}/100</span>
-                                  <span className="text-xs font-medium text-green-600">
+                                  <span className="text-xs font-medium text-green-700">
                                     +{product.improvement} pts
                                   </span>
                                 </div>
@@ -251,6 +251,7 @@ export const RecommendationsSection: React.FC = () => {
 
 export default RecommendationsSection;
 // EOF
+
 
 
 

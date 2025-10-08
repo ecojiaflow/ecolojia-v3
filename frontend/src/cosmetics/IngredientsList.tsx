@@ -53,8 +53,8 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
   });
 
   const getSafetyColor = (safety: number) => {
-    if (safety >= 4) return 'text-green-600 bg-green-50';
-    if (safety >= 3) return 'text-yellow-600 bg-yellow-50';
+    if (safety >= 4) return 'text-green-700 bg-green-50';
+    if (safety >= 3) return 'text-green-500 bg-yellow-50';
     if (safety >= 2) return 'text-orange-600 bg-orange-50';
     return 'text-red-600 bg-red-50';
   };
@@ -191,7 +191,7 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
                   {/* Icone nature */}
                   <div className="mt-0.5">
                     {ingredient.natural ? (
-                      <Leaf className="w-5 h-5 text-green-600" />
+                      <Leaf className="w-5 h-5 text-green-700" />
                     ) : (
                       <Flask className="w-5 h-5 text-blue-600" />
                     )}
@@ -331,5 +331,6 @@ export const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients })
 };
 
 export default IngredientsList;
+
 
 

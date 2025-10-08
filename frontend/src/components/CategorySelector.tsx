@@ -47,7 +47,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
     const colorMap = {
       green: {
         border: isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300',
-        icon: 'text-green-600',
+        icon: 'text-green-700',
         badge: 'bg-green-100 text-green-800'
       },
       pink: {
@@ -131,7 +131,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-green-600" />
+              <Sparkles className="w-5 h-5 text-green-700" />
             </div>
           </div>
           <div>
@@ -152,5 +152,6 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
 };
 
 export default CategorySelector;
+
 
 

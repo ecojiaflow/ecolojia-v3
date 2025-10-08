@@ -139,7 +139,7 @@ const ProductNotFoundPage: React.FC = () => {
                 Code-barres: {barcode || 'Non defini'}
               </p>
               {barcodeValid && (
-                <p className="text-xs text-green-600 mt-1">
+                <p className="text-xs text-green-700 mt-1">
                   aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Code-barres detecte ({barcode.length} caracteres)
                 </p>
               )}
@@ -276,5 +276,6 @@ const ProductNotFoundPage: React.FC = () => {
 };
 
 export default ProductNotFoundPage;
+
 
 

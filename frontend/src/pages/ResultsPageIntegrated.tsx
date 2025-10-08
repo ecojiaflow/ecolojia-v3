@@ -89,7 +89,7 @@ const ResultsPage: React.FC = () => {
         {/* Scores simples sans gauge */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-3xl font-bold text-green-600">{healthScore}%</div>
+            <div className="text-3xl font-bold text-green-700">{healthScore}%</div>
             <p className="text-sm text-gray-600 mt-1">Score Santé</p>
           </div>
           
@@ -154,3 +154,4 @@ const ResultsPage: React.FC = () => {
 };
 
 export default ResultsPage;
+

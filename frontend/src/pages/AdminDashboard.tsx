@@ -121,7 +121,7 @@ const AdminDashboard: React.FC = () => {
               <StatsCard
                 title="Imports Reussis"
                 value={stats.totalImports}
-                icon={<BarChart3 className="h-6 w-6 text-green-600" />}
+                icon={<BarChart3 className="h-6 w-6 text-green-700" />}
                 color="green"
                 percentage={stats.successRate}
               />
@@ -181,6 +181,7 @@ const AdminDashboard: React.FC = () => {
 
 export default AdminDashboard;
 // EOF
+
 
 
 

@@ -183,7 +183,7 @@ const ProfilePage: React.FC = () => {
                 {user?.subscription?.tier === 'premium' && (
                   <div className="flex items-center gap-1 mt-1">
                     <Crown className="w-4 h-4 text-yellow-500" />
-                    <span className="text-sm text-yellow-600 font-medium">Premium</span>
+                    <span className="text-sm text-green-500 font-medium">Premium</span>
                   </div>
                 )}
               </div>
@@ -208,7 +208,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('profile')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'profile'
-                  ? 'border-green-500 text-green-600'
+                  ? 'border-green-500 text-green-700'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -222,7 +222,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('preferences')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'preferences'
-                  ? 'border-green-500 text-green-600'
+                  ? 'border-green-500 text-green-700'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -236,7 +236,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('security')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'security'
-                  ? 'border-green-500 text-green-600'
+                  ? 'border-green-500 text-green-700'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -262,7 +262,7 @@ const ProfilePage: React.FC = () => {
               {!isEditing && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-green-600 hover:text-green-700 font-medium"
+                  className="text-green-700 hover:text-green-700 font-medium"
                 >
                   Modifier
                 </button>
@@ -348,7 +348,7 @@ const ProfilePage: React.FC = () => {
                   {user?.subscription?.tier === 'free' && (
                     <button
                       onClick={() => navigate('/premium')}
-                      className="text-green-600 hover:text-green-700 text-sm font-medium"
+                      className="text-green-700 hover:text-green-700 text-sm font-medium"
                     >
                       Passer Ã  Premium
                     </button>
@@ -607,14 +607,14 @@ const ProfilePage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <Shield className="w-5 h-5 text-green-600" />
+                        <Shield className="w-5 h-5 text-green-700" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-800">Session actuelle</p>
                         <p className="text-sm text-gray-600">Connecté maintenant</p>
                       </div>
                     </div>
-                    <span className="text-sm text-green-600">Active</span>
+                    <span className="text-sm text-green-700">Active</span>
                   </div>
                 </div>
               </div>

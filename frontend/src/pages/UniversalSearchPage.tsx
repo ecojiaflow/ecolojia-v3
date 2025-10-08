@@ -98,7 +98,7 @@ const SmartNavbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <Leaf className="h-8 w-8 text-green-600 mr-2" // />
+              <Leaf className="h-8 w-8 text-green-700 mr-2" // />
               <span className="text-xl font-bold text-gray-800">ECOLOJIA</span>
             </Link>
           </div>
@@ -199,7 +199,7 @@ const SearchFirstHomePage: React.FC = () => {
           {/* Metriques de confiance */}
           <div className="grid grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-600">2M+</div>
+              <div className="text-3xl font-bold text-green-700">2M+</div>
               <div className="text-gray-600">Produits analysables</div>
             </div>
             <div>
@@ -307,5 +307,6 @@ aƒâ€¦aâ‚¬Å“aaâ€šÂ¬‚Â¦ Conversion : flux naturel recherche 
 aƒâ€¦aâ‚¬Å“aaâ€šÂ¬‚Â¦ Differenciation : "Google des produits ethiques"
 aƒâ€¦aâ‚¬Å“aaâ€šÂ¬‚Â¦ Metriques : affichees dans contexte pertinent
 */
+
 
 

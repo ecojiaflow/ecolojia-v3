@@ -278,7 +278,7 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
               <ul className="space-y-1">
                 {product.recommendation.alternatives.map((alternative, index) => (
                   <li key={index} className="flex items-center">
-                    <span className="text-green-600 mr-2">aa</span>
+                    <span className="text-green-700 mr-2">aa</span>
                     <span>{alternative}</span>
                   </li>
                 ))}
@@ -338,4 +338,5 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
 };
 
 export default NovaResults;
+
 

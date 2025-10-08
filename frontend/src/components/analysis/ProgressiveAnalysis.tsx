@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
 // Composant d'analyse progressive avec gestion des valeurs manquantes
 
@@ -59,9 +59,9 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
   
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100';
-    if (score >= 60) return 'bg-yellow-100';
-    if (score >= 40) return 'bg-orange-100';
+    if (score >= 70) return 'bg-green-100';
+    if (score >= 50) return 'bg-yellow-100';
+    if (score >= 30) return 'bg-orange-100';
     return 'bg-red-100';
   };
 
@@ -295,14 +295,14 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
         {alternatives.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-medium flex items-center">
-              <TrendingUp className="w-5 h-5 text-green-600 mr-2" />
+              <TrendingUp className="w-5 h-5 text-green-700 mr-2" />
               Alternatives plus saines
             </h4>
             {alternatives.map((alt: any, index: number) => (
               <div key={alt._id || index} className="bg-green-50 rounded-lg p-3 flex items-center justify-between">
                 <div>
                   <p className="font-medium text-green-800">{alt.name}</p>
-                  <p className="text-sm text-green-600">{alt.brand}</p>
+                  <p className="text-sm text-green-700">{alt.brand}</p>
                 </div>
                 <div className="text-right">
                   <span className={`text-lg font-bold ${getScoreColor(alt.healthScore || 0)}`}>
@@ -397,7 +397,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
-                    <Leaf className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <Leaf className="w-8 h-8 text-green-700 mx-auto mb-2" />
                     <p className="text-2xl font-bold">{impactEnv.co2?.toFixed(1) || 0}</p>
                     <p className="text-sm text-gray-600">kg COaaaaa</p>
                   </div>
@@ -420,7 +420,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium">Commerce equitable</span>
                   {impactSocial.fairTrade ? (
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <CheckCircle className="w-5 h-5 text-green-700" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-600" />
                   )}
@@ -428,7 +428,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium">Production locale</span>
                   {impactSocial.localProduction ? (
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <CheckCircle className="w-5 h-5 text-green-700" />
                   ) : (
                     <XCircle className="w-5 h-5 text-red-600" />
                   )}
@@ -486,6 +486,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
 };
 
 export default ProgressiveAnalysis;
+
 
 
 

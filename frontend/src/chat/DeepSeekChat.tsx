@@ -336,7 +336,7 @@ ${productData ? `Pret pour une analyse experte de "${productdata?.productName}" 
                     </div>
                   )}
                   {message.cost && (
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className="flex items-center gap-1 text-green-700">
                       <TrendingUp className="w-3 h-3" />
                       <span>{message.cost.toFixed(4)}aaa</span>
                     </div>
@@ -450,6 +450,7 @@ ${productData ? `Pret pour une analyse experte de "${productdata?.productName}" 
     </div>
   );
 };
+
 
 
 

@@ -174,8 +174,8 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
                         <span className="font-medium">{log.productsProcessed}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-green-600">Succes:</span>
-                        <span className="font-medium text-green-600">{log.productsSuccess}</span>
+                        <span className="text-green-700">Succes:</span>
+                        <span className="font-medium text-green-700">{log.productsSuccess}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-red-600">aachecs:</span>
@@ -203,4 +203,5 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
 
 export default LogViewer;
 // EOF
+
 

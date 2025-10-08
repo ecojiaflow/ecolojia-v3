@@ -36,7 +36,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
       title: "Produit Non ou Minimalement Transforme",
       description: "Excellent choix ! Ce produit subit peu ou pas de transformation industrielle.",
       color: "bg-green-50 border-green-300 text-green-800",
-      icon: <CheckCircle className="w-5 h-5 text-green-600" />,
+      icon: <CheckCircle className="w-5 h-5 text-green-700" />,
       impact: "Benefique pour la sante selon les etudes INSERM",
       recommendation: "Continuez  privilegier ce type de produits",
       scientificBacking: "Associe  -23% risque maladies chroniques (Cohorte NutriNet-Sante)"
@@ -268,6 +268,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
     </div>
   );
 };
+
 
 
 

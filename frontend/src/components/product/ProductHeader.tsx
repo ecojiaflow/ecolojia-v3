@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React from 'react';
 import { Package } from 'lucide-react';
 
@@ -26,8 +26,8 @@ const getCategoryIcon = (category: string) => {
 const getCategoryLabel = (category: string) => {
   switch (category) {
     case 'food': return 'Alimentaire';
-    case 'cosmetics': return 'Cosmétique';
-    case 'detergents': return 'Détergent';
+    case 'cosmetics': return 'CosmÃ©tique';
+    case 'detergents': return 'DÃ©tergent';
     default: return 'Produit';
   }
 };
@@ -126,5 +126,6 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
     </div>
   );
 };
+
 
 

@@ -51,7 +51,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
             </p>
             
             {trend && (
-              <span className="text-sm text-green-600 font-medium">
+              <span className="text-sm text-green-700 font-medium">
                 {trend}
               </span>
             )}
@@ -89,4 +89,5 @@ const StatsCard: React.FC<StatsCardProps> = ({
 
 export default StatsCard;
 // EOF
+
 

@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React from 'react';
 import { Heart, Leaf } from 'lucide-react';
 
@@ -22,31 +22,33 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-red-500" />
-              <span className="font-medium">Santé</span>
+              <span className="font-medium">SantÃ©</span>
             </div>
             <span className={`text-2xl font-bold ${getScoreColor(healthScore)}`}>
               {healthScore}
             </span>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Impact sur votre santé</p>
+          <p className="text-sm text-gray-600 mt-1">Impact sur votre santÃ©</p>
         </div>
 
         {/* Environment Score */}
         <div className={`p-4 rounded-lg border ${getScoreBgColor(environmentScore)}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Leaf className="w-5 h-5 text-green-600" />
+              <Leaf className="w-5 h-5 text-green-700" />
               <span className="font-medium">Environnement</span>
             </div>
             <span className={`text-2xl font-bold ${getScoreColor(environmentScore)}`}>
               {environmentScore}
             </span>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Empreinte écologique</p>
+          <p className="text-sm text-gray-600 mt-1">Empreinte Ã©cologique</p>
         </div>
       </div>
     </div>
   );
 };
+
+
 
 

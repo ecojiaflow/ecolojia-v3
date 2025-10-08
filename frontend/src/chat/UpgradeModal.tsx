@@ -115,10 +115,10 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           {/* Avantages Premium detailles */}
           <div className="space-y-3 mb-6">
             <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-              <Unlock className="w-5 h-5 text-green-600" />
+              <Unlock className="w-5 h-5 text-green-700" />
               <div>
                 <div className="font-medium text-green-800">Questions illimitees</div>
-                <div className="text-sm text-green-600">Analysez autant de produits que souhaite</div>
+                <div className="text-sm text-green-700">Analysez autant de produits que souhaite</div>
               </div>
             </div>
 
@@ -322,7 +322,7 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
             </div>
             <div>
               <div className="text-gray-600">Cot</div>
-              <div className="font-bold text-green-600 flex items-center gap-1">
+              <div className="font-bold text-green-700 flex items-center gap-1">
                 <Calculator className="w-3 h-3" />
                 {stats.totalCost.toFixed(4)}aaa
               </div>
@@ -344,5 +344,6 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
     </div>
   );
 };
+
 
 

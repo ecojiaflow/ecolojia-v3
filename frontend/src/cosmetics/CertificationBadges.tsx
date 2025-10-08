@@ -42,7 +42,7 @@ const certificationData: Record<string, CertificationInfo> = {
     name: 'COSMOS Natural',
     description: 'Cosmetique naturel certifie',
     icon: <Flower className="w-full h-full" />,
-    color: 'text-green-600',
+    color: 'text-green-700',
     bgColor: 'bg-green-50'
   },
   'ecocert': {
@@ -247,7 +247,7 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {categorizedCerts.organic.length > 0 && (
         <div className="text-center">
-          <Leaf className="w-8 h-8 mx-auto text-green-600 mb-2" />
+          <Leaf className="w-8 h-8 mx-auto text-green-700 mb-2" />
           <p className="text-sm font-medium">Certifie Bio</p>
           <p className="text-xs text-gray-500">{categorizedCerts.organic.length} certification(s)</p>
         </div>
@@ -281,6 +281,7 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
 };
 
 export default CertificationBadges;
+
 
 
 

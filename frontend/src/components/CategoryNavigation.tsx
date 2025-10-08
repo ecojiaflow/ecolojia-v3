@@ -15,7 +15,7 @@ const CategoryNavigation: React.FC = () => {
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
               location.pathname === '/'
                 ? 'bg-green-100 text-green-800'
-                : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                : 'text-gray-600 hover:text-green-700 hover:bg-green-50'
             }`}
           >
             <span>a</span>
@@ -30,7 +30,7 @@ const CategoryNavigation: React.FC = () => {
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
                 location.pathname === `/category/${key}`
                   ? 'bg-green-100 text-green-800'
-                  : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                  : 'text-gray-600 hover:text-green-700 hover:bg-green-50'
               }`}
             >
               <span>{config.icon}</span>
@@ -57,4 +57,5 @@ const CategoryNavigation: React.FC = () => {
 };
 
 export default CategoryNavigation;
+
 

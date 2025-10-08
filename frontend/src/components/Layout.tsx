@@ -286,7 +286,7 @@ export function Layout() {
             to="/"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-gray-500'
               }`
             }
           >
@@ -298,7 +298,7 @@ export function Layout() {
             to="/search"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-gray-500'
               }`
             }
           >
@@ -310,7 +310,7 @@ export function Layout() {
             to="/scan"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 relative ${
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-gray-500'
               }`
             }
           >
@@ -324,7 +324,7 @@ export function Layout() {
             to="/dashboard"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-gray-500'
               }`
             }
           >
@@ -336,7 +336,7 @@ export function Layout() {
             to="/history"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-gray-500'
               }`
             }
           >
@@ -348,6 +348,7 @@ export function Layout() {
     </div>
   );
 }
+
 
 
 

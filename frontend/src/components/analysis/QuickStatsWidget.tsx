@@ -35,7 +35,7 @@ const QuickStatsWidget: React.FC = () => {
         {/* Stats Demo */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-green-600">--</div>
+            <div className="text-2xl font-bold text-green-700">--</div>
             <p className="text-xs text-green-700 font-medium">Score Sante</p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
@@ -100,7 +100,7 @@ const QuickStatsWidget: React.FC = () => {
         </div>
         <div className="text-right">
           {trend > 0 && (
-            <div className="flex items-center text-green-600 text-sm">
+            <div className="flex items-center text-green-700 text-sm">
               <TrendingUp className="w-4 h-4 mr-1" />
               <span className="font-medium">+{trend.toFixed(1)} pts</span>
             </div>
@@ -122,9 +122,9 @@ const QuickStatsWidget: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-green-600">{currentScore}</div>
+          <div className="text-2xl font-bold text-green-700">{currentScore}</div>
           <p className="text-xs text-green-700 font-medium">Score Sante</p>
-          <p className="text-xs text-green-600 mt-1">/100</p>
+          <p className="text-xs text-green-700 mt-1">/100</p>
         </div>
         
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
@@ -218,5 +218,6 @@ const QuickStatsWidget: React.FC = () => {
 };
 
 export default QuickStatsWidget;
+
 
 

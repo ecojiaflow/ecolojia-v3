@@ -110,7 +110,7 @@ export const WeeklySummary: React.FC = () => {
   const getScoreChange = (improvement: number) => {
     if (improvement > 0) {
       return (
-        <div className="flex items-center text-green-600">
+        <div className="flex items-center text-green-700">
           <TrendingUp className="w-4 h-4 mr-1" />
           <span className="font-medium">+{improvement}%</span>
         </div>
@@ -196,7 +196,7 @@ export const WeeklySummary: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-green-600 font-medium">Score moyen</p>
+                    <p className="text-sm text-green-700 font-medium">Score moyen</p>
                     <p className="text-2xl font-bold text-gray-800">{summarydata?.stats.avgHealthScore}/100</p>
                   </div>
                   {getScoreChange(summarydata?.stats.improvementFromLastWeek)}
@@ -266,7 +266,7 @@ export const WeeklySummary: React.FC = () => {
               {/* Achieved Goals */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Award className="w-5 h-5 mr-2 text-green-600" />
+                  <Award className="w-5 h-5 mr-2 text-green-700" />
                   Objectifs atteints
                 </h3>
                 <div className="space-y-2">
@@ -279,7 +279,7 @@ export const WeeklySummary: React.FC = () => {
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg"
                       >
-                        <span className="text-green-600">aaaa</span>
+                        <span className="text-green-700">aaaa</span>
                         <div>
                           <p className="font-medium text-gray-800">{goal.title}</p>
                           <p className="text-sm text-gray-600">{goal.description}</p>
@@ -349,6 +349,7 @@ export const WeeklySummary: React.FC = () => {
 // aaaa ? ajouter  la toute fin :
 export default WeeklySummary;
 // EOF
+
 
 
 

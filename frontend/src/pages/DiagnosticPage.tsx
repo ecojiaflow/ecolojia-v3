@@ -310,13 +310,13 @@ const DiagnosticPage: React.FC = () => {
             <h2 className="text-lg font-bold text-gray-800 mb-4">Résumé</h2>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-green-700">
                   {diagnostics.filter(t => t.status === 'success').length}
                 </div>
                 <div className="text-sm text-gray-600">Succès</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-yellow-600">
+                <div className="text-2xl font-bold text-green-500">
                   {diagnostics.filter(t => t.status === 'warning').length}
                 </div>
                 <div className="text-sm text-gray-600">Avertissements</div>
@@ -359,3 +359,4 @@ const DiagnosticPage: React.FC = () => {
 };
 
 export default DiagnosticPage;
+

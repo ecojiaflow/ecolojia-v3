@@ -1,10 +1,10 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/DetergentAnalysisPage.tsx
 
 // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query'; // a�…a€œaa‚¬�¦ Correction ici
+import { useQuery } from '@tanstack/react-query'; // a�…a€œaa‚¬�¦ Correction ici
 import {
   AlertTriangle,
   Droplet,
@@ -139,17 +139,17 @@ const DetergentAnalysisPage: React.FC = () => {
   
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-50';
-    if (score >= 60) return 'bg-yellow-50';
-    if (score >= 40) return 'bg-orange-50';
+    if (score >= 70) return 'bg-green-50';
+    if (score >= 50) return 'bg-yellow-50';
+    if (score >= 30) return 'bg-orange-50';
     return 'bg-red-50';
   };
 
   const getRatingColor = (rating: string) => {
     switch (rating) {
-      case 'excellent': return 'text-green-600';
+      case 'excellent': return 'text-green-700';
       case 'good': return 'text-green-500';
-      case 'moderate': return 'text-yellow-600';
+      case 'moderate': return 'text-green-500';
       case 'poor': return 'text-red-600';
       default: return 'text-gray-600';
     }
@@ -218,7 +218,7 @@ const DetergentAnalysisPage: React.FC = () => {
                 {warning.details && (
                   <ul className="mt-2 space-y-1">
                     {warning.details.map((detail, idx) => (
-                      <li key={idx} className="text-sm text-gray-600">aa‚¬�‚�¢ {detail}</li>
+                      <li key={idx} className="text-sm text-gray-600">aa‚¬�‚�¢ {detail}</li>
                     ))}
                   </ul>
                 )}
@@ -263,7 +263,7 @@ const DetergentAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.ecological)}`}>
                     <Leaf className={`w-8 h-8 ${getScoreColor(analysis.scores.ecological)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">�ƒ�’aa‚¬�°cologique</p>
+                  <p className="mt-2 text-sm font-medium">�ƒ�’aa‚¬�°cologique</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.ecological)}`}>
                     {analysis.scores.ecological}%
                   </p>
@@ -346,7 +346,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRatingColor(analysis.details.cdv.rating)}`}>
                       {analysis.details.cdv.rating === 'excellent' ? 'Tres faible' :
                        analysis.details.cdv.rating === 'good' ? 'Faible' :
-                       analysis.details.cdv.rating === 'moderate' ? 'Modere' : '�ƒ�’aa‚¬�°leve'}
+                       analysis.details.cdv.rating === 'moderate' ? 'Modere' : '�ƒ�’aa‚¬�°leve'}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
@@ -363,7 +363,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     {analysis.details.phosphates.present ? (
                       <XCircle className="w-5 h-5 text-orange-600" />
                     ) : (
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <CheckCircle className="w-5 h-5 text-green-700" />
                     )}
                     <span className={`font-medium ${analysis.details.phosphates.present ? 'text-orange-900' : 'text-green-900'}`}>
                       {analysis.details.phosphates.present 
@@ -377,7 +377,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     </p>
                   )}
                   <p className="text-sm text-gray-600 mt-1">
-                    Conformite EU: {analysis.details.phosphates.euCompliant ? 'a�…a€œaa‚¬�“ Conforme' : 'a�…a€œaa‚¬a€ Non conforme'}
+                    Conformite EU: {analysis.details.phosphates.euCompliant ? 'a�…a€œaa‚¬�“ Conforme' : 'a�…a€œaa‚¬a€ Non conforme'}
                   </p>
                 </div>
               </div>
@@ -425,7 +425,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     <div className="mt-3 space-y-1">
                       {analysis.details.voc.components.map((comp, idx) => (
                         <div key={idx} className="text-sm text-gray-600">
-                          aa‚¬�‚�¢ {comp.ingredient} ({comp.percentage}%)
+                          aa‚¬�‚�¢ {comp.ingredient} ({comp.percentage}%)
                         </div>
                       ))}
                     </div>
@@ -466,15 +466,15 @@ const DetergentAnalysisPage: React.FC = () => {
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{irritant.ingredient}</p>
                           <p className="text-sm text-gray-600 mt-1">
-                            Type: {irritant.type} aa‚¬�‚�¢ Severite: {
-                              irritant.severity === 'high' ? '�ƒ�’aa‚¬�°levee' :
+                            Type: {irritant.type} aa‚¬�‚�¢ Severite: {
+                              irritant.severity === 'high' ? '�ƒ�’aa‚¬�°levee' :
                               irritant.severity === 'moderate' ? 'Moderee' : 'Faible'
                             }
                           </p>
                           {irritant.hazards.length > 0 && (
                             <div className="mt-2 space-y-1">
                               {irritant.hazards.map((hazard, idx) => (
-                                <p key={idx} className="text-sm text-orange-700">aa‚¬�‚�¢ {hazard}</p>
+                                <p key={idx} className="text-sm text-orange-700">aa‚¬�‚�¢ {hazard}</p>
                               ))}
                             </div>
                           )}
@@ -524,7 +524,7 @@ const DetergentAnalysisPage: React.FC = () => {
           <div className="space-y-4">
             {analysis.certifications.eco.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">�ƒ�’aa‚¬�°cologiques</h3>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">�ƒ�’aa‚¬�°cologiques</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.certifications.eco.map(cert => (
                     <span key={cert.id} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
@@ -568,6 +568,7 @@ const DetergentAnalysisPage: React.FC = () => {
 };
 
 export default DetergentAnalysisPage;
+
 
 
 

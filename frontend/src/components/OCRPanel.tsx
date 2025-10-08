@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Eye, AlertTriangle, Leaf, Zap } from 'lucide-react';
 
 interface VisionResult {
@@ -38,7 +38,7 @@ export function OCRPanel({ result, className = '' }: OCRPanelProps) {
   }[result.source];
 
   const confidenceColor = result.confidence && result.confidence > 0.8 
-    ? 'text-green-600' 
+    ? 'text-green-700' 
     : result.confidence && result.confidence > 0.6 
     ? 'text-orange-600' 
     : 'text-red-600';
@@ -69,7 +69,7 @@ export function OCRPanel({ result, className = '' }: OCRPanelProps) {
         {/* Ingrédients */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <Leaf className="text-green-600" size={18} />
+            <Leaf className="text-green-700" size={18} />
             <h4 className="font-medium text-gray-900">
               Ingrédients détectés ({result.ingredients.length})
             </h4>

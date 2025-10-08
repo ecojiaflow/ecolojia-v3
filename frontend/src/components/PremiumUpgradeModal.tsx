@@ -136,7 +136,7 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
                 <div key={index} className="flex items-start space-x-3">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Icon className="w-4 h-4 text-green-600" />
+                      <Icon className="w-4 h-4 text-green-700" />
                     </div>
                   </div>
                   <div>
@@ -236,4 +236,5 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
 };
 
 export default PremiumUpgradeModal;
+
 

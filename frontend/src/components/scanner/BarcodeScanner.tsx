@@ -348,7 +348,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                 className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all flex items-center space-x-4"
               >
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Camera className="w-8 h-8 text-green-600" />
+                  <Camera className="w-8 h-8 text-green-700" />
                 </div>
                 <div className="text-left flex-1">
                   <h4 className="font-semibold text-gray-800">Scanner le code-barres</h4>
@@ -432,7 +432,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
             <div className="p-6">
               {/* Indicateur d'etapes */}
               <div className="flex justify-between mb-8">
-                <div className={`flex-1 text-center ${photoStep === 'front' ? 'text-green-600' : capturedPhotos.front ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'front' ? 'text-green-700' : capturedPhotos.front ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'front' ? 'bg-green-600 text-white' :
                     capturedPhotos.front ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -442,7 +442,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   <span className="text-xs">Face avant</span>
                 </div>
 
-                <div className={`flex-1 text-center ${photoStep === 'ingredients' ? 'text-green-600' : capturedPhotos.ingredients ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'ingredients' ? 'text-green-700' : capturedPhotos.ingredients ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'ingredients' ? 'bg-green-600 text-white' :
                     capturedPhotos.ingredients ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -452,7 +452,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   <span className="text-xs">Ingredients</span>
                 </div>
 
-                <div className={`flex-1 text-center ${photoStep === 'barcode' ? 'text-green-600' : capturedPhotos.barcode ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'barcode' ? 'text-green-700' : capturedPhotos.barcode ? 'text-green-500' : 'text-gray-400'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'barcode' ? 'bg-green-600 text-white' :
                     capturedPhotos.barcode ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -467,7 +467,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
               <div className="text-center mb-8">
                 {photoStep === 'front' && (
                   <>
-                    <Package className="w-20 h-20 text-green-600 mx-auto mb-4" />
+                    <Package className="w-20 h-20 text-green-700 mx-auto mb-4" />
                     <h4 className="text-xl font-semibold mb-2">Face avant du produit</h4>
                     <p className="text-gray-600">
                       Prenez une photo de la face avant avec le nom du produit bien visible
@@ -627,7 +627,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
           {/* Etat de chargement */}
           {isLoading && (
             <div className="flex flex-col items-center justify-center h-full p-6">
-              <Loader className="w-12 h-12 text-green-600 animate-spin mb-4" />
+              <Loader className="w-12 h-12 text-green-700 animate-spin mb-4" />
               <p className="text-gray-600 text-center">
                 Analyse en cours...
               </p>

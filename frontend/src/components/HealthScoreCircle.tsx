@@ -30,25 +30,25 @@ const HealthScoreCircle: React.FC<HealthScoreCircleProps> = ({
 
   // Couleur selon le score
   const getColor = (score: number) => {
-    if (score >= 80) return '#22c55e'; // green-500
-    if (score >= 60) return '#eab308'; // yellow-500
-    if (score >= 40) return '#f97316'; // orange-500
+    if (score >= 70) return '#22c55e'; // green-500
+    if (score >= 50) return '#eab308'; // yellow-500
+    if (score >= 30) return '#f97316'; // orange-500
     return '#ef4444'; // red-500
   };
 
   // Icone selon le score
   const getIcon = (score: number) => {
-    if (score >= 80) return CheckCircle;
-    if (score >= 60) return Heart;
-    if (score >= 40) return AlertCircle;
+    if (score >= 70) return CheckCircle;
+    if (score >= 50) return Heart;
+    if (score >= 30) return AlertCircle;
     return XCircle;
   };
 
   // Label selon le score
   const getLabel = (score: number) => {
-    if (score >= 80) return 'Excellent';
-    if (score >= 60) return 'Bon';
-    if (score >= 40) return 'Moyen';
+    if (score >= 70) return 'Excellent';
+    if (score >= 50) return 'Bon';
+    if (score >= 30) return 'Moyen';
     return 'Faible';
   };
 
@@ -125,3 +125,4 @@ const HealthScoreCircle: React.FC<HealthScoreCircleProps> = ({
 };
 
 export default HealthScoreCircle;
+

@@ -18,8 +18,8 @@ const AlgoliaProductCard: React.FC<AlgoliaProductCardProps> = ({ hit }) => {
   };
 
   const getEcoScoreColor = (score: number) => {
-    if (score >= 0.8) return 'text-green-600';
-    if (score >= 0.6) return 'text-yellow-600';
+    if (score >= 0.8) return 'text-green-700';
+    if (score >= 0.6) return 'text-green-500';
     return 'text-orange-600';
   };
 
@@ -159,5 +159,6 @@ const AlgoliaProductCard: React.FC<AlgoliaProductCardProps> = ({ hit }) => {
 };
 
 export default AlgoliaProductCard;
+
 
 

@@ -385,8 +385,8 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
           {/* Score ECOLOJIA */}
           {result.enrichment?.ecolojia_score && (
             <div className={`ml-3 px-2 py-1 rounded-full text-xs font-medium ${
-              result.enrichment.ecolojia_score >= 80 ? 'bg-green-100 text-green-800' :
-              result.enrichment.ecolojia_score >= 60 ? 'bg-yellow-100 text-yellow-800' :
+              result.enrichment.ecolojia_score >= 70 ? 'bg-green-100 text-green-800' :
+              result.enrichment.ecolojia_score >= 50 ? 'bg-yellow-100 text-yellow-800' :
               'bg-red-100 text-red-800'
             }`}>
               {result.enrichment.ecolojia_score}/100
@@ -722,4 +722,5 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 };
 
 export default EnhancedSearchInterface;
+
 

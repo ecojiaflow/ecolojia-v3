@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
 import React, { useState } from 'react';
 import { CircleGauge, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Activity } from 'lucide-react';
@@ -60,16 +60,16 @@ interface Props {
 }
 
 const getScoreColor = (score: number): string => {
-  if (score >= 80) return 'text-green-600';
-  if (score >= 60) return 'text-yellow-500';
-  if (score >= 40) return 'text-orange-500';
+  if (score >= 70) return 'text-green-700';
+  if (score >= 50) return 'text-yellow-500';
+  if (score >= 30) return 'text-orange-500';
   return 'text-red-500';
 };
 
 const getScoreGradient = (score: number): string => {
-  if (score >= 80) return 'from-green-500 to-green-600';
-  if (score >= 60) return 'from-yellow-500 to-yellow-600';
-  if (score >= 40) return 'from-orange-500 to-orange-600';
+  if (score >= 70) return 'from-green-500 to-green-600';
+  if (score >= 50) return 'from-yellow-500 to-yellow-600';
+  if (score >= 30) return 'from-orange-500 to-orange-600';
   return 'from-red-500 to-red-600';
 };
 
@@ -209,8 +209,8 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
     if (!glycemic) return null;
 
     const categoryLabels = {
-      low: { label: 'Faible', color: 'text-green-600', bg: 'bg-green-50' },
-      medium: { label: 'Modere', color: 'text-yellow-600', bg: 'bg-yellow-50' },
+      low: { label: 'Faible', color: 'text-green-700', bg: 'bg-green-50' },
+      medium: { label: 'Modere', color: 'text-green-500', bg: 'bg-yellow-50' },
       high: { label: 'aaleve', color: 'text-red-600', bg: 'bg-red-50' }
     };
 
@@ -342,6 +342,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
     </div>
   );
 };
+
 
 
 

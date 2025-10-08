@@ -29,7 +29,7 @@ export function MockTestPanel() {
       <div className="p-3 bg-green-50 rounded">
         <h4 className="font-medium text-green-800">📊 Quotas</h4>
         <p><strong>Utilisé:</strong> {quota?.usedToday}/{quota?.limit} ({usagePercentage}%)</p>
-        <p><strong>Restant:</strong> <span className={hasRemaining ? 'text-green-600' : 'text-red-600'}>{quota?.remaining}</span></p>
+        <p><strong>Restant:</strong> <span className={hasRemaining ? 'text-green-700' : 'text-red-600'}>{quota?.remaining}</span></p>
         <p><strong>Reset:</strong> {quota ? new Date(quota.resetAt).toLocaleTimeString() : 'N/A'}</p>
         <button onClick={refetchQuota} className="mt-2 px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700">
           🔄 Actualiser
@@ -43,3 +43,4 @@ export function MockTestPanel() {
     </div>
   );
 }
+

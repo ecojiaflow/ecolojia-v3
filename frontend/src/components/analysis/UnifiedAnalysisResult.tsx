@@ -123,7 +123,7 @@ function CategoryDetails({ data }: { data: AnalysisData }) {
 function FoodDetails({ details }: { details: any }) {
   const getNovaColor = (nova: number) => {
     switch (nova) {
-      case 1: return 'text-green-600 bg-green-50';
+      case 1: return 'text-green-700 bg-green-50';
       case 2: return 'text-lime-600 bg-lime-50';
       case 3: return 'text-orange-600 bg-orange-50';
       case 4: return 'text-red-600 bg-red-50';
@@ -134,7 +134,7 @@ function FoodDetails({ details }: { details: any }) {
   return (
     <div className="bg-white rounded-xl shadow p-6">
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <Leaf className="w-5 h-5 text-green-600" />
+        <Leaf className="w-5 h-5 text-green-700" />
         Analyse nutritionnelle
       </h2>
       
@@ -250,14 +250,14 @@ function HighlightsSection({ highlights }: { highlights: string[] }) {
   return (
     <div className="bg-white rounded-xl shadow p-6">
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <CheckCircle className="w-5 h-5 text-green-600" />
+        <CheckCircle className="w-5 h-5 text-green-700" />
         Points positifs
       </h2>
       
       <div className="space-y-2">
         {highlights.map((highlight, idx) => (
           <div key={idx} className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <CheckCircle className="w-5 h-5 text-green-700 flex-shrink-0" />
             <p className="text-green-800">{highlight}</p>
           </div>
         ))}
@@ -346,5 +346,6 @@ function EmptyState() {
     </div>
   );
 }
+
 
 
