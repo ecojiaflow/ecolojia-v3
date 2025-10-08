@@ -61,9 +61,9 @@ class AlgoliaService {
       scores: product.scores || {},
       healthScore: product.scores?.healthScore || 50,
       environmentScore: product.scores?.environmentScore || 50,
-      nova: product.scores?.nova || null,
-      nutriscore: product.scores?.nutriscore || null,
-      ecoscore: product.scores?.ecoscore || null,
+      nova: product.foodData?.novaGroup || null,
+      nutriscore: product.foodData?.nutriScore || null,
+      ecoscore: product.foodData?.ecoScore || null,
       
       // Timestamps
       createdAt: product.createdAt || product.created_at || new Date(),
@@ -450,6 +450,7 @@ class AlgoliaService {
       const searchOptions = {
         page: options.page || 0,
         hitsPerPage: options.hitsPerPage || 20,
+      attributesToRetrieve: ["*"], // RETOURNER TOUS LES CHAMPS
         facets: ['category', 'brand', 'nova', 'nutriscore', 'ecoscore', 'tags'],
         maxValuesPerFacet: 50
       };
@@ -654,3 +655,5 @@ class AlgoliaService {
 
 // Export singleton
 module.exports = new AlgoliaService();
+
+
