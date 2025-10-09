@@ -12,12 +12,14 @@ interface ScoreBreakdownProps {
   score: number;
   factors: ScoreFactor[];
   productScores?: any;
+  product?: any;
 }
 
-export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ 
-  score, 
+export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
+  score,
   factors,
-  productScores 
+  productScores,
+  product
 }) => {
   const getActualScore = (factorName: string): number => {
     if (!productScores?.breakdown) return 50;
@@ -75,7 +77,7 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
     return "À améliorer";
   };
 
-  const getDetailedInfo = (factorName: string, score: number): React.ReactNode => {
+  const getDetailedInfo = (factorName: string, score: number, product?: any): React.ReactNode => {
     if (factorName.includes('NOVA')) {
       const group = getNovaGroup(score);
       const dots = Array(4).fill(0).map((_, i) => (
@@ -154,12 +156,46 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
       }
       
       if (score >= 70) {
+        const additives = product?.foodData?.additives || [];
+        
         return (
           <div className="space-y-3">
             <h3 className="font-bold text-base">Additifs alimentaires</h3>
-            <div className="p-3 bg-green-50 rounded border border-green-200">
-              <p className="text-sm text-green-700">Peu d'additifs, aucun classé à haut risque.</p>
-            </div>
+            
+            {additives.length > 0 ? (
+              <div className="space-y-2">
+                <p className="text-sm text-green-800 font-medium mb-2">
+                  {additives.length} additif{additives.length > 1 ? 's' : ''} détecté{additives.length > 1 ? 's' : ''} :
+                </p>
+                {additives.map((additive: any, idx: number) => {
+                  const code = additive.code || 'N/A';
+                  const name = additive.name || '';
+                  const riskLevel = additive.riskLevel || 'LOW';
+                  
+                  const bgColor = riskLevel === 'HIGH' ? 'bg-red-50 border-red-300' : riskLevel === 'MEDIUM' ? 'bg-orange-50 border-orange-300' : 'bg-green-50 border-green-300';
+                  const textColor = riskLevel === 'HIGH' ? 'text-red-800' : riskLevel === 'MEDIUM' ? 'text-orange-800' : 'text-green-800';
+                  const icon = riskLevel === 'HIGH' ? '🚨' : riskLevel === 'MEDIUM' ? '⚠️' : '✅';
+                  const risk = riskLevel === 'HIGH' ? 'Risque élevé' : riskLevel === 'MEDIUM' ? 'Risque modéré' : 'Risque faible';
+                  
+                  return (
+                    <div key={idx} className={`p-3 rounded border ${bgColor} ${textColor}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <p className="font-semibold text-sm">{icon} {code}</p>
+                          {name && <p className="text-xs mt-1 opacity-80 capitalize">{name}</p>}
+                        </div>
+                        <span className="text-xs font-medium whitespace-nowrap">{risk}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-3 bg-green-50 rounded border border-green-200">
+                <p className="text-sm text-green-700">Aucun additif détecté. Excellent !</p>
+              </div>
+            )}
+            
             <div className="mt-3 p-2 bg-blue-50 rounded text-sm"><strong>Score : {score}/100</strong></div>
           </div>
         );
@@ -223,7 +259,7 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
         {factors.map((factor, index) => {
           const actualScore = getActualScore(factor.factor);
           const description = getDescription(factor.factor, actualScore);
-          const detailedInfo = getDetailedInfo(factor.factor, actualScore);
+          const detailedInfo = getDetailedInfo(factor.factor, actualScore, product);
           
           return (
             <ScoreBar
@@ -243,3 +279,4 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
     </div>
   );
 };
+

@@ -16,6 +16,7 @@ import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysis
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { ProductChatActions } from '../components/product/ProductChatActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
+import NovaBadge from '../components/NovaBadge';
 
 const getJSON = async (endpoint: string): Promise<any> => {
   const url = endpoint.startsWith('http') 
@@ -183,6 +184,17 @@ const ProductPage: React.FC = () => {
                 </div>
               </div>
               <ScoreProgressBar score={overallScore} />
+        {/* NOVA Badge V2 */}
+        {product.category === 'food' && product.foodData?.novaGroup && (
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">🔬 Classification NOVA</h2>
+            <NovaBadge 
+              novaGroup={product.foodData.novaGroup} 
+              typeTransformation={product.typeTransformation}
+              showDetails={true}
+            />
+          </div>
+        )}
             </div>
           </div>
           <div className="bg-white p-4 space-y-2">
@@ -199,7 +211,7 @@ const ProductPage: React.FC = () => {
           </details>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
-            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} /></div>
+            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-white" open>
@@ -285,8 +297,19 @@ const ProductPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ScoreProgressBar score={overallScore} />
+        {/* NOVA Badge V2 */}
+        {product.category === 'food' && product.foodData?.novaGroup && (
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">🔬 Classification NOVA</h2>
+            <NovaBadge 
+              novaGroup={product.foodData.novaGroup} 
+              typeTransformation={product.typeTransformation}
+              showDetails={true}
+            />
+          </div>
+        )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} />
+        <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
 
@@ -328,6 +351,11 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
+
+
+
 
 
 
