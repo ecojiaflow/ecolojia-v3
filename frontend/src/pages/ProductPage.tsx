@@ -14,6 +14,8 @@ import { ProductNutrition } from '../components/product/ProductNutrition';
 import { ProductAlternatives } from '../components/product/ProductAlternatives';
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
+import { AllergensSection } from '../components/product/AllergensSection';
+import { LabelsSection } from '../components/product/LabelsSection';
 import { ProductChatActions } from '../components/product/ProductChatActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import NovaBadge from '../components/NovaBadge';
@@ -195,6 +197,20 @@ const ProductPage: React.FC = () => {
             />
           </div>
         )}
+
+          {/* Allergènes Mobile */}
+          {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
+            <div className="bg-white p-4">
+              <AllergensSection allergens={product.foodData.allergens} />
+            </div>
+          )}
+
+          {/* Labels Mobile */}
+          {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
+            <div className="bg-white p-4">
+              <LabelsSection labels={product.foodData.labels} />
+            </div>
+          )}
             </div>
           </div>
           <div className="bg-white p-4 space-y-2">
@@ -213,10 +229,10 @@ const ProductPage: React.FC = () => {
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
-          {product.nutrition?.per100g && product.category === 'food' && (
+          {product.foodData?.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-white" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Valeurs nutritionnelles</summary>
-              <div className="p-4"><ProductNutrition nutrition={product.nutrition.per100g} /></div>
+              <div className="p-4"><ProductNutrition nutrition={product.foodData.nutrition.per100g} /></div>
             </details>
           )}
           
@@ -308,10 +324,24 @@ const ProductPage: React.FC = () => {
             />
           </div>
         )}
+
+          {/* Allergènes Mobile */}
+          {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
+            <div className="bg-white p-4">
+              <AllergensSection allergens={product.foodData.allergens} />
+            </div>
+          )}
+
+          {/* Labels Mobile */}
+          {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
+            <div className="bg-white p-4">
+              <LabelsSection labels={product.foodData.labels} />
+            </div>
+          )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
-        {product.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.nutrition.per100g} />}
+        {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
 
         {/* Section Cosmétiques Desktop */}
         {product.category === 'cosmetics' && (
@@ -351,6 +381,8 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
 
 
 
