@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 // router.use(enrichProduct);
 
 // SCORING ENGINE SCIENTIFIQUE
+const imageEnrichment = require('../services/imageEnrichment.service');
+
 const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
 
 /* Middleware debug */
@@ -127,12 +129,15 @@ router.get('/search', handleAsync(async (req, res) => {
       const products = await Product.find(searchQuery)
         .limit(parseInt(limit))
         .skip((parseInt(page) - 1) * parseInt(limit));
-      
+
       const total = await Product.countDocuments(searchQuery);
-      
+
+      // Enrichir les produits avec images OpenFoodFacts
+      const enrichedProducts = await imageEnrichment.batchEnrich(products);
+
       return res.json({
         success: true,
-        products,
+        products: enrichedProducts,
         pagination: {
           total,
           page: parseInt(page),

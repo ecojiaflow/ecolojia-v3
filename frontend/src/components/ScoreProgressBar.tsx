@@ -6,18 +6,16 @@ interface ScoreProgressBarProps {
 
 export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ score }) => {
   const getScoreLabel = (score: number): string => {
-    if (score >= 70) return 'Excellent';
-    if (score >= 65) return 'Bon';
-    if (score >= 45) return 'Moyen';
-    if (score >= 25) return 'Médiocre';
+    if (score >= 76) return 'Excellent';
+    if (score >= 56) return 'Bon';
+    if (score >= 36) return 'Passable';
     return 'Mauvais';
   };
 
   const getScoreColor = (score: number): string => {
-    if (score >= 70) return 'bg-green-600';
-    if (score >= 65) return 'bg-green-400';
-    if (score >= 45) return 'bg-yellow-500';
-    if (score >= 25) return 'bg-orange-500';
+    if (score >= 76) return 'bg-green-600';
+    if (score >= 56) return 'bg-green-500';
+    if (score >= 36) return 'bg-orange-500';
     return 'bg-red-600';
   };
 
@@ -36,12 +34,10 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ score }) => 
       </div>
       <div className='flex justify-between mt-2 text-xs text-gray-600'>
         <span className='text-red-600 font-medium'>0 Mauvais</span>
-        <span className='text-orange-500 font-medium'>25</span>
-        <span className='text-yellow-500 font-medium'>45 Moyen</span>
-        <span className='text-green-400 font-medium'>65 Bon</span>
-        <span className='text-green-700 font-medium'>80 Excellent</span>
+        <span className='text-orange-500 font-medium'>36 Passable</span>
+        <span className='text-green-500 font-medium'>56 Bon</span>
+        <span className='text-green-700 font-medium'>76 Excellent</span>
       </div>
     </div>
   );
 };
-

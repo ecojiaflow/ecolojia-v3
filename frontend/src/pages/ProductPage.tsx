@@ -48,6 +48,11 @@ interface Product {
   foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
+// Helper pour compatibilité images
+const getProductImage = (product: any) => {
+  return product.imageUrl || product.images?.front || null;
+};
+
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -175,7 +180,7 @@ const ProductPage: React.FC = () => {
         </div>
         <div className="space-y-2">
           <div className="bg-white p-6">
-            {product.images?.front && <img src={product.images.front} alt={product.name} className="w-32 h-32 object-contain mx-auto mb-4" />}
+            {getProductImage(product) && <img src={getProductImage(product)} alt={product.name} className="w-32 h-32 object-contain mx-auto mb-4" />}
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
               {product.brand && <p className="text-gray-600 mb-4">{product.brand}</p>}
@@ -282,7 +287,7 @@ const ProductPage: React.FC = () => {
               <div className="space-y-3">
                 {alternatives.slice(0, 5).map(alt => (
                   <div key={alt._id} onClick={() => navigate(`/product/${alt.barcode}`)} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                    {alt.images?.front && <img src={alt.images.front} alt={alt.name} className="w-12 h-12 object-contain" />}
+                    {getProductImage(alt) && <img src={getProductImage(alt)} alt={alt.name} className="w-12 h-12 object-contain" />}
                     <div className="flex-1">
                       <p className="font-medium text-sm">{alt.name}</p>
                       <p className="text-xs text-gray-500">{alt.brand}</p>
@@ -311,7 +316,7 @@ const ProductPage: React.FC = () => {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={product.images?.front} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
+        <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ScoreProgressBar score={overallScore} />
         {/* NOVA Badge V2 */}
         {product.category === 'food' && product.foodData?.novaGroup && (
