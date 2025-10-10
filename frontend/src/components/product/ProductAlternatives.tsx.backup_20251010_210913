@@ -54,8 +54,9 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {alternatives.slice(0, 6).map((alt, index) => {
-            // Utiliser directement overallScore du backend (déjà calculé scientifiquement)
-            const altOverallScore = alt.scores?.overallScore || alt.scores?.global || 50;
+            const altHealthScore = alt.scores?.healthScore || 50;
+            const altEnvironmentScore = alt.scores?.environmentScore || 50;
+            const altOverallScore = Math.round((altHealthScore + altEnvironmentScore) / 2);
             
             return (
               <Link

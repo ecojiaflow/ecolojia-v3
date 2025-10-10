@@ -1,0 +1,44 @@
+﻿import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { searchProducts, toDisplayProduct } from "../lib/api";
+import { useQuerySync } from '../hooks/useQuerySync';
+
+export default function SearchPage() {
+  const [state, setState] = useState({ q: '' });
+  const updateURL = useQuerySync(state, setState);
+  const [res, setRes] = useState(null);
+
+  useEffect(() => {
+    if (state.q.trim()) {
+      searchProducts(state.q.trim(), {}).then(setRes);
+    }
+  }, [state.q]);
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <input
+        type="text"
+        value={state.q}
+        onChange={(e) => { const q = e.target.value; setState({ q }); updateURL({ q }); }}
+        placeholder="Rechercher..."
+        className="w-full px-4 py-2 border rounded mb-6"
+      />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {res?.items.map((item, i) => {
+          const p = toDisplayProduct(item);
+          return (
+            <div key={i} className="border rounded p-4">
+              <h3 className="font-bold">{p.name}</h3>
+              <p className="text-sm text-gray-600">{p.brand}</p>
+              <button onClick={() => window.location.href = `/product/${item._id || item.objectID}`} className="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Voir</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
+
+
