@@ -87,6 +87,7 @@ try {
 // ================================================================
 
 const express = require('express');
+const aiCache = require('./services/aiCache.service');
 const mongoSanitize = require('express-mongo-sanitize');
 const { generalLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const cors = require('cors');
@@ -347,6 +348,7 @@ try {
 } catch (err) {
   console.log('?? Stats routes non disponibles');
 }
+
 
 
 
