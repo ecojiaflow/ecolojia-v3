@@ -116,7 +116,8 @@ const ResultsPage: React.FC = () => {
   // Gestion des scores avec fallback sur les champs directs
   const healthScore = analysisData.scores?.health || analysisData.healthScore || 50;
   const envScore = analysisData.scores?.environment || analysisData.environmentScore || 50;
-  const overallScore = Math.round((healthScore + envScore) / 2);
+  // PHASE 5 - Utilise score persisté backend
+  const overallScore = analysis.scores?.overallScore || 50;
 
   
 

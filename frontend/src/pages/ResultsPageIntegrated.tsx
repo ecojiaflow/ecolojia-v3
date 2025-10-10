@@ -69,7 +69,8 @@ const ResultsPage: React.FC = () => {
   const { product, scores } = data;
   const healthScore = scores?.normalized?.value || scores?.healthScore || 50;
   const environmentScore = scores?.environmentScore || 0;
-  const overallScore = scores?.globalScore || Math.round((healthScore + environmentScore) / 2);
+  // PHASE 5 - Utilise score persisté backend
+  const overallScore = scores?.overallScore || 50;
 
   return (
     <div className="max-w-2xl mx-auto p-4">
