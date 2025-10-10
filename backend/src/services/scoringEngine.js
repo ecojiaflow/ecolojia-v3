@@ -69,12 +69,12 @@ function calculateFoodScores(data) {
     healthScore,
     environmentScore,
     breakdown: {
-      nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: 'NOVA' },
-      nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 20, label: 'Nutri-Score' },
-      additives: { score: Math.max(0, 50 - (additives.length * 5)), label: 'Additifs' },
-      ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: 'Eco-Score' },
-      packaging: { score: 50, label: 'Emballage' },
-      origin: { score: 50, label: 'Origine' }
+      nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: data.novaGroup ? `Groupe ${data.novaGroup}` : 'Non défini' },
+      nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 20, label: data.nutriScore ? data.nutriScore.toUpperCase() : 'Non défini' },
+      additives: { score: Math.max(0, 50 - (additives.length * 5)), label: ` additif` },
+      ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: data.ecoScore ? data.ecoScore.toUpperCase() : 'Non défini' },
+      packaging: { score: 50, label: 'Standard' },
+      origin: { score: 50, label: data.origin || 'Non défini' }
     }
   };
 }
@@ -316,12 +316,12 @@ function calculateDetergentScores(product) {
   // TODO: Appliquer même rigueur scientifique
   return {
     breakdown: {
-      nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: 'NOVA' },
-      nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 20, label: 'Nutri-Score' },
-      additives: { score: Math.max(0, 50 - (additives.length * 5)), label: 'Additifs' },
-      ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: 'Eco-Score' },
-      packaging: { score: 50, label: 'Emballage' },
-      origin: { score: 50, label: 'Origine' }
+      nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: data.novaGroup ? `Groupe ${data.novaGroup}` : 'Non défini' },
+      nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 20, label: data.nutriScore ? data.nutriScore.toUpperCase() : 'Non défini' },
+      additives: { score: Math.max(0, 50 - (additives.length * 5)), label: ` additif` },
+      ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: data.ecoScore ? data.ecoScore.toUpperCase() : 'Non défini' },
+      packaging: { score: 50, label: 'Standard' },
+      origin: { score: 50, label: data.origin || 'Non défini' }
     },
     overallScore: 50,
     environmentScore: 50,
