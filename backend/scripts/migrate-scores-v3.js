@@ -74,11 +74,14 @@ async function migrateScores() {
           await Product.updateOne(
             { _id: product._id },
             { 
-              $set: { 
-                scores: newScores,
-                scoringVersion: '3.0.0',
-                lastScoreUpdate: new Date()
-              } 
+              $set: {
+                'scores.overallScore': newScores.overallScore || newScores.global || 50,
+                'scores.healthScore': newScores.healthScore || 50,
+                'scores.environmentScore': newScores.environmentScore || 50,
+                'scores.calculatedAt': new Date(),
+                'scores.scoringVersion': '3.0.0',
+                'scores.breakdown': newScores.breakdown || {}
+              }
             }
           );
 

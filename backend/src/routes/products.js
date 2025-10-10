@@ -375,41 +375,12 @@ router.get('/:id', handleAsync(async (req, res) => {
     return res.status(404).json({ success: false, error: 'Produit introuvable' });
   }
 
-  const category = product.category || 'food';
-  let scores = {};
-
-  try {
-    if (category === 'food') {
-      scores = calculateFoodScores({
-        novaGroup: product.foodData?.novaGroup || product.nova_group,
-        nutriScore: product.foodData?.nutriScore || product.nutriscore_grade,
-        ecoScore: product.foodData?.ecoScore || product.ecoscore_grade,
-        additives: product.foodData?.additives || [],
-        allergens: product.foodData?.allergens || [],
-        labels: product.foodData?.labels || [],
-        packaging: product.packaging,
-        origin: product.origin,
-        product_name: product.name || product.product_name
-      });
-    } else if (category === 'cosmetics') {
-      scores = calculateCosmeticScores({
-        ingredients: product.cosmeticsData?.ingredients || [],
-        endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
-        allergens: product.cosmeticsData?.allergens || [],
-        certifications: product.cosmeticsData?.certifications || []
-      });
-    } else if (category === 'detergents') {
-      scores = calculateDetergentScores({
-        surfactants: product.detergentsData?.surfactants || [],
-        composition: product.detergentsData?.composition || [],
-        ecoLabels: product.detergentsData?.ecoLabels || [],
-        phosphates: product.detergentsData?.phosphates || false
-      });
-    }
-  } catch (err) {
-    logger.error('Scoring error:', err);
-    scores = { overallScore: 50, healthScore: 50, environmentScore: 50 };
-  }
+  // PHASE 4 - Utiliser scores persistés MongoDB (migration v3.0.0 effectuée)
+  const scores = product.scores || {
+    overallScore: 50,
+    healthScore: 50,
+    environmentScore: 50
+  };
 
   const productObj = product.toObject ? product.toObject() : product;
   

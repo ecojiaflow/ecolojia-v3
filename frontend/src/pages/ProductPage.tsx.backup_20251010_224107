@@ -127,8 +127,7 @@ const ProductPage: React.FC = () => {
   // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
-  // PHASE 5 - Utilise score persisté backend (plus de recalcul)
-  const overallScore = product.scores?.overallScore || 50;
+  const overallScore = product.scores?.overallScore || Math.round((healthScore + environmentScore) / 2);
 
   // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};

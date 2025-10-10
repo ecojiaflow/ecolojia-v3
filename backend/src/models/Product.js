@@ -1,4 +1,4 @@
-// backend/src/models/Product.js
+﻿// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -82,7 +82,7 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ? Modifi� en objets
+    allergens: [allergenSchema],  // ? Modifié en objets
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },
@@ -104,6 +104,27 @@ const productSchema = new mongoose.Schema({
     phosphateFree: Boolean,
     biodegradable: Boolean,
     ecoLabels: [String]
+  },
+
+  // Scores scientifiques (Calculate Once, Store Forever)
+  scores: {
+    overallScore: { type: Number, min: 0, max: 100, index: true },
+    healthScore: { type: Number, min: 0, max: 100 },
+    environmentScore: { type: Number, min: 0, max: 100 },
+    
+    // Métadonnées audit
+    calculatedAt: { type: Date, default: Date.now },
+    scoringVersion: { type: String, default: '3.0.0' },
+    
+    // Breakdown détaillé (pour debug)
+    breakdown: {
+      nova: { score: Number, reason: String },
+      nutriscore: { score: Number, reason: String },
+      additives: { score: Number, reason: String },
+      ecoscore: { score: Number, reason: String },
+      packaging: { score: Number, reason: String },
+      origin: { score: Number, reason: String }
+    }
   },
 
   analysisData: {
