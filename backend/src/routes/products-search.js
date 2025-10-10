@@ -1,9 +1,7 @@
-﻿// PATH: backend/src/routes/products-search-fix.js
-const express = require('express');
+﻿const express = require('express');
 const imageEnrichment = require('../services/imageEnrichment.service');
 const router = express.Router();
 const Product = require('../models/Product');
-const imageEnrichment = require('../services/imageEnrichment.service');
 
 // Route de recherche qui utilise l'index MongoDB
 router.get('/', async (req, res) => {
@@ -65,4 +63,3 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
-

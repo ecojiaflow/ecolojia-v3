@@ -27,19 +27,24 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
     const breakdown = productScores.breakdown;
     let item = null;
     
+    // Mapping COMPLET pour TOUS les facteurs
     if (factorName.includes('NOVA')) item = breakdown.nova;
+    if (factorName.includes('Nutri-Score')) item = breakdown.nutriscore;
     if (factorName.includes('Additifs')) item = breakdown.additives;
+    if (factorName.includes('Éco-Score')) item = breakdown.ecoscore;
+    if (factorName.includes('Emballage')) item = breakdown.packaging;
+    if (factorName.includes('Origine')) item = breakdown.origin;
     if (factorName.includes('Éthique')) item = breakdown.ethics;
     
-    if (item && typeof item.maxScore === 'number' && item.maxScore > 0) {
-      return Math.round((item.score / item.maxScore) * 100);
+    // Structure backend V3 : {score: X} directement (PAS de maxScore)
+    if (item && typeof item.score === 'number') {
+      return item.score;
     }
     
     return 50;
   };
 
   const getNovaGroup = (score: number): number => {
-    // Conversion score → groupe NOVA
     if (score >= 90) return 1;
     if (score >= 70) return 2;
     if (score >= 40) return 3;
@@ -53,6 +58,38 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
       if (group === 2) return "Ingrédients culinaires transformés";
       if (group === 3) return "Aliments transformés";
       return "Aliments ultra-transformés";
+    }
+    
+    if (factorName.includes('Nutri-Score')) {
+      if (score >= 90) return "Excellent profil nutritionnel";
+      if (score >= 70) return "Bon profil nutritionnel";
+      if (score >= 50) return "Profil nutritionnel moyen";
+      if (score >= 30) return "Profil nutritionnel médiocre";
+      return "Profil nutritionnel très médiocre";
+    }
+    
+    if (factorName.includes('Éco-Score')) {
+      if (score >= 90) return "Impact environnemental très faible";
+      if (score >= 70) return "Impact environnemental faible";
+      if (score >= 50) return "Impact environnemental modéré";
+      if (score >= 30) return "Impact environnemental élevé";
+      return "Impact environnemental très élevé";
+    }
+    
+    if (factorName.includes('Emballage')) {
+      if (score >= 90) return "Emballage très écologique";
+      if (score >= 70) return "Emballage écologique";
+      if (score >= 50) return "Emballage standard";
+      if (score >= 30) return "Emballage peu écologique";
+      return "Emballage très polluant";
+    }
+    
+    if (factorName.includes('Origine')) {
+      if (score >= 90) return "Origine locale et traçable";
+      if (score >= 70) return "Bonne traçabilité";
+      if (score >= 50) return "Traçabilité partielle";
+      if (score >= 30) return "Peu d'informations sur l'origine";
+      return "Origine inconnue";
     }
     
     if (factorName.includes('Additifs')) {
@@ -279,4 +316,3 @@ export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({
     </div>
   );
 };
-
