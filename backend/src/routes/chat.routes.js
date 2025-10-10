@@ -1,4 +1,6 @@
-const express = require('express');
+ï»¿const express = require('express');
+const aiCache = require('../services/aiCache.service');
+const { aiCacheMiddleware } = require('../middleware/aiCache.middleware');
 const ChatHistory = require('../models/ChatHistory');
 const { enrichPromptWithProduct } = require('../services/productPrompt.service');
 const crypto = require('crypto');
@@ -20,7 +22,7 @@ router.get('/health', (_req, res) => {
   });
 });
 
-router.post('/deepseek', aiLimiter, deepseekChat);
+router.post('/deepseek', aiLimiter, aiCacheMiddleware, deepseekChat);
 
 
 // POST /product-chat - Chat contextuel produit
@@ -34,13 +36,13 @@ router.post('/product-chat', aiLimiter, async (req, res) => {
     
     const userHash = crypto.createHash('sha256').update(userId).digest('hex');
     
-    // Enrichir prompt avec données produit
+    // Enrichir prompt avec donnÃ©es produit
     const enriched = await enrichPromptWithProduct(productId);
     if (!enriched) {
-      return res.status(404).json({ error: 'Produit non trouvé' });
+      return res.status(404).json({ error: 'Produit non trouvÃ©' });
     }
     
-    // Récupérer ou créer historique
+    // RÃ©cupÃ©rer ou crÃ©er historique
     let chat = await ChatHistory.findOne({ userHash, productId });
     if (!chat) {
       chat = new ChatHistory({ userHash, productId, messages: [] });
@@ -67,9 +69,9 @@ router.post('/product-chat', aiLimiter, async (req, res) => {
     });
     
     const data = await response.json();
-    const assistantMessage = data.choices?.[0]?.message?.content || 'Erreur réponse IA';
+    const assistantMessage = data.choices?.[0]?.message?.content || 'Erreur rÃ©ponse IA';
     
-    // Sauvegarder réponse
+    // Sauvegarder rÃ©ponse
     await chat.addMessage('assistant', assistantMessage);
     
     res.json({
@@ -84,4 +86,11 @@ router.post('/product-chat', aiLimiter, async (req, res) => {
   }
 });
 
+
+router.get('/cache-stats', (req, res) => {
+  res.json({ success: true, stats: aiCache.getStats() });
+});
+
 module.exports = router;
+
+
