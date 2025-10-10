@@ -190,7 +190,7 @@ const routesToLoad = [
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
   { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
   { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },
-  { path: '/api/payments', file: './payments/routes/payments.routes.js', name: 'Payments' }
+  { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' }
 ];
 
 routesToLoad.forEach(route => {
@@ -347,5 +347,6 @@ try {
 } catch (err) {
   console.log('?? Stats routes non disponibles');
 }
+
 
 

@@ -2,6 +2,7 @@
 const multer = require('multer');
 const { analyze } = require('../services/visionRuntime');
 
+const { aiLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -9,7 +10,7 @@ const upload = multer({
 });
 
 // POST /api/vision/analyze (upload fichier)
-router.post('/analyze', upload.single('image'), async (req, res) => {
+router.post('/analyze', upload.single('image'), aiLimiter, async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ 
@@ -38,3 +39,4 @@ router.get('/health', (req, res) => {
 });
 
 module.exports = router;
+
