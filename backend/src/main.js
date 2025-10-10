@@ -175,6 +175,7 @@ app.get('/', (req, res) => {
 
 // Chargement des routes principales avec gestion d'erreur
 const routesToLoad = [
+  { path: '/api/provisional', file: './routes/provisional.routes.js', name: 'Provisional' },
   { path: '/api/version', file: './routes/version.routes.js', name: 'Version' },
   { path: '/api/analysis', file: './routes/analysis.routes.js', name: 'Analysis' },
   { path: '/api/vision', file: './routes/vision.simple.js', name: 'Vision' },
@@ -348,6 +349,7 @@ try {
 } catch (err) {
   console.log('?? Stats routes non disponibles');
 }
+
 
 
 
