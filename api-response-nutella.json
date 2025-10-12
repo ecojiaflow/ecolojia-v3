@@ -1,0 +1,160 @@
+﻿{
+    "success":  true,
+    "product":  {
+                    "foodData":  {
+                                     "novaGroup":  4,
+                                     "nutriScore":  "E",
+                                     "ecoScore":  null,
+                                     "additives":  [
+                                                       {
+                                                           "riskLevel":  "LOW",
+                                                           "healthConcerns":  [
+
+                                                                              ],
+                                                           "tag":  "en:e322",
+                                                           "code":  "E322",
+                                                           "name":  "e322"
+                                                       },
+                                                       {
+                                                           "riskLevel":  "LOW",
+                                                           "healthConcerns":  [
+
+                                                                              ],
+                                                           "tag":  "en:e322i",
+                                                           "code":  "E322I",
+                                                           "name":  "e322i"
+                                                       }
+                                                   ],
+                                     "allergens":  [
+                                                       {
+                                                           "riskLevel":  "MEDIUM",
+                                                           "concerns":  [
+
+                                                                        ],
+                                                           "tag":  "en:milk",
+                                                           "name":  "milk"
+                                                       },
+                                                       {
+                                                           "riskLevel":  "MEDIUM",
+                                                           "concerns":  [
+
+                                                                        ],
+                                                           "tag":  "en:nuts",
+                                                           "name":  "nuts"
+                                                       },
+                                                       {
+                                                           "riskLevel":  "MEDIUM",
+                                                           "concerns":  [
+
+                                                                        ],
+                                                           "tag":  "en:soybeans",
+                                                           "name":  "soybeans"
+                                                       }
+                                                   ],
+                                     "ingredients":  "Sucre, huile de palme, NOISETTES 13%, LAIT écrémé en poudre 8,7%, cacao maigre 7,4%, émulsifiants: lécithines [SOJA]; vanilline. Sans gluten",
+                                     "labels":  [
+                                                    "en:vegetarian",
+                                                    "en:no-gluten",
+                                                    "en:no-preservatives",
+                                                    "en:no-colorings",
+                                                    "en:no-hydrogenated-fats",
+                                                    "fr:triman"
+                                                ],
+                                     "nutrition":  {
+                                                       "per100g":  {
+                                                                       "sugars":  56.3,
+                                                                       "salt":  0.107,
+                                                                       "saturatedFat":  10.6,
+                                                                       "energy":  538.2409177820267,
+                                                                       "fiber":  0,
+                                                                       "protein":  6.3
+                                                                   }
+                                                   }
+                                 },
+                    "cosmeticsData":  {
+                                          "allergens":  [
+
+                                                        ],
+                                          "certifications":  [
+
+                                                             ],
+                                          "endocrineDisruptors":  [
+
+                                                                  ],
+                                          "ingredients":  [
+
+                                                          ]
+                                      },
+                    "detergentsData":  {
+                                           "composition":  [
+
+                                                           ],
+                                           "ecoLabels":  [
+
+                                                         ],
+                                           "surfactants":  [
+
+                                                           ]
+                                       },
+                    "scores":  {
+                                   "breakdown":  {
+                                                     "nova":  {
+                                                                  "score":  10
+                                                              },
+                                                     "nutriscore":  {
+                                                                        "score":  20
+                                                                    },
+                                                     "additives":  {
+                                                                       "score":  40
+                                                                   },
+                                                     "ecoscore":  {
+                                                                      "score":  20
+                                                                  },
+                                                     "packaging":  {
+                                                                       "score":  50
+                                                                   },
+                                                     "origin":  {
+                                                                    "score":  50
+                                                                }
+                                                 },
+                                   "overallScore":  16,
+                                   "healthScore":  0,
+                                   "environmentScore":  40,
+                                   "ethicsScore":  20,
+                                   "metadata":  {
+                                                    "methodology":  "ANSES/OMS/EFSA 2025",
+                                                    "version":  "3.0.0",
+                                                    "lastUpdate":  "2025-10-08T16:09:29.973Z"
+                                                },
+                                   "calculatedAt":  "2025-10-10T22:49:40.682Z",
+                                   "scoringVersion":  "3.0.1-final"
+                               },
+                    "_id":  "68e2c64446db866b232c4d26",
+                    "barcode":  "3017620425035",
+                    "name":  "Nutella",
+                    "brand":  "Ferrero",
+                    "category":  "food",
+                    "subcategory":  "spreads",
+                    "categories_tags":  [
+                                            "en:petit-dejeuners",
+                                            "en:produits-a-tartiner",
+                                            "en:produits-a-tartiner-sucres",
+                                            "en:pates-a-tartiner",
+                                            "en:pates-a-tartiner-au-chocolat",
+                                            "en:pates-a-tartiner-aux-noisettes",
+                                            "en:pates-a-tartiner-aux-noisettes-et-au-cacao"
+                                        ],
+                    "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/5035/front_en.583.400.jpg",
+                    "packaging":  "Composites multicouches,Plastique,Carton,Verre,PP 5 - Polypropylène,Verre transparent,Carton non ondulé,82 C/X,82 C/PAP,en:Bocal",
+                    "origin":  "",
+                    "viewCount":  0,
+                    "scanCount":  0,
+                    "createdAt":  "2025-10-05T19:25:56.867Z",
+                    "updatedAt":  "2025-10-08T16:09:29.973Z",
+                    "__v":  1,
+                    "lastScoreUpdate":  "2025-10-07T23:51:28.231Z",
+                    "scoringVersion":  "3.0.0",
+                    "nutritionEnrichedAt":  "2025-10-07T21:49:08.414Z",
+                    "nutritionSource":  "openfoodfacts"
+                }
+}

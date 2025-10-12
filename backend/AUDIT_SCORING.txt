@@ -1,0 +1,30 @@
+﻿=== AUDIT SCORING ECOLOJIA V3 ===
+Date: 2025-10-12 12:15
+
+FICHIERS DE SCORING TROUVÉS:
+- src\routes\scoring.routes.js
+- src\services\scoring.service.js
+- src\services\scoringEngine.AVANT_NOVA_FIX_20251007_232733.js
+- src\services\scoringEngine.js
+- src\services\scoringEngine.js.backup
+- src\services\scoringEngine.js.backup_20251010_225803
+- src\services\scoringEngine_OLD_V2.js
+
+
+FICHIERS AVEC calculateFoodScores:
+- src\routes\products.js
+- src\services\scoringEngine.AVANT_NOVA_FIX_20251007_232733.js
+- src\services\scoringEngine.js
+- src\services\scoringEngine_OLD_V2.js
+
+
+FICHIERS AVEC Product.create ou Product.save:
+- src\controllers\analysisController.js
+- src\routes\enrich.routes.js
+- src\routes\ocr-analyze.routes.js
+- src\routes\provisional.routes.js
+- src\scripts\importDirectToDB.js
+- src\scripts\migrate-pg-to-mongo.js
+- src\services\openfoodfacts.service.js
+- src\services\productAnalysisService.js
+- src\workers\ImageProcessingWorker.js

@@ -1,0 +1,26 @@
+﻿=== FLUX DE DONNÉES - AUDIT ===
+
+1. IMPORT BATCH OFF (ingestOpenFoodFacts.js)
+   - Fichier source: src/scripts/ingestOpenFoodFacts.js
+   - Appelle quoi pour scoring ?
+   - Sauvegarde où ?
+
+2. SCAN CODE-BARRE (products.js route /analyze)
+   - Fichier source: src/routes/products.js
+   - Ligne: ~190
+   - Appelle quoi pour scoring ?
+   - Sauvegarde où ?
+
+3. OCR/VISION (ocr-analyze.routes.js)
+   - Fichier source: src/routes/ocr-analyze.routes.js
+   - Ligne: ~50
+   - Appelle quoi pour scoring ?
+   - Sauvegarde où ?
+
+4. ENRICHISSEMENT (enrich.routes.js)
+   - Fichier source: src/routes/enrich.routes.js
+   - Ligne: ~39, ~95
+   - Appelle quoi pour scoring ?
+   - Sauvegarde où ?
+
+À COMPLÉTER ENSEMBLE...

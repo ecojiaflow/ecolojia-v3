@@ -1,0 +1,412 @@
+﻿# AUDIT FICHIERS EXISTANTS - ECOLOJIA V3
+Date: 2025-10-11 14:10
+
+---
+
+## FRONTEND
+
+### Pages (src/pages/)
+- [OK] AboutPage.tsx
+- [OK] AdminDashboard.tsx
+- [OK] AiPreferencesPage.tsx
+- [OK] AnalysisDevPage.tsx
+- [OK] CategoryPage.tsx
+- [OK] ChatPage.tsx
+- [OK] ComparePage.tsx
+- [OK] CosmeticAnalysisPage.tsx
+- [OK] DashboardPage.tsx
+- [OK] DetergentAnalysisPage.tsx
+- [OK] DiagnosticPage.tsx
+- [OK] EmailVerificationPage.tsx
+- [OK] FavoritesPage.tsx
+- [OK] HistoryPage.tsx
+- [OK] HomePage.tsx
+- [OK] LegalPage.tsx
+- [OK] LoginPage.tsx
+- [OK] ManualAnalysisPage.tsx
+- [OK] MultiCategoriesPage.tsx
+- [OK] MultiScanPage.tsx
+- [OK] OCRPage.tsx
+- [OK] OnboardingPage.tsx
+- [OK] PremiumPage.tsx
+- [OK] PricingPage.tsx
+- [OK] PricingPage.tsx
+- [OK] PrivacyPage.tsx
+- [OK] ProductDetailPage.tsx
+- [OK] ProductNotFoundPage.tsx
+- [OK] ProductPage.tsx
+- [OK] ProfilePage.tsx
+- [OK] RegisterPage.tsx
+- [OK] ResultPage.tsx
+- [OK] Results.tsx
+- [OK] ResultsPage.tsx
+- [OK] ResultsPageIntegrated.tsx
+- [OK] ScannerChoicePage.tsx
+- [OK] ScanPage.tsx
+- [OK] ScanPageIntegrated.tsx
+- [OK] SearchPage.OLD.tsx
+- [OK] SearchPage.tsx
+- [OK] SettingsPage.tsx
+- [OK] TermsPage.tsx
+- [OK] TestPage.tsx
+- [OK] UnifiedResultsPage.tsx
+- [OK] UniversalSearchPage.tsx
+
+### Composants (src/components/)
+- [OK] AdvancedFilters.tsx
+- [OK] AffiliateButton.tsx
+- [OK] analysis\AIChat.tsx
+- [OK] AlgoliaProductCard.tsx
+- [OK] product\AllergensSection.tsx
+- [OK] analysis\AlternativesList.tsx
+- [OK] analysis\AlternativesSuggestions.tsx
+- [OK] AnalysisResultCard.tsx
+- [OK] common\Badge.tsx
+- [OK] scanner\__tests__\BarcodeScanner.spec.tsx
+- [OK] scanner\BarcodeScanner.tsx
+- [OK] scanner\BarcodeScannerEnhanced.tsx
+- [OK] common\Button.tsx
+- [OK] scanner\CategoryAutoDetector.tsx
+- [OK] CategoryCard.tsx
+- [OK] CategoryFilter.tsx
+- [OK] CategoryNavigation.tsx
+- [OK] CategorySelector.tsx
+- [OK] chat\ChatBubble.tsx
+- [OK] chat\ChatWidget.tsx
+- [OK] payments\CheckoutButton.tsx
+- [OK] dashboard\CommunityComparison.tsx
+- [OK] ConfidenceBadge.tsx
+- [OK] gdpr\ConsentManager.tsx
+- [OK] CookieBanner.tsx
+- [OK] analysis\CosmeticAnalysisDisplay.tsx
+- [OK] dashboard\DailyAnalysesChart.tsx
+- [OK] DomainBadges.tsx
+- [OK] EcoScoreBadge.tsx
+- [OK] EmailVerificationBanner.tsx
+- [OK] scanner\EnhancedBarcodeScanner.tsx
+- [OK] EnvironmentScore.tsx
+- [OK] ErrorBoundary.tsx
+- [OK] ErrorMessage.tsx
+- [OK] EthicalScoreBadge.tsx
+- [OK] search\FiltersPanel.tsx
+- [OK] Footer.tsx
+- [OK] HealthScoreCircle.tsx
+- [OK] Admin\ImportProgress.tsx
+- [OK] product\LabelsSection.tsx
+- [OK] LanguageSelector.tsx
+- [OK] Layout.tsx
+- [OK] layout\Layout.tsx
+- [OK] common\LoadingSpinner.tsx
+- [OK] ui\LoadingStates.tsx
+- [OK] Admin\LogViewer.tsx
+- [OK] scanner\ManualInput.tsx
+- [OK] scanner\ManualSearch.tsx
+- [OK] layout\MobileBottomNav.tsx
+- [OK] MockTestPanel.tsx
+- [OK] Navbar.tsx
+- [OK] NoResultsFound.tsx
+- [OK] NotificationContainer.tsx
+- [OK] analysis\NovaAlert.tsx
+- [OK] NovaBadge.tsx
+- [OK] NovaDetails.tsx
+- [OK] NovaResults.tsx
+- [OK] product\NutritionBar.tsx
+- [OK] scanner\OCRGuide.tsx
+- [OK] OCRPanel.tsx
+- [OK] OCRUpload.tsx
+- [OK] OfflineIndicator.tsx
+- [OK] PartnerLinks.tsx
+- [OK] PhotoAnalyzerEnhanced.tsx
+- [OK] PhotoCapture.tsx
+- [OK] scanner\PhotoCapture.tsx
+- [OK] profile\PreferencesTab.tsx
+- [OK] PremiumCTA.tsx
+- [OK] premium\PremiumModal.tsx
+- [OK] PremiumUpgradeModal.tsx
+- [OK] PrivateRoute.tsx
+- [OK] product\ProductActions.tsx
+- [OK] product\ProductAlternatives.tsx
+- [OK] ProductCard.tsx
+- [OK] ProductCardSkeleton.tsx
+- [OK] product\ProductChatActions.tsx
+- [OK] ProductDetail.tsx
+- [OK] product\ProductHeader.tsx
+- [OK] ProductHit.tsx
+- [OK] product\ProductIngredients.tsx
+- [OK] product\ProductIngredientsSection.tsx
+- [OK] product\ProductNutrition.tsx
+- [OK] product\ProductScoresCard.tsx
+- [OK] Admin\ProductTable.tsx
+- [OK] analysis\ProgressiveAnalysis.tsx
+- [OK] ProtectedRoute.tsx
+- [OK] PWAInstallBanner.tsx
+- [OK] analysis\QuickStatsWidget.tsx
+- [OK] quota\QuotaAlert.tsx
+- [OK] quota\QuotaBanner.tsx
+- [OK] quota\QuotaBar.tsx
+- [OK] dashboard\RecommendationsSection.tsx
+- [OK] ResultCard.tsx
+- [OK] analysis\RiskCard.tsx
+- [OK] ScanFloatingButton.tsx
+- [OK] ScannerChoice.tsx
+- [OK] analysis\ScientificScore.tsx
+- [OK] ui\ScoreBar.tsx
+- [OK] product\ScoreBreakdown.tsx
+- [OK] ScoreChip.tsx
+- [OK] analysis\ScoreDisplay.tsx
+- [OK] analysis\ScoreGauge.tsx
+- [OK] analysis\ScoreGaugeEnhanced.tsx
+- [OK] ScoreProgressBar.tsx
+- [OK] search\SearchBar.tsx
+- [OK] search\SearchExperience.tsx
+- [OK] SEOHead.tsx
+- [OK] SimilarProductsCarousel.tsx
+- [OK] upgrade\SmartUpgradeModal.tsx
+- [OK] dashboard\StatsCard.tsx
+- [OK] Admin\StatsCard.tsx
+- [OK] TranslatedContent.tsx
+- [OK] dashboard\TrendSparkline.tsx
+- [OK] UltraProcessingPanel.tsx
+- [OK] UltraTransformResults.tsx
+- [OK] analysis\UnifiedAnalysisResult.tsx
+- [OK] dashboard\WeeklySummary.tsx
+
+### Services Frontend
+- [OK] services\ai\AIAnalysisService.ts
+- [OK] services\aiAnalysisService.ts
+- [OK] backup_20250906_221723\aiAnalysisService.ts
+- [OK] services\aiService.ts
+- [OK] backup_20250906_221723\aiService.ts
+- [OK] services\alternativesService.ts
+- [OK] backup_20250906_221723\alternativesService.ts
+- [OK] services\__tests__\analysisService.spec.ts
+- [OK] backup_20250906_221723\analysisService.ts
+- [OK] services\analysisService.ts
+- [OK] backup_20250906_221723\analyticsService.ts
+- [OK] services\analyticsService.ts
+- [OK] backup_20250906_221723\authService.ts
+- [OK] services\authService.ts
+- [OK] backup_20250906_221723\chatService.ts
+- [OK] services\chatService.ts
+- [OK] services\chatService.ts.backup
+- [OK] services\chat\ChatService.ts.backup_old
+- [OK] services\cloudinaryService.ts
+- [OK] backup_20250906_221723\cloudinaryService.ts
+- [OK] backup_20250906_221723\configService.ts
+- [OK] services\configService.ts
+- [OK] backup_20250906_221723\dashboardService.ts
+- [OK] services\dashboardService.ts
+- [OK] services\ai\DeepSeekECOLOJIAService.ts
+- [OK] backup_20250906_221723\demoService.ts
+- [OK] services\demoService.ts
+- [OK] services\EmailService.ts
+- [OK] backup_20250906_221723\EmailService.ts
+- [OK] services\emailValidationService.ts
+- [OK] backup_20250906_221723\emailValidationService.ts
+- [OK] backup_20250906_221723\exportService.ts
+- [OK] services\exportService.ts
+- [OK] services\fallbackService.ts
+- [OK] backup_20250906_221723\fallbackService.ts
+- [OK] services\favoritesService.ts
+- [OK] backup_20250906_221723\favoritesService.ts
+- [OK] services\history.service.ts
+- [OK] backup_20250906_221723\historyService.ts
+- [OK] services\historyService.ts
+- [OK] services\historySyncService.ts
+- [OK] backup_20250906_221723\historySyncService.ts
+- [OK] backup_20250906_221723\mockService.ts
+- [OK] backup_20250906_221723\notificationService.ts
+- [OK] services\notificationService.ts
+- [OK] services\ocrService.ts
+- [OK] backup_20250906_221723\ocrService.ts
+- [OK] services\offlineService.ts
+- [OK] backup_20250906_221723\offlineService.ts
+- [OK] backup_20250906_221723\paymentService.ts
+- [OK] services\paymentService.ts
+- [OK] services\productSaveService.ts
+- [OK] services\productService.ts
+- [OK] backup_20250906_221723\productService.ts
+- [OK] backup_20250906_221723\quotaService.ts
+- [OK] services\quotaService.ts
+- [OK] backup_20250906_221723\scanService.ts
+- [OK] services\scanService.ts
+- [OK] backup_20250906_221723\searchService.ts
+- [OK] services\searchService.ts
+- [OK] services\security\SecureProxyService.ts
+- [OK] services\ai\ultraTransformService.ts
+- [OK] pages\UniversalSearchService.ts
+- [OK] services\search\UniversalSearchService.ts
+- [OK] backup_20250906_221723\userService.ts
+- [OK] services\userService.ts
+- [OK] backup_20250906_221723\visionService.ts
+- [OK] services\visionService.ts
+
+### Hooks
+- [OK] useAdmin.ts
+- [OK] useAIChat.ts
+- [OK] useAnalysis.ts
+- [OK] useCamera.ts
+- [OK] useChat.ts
+- [OK] useDebounce.ts
+- [OK] use-debounce.ts
+- [OK] useDeviceContext.ts
+- [OK] useEmailValidation.ts
+- [OK] useFavorites.ts
+- [OK] useHistory.ts
+- [OK] useIngredientsEnrichment.ts
+- [OK] useIntersectionObserver.ts
+- [OK] useNotifications.ts
+- [OK] useNovaApi.ts
+- [OK] useOfflineStatus.ts
+- [OK] useProductAnalysis.ts
+- [OK] useProductCache.ts
+- [OK] usePWA.ts
+- [OK] useQuerySync.ts
+- [OK] useQuota.ts
+- [OK] user.ts
+- [OK] UserAnalytics.ts
+- [OK] UserAnalytics.ts
+- [OK] userService.ts
+- [OK] userService.ts
+- [OK] useScanner.ts
+- [OK] useSEO.ts
+- [OK] useSimilarProducts.ts
+- [OK] use-toast.ts
+- [OK] useUniversalSearch.ts
+- [OK] useUserAnalytics.ts
+
+---
+
+## BACKEND
+
+### Routes (src/routes/)
+- [OK] ai.routes.js
+- [OK] algolia.js
+- [OK] algolia-unified.js
+- [OK] analysis.routes.js
+- [OK] analysis-simple.js
+- [OK] analyze.routes.js
+- [OK] auth.js
+- [OK] auth.routes.js
+- [OK] auth.simple.js
+- [OK] chat.routes.js
+- [OK] cosmetics.routes.js
+- [OK] dashboard.js
+- [OK] detergents.routes.js
+- [OK] enrich.routes.js
+- [OK] export.js
+- [OK] favorites.js
+- [OK] favorites.routes.js
+- [OK] gdpr.routes.js
+- [OK] history.js
+- [OK] journey.routes.js
+- [OK] ocr-analyze.routes.js
+- [OK] partner.routes.js
+- [OK] payment.routes.js
+- [OK] products.js
+- [OK] products-search.js
+- [OK] provisional.routes.js
+- [OK] proxy.js
+- [OK] quota.js
+- [OK] scoring.routes.js
+- [OK] stats.routes.js
+- [OK] test-minimal.js
+- [OK] test-partner.js
+- [OK] user.routes.js
+- [OK] version.routes.js
+- [OK] vision.analyze.js
+- [OK] vision.ocr.public.js
+- [OK] vision.routes.js
+- [OK] vision.simple.js
+- [OK] webhooks.js
+
+### Services (src/services/)
+- [OK] additiveEnrichment.service.js
+- [OK] aiCache.service.js
+- [OK] aiService.js
+- [OK] allergenEnrichment.service.js
+- [OK] analyzeService.js
+- [OK] circuitBreaker.js
+- [OK] cosmeticsService.js
+- [OK] cronJobs.js
+- [OK] dataCompleteness.service.js
+- [OK] emailService.js
+- [OK] EnhancedOFFClient.js
+- [OK] gdprService.js
+- [OK] imageEnrichment.service.js
+- [OK] ingredientParser.service.js
+- [OK] ocr-parser.service.js
+- [OK] offClient.enhanced.js
+- [OK] offClient.js
+- [OK] openfoodfacts.service.js
+- [OK] productAnalysisService.js
+- [OK] productPrompt.service.js
+- [OK] quotaService.js
+- [OK] scoring.service.js
+- [OK] scoringEngine.AVANT_NOVA_FIX_20251007_232733.js
+- [OK] scoringEngine.js
+- [OK] scoringEngine_OLD_V2.js
+- [OK] visionRuntime.js
+- [OK] webhookService.js
+
+---
+
+## CONFIGURATION
+
+### Variables Environnement Backend
+
+- [OK] NODE_ENV : Configure (developmen...)
+- [OK] PORT : Configure (***)
+- [OK] MONGODB_URI : Configure (mongodb+sr...)
+- [OK] JWT_SECRET : Configure (ecolojia-s...)
+- [OK] JWT_EXPIRES : Configure (***)
+- [OK] CORS_ORIGINS : Configure (https://fr...)
+- [OK] DEEPSEEK_API_KEY : Configure (sk-a85ac6a...)
+- [OK] ALGOLIA_APP_ID : Configure (***)
+- [OK] ALGOLIA_ADMIN_API_KEY : Configure (8a6393c1ff...)
+- [OK] ALGOLIA_SEARCH_KEY : Configure (8a6393c1ff...)
+- [OK] ALGOLIA_INDEX_NAME : Configure (***)
+- [OK] MOCK_OFF : Configure (***)
+- [OK] MOCK_VISION : Configure (***)
+- [OK] MOCK_ALGOLIA : Configure (***)
+- [OK] FREE_DAILY_ANALYSES : Configure (***)
+- [OK] FRONTEND_BASE_URL : Configure (http://loc...)
+- [OK] GOOGLE_PROJECT_ID : Configure (semiotic-n...)
+- [OK] GOOGLE_CLIENT_EMAIL : Configure (ocr-servic...)
+- [OK] GOOGLE_PRIVATE_KEY_ID : Configure (68f66fa74b...)
+- [OK] LEMONSQUEEZY_API_KEY : Configure (eyJ0eXAiOi...)
+- [OK] LEMONSQUEEZY_STORE_ID : Configure (***)
+- [OK] LEMONSQUEEZY_VARIANT_ID : Configure (***)
+- [OK] LEMONSQUEEZY_WEBHOOK_SECRET : Configure (***)
+- [OK] ENABLE_CHAT : Configure (***)
+- [OK] AI_PROVIDER : Configure (***)
+- [OK] GOOGLE_PROJECT_ID : Configure (semiotic-n...)
+- [OK] GOOGLE_CLIENT_EMAIL : Configure (ocr-servic...)
+- [OK] GOOGLE_PRIVATE_KEY : Configure ("-----BEGI...)
+- [OK] ENABLE_PAYMENTS : Configure (***)
+
+### Variables Environnement Frontend
+- [OK] VITE_API_URL : Configure (https://ec...)
+- [OK] VITE_DEEPSEEK_ENABLED : Configure (***)
+- [OK] VITE_APP_NAME : Configure (***)
+- [OK] VITE_ALGOLIA_APP_ID : Configure (***)
+- [OK] VITE_ALGOLIA_SEARCH_KEY : Configure (8a6393c1ff...)
+
+---
+
+## ALGOLIA STATUS
+- [OK] **Algolia configure** (backend + frontend)
+
+### Fichiers Algolia existants
+- [MISSING] backend\src\services\algolia.service.js
+- [OK] backend\src\routes\algolia-unified.js
+- [OK] backend\src\routes\algolia.js
+- [OK] frontend\src\components\AlgoliaProductCard.tsx
+
+---
+
+## STATISTIQUES
+- Pages frontend : 45
+- Composants : 117
+- Routes backend : 39
+- Services backend : 27

@@ -1,0 +1,19 @@
+﻿=== ANALYSE DÉTAILLÉE DES POINTS D'ENTRÉE ===
+
+1. PRODUCTS.JS (Scan code-barre)
+   Ligne d'import scoring:
+   > C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:13:const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
+  C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:14:
+  C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\products.js:15:/* Middleware debug */
+
+2. OCR-ANALYZE.ROUTES.JS (Vision OCR)
+   Ligne d'import scoring:
+   > C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ocr-analyze.routes.js:5:const { calculateProductScores } = require('../services/scoring.service');
+  C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ocr-analyze.routes.js:6:const Product = require('../models/product.model');
+  C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\backend\src\routes\ocr-analyze.routes.js:7:
+
+3. ANALYSISCONTROLLER.JS
+   Recherche de Product.save:
+
+4. OPENFOODFACTS.SERVICE.JS
+
