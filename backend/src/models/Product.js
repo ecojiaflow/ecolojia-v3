@@ -111,20 +111,11 @@ const productSchema = new mongoose.Schema({
     overallScore: { type: Number, min: 0, max: 100, index: true },
     healthScore: { type: Number, min: 0, max: 100 },
     environmentScore: { type: Number, min: 0, max: 100 },
-    
-    // Métadonnées audit
+    confidence: Number,
+    dataCompleteness: String,
     calculatedAt: { type: Date, default: Date.now },
     scoringVersion: { type: String, default: '3.0.0' },
-    
-    // Breakdown détaillé (pour debug)
-    breakdown: {
-      nova: { score: Number, reason: String },
-      nutriscore: { score: Number, reason: String },
-      additives: { score: Number, reason: String },
-      ecoscore: { score: Number, reason: String },
-      packaging: { score: Number, reason: String },
-      origin: { score: Number, reason: String }
-    }
+    breakdown: mongoose.Schema.Types.Mixed  // Flexible pour accepter TOUS les champs
   },
 
   analysisData: {
@@ -173,7 +164,7 @@ productSchema.statics.searchProducts = async function(query, category = null) {
 
 
 // ============================================================================
-// MIDDLEWARE AUTO-CALCUL SCORES (SCORING UNIFIED V3.0.0)
+// MIDDLEWARE AUTO-CALCUL SCORES V3.0.0
 // ============================================================================
 const scoringUnified = require('../services/scoringUnified');
 
@@ -186,29 +177,37 @@ productSchema.pre('save', async function(next) {
     let calculatedScores;
     
     if (this.category === 'food' || !this.category) {
+      const nutritionalInfo = this.foodData?.nutritionalInfo || {};
+      
       const scoringData = {
-        novaGroup: this.foodData?.novaGroup || this.nova_group,
-        nutriScore: this.foodData?.nutriScore || this.nutriscore_grade,
-        ecoScore: this.foodData?.ecoScore || this.ecoscore_grade,
+        novaGroup: this.nova_group || this.foodData?.novaGroup,
+        nutriScore: this.nutriscore_grade || this.foodData?.nutriScore,
+        ecoScore: this.ecoscore_grade || this.foodData?.ecoScore,
         additives: this.foodData?.additives?.map(a => a.code || a.tag || a) || this.additives_tags || [],
         labels: this.foodData?.labels || this.labels_tags || [],
-        packaging: this.packaging || this.packaging_tags?.[0],
-        origin: this.origins || this.origins_tags?.[0],
-        ingredients: this.foodData?.ingredients || this.ingredients_text,
-        nutriments: this.foodData?.nutritionalInfo || this.nutriments || {}
+        packaging: this.packaging,
+        origin: this.origins,
+        ingredients: this.ingredients_text || this.foodData?.ingredients,
+        nutriments: {
+          sugars_100g: nutritionalInfo.sugars,
+          'saturated-fat_100g': nutritionalInfo.saturatedFat,
+          salt_100g: nutritionalInfo.salt
+        }
       };
       
       calculatedScores = scoringUnified.calculateFoodScores(scoringData);
-    } else if (this.category === 'cosmetics') {
+    } 
+    else if (this.category === 'cosmetics') {
       calculatedScores = scoringUnified.calculateCosmeticScores(this);
-    } else if (this.category === 'detergents') {
+    } 
+    else if (this.category === 'detergents') {
       calculatedScores = scoringUnified.calculateDetergentScores(this);
     }
     
     if (calculatedScores) {
       this.scores = {
         overallScore: calculatedScores.overallScore,
-        healthScore: calculatedScores.healthScore || calculatedScores.safetyScore,
+        healthScore: calculatedScores.healthScore,
         environmentScore: calculatedScores.environmentScore,
         breakdown: calculatedScores.breakdown,
         confidence: calculatedScores.confidence,
@@ -218,12 +217,14 @@ productSchema.pre('save', async function(next) {
       };
     }
   } catch (error) {
-    console.error('[Product Middleware] Erreur:', error.message);
+    console.error('[Middleware]', error.message);
   }
   
   next();
 });
-
 module.exports = mongoose.model('Product', productSchema);
+
+
+
 
 
