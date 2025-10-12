@@ -1,0 +1,187 @@
+﻿// backend/src/services/scoringUnified.js
+const ADDITIVES_RED_LIST = ['E250','E251','E252','E621','E622','E623','E150c','E150d','E320','E321','E951','E104','E110','E122','E124','E129','E216','E217','E214','E215'];
+const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471','E472','E473','E476'];
+
+function calculateFoodScores(data) {
+  const nutriments = data.nutriments || {};
+  const missingData = [];
+  if (!data.novaGroup) missingData.push('nova');
+  if (!data.nutriScore) missingData.push('nutriScore');
+  if (!nutriments.sugars_100g && nutriments.sugars === undefined) missingData.push('sugars');
+  if (!nutriments['saturated-fat_100g'] && nutriments.saturated_fat === undefined) missingData.push('saturatedFat');
+  if (!nutriments.salt_100g && nutriments.salt === undefined) missingData.push('salt');
+  
+  const confidence = (8 - missingData.length) / 8;
+  
+  let novaScore = 50;
+  if (data.novaGroup) {
+    const novaMapping = { 1: 85, 2: 65, 3: 45, 4: 25 };
+    novaScore = novaMapping[data.novaGroup] || 50;
+  }
+  const novaContribution = novaScore * 0.15;
+  
+  let nutriScoreValue = 50;
+  if (data.nutriScore) {
+    const nutriMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
+    nutriScoreValue = nutriMapping[data.nutriScore] || 50;
+  }
+  const nutriContribution = nutriScoreValue * 0.20;
+  
+  const additivesAnalysis = analyzeAdditives(data.additives || []);
+  const additivesContribution = additivesAnalysis.score * 0.15;
+  
+  let sugarsScore = 50;
+  const sugars = nutriments.sugars_100g !== undefined ? nutriments.sugars_100g : (nutriments.sugars !== undefined ? nutriments.sugars : null);
+  if (sugars !== null) {
+    if (sugars < 5) sugarsScore = 85;
+    else if (sugars < 10) sugarsScore = 70;
+    else if (sugars < 15) sugarsScore = 50;
+    else if (sugars < 25) sugarsScore = 30;
+    else sugarsScore = 15;
+  }
+  const sugarsContribution = sugarsScore * 0.10;
+  
+  let fatScore = 50;
+  const saturatedFat = nutriments['saturated-fat_100g'] !== undefined ? nutriments['saturated-fat_100g'] : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null);
+  if (saturatedFat !== null) {
+    if (saturatedFat < 1.5) fatScore = 85;
+    else if (saturatedFat < 5) fatScore = 65;
+    else if (saturatedFat < 10) fatScore = 45;
+    else if (saturatedFat < 15) fatScore = 25;
+    else fatScore = 10;
+  }
+  const fatContribution = fatScore * 0.10;
+  
+  let saltScore = 50;
+  const salt = nutriments.salt_100g !== undefined ? nutriments.salt_100g : (nutriments.salt !== undefined ? nutriments.salt : null);
+  if (salt !== null) {
+    if (salt < 0.3) saltScore = 85;
+    else if (salt < 1) saltScore = 65;
+    else if (salt < 1.5) saltScore = 45;
+    else if (salt < 2.5) saltScore = 25;
+    else saltScore = 10;
+  }
+  const saltContribution = saltScore * 0.10;
+  
+  let ecoScore = 50;
+  if (data.ecoScore) {
+    const ecoMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
+    ecoScore = ecoMapping[data.ecoScore] || 50;
+  }
+  const ecoContribution = ecoScore * 0.15;
+  
+  let labelsBonus = 0;
+  const labels = data.labels || [];
+  const isBio = labels.some(l => (l || '').toLowerCase().includes('bio') || (l || '').toLowerCase().includes('organic'));
+  if (isBio) labelsBonus += 10;
+  labelsBonus = Math.min(15, labelsBonus);
+  const labelsContribution = labelsBonus * 0.05;
+  
+  const overallScore = Math.round(novaContribution + nutriContribution + additivesContribution + sugarsContribution + fatContribution + saltContribution + ecoContribution + labelsContribution);
+  
+  return {
+    overallScore: Math.max(0, Math.min(100, overallScore)),
+    healthScore: Math.round((novaContribution + nutriContribution + additivesContribution + sugarsContribution + fatContribution + saltContribution) / 0.8),
+    environmentScore: Math.round(ecoContribution / 0.15),
+    confidence,
+    missingData,
+    dataCompleteness: confidence >= 0.7 ? 'Excellente' : confidence >= 0.4 ? 'Partielle' : 'Insuffisante',
+    breakdown: {
+      nova: { 
+        score: novaScore, 
+        weight: 0.15,
+        group: data.novaGroup || null,
+        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non défini'
+      },
+      nutriScore: { 
+        score: nutriScoreValue, 
+        weight: 0.20,
+        grade: data.nutriScore ? data.nutriScore.toUpperCase() : null,
+        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non défini'
+      },
+      additives: { 
+        score: additivesAnalysis.score, 
+        weight: 0.15,
+        count: (data.additives || []).length,
+        dangerous: additivesAnalysis.dangerous,
+        label: additivesAnalysis.label
+      },
+      sugars: { 
+        score: sugarsScore, 
+        weight: 0.10,
+        value: sugars,
+        unit: 'g/100g',
+        label: sugars !== null ? sugars + 'g/100g' : 'Non spécifié'
+      },
+      saturatedFat: { 
+        score: fatScore, 
+        weight: 0.10,
+        value: saturatedFat,
+        unit: 'g/100g',
+        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spécifié'
+      },
+      salt: { 
+        score: saltScore, 
+        weight: 0.10,
+        value: salt,
+        unit: 'g/100g',
+        label: salt !== null ? salt + 'g/100g' : 'Non spécifié'
+      },
+      ecoScore: { 
+        score: ecoScore, 
+        weight: 0.15,
+        grade: data.ecoScore ? data.ecoScore.toUpperCase() : null,
+        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non défini'
+      },
+      labels: { 
+        score: labelsBonus, 
+        weight: 0.05,
+        list: labels,
+        isBio,
+        label: isBio ? 'Bio certifié' : 'Aucun label'
+      }
+    },
+    metadata: {
+      methodology: 'ECOLOJIA V3 - Scoring scientifique 8 composantes',
+      version: '3.0.0',
+      calculatedAt: new Date().toISOString()
+    }
+  };
+}
+
+function analyzeAdditives(additives) {
+  if (!additives || additives.length === 0) {
+    return { score: 85, label: 'Aucun additif', dangerous: [] };
+  }
+  
+  let redCount = 0;
+  let orangeCount = 0;
+  const dangerous = [];
+  
+  additives.forEach(additive => {
+    const code = String(additive).toUpperCase();
+    if (ADDITIVES_RED_LIST.some(red => code.includes(red))) {
+      redCount++;
+      dangerous.push({ code, riskLevel: 'HIGH' });
+    } else if (ADDITIVES_ORANGE_LIST.some(orange => code.includes(orange))) {
+      orangeCount++;
+    }
+  });
+  
+  if (redCount > 0) return { score: 10, label: additives.length + ' additifs dont ' + redCount + ' DANGEREUX', dangerous };
+  if (orangeCount >= 3) return { score: 35, label: additives.length + ' additifs', dangerous: [] };
+  if (orangeCount >= 1) return { score: 55, label: additives.length + ' additifs acceptables', dangerous: [] };
+  if (additives.length <= 3) return { score: 70, label: additives.length + ' additifs', dangerous: [] };
+  
+  return { score: 50, label: additives.length + ' additifs', dangerous: [] };
+}
+
+function calculateCosmeticScores(data) {
+  return { overallScore: 50, confidence: 0.3, breakdown: {}, metadata: { version: '3.0.0' } };
+}
+
+function calculateDetergentScores(data) {
+  return { overallScore: 50, confidence: 0.3, breakdown: {}, metadata: { version: '3.0.0' } };
+}
+
+module.exports = { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores };

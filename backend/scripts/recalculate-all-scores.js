@@ -1,74 +1,93 @@
-﻿require('dotenv').config();
+﻿// backend/scripts/recalculate-all-scores.js
+require('dotenv').config();
 const mongoose = require('mongoose');
-const Product = require('./src/models/product.model');
+const Product = require('../src/models/Product');
+const scoringUnified = require('../src/services/scoringUnified');
+
+console.log('🔄 RECALCUL MASSIF DES SCORES - ECOLOJIA V3.0.0');
+console.log('='.repeat(60));
 
 async function recalculateAllScores() {
-  await mongoose.connect(process.env.MONGODB_URI);
-  console.log('✅ MongoDB connecté');
-
-  const products = await Product.find();
-  console.log(`📊 ${products.length} produits à recalculer`);
-
-  let updated = 0;
-
-  for (const product of products) {
-    try {
-      // Calculer NOVA (0-100, inversé : groupe 1=100, groupe 4=0)
-      const novaGroup = product.foodData?.novaGroup || 3;
-      const novaScore = Math.max(0, 100 - (novaGroup - 1) * 33);
-
-      // Calculer Additifs (0-100, moins = mieux)
-      const additivesCount = product.foodData?.additives?.length || 0;
-      const additivesScore = Math.max(0, 100 - additivesCount * 10);
-
-      // Calculer Éthique (labels bio, pas huile palme)
-      const isBio = product.labels_tags?.some(l => l.includes('bio')) || false;
-      const hasPalmOil = product.ingredients?.some(i => 
-        i.name?.toLowerCase().includes('palm') || 
-        i.name?.toLowerCase().includes('palme')
-      ) || false;
-      const ethicsScore = (isBio ? 50 : 0) + (hasPalmOil ? 0 : 50);
-
-      // HealthScore = moyenne des 3
-      const healthScore = Math.round((novaScore + additivesScore + ethicsScore) / 3);
-
-      // EnvironmentScore (Eco-Score)
-      const ecoScoreGrade = product.foodData?.ecoScore || 'c';
-      const ecoScoreMap = { a: 90, b: 75, c: 50, d: 25, e: 10 };
-      const environmentScore = ecoScoreMap[ecoScoreGrade.toLowerCase()] || 50;
-
-      // OverallScore = Santé × 0.7 + Env × 0.3
-      const overallScore = Math.round(healthScore * 0.7 + environmentScore * 0.3);
-
-      // Mise à jour
-      product.scores = {
-        healthScore,
-        environmentScore,
-        overallScore,
-        breakdown: {
-          nova: { score: novaScore, impact: novaScore - 50 },
-          additives: { score: additivesScore, impact: additivesScore - 50 },
-          ethics: { score: ethicsScore, impact: ethicsScore - 50 },
-          ecoscore: { score: environmentScore, impact: environmentScore - 50 }
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ MongoDB connecté\n');
+    
+    let updated = 0;
+    let errors = 0;
+    
+    const products = await Product.find({ category: 'food' }).lean();
+    console.log('📦 ' + products.length + ' produits à traiter\n');
+    
+    const batchSize = 50;
+    const totalBatches = Math.ceil(products.length / batchSize);
+    
+    for (let i = 0; i < totalBatches; i++) {
+      const start = i * batchSize;
+      const end = Math.min(start + batchSize, products.length);
+      const batch = products.slice(start, end);
+      
+      console.log('📊 Batch ' + (i + 1) + '/' + totalBatches + ' (' + (start + 1) + '-' + end + ')');
+      
+      for (const product of batch) {
+        try {
+          const scores = scoringUnified.calculateFoodScores({
+            novaGroup: product.nova_group || product.foodData?.novaGroup,
+            nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
+            ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
+            additives: product.additives_tags || product.foodData?.additives || [],
+            labels: product.labels_tags || product.foodData?.labels || [],
+            packaging: product.packaging || product.packaging_tags?.[0],
+            origin: product.origins || product.origins_tags?.[0],
+            ingredients: product.ingredients_text || product.foodData?.ingredients,
+            nutriments: product.nutriments || product.foodData?.nutritionalInfo || {}
+          });
+          
+          await Product.updateOne(
+            { _id: product._id },
+            {
+              '': {
+                'scores.overallScore': scores.overallScore,
+                'scores.healthScore': scores.healthScore,
+                'scores.environmentScore': scores.environmentScore,
+                'scores.breakdown': scores.breakdown,
+                'scores.confidence': scores.confidence,
+                'scores.dataCompleteness': scores.dataCompleteness,
+                'scores.calculatedAt': new Date(),
+                'scores.scoringVersion': '3.0.0'
+              }
+            }
+          );
+          
+          updated++;
+          
+          if (updated % 100 === 0) {
+            console.log('   ✅ ' + updated + '/' + products.length + ' produits mis à jour...');
+          }
+          
+        } catch (err) {
+          errors++;
+          console.error('   ❌ Erreur ' + product.name + ': ' + err.message);
         }
-      };
-
-      await product.save();
-      updated++;
-
-      if (updated % 100 === 0) {
-        console.log(`✅ ${updated}/${products.length} produits mis à jour`);
       }
-    } catch (err) {
-      console.error(`❌ Erreur produit ${product._id}:`, err.message);
+      
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
+    
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 RAPPORT FINAL');
+    console.log('='.repeat(60));
+    console.log('✅ Produits mis à jour : ' + updated);
+    console.log('❌ Erreurs : ' + errors);
+    console.log('📈 Taux de succès : ' + ((updated / products.length) * 100).toFixed(1) + '%');
+    console.log('\n✅ Recalcul terminé avec succès!');
+    
+    await mongoose.disconnect();
+    process.exit(0);
+    
+  } catch (error) {
+    console.error('❌ Erreur fatale:', error);
+    process.exit(1);
   }
-
-  console.log(`\n✅ Recalcul terminé: ${updated} produits mis à jour`);
-  process.exit(0);
 }
 
-recalculateAllScores().catch(err => {
-  console.error('❌ Erreur:', err);
-  process.exit(1);
-});
+recalculateAllScores();

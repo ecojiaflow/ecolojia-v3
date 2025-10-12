@@ -171,5 +171,59 @@ productSchema.statics.searchProducts = async function(query, category = null) {
     .sort({ score: { $meta: 'textScore' } });
 };
 
+
+// ============================================================================
+// MIDDLEWARE AUTO-CALCUL SCORES (SCORING UNIFIED V3.0.0)
+// ============================================================================
+const scoringUnified = require('../services/scoringUnified');
+
+productSchema.pre('save', async function(next) {
+  if (this.scores?.scoringVersion === '3.0.0' && this.scores?.overallScore) {
+    return next();
+  }
+  
+  try {
+    let calculatedScores;
+    
+    if (this.category === 'food' || !this.category) {
+      const scoringData = {
+        novaGroup: this.foodData?.novaGroup || this.nova_group,
+        nutriScore: this.foodData?.nutriScore || this.nutriscore_grade,
+        ecoScore: this.foodData?.ecoScore || this.ecoscore_grade,
+        additives: this.foodData?.additives?.map(a => a.code || a.tag || a) || this.additives_tags || [],
+        labels: this.foodData?.labels || this.labels_tags || [],
+        packaging: this.packaging || this.packaging_tags?.[0],
+        origin: this.origins || this.origins_tags?.[0],
+        ingredients: this.foodData?.ingredients || this.ingredients_text,
+        nutriments: this.foodData?.nutritionalInfo || this.nutriments || {}
+      };
+      
+      calculatedScores = scoringUnified.calculateFoodScores(scoringData);
+    } else if (this.category === 'cosmetics') {
+      calculatedScores = scoringUnified.calculateCosmeticScores(this);
+    } else if (this.category === 'detergents') {
+      calculatedScores = scoringUnified.calculateDetergentScores(this);
+    }
+    
+    if (calculatedScores) {
+      this.scores = {
+        overallScore: calculatedScores.overallScore,
+        healthScore: calculatedScores.healthScore || calculatedScores.safetyScore,
+        environmentScore: calculatedScores.environmentScore,
+        breakdown: calculatedScores.breakdown,
+        confidence: calculatedScores.confidence,
+        dataCompleteness: calculatedScores.dataCompleteness,
+        calculatedAt: new Date(),
+        scoringVersion: '3.0.0'
+      };
+    }
+  } catch (error) {
+    console.error('[Product Middleware] Erreur:', error.message);
+  }
+  
+  next();
+});
+
 module.exports = mongoose.model('Product', productSchema);
+
 

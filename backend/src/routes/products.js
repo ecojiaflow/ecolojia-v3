@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 // SCORING ENGINE SCIENTIFIQUE
 const imageEnrichment = require('../services/imageEnrichment.service');
 
-const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../services/scoringEngine');
+const scoringUnified = require('../services/scoringUnified');
 
 /* Middleware debug */
 router.use((req, _res, next) => {
