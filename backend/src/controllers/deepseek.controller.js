@@ -1,8 +1,12 @@
 ﻿const axios = require('axios');
-const { checkUrgentPatterns, requiresMedicalDisclaimer } = require('../middleware/chatSafety');
 const { 
-  FOOD_SYSTEM_PROMPT, 
-  COSMETIC_SYSTEM_PROMPT, 
+  checkUrgentPatterns, 
+  checkPersonalMedicalQuestion,
+  requiresMedicalDisclaimer 
+} = require('../middleware/chatSafety');
+const {
+  FOOD_SYSTEM_PROMPT,
+  COSMETIC_SYSTEM_PROMPT,
   DETERGENT_SYSTEM_PROMPT,
   MEDICAL_DISCLAIMER
 } = require('../config/prompts.config');
@@ -13,12 +17,14 @@ const DEEPSEEK_BASE = 'https://api.deepseek.com';
 async function deepseekChat(req, res) {
   try {
     const { messages = [], productContext, userProfile } = req.body || {};
-    
+
     // Récupérer dernier message utilisateur
     const lastUserMessage = messages.filter(m => m.role === 'user').pop();
-    
+
     if (lastUserMessage) {
-      // 1. VÉRIFICATION URGENCE PRIORITAIRE
+      // =====================================================================
+      // 1. VÉRIFICATION URGENCE VITALE (priorité absolue)
+      // =====================================================================
       const urgentCheck = checkUrgentPatterns(lastUserMessage.content);
       if (urgentCheck.isUrgent) {
         return res.json({
@@ -27,9 +33,23 @@ async function deepseekChat(req, res) {
           urgentType: urgentCheck.type
         });
       }
+
+      // =====================================================================
+      // 2. VÉRIFICATION QUESTION MÉDICALE PERSONNELLE (nouvelle protection)
+      // =====================================================================
+      const medicalCheck = checkPersonalMedicalQuestion(lastUserMessage.content);
+      if (medicalCheck.isPersonalMedical) {
+        return res.json({
+          reply: medicalCheck.response,
+          isPersonalMedical: true,
+          medicalType: medicalCheck.type
+        });
+      }
     }
 
-    // 2. Sélectionner prompt scientifique
+    // =====================================================================
+    // 3. Si question OK → Sélectionner prompt scientifique
+    // =====================================================================
     let systemPrompt;
     if (productContext) {
       switch(productContext.category) {
@@ -67,8 +87,10 @@ async function deepseekChat(req, res) {
     });
 
     let reply = r.data?.choices?.[0]?.message?.content ?? 'Désolé, aucune réponse.';
-    
-    // 3. AJOUTER DISCLAIMER si question médicale
+
+    // =====================================================================
+    // 4. AJOUTER DISCLAIMER si détection mots-clés médicaux généraux
+    // =====================================================================
     if (lastUserMessage && requiresMedicalDisclaimer(lastUserMessage.content)) {
       reply += `\n\n${MEDICAL_DISCLAIMER}`;
     }
