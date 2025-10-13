@@ -1,13 +1,25 @@
-Ôªøconst express = require('express');
+const express = require('express');
 const router = express.Router();
 const visionService = require('../services/vision.service');
 const { parseOCRToProduct } = require('../services/ocr-parser.service');
-const { calculateProductScores } = require('../services/scoring.service');
+const { calculateFoodScores } = require('../services/scoringUnified');
 const Product = require('../models/product.model');
+
+// Helper pour convertir Product -> format scoringUnified
+function prepareScoringData(product) {
+  return {
+    novaGroup: product.nova_group || product.foodData?.novaGroup,
+    nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
+    ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
+    additives: product.additives_tags || product.foodData?.additives || [],
+    labels: product.labels_tags || product.foodData?.labels || [],
+    nutriments: product.nutriments || product.foodData?.nutritionalInfo || product.foodData?.nutrition?.per100g || {}
+  };
+}
 
 /**
  * POST /api/ocr/analyze
- * Analyse 3 photos ‚Üí Parsing IA ‚Üí Score ‚Üí Save DB
+ * Analyse 3 photos ? Parsing IA ? Score ? Save DB
  */
 router.post('/analyze', async (req, res) => {
   try {
@@ -15,11 +27,11 @@ router.post('/analyze', async (req, res) => {
 
     if (!frontImage || !ingredientsImage) {
       return res.status(400).json({
-        error: 'Photos face avant et ingr√©dients requises'
+        error: 'Photos face avant et ingrÈdients requises'
       });
     }
 
-    console.log('üîç Analyse OCR d√©marr√©e...');
+    console.log('?? Analyse OCR dÈmarrÈe...');
 
     // 1. Google Vision OCR
     const [frontResult, ingredientsResult, barcodeResult] = await Promise.all([
@@ -28,7 +40,7 @@ router.post('/analyze', async (req, res) => {
       barcodeImage ? visionService.extractText(barcodeImage) : Promise.resolve({ text: '' })
     ]);
 
-    console.log('‚úÖ OCR termin√©');
+    console.log('? OCR terminÈ');
 
     // 2. Parsing DeepSeek
     const productData = await parseOCRToProduct({
@@ -37,16 +49,16 @@ router.post('/analyze', async (req, res) => {
       barcodeText: barcodeResult.text
     });
 
-    console.log('‚úÖ Parsing termin√©:', productData.name);
+    console.log('? Parsing terminÈ:', productData.name);
 
-    // 3. V√©rifier si produit existe d√©j√† (par barcode)
+    // 3. VÈrifier si produit existe dÈj‡ (par barcode)
     let product;
     if (productData.barcode) {
       product = await Product.findOne({ barcode: productData.barcode });
     }
 
     if (!product) {
-      // 4. Cr√©er nouveau produit
+      // 4. CrÈer nouveau produit
       product = new Product({
         name: productData.name,
         brand: productData.brand,
@@ -54,7 +66,7 @@ router.post('/analyze', async (req, res) => {
         category: productData.category,
         foodData: {
           ingredients: productData.ingredients.join(', '),
-          novaGroup: null, // Sera calcul√© par IA si possible
+          novaGroup: null, // Sera calculÈ par IA si possible
           additives: productData.ingredients.filter(i => i.match(/^E\d+/i))
         },
         labels_tags: productData.labels,
@@ -67,17 +79,18 @@ router.post('/analyze', async (req, res) => {
       });
 
       // 5. Calculer scores
-      product.scores = calculateProductScores(product);
+      const scoringData = prepareScoringData(product);
+      product.scores = calculateFoodScores(scoringData);
 
       // 6. Sauvegarder
       await product.save();
 
-      console.log('‚úÖ Nouveau produit cr√©√©:', product._id);
+      console.log('? Nouveau produit crÈÈ:', product._id);
     } else {
-      console.log('‚úÖ Produit existant trouv√©:', product._id);
+      console.log('? Produit existant trouvÈ:', product._id);
     }
 
-    // 7. Retourner r√©sultat
+    // 7. Retourner rÈsultat
     res.json({
       success: true,
       product: {
@@ -93,7 +106,7 @@ router.post('/analyze', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('‚ùå Erreur analyse OCR:', error);
+    console.error('? Erreur analyse OCR:', error);
     res.status(500).json({
       error: 'Erreur lors de l\'analyse OCR',
       details: error.message

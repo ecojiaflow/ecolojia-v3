@@ -1,8 +1,20 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
-const scoringService = require('../services/scoring.service');
+const scoringUnified = require('../services/scoringUnified');
 const Product = require('../models/Product');
 const asyncHandler = require('../utils/asyncHandler');
+
+// Helper pour convertir Product -> format scoringUnified
+function prepareScoringData(product) {
+  return {
+    novaGroup: product.nova_group || product.foodData?.novaGroup,
+    nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
+    ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
+    additives: product.additives_tags || product.foodData?.additives || [],
+    labels: product.labels_tags || product.foodData?.labels || [],
+    nutriments: product.nutriments || product.foodData?.nutritionalInfo || product.foodData?.nutrition?.per100g || {}
+  };
+}
 
 // GET /api/scoring/:productId - Obtenir les scores d'un produit
 router.get('/:productId', asyncHandler(async (req, res) => {
@@ -16,7 +28,8 @@ router.get('/:productId', asyncHandler(async (req, res) => {
     });
   }
 
-  const scores = await scoringService.calculateScores(product);
+  const scoringData = prepareScoringData(product);
+  const scores = scoringUnified.calculateFoodScores(scoringData);
   
   res.json({
     success: true,
@@ -38,7 +51,11 @@ router.post('/:productId/calculate', asyncHandler(async (req, res) => {
     });
   }
 
-  const enrichedProduct = await scoringService.enrichProductWithScores(product);
+  const scoringData = prepareScoringData(product);
+  const scores = scoringUnified.calculateFoodScores(scoringData);
+  
+  product.scores = scores;
+  const enrichedProduct = await product.save();
   
   res.json({
     success: true,
@@ -49,7 +66,18 @@ router.post('/:productId/calculate', asyncHandler(async (req, res) => {
 
 // POST /api/scoring/calculate-all - Calculer tous les scores (admin)
 router.post('/calculate-all', asyncHandler(async (req, res) => {
-  const result = await scoringService.calculateAllProductScores();
+  const products = await Product.find({ category: 'food' });
+  let updated = 0;
+  
+  for (const product of products) {
+    const scoringData = prepareScoringData(product);
+    const scores = scoringUnified.calculateFoodScores(scoringData);
+    product.scores = scores;
+    await product.save();
+    updated++;
+  }
+  
+  const result = { updated };
   
   res.json({
     success: true,
@@ -70,7 +98,11 @@ router.get('/barcode/:barcode', asyncHandler(async (req, res) => {
     });
   }
 
-  const scores = product.scores || await scoringService.calculateScores(product);
+  let scores = product.scores;
+  if (!scores || !scores.overallScore) {
+    const scoringData = prepareScoringData(product);
+    scores = scoringUnified.calculateFoodScores(scoringData);
+  }
   
   res.json({
     success: true,
