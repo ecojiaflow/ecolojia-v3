@@ -1,16 +1,56 @@
-ï»¿// backend/src/services/ProductOrchestrator.js
+// backend/src/services/ProductOrchestrator.js
 /**
- * Orchestrateur central pour rÃ©cupÃ©ration/crÃ©ation produits
- * GÃ¨re enrichissement automatique et cache IA
+ * Orchestrateur central pour récupération/création produits
+ * Gère enrichissement automatique et cache IA
  */
 
 const Product = require('../models/Product');
 const offClient = require('./offClient');
 const scoringUnified = require('./scoringUnified');
 const aiEnrichment = require('./aiEnrichment.service');
+/**
+ * Détecte si un code-barre correspond à une catégorie valide
+ * @param {string} barcode - Code-barre du produit
+ * @returns {Object} { isValid, reason, detectedType }
+ */
+function detectProductCategory(barcode) {
+  if (!barcode || typeof barcode !== 'string') {
+    return { isValid: false, reason: 'Barcode invalide', detectedType: 'INVALID' };
+  }
+
+  // Livres (ISBN-13)
+  if (barcode.startsWith('978') || barcode.startsWith('979')) {
+    return { 
+      isValid: false, 
+      reason: 'Code-barre de livre (ISBN) détecté', 
+      detectedType: 'BOOK' 
+    };
+  }
+
+  // Médicaments France (codes CIP)
+  if (barcode.startsWith('3400') || barcode.startsWith('3401')) {
+    return { 
+      isValid: false, 
+      reason: 'Code-barre de médicament détecté', 
+      detectedType: 'MEDICINE' 
+    };
+  }
+
+  // Médicaments internationaux (codes spécifiques)
+  if (barcode.length === 13 && barcode.startsWith('34')) {
+    return { 
+      isValid: false, 
+      reason: 'Code-barre pharmaceutique détecté', 
+      detectedType: 'MEDICINE' 
+    };
+  }
+
+  // Codes-barres valides pour nos catégories
+  return { isValid: true, detectedType: 'VALID' };
+}
 
 /**
- * Point d'entrÃ©e unique pour obtenir un produit (avec enrichissement auto)
+ * Point d'entrée unique pour obtenir un produit (avec enrichissement auto)
  * @param {Object} input - { barcode, source }
  * @returns {Promise<Object>} Produit enrichi
  */
@@ -19,6 +59,19 @@ async function getOrCreateProduct(input) {
   
   if (!barcode) {
     throw new Error('Barcode requis');
+  }
+
+  // 0. Vérifier catégorie valide (filtrage médicaments/livres)
+  const categoryCheck = detectProductCategory(barcode);
+  if (!categoryCheck.isValid) {
+    console.log('[Orchestrator] Invalid category detected:', categoryCheck);
+    return {
+      product: null,
+      source: 'INVALID_CATEGORY',
+      error: categoryCheck.reason,
+      detectedType: categoryCheck.detectedType,
+      suggestion: 'Ce type de produit n\'est pas analysable par ECOLOJIA'
+    };
   }
 
   // 1. Chercher en base
@@ -33,7 +86,7 @@ async function getOrCreateProduct(input) {
     };
   }
 
-  // 2. RÃ©cupÃ©rer depuis OpenFoodFacts si pas en base
+  // 2. Récupérer depuis OpenFoodFacts si pas en base
   if (!product) {
     console.log('[Orchestrator] Fetching from OFF:', barcode);
     const offData = await offClient.fetchFromOpenFoodFacts(barcode);
@@ -42,11 +95,11 @@ async function getOrCreateProduct(input) {
       return {
         product: null,
         source: 'NOT_FOUND',
-        error: 'Produit non trouvÃ© sur OpenFoodFacts'
+        error: 'Produit non trouvé sur OpenFoodFacts'
       };
     }
     
-    // Mapper donnÃ©es OFF â†’ format ECOLOJIA
+    // Mapper données OFF ? format ECOLOJIA
     product = mapOFFToProduct(offData);
   }
 
@@ -54,7 +107,7 @@ async function getOrCreateProduct(input) {
   const scoringData = prepareScoringData(product);
   const scores = scoringUnified.calculateFoodScores(scoringData);
 
-  // 4. Enrichir avec IA si donnÃ©es manquantes
+  // 4. Enrichir avec IA si données manquantes
   const enrichedScores = await aiEnrichment.enrichProductWithAI(product, scores);
 
   // 5. Sauvegarder en base
@@ -92,7 +145,7 @@ function mapOFFToProduct(offData) {
     category: 'food',
     image_url: offData.image_url,
     
-    // DonnÃ©es food
+    // Données food
     nova_group: offData.nova_group,
     nutriscore_grade: offData.nutriscore_grade,
     ecoscore_grade: offData.ecoscore_grade,
