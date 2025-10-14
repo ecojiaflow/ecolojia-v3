@@ -1,15 +1,15 @@
-ï»¿// backend/src/services/aiEnrichment.service.js
+// backend/src/services/aiEnrichment.service.js
 /**
- * Service d'enrichissement IA pour produits avec donnÃ©es manquantes
+ * Service d'enrichissement IA pour produits avec données manquantes
  * Utilise DeepSeek pour estimer valeurs nutritionnelles
  */
 
 const deepSeekService = require('./ai/deepSeekService');
 
 /**
- * Estime les donnÃ©es manquantes d'un produit via IA
- * @param {Object} product - Produit avec donnÃ©es potentiellement incomplÃ¨tes
- * @param {Object} scores - Scores calculÃ©s avec donnÃ©es manquantes dÃ©tectÃ©es
+ * Estime les données manquantes d'un produit via IA
+ * @param {Object} product - Produit avec données potentiellement incomplètes
+ * @param {Object} scores - Scores calculés avec données manquantes détectées
  * @returns {Promise<Object>} Scores enrichis avec estimations IA
  */
 async function enrichProductWithAI(product, scores) {
@@ -21,7 +21,7 @@ async function enrichProductWithAI(product, scores) {
     };
   }
 
-  // VÃ©rifier si estimations rÃ©centes existent dÃ©jÃ 
+  // Vérifier si estimations récentes existent déjà
   const existingEstimations = product.scores?.aiEstimations;
   if (existingEstimations && isEstimationRecent(existingEstimations)) {
     console.log('[AI] Using cached estimations for', product.barcode);
@@ -60,10 +60,10 @@ async function enrichProductWithAI(product, scores) {
 }
 
 /**
- * Estime donnÃ©es manquantes via DeepSeek
+ * Estime données manquantes via DeepSeek
  * @param {Object} product - Produit
  * @param {Array} missingFields - Liste champs manquants
- * @returns {Promise<Object>} Estimations structurÃ©es
+ * @returns {Promise<Object>} Estimations structurées
  */
 async function estimateMissingData(product, missingFields = []) {
   if (missingFields.length === 0) {
@@ -72,34 +72,24 @@ async function estimateMissingData(product, missingFields = []) {
 
   const prompt = buildEstimationPrompt(product, missingFields);
   
-  const response = await deepSeekService.chat({
-    messages: [
-      { role: 'system', content: getSystemPrompt() },
-      { role: 'user', content: prompt }
-    ],
-    temperature: 0.3,
-    max_tokens: 800
-  });
-
-  return parseAIResponse(response);
+  const response = await deepSeekService.analyze(prompt, getSystemPrompt());
+  console.log("[AI] Raw response:", response.substring(0, 200) + "...");
+  
+  const parsed = parseAIResponse(response);
+  console.log("[AI] Parsed estimations:", parsed ? Object.keys(parsed) : "NULL");
+  
+  return parsed;
 }
 
 /**
- * Analyse qualitative pour produits trÃ¨s incomplets
+ * Analyse qualitative pour produits très incomplets
  * @param {Object} product - Produit
  * @returns {Promise<Object>} Analyse qualitative
  */
 async function qualitativeAnalysis(product) {
   const prompt = buildQualitativePrompt(product);
   
-  const response = await deepSeekService.chat({
-    messages: [
-      { role: 'system', content: getSystemPrompt() },
-      { role: 'user', content: prompt }
-    ],
-    temperature: 0.5,
-    max_tokens: 1000
-  });
+  const response = await deepSeekService.analyze(prompt, getSystemPrompt());
 
   return {
     qualitativeAnalysis: {
@@ -129,7 +119,7 @@ function isEstimationRecent(estimations) {
 function buildEstimationPrompt(product, missingFields) {
   const name = product.name || product.product_name || 'Produit inconnu';
   const brand = product.brand || product.brands || 'Marque inconnue';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spÃ©cifiÃ©';
+  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spécifié';
   
   return `
 Analyse ce produit alimentaire et estime les valeurs nutritionnelles manquantes.
@@ -137,24 +127,24 @@ Analyse ce produit alimentaire et estime les valeurs nutritionnelles manquantes.
 PRODUIT :
 - Nom : ${name}
 - Marque : ${brand}
-- CatÃ©gorie : ${product.category || 'food'}
-- IngrÃ©dients : ${ingredients}
+- Catégorie : ${product.category || 'food'}
+- Ingrédients : ${ingredients}
 
-DONNÃ‰ES MANQUANTES Ã€ ESTIMER : ${missingFields.join(', ')}
+DONNÉES MANQUANTES À ESTIMER : ${missingFields.join(', ')}
 
-TÃ‚CHE :
-Pour chaque donnÃ©e manquante, fournis :
-1. Valeur estimÃ©e (g/100g)
+TÂCHE :
+Pour chaque donnée manquante, fournis :
+1. Valeur estimée (g/100g)
 2. Fourchette min-max
 3. Niveau de confiance (0-1)
-4. Raisonnement (basÃ© sur ingrÃ©dients)
+4. Raisonnement (basé sur ingrédients)
 
 IMPORTANT :
-- Base-toi sur l'ORDRE des ingrÃ©dients (les premiers = plus abondants)
+- Base-toi sur l'ORDRE des ingrédients (les premiers = plus abondants)
 - Compare avec des produits similaires
 - Sois conservateur dans tes estimations
 
-RÃ‰PONDS AU FORMAT JSON STRICT :
+RÉPONDS AU FORMAT JSON STRICT :
 {
   "sugars": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
   "saturatedFat": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
@@ -165,32 +155,32 @@ RÃ‰PONDS AU FORMAT JSON STRICT :
 
 function buildQualitativePrompt(product) {
   const name = product.name || product.product_name || 'Produit inconnu';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spÃ©cifiÃ©';
+  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spécifié';
   const additives = product.additives_tags || product.foodData?.additives || [];
   
   return `
-Analyse qualitative de ce produit alimentaire (donnÃ©es nutritionnelles manquantes).
+Analyse qualitative de ce produit alimentaire (données nutritionnelles manquantes).
 
 PRODUIT : ${name}
-INGRÃ‰DIENTS : ${ingredients}
+INGRÉDIENTS : ${ingredients}
 ADDITIFS : ${additives.join(', ')}
 
-TÃ‚CHE :
+TÂCHE :
 1. Identifier le niveau de transformation (NOVA 1-4)
-2. DÃ©tecter ingrÃ©dients prÃ©occupants
+2. Détecter ingrédients préoccupants
 3. Donner une recommandation globale
 
-Sois factuel, bienveillant, et rappelle que tu n'es pas mÃ©decin.
-Limite Ã  200 mots.
+Sois factuel, bienveillant, et rappelle que tu n'es pas médecin.
+Limite à 200 mots.
 `;
 }
 
 function getSystemPrompt() {
   return `Tu es un expert nutritionniste IA pour ECOLOJIA.
 
-RÃˆGLES STRICTES :
-1. Tu n'es PAS mÃ©decin - toujours le rappeler
-2. Estimations basÃ©es sur science (CIQUAL, USDA, Ã©tudes)
+RÈGLES STRICTES :
+1. Tu n'es PAS médecin - toujours le rappeler
+2. Estimations basées sur science (CIQUAL, USDA, études)
 3. Sois conservateur dans tes estimations
 4. Explique ton raisonnement
 5. Indique toujours niveau de confiance
@@ -199,12 +189,12 @@ SOURCES :
 - Base CIQUAL (ANSES)
 - USDA FoodData Central
 - Comparaison produits similaires
-- Ordre ingrÃ©dients (rÃ©glementation UE)`;
+- Ordre ingrédients (réglementation UE)`;
 }
 
 function parseAIResponse(response) {
   try {
-    // Extraire JSON de la rÃ©ponse
+    // Extraire JSON de la réponse
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No JSON found in AI response');

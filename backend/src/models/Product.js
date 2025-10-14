@@ -1,4 +1,4 @@
-﻿// backend/src/models/Product.js
+// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -82,7 +82,7 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ? Modifié en objets
+    allergens: [allergenSchema],  // ? Modifi� en objets
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },
@@ -114,8 +114,12 @@ const productSchema = new mongoose.Schema({
     confidence: Number,
     dataCompleteness: String,
     calculatedAt: { type: Date, default: Date.now },
-    scoringVersion: { type: String, default: '3.0.0' },
-    breakdown: mongoose.Schema.Types.Mixed  // Flexible pour accepter TOUS les champs
+    scoringVersion: { type: String, default: '3.0.0' },    breakdown: mongoose.Schema.Types.Mixed,
+    missingData: [String],
+    aiEstimations: mongoose.Schema.Types.Mixed,
+    aiEnrichmentUsed: { type: Boolean, default: false },
+    aiEnrichmentSource: String,
+    aiEnrichmentError: String
   },
 
   analysisData: {

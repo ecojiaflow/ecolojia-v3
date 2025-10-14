@@ -1,4 +1,4 @@
-ï»¿// PATH: frontend/src/services/ocrService.ts
+// PATH: frontend/src/services/ocrService.ts
 import apiClient from './apiClient';
 
 export interface OcrResult {
@@ -13,7 +13,7 @@ const ocrService = {
     form.append('image', file);
     try {
       // Essayer d'abord l'endpoint vision
-      const res = await apiClient.post<OcrResult>('/vision/analyze-image', form, {
+      const res = await apiClient.post<OcrResult>('/vision/analyze', form, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       return res;
@@ -25,7 +25,7 @@ const ocrService = {
         });
         return res;
       } catch {
-        // Retourner un rÃ©sultat vide en cas d'Ã©chec
+        // Retourner un résultat vide en cas d'échec
         console.warn('OCR service unavailable');
         return { text: '' };
       }
@@ -41,7 +41,7 @@ const ocrService = {
       });
       return Array.isArray(data) ? data : [];
     } catch {
-      // fallback : sÃ©quentiel
+      // fallback : séquentiel
       const res: OcrResult[] = [];
       for (const f of files) res.push(await ocrService.extractFromImage(f));
       return res;
