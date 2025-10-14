@@ -20,19 +20,31 @@ import { ProductChatActions } from '../components/product/ProductChatActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import NovaBadge from '../components/NovaBadge';
 
+// CORRECTION 1 : getJSON retourne maintenant {ok, status, data} au lieu de throw
 const getJSON = async (endpoint: string): Promise<any> => {
   const url = endpoint.startsWith('http') 
     ? endpoint 
     : `${import.meta.env.VITE_API_URL || 'http://localhost:10000'}${endpoint}`;
+  
   const response = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'
   });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  
+  // Retourner status + data au lieu de throw error
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (e) {
+    // Si pas de JSON, retourner objet vide
   }
-  return response.json();
+  
+  return { 
+    ok: response.ok, 
+    status: response.status, 
+    data 
+  };
 };
 
 interface Product {
@@ -63,6 +75,7 @@ const ProductPage: React.FC = () => {
   const [alternatives, setAlternatives] = useState<Product[]>([]);
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
 
+  // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id || id === 'undefined') {
@@ -70,28 +83,62 @@ const ProductPage: React.FC = () => {
         setLoading(false);
         return;
       }
+      
       try {
         setLoading(true);
         setError(null);
-        const productData = await getJSON(`/api/products/${id}`);
-        setProduct(productData.product || productData);
+        
+        const result = await getJSON(`/api/products/${id}`);
+        
+        // Gestion erreur 400 (médicament, livre, etc.)
+        if (result.status === 400) {
+          setError(`?? ${result.data.error || 'Type de produit non supporté'}`);
+          toast.error(result.data.error || 'Type de produit non supporté', { duration: 5000 });
+          setLoading(false);
+          return;
+        }
+        
+        // Gestion erreur 404 (produit inconnu)
+        if (result.status === 404) {
+          setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
+          toast.error('Produit non trouvé - Utilisez l\'OCR', { duration: 5000 });
+          setLoading(false);
+          return;
+        }
+        
+        // Autre erreur serveur
+        if (!result.ok) {
+          setError(`Erreur serveur (${result.status}). Veuillez réessayer.`);
+          toast.error('Erreur serveur');
+          setLoading(false);
+          return;
+        }
+        
+        // Succès
+        setProduct(result.data.product || result.data);
         loadAlternatives(id);
+        
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
-        setError(err.message || 'Impossible de charger le produit');
-        toast.error('Erreur lors du chargement du produit');
+        setError('? Erreur réseau - Vérifiez votre connexion');
+        toast.error('Erreur réseau');
       } finally {
         setLoading(false);
       }
     };
+    
     fetchProduct();
   }, [id]);
 
   const loadAlternatives = async (productId: string) => {
     try {
       setLoadingAlternatives(true);
-      const altData = await getJSON(`/api/products/${productId}/alternatives`);
-      setAlternatives(altData.alternatives || altData || []);
+      const result = await getJSON(`/api/products/${productId}/alternatives`);
+      if (result.ok) {
+        setAlternatives(result.data.alternatives || result.data || []);
+      } else {
+        setAlternatives([]);
+      }
     } catch (err) {
       console.error('Alternatives non disponibles:', err);
       setAlternatives([]);
@@ -117,20 +164,28 @@ const ProductPage: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
-          <p className="text-gray-600 mb-6">{error || 'Ce produit n\'existe pas'}</p>
-          <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 inline-block">Rechercher un produit</Link>
+          <p className="text-gray-600 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
+          <div className="space-y-3">
+            <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 inline-block">
+              Rechercher un produit
+            </Link>
+            {error?.includes('OCR') && (
+              <Link to="/ocr" className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 inline-block ml-3">
+                Analyser avec OCR
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   // Scores réels depuis l'API
-  const healthScore = product.scores?.healthScore || 50;
-  const environmentScore = product.scores?.environmentScore || 50;
-  // PHASE 5 - Utilise score persisté backend (plus de recalcul)
+  const healthScore = product.scores?.healthScore || 0;
+  const environmentScore = product.scores?.environmentScore || 0;
   const overallScore = product.scores?.overallScore || 0;
 
-  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown réel depuis l'API
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -168,7 +223,7 @@ const ProductPage: React.FC = () => {
       impact: breakdown.ethics.score - 50, 
       reason: `Score éthique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les éléments null/undefined
+  ].filter(Boolean);
 
   if (isMobile) {
     return (
@@ -192,31 +247,26 @@ const ProductPage: React.FC = () => {
                 </div>
               </div>
               <ScoreProgressBar score={overallScore} />
-        {/* NOVA Badge V2 */}
-        {product.category === 'food' && product.foodData?.novaGroup && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
-            <NovaBadge 
-              novaGroup={product.foodData.novaGroup} 
-              typeTransformation={product.typeTransformation}
-              showDetails={true}
-            />
-          </div>
-        )}
-
-          {/* Allergènes Mobile */}
-          {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-            <div className="bg-white p-4">
-              <AllergensSection allergens={product.foodData.allergens} />
-            </div>
-          )}
-
-          {/* Labels Mobile */}
-          {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-            <div className="bg-white p-4">
-              <LabelsSection labels={product.foodData.labels} />
-            </div>
-          )}
+              {product.category === 'food' && product.foodData?.novaGroup && (
+                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
+                  <NovaBadge 
+                    novaGroup={product.foodData.novaGroup} 
+                    typeTransformation={product.typeTransformation}
+                    showDetails={true}
+                  />
+                </div>
+              )}
+              {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
+                <div className="bg-white p-4">
+                  <AllergensSection allergens={product.foodData.allergens} />
+                </div>
+              )}
+              {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
+                <div className="bg-white p-4">
+                  <LabelsSection labels={product.foodData.labels} />
+                </div>
+              )}
             </div>
           </div>
           <div className="bg-white p-4 space-y-2">
@@ -241,9 +291,6 @@ const ProductPage: React.FC = () => {
               <div className="p-4"><ProductNutrition nutrition={product.foodData.nutrition.per100g} /></div>
             </details>
           )}
-          
-
-          {/* Section Cosmétiques */}
           {product.category === 'cosmetics' && (
             <details className="bg-white" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
@@ -259,8 +306,6 @@ const ProductPage: React.FC = () => {
               </div>
             </details>
           )}
-
-          {/* Section Détergents */}
           {product.category === 'detergents' && (
             <details className="bg-white" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
@@ -279,7 +324,6 @@ const ProductPage: React.FC = () => {
               </div>
             </details>
           )}
-          {/* Alternatives section */}
           <div id="alternatives-section" className="bg-white p-4">
             <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
@@ -319,7 +363,6 @@ const ProductPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
         <ScoreProgressBar score={overallScore} />
-        {/* NOVA Badge V2 */}
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
@@ -330,26 +373,20 @@ const ProductPage: React.FC = () => {
             />
           </div>
         )}
-
-          {/* Allergènes Mobile */}
-          {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-            <div className="bg-white p-4">
-              <AllergensSection allergens={product.foodData.allergens} />
-            </div>
-          )}
-
-          {/* Labels Mobile */}
-          {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-            <div className="bg-white p-4">
-              <LabelsSection labels={product.foodData.labels} />
-            </div>
-          )}
+        {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
+          <div className="bg-white p-4">
+            <AllergensSection allergens={product.foodData.allergens} />
+          </div>
+        )}
+        {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
+          <div className="bg-white p-4">
+            <LabelsSection labels={product.foodData.labels} />
+          </div>
+        )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
-
-        {/* Section Cosmétiques Desktop */}
         {product.category === 'cosmetics' && (
           <CosmeticAnalysisDisplay 
             analysis={{ 
@@ -360,8 +397,6 @@ const ProductPage: React.FC = () => {
             productName={product.name} 
           />
         )}
-
-        {/* Section Détergents Desktop */}
         {product.category === 'detergents' && (
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
@@ -379,7 +414,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         <ProductChatActions product={product} />
-                <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
+        <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
     </div>
@@ -387,24 +422,3 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
