@@ -1,4 +1,4 @@
-Ôªøimport { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -44,7 +44,7 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Alternatives recommand√©es
+        Alternatives recommandÈes
       </h2>
       {loading ? (
         <div className="text-center py-8">
@@ -54,8 +54,8 @@ export const ProductAlternatives: React.FC<ProductAlternativesProps> = ({
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {alternatives.slice(0, 6).map((alt, index) => {
-            // Utiliser directement overallScore du backend (d√©j√† calcul√© scientifiquement)
-            const altOverallScore = alt.scores?.overallScore || alt.scores?.global || 50;
+            // Utiliser directement overallScore du backend (dÈj‡ calculÈ scientifiquement)
+            const altOverallScore = alt.scores?.overallScore || alt.scores?.global || 0;
             
             return (
               <Link

@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -56,18 +56,18 @@ const ResultsPage: React.FC = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    // R�cup�rer les donn�es depuis la navigation
+    // R?cup?rer les donn?es depuis la navigation
     if (location.state?.analysisData) {
       setAnalysisData(location.state.analysisData);
       setCapturedImages(location.state.capturedImages || {});
       setLoading(false);
     } else {
-      // Rediriger si pas de donn�es
+      // Rediriger si pas de donn?es
       navigate('/scan');
     }
   }, [location, navigate]);
 
-  // Sauvegarder le produit apr�s analyse
+  // Sauvegarder le produit apr?s analyse
   useEffect(() => {
     const saveProduct = async () => {
       if (location.state?.analysisData && location.state?.shouldSave && !isSaved) {
@@ -87,7 +87,7 @@ const ResultsPage: React.FC = () => {
           );
           
           setIsSaved(true);
-          toast.success('? Produit ajout� � la base de donn�es !');
+          toast.success('? Produit ajout? ? la base de donn?es !');
         } catch (error) {
           console.error('Erreur sauvegarde:', error);
           toast.error('Impossible de sauvegarder le produit');
@@ -116,8 +116,8 @@ const ResultsPage: React.FC = () => {
   // Gestion des scores avec fallback sur les champs directs
   const healthScore = analysisData.scores?.health || analysisData.healthScore || 50;
   const envScore = analysisData.scores?.environment || analysisData.environmentScore || 50;
-  // PHASE 5 - Utilise score persisté backend
-  const overallScore = analysis.scores?.overallScore || 50;
+  // PHASE 5 - Utilise score persist� backend
+  const overallScore = analysis.scores?.overallScore || 0;
 
   
 
@@ -128,7 +128,7 @@ const ResultsPage: React.FC = () => {
   };
 
   // Nom du produit avec fallback
-  const productName = analysisData.product?.name || analysisData.productName || location.state?.productName || 'Produit analys�';
+  const productName = analysisData.product?.name || analysisData.productName || location.state?.productName || 'Produit analys?';
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -149,7 +149,7 @@ const ResultsPage: React.FC = () => {
               )}
               {isSaved && (
                 <p className="text-sm text-green-700 mt-1">
-                  ? Enregistr� dans votre historique
+                  ? Enregistr? dans votre historique
                 </p>
               )}
             </div>
@@ -163,7 +163,7 @@ const ResultsPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Images captur�es */}
+      {/* Images captur?es */}
       {Object.keys(capturedImages).length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -173,7 +173,7 @@ const ResultsPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-sm p-4">
             <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
               <Camera className="w-5 h-5 mr-2" />
-              Photos analys�es
+              Photos analys?es
             </h3>
             <div className="grid grid-cols-3 gap-3">
               {capturedImages.barcode && (
@@ -204,11 +204,11 @@ const ResultsPage: React.FC = () => {
                 <div className="relative">
                   <img 
                     src={capturedImages.ingredients} 
-                    alt="Ingr�dients"
+                    alt="Ingr?dients"
                     className="w-full h-24 object-cover rounded-lg"
                   />
                   <span className="absolute bottom-1 left-1 text-xs bg-black bg-opacity-50 text-white px-2 py-1 rounded">
-                    Ingr�dients
+                    Ingr?dients
                   </span>
                 </div>
               )}
@@ -218,7 +218,7 @@ const ResultsPage: React.FC = () => {
       )}
 
       <div className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
-        {/* Scores d�taill�s */}
+        {/* Scores d?taill?s */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -229,7 +229,7 @@ const ResultsPage: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-800 flex items-center">
                 <Heart className="w-5 h-5 mr-2 text-red-500" />
-                Impact Sant�
+                Impact Sant?
               </h3>
               <span className={`text-2xl font-bold ${getScoreColor(healthScore)}`}>
                 {healthScore}/100
@@ -282,7 +282,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2" />
-              Informations d�tect�es
+              Informations d?tect?es
             </h3>
             
             <div className="grid md:grid-cols-2 gap-4">
@@ -315,7 +315,7 @@ const ResultsPage: React.FC = () => {
 
             {analysisData.insights.additives && analysisData.insights.additives.length > 0 && (
               <div className="mt-4">
-                <h4 className="font-medium text-gray-700 mb-2">Additifs d�tect�s</h4>
+                <h4 className="font-medium text-gray-700 mb-2">Additifs d?tect?s</h4>
                 <div className="flex flex-wrap gap-2">
                   {analysisData.insights.additives.map((additive, index) => (
                     <span key={index} className="px-2 py-1 bg-orange-100 text-orange-700 rounded text-sm">
@@ -328,7 +328,7 @@ const ResultsPage: React.FC = () => {
 
             {analysisData.insights.allergens && analysisData.insights.allergens.length > 0 && (
               <div className="mt-4">
-                <h4 className="font-medium text-gray-700 mb-2">Allerg�nes</h4>
+                <h4 className="font-medium text-gray-700 mb-2">Allerg?nes</h4>
                 <div className="flex flex-wrap gap-2">
                   {analysisData.insights.allergens.map((allergen, index) => (
                     <span key={index} className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
@@ -341,7 +341,7 @@ const ResultsPage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Analyse d�taill�e */}
+        {/* Analyse d?taill?e */}
         {analysisData.analysis && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -351,7 +351,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <Sparkles className="w-5 h-5 mr-2" />
-              Analyse IA d�taill�e
+              Analyse IA d?taill?e
             </h3>
 
             {/* Points positifs */}
@@ -372,7 +372,7 @@ const ResultsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Points n�gatifs */}
+            {/* Points n?gatifs */}
             {analysisData.analysis.negatives && analysisData.analysis.negatives.length > 0 && (
               <div className="mb-6">
                 <h4 className="font-medium text-red-700 mb-3 flex items-center">
@@ -382,7 +382,7 @@ const ResultsPage: React.FC = () => {
                 <ul className="space-y-2">
                   {analysisData.analysis.negatives.map((point, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-red-500 mr-2 mt-1">�</span>
+                      <span className="text-red-500 mr-2 mt-1">?</span>
                       <span className="text-gray-700">{point}</span>
                     </li>
                   ))}
@@ -419,7 +419,7 @@ const ResultsPage: React.FC = () => {
           >
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
               <TrendingUp className="w-5 h-5 mr-2" />
-              Alternatives recommand�es
+              Alternatives recommand?es
             </h3>
             
             <div className="space-y-3">

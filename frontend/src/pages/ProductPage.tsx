@@ -1,4 +1,4 @@
-ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -48,7 +48,7 @@ interface Product {
   foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
-// Helper pour compatibilitÃ© images
+// Helper pour compatibilité images
 const getProductImage = (product: any) => {
   return product.imageUrl || product.images?.front || null;
 };
@@ -124,13 +124,13 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores rÃ©els depuis l'API
+  // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
-  // PHASE 5 - Utilise score persistÃ© backend (plus de recalcul)
-  const overallScore = product.scores?.overallScore || 50;
+  // PHASE 5 - Utilise score persisté backend (plus de recalcul)
+  const overallScore = product.scores?.overallScore || 0;
 
-  // Breakdown rÃ©el depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -149,7 +149,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: 'Ã‰co-Score', 
+      factor: 'Éco-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -164,11 +164,11 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: 'Ã‰thique', 
+      factor: 'Éthique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score Ã©thique: ${breakdown.ethics.score}/100` 
+      reason: `Score éthique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les Ã©lÃ©ments null/undefined
+  ].filter(Boolean); // Retirer les éléments null/undefined
 
   if (isMobile) {
     return (
@@ -195,7 +195,7 @@ const ProductPage: React.FC = () => {
         {/* NOVA Badge V2 */}
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">ðŸ”¬ Classification NOVA</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
             <NovaBadge 
               novaGroup={product.foodData.novaGroup} 
               typeTransformation={product.typeTransformation}
@@ -204,7 +204,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
 
-          {/* AllergÃ¨nes Mobile */}
+          {/* Allergènes Mobile */}
           {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
             <div className="bg-white p-4">
               <AllergensSection allergens={product.foodData.allergens} />
@@ -232,7 +232,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
@@ -243,14 +243,14 @@ const ProductPage: React.FC = () => {
           )}
           
 
-          {/* Section CosmÃ©tiques */}
+          {/* Section Cosmétiques */}
           {product.category === 'cosmetics' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse CosmÃ©tique</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
               <div className="p-4">
                 <CosmeticAnalysisDisplay 
                   analysis={{ 
-                    healthScore: product.scores?.healthScore || 50,
+                    healthScore: product.scores?.healthScore || 0,
                     endocrineRisk: { level: 'NONE' },
                     category: 'cosmetics'
                   }} 
@@ -260,10 +260,10 @@ const ProductPage: React.FC = () => {
             </details>
           )}
 
-          {/* Section DÃ©tergents */}
+          {/* Section Détergents */}
           {product.category === 'detergents' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse DÃ©tergent</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
               <div className="p-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -273,7 +273,7 @@ const ProductPage: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Impact aquatique, biodÃ©gradabilitÃ© et composition Ã©valuÃ©s
+                    Impact aquatique, biodégradabilité et composition évalués
                   </p>
                 </div>
               </div>
@@ -281,7 +281,7 @@ const ProductPage: React.FC = () => {
           )}
           {/* Alternatives section */}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandÃ©es</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -293,7 +293,7 @@ const ProductPage: React.FC = () => {
                       <p className="font-medium text-sm">{alt.name}</p>
                       <p className="text-xs text-gray-500">{alt.brand}</p>
                     </div>
-                    <div className={`text-lg font-bold ${getScoreColor(alt.scores?.overallScore || 50)}`}>{alt.scores?.overallScore || 50}</div>
+                    <div className={`text-lg font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>{alt.scores?.overallScore || 0}</div>
                   </div>
                 ))}
               </div>
@@ -322,7 +322,7 @@ const ProductPage: React.FC = () => {
         {/* NOVA Badge V2 */}
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">ðŸ”¬ Classification NOVA</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
             <NovaBadge 
               novaGroup={product.foodData.novaGroup} 
               typeTransformation={product.typeTransformation}
@@ -331,7 +331,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
 
-          {/* AllergÃ¨nes Mobile */}
+          {/* Allergènes Mobile */}
           {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
             <div className="bg-white p-4">
               <AllergensSection allergens={product.foodData.allergens} />
@@ -349,11 +349,11 @@ const ProductPage: React.FC = () => {
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
 
-        {/* Section CosmÃ©tiques Desktop */}
+        {/* Section Cosmétiques Desktop */}
         {product.category === 'cosmetics' && (
           <CosmeticAnalysisDisplay 
             analysis={{ 
-              healthScore: product.scores?.healthScore || 50,
+              healthScore: product.scores?.healthScore || 0,
               endocrineRisk: { level: 'NONE' },
               category: 'cosmetics'
             }} 
@@ -361,10 +361,10 @@ const ProductPage: React.FC = () => {
           />
         )}
 
-        {/* Section DÃ©tergents Desktop */}
+        {/* Section Détergents Desktop */}
         {product.category === 'detergents' && (
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse DÃ©tergent</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
@@ -373,7 +373,7 @@ const ProductPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-gray-600">
-                Ã‰valuation basÃ©e sur l'impact aquatique, la biodÃ©gradabilitÃ© et la composition
+                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
               </p>
             </div>
           </div>

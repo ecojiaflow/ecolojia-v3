@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BarcodeScanner from '../components/scanner/BarcodeScanner';
 import { OCRGuide } from '../components/scanner/OCRGuide';
@@ -19,7 +19,7 @@ export const ScanPage: React.FC = () => {
   }, [scanAttempts]);
 
   const handleScanSuccess = async (barcode: string) => {
-    console.log('Code-barres scanné:', barcode);
+    console.log('Code-barres scann�:', barcode);
     
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products?barcode=${barcode}`);
@@ -32,13 +32,13 @@ export const ScanPage: React.FC = () => {
         }
       }
       
-      setScanError(`Produit ${barcode} non trouvé en base`);
+      setScanError(`Produit ${barcode} non trouv� en base`);
       setScanAttempts(prev => prev + 1);
       setShowOCRFallback(true);
       
     } catch (error) {
       console.error('Erreur recherche produit:', error);
-      setScanError('Erreur réseau');
+      setScanError('Erreur r�seau');
       setScanAttempts(prev => prev + 1);
     }
   };
@@ -62,7 +62,7 @@ export const ScanPage: React.FC = () => {
         barcodeImage: photos.barcode
       });
 
-      console.log('Analyse OCR réussie:', result);
+      console.log('Analyse OCR r�ussie:', result);
 
       if (result.success && result.product) {
         navigate(`/product/${result.product.barcode}`, {
@@ -73,7 +73,7 @@ export const ScanPage: React.FC = () => {
           }
         });
       } else {
-        throw new Error('Analyse incomplète');
+        throw new Error('Analyse incompl�te');
       }
 
     } catch (error: any) {
@@ -119,9 +119,9 @@ export const ScanPage: React.FC = () => {
 
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white z-10">
           <p className="text-center text-sm">
-            {scanAttempts === 0 ? '📱 Placez le code-barres dans le cadre' : 
-             scanAttempts < 3 ? '⚠️ Code-barres introuvable ? Utilisez l\'OCR !' :
-             '📷 Passez en mode photo (OCR) pour une analyse complète'}
+            {scanAttempts === 0 ? '?? Placez le code-barres dans le cadre' : 
+             scanAttempts < 3 ? '?? Code-barres introuvable ? Utilisez l\'OCR !' :
+             '?? Passez en mode photo (OCR) pour une analyse compl�te'}
           </p>
         </div>
       </div>
@@ -132,7 +132,7 @@ export const ScanPage: React.FC = () => {
             <div className="bg-white rounded-xl p-8 text-center">
               <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
               <p className="text-lg font-semibold">Analyse en cours...</p>
-              <p className="text-sm text-gray-600 mt-2">Intelligence artificielle au travail 🤖</p>
+              <p className="text-sm text-gray-600 mt-2">Intelligence artificielle au travail ??</p>
             </div>
           </div>
         ) : (
