@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Camera, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../services/apiClient';
 import { OCRUpload } from '../components/OCRUpload';
 import { OCRPanel } from '../components/OCRPanel';
 
@@ -32,33 +31,6 @@ export default function OCRPage() {
   const handleNewAnalysis = () => {
     setResult(null);
     setIsAnalyzing(false);
-  };
-
-  const handleCreateProduct = async () => {
-    if (!result) return;
-    
-    try {
-      // Créer produit depuis données OCR
-      const data = await apiClient.post('/products/analyze', {
-        category: 'food',
-        manualData: {
-          name: 'Produit analysé par OCR',
-          ingredients: result.ingredients?.join(', ') || result.rawText,
-          source: 'OCR'
-        }
-      });
-      
-      if (data.success && data.product) {
-        // Rediriger vers page produit
-        navigate(`/product/${data.product._id}`);
-      } else {
-        alert('Produit non trouvé. Essayez la recherche manuelle.');
-        navigate('/search');
-      }
-    } catch (error) {
-      console.error('Erreur création produit:', error);
-      navigate('/search');
-    }
   };
 
   return (
@@ -138,7 +110,7 @@ export default function OCRPage() {
               <h3 className="font-semibold text-gray-900 mb-4">Que faire ensuite ?</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <button
-                  onClick={handleCreateProduct}
+                  onClick={() => navigate('/search')}
                   className="p-4 text-left bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors"
                 >
                   <h4 className="font-medium text-blue-900 mb-1">
