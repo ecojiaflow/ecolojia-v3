@@ -105,22 +105,39 @@ async function getOrCreateProduct(input) {
 
   // 3. Calculer scores
   const scoringData = prepareScoringData(product);
+  console.log('?? [ProductOrchestrator] scoringData preparé:', JSON.stringify(scoringData, null, 2));
   const scores = scoringUnified.calculateFoodScores(scoringData);
+  console.log('?? [ProductOrchestrator] scores calculés:', JSON.stringify({ canScore: scores.dataQuality?.canScore, confidence: scores.dataQuality?.confidence }, null, 2));
 
-  // 4. Enrichir avec IA si données manquantes
-  const enrichedScores = await aiEnrichment.enrichProductWithAI(product, scores);
+  // 4. Enrichir avec IA UNIQUEMENT si données insuffisantes
+  let finalScores = scores;
+  let aiUsed = false;
+  
+  // Vérifier si le scoring a besoin d'enrichissement
+  if (scores.dataQuality && !scores.dataQuality.canScore) {
+    console.log('?? Données insuffisantes - Enrichissement IA nécessaire');
+    finalScores = await aiEnrichment.enrichProductWithAI(product, scores);
+    aiUsed = true;
+  } else if (scores.dataQuality && scores.dataQuality.confidence < 70) {
+    console.log('?? Confiance faible - Enrichissement IA optionnel');
+    finalScores = await aiEnrichment.enrichProductWithAI(product, scores);
+    aiUsed = true;
+  } else {
+    console.log('? Données suffisantes - Pas d\'enrichissement IA nécessaire');
+  }
 
   // 5. Sauvegarder en base
+  const productData = product.toObject ? product.toObject() : product;
   const savedProduct = await saveProduct({
-    ...product,
-    scores: enrichedScores
+    ...productData,
+    scores: finalScores
   });
 
   return {
     product: savedProduct,
     source: product._id ? 'DATABASE_UPDATED' : 'OFF_NEW',
     cached: false,
-    aiEnrichmentUsed: enrichedScores.aiEnrichmentUsed || false
+    aiEnrichmentUsed: aiUsed
   };
 }
 
@@ -165,22 +182,64 @@ function mapOFFToProduct(offData) {
 }
 
 function prepareScoringData(product) {
-  const nutriments = product.nutriments || {};
+  // Structure flexible qui supporte produits OFF bruts ET produits MongoDB
   
+  // 1. Identifier la source des données
+  const isMongoProduct = product.foodData !== undefined;
+  
+  // 2. Extraire les nutriments selon la source
+  let nutriments = {};
+  if (isMongoProduct) {
+    // Produit MongoDB : chercher dans foodData
+    const nutrition = product.foodData?.nutrition?.per100g || {};
+    const nutritionalInfo = product.foodData?.nutritionalInfo || {};
+    nutriments = {
+      sugars_100g: nutrition.sugars || nutritionalInfo.sugars,
+      sugars: nutrition.sugars || nutritionalInfo.sugars,
+      'saturated-fat_100g': nutrition.saturatedFat || nutritionalInfo.saturatedFat,
+      saturated_fat: nutrition.saturatedFat || nutritionalInfo.saturatedFat,
+      salt_100g: nutrition.salt || nutritionalInfo.salt,
+      salt: nutrition.salt || nutritionalInfo.salt
+    };
+  } else {
+    // Produit OFF brut : utiliser nutriments directement
+    const rawNutriments = product.nutriments || {};
+    nutriments = {
+      sugars_100g: rawNutriments.sugars_100g || rawNutriments.sugars,
+      sugars: rawNutriments.sugars_100g || rawNutriments.sugars,
+      'saturated-fat_100g': rawNutriments['saturated-fat_100g'] || rawNutriments.saturated_fat,
+      saturated_fat: rawNutriments['saturated-fat_100g'] || rawNutriments.saturated_fat,
+      salt_100g: rawNutriments.salt_100g || rawNutriments.salt,
+      salt: rawNutriments.salt_100g || rawNutriments.salt
+    };
+  }
+  
+  // 3. Construire l'objet de scoring unifié
   return {
+    // Champs requis pour calculateDataConfidence
+    product_name: product.product_name || product.name || '',
+    brands: product.brands || product.brand || '',
+    ingredients_text: product.ingredients_text || product.foodData?.ingredients || '',
+    
+    // Scores et labels
     novaGroup: product.nova_group || product.foodData?.novaGroup,
     nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
     ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
-    additives: product.additives_tags || product.foodData?.additives || [],
+    
+    // Additifs (extraire les codes si objets)
+    additives: isMongoProduct 
+      ? (product.foodData?.additives?.map(a => a.code || a) || [])
+      : (product.additives_tags || []),
+    
+    // Labels
     labels: product.labels_tags || product.foodData?.labels || [],
+    
+    // Catégories et packaging
+    categories: product.categories_tags || [],
     packaging: product.packaging || '',
-    origin: product.origins || '',
-    ingredients: product.ingredients_text || '',
-    nutriments: {
-      sugars_100g: nutriments.sugars_100g || nutriments.sugars,
-      'saturated-fat_100g': nutriments['saturated-fat_100g'] || nutriments.saturated_fat,
-      salt_100g: nutriments.salt_100g || nutriments.salt
-    }
+    
+    // Nutriments unifiés
+    nutriments
   };
 }
 

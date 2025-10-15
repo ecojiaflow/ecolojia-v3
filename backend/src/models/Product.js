@@ -114,12 +114,25 @@ const productSchema = new mongoose.Schema({
     confidence: Number,
     dataCompleteness: String,
     calculatedAt: { type: Date, default: Date.now },
-    scoringVersion: { type: String, default: '3.0.0' },    breakdown: mongoose.Schema.Types.Mixed,
+    scoringVersion: { type: String, default: '3.0.0' },
+    breakdown: mongoose.Schema.Types.Mixed,
     missingData: [String],
     aiEstimations: mongoose.Schema.Types.Mixed,
     aiEnrichmentUsed: { type: Boolean, default: false },
     aiEnrichmentSource: String,
-    aiEnrichmentError: String
+    aiEnrichmentError: String,
+    // Nouveaux champs v3.1.0
+    metadata: {
+      version: String,
+      calculatedAt: Date,
+      methodology: String
+    },
+    dataQuality: {
+      confidence: Number,
+      level: String,
+      canScore: Boolean,
+      availableData: [String]
+    }
   },
 
   analysisData: {

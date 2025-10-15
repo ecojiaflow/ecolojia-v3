@@ -112,4 +112,64 @@ router.get('/barcode/:barcode', asyncHandler(async (req, res) => {
   });
 }));
 
+
+// Route de recalcul forcé
+router.post('/:productId/recalculate', async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const Product = require('../models/Product');
+    const scoringUnified = require('../services/scoringUnified');
+    
+    // Trouver le produit
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    // Préparer les données pour le scoring (format attendu par calculateDataConfidence)
+    const scoringData = {
+      product_name: product.name || '',
+      brands: product.brand || '',
+      ingredients_text: product.foodData?.ingredients || '',
+      novaGroup: product.foodData?.novaGroup,
+      nutriScore: product.foodData?.nutriScore,
+      ecoScore: product.foodData?.ecoScore,
+      additives: product.foodData?.additives?.map(a => a.code) || [],
+      labels: product.foodData?.labels || [],
+      categories: product.categories_tags || [],
+      packaging: product.packaging || '',
+      nutriments: {
+        sugars_100g: product.foodData?.nutrition?.per100g?.sugars || product.foodData?.nutritionalInfo?.sugars,
+        sugars: product.foodData?.nutrition?.per100g?.sugars || product.foodData?.nutritionalInfo?.sugars,
+        'saturated-fat_100g': product.foodData?.nutrition?.per100g?.saturatedFat || product.foodData?.nutritionalInfo?.saturatedFat,
+        saturated_fat: product.foodData?.nutrition?.per100g?.saturatedFat || product.foodData?.nutritionalInfo?.saturatedFat,
+        salt_100g: product.foodData?.nutrition?.per100g?.salt || product.foodData?.nutritionalInfo?.salt,
+        salt: product.foodData?.nutrition?.per100g?.salt || product.foodData?.nutritionalInfo?.salt
+      }
+    };
+    
+    console.log('?? Données envoyées au scoring:', JSON.stringify(scoringData, null, 2));
+    
+    // FORCER le recalcul avec le nouveau système
+    const newScores = scoringUnified.calculateFoodScores(scoringData);
+    console.log('?? [RESULT] newScores:', JSON.stringify(newScores, null, 2));
+    
+    // Sauvegarder
+    product.scores = newScores;
+    product.scoringVersion = newScores.metadata?.version || '3.1.0';
+    product.lastScoreUpdate = new Date();
+    await product.save();
+    
+    res.json({
+      success: true,
+      message: 'Score recalculé avec le nouveau système',
+      product: product,
+      oldVersion: '3.0.0',
+      newVersion: newScores.metadata?.version || '3.1.0'
+    });
+  } catch (error) {
+    console.error('Erreur recalcul:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
