@@ -121,18 +121,9 @@ const productSchema = new mongoose.Schema({
     aiEnrichmentUsed: { type: Boolean, default: false },
     aiEnrichmentSource: String,
     aiEnrichmentError: String,
-    // Nouveaux champs v3.1.0
-    metadata: {
-      version: String,
-      calculatedAt: Date,
-      methodology: String
-    },
-    dataQuality: {
-      confidence: Number,
-      level: String,
-      canScore: Boolean,
-      availableData: [String]
-    }
+    // Champs plats v3.1.0 (workaround Mongoose)
+    scoringMetadata: mongoose.Schema.Types.Mixed,
+    dataQualityInfo: mongoose.Schema.Types.Mixed
   },
 
   analysisData: {

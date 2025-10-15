@@ -154,18 +154,29 @@ router.post('/:productId/recalculate', async (req, res) => {
     const newScores = scoringUnified.calculateFoodScores(scoringData);
     console.log('?? [RESULT] newScores:', JSON.stringify(newScores, null, 2));
     
-    // Sauvegarder
+    // Sauvegarder avec markModified pour les champs imbriqués
     product.scores = newScores;
-    product.scoringVersion = newScores.metadata?.version || '3.1.0';
+    product.scoringVersion = newScores.scoringMetadata?.version || '3.1.0';
     product.lastScoreUpdate = new Date();
+    
+    console.log('?? [DEBUG] AVANT SAVE - product.scores.scoringMetadata:', JSON.stringify(product.scores.scoringMetadata, null, 2));
+    console.log('?? [DEBUG] AVANT SAVE - product.scores.dataQualityInfo:', JSON.stringify(product.scores.dataQualityInfo, null, 2));
+    
+    // CRITIQUE : Forcer Mongoose à détecter les changements dans scores
+    product.markModified('scores');
     await product.save();
+    
+    console.log('?? [DEBUG] APRÈS SAVE - Relecture de la DB...');
+    const reloaded = await Product.findById(product._id);
+    console.log('?? [DEBUG] APRÈS SAVE - reloaded.scores.scoringMetadata:', JSON.stringify(reloaded.scores.scoringMetadata, null, 2));
+    console.log('?? [DEBUG] APRÈS SAVE - reloaded.scores.dataQualityInfo:', JSON.stringify(reloaded.scores.dataQualityInfo, null, 2));
     
     res.json({
       success: true,
       message: 'Score recalculé avec le nouveau système',
       product: product,
       oldVersion: '3.0.0',
-      newVersion: newScores.metadata?.version || '3.1.0'
+      newVersion: newScores.scoringMetadata?.version || '3.1.0'
     });
   } catch (error) {
     console.error('Erreur recalcul:', error);

@@ -127,7 +127,7 @@ function calculateFoodScores(data) {
       version: '3.1.0',
       timestamp: new Date().toISOString(),
       category: 'food',
-      dataQuality: {
+      dataQualityInfo: {
         confidence: dataConfidence.confidence,
         level: dataConfidence.level,
         canScore: false,
@@ -228,7 +228,7 @@ function calculateFoodScores(data) {
     healthScore: Math.round((novaContribution + nutriContribution + additivesContribution + sugarsContribution + fatContribution + saltContribution) / 0.8),
     environmentScore: Math.round(ecoContribution / 0.15),
     confidence,
-    dataQuality: {
+    dataQualityInfo: {
       confidence: dataConfidence.confidence,
       level: dataConfidence.level,
       canScore: true,
@@ -291,7 +291,7 @@ function calculateFoodScores(data) {
         label: isBio ? 'Bio certifié' : 'Aucun label'
       }
     },
-    metadata: {
+    scoringMetadata: {
       methodology: 'ECOLOJIA V3 - Scoring scientifique 8 composantes',
       version: '3.1.0',
       calculatedAt: new Date().toISOString()
@@ -333,14 +333,14 @@ function analyzeAdditives(additives) {
 // CALCUL COSMÉTIQUES (À IMPLÉMENTER)
 // ============================================
 function calculateCosmeticScores(data) {
-  return { overallScore: 50, confidence: 0.3, breakdown: {}, metadata: { version: '3.1.0' } };
+  return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
 }
 
 // ============================================
 // CALCUL DÉTERGENTS (À IMPLÉMENTER)
 // ============================================
 function calculateDetergentScores(data) {
-  return { overallScore: 50, confidence: 0.3, breakdown: {}, metadata: { version: '3.1.0' } };
+  return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
 }
 
 module.exports = { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores };
