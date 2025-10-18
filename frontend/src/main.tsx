@@ -55,3 +55,5 @@ if (import.meta.env.DEV && 'serviceWorker' in navigator) {
     for (const r of regs) { r.unregister().catch(()=>{}); }
   }).catch(()=>{});
 }
+
+// Build: 20251018151254
