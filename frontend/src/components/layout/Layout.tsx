@@ -25,7 +25,6 @@ const Layout: React.FC = () => {
   const navigation = [
     { name: 'Accueil', href: '/', icon: null },
     { name: 'Rechercher', href: '/search', icon: Search },
-    { name: 'Scanner', href: '/scan', icon: Camera },
     { name: 'OCR', href: '/ocr', icon: Camera },
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3, requiresAuth: true },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle, requiresAuth: true }

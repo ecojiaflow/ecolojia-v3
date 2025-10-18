@@ -36,7 +36,6 @@ export function Layout() {
   const navigation = [
     { name: 'Accueil', href: '/', icon: Home },
     { name: 'Recherche', href: '/search', icon: Search },
-    { name: 'Scanner', href: '/scan', icon: Camera },
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
     { name: 'Historique', href: '/history', icon: History },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle, premium: true },
@@ -317,7 +316,6 @@ export function Layout() {
             <div className="absolute -top-6 bg-green-500 rounded-full p-3 shadow-lg">
               <Camera className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs mt-4">Scanner</span>
           </NavLink>
           
           <NavLink
