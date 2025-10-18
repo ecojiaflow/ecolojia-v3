@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -102,7 +102,7 @@ const ResultsPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Analyse en cours...</p>
         </div>
       </div>
@@ -116,7 +116,7 @@ const ResultsPage: React.FC = () => {
   // Gestion des scores avec fallback sur les champs directs
   const healthScore = analysisData.scores?.health || analysisData.healthScore || 50;
   const envScore = analysisData.scores?.environment || analysisData.environmentScore || 50;
-  // PHASE 5 - Utilise score persisté backend
+  // PHASE 5 - Utilise score persistï¿½ backend
   const overallScore = analysis.scores?.overallScore || 0;
 
   
@@ -148,7 +148,7 @@ const ResultsPage: React.FC = () => {
                 <p className="text-gray-600">{analysisData.product.brand}</p>
               )}
               {isSaved && (
-                <p className="text-sm text-green-700 mt-1">
+                <p className="text-sm text-primary mt-1">
                   ? Enregistr? dans votre historique
                 </p>
               )}
@@ -290,7 +290,7 @@ const ResultsPage: React.FC = () => {
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="text-gray-600">Classification NOVA</span>
                   <span className={`font-bold px-3 py-1 rounded ${
-                    analysisData.insights.nova <= 2 ? 'bg-green-100 text-green-700' :
+                    analysisData.insights.nova <= 2 ? 'bg-green-100 text-primary' :
                     analysisData.insights.nova === 3 ? 'bg-yellow-100 text-yellow-700' :
                     'bg-red-100 text-red-700'
                   }`}>
@@ -303,7 +303,7 @@ const ResultsPage: React.FC = () => {
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <span className="text-gray-600">Nutri-Score</span>
                   <span className={`font-bold px-3 py-1 rounded ${
-                    ['A', 'B'].includes(analysisData.insights.nutriscore) ? 'bg-green-100 text-green-700' :
+                    ['A', 'B'].includes(analysisData.insights.nutriscore) ? 'bg-green-100 text-primary' :
                     analysisData.insights.nutriscore === 'C' ? 'bg-yellow-100 text-yellow-700' :
                     'bg-red-100 text-red-700'
                   }`}>
@@ -357,7 +357,7 @@ const ResultsPage: React.FC = () => {
             {/* Points positifs */}
             {analysisData.analysis.positives && analysisData.analysis.positives.length > 0 && (
               <div className="mb-6">
-                <h4 className="font-medium text-green-700 mb-3 flex items-center">
+                <h4 className="font-medium text-primary mb-3 flex items-center">
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Points positifs
                 </h4>
@@ -457,7 +457,7 @@ const ResultsPage: React.FC = () => {
         >
           <button
             onClick={() => navigate('/scan')}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Camera className="w-5 h-5" />
             Scanner un autre produit

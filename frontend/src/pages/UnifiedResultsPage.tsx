@@ -71,7 +71,7 @@ export const UnifiedResultsPage: React.FC = () => {
   }, [location, navigate]);
 
   const getScoreColor = (score: number): string => {
-    if (score >= 70) return 'text-green-700';
+    if (score >= 70) return 'text-primary';
     if (score >= 50) return 'text-green-500';
     if (score >= 30) return 'text-orange-600';
     return 'text-red-600';
@@ -229,7 +229,7 @@ export const UnifiedResultsPage: React.FC = () => {
               <button
                 onClick={saveToHistory}
                 className={`p-2 rounded-lg transition-colors ${
-                  isSaved ? 'bg-green-100 text-green-700' : 'bg-gray-100 hover:bg-gray-200'
+                  isSaved ? 'bg-green-100 text-primary' : 'bg-gray-100 hover:bg-gray-200'
                 }`}
                 title="Sauvegarder"
               >
@@ -306,7 +306,7 @@ export const UnifiedResultsPage: React.FC = () => {
           {result.analysis.alternatives && result.analysis.alternatives.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Leaf className="w-5 h-5 mr-2 text-green-700" />
+                <Leaf className="w-5 h-5 mr-2 text-primary" />
                 Alternatives plus saines
               </h2>
               <div className="grid gap-4">
@@ -343,7 +343,7 @@ const FoodAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
         <div className="flex items-center justify-between">
           <span className="text-gray-700">Score NOVA</span>
           <span className={`text-lg font-semibold ${
-            analysis.novaScore <= 2 ? 'text-green-700' : 'text-red-600'
+            analysis.novaScore <= 2 ? 'text-primary' : 'text-red-600'
           }`}>
             {analysis.novaScore}/4
           </span>
@@ -372,7 +372,7 @@ const FoodAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
               <span className={`px-2 py-1 rounded text-xs ${
                 additive.riskLevel === 'high' ? 'bg-red-100 text-red-700' :
                 additive.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                'bg-green-100 text-green-700'
+                'bg-green-100 text-primary'
               }`}>
                 {additive.riskLevel}
               </span>
@@ -433,7 +433,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
         <div className="flex items-center justify-between">
           <span className="text-gray-700">Biodegradabilite</span>
           <span className={`text-lg font-semibold ${
-            analysis.biodegradability >= 80 ? 'text-green-700' : 'text-orange-600'
+            analysis.biodegradability >= 80 ? 'text-primary' : 'text-orange-600'
           }`}>
             {analysis.biodegradability}%
           </span>
@@ -456,7 +456,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
           Toxicite aquatique
         </h3>
         <span className={`px-3 py-1 rounded text-sm ${
-          analysis.aquaticToxicity === 'low' ? 'bg-green-100 text-green-700' :
+          analysis.aquaticToxicity === 'low' ? 'bg-green-100 text-primary' :
           analysis.aquaticToxicity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
           'bg-red-100 text-red-700'
         }`}>

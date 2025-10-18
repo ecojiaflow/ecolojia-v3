@@ -118,7 +118,7 @@ const ProductPage: React.FC = () => {
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-6">{error || 'Ce produit n\'existe pas'}</p>
-          <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 inline-block">Rechercher un produit</Link>
+          <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">Rechercher un produit</Link>
         </div>
       </div>
     );
@@ -223,7 +223,7 @@ const ProductPage: React.FC = () => {
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
-            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-700 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
+            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-primary text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
@@ -268,7 +268,7 @@ const ProductPage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">Score environnemental</span>
-                    <span className="text-2xl font-bold text-green-700">
+                    <span className="text-2xl font-bold text-primary">
                       {product.scores?.environmentScore || 'N/A'}/100
                     </span>
                   </div>
@@ -368,7 +368,7 @@ const ProductPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
-                <span className="text-3xl font-bold text-green-700">
+                <span className="text-3xl font-bold text-primary">
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>

@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
   };
 
   const stats = [
-    { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-green-700' },
+    { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
     { icon: Shield, value: '100%', label: 'Scientifique', color: 'text-blue-600' },
     { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-purple-600' },
     { icon: Users, value: '500k+', label: 'Utilisateurs actifs', color: 'text-orange-600' }
@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
       icon: Camera,
       title: 'Scanner Intelligent',
       description: 'Analysez instantanement avec photo, code-barres ou recherche manuelle',
-      color: 'bg-green-100 text-green-700'
+      color: 'bg-green-100 text-primary'
     },
     {
       icon: BarChart3,
@@ -122,12 +122,12 @@ const HomePage: React.FC = () => {
                   <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                   <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Nutella, L'Oréal..." className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none" />
                 </div>
-                <button type="submit" className="w-full mt-3 bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700">Rechercher</button>
+                <button type="submit" className="w-full mt-3 bg-primary text-white py-3 rounded-lg font-medium hover:bg-green-700">Rechercher</button>
               </form>
             </details>
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="bg-white p-4 rounded-xl shadow-md text-center">
-                <Package className="w-8 h-8 text-green-700 mx-auto mb-2" />
+                <Package className="w-8 h-8 text-primary mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">2M+</div>
                 <div className="text-xs text-gray-600">Produits</div>
               </div>
@@ -163,7 +163,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </form>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <button onClick={() => navigate('/scan?mode=camera')} className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"><Camera className="w-5 h-5 text-green-700" /><span className="font-medium">Scanner un produit</span><ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" /></button>
+                  <button onClick={() => navigate('/scan?mode=camera')} className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"><Camera className="w-5 h-5 text-primary" /><span className="font-medium">Scanner un produit</span><ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" /></button>
                   <button onClick={() => navigate('/auth')} className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"><Sparkles className="w-5 h-5" /><span className="font-medium">Essai gratuit Premium</span></button>
                 </div>
               </motion.div>
@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-12"><h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par categorie</h2><p className="text-lg text-gray-600">Analyse complete pour tous vos produits du quotidien</p></div>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {categories.map((category, index) => (<motion.div key={category.name} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.1 }} onClick={() => navigate(`/search?category=${category.name}`)} className="group cursor-pointer"><div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"><div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}><span className="text-3xl">{category.icon}</span></div><h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3><p className="text-sm text-gray-500 mb-4">{category.count}</p><div className="space-y-1"><p className="text-xs text-gray-400">Populaires :</p><div className="flex flex-wrap gap-1">{category.popular.map((item) => (<span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">{item}</span>))}</div></div><div className="mt-4 flex items-center text-green-700 font-medium">Explorer<ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-2 transition-transform" /></div></div></motion.div>))}
+                {categories.map((category, index) => (<motion.div key={category.name} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.1 }} onClick={() => navigate(`/search?category=${category.name}`)} className="group cursor-pointer"><div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"><div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}><span className="text-3xl">{category.icon}</span></div><h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3><p className="text-sm text-gray-500 mb-4">{category.count}</p><div className="space-y-1"><p className="text-xs text-gray-400">Populaires :</p><div className="flex flex-wrap gap-1">{category.popular.map((item) => (<span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">{item}</span>))}</div></div><div className="mt-4 flex items-center text-primary font-medium">Explorer<ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-2 transition-transform" /></div></div></motion.div>))}
               </div>
             </div>
           </section>
@@ -188,7 +188,7 @@ const HomePage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-12"><h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2><p className="text-lg text-gray-600">La technologie au service de votre sante</p></div>
               <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {features.map((feature, index) => (<motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"><div className={`inline-flex p-4 rounded-xl ${feature.color} mb-6`}><feature.icon className="w-6 h-6" /></div><h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3><p className="text-gray-600 mb-4">{feature.description}</p><button className="text-green-700 font-medium inline-flex items-center hover:text-green-700 transition-colors">En savoir plus<ArrowRight className="w-4 h-4 ml-1" /></button></motion.div>))}
+                {features.map((feature, index) => (<motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"><div className={`inline-flex p-4 rounded-xl ${feature.color} mb-6`}><feature.icon className="w-6 h-6" /></div><h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3><p className="text-gray-600 mb-4">{feature.description}</p><button className="text-primary font-medium inline-flex items-center hover:text-primary transition-colors">En savoir plus<ArrowRight className="w-4 h-4 ml-1" /></button></motion.div>))}
               </div>
             </div>
           </section>
@@ -205,7 +205,7 @@ const HomePage: React.FC = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Pret a transformer votre consommation ?</h2>
               <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">Rejoignez 500 000+ utilisateurs qui font des choix eclaires chaque jour</p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <button onClick={() => navigate('/auth')} className="bg-white text-green-700 px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2"><CheckCircle className="w-5 h-5" />Commencer gratuitement</button>
+                <button onClick={() => navigate('/auth')} className="bg-white text-primary px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2"><CheckCircle className="w-5 h-5" />Commencer gratuitement</button>
                 <button onClick={() => navigate('/premium')} className="bg-green-700 text-white px-8 py-4 rounded-xl font-medium hover:bg-green-800 transition-colors inline-flex items-center gap-2"><Sparkles className="w-5 h-5" />Decouvrir Premium</button>
               </div>
             </div>

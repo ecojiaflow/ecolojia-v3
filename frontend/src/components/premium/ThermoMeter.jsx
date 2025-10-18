@@ -1,4 +1,4 @@
-// frontend/src/components/premium/ThermoMeter.jsx
+﻿// frontend/src/components/premium/ThermoMeter.jsx
 
 import React, { useEffect, useState } from 'react';
 

@@ -1,4 +1,4 @@
-// frontend/src/components/premium/PremiumChat.jsx
+﻿// frontend/src/components/premium/PremiumChat.jsx
 
 import React, { useState } from 'react';
 

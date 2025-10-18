@@ -1,4 +1,4 @@
-// backend/src/services/ai/NutritionistChatService.js
+﻿// backend/src/services/ai/NutritionistChatService.js
 // Service de chat avec IA nutritionniste utilisant DeepSeek
 
 const axios = require('axios');
@@ -76,7 +76,7 @@ Instructions importantes :
       );
 
       // Appeler l'API DeepSeek
-      console.log('ðŸ¤– Appel API DeepSeek...');
+      console.log('Ã°Å¸Â¤â€“ Appel API DeepSeek...');
       const response = await this.callDeepSeekAPI(messages);
       
       // Sauvegarder l'echange
@@ -97,7 +97,7 @@ Instructions importantes :
       };
 
     } catch (error) {
-      console.error('âŒ Erreur chat IA:', error);
+      console.error('Ã¢ÂÅ’ Erreur chat IA:', error);
       
       // Gestion des erreurs specifiques
       if (error.response?.status === 429) {
@@ -127,7 +127,7 @@ Instructions importantes :
       return {
         allowed: false,
         message: user.tier === 'free' 
-          ? 'Quota depasse. Passez   Premium pour continuer.'
+          ? 'Quota depasse. Passez Â  Premium pour continuer.'
           : 'Quota mensuel depasse. Il se renouvellera le mois prochain.',
         remaining: 0
       };
@@ -389,7 +389,7 @@ Utilise ces informations pour personnaliser tes reponses.`
   }
 
   /**
-   * Genere une reponse   une question sur un produit specifique
+   * Genere une reponse Â  une question sur un produit specifique
    */
   async answerProductQuestion(userId, productId, question) {
     try {
@@ -416,7 +416,7 @@ Utilise ces informations pour personnaliser tes reponses.`
         }
       };
       
-      // Ajouter un prefixe   la question pour orienter l'IA
+      // Ajouter un prefixe Â  la question pour orienter l'IA
       const enhancedQuestion = `Concernant le produit "${analysis.productId.name}" : ${question}`;
       
       return await this.sendMessage(userId, enhancedQuestion, productContext);
@@ -450,7 +450,7 @@ Utilise ces informations pour personnaliser tes reponses.`
       }).populate('productId');
       
       if (analyses.length < 2) {
-        throw new Error('Pas assez de produits   comparer');
+        throw new Error('Pas assez de produits Â  comparer');
       }
       
       // Preparer le contexte de comparaison
@@ -523,7 +523,7 @@ Utilise ces informations pour personnaliser tes reponses.`
    */
   async getQuestionSuggestions(userId, context = {}) {
     const suggestions = [
-      "Quels sont les additifs   eviter absolument ?",
+      "Quels sont les additifs Â  eviter absolument ?",
       "Comment reduire ma consommation de sucre ?",
       "Quelles alternatives saines pour mes snacks ?",
       "Comment lire correctement une etiquette nutritionnelle ?",
@@ -533,7 +533,7 @@ Utilise ces informations pour personnaliser tes reponses.`
     // Personnaliser selon le contexte
     if (context.lastProduct) {
       suggestions.unshift(
-        `Ce produit est-il adapte   mon regime ?`,
+        `Ce produit est-il adapte Â  mon regime ?`,
         `Quelles sont les alternatives plus saines ?`
       );
     }

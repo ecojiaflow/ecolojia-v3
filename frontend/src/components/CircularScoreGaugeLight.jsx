@@ -1,4 +1,4 @@
-// frontend/src/components/CircularScoreGaugeLight.jsx
+﻿// frontend/src/components/CircularScoreGaugeLight.jsx
 
 import React, { useEffect, useState } from 'react';
 

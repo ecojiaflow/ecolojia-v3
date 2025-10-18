@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 // Remplacer dans : frontend/src/components/premium/PremiumAlternatives.jsx
 

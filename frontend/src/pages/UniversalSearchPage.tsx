@@ -98,7 +98,7 @@ const SmartNavbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <Leaf className="h-8 w-8 text-green-700 mr-2" // />
+              <Leaf className="h-8 w-8 text-primary mr-2" // />
               <span className="text-xl font-bold text-gray-800">ECOLOJIA</span>
             </Link>
           </div>
@@ -199,7 +199,7 @@ const SearchFirstHomePage: React.FC = () => {
           {/* Metriques de confiance */}
           <div className="grid grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-700">2M+</div>
+              <div className="text-3xl font-bold text-primary">2M+</div>
               <div className="text-gray-600">Produits analysables</div>
             </div>
             <div>
@@ -261,7 +261,7 @@ const UniversalSearchWidget: React.FC<{
         
         {/* Badge multi-sources */}
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+          <span className="text-xs bg-green-100 text-primary px-2 py-1 rounded-full">
             Multi-sources
           </span>
         </div>

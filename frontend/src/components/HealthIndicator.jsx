@@ -1,4 +1,4 @@
-// frontend/src/components/HealthIndicator.jsx
+﻿// frontend/src/components/HealthIndicator.jsx
 
 import React from 'react';
 

@@ -92,7 +92,7 @@ const MultiCategoriesPage: React.FC = () => {
   const renderConnectionStatus = () => {
     const statusConfig = {
       checking: { color: 'text-green-500', bg: 'bg-yellow-50', icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾', text: 'Verification...' },
-      connected: { color: 'text-green-700', bg: 'bg-green-50', icon: 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦', text: 'API Connectee' },
+      connected: { color: 'text-primary', bg: 'bg-green-50', icon: 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦', text: 'API Connectee' },
       disconnected: { color: 'text-red-600', bg: 'bg-red-50', icon: 'aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢', text: 'API Deconnectee' }
     };
     
@@ -224,7 +224,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Statistiques */}
           <div className="flex justify-center space-x-8 text-center">
             <div className="bg-white rounded-2xl p-4 shadow-lg">
-              <div className="text-2xl font-bold text-green-700">{categories.length}</div>
+              <div className="text-2xl font-bold text-primary">{categories.length}</div>
               <div className="text-sm text-gray-600">Categories</div>
             </div>
             <div className="bg-white rounded-2xl p-4 shadow-lg">
@@ -250,7 +250,7 @@ const MultiCategoriesPage: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-green-50 rounded-2xl">
-                  <div className="text-2xl font-bold text-green-700">
+                  <div className="text-2xl font-bold text-primary">
                     {lastAnalysis.analysis?.overall_score || 'N/A'}/100
                   </div>
                   <div className="text-sm text-gray-600">Score Global</div>
@@ -302,7 +302,7 @@ const MultiCategoriesPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-4xl mb-3">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½</div>
-                <h4 className="font-bold text-green-700 mb-2">Alimentaire</h4>
+                <h4 className="font-bold text-primary mb-2">Alimentaire</h4>
                 <p className="text-sm text-gray-600">
                   Test avec cereales bio + additifs pour detecter l'ultra-transformation
                 </p>

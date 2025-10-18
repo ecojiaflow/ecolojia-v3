@@ -310,7 +310,7 @@ const DiagnosticPage: React.FC = () => {
             <h2 className="text-lg font-bold text-gray-800 mb-4">Résumé</h2>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-green-700">
+                <div className="text-2xl font-bold text-primary">
                   {diagnostics.filter(t => t.status === 'success').length}
                 </div>
                 <div className="text-sm text-gray-600">Succès</div>

@@ -147,7 +147,7 @@ const DetergentAnalysisPage: React.FC = () => {
 
   const getRatingColor = (rating: string) => {
     switch (rating) {
-      case 'excellent': return 'text-green-700';
+      case 'excellent': return 'text-primary';
       case 'good': return 'text-green-500';
       case 'moderate': return 'text-green-500';
       case 'poor': return 'text-red-600';
@@ -363,7 +363,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     {analysis.details.phosphates.present ? (
                       <XCircle className="w-5 h-5 text-orange-600" />
                     ) : (
-                      <CheckCircle className="w-5 h-5 text-green-700" />
+                      <CheckCircle className="w-5 h-5 text-primary" />
                     )}
                     <span className={`font-medium ${analysis.details.phosphates.present ? 'text-orange-900' : 'text-green-900'}`}>
                       {analysis.details.phosphates.present 
@@ -412,7 +412,7 @@ const DetergentAnalysisPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-lg font-bold">{analysis.details.voc.percentage}% COV</span>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      analysis.details.voc.compliant ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      analysis.details.voc.compliant ? 'bg-green-100 text-primary' : 'bg-red-100 text-red-700'
                     }`}>
                       {analysis.details.voc.compliant ? 'Conforme EU' : 'Non conforme EU'}
                     </span>
@@ -527,7 +527,7 @@ const DetergentAnalysisPage: React.FC = () => {
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">�ƒ�’aa‚¬�°cologiques</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.certifications.eco.map(cert => (
-                    <span key={cert.id} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                    <span key={cert.id} className="px-3 py-1 bg-green-100 text-primary rounded-full text-sm">
                       {cert.name}
                     </span>
                   ))}

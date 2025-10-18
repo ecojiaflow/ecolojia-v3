@@ -1,4 +1,4 @@
-// frontend/src/components/NovaClassificationBadge.jsx - Version Simplifiee
+﻿// frontend/src/components/NovaClassificationBadge.jsx - Version Simplifiee
 
 import React from 'react';
 

@@ -293,7 +293,7 @@ const OnboardingPage: React.FC = () => {
             </div>
 
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-primary">
                 🔒 Vos données sont sécurisées et ne seront jamais partagées sans votre consentement.
               </p>
             </div>
@@ -378,7 +378,7 @@ const OnboardingPage: React.FC = () => {
           <button
             onClick={handleNext}
             disabled={isLoading}
-            className="px-8 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center disabled:opacity-50"
+            className="px-8 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-primary transition-colors flex items-center disabled:opacity-50"
           >
             {currentStep === 3 ? 'Terminer' : 'Suivant'}
             <ChevronRight className="w-5 h-5 ml-2" />

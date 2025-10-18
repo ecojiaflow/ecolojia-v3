@@ -1,4 +1,4 @@
-export interface ScanHistoryItem {
+ï»¿export interface ScanHistoryItem {
   barcode: string;
   productName: string;
   timestamp: Date;
@@ -16,7 +16,7 @@ export const addScan = (barcode: string, productData: any): void => {
     score: productData.scores?.overallScore
   };
   
-  // Éviter doublons récents (< 1h)
+  // ï¿½viter doublons rï¿½cents (< 1h)
   const isDuplicate = history.some(
     item => item.barcode === barcode && 
     (Date.now() - new Date(item.timestamp).getTime()) < 3600000

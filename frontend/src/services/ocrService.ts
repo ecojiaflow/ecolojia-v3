@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ocrService.ts
+ï»¿// PATH: frontend/src/services/ocrService.ts
 import apiClient from './apiClient';
 
 export interface OcrResult {
@@ -25,7 +25,7 @@ const ocrService = {
         });
         return res;
       } catch {
-        // Retourner un résultat vide en cas d'échec
+        // Retourner un rï¿½sultat vide en cas d'ï¿½chec
         console.warn('OCR service unavailable');
         return { text: '' };
       }
@@ -41,7 +41,7 @@ const ocrService = {
       });
       return Array.isArray(data) ? data : [];
     } catch {
-      // fallback : séquentiel
+      // fallback : sï¿½quentiel
       const res: OcrResult[] = [];
       for (const f of files) res.push(await ocrService.extractFromImage(f));
       return res;

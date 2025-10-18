@@ -48,7 +48,7 @@ const FavoritesPage: React.FC = () => {
   );
 
   const getScoreColor = (score: number) => {
-    if (score >= 76) return 'text-green-600';
+    if (score >= 76) return 'text-primary';
     if (score >= 56) return 'text-lime-600';
     if (score >= 36) return 'text-orange-600';
     return 'text-red-600';

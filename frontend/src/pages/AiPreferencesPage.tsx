@@ -184,7 +184,7 @@ const AiPreferencesPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto px-4 mt-4"
         >
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 flex items-center gap-2">
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-primary flex items-center gap-2">
             <Check className="w-5 h-5" />
             Prfrences mises  jour avec succs !
           </div>

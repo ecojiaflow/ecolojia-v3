@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -60,7 +60,7 @@ interface Product {
   foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
-// Helper pour compatibilité images
+// Helper pour compatibilitï¿½ images
 const getProductImage = (product: any) => {
   return product.imageUrl || product.images?.front || null;
 };
@@ -75,7 +75,7 @@ const ProductPage: React.FC = () => {
   const [alternatives, setAlternatives] = useState<Product[]>([]);
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
 
-  // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
+  // CORRECTION 2 : useEffect gï¿½re maintenant les erreurs 400/404
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id || id === 'undefined') {
@@ -90,10 +90,10 @@ const ProductPage: React.FC = () => {
         
         const result = await getJSON(`/api/products/${id}`);
         
-        // Gestion erreur 400 (médicament, livre, etc.)
+        // Gestion erreur 400 (mï¿½dicament, livre, etc.)
         if (result.status === 400) {
-          setError(`?? ${result.data.error || 'Type de produit non supporté'}`);
-          toast.error(result.data.error || 'Type de produit non supporté', { duration: 5000 });
+          setError(`?? ${result.data.error || 'Type de produit non supportï¿½'}`);
+          toast.error(result.data.error || 'Type de produit non supportï¿½', { duration: 5000 });
           setLoading(false);
           return;
         }
@@ -101,27 +101,27 @@ const ProductPage: React.FC = () => {
         // Gestion erreur 404 (produit inconnu)
         if (result.status === 404) {
           setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
-          toast.error('Produit non trouvé - Utilisez l\'OCR', { duration: 5000 });
+          toast.error('Produit non trouvï¿½ - Utilisez l\'OCR', { duration: 5000 });
           setLoading(false);
           return;
         }
         
         // Autre erreur serveur
         if (!result.ok) {
-          setError(`Erreur serveur (${result.status}). Veuillez réessayer.`);
+          setError(`Erreur serveur (${result.status}). Veuillez rï¿½essayer.`);
           toast.error('Erreur serveur');
           setLoading(false);
           return;
         }
         
-        // Succès
+        // Succï¿½s
         setProduct(result.data.product || result.data);
         loadAlternatives(id);
         
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
-        setError('? Erreur réseau - Vérifiez votre connexion');
-        toast.error('Erreur réseau');
+        setError('? Erreur rï¿½seau - Vï¿½rifiez votre connexion');
+        toast.error('Erreur rï¿½seau');
       } finally {
         setLoading(false);
       }
@@ -166,7 +166,7 @@ const ProductPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
           <div className="space-y-3">
-            <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 inline-block">
+            <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
               Rechercher un produit
             </Link>
             {error?.includes('OCR') && (
@@ -180,12 +180,12 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores réels depuis l'API
+  // Scores rï¿½els depuis l'API
   const healthScore = product.scores?.healthScore || 0;
   const environmentScore = product.scores?.environmentScore || 0;
   const overallScore = product.scores?.overallScore || 0;
 
-  // Breakdown réel depuis l'API
+  // Breakdown rï¿½el depuis l'API
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -204,7 +204,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: 'Éco-Score', 
+      factor: 'ï¿½co-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -219,9 +219,9 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: 'Éthique', 
+      factor: 'ï¿½thique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score éthique: ${breakdown.ethics.score}/100` 
+      reason: `Score ï¿½thique: ${breakdown.ethics.score}/100` 
     }
   ].filter(Boolean);
 
@@ -273,7 +273,7 @@ const ProductPage: React.FC = () => {
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
-            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-700 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
+            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-primary text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
@@ -282,7 +282,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Dï¿½tails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
@@ -293,7 +293,7 @@ const ProductPage: React.FC = () => {
           )}
           {product.category === 'cosmetics' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmï¿½tique</summary>
               <div className="p-4">
                 <CosmeticAnalysisDisplay 
                   analysis={{ 
@@ -308,24 +308,24 @@ const ProductPage: React.FC = () => {
           )}
           {product.category === 'detergents' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Dï¿½tergent</summary>
               <div className="p-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">Score environnemental</span>
-                    <span className="text-2xl font-bold text-green-700">
+                    <span className="text-2xl font-bold text-primary">
                       {product.scores?.environmentScore || 'N/A'}/100
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Impact aquatique, biodégradabilité et composition évalués
+                    Impact aquatique, biodï¿½gradabilitï¿½ et composition ï¿½valuï¿½s
                   </p>
                 </div>
               </div>
             </details>
           )}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandï¿½es</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -399,16 +399,16 @@ const ProductPage: React.FC = () => {
         )}
         {product.category === 'detergents' && (
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Dï¿½tergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
-                <span className="text-3xl font-bold text-green-700">
+                <span className="text-3xl font-bold text-primary">
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>
               <p className="text-gray-600">
-                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
+                ï¿½valuation basï¿½e sur l'impact aquatique, la biodï¿½gradabilitï¿½ et la composition
               </p>
             </div>
           </div>

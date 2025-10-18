@@ -119,7 +119,7 @@ const MultiScanPage: React.FC = () => {
   // Obtenir la couleur selon le statut
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'text-green-700';
+      case 'completed': return 'text-primary';
       case 'analyzing': return 'text-blue-600';
       case 'error': return 'text-red-600';
       default: return 'text-gray-400';
@@ -149,7 +149,7 @@ const MultiScanPage: React.FC = () => {
             <div className="text-sm text-gray-500">Produits</div>
           </div>
           <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-green-700">
+            <div className="text-2xl font-bold text-primary">
               {products.filter(p => p.status === 'completed').length}
             </div>
             <div className="text-sm text-gray-500">Analyses</div>

@@ -1,4 +1,4 @@
-// frontend/src/components/premium/BatteryProgress.jsx
+﻿// frontend/src/components/premium/BatteryProgress.jsx
 
 import React, { useEffect, useState } from 'react';
 

@@ -104,7 +104,7 @@ const Results: React.FC = () => {
             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
+              className="bg-green-500 hover:bg-primary disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
             >
               {loading ? (
                 <>
@@ -226,9 +226,9 @@ const Results: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="text-green-700 text-2xl mb-2">ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â¥ƒâ€š‚Â¬</div>
+                <div className="text-primary text-2xl mb-2">ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â¥ƒâ€š‚Â¬</div>
                 <h3 className="font-medium text-green-800">Groupe NOVA 1-2</h3>
-                <p className="text-green-700">Aliments peu ou pas transformes</p>
+                <p className="text-primary">Aliments peu ou pas transformes</p>
               </div>
               
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">

@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-green-700 hover:text-green-700"
+                  className="text-sm text-primary hover:text-primary"
                 >
                   Mot de passe oublié ?
                 </Link>
@@ -162,7 +162,7 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-primary transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -200,7 +200,7 @@ const LoginPage: React.FC = () => {
               Pas encore de compte ?{' '}
               <Link
                 to="/register"
-                className="text-green-700 font-medium hover:text-green-700"
+                className="text-primary font-medium hover:text-primary"
               >
                 Créer un compte gratuit
               </Link>

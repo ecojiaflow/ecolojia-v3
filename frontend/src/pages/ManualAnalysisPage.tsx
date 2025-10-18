@@ -38,7 +38,7 @@ export const ManualAnalysisPage: React.FC = () => {
       id: 'food' as const,
       name: 'Alimentaire',
       icon: Package,
-      color: 'bg-green-100 text-green-700',
+      color: 'bg-green-100 text-primary',
       description: 'Analyse NOVA, additifs, ultra-transformation',
       placeholder: 'Ex: Eau, sucre, huile de palme, cacao maigre, lait ecreme en poudre...'
     },

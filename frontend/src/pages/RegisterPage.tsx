@@ -101,7 +101,7 @@ const RegisterPage: React.FC = () => {
           <h3 className="font-semibold text-green-800 mb-2">
             âœ¨ Avec un compte gratuit :
           </h3>
-          <ul className="space-y-1 text-sm text-green-700">
+          <ul className="space-y-1 text-sm text-primary">
             <li className="flex items-center">
               <Check className="w-4 h-4 mr-2 flex-shrink-0" />
               30 analyses de produits par mois
@@ -218,7 +218,7 @@ const RegisterPage: React.FC = () => {
                     <div
                       key={index}
                       className={`text-xs flex items-center ${
-                        req.regex.test(formData.password) ? 'text-green-700' : 'text-gray-400'
+                        req.regex.test(formData.password) ? 'text-primary' : 'text-gray-400'
                       }`}
                     >
                       <Check className="w-3 h-3 mr-1" />
@@ -260,11 +260,11 @@ const RegisterPage: React.FC = () => {
               />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                 J'accepte les{' '}
-                <Link to="/terms" className="text-green-700 hover:underline">
+                <Link to="/terms" className="text-primary hover:underline">
                   conditions d'utilisation
                 </Link>{' '}
                 et la{' '}
-                <Link to="/privacy" className="text-green-700 hover:underline">
+                <Link to="/privacy" className="text-primary hover:underline">
                   politique de confidentialit?
                 </Link>
               </label>
@@ -274,7 +274,7 @@ const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading || !acceptTerms}
-              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-primary transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -293,7 +293,7 @@ const RegisterPage: React.FC = () => {
               D?jÃ  un compte ?{' '}
               <Link
                 to="/login"
-                className="text-green-700 font-medium hover:text-green-700"
+                className="text-primary font-medium hover:text-primary"
               >
                 Se connecter
               </Link>

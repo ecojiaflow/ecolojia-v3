@@ -1,4 +1,4 @@
-// frontend/src/components/premium/DualBadgeCard.jsx
+﻿// frontend/src/components/premium/DualBadgeCard.jsx
 
 import React from 'react';
 

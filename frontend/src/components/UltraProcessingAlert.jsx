@@ -1,4 +1,4 @@
-// frontend/src/components/UltraProcessingAlert.jsx
+﻿// frontend/src/components/UltraProcessingAlert.jsx
 
 import React, { useState } from 'react';
 

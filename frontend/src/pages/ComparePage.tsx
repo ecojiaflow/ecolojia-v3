@@ -145,7 +145,7 @@ const ComparePage: React.FC = () => {
     
     // Score numérique
     const numScore = Number(score);
-    if (numscore >= 70) return 'text-green-700';
+    if (numscore >= 70) return 'text-primary';
     if (numscore >= 50) return 'text-green-500';
     if (numscore >= 30) return 'text-orange-600';
     return 'text-red-600';
@@ -343,7 +343,7 @@ const ComparePage: React.FC = () => {
                       
                       return (
                         <td key={item.id} className="p-4 text-center">
-                          <span className={additives > 5 ? 'text-red-600 font-semibold' : additives > 2 ? 'text-orange-600' : 'text-green-700'}>
+                          <span className={additives > 5 ? 'text-red-600 font-semibold' : additives > 2 ? 'text-orange-600' : 'text-primary'}>
                             {additives}
                           </span>
                         </td>

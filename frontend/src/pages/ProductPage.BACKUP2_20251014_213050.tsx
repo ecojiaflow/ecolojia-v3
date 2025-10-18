@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -48,7 +48,7 @@ interface Product {
   foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
-// Helper pour compatibilité images
+// Helper pour compatibilitï¿½ images
 const getProductImage = (product: any) => {
   return product.imageUrl || product.images?.front || null;
 };
@@ -118,19 +118,19 @@ const ProductPage: React.FC = () => {
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-6">{error || 'Ce produit n\'existe pas'}</p>
-          <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 inline-block">Rechercher un produit</Link>
+          <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">Rechercher un produit</Link>
         </div>
       </div>
     );
   }
 
-  // Scores réels depuis l'API
+  // Scores rï¿½els depuis l'API
   const healthScore = product.scores?.healthScore || 50;
   const environmentScore = product.scores?.environmentScore || 50;
-  // PHASE 5 - Utilise score persisté backend (plus de recalcul)
+  // PHASE 5 - Utilise score persistï¿½ backend (plus de recalcul)
   const overallScore = product.scores?.overallScore || 0;
 
-  // Breakdown réel depuis l'API (converti au format attendu par ScoreBreakdown)
+  // Breakdown rï¿½el depuis l'API (converti au format attendu par ScoreBreakdown)
   const breakdown = product.scores?.breakdown || {};
   const realBreakdown = [
     breakdown.nova && { 
@@ -149,7 +149,7 @@ const ProductPage: React.FC = () => {
       reason: `Score additifs: ${breakdown.additives.score}/100` 
     },
     breakdown.ecoscore && { 
-      factor: 'Éco-Score', 
+      factor: 'ï¿½co-Score', 
       impact: breakdown.ecoscore.score - 50, 
       reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
     },
@@ -164,11 +164,11 @@ const ProductPage: React.FC = () => {
       reason: `Score origine: ${breakdown.origin.score}/100` 
     },
     breakdown.ethics && { 
-      factor: 'Éthique', 
+      factor: 'ï¿½thique', 
       impact: breakdown.ethics.score - 50, 
-      reason: `Score éthique: ${breakdown.ethics.score}/100` 
+      reason: `Score ï¿½thique: ${breakdown.ethics.score}/100` 
     }
-  ].filter(Boolean); // Retirer les éléments null/undefined
+  ].filter(Boolean); // Retirer les ï¿½lï¿½ments null/undefined
 
   if (isMobile) {
     return (
@@ -204,7 +204,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
 
-          {/* Allergènes Mobile */}
+          {/* Allergï¿½nes Mobile */}
           {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
             <div className="bg-white p-4">
               <AllergensSection allergens={product.foodData.allergens} />
@@ -223,7 +223,7 @@ const ProductPage: React.FC = () => {
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
-            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-green-600 text-green-700 py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
+            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-primary text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
@@ -232,7 +232,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Dï¿½tails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
@@ -243,10 +243,10 @@ const ProductPage: React.FC = () => {
           )}
           
 
-          {/* Section Cosmétiques */}
+          {/* Section Cosmï¿½tiques */}
           {product.category === 'cosmetics' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmï¿½tique</summary>
               <div className="p-4">
                 <CosmeticAnalysisDisplay 
                   analysis={{ 
@@ -260,20 +260,20 @@ const ProductPage: React.FC = () => {
             </details>
           )}
 
-          {/* Section Détergents */}
+          {/* Section Dï¿½tergents */}
           {product.category === 'detergents' && (
             <details className="bg-white" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Dï¿½tergent</summary>
               <div className="p-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">Score environnemental</span>
-                    <span className="text-2xl font-bold text-green-700">
+                    <span className="text-2xl font-bold text-primary">
                       {product.scores?.environmentScore || 'N/A'}/100
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Impact aquatique, biodégradabilité et composition évalués
+                    Impact aquatique, biodï¿½gradabilitï¿½ et composition ï¿½valuï¿½s
                   </p>
                 </div>
               </div>
@@ -281,7 +281,7 @@ const ProductPage: React.FC = () => {
           )}
           {/* Alternatives section */}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandï¿½es</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -331,7 +331,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
 
-          {/* Allergènes Mobile */}
+          {/* Allergï¿½nes Mobile */}
           {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
             <div className="bg-white p-4">
               <AllergensSection allergens={product.foodData.allergens} />
@@ -349,7 +349,7 @@ const ProductPage: React.FC = () => {
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
 
-        {/* Section Cosmétiques Desktop */}
+        {/* Section Cosmï¿½tiques Desktop */}
         {product.category === 'cosmetics' && (
           <CosmeticAnalysisDisplay 
             analysis={{ 
@@ -361,19 +361,19 @@ const ProductPage: React.FC = () => {
           />
         )}
 
-        {/* Section Détergents Desktop */}
+        {/* Section Dï¿½tergents Desktop */}
         {product.category === 'detergents' && (
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Dï¿½tergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
-                <span className="text-3xl font-bold text-green-700">
+                <span className="text-3xl font-bold text-primary">
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>
               <p className="text-gray-600">
-                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
+                ï¿½valuation basï¿½e sur l'impact aquatique, la biodï¿½gradabilitï¿½ et la composition
               </p>
             </div>
           </div>

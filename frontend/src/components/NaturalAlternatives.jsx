@@ -1,4 +1,4 @@
-// frontend/src/components/NaturalAlternatives.jsx - Version Simplifiee
+﻿// frontend/src/components/NaturalAlternatives.jsx - Version Simplifiee
 
 import React, { useState } from 'react';
 

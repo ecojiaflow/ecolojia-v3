@@ -208,7 +208,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('profile')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'profile'
-                  ? 'border-green-500 text-green-700'
+                  ? 'border-green-500 text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -222,7 +222,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('preferences')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'preferences'
-                  ? 'border-green-500 text-green-700'
+                  ? 'border-green-500 text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -236,7 +236,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setActiveTab('security')}
               className={`py-4 border-b-2 transition-colors ${
                 activeTab === 'security'
-                  ? 'border-green-500 text-green-700'
+                  ? 'border-green-500 text-primary'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -262,7 +262,7 @@ const ProfilePage: React.FC = () => {
               {!isEditing && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-green-700 hover:text-green-700 font-medium"
+                  className="text-primary hover:text-primary font-medium"
                 >
                   Modifier
                 </button>
@@ -323,7 +323,7 @@ const ProfilePage: React.FC = () => {
                   <button
                     onClick={handleUpdateProfile}
                     disabled={loading}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-primary disabled:opacity-50"
                   >
                     {loading ? 'Enregistrement...' : 'Enregistrer'}
                   </button>
@@ -348,7 +348,7 @@ const ProfilePage: React.FC = () => {
                   {user?.subscription?.tier === 'free' && (
                     <button
                       onClick={() => navigate('/premium')}
-                      className="text-green-700 hover:text-green-700 text-sm font-medium"
+                      className="text-primary hover:text-primary text-sm font-medium"
                     >
                       Passer Ã  Premium
                     </button>
@@ -534,7 +534,7 @@ const ProfilePage: React.FC = () => {
             <button
               onClick={handleUpdatePreferences}
               disabled={loading}
-              className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 font-medium"
+              className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-primary disabled:opacity-50 font-medium"
             >
               {loading ? 'Enregistrement...' : 'Enregistrer les préférences'}
             </button>
@@ -593,7 +593,7 @@ const ProfilePage: React.FC = () => {
                   <button
                     onClick={handleUpdatePassword}
                     disabled={loading || !formData.currentPassword || !formData.newPassword}
-                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
+                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-primary disabled:opacity-50"
                   >
                     {loading ? 'Mise Ã  jour...' : 'Mettre Ã  jour le mot de passe'}
                   </button>
@@ -607,14 +607,14 @@ const ProfilePage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <Shield className="w-5 h-5 text-green-700" />
+                        <Shield className="w-5 h-5 text-primary" />
                       </div>
                       <div>
                         <p className="font-medium text-gray-800">Session actuelle</p>
                         <p className="text-sm text-gray-600">Connecté maintenant</p>
                       </div>
                     </div>
-                    <span className="text-sm text-green-700">Active</span>
+                    <span className="text-sm text-primary">Active</span>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+ï»¿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BarcodeScanner from '../components/scanner/BarcodeScanner';
 import { OCRGuide } from '../components/scanner/OCRGuide';
@@ -19,7 +19,7 @@ export const ScanPage: React.FC = () => {
   }, [scanAttempts]);
 
   const handleScanSuccess = async (barcode: string) => {
-    console.log('Code-barres scanné:', barcode);
+    console.log('Code-barres scannï¿½:', barcode);
     
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products?barcode=${barcode}`);
@@ -32,13 +32,13 @@ export const ScanPage: React.FC = () => {
         }
       }
       
-      setScanError(`Produit ${barcode} non trouvé en base`);
+      setScanError(`Produit ${barcode} non trouvï¿½ en base`);
       setScanAttempts(prev => prev + 1);
       setShowOCRFallback(true);
       
     } catch (error) {
       console.error('Erreur recherche produit:', error);
-      setScanError('Erreur réseau');
+      setScanError('Erreur rï¿½seau');
       setScanAttempts(prev => prev + 1);
     }
   };
@@ -62,7 +62,7 @@ export const ScanPage: React.FC = () => {
         barcodeImage: photos.barcode
       });
 
-      console.log('Analyse OCR réussie:', result);
+      console.log('Analyse OCR rï¿½ussie:', result);
 
       if (result.success && result.product) {
         navigate(`/product/${result.product.barcode}`, {
@@ -73,7 +73,7 @@ export const ScanPage: React.FC = () => {
           }
         });
       } else {
-        throw new Error('Analyse incomplète');
+        throw new Error('Analyse incomplï¿½te');
       }
 
     } catch (error: any) {
@@ -121,7 +121,7 @@ export const ScanPage: React.FC = () => {
           <p className="text-center text-sm">
             {scanAttempts === 0 ? '?? Placez le code-barres dans le cadre' : 
              scanAttempts < 3 ? '?? Code-barres introuvable ? Utilisez l\'OCR !' :
-             '?? Passez en mode photo (OCR) pour une analyse complète'}
+             '?? Passez en mode photo (OCR) pour une analyse complï¿½te'}
           </p>
         </div>
       </div>

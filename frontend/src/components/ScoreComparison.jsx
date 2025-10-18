@@ -1,4 +1,4 @@
-// frontend/src/components/ScoreComparison.jsx
+﻿// frontend/src/components/ScoreComparison.jsx
 
 import React from 'react';
 

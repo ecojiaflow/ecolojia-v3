@@ -43,7 +43,7 @@ const HistoryPage: React.FC = () => {
   );
 
   const getScoreColor = (score: number) => {
-    if (score >= 76) return 'text-green-600';
+    if (score >= 76) return 'text-primary';
     if (score >= 56) return 'text-lime-600';
     if (score >= 36) return 'text-orange-600';
     return 'text-red-600';
@@ -137,7 +137,7 @@ const HistoryPage: React.FC = () => {
                     {(item.nutriScore || item.novaGroup) && (
                       <div className="flex items-center gap-2">
                         {item.nutriScore && (
-                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                          <span className="px-3 py-1 bg-green-100 text-primary rounded-full text-xs font-medium">
                             Nutri-Score {item.nutriScore}
                           </span>
                         )}

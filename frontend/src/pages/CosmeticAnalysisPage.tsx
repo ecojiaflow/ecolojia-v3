@@ -258,7 +258,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                     <p className="text-sm text-gray-600">Ingredients totaux</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-green-700">{analysis.analysis.naturalIngredients}</p>
+                    <p className="text-2xl font-bold text-primary">{analysis.analysis.naturalIngredients}</p>
                     <p className="text-sm text-gray-600">Naturels</p>
                   </div>
                   <div>
@@ -404,7 +404,7 @@ const CosmeticAnalysisPage: React.FC = () => {
           {analysis.recommendations.skinTypes.map((type) => (
             <span
               key={type}
-              className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium"
+              className="px-3 py-1 bg-green-100 text-primary rounded-full text-sm font-medium"
             >
               {getSkinTypeLabel(type)}
             </span>
@@ -446,7 +446,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                   <p className="text-sm text-gray-600">{alt.brand}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-green-700">{alt.cosmeticAnalysis?.scores.overall}%</p>
+                  <p className="text-lg font-bold text-primary">{alt.cosmeticAnalysis?.scores.overall}%</p>
                   <p className="text-xs text-gray-500">Score global</p>
                 </div>
               </button>

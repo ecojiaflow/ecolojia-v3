@@ -199,13 +199,13 @@ const CategoryPage: React.FC = () => {
             <div className="flex border border-gray-300 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-3 ${viewMode === 'grid' ? 'bg-green-100 text-green-700' : 'hover:bg-gray-50'}`}
+                className={`p-3 ${viewMode === 'grid' ? 'bg-green-100 text-primary' : 'hover:bg-gray-50'}`}
               >
                 <Grid className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-3 ${viewMode === 'list' ? 'bg-green-100 text-green-700' : 'hover:bg-gray-50'}`}
+                className={`p-3 ${viewMode === 'list' ? 'bg-green-100 text-primary' : 'hover:bg-gray-50'}`}
               >
                 <List className="h-5 w-5" />
               </button>
@@ -304,7 +304,7 @@ const CategoryPage: React.FC = () => {
                     });
                     setSearchQuery('');
                   }}
-                  className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+                  className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-green-700"
                 >
                   Reinitialiser les filtres
                 </button>
@@ -364,7 +364,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick })
         }}
       />
       <div className={`p-4 ${isListMode ? 'flex-1' : ''}`}>
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-700 transition-colors">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
           {product.nameKey}
         </h3>
         <p className="text-sm text-gray-600 mb-2">{product.brandKey}</p>
@@ -403,7 +403,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick })
             <span className="text-lg font-bold text-gray-900">
               {product.price}aaa
             </span>
-            <div className="text-xs text-green-700 font-medium group-hover:underline">
+            <div className="text-xs text-primary font-medium group-hover:underline">
               Voir details
             </div>
           </div>

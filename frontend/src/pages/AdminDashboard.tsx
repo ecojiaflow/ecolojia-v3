@@ -64,7 +64,7 @@ const AdminDashboard: React.FC = () => {
               <button
                 onClick={handleImport}
                 disabled={loading}
-                className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                className="flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
               >
                 <Plus className="h-4 w-4" />
                 <span>Importer produits</span>
@@ -121,7 +121,7 @@ const AdminDashboard: React.FC = () => {
               <StatsCard
                 title="Imports Reussis"
                 value={stats.totalImports}
-                icon={<BarChart3 className="h-6 w-6 text-green-700" />}
+                icon={<BarChart3 className="h-6 w-6 text-primary" />}
                 color="green"
                 percentage={stats.successRate}
               />

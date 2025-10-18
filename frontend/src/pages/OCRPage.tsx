@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ï»¿import React, { useState } from 'react';
 import { ArrowLeft, Camera, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
@@ -38,11 +38,11 @@ export default function OCRPage() {
     if (!result) return;
     
     try {
-      // Créer produit depuis données OCR
+      // Crï¿½er produit depuis donnï¿½es OCR
       const data = await apiClient.post('/products/analyze', {
         category: 'food',
         manualData: {
-          name: 'Produit analysé par OCR',
+          name: 'Produit analysï¿½ par OCR',
           ingredients: result.ingredients?.join(', ') || result.rawText,
           source: 'OCR'
         }
@@ -52,11 +52,11 @@ export default function OCRPage() {
         // Rediriger vers page produit
         navigate(`/product/${data.product._id}`);
       } else {
-        alert('Produit non trouvé. Essayez la recherche manuelle.');
+        alert('Produit non trouvï¿½. Essayez la recherche manuelle.');
         navigate('/search');
       }
     } catch (error) {
-      console.error('Erreur création produit:', error);
+      console.error('Erreur crï¿½ation produit:', error);
       navigate('/search');
     }
   };
@@ -156,7 +156,7 @@ export default function OCRPage() {
                   <h4 className="font-medium text-green-900 mb-1">
                     Analyser un autre produit
                   </h4>
-                  <p className="text-green-700 text-sm">
+                  <p className="text-primary text-sm">
                     Comparez avec d'autres ingrÃ©dients
                   </p>
                 </button>
