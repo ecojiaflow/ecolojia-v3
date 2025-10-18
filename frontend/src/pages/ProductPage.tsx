@@ -282,7 +282,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">D�tails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
