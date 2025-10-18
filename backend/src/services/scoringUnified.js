@@ -7,27 +7,6 @@ const ADDITIVES_RED_LIST = ['E250','E251','E252','E621','E622','E623','E150c','E
 const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471','E472','E473','E476'];
 
 // ============================================
-// FONCTIONS HELPER POUR ÉQUIVALENTS COMPRÉHENSIBLES
-// ============================================
-function getSugarEquivalent(sugars) {
-  if (!sugars) return null;
-  const morceaux = Math.round(sugars / 5);
-  return morceaux + ' morceau' + (morceaux > 1 ? 'x' : '') + ' de sucre';
-}
-
-function getFatEquivalent(saturatedFat) {
-  if (!saturatedFat) return null;
-  const cuilleres = Math.round(saturatedFat / 5);
-  return cuilleres + ' cuillère' + (cuilleres > 1 ? 's' : '') + ' à café de beurre';
-}
-
-function getSaltEquivalent(salt) {
-  if (!salt) return null;
-  const pincees = Math.round(salt / 0.5);
-  return pincees + ' pincée' + (pincees > 1 ? 's' : '') + ' de sel';
-}
-
-// ============================================
 // SEUILS DE CONFIANCE ET TRANSPARENCE
 // ============================================
 const CONFIDENCE_THRESHOLDS = {
@@ -282,24 +261,21 @@ function calculateFoodScores(data) {
         weight: 0.10,
         value: sugars,
         unit: 'g/100g',
-        label: sugars !== null ? sugars + 'g/100g' : 'Non spécifié',
-        equivalent: getSugarEquivalent(sugars)
+        label: sugars !== null ? sugars + 'g/100g' : 'Non spécifié'
       },
       saturatedFat: { 
         score: fatScore, 
         weight: 0.10,
         value: saturatedFat,
         unit: 'g/100g',
-        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spécifié',
-        equivalent: getFatEquivalent(saturatedFat)
+        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spécifié'
       },
       salt: { 
         score: saltScore, 
         weight: 0.10,
         value: salt,
         unit: 'g/100g',
-        label: salt !== null ? salt + 'g/100g' : 'Non spécifié',
-        equivalent: getSaltEquivalent(salt)
+        label: salt !== null ? salt + 'g/100g' : 'Non spécifié'
       },
       ecoScore: { 
         score: ecoScore, 
