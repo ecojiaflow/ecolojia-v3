@@ -1,4 +1,4 @@
-﻿// frontend/src/components/product/ScoreBreakdown.tsx
+// frontend/src/components/product/ScoreBreakdown.tsx
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
@@ -69,7 +69,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
     },
     {
       key: 'nutriScore',
-      title: 'Qualit� nutritionnelle',
+      title: 'Qualité nutritionnelle',
       weight: '20%',
       data: breakdown.nutriScore,
       icon: '??'
@@ -90,7 +90,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
     },
     {
       key: 'saturatedFat',
-      title: 'Graisses satur�es',
+      title: 'Graisses saturées',
       weight: '10%',
       data: breakdown.saturatedFat,
       icon: '??'
@@ -154,7 +154,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         </div>
 
         <div className="mt-4 text-sm text-gray-700">
-          <strong>Compl�tude des donn�es :</strong> {scores.dataCompleteness || 'Partielle'}
+          <strong>Complétude des données :</strong> {scores.dataCompleteness || 'Partielle'}
         </div>
       </div>
 
@@ -163,7 +163,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-blue-800">
-            <strong>Information importante :</strong> Ces scores sont informatifs et bas�s sur des 
+            <strong>Information importante :</strong> Ces scores sont informatifs et basés sur des 
             methodologies scientifiques (OMS, ANSES, EFSA). Ils ne remplacent pas l'avis d'un 
             professionnel de Santé.
           </div>
@@ -195,7 +195,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   <div className="text-left">
                     <div className="font-semibold text-gray-900">{component.title}</div>
                     <div className="text-sm text-gray-600">
-                      {component.data?.label || 'Non sp�cifi�'} � Poids : {component.weight}
+                      {component.data?.label || 'Non spécifié'} � Poids : {component.weight}
                     </div>
                   </div>
                 </div>
@@ -317,7 +317,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
           methodologie scientifique
         </h4>
         <div className="text-sm text-gray-600 space-y-1">
-          <p>? <strong>8 compoSantés</strong> pond�r�es selon leur impact Santé/environnement</p>
+          <p>? <strong>8 compoSantés</strong> pondérées selon leur impact Santé/environnement</p>
           <p>? <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Santé Publique France</p>
           <p>? <strong>Version 3.0.0</strong> - Calcul� le {new Date(scores.calculatedAt || Date.now()).toLocaleDateString('fr-FR')}</p>
         </div>
