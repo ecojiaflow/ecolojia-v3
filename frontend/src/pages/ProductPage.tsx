@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -249,7 +249,7 @@ const ProductPage: React.FC = () => {
               <ScoreProgressBar score={overallScore} />
               {product.category === 'food' && product.foodData?.novaGroup && (
                 <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">🔥 Classification NOVA</h2>
                   <NovaBadge 
                     novaGroup={product.foodData.novaGroup} 
                     typeTransformation={product.typeTransformation}
@@ -365,7 +365,7 @@ const ProductPage: React.FC = () => {
         <ScoreProgressBar score={overallScore} />
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">?? Classification NOVA</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">🔥 Classification NOVA</h2>
             <NovaBadge 
               novaGroup={product.foodData.novaGroup} 
               typeTransformation={product.typeTransformation}
