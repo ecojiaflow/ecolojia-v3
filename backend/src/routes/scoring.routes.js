@@ -162,9 +162,26 @@ router.post('/:productId/recalculate', async (req, res) => {
     console.log('?? [DEBUG] AVANT SAVE - product.scores.scoringMetadata:', JSON.stringify(product.scores.scoringMetadata, null, 2));
     console.log('?? [DEBUG] AVANT SAVE - product.scores.dataQualityInfo:', JSON.stringify(product.scores.dataQualityInfo, null, 2));
     
-    // CRITIQUE : Forcer Mongoose à détecter les changements dans scores
-    product.markModified('scores');
-    await product.save();
+    // FIX : Utiliser updateOne avec $set explicite pour forcer MongoDB
+    await Product.updateOne(
+      { _id: product._id },
+      {
+        $set: {
+          'scores.overallScore': newScores.overallScore,
+          'scores.healthScore': newScores.healthScore,
+          'scores.environmentScore': newScores.environmentScore,
+          'scores.confidence': newScores.confidence,
+          'scores.dataCompleteness': newScores.dataCompleteness,
+          'scores.breakdown': newScores.breakdown,
+          'scores.scoringMetadata': newScores.scoringMetadata,
+          'scores.dataQualityInfo': newScores.dataQualityInfo,
+          'scores.missingData': newScores.missingData,
+          'scores.calculatedAt': new Date(),
+          'scoringVersion': newScores.scoringMetadata?.version || '3.1.0',
+          'lastScoreUpdate': new Date()
+        }
+      }
+    );
     
     console.log('?? [DEBUG] APRÈS SAVE - Relecture de la DB...');
     const reloaded = await Product.findById(product._id);
