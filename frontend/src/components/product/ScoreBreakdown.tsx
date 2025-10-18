@@ -65,65 +65,65 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
       title: 'Transformation (NOVA)',
       weight: '15%',
       data: breakdown.nova,
-      icon: '??'
+      icon: '🏭'
     },
     {
       key: 'nutriScore',
       title: 'Qualité nutritionnelle',
       weight: '20%',
       data: breakdown.nutriScore,
-      icon: '??'
+      icon: '🥗'
     },
     {
       key: 'additives',
       title: 'Additifs',
       weight: '15%',
       data: breakdown.additives,
-      icon: '??'
+      icon: '⚗️'
     },
     {
       key: 'sugars',
       title: 'Sucres',
       weight: '10%',
       data: breakdown.sugars,
-      icon: '??'
+      icon: '🍬'
     },
     {
       key: 'saturatedFat',
       title: 'Graisses saturées',
       weight: '10%',
       data: breakdown.saturatedFat,
-      icon: '??'
+      icon: '🧈'
     },
     {
       key: 'salt',
       title: 'Sel',
       weight: '10%',
       data: breakdown.salt,
-      icon: '??'
+      icon: '🧂'
     },
     {
       key: 'ecoScore',
       title: 'Impact environnemental',
       weight: '15%',
       data: breakdown.ecoScore,
-      icon: '??'
+      icon: '🌍'
     },
     {
       key: 'labels',
-      title: 'Labels & ethique',
+      title: 'Labels & éthique',
       weight: '5%',
       data: breakdown.labels,
-      icon: '???'
+      icon: '🏷️'
     }
   ];
 
   return (
     <div className="space-y-6">
-      {/* En-t�te avec score global */}
+      {/* En-tête avec score global */}
       <div className={`${getScoreBgColor(scores.overallScore)} ${getScoreBorderColor(scores.overallScore)} border rounded-lg p-6`}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-gray-900">Analyse detaillee du score</h3>
+          <h3 className="text-xl font-bold text-gray-900">Analyse détaillée du score</h3>
           <div className="flex items-center gap-2">
             <Info className="w-5 h-5 text-gray-500" />
             <span className="text-sm text-gray-600">
@@ -164,16 +164,16 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
           <AlertTriangle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-blue-800">
             <strong>Information importante :</strong> Ces scores sont informatifs et basés sur des 
-            methodologies scientifiques (OMS, ANSES, EFSA). Ils ne remplacent pas l'avis d'un 
+            méthodologies scientifiques (OMS, ANSES, EFSA). Ils ne remplacent pas l'avis d'un 
             professionnel de Santé.
           </div>
         </div>
       </div>
 
-      {/* Liste des 8 compoSantés */}
+      {/* Liste des 8 composantes */}
       <div className="space-y-3">
         <h4 className="font-semibold text-lg text-gray-900">
-          Detail des 8 compoSantés (methodologie ECOLOJIA V3)
+          Détail des 8 composantes (méthodologie ECOLOJIA V3)
         </h4>
 
         {components.map((component) => {
@@ -195,7 +195,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   <div className="text-left">
                     <div className="font-semibold text-gray-900">{component.title}</div>
                     <div className="text-sm text-gray-600">
-                      {component.data?.label || 'Non spécifié'} � Poids : {component.weight}
+                      {component.data?.label || 'Non spécifié'} • Poids : {component.weight}
                     </div>
                   </div>
                 </div>
@@ -229,7 +229,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   {component.data?.explanation && (
                     <div>
                       <div className="text-sm font-semibold text-gray-700 mb-1">
-                        ?? Explication
+                        📖 Explication
                       </div>
                       <div className="text-sm text-gray-600">
                         {component.data.explanation}
@@ -241,7 +241,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   {component.data?.recommendation && (
                     <div>
                       <div className="text-sm font-semibold text-gray-700 mb-1">
-                        ?? Recommandation
+                        💡 Recommandation
                       </div>
                       <div className="text-sm text-gray-600">
                         {component.data.recommendation}
@@ -253,13 +253,13 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   {component.data?.value !== undefined && component.data?.value !== null && (
                     <div>
                       <div className="text-sm font-semibold text-gray-700 mb-1">
-                        ?? Valeur mesur�e
+                        📊 Valeur mesurée
                       </div>
                       <div className="text-sm text-gray-600">
                         {component.data.value} {component.data.unit}
                         {component.data.equivalent && (
                           <span className="ml-2 text-gray-500">
-                            (� {component.data.equivalent})
+                            (≈ {component.data.equivalent})
                           </span>
                         )}
                       </div>
@@ -270,10 +270,10 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   {component.data?.weight && (
                     <div>
                       <div className="text-sm font-semibold text-gray-700 mb-1">
-                        ?? Contribution au score global
+                        🧮 Contribution au score global
                       </div>
                       <div className="text-sm text-gray-600">
-                        {score} points � {(component.data.weight * 100).toFixed(0)}% = {' '}
+                        {score} points × {(component.data.weight * 100).toFixed(0)}% = {' '}
                         <strong className={getScoreTextColor(score)}>
                           {(score * component.data.weight).toFixed(2)} points
                         </strong>
@@ -285,12 +285,12 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                   {component.key === 'additives' && component.data?.dangerous?.length > 0 && (
                     <div>
                       <div className="text-sm font-semibold text-red-700 mb-1">
-                        ?? Additifs � risque d�tect�s
+                        ⚠️ Additifs à risque détectés
                       </div>
                       <div className="space-y-1">
                         {component.data.dangerous.map((additive: any, idx: number) => (
                           <div key={idx} className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">
-                            {additive.code} - Risque �lev�
+                            {additive.code} - Risque élevé
                           </div>
                         ))}
                       </div>
@@ -310,25 +310,25 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         })}
       </div>
 
-      {/* methodologie */}
+      {/* Méthodologie */}
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
           <Info className="w-5 h-5" />
-          methodologie scientifique
+          Méthodologie scientifique
         </h4>
         <div className="text-sm text-gray-600 space-y-1">
-          <p>? <strong>8 compoSantés</strong> pondérées selon leur impact Santé/environnement</p>
-          <p>? <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Santé Publique France</p>
-          <p>? <strong>Version 3.0.0</strong> - Calcul� le {new Date(scores.calculatedAt || Date.now()).toLocaleDateString('fr-FR')}</p>
+          <p>• <strong>8 composantes</strong> pondérées selon leur impact Santé/environnement</p>
+          <p>• <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Santé Publique France</p>
+          <p>• <strong>Version 3.0.0</strong> - Calculé le {new Date(scores.calculatedAt || Date.now()).toLocaleDateString('fr-FR')}</p>
         </div>
       </div>
 
       {/* Disclaimer final */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <div className="text-sm text-yellow-800">
-          <strong>?? Rappel l�gal :</strong> ECOLOJIA n'est pas un dispositif m�dical. Pour un suivi 
-          nutritionnel personnalis� ou en cas de pathologie (diab�te, allergies, etc.), consultez un 
-          professionnel de Santé dipl�m� (m�decin, nutritionniste, di�t�ticien).
+          <strong>⚖️ Rappel légal :</strong> ECOLOJIA n'est pas un dispositif médical. Pour un suivi 
+          nutritionnel personnalisé ou en cas de pathologie (diabète, allergies, etc.), consultez un 
+          professionnel de Santé diplômé (médecin, nutritionniste, diététicien).
         </div>
       </div>
     </div>
