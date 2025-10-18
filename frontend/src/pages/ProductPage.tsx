@@ -325,7 +325,7 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommand�es</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
