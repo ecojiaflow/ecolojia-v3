@@ -143,7 +143,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
             <div className={`text-3xl font-bold ${getScoreTextColor(scores.healthScore || 50)}`}>
               {scores.healthScore || 50}
             </div>
-            <div className="text-sm text-gray-600 mt-1">Sante</div>
+            <div className="text-sm text-gray-600 mt-1">Santé</div>
           </div>
           <div className="text-center">
             <div className={`text-3xl font-bold ${getScoreTextColor(scores.environmentScore || 50)}`}>
@@ -165,15 +165,15 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
           <div className="text-sm text-blue-800">
             <strong>Information importante :</strong> Ces scores sont informatifs et bas�s sur des 
             methodologies scientifiques (OMS, ANSES, EFSA). Ils ne remplacent pas l'avis d'un 
-            professionnel de Sante.
+            professionnel de Santé.
           </div>
         </div>
       </div>
 
-      {/* Liste des 8 composantes */}
+      {/* Liste des 8 compoSantés */}
       <div className="space-y-3">
         <h4 className="font-semibold text-lg text-gray-900">
-          Detail des 8 composantes (methodologie ECOLOJIA V3)
+          Detail des 8 compoSantés (methodologie ECOLOJIA V3)
         </h4>
 
         {components.map((component) => {
@@ -317,8 +317,8 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
           methodologie scientifique
         </h4>
         <div className="text-sm text-gray-600 space-y-1">
-          <p>? <strong>8 composantes</strong> pond�r�es selon leur impact Sante/environnement</p>
-          <p>? <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Sante Publique France</p>
+          <p>? <strong>8 compoSantés</strong> pond�r�es selon leur impact Santé/environnement</p>
+          <p>? <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Santé Publique France</p>
           <p>? <strong>Version 3.0.0</strong> - Calcul� le {new Date(scores.calculatedAt || Date.now()).toLocaleDateString('fr-FR')}</p>
         </div>
       </div>
@@ -328,7 +328,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         <div className="text-sm text-yellow-800">
           <strong>?? Rappel l�gal :</strong> ECOLOJIA n'est pas un dispositif m�dical. Pour un suivi 
           nutritionnel personnalis� ou en cas de pathologie (diab�te, allergies, etc.), consultez un 
-          professionnel de Sante dipl�m� (m�decin, nutritionniste, di�t�ticien).
+          professionnel de Santé dipl�m� (m�decin, nutritionniste, di�t�ticien).
         </div>
       </div>
     </div>
