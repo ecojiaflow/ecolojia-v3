@@ -265,11 +265,11 @@ const UniversalSearchPage: React.FC = () => {
             </div>
           )}
 
-          {/* Barre de progression sante */}
+          {/* Barre de progression Santé */}
           {result.enrichment?.health_score && (
             <div className="mb-3">
               <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                <span>Impact Sante</span>
+                <span>Impact Santé</span>
                 <span>{result.enrichment.health_score}/100</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">

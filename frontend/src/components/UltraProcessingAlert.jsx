@@ -84,7 +84,7 @@ const UltraProcessingAlert = ({ novaGroup, additives, healthImpact, alternatives
           {novaGroup === 4 && (
             <div className="mt-3 bg-white bg-opacity-50 rounded-lg p-3 border border-red-200">
               <div className="text-xs font-medium text-red-900 mb-1">
-                ? Impact Sante Scientifiquement Documente :
+                ? Impact Santé Scientifiquement Documente :
               </div>
               <div className="text-xs text-red-700 space-y-1">
                 <div>a +22% risque depression (Nature Mental Health 2024)</div>

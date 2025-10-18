@@ -146,7 +146,7 @@ function generateCosmeticSimulation(payload: AnalysisRequest) {
         positiveIngredients: hasBioIngredients ? [
           {
             name: isCosmetic ? 'Huiles essentielles bio' : 'Agents lavants vegetaux',
-            benefit: isCosmetic ? 'Proprietes apaisantes naturelles' : 'Biodegradabilite elevee'
+            benefit: isCosmetic ? 'Proprietes apaiSantés naturelles' : 'Biodegradabilite elevee'
           },
           {
             name: isCosmetic ? 'Aloe vera bio' : 'Bicarbonate de sodium',
@@ -159,7 +159,7 @@ function generateCosmeticSimulation(payload: AnalysisRequest) {
             ? (hasBioIngredients ? 'Excellent choix ! Ce produit cosmetique presente une composition naturelle et respectueuse de votre peau.'
                 : hasProblematicIngredients ? 'Attention : ce produit contient des ingredients potentiellement irritants. Considerez des alternatives plus naturelles.'
                   : 'Produit acceptable, mais pourrait etre ameliore avec des ingredients plus naturels.')
-            : (hasBioIngredients ? 'Tres bon choix ecologique ! Ce produit respecte l\'environnement et votre sante.'
+            : (hasBioIngredients ? 'Tres bon choix ecologique ! Ce produit respecte l\'environnement et votre Santé.'
                 : hasProblematicIngredients ? 'Impact environnemental preoccupant. Privilegiez des alternatives ecologiques.'
                   : 'Produit standard. Des alternatives plus ecologiques existent.'),
           alternatives: hasProblematicIngredients ? (isCosmetic ? [
@@ -320,7 +320,7 @@ export function useNovaApiLegacy(): UseNovaApiReturn {
             ] : [
               'Classification NOVA - INSERM 2024',
               'Base de donnees EFSA',
-              'Programme National Nutrition Sante',
+              'Programme National Nutrition Santé',
               'ANSES - Agence nationale de securite sanitaire'
             ]
           },

@@ -54,7 +54,7 @@ Les aliments NOVA 4 contiennent souvent des additifs, colorants et conservateurs
 **D (orange)** : Qualité nutritionnelle faible
 **E (rouge)** : Qualité nutritionnelle très faible
 
-Le calcul prend en compte :
+Le calculéprend en compte :
 ✅ Points positifs : fibres, protéines, fruits/légumes
 ❌ Points négatifs : calories, sucres, graisses saturées, sel
 

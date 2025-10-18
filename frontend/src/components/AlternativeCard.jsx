@@ -30,7 +30,7 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
     return [
       "Meilleure qualite nutritionnelle",
       "Moins de transformation industrielle",
-      "Impact sante positif prouve"
+      "Impact Santé positif prouve"
     ];
   };
   
@@ -73,7 +73,7 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
         {isSelected && (
           <div className="border-t border-gray-100 pt-4 mt-4 space-y-4">
             <div className="bg-green-50 rounded-xl p-4">
-              <h4 className="font-bold text-green-700 mb-2">a Benefices Sante Prouves</h4>
+              <h4 className="font-bold text-green-700 mb-2">a Benefices Santé Prouves</h4>
               <ul className="text-sm text-green-600 space-y-1">
                 {getHealthBenefits(alternative.name).map((benefit, idx) => (
                   <li key={idx}>a {benefit}</li>
@@ -85,7 +85,7 @@ const AlternativeCard = ({ alternative, index, isSelected, onSelect, currentScor
 
         <div className="text-center mt-4">
           <span className="text-xs text-gray-400">
-            {isSelected ? 'aa Masquer details' : 'aa Voir benefices sante'}
+            {isSelected ? 'aa Masquer details' : 'aa Voir benefices Santé'}
           </span>
         </div>
       </div>

@@ -98,12 +98,12 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
     },
     {
       id: 'healthData',
-      name: 'aa Analyse nutritionnelle & sante',
+      name: 'aa Analyse nutritionnelle & Santé',
       icon: <Eye className="w-5 h-5" />,
       required: false,
       important: true,
       description: 'Analyse personnalisee de vos produits',
-      details: 'Ces donnees nous permettent d\'analyser vos produits alimentaires, cosmetiques et detergents pour vous fournir des scores de sante personnalises, des recommandations et des alternatives. Ces donnees peuvent inclure vos allergies, preferences alimentaires et historique d\'analyses.',
+      details: 'Ces donnees nous permettent d\'analyser vos produits alimentaires, cosmetiques et detergents pour vous fournir des scores de Santé personnalises, des recommandations et des alternatives. Ces donnees peuvent inclure vos allergies, preferences alimentaires et historique d\'analyses.',
       legalBasis: 'Consentement explicite (RGPD Art. 9)',
       dataTypes: [
         'Historique des produits analyses',

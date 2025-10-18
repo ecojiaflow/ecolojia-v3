@@ -114,7 +114,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
     return baseBenefits;
   };
 
-  // aaaa CALCUL VALEUR aaCONOMIQUE
+  // aaaa calculéVALEUR aaCONOMIQUE
   const getEconomicValue = () => {
     const monthlyScans = quotaStatus?.scans.used || 15;
     const annualScans = monthlyScans * 12;

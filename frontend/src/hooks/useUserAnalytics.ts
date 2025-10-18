@@ -171,26 +171,26 @@ export const useUserAnalytics = () => {
     const analyses = getStoredData(STORAGE_KEYS.analyses, []);
     if (analyses.length === 0) return null;
 
-    // Calcul score sante
+    // calculéscore Santé
     const healthScores = analyses.map((a: ProductAnalysis) => ?.healthScore || 50);
     const healthScore = Math.round(healthScores.reduce((sum: number, score: number) => sum + score, 0) / healthScores.length);
 
-    // Calcul NOVA moyen
+    // calculéNOVA moyen
     const novaScores = analyses.map((a: ProductAnalysis) => ?.novaGroup || 2);
     const averageNovaScore = Number((novaScores.reduce((sum: number, nova: number) => sum + nova, 0) / novaScores.length).toFixed(1));
 
-    // Calcul ultra-transformes
+    // calculéultra-transformes
     const ultraCount = analyses.filter((a: ProductAnalysis) => (?.novaGroup || 2) >= 4).length;
     const ultraTransformPercent = Math.round((ultraCount / analyses.length) * 100);
 
-    // Calcul additifs
+    // calculéadditifs
     const additivesCount = analyses.reduce((total: number, a: ProductAnalysis) => total + (?.additives?.length || 0), 0);
 
-    // Calcul bio
+    // calculébio
     const bioCount = analyses.filter((a: ProductAnalysis) => ?.isBio === true).length;
     const bioProductsPercent = Math.round((bioCount / analyses.length) * 100);
 
-    // Calcul tendance amelioration
+    // calculétendance amelioration
     let improvementTrend = 0;
     if (analyses.length >= 4) {
       const recent = analyses.slice(-2);
@@ -292,7 +292,7 @@ export const useUserAnalytics = () => {
         {
           id: 'improve_score_default',
           type: 'improve_score',
-          title: 'Atteindre 75 points de score sante',
+          title: 'Atteindre 75 points de score Santé',
           description: 'Ameliorer progressivement mes choix alimentaires',
           target: 75,
           current: currentMetrics.healthScore,

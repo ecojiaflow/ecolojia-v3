@@ -73,7 +73,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           {novaGroup === 4 && (
             <div className="bg-white bg-opacity-70 rounded-lg p-4 border border-red-200">
               <div className="text-sm text-red-800 font-semibold mb-2">
-                ? Impact Sante Documente
+                ? Impact Santé Documente
               </div>
               <div className="text-xs text-red-700 space-y-1">
                 <div>a Augmentation risques cardiovasculaires et diabete</div>
@@ -89,7 +89,7 @@ const NovaClassificationBadge = ({ novaGroup, groupInfo, healthImpact }) => {
           {novaGroup === 1 && (
             <div className="bg-white bg-opacity-70 rounded-lg p-4 border border-green-200">
               <div className="text-sm text-green-800 font-semibold mb-2">
-                ? Excellent pour la Sante
+                ? Excellent pour la Santé
               </div>
               <div className="text-xs text-green-700">
                 Preserve la matrice alimentaire et les qualites nutritionnelles originales

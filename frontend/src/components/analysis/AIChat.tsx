@@ -34,7 +34,7 @@ const PREDEFINED_QUESTIONS = [
     ]
   },
   {
-    category: 'aaa Nutrition & Sante',
+    category: 'aaa Nutrition & Santé',
     questions: [
       { text: 'Quel est l\'impact glycemique de ce produit a', type: 'glycemic_impact' },
       { text: 'Ce produit convient-il aux diabetiques a', type: 'diabetes_suitability' },
@@ -68,7 +68,7 @@ export const AIChat: React.FC<Props> = ({ productData, onAnalysisRequest }) => {
       id: '1',
       type: 'assistant',
       content: productData ? 
-        `Bonjour ! Je suis votre assistant IA specialise en analyse scientifique. Je peux vous expliquer tout sur "${productdata?.name}" : composition, impact sante, alternatives, etc. Que souhaitez-vous savoir a` :
+        `Bonjour ! Je suis votre assistant IA specialise en analyse scientifique. Je peux vous expliquer tout sur "${productdata?.name}" : composition, impact Santé, alternatives, etc. Que souhaitez-vous savoir a` :
         'Bonjour ! Je suis votre assistant IA specialise en analyse scientifique des produits. Posez-moi vos questions !',
       timestamp: new Date()
     }
@@ -154,7 +154,7 @@ Source : Base EFSA 2024`;
       case 'nova_explanation':
         const novaExplanations = {
           1: 'aaaa **Groupe 1 - Non/Minimalement Transforme**\n\nExcellent choix ! Ce produit subit peu de transformation industrielle. Associe  -23% de risques de maladies chroniques selon les etudes INSERM.',
-          2: 'aaaa **Groupe 2 - Peu Transforme**\n\nBon choix ! Quelques ingredients ajoutes pour conservation. Impact sante neutre  positif.',
+          2: 'aaaa **Groupe 2 - Peu Transforme**\n\nBon choix ! Quelques ingredients ajoutes pour conservation. Impact Santé neutre  positif.',
           3: 'a **Groupe 3 - Transforme**\n\nProduit avec plusieurs ingredients transformes. ? consommer avec moderation.',
           4: ' **Groupe 4 - ULTRA-TRANSFORMaa**\n\nATTENTION : Transformation industrielle intensive. Risque +53% diabete, +22% depression selon BMJ 2024. Privilegier les alternatives naturelles.'
         };
@@ -183,7 +183,7 @@ Voulez-vous que je detaille une alternative specifique a`;
 
 Grace  mon analyse scientifique avancee, je peux vous expliquer :
 aa La composition exacte et les risques potentiels
-aa L'impact sur votre sante selon les dernieres etudes
+aa L'impact sur votre Santé selon les dernieres etudes
 aa Des alternatives plus saines et naturelles
 aa Des conseils personnalises
 

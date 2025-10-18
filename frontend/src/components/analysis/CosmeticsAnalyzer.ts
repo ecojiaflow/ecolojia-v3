@@ -129,7 +129,7 @@ export class CosmeticsAnalyzer {
     // Detection allergenes
     const allergens = this.detectAllergens(ingredients);
 
-    // Calcul scores
+    // calculéscores
     const naturalnessScore = this.calculateNaturalnessScore(ingredients);
     const skinCompatibilityScore = this.calculateSkinCompatibilityScore(inciIngredients);
     const healthScore = this.calculateCosmeticHealthScore(
@@ -475,7 +475,7 @@ export class DetergentsAnalyzer {
     // Detection labels ecologiques
     const ecoLabels = this.detectEcoLabels(name);
 
-    // Calcul scores
+    // calculéscores
     const environmentalScore = this.calculateEnvironmentalScore(aquaticToxicity, biodegradability, ecoLabels);
     const healthScore = this.calculateDetergentHealthScore(aquaticToxicity, ingredients);
 
@@ -593,7 +593,7 @@ export class DetergentsAnalyzer {
   private calculateDetergentHealthScore(aquaticToxicity: any, ingredients: string[]): number {
     let score = 85; // Score de base plus eleve pour detergents
 
-    // Penalites pour toxicite (impact indirect sur sante)
+    // Penalites pour toxicite (impact indirect sur Santé)
     const healthPenalties = {
       'LOW': 0,
       'MODERATE': -5,

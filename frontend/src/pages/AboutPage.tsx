@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-[#3B3B3B] mb-2">Analyse instantanee</h3>
-                    <p className="text-[#3B3B3B]/70">Notre IA calcule les scores sante, environnement et ethique</p>
+                    <p className="text-[#3B3B3B]/70">Notre IA calcule les scores Santé, environnement et ethique</p>
                   </div>
                 </div>
                 
@@ -119,7 +119,7 @@ const AboutPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Responsabilite</h3>
               <p className="text-[#3B3B3B]/70">
-                Engagement pour votre sante et celle de la planete
+                Engagement pour votre Santé et celle de la planete
               </p>
             </div>
             
@@ -176,7 +176,7 @@ const AboutPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Analyse Temps Reel</h3>
               <p className="text-[#3B3B3B]/70">
-                Enrichissement automatique et calcul instantane des scores en moins de 2 secondes
+                Enrichissement automatique et calculéinstantane des scores en moins de 2 secondes
               </p>
             </div>
             

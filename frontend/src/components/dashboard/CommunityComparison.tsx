@@ -95,7 +95,7 @@ export const CommunityComparison: React.FC = () => {
   // Prepare radar chart data
   const radarData = [
     {
-      subject: 'Score Sante',
+      subject: 'Score Santé',
       user: comparisondata?.user.avgHealthScore,
       community: comparisondata?.community.avgHealthScore,
       fullMark: 100

@@ -140,7 +140,7 @@ class DashboardService {
         goals: [
           {
             id: '1',
-            name: 'Score sante moyen',
+            name: 'Score Santé moyen',
             target: 80,
             current: 72,
             unit: 'points'

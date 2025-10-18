@@ -148,7 +148,7 @@ export class EmailService {
                 <ul>
                     <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ <strong>Analyse scientifique avancee</strong> : Classification NOVA, detection ultra-transformation</li>
                     <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â€šÂ¬Ã…â€œ <strong>Chat IA Expert</strong> : 5 questions gratuites par jour avec notre nutritionniste IA</li>
-                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â  <strong>Score sante 0-100</strong> : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits</li>
+                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â  <strong>Score Santé 0-100</strong> : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits</li>
                     <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¿ <strong>Alternatives saines</strong> : Suggestions personnalisees</li>
                 </ul>
                 
@@ -182,7 +182,7 @@ ${verificationUrl}
 Ce que vous allez decouvrir avec ECOLOJIA :
 - Analyse scientifique avancee : Classification NOVA, detection ultra-transformation
 - Chat IA Expert : 5 questions gratuites par jour avec notre nutritionniste IA
-- Score sante 0-100 : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits
+- Score Santé 0-100 : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits
 - Alternatives saines : Suggestions personnalisees
 
 Ce lien est valable pendant 24 heures.
@@ -306,7 +306,7 @@ L'equipe ECOLOJIA
                 
                 <div class="feature">
                     <h3>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ Votre IA Scientifique Gratuite</h3>
-                    <p>Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score sante 0-100.</p>
+                    <p>Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score Santé 0-100.</p>
                 </div>
                 
                 <div class="feature">
@@ -326,7 +326,7 @@ L'equipe ECOLOJIA
                 <p><strong>Premiers pas conseilles :</strong></p>
                 <ol>
                     <li>Scannez un produit de votre cuisine</li>
-                    <li>Decouvrez son score sante et ses analyses</li>
+                    <li>Decouvrez son score Santé et ses analyses</li>
                     <li>Posez une question Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre IA Expert</li>
                     <li>Explorez les alternatives suggerees</li>
                 </ol>
@@ -336,7 +336,7 @@ L'equipe ECOLOJIA
             
             <div class="footer">
                 <p>Merci de faire confiance Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  ECOLOJIA pour votre parcours vers une consommation plus consciente.</p>
-                <p>Æ’Ã†â€™aÃ¢â€šÂ¬Ã…Â¡â€šÃ‚Â© 2024 ECOLOJIA - L'IA au service de votre sante</p>
+                <p>Æ’Ã†â€™aÃ¢â€šÂ¬Ã…Â¡â€šÃ‚Â© 2024 ECOLOJIA - L'IA au service de votre Santé</p>
             </div>
         </div>
     </body>
@@ -351,7 +351,7 @@ Felicitations ${name} !
 Votre compte ECOLOJIA est maintenant actif. Vous faites desormais partie de la communaute de consommateurs eclaires qui utilisent l'IA pour faire de meilleurs choix.
 
 VOTRE IA SCIENTIFIQUE GRATUITE :
-Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score sante 0-100.
+Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score Santé 0-100.
 
 CHAT EXPERT IA (5 questions/jour) :
 Posez vos questions Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre nutritionniste I?. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Reponses personnalisees garanties.
@@ -361,7 +361,7 @@ Questions IA illimitees, coaching personnalise, dashboard analytics complet. Ess
 
 Premiers pas conseilles :
 1. Scannez un produit de votre cuisine
-2. Decouvrez son score sante et ses analyses  
+2. Decouvrez son score Santé et ses analyses  
 3. Posez une question Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre IA Expert
 4. Explorez les alternatives suggerees
 

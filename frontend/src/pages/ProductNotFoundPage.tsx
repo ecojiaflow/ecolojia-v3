@@ -266,7 +266,7 @@ const ProductNotFoundPage: React.FC = () => {
           <ul className="text-sm text-blue-800 space-y-1">
             <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Extraction automatique du nom et de la marque</li>
             <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Reconnaissance OCR des ingredients</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Calcul du score ecologique (0-100%)</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ calculédu score ecologique (0-100%)</li>
             <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Creation automatique de la fiche produit</li>
           </ul>
         </div>

@@ -141,7 +141,7 @@ export class MultiCategoryApiService {
         {
           id: 'detergents',
           name: 'Detergents',
-          description: 'Impact environnemental et sante des produits menagers',
+          description: 'Impact environnemental et Santé des produits menagers',
           icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â½',
           color: '#4FC3F7',
           features: ['Biodegradabilite', 'Toxicite aquatique', 'Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°missions COV', 'Recettes DIY'],

@@ -148,7 +148,7 @@ function processBackendResponse(backendData: any, productName: string, ingredien
     description: ?.description || ?.desc || ''
   }));
   
-  // Calcul du score de sante base sur NOVA et autres facteurs
+  // calculédu score de Santé base sur NOVA et autres facteurs
   const healthScore = calculateHealthScoreFromBackend(novaGroup, novaData, backendAdditives, productName, ingredients);
   
   // Extraction des recommandations
@@ -185,7 +185,7 @@ function processBackendResponse(backendData: any, productName: string, ingredien
 }
 
 /**
- * Calcule le score de sante depuis les donnees backend
+ * Calcule le score de Santé depuis les donnees backend
  */
 function calculateHealthScoreFromBackend(novaGroup: number, novaData: any, additives: any[], productName: string, ingredients: string): number {
   let score = 100;
@@ -197,7 +197,7 @@ function calculateHealthScoreFromBackend(novaGroup: number, novaData: any, addit
   // Penalites pour additifs
   score -= additives.length * 5;
   
-  // Ajustement selon le niveau de sante du backend
+  // Ajustement selon le niveau de Santé du backend
   const healthLevel = novadata?.healthImpact?.level;
   if (healthLevel === 'warning') score -= 20;
   else if (healthLevel === 'danger') score -= 40;
@@ -277,7 +277,7 @@ function buildReasoning(novaData: any, novaGroup: number, additives: any[]): str
     reasoning += 'Aucun additif detecte. ';
   }
   
-  // Impact sante
+  // Impact Santé
   if (novadata?.healthImpact?.description) {
     reasoning += novadata?.healthImpact.description + '. ';
   }
@@ -468,7 +468,7 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
 }
 
 /**
- * aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ CALCUL SCORE SANTÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â° AVANCÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°
+ * aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ calculéSCORE SANTÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â° AVANCÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°
  * Algorithme sophistique prenant en compte multiples facteurs
  */
 function calculateHealthScoreAdvanced(ingredients: string, novaGroup: number, additives: any[]): number {

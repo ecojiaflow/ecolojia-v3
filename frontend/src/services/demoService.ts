@@ -422,7 +422,7 @@ class DemoService {
   private generateAlternatives(category: string): any[] {
     const alternatives = {
       food: [
-        { productId: 'alt-f1', name: 'Alternative Bio', brand: 'NatureBio', score: 95, reason: 'Meilleur pour la sante' },
+        { productId: 'alt-f1', name: 'Alternative Bio', brand: 'NatureBio', score: 95, reason: 'Meilleur pour la Santé' },
         { productId: 'alt-f2', name: 'Option Locale', brand: 'Ferme du Coin', score: 92, reason: 'Circuit court' }
       ],
       cosmetic: [

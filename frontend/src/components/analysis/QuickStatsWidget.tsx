@@ -36,7 +36,7 @@ const QuickStatsWidget: React.FC = () => {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-green-700">--</div>
-            <p className="text-xs text-green-700 font-medium">Score Sante</p>
+            <p className="text-xs text-green-700 font-medium">Score Santé</p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-blue-600">--</div>
@@ -123,7 +123,7 @@ const QuickStatsWidget: React.FC = () => {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-green-700">{currentScore}</div>
-          <p className="text-xs text-green-700 font-medium">Score Sante</p>
+          <p className="text-xs text-green-700 font-medium">Score Santé</p>
           <p className="text-xs text-green-700 mt-1">/100</p>
         </div>
         
@@ -148,11 +148,11 @@ const QuickStatsWidget: React.FC = () => {
 
       {/* Progress Indicators */}
       <div className="space-y-3 mb-6">
-        {/* Score Sante Progress */}
+        {/* Score Santé Progress */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="text-green-500 mr-2">a</div>
-            <span className="text-sm font-medium text-gray-700">Score Sante Global</span>
+            <span className="text-sm font-medium text-gray-700">Score Santé Global</span>
           </div>
           <div className="flex items-center">
             <div className="w-20 h-2 bg-gray-200 rounded-full mr-2">

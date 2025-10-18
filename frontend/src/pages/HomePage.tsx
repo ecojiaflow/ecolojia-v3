@@ -75,7 +75,7 @@ const HomePage: React.FC = () => {
     {
       icon: Sparkles,
       title: 'IA Personnalisee',
-      description: 'Recommandations adaptees a votre profil et vos objectifs sante',
+      description: 'Recommandations adaptees a votre profil et vos objectifs Santé',
       color: 'bg-purple-100 text-purple-700'
     }
   ];
@@ -186,7 +186,7 @@ const HomePage: React.FC = () => {
           </section>
           <section className="py-20 bg-gray-50">
             <div className="container mx-auto px-4">
-              <div className="text-center mb-12"><h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2><p className="text-lg text-gray-600">La technologie au service de votre sante</p></div>
+              <div className="text-center mb-12"><h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2><p className="text-lg text-gray-600">La technologie au service de votre Santé</p></div>
               <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 {features.map((feature, index) => (<motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"><div className={`inline-flex p-4 rounded-xl ${feature.color} mb-6`}><feature.icon className="w-6 h-6" /></div><h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3><p className="text-gray-600 mb-4">{feature.description}</p><button className="text-primary font-medium inline-flex items-center hover:text-primary transition-colors">En savoir plus<ArrowRight className="w-4 h-4 ml-1" /></button></motion.div>))}
               </div>

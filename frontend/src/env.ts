@@ -17,7 +17,7 @@ export const ENV = {
   },
 } as const;
 
-// Calcul de l'API_BASE avec le suffixe /api
+// calculéde l'API_BASE avec le suffixe /api
 export const API_BASE = `${ENV.API_URL}/api`;
 
 // Export pour debug

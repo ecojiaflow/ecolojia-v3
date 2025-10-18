@@ -94,11 +94,11 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
 
       {/* Scores detailles */}
       <div className="grid grid-cols-2 gap-4 mt-8">
-        {/* Score Sante */}
+        {/* Score Santé */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
-            <span className="text-sm font-medium">Sante</span>
+            <span className="text-sm font-medium">Santé</span>
             {getScoreIcon(result.scores.healthScore)}
           </div>
           <Progress value={result.scores.healthScore} className="h-2" />

@@ -58,7 +58,7 @@ const NovaDetails: React.FC<{ novaAnalysis: NovaAnalysis }> = ({ novaAnalysis })
           </div>
 
           <div>
-            <h4 className="font-bold text-blue-700 mb-2"> Impact sur la Sante</h4>
+            <h4 className="font-bold text-blue-700 mb-2"> Impact sur la Santé</h4>
             <p className="text-sm text-blue-600 bg-white rounded-lg p-3">
               {novaAnalysis.health_impact}
             </p>

@@ -94,7 +94,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
               </span>
             </div>
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-full shadow-md">
-              <span className="text-sm font-medium text-gray-700">Score Sante</span>
+              <span className="text-sm font-medium text-gray-700">Score Santé</span>
             </div>
           </div>
         </div>
@@ -308,7 +308,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                   <span className={`text-lg font-bold ${getScoreColor(alt.healthScore || 0)}`}>
                     {alt.healthScore || 0}
                   </span>
-                  <p className="text-xs text-gray-500">Score sante</p>
+                  <p className="text-xs text-gray-500">Score Santé</p>
                 </div>
               </div>
             ))}
@@ -366,7 +366,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
               }`}
             >
               <Heart className="w-5 h-5 inline mr-2" />
-              Sante
+              Santé
             </button>
             <button
               onClick={() => setSelectedTab('environment')}
@@ -443,7 +443,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
             {selectedTab === 'health' && (
               <div className="prose prose-sm max-w-none">
                 <p className="text-gray-600">
-                  Analyse detaillee de l'impact sur votre sante avec recommandations personnalisees...
+                  Analyse detaillee de l'impact sur votre Santé avec recommandations personnalisees...
                 </p>
               </div>
             )}

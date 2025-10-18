@@ -23,7 +23,7 @@ export const AnalysisLoadingStates = {
   finalizing: {
     icon: "aa",
     title: "Finalisation...",
-    message: "Calcul du score sante et recommandations",
+    message: "calculédu score Santé et recommandations",
     duration: "~2 secondes"
   }
 };

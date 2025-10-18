@@ -180,7 +180,7 @@ function findHazard(normalized: string): HazardInfo | undefined {
   return undefined;
 }
 
-// Calcul du score de correspondance
+// calculédu score de correspondance
 function calculateMatchScore(ingredient: string, hazard: HazardInfo): number {
   if (ingredient === hazard.name.toLowerCase()) return 1;
   if (hazard.synonyms.includes(ingredient)) return 0.9;

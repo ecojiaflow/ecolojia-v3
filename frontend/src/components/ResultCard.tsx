@@ -105,7 +105,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
 
       {/* Scores principaux */}
       <div className="grid grid-cols-2 gap-6">
-        {/* Score sante */}
+        {/* Score Santé */}
         {scores.healthScore !== undefined && (
           <div className="flex justify-center">
             <HealthScoreCircle score={scores.healthScore} size="medium" />

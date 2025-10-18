@@ -40,11 +40,11 @@
       dataCompleteness: "Complétude des données",
       excellent: "Excellente",
       partial: "Partielle",
-      insufficient: "Insuffisante"
+      insufficient: "InsuffiSanté"
     },
     
     breakdown: {
-      title: "Détail des 8 composantes (méthodologie ECOLOJIA V3)",
+      title: "Détail des 8 compoSantés (méthodologie ECOLOJIA V3)",
       nova: "Transformation (NOVA)",
       nutriScore: "Qualité nutritionnelle",
       additives: "Additifs",
@@ -89,12 +89,12 @@
     confidence: {
       high: "Données complètes - Score fiable",
       medium: "Données partielles - Score indicatif",
-      low: "Données insuffisantes - Score non calculable"
+      low: "Données insuffiSantés - Score non calculable"
     },
     
     methodology: {
       title: "Méthodologie scientifique",
-      components: "8 composantes pondérées selon leur impact santé/environnement",
+      components: "8 compoSantés pondérées selon leur impact santé/environnement",
       sources: "Sources officielles : OMS, ANSES, EFSA, ADEME, Santé Publique France",
       version: "Version {{version}} - Calculé le {{date}}"
     }

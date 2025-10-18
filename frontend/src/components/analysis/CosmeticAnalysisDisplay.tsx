@@ -35,7 +35,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
       <div className={`p-6 rounded-xl border-2 ${getScoreColor(analysis.healthScore)}`}>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold">Score Sante Cosmetique</h2>
+            <h2 className="text-2xl font-bold">Score Santé Cosmetique</h2>
             <p className="text-sm opacity-75">Analyse basee sur la composition INCI</p>
           </div>
           <div className="text-right">
@@ -271,7 +271,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
         <div className={`p-6 rounded-xl border-2 ${getScoreColor(analysis.healthScore || 0)}`}>
           <div className="text-center">
             <div className="text-3xl font-bold">{analysis.healthScore || 0}/100</div>
-            <div className="text-sm font-medium">Score Sante</div>
+            <div className="text-sm font-medium">Score Santé</div>
             <div className="text-xs opacity-75 mt-1">Securite d'usage</div>
           </div>
         </div>

@@ -53,7 +53,7 @@ const TermsPage: React.FC = () => {
               <h3 className="text-lg font-semibold text-[#3B3B3B] mb-3">ECOLOJIA propose :</h3>
               <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
                 <li>L'analyse instantanee de produits via scan, photo ou recherche manuelle</li>
-                <li>Des scores de sante, environnement et ethique bases sur des criteres scientifiques</li>
+                <li>Des scores de Santé, environnement et ethique bases sur des criteres scientifiques</li>
                 <li>Des recommandations d'alternatives plus saines</li>
                 <li>Un assistant IA pour repondre Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  vos questions nutritionnelles</li>
                 <li>Un tableau de bord personnalise pour suivre vos habitudes</li>
@@ -61,7 +61,7 @@ const TermsPage: React.FC = () => {
             </div>
             <p className="text-[#3B3B3B]/70">
               Nos analyses sont basees sur des algorithmes proprietaires et des sources scientifiques reconnues 
-              (INSERM, ANSES, EFSA). Cependant, elles ne remplacent pas l'avis d'un professionnel de sante.
+              (INSERM, ANSES, EFSA). Cependant, elles ne remplacent pas l'avis d'un professionnel de Santé.
             </p>
           </section>
 
@@ -130,7 +130,7 @@ const TermsPage: React.FC = () => {
               </p>
               <p className="text-[#3B3B3B]/70">
                 ECOLOJIA ne saurait etre tenu responsable des decisions prises sur la base de nos analyses. 
-                Pour tout probleme de sante ou regime specifique, consultez un professionnel qualifie.
+                Pour tout probleme de Santé ou regime specifique, consultez un professionnel qualifie.
               </p>
             </div>
           </section>

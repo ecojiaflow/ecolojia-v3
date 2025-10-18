@@ -162,7 +162,7 @@ export const UnifiedResultsPage: React.FC = () => {
 
     const shareData = {
       title: `Analyse ECOLOJIA - ${result.product.name}`,
-      text: `Score sante : ${result.analysis.healthScore}/100. Decouvrez l'analyse complete sur ECOLOJI?.`,
+      text: `Score Santé : ${result.analysis.healthScore}/100. Decouvrez l'analyse complete sur ECOLOJI?.`,
       url: window.location.href
     };
 
@@ -258,7 +258,7 @@ export const UnifiedResultsPage: React.FC = () => {
             <div className={`text-6xl font-bold ${getScoreColor(result.analysis.healthScore)}`}>
               {result.analysis.healthScore}/100
             </div>
-            <p className="text-gray-600 mt-2">Score Sante Global</p>
+            <p className="text-gray-600 mt-2">Score Santé Global</p>
           </div>
 
           {/* Bouton Chat IA */}

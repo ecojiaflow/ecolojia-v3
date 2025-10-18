@@ -7,7 +7,7 @@ const PremiumChat = ({ productContext }) => {
     {
       id: 1,
       type: 'ai',
-      content: `Bonjour ! J'ai analyse "${productContext?.title}" avec notre IA revolutionnaire. Ce produit presente des caracteristiques interessantes que je peux vous expliquer en detail. Que souhaitez-vous savoir a`,
+      content: `Bonjour ! J'ai analyse "${productContext?.title}" avec notre IA revolutionnaire. Ce produit presente des caracteristiques interesSantés que je peux vous expliquer en detail. Que souhaitez-vous savoir a`,
       timestamp: new Date()
     }
   ]);
@@ -28,7 +28,7 @@ const PremiumChat = ({ productContext }) => {
       icon: ""
     },
     {
-      text: "Comment l'index glycemique affecte-t-il ma sante a",
+      text: "Comment l'index glycemique affecte-t-il ma Santé a",
       icon: "a"
     },
     {
@@ -115,7 +115,7 @@ Classification officielle INSERM 2024.`;
 **Ce produit : IG 87** (tres eleve !)
 **Riz complet naturel : IG 50** (modere)
 
-**Impact sur votre sante :**
+**Impact sur votre Santé :**
 - Pic glycemique rapide en 15-30min
 - Chute brutale = fringales 2h apres
 - Stress pancreatique repete

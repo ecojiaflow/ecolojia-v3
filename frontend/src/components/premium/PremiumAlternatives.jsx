@@ -236,7 +236,7 @@ const PremiumAlternatives = ({ alternatives = [], currentScore = 0 }) => {
         {/* Call to Action */}
         <div className="text-center mt-8">
           <p className="text-gray-300 mb-4">
-            Pret  ameliorer votre sante avec ces alternatives scientifiquement prouvees a
+            Pret  ameliorer votre Santé avec ces alternatives scientifiquement prouvees a
           </p>
           <button className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 hover:from-green-400 hover:via-blue-400 hover:to-purple-400 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/25 transition-all duration-300 transform hover:scale-105">
              Commencer la Transition

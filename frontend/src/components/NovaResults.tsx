@@ -209,7 +209,7 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
           <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-700 text-sm">
               <strong>aaa Info scientifique:</strong> Les marqueurs d'ultra-transformation indiquent des procedes industriels 
-              qui peuvent reduire la qualite nutritionnelle et augmenter les risques pour la sante selon les etudes INSERM 2024.
+              qui peuvent reduire la qualite nutritionnelle et augmenter les risques pour la Santé selon les etudes INSERM 2024.
             </p>
           </div>
         </div>

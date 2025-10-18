@@ -37,16 +37,16 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
       description: "Excellent choix ! Ce produit subit peu ou pas de transformation industrielle.",
       color: "bg-green-50 border-green-300 text-green-800",
       icon: <CheckCircle className="w-5 h-5 text-green-700" />,
-      impact: "Benefique pour la sante selon les etudes INSERM",
+      impact: "Benefique pour la Santé selon les etudes INSERM",
       recommendation: "Continuez  privilegier ce type de produits",
-      scientificBacking: "Associe  -23% risque maladies chroniques (Cohorte NutriNet-Sante)"
+      scientificBacking: "Associe  -23% risque maladies chroniques (Cohorte NutriNet-Santé)"
     },
     2: {
       title: "Produit Peu Transforme",
       description: "Bon choix avec quelques ingredients ajoutes pour la conservation.",
       color: "bg-yellow-50 border-yellow-300 text-yellow-800", 
       icon: <CheckCircle className="w-5 h-5 text-yellow-500" />,
-      impact: "Impact sante neutre  positif",
+      impact: "Impact Santé neutre  positif",
       recommendation: "Consommation recommandee dans le cadre d'une alimentation equilibree",
       scientificBacking: "Pas d'association negative demontree (Classification NOVA INSERM)"
     },
@@ -64,7 +64,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
       description: "ATTENTION : Ce produit subit une transformation industrielle intensive avec de nombreux additifs.",
       color: "bg-red-50 border-red-300 text-red-800",
       icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
-      impact: "Impact negatif sur la sante demontre scientifiquement",
+      impact: "Impact negatif sur la Santé demontre scientifiquement",
       recommendation: "a REMPLACER par des alternatives naturelles recommandees ci-dessous",
       scientificBacking: "Risque +53% diabete, +22% depression, +10% maladies cardiovasculaires (BMJ 2024)"
     }
@@ -218,7 +218,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
 
           <div className="space-y-2 text-sm">
             <div>
-              <span className="font-medium">Impact Sante :</span> {currentInfo.impact}
+              <span className="font-medium">Impact Santé :</span> {currentInfo.impact}
             </div>
             <div>
               <span className="font-medium">Recommandation :</span> {currentInfo.recommendation}
@@ -256,7 +256,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5" />
             <div className="text-sm text-red-800">
-              <p className="font-medium mb-1">a Alerte Sante Publique</p>
+              <p className="font-medium mb-1">a Alerte Santé Publique</p>
               <p>
                 L'OMS et l'ANSES recommandent de <strong>limiter drastiquement</strong> la consommation 
                 de produits ultra-transformes. Privilegiez les alternatives naturelles proposees ci-dessous.

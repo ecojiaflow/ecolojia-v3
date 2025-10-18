@@ -45,7 +45,7 @@ const PricingPage: React.FC = () => {
       icon: <Sparkles className="w-6 h-6" />,
       features: [
         { name: '30 analyses par mois', included: true },
-        { name: 'Score sante basique', included: true },
+        { name: 'Score Santé basique', included: true },
         { name: 'Classification NOVA', included: true },
         { name: '3 alternatives par produit', included: true },
         { name: 'Historique 30 jours', included: true },

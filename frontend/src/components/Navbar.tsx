@@ -89,7 +89,7 @@ class NavbarSearchService {
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
       contextual.push(
         { query: `${query} NOVA 1`, icon: '🌟', category: 'Alimentaire sain', score: 'A' },
-        { query: `${query} nutri-score A`, icon: '💚', category: 'Top sante', score: 'A' }
+        { query: `${query} nutri-score A`, icon: '💚', category: 'Top Santé', score: 'A' }
       );
     }
 
@@ -608,7 +608,7 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2"></span>
-                      Score sante
+                      Score Santé
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-2"></span>

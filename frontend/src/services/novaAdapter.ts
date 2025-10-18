@@ -363,7 +363,7 @@ export class NovaAdapter {
         markers.push('Haut niveau de transformation industrielle');
       }
       if (analysis.breakdown.health < 30) {
-        markers.push('Impact sante preoccupant');
+        markers.push('Impact Santé preoccupant');
       }
     }
 
@@ -431,8 +431,8 @@ export class NovaAdapter {
       case 'food':
         return [
           ...commonSources,
-          'Programme National Nutrition Sante (PNNS)',
-          'ƒÆ’†â€™aaâ€šÂ¬‚Â°tude NutriNet-Sante - EREN',
+          'Programme National Nutrition Santé (PNNS)',
+          'ƒÆ’†â€™aaâ€šÂ¬‚Â°tude NutriNet-Santé - EREN',
           'Recommandations nutritionnelles ANSES 2024'
         ];
       case 'cosmetic':
