@@ -1,10 +1,10 @@
-ï»¿// PATH: backend/src/routes/products.js
+// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
 // const enrichProduct = require('../middleware/enrichProduct');
 const mongoose = require('mongoose');
 
-// Middleware enrichissement mÃ©tadonnÃ©es global
+// Middleware enrichissement métadonnées global
 // router.use(enrichProduct);
 
 // SCORING ENGINE SCIENTIFIQUE
@@ -54,12 +54,12 @@ try {
   Analysis = mockModel(); 
 }
 
-/* Nova classifier (sÃ©curisÃ©) */
+/* Nova classifier (sécurisé) */
 let novaClassifier;
 try {
   novaClassifier = require('../services/analysis/novaClassifier');
 } catch {
-  console.log('[Products] novaClassifier not found â€“ defaulting to stub');
+  console.log('[Products] novaClassifier not found – defaulting to stub');
   novaClassifier = { classify: () => ({ group: null }) };
 }
 
@@ -78,7 +78,7 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 
 /* ========== ROUTES ========== */
 
-/* Route par dÃ©faut */
+/* Route par défaut */
 
 // GET /api/products/stats
 router.get('/stats', async (req, res) => {
@@ -128,7 +128,7 @@ router.get('/search', handleAsync(async (req, res) => {
   logger.info('Search request:', { query: q, category, page, limit });
 
   if (!q || q.trim().length < 2) {
-    return res.status(400).json({ success: false, error: 'La requÃªte doit contenir au moins 2 caractÃ¨res' });
+    return res.status(400).json({ success: false, error: 'La requête doit contenir au moins 2 caractères' });
   }
 
   if (mongoose.connection.readyState === 1) {
@@ -202,7 +202,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   if (req.user && req.user.quotas && req.user.quotas.scansRemaining <= 0) {
     return res.status(403).json({ 
       success: false, 
-      error: 'Quota de scans dÃ©passÃ©', 
+      error: 'Quota de scans dépassé', 
       quotas: req.user.quotas 
     });
   }
@@ -254,7 +254,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
     },
     summary: { 
       fr: generateSummary(novaGroup, nutriScore), 
-      en: 'Summary in Englishâ€¦' 
+      en: 'Summary in English…' 
     },
     recommendations: generateRecommendations(novaGroup, nutriScore)
   };
@@ -289,7 +289,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   });
 }));
 
-/* Obtenir alternatives - CORRIGÃ‰ */
+/* Obtenir alternatives - CORRIGÉ */
 router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get alternatives for product:', id);
@@ -312,10 +312,10 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const currentScore = product.scores?.overallScore || product.scores?.global || 0;
 
   if (currentScore >= 70) {
-    return res.json({ success: true, alternatives: [], message: 'Ce produit est dÃ©jÃ  excellent' });
+    return res.json({ success: true, alternatives: [], message: 'Ce produit est déjà excellent' });
   }
 
-  // FIX: RequÃªte flexible avec subcategory optionnelle
+  // FIX: Requête flexible avec subcategory optionnelle
   const query = {
     category: product.category,
     _id: { $ne: product._id },
@@ -366,7 +366,7 @@ router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
 
   res.json({ 
     success: true, 
-    message: 'Signalement enregistrÃ© avec succÃ¨s', 
+    message: 'Signalement enregistré avec succès', 
     reportId: new Date().getTime().toString() 
   });
 }));
@@ -397,29 +397,29 @@ router.get('/:id', handleAsync(async (req, res) => {
       source: 'OFF' 
     });
 
-    // Cas 1 : CatÃ©gorie invalide (mÃ©dicament, livre, etc.)
+    // Cas 1 : Catégorie invalide (médicament, livre, etc.)
     if (result.source === 'INVALID_CATEGORY') {
       return res.status(400).json({
         success: false,
         error: result.error,
         detectedType: result.detectedType,
         suggestion: result.suggestion,
-        redirectTo: null // Pas de redirection OCR pour mÃ©dicaments
+        redirectTo: null // Pas de redirection OCR pour médicaments
       });
     }
 
-    // Cas 2 : Produit non trouvÃ© ? Rediriger vers OCR
+    // Cas 2 : Produit non trouvé ? Rediriger vers OCR
     if (result.source === 'NOT_FOUND') {
       return res.status(404).json({
         success: false,
-        error: 'Produit non trouvÃ© dans OpenFoodFacts',
-        suggestion: 'Utilisez la fonctionnalitÃ© OCR pour analyser ce produit',
+        error: 'Produit non trouvé dans OpenFoodFacts',
+        suggestion: 'Utilisez la fonctionnalité OCR pour analyser ce produit',
         redirectTo: '/ocr',
         barcode: id
       });
     }
 
-    // Cas 3 : Produit trouvÃ© et enrichi
+    // Cas 3 : Produit trouvé et enrichi
     if (result.product) {
       logger.info('Product found/created via Orchestrator:', result.source);
       return res.json({
@@ -434,7 +434,7 @@ router.get('/:id', handleAsync(async (req, res) => {
     // Cas 4 : Erreur inattendue
     return res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©cupÃ©ration du produit'
+      error: 'Erreur lors de la récupération du produit'
     });
 
   } catch (error) {
@@ -446,7 +446,7 @@ router.get('/:id', handleAsync(async (req, res) => {
   }
 }));
 
-/* CrÃ©er un produit manuellement */
+/* Créer un produit manuellement */
 router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) => {
   const { name, brand, category, barcode, specificData } = req.body;
   logger.info('Create product manually:', { name, brand, category });
@@ -454,14 +454,14 @@ router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) =>
   if (!name || !category) {
     return res.status(400).json({ 
       success: false, 
-      error: 'Le nom et la catÃ©gorie sont requis' 
+      error: 'Le nom et la catégorie sont requis' 
     });
   }
 
   if (!['food', 'cosmetics', 'detergents'].includes(category)) {
     return res.status(400).json({ 
       success: false, 
-      error: 'CatÃ©gorie invalide. Doit Ãªtre: food, cosmetics, ou detergents' 
+      error: 'Catégorie invalide. Doit être: food, cosmetics, ou detergents' 
     });
   }
 
@@ -498,23 +498,23 @@ function calculateHealthScore(prod, nova, nutri) {
 
 function generateSummary(nova, nutri) {
   const arr = [];
-  if (nova === 4) arr.push('? Produit ultra-transformÃ©.');
+  if (nova === 4) arr.push('? Produit ultra-transformé.');
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
     arr.push('? Mauvais Nutri-Score.');
   }
-  return arr.join(' ') || 'Analyse complÃ¨te du produit.';
+  return arr.join(' ') || 'Analyse complète du produit.';
 }
 
 function generateRecommendations(nova, nutri) {
   const rec = { 
-    healthImpact: 'Ã€ consommer avec modÃ©ration', 
+    healthImpact: 'À consommer avec modération', 
     alternatives: [], 
     advice: [] 
   };
   
   if (nova === 4) { 
-    rec.healthImpact = 'Ã€ limiter â€“ ultra-transformÃ©'; 
-    rec.advice.push('PrivilÃ©giez des alternatives moins transformÃ©es'); 
+    rec.healthImpact = 'À limiter – ultra-transformé'; 
+    rec.advice.push('Privilégiez des alternatives moins transformées'); 
   }
   
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
@@ -534,6 +534,6 @@ function mockModel() {
   }; 
 }
 
-console.log('[Products] Router crÃ©Ã© avec', router.stack.filter(l => l.route).length, 'routes');
+console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;

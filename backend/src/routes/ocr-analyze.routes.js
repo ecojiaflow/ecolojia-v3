@@ -1,115 +1,97 @@
 const express = require('express');
 const router = express.Router();
-const visionService = require('../services/vision.service');
-const { parseOCRToProduct } = require('../services/ocr-parser.service');
+const Product = require('../models/Product');
 const { calculateFoodScores } = require('../services/scoringUnified');
-const Product = require('../models/product.model');
 
-// Helper pour convertir Product -> format scoringUnified
+// Helper pour préparer les données de scoring
 function prepareScoringData(product) {
+  // Convertir objet Mongoose en objet JS simple
+  const productObj = product.toObject ? product.toObject() : product;
+  const foodData = productObj.foodData || {};
+  const nutriments = (foodData && foodData.nutrition && foodData.nutrition.per100g) 
+    || (productObj && productObj.nutrition && productObj.nutrition.per100g) 
+    || {};
+  
+  // FORMAT OPENFOODFACTS attendu par calculateFoodScores
   return {
-    novaGroup: product.nova_group || product.foodData?.novaGroup,
-    nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
-    ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
-    additives: product.additives_tags || product.foodData?.additives || [],
-    labels: product.labels_tags || product.foodData?.labels || [],
-    nutriments: product.nutriments || product.foodData?.nutritionalInfo || product.foodData?.nutrition?.per100g || {}
+    product_name: productObj.name,
+    brands: productObj.brand,
+    ingredients_text: foodData.ingredients,
+    nova_group: foodData.novaGroup || productObj.nova_group,
+    nutriscore_grade: foodData.nutriScore || productObj.nutriscore_grade,
+    ecoscore_grade: foodData.ecoScore || productObj.ecoscore_grade,
+    additives_tags: foodData.additives || productObj.additives_tags || [],
+    labels_tags: foodData.labels || productObj.labels_tags || [],
+    nutriments: nutriments
   };
 }
 
 /**
- * POST /api/ocr/analyze
- * Analyse 3 photos ? Parsing IA ? Score ? Save DB
+ * POST /api/ocr-analyze/:barcode
+ * Calcule les scores pour un produit existant
  */
-router.post('/analyze', async (req, res) => {
+router.post('/:barcode', async (req, res) => {
   try {
-    const { frontImage, ingredientsImage, barcodeImage } = req.body;
-
-    if (!frontImage || !ingredientsImage) {
-      return res.status(400).json({
-        error: 'Photos face avant et ingrédients requises'
+    const { barcode } = req.params;// 1. Récupérer le produit
+    let product = await Product.findOne({ barcode });
+    console.log('[OCR-Analyze/:barcode] PRODUCT COMPLET:', JSON.stringify({
+      barcode: product?.barcode,
+      foodData: product?.foodData,
+      nutrition: product?.nutrition
+    }, null, 2));
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        error: 'Produit non trouvé'
       });
     }
 
-    console.log('?? Analyse OCR démarrée...');
-
-    // 1. Google Vision OCR
-    const [frontResult, ingredientsResult, barcodeResult] = await Promise.all([
-      visionService.extractText(frontImage),
-      visionService.extractText(ingredientsImage),
-      barcodeImage ? visionService.extractText(barcodeImage) : Promise.resolve({ text: '' })
-    ]);
-
-    console.log('? OCR terminé');
-
-    // 2. Parsing DeepSeek
-    const productData = await parseOCRToProduct({
-      frontText: frontResult.text,
-      ingredientsText: ingredientsResult.text,
-      barcodeText: barcodeResult.text
+    // 2. Calculer les scores avec les données existantes
+    const scoringData = prepareScoringData(product);
+    console.log('[OCR-Analyze/:barcode] prepareScoringData INPUT:', JSON.stringify({
+      novaGroup: product.foodData?.novaGroup,
+      nutriScore: product.foodData?.nutriScore,
+      nutrition: product.nutrition?.per100g
+    }, null, 2));const scores = calculateFoodScores(scoringData);console.log('[OCR-Analyze/:barcode] Scores calculated:', {
+      overallScore: scores.overallScore,
+      confidence: scores.dataQuality?.confidence
     });
 
-    console.log('? Parsing terminé:', productData.name);
-
-    // 3. Vérifier si produit existe déjà (par barcode)
-    let product;
-    if (productData.barcode) {
-      product = await Product.findOne({ barcode: productData.barcode });
-    }
-
-    if (!product) {
-      // 4. Créer nouveau produit
-      product = new Product({
-        name: productData.name,
-        brand: productData.brand,
-        barcode: productData.barcode || `OCR-${Date.now()}`,
-        category: productData.category,
-        foodData: {
-          ingredients: productData.ingredients.join(', '),
-          novaGroup: null, // Sera calculé par IA si possible
-          additives: productData.ingredients.filter(i => i.match(/^E\d+/i))
-        },
-        labels_tags: productData.labels,
-        source: productData.source,
-        ocrMetadata: {
-          confidence: productData.confidence,
-          rawText: productData.ocrRawText,
-          createdAt: new Date()
-        }
-      });
-
-      // 5. Calculer scores
-      const scoringData = prepareScoringData(product);
-      product.scores = calculateFoodScores(scoringData);
-
-      // 6. Sauvegarder
-      await product.save();
-
-      console.log('? Nouveau produit créé:', product._id);
-    } else {
-      console.log('? Produit existant trouvé:', product._id);
-    }
-
-    // 7. Retourner résultat
-    res.json({
-      success: true,
-      product: {
-        _id: product._id,
-        name: product.name,
-        brand: product.brand,
-        barcode: product.barcode,
-        category: product.category,
-        scores: product.scores,
-        confidence: productData.confidence,
-        isNew: !product.createdAt || product.source === productData.source
+    // 3. Enrichir avec IA si confiance < 70%
+    if (!scores.overallScore || (scores.dataQuality && scores.dataQuality.confidence < 70)) {try {
+        const aiEnrichment = require('../services/aiEnrichment.service');
+        product.scores = await aiEnrichment.enrichProductWithAI(product, scores);
+      } catch (aiError) {product.scores = scores;
       }
+    } else {
+      product.scores = scores;
+    }
+
+    // 4. Sauvegarder
+    product.scores.calculatedAt = new Date();
+    product.scores.scoringVersion = '3.0.0';
+    product.status = 'analyzed';
+    product.updatedAt = new Date();
+    await product.save();
+
+    // 5. Synchroniser Algolia
+    try {
+      const algoliaService = require('../services/algolia.service');
+      await algoliaService.indexProduct(product);
+    } catch (algoliaError) {
+      console.error('[OCR-Analyze/:barcode] Algolia sync failed:', algoliaError.message);
+    }res.json({
+      success: true,
+      product,
+      message: 'Analyse terminée avec succès'
     });
 
   } catch (error) {
-    console.error('? Erreur analyse OCR:', error);
+    console.error('[OCR-Analyze/:barcode] Error:', error);
     res.status(500).json({
-      error: 'Erreur lors de l\'analyse OCR',
-      details: error.message
+      success: false,
+      error: error.message
     });
   }
 });

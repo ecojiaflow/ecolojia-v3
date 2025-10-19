@@ -135,6 +135,8 @@ loadRoute('Export', './routes/export', '/api/export');
 loadRoute('History', './routes/history', '/api/history');
 loadRoute('Favorites', './routes/favorites', '/api/favorites');
 
+loadRoute('OCR Analyze', './routes/ocr-analyze.routes', '/api/ocr-analyze');
+
 // Gestion 404
 app.use((req, res) => {
   res.status(404).json({

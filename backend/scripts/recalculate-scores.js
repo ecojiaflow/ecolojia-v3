@@ -1,72 +1,111 @@
-﻿require('dotenv').config();
+// backend/scripts/recalculate-scores.js
 const mongoose = require('mongoose');
 const Product = require('../src/models/Product');
-const { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores } = require('../src/services/scoringEngine');
+const scoringUnified = require('../src/services/scoringUnified');
+require('dotenv').config();
 
-async function recalculateAll() {
-  await mongoose.connect(process.env.MONGODB_URI);
-  console.log('? MongoDB connecté');
+async function recalculateAllScores() {
+  console.log('🔄 MIGRATION - Recalcul des scores pour tous les produits');
+  console.log('================================================\n');
 
-  const products = await Product.find({ 'scores.overallScore': { $exists: false } });
-  console.log(`?? ${products.length} produits sans scores\n`);
-  
-  let success = 0;
-  
-  for (const product of products) {
-    try {
-      // Nettoyer valeurs invalides
-      if (product.foodData) {
-        if (['UNKNOWN', 'NOT-APPLICABLE'].includes(product.foodData.nutriScore)) {
-          product.foodData.nutriScore = undefined;
-        }
-        if (['UNKNOWN', 'NOT-APPLICABLE', 'A-PLUS'].includes(product.foodData.ecoScore)) {
-          product.foodData.ecoScore = undefined;
-        }
-        if (Array.isArray(product.foodData.ingredients)) {
-          product.foodData.ingredients = '';
+  try {
+    // Connexion MongoDB
+    console.log('📊 Connexion à MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ MongoDB connecté\n');
+
+    // Compter les produits
+    const totalProducts = await Product.countDocuments();
+    console.log(`📦 Total produits à recalculer : ${totalProducts}\n`);
+
+    // Traiter par batch de 100
+    const batchSize = 100;
+    let processed = 0;
+    let updated = 0;
+    let errors = 0;
+
+    for (let skip = 0; skip < totalProducts; skip += batchSize) {
+      const products = await Product.find()
+        .skip(skip)
+        .limit(batchSize)
+        .lean();
+
+      console.log(`\n🔄 Batch ${Math.floor(skip / batchSize) + 1}/${Math.ceil(totalProducts / batchSize)}`);
+      
+      for (const product of products) {
+        try {
+          // Préparer les données pour le scoring
+          const scoringData = {
+            novaGroup: product.foodData?.novaGroup,
+            nutriScore: product.foodData?.nutriScore,
+            ecoScore: product.foodData?.ecoScore,
+            additives: product.foodData?.additives || [],
+            labels: product.foodData?.labels || [],
+            allergens: product.foodData?.allergens || [],
+            nutriments: product.foodData?.nutrition?.per100g || {}
+          };
+
+          // Recalculer les scores selon la catégorie
+          let newScores;
+          if (product.category === 'cosmetics') {
+            newScores = scoringUnified.calculateCosmeticScores(scoringData);
+          } else if (product.category === 'detergents') {
+            newScores = scoringUnified.calculateDetergentScores(scoringData);
+          } else {
+            newScores = scoringUnified.calculateFoodScores(scoringData);
+          }
+
+          // Mettre à jour le produit
+          await Product.updateOne(
+            { _id: product._id },
+            { 
+              $set: { 
+                scores: newScores,
+                lastScoreUpdate: new Date(),
+                scoringVersion: '3.0.0'
+              }
+            }
+          );
+
+          processed++;
+          updated++;
+          
+          // Log tous les 50 produits
+          if (processed % 50 === 0) {
+            const progress = ((processed / totalProducts) * 100).toFixed(1);
+            console.log(`   ✅ ${processed}/${totalProducts} (${progress}%) - ${updated} mis à jour, ${errors} erreurs`);
+          }
+
+        } catch (error) {
+          errors++;
+          console.error(`   ❌ Erreur produit ${product.barcode}: ${error.message}`);
         }
       }
-      
-      let scores;
-      if (product.category === 'food') {
-        scores = calculateFoodScores({
-        novaGroup: product.foodData?.novaGroup,
-        nutriScore: product.foodData?.nutriScore,
-        ecoScore: product.foodData?.ecoScore,
-        additives: (product.foodData?.additives || []).map(a => a.code || a),
-        allergens: [],
-        labels: product.foodData?.labels || [],
-        packaging: product.packaging,
-        origin: product.origin
-      });
-      } else if (product.category === 'cosmetics') {
-        scores = calculateCosmeticScores({
-          ingredients: product.cosmeticsData?.ingredients || [],
-          endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
-          allergens: product.cosmeticsData?.allergens || [],
-          certifications: product.cosmeticsData?.certifications || []
-        });
-      } else if (product.category === 'detergents') {
-        scores = calculateDetergentScores({
-          surfactants: product.detergentsData?.surfactants || [],
-          composition: product.detergentsData?.composition || [],
-          ecoLabels: product.detergentsData?.ecoLabels || [],
-          phosphates: product.detergentsData?.phosphates || false
-        });
-      }
-      product.scores = scores;
-      await product.save();
-      
-      success++;
-      if (success % 500 === 0) console.log(`  ? ${success}/${products.length}`);
-    } catch (err) {
-      // Ignorer échecs silencieusement
     }
+
+    console.log('\n================================================');
+    console.log('✅ MIGRATION TERMINÉE');
+    console.log(`📊 Résultats :`);
+    console.log(`   - Total traités : ${processed}`);
+    console.log(`   - Mis à jour : ${updated}`);
+    console.log(`   - Erreurs : ${errors}`);
+    console.log(`   - Taux de succès : ${((updated / processed) * 100).toFixed(2)}%`);
+
+  } catch (error) {
+    console.error('\n❌ ERREUR MIGRATION:', error);
+  } finally {
+    await mongoose.connection.close();
+    console.log('\n🔌 Connexion MongoDB fermée');
   }
-  
-  console.log(`\n?? ${success}/${products.length} produits mis à jour`);
-  process.exit(0);
 }
 
-recalculateAll().catch(console.error);
-
+// Lancer la migration
+recalculateAllScores()
+  .then(() => {
+    console.log('\n✅ Script terminé avec succès');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error('\n❌ Script terminé avec erreur:', error);
+    process.exit(1);
+  });
