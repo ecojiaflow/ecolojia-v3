@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          
+
           {/* Logo et description */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center mb-4 hover:opacity-80 transition-opacity">
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-eco-leaf/30 focus:border-eco-leaf"
               />
               <button className="px-4 py-2 bg-eco-leaf text-white rounded-r-lg hover:bg-eco-leaf/90 transition-colors">
-                <span className="text-sm">aa</span>
+                <span className="text-sm">→</span>
               </button>
             </div>
             <p className="text-xs text-eco-text/50 mt-2">
@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
         {/* Certifications */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <div className="flex items-center mb-4">
-            <span className="text-sm font-medium text-eco-text mr-4">aa {t('footer.certifications')}</span>
+            <span className="text-sm font-medium text-eco-text mr-4">✓ {t('footer.certifications')}</span>
           </div>
           <div className="flex flex-wrap gap-3 mb-6">
             <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full border border-yellow-200">
@@ -124,11 +124,32 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* Disclaimer médical - NOUVEAU */}
+        <div className="bg-amber-50 border-t border-amber-200 pt-6 pb-4 mt-8 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 mt-0.5">
+              <svg className="h-5 w-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-gray-700 leading-relaxed">
+                <strong className="text-amber-800">⚠️ Information importante :</strong> ECOLOJIA est un outil d'information nutritionnelle, 
+                <strong> pas un dispositif médical</strong>. Les analyses sont basées sur des méthodologies scientifiques 
+                (OMS, ANSES, EFSA) mais ne remplacent pas l'avis d'un professionnel de santé.{' '}
+                <Link to="/legal" className="text-amber-700 hover:text-amber-800 underline font-medium">
+                  En savoir plus
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Copyright */}
-        <div className="border-t border-gray-200 pt-6">
+        <div className="border-t border-gray-200 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-eco-text/60 text-sm">
-              ? 2025 Ecoloji?. {t('footer.allRights')}
+              © 2025 ECOLOJIA. {t('footer.allRights')}
             </p>
             <div className="flex items-center mt-4 md:mt-0">
               <Heart className="h-4 w-4 text-red-500 mr-1" />
@@ -142,5 +163,3 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
-
-

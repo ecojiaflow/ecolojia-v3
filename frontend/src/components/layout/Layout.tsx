@@ -8,6 +8,7 @@ import { useAuthContext } from '../../Contexts/AuthContext';
 import { useQuota } from '../../hooks/useQuota';
 import { MobileBottomNav } from './MobileBottomNav';
 import { useDeviceContext } from '../../hooks/useDeviceContext';
+import Footer from '../Footer';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -204,54 +205,8 @@ const Layout: React.FC = () => {
       </main>
 
       {/* Footer - masqué sur mobile */}
-      <footer className={`bg-gray-100 border-t border-gray-200 ${isMobile ? 'hidden' : 'block'}`}>
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* About */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">À propos</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="/about" className="hover:text-gray-900">Qui sommes-nous</Link></li>
-                <li><Link to="/mission" className="hover:text-gray-900">Notre mission</Link></li>
-                <li><Link to="/blog" className="hover:text-gray-900">Blog</Link></li>
-              </ul>
-            </div>
-
-            {/* Features */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">Fonctionnalités</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="/search" className="hover:text-gray-900">Recherche IA</Link></li>
-                <li><Link to="/scan" className="hover:text-gray-900">Scanner</Link></li>
-                <li><Link to="/ocr" className="hover:text-gray-900">OCR</Link></li>
-                <li><Link to="/premium" className="hover:text-gray-900">Premium</Link></li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">Légal</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="/terms" className="hover:text-gray-900">CGU</Link></li>
-                <li><Link to="/privacy" className="hover:text-gray-900">Confidentialité</Link></li>
-                <li><Link to="/cookies" className="hover:text-gray-900">Cookies</Link></li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-800 mb-3">Contact</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="mailto:support@ecolojia.app" className="hover:text-gray-900">support@ecolojia.app</a></li>
-                <li><Link to="/faq" className="hover:text-gray-900">FAQ</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-            <p>© 2025 ECOLOJIA. Tous droits réservés.</p>
-          </div>
-        </div>
+      <footer className={`${isMobile ? 'hidden' : 'block'}`}>
+        <Footer />
       </footer>
 
       {/* Mobile Bottom Navigation */}
@@ -261,3 +216,4 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
+

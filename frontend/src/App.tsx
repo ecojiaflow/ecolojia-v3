@@ -1,11 +1,12 @@
 ﻿// PATH: frontend/src/App.tsx
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './Contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
+import { DisclaimerModal, hasAcceptedDisclaimer } from './components/legal/DisclaimerModal';
 
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -29,46 +30,49 @@ const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
+  const [showDisclaimer, setShowDisclaimer] = useState(!hasAcceptedDisclaimer());
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="search" element={<SearchPage />} />
-          <Route path="results" element={<ResultsPage />} />
-          <Route path="product/:id" element={<ProductPage />} />
-          <Route path="scan" element={<BarcodeScanPage />} />
-          <Route path="ocr" element={<OCRPage />} />
-          <Route path="favorites" element={<FavoritesPage />} />
-          <Route path="multi-scan" element={<MultiScanPage />} />
-          <Route path="premium" element={<PremiumPage />} />
-          <Route path="diagnostic" element={<DiagnosticPage />} />
-          
-          <Route
-            path="login"
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
-          />
-          <Route
-            path="register"
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
-          />
-          
-          <Route element={<ProtectedRoute />}>
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="chat" element={<ChatPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="history" element={<HistoryPage />} />
-            <Route path="onboarding" element={<OnboardingPage />} />
+    <>
+      {showDisclaimer && <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />}
+      
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="results" element={<ResultsPage />} />
+            <Route path="product/:id" element={<ProductPage />} />
+            <Route path="scan" element={<BarcodeScanPage />} />
+            <Route path="ocr" element={<OCRPage />} />
+            <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="multi-scan" element={<MultiScanPage />} />
+            <Route path="premium" element={<PremiumPage />} />
+            <Route path="diagnostic" element={<DiagnosticPage />} />
+
+            <Route
+              path="login"
+              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+            />
+            <Route
+              path="register"
+              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
+            />
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="chat" element={<ChatPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="history" element={<HistoryPage />} />
+              <Route path="onboarding" element={<OnboardingPage />} />
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </>
   );
 };
 
 export default App;
-
-
