@@ -27,7 +27,7 @@ export interface AlgoliaHit {
 }
 
 export function normalizeAlgoliaProduct(hit: AlgoliaHit): Product {
-  console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â Debug Algolia hit:', {
+  console.log('ƒÆ’‚Â°ƒ'¦‚Â¸aa'šÂ¬‚Âƒ'š‚Â Debug Algolia hit:', {
     objectID: hit.objectID,
     title: hit.title,
     image_url: hit.image_url,
@@ -48,7 +48,7 @@ export function normalizeAlgoliaProduct(hit: AlgoliaHit): Product {
       new URL(trimmed);
       return trimmed;
     } catch {
-      console.warn(`aƒâ€¦‚Â¡ƒâ€š‚Â ƒÂ¯ƒâ€š‚Â¸ƒâ€š‚Â URL invalide pour ${hit.title}:`, trimmed);
+      console.warn(`aƒ'¦‚Â¡ƒ'š‚Â ƒÂ¯ƒ'š‚Â¸ƒ'š‚Â URL invalide pour ${hit.title}:`, trimmed);
       return undefined;
     }
   })();
@@ -70,4 +70,5 @@ export function normalizeAlgoliaProduct(hit: AlgoliaHit): Product {
     tagsKeys: Array.isArray(hit.tags) ? hit.tags : []
   };
 }
+
 

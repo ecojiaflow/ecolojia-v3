@@ -1,6 +1,6 @@
 ﻿// PATH: src/utils/setupMocks.ts
 /**
- * Mocks optaâ‚¬â€˜in : actives SEULEMENT si VITE_MOCKS === '1'
+ * Mocks optaâ‚¬'˜in : actives SEULEMENT si VITE_MOCKS === '1'
  * - Par defaut: n'altere PAS window.fetch
  * - Si active: on peut renvoyer des reponses simulees
  */
@@ -45,4 +45,5 @@ export function disableMocks() {
     console.warn('[setupMocks] Mocks DISABLED (restored native fetch).');
   }
 }
+
 

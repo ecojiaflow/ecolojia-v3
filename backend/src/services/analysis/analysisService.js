@@ -1,4 +1,4 @@
-// PATH: backend\src\services\analysis\analysisService.js
+﻿// PATH: backend\src\services\analysis\analysisService.js
 const Product = require('../../models/Product');
 
 // ---------- require Algolia tolerant (plusieurs chemins + stub) ----------
@@ -63,7 +63,7 @@ function simpleNovaFromText(raw = '') {
   const proc = /(ar[oo]me|colorant|conservateur|emulsifiant|emulsifiant|stabilisant|correcteur d.?acidit|edulcorant|edulcorant)/.test(t);
   let group = 1, label = 'Non transforme', reason = 'Ingredient unique';
   if (up || addCount >= 3 || (addCount >= 1 && proc)) { group = 4; label = 'Ultra-transforme'; reason = 'Marqueur U.P. ou â‰¥3 additifs'; }
-  else if (addCount >= 1 || proc) { group = 3; label = 'Transforme'; reason = 'Presence dâ€™additifs/procedes'; }
+  else if (addCount >= 1 || proc) { group = 3; label = 'Transforme'; reason = 'Presence d'additifs/procedes'; }
   else if (t.split(/,|;|\bet\b/gi).map(s => s.trim()).filter(Boolean).length > 1) { group = 2; label = 'Transforme simple'; reason = 'Plusieurs ingredients'; }
   return { group, label, confidence: group === 4 ? 0.85 : 0.75, markers: [], reason };
 }
@@ -382,3 +382,4 @@ class AnalysisService {
 }
 
 module.exports = new AnalysisService();
+

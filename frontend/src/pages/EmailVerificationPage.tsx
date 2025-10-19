@@ -72,7 +72,7 @@ export const EmailVerificationPage: React.FC = () => {
           <div className="text-center">
             {verificationResult?.success ? (
               <>
-                <div className="text-green-500 text-6xl mb-4">aƒâ€¦aâ‚¬Å“aaâ€šÂ¬‚Â¦</div>
+                <div className="text-green-500 text-6xl mb-4">aƒ'¦aâ‚¬Å“aa'šÂ¬‚Â¦</div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
                   Email verifie !
                 </h2>
@@ -91,7 +91,7 @@ export const EmailVerificationPage: React.FC = () => {
               </>
             ) : (
               <>
-                <div className="text-red-500 text-6xl mb-4">aƒâ€š‚Âƒâ€¦aâ‚¬â„¢</div>
+                <div className="text-red-500 text-6xl mb-4">aƒ'š‚Âƒ'¦aâ‚¬â„¢</div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
                   Verification echouee
                 </h2>
@@ -103,7 +103,7 @@ export const EmailVerificationPage: React.FC = () => {
                     onClick={() => navigate('/auth')}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700"
                   >
-                    Retour ƒÆ’†â€™ƒâ€š‚Â  la connexion
+                    Retour ƒÆ’†'ƒ'š‚Â  la connexion
                   </button>
                   <button
                     onClick={() => window.location.reload()}
@@ -122,5 +122,6 @@ export const EmailVerificationPage: React.FC = () => {
 };
 
 export default EmailVerificationPage;
+
 
 

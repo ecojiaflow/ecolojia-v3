@@ -1,6 +1,6 @@
-﻿// src/services/multiCategoryApi.ts - VERSION CORRIGÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°E POUR SERVER.JS
+﻿// src/services/multiCategoryApi.ts - VERSION CORRIGÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°E POUR SERVER.JS
 
-// Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â§ Configuration multi-environnements
+// Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ Configuration multi-environnements
 const API_ENDPOINTS = {
   production: 'https://ecolojia-backend-working.onrender.com',
   local: 'http://localhost:8000',
@@ -11,17 +11,17 @@ const API_ENDPOINTS = {
 const detectBestEndpoint = async (): Promise<string> => {
   // 1. Essayer production
   try {
-    // Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â§ FIX: Utiliser /health au lieu de /api/health
+    // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Utiliser /health au lieu de /api/health
     const response = await fetch(`${API_ENDPOINTS.production}/api/health`, { 
       method: 'GET',
       signal: AbortSignal.timeout(3000) // 3s max
     });
     if (response.ok) {
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Backend production disponible');
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Backend production disponible');
       return API_ENDPOINTS.production;
     }
   } catch (error) {
-    console.log('aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Backend production indisponible');
+    console.log('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Backend production indisponible');
   }
 
   // 2. Essayer local
@@ -31,15 +31,15 @@ const detectBestEndpoint = async (): Promise<string> => {
       signal: AbortSignal.timeout(2000) // 2s max
     });
     if (response.ok) {
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Backend local disponible');
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Backend local disponible');
       return API_ENDPOINTS.local;
     }
   } catch (error) {
-    console.log('aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Backend local indisponible');
+    console.log('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Backend local indisponible');
   }
 
   // 3. Fallback mode mock
-  console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Mode fallback active - Donnees simulees');
+  console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode fallback active - Donnees simulees');
   return API_ENDPOINTS.fallback;
 };
 
@@ -124,7 +124,7 @@ export class MultiCategoryApiService {
           id: 'food',
           name: 'Alimentaire',
           description: 'Analyse nutritionnelle et detection ultra-transformation des produits alimentaires',
-          icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½',
+          icon: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦'šÃ‚Â½',
           color: '#7DDE4A',
           features: ['Classification NOVA', 'Index glycemique', 'Additifs dangereux', 'Alternatives bio'],
           available: true
@@ -133,7 +133,7 @@ export class MultiCategoryApiService {
           id: 'cosmetics',
           name: 'Cosmetiques',
           description: 'Analyse des ingredients cosmetiques et perturbateurs endocriniens',
-          icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾',
+          icon: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾',
           color: '#FF69B4',
           features: ['Ingredients toxiques', 'Certification bio', 'Tests animaux', 'Alternatives naturelles'],
           available: true
@@ -142,9 +142,9 @@ export class MultiCategoryApiService {
           id: 'detergents',
           name: 'Detergents',
           description: 'Impact environnemental et Santé des produits menagers',
-          icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â½',
+          icon: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â§Æ’Ã¢â‚¬Å¡'šÃ‚Â½',
           color: '#4FC3F7',
-          features: ['Biodegradabilite', 'Toxicite aquatique', 'Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°missions COV', 'Recettes DIY'],
+          features: ['Biodegradabilite', 'Toxicite aquatique', 'Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°missions COV', 'Recettes DIY'],
           available: true
         }
       ],
@@ -191,12 +191,12 @@ export class MultiCategoryApiService {
     await this.initializeEndpoint();
 
     if (this.baseUrl === 'mock') {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Mode mock: Retour categories simulees');
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode mock: Retour categories simulees');
       return this.getMockCategories();
     }
 
     try {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â Recuperation categories depuis:', `${this.baseUrl}/api/multi-category/categories`);
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â Recuperation categories depuis:', `${this.baseUrl}/api/multi-category/categories`);
       
       const response = await fetch(`${this.baseUrl}/api/multi-category/categories`, {
         method: 'GET',
@@ -209,11 +209,11 @@ export class MultiCategoryApiService {
       }
 
       const data: CategoriesResponse = await response.json();
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Categories recuperees depuis API:', data?.categories?.length || 0);
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Categories recuperees depuis API:', data?.categories?.length || 0);
       return data;
 
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur API, basculement vers mock:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur API, basculement vers mock:', error);
       return this.getMockCategories();
     }
   }
@@ -223,13 +223,13 @@ export class MultiCategoryApiService {
     await this.initializeEndpoint();
 
     if (this.baseUrl === 'mock') {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Mode mock: Analyse simulee pour', request.product.title);
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode mock: Analyse simulee pour', request.product.title);
       await new Promise(resolve => setTimeout(resolve, 800)); // Simuler delai
       return this.getMockAnalysis(request.product);
     }
 
     try {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Âª Analyse produit:', request.product.title);
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â§Æ’Ã¢â‚¬Å¡'šÃ‚Âª Analyse produit:', request.product.title);
       
       const enrichedRequest = {
         ...request,
@@ -252,16 +252,16 @@ export class MultiCategoryApiService {
       }
 
       const data: AnalysisResponse = await response.json();
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Analyse terminee via API:', data?.category, 'Score:', data?.analysis?.overall_score);
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse terminee via API:', data?.category, 'Score:', data?.analysis?.overall_score);
       return data;
 
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur analyse API, basculement vers mock:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur analyse API, basculement vers mock:', error);
       return this.getMockAnalysis(request.product);
     }
   }
 
-  // Test de connectivite ameliore - Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â§ FIX: Endpoints corriges
+  // Test de connectivite ameliore - Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Endpoints corriges
   async testConnection(): Promise<boolean> {
     await this.initializeEndpoint();
     
@@ -269,11 +269,11 @@ export class MultiCategoryApiService {
       return true; // Mode mock toujours "connecte"
     }
 
-    // Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â§ FIX: Utiliser les bons endpoints selon server.js
+    // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Utiliser les bons endpoints selon server.js
     const endpointsToTest = [
-      `${this.baseUrl}/health`,                            // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Endpoint principal dans server.js
-      `${this.baseUrl}/api/multi-category/categories`,     // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Fonctionne dejÆ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â 
-      `${this.baseUrl}/`,                                  // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Route racine
+      `${this.baseUrl}/health`,                            // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Endpoint principal dans server.js
+      `${this.baseUrl}/api/multi-category/categories`,     // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Fonctionne dejÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â 
+      `${this.baseUrl}/`,                                  // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Route racine
     ];
 
     for (const endpoint of endpointsToTest) {
@@ -285,16 +285,16 @@ export class MultiCategoryApiService {
         });
         
         if (response.ok) {
-          console.log(`aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Connexion OK via: ${endpoint}`);
+          console.log(`aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Connexion OK via: ${endpoint}`);
           return true;
         }
       } catch (error) {
-        console.log(`aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°chec connexion: ${endpoint}`, error instanceof Error ? error.message : error);
+        console.log(`aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°chec connexion: ${endpoint}`, error instanceof Error ? error.message : error);
         continue;
       }
     }
     
-    console.log('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Tous les tests de connexion ont echoue');
+    console.log('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Tous les tests de connexion ont echoue');
     return false;
   }
 
@@ -323,7 +323,7 @@ export class MultiCategoryApiService {
       },
       detergents: {
         product: {
-          title: "Lessive Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°cologique Concentree",
+          title: "Lessive Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°cologique Concentree",
           brand: "EcoVert",
           description: "Lessive avec tensioactifs vegetaux et enzymes",
           ingredients: ["tensioactifs vegetaux", "enzymes", "parfum", "zeolites", "conservateur"],
@@ -338,9 +338,9 @@ export class MultiCategoryApiService {
     return `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  // Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â§ FIX: Diagnostic specifique pour server.js
+  // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Diagnostic specifique pour server.js
   async diagnoseApiStructure(): Promise<void> {
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â === DIAGNOSTIC API ECOLOJIA (SERVER.JS) ===');
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â === DIAGNOSTIC API ECOLOJIA (SERVER.JS) ===');
     
     // Test endpoints server.js
     const serverEndpoints = [
@@ -356,13 +356,13 @@ export class MultiCategoryApiService {
           method: 'GET',
           signal: AbortSignal.timeout(5000)
         });
-        console.log(`${endpoint}: ${response.status} ${response.ok ? 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦' : 'aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢'}`);
+        console.log(`${endpoint}: ${response.status} ${response.ok ? 'aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦' : 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢'}`);
       } catch (error) {
-        console.log(`${endpoint}: aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ ERREUR`);
+        console.log(`${endpoint}: aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ ERREUR`);
       }
     }
     
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â === FIN DIAGNOSTIC ===');
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â === FIN DIAGNOSTIC ===');
   }
 }
 
@@ -372,6 +372,7 @@ export const multiCategoryApi = new MultiCategoryApiService();
 export type { AnalysisRequest, AnalysisResponse, Category, CategoriesResponse };
 
 export default multiCategoryApi;
+
 
 
 

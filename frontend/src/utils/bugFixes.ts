@@ -56,15 +56,15 @@ function fixEncodingInObject(obj: any): any {
   if (typeof obj === 'string') {
     // Corriger les caracteres mal encodes courants
     return obj
-      .replace(/Æ’Ã†â€™â€šÃ‚Â©/g, 'e')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â¨/g, 'e')
-      .replace(/Æ’Ã†â€™ /g, 'Æ’Ã‚Â ')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â§/g, 'c')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â´/g, 'o')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â»/g, 'Æ’Ã‚Â»')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â®/g, 'i')
-      .replace(/Æ’Ã†â€™â€šÃ‚Âª/g, 'e')
-      .replace(/Æ’Ã†â€™â€šÃ‚Â¢/g, 'a');
+      .replace(/Æ’Ã†''šÃ‚Â©/g, 'e')
+      .replace(/Æ’Ã†''šÃ‚Â¨/g, 'e')
+      .replace(/Æ’Ã†' /g, 'Æ’Ã‚Â ')
+      .replace(/Æ’Ã†''šÃ‚Â§/g, 'c')
+      .replace(/Æ’Ã†''šÃ‚Â´/g, 'o')
+      .replace(/Æ’Ã†''šÃ‚Â»/g, 'Æ’Ã‚Â»')
+      .replace(/Æ’Ã†''šÃ‚Â®/g, 'i')
+      .replace(/Æ’Ã†''šÃ‚Âª/g, 'e')
+      .replace(/Æ’Ã†''šÃ‚Â¢/g, 'a');
   }
   
   if (Array.isArray(obj)) {
@@ -121,7 +121,7 @@ export function setupAutoRefreshToken() {
               return makeRequest();
             }
           } catch (error) {
-            console.error('aÃ‚ÂÃ…â€™ â€°chec du refresh token:', error);
+            console.error('aÃ‚ÂÃ…' '°chec du refresh token:', error);
           }
         }
         
@@ -173,7 +173,7 @@ export function enableDemoMode() {
       },
       globalScore: 67,
       confidence: 0.85,
-      recommendations: ['aÃ…â€œÃ¢â‚¬Â¦ Bon choix global', 'Â°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡ Privilegier les versions sans additifs']
+      recommendations: ['aÃ…'œÃ¢â‚¬Â¦ Bon choix global', 'Â°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡ Privilegier les versions sans additifs']
     },
     '/api/auth/login': {
       token: 'demo-token-12345',
@@ -269,7 +269,7 @@ export function applyEssentialFixes() {
   setupAutoRefreshToken();
   setupDebugLogger();
   
-  console.log('aÃ…â€œÃ¢â‚¬Â¦ Fixes essentiels appliques');
+  console.log('aÃ…'œÃ¢â‚¬Â¦ Fixes essentiels appliques');
 }
 
 // Commandes disponibles dans la console
@@ -307,4 +307,5 @@ window.ecolojiaFixes = {
 console.log('Â°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ Fixes disponibles : window.ecolojiaFixes');
 console.log('Pour activer le mode demo : ecolojiaFixes.enableDemoMode()');
 console.log('Pour voir les erreurs : ecolojiaFixes.showErrors()');
+
 

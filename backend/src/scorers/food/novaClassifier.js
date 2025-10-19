@@ -1,4 +1,4 @@
-// PATH: backend/src/services/analysis/novaClassifier.js
+﻿// PATH: backend/src/services/analysis/novaClassifier.js
 const novaRules = require('../../data/nova-rules.json');
 
 /**
@@ -125,6 +125,7 @@ class NovaClassifier {
   }
 }
 
-/*  âœ… Exporter directement lâ€™INSTANCE pour eviter
+/*  âœ… Exporter directement l'INSTANCE pour eviter
     TypeError: novaClassifier.classify is not a function */
 module.exports = new NovaClassifier();
+

@@ -63,7 +63,7 @@ const FavoritesPage: React.FC = () => {
             <Heart className="w-8 h-8 text-red-500" />
             Mes Favoris
           </h1>
-          <p className="text-gray-600">{favorites.length} produit(s) enregistrÃ©(s)</p>
+          <p className="text-gray-600">{favorites.length} produit(s) enregistré(s)</p>
         </div>
 
         {/* Recherche */}
@@ -83,13 +83,13 @@ const FavoritesPage: React.FC = () => {
           <div className="text-center py-12 bg-white rounded-xl">
             <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg mb-4">
-              {searchQuery ? 'Aucun rÃ©sultat' : 'Aucun favori'}
+              {searchQuery ? 'Aucun résultat' : 'Aucun favori'}
             </p>
             <button
               onClick={() => navigate('/search')}
               className="px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B]"
             >
-              DÃ©couvrir des produits
+              Découvrir des produits
             </button>
           </div>
         ) : (

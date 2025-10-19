@@ -1,10 +1,10 @@
-// PATH: backend\src\tests\test-ocr.js
+﻿// PATH: backend\src\tests\test-ocr.js
 /**
  * Script de validation OCR ECOLOJIA v5
  * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
- * â€¢ Corrige lâ€™envoi du fichier : on precise le **content-type image/jpeg**
+ * â€¢ Corrige l'envoi du fichier : on precise le **content-type image/jpeg**
  *   pour que Multer accepte le flux (sinon mimetype = octet/stream â†’ rejete).
- * â€¢ Si lâ€™image provient dâ€™un fichier local, on saute /analyze-url.
+ * â€¢ Si l'image provient d'un fichier local, on saute /analyze-url.
  * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
  */
 
@@ -139,3 +139,4 @@ async function compareServices (filePath) {
 
   console.log('\nâœ…  Tous les tests termines');
 })();
+

@@ -194,7 +194,7 @@ const RegisterPage: React.FC = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="'¢'¢'¢'¢'¢'¢'¢'¢"
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
                 />
@@ -242,7 +242,7 @@ const RegisterPage: React.FC = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="'¢'¢'¢'¢'¢'¢'¢'¢"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
                 />
@@ -306,5 +306,6 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+
 
 

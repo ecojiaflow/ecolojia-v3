@@ -321,7 +321,7 @@ const PricingPage: React.FC = () => {
             <Zap className="w-5 h-5" />
             Commencer l'essai gratuit
           </button>
-          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise aÃ¢â€šÂ¬Ã‚Â¢ Annulation Æ’Ã‚Â  tout moment</p>
+          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise aÃ¢'šÂ¬Ã‚Â¢ Annulation Æ’Ã‚Â  tout moment</p>
         </div>
       </div>
     </div>
@@ -329,6 +329,7 @@ const PricingPage: React.FC = () => {
 };
 
 export default PricingPage;
+
 
 
 

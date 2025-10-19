@@ -67,7 +67,7 @@ const HistoryPage: React.FC = () => {
             Historique des analyses
           </h1>
           <p className="text-gray-600">
-            {history.length} produit(s) scannÃ©(s)
+            {history.length} produit(s) scanné(s)
           </p>
         </div>
 
@@ -88,7 +88,7 @@ const HistoryPage: React.FC = () => {
           <div className="text-center py-12 bg-white rounded-xl">
             <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 text-lg mb-4">
-              {searchQuery ? 'Aucun rÃ©sultat' : 'Aucun produit dans votre historique'}
+              {searchQuery ? 'Aucun résultat' : 'Aucun produit dans votre historique'}
             </p>
             <button
               onClick={() => navigate('/scan')}

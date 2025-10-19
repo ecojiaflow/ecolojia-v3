@@ -34,7 +34,7 @@ interface Analysis {
 }
 
 interface ProductState {
-  // ƒÆ’†â€™aaâ€šÂ¬‚Â°tat
+  // ƒÆ’†'aa'šÂ¬‚Â°tat
   recentScans: Analysis[];
   favorites: string[];
   searchHistory: string[];
@@ -58,7 +58,7 @@ interface ProductState {
 export const useProductStore = create<ProductState>()(
   persist(
     (set, get) => ({
-      // ƒÆ’†â€™aaâ€šÂ¬‚Â°tat initial
+      // ƒÆ’†'aa'šÂ¬‚Â°tat initial
       recentScans: [],
       favorites: [],
       searchHistory: [],
@@ -68,7 +68,7 @@ export const useProductStore = create<ProductState>()(
       // Actions
       addRecentScan: (analysis: Analysis) => {
         set((state) => {
-          // ƒÆ’†â€™aaâ€šÂ¬‚Â°viter les doublons
+          // ƒÆ’†'aa'šÂ¬‚Â°viter les doublons
           const filtered = state.recentScans.filter(
             scan => scan.productSnapshot._id !== analysis.productSnapshot._id
           );
@@ -95,7 +95,7 @@ export const useProductStore = create<ProductState>()(
         if (!query.trim()) return;
         
         set((state) => {
-          // ƒÆ’†â€™aaâ€šÂ¬‚Â°viter les doublons et garder seulement les 20 dernieres recherches
+          // ƒÆ’†'aa'šÂ¬‚Â°viter les doublons et garder seulement les 20 dernieres recherches
           const filtered = state.searchHistory.filter(q => q !== query);
           const newHistory = [query, ...filtered].slice(0, 20);
           
@@ -140,4 +140,5 @@ export const useProductStore = create<ProductState>()(
     }
   )
 );
+
 

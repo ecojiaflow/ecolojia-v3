@@ -99,7 +99,7 @@ class DashboardService {
     try {
       // Verifier que l'endpoint existe
       if (!API_CONFIG?.ENDPOINTS?.DASHBOARD?.STATS) {
-        console.log('°Å¸â€œÅ  Using mock data for dashboard stats');
+        console.log('°Å¸'œÅ  Using mock data for dashboard stats');
         return mockService.getDashboardStats();
       }
       
@@ -369,6 +369,7 @@ class DashboardService {
 }
 
 export default DashboardService.getInstance();
+
 
 
 

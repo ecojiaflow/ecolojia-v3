@@ -33,8 +33,8 @@ app.use(express.json());
 
 // MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('a…â€œaâ‚¬Â¦ MongoDB Atlas connecte'))
-  .catch(err => console.log('a‚Â…â€™ MongoDB erreur:', err.message));
+  .then(() => console.log('a…'œaâ‚¬Â¦ MongoDB Atlas connecte'))
+  .catch(err => console.log('a‚Â…' MongoDB erreur:', err.message));
 
 // Middleware Auth
 const authMiddleware = (req, res, next) => {
@@ -354,7 +354,7 @@ app.use((err, req, res, next) => {
 // ========== START SERVER ==========
 app.listen(PORT, () => {
   console.log(`
-aaâ‚¬Â¢aâ‚¬Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢aâ‚¬â€
+aaâ‚¬Â¢aâ‚¬Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢aâ‚¬'
 aaâ‚¬Â¢aâ‚¬Ëœ           ECOLOJIA Backend V2.0                    aaâ‚¬Â¢aâ‚¬Ëœ
 aaâ‚¬Â¢‚Â aaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Â£
 aaâ‚¬Â¢aâ‚¬Ëœ  ƒÂ°…Â¸…Â¡â‚¬ Server:     http://localhost:${PORT}            aaâ‚¬Â¢aâ‚¬Ëœ
@@ -368,3 +368,4 @@ aaâ‚¬Â¢…Â¡aaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Âaaâ‚¬Â¢‚Â
 
 // Store OCR results in memory
 global.ocrResults = {};
+

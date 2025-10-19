@@ -60,7 +60,7 @@ export default function ManualInput({ onSubmit, onClose, defaults }: Props) {
           onChange={(e) => setIngredientsText(e.target.value)}
           rows={4}
           className="mt-1 w-full rounded-lg border px-3 py-2"
-          placeholder="lait, ferments lactiques, sucreâ€¦"
+          placeholder="lait, ferments lactiques, sucre'¦"
         />
       </div>
       <div className="flex gap-2">
@@ -74,3 +74,4 @@ export default function ManualInput({ onSubmit, onClose, defaults }: Props) {
     </form>
   );
 }
+

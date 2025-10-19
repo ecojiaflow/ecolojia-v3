@@ -17,7 +17,7 @@ const adminApi = axios.create({
 adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur API Admin:', error.response?.data || error.message);
+    console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur API Admin:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
@@ -34,7 +34,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getDashboardStats:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getDashboardStats:', error);
       throw new Error('Impossible de recuperer les statistiques du dashboard');
     }
   }
@@ -50,7 +50,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getRecentProducts:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getRecentProducts:', error);
       throw new Error('Impossible de recuperer les produits recents');
     }
   }
@@ -66,7 +66,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getImportLogs:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getImportLogs:', error);
       throw new Error('Impossible de recuperer les logs d\'import');
     }
   }
@@ -84,7 +84,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur triggerImport:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur triggerImport:', error);
       throw new Error('Impossible de declencher l\'import');
     }
   }
@@ -100,7 +100,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur getImportProgress:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getImportProgress:', error);
       throw new Error('Impossible de recuperer le progres de l\'import');
     }
   }
@@ -116,7 +116,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur deleteProduct:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur deleteProduct:', error);
       throw new Error('Impossible de supprimer le produit');
     }
   }
@@ -134,7 +134,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur validateProduct:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur validateProduct:', error);
       throw new Error('Impossible de valider le produit');
     }
   }
@@ -142,6 +142,7 @@ export class AdminApiService {
 
 export default AdminApiService;
 // EOF
+
 
 
 

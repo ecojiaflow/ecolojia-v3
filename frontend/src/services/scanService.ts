@@ -75,7 +75,7 @@ export class ScanService {
         imageUrl,
         method: 'photo',
         source: 'web',
-        category: 'food', // Æ’Ã†â€™â€ Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ detecter automatiquement plus tard
+        category: 'food', // Æ’Ã†'' Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ detecter automatiquement plus tard
         extractText: useOCR
       });
       
@@ -123,7 +123,7 @@ export class ScanService {
     return /^(\d{8}|\d{12}|\d{13})$/.test(code);
   }
 
-  // Methode pour detecter la categorie d'un produit Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  partir de son nom
+  // Methode pour detecter la categorie d'un produit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  partir de son nom
   static detectCategory(productName: string): string {
     const categories = {
       food: ['yaourt', 'lait', 'pain', 'pates', 'riz', 'chocolat', 'biscuit', 'cereales'],
@@ -142,6 +142,7 @@ export class ScanService {
     return 'food'; // Par defaut
   }
 }
+
 
 
 

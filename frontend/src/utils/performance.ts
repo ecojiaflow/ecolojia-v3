@@ -57,7 +57,7 @@ export const usePerformanceMonitoring = () => {
     
     // Log pour debug (en mode developpement seulement)
     if (import.meta.env.DEV) {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Performance - Recherche enregistree:', {
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Performance - Recherche enregistree:', {
         query,
         resultsCount,
         searchTime: `${searchTime}ms`,
@@ -83,7 +83,7 @@ export const usePerformanceMonitoring = () => {
     }
     
     if (import.meta.env.DEV) {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Performance - Page chargee:', {
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Performance - Page chargee:', {
         url,
         loadTime: `${loadTime}ms`
       });
@@ -104,7 +104,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.log(`aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â±Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
+        console.log(`aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â±Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Performance - ${operationName}:`, `${executionTime.toFixed(2)}ms`);
       }
       
       return { result, time: executionTime };
@@ -113,7 +113,7 @@ export const usePerformanceMonitoring = () => {
       const executionTime = endTime - startTime;
       
       if (import.meta.env.DEV) {
-        console.error(`aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
+        console.error(`aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Performance - ${operationName} (erreur):`, `${executionTime.toFixed(2)}ms`, error);
       }
       
       throw error;
@@ -136,7 +136,7 @@ export const usePerformanceMonitoring = () => {
     };
     
     if (import.meta.env.DEV) {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Performance - Metriques reinitialisees');
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Performance - Metriques reinitialisees');
     }
   }, []);
   
@@ -188,5 +188,6 @@ export const usePagePerformanceMonitoring = () => {
   
   return { monitorPageLoad };
 };
+
 
 

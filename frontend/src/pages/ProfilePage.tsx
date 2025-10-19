@@ -357,7 +357,7 @@ const ProfilePage: React.FC = () => {
                 <p className="text-sm text-gray-600">
                   {user?.subscription?.tier === 'premium'
                     ? `Renouvellement le ${new Date(user.subscription.currentPeriodEnd || '').toLocaleDateString('fr-FR')}`
-                    : '30 scans/mois â€¢ 5 chats IA/mois'
+                    : '30 scans/mois • 5 chats IA/mois'
                   }
                 </p>
               </div>
@@ -629,7 +629,7 @@ const ProfilePage: React.FC = () => {
                   <button
                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                     onClick={() => {
-                      if (confirm('ÃŠtes-vous sÃ»r de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                      if (confirm('ÃŠtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
                         toast.error('Fonctionnalité en cours de développement');
                       }
                     }}
@@ -647,3 +647,4 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+

@@ -71,9 +71,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<UltraTransformResult> {
     try {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ UltraTransformService - Demarrage analyse:', { productName });
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ UltraTransformService - Demarrage analyse:', { productName });
 
-      // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ CORRECTION: Utiliser la nouvelle URL /api/products/ultra-transform
+      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Utiliser la nouvelle URL /api/products/ultra-transform
       const response = await fetch(`${this.baseUrl}/api/products/ultra-transform`, {
         method: 'POST',
         headers: this.headers,
@@ -84,30 +84,30 @@ class UltraTransformService {
         })
       });
 
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â Reponse serveur Ultra-Transform:', response.status, response.statusText);
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â Reponse serveur Ultra-Transform:', response.status, response.statusText);
 
       if (!response.ok) {
         if (response.status === 404) {
-          console.warn('aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Endpoint ultra-transform non disponible, utilisation du fallback');
+          console.warn('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Endpoint ultra-transform non disponible, utilisation du fallback');
           return this.analyzeLocal(productName, ingredients);
         }
         
         const errorData = await response.json().catch(() => ({ error: 'Erreur inconnue' }));
-        console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur HTTP:', response.status, errorData);
+        console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur HTTP:', response.status, errorData);
         throw new Error(errordata?.error || errordata?.message || `Erreur HTTP ${response.status}`);
       }
 
       const data = await response.json();
       
       if (!data?.success) {
-        console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Reponse backend echec:', data);
+        console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Reponse backend echec:', data);
         throw new Error(data?.message || 'Erreur analyse ultra-transformation');
       }
       
       // Extraction du resultat selon la structure de reponse
       const result = data?.analysis || data;
       
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Analyse Ultra-Transformation reussie:', result);
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse Ultra-Transformation reussie:', result);
 
       // Ajout des champs de compatibilite et enrichissement
       const enrichedResult: UltraTransformResult = {
@@ -133,14 +133,14 @@ class UltraTransformService {
 
       return enrichedResult;
     } catch (error: any) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur service Ultra-Transformation:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur service Ultra-Transformation:', error);
       
       // Fallback vers analyse locale si backend indisponible
       if (error.message.includes('fetch') || 
           error.message.includes('Failed to fetch') ||
           error.message.includes('Route non trouvee') ||
           error.message.includes('404')) {
-        console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Fallback vers analyse locale');
+        console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Fallback vers analyse locale');
         return this.analyzeLocal(productName, ingredients);
       }
       
@@ -156,9 +156,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<CombinedAnalysisResult> {
     try {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ Analyse combinee NOVA + Ultra-Transform:', { productName });
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ Analyse combinee NOVA + Ultra-Transform:', { productName });
 
-      // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ CORRECTION: Tenter d'abord /products/combined, sinon fallback
+      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Tenter d'abord /products/combined, sinon fallback
       const response = await fetch(`${this.baseUrl}/api/products/combined`, {
         method: 'POST',
         headers: this.headers,
@@ -172,7 +172,7 @@ class UltraTransformService {
       if (!response.ok) {
         if (response.status === 404) {
           // Fallback : analyses separees
-          console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Endpoint combined non disponible, analyses separees');
+          console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Endpoint combined non disponible, analyses separees');
           return this.combinedFallback(productName, ingredients);
         }
         throw new Error(`Erreur HTTP ${response.status}`);
@@ -181,11 +181,11 @@ class UltraTransformService {
       const data = await response.json();
       const result = data?.analysis || data;
       
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Analyse combinee reussie:', result);
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse combinee reussie:', result);
 
       return result;
     } catch (error: any) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur analyse combinee:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur analyse combinee:', error);
       
       if (error.message.includes('404') || error.message.includes('fetch')) {
         return this.combinedFallback(productName, ingredients);
@@ -199,7 +199,7 @@ class UltraTransformService {
    * Fallback pour analyse combinee
    */
   private async combinedFallback(productName: string, ingredients: string): Promise<CombinedAnalysisResult> {
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Fallback analyse combinee');
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Fallback analyse combinee');
     
     // Analyse ultra-transformation locale
     const ultraResult = await this.analyzeUltraTransformation(productName, ingredients);
@@ -225,11 +225,11 @@ class UltraTransformService {
       ultraTransformation: ultraResult,
       holisticScore: Math.round((novaResult.healthScore + (100 - (ultraResult.transformationScore || 80))) / 2),
       globalAssessment: ultraResult.transformationLevel >= 4 ? 
-        'Produit ultra-transforme Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  limiter' : 
+        'Produit ultra-transforme Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  limiter' : 
         'Produit acceptable avec moderation',
       recommendations: [
         ...ultraResult.recommendations,
-        'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Analyse combinee en mode fallback'
+        'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Analyse combinee en mode fallback'
       ],
       timestamp: new Date().toISOString()
     };
@@ -239,7 +239,7 @@ class UltraTransformService {
    * Analyse locale de secours (fallback)
    */
   private analyzeLocal(productName: string, ingredients: string): UltraTransformResult {
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Analyse Ultra-Transformation locale pour:', productName);
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Analyse Ultra-Transformation locale pour:', productName);
     
     // Analyse simplifiee locale
     const lower = ingredients.toLowerCase();
@@ -313,13 +313,13 @@ class UltraTransformService {
     
     // Recommandations personnalisees
     const recommendations = [
-      level >= 4 ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â¨ Ultra-transformation detectee - limiter la consommation' : 
-      level >= 3 ? 'aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Transformation importante - consommation moderee' :
-      level >= 2 ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Âº Produit transforme - consommation occasionnelle' :
-      'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Transformation minimale - produit acceptable',
-      `Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  ${methods.length} methode(s) de transformation identifiee(s)`,
-      `Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ ${markers.length} marqueur(s) industriel(s) detecte(s)`,
-      'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â± Analyse locale - resultats approximatifs'
+      level >= 4 ? 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â¨ Ultra-transformation detectee - limiter la consommation' : 
+      level >= 3 ? 'aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Transformation importante - consommation moderee' :
+      level >= 2 ? 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Âº Produit transforme - consommation occasionnelle' :
+      'aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Transformation minimale - produit acceptable',
+      `Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  ${methods.length} methode(s) de transformation identifiee(s)`,
+      `Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ ${markers.length} marqueur(s) industriel(s) detecte(s)`,
+      'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡'šÃ‚Â± Analyse locale - resultats approximatifs'
     ];
 
     const naturalIngredients = Math.max(0, ingredients.split(',').length - additivesCount - methods.length);
@@ -361,7 +361,7 @@ class UltraTransformService {
    */
   async getServiceInfo(): Promise<any> {
     try {
-      // aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ CORRECTION: Nouvelle URL
+      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Nouvelle URL
       const response = await fetch(`${this.baseUrl}/api/products/status`);
       if (!response.ok) throw new Error('Service info unavailable');
       return await response.json();
@@ -389,12 +389,12 @@ class UltraTransformService {
 
   private getLevelIcon(level: number): string {
     switch (level) {
-      case 1: return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¿';
-      case 2: return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â±';
-      case 3: return 'aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â';
-      case 4: return 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â¨';
-      case 5: return 'aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢';
-      default: return 'aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“';
+      case 1: return 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â¿';
+      case 2: return 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â±';
+      case 3: return 'aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â';
+      case 4: return 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â¨';
+      case 5: return 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢';
+      default: return 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“';
     }
   }
 
@@ -438,6 +438,7 @@ export const ultraTransformService = new UltraTransformService();
 // Export types et classe
 export default UltraTransformService;
 // EOF
+
 
 
 

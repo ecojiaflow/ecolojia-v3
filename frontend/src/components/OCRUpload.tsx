@@ -24,7 +24,7 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sÃ©lectionner une image valide');
+      alert('Veuillez sélectionner une image valide');
       return;
     }
 
@@ -54,17 +54,17 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
       if (result.success) {
         onAnalysis(result);
       } else {
-        throw new Error(result.error || 'Analyse Ã©chouÃ©e');
+        throw new Error(result.error || 'Analyse échouée');
       }
     } catch (error) {
       console.error('Erreur analyse OCR:', error);
-      // Fallback avec rÃ©sultat stub pour tests
+      // Fallback avec résultat stub pour tests
       const stubResult: VisionResult = {
         success: true,
         source: 'stub',
         ingredients: ['Sucre', 'Huile de palme', 'Noisettes 13%', 'Cacao maigre en poudre 7.4%'],
         warnings: ['Contient des fruits Ã  coque', 'Peut contenir du gluten'],
-        rawText: `NUTELLA\nSucre, huile de palme, noisettes 13%, cacao maigre en poudre 7.4%, lait Ã©crÃ©mÃ© en poudre 6.6%, Ã©mulsifiants : lÃ©cithines [soja], vanilline.\n\nÃ€ conserver dans un endroit frais et sec.`,
+        rawText: `NUTELLA\nSucre, huile de palme, noisettes 13%, cacao maigre en poudre 7.4%, lait écrémé en poudre 6.6%, émulsifiants : lécithines [soja], vanilline.\n\nÃ€ conserver dans un endroit frais et sec.`,
         confidence: 0.85
       };
       onAnalysis(stubResult);
@@ -139,7 +139,7 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
               <>
                 <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                 <p className="text-lg font-medium text-gray-700 mb-2">
-                  DÃ©posez une image ici
+                  Déposez une image ici
                 </p>
                 <p className="text-sm text-gray-500 mb-4">
                   ou utilisez les boutons ci-dessous
@@ -173,7 +173,7 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
         )}
       </div>
 
-      {/* Inputs cachÃ©s */}
+      {/* Inputs cachés */}
       <input
         ref={fileInputRef}
         type="file"
@@ -193,8 +193,9 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
 
       {/* Instructions */}
       <div className="text-xs text-gray-500 text-center">
-        Formats acceptÃ©s: JPG, PNG, WebP â€¢ Taille max: 5MB
+        Formats acceptés: JPG, PNG, WebP '¢ Taille max: 5MB
       </div>
     </div>
   );
 }
+

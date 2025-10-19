@@ -1,11 +1,11 @@
 ﻿// PATH: frontend/src/services/analytics/UserAnalytics.ts
 /**
- * Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  ECOLOJIA User Analytics Service
+ * Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  ECOLOJIA User Analytics Service
  * Infrastructure de tracking pour Dashboard Personnel
  * Stockage local + calculs metriques avances
  */
 
-// aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ INTERFACES PRINCIPALES
+// aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ INTERFACES PRINCIPALES
 export interface ProductAnalysis {
   id: string;
   productName: string;
@@ -106,7 +106,7 @@ export interface WeeklyReport {
   generatedAt: Date;
 }
 
-// aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ SERVICE PRINCIPAL
+// aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ SERVICE PRINCIPAL
 class UserAnalyticsService {
   private sessionId: string;
   private readonly storageKey = 'ecolojia_user_data';
@@ -135,7 +135,7 @@ class UserAnalyticsService {
 
     userdata?.scannedProducts.push(fullAnalysis);
     
-    // Limiter Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  1000 scans pour eviter overflow localStorage
+    // Limiter Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  1000 scans pour eviter overflow localStorage
     if (userdata?.scannedProducts.length > 1000) {
       userdata?.scannedProducts = userdata?.scannedProducts.slice(-800);
     }
@@ -152,7 +152,7 @@ class UserAnalyticsService {
     // Sauvegarder
     this.saveUserData(userData);
     
-    console.log('Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  Scan tracke:', {
+    console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  Scan tracke:', {
       product: analysis.productName,
       nova: analysis.novaGroup,
       totalScans: userdata?.scannedProducts.length,
@@ -303,7 +303,7 @@ class UserAnalyticsService {
     return report;
   }
 
-  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES PRIVÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ES DE calculé=====
+  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES PRIVÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°ES DE calculé=====
 
   private calculateMetrics(products: ProductAnalysis[]): HealthMetrics {
     if (products.length === 0) {
@@ -394,7 +394,7 @@ class UserAnalyticsService {
       insights.push({
         id: this.generateId(),
         type: 'warning',
-        title: 'aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Produit ultra-transforme detecte',
+        title: 'aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Produit ultra-transforme detecte',
         message: `"${analysis.productName}" est classe NOVA 4 avec ${analysis.additives.length} additif(s)`,
         action: 'Rechercher une alternative NOVA 1-2',
         priority: 'high',
@@ -415,7 +415,7 @@ class UserAnalyticsService {
         insights.push({
           id: this.generateId(),
           type: 'progress',
-          title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â  Excellent progres !',
+          title: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¹aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'šÃ‚Â  Excellent progres !',
           message: `Vos 5 derniers scans montrent une amelioration de ${Math.round(avgRecentScore - overallScore)} points`,
           action: 'Continuez sur cette lancee !',
           priority: 'medium',
@@ -441,9 +441,9 @@ class UserAnalyticsService {
     if (userdata?.scannedProducts.length === 1 && !existingIds.has('first_scan')) {
       newAchievements.push({
         id: 'first_scan',
-        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Premier Scan',
+        title: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Premier Scan',
         description: 'Votre premiere analyse NOVA !',
-        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â',
+        icon: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
@@ -454,9 +454,9 @@ class UserAnalyticsService {
     if (userdata?.scannedProducts.length >= 10 && !existingIds.has('scanner_enthusiast')) {
       newAchievements.push({
         id: 'scanner_enthusiast',
-        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â± Explorateur NOVA',
+        title: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â± Explorateur NOVA',
         description: '10 produits analyses !',
-        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â±',
+        icon: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â±',
         unlockedAt: new Date(),
         category: 'analyzer',
         rarity: 'common'
@@ -467,22 +467,22 @@ class UserAnalyticsService {
     if (userdata?.currentMetrics.healthScore >= 80 && !existingIds.has('health_champion')) {
       newAchievements.push({
         id: 'health_champion',
-        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂaaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  Champion Santé',
-        description: 'Score Santé superieur Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  80 !',
-        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂaaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ',
+        title: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂaaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  Champion Santé',
+        description: 'Score Santé superieur Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  80 !',
+        icon: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂaaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â ',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'rare'
       });
     }
 
-    // Achievement: Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°viter ultra-transformes
+    // Achievement: Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°viter ultra-transformes
     if (userdata?.currentMetrics.ultraTransformPercent <= 20 && userdata?.scannedProducts.length >= 20 && !existingIds.has('ultra_avoider')) {
       newAchievements.push({
         id: 'ultra_avoider',
-        title: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂºÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Anti Ultra-Transforme',
+        title: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂºÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Anti Ultra-Transforme',
         description: 'Moins de 20% d\'ultra-transformes !',
-        icon: 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂºÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â',
+        icon: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂºÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â',
         unlockedAt: new Date(),
         category: 'improver',
         rarity: 'epic'
@@ -492,7 +492,7 @@ class UserAnalyticsService {
     userdata?.achievements.push(...newAchievements);
   }
 
-  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES UTILITAIRES =====
+  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES UTILITAIRES =====
 
   private getOrCreateSessionId(): string {
     let sessionId = localStorage.getItem(this.sessionKey);
@@ -590,10 +590,10 @@ class UserAnalyticsService {
   }
 
   private generateDayInsight(metrics: HealthMetrics, products: ProductAnalysis[]): string {
-    if (metrics.healthScore >= 80) return 'Excellente journee Santé ! Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸';
-    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â';
-    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformes aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Ã†â€™Ãƒâ€šÃ‚Â¯Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â';
-    return 'Continuez vos efforts ! Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬aÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª';
+    if (metrics.healthScore >= 80) return 'Excellente journee Santé ! Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸';
+    if (metrics.healthScore >= 60) return 'Bonne progression nutritionnelle Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¹Ãƒ'¦Ã¢â‚¬Å“Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â';
+    if (metrics.ultraTransformPercent > 50) return 'Attention aux ultra-transformes aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â';
+    return 'Continuez vos efforts ! Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬aÃƒÂ¢Ã¢'šÂ¬Ã…Â¾Ãƒ'šÃ‚Â¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Âª';
   }
 
   private getCurrentValueForGoalType(type: UserGoal['type']): number {
@@ -636,7 +636,7 @@ class UserAnalyticsService {
   }
 
   private generateNextWeekGoal(metrics: HealthMetrics): string {
-    if (metrics.ultraTransformPercent > 60) return 'Reduire les ultra-transformes Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  moins de 50%';
+    if (metrics.ultraTransformPercent > 60) return 'Reduire les ultra-transformes Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  moins de 50%';
     if (metrics.bioPercent < 20) return 'Essayer 3 nouveaux produits bio';
     if (metrics.healthScore < 70) return 'Atteindre un score Santé de 75';
     return 'Maintenir vos bonnes habitudes alimentaires';
@@ -717,7 +717,7 @@ class UserAnalyticsService {
     }
   }
 
-  // ===== MÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°THODES PUBLIQUES SUPPLÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°MENTAIRES =====
+  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES PUBLIQUES SUPPLÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°MENTAIRES =====
 
   /**
    * Obtenir statistiques generales
@@ -747,7 +747,7 @@ class UserAnalyticsService {
   resetAllData(): void {
     localStorage.removeItem(this.storageKey);
     localStorage.removeItem(this.sessionKey);
-    console.log('aÃ†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ Donnees utilisateur reinitialisees');
+    console.log('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ Donnees utilisateur reinitialisees');
   }
 
   /**
@@ -775,6 +775,7 @@ class UserAnalyticsService {
 // Export singleton
 export const userAnalytics = new UserAnalyticsService();
 export default UserAnalyticsService;
+
 
 
 

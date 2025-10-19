@@ -268,10 +268,10 @@ export const ManualAnalysisPage: React.FC = () => {
             Conseils pour une analyse precise
           </h3>
           <ul className="space-y-1 text-sm text-blue-800">
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Copiez la liste complete des ingredients dans l'ordre exact</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Pour les cosmetiques, utilisez la liste INCI (noms internationaux)</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Separez les ingredients par des virgules</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Copiez la liste complete des ingredients dans l'ordre exact</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Pour les cosmetiques, utilisez la liste INCI (noms internationaux)</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Separez les ingredients par des virgules</li>
           </ul>
         </div>
       </div>
@@ -280,6 +280,7 @@ export const ManualAnalysisPage: React.FC = () => {
 };
 
 export default ManualAnalysisPage;
+
 
 
 

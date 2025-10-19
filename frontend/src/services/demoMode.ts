@@ -7,11 +7,11 @@ export const demoMode = {
   isEnabled: () => true,
   
   toggle: (enabled) => {
-    console.log(enabled ? "Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ Mode demo active" : "Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Mode demo desactive");
+    console.log(enabled ? "Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ Mode demo active" : "Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Mode demo desactive");
   },
   
   analyzeBarcode: async (barcode) => {
-    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse barcode", barcode);
+    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse barcode", barcode);
     await delay(1000);
     
     return {
@@ -31,7 +31,7 @@ export const demoMode = {
         nutriScore: "E",
         ecoScore: "D",
         additives: ["E322 - Lecithines", "E330 - Acide citrique"],
-        allergens: ["Lait", "Fruits Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  coque", "Soja"],
+        allergens: ["Lait", "Fruits Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  coque", "Soja"],
         warnings: ["Teneur elevee en sucre", "Ultra-transforme"],
         ingredients: "Sucre, huile de palme, NOISETTES 13%, cacao maigre, LAIT ecreme en poudre, lactoserum, lecithines, vanilline",
         nutritionalValues: {
@@ -49,7 +49,7 @@ export const demoMode = {
         alternatives: [
           {
             _id: "alt1",
-            name: "Pate Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  tartiner bio sans huile de palme",
+            name: "Pate Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  tartiner bio sans huile de palme",
             brand: "Bio Brand",
             healthScore: 65,
             nutriScore: "C",
@@ -79,7 +79,7 @@ export const demoMode = {
   },
   
   analyzeImage: async (file) => {
-    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse image", file.name);
+    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse image", file.name);
     await delay(2000);
     
     return {
@@ -99,7 +99,7 @@ export const demoMode = {
   },
   
   analyzeManual: async (data) => {
-    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ DEMO: Analyse manuelle", data);
+    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse manuelle", data);
     await delay(1500);
     
     return {
@@ -202,12 +202,13 @@ export const demoMode = {
   }),
   
   incrementScans: () => {
-    console.log("Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â­ Scan comptabilise");
+    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ Scan comptabilise");
   }
 };
 
 
 export default demoMode;
+
 
 
 

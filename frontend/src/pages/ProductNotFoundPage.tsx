@@ -26,7 +26,7 @@ const ProductNotFoundPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Debug pour verifier le code-barres au chargement
-  console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â ProductNotFoundPage Debug:');
+  console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â ProductNotFoundPage Debug:');
   console.log('  - paramBarcode:', paramBarcode);
   console.log('  - searchParams barcode:', searchParams.get('barcode'));
   console.log('  - barcode final:', barcode);
@@ -49,11 +49,11 @@ const ProductNotFoundPage: React.FC = () => {
 
     // Validation stricte du code-barres
     const barcodeToSend = barcode.trim();
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â¦ Code-barres Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  envoyer:', `"${barcodeToSend}"`);
-    console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â Longueur code-barres:', barcodeToSend.length);
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡'šÃ‚Â¦ Code-barres Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  envoyer:', `"${barcodeToSend}"`);
+    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡'šÃ‚Â Longueur code-barres:', barcodeToSend.length);
 
     if (!barcodeToSend || barcodeToSend === '') {
-      setError('Code-barres manquant. Veuillez scanner le produit Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  nouveau.');
+      setError('Code-barres manquant. Veuillez scanner le produit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  nouveau.');
       return;
     }
 
@@ -61,8 +61,8 @@ const ProductNotFoundPage: React.FC = () => {
     setError(null);
 
     try {
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ Envoi photos pour analyse I?...');
-      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Donnees completes:', {
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Envoi photos pour analyse I?...');
+      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Donnees completes:', {
         barcode: barcodeToSend,
         barcodeLength: barcodeToSend.length,
         photosCount: 3,
@@ -80,7 +80,7 @@ const ProductNotFoundPage: React.FC = () => {
         }
       });
 
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Analyse terminee:', response);
+      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse terminee:', response);
       
       if (response.success) {
         // Gestion des differents formats de reponse backend
@@ -98,19 +98,19 @@ const ProductNotFoundPage: React.FC = () => {
         }
         
         if (redirectPath) {
-          console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â¯ Redirection vers:', redirectPath);
+          console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â¯ Redirection vers:', redirectPath);
           navigate(redirectPath);
         } else {
-          console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Aucune URL de redirection trouvee dans:', response);
+          console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Aucune URL de redirection trouvee dans:', response);
           setError('Produit cree mais impossible de le trouver. Rechargez la page.');
         }
       } else {
         const errorMsg = response.error || response.message || 'Erreur lors de l\'analyse. Reessayez.';
-        console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur backend:', errorMsg);
+        console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur backend:', errorMsg);
         setError(errorMsg);
       }
     } catch (err) {
-      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur analyse (catch):', err);
+      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur analyse (catch):', err);
       setError('Impossible d\'analyser les photos. Verifiez votre connexion.');
     } finally {
       setIsAnalyzing(false);
@@ -140,12 +140,12 @@ const ProductNotFoundPage: React.FC = () => {
               </p>
               {barcodeValid && (
                 <p className="text-xs text-primary mt-1">
-                  aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Code-barres detecte ({barcode.length} caracteres)
+                  aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Code-barres detecte ({barcode.length} caracteres)
                 </p>
               )}
               {!barcodeValid && (
                 <p className="text-xs text-red-600 mt-1">
-                  aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Code-barres manquant - Retournez scanner le produit
+                  aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Code-barres manquant - Retournez scanner le produit
                 </p>
               )}
             </div>
@@ -160,7 +160,7 @@ const ProductNotFoundPage: React.FC = () => {
               <Upload className="h-8 w-8 text-orange-600" />
             </div>
             <h2 className="text-2xl font-bold text-eco-text mb-2">
-              Aidez-nous Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  enrichir notre base !
+              Aidez-nous Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  enrichir notre base !
             </h2>
             <p className="text-gray-600">
               Prenez 3 photos du produit et notre IA l'analysera automatiquement
@@ -243,7 +243,7 @@ const ProductNotFoundPage: React.FC = () => {
               </>
             ) : !barcodeValid ? (
               <>
-                <span>aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Code-barres requis</span>
+                <span>aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Code-barres requis</span>
               </>
             ) : (
               <>
@@ -264,10 +264,10 @@ const ProductNotFoundPage: React.FC = () => {
             Comment fonctionne notre IA ?
           </h3>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Extraction automatique du nom et de la marque</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Reconnaissance OCR des ingredients</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ calculédu score ecologique (0-100%)</li>
-            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ Creation automatique de la fiche produit</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Extraction automatique du nom et de la marque</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Reconnaissance OCR des ingredients</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ calculédu score ecologique (0-100%)</li>
+            <li>aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Creation automatique de la fiche produit</li>
           </ul>
         </div>
       </div>
@@ -276,6 +276,7 @@ const ProductNotFoundPage: React.FC = () => {
 };
 
 export default ProductNotFoundPage;
+
 
 
 

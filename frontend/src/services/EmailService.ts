@@ -52,7 +52,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â± Verifiez votre email ECOLOJIA',
+        subject: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± Verifiez votre email ECOLOJIA',
         text: textContent,
         html: htmlContent
       });
@@ -75,7 +75,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â Reinitialisation de votre mot de passe ECOLOJIA',
+        subject: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â Reinitialisation de votre mot de passe ECOLOJIA',
         text: textContent,
         html: htmlContent
       });
@@ -96,7 +96,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: `${this.fromName} <${this.fromEmail}>`,
         to: email,
-        subject: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â° Bienvenue sur ECOLOJIA !',
+        subject: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â° Bienvenue sur ECOLOJIA !',
         text: textContent,
         html: htmlContent
       });
@@ -129,7 +129,7 @@ export class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <h1>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â± ECOLOJIA</h1>
+                <h1>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± ECOLOJIA</h1>
                 <p>Votre expert IA pour une consommation eclairee</p>
             </div>
             
@@ -138,30 +138,30 @@ export class EmailService {
                 
                 <p>Merci de vous etre inscrit sur <strong>ECOLOJIA</strong>, votre nouvelle plateforme d'analyse de produits alimentee par IA scientifique.</p>
                 
-                <p>Pour commencer Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  analyser vos produits et acceder Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  toutes nos fonctionnalites, veuillez verifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+                <p>Pour commencer Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  analyser vos produits et acceder Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  toutes nos fonctionnalites, veuillez verifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
                 
                 <div style="text-align: center;">
-                    <a href="${verificationUrl}" class="button">aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Verifier mon email</a>
+                    <a href="${verificationUrl}" class="button">aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Verifier mon email</a>
                 </div>
                 
                 <p><strong>Ce que vous allez decouvrir avec ECOLOJIA :</strong></p>
                 <ul>
-                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ <strong>Analyse scientifique avancee</strong> : Classification NOVA, detection ultra-transformation</li>
-                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â€šÂ¬Ã…â€œ <strong>Chat IA Expert</strong> : 5 questions gratuites par jour avec notre nutritionniste IA</li>
-                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â  <strong>Score Santé 0-100</strong> : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits</li>
-                    <li>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¿ <strong>Alternatives saines</strong> : Suggestions personnalisees</li>
+                    <li>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ <strong>Analyse scientifique avancee</strong> : Classification NOVA, detection ultra-transformation</li>
+                    <li>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â¤aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢'šÂ¬Ã…'œ <strong>Chat IA Expert</strong> : 5 questions gratuites par jour avec notre nutritionniste IA</li>
+                    <li>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â  <strong>Score Santé 0-100</strong> : Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°valuation instantanee de vos produits</li>
+                    <li>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â¿ <strong>Alternatives saines</strong> : Suggestions personnalisees</li>
                 </ul>
                 
                 <p>Ce lien est valable pendant <strong>24 heures</strong>.</p>
                 
-                <p>Si vous n'arrivez pas Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  cliquer sur le bouton, copiez et collez cette URL dans votre navigateur :</p>
+                <p>Si vous n'arrivez pas Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  cliquer sur le bouton, copiez et collez cette URL dans votre navigateur :</p>
                 <p style="word-break: break-all; color: #6b7280;">${verificationUrl}</p>
             </div>
             
             <div class="footer">
                 <p>Vous recevez cet email car vous avez cree un compte sur ecoloji?.com</p>
-                <p>Si vous n'etes pas Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'origine de cette inscription, vous pouvez ignorer cet email.</p>
-                <p>Æ’Ã†â€™aÃ¢â€šÂ¬Ã…Â¡â€šÃ‚Â© 2024 ECOLOJIA - Consommation eclairee par IA</p>
+                <p>Si vous n'etes pas Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'origine de cette inscription, vous pouvez ignorer cet email.</p>
+                <p>Æ’Ã†'aÃ¢'šÂ¬Ã…Â¡'šÃ‚Â© 2024 ECOLOJIA - Consommation eclairee par IA</p>
             </div>
         </div>
     </body>
@@ -175,19 +175,19 @@ Bonjour ${name} !
 
 Merci de vous etre inscrit sur ECOLOJIA, votre nouvelle plateforme d'analyse de produits alimentee par IA scientifique.
 
-Pour commencer Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  analyser vos produits et acceder Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  toutes nos fonctionnalites, veuillez verifier votre adresse email en cliquant sur ce lien :
+Pour commencer Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  analyser vos produits et acceder Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  toutes nos fonctionnalites, veuillez verifier votre adresse email en cliquant sur ce lien :
 
 ${verificationUrl}
 
 Ce que vous allez decouvrir avec ECOLOJIA :
 - Analyse scientifique avancee : Classification NOVA, detection ultra-transformation
 - Chat IA Expert : 5 questions gratuites par jour avec notre nutritionniste IA
-- Score Santé 0-100 : Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°valuation instantanee de vos produits
+- Score Santé 0-100 : Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°valuation instantanee de vos produits
 - Alternatives saines : Suggestions personnalisees
 
 Ce lien est valable pendant 24 heures.
 
-Si vous n'etes pas Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'origine de cette inscription, vous pouvez ignorer cet email.
+Si vous n'etes pas Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'origine de cette inscription, vous pouvez ignorer cet email.
 
 Merci !
 L'equipe ECOLOJIA
@@ -215,7 +215,7 @@ L'equipe ECOLOJIA
     <body>
         <div class="container">
             <div class="header">
-                <h1>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â ECOLOJIA</h1>
+                <h1>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â ECOLOJIA</h1>
                 <p>Reinitialisation de mot de passe</p>
             </div>
             
@@ -227,11 +227,11 @@ L'equipe ECOLOJIA
                 <p>Cliquez sur le bouton ci-dessous pour creer un nouveau mot de passe :</p>
                 
                 <div style="text-align: center;">
-                    <a href="${resetUrl}" class="button">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¹Ã…â€œ Reinitialiser mon mot de passe</a>
+                    <a href="${resetUrl}" class="button">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¹Ã…'œ Reinitialiser mon mot de passe</a>
                 </div>
                 
                 <div class="warning">
-                    <strong>aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Important :</strong>
+                    <strong>aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Important :</strong>
                     <ul>
                         <li>Ce lien est valable pendant <strong>1 heure seulement</strong></li>
                         <li>Si vous n'avez pas demande cette reinitialisation, ignorez cet email</li>
@@ -245,8 +245,8 @@ L'equipe ECOLOJIA
             
             <div class="footer">
                 <p>Vous recevez cet email car une reinitialisation de mot de passe ? ete demandee pour votre compte ECOLOJI?.</p>
-                <p>Si vous n'etes pas Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'origine de cette demande, votre compte est peut-etre compromis. Contactez-nous immediatement.</p>
-                <p>Æ’Ã†â€™aÃ¢â€šÂ¬Ã…Â¡â€šÃ‚Â© 2024 ECOLOJIA</p>
+                <p>Si vous n'etes pas Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'origine de cette demande, votre compte est peut-etre compromis. Contactez-nous immediatement.</p>
+                <p>Æ’Ã†'aÃ¢'šÂ¬Ã…Â¡'šÃ‚Â© 2024 ECOLOJIA</p>
             </div>
         </div>
     </body>
@@ -268,7 +268,7 @@ IMPORTANT :
 - Si vous n'avez pas demande cette reinitialisation, ignorez cet email
 - Votre mot de passe actuel reste inchange tant que vous ne cliquez pas sur le lien
 
-Si vous n'etes pas Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  l'origine de cette demande, votre compte est peut-etre compromis. Contactez-nous immediatement.
+Si vous n'etes pas Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'origine de cette demande, votre compte est peut-etre compromis. Contactez-nous immediatement.
 
 L'equipe ECOLOJIA
     `;
@@ -295,48 +295,48 @@ L'equipe ECOLOJIA
     <body>
         <div class="container">
             <div class="header">
-                <h1>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â° Bienvenue sur ECOLOJIA !</h1>
+                <h1>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â° Bienvenue sur ECOLOJIA !</h1>
                 <p>Votre voyage vers une consommation eclairee commence maintenant</p>
             </div>
             
             <div class="content">
-                <h2>Felicitations ${name} ! Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â±</h2>
+                <h2>Felicitations ${name} ! Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â±</h2>
                 
                 <p>Votre compte ECOLOJIA est maintenant actif. Vous faites desormais partie de la communaute de consommateurs eclaires qui utilisent l'IA pour faire de meilleurs choix.</p>
                 
                 <div class="feature">
-                    <h3>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ Votre IA Scientifique Gratuite</h3>
+                    <h3>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ Votre IA Scientifique Gratuite</h3>
                     <p>Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score Santé 0-100.</p>
                 </div>
                 
                 <div class="feature">
-                    <h3>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â€šÂ¬Ã…â€œ Chat Expert IA (5 questions/jour)</h3>
-                    <p>Posez vos questions Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre nutritionniste I?. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Reponses personnalisees garanties.</p>
+                    <h3>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â¤aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢'šÂ¬Ã…'œ Chat Expert IA (5 questions/jour)</h3>
+                    <p>Posez vos questions Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  notre nutritionniste I?. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Reponses personnalisees garanties.</p>
                 </div>
                 
                 <div class="feature">
-                    <h3>Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â  Premium Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  decouvrir</h3>
+                    <h3>Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â  Premium Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  decouvrir</h3>
                     <p>Questions IA illimitees, coaching personnalise, dashboard analytics complet. Essai gratuit disponible !</p>
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="${this.baseUrl}/scanner" class="button">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â¡aÃ¢â‚¬Å¡Ã‚Â¬ Commencer Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  scanner</a>
+                    <a href="${this.baseUrl}/scanner" class="button">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â¡aÃ¢â‚¬Å¡Ã‚Â¬ Commencer Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  scanner</a>
                 </div>
                 
                 <p><strong>Premiers pas conseilles :</strong></p>
                 <ol>
                     <li>Scannez un produit de votre cuisine</li>
                     <li>Decouvrez son score Santé et ses analyses</li>
-                    <li>Posez une question Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre IA Expert</li>
+                    <li>Posez une question Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  notre IA Expert</li>
                     <li>Explorez les alternatives suggerees</li>
                 </ol>
                 
-                <p>Des questions ? Notre equipe est lÆ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  pour vous aider !</p>
+                <p>Des questions ? Notre equipe est lÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  pour vous aider !</p>
             </div>
             
             <div class="footer">
-                <p>Merci de faire confiance Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  ECOLOJIA pour votre parcours vers une consommation plus consciente.</p>
-                <p>Æ’Ã†â€™aÃ¢â€šÂ¬Ã…Â¡â€šÃ‚Â© 2024 ECOLOJIA - L'IA au service de votre Santé</p>
+                <p>Merci de faire confiance Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  ECOLOJIA pour votre parcours vers une consommation plus consciente.</p>
+                <p>Æ’Ã†'aÃ¢'šÂ¬Ã…Â¡'šÃ‚Â© 2024 ECOLOJIA - L'IA au service de votre Santé</p>
             </div>
         </div>
     </body>
@@ -354,22 +354,22 @@ VOTRE IA SCIENTIFIQUE GRATUITE :
 Analysez instantanement vos produits avec nos algorithmes bases sur INSERM, ANSES et EFS?. Classification NOVA, detection ultra-transformation, score Santé 0-100.
 
 CHAT EXPERT IA (5 questions/jour) :
-Posez vos questions Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre nutritionniste I?. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Reponses personnalisees garanties.
+Posez vos questions Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  notre nutritionniste I?. "Ce produit convient-il aux enfants ?", "Quelles alternatives plus saines ?" - Reponses personnalisees garanties.
 
-PREMIUM Æ’Ã†â€™â€ Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ DÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°COUVRIR :
+PREMIUM Æ’Ã†'' Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ DÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°COUVRIR :
 Questions IA illimitees, coaching personnalise, dashboard analytics complet. Essai gratuit disponible !
 
 Premiers pas conseilles :
 1. Scannez un produit de votre cuisine
 2. Decouvrez son score Santé et ses analyses  
-3. Posez une question Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  notre IA Expert
+3. Posez une question Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  notre IA Expert
 4. Explorez les alternatives suggerees
 
 Commencez des maintenant : ${this.baseUrl}/scanner
 
-Des questions ? Notre equipe est lÆ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  pour vous aider !
+Des questions ? Notre equipe est lÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  pour vous aider !
 
-Merci de faire confiance Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  ECOLOJIA pour votre parcours vers une consommation plus consciente.
+Merci de faire confiance Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  ECOLOJIA pour votre parcours vers une consommation plus consciente.
 
 L'equipe ECOLOJIA
     `;
@@ -386,5 +386,6 @@ L'equipe ECOLOJIA
     }
   }
 }
+
 
 

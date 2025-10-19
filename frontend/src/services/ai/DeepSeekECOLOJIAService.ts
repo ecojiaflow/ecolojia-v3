@@ -83,7 +83,7 @@ export async function streamDeepSeekResponse(
                 onToken(content);
               }
             } catch (err) {
-              console.warn('aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Impossible de parser:', data);
+              console.warn('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Impossible de parser:', data);
             }
           }
         }
@@ -92,7 +92,7 @@ export async function streamDeepSeekResponse(
 
     onDone?.();
   } catch (err: any) {
-    console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur streaming IA:', err);
+    console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur streaming IA:', err);
     
     // Message d'erreur plus detaille selon le type d'erreur
     let errorMessage = 'Erreur de connexion avec le serveur';
@@ -124,5 +124,6 @@ export async function checkDeepSeekAvailability(): Promise<boolean> {
     return false;
   }
 }
+
 
 
