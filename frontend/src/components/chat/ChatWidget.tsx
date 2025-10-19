@@ -201,7 +201,18 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
                   ))}
                 </div>
               </div>
-            )}
+            )}              {/* Disclaimer Chat IA - Toujours visible */}
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-3 mx-4 mb-2 rounded-r-lg">
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-600 text-sm flex-shrink-0">💬</span>
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    <strong>Rappel :</strong> Je suis un assistant IA, pas un professionnel de santé. 
+                    Mes réponses sont à but informatif. Pour un avis personnalisé, consultez un 
+                    professionnel diplômé (médecin, nutritionniste, diététicien).
+                  </p>
+                </div>
+              </div>
+
 
             {/* Input */}
             <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">

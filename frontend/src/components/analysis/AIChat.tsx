@@ -303,7 +303,20 @@ Posez-moi une question plus specifique pour une analyse detaillee !`;
         )}
 
         <div ref={messagesEndRef} />
+      </div>      {/* Disclaimer Chat IA - Toujours visible */}
+      <div className="bg-blue-50 border-l-4 border-blue-500 p-3 mx-4 mb-2 rounded-r-lg">
+        <div className="flex items-start space-x-2">
+          <span className="text-blue-600 text-lg flex-shrink-0">💬</span>
+          <div className="flex-1">
+            <p className="text-xs text-gray-700 leading-relaxed">
+              <strong>Rappel :</strong> Je suis un assistant IA, pas un professionnel de santé. 
+              Mes réponses sont à but informatif. Pour un avis personnalisé, consultez un 
+              professionnel diplômé (médecin, nutritionniste, diététicien).
+            </p>
+          </div>
+        </div>
       </div>
+
 
       {/* Input */}
       <div className="border-t p-4 bg-gray-50">
@@ -332,6 +345,7 @@ Posez-moi une question plus specifique pour une analyse detaillee !`;
     </div>
   );
 };
+
 
 
 
