@@ -1,4 +1,4 @@
-// backend/src/services/scoringUnified.js
+ï»¿// backend/src/services/scoringUnified.js
 
 // ============================================
 // LISTES D'ADDITIFS
@@ -10,10 +10,10 @@ const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471',
 // SEUILS DE CONFIANCE ET TRANSPARENCE
 // ============================================
 const CONFIDENCE_THRESHOLDS = {
-  EXCELLENT: 85,      // Données complètes et vérifiées
-  GOOD: 70,           // Données suffisantes pour scoring fiable
+  EXCELLENT: 85,      // Donnï¿½es complï¿½tes et vï¿½rifiï¿½es
+  GOOD: 70,           // Donnï¿½es suffisantes pour scoring fiable
   ACCEPTABLE: 60,     // Minimum pour afficher un score
-  INSUFFICIENT: 0     // Données insuffisantes - pas de score
+  INSUFFICIENT: 0     // Donnï¿½es insuffisantes - pas de score
 };
 
 const SCORING_WEIGHTS = {
@@ -53,7 +53,7 @@ function calculateDataConfidence(product, category = 'food') {
   let missingImportant = [];
   let availableData = [];
 
-  // Vérifier champs critiques (40 points)
+  // Vï¿½rifier champs critiques (40 points)
   required.critical.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 20;
@@ -63,7 +63,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Vérifier champs importants (40 points)
+  // Vï¿½rifier champs importants (40 points)
   required.important.forEach(field => {
     if (field === 'nutriments' && product.nutriments) {
       const nutriments = product.nutriments;
@@ -84,7 +84,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Vérifier champs optionnels (20 points)
+  // Vï¿½rifier champs optionnels (20 points)
   required.optional.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 6.67;
@@ -92,7 +92,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Déterminer le niveau
+  // Dï¿½terminer le niveau
   let level;
   if (confidence >= CONFIDENCE_THRESHOLDS.EXCELLENT) {
     level = 'EXCELLENT';
@@ -118,10 +118,10 @@ function calculateDataConfidence(product, category = 'food') {
 // CALCUL DES SCORES ALIMENTAIRES
 // ============================================
 function calculateFoodScores(data) {
-  // 1. VÉRIFIER LA QUALITÉ DES DONNÉES
+  // 1. Vï¿½RIFIER LA QUALITï¿½ DES DONNï¿½ES
   const dataConfidence = calculateDataConfidence(data, 'food');
   
-  // 2. SI DONNÉES INSUFFISANTES, RETOURNER STRUCTURE SPÉCIALE
+  // 2. SI DONNï¿½ES INSUFFISANTES, RETOURNER STRUCTURE SPï¿½CIALE
   if (!dataConfidence.canScore) {
     return {
       version: '3.1.0',
@@ -139,14 +139,14 @@ function calculateFoodScores(data) {
       healthScore: null,
       environmentScore: null,
       breakdown: null,
-      message: 'Données insuffisantes pour calculer un score fiable.',
+      message: 'Donnï¿½es insuffisantes pour calculer un score fiable.',
       recommendation: 'Utilisez le chat IA pour en savoir plus sur ce produit.',
       needsAIEnrichment: true,
       aiSuggestion: 'ask_ai_for_analysis'
     };
   }
 
-  // 3. CALCULER LES SCORES (données suffisantes)
+  // 3. CALCULER LES SCORES (donnï¿½es suffisantes)
   const nutriments = data.nutriments || {};
   const missingData = [];
   if (!data.novaGroup) missingData.push('nova');
@@ -157,24 +157,24 @@ function calculateFoodScores(data) {
   
   const confidence = (8 - missingData.length) / 8;
   
-  let novaScore = 50;
+  let novaScore = null;
   if (data.novaGroup) {
     const novaMapping = { 1: 85, 2: 65, 3: 45, 4: 25 };
     novaScore = novaMapping[data.novaGroup] || 50;
   }
-  const novaContribution = novaScore * 0.15;
+  const novaContribution = (novaScore || 0) * 0.15;
   
-  let nutriScoreValue = 50;
+  let nutriScoreValue = null;
   if (data.nutriScore) {
     const nutriMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
     nutriScoreValue = nutriMapping[data.nutriScore] || 50;
   }
-  const nutriContribution = nutriScoreValue * 0.20;
+  const nutriContribution = (nutriScoreValue || 0) * 0.20;
   
   const additivesAnalysis = analyzeAdditives(data.additives || []);
-  const additivesContribution = additivesAnalysis.score * 0.15;
+  const additivesContribution = (additivesAnalysis.score || 0) * 0.15;
   
-  let sugarsScore = 50;
+  let sugarsScore = null;
   const sugars = nutriments.sugars_100g !== undefined ? nutriments.sugars_100g : (nutriments.sugars !== undefined ? nutriments.sugars : null);
   if (sugars !== null) {
     if (sugars < 5) sugarsScore = 85;
@@ -183,9 +183,9 @@ function calculateFoodScores(data) {
     else if (sugars < 25) sugarsScore = 30;
     else sugarsScore = 15;
   }
-  const sugarsContribution = sugarsScore * 0.10;
+  const sugarsContribution = (sugarsScore || 0) * 0.10;
   
-  let fatScore = 50;
+  let fatScore = null;
   const saturatedFat = nutriments['saturated-fat_100g'] !== undefined ? nutriments['saturated-fat_100g'] : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null);
   if (saturatedFat !== null) {
     if (saturatedFat < 1.5) fatScore = 85;
@@ -194,9 +194,9 @@ function calculateFoodScores(data) {
     else if (saturatedFat < 15) fatScore = 25;
     else fatScore = 10;
   }
-  const fatContribution = fatScore * 0.10;
+  const fatContribution = (fatScore || 0) * 0.10;
   
-  let saltScore = 50;
+  let saltScore = null;
   const salt = nutriments.salt_100g !== undefined ? nutriments.salt_100g : (nutriments.salt !== undefined ? nutriments.salt : null);
   if (salt !== null) {
     if (salt < 0.3) saltScore = 85;
@@ -205,14 +205,14 @@ function calculateFoodScores(data) {
     else if (salt < 2.5) saltScore = 25;
     else saltScore = 10;
   }
-  const saltContribution = saltScore * 0.10;
+  const saltContribution = (saltScore || 0) * 0.10;
   
-  let ecoScore = 50;
+  let ecoScore = null;
   if (data.ecoScore) {
     const ecoMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
     ecoScore = ecoMapping[data.ecoScore] || 50;
   }
-  const ecoContribution = ecoScore * 0.15;
+  const ecoContribution = (ecoScore || 0) * 0.15;
   
   let labelsBonus = 0;
   const labels = data.labels || [];
@@ -241,13 +241,13 @@ function calculateFoodScores(data) {
         score: novaScore, 
         weight: 0.15,
         group: data.novaGroup || null,
-        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non défini'
+        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non dï¿½fini'
       },
       nutriScore: { 
         score: nutriScoreValue, 
         weight: 0.20,
         grade: data.nutriScore ? data.nutriScore.toUpperCase() : null,
-        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non défini'
+        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non dï¿½fini'
       },
       additives: { 
         score: additivesAnalysis.score, 
@@ -261,34 +261,34 @@ function calculateFoodScores(data) {
         weight: 0.10,
         value: sugars,
         unit: 'g/100g',
-        label: sugars !== null ? sugars + 'g/100g' : 'Non spécifié'
+        label: sugars !== null ? sugars + 'g/100g' : 'Non spï¿½cifiï¿½'
       },
       saturatedFat: { 
         score: fatScore, 
         weight: 0.10,
         value: saturatedFat,
         unit: 'g/100g',
-        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spécifié'
+        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spï¿½cifiï¿½'
       },
       salt: { 
         score: saltScore, 
         weight: 0.10,
         value: salt,
         unit: 'g/100g',
-        label: salt !== null ? salt + 'g/100g' : 'Non spécifié'
+        label: salt !== null ? salt + 'g/100g' : 'Non spï¿½cifiï¿½'
       },
       ecoScore: { 
         score: ecoScore, 
         weight: 0.15,
         grade: data.ecoScore ? data.ecoScore.toUpperCase() : null,
-        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non défini'
+        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non dï¿½fini'
       },
       labels: { 
         score: labelsBonus, 
         weight: 0.05,
         list: labels,
         isBio,
-        label: isBio ? 'Bio certifié' : 'Aucun label'
+        label: isBio ? 'Bio certifiï¿½' : 'Aucun label'
       }
     },
     scoringMetadata: {
@@ -330,14 +330,14 @@ function analyzeAdditives(additives) {
 }
 
 // ============================================
-// CALCUL COSMÉTIQUES (À IMPLÉMENTER)
+// CALCUL COSMï¿½TIQUES (ï¿½ IMPLï¿½MENTER)
 // ============================================
 function calculateCosmeticScores(data) {
   return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
 }
 
 // ============================================
-// CALCUL DÉTERGENTS (À IMPLÉMENTER)
+// CALCUL Dï¿½TERGENTS (ï¿½ IMPLï¿½MENTER)
 // ============================================
 function calculateDetergentScores(data) {
   return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
