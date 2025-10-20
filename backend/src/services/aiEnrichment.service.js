@@ -1,19 +1,20 @@
 ﻿// backend/src/services/aiEnrichment.service.js
 /**
- * Service d'enrichissement IA pour produits avec donn�es manquantes
- * Utilise DeepSeek pour estimer valeurs nutritionnelles
+ * Service enrichissement IA multi-categories (Food/Cosmetics/Detergents)
+ * Utilise deepSeekService.analyzeProduct() avec routing automatique
  */
 
 const deepSeekService = require('./ai/deepSeekService');
+const { calculateScores } = require('./scoringUnified');
 
 /**
- * Estime les donn�es manquantes d'un produit via IA
- * @param {Object} product - Produit avec donn�es potentiellement incompl�tes
- * @param {Object} scores - Scores calcul�s avec donn�es manquantes d�tect�es
- * @returns {Promise<Object>} Scores enrichis avec estimations IA
+ * Enrichit un produit avec IA si confiance < 70%
+ * @param {Object} product - Produit a enrichir
+ * @param {Object} scores - Scores calcules
+ * @returns {Promise<Object>} Scores enrichis
  */
 async function enrichProductWithAI(product, scores) {
-  // Si confiance >= 70%, pas besoin d'enrichissement
+  // Si confiance >= 70%, pas besoin enrichissement
   if (scores.confidence >= 0.7) {
     return {
       ...scores,
@@ -21,7 +22,7 @@ async function enrichProductWithAI(product, scores) {
     };
   }
 
-  // V�rifier si estimations r�centes existent d�j�
+  // Verifier si estimations recentes existent deja
   const existingEstimations = product.scores?.aiEstimations;
   if (existingEstimations && isEstimationRecent(existingEstimations)) {
     console.log('[AI] Using cached estimations for', product.barcode);
@@ -34,13 +35,19 @@ async function enrichProductWithAI(product, scores) {
   }
 
   // Appeler IA pour nouvelles estimations
-  console.log('[AI] Requesting new estimations for', product.barcode);
-  
+  console.log('[AI] Requesting new estimations for', product.barcode, 'category:', product.category);
+
   try {
     const estimations = await estimateMissingData(product, scores.missingData);
-    
+
+    // Merger estimations dans le produit
+    const enrichedProduct = mergeEstimations(product, estimations);
+
+    // Recalculer scores avec donnees enrichies
+    const recalculatedScores = calculateScores(enrichedProduct);
+
     return {
-      ...scores,
+      ...recalculatedScores,
       aiEstimations: {
         ...estimations,
         estimatedAt: new Date(),
@@ -60,187 +67,367 @@ async function enrichProductWithAI(product, scores) {
 }
 
 /**
- * Estime donn�es manquantes via DeepSeek
+ * Estime donnees manquantes via IA (multi-categories)
  * @param {Object} product - Produit
- * @param {Array} missingFields - Liste champs manquants
- * @returns {Promise<Object>} Estimations structur�es
+ * @param {Array} missingFields - Champs manquants
+ * @returns {Promise<Object>} Estimations IA
  */
 async function estimateMissingData(product, missingFields = []) {
   if (missingFields.length === 0) {
     return null;
   }
 
-  const prompt = buildEstimationPrompt(product, missingFields);
+  const category = product.category || 'food';
   
-  const response = await deepSeekService.analyze(prompt, getSystemPrompt());
-  console.log("[AI] Raw response:", response.substring(0, 200) + "...");
-  
-  const parsed = parseAIResponse(response);
-  console.log("[AI] Parsed estimations:", parsed ? Object.keys(parsed) : "NULL");
-  
-  return parsed;
+  console.log(`[AI] Estimating ${missingFields.join(', ')} for category: ${category}`);
+
+  try {
+    // Utiliser analyzeProduct() qui route automatiquement par categorie
+    const response = await deepSeekService.analyzeProduct(product, category);
+    console.log("[AI] Raw response:", response.substring(0, 200) + "...");
+
+    // Parser selon categorie
+    const parsed = parseAIResponseByCategory(response, category, missingFields);
+    console.log("[AI] Parsed estimations:", parsed ? Object.keys(parsed) : "NULL");
+
+    return parsed;
+  } catch (error) {
+    console.error('[AI] estimateMissingData failed:', error.message);
+    throw error;
+  }
 }
 
 /**
- * Analyse qualitative pour produits tr�s incomplets
+ * Analyse qualitative pour produits tres incomplets
  * @param {Object} product - Produit
  * @returns {Promise<Object>} Analyse qualitative
  */
 async function qualitativeAnalysis(product) {
-  const prompt = buildQualitativePrompt(product);
+  const category = product.category || 'food';
   
-  const response = await deepSeekService.analyze(prompt, getSystemPrompt());
+  try {
+    const response = await deepSeekService.analyzeProduct(product, category);
 
-  return {
-    qualitativeAnalysis: {
-      summary: response,
-      analyzedAt: new Date()
-    }
-  };
+    return {
+      qualitativeAnalysis: {
+        summary: response,
+        category: category,
+        analyzedAt: new Date()
+      }
+    };
+  } catch (error) {
+    console.error('[AI] qualitativeAnalysis failed:', error.message);
+    throw error;
+  }
 }
 
 // ============================================================================
 // HELPERS
 // ============================================================================
 
+/**
+ * Verifie si estimations sont recentes (< 30 jours)
+ */
 function isEstimationRecent(estimations) {
-  if (!estimations.sugars?.estimatedAt && !estimations.qualitativeAnalysis?.analyzedAt) {
+  if (!estimations.estimatedAt && !estimations.qualitativeAnalysis?.analyzedAt) {
     return false;
   }
-  
+
   const estimatedAt = new Date(
-    estimations.sugars?.estimatedAt || estimations.qualitativeAnalysis.analyzedAt
+    estimations.estimatedAt || estimations.qualitativeAnalysis.analyzedAt
   );
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  
+
   return estimatedAt > thirtyDaysAgo;
 }
 
-function buildEstimationPrompt(product, missingFields) {
-  const name = product.name || product.product_name || 'Produit inconnu';
-  const brand = product.brand || product.brands || 'Marque inconnue';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non sp�cifi�';
+/**
+ * Merge estimations IA dans le produit
+ */
+function mergeEstimations(product, estimations) {
+  if (!estimations) return product;
+
+  const enriched = { ...product };
+  const category = product.category || 'food';
+
+  switch(category) {
+    case 'food':
+      return mergeFoodEstimations(enriched, estimations);
+    case 'cosmetics':
+      return mergeCosmeticsEstimations(enriched, estimations);
+    case 'detergents':
+      return mergeDetergentsEstimations(enriched, estimations);
+    default:
+      return enriched;
+  }
+}
+
+function mergeFoodEstimations(product, estimations) {
+  const enriched = { ...product };
   
-  return `
-Analyse ce produit alimentaire et estime les valeurs nutritionnelles manquantes.
-
-PRODUIT :
-- Nom : ${name}
-- Marque : ${brand}
-- Cat�gorie : ${product.category || 'food'}
-- Ingr�dients : ${ingredients}
-
-DONNEES MANQUANTES A ESTIMER : ${missingFields.join(', ')}
-
-POUR CHAQUE COMPOSANTE :
-- nova : Groupe 1-4 selon transformation (1=brut, 4=ultra-transforme)
-- nutriScore : Grade A-E selon algorithme ANSES
-- sugars : g/100g
-- saturatedFat : g/100g
-- salt : g/100g
-
-T�CHE :
-Pour chaque donn�e manquante, fournis :
-1. Valeur estim�e (g/100g)
-2. Fourchette min-max
-3. Niveau de confiance (0-1)
-4. Raisonnement (bas� sur ingr�dients)
-
-IMPORTANT :
-- Base-toi sur l'ORDRE des ingr�dients (les premiers = plus abondants)
-- Compare avec des produits similaires
-- Sois conservateur dans tes estimations
-
-R�PONDS AU FORMAT JSON STRICT :
-{
-  "nova": { "value": 1-4, "confidence": 0.X, "reasoning": "..." },
-  "nutriScore": { "value": "A-E", "confidence": 0.X, "reasoning": "..." },
-  "sugars": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
-  "saturatedFat": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
-  "salt": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." }
-}
-`;
-}
-
-function buildQualitativePrompt(product) {
-  const name = product.name || product.product_name || 'Produit inconnu';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non sp�cifi�';
-  const additives = product.additives_tags || product.foodData?.additives || [];
+  if (estimations.nova?.value) {
+    enriched.novaGroup = estimations.nova.value;
+  }
   
-  return `
-Analyse qualitative de ce produit alimentaire (donn�es nutritionnelles manquantes).
+  if (estimations.nutriScore?.value) {
+    enriched.nutriScore = estimations.nutriScore.value;
+  }
+  
+  if (estimations.ecoScore?.value) {
+    enriched.ecoScore = estimations.ecoScore.value;
+  }
 
-PRODUIT : ${name}
-INGR�DIENTS : ${ingredients}
-ADDITIFS : ${additives.join(', ')}
+  // Nutriments
+  if (!enriched.nutriments) enriched.nutriments = {};
+  
+  if (estimations.sugars?.estimated) {
+    enriched.nutriments.sugars_100g = estimations.sugars.estimated;
+  }
+  
+  if (estimations.saturatedFat?.estimated) {
+    enriched.nutriments['saturated-fat_100g'] = estimations.saturatedFat.estimated;
+  }
+  
+  if (estimations.salt?.estimated) {
+    enriched.nutriments.salt_100g = estimations.salt.estimated;
+  }
 
-T�CHE :
-1. Identifier le niveau de transformation (NOVA 1-4)
-2. D�tecter ingr�dients pr�occupants
-3. Donner une recommandation globale
-
-Sois factuel, bienveillant, et rappelle que tu n'es pas m�decin.
-Limite � 200 mots.
-`;
+  return enriched;
 }
 
-function getSystemPrompt() {
-  return `Tu es un expert nutritionniste IA pour ECOLOJIA.
+function mergeCosmeticsEstimations(product, estimations) {
+  const enriched = { ...product };
+  
+  if (!enriched.cosmeticsData) enriched.cosmeticsData = {};
+  
+  if (estimations.endocrineDisruptors?.detected) {
+    enriched.cosmeticsData.endocrineDisruptors = estimations.endocrineDisruptors.detected;
+  }
+  
+  if (estimations.allergens?.detected) {
+    enriched.cosmeticsData.allergens = estimations.allergens.detected;
+  }
+  
+  if (estimations.cmrSubstances?.detected) {
+    enriched.cosmeticsData.cmrSubstances = estimations.cmrSubstances.detected;
+  }
+  
+  if (estimations.certifications?.detected) {
+    enriched.cosmeticsData.certifications = estimations.certifications.detected;
+  }
 
-R�GLES STRICTES :
-1. Tu n'es PAS m�decin - toujours le rappeler
-2. Estimations bas�es sur science (CIQUAL, USDA, �tudes)
-3. Sois conservateur dans tes estimations
-4. Explique ton raisonnement
-5. Indique toujours niveau de confiance
-
-SOURCES :
-- Base CIQUAL (ANSES)
-- USDA FoodData Central
-- Comparaison produits similaires
-- Ordre ingr�dients (r�glementation UE)`;
+  return enriched;
 }
 
-function parseAIResponse(response) {
+function mergeDetergentsEstimations(product, estimations) {
+  const enriched = { ...product };
+  
+  if (!enriched.detergentsData) enriched.detergentsData = {};
+  
+  if (estimations.biodegradability?.score !== undefined) {
+    enriched.detergentsData.biodegradable = estimations.biodegradability.score > 60;
+  }
+  
+  if (estimations.aquaticToxicity?.clpCodes) {
+    enriched.detergentsData.aquaticToxicity = estimations.aquaticToxicity.clpCodes;
+  }
+  
+  if (estimations.phosphates?.detected !== undefined) {
+    enriched.detergentsData.phosphates = estimations.phosphates.detected;
+  }
+  
+  if (estimations.ecolabels?.detected) {
+    enriched.detergentsData.ecolabels = estimations.ecolabels.detected;
+  }
+
+  return enriched;
+}
+
+/**
+ * Parse reponse IA selon categorie
+ */
+function parseAIResponseByCategory(response, category, missingFields) {
   try {
-    // Extraire JSON de la r�ponse
+    // Extraire JSON de la reponse
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error('No JSON found in AI response');
+      console.warn('[AI] No JSON found in response');
+      return null;
     }
-    
-    const estimations = JSON.parse(jsonMatch[0]);
-    
-    // Transformer en format attendu
-    const result = {};
-    
-    for (const [key, value] of Object.entries(estimations)) {
-      if (value && typeof value === 'object') {
-        // Handle categorical values (nova, nutriScore, ecoScore)
-        if (value.value !== undefined && typeof value.value !== 'number') {
-          result[key] = {
-            estimatedValue: value.value,
-            confidence: value.confidence || 0.5,
-            reasoning: value.reasoning || ''
-          };
-        }
-        // Handle numeric ranges (sugars, saturatedFat, salt)
-        else if (value.min !== undefined) {
-          result[key] = {
-            estimatedValue: (value.min + value.max) / 2,
-            range: [value.min, value.max],
-            confidence: value.confidence || 0.5,
-            reasoning: value.reasoning || ''
-          };
-        }
-      }
+
+    const parsed = JSON.parse(jsonMatch[0]);
+
+    switch(category) {
+      case 'food':
+        return parseFoodResponse(parsed, missingFields);
+      case 'cosmetics':
+        return parseCosmeticsResponse(parsed, missingFields);
+      case 'detergents':
+        return parseDetergentsResponse(parsed, missingFields);
+      default:
+        return parsed;
     }
-    
-    return result;
   } catch (error) {
-    console.error('[AI] Failed to parse response:', error);
+    console.error('[AI] Parse error:', error.message);
     return null;
   }
+}
+
+function parseFoodResponse(parsed, missingFields) {
+  const result = {};
+
+  if (missingFields.includes('nova') && parsed.nova) {
+    result.nova = {
+      value: parsed.nova.value || parsed.nova,
+      confidence: parsed.nova.confidence || 0.7,
+      reasoning: parsed.nova.reasoning || ''
+    };
+  }
+
+  if (missingFields.includes('nutriScore') && parsed.nutriScore) {
+    result.nutriScore = {
+      value: parsed.nutriScore.value || parsed.nutriScore,
+      confidence: parsed.nutriScore.confidence || 0.7,
+      reasoning: parsed.nutriScore.reasoning || ''
+    };
+  }
+
+  if (missingFields.includes('ecoScore') && parsed.ecoScore) {
+    result.ecoScore = {
+      value: parsed.ecoScore.value || parsed.ecoScore,
+      confidence: parsed.ecoScore.confidence || 0.6,
+      reasoning: parsed.ecoScore.reasoning || ''
+    };
+  }
+
+  if (missingFields.includes('sugars') && parsed.sugars) {
+    result.sugars = {
+      estimated: parsed.sugars.estimated || parsed.sugars.value || 0,
+      min: parsed.sugars.min || 0,
+      max: parsed.sugars.max || 0,
+      confidence: parsed.sugars.confidence || 0.6,
+      reasoning: parsed.sugars.reasoning || ''
+    };
+  }
+
+  if (missingFields.includes('saturatedFat') && parsed.saturatedFat) {
+    result.saturatedFat = {
+      estimated: parsed.saturatedFat.estimated || parsed.saturatedFat.value || 0,
+      min: parsed.saturatedFat.min || 0,
+      max: parsed.saturatedFat.max || 0,
+      confidence: parsed.saturatedFat.confidence || 0.6,
+      reasoning: parsed.saturatedFat.reasoning || ''
+    };
+  }
+
+  if (missingFields.includes('salt') && parsed.salt) {
+    result.salt = {
+      estimated: parsed.salt.estimated || parsed.salt.value || 0,
+      min: parsed.salt.min || 0,
+      max: parsed.salt.max || 0,
+      confidence: parsed.salt.confidence || 0.6,
+      reasoning: parsed.salt.reasoning || ''
+    };
+  }
+
+  return result;
+}
+
+function parseCosmeticsResponse(parsed, missingFields) {
+  const result = {};
+
+  if (parsed.endocrineDisruptors) {
+    result.endocrineDisruptors = {
+      detected: parsed.endocrineDisruptors.detected || [],
+      count: parsed.endocrineDisruptors.count || 0,
+      severity: parsed.endocrineDisruptors.severity || 'NONE',
+      score: parsed.endocrineDisruptors.score || 100,
+      confidence: parsed.endocrineDisruptors.confidence || 0.7,
+      reasoning: parsed.endocrineDisruptors.reasoning || ''
+    };
+  }
+
+  if (parsed.allergens) {
+    result.allergens = {
+      detected: parsed.allergens.detected || [],
+      count: parsed.allergens.count || 0,
+      euMandatory: parsed.allergens.euMandatory || false,
+      score: parsed.allergens.score || 100,
+      confidence: parsed.allergens.confidence || 0.8,
+      reasoning: parsed.allergens.reasoning || ''
+    };
+  }
+
+  if (parsed.cmrSubstances) {
+    result.cmrSubstances = {
+      detected: parsed.cmrSubstances.detected || [],
+      count: parsed.cmrSubstances.count || 0,
+      categoryECHA: parsed.cmrSubstances.categoryECHA || 'None',
+      score: parsed.cmrSubstances.score || 100,
+      confidence: parsed.cmrSubstances.confidence || 0.9,
+      reasoning: parsed.cmrSubstances.reasoning || ''
+    };
+  }
+
+  if (parsed.certifications) {
+    result.certifications = {
+      detected: parsed.certifications.detected || [],
+      verified: parsed.certifications.verified || false,
+      score: parsed.certifications.score || 50,
+      confidence: parsed.certifications.confidence || 0.6,
+      reasoning: parsed.certifications.reasoning || ''
+    };
+  }
+
+  return result;
+}
+
+function parseDetergentsResponse(parsed, missingFields) {
+  const result = {};
+
+  if (parsed.biodegradability) {
+    result.biodegradability = {
+      score: parsed.biodegradability.score || 50,
+      surfactantsType: parsed.biodegradability.surfactantsType || 'unknown',
+      biodegradablePercent: parsed.biodegradability.biodegradablePercent || 0,
+      standard: parsed.biodegradability.standard || 'Unknown',
+      confidence: parsed.biodegradability.confidence || 0.6,
+      reasoning: parsed.biodegradability.reasoning || ''
+    };
+  }
+
+  if (parsed.aquaticToxicity) {
+    result.aquaticToxicity = {
+      clpCodes: parsed.aquaticToxicity.clpCodes || [],
+      severity: parsed.aquaticToxicity.severity || 'NONE',
+      score: parsed.aquaticToxicity.score || 100,
+      confidence: parsed.aquaticToxicity.confidence || 0.7,
+      reasoning: parsed.aquaticToxicity.reasoning || ''
+    };
+  }
+
+  if (parsed.phosphates) {
+    result.phosphates = {
+      detected: parsed.phosphates.detected || false,
+      estimatedContent: parsed.phosphates.estimatedContent || '0g',
+      compliantEU: parsed.phosphates.compliantEU !== false,
+      score: parsed.phosphates.score || 100,
+      confidence: parsed.phosphates.confidence || 0.7,
+      reasoning: parsed.phosphates.reasoning || ''
+    };
+  }
+
+  if (parsed.ecolabels) {
+    result.ecolabels = {
+      detected: parsed.ecolabels.detected || [],
+      verified: parsed.ecolabels.verified || false,
+      score: parsed.ecolabels.score || 50,
+      confidence: parsed.ecolabels.confidence || 0.6,
+      reasoning: parsed.ecolabels.reasoning || ''
+    };
+  }
+
+  return result;
 }
 
 module.exports = {

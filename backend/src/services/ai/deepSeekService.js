@@ -1,4 +1,4 @@
-// PATH: backend/src/services/ai/deepSeekService.js
+﻿// PATH: backend/src/services/ai/deepSeekService.js
 // FICHIER COMPLET - € CR‰ER TEL QUEL
 
 const axios = require('axios');
