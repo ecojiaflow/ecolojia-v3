@@ -1,7 +1,7 @@
 ﻿const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
-const { calculateFoodScores } = require('../services/scoringUnified');
+const { calculateScores } = require('../services/scoringUnified');
 
 // Current scoring algorithm version
 const CURRENT_SCORING_VERSION = '3.1.0';
@@ -72,7 +72,7 @@ router.post('/:barcode', async (req, res) => {
       novaGroup: product.foodData?.novaGroup,
       nutriScore: product.foodData?.nutriScore,
       nutrition: product.nutrition?.per100g
-    }, null, 2));const scores = calculateFoodScores(scoringData);console.log('[OCR-Analyze/:barcode] Scores calculated:', {
+    }, null, 2));const scores = calculateScores(scoringData);console.log('[OCR-Analyze/:barcode] Scores calculated:', {
       overallScore: scores.overallScore,
       confidence: scores.dataQuality?.confidence
     });
@@ -80,7 +80,36 @@ router.post('/:barcode', async (req, res) => {
     // 3. Enrichir avec IA si confiance < 70%
     if (!scores.overallScore || (scores.dataQuality && scores.dataQuality.confidence < 70)) {try {
         const aiEnrichment = require('../services/aiEnrichment.service');
-        product.scores = await aiEnrichment.enrichProductWithAI(product, scores);
+        const enrichedScores = await aiEnrichment.enrichProductWithAI(product, scores);
+        
+        // Merge AI estimations into product data before recalculating
+        if (enrichedScores.aiEstimations) {
+          const estimations = enrichedScores.aiEstimations;
+          if (estimations.nova?.estimatedValue) {
+            scoringData.nova_group = estimations.nova.estimatedValue;
+          }
+          if (estimations.nutriScore?.estimatedValue) {
+            scoringData.nutriscore_grade = estimations.nutriScore.estimatedValue;
+          }
+          if (estimations.ecoScore?.estimatedValue) {
+            scoringData.ecoscore_grade = estimations.ecoScore.estimatedValue;
+          }
+          if (estimations.sugars?.estimatedValue) {
+            scoringData.nutriments.sugars_100g = estimations.sugars.estimatedValue;
+          }
+          if (estimations.saturatedFat?.estimatedValue) {
+            scoringData.nutriments['saturated-fat_100g'] = estimations.saturatedFat.estimatedValue;
+          }
+          if (estimations.salt?.estimatedValue) {
+            scoringData.nutriments.salt_100g = estimations.salt.estimatedValue;
+          }
+          
+          // Recalculate scores with enriched data
+          const recalculatedScores = calculateScores(scoringData);
+          product.scores = { ...recalculatedScores, ...enrichedScores };
+        } else {
+          product.scores = enrichedScores;
+        }
       } catch (aiError) {product.scores = scores;
       }
     } else {

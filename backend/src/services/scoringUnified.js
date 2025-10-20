@@ -358,4 +358,163 @@ function calculateDetergentScores(data) {
   return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
 }
 
+// ============================================
+// MULTI-CATEGORY ROUTER
+// ============================================
+function calculateScores(data) {
+  const category = data.category || 'food';
+  
+  switch(category) {
+    case 'cosmetics':
+      return calculateCosmeticsScores(data);
+    case 'detergents':
+      return calculateDetergentsScores(data);
+    case 'food':
+    default:
+      return calculateFoodScores(data);
+  }
+}
+
+// ============================================
+// COSMETICS SCORING (8 components)
+// ============================================
+function calculateCosmeticsScores(data) {
+  const missingData = [];
+  
+  // 1. Endocrine disruptors (30%)
+  const endocrineDisruptors = data.cosmeticsData?.endocrineDisruptors || [];
+  let endocrineScore = 100;
+  if (endocrineDisruptors.length > 0) {
+    endocrineScore = Math.max(0, 100 - (endocrineDisruptors.length * 20));
+  }
+  const endocrineContribution = endocrineScore * 0.30;
+
+  // 2. Allergens (20%)
+  const allergens = data.cosmeticsData?.allergens || [];
+  let allergensScore = 100;
+  if (allergens.length > 0) {
+    allergensScore = Math.max(0, 100 - (allergens.length * 15));
+  }
+  const allergensContribution = allergensScore * 0.20;
+
+  // 3. Controversial substances (20%)
+  const ingredients = data.cosmeticsData?.ingredients || [];
+  const controversialCount = ingredients.filter(i => 
+    i.concerns && i.concerns.length > 0
+  ).length;
+  let controversialScore = 100;
+  if (controversialCount > 0) {
+    controversialScore = Math.max(0, 100 - (controversialCount * 10));
+  }
+  const controversialContribution = controversialScore * 0.20;
+
+  // 4. Certifications (15%)
+  const certifications = data.cosmeticsData?.certifications || [];
+  let certificationScore = 0;
+  if (certifications.some(c => c.toLowerCase().includes('bio') || c.toLowerCase().includes('organic'))) {
+    certificationScore += 50;
+  }
+  if (certifications.some(c => c.toLowerCase().includes('ecocert'))) {
+    certificationScore += 30;
+  }
+  if (certifications.some(c => c.toLowerCase().includes('cosmebio'))) {
+    certificationScore += 20;
+  }
+  certificationScore = Math.min(100, certificationScore);
+  const certificationContribution = certificationScore * 0.15;
+
+  // 5-8. Other components (15% total)
+  const otherContribution = 50 * 0.15; // Default 50/100
+
+  const contributions = [
+    { value: endocrineContribution, weight: 0.30, available: true },
+    { value: allergensContribution, weight: 0.20, available: true },
+    { value: controversialContribution, weight: 0.20, available: true },
+    { value: certificationContribution, weight: 0.15, available: true },
+    { value: otherContribution, weight: 0.15, available: true }
+  ];
+
+  const availableComponents = contributions.filter(c => c.available);
+  const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
+  const totalScore = availableComponents.reduce((sum, c) => sum + c.value, 0);
+  const overallScore = totalAvailableWeight > 0 ? Math.round(totalScore / totalAvailableWeight) : 0;
+
+  return {
+    overallScore: Math.max(0, Math.min(100, overallScore)),
+    healthScore: Math.round((endocrineContribution + allergensContribution + controversialContribution) / 0.70),
+    confidence: 0.7,
+    breakdown: {
+      endocrineDisruptors: { score: endocrineScore, weight: 0.30, count: endocrineDisruptors.length },
+      allergens: { score: allergensScore, weight: 0.20, count: allergens.length },
+      controversial: { score: controversialScore, weight: 0.20, count: controversialCount },
+      certifications: { score: certificationScore, weight: 0.15 }
+    }
+  };
+}
+
+// ============================================
+// DETERGENTS SCORING (8 components)
+// ============================================
+function calculateDetergentsScores(data) {
+  // 1. Biodegradability (30%)
+  const biodegradable = data.detergentsData?.biodegradable || false;
+  const biodegradabilityScore = biodegradable ? 85 : 30;
+  const biodegradabilityContribution = biodegradabilityScore * 0.30;
+
+  // 2. Aquatic toxicity (25%)
+  const aquaticToxicity = data.detergentsData?.aquaticToxicity || 'unknown';
+  let aquaticScore = 50;
+  if (aquaticToxicity === 'low') aquaticScore = 85;
+  if (aquaticToxicity === 'high') aquaticScore = 15;
+  const aquaticContribution = aquaticScore * 0.25;
+
+  // 3. Phosphates (20%)
+  const hasPhosphates = data.detergentsData?.hasPhosphates || false;
+  const phosphatesScore = hasPhosphates ? 20 : 85;
+  const phosphatesContribution = phosphatesScore * 0.20;
+
+  // 4. Eco-labels (15%)
+  const labels = data.labels_tags || [];
+  let ecolabelScore = 0;
+  if (labels.some(l => l.toLowerCase().includes('ecolabel'))) {
+    ecolabelScore += 50;
+  }
+  if (labels.some(l => l.toLowerCase().includes('nordic-swan'))) {
+    ecolabelScore += 30;
+  }
+  if (labels.some(l => l.toLowerCase().includes('ecocert'))) {
+    ecolabelScore += 20;
+  }
+  ecolabelScore = Math.min(100, ecolabelScore);
+  const ecolabelContribution = ecolabelScore * 0.15;
+
+  // 5-8. Other components (10% total)
+  const otherContribution = 50 * 0.10;
+
+  const contributions = [
+    { value: biodegradabilityContribution, weight: 0.30, available: true },
+    { value: aquaticContribution, weight: 0.25, available: true },
+    { value: phosphatesContribution, weight: 0.20, available: true },
+    { value: ecolabelContribution, weight: 0.15, available: true },
+    { value: otherContribution, weight: 0.10, available: true }
+  ];
+
+  const availableComponents = contributions.filter(c => c.available);
+  const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
+  const totalScore = availableComponents.reduce((sum, c) => sum + c.value, 0);
+  const overallScore = totalAvailableWeight > 0 ? Math.round(totalScore / totalAvailableWeight) : 0;
+
+  return {
+    overallScore: Math.max(0, Math.min(100, overallScore)),
+    environmentScore: overallScore,
+    confidence: 0.6,
+    breakdown: {
+      biodegradability: { score: biodegradabilityScore, weight: 0.30 },
+      aquaticToxicity: { score: aquaticScore, weight: 0.25 },
+      phosphates: { score: phosphatesScore, weight: 0.20 },
+      ecolabels: { score: ecolabelScore, weight: 0.15 }
+    }
+  };
+}
+
 module.exports = { calculateFoodScores, calculateCosmeticScores, calculateDetergentScores };

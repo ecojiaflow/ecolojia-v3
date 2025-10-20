@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BarcodeScanner from '../components/scanner/BarcodeScanner';
-import { UnknownProductModal } from '../components/scanner/UnknownProductModal';
 import { OCRGuide } from '../components/scanner/OCRGuide';
 import { analyzeWithOCR } from '../services/ocr-api';
 import { AlertCircle, Camera } from 'lucide-react';
@@ -12,8 +11,6 @@ export const ScanPage: React.FC = () => {
   const [showOCRFallback, setShowOCRFallback] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [scanAttempts, setScanAttempts] = useState(0);
-  const [showUnknownModal, setShowUnknownModal] = useState(false);
-  const [unknownBarcode, setUnknownBarcode] = useState('');
 
   useEffect(() => {
     if (scanAttempts >= 3) {
@@ -95,8 +92,7 @@ export const ScanPage: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <div className="relative h-screen">
         <BarcodeScanner
           onScanSuccess={handleScanSuccess}
@@ -146,13 +142,6 @@ export const ScanPage: React.FC = () => {
           />
         )
       )}
-      </div>
-
-      <UnknownProductModal
-        isOpen={showUnknownModal}
-        barcode={unknownBarcode}
-        onClose={() => setShowUnknownModal(false)}
-      />
-    </>
+    </div>
   );
 };

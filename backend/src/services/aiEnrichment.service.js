@@ -215,13 +215,24 @@ function parseAIResponse(response) {
     const result = {};
     
     for (const [key, value] of Object.entries(estimations)) {
-      if (value && typeof value === 'object' && value.min !== undefined) {
-        result[key] = {
-          estimatedValue: (value.min + value.max) / 2,
-          range: [value.min, value.max],
-          confidence: value.confidence || 0.5,
-          reasoning: value.reasoning || ''
-        };
+      if (value && typeof value === 'object') {
+        // Handle categorical values (nova, nutriScore, ecoScore)
+        if (value.value !== undefined && typeof value.value !== 'number') {
+          result[key] = {
+            estimatedValue: value.value,
+            confidence: value.confidence || 0.5,
+            reasoning: value.reasoning || ''
+          };
+        }
+        // Handle numeric ranges (sugars, saturatedFat, salt)
+        else if (value.min !== undefined) {
+          result[key] = {
+            estimatedValue: (value.min + value.max) / 2,
+            range: [value.min, value.max],
+            confidence: value.confidence || 0.5,
+            reasoning: value.reasoning || ''
+          };
+        }
       }
     }
     
