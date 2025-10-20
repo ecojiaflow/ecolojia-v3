@@ -1,93 +1,131 @@
 ﻿// backend/scripts/recalculate-all-scores.js
+/**
+ * Script de migration pour recalculer tous les scores avec la nouvelle version
+ * Usage: node scripts/recalculate-all-scores.js
+ */
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Product = require('../src/models/Product');
-const scoringUnified = require('../src/services/scoringUnified');
+const { calculateFoodScores } = require('../src/services/scoringUnified');
 
-console.log('🔄 RECALCUL MASSIF DES SCORES - ECOLOJIA V3.0.0');
-console.log('='.repeat(60));
+const CURRENT_VERSION = '3.1.0';
+const BATCH_SIZE = 100;
+
+// Helper function from ocr-analyze.routes.js
+function prepareScoringData(product) {
+  const productObj = product.toObject ? product.toObject() : product;
+  const foodData = productObj.foodData || {};
+  const nutriments = (foodData && foodData.nutrition && foodData.nutrition.per100g)
+    || (productObj && productObj.nutrition && productObj.nutrition.per100g)
+    || {};
+
+  return {
+    product_name: productObj.name,
+    brands: productObj.brand,
+    ingredients_text: foodData.ingredients,
+    nova_group: foodData.novaGroup || productObj.nova_group,
+    nutriscore_grade: foodData.nutriScore || productObj.nutriscore_grade,
+    ecoscore_grade: foodData.ecoScore || productObj.ecoscore_grade,
+    additives_tags: foodData.additives || productObj.additives_tags || [],
+    labels_tags: foodData.labels || productObj.labels_tags || [],
+    nutriments: nutriments
+  };
+}
 
 async function recalculateAllScores() {
   try {
+    console.log('[Migration] Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ MongoDB connecté\n');
-    
+    console.log('[Migration] Connected successfully');
+
+    // Count products needing recalculation
+    const totalProducts = await Product.countDocuments({
+      category: 'food',
+      $or: [
+        { 'scores.scoringVersion': { $ne: CURRENT_VERSION } },
+        { 'scores.scoringVersion': { $exists: false } },
+        { scores: { $exists: false } }
+      ]
+    });
+
+    console.log(`[Migration] Found ${totalProducts} products to recalculate`);
+
+    if (totalProducts === 0) {
+      console.log('[Migration] All products already up to date!');
+      process.exit(0);
+    }
+
+    let processed = 0;
     let updated = 0;
     let errors = 0;
-    
-    const products = await Product.find({ category: 'food' }).lean();
-    console.log('📦 ' + products.length + ' produits à traiter\n');
-    
-    const batchSize = 50;
-    const totalBatches = Math.ceil(products.length / batchSize);
-    
-    for (let i = 0; i < totalBatches; i++) {
-      const start = i * batchSize;
-      const end = Math.min(start + batchSize, products.length);
-      const batch = products.slice(start, end);
-      
-      console.log('📊 Batch ' + (i + 1) + '/' + totalBatches + ' (' + (start + 1) + '-' + end + ')');
-      
-      for (const product of batch) {
+
+    // Process in batches
+    while (processed < totalProducts) {
+      const products = await Product.find({
+        category: 'food',
+        $or: [
+          { 'scores.scoringVersion': { $ne: CURRENT_VERSION } },
+          { 'scores.scoringVersion': { $exists: false } },
+          { scores: { $exists: false } }
+        ]
+      })
+      .limit(BATCH_SIZE)
+      .lean();
+
+      console.log(`\n[Migration] Processing batch ${Math.floor(processed / BATCH_SIZE) + 1}...`);
+
+      for (const product of products) {
         try {
-          const scores = scoringUnified.calculateFoodScores({
-            novaGroup: product.nova_group || product.foodData?.novaGroup,
-            nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
-            ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
-            additives: product.additives_tags || product.foodData?.additives || [],
-            labels: product.labels_tags || product.foodData?.labels || [],
-            packaging: product.packaging || product.packaging_tags?.[0],
-            origin: product.origins || product.origins_tags?.[0],
-            ingredients: product.ingredients_text || product.foodData?.ingredients,
-            nutriments: product.nutriments || product.foodData?.nutritionalInfo || {}
-          });
-          
+          const scoringData = prepareScoringData(product);
+          const scores = calculateFoodScores(scoringData);
+
           await Product.updateOne(
             { _id: product._id },
             {
-              '': {
-                'scores.overallScore': scores.overallScore,
-                'scores.healthScore': scores.healthScore,
-                'scores.environmentScore': scores.environmentScore,
-                'scores.breakdown': scores.breakdown,
-                'scores.confidence': scores.confidence,
-                'scores.dataCompleteness': scores.dataCompleteness,
-                'scores.calculatedAt': new Date(),
-                'scores.scoringVersion': '3.0.0'
+              $set: {
+                scores: {
+                  ...scores,
+                  scoringVersion: CURRENT_VERSION,
+                  calculatedAt: new Date()
+                },
+                updatedAt: new Date()
               }
             }
           );
-          
+
           updated++;
           
-          if (updated % 100 === 0) {
-            console.log('   ✅ ' + updated + '/' + products.length + ' produits mis à jour...');
+          if (updated % 50 === 0) {
+            console.log(`[Migration] Progress: ${updated}/${totalProducts} (${Math.round(updated/totalProducts*100)}%)`);
           }
-          
-        } catch (err) {
+        } catch (error) {
+          console.error(`[Migration] Error processing product ${product.barcode}:`, error.message);
           errors++;
-          console.error('   ❌ Erreur ' + product.name + ': ' + err.message);
         }
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
+
+      processed += products.length;
     }
-    
-    console.log('\n' + '='.repeat(60));
-    console.log('📊 RAPPORT FINAL');
-    console.log('='.repeat(60));
-    console.log('✅ Produits mis à jour : ' + updated);
-    console.log('❌ Erreurs : ' + errors);
-    console.log('📈 Taux de succès : ' + ((updated / products.length) * 100).toFixed(1) + '%');
-    console.log('\n✅ Recalcul terminé avec succès!');
-    
-    await mongoose.disconnect();
+
+    console.log('\n[Migration] ====================================');
+    console.log(`[Migration] Migration completed!`);
+    console.log(`[Migration] Total processed: ${processed}`);
+    console.log(`[Migration] Successfully updated: ${updated}`);
+    console.log(`[Migration] Errors: ${errors}`);
+    console.log('[Migration] ====================================\n');
+
     process.exit(0);
-    
   } catch (error) {
-    console.error('❌ Erreur fatale:', error);
+    console.error('[Migration] Fatal error:', error);
     process.exit(1);
   }
 }
+
+// Run migration
+console.log('\n========================================');
+console.log('ECOLOJIA - Score Recalculation Migration');
+console.log(`Target version: ${CURRENT_VERSION}`);
+console.log('========================================\n');
 
 recalculateAllScores();

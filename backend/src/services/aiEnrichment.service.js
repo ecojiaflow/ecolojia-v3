@@ -1,15 +1,15 @@
-// backend/src/services/aiEnrichment.service.js
+ï»¿// backend/src/services/aiEnrichment.service.js
 /**
- * Service d'enrichissement IA pour produits avec données manquantes
+ * Service d'enrichissement IA pour produits avec donnï¿½es manquantes
  * Utilise DeepSeek pour estimer valeurs nutritionnelles
  */
 
 const deepSeekService = require('./ai/deepSeekService');
 
 /**
- * Estime les données manquantes d'un produit via IA
- * @param {Object} product - Produit avec données potentiellement incomplètes
- * @param {Object} scores - Scores calculés avec données manquantes détectées
+ * Estime les donnï¿½es manquantes d'un produit via IA
+ * @param {Object} product - Produit avec donnï¿½es potentiellement incomplï¿½tes
+ * @param {Object} scores - Scores calculï¿½s avec donnï¿½es manquantes dï¿½tectï¿½es
  * @returns {Promise<Object>} Scores enrichis avec estimations IA
  */
 async function enrichProductWithAI(product, scores) {
@@ -21,7 +21,7 @@ async function enrichProductWithAI(product, scores) {
     };
   }
 
-  // Vérifier si estimations récentes existent déjà
+  // Vï¿½rifier si estimations rï¿½centes existent dï¿½jï¿½
   const existingEstimations = product.scores?.aiEstimations;
   if (existingEstimations && isEstimationRecent(existingEstimations)) {
     console.log('[AI] Using cached estimations for', product.barcode);
@@ -60,10 +60,10 @@ async function enrichProductWithAI(product, scores) {
 }
 
 /**
- * Estime données manquantes via DeepSeek
+ * Estime donnï¿½es manquantes via DeepSeek
  * @param {Object} product - Produit
  * @param {Array} missingFields - Liste champs manquants
- * @returns {Promise<Object>} Estimations structurées
+ * @returns {Promise<Object>} Estimations structurï¿½es
  */
 async function estimateMissingData(product, missingFields = []) {
   if (missingFields.length === 0) {
@@ -82,7 +82,7 @@ async function estimateMissingData(product, missingFields = []) {
 }
 
 /**
- * Analyse qualitative pour produits très incomplets
+ * Analyse qualitative pour produits trï¿½s incomplets
  * @param {Object} product - Produit
  * @returns {Promise<Object>} Analyse qualitative
  */
@@ -119,7 +119,7 @@ function isEstimationRecent(estimations) {
 function buildEstimationPrompt(product, missingFields) {
   const name = product.name || product.product_name || 'Produit inconnu';
   const brand = product.brand || product.brands || 'Marque inconnue';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spécifié';
+  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spï¿½cifiï¿½';
   
   return `
 Analyse ce produit alimentaire et estime les valeurs nutritionnelles manquantes.
@@ -127,25 +127,34 @@ Analyse ce produit alimentaire et estime les valeurs nutritionnelles manquantes.
 PRODUIT :
 - Nom : ${name}
 - Marque : ${brand}
-- Catégorie : ${product.category || 'food'}
-- Ingrédients : ${ingredients}
+- Catï¿½gorie : ${product.category || 'food'}
+- Ingrï¿½dients : ${ingredients}
 
-DONNÉES MANQUANTES À ESTIMER : ${missingFields.join(', ')}
+DONNEES MANQUANTES A ESTIMER : ${missingFields.join(', ')}
 
-TÂCHE :
-Pour chaque donnée manquante, fournis :
-1. Valeur estimée (g/100g)
+POUR CHAQUE COMPOSANTE :
+- nova : Groupe 1-4 selon transformation (1=brut, 4=ultra-transforme)
+- nutriScore : Grade A-E selon algorithme ANSES
+- sugars : g/100g
+- saturatedFat : g/100g
+- salt : g/100g
+
+Tï¿½CHE :
+Pour chaque donnï¿½e manquante, fournis :
+1. Valeur estimï¿½e (g/100g)
 2. Fourchette min-max
 3. Niveau de confiance (0-1)
-4. Raisonnement (basé sur ingrédients)
+4. Raisonnement (basï¿½ sur ingrï¿½dients)
 
 IMPORTANT :
-- Base-toi sur l'ORDRE des ingrédients (les premiers = plus abondants)
+- Base-toi sur l'ORDRE des ingrï¿½dients (les premiers = plus abondants)
 - Compare avec des produits similaires
 - Sois conservateur dans tes estimations
 
-RÉPONDS AU FORMAT JSON STRICT :
+Rï¿½PONDS AU FORMAT JSON STRICT :
 {
+  "nova": { "value": 1-4, "confidence": 0.X, "reasoning": "..." },
+  "nutriScore": { "value": "A-E", "confidence": 0.X, "reasoning": "..." },
   "sugars": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
   "saturatedFat": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." },
   "salt": { "min": X, "max": Y, "confidence": 0.X, "reasoning": "..." }
@@ -155,32 +164,32 @@ RÉPONDS AU FORMAT JSON STRICT :
 
 function buildQualitativePrompt(product) {
   const name = product.name || product.product_name || 'Produit inconnu';
-  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spécifié';
+  const ingredients = product.ingredients_text || product.foodData?.ingredients || 'Non spï¿½cifiï¿½';
   const additives = product.additives_tags || product.foodData?.additives || [];
   
   return `
-Analyse qualitative de ce produit alimentaire (données nutritionnelles manquantes).
+Analyse qualitative de ce produit alimentaire (donnï¿½es nutritionnelles manquantes).
 
 PRODUIT : ${name}
-INGRÉDIENTS : ${ingredients}
+INGRï¿½DIENTS : ${ingredients}
 ADDITIFS : ${additives.join(', ')}
 
-TÂCHE :
+Tï¿½CHE :
 1. Identifier le niveau de transformation (NOVA 1-4)
-2. Détecter ingrédients préoccupants
+2. Dï¿½tecter ingrï¿½dients prï¿½occupants
 3. Donner une recommandation globale
 
-Sois factuel, bienveillant, et rappelle que tu n'es pas médecin.
-Limite à 200 mots.
+Sois factuel, bienveillant, et rappelle que tu n'es pas mï¿½decin.
+Limite ï¿½ 200 mots.
 `;
 }
 
 function getSystemPrompt() {
   return `Tu es un expert nutritionniste IA pour ECOLOJIA.
 
-RÈGLES STRICTES :
-1. Tu n'es PAS médecin - toujours le rappeler
-2. Estimations basées sur science (CIQUAL, USDA, études)
+Rï¿½GLES STRICTES :
+1. Tu n'es PAS mï¿½decin - toujours le rappeler
+2. Estimations basï¿½es sur science (CIQUAL, USDA, ï¿½tudes)
 3. Sois conservateur dans tes estimations
 4. Explique ton raisonnement
 5. Indique toujours niveau de confiance
@@ -189,12 +198,12 @@ SOURCES :
 - Base CIQUAL (ANSES)
 - USDA FoodData Central
 - Comparaison produits similaires
-- Ordre ingrédients (réglementation UE)`;
+- Ordre ingrï¿½dients (rï¿½glementation UE)`;
 }
 
 function parseAIResponse(response) {
   try {
-    // Extraire JSON de la réponse
+    // Extraire JSON de la rï¿½ponse
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No JSON found in AI response');

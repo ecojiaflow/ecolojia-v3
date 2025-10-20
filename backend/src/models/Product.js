@@ -1,4 +1,4 @@
-// backend/src/models/Product.js
+ï»¿// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -82,7 +82,7 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ? Modifié en objets
+    allergens: [allergenSchema],  // ? Modifiï¿½ en objets
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },

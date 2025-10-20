@@ -221,7 +221,22 @@ function calculateFoodScores(data) {
   labelsBonus = Math.min(15, labelsBonus);
   const labelsContribution = labelsBonus * 0.05;
   
-  const overallScore = Math.round(novaContribution + nutriContribution + additivesContribution + sugarsContribution + fatContribution + saltContribution + ecoContribution + labelsContribution);
+    // Calculate score only from available components
+  const contributions = [
+    { value: novaContribution, weight: 0.15, available: novaScore !== null },
+    { value: nutriContribution, weight: 0.20, available: nutriScoreValue !== null },
+    { value: additivesContribution, weight: 0.15, available: true },
+    { value: sugarsContribution, weight: 0.10, available: sugarsScore !== null },
+    { value: fatContribution, weight: 0.10, available: fatScore !== null },
+    { value: saltContribution, weight: 0.10, available: saltScore !== null },
+    { value: ecoContribution, weight: 0.15, available: ecoScore !== null },
+    { value: labelsContribution, weight: 0.05, available: true }
+  ];
+  
+  const availableComponents = contributions.filter(c => c.available);
+  const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
+  const totalScore = availableComponents.reduce((sum, c) => sum + c.value, 0);
+  const overallScore = totalAvailableWeight > 0 ? Math.round(totalScore / totalAvailableWeight) : 0;
   
   return {
     overallScore: Math.max(0, Math.min(100, overallScore)),

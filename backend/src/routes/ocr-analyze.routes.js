@@ -1,9 +1,12 @@
-const express = require('express');
+ï»¿const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const { calculateFoodScores } = require('../services/scoringUnified');
 
-// Helper pour préparer les données de scoring
+// Current scoring algorithm version
+const CURRENT_SCORING_VERSION = '3.1.0';
+
+// Helper pour prï¿½parer les donnï¿½es de scoring
 function prepareScoringData(product) {
   // Convertir objet Mongoose en objet JS simple
   const productObj = product.toObject ? product.toObject() : product;
@@ -32,7 +35,7 @@ function prepareScoringData(product) {
  */
 router.post('/:barcode', async (req, res) => {
   try {
-    const { barcode } = req.params;// 1. Récupérer le produit
+    const { barcode } = req.params;// 1. Rï¿½cupï¿½rer le produit
     let product = await Product.findOne({ barcode });
     console.log('[OCR-Analyze/:barcode] PRODUCT COMPLET:', JSON.stringify({
       barcode: product?.barcode,
@@ -43,11 +46,27 @@ router.post('/:barcode', async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        error: 'Produit non trouvé'
+        error: 'Produit non trouvï¿½'
       });
     }
 
-    // 2. Calculer les scores avec les données existantes
+    // 2. Check if recalculation needed (version mismatch or missing score)
+    const needsRecalculation = !product.scores || 
+      !product.scores.scoringVersion || 
+      product.scores.scoringVersion !== CURRENT_SCORING_VERSION ||
+      req.query.force === 'true';
+
+    if (needsRecalculation) {
+      console.log('[OCR-Analyze] Recalculation needed:', {
+        barcode: product.barcode,
+        reason: !product.scores ? 'no_score' : 
+                !product.scores.scoringVersion ? 'no_version' :
+                product.scores.scoringVersion !== CURRENT_SCORING_VERSION ? 'version_mismatch' :
+                'forced'
+      });
+    }
+
+    // 3. Calculer les scores avec les donnees existantes
     const scoringData = prepareScoringData(product);
     console.log('[OCR-Analyze/:barcode] prepareScoringData INPUT:', JSON.stringify({
       novaGroup: product.foodData?.novaGroup,
@@ -68,23 +87,23 @@ router.post('/:barcode', async (req, res) => {
       product.scores = scores;
     }
 
-    // 4. Sauvegarder
+    // 4. Sauvegarder avec nouvelle version
     product.scores.calculatedAt = new Date();
-    product.scores.scoringVersion = '3.0.0';
+    product.scores.scoringVersion = CURRENT_SCORING_VERSION;
     product.status = 'analyzed';
     product.updatedAt = new Date();
     await product.save();
 
     // 5. Synchroniser Algolia
     try {
-      const algoliaService = require('../services/algolia.service');
+      const algoliaService = require('../services/algolia/algolia.service');
       await algoliaService.indexProduct(product);
     } catch (algoliaError) {
       console.error('[OCR-Analyze/:barcode] Algolia sync failed:', algoliaError.message);
     }res.json({
       success: true,
       product,
-      message: 'Analyse terminée avec succès'
+      message: 'Analyse terminï¿½e avec succï¿½s'
     });
 
   } catch (error) {
