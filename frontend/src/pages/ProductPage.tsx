@@ -155,7 +155,7 @@ const ProductPage: React.FC = () => {
     const cleanBarcode = product.barcode.replace(/_\d+$/, '');
     setIsAnalyzing(true);
     try {
-      const response = await fetch(`http://localhost:10000/api/ocr-analyze/${cleanBarcode}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:10000'}/api/ocr-analyze/${cleanBarcode}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
