@@ -111,11 +111,11 @@ async function getOrCreateProduct(input) {
   
   // Logique conditionnelle selon catégorie
   if (product.category === 'cosmetics') {
-    scores = scoringUnified.calculateCosmeticScores(scoringData);
+    scores = scoringUnified.calculateCosmeticsScores(scoringData);
     console.log('💄 [ProductOrchestrator] 💄 [ProductOrchestrator] Scores COSMÉTIQUES calculés');
   } 
   else if (product.category === 'detergents') {
-    scores = scoringUnified.calculateDetergentScores(scoringData);
+    scores = scoringUnified.calculateDetergentsScores(scoringData);
     console.log('🧽 [ProductOrchestrator] 🧽 [ProductOrchestrator] Scores DÉTERGENTS calculés');
   }
   else {
