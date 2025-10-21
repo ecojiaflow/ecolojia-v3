@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/main.tsx
+// PATH: frontend/src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { AuthProvider } from './Contexts/AuthContext';
 import './index.css';
-
 // Créer le root element
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
@@ -57,3 +56,4 @@ if (import.meta.env.DEV && 'serviceWorker' in navigator) {
 }
 
 // Build: 20251018151254
+

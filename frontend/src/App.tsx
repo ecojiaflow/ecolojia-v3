@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      
       {showDisclaimer && <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />}
       
       <Suspense fallback={<LoadingSpinner />}>
@@ -76,3 +77,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
