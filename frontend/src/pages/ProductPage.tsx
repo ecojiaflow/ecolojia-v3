@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -156,7 +156,7 @@ const ProductPage: React.FC = () => {
     const cleanBarcode = product.barcode.replace(/_\d+$/, '');
     setIsAnalyzing(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:10000'}/api/ocr-analyze/${cleanBarcode}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:10000'}/api/scoring/${cleanBarcode}/ai-enrich`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });

@@ -113,7 +113,7 @@ router.get('/barcode/:barcode', asyncHandler(async (req, res) => {
 }));
 
 
-// Route de recalcul forcÈ
+// Route de recalcul forcÔøΩ
 router.post('/:productId/recalculate', async (req, res) => {
   try {
     const { productId } = req.params;
@@ -126,7 +126,7 @@ router.post('/:productId/recalculate', async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
     
-    // PrÈparer les donnÈes pour le scoring (format attendu par calculateDataConfidence)
+    // PrÔøΩparer les donnÔøΩes pour le scoring (format attendu par calculateDataConfidence)
     const scoringData = {
       product_name: product.name || '',
       brands: product.brand || '',
@@ -148,13 +148,13 @@ router.post('/:productId/recalculate', async (req, res) => {
       }
     };
     
-    console.log('?? DonnÈes envoyÈes au scoring:', JSON.stringify(scoringData, null, 2));
+    console.log('?? DonnÔøΩes envoyÔøΩes au scoring:', JSON.stringify(scoringData, null, 2));
     
-    // FORCER le recalcul avec le nouveau systËme
+    // FORCER le recalcul avec le nouveau systÔøΩme
     const newScores = scoringUnified.calculateFoodScores(scoringData);
     console.log('?? [RESULT] newScores:', JSON.stringify(newScores, null, 2));
     
-    // Sauvegarder avec markModified pour les champs imbriquÈs
+    // Sauvegarder avec markModified pour les champs imbriquÔøΩs
     product.scores = newScores;
     product.scoringVersion = newScores.scoringMetadata?.version || '3.1.0';
     product.lastScoreUpdate = new Date();
@@ -183,14 +183,14 @@ router.post('/:productId/recalculate', async (req, res) => {
       }
     );
     
-    console.log('?? [DEBUG] APR»S SAVE - Relecture de la DB...');
+    console.log('?? [DEBUG] APRÔøΩS SAVE - Relecture de la DB...');
     const reloaded = await Product.findById(product._id);
-    console.log('?? [DEBUG] APR»S SAVE - reloaded.scores.scoringMetadata:', JSON.stringify(reloaded.scores.scoringMetadata, null, 2));
-    console.log('?? [DEBUG] APR»S SAVE - reloaded.scores.dataQualityInfo:', JSON.stringify(reloaded.scores.dataQualityInfo, null, 2));
+    console.log('?? [DEBUG] APRÔøΩS SAVE - reloaded.scores.scoringMetadata:', JSON.stringify(reloaded.scores.scoringMetadata, null, 2));
+    console.log('?? [DEBUG] APRÔøΩS SAVE - reloaded.scores.dataQualityInfo:', JSON.stringify(reloaded.scores.dataQualityInfo, null, 2));
     
     res.json({
       success: true,
-      message: 'Score recalculÈ avec le nouveau systËme',
+      message: 'Score recalculÔøΩ avec le nouveau systÔøΩme',
       product: product,
       oldVersion: '3.0.0',
       newVersion: newScores.scoringMetadata?.version || '3.1.0'
@@ -200,4 +200,120 @@ router.post('/:productId/recalculate', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// POST /api/scoring/:barcode/ai-enrich - Enrichir avec IA et recalculer scores
+router.post('/:barcode/ai-enrich', asyncHandler(async (req, res) => {
+  const { barcode } = req.params;
+
+  // 1. Trouver produit par barcode
+  const product = await Product.findOne({ barcode });
+  if (!product) {
+    return res.status(404).json({
+      success: false,
+      error: 'Produit introuvable',
+      barcode
+    });
+  }
+
+  console.log(`[AI-ENRICH] Enrichissement IA demand√© pour ${product.name} (${barcode})`);
+
+  try {
+    // 2. Calculer scores actuels
+    const currentScores = scoringUnified.calculateScores(product);
+    
+    // 3. Si confiance >= 70%, pas besoin enrichissement
+    if (currentScores.confidence >= 0.7) {
+      return res.json({
+        success: true,
+        message: 'Produit d√©j√† complet',
+        product: {
+          ...product.toObject(),
+          scores: currentScores
+        },
+        aiEnrichmentUsed: false,
+        confidence: currentScores.confidence
+      });
+    }
+
+    // 4. Enrichir avec IA
+    const aiEnrichment = require('../services/aiEnrichment.service');
+    const enrichedScores = await aiEnrichment.enrichProductWithAI(product, currentScores);
+
+    // 5. Merger estimations IA dans le produit
+    if (enrichedScores.aiEstimations) {
+      const estimations = enrichedScores.aiEstimations;
+      
+      // Merger selon cat√©gorie
+      if (product.category === 'food') {
+        if (estimations.sugars !== undefined) {
+          product.foodData = product.foodData || {};
+          product.foodData.nutritionalInfo = product.foodData.nutritionalInfo || {};
+          product.foodData.nutritionalInfo.sugars = estimations.sugars;
+        }
+        if (estimations.saturatedFat !== undefined) {
+          product.foodData.nutritionalInfo.saturatedFat = estimations.saturatedFat;
+        }
+        if (estimations.salt !== undefined) {
+          product.foodData.nutritionalInfo.salt = estimations.salt;
+        }
+        if (estimations.novaGroup !== undefined) {
+          product.foodData.novaGroup = estimations.novaGroup;
+        }
+      }
+
+      // Recalculer scores avec donn√©es enrichies
+      // Pr√©parer les donn√©es au format attendu par calculateScores
+      const scoringData = {
+        category: product.category,
+        product_name: product.name || '',
+        brands: product.brand || '',
+        ingredients_text: product.foodData?.ingredients || '',
+        novaGroup: product.foodData?.novaGroup,
+        nutriScore: product.foodData?.nutriScore,
+        ecoScore: product.foodData?.ecoScore,
+        additives: product.foodData?.additives || [],
+        labels: product.foodData?.labels || [],
+        nutriments: {
+          sugars_100g: product.foodData?.nutritionalInfo?.sugars || product.foodData?.nutrition?.per100g?.sugars,
+          'saturated-fat_100g': product.foodData?.nutritionalInfo?.saturatedFat || product.foodData?.nutrition?.per100g?.saturatedFat,
+          salt_100g: product.foodData?.nutritionalInfo?.salt || product.foodData?.nutrition?.per100g?.salt,
+          sugars: product.foodData?.nutritionalInfo?.sugars || product.foodData?.nutrition?.per100g?.sugars,
+          saturated_fat: product.foodData?.nutritionalInfo?.saturatedFat || product.foodData?.nutrition?.per100g?.saturatedFat,
+          salt: product.foodData?.nutritionalInfo?.salt || product.foodData?.nutrition?.per100g?.salt
+        }
+      };
+      const recalculatedScores = scoringUnified.calculateScores(scoringData);
+      console.log('[AI-ENRICH] scoringData envoy√©:', JSON.stringify(scoringData, null, 2));
+      console.log('[AI-ENRICH] recalculatedScores re√ßu:', JSON.stringify(recalculatedScores, null, 2));
+      product.scores = { ...recalculatedScores, ...enrichedScores };
+    } else {
+      product.scores = enrichedScores;
+    }
+
+    // 6. Sauvegarder
+    product.lastScoreUpdate = new Date();
+    await product.save();
+
+    console.log(`[AI-ENRICH] Enrichissement r√©ussi - Confiance: ${product.scores.confidence * 100}%`);
+
+    // 7. Retourner produit enrichi
+    res.json({
+      success: true,
+      message: 'Produit enrichi avec succ√®s',
+      product: product.toObject(),
+      aiEnrichmentUsed: enrichedScores.aiEnrichmentUsed,
+      confidence: product.scores.confidence,
+      estimations: enrichedScores.aiEstimations
+    });
+
+  } catch (error) {
+    console.error('[AI-ENRICH] Erreur:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erreur enrichissement IA',
+      details: error.message
+    });
+  }
+}));
+
 module.exports = router;
