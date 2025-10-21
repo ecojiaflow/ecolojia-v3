@@ -1,4 +1,4 @@
-﻿?// backend/src/services/ProductOrchestrator.js
+// backend/src/services/ProductOrchestrator.js
 /**
  * Orchestrateur central pour récupération/création produits
  * Gère enrichissement automatique et cache IA
@@ -8,7 +8,7 @@ const Product = require('../models/Product');
 const offClient = require('./offClient');
 const scoringUnified = require('./scoringUnified');
 const aiEnrichment = require('./aiEnrichment.service');
-const visionService = require('./vision.service');
+const visionService = require('./vision/VisionService');
 /**
  * Détecte si un code-barre correspond à une catégorie valide
  * @param {string} barcode - Code-barre du produit
