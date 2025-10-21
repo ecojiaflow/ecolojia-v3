@@ -1,4 +1,4 @@
-﻿// frontend/src/components/product/ScoreBreakdown.tsx
+// frontend/src/components/product/ScoreBreakdown.tsx
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
@@ -310,7 +310,40 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                         </strong>
                       </div>
                     </div>
+                  )}                  {/* Liste complète des additifs */}
+                  {component.key === 'additives' && product.foodData?.additives && product.foodData.additives.length > 0 && (
+                    <div>
+                      <div className="text-sm font-semibold text-gray-700 mb-2">
+                        📋 Détail des additifs détectés
+                      </div>
+                      <div className="space-y-2">
+                        {product.foodData.additives.map((additive: any, idx: number) => {
+                          const getRiskColor = (risk: string) => {
+                            if (risk === 'HIGH') return 'bg-red-50 border-red-200 text-red-800';
+                            if (risk === 'MEDIUM') return 'bg-orange-50 border-orange-200 text-orange-800';
+                            return 'bg-green-50 border-green-200 text-green-800';
+                          };
+                          const getRiskLabel = (risk: string) => {
+                            if (risk === 'HIGH') return '🔴 Risque élevé';
+                            if (risk === 'MEDIUM') return '🟠 Risque modéré';
+                            return '🟢 Risque faible';
+                          };
+                          return (
+                            <div key={idx} className={`border rounded px-3 py-2 ${getRiskColor(additive.riskLevel || 'LOW')}`}>
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold">{additive.code || additive.tag}</span>
+                                <span className="text-xs">{getRiskLabel(additive.riskLevel || 'LOW')}</span>
+                              </div>
+                              {additive.name && additive.name !== additive.code?.toLowerCase() && (
+                                <div className="text-xs mt-1 opacity-75">{additive.name}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
+
 
                   {/* Additifs dangereux */}
                   {component.key === 'additives' && component.data?.dangerous?.length > 0 && (
