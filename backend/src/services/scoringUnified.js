@@ -1,4 +1,4 @@
-ï»¿// backend/src/services/scoringUnified.js
+// backend/src/services/scoringUnified.js
 
 // ============================================
 // LISTES D'ADDITIFS
@@ -10,10 +10,10 @@ const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471',
 // SEUILS DE CONFIANCE ET TRANSPARENCE
 // ============================================
 const CONFIDENCE_THRESHOLDS = {
-  EXCELLENT: 85,      // Donnï¿½es complï¿½tes et vï¿½rifiï¿½es
-  GOOD: 70,           // Donnï¿½es suffisantes pour scoring fiable
+  EXCELLENT: 85,      // Donn?es compl?tes et v?rifi?es
+  GOOD: 70,           // Donn?es suffisantes pour scoring fiable
   ACCEPTABLE: 60,     // Minimum pour afficher un score
-  INSUFFICIENT: 0     // Donnï¿½es insuffisantes - pas de score
+  INSUFFICIENT: 0     // Donn?es insuffisantes - pas de score
 };
 
 const SCORING_WEIGHTS = {
@@ -26,6 +26,45 @@ const SCORING_WEIGHTS = {
   ecoScore: 0.15,
   labels: 0.05
 };
+
+function getSugarEquivalent(sugars) {
+  if (!sugars || sugars === 0) return null;
+  const morceaux = Math.round(sugars / 5);
+  return morceaux + ' morceau' + (morceaux > 1 ? 'x' : '') + ' de sucre';
+}
+
+function getFatEquivalent(saturatedFat) {
+  if (!saturatedFat || saturatedFat === 0) return null;
+  const cuilleres = Math.round(saturatedFat / 5);
+  return cuilleres + ' cuillère' + (cuilleres > 1 ? 's' : '') + ' à café de beurre';
+}
+
+function getSaltEquivalent(salt) {
+  if (!salt || salt === 0) return null;
+  const pincees = Math.round(salt / 0.5);
+  return pincees + ' pincée' + (pincees > 1 ? 's' : '') + ' de sel';
+}
+
+/**
+ * Convertit les sucres en équivalent morceaux de sucre
+ * @param {number} sugars - Sucres en g/100g
+ * @returns {string|null} - Équivalent en morceaux
+ */
+
+
+/**
+ * Convertit les graisses saturées en équivalent cuillères de beurre
+ * @param {number} saturatedFat - Graisses saturées en g/100g
+ * @returns {string|null} - Équivalent en cuillères
+ */
+
+
+/**
+ * Convertit le sel en équivalent pincées
+ * @param {number} salt - Sel en g/100g
+ * @returns {string|null} - Équivalent en pincées
+ */
+
 
 const REQUIRED_FIELDS_FOR_FOOD = {
   critical: ['product_name', 'brands'],
@@ -53,7 +92,7 @@ function calculateDataConfidence(product, category = 'food') {
   let missingImportant = [];
   let availableData = [];
 
-  // Vï¿½rifier champs critiques (40 points)
+  // V?rifier champs critiques (40 points)
   required.critical.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 20;
@@ -63,7 +102,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Vï¿½rifier champs importants (40 points)
+  // V?rifier champs importants (40 points)
   required.important.forEach(field => {
     if (field === 'nutriments' && product.nutriments) {
       const nutriments = product.nutriments;
@@ -84,7 +123,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Vï¿½rifier champs optionnels (20 points)
+  // V?rifier champs optionnels (20 points)
   required.optional.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 6.67;
@@ -92,7 +131,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // Dï¿½terminer le niveau
+  // D?terminer le niveau
   let level;
   if (confidence >= CONFIDENCE_THRESHOLDS.EXCELLENT) {
     level = 'EXCELLENT';
@@ -118,10 +157,10 @@ function calculateDataConfidence(product, category = 'food') {
 // CALCUL DES SCORES ALIMENTAIRES
 // ============================================
 function calculateFoodScores(data) {
-  // 1. Vï¿½RIFIER LA QUALITï¿½ DES DONNï¿½ES
+  // 1. V?RIFIER LA QUALIT? DES DONN?ES
   const dataConfidence = calculateDataConfidence(data, 'food');
   
-  // 2. SI DONNï¿½ES INSUFFISANTES, RETOURNER STRUCTURE SPï¿½CIALE
+  // 2. SI DONN?ES INSUFFISANTES, RETOURNER STRUCTURE SP?CIALE
   if (!dataConfidence.canScore) {
     return {
       version: '3.1.0',
@@ -139,14 +178,14 @@ function calculateFoodScores(data) {
       healthScore: null,
       environmentScore: null,
       breakdown: null,
-      message: 'Donnï¿½es insuffisantes pour calculer un score fiable.',
+      message: 'Donn?es insuffisantes pour calculer un score fiable.',
       recommendation: 'Utilisez le chat IA pour en savoir plus sur ce produit.',
       needsAIEnrichment: true,
       aiSuggestion: 'ask_ai_for_analysis'
     };
   }
 
-  // 3. CALCULER LES SCORES (donnï¿½es suffisantes)
+  // 3. CALCULER LES SCORES (donn?es suffisantes)
   const nutriments = data.nutriments || {};
   const missingData = [];
   if (!data.novaGroup) missingData.push('nova');
@@ -256,13 +295,13 @@ function calculateFoodScores(data) {
         score: novaScore, 
         weight: 0.15,
         group: data.novaGroup || null,
-        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non dï¿½fini'
+        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non d?fini'
       },
       nutriScore: { 
         score: nutriScoreValue, 
         weight: 0.20,
         grade: data.nutriScore ? data.nutriScore.toUpperCase() : null,
-        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non dï¿½fini'
+        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non d?fini'
       },
       additives: { 
         score: additivesAnalysis.score, 
@@ -276,34 +315,37 @@ function calculateFoodScores(data) {
         weight: 0.10,
         value: sugars,
         unit: 'g/100g',
-        label: sugars !== null ? sugars + 'g/100g' : 'Non spï¿½cifiï¿½'
-      },
+        label: sugars !== null ? sugars + 'g/100g' : 'Non sp?cifi?'
+      ,
+        equivalent: getSugarEquivalent(sugars)},
       saturatedFat: { 
         score: fatScore, 
         weight: 0.10,
         value: saturatedFat,
         unit: 'g/100g',
-        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non spï¿½cifiï¿½'
-      },
+        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non sp?cifi?'
+      ,
+        equivalent: getFatEquivalent(saturatedFat)},
       salt: { 
         score: saltScore, 
         weight: 0.10,
         value: salt,
         unit: 'g/100g',
-        label: salt !== null ? salt + 'g/100g' : 'Non spï¿½cifiï¿½'
-      },
+        label: salt !== null ? salt + 'g/100g' : 'Non sp?cifi?'
+      ,
+        equivalent: getSaltEquivalent(salt)},
       ecoScore: { 
         score: ecoScore, 
         weight: 0.15,
         grade: data.ecoScore ? data.ecoScore.toUpperCase() : null,
-        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non dï¿½fini'
+        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non d?fini'
       },
       labels: { 
         score: labelsBonus, 
         weight: 0.05,
         list: labels,
         isBio,
-        label: isBio ? 'Bio certifiï¿½' : 'Aucun label'
+        label: isBio ? 'Bio certifi?' : 'Aucun label'
       }
     },
     scoringMetadata: {
@@ -345,14 +387,14 @@ function analyzeAdditives(additives) {
 }
 
 // ============================================
-// CALCUL COSMï¿½TIQUES (ï¿½ IMPLï¿½MENTER)
+// CALCUL COSM?TIQUES (? IMPL?MENTER)
 // ============================================
 function calculateCosmeticScores(data) {
   return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
 }
 
 // ============================================
-// CALCUL Dï¿½TERGENTS (ï¿½ IMPLï¿½MENTER)
+// CALCUL D?TERGENTS (? IMPL?MENTER)
 // ============================================
 function calculateDetergentScores(data) {
   return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
