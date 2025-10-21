@@ -1,4 +1,4 @@
-ï»¿// backend/src/services/aiEnrichment.service.js
+// backend/src/services/aiEnrichment.service.js
 /**
  * Service enrichissement IA multi-categories (Food/Cosmetics/Detergents)
  * Utilise deepSeekService.analyzeProduct() avec routing automatique
@@ -430,8 +430,130 @@ function parseDetergentsResponse(parsed, missingFields) {
   return result;
 }
 
+
+/**
+ * Parse un produit depuis texte OCR avec DeepSeek IA
+ * @param {string} ocrText - Texte extrait par OCR
+ * @param {string} barcode - Code-barre du produit
+ * @returns {Promise<Object>} Produit parsé
+ */
+async function parseProductFromOCR(ocrText, barcode) {
+  try {
+    console.log('[AI Enrichment] Parsing OCR text with DeepSeek...');
+    
+    const prompt = `Tu es un expert en analyse d'étiquettes de produits (alimentaires, cosmétiques, détergents).
+
+TÂCHE : Extraire les informations structurées depuis le texte OCR d'une étiquette produit.
+
+TEXTE OCR (peut contenir erreurs) :
+"""
+${ocrText}
+"""
+
+CODE-BARRE : ${barcode}
+
+INSTRUCTIONS :
+1. Identifier le NOM du produit (le plus mis en valeur)
+2. Identifier la MARQUE
+3. Déterminer la CATÉGORIE : "food" | "cosmetics" | "detergents"
+4. Extraire la LISTE D'INGRÉDIENTS complète
+5. Extraire les VALEURS NUTRITIONNELLES (si food) pour 100g/100ml
+6. Identifier les ADDITIFS alimentaires (codes E suivi de chiffres)
+7. Identifier les LABELS (Bio, Vegan, Ecocert, etc.)
+8. Évaluer la CONFIANCE de l'extraction (0-1)
+
+FORMAT RÉPONSE (JSON strict) :
+{
+  "name": "Nom du produit",
+  "brand": "Marque",
+  "category": "food|cosmetics|detergents",
+  "ingredients_text": "Liste complète des ingrédients",
+  "nutriments": {
+    "energy": 500,
+    "proteins": 10,
+    "carbohydrates": 60,
+    "sugars": 25,
+    "fat": 15,
+    "saturated_fat": 5,
+    "salt": 0.5,
+    "fiber": 3
+  },
+  "additives": ["E150d", "E322"],
+  "labels": ["Bio", "Vegan"],
+  "novaGroup": 4,
+  "nutriScore": "d",
+  "inci": ["Aqua", "Glycerin"],
+  "confidence": 0.85
+}
+
+RÈGLES IMPORTANTES :
+- Si catégorie = "cosmetics", remplir "inci" au lieu de "ingredients_text"
+- Si catégorie = "detergents", indiquer ingrédients chimiques
+- Si données manquantes, mettre null
+- Confiance élevée si texte clair, faible si OCR dégradé
+
+RÉPONDS UNIQUEMENT AVEC LE JSON, PAS DE TEXTE AVANT/APRÈS.`;
+
+    // Appeler DeepSeek
+    const response = await deepSeekService.chat([
+      { role: 'user', content: prompt }
+    ], {
+      temperature: 0.1, // Précision maximale
+      max_tokens: 2000
+    });
+    
+    // Parser réponse JSON
+    let parsed;
+    try {
+      // Nettoyer la réponse (enlever markdown si présent)
+      const cleanResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      parsed = JSON.parse(cleanResponse);
+    } catch (parseError) {
+      console.error('[AI Enrichment] JSON parse error:', parseError);
+      throw new Error('IA response not valid JSON');
+    }
+    
+    // Valider données minimales
+    if (!parsed.name) {
+      throw new Error('Product name not found in OCR');
+    }
+    
+    console.log('[AI Enrichment] ? Product parsed:', parsed.name);
+    
+    return {
+      barcode: barcode,
+      name: parsed.name,
+      brand: parsed.brand || 'Marque inconnue',
+      category: parsed.category || 'food',
+      
+      // Food data
+      ingredients_text: parsed.ingredients_text,
+      nutriments: parsed.nutriments || {},
+      additives: parsed.additives || [],
+      labels: parsed.labels || [],
+      novaGroup: parsed.novaGroup,
+      nutriScore: parsed.nutriScore,
+      
+      // Cosmetics data
+      inci: parsed.inci || [],
+      
+      // Detergents data
+      ingredients: parsed.ingredients || [],
+      
+      // Confidence
+      confidence: parsed.confidence || 0.5
+    };
+    
+  } catch (error) {
+    console.error('[AI Enrichment] ? Error parsing OCR:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   enrichProductWithAI,
   estimateMissingData,
-  qualitativeAnalysis
+  qualitativeAnalysis,
+  parseProductFromOCR
 };
+

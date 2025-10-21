@@ -1,0 +1,118 @@
+
+
+/* ===== AI ENGAGEMENT WIDGET ===== */
+.ai-engagement-widget {
+  margin: 24px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #f4f9f6 0%, #e8f5e9 100%);
+  border-radius: 16px;
+  border: 2px solid #2d5f3f20;
+}
+
+.ai-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.ai-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d5f3f, #52b788);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(45, 95, 63, 0.3);
+  animation: pulse-avatar 2s infinite;
+}
+
+@keyframes pulse-avatar {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.ai-content {
+  flex: 1;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2d5f3f;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ai-message {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #2c3e50;
+  margin-bottom: 16px;
+}
+
+.btn-ai-chat {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #2d5f3f, #52b788);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(45, 95, 63, 0.3);
+}
+
+.btn-ai-chat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(45, 95, 63, 0.4);
+}
+
+.quick-questions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.quick-btn {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #2d5f3f20;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #2d5f3f;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-btn:hover {
+  background: #2d5f3f;
+  color: white;
+  border-color: #2d5f3f;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .ai-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .quick-questions {
+    flex-direction: column;
+  }
+  
+  .quick-btn {
+    width: 100%;
+  }
+}

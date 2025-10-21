@@ -1,4 +1,4 @@
-﻿﻿// backend/src/services/ProductOrchestrator.js
+﻿?// backend/src/services/ProductOrchestrator.js
 /**
  * Orchestrateur central pour récupération/création produits
  * Gère enrichissement automatique et cache IA
@@ -8,6 +8,7 @@ const Product = require('../models/Product');
 const offClient = require('./offClient');
 const scoringUnified = require('./scoringUnified');
 const aiEnrichment = require('./aiEnrichment.service');
+const visionService = require('./vision.service');
 /**
  * Détecte si un code-barre correspond à une catégorie valide
  * @param {string} barcode - Code-barre du produit
@@ -92,6 +93,12 @@ async function getOrCreateProduct(input) {
     const offData = await offClient.fetchFromOpenFoodFacts(barcode);
     
     if (!offData) {
+      // ⭐ NOUVEAU : Si image fournie, tenter OCR + IA
+      if (input.imageFile) {
+        console.log('[Orchestrator] ⚡ OFF échoué, tentative OCR+IA...');
+        return await createProductFromImage(input);
+      }
+      
       return {
         product: null,
         source: 'NOT_FOUND',
@@ -105,26 +112,26 @@ async function getOrCreateProduct(input) {
 
   // 3. Calculer scores selon catégorie du produit
   const scoringData = prepareScoringData(product);
-  console.log('📊 [ProductOrchestrator] 📊 [ProductOrchestrator] scoringData préparé:', JSON.stringify(scoringData, null, 2));
+  console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] scoringData préparé:', JSON.stringify(scoringData, null, 2));
   
   let scores;
   
   // Logique conditionnelle selon catégorie
   if (product.category === 'cosmetics') {
     scores = scoringUnified.calculateCosmeticsScores(scoringData);
-    console.log('💄 [ProductOrchestrator] 💄 [ProductOrchestrator] Scores COSMÉTIQUES calculés');
+    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores COSMÉTIQUES calculés');
   } 
   else if (product.category === 'detergents') {
     scores = scoringUnified.calculateDetergentsScores(scoringData);
-    console.log('🧽 [ProductOrchestrator] 🧽 [ProductOrchestrator] Scores DÉTERGENTS calculés');
+    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores DÉTERGENTS calculés');
   }
   else {
     // Par défaut : food (ou si category manquante/undefined)
     scores = scoringUnified.calculateFoodScores(scoringData);
-    console.log('🍎 [ProductOrchestrator] 🍎 [ProductOrchestrator] Scores ALIMENTAIRES calculés');
+    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores ALIMENTAIRES calculés');
   }
   
-  console.log('✅ [ProductOrchest✅ [ProductOrchestrator] Résumé scores:', JSON.stringify({ 
+  console.log('? [ProductOrchest? [ProductOrchestrator] Résumé scores:', JSON.stringify({ 
     category: product.category || 'undefined',
     canScore: scores.dataQuality?.canScore, 
     confidence: scores.dataQuality?.confidence 
@@ -160,6 +167,107 @@ async function getOrCreateProduct(input) {
     cached: false,
     aiEnrichmentUsed: aiUsed
   };
+}
+
+
+/**
+ * Crée un produit depuis une image (OCR + IA)
+ * Utilisé quand OpenFoodFacts ne trouve pas le produit
+ */
+async function createProductFromImage(input) {
+  const { barcode, imageFile } = input;
+  
+  try {
+    console.log('[Orchestrator] ?? Analyse image pour produit inconnu:', barcode);
+    
+    // 1. OCR avec Google Vision
+    console.log('[Orchestrator] ?? Extraction texte via OCR...');
+    const ocrResult = await visionService.extractText(imageFile);
+    
+    if (!ocrResult || !ocrResult.text) {
+      throw new Error('OCR échoué : aucun texte extrait');
+    }
+    
+    console.log('[Orchestrator] ? Texte extrait:', ocrResult.text.substring(0, 200) + '...');
+    
+    // 2. Parser avec DeepSeek IA
+    console.log('[Orchestrator] ?? Parsing IA des données produit...');
+    const parsedProduct = await aiEnrichment.parseProductFromOCR(ocrResult.text, barcode);
+    
+    if (!parsedProduct || !parsedProduct.name) {
+      throw new Error('IA parsing échoué : données insuffisantes');
+    }
+    
+    console.log('[Orchestrator] ? Produit parsé:', parsedProduct.name);
+    
+    // 3. Calculer scores selon catégorie détectée
+    const scoringData = prepareScoringData(parsedProduct);
+    
+    let scores;
+    if (parsedProduct.category === 'cosmetics') {
+      scores = scoringUnified.calculateCosmeticsScores(scoringData);
+    } else if (parsedProduct.category === 'detergents') {
+      scores = scoringUnified.calculateDetergentsScores(scoringData);
+    } else {
+      scores = scoringUnified.calculateFoodScores(scoringData);
+    }
+    
+    console.log('[Orchestrator] ? Score calculé:', scores.overallScore);
+    
+    // 4. Créer produit en base avec flag IA
+    const productToSave = {
+      barcode: barcode,
+      name: parsedProduct.name,
+      brand: parsedProduct.brand,
+      category: parsedProduct.category || 'food',
+      
+      foodData: parsedProduct.category === 'food' ? {
+        ingredients: parsedProduct.ingredients_text,
+        nutrition: { per100g: parsedProduct.nutriments },
+        novaGroup: parsedProduct.novaGroup,
+        nutriScore: parsedProduct.nutriScore,
+        additives: parsedProduct.additives,
+        labels: parsedProduct.labels
+      } : undefined,
+      
+      cosmeticsData: parsedProduct.category === 'cosmetics' ? {
+        inci: parsedProduct.inci || [],
+        concerns: parsedProduct.concerns || []
+      } : undefined,
+      
+      detergentsData: parsedProduct.category === 'detergents' ? {
+        ingredients: parsedProduct.ingredients || [],
+        hazards: parsedProduct.hazards || []
+      } : undefined,
+      
+      scores: scores,
+      aiGenerated: true,
+      aiConfidence: parsedProduct.confidence || scores.dataQuality?.confidence || 0.5,
+      source: 'AI_OCR',
+      createdAt: new Date(),
+      lastSync: new Date()
+    };
+    
+    const savedProduct = await saveProduct(productToSave);
+    
+    console.log('[Orchestrator] ?? Produit IA créé avec succès:', savedProduct._id);
+    
+    return {
+      product: savedProduct,
+      source: 'AI_GENERATED',
+      cached: false,
+      aiEnrichmentUsed: true,
+      method: 'OCR + DeepSeek'
+    };
+    
+  } catch (error) {
+    console.error('[Orchestrator] ? Erreur création produit IA:', error);
+    return {
+      product: null,
+      source: 'AI_ERROR',
+      error: `Analyse IA échouée : ${error.message}`
+    };
+  }
 }
 
 // ============================================================================
@@ -280,4 +388,6 @@ async function saveProduct(productData) {
 module.exports = {
   getOrCreateProduct
 };
+
+
 
