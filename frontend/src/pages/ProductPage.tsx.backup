@@ -1,4 +1,4 @@
-ï»¿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -307,7 +307,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
@@ -350,7 +350,7 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandÃ©es</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -410,9 +410,6 @@ const ProductPage: React.FC = () => {
         )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
-
-        {/* AI Engagement Widget */}
-        <AIEngagementWidget product={product} />
         {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
         {product.category === 'cosmetics' && (

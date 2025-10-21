@@ -1,11 +1,10 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams, useLocation } from 'react-router-dom';
+﻿import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import chatService from '../services/chatService';
 import { MessageCircle, Send, Loader, AlertTriangle } from 'lucide-react';
 
 const ChatPage = () => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const productBarcode = searchParams.get('product');
   const prefilledQuestion = searchParams.get('q');
   
@@ -17,7 +16,6 @@ const ChatPage = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<any>(null);
-  const messageAlreadySent = useRef(false);
   
   useEffect(() => {
     if (productBarcode) {
@@ -33,24 +31,6 @@ const ChatPage = () => {
       handleSendMessage(decodeURIComponent(prefilledQuestion));
     }
   }, [prefilledQuestion, product]);
-
-  // Auto-démarrer conversation depuis navigation state
-  useEffect(() => {
-    const navState = location.state;
-    if (navState?.productContext && navState?.initialMessage) {
-      // Éviter double envoi
-      if (messageAlreadySent.current) return;
-      messageAlreadySent.current = true;
-
-      // Définir le produit depuis le state
-      setProduct(navState.productContext);
-      
-      // Envoyer le message initial automatiquement
-      setTimeout(() => {
-        handleSendMessage(navState.initialMessage);
-      }, 500);
-    }
-  }, []);
   
   const handleSendMessage = async (messageText?: string) => {
     const messageToSend = messageText || input.trim();
@@ -179,10 +159,3 @@ const ChatPage = () => {
 };
 
 export default ChatPage;
-
-
-
-
-
-
-
