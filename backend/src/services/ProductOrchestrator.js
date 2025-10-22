@@ -1,4 +1,4 @@
-// backend/src/services/ProductOrchestrator.js
+﻿// backend/src/services/ProductOrchestrator.js
 /**
  * Orchestrateur central pour récupération/création produits
  * Gère enrichissement automatique et cache IA
@@ -161,8 +161,11 @@ async function getOrCreateProduct(input) {
     scores: finalScores
   });
 
+  // FIX : Re-fetch le produit pour avoir TOUS les champs (y compris scores)
+  const refreshedProduct = await Product.findOne({ barcode: savedProduct.barcode }).lean();
+
   return {
-    product: savedProduct,
+    product: refreshedProduct,
     source: product._id ? 'DATABASE_UPDATED' : 'OFF_NEW',
     cached: false,
     aiEnrichmentUsed: aiUsed
