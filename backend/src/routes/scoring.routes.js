@@ -64,26 +64,112 @@ router.post('/:productId/calculate', asyncHandler(async (req, res) => {
   });
 }));
 
-// POST /api/scoring/calculate-all - Calculer tous les scores (admin)
+// POST /api/scoring/calculate-all - Recalculer TOUS les produits (TOUTES catégories)
 router.post('/calculate-all', asyncHandler(async (req, res) => {
-  const products = await Product.find({ category: 'food' });
-  let updated = 0;
+  console.log('[BATCH] 🚀 Début recalcul complet de la base...');
   
-  for (const product of products) {
-    const scoringData = prepareScoringData(product);
-    const scores = scoringUnified.calculateFoodScores(scoringData);
-    product.scores = scores;
-    await product.save();
-    updated++;
+  const startTime = Date.now();
+  let processed = 0;
+  let succeeded = 0;
+  let failed = 0;
+  const errors = [];
+  
+  try {
+    // Récupérer TOUS les produits (food + cosmetics + detergents)
+    const products = await Product.find({});
+    const total = products.length;
+    
+    console.log(`[BATCH] 📊 ${total} produits à traiter`);
+    
+    // Traiter un par un (pas de batch pour éviter surcharge mémoire)
+    for (const product of products) {
+      try {
+        processed++;
+        
+        // Préparer données scoring
+        const scoringData = prepareScoringData(product);
+        
+        // Calculer scores selon catégorie
+        let scores;
+        if (product.category === 'cosmetics') {
+          scores = scoringUnified.calculateCosmeticsScores(scoringData);
+        } else if (product.category === 'detergents') {
+          scores = scoringUnified.calculateDetergentsScores(scoringData);
+        } else {
+          scores = scoringUnified.calculateFoodScores(scoringData);
+        }
+        
+        // Sauvegarder avec updateOne explicite
+        await Product.updateOne(
+          { _id: product._id },
+          {
+            $set: {
+              'scores.globalScore': scores.globalScore,
+              'scores.overallScore': scores.overallScore,
+              'scores.healthScore': scores.healthScore,
+              'scores.environmentScore': scores.environmentScore,
+              'scores.confidence': scores.confidence,
+              'scores.dataCompleteness': scores.dataCompleteness,
+              'scores.breakdown': scores.breakdown,
+              'scores.scoringMetadata': scores.scoringMetadata,
+              'scores.calculatedAt': new Date(),
+              'lastScoreUpdate': new Date()
+            }
+          }
+        );
+        
+        succeeded++;
+        
+        // Log progression tous les 100 produits
+        if (processed % 100 === 0) {
+          const percent = Math.round(processed/total*100);
+          const elapsed = Math.round((Date.now() - startTime) / 1000);
+          const eta = Math.round((elapsed / processed) * (total - processed));
+          console.log(`[BATCH] ⏳ ${processed}/${total} (${percent}%) - ETA: ${eta}s`);
+        }
+        
+      } catch (error) {
+        failed++;
+        errors.push({
+          barcode: product.barcode,
+          name: product.name,
+          error: error.message
+        });
+        
+        if (errors.length <= 10) {
+          console.error(`[BATCH] ❌ Erreur sur ${product.barcode}:`, error.message);
+        }
+      }
+    }
+    
+    const duration = Math.round((Date.now() - startTime) / 1000);
+    
+    console.log(`[BATCH] ✅ Terminé en ${duration}s`);
+    console.log(`[BATCH] 📊 Traités: ${processed} | Succès: ${succeeded} | Échecs: ${failed}`);
+    
+    res.json({
+      success: true,
+      message: 'Recalcul batch terminé',
+      stats: {
+        total: processed,
+        succeeded,
+        failed,
+        duration: `${duration}s`,
+        errorsCount: errors.length,
+        firstErrors: errors.slice(0, 10)
+      }
+    });
+    
+  } catch (error) {
+    console.error('[BATCH] ❌ Erreur critique:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      processed,
+      succeeded,
+      failed
+    });
   }
-  
-  const result = { updated };
-  
-  res.json({
-    success: true,
-    message: `Scores calculated for ${result.updated} products`,
-    result
-  });
 }));
 
 // GET /api/scoring/barcode/:barcode - Obtenir les scores par code-barres
