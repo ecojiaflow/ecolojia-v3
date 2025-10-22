@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -307,7 +307,7 @@ const ProductPage: React.FC = () => {
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">DÃ©tails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
@@ -350,7 +350,7 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           <div id="alternatives-section" className="bg-white p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
+            <h3 className="font-semibold text-lg mb-3">Alternatives recommandÃ©es</h3>
             {loadingAlternatives ? (
               <p className="text-gray-500">Chargement...</p>
             ) : alternatives.length > 0 ? (
@@ -387,6 +387,28 @@ const ProductPage: React.FC = () => {
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
+
+        {/* Disclaimer OCR si produit créé via OCR */}
+        {product.source === 'ocr' && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="text-yellow-600 flex-shrink-0 mt-0.5" size={20} />
+              <div>
+                <h3 className="font-medium text-yellow-900 mb-1">
+                  ⚠️ Produit créé par reconnaissance OCR
+                </h3>
+                <p className="text-yellow-800 text-sm mb-2">
+                  Ce produit a été créé automatiquement à partir de photos. 
+                  Fiabilité estimée : {product.confidence ? Math.round(product.confidence * 100) : 70}%
+                </p>
+                <p className="text-yellow-700 text-xs">
+                  Les données peuvent contenir des erreurs. Vérifiez les informations avant utilisation.
+                  {product.needsVerification && ' Ce produit nécessite une vérification manuelle.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} />
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">

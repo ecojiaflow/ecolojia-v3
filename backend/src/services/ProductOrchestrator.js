@@ -395,6 +395,142 @@ async function saveProduct(productData) {
   return updated;
 }
 
+
+  /**
+   * Crée un produit depuis données OCR avec scoring ajusté
+   * @param {Object} ocrData - Données extraites par OCR
+   * @returns {Promise<Object>} - Produit créé avec scores
+   */
+async function createFromOCR(ocrData) {
+    try {
+      const {
+        code,
+        product_name,
+        brands,
+        quantity,
+        ingredients_text,
+        categories_tags = ['en:food'],
+        source = 'ocr',
+        confidence = 0.7,
+        ocrMetadata = {}
+      } = ocrData;
+
+      console.log(`[Orchestrator] Création produit OCR: ${code} - "${product_name}"`);
+
+      // Vérifier si le produit existe déjà
+      const existingProduct = await Product.findOne({ code });
+      if (existingProduct) {
+        console.log(`[Orchestrator] Produit ${code} existe déjà, mise à jour...`);
+        
+        // Mettre à jour avec données OCR si meilleure confiance
+        if (existingProduct.confidence && existingProduct.confidence >= confidence) {
+          console.log(`[Orchestrator] Confiance existante supérieure, abandon mise à jour`);
+          return existingProduct;
+        }
+      }
+
+      // Normaliser les données avec DataNormalizer
+      const normalizedData = DataNormalizer.normalizeFromOCR({
+        code,
+        product_name,
+        brands,
+        quantity,
+        ingredients_text,
+        categories_tags
+      });
+
+      console.log('[Orchestrator] Données normalisées:', {
+        name: normalizedData.product_name,
+        ingredients: normalizedData.ingredients?.length || 0
+      });
+
+      // Calculer les scores avec ScoringEngineV3
+      console.log('[Orchestrator] Calcul des scores...');
+      const category = this._detectCategory(categories_tags);
+      const scores = ScoringEngineV3.calculateScores(normalizedData, category);
+
+      // Ajuster la confiance des scores selon la confiance OCR
+      if (scores && confidence < 1) {
+        scores.confidence = scores.confidence * confidence;
+        scores.metadata = scores.metadata || {};
+        scores.metadata.ocrConfidence = confidence;
+        scores.metadata.adjustedByOCR = true;
+        
+        console.log(`[Orchestrator] Confiance ajustée: ${scores.confidence.toFixed(2)} (base × OCR ${confidence})`);
+      }
+
+      // Créer l'objet produit avec métadonnées OCR
+      const productData = {
+        code,
+        product_name,
+        brands,
+        quantity,
+        ingredients_text,
+        categories_tags,
+        
+        // Scores calculés
+        scores: scores || null,
+        
+        // Métadonnées OCR
+        source,
+        confidence,
+        dataQuality: this._assessDataQuality(normalizedData, confidence),
+        ocrMetadata: {
+          ...ocrMetadata,
+          createdAt: new Date(),
+          version: '3.2.0'
+        },
+        
+        // Flags spéciaux
+        needsVerification: confidence < 0.75,
+        isOCRProduct: true,
+        
+        // Audit
+        lastUpdated: new Date(),
+        createdAt: new Date()
+      };
+
+      // Sauvegarder en base
+      const product = existingProduct 
+        ? await Product.findOneAndUpdate({ code }, productData, { new: true })
+        : await Product.create(productData);
+
+      console.log(`[Orchestrator] ✓ Produit ${existingProduct ? 'mis à jour' : 'créé'}: ${product._id}`);
+
+      // Indexer dans Algolia
+      try {
+        await algoliaService.indexProduct(product);
+        console.log('[Orchestrator] ✓ Produit indexé dans Algolia');
+      } catch (algoliaError) {
+        console.warn('[Orchestrator] Erreur indexation Algolia:', algoliaError.message);
+      }
+
+      return product;
+
+    } catch (error) {
+      console.error('[Orchestrator] Erreur création produit OCR:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Évalue la qualité des données OCR
+   */
+function _assessDataQuality(data, confidence) {
+    const hasName = !!data.product_name && data.product_name.length > 3;
+    const hasIngredients = !!data.ingredients_text && data.ingredients_text.length > 10;
+    const hasBrand = !!data.brands && data.brands.length > 0;
+
+    if (confidence >= 0.8 && hasName && hasIngredients && hasBrand) {
+      return 'EXCELLENT';
+    } else if (confidence >= 0.65 && hasName && hasIngredients) {
+      return 'BON';
+    } else if (confidence >= 0.5 && hasName) {
+      return 'MOYEN';
+    } else {
+      return 'FAIBLE';
+    }
+  }
 module.exports = {
   getOrCreateProduct
 };

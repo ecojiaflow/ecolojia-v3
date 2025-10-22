@@ -1,4 +1,4 @@
-// PATH: frontend/src/App.tsx
+﻿// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
 import { DisclaimerModal, hasAcceptedDisclaimer } from './components/legal/DisclaimerModal';
+import OCRWizardPage from './pages/OCRWizardPage';
 
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -46,6 +47,7 @@ const App: React.FC = () => {
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />
             <Route path="ocr" element={<OCRPage />} />
+            <Route path="ocr-wizard" element={<OCRWizardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="multi-scan" element={<MultiScanPage />} />
             <Route path="premium" element={<PremiumPage />} />
