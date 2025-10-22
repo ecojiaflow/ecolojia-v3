@@ -5,6 +5,8 @@
  */
 
 const Product = require('../models/Product');
+const DataNormalizer = require('./DataNormalizer');
+const ScoringEngineV3 = require('./ScoringEngineV3');
 const offClient = require('./offClient');
 const scoringUnified = require('./scoringUnified');
 const aiEnrichment = require('./aiEnrichment.service');
@@ -110,48 +112,53 @@ async function getOrCreateProduct(input) {
     product = mapOFFToProduct(offData);
   }
 
-  // 3. Calculer scores selon catégorie du produit
-  const scoringData = prepareScoringData(product);
-  console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] scoringData préparé:', JSON.stringify(scoringData, null, 2));
+  // 3. NOUVELLE ARCHITECTURE : Normaliser puis scorer
+  console.log('📦 [Orchestrator] Normalisation des données...');
+  const normalizedProduct = DataNormalizer.normalizeProduct(product, product._id ? 'DATABASE' : 'OFF');
   
-  let scores;
+  console.log('🎯 [Orchestrator] Calcul scientifique du score...');
+  const scoringResult = ScoringEngineV3.calculateScore(normalizedProduct);
   
-  // Logique conditionnelle selon catégorie
-  if (product.category === 'cosmetics') {
-    scores = scoringUnified.calculateCosmeticsScores(scoringData);
-    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores COSMÉTIQUES calculés');
-  } 
-  else if (product.category === 'detergents') {
-    scores = scoringUnified.calculateDetergentsScores(scoringData);
-    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores DÉTERGENTS calculés');
-  }
-  else {
-    // Par défaut : food (ou si category manquante/undefined)
-    scores = scoringUnified.calculateFoodScores(scoringData);
-    console.log('?? [ProductOrchestrator] ?? [ProductOrchestrator] Scores ALIMENTAIRES calculés');
-  }
+  console.log('📊 [Orchestrator] Résultat:', {
+    canScore: scoringResult.canScore,
+    score: scoringResult.overallScore,
+    confidence: scoringResult.confidence,
+    available: scoringResult.availableComponents?.length || 0,
+    missing: scoringResult.missingComponents?.length || 0
+  });
   
-  console.log('? [ProductOrchest? [ProductOrchestrator] Résumé scores:', JSON.stringify({ 
-    category: product.category || 'undefined',
-    canScore: scores.dataQuality?.canScore, 
-    confidence: scores.dataQuality?.confidence 
-  }, null, 2));
-
-  // 4. Enrichir avec IA UNIQUEMENT si données insuffisantes
-  let finalScores = scores;
+  // 4. Enrichir avec IA UNIQUEMENT si confiance < 70%
+  let finalScores = scoringResult;
   let aiUsed = false;
   
-  // Vérifier si le scoring a besoin d'enrichissement
-  if (scores.dataQuality && !scores.dataQuality.canScore) {
-    console.log('?? Données insuffisantes - Enrichissement IA nécessaire');
-    finalScores = await aiEnrichment.enrichProductWithAI(product, scores);
+  if (!scoringResult.canScore) {
+    console.log('⚠️ [Orchestrator] Aucune donnée - Enrichissement IA nécessaire');
+    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, scoringResult);
+    
+    // Re-normaliser avec données IA
+    const enrichedProduct = DataNormalizer.normalizeProduct({
+      ...normalizedProduct,
+      ...aiResult.estimations
+    }, 'AI');
+    
+    // Re-calculer scores
+    finalScores = ScoringEngineV3.calculateScore(enrichedProduct);
     aiUsed = true;
-  } else if (scores.dataQuality && scores.dataQuality.confidence < 70) {
-    console.log('?? Confiance faible - Enrichissement IA optionnel');
-    finalScores = await aiEnrichment.enrichProductWithAI(product, scores);
-    aiUsed = true;
+  } else if (scoringResult.confidence < 70) {
+    console.log('⚠️ [Orchestrator] Confiance faible - Enrichissement IA optionnel');
+    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, scoringResult);
+    
+    if (aiResult.success) {
+      const enrichedProduct = DataNormalizer.normalizeProduct({
+        ...normalizedProduct,
+        ...aiResult.estimations
+      }, 'AI');
+      
+      finalScores = ScoringEngineV3.calculateScore(enrichedProduct);
+      aiUsed = true;
+    }
   } else {
-    console.log('? Données suffisantes - Pas d\'enrichissement IA nécessaire');
+    console.log('✅ [Orchestrator] Données suffisantes - Pas d\'enrichissement IA nécessaire');
   }
 
   // 5. Sauvegarder en base

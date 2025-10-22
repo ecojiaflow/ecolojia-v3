@@ -1,6 +1,8 @@
 ﻿const express = require('express');
 const router = express.Router();
 const scoringUnified = require('../services/scoringUnified');
+const DataNormalizer = require('../services/DataNormalizer');
+const ScoringEngineV3 = require('../services/ScoringEngineV3');
 const Product = require('../models/Product');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -86,18 +88,33 @@ router.post('/calculate-all', asyncHandler(async (req, res) => {
       try {
         processed++;
         
-        // Préparer données scoring
-        const scoringData = prepareScoringData(product);
+        // NOUVELLE ARCHITECTURE : Normaliser + Scorer
+        const normalized = DataNormalizer.normalizeProduct(product.toObject ? product.toObject() : product, 'DATABASE');
+        const scoringResult = ScoringEngineV3.calculateScore(normalized);
         
-        // Calculer scores selon catégorie
-        let scores;
-        if (product.category === 'cosmetics') {
-          scores = scoringUnified.calculateCosmeticsScores(scoringData);
-        } else if (product.category === 'detergents') {
-          scores = scoringUnified.calculateDetergentsScores(scoringData);
-        } else {
-          scores = scoringUnified.calculateFoodScores(scoringData);
+        // Vérifier si on peut scorer
+        if (!scoringResult.canScore) {
+          failed++;
+          errors.push({
+            barcode: product.barcode,
+            name: product.name,
+            error: 'Données insuffisantes pour calculer un score'
+          });
+          continue;
         }
+        
+        // Préparer l'objet scores pour MongoDB
+        const scores = {
+          globalScore: scoringResult.overallScore,
+          overallScore: scoringResult.overallScore,
+          healthScore: Math.round(scoringResult.overallScore), // Pour compatibilité
+          environmentScore: null, // À calculer séparément si besoin
+          confidence: scoringResult.confidence, // Déjà normalisé 0-1
+          dataCompleteness: scoringResult.completenessLevel,
+          breakdown: scoringResult.breakdown,
+          scoringMetadata: scoringResult.metadata,
+          calculatedAt: new Date()
+        };
         
         // Sauvegarder avec updateOne explicite
         await Product.updateOne(
@@ -205,6 +222,8 @@ router.post('/:productId/recalculate', async (req, res) => {
     const { productId } = req.params;
     const Product = require('../models/Product');
     const scoringUnified = require('../services/scoringUnified');
+const DataNormalizer = require('../services/DataNormalizer');
+const ScoringEngineV3 = require('../services/ScoringEngineV3');
     
     // Trouver le produit
     const product = await Product.findById(productId);
