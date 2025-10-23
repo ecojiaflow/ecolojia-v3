@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Search, TrendingUp, Shield, Sparkles, ArrowRight,
+import { 
+  Search, TrendingUp, Shield, Sparkles, ArrowRight, 
   Award, Users, BarChart3, Leaf, Heart, Star,
   ShoppingBag, Camera, Package, Clock, CheckCircle
 } from 'lucide-react';
@@ -29,30 +29,30 @@ const HomePage: React.FC = () => {
   ];
 
   const categories = [
-    {
-      name: 'Alimentaire',
-      icon: '🥫',
+    { 
+      name: 'Alimentaire', 
+      icon: '🥫', 
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
       popular: ['Nutella', 'Yaourt', 'Pain bio']
     },
-    {
-      name: 'Cosmetique',
-      icon: '💄',
+    { 
+      name: 'Cosmetique', 
+      icon: '💄', 
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
       popular: ['Shampoing', 'Creme', 'Deodorant']
     },
-    {
-      name: 'Entretien',
-      icon: '🧼',
+    { 
+      name: 'Entretien', 
+      icon: '🧼', 
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
       popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
     },
-    {
-      name: 'Hygiene',
-      icon: '🪥',
+    { 
+      name: 'Hygiene', 
+      icon: '🪥', 
       count: '180k produits',
       color: 'from-purple-400 to-purple-600',
       popular: ['Dentifrice', 'Savon', 'Gel douche']
@@ -217,3 +217,5 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+

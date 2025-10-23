@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/ProtectedRoute.tsx
+// PATH: frontend/src/components/ProtectedRoute.tsx
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthContext } from "../Contexts/AuthContext";
@@ -16,7 +16,9 @@ const ProtectedRoute: React.FC = () => {
   // Rediriger vers login si non authentifié
   if (!isAuthenticated) {
     // Sauvegarder la page tentée pour redirection après login
-    return <Navigate to="/login" replace state={{ from: location }} />;
+      const location = useLocation();
+  saveReturnUrl(location.pathname + location.search);
+  return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   // Rendre les routes enfants si authentifié

@@ -1,92 +1,381 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { searchProducts, toDisplayProduct } from "../lib/api";
-import { useQuerySync } from '../hooks/useQuerySync';
+﻿import React from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import algoliasearch from 'algoliasearch/lite';
+import {
+  InstantSearch,
+  SearchBox,
+  Hits,
+  RefinementList,
+  Pagination,
+  Stats,
+  ClearRefinements,
+  Configure
+} from 'react-instantsearch';
+import { Package, Filter, X, SlidersHorizontal } from 'lucide-react';
+import { useDeviceContext } from '../hooks/useDeviceContext';
 
-export default function SearchPage() {
-  const [state, setState] = useState({ q: '' });
-  const updateURL = useQuerySync(state, setState);
-  const [res, setRes] = useState(null);
+// Configuration Algolia
+const searchClient = algoliasearch(
+  import.meta.env.VITE_ALGOLIA_APP_ID || '',
+  import.meta.env.VITE_ALGOLIA_SEARCH_KEY || ''
+);
 
-  useEffect(() => {
-    if (state.q.trim()) {
-      searchProducts(state.q.trim(), {}).then(setRes);
-    }
-  }, [state.q]);
+const indexName = 'products';
+
+// Composant pour afficher un produit
+const ProductHit = ({ hit }: { hit: any }) => {
+  const navigate = useNavigate();
+
+  // Debug: voir les données disponibles
+  React.useEffect(() => {
+    console.log('Algolia hit:', hit);
+  }, [hit]);
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-100';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+    if (score >= 40) return 'text-orange-600 bg-orange-100';
+    return 'text-red-600 bg-red-100';
+  };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return 'Excellent';
+    if (score >= 60) return 'Bon';
+    if (score >= 40) return 'Moyen';
+    return 'À éviter';
+  };
+
+  const globalScore = hit.scores?.global || 0;
+  
+  // Essayer différents champs pour le nom du produit
+  const productName = hit.product_name || hit.name || hit.product_name_fr || hit.generic_name || 'Produit sans nom';
+  const productBrand = hit.brands || hit.brand || '';
+  const productImage = hit.image_url || hit.image_front_url || hit.image_small_url || '';
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <input
-        type="text"
-        value={state.q}
-        onChange={(e) => { const q = e.target.value; setState({ q }); updateURL({ q }); }}
-        placeholder="Rechercher un produit..."
-        className="w-full px-4 py-2 border rounded mb-6 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      
-      {res?.items && res.items.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {res.items.map((item, i) => {
-            const p = toDisplayProduct(item);
-            const imageUrl = item.imageUrl || p.imageUrl;
-            
-            return (
-              <div 
-                key={i} 
-                className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white"
-              >
-                {/* Image produit */}
-                <div className="w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
-                  {imageUrl ? (
-                    <img 
-                      src={imageUrl} 
-                      alt={p.name || 'Produit'}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect fill="%23f3f4f6" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%239ca3af"%3EPas d\'image%3C/text%3E%3C/svg%3E';
-                      }}
-                    />
-                  ) : (
-                    <div className="text-gray-400 text-center p-4">
-                      <svg 
-                        className="w-16 h-16 mx-auto mb-2" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
-                        />
-                      </svg>
-                      <span className="text-sm">Pas d'image</span>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Informations produit */}
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-1 line-clamp-2">{p.name || 'Produit sans nom'}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{p.brand || 'Marque inconnue'}</p>
-                  
-                  <button 
-                    onClick={() => window.location.href = `/product/${item._id || item.objectID}`} 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
-                  >
-                    Voir le produit
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+    <div
+      onClick={() => navigate(`/product/${hit.code || hit.barcode || hit.objectID}`)}
+      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all cursor-pointer p-4 flex gap-4"
+    >
+      {/* Image */}
+      <div className="flex-shrink-0 w-24 h-24 bg-gray-100 rounded-lg overflow-hidden">
+        {productImage ? (
+          <img
+            src={productImage}
+            alt={productName}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Package className="w-8 h-8 text-gray-400" />
+          </div>
+        )}
+      </div>
+
+      {/* Informations */}
+      <div className="flex-1 min-w-0">
+        <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+          {productName}
+        </h3>
+        {productBrand && (
+          <p className="text-sm text-gray-600 mb-2">{productBrand}</p>
+        )}
+        <div className="flex flex-wrap gap-2">
+          {/* Score global */}
+          {globalScore > 0 && (
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(globalScore)}`}>
+              {globalScore}/100 - {getScoreLabel(globalScore)}
+            </span>
+          )}
+          {/* NOVA */}
+          {hit.nova_group && (
+            <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+              NOVA {hit.nova_group}
+            </span>
+          )}
+          {/* Nutri-Score */}
+          {hit.nutriscore_grade && (
+            <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
+              hit.nutriscore_grade === 'a' ? 'bg-green-500 text-white' :
+              hit.nutriscore_grade === 'b' ? 'bg-lime-500 text-white' :
+              hit.nutriscore_grade === 'c' ? 'bg-yellow-500 text-white' :
+              hit.nutriscore_grade === 'd' ? 'bg-orange-500 text-white' :
+              'bg-red-500 text-white'
+            }`}>
+              Nutri-Score {hit.nutriscore_grade}
+            </span>
+          )}
+          {/* Labels */}
+          {hit.labels_tags && hit.labels_tags.includes('en:organic') && (
+            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
+              🌱 Bio
+            </span>
+          )}
         </div>
-      ) : (
-        <div className="text-center text-gray-500 py-12">
-          {state.q.trim() ? 'Aucun produit trouvé' : 'Tapez pour rechercher'}
-        </div>
-      )}
+      </div>
     </div>
   );
-}
+};
+
+// Composant principal
+const SearchPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const { isMobile } = useDeviceContext();
+  const [showFilters, setShowFilters] = React.useState(!isMobile);
+
+  const initialQuery = searchParams.get('q') || '';
+  const initialCategory = searchParams.get('category') || '';
+
+  return (
+    <InstantSearch
+      searchClient={searchClient}
+      indexName={indexName}
+      initialUiState={{
+        [indexName]: {
+          query: initialQuery,
+          refinementList: initialCategory
+            ? { categories: [initialCategory] }
+            : undefined
+        }
+      }}
+    >
+      <Configure hitsPerPage={20} />
+
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b sticky top-0 z-10">
+          <div className="container mx-auto px-4 py-4">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Recherche de produits
+            </h1>
+
+            {/* SearchBox */}
+            <div className="mb-4">
+              <SearchBox
+                placeholder="Rechercher un produit (Nutella, L'Oréal, Ariel...)"
+                classNames={{
+                  root: 'relative',
+                  form: 'relative',
+                  input:
+                    'w-full pl-4 pr-12 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none',
+                  submit: 'absolute right-2 top-1/2 -translate-y-1/2',
+                  reset:
+                    'absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600',
+                  loadingIndicator: 'absolute right-2 top-1/2 -translate-y-1/2'
+                }}
+              />
+            </div>
+
+            {/* Stats et Toggle Filtres Mobile */}
+            <div className="flex items-center justify-between">
+              <Stats
+                classNames={{
+                  root: 'text-sm text-gray-600'
+                }}
+              />
+              {isMobile && (
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                >
+                  <Filter className="w-4 h-4" />
+                  Filtres
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Contenu principal */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Sidebar Filtres */}
+            {(!isMobile || showFilters) && (
+              <aside className="lg:w-64 flex-shrink-0">
+                <div className="bg-white rounded-xl shadow-md p-6 sticky top-24">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                      <SlidersHorizontal className="w-5 h-5" />
+                      Filtres
+                    </h2>
+                    {isMobile && (
+                      <button
+                        onClick={() => setShowFilters(false)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+
+                  <ClearRefinements
+                    classNames={{
+                      root: 'mb-4',
+                      button:
+                        'w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium'
+                    }}
+                    translations={{
+                      resetButtonText: 'Réinitialiser les filtres'
+                    }}
+                  />
+
+                  {/* Catégories */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                      Catégorie
+                    </h3>
+                    <RefinementList
+                      attribute="categories"
+                      limit={5}
+                      showMore={true}
+                      showMoreLimit={20}
+                      classNames={{
+                        root: 'text-sm',
+                        list: 'space-y-2',
+                        item: 'flex items-center',
+                        label: 'flex items-center gap-2 cursor-pointer hover:text-green-600',
+                        checkbox:
+                          'w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500',
+                        labelText: 'text-gray-700',
+                        count:
+                          'ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600',
+                        showMore:
+                          'mt-2 text-green-600 hover:text-green-700 text-sm font-medium'
+                      }}
+                      translations={{
+                        showMoreButtonText({ isShowingMore }) {
+                          return isShowingMore ? 'Voir moins' : 'Voir plus';
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* NOVA Group */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                      Groupe NOVA
+                    </h3>
+                    <RefinementList
+                      attribute="nova_group"
+                      sortBy={['name:asc']}
+                      classNames={{
+                        root: 'text-sm',
+                        list: 'space-y-2',
+                        item: 'flex items-center',
+                        label: 'flex items-center gap-2 cursor-pointer hover:text-green-600',
+                        checkbox:
+                          'w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500',
+                        labelText: 'text-gray-700',
+                        count:
+                          'ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600'
+                      }}
+                    />
+                  </div>
+
+                  {/* Nutri-Score */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                      Nutri-Score
+                    </h3>
+                    <RefinementList
+                      attribute="nutriscore_grade"
+                      sortBy={['name:asc']}
+                      classNames={{
+                        root: 'text-sm',
+                        list: 'space-y-2',
+                        item: 'flex items-center',
+                        label: 'flex items-center gap-2 cursor-pointer hover:text-green-600',
+                        checkbox:
+                          'w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500',
+                        labelText: 'text-gray-700 uppercase',
+                        count:
+                          'ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600'
+                      }}
+                    />
+                  </div>
+
+                  {/* Labels */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                      Labels
+                    </h3>
+                    <RefinementList
+                      attribute="labels_tags"
+                      operator="and"
+                      limit={5}
+                      showMore={true}
+                      transformItems={(items) =>
+                        items.map((item) => ({
+                          ...item,
+                          label: item.label.replace('en:', '').replace(/-/g, ' ')
+                        }))
+                      }
+                      classNames={{
+                        root: 'text-sm',
+                        list: 'space-y-2',
+                        item: 'flex items-center',
+                        label: 'flex items-center gap-2 cursor-pointer hover:text-green-600',
+                        checkbox:
+                          'w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500',
+                        labelText: 'text-gray-700 capitalize',
+                        count:
+                          'ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600',
+                        showMore:
+                          'mt-2 text-green-600 hover:text-green-700 text-sm font-medium'
+                      }}
+                      translations={{
+                        showMoreButtonText({ isShowingMore }) {
+                          return isShowingMore ? 'Voir moins' : 'Voir plus';
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </aside>
+            )}
+
+            {/* Résultats */}
+            <main className="flex-1">
+              <Hits
+                hitComponent={ProductHit}
+                classNames={{
+                  root: 'space-y-4',
+                  list: 'space-y-4',
+                  item: ''
+                }}
+              />
+
+              {/* Pagination */}
+              <div className="mt-8">
+                <Pagination
+                  padding={2}
+                  showFirst={!isMobile}
+                  showLast={!isMobile}
+                  classNames={{
+                    root: 'flex justify-center',
+                    list: 'flex items-center gap-2',
+                    item: '',
+                    link: 'px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors',
+                    selectedItem:
+                      'px-4 py-2 bg-green-500 text-white rounded-lg font-medium',
+                    disabledItem: 'opacity-50 cursor-not-allowed',
+                    firstPageItem: isMobile ? 'hidden' : '',
+                    lastPageItem: isMobile ? 'hidden' : ''
+                  }}
+                  translations={{
+                    firstPageItemText: '«',
+                    previousPageItemText: '‹',
+                    nextPageItemText: '›',
+                    lastPageItemText: '»'
+                  }}
+                />
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </InstantSearch>
+  );
+};
+
+export default SearchPage;

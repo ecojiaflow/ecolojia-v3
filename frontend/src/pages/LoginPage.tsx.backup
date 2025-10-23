@@ -1,4 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+// ========================================
+// FICHIER 3: src/pages/LoginPage.tsx (avec redirection corrigée)
+// ========================================
+// PATH: frontend/src/pages/LoginPage.tsx
+
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getReturnUrl } from '../utils/navigation';
 import { Mail, Lock, Eye, EyeOff, Leaf, ArrowRight } from 'lucide-react';
@@ -11,21 +16,20 @@ const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuthContext();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
-  // ✅ CORRECTION: Utiliser getReturnUrl pour gérer tous les cas
-  const returnUrl = getReturnUrl(location);
+  const from = location.state?.from?.pathname || '/dashboard';
 
   // Redirection si déjà connecté
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(returnUrl, { replace: true });
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, returnUrl]);
+  }, [isAuthenticated, navigate, from]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -36,7 +40,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!formData.email || !formData.password) {
       toast.error('Veuillez remplir tous les champs');
       return;
@@ -46,7 +50,7 @@ const LoginPage: React.FC = () => {
     try {
       await login(formData.email, formData.password);
       toast.success('Connexion réussie !');
-
+      
       // La redirection se fera automatiquement via useEffect
     } catch (error: any) {
       console.error('Erreur de connexion:', error);
@@ -62,12 +66,12 @@ const LoginPage: React.FC = () => {
       email: 'demo@ecolojia.app',
       password: 'demo123'
     });
-
+    
     setIsLoading(true);
     try {
       await login('demo@ecolojia.app', 'demo123');
       toast.success('Connexion démo réussie !');
-
+      
       // La redirection se fera automatiquement via useEffect
     } catch (error: any) {
       console.error('Erreur connexion démo:', error);

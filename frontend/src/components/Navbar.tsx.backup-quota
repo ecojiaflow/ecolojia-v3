@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/Navbar.tsx
+// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDeviceContext } from '@/hooks/useDeviceContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -10,7 +10,6 @@ import {
   History, Star
 } from 'lucide-react';
 import { useAuthContext } from './Contexts/AuthContext';
-import { useQuota } from '../hooks/useQuota';
 
 // Couleurs ECOLOJIA
 const COLORS = {
@@ -91,7 +90,7 @@ class NavbarSearchService {
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
       contextual.push(
         { query: `${query} NOVA 1`, icon: '??', category: 'Alimentaire sain', score: 'A' },
-        { query: `${query} nutri-score A`, icon: '??', category: 'Top SantÃ©', score: 'A' }
+        { query: `${query} nutri-score A`, icon: '??', category: 'Top Santé', score: 'A' }
       );
     }
 
@@ -126,7 +125,6 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuthContext();
-  const { quotas, canScan } = useQuota();
   
   const { isMobile } = useDeviceContext();
   // Etat
@@ -147,13 +145,13 @@ const Navbar: React.FC = () => {
   // Navigation items (conditionnel Desktop/Mobile)
   const navigationItems = [
     { name: 'Recherche', href: '/search', icon: Search },
-    { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÃ‰ MOBILE
+    { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÉ MOBILE
     { name: 'Historique', href: '/history', icon: History },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle },
   ];
 
   // Filtrer selon device
-  console.log('ðŸ” isMobile:', isMobile, 'navigationItems:', navigationItems.map(i => i.name));
+  console.log('🔍 isMobile:', isMobile, 'navigationItems:', navigationItems.map(i => i.name));
   const navigation = navigationItems.filter(item => {
     if (item.desktopOnly && isMobile) return false; // Masquer Multi-Scan mobile
     return true;
@@ -324,7 +322,7 @@ const Navbar: React.FC = () => {
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-gray-600">
                       <Zap className="w-3 h-3 text-[#7DDE4A]" />
-                      <span>IA Scientifique â€¢ Temps reel</span>
+                      <span>IA Scientifique • Temps reel</span>
                     </div>
                   </div>
                   
@@ -617,7 +615,7 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2"></span>
-                      Score SantÃ©
+                      Score Santé
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-2"></span>
