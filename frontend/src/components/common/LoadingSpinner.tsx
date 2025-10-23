@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/common/LoadingSpinner.tsx
+// PATH: frontend/src/components/common/LoadingSpinner.tsx
 import React from 'react';
 
 interface LoadingSpinnerProps {

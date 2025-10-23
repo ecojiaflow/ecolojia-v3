@@ -1,7 +1,7 @@
 
 
 // ========================================
-// 3. INT‰GRATION AUTH SERVICE AM‰LIOR‰E
+// 3. INTâ€°GRATION AUTH SERVICE AMâ€°LIORâ€°E
 // PATH: backend/src/services/auth/authService.js
 // ========================================
 const User = require('../../models/User');
@@ -95,7 +95,7 @@ class AuthService {
         throw new Error('Invalid credentials');
       }
 
-      // Mettre   jour derniere connexion
+      // Mettre Â  jour derniere connexion
       user.lastLoginAt = new Date();
       await user.save();
 
@@ -165,7 +165,7 @@ class AuthService {
   /**
    * Deconnexion
    * @param {string} userId - ID utilisateur
-   * @param {string} refreshToken - Refresh token   revoquer
+   * @param {string} refreshToken - Refresh token Â  revoquer
    */
   async logout(userId, refreshToken) {
     try {

@@ -77,7 +77,7 @@ export const DEMO_CONFIG = {
   SESSION_DURATION_HOURS: 24
 };
 
-// ===== DONNÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°ES FACTICES =====
+// ===== DONNÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ES FACTICES =====
 export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
   {
     id: 'scan-1',
@@ -108,7 +108,7 @@ export const MOCK_ANALYSIS_HISTORY: MockAnalysisHistory[] = [
   },
   {
     id: 'scan-4',
-    productName: 'Lessive Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°cologique',
+    productName: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
     brand: 'Ecover',
     category: 'detergents',
     healthScore: 85,
@@ -151,14 +151,14 @@ export const createDemoSession = (tier: 'free' | 'premium' = 'premium') => {
 
   const usageConfig = {
     free: {
-      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 dejÆ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  utilises
+      scansThisMonth: Math.floor(Math.random() * 15) + 5, // 5-20 dejÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  utilises
       aiQuestionsToday: 0,
       aiQuestionsThisMonth: 0,
       exportsThisMonth: 0,
       apiCallsThisMonth: 0
     },
     premium: {
-      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 dejÆ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  utilises
+      scansThisMonth: Math.floor(Math.random() * 50) + 20, // 20-70 dejÃ†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  utilises
       aiQuestionsToday: Math.floor(Math.random() * 3) + 1, // 1-4 aujourd'hui
       aiQuestionsThisMonth: Math.floor(Math.random() * 25) + 10, // 10-35 ce mois
       exportsThisMonth: Math.floor(Math.random() * 3), // 0-3 ce mois

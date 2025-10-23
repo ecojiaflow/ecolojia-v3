@@ -5,13 +5,13 @@ const axios = require('axios');
 
 async function importCosmetics(limit = 50) {
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log('? MongoDB connecté');
+  console.log('? MongoDB connectÃ©');
 
   const categories = ['shampoos', 'face-creams', 'shower-gels', 'deodorants', 'toothpastes'];
   let imported = 0;
 
   for (const category of categories) {
-    console.log(`\n?? Import catégorie: ${category}`);
+    console.log(`\n?? Import catÃ©gorie: ${category}`);
     
     try {
       const { data } = await axios.get(
@@ -43,14 +43,14 @@ async function importCosmetics(limit = 50) {
         );
         
         imported++;
-        if (imported % 10 === 0) console.log(`  ? ${imported} produits importés`);
+        if (imported % 10 === 0) console.log(`  ? ${imported} produits importÃ©s`);
       }
     } catch (err) {
       console.error(`? Erreur ${category}:`, err.message);
     }
   }
 
-  console.log(`\n? Total: ${imported} cosmétiques importés`);
+  console.log(`\n? Total: ${imported} cosmÃ©tiques importÃ©s`);
   process.exit(0);
 }
 

@@ -38,20 +38,20 @@ const PricingPage: React.FC = () => {
     {
       id: 'free',
       name: 'Gratuit',
-      description: 'Pour découvrir ECOLOJIA',
+      description: 'Pour dÃ©couvrir ECOLOJIA',
       price: 0,
       priceLabel: 'Gratuit',
       color: 'gray',
       icon: <Sparkles className="w-6 h-6" />,
       features: [
         { name: '30 analyses par mois', included: true },
-        { name: 'Score santé basique', included: true },
+        { name: 'Score santÃ© basique', included: true },
         { name: 'Classification NOVA', included: true },
         { name: '3 alternatives par produit', included: true },
         { name: 'Historique 30 jours', included: true },
         { name: 'Chat IA (5 questions/mois)', included: true },
-        { name: 'Export données', included: false },
-        { name: 'Analyses illimitées', included: false },
+        { name: 'Export donnÃ©es', included: false },
+        { name: 'Analyses illimitÃ©es', included: false },
         { name: 'Support prioritaire', included: false },
       ],
       cta: user ? 'Plan actuel' : 'Commencer gratuitement'
@@ -61,29 +61,29 @@ const PricingPage: React.FC = () => {
       name: 'Premium',
       description: 'Pour les consommateurs avertis',
       price: billingPeriod === 'monthly' ? 2.49 : 24.90,
-      priceLabel: billingPeriod === 'monthly' ? '2,49 â‚¬/mois' : '24,90 â‚¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '2,49 Ã¢â€šÂ¬/mois' : '24,90 Ã¢â€šÂ¬/an',
       color: 'green',
       icon: <Star className="w-6 h-6" />,
       popular: true,
       features: [
-        { name: 'Analyses illimitées', included: true },
-        { name: 'Tous les scores détaillés', included: true },
-        { name: 'Classification NOVA avancée', included: true },
+        { name: 'Analyses illimitÃ©es', included: true },
+        { name: 'Tous les scores dÃ©taillÃ©s', included: true },
+        { name: 'Classification NOVA avancÃ©e', included: true },
         { name: '10 alternatives par produit', included: true },
-        { name: 'Historique illimité', included: true },
-        { name: 'Chat IA illimité', included: true, tooltip: '500 questions/mois' },
+        { name: 'Historique illimitÃ©', included: true },
+        { name: 'Chat IA illimitÃ©', included: true, tooltip: '500 questions/mois' },
         { name: 'Export CSV/PDF', included: true },
-        { name: 'Sans publicité', included: true },
+        { name: 'Sans publicitÃ©', included: true },
         { name: 'Support prioritaire', included: true },
       ],
-      cta: 'Passer Ã  Premium'
+      cta: 'Passer ÃƒÂ  Premium'
     },
     {
       id: 'family',
       name: 'Famille',
       description: 'Pour toute la famille',
       price: billingPeriod === 'monthly' ? 4.99 : 49.90,
-      priceLabel: billingPeriod === 'monthly' ? '4,99 â‚¬/mois' : '49,90 â‚¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '4,99 Ã¢â€šÂ¬/mois' : '49,90 Ã¢â€šÂ¬/an',
       color: 'purple',
       icon: <Users className="w-6 h-6" />,
       features: [
@@ -93,8 +93,8 @@ const PricingPage: React.FC = () => {
         { name: 'Partage de favoris', included: true },
         { name: 'Statistiques familiales', included: true },
         { name: 'Gestion des allergies', included: true },
-        { name: 'Listes de courses partagées', included: true },
-        { name: 'Défis famille', included: true },
+        { name: 'Listes de courses partagÃ©es', included: true },
+        { name: 'DÃ©fis famille', included: true },
         { name: 'Support VIP', included: true },
       ],
       cta: 'Choisir Famille'
@@ -104,12 +104,12 @@ const PricingPage: React.FC = () => {
   const handleSelectPlan = async (plan: 'premium' | 'family') => {
     try {
       setLoadingPlan(plan);
-      // Crée une session de paiement (via backend Render)
+      // CrÃ©e une session de paiement (via backend Render)
       const { url } = await paymentService.createCheckout(plan);
       if (url) window.location.href = url;
     } catch (err) {
       console.error('[checkout] error:', err);
-      alert("Impossible de créer la session de paiement. Réessaie plus tard.");
+      alert("Impossible de crÃ©er la session de paiement. RÃ©essaie plus tard.");
     } finally {
       setLoadingPlan(null);
     }
@@ -117,20 +117,20 @@ const PricingPage: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Puis-je changer de plan Ã  tout moment ?',
-      answer: 'Oui ! Vous pouvez passer Ã  un plan supérieur Ã  tout moment. Le changement est effectif immédiatement et la facturation est au prorata.'
+      question: 'Puis-je changer de plan ÃƒÂ  tout moment ?',
+      answer: 'Oui ! Vous pouvez passer ÃƒÂ  un plan supÃ©rieur ÃƒÂ  tout moment. Le changement est effectif immÃ©diatement et la facturation est au prorata.'
     },
     {
-      question: "Comment fonctionne la période d'essai ?",
-      answer: "Les nouveaux utilisateurs Premium ont 7 jours d'essai gratuit. Aucun paiement n'est prélevé pendant cette période."
+      question: "Comment fonctionne la pÃ©riode d'essai ?",
+      answer: "Les nouveaux utilisateurs Premium ont 7 jours d'essai gratuit. Aucun paiement n'est prÃ©levÃ© pendant cette pÃ©riode."
     },
     {
       question: 'Puis-je annuler mon abonnement ?',
-      answer: "Oui, vous pouvez annuler Ã  tout moment depuis votre profil. Vous conservez l'accès jusqu'Ã  la fin de la période en cours."
+      answer: "Oui, vous pouvez annuler ÃƒÂ  tout moment depuis votre profil. Vous conservez l'accÃ¨s jusqu'ÃƒÂ  la fin de la pÃ©riode en cours."
     },
     {
-      question: 'Mes données sont-elles sécurisées ?',
-      answer: 'Absolument ! Chiffrement de niveau bancaire et respect strict du RGPD. Vos données ne sont jamais revendues.'
+      question: 'Mes donnÃ©es sont-elles sÃ©curisÃ©es ?',
+      answer: 'Absolument ! Chiffrement de niveau bancaire et respect strict du RGPD. Vos donnÃ©es ne sont jamais revendues.'
     }
   ];
 
@@ -144,7 +144,7 @@ const PricingPage: React.FC = () => {
               Choisissez votre plan ECOLOJIA
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Accédez Ã  toutes les fonctionnalités pour une consommation plus consciente
+              AccÃ©dez ÃƒÂ  toutes les fonctionnalitÃ©s pour une consommation plus consciente
             </p>
           </motion.div>
 
@@ -173,7 +173,7 @@ const PricingPage: React.FC = () => {
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-[#7DDE4A]" />
-              <span>Paiement sécurisé</span>
+              <span>Paiement sÃ©curisÃ©</span>
             </div>
             <div className="flex items-center gap-2">
               <Gift className="w-5 h-5 text-[#7DDE4A]" />
@@ -181,7 +181,7 @@ const PricingPage: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Lock className="w-5 h-5 text-[#7DDE4A]" />
-              <span>Données protégées RGPD</span>
+              <span>DonnÃ©es protÃ©gÃ©es RGPD</span>
             </div>
           </div>
         </div>
@@ -205,7 +205,7 @@ const PricingPage: React.FC = () => {
               )}
 
               <div className="p-8">
-                {/* En-tête */}
+                {/* En-tÃªte */}
                 <div className="text-center mb-8">
                   <div
                     className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
@@ -224,11 +224,11 @@ const PricingPage: React.FC = () => {
 
                   <div className="text-4xl font-bold text-[#3B3B3B]">{plan.priceLabel}</div>
                   {plan.price > 0 && billingPeriod === 'yearly' && (
-                    <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} â‚¬/mois</p>
+                    <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} Ã¢â€šÂ¬/mois</p>
                   )}
                 </div>
 
-                {/* Fonctionnalités */}
+                {/* FonctionnalitÃ©s */}
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
@@ -274,7 +274,7 @@ const PricingPage: React.FC = () => {
 
       {/* FAQ */}
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">Questions fréquentes</h2>
+        <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">Questions frÃ©quentes</h2>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
@@ -310,9 +310,9 @@ const PricingPage: React.FC = () => {
       {/* CTA final */}
       <div className="bg-gradient-to-r from-[#7DDE4A] to-[#6bc93a] py-16">
         <div className="max-w-4xl mx-auto px-4 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Prêt Ã  améliorer votre consommation ?</h2>
+          <h2 className="text-3xl font-bold mb-4">PrÃªt ÃƒÂ  amÃ©liorer votre consommation ?</h2>
           <p className="text-xl mb-8 text-white/90">
-            Rejoignez des milliers d'utilisateurs qui font des choix plus éclairés
+            Rejoignez des milliers d'utilisateurs qui font des choix plus Ã©clairÃ©s
           </p>
           <button
             onClick={() => handleSelectPlan('premium')}
@@ -321,7 +321,7 @@ const PricingPage: React.FC = () => {
             <Zap className="w-5 h-5" />
             Commencer l'essai gratuit
           </button>
-          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise â€¢ Annulation Ã  tout moment</p>
+          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise Ã¢â‚¬Â¢ Annulation ÃƒÂ  tout moment</p>
         </div>
       </div>
     </div>

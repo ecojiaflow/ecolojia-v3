@@ -6,7 +6,7 @@ class OpenFoodFactsService {
   
   static async getProduct(barcode) {
     try {
-      console.log(`ðŸ” Recherche OpenFoodFacts: ${barcode}`);
+      console.log(`Ã°Å¸â€Â Recherche OpenFoodFacts: ${barcode}`);
       
       const response = await axios.get(
         `${this.BASE_URL}/${barcode}.json`,
@@ -55,7 +55,7 @@ class OpenFoodFactsService {
         };
       }
 
-      console.log(`âŒ Produit non trouve dans OpenFoodFacts: ${barcode}`);
+      console.log(`Ã¢ÂÅ’ Produit non trouve dans OpenFoodFacts: ${barcode}`);
       return null;
 
     } catch (error) {

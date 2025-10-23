@@ -42,7 +42,7 @@
 
                                   ],
                      "chat_context":  {
-                                          "error":  "Analyse limitée"
+                                          "error":  "Analyse limitÃ©e"
                                       },
                      "differentiation":  {
 
@@ -57,8 +57,8 @@
                               }
                  },
     "disclaimers":  [
-                        "✅ ROUTE DE TEST - Tous niveaux de confiance acceptés",
-                        "Information éducative - ne remplace pas avis médical",
-                        "Basé sur données publiques sous licence ODbL"
+                        "âœ… ROUTE DE TEST - Tous niveaux de confiance acceptÃ©s",
+                        "Information Ã©ducative - ne remplace pas avis mÃ©dical",
+                        "BasÃ© sur donnÃ©es publiques sous licence ODbL"
                     ]
 }

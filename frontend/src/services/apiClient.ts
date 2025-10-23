@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/apiClient.ts
+// PATH: frontend/src/services/apiClient.ts
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { API_BASE, ENV } from "../env";
 

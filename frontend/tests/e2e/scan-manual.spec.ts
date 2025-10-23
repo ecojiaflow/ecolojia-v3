@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 import fs from "fs/promises";
 import path from "path";
 
-test("Flow manuel: Scan -> Analyse -> Résultat", async ({ page }) => {
+test("Flow manuel: Scan -> Analyse -> RÃ©sultat", async ({ page }) => {
   const payload = JSON.parse(
     await fs.readFile(path.join(process.cwd(), "tests/fixtures/analysis.sample.json"), "utf-8")
   );
@@ -23,8 +23,8 @@ test("Flow manuel: Scan -> Analyse -> Résultat", async ({ page }) => {
   await page.getByRole("button", { name: "Saisie manuelle" }).click();
 
   await page.getByLabel("Nom du produit").fill("Yaourt nature");
-  await page.getByLabel("Catégorie").selectOption("food");
-  await page.getByLabel("Ingrédients (séparés par virgules)").fill("lait, ferments lactiques");
+  await page.getByLabel("CatÃ©gorie").selectOption("food");
+  await page.getByLabel("IngrÃ©dients (sÃ©parÃ©s par virgules)").fill("lait, ferments lactiques");
   await page.getByRole("button", { name: "Analyser" }).click();
 
   await expect(page).toHaveURL(/.*result/);

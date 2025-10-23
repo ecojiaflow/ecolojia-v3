@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { productService } from '../services/api';
 
 const SimilarProductsCarousel: React.FC<{ productId: string }> = ({ productId }) => {

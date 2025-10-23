@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+// PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
 import axios from 'axios';
 import { AdminStats, RecentProduct, ImportLog, ImportProgress, AdminApiResponse } from '../types/admin';
 

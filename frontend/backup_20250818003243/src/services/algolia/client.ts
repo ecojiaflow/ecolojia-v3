@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/algolia/client.ts
+// PATH: frontend/src/services/algolia/client.ts
 import algoliasearch from 'algoliasearch';
 
 // Configuration Algolia avec les BONNES cles

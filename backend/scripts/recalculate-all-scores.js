@@ -1,4 +1,4 @@
-﻿// backend/scripts/recalculate-all-scores.js
+// backend/scripts/recalculate-all-scores.js
 /**
  * Script de migration pour recalculer tous les scores avec la nouvelle version
  * Usage: node scripts/recalculate-all-scores.js

@@ -27,7 +27,7 @@ export interface AlgoliaHit {
 }
 
 export function normalizeAlgoliaProduct(hit: AlgoliaHit): Product {
-  console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â Debug Algolia hit:', {
+  console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â Debug Algolia hit:', {
     objectID: hit.objectID,
     title: hit.title,
     image_url: hit.image_url,
@@ -48,7 +48,7 @@ export function normalizeAlgoliaProduct(hit: AlgoliaHit): Product {
       new URL(trimmed);
       return trimmed;
     } catch {
-      console.warn(`aƒâ€¦‚Â¡ƒâ€š‚Â ƒÂ¯ƒâ€š‚Â¸ƒâ€š‚Â URL invalide pour ${hit.title}:`, trimmed);
+      console.warn(`aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â URL invalide pour ${hit.title}:`, trimmed);
       return undefined;
     }
   })();

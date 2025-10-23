@@ -151,11 +151,11 @@ export class ErrorHandler {
       
       // Erreurs de quota
       'QUOTA_EXCEEDED': 'Vous avez atteint votre limite de scans pour ce mois.',
-      'AI_QUOTA_EXCEEDED': 'Vous avez atteint votre limite de questions Â  l\'I?.',
+      'AI_QUOTA_EXCEEDED': 'Vous avez atteint votre limite de questions Ã‚Â  l\'I?.',
       
       // Erreurs d'authentification
       'INVALID_CREDENTIALS': 'Email ou mot de passe incorrect.',
-      'EMAIL_ALREADY_EXISTS': 'Un compte existe dejÂ  avec cet email.',
+      'EMAIL_ALREADY_EXISTS': 'Un compte existe dejÃ‚Â  avec cet email.',
       'WEAK_PASSWORD': 'Le mot de passe doit contenir au moins 8 caracteres.',
       'INVALID_TOKEN': 'Votre session ? expire. Veuillez vous reconnecter.',
       
@@ -177,7 +177,7 @@ export class ErrorHandler {
   }
 
   /**
-   * Affiche une notification Â  l'utilisateur
+   * Affiche une notification Ã‚Â  l'utilisateur
    */
   private showUserNotification(error: AppError) {
     const variant = this.getToastVariant(error.code);
@@ -215,7 +215,7 @@ export class ErrorHandler {
       'UNAUTHORIZED': 'Session expiree',
       'FORBIDDEN': 'Acces refuse',
       'QUOTA_EXCEEDED': 'Limite atteinte',
-      'PAYMENT_FAILED': 'â€°chec du paiement',
+      'PAYMENT_FAILED': 'Ã¢â‚¬Â°chec du paiement',
       'SERVICE_UNAVAILABLE': 'Service indisponible'
     };
     

@@ -3,7 +3,7 @@
 // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query'; // âÃ…â€œââ‚¬Â¦ Correction ici
+import { useQuery } from '@tanstack/react-query'; // Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ Correction ici
 import {
   AlertTriangle,
   Droplet,
@@ -171,7 +171,7 @@ const DetergentAnalysisPage: React.FC = () => {
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message="Erreur lors du chargement du produit" />;
-  if (!product || !analysis) return <ErrorMessage message="Produit non trouvé" />;
+  if (!product || !analysis) return <ErrorMessage message="Produit non trouvÃ©" />;
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -191,7 +191,7 @@ const DetergentAnalysisPage: React.FC = () => {
             <div className="flex items-center gap-4 mt-2">
               <span className="text-sm text-gray-500">Code-barres: {product.barcode}</span>
               <span className="text-sm text-gray-500">
-                {analysis.analysis.totalIngredients} ingrédients
+                {analysis.analysis.totalIngredients} ingrÃ©dients
               </span>
             </div>
           </div>
@@ -222,7 +222,7 @@ const DetergentAnalysisPage: React.FC = () => {
                 {warning.details && (
                   <ul className="mt-2 space-y-1">
                     {warning.details.map((detail, idx) => (
-                      <li key={idx} className="text-sm text-gray-600">ââ‚¬Ã‚Â¢ {detail}</li>
+                      <li key={idx} className="text-sm text-gray-600">Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ {detail}</li>
                     ))}
                   </ul>
                 )}
@@ -267,7 +267,7 @@ const DetergentAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.ecological)}`}>
                     <Leaf className={`w-8 h-8 ${getScoreColor(analysis.scores.ecological)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">ÃƒÆ’ââ‚¬Â°cologique</p>
+                  <p className="mt-2 text-sm font-medium">ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°cologique</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.ecological)}`}>
                     {analysis.scores.ecological}%
                   </p>
@@ -277,7 +277,7 @@ const DetergentAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.efficiency)}`}>
                     <Droplets className={`w-8 h-8 ${getScoreColor(analysis.scores.efficiency)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">Efficacité</p>
+                  <p className="mt-2 text-sm font-medium">EfficacitÃ©</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.efficiency)}`}>
                     {analysis.scores.efficiency}%
                   </p>
@@ -287,7 +287,7 @@ const DetergentAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.safety)}`}>
                     <Shield className={`w-8 h-8 ${getScoreColor(analysis.scores.safety)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">Sécurité</p>
+                  <p className="mt-2 text-sm font-medium">SÃ©curitÃ©</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.safety)}`}>
                     {analysis.scores.safety}%
                   </p>
@@ -319,16 +319,16 @@ const DetergentAnalysisPage: React.FC = () => {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden px-6 pb-6"
             >
-              {/* Biodégradabilité */}
+              {/* BiodÃ©gradabilitÃ© */}
               <div className="mt-4">
-                <h3 className="font-semibold text-gray-900 mb-3">Biodégradabilité</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">BiodÃ©gradabilitÃ©</h3>
                 <div className={`p-4 rounded-lg ${getRatingBgColor(analysis.details.biodegradability.rating)}`}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-lg font-bold">{analysis.details.biodegradability.percentage}%</span>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRatingColor(analysis.details.biodegradability.rating)}`}>
                       {analysis.details.biodegradability.rating === 'excellent' ? 'Excellent' :
                        analysis.details.biodegradability.rating === 'good' ? 'Bon' :
-                       analysis.details.biodegradability.rating === 'moderate' ? 'Modéré' : 'Faible'}
+                       analysis.details.biodegradability.rating === 'moderate' ? 'ModÃ©rÃ©' : 'Faible'}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
@@ -348,9 +348,9 @@ const DetergentAnalysisPage: React.FC = () => {
                       {analysis.details.cdv.value.toLocaleString()} {analysis.details.cdv.unit}
                     </span>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRatingColor(analysis.details.cdv.rating)}`}>
-                      {analysis.details.cdv.rating === 'excellent' ? 'Très faible' :
+                      {analysis.details.cdv.rating === 'excellent' ? 'TrÃ¨s faible' :
                        analysis.details.cdv.rating === 'good' ? 'Faible' :
-                       analysis.details.cdv.rating === 'moderate' ? 'Modéré' : 'ÃƒÆ’ââ‚¬Â°levé'}
+                       analysis.details.cdv.rating === 'moderate' ? 'ModÃ©rÃ©' : 'ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°levÃ©'}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
@@ -371,7 +371,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     )}
                     <span className={`font-medium ${analysis.details.phosphates.present ? 'text-orange-900' : 'text-green-900'}`}>
                       {analysis.details.phosphates.present 
-                        ? `Présence de phosphates (${analysis.details.phosphates.percentage}%)`
+                        ? `PrÃ©sence de phosphates (${analysis.details.phosphates.percentage}%)`
                         : 'Sans phosphates'}
                     </span>
                   </div>
@@ -381,7 +381,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     </p>
                   )}
                   <p className="text-sm text-gray-600 mt-1">
-                    Conformité EU: {analysis.details.phosphates.euCompliant ? 'âÃ…â€œââ‚¬Å“ Conforme' : 'âÃ…â€œââ‚¬â€ Non conforme'}
+                    ConformitÃ© EU: {analysis.details.phosphates.euCompliant ? 'Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã…â€œ Conforme' : 'Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã¢â‚¬Â Non conforme'}
                   </p>
                 </div>
               </div>
@@ -390,7 +390,7 @@ const DetergentAnalysisPage: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      {/* COV (Composés Organiques Volatils) */}
+      {/* COV (ComposÃ©s Organiques Volatils) */}
       {analysis.details.voc.percentage > 0 && (
         <div className="bg-white rounded-lg shadow-sm">
           <button
@@ -399,7 +399,7 @@ const DetergentAnalysisPage: React.FC = () => {
           >
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Wind className="w-5 h-5 text-purple-500" />
-              Composés Organiques Volatils (COV)
+              ComposÃ©s Organiques Volatils (COV)
             </h2>
             {expandedSections.has('voc') ? <ChevronUp /> : <ChevronDown />}
           </button>
@@ -429,7 +429,7 @@ const DetergentAnalysisPage: React.FC = () => {
                     <div className="mt-3 space-y-1">
                       {analysis.details.voc.components.map((comp, idx) => (
                         <div key={idx} className="text-sm text-gray-600">
-                          ââ‚¬Ã‚Â¢ {comp.ingredient} ({comp.percentage}%)
+                          Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ {comp.ingredient} ({comp.percentage}%)
                         </div>
                       ))}
                     </div>
@@ -470,15 +470,15 @@ const DetergentAnalysisPage: React.FC = () => {
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{irritant.ingredient}</p>
                           <p className="text-sm text-gray-600 mt-1">
-                            Type: {irritant.type} ââ‚¬Ã‚Â¢ Sévérité: {
-                              irritant.severity === 'high' ? 'ÃƒÆ’ââ‚¬Â°levée' :
-                              irritant.severity === 'moderate' ? 'Modérée' : 'Faible'
+                            Type: {irritant.type} Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ SÃ©vÃ©ritÃ©: {
+                              irritant.severity === 'high' ? 'ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°levÃ©e' :
+                              irritant.severity === 'moderate' ? 'ModÃ©rÃ©e' : 'Faible'
                             }
                           </p>
                           {irritant.hazards.length > 0 && (
                             <div className="mt-2 space-y-1">
                               {irritant.hazards.map((hazard, idx) => (
-                                <p key={idx} className="text-sm text-orange-700">ââ‚¬Ã‚Â¢ {hazard}</p>
+                                <p key={idx} className="text-sm text-orange-700">Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ {hazard}</p>
                               ))}
                             </div>
                           )}
@@ -528,7 +528,7 @@ const DetergentAnalysisPage: React.FC = () => {
           <div className="space-y-4">
             {analysis.certifications.eco.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">ÃƒÆ’ââ‚¬Â°cologiques</h3>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°cologiques</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.certifications.eco.map(cert => (
                     <span key={cert.id} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
@@ -541,7 +541,7 @@ const DetergentAnalysisPage: React.FC = () => {
             
             {analysis.certifications.safety.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Sécurité</h3>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">SÃ©curitÃ©</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.certifications.safety.map(cert => (
                     <span key={cert.id} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">

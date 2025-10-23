@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 - ChatHistory Model ===
+// === ECOLOJIA V3 - ChatHistory Model ===
 const mongoose = require('mongoose');
 
 const chatHistorySchema = new mongoose.Schema({

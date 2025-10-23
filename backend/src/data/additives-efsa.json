@@ -5,41 +5,41 @@
   "additives": [
     {
       "e_number": "E471",
-      "name": "Mono- et diglycérides d'acides gras",
-      "common_names": ["mono et diglycérides", "émulsifiant", "e471"],
-      "function": "Ã‰mulsifiant",
+      "name": "Mono- et diglycÃ©rides d'acides gras",
+      "common_names": ["mono et diglycÃ©rides", "Ã©mulsifiant", "e471"],
+      "function": "Ãƒâ€°mulsifiant",
       "efsa_assessment": {
-        "status": "Autorisé",
+        "status": "AutorisÃ©",
         "risk_level": "medium",
         "concerns": ["Impact microbiote", "Inflammation intestinale"],
         "assessment_date": "2023-11-20",
         "source_url": "https://www.efsa.europa.eu/en/efsajournal/pub/7045"
       },
-      "microbiome_impact": "Peut altérer composition microbiote intestinal",
+      "microbiome_impact": "Peut altÃ©rer composition microbiote intestinal",
       "microbiome_severity": "moderate"
     },
     {
       "e_number": "E472e", 
-      "name": "Esters mono- et diacétyltartriques",
-      "common_names": ["e472e", "émulsifiant tartrique"],
-      "function": "Ã‰mulsifiant", 
+      "name": "Esters mono- et diacÃ©tyltartriques",
+      "common_names": ["e472e", "Ã©mulsifiant tartrique"],
+      "function": "Ãƒâ€°mulsifiant", 
       "efsa_assessment": {
-        "status": "Autorisé",
+        "status": "AutorisÃ©",
         "risk_level": "medium",
-        "concerns": ["Perturbation barrière intestinale"],
+        "concerns": ["Perturbation barriÃ¨re intestinale"],
         "assessment_date": "2023-09-15",
         "source_url": "https://www.efsa.europa.eu/en/efsajournal/pub/6892"
       },
-      "microbiome_impact": "Réduction diversité bactérienne",
+      "microbiome_impact": "RÃ©duction diversitÃ© bactÃ©rienne",
       "microbiome_severity": "moderate"
     },
     {
       "e_number": "E621",
       "name": "Glutamate monosodique",
       "common_names": ["glutamate", "msg", "e621"],
-      "function": "Exhausteur de goût",
+      "function": "Exhausteur de goÃ»t",
       "efsa_assessment": {
-        "status": "Autorisé avec DJA",
+        "status": "AutorisÃ© avec DJA",
         "risk_level": "low", 
         "concerns": [],
         "assessment_date": "2023-06-10",
@@ -52,15 +52,15 @@
       "e_number": "E951",
       "name": "Aspartame", 
       "common_names": ["aspartame", "e951"],
-      "function": "Ã‰dulcorant",
+      "function": "Ãƒâ€°dulcorant",
       "efsa_assessment": {
-        "status": "En réévaluation",
+        "status": "En rÃ©Ã©valuation",
         "risk_level": "high",
-        "concerns": ["Cancérogénicité possible", "Impact neurologique"],
+        "concerns": ["CancÃ©rogÃ©nicitÃ© possible", "Impact neurologique"],
         "assessment_date": "2024-01-08", 
         "source_url": "https://www.efsa.europa.eu/en/news/aspartame-safety-assessment"
       },
-      "microbiome_impact": "Altération équilibre glucidique",
+      "microbiome_impact": "AltÃ©ration Ã©quilibre glucidique",
       "microbiome_severity": "moderate"
     },
     {
@@ -69,9 +69,9 @@
       "common_names": ["tartrazine", "colorant jaune", "e102"],
       "function": "Colorant",
       "efsa_assessment": {
-        "status": "Autorisé avec restrictions",
+        "status": "AutorisÃ© avec restrictions",
         "risk_level": "medium",
-        "concerns": ["Hyperactivité enfants", "Réactions allergiques"],
+        "concerns": ["HyperactivitÃ© enfants", "RÃ©actions allergiques"],
         "assessment_date": "2023-08-25",
         "source_url": "https://www.efsa.europa.eu/en/efsajournal/pub/6754"
       },

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
+// PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
 import React, { useState } from 'react';
 import { RecentProduct } from '../../types/admin';
 import { Eye, Trash2, Check, X, ExternalLink, Calendar } from 'lucide-react';

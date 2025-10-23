@@ -37,7 +37,7 @@ interface Settings {
   };
 }
 
-// Composant Switch personnalisé
+// Composant Switch personnalisÃ©
 const Switch: React.FC<{
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -124,18 +124,18 @@ const SettingsPage: React.FC = () => {
       setSaving(true);
       await api.put(API_CONFIG.ENDPOINTS.USER.PREFERENCES, settings);
       
-      // Afficher une notification de succès
-      alert('Paramètres sauvegardés avec succès !');
+      // Afficher une notification de succÃ¨s
+      alert('ParamÃ¨tres sauvegardÃ©s avec succÃ¨s !');
     } catch (err) {
       console.error('Error saving settings:', err);
-      alert('Erreur lors de la sauvegarde des paramètres');
+      alert('Erreur lors de la sauvegarde des paramÃ¨tres');
     } finally {
       setSaving(false);
     }
   };
 
   const handleLogout = async () => {
-    if (window.confirm('ÃƒÆ’Ã…Â tes-vous sÃƒÆ’Ã‚Â»r de vouloir vous déconnecter ?')) {
+    if (window.confirm('ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â tes-vous sÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â»r de vouloir vous dÃ©connecter ?')) {
       await logout();
       navigate('/');
     }
@@ -151,7 +151,7 @@ const SettingsPage: React.FC = () => {
       await authService.changePassword(passwords.current, passwords.new);
       setShowPasswordModal(false);
       setPasswords({ current: '', new: '', confirm: '' });
-      alert('Mot de passe modifié avec succès !');
+      alert('Mot de passe modifiÃ© avec succÃ¨s !');
     } catch (err: any) {
       alert(err.message || 'Erreur lors du changement de mot de passe');
     }
@@ -175,7 +175,7 @@ const SettingsPage: React.FC = () => {
         { responseType: 'blob' }
       );
       
-      // Télécharger le fichier
+      // TÃ©lÃ©charger le fichier
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
@@ -185,7 +185,7 @@ const SettingsPage: React.FC = () => {
       link.remove();
     } catch (err) {
       console.error('Error exporting data:', err);
-      alert('Erreur lors de l\'export des données');
+      alert('Erreur lors de l\'export des donnÃ©es');
     }
   };
 
@@ -204,7 +204,7 @@ const SettingsPage: React.FC = () => {
       <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#7DDE4A] border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600">Chargement des paramètres...</p>
+          <p className="text-gray-600">Chargement des paramÃ¨tres...</p>
         </div>
       </div>
     );
@@ -215,8 +215,8 @@ const SettingsPage: React.FC = () => {
       {/* Header */}
       <div className="bg-white border-b border-[#DDE9DA]">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-[#3B3B3B]">Paramètres</h1>
-          <p className="text-gray-600 mt-1">Gérez vos préférences et la sécurité de votre compte</p>
+          <h1 className="text-3xl font-bold text-[#3B3B3B]">ParamÃ¨tres</h1>
+          <p className="text-gray-600 mt-1">GÃ©rez vos prÃ©fÃ©rences et la sÃ©curitÃ© de votre compte</p>
         </div>
       </div>
 
@@ -238,7 +238,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Notifications push</span>
-                <p className="text-sm text-gray-600 mt-1">Recevez des alertes sur vos produits scannés</p>
+                <p className="text-sm text-gray-600 mt-1">Recevez des alertes sur vos produits scannÃ©s</p>
               </div>
               <Switch
                 checked={settings.notifications.push}
@@ -248,8 +248,8 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Emails de mise ÃƒÆ’Ã‚Â  jour</span>
-                <p className="text-sm text-gray-600 mt-1">Nouvelles fonctionnalités et améliorations</p>
+                <span className="text-[#3B3B3B] font-medium">Emails de mise ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour</span>
+                <p className="text-sm text-gray-600 mt-1">Nouvelles fonctionnalitÃ©s et amÃ©liorations</p>
               </div>
               <Switch
                 checked={settings.notifications.email}
@@ -260,7 +260,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Rapport hebdomadaire</span>
-                <p className="text-sm text-gray-600 mt-1">Résumé de vos analyses et progrès</p>
+                <p className="text-sm text-gray-600 mt-1">RÃ©sumÃ© de vos analyses et progrÃ¨s</p>
               </div>
               <Switch
                 checked={settings.notifications.weeklyReport}
@@ -271,7 +271,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Alertes produits</span>
-                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises ÃƒÆ’Ã‚Â  jour</p>
+                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour</p>
               </div>
               <Switch
                 checked={settings.notifications.productAlerts}
@@ -297,7 +297,7 @@ const SettingsPage: React.FC = () => {
           
           <div className="p-6 space-y-4">
             <div>
-              <label className="block text-[#3B3B3B] font-medium mb-2">Thème</label>
+              <label className="block text-[#3B3B3B] font-medium mb-2">ThÃ¨me</label>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { value: 'light', label: 'Clair', icon: <Sun className="w-4 h-4" /> },
@@ -327,9 +327,9 @@ const SettingsPage: React.FC = () => {
                 onChange={(e) => updateSetting('appearance', 'language', e.target.value)}
                 className="w-full px-4 py-3 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
               >
-                <option value="fr">Français</option>
+                <option value="fr">FranÃ§ais</option>
                 <option value="en">English</option>
-                <option value="es">EspaÃƒÆ’Ã‚Â±ol</option>
+                <option value="es">EspaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±ol</option>
                 <option value="de">Deutsch</option>
               </select>
             </div>
@@ -337,7 +337,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Mode compact</span>
-                <p className="text-sm text-gray-600 mt-1">Affichage condensé pour plus d'informations</p>
+                <p className="text-sm text-gray-600 mt-1">Affichage condensÃ© pour plus d'informations</p>
               </div>
               <Switch
                 checked={settings.appearance.compactMode}
@@ -347,7 +347,7 @@ const SettingsPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Confidentialité */}
+        {/* ConfidentialitÃ© */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -357,7 +357,7 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 border-b border-[#DDE9DA]">
             <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
               <Shield className="w-5 h-5 mr-3 text-[#7DDE4A]" />
-              Confidentialité
+              ConfidentialitÃ©
             </h2>
           </div>
           
@@ -365,7 +365,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Partager les analyses anonymes</span>
-                <p className="text-sm text-gray-600 mt-1">Aidez ÃƒÆ’Ã‚Â  améliorer notre base de données</p>
+                <p className="text-sm text-gray-600 mt-1">Aidez ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  amÃ©liorer notre base de donnÃ©es</p>
               </div>
               <Switch
                 checked={settings.privacy.shareAnalytics}
@@ -375,8 +375,8 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Publicités personnalisées</span>
-                <p className="text-sm text-gray-600 mt-1">Afficher des publicités selon vos intérêts</p>
+                <span className="text-[#3B3B3B] font-medium">PublicitÃ©s personnalisÃ©es</span>
+                <p className="text-sm text-gray-600 mt-1">Afficher des publicitÃ©s selon vos intÃ©rÃªts</p>
               </div>
               <Switch
                 checked={settings.privacy.personalizedAds}
@@ -401,13 +401,13 @@ const SettingsPage: React.FC = () => {
                 className="flex items-center gap-2 text-[#7DDE4A] hover:text-[#6bc93a] font-medium"
               >
                 <Download className="w-4 h-4" />
-                Télécharger mes données (RGPD)
+                TÃ©lÃ©charger mes donnÃ©es (RGPD)
               </button>
             </div>
           </div>
         </motion.div>
 
-        {/* Sécurité */}
+        {/* SÃ©curitÃ© */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -417,18 +417,18 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 border-b border-[#DDE9DA]">
             <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
               <Lock className="w-5 h-5 mr-3 text-[#7DDE4A]" />
-              Sécurité
+              SÃ©curitÃ©
             </h2>
           </div>
           
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between p-4 bg-[#E9F8DF] rounded-lg">
               <div>
-                <h4 className="font-medium text-[#3B3B3B]">Authentification ÃƒÆ’Ã‚Â  deux facteurs</h4>
+                <h4 className="font-medium text-[#3B3B3B]">Authentification ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  deux facteurs</h4>
                 <p className="text-sm text-gray-600 mt-1">
                   {settings.security.twoFactorEnabled 
-                    ? 'Votre compte est protégé par 2FA'
-                    : 'Ajoutez une couche de sécurité supplémentaire'
+                    ? 'Votre compte est protÃ©gÃ© par 2FA'
+                    : 'Ajoutez une couche de sÃ©curitÃ© supplÃ©mentaire'
                   }
                 </p>
               </div>
@@ -437,7 +437,7 @@ const SettingsPage: React.FC = () => {
                   ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   : 'bg-[#7DDE4A] text-white hover:bg-[#6bc93a]'
               }`}>
-                {settings.security.twoFactorEnabled ? 'Désactiver' : 'Activer'}
+                {settings.security.twoFactorEnabled ? 'DÃ©sactiver' : 'Activer'}
               </button>
             </div>
             
@@ -475,7 +475,7 @@ const SettingsPage: React.FC = () => {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all"
               >
                 <LogOut className="w-4 h-4" />
-                Se déconnecter
+                Se dÃ©connecter
               </button>
               
               <button
@@ -513,7 +513,7 @@ const SettingsPage: React.FC = () => {
                   <p className="text-gray-600">
                     {user.tier === 'free' 
                       ? `${user.quotas?.scansUsed || 0} / ${user.quotas?.scansLimit || 30} analyses ce mois`
-                      : 'Analyses illimitées'
+                      : 'Analyses illimitÃ©es'
                     }
                   </p>
                 </div>
@@ -527,7 +527,7 @@ const SettingsPage: React.FC = () => {
                   </button>
                 ) : (
                   <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all">
-                    Gérer l'abonnement
+                    GÃ©rer l'abonnement
                   </button>
                 )}
               </div>
@@ -535,7 +535,7 @@ const SettingsPage: React.FC = () => {
               {user.tier !== 'free' && (
                 <div className="space-y-2 text-sm text-gray-600">
                   <p>Prochaine facturation : 1er du mois prochain</p>
-                  <p>Méthode de paiement : ââ‚¬Ã‚Â¢ââ‚¬Ã‚Â¢ââ‚¬Ã‚Â¢ââ‚¬Ã‚Â¢ 4242</p>
+                  <p>MÃ©thode de paiement : Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ 4242</p>
                 </div>
               )}
             </div>
@@ -681,17 +681,17 @@ const SettingsPage: React.FC = () => {
                 Supprimer votre compte ?
               </h3>
               <p className="text-gray-600">
-                Cette action est irréversible. Toutes vos données seront définitivement supprimées.
+                Cette action est irrÃ©versible. Toutes vos donnÃ©es seront dÃ©finitivement supprimÃ©es.
               </p>
             </div>
             
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-red-800 mb-2">Vous allez perdre :</h4>
               <ul className="text-sm text-red-700 space-y-1">
-                <li>ââ‚¬Ã‚Â¢ Toutes vos analyses de produits</li>
-                <li>ââ‚¬Ã‚Â¢ Vos favoris et listes personnalisées</li>
-                <li>ââ‚¬Ã‚Â¢ Votre historique et statistiques</li>
-                <li>ââ‚¬Ã‚Â¢ Votre abonnement actif</li>
+                <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Toutes vos analyses de produits</li>
+                <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Vos favoris et listes personnalisÃ©es</li>
+                <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Votre historique et statistiques</li>
+                <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Votre abonnement actif</li>
               </ul>
             </div>
             
@@ -706,7 +706,7 @@ const SettingsPage: React.FC = () => {
                 onClick={handleDeleteAccount}
                 className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
               >
-                Supprimer définitivement
+                Supprimer dÃ©finitivement
               </button>
             </div>
           </motion.div>

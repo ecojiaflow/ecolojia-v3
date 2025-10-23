@@ -37,12 +37,12 @@ class WebhookService {
     }
   }
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
   // IDEMPOTENCE
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
   /**
-   * Verifie si un webhook a dej  ete traite
+   * Verifie si un webhook a dejÂ  ete traite
    */
   async checkIdempotency(eventId) {
     // Verifier d'abord dans Redis (cache rapide)
@@ -91,9 +91,9 @@ class WebhookService {
     });
   }
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
   // EMAILS TRANSACTIONNELS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
   /**
    * Email de bienvenue Premium
@@ -105,7 +105,7 @@ class WebhookService {
       await this.emailTransporter.sendMail({
         from: '"ECOLOJIA" <premium@ecolojia.app>',
         to: user.email,
-        subject: 'ðŸŽ‰ Bienvenue dans ECOLOJIA Premium !',
+        subject: 'Ã°Å¸Å½â€° Bienvenue dans ECOLOJIA Premium !',
         html: `
           <!DOCTYPE html>
           <html>
@@ -123,18 +123,18 @@ class WebhookService {
           <body>
             <div class="container">
               <div class="header">
-                <h1>Bienvenue dans ECOLOJIA Premium ! ðŸŒ±</h1>
+                <h1>Bienvenue dans ECOLOJIA Premium ! Ã°Å¸Å’Â±</h1>
                 <p>Felicitations ${user.profile?.firstName || 'Champion'}, vous faites maintenant partie de la communaute Premium !</p>
               </div>
               <div class="content">
                 <h2>Vos avantages Premium sont actifs :</h2>
                 <div class="features">
-                  <div class="feature">âœ… <strong>Analyses illimitees</strong> - Scannez autant de produits que vous voulez</div>
-                  <div class="feature">ðŸ¤– <strong>Chat IA illimite</strong> - Posez toutes vos questions nutritionnelles</div>
-                  <div class="feature">ðŸ“Š <strong>Exports de donnees</strong> - Telechargez vos analyses en PDF/CSV</div>
-                  <div class="feature">ðŸŽ¯ <strong>Dashboard avance</strong> - Suivez vos progres en detail</div>
-                  <div class="feature">ðŸš€ <strong>Sans publicite</strong> - Une experience fluide et agreable</div>
-                  <div class="feature">ðŸ’¬ <strong>Support prioritaire</strong> - Reponse en 24h garantie</div>
+                  <div class="feature">Ã¢Å“â€¦ <strong>Analyses illimitees</strong> - Scannez autant de produits que vous voulez</div>
+                  <div class="feature">Ã°Å¸Â¤â€“ <strong>Chat IA illimite</strong> - Posez toutes vos questions nutritionnelles</div>
+                  <div class="feature">Ã°Å¸â€œÅ  <strong>Exports de donnees</strong> - Telechargez vos analyses en PDF/CSV</div>
+                  <div class="feature">Ã°Å¸Å½Â¯ <strong>Dashboard avance</strong> - Suivez vos progres en detail</div>
+                  <div class="feature">Ã°Å¸Å¡â‚¬ <strong>Sans publicite</strong> - Une experience fluide et agreable</div>
+                  <div class="feature">Ã°Å¸â€™Â¬ <strong>Support prioritaire</strong> - Reponse en 24h garantie</div>
                 </div>
                 
                 <h3>Prochaines etapes :</h3>
@@ -144,13 +144,13 @@ class WebhookService {
                   <li>Explorez le chat IA pour des conseils personnalises</li>
                 </ol>
                 
-                <a href="${process.env.FRONTEND_URL}/dashboard" class="button">Acceder   mon Dashboard Premium</a>
+                <a href="${process.env.FRONTEND_URL}/dashboard" class="button">Acceder Â  mon Dashboard Premium</a>
                 
                 <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
                   Plan : ${user.subscription.plan === 'annual' ? 'Annuel' : 'Mensuel'}<br>
                   Prochain renouvellement : ${new Date(user.subscription.currentPeriodEnd).toLocaleDateString('fr-FR')}<br>
                   <br>
-                  Des questions ? Repondez simplement   cet email, notre equipe Premium est l  pour vous !
+                  Des questions ? Repondez simplement Â  cet email, notre equipe Premium est lÂ  pour vous !
                 </p>
               </div>
             </div>
@@ -177,7 +177,7 @@ class WebhookService {
       await this.emailTransporter.sendMail({
         from: '"ECOLOJIA" <support@ecolojia.app>',
         to: user.email,
-        subject: 'ðŸ˜¢ Confirmation de resiliation de votre abonnement',
+        subject: 'Ã°Å¸ËœÂ¢ Confirmation de resiliation de votre abonnement',
         html: `
           <!DOCTYPE html>
           <html>
@@ -195,33 +195,33 @@ class WebhookService {
             <div class="container">
               <div class="header">
                 <h1>Votre abonnement a ete resilie</h1>
-                <p>Nous sommes tristes de vous voir partir, ${user.profile?.firstName || 'vous'} ðŸ˜¢</p>
+                <p>Nous sommes tristes de vous voir partir, ${user.profile?.firstName || 'vous'} Ã°Å¸ËœÂ¢</p>
               </div>
               <div class="content">
                 <p>Votre demande de resiliation a bien ete prise en compte.</p>
                 
                 <div class="warning">
-                  <strong>âš ï¸ Important :</strong><br>
+                  <strong>Ã¢Å¡Â Ã¯Â¸Â Important :</strong><br>
                   Vous conservez l'acces Premium jusqu'au <strong>${endDate.toLocaleDateString('fr-FR')}</strong>.<br>
                   Apres cette date, votre compte repassera en version gratuite avec des fonctionnalites limitees.
                 </div>
                 
                 <h3>Ce que vous allez perdre :</h3>
                 <ul>
-                  <li>âŒ Analyses illimitees (limite   30/mois)</li>
-                  <li>âŒ Chat IA (plus disponible)</li>
-                  <li>âŒ Exports de donnees</li>
-                  <li>âŒ Dashboard avance</li>
-                  <li>âŒ Support prioritaire</li>
+                  <li>Ã¢ÂÅ’ Analyses illimitees (limite Â  30/mois)</li>
+                  <li>Ã¢ÂÅ’ Chat IA (plus disponible)</li>
+                  <li>Ã¢ÂÅ’ Exports de donnees</li>
+                  <li>Ã¢ÂÅ’ Dashboard avance</li>
+                  <li>Ã¢ÂÅ’ Support prioritaire</li>
                 </ul>
                 
                 <h3>Change d'avis ?</h3>
-                <p>Vous pouvez reactiver votre abonnement   tout moment avant le ${endDate.toLocaleDateString('fr-FR')} :</p>
+                <p>Vous pouvez reactiver votre abonnement Â  tout moment avant le ${endDate.toLocaleDateString('fr-FR')} :</p>
                 
                 <a href="${process.env.FRONTEND_URL}/subscription" class="button">Reactiver mon abonnement</a>
                 
                 <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
-                  Nous aimerions comprendre pourquoi vous partez. Pourriez-vous prendre 30 secondes pour repondre   ce court sondage ?<br>
+                  Nous aimerions comprendre pourquoi vous partez. Pourriez-vous prendre 30 secondes pour repondre Â  ce court sondage ?<br>
                   <a href="${process.env.FRONTEND_URL}/feedback/cancellation">Donner mon avis</a>
                 </p>
               </div>
@@ -247,7 +247,7 @@ class WebhookService {
       await this.emailTransporter.sendMail({
         from: '"ECOLOJIA" <billing@ecolojia.app>',
         to: user.email,
-        subject: 'âš ï¸ ‰chec de paiement - Action requise',
+        subject: 'Ã¢Å¡Â Ã¯Â¸Â â€°chec de paiement - Action requise',
         html: `
           <!DOCTYPE html>
           <html>
@@ -264,7 +264,7 @@ class WebhookService {
           <body>
             <div class="container">
               <div class="header">
-                <h1>‰chec de paiement</h1>
+                <h1>â€°chec de paiement</h1>
                 <p>Nous n'avons pas pu traiter votre paiement</p>
               </div>
               <div class="content">
@@ -273,7 +273,7 @@ class WebhookService {
                 <p>Le renouvellement de votre abonnement ECOLOJIA Premium a echoue.</p>
                 
                 <div class="alert">
-                  <strong>â° Vous avez 7 jours pour mettre   jour vos informations de paiement</strong><br>
+                  <strong>Ã¢ÂÂ° Vous avez 7 jours pour mettre Â  jour vos informations de paiement</strong><br>
                   Passe ce delai, votre compte sera automatiquement retrograde en version gratuite.
                 </div>
                 
@@ -286,12 +286,12 @@ class WebhookService {
                 </ul>
                 
                 <a href="${user.subscription?.updatePaymentUrl || process.env.FRONTEND_URL + '/subscription'}" class="button">
-                  Mettre   jour mes informations de paiement
+                  Mettre Â  jour mes informations de paiement
                 </a>
                 
                 <p style="margin-top: 30px; color: #6b7280; font-size: 14px;">
-                  Besoin d'aide ? Contactez-nous   support@ecolojia.app<br>
-                  Nous sommes l  pour vous aider !
+                  Besoin d'aide ? Contactez-nous Â  support@ecolojia.app<br>
+                  Nous sommes lÂ  pour vous aider !
                 </p>
               </div>
             </div>
@@ -343,14 +343,14 @@ class WebhookService {
                 
                 <div class="limits">
                   <strong>Vos nouvelles limites :</strong><br>
-                  â€¢ 30 analyses par mois<br>
-                  â€¢ Pas d'acces au chat IA<br>
-                  â€¢ Pas d'export de donnees<br>
-                  â€¢ Dashboard basique<br>
-                  â€¢ Publicites activees
+                  Ã¢â‚¬Â¢ 30 analyses par mois<br>
+                  Ã¢â‚¬Â¢ Pas d'acces au chat IA<br>
+                  Ã¢â‚¬Â¢ Pas d'export de donnees<br>
+                  Ã¢â‚¬Â¢ Dashboard basique<br>
+                  Ã¢â‚¬Â¢ Publicites activees
                 </div>
                 
-                <h3>Vous manquez dej  les avantages Premium ?</h3>
+                <h3>Vous manquez dejÂ  les avantages Premium ?</h3>
                 <p>Reabonnez-vous maintenant et beneficiez de <strong>-20% sur le premier mois</strong> avec le code <strong>COMEBACK20</strong> !</p>
                 
                 <a href="${process.env.FRONTEND_URL}/premium?promo=COMEBACK20" class="button">
@@ -374,9 +374,9 @@ class WebhookService {
     }
   }
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
   // LOGGING DES PAIEMENTS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
   /**
    * Log un paiement
@@ -416,12 +416,12 @@ class WebhookService {
     }
   }
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
   // MAINTENANCE
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
 
   /**
-   * Nettoyer les vieux logs (  executer via cron)
+   * Nettoyer les vieux logs (Â  executer via cron)
    */
   async cleanupOldLogs() {
     const thirtyDaysAgo = new Date();

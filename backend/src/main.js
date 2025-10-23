@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
 // ?? CHARGEMENT ENVIRONNEMENT (développement + production)

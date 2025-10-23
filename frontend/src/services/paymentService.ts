@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/paymentService.ts
+// PATH: frontend/src/services/paymentService.ts
 import api from './apiClient';
 
 export type Plan = 'basic' | 'pro';

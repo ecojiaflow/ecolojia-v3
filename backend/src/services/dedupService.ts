@@ -1,4 +1,4 @@
-﻿import stringSimilarity from 'string-similarity';
+import stringSimilarity from 'string-similarity';
 import Product from '../models/Product';
 
 export async function findDuplicateCandidate(name?: string, brand?: string) {

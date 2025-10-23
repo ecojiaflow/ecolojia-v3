@@ -18,8 +18,8 @@ export interface IUser extends Document {
   
   // Quotas
   quotas: {
-    analyses: number;      // -1 = illimité
-    aiQuestions: number;   // -1 = illimité
+    analyses: number;      // -1 = illimitÃ©
+    aiQuestions: number;   // -1 = illimitÃ©
     exports: number;       // nombre par mois
     apiCalls: number;      // nombre par mois
   };
@@ -44,7 +44,7 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   
-  // Méthodes
+  // MÃ©thodes
   checkQuota(quotaType: 'analyses' | 'aiQuestions' | 'exports' | 'apiCalls'): boolean;
   incrementUsage(usageType: 'analyses' | 'aiQuestions' | 'exports' | 'apiCalls'): Promise<void>;
   resetMonthlyUsage(): Promise<void>;
@@ -138,12 +138,12 @@ const UserSchema = new Schema<IUser>({
   timestamps: true
 });
 
-// Méthodes
+// MÃ©thodes
 UserSchema.methods.checkQuota = function(quotaType: keyof IUser['quotas']): boolean {
-  // Premium = illimité (-1)
+  // Premium = illimitÃ© (-1)
   if (this.quotas[quotaType] === -1) return true;
   
-  // Vérifier si l'usage actuel est inférieur au quota
+  // VÃ©rifier si l'usage actuel est infÃ©rieur au quota
   return this.usage[quotaType] < this.quotas[quotaType];
 };
 
@@ -165,12 +165,12 @@ UserSchema.methods.resetMonthlyUsage = async function(): Promise<void> {
   await this.save();
 };
 
-// Vérifier et réinitialiser l'usage mensuel si nécessaire
+// VÃ©rifier et rÃ©initialiser l'usage mensuel si nÃ©cessaire
 UserSchema.pre('save', function(next) {
   const now = new Date();
   const lastReset = new Date(this.usage.lastResetDate);
   
-  // Si on est dans un nouveau mois, réinitialiser
+  // Si on est dans un nouveau mois, rÃ©initialiser
   if (now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear()) {
     this.usage = {
       analyses: 0,

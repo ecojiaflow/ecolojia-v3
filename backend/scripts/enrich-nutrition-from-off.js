@@ -1,4 +1,4 @@
-﻿// backend/scripts/enrich-nutrition-from-off.js
+// backend/scripts/enrich-nutrition-from-off.js
 // Enrichissement nutrition depuis OpenFoodFacts API
 // Respecte rate limiting : 100 req/min
 

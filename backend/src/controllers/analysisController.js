@@ -1,4 +1,4 @@
-// backend/src/controllers/analysisController.js - Version corrigée UTF-8
+// backend/src/controllers/analysisController.js - Version corrigÃ©e UTF-8
 
 const Product = require('../models/Product');
 const scoreCalculator = require('../scorers/alimentaire');
@@ -29,7 +29,7 @@ class AnalysisController {
         }
       }
 
-      // Si produit trouvé en DB
+      // Si produit trouvÃ© en DB
       if (product) {
         analysisData = {
           name: product.name,
@@ -45,17 +45,17 @@ class AnalysisController {
           name: name || 'Produit inconnu',
           ingredients: ingredients || '',
           category: category || 'food'
-          // PAS de barcode dans analysisData pour éviter les erreurs
+          // PAS de barcode dans analysisData pour Ã©viter les erreurs
         };
       }
 
-      // Validation des données minimales
+      // Validation des donnÃ©es minimales
       if (!analysisData.ingredients || analysisData.ingredients.trim() === '') {
         return res.status(400).json({
           success: false,
           error: {
             code: 'MISSING_INGREDIENTS',
-            message: 'Les ingrédients sont requis pour l\'analyse'
+            message: 'Les ingrÃ©dients sont requis pour l\'analyse'
           }
         });
       }
@@ -70,7 +70,7 @@ class AnalysisController {
         time: analysisTime 
       });
 
-      // Réponse normalisée
+      // RÃ©ponse normalisÃ©e
       const response = {
         success: true,
         timestamp: new Date().toISOString(),
@@ -80,15 +80,15 @@ class AnalysisController {
           category: analysisData.category || 'food',
           name: analysisData.name,
           brand: analysisData.brand,
-          barcode: product?.barcode || undefined, // Seulement si trouvé en DB
+          barcode: product?.barcode || undefined, // Seulement si trouvÃ© en DB
           
-          // Scores normalisés
+          // Scores normalisÃ©s
           score: {
             value: analysis.globalScore || 0,
             label: this.getScoreLabel(analysis.globalScore || 0)
           },
           
-          // Détails spécifiques alimentaire
+          // DÃ©tails spÃ©cifiques alimentaire
           details: {
             nova: analysis.scores?.nova || null,
             novaLabel: analysis.details?.novaLabel || '',
@@ -102,7 +102,7 @@ class AnalysisController {
           highlights: this.extractHighlights(analysis),
           recommendations: this.getRecommendations(analysis),
           
-          // Données brutes pour debug
+          // DonnÃ©es brutes pour debug
           raw: {
             scores: analysis.scores,
             details: analysis.details,
@@ -134,7 +134,7 @@ class AnalysisController {
     }
   }
 
-  // Méthodes helper
+  // MÃ©thodes helper
   getScoreLabel(score) {
     if (score >= 80) return 'A';
     if (score >= 60) return 'B';
@@ -150,7 +150,7 @@ class AnalysisController {
       risks.push({
         code: 'ULTRA_PROCESSED',
         severity: 'high',
-        message: 'Produit ultra-transformé',
+        message: 'Produit ultra-transformÃ©',
         evidence: analysis.details?.novaReason ? [analysis.details.novaReason] : []
       });
     }
@@ -159,16 +159,16 @@ class AnalysisController {
       risks.push({
         code: 'POOR_NUTRITION',
         severity: 'medium',
-        message: 'Qualité nutritionnelle faible'
+        message: 'QualitÃ© nutritionnelle faible'
       });
     }
 
-    // Additifs controversés
+    // Additifs controversÃ©s
     if (analysis.details?.additives?.controversial?.length > 0) {
       risks.push({
         code: 'CONTROVERSIAL_ADDITIVES',
         severity: 'medium',
-        message: 'Contient des additifs controversés',
+        message: 'Contient des additifs controversÃ©s',
         evidence: analysis.details.additives.controversial.map(a => a.name || a.code)
       });
     }
@@ -180,15 +180,15 @@ class AnalysisController {
     const highlights = [];
     
     if (analysis.scores?.nova <= 2) {
-      highlights.push('✨ Peu ou pas transformé');
+      highlights.push('âœ¨ Peu ou pas transformÃ©');
     }
     
     if (analysis.scores?.nutriscore === 'A' || analysis.scores?.nutriscore === 'B') {
-      highlights.push('🥗 Bonne qualité nutritionnelle');
+      highlights.push('ðŸ¥— Bonne qualitÃ© nutritionnelle');
     }
 
     if (analysis.details?.additives?.total === 0) {
-      highlights.push('✅ Sans additifs');
+      highlights.push('âœ… Sans additifs');
     }
 
     return highlights;
@@ -198,15 +198,15 @@ class AnalysisController {
     const recommendations = [];
     
     if (analysis.scores?.nova >= 3) {
-      recommendations.push('Privilégier des alternatives moins transformées');
+      recommendations.push('PrivilÃ©gier des alternatives moins transformÃ©es');
     }
     
     if (analysis.details?.additives?.controversial?.length > 0) {
-      recommendations.push('Vérifier la présence d\'additifs controversés');
+      recommendations.push('VÃ©rifier la prÃ©sence d\'additifs controversÃ©s');
     }
 
     if (analysis.scores?.nutriscore === 'D' || analysis.scores?.nutriscore === 'E') {
-      recommendations.push('À consommer avec modération');
+      recommendations.push('Ã€ consommer avec modÃ©ration');
     }
 
     return recommendations;

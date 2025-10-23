@@ -6,7 +6,7 @@ const { Logger } = require('../utils/logger');
 
 const logger = new Logger('UltraProcessingRoutes');
 
-// ðŸ”Ž Liste simplifiee des procedes ultra-transformants connus
+// Ã°Å¸â€Å½ Liste simplifiee des procedes ultra-transformants connus
 const suspiciousKeywords = [
   'extrusion',
   'hydrogenation',
@@ -52,7 +52,7 @@ const suspiciousKeywords = [
 const eNumberPattern = /\bE\d{3,4}\b/gi;
 
 /**
- * ðŸ”¬ Analyse IA ultra-transformation
+ * Ã°Å¸â€Â¬ Analyse IA ultra-transformation
  */
 const detectUltraTransformation = (ingredients) => {
   const found = [];
@@ -106,7 +106,7 @@ const detectUltraTransformation = (ingredients) => {
   const recommendations = {
     minimal: "Excellent ! Ce produit semble peu ou pas transforme.",
     leger: "Produit legerement transforme, consommation occasionnelle recommandee.",
-    modere: "Produit transforme,   consommer avec moderation.",
+    modere: "Produit transforme, Â  consommer avec moderation.",
     eleve: "Produit hautement transforme, privilegier des alternatives plus naturelles.",
     severe: "Produit ultra-transforme, eviter la consommation reguliere."
   };
@@ -200,15 +200,15 @@ router.get('/additives', (req, res) => {
       'E321': 'BHT - Antioxydant, perturbateur endocrinien suspecte'
     },
     edulcorants: {
-      'E951': 'Aspartame - ‰dulcorant artificiel controverse',
-      'E952': 'Cyclamate - ‰dulcorant interdit aux USA',
-      'E954': 'Saccharine - ‰dulcorant artificiel',
-      'E955': 'Sucralose - ‰dulcorant artificiel'
+      'E951': 'Aspartame - â€°dulcorant artificiel controverse',
+      'E952': 'Cyclamate - â€°dulcorant interdit aux USA',
+      'E954': 'Saccharine - â€°dulcorant artificiel',
+      'E955': 'Sucralose - â€°dulcorant artificiel'
     },
     autres: {
       'E621': 'Glutamate monosodique - Exhausteur de gout',
       'E150d': 'Caramel au sulfite d\'ammonium - Colorant',
-      'E471': 'Mono- et diglycerides - ‰mulsifiant'
+      'E471': 'Mono- et diglycerides - â€°mulsifiant'
     }
   };
   

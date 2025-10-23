@@ -116,7 +116,7 @@ async function migrateUsers() {
 
           mongoUsers.push(mongoUser);
         } catch (error) {
-          console.error(chalk.red(`âŒ Erreur mapping utilisateur ${pgUser.email}:`), error.message);
+          console.error(chalk.red(`Ã¢ÂÅ’ Erreur mapping utilisateur ${pgUser.email}:`), error.message);
           stats.users.failed++;
         }
       }
@@ -128,15 +128,15 @@ async function migrateUsers() {
           stats.users.migrated += mongoUsers.length;
           spinner.text = `Migration utilisateurs: ${stats.users.migrated}/${stats.users.total}`;
         } catch (error) {
-          console.error(chalk.red('âŒ Erreur insertion batch utilisateurs:'), error.message);
+          console.error(chalk.red('Ã¢ÂÅ’ Erreur insertion batch utilisateurs:'), error.message);
           stats.users.failed += mongoUsers.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`âœ… Utilisateurs migres: ${stats.users.migrated}/${stats.users.total}`));
+    spinner.succeed(chalk.green(`Ã¢Å“â€¦ Utilisateurs migres: ${stats.users.migrated}/${stats.users.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('âŒ Erreur migration utilisateurs'));
+    spinner.fail(chalk.red('Ã¢ÂÅ’ Erreur migration utilisateurs'));
     console.error(error);
   }
 }
@@ -232,7 +232,7 @@ async function migrateProducts() {
 
           mongoProducts.push(mongoProduct);
         } catch (error) {
-          console.error(chalk.red(`âŒ Erreur mapping produit ${pgProduct.name}:`), error.message);
+          console.error(chalk.red(`Ã¢ÂÅ’ Erreur mapping produit ${pgProduct.name}:`), error.message);
           stats.products.failed++;
         }
       }
@@ -244,15 +244,15 @@ async function migrateProducts() {
           stats.products.migrated += mongoProducts.length;
           spinner.text = `Migration produits: ${stats.products.migrated}/${stats.products.total}`;
         } catch (error) {
-          console.error(chalk.red('âŒ Erreur insertion batch produits:'), error.message);
+          console.error(chalk.red('Ã¢ÂÅ’ Erreur insertion batch produits:'), error.message);
           stats.products.failed += mongoProducts.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`âœ… Produits migres: ${stats.products.migrated}/${stats.products.total}`));
+    spinner.succeed(chalk.green(`Ã¢Å“â€¦ Produits migres: ${stats.products.migrated}/${stats.products.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('âŒ Erreur migration produits'));
+    spinner.fail(chalk.red('Ã¢ÂÅ’ Erreur migration produits'));
     console.error(error);
   }
 }
@@ -311,7 +311,7 @@ async function migrateAnalyses() {
           const productId = productMapping[pgAnalysis.product_id];
           
           if (!userId) {
-            console.warn(chalk.yellow(`âš ï¸  User ID ${pgAnalysis.user_id} non trouve`));
+            console.warn(chalk.yellow(`Ã¢Å¡Â Ã¯Â¸Â  User ID ${pgAnalysis.user_id} non trouve`));
             stats.analyses.failed++;
             continue;
           }
@@ -361,7 +361,7 @@ async function migrateAnalyses() {
 
           mongoAnalyses.push(mongoAnalysis);
         } catch (error) {
-          console.error(chalk.red(`âŒ Erreur mapping analyse:`, error.message));
+          console.error(chalk.red(`Ã¢ÂÅ’ Erreur mapping analyse:`, error.message));
           stats.analyses.failed++;
         }
       }
@@ -373,15 +373,15 @@ async function migrateAnalyses() {
           stats.analyses.migrated += mongoAnalyses.length;
           spinner.text = `Migration analyses: ${stats.analyses.migrated}/${stats.analyses.total}`;
         } catch (error) {
-          console.error(chalk.red('âŒ Erreur insertion batch analyses:'), error.message);
+          console.error(chalk.red('Ã¢ÂÅ’ Erreur insertion batch analyses:'), error.message);
           stats.analyses.failed += mongoAnalyses.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`âœ… Analyses migrees: ${stats.analyses.migrated}/${stats.analyses.total}`));
+    spinner.succeed(chalk.green(`Ã¢Å“â€¦ Analyses migrees: ${stats.analyses.migrated}/${stats.analyses.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('âŒ Erreur migration analyses'));
+    spinner.fail(chalk.red('Ã¢ÂÅ’ Erreur migration analyses'));
     console.error(error);
   }
 }
@@ -436,7 +436,7 @@ async function migrateFavorites() {
           const productId = productMapping[pgFavorite.product_id];
           
           if (!userId) {
-            console.warn(chalk.yellow(`âš ï¸  User ID ${pgFavorite.user_id} non trouve`));
+            console.warn(chalk.yellow(`Ã¢Å¡Â Ã¯Â¸Â  User ID ${pgFavorite.user_id} non trouve`));
             stats.favorites.failed++;
             continue;
           }
@@ -469,7 +469,7 @@ async function migrateFavorites() {
 
           mongoFavorites.push(mongoFavorite);
         } catch (error) {
-          console.error(chalk.red(`âŒ Erreur mapping favori:`, error.message));
+          console.error(chalk.red(`Ã¢ÂÅ’ Erreur mapping favori:`, error.message));
           stats.favorites.failed++;
         }
       }
@@ -481,26 +481,26 @@ async function migrateFavorites() {
           stats.favorites.migrated += mongoFavorites.length;
           spinner.text = `Migration favoris: ${stats.favorites.migrated}/${stats.favorites.total}`;
         } catch (error) {
-          console.error(chalk.red('âŒ Erreur insertion batch favoris:'), error.message);
+          console.error(chalk.red('Ã¢ÂÅ’ Erreur insertion batch favoris:'), error.message);
           stats.favorites.failed += mongoFavorites.length;
         }
       }
     }
 
-    spinner.succeed(chalk.green(`âœ… Favoris migres: ${stats.favorites.migrated}/${stats.favorites.total}`));
+    spinner.succeed(chalk.green(`Ã¢Å“â€¦ Favoris migres: ${stats.favorites.migrated}/${stats.favorites.total}`));
   } catch (error) {
-    spinner.fail(chalk.red('âŒ Erreur migration favoris'));
+    spinner.fail(chalk.red('Ã¢ÂÅ’ Erreur migration favoris'));
     console.error(error);
   }
 }
 
 // Fonction principale de migration
 async function migrate() {
-  console.log(chalk.bold.cyan('\nðŸš€ ECOLOJIA - Migration PostgreSQL vers MongoDB\n'));
+  console.log(chalk.bold.cyan('\nÃ°Å¸Å¡â‚¬ ECOLOJIA - Migration PostgreSQL vers MongoDB\n'));
   
   try {
     // Connexion MongoDB
-    const mongoSpinner = createSpinner('Connexion   MongoDB...');
+    const mongoSpinner = createSpinner('Connexion Â  MongoDB...');
     mongoSpinner.start();
     
     await mongoose.connect(MONGODB_URI, {
@@ -508,17 +508,17 @@ async function migrate() {
       minPoolSize: 10
     });
     
-    mongoSpinner.succeed(chalk.green('âœ… MongoDB connecte'));
+    mongoSpinner.succeed(chalk.green('Ã¢Å“â€¦ MongoDB connecte'));
     
     // Test connexion PostgreSQL
     const pgSpinner = createSpinner('Test connexion PostgreSQL...');
     pgSpinner.start();
     
     const { rows } = await pgPool.query('SELECT COUNT(*) FROM users');
-    pgSpinner.succeed(chalk.green(`âœ… PostgreSQL connecte - ${rows[0].count} utilisateurs trouves`));
+    pgSpinner.succeed(chalk.green(`Ã¢Å“â€¦ PostgreSQL connecte - ${rows[0].count} utilisateurs trouves`));
     
     // Demander confirmation
-    console.log(chalk.yellow('\nâš ï¸  Cette migration va :'));
+    console.log(chalk.yellow('\nÃ¢Å¡Â Ã¯Â¸Â  Cette migration va :'));
     console.log(chalk.yellow('   - Migrer tous les utilisateurs'));
     console.log(chalk.yellow('   - Migrer tous les produits'));
     console.log(chalk.yellow('   - Migrer toutes les analyses'));
@@ -532,7 +532,7 @@ async function migrate() {
     await migrateFavorites();
     
     // Rapport final
-    console.log(chalk.bold.cyan('\nðŸ“Š RAPPORT DE MIGRATION\n'));
+    console.log(chalk.bold.cyan('\nÃ°Å¸â€œÅ  RAPPORT DE MIGRATION\n'));
     console.log(chalk.white('Utilisateurs :'), 
       chalk.green(`${stats.users.migrated} migres`), 
       chalk.red(`${stats.users.failed} echoues`));
@@ -555,10 +555,10 @@ async function migrate() {
       chalk.green(`${totalMigrated} entrees migrees`), 
       chalk.red(`${totalFailed} echecs`));
     
-    console.log(chalk.bold.green('\nâœ… Migration terminee avec succes !\n'));
+    console.log(chalk.bold.green('\nÃ¢Å“â€¦ Migration terminee avec succes !\n'));
     
   } catch (error) {
-    console.error(chalk.bold.red('\nâŒ ERREUR FATALE DE MIGRATION\n'));
+    console.error(chalk.bold.red('\nÃ¢ÂÅ’ ERREUR FATALE DE MIGRATION\n'));
     console.error(error);
     process.exit(1);
   } finally {

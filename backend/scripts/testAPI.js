@@ -1,4 +1,4 @@
-﻿const axios = require('axios');
+const axios = require('axios');
 
 async function testAPI() {
   const barcode = '3017620422003'; // Nutella

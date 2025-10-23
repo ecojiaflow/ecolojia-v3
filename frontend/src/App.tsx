@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -26,7 +26,6 @@ const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
-const OCRPage = lazy(() => import('./pages/OCRPage'));
 const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
 
 const App: React.FC = () => {
@@ -46,7 +45,8 @@ const App: React.FC = () => {
             <Route path="results" element={<ResultsPage />} />
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />
-            <Route path="ocr" element={<OCRPage />} />
+            {/* ✅ SUPPRIMÉ : Ancienne page OCR simple - Redirection vers scan */}
+            <Route path="ocr" element={<Navigate to="/scan" replace />} />
             <Route path="ocr-wizard" element={<OCRWizardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="multi-scan" element={<MultiScanPage />} />
@@ -79,5 +79,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-

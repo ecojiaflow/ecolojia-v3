@@ -36,7 +36,7 @@ export class BarcodeAnalyzer {
   ): Promise<BarcodeAnalysisResult> {
     const startTime = Date.now();
     
-    // Pour l'instant, analyse générique pour tous les produits
+    // Pour l'instant, analyse gÃ©nÃ©rique pour tous les produits
     return this.getGenericAnalysis(productData, category, startTime);
   }
 
@@ -44,28 +44,28 @@ export class BarcodeAnalyzer {
     const prefix = productData.barcode.substring(0, 2);
     
     let score = 50;
-    let riskFactors = ['Produit non trouvé en base de données'];
-    let recommendations = ['Vérifiez les informations sur l\'emballage'];
+    let riskFactors = ['Produit non trouvÃ© en base de donnÃ©es'];
+    let recommendations = ['VÃ©rifiez les informations sur l\'emballage'];
     
-    // Estimation basée sur la catégorie
+    // Estimation basÃ©e sur la catÃ©gorie
     switch (category) {
       case 'alimentaire':
         const novaGroup = this.estimateNovaFromPrefix(prefix);
         score = (5 - novaGroup) * 20;
-        riskFactors = [`Groupe NOVA estimé: ${novaGroup}`];
-        recommendations = ['Privilégiez les produits peu transformés'];
+        riskFactors = [`Groupe NOVA estimÃ©: ${novaGroup}`];
+        recommendations = ['PrivilÃ©giez les produits peu transformÃ©s'];
         break;
         
       case 'cosmetique':
         score = 60;
-        riskFactors = ['Composition INCI non analysée'];
-        recommendations = ['Vérifiez la liste des ingrédients'];
+        riskFactors = ['Composition INCI non analysÃ©e'];
+        recommendations = ['VÃ©rifiez la liste des ingrÃ©dients'];
         break;
         
       case 'detergent':
         score = 45;
-        riskFactors = ['Impact environnemental non évalué'];
-        recommendations = ['Choisissez des produits écolabellisés'];
+        riskFactors = ['Impact environnemental non Ã©valuÃ©'];
+        recommendations = ['Choisissez des produits Ã©colabellisÃ©s'];
         break;
     }
 
@@ -94,14 +94,14 @@ export class BarcodeAnalyzer {
     return 2;
   }
 
-  // Méthodes pour récupérer des produits (retournent null pour l'instant)
+  // MÃ©thodes pour rÃ©cupÃ©rer des produits (retournent null pour l'instant)
   static async getCosmeticProduct(barcode: string): Promise<ProductData | null> {
-    console.log(`🔍 Recherche cosmétique: ${barcode}`);
+    console.log(`ðŸ” Recherche cosmÃ©tique: ${barcode}`);
     return null;
   }
 
   static async getDetergentProduct(barcode: string): Promise<ProductData | null> {
-    console.log(`🔍 Recherche détergent: ${barcode}`);
+    console.log(`ðŸ” Recherche dÃ©tergent: ${barcode}`);
     return null;
   }
 }

@@ -16,17 +16,17 @@ const AboutPage: React.FC = () => {
             </Link>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-[#3B3B3B] mb-6">
-            ÃƒÆ’â‚¬ propos d'ECOLOJIA
+            ÃƒÆ’Ã†â€™Ã¢â€šÂ¬ propos d'ECOLOJIA
           </h1>
           <p className="text-xl text-[#3B3B3B]/80 max-w-3xl mx-auto leading-relaxed">
-            Votre assistant IA pour une consommation éclairée et responsable. 
+            Votre assistant IA pour une consommation Ã©clairÃ©e et responsable. 
             Analysez vos produits, comprenez leur impact et faites des choix conscients.
           </p>
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 mt-6 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
           >
-            âââ‚¬Â Ã‚Â Retour ÃƒÆ’Ã‚Â  l'accueil
+            Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â Retour ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'accueil
           </Link>
         </div>
       </section>
@@ -42,13 +42,13 @@ const AboutPage: React.FC = () => {
               </h2>
               <div className="space-y-4 text-[#3B3B3B]/80 text-lg leading-relaxed">
                 <p>
-                  <strong className="text-[#3B3B3B]">Démocratiser l'accès ÃƒÆ’Ã‚Â  une information fiable</strong> sur tous les produits du quotidien.
+                  <strong className="text-[#3B3B3B]">DÃ©mocratiser l'accÃ¨s ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  une information fiable</strong> sur tous les produits du quotidien.
                 </p>
                 <p>
-                  Nous croyons que chaque consommateur a le droit de savoir ce qu'il achète et consomme. ECOLOJIA rend cette information accessible ÃƒÆ’Ã‚Â  tous.
+                  Nous croyons que chaque consommateur a le droit de savoir ce qu'il achÃ¨te et consomme. ECOLOJIA rend cette information accessible ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tous.
                 </p>
                 <p>
-                  Grâce ÃƒÆ’Ã‚Â  notre intelligence artificielle avancée, nous analysons instantanément les produits alimentaires, cosmétiques et ménagers selon des critères scientifiques reconnus.
+                  GrÃ¢ce ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  notre intelligence artificielle avancÃ©e, nous analysons instantanÃ©ment les produits alimentaires, cosmÃ©tiques et mÃ©nagers selon des critÃ¨res scientifiques reconnus.
                 </p>
               </div>
             </div>
@@ -70,8 +70,8 @@ const AboutPage: React.FC = () => {
                     <span className="text-white font-bold">2</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#3B3B3B] mb-2">Analyse instantanée</h3>
-                    <p className="text-[#3B3B3B]/70">Notre IA calcule les scores santé, environnement et éthique</p>
+                    <h3 className="font-semibold text-[#3B3B3B] mb-2">Analyse instantanÃ©e</h3>
+                    <p className="text-[#3B3B3B]/70">Notre IA calcule les scores santÃ©, environnement et Ã©thique</p>
                   </div>
                 </div>
                 
@@ -81,7 +81,7 @@ const AboutPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-[#3B3B3B] mb-2">Alternatives saines</h3>
-                    <p className="text-[#3B3B3B]/70">Découvrez des produits similaires avec de meilleurs scores</p>
+                    <p className="text-[#3B3B3B]/70">DÃ©couvrez des produits similaires avec de meilleurs scores</p>
                   </div>
                 </div>
               </div>
@@ -109,7 +109,7 @@ const AboutPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Transparence</h3>
               <p className="text-[#3B3B3B]/70">
-                Sources vérifiées et méthodologie claire pour chaque analyse
+                Sources vÃ©rifiÃ©es et mÃ©thodologie claire pour chaque analyse
               </p>
             </div>
             
@@ -117,9 +117,9 @@ const AboutPage: React.FC = () => {
               <div className="w-16 h-16 bg-[#7DDE4A] rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Responsabilité</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">ResponsabilitÃ©</h3>
               <p className="text-[#3B3B3B]/70">
-                Engagement pour votre santé et celle de la planète
+                Engagement pour votre santÃ© et celle de la planÃ¨te
               </p>
             </div>
             
@@ -129,7 +129,7 @@ const AboutPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Innovation</h3>
               <p className="text-[#3B3B3B]/70">
-                IA de pointe pour des analyses toujours plus précises
+                IA de pointe pour des analyses toujours plus prÃ©cises
               </p>
             </div>
             
@@ -137,9 +137,9 @@ const AboutPage: React.FC = () => {
               <div className="w-16 h-16 bg-[#7DDE4A] rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Simplicité</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">SimplicitÃ©</h3>
               <p className="text-[#3B3B3B]/70">
-                Interface intuitive accessible ÃƒÆ’Ã‚Â  tous
+                Interface intuitive accessible ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tous
               </p>
             </div>
           </div>
@@ -155,38 +155,38 @@ const AboutPage: React.FC = () => {
               Notre Technologie
             </h2>
             <p className="text-[#3B3B3B]/70 text-lg max-w-2xl mx-auto">
-              Une combinaison unique d'intelligence artificielle et de données scientifiques
+              Une combinaison unique d'intelligence artificielle et de donnÃ©es scientifiques
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">ÃƒÂ°Ã…Â¸Ã‚Â¤ââ‚¬â€œ</span>
+                <span className="text-2xl">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¤Ã¢Ã¢â€šÂ¬Ã¢â‚¬Å“</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">IA Propriétaire</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">IA PropriÃ©taire</h3>
               <p className="text-[#3B3B3B]/70">
-                Algorithmes NOVA V2, INCI V2 et ECO V2 développés spécifiquement pour chaque catégorie
+                Algorithmes NOVA V2, INCI V2 et ECO V2 dÃ©veloppÃ©s spÃ©cifiquement pour chaque catÃ©gorie
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">âÃ…Â¡Ã‚Â¡</span>
+                <span className="text-2xl">Ã¢Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â¡</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Analyse Temps Réel</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Analyse Temps RÃ©el</h3>
               <p className="text-[#3B3B3B]/70">
-                Enrichissement automatique et calcul instantané des scores en moins de 2 secondes
+                Enrichissement automatique et calcul instantanÃ© des scores en moins de 2 secondes
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-[#7DDE4A]/10">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">ÃƒÂ°Ã…Â¸ââ‚¬Âââ‚¬â„¢</span>
+                <span className="text-2xl">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</span>
               </div>
-              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">Données Sécurisées</h3>
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mb-3">DonnÃ©es SÃ©curisÃ©es</h3>
               <p className="text-[#3B3B3B]/70">
-                Respect total de votre vie privée avec chiffrement de bout en bout
+                Respect total de votre vie privÃ©e avec chiffrement de bout en bout
               </p>
             </div>
           </div>
@@ -204,15 +204,15 @@ const AboutPage: React.FC = () => {
           </h2>
           <p className="text-[#3B3B3B]/80 text-lg mb-8 max-w-2xl mx-auto">
             Une question, une suggestion ou envie de collaborer ? 
-            Notre équipe est ÃƒÆ’Ã‚Â  votre écoute
+            Notre Ã©quipe est ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  votre Ã©coute
           </p>
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-white/80 px-6 py-3 rounded-full text-[#3B3B3B]">
-              <span className="text-[#7DDE4A]">âÃ…â€œââ‚¬Â°Ã¯Ã‚Â¸Ã‚Â</span>
+              <span className="text-[#7DDE4A]">Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â°ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â</span>
               <span className="font-medium">contact@ecolojia.app</span>
             </div>
             <p className="text-[#3B3B3B]/60 text-sm">
-              Nous répondons sous 48h ouvrées
+              Nous rÃ©pondons sous 48h ouvrÃ©es
             </p>
           </div>
         </div>

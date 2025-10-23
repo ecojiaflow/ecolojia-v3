@@ -26,12 +26,12 @@ const trackEvent = (event: string, data?: any) => {
   if (import.meta.env.DEV) {
     console.log(`[Analytics] ${event}`, data);
   }
-  // En production, on pourrait envoyer Ã  un service d'analytics
+  // En production, on pourrait envoyer ÃƒÂ  un service d'analytics
 };
 
 // ==================== COMPOSANTS SEARCH ====================
 
-// Widget de recherche réutilisable
+// Widget de recherche rÃ©utilisable
 const SearchWidget: React.FC<{
   variant?: 'compact' | 'expanded' | 'hero';
   placeholder?: string;
@@ -40,14 +40,14 @@ const SearchWidget: React.FC<{
   className?: string;
 }> = ({ 
   variant = 'expanded', 
-  placeholder = 'Rechercher un produit, une marque, un ingrédient...',
+  placeholder = 'Rechercher un produit, une marque, un ingrÃ©dient...',
   autoFocus = false,
   onSearch,
   className = ''
 }) => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  useDebounce(query, 300); // (Conservé pour future amélioration)
+  useDebounce(query, 300); // (ConservÃ© pour future amÃ©lioration)
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -139,7 +139,7 @@ const SearchWidget: React.FC<{
       {isHero && !query && (
         <div className="mt-4 flex flex-wrap gap-2 justify-center">
           <span className="text-sm text-gray-500">Suggestions :</span>
-          {['Bio', 'Sans gluten', 'Vegan', 'Local', 'Éco-score A'].map((suggestion) => (
+          {['Bio', 'Sans gluten', 'Vegan', 'Local', 'Ã‰co-score A'].map((suggestion) => (
             <button
               key={suggestion}
               type="button"
@@ -156,7 +156,7 @@ const SearchWidget: React.FC<{
   );
 };
 
-// Métriques contextuelles
+// MÃ©triques contextuelles
 const ContextualMetrics: React.FC<{
   totalResults: number;
   searchTime: number;
@@ -172,7 +172,7 @@ const ContextualMetrics: React.FC<{
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-4 text-sm text-gray-600">
         <span className="font-medium">
-          {totalResults.toLocaleString()} résultat{totalResults > 1 ? 's' : ''}
+          {totalResults.toLocaleString()} rÃ©sultat{totalResults > 1 ? 's' : ''}
         </span>
         
         <span className="flex items-center gap-1">
@@ -202,16 +202,16 @@ const ContextualMetrics: React.FC<{
   );
 };
 
-// Filtres avancés
+// Filtres avancÃ©s
 const AdvancedFilters: React.FC<{
   filters: SearchFilters;
   onFiltersChange: (filters: SearchFilters) => void;
   isOpen: boolean;
   onToggle: () => void;
 }> = ({ filters, onFiltersChange, isOpen, onToggle }) => {
-  const categories = ['Alimentaire', 'Cosmétique', 'Entretien', 'Hygiène'];
+  const categories = ['Alimentaire', 'CosmÃ©tique', 'Entretien', 'HygiÃ¨ne'];
   const scores = ['A', 'B', 'C', 'D', 'E'];
-  const labels = ['Bio', 'Équitable', 'Local', 'Sans additifs'];
+  const labels = ['Bio', 'Ã‰quitable', 'Local', 'Sans additifs'];
 
   return (
     <>
@@ -235,9 +235,9 @@ const AdvancedFilters: React.FC<{
                        border border-gray-100 p-6 z-50"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Catégories */}
+              {/* CatÃ©gories */}
               <div>
-                <h3 className="font-semibold mb-3">Catégorie</h3>
+                <h3 className="font-semibold mb-3">CatÃ©gorie</h3>
                 <div className="space-y-2">
                   {categories.map((cat) => (
                     <label key={cat} className="flex items-center gap-2 cursor-pointer">
@@ -322,7 +322,7 @@ const AdvancedFilters: React.FC<{
                 onClick={() => onFiltersChange({})}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
               >
-                Réinitialiser
+                RÃ©initialiser
               </button>
               <button
                 onClick={onToggle}
@@ -397,7 +397,7 @@ const ProductCard: React.FC<{
               
               {product.ecoScore && (
                 <span className="text-xs px-2 py-0.5 bg-[#E9F8DF] text-gray-700 rounded">
-                  Éco: {product.ecoScore}
+                  Ã‰co: {product.ecoScore}
                 </span>
               )}
               
@@ -491,7 +491,7 @@ const ProductCard: React.FC<{
   );
 };
 
-// États de chargement et erreur
+// Ã‰tats de chargement et erreur
 const LoadingState: React.FC = () => (
   <div className="flex flex-col items-center justify-center py-16">
     <Loader className="w-8 h-8 text-[#7DDE4A] animate-spin mb-4" />
@@ -503,10 +503,10 @@ const EmptyState: React.FC<{ query: string }> = ({ query }) => (
   <div className="flex flex-col items-center justify-center py-16">
     <Search className="w-16 h-16 text-gray-300 mb-4" />
     <h3 className="text-xl font-semibold text-gray-800 mb-2">
-      Aucun résultat pour "{query}"
+      Aucun rÃ©sultat pour "{query}"
     </h3>
     <p className="text-gray-500 text-center max-w-md">
-      Essayez avec d'autres mots-clés ou vérifiez l'orthographe
+      Essayez avec d'autres mots-clÃ©s ou vÃ©rifiez l'orthographe
     </p>
   </div>
 );
@@ -518,14 +518,14 @@ const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
       Une erreur est survenue
     </h3>
     <p className="text-gray-500 mb-4">
-      Impossible de charger les résultats
+      Impossible de charger les rÃ©sultats
     </p>
     <button
       onClick={onRetry}
       className="px-6 py-2 bg-[#7DDE4A] text-white rounded-xl
                  hover:bg-[#6bc73a] transition-colors"
     >
-      Réessayer
+      RÃ©essayer
     </button>
   </div>
 );
@@ -536,12 +536,12 @@ const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuthStore();
   
-  // États
+  // Ã‰tats
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({});
   
-  // Récupération de la query depuis l'URL
+  // RÃ©cupÃ©ration de la query depuis l'URL
   const query = searchParams.get('q') || '';
   
   // Hook de recherche universelle
@@ -588,7 +588,7 @@ const SearchPage: React.FC = () => {
     setViewMode((prev) => (prev === 'grid' ? 'list' : 'grid'));
   }, []);
 
-  // Méta-données pour SEO
+  // MÃ©ta-donnÃ©es pour SEO
   useEffect(() => {
     document.title = query 
       ? `${query} - Recherche ECOLOJIA` 
@@ -597,7 +597,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header avec SearchWidget intégré */}
+      {/* Header avec SearchWidget intÃ©grÃ© */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
@@ -605,7 +605,7 @@ const SearchPage: React.FC = () => {
               onClick={() => navigate('/')}
               className="text-gray-600 hover:text-gray-800"
             >
-              â† Retour
+              Ã¢â€ Â Retour
             </button>
             
             <div className="flex-1 max-w-2xl">
@@ -621,12 +621,12 @@ const SearchPage: React.FC = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Filtres et métriques */}
+        {/* Filtres et mÃ©triques */}
         {(results.length > 0 || loading) && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold text-gray-800">
-                {query ? `Résultats pour "${query}"` : 'Tous les produits'}
+                {query ? `RÃ©sultats pour "${query}"` : 'Tous les produits'}
               </h1>
               
               <div className="relative">
@@ -651,7 +651,7 @@ const SearchPage: React.FC = () => {
           </div>
         )}
 
-        {/* États et résultats */}
+        {/* Ã‰tats et rÃ©sultats */}
         <AnimatePresence mode="wait">
           {loading && <LoadingState />}
           
@@ -691,20 +691,20 @@ const SearchPage: React.FC = () => {
                 Commencez votre recherche
               </h2>
               <p className="text-gray-500 mb-8">
-                Trouvez des produits sains et éco-responsables
+                Trouvez des produits sains et Ã©co-responsables
               </p>
               
-              {/* Catégories populaires */}
+              {/* CatÃ©gories populaires */}
               <div className="max-w-2xl mx-auto">
                 <h3 className="text-sm font-semibold text-gray-600 mb-4">
-                  CATÉGORIES POPULAIRES
+                  CATÃ‰GORIES POPULAIRES
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {[
-                    { name: 'Alimentaire', icon: 'ðŸŽ', count: '12.5k' },
-                    { name: 'Cosmétique', icon: 'ðŸ’„', count: '3.2k' },
-                    { name: 'Entretien', icon: 'ðŸ§¹', count: '1.8k' },
-                    { name: 'Hygiène', icon: 'ðŸ§¼', count: '2.1k' }
+                    { name: 'Alimentaire', icon: 'Ã°Å¸ÂÅ½', count: '12.5k' },
+                    { name: 'CosmÃ©tique', icon: 'Ã°Å¸â€™â€ž', count: '3.2k' },
+                    { name: 'Entretien', icon: 'Ã°Å¸Â§Â¹', count: '1.8k' },
+                    { name: 'HygiÃ¨ne', icon: 'Ã°Å¸Â§Â¼', count: '2.1k' }
                   ].map((cat) => (
                     <button
                       key={cat.name}
@@ -731,7 +731,7 @@ const SearchPage: React.FC = () => {
                   TENDANCES DU MOMENT
                 </h3>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {['Sans additifs', 'Zéro déchet', 'Made in France', 'Bio équitable',
+                  {['Sans additifs', 'ZÃ©ro dÃ©chet', 'Made in France', 'Bio Ã©quitable',
                     'Sans huile de palme'].map((trend) => (
                     <button
                       key={trend}
@@ -748,12 +748,12 @@ const SearchPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Pagination (si résultats) */}
+        {/* Pagination (si rÃ©sultats) */}
         {!loading && results.length > 0 && totalResults > results.length && (
           <div className="mt-8 flex justify-center">
             <button className="px-6 py-3 bg-[#7DDE4A] text-white rounded-xl
                               hover:bg-[#6bc73a] transition-colors">
-              Charger plus de résultats
+              Charger plus de rÃ©sultats
             </button>
           </div>
         )}

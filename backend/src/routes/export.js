@@ -372,7 +372,7 @@ function generateRecommendations(stats, analyses) {
     recommendations.push({
       type: 'warning',
       title: 'Score sante faible',
-      message: 'Votre score sante moyen est inferieur   50/100. Privilegiez des produits moins transformes.',
+      message: 'Votre score sante moyen est inferieur Â  50/100. Privilegiez des produits moins transformes.',
       priority: 'high'
     });
   }

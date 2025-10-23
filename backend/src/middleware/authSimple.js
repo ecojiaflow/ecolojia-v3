@@ -25,7 +25,7 @@ const authSimple = (req, res, next) => {
     // Verifier le token
     const decoded = jwt.verify(token, JWT_SECRET);
     
-    // Ajouter les infos   la requete
+    // Ajouter les infos Â  la requete
     req.userId = decoded.userId;
     req.userEmail = decoded.email;
     req.userTier = decoded.tier;

@@ -1,4 +1,4 @@
-﻿// VisionServiceSimple.js - Version simplifiée pour tests
+// VisionServiceSimple.js - Version simplifiée pour tests
 const vision = require('@google-cloud/vision');
 
 class VisionServiceSimple {

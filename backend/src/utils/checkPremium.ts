@@ -1,4 +1,4 @@
-﻿export async function checkPremium(userId: string): Promise<boolean> {
+export async function checkPremium(userId: string): Promise<boolean> {
   const paymentsEnabled = import.meta.env.VITE_PAYMENTS_ENABLED !== "false";
   const gatingEnabled = import.meta.env.VITE_PREMIUM_GATING !== "off";
 

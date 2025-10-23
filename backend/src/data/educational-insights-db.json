@@ -1,103 +1,103 @@
 {
   "nutrition_insights": {
     "ultra_transformation": {
-      "title": "Pourquoi l'ultra-transformation pose problème",
+      "title": "Pourquoi l'ultra-transformation pose problÃ¨me",
       "facts": [
         {
-          "fact": "L'ultra-transformation détruit la matrice alimentaire naturelle",
-          "explanation": "Les procédés industriels (extrusion, haute température) cassent les liens entre nutriments, réduisant leur biodisponibilité",
-          "impact": "Absorption plus rapide â†’ pics glycémiques â†’ inflammation",
+          "fact": "L'ultra-transformation dÃ©truit la matrice alimentaire naturelle",
+          "explanation": "Les procÃ©dÃ©s industriels (extrusion, haute tempÃ©rature) cassent les liens entre nutriments, rÃ©duisant leur biodisponibilitÃ©",
+          "impact": "Absorption plus rapide Ã¢â€ â€™ pics glycÃ©miques Ã¢â€ â€™ inflammation",
           "source": "INSERM 2024 - Ultra-processed foods and health",
-          "visual_analogy": "Comme comparer une pomme entière vs jus de pomme industriel"
+          "visual_analogy": "Comme comparer une pomme entiÃ¨re vs jus de pomme industriel"
         },
         {
           "fact": "Les additifs perturbent le microbiote intestinal",
-          "explanation": "Ã‰mulsifiants (E471, E472) et conservateurs modifient la barrière intestinale",
-          "impact": "Dysbiose â†’ inflammation chronique â†’ maladies métaboliques",
+          "explanation": "Ãƒâ€°mulsifiants (E471, E472) et conservateurs modifient la barriÃ¨re intestinale",
+          "impact": "Dysbiose Ã¢â€ â€™ inflammation chronique Ã¢â€ â€™ maladies mÃ©taboliques",
           "source": "Nature 2024 - Emulsifiers and gut microbiome",
-          "prevention": "Privilégier aliments avec <5 ingrédients reconnaissables"
+          "prevention": "PrivilÃ©gier aliments avec <5 ingrÃ©dients reconnaissables"
         },
         {
-          "fact": "Corrélation ultra-transformés et maladies chroniques",
-          "explanation": "Méta-analyses montrent +10% risque cardiovasculaire par portion quotidienne",
-          "impact": "Risques: obésité (+45%), diabète (+53%), dépression (+22%)",
+          "fact": "CorrÃ©lation ultra-transformÃ©s et maladies chroniques",
+          "explanation": "MÃ©ta-analyses montrent +10% risque cardiovasculaire par portion quotidienne",
+          "impact": "Risques: obÃ©sitÃ© (+45%), diabÃ¨te (+53%), dÃ©pression (+22%)",
           "source": "BMJ 2024 - Ultra-processed foods systematic review",
-          "action": "Réduire progressivement: 1 produit/semaine remplacé"
+          "action": "RÃ©duire progressivement: 1 produit/semaine remplacÃ©"
         }
       ]
     },
     "microbiote": {
-      "title": "Comment préserver son microbiote intestinal",
+      "title": "Comment prÃ©server son microbiote intestinal",
       "facts": [
         {
-          "fact": "La diversité alimentaire nourrit la diversité microbienne",
-          "explanation": "Chaque fibre différente nourrit des bactéries spécifiques",
-          "impact": "30+ végétaux/semaine = microbiote optimal vs 10 = dysbiose",
+          "fact": "La diversitÃ© alimentaire nourrit la diversitÃ© microbienne",
+          "explanation": "Chaque fibre diffÃ©rente nourrit des bactÃ©ries spÃ©cifiques",
+          "impact": "30+ vÃ©gÃ©taux/semaine = microbiote optimal vs 10 = dysbiose",
           "source": "Gut Microbiome Journal 2024",
-          "practical_tip": "Compter couleurs dans assiette: 5 couleurs = diversité"
+          "practical_tip": "Compter couleurs dans assiette: 5 couleurs = diversitÃ©"
         },
         {
-          "fact": "Les prébiotiques sont plus importants que les probiotiques",
-          "explanation": "Fibres solubles nourrissent bactéries bénéfiques déjÃ  présentes",
-          "impact": "Production AGCC â†’ anti-inflammation â†’ protection intestinale",
+          "fact": "Les prÃ©biotiques sont plus importants que les probiotiques",
+          "explanation": "Fibres solubles nourrissent bactÃ©ries bÃ©nÃ©fiques dÃ©jÃƒÂ  prÃ©sentes",
+          "impact": "Production AGCC Ã¢â€ â€™ anti-inflammation Ã¢â€ â€™ protection intestinale",
           "source": "Cell Host Microbe 2024",
           "best_sources": "Avoine, ail, oignon, asperges, topinambour"
         },
         {
-          "fact": "Les édulcorants artificiels perturbent la régulation glycémique",
-          "explanation": "Modification composition microbienne â†’ intolérance glucose",
-          "impact": "Paradoxe: produits 'sans sucre' favorisent diabète",
+          "fact": "Les Ã©dulcorants artificiels perturbent la rÃ©gulation glycÃ©mique",
+          "explanation": "Modification composition microbienne Ã¢â€ â€™ intolÃ©rance glucose",
+          "impact": "Paradoxe: produits 'sans sucre' favorisent diabÃ¨te",
           "source": "Nature Medicine 2024",
-          "alternative": "Habituer progressivement au goût moins sucré"
+          "alternative": "Habituer progressivement au goÃ»t moins sucrÃ©"
         }
       ]
     },
     "glycemie": {
-      "title": "Comprendre l'index glycémique au-delÃ  des chiffres",
+      "title": "Comprendre l'index glycÃ©mique au-delÃƒÂ  des chiffres",
       "facts": [
         {
-          "fact": "L'index glycémique varie selon la transformation",
-          "explanation": "Même aliment: pomme entière IG=35, compote IG=50, jus IG=75",
+          "fact": "L'index glycÃ©mique varie selon la transformation",
+          "explanation": "MÃªme aliment: pomme entiÃ¨re IG=35, compote IG=50, jus IG=75",
           "impact": "Transformation = destruction fibres = absorption rapide",
           "source": "Diabetes Care 2024",
-          "rule": "Plus c'est proche de l'état naturel, mieux c'est"
+          "rule": "Plus c'est proche de l'Ã©tat naturel, mieux c'est"
         },
         {
           "fact": "Les fibres ralentissent l'absorption des sucres",
-          "explanation": "Gel formé dans estomac â†’ libération glucose progressive",
-          "impact": "Satiété prolongée + énergie stable + pas de fringales",
+          "explanation": "Gel formÃ© dans estomac Ã¢â€ â€™ libÃ©ration glucose progressive",
+          "impact": "SatiÃ©tÃ© prolongÃ©e + Ã©nergie stable + pas de fringales",
           "source": "Journal of Nutrition 2024",
-          "combo_gagnant": "Toujours associer glucides + fibres + protéines"
+          "combo_gagnant": "Toujours associer glucides + fibres + protÃ©ines"
         },
         {
-          "fact": "L'ordre d'ingestion des aliments influence la glycémie",
-          "explanation": "Légumes â†’ protéines â†’ glucides = pic glycémique réduit 30%",
-          "impact": "Même repas, meilleure régulation sans restriction",
+          "fact": "L'ordre d'ingestion des aliments influence la glycÃ©mie",
+          "explanation": "LÃ©gumes Ã¢â€ â€™ protÃ©ines Ã¢â€ â€™ glucides = pic glycÃ©mique rÃ©duit 30%",
+          "impact": "MÃªme repas, meilleure rÃ©gulation sans restriction",
           "source": "Diabetologia 2024",
           "technique": "Commencer par salade = effet protecteur"
         }
       ]
     },
     "additifs": {
-      "title": "Décrypter les additifs alimentaires",
+      "title": "DÃ©crypter les additifs alimentaires",
       "facts": [
         {
-          "fact": "Tous les additifs autorisés ne sont pas équivalents",
-          "explanation": "DJA (Dose Journalière Acceptable) basée sur études anciennes",
-          "impact": "Nouvelles recherches révèlent effets cocktails non étudiés",
+          "fact": "Tous les additifs autorisÃ©s ne sont pas Ã©quivalents",
+          "explanation": "DJA (Dose JournaliÃ¨re Acceptable) basÃ©e sur Ã©tudes anciennes",
+          "impact": "Nouvelles recherches rÃ©vÃ¨lent effets cocktails non Ã©tudiÃ©s",
           "source": "EFSA 2024 - Additives reassessment",
-          "precaution": "Principe de précaution: limiter nombre d'additifs/jour"
+          "precaution": "Principe de prÃ©caution: limiter nombre d'additifs/jour"
         },
         {
-          "fact": "Les émulsifiants (E471, E472) fragilisent la barrière intestinale",
-          "explanation": "Action détergente â†’ perméabilité intestinale â†’ inflammation",
-          "impact": "Présents dans 60% produits industriels, même bio",
+          "fact": "Les Ã©mulsifiants (E471, E472) fragilisent la barriÃ¨re intestinale",
+          "explanation": "Action dÃ©tergente Ã¢â€ â€™ permÃ©abilitÃ© intestinale Ã¢â€ â€™ inflammation",
+          "impact": "PrÃ©sents dans 60% produits industriels, mÃªme bio",
           "source": "Gastroenterology 2024",
-          "detection": "Si texture impossible Ã  reproduire maison = suspect"
+          "detection": "Si texture impossible ÃƒÂ  reproduire maison = suspect"
         },
         {
-          "fact": "Les nitrites (E249, E250) forment des nitrosamines cancérigènes",
-          "explanation": "Réaction avec protéines en milieu acide (estomac)",
+          "fact": "Les nitrites (E249, E250) forment des nitrosamines cancÃ©rigÃ¨nes",
+          "explanation": "RÃ©action avec protÃ©ines en milieu acide (estomac)",
           "impact": "Charcuterie industrielle = facteur risque cancer colorectal",
           "source": "CIRC/IARC 2024",
           "alternative": "Charcuterie artisanale sans nitrites + vitamine C"
@@ -107,25 +107,25 @@
   },
   "environmental_insights": {
     "carbon_footprint": {
-      "title": "Impact carbone réel de notre alimentation",
+      "title": "Impact carbone rÃ©el de notre alimentation",
       "facts": [
         {
           "fact": "L'ultra-transformation multiplie l'empreinte carbone par 3-5",
-          "explanation": "Ã‰nergie transformation + emballages + transport + conservation",
+          "explanation": "Ãƒâ€°nergie transformation + emballages + transport + conservation",
           "impact": "Biscuits industriels = 10x empreinte vs fruits secs maison",
           "source": "Environmental Science 2024",
-          "action": "Cuisiner = acte écologique majeur"
+          "action": "Cuisiner = acte Ã©cologique majeur"
         },
         {
-          "fact": "Local ultra-transformé > Bio lointain bien transformé",
+          "fact": "Local ultra-transformÃ© > Bio lointain bien transformÃ©",
           "explanation": "Transport = 10% empreinte, transformation = 40%",
-          "impact": "Hiérarchie: Local peu transformé > Bio local > Bio lointain > Conventionnel ultra-transformé",
+          "impact": "HiÃ©rarchie: Local peu transformÃ© > Bio local > Bio lointain > Conventionnel ultra-transformÃ©",
           "source": "Sustainable Agriculture 2024",
-          "guide": "Privilégier circuit court + fait maison"
+          "guide": "PrivilÃ©gier circuit court + fait maison"
         },
         {
-          "fact": "Réduction gaspillage = impact majeur",
-          "explanation": "30% alimentation gaspillée = 30% impact évitable",
+          "fact": "RÃ©duction gaspillage = impact majeur",
+          "explanation": "30% alimentation gaspillÃ©e = 30% impact Ã©vitable",
           "impact": "Planifier repas + conserver optimalement = -25% empreinte",
           "source": "Food Waste Research 2024",
           "tools": "Apps anti-gaspi + conservation optimale"
@@ -133,21 +133,21 @@
       ]
     },
     "packaging": {
-      "title": "L'impact caché des emballages",
+      "title": "L'impact cachÃ© des emballages",
       "facts": [
         {
-          "fact": "L'emballage représente jusqu'Ã  30% de l'impact produit",
+          "fact": "L'emballage reprÃ©sente jusqu'ÃƒÂ  30% de l'impact produit",
           "explanation": "Production plastique + transport + fin de vie",
           "impact": "Portion individuelle = 5x plus d'emballage/gramme",
           "source": "Packaging & Environment 2024",
-          "alternative": "Vrac + contenants réutilisables"
+          "alternative": "Vrac + contenants rÃ©utilisables"
         },
         {
-          "fact": "Tous les plastiques 'recyclables' ne sont pas recyclés",
-          "explanation": "9% plastiques effectivement recyclés mondialement",
-          "impact": "Triangle recyclage â‰  recyclage effectif",
+          "fact": "Tous les plastiques 'recyclables' ne sont pas recyclÃ©s",
+          "explanation": "9% plastiques effectivement recyclÃ©s mondialement",
+          "impact": "Triangle recyclage Ã¢â€°Â  recyclage effectif",
           "source": "Waste Management 2024",
-          "priority": "Réduire > Réutiliser > Recycler"
+          "priority": "RÃ©duire > RÃ©utiliser > Recycler"
         }
       ]
     }
@@ -157,65 +157,65 @@
       "title": "Alimentation et inflammation chronique",
       "facts": [
         {
-          "fact": "L'inflammation chronique silencieuse accélère le vieillissement",
-          "explanation": "Stress oxydatif permanent â†’ dommages cellulaires cumulés",
-          "impact": "Maladies auto-immunes, cardiovasculaires, neurodégénératives",
+          "fact": "L'inflammation chronique silencieuse accÃ©lÃ¨re le vieillissement",
+          "explanation": "Stress oxydatif permanent Ã¢â€ â€™ dommages cellulaires cumulÃ©s",
+          "impact": "Maladies auto-immunes, cardiovasculaires, neurodÃ©gÃ©nÃ©ratives",
           "source": "Aging Research 2024",
-          "markers": "CRP, IL-6 élevées = signal d'alarme"
+          "markers": "CRP, IL-6 Ã©levÃ©es = signal d'alarme"
         },
         {
-          "fact": "Aliments ultra-transformés = aliments pro-inflammatoires",
-          "explanation": "AGE (produits glycation avancée) + additifs + déséquilibre oméga",
-          "impact": "Chaque repas transformé = pic inflammatoire 3h",
+          "fact": "Aliments ultra-transformÃ©s = aliments pro-inflammatoires",
+          "explanation": "AGE (produits glycation avancÃ©e) + additifs + dÃ©sÃ©quilibre omÃ©ga",
+          "impact": "Chaque repas transformÃ© = pic inflammatoire 3h",
           "source": "Inflammation Research 2024",
           "solution": "Antioxydants naturels contrent inflammation"
         },
         {
-          "fact": "Jeûne intermittent réduit inflammation de 40%",
-          "explanation": "Repos digestif â†’ autophagie â†’ régénération cellulaire",
-          "impact": "12h minimum entre dernier/premier repas = bénéfice",
+          "fact": "JeÃ»ne intermittent rÃ©duit inflammation de 40%",
+          "explanation": "Repos digestif Ã¢â€ â€™ autophagie Ã¢â€ â€™ rÃ©gÃ©nÃ©ration cellulaire",
+          "impact": "12h minimum entre dernier/premier repas = bÃ©nÃ©fice",
           "source": "Cell Metabolism 2024",
-          "start": "Décaler petit-déjeuner ou avancer dîner"
+          "start": "DÃ©caler petit-dÃ©jeuner ou avancer dÃ®ner"
         }
       ]
     },
     "hormones": {
-      "title": "Perturbateurs endocriniens cachés",
+      "title": "Perturbateurs endocriniens cachÃ©s",
       "facts": [
         {
-          "fact": "Plastiques alimentaires libèrent phtalates et bisphénols",
-          "explanation": "Migration vers aliments gras + chaleur + acidité",
-          "impact": "Perturbation hormonale â†’ fertilité, métabolisme, développement",
+          "fact": "Plastiques alimentaires libÃ¨rent phtalates et bisphÃ©nols",
+          "explanation": "Migration vers aliments gras + chaleur + aciditÃ©",
+          "impact": "Perturbation hormonale Ã¢â€ â€™ fertilitÃ©, mÃ©tabolisme, dÃ©veloppement",
           "source": "Endocrine Society 2024",
-          "prevention": "Ã‰viter plastique contact alimentaire chaud"
+          "prevention": "Ãƒâ€°viter plastique contact alimentaire chaud"
         },
         {
           "fact": "Pesticides = cocktail perturbateurs endocriniens",
           "explanation": "Effet synergique: 1+1 = 10 en toxicologie",
-          "impact": "Doses 'sûres' individuelles dangereuses en mélange",
+          "impact": "Doses 'sÃ»res' individuelles dangereuses en mÃ©lange",
           "source": "Environmental Health 2024",
-          "protection": "Bio prioritaire pour fruits/légumes fins"
+          "protection": "Bio prioritaire pour fruits/lÃ©gumes fins"
         }
       ]
     }
   },
   "practical_insights": {
     "meal_timing": {
-      "title": "Quand manger pour optimiser sa santé",
+      "title": "Quand manger pour optimiser sa santÃ©",
       "facts": [
         {
-          "fact": "Notre métabolisme suit un rythme circadien",
+          "fact": "Notre mÃ©tabolisme suit un rythme circadien",
           "explanation": "Insulin sensitivity maximale le matin, minimale le soir",
-          "impact": "Même repas: matin = stockage muscle, soir = stockage graisse",
+          "impact": "MÃªme repas: matin = stockage muscle, soir = stockage graisse",
           "source": "Chronobiology 2024",
-          "application": "Petit-déjeuner copieux, dîner léger"
+          "application": "Petit-dÃ©jeuner copieux, dÃ®ner lÃ©ger"
         },
         {
-          "fact": "Manger en pleine conscience améliore la digestion",
-          "explanation": "Mastication lente â†’ satiété précoce â†’ meilleure absorption",
+          "fact": "Manger en pleine conscience amÃ©liore la digestion",
+          "explanation": "Mastication lente Ã¢â€ â€™ satiÃ©tÃ© prÃ©coce Ã¢â€ â€™ meilleure absorption",
           "impact": "20min minimum par repas = -25% calories naturellement",
           "source": "Mindful Eating Research 2024",
-          "technique": "Poser couverts entre bouchées"
+          "technique": "Poser couverts entre bouchÃ©es"
         }
       ]
     },
@@ -223,18 +223,18 @@
       "title": "Associations alimentaires optimales",
       "facts": [
         {
-          "fact": "Vitamine C multiplie absorption fer végétal par 4",
-          "explanation": "Réduction fer ferrique â†’ fer ferreux biodisponible",
-          "impact": "Légumineuses + agrumes = prévention anémie",
+          "fact": "Vitamine C multiplie absorption fer vÃ©gÃ©tal par 4",
+          "explanation": "RÃ©duction fer ferrique Ã¢â€ â€™ fer ferreux biodisponible",
+          "impact": "LÃ©gumineuses + agrumes = prÃ©vention anÃ©mie",
           "source": "Iron Metabolism 2024",
-          "examples": "Lentilles + poivron, épinards + citron"
+          "examples": "Lentilles + poivron, Ã©pinards + citron"
         },
         {
-          "fact": "Curcuma + poivre noir = biodisponibilité +2000%",
-          "explanation": "Pipérine inhibe métabolisme curcumine",
+          "fact": "Curcuma + poivre noir = biodisponibilitÃ© +2000%",
+          "explanation": "PipÃ©rine inhibe mÃ©tabolisme curcumine",
           "impact": "Anti-inflammatoire puissant accessible",
           "source": "Phytotherapy Research 2024",
-          "dosage": "1 pincée poivre pour 1 c.Ã .café curcuma"
+          "dosage": "1 pincÃ©e poivre pour 1 c.ÃƒÂ .cafÃ© curcuma"
         }
       ]
     }
@@ -243,97 +243,97 @@
     "common_myths": [
       {
         "myth": "Le bio est toujours meilleur",
-        "reality": "Bio ultra-transformé reste problématique",
-        "explanation": "Bio garantit absence pesticides, pas qualité nutritionnelle",
+        "reality": "Bio ultra-transformÃ© reste problÃ©matique",
+        "explanation": "Bio garantit absence pesticides, pas qualitÃ© nutritionnelle",
         "source": "Organic Food Review 2024",
-        "nuance": "Bio + peu transformé = optimal"
+        "nuance": "Bio + peu transformÃ© = optimal"
       },
       {
         "myth": "Les calories se valent toutes",
-        "reality": "100 cal sucre â‰  100 cal amandes",
-        "explanation": "Effet thermique, satiété, impact hormonal différents",
+        "reality": "100 cal sucre Ã¢â€°Â  100 cal amandes",
+        "explanation": "Effet thermique, satiÃ©tÃ©, impact hormonal diffÃ©rents",
         "source": "Metabolic Research 2024",
-        "key": "Qualité > quantité"
+        "key": "QualitÃ© > quantitÃ©"
       },
       {
-        "myth": "Les compléments remplacent une alimentation déséquilibrée",
-        "reality": "Synergie naturelle aliments irremplaçable",
-        "explanation": "Nutriments isolés vs matrice alimentaire complète",
+        "myth": "Les complÃ©ments remplacent une alimentation dÃ©sÃ©quilibrÃ©e",
+        "reality": "Synergie naturelle aliments irremplaÃ§able",
+        "explanation": "Nutriments isolÃ©s vs matrice alimentaire complÃ¨te",
         "source": "Nutrition Science 2024",
-        "priority": "Food first, suppléments si déficience prouvée"
+        "priority": "Food first, supplÃ©ments si dÃ©ficience prouvÃ©e"
       }
     ]
   },
   "personalization_triggers": {
     "diabetes_risk": {
-      "keywords": ["diabète", "glycémie", "insuline", "sucre"],
+      "keywords": ["diabÃ¨te", "glycÃ©mie", "insuline", "sucre"],
       "specific_insights": [
-        "Index glycémique combiné crucial",
-        "Fibres solubles = médicament naturel",
-        "Chronobiologie repas déterminante"
+        "Index glycÃ©mique combinÃ© crucial",
+        "Fibres solubles = mÃ©dicament naturel",
+        "Chronobiologie repas dÃ©terminante"
       ]
     },
     "digestive_issues": {
       "keywords": ["ballonnements", "digestion", "intestin", "ventre"],
       "specific_insights": [
-        "Microbiote diversité prioritaire",
-        "Ã‰mulsifiants = ennemis #1",
-        "Fermentés traditionnels bénéfiques"
+        "Microbiote diversitÃ© prioritaire",
+        "Ãƒâ€°mulsifiants = ennemis #1",
+        "FermentÃ©s traditionnels bÃ©nÃ©fiques"
       ]
     },
     "weight_management": {
-      "keywords": ["poids", "minceur", "régime", "calories"],
+      "keywords": ["poids", "minceur", "rÃ©gime", "calories"],
       "specific_insights": [
-        "Ultra-transformés court-circuitent satiété",
-        "Protéines + fibres = duo gagnant",
+        "Ultra-transformÃ©s court-circuitent satiÃ©tÃ©",
+        "ProtÃ©ines + fibres = duo gagnant",
         "Restriction cognitive contre-productive"
       ]
     },
     "environmental_concern": {
-      "keywords": ["environnement", "planète", "carbone", "durable"],
+      "keywords": ["environnement", "planÃ¨te", "carbone", "durable"],
       "specific_insights": [
-        "Fait maison = acte écologique majeur",
-        "Local peu transformé > bio lointain",
-        "Réduction gaspillage = levier puissant"
+        "Fait maison = acte Ã©cologique majeur",
+        "Local peu transformÃ© > bio lointain",
+        "RÃ©duction gaspillage = levier puissant"
       ]
     }
   },
   "seasonal_insights": {
     "spring": {
-      "focus": "Détox naturelle après hiver",
-      "key_foods": "Légumes verts, herbes fraîches, jeunes pousses",
-      "insight": "Chlorophylle = détox naturelle du foie"
+      "focus": "DÃ©tox naturelle aprÃ¨s hiver",
+      "key_foods": "LÃ©gumes verts, herbes fraÃ®ches, jeunes pousses",
+      "insight": "Chlorophylle = dÃ©tox naturelle du foie"
     },
     "summer": {
       "focus": "Hydratation et antioxydants",
-      "key_foods": "Fruits colorés, légumes gorgés d'eau",
-      "insight": "Eau + électrolytes naturels > boissons sportives"
+      "key_foods": "Fruits colorÃ©s, lÃ©gumes gorgÃ©s d'eau",
+      "insight": "Eau + Ã©lectrolytes naturels > boissons sportives"
     },
     "autumn": {
       "focus": "Renforcement immunitaire",
-      "key_foods": "Courges, champignons, fruits Ã  coque",
-      "insight": "Vitamine D + zinc = duo immunité"
+      "key_foods": "Courges, champignons, fruits ÃƒÂ  coque",
+      "insight": "Vitamine D + zinc = duo immunitÃ©"
     },
     "winter": {
-      "focus": "Réchauffement et énergie",
-      "key_foods": "Légumineuses, céréales complètes, épices",
-      "insight": "Aliments chauds économisent énergie digestive"
+      "focus": "RÃ©chauffement et Ã©nergie",
+      "key_foods": "LÃ©gumineuses, cÃ©rÃ©ales complÃ¨tes, Ã©pices",
+      "insight": "Aliments chauds Ã©conomisent Ã©nergie digestive"
     }
   },
   "trending_topics_2024": [
     {
-      "topic": "Aliments fermentés et santé mentale",
+      "topic": "Aliments fermentÃ©s et santÃ© mentale",
       "insight": "Axe intestin-cerveau: microbiote influence humeur",
       "source": "Microbiome-Gut-Brain Axis 2024"
     },
     {
-      "topic": "Protéines végétales vs animales",
-      "insight": "Combinaison céréales+légumineuses = profil complet",
+      "topic": "ProtÃ©ines vÃ©gÃ©tales vs animales",
+      "insight": "Combinaison cÃ©rÃ©ales+lÃ©gumineuses = profil complet",
       "source": "Plant Protein Research 2024"
     },
     {
-      "topic": "Jeûne intermittent et autophagie",
-      "insight": "12h minimum = déclenchement processus réparation",
+      "topic": "JeÃ»ne intermittent et autophagie",
+      "insight": "12h minimum = dÃ©clenchement processus rÃ©paration",
       "source": "Autophagy Research 2024"
     }
   ],
@@ -341,6 +341,6 @@
     "last_updated": "2024-07-12",
     "sources_quality": "Peer-reviewed journals + organismes officiels uniquement",
     "update_frequency": "Trimestrielle avec nouvelles recherches",
-    "disclaimer": "Informations éducatives basées sur recherche scientifique actuelle. Non substituables Ã  avis médical professionnel."
+    "disclaimer": "Informations Ã©ducatives basÃ©es sur recherche scientifique actuelle. Non substituables ÃƒÂ  avis mÃ©dical professionnel."
   }
 }

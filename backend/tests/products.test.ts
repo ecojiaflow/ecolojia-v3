@@ -38,7 +38,7 @@ describe('API Products', () => {
       expect(response.body).toHaveProperty('slug', testProduct.slug);
       expect(response.body).toHaveProperty('eco_score');
 
-      // ✅ Cast Prisma.Decimal to number
+      // âœ… Cast Prisma.Decimal to number
       const ecoScore = Number(response.body.eco_score);
       expect(typeof ecoScore).toBe('number');
       expect(ecoScore).toBeGreaterThanOrEqual(0);
@@ -57,9 +57,9 @@ describe('API Products', () => {
   describe('POST /api/products', () => {
     it('should create a new product with eco_score', async () => {
       const newProduct = {
-        title: "Produit Test Écologique",
-        slug: "produit-test-ecologique-" + Date.now(), // 🔁 éviter les doublons
-        description: "Produit certifié éco.",
+        title: "Produit Test Ã‰cologique",
+        slug: "produit-test-ecologique-" + Date.now(), // ðŸ” Ã©viter les doublons
+        description: "Produit certifiÃ© Ã©co.",
         category: "test",
         brand: "TestBrand",
         tags: ["bio", "test"],

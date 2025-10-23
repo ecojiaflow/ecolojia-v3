@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/analysisService.ts
+// PATH: frontend/src/services/analysisService.ts
 import apiClient from "./apiClient";
 import type { Category, Product } from "./productService";
 

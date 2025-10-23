@@ -1,4 +1,4 @@
-﻿const RED_FLAGS = [/paraben/i, /phenoxyethanol/i, /bht\b/i, /bpa\b/i, /siloxane/i, /sls\b/i, /peg-\d+/i];
+const RED_FLAGS = [/paraben/i, /phenoxyethanol/i, /bht\b/i, /bpa\b/i, /siloxane/i, /sls\b/i, /peg-\d+/i];
 
 export function scoreCosmetics(input: { ingredients?: string }) {
   const text = input.ingredients || '';

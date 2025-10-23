@@ -17,7 +17,7 @@ class ProductAnalysisService {
       cosmetics: null,
       detergents: null
     };// PATH: backend/src/services/productAnalysisService.js
-// Service principal d'orchestration des analyses de produits - VERSION CORRIG‰E
+// Service principal d'orchestration des analyses de produits - VERSION CORRIGâ€°E
 
 const Analysis = require('../models/Analysis');
 const Product = require('../models/Product');
@@ -98,7 +98,7 @@ class ProductAnalysisService {
     }
   }
 
-  // NOUVELLE M‰THODE SIMPLIFI‰E pour compatibilite avec products.js
+  // NOUVELLE Mâ€°THODE SIMPLIFIâ€°E pour compatibilite avec products.js
   async analyzeProduct(product, options = {}) {
     const { userId, useAI, category } = options;
     
@@ -167,7 +167,7 @@ class ProductAnalysisService {
         type: params.barcode ? 'barcode_scan' : 'manual_entry'
       });
 
-      // Mettre   jour le produit avec les derniers resultats
+      // Mettre Â  jour le produit avec les derniers resultats
       await this.updateProductWithAnalysis(product, analysisResults);
 
       logger.info('Analysis completed:', { 
@@ -244,7 +244,7 @@ class ProductAnalysisService {
         ingredients: product.ingredients || params.ingredients || '',
         category: product.category,
         barcode: product.barcode,
-        ...product[`${category}Data`] // Donnees specifiques   la categorie
+        ...product[`${category}Data`] // Donnees specifiques Â  la categorie
       };
 
       // Executer l'analyse specialisee selon le type d'analyseur
@@ -588,7 +588,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         type: params.barcode ? 'barcode_scan' : 'manual_entry'
       });
 
-      // Mettre   jour le produit avec les derniers resultats
+      // Mettre Â  jour le produit avec les derniers resultats
       await this.updateProductWithAnalysis(product, analysisResults);
 
       logger.info('Analysis completed:', { 
@@ -665,7 +665,7 @@ module.exports.analyzeProduct = module.exports.analyzeProduct.bind(module.export
         ingredients: product.ingredients || params.ingredients || '',
         category: product.category,
         barcode: product.barcode,
-        ...product[`${category}Data`] // Donnees specifiques   la categorie
+        ...product[`${category}Data`] // Donnees specifiques Â  la categorie
       };
 
       // Executer l'analyse specialisee

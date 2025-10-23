@@ -1,13 +1,13 @@
 // PATH: backend/src/types/ultra-transform.types.ts
 
 /**
- * Résultat de l'analyse Ultra-Transformation
+ * RÃ©sultat de l'analyse Ultra-Transformation
  */
 export interface UltraTransformResult {
   productName: string;
-  transformationLevel: number;           // 1-5 (1=minimal, 5=extrême)
-  processingMethods: string[];          // Méthodes de transformation détectées
-  industrialMarkers: string[];          // Marqueurs industriels identifiés
+  transformationLevel: number;           // 1-5 (1=minimal, 5=extrÃªme)
+  processingMethods: string[];          // MÃ©thodes de transformation dÃ©tectÃ©es
+  industrialMarkers: string[];          // Marqueurs industriels identifiÃ©s
   nutritionalImpact: NutritionalImpact;
   recommendations: string[];
   naturalityMatrix: NaturalityMatrix;
@@ -21,9 +21,9 @@ export interface UltraTransformResult {
  */
 export interface NutritionalImpact {
   vitaminLoss: number;                  // % perte vitamines
-  mineralRetention: number;             // % rétention minéraux
-  proteinDenaturation: number;          // % dénaturation protéines
-  fiberDegradation: number;             // % dégradation fibres
+  mineralRetention: number;             // % rÃ©tention minÃ©raux
+  proteinDenaturation: number;          // % dÃ©naturation protÃ©ines
+  fiberDegradation: number;             // % dÃ©gradation fibres
   antioxidantLoss: number;              // % perte antioxydants
   glycemicIndexIncrease: number;        // % augmentation IG
   neoformedCompounds: 'low' | 'medium' | 'high';
@@ -31,17 +31,17 @@ export interface NutritionalImpact {
 }
 
 /**
- * Matrice de naturalité
+ * Matrice de naturalitÃ©
  */
 export interface NaturalityMatrix {
-  naturalIngredients: number;           // Nombre d'ingrédients naturels
-  artificialIngredients: number;        // Nombre d'ingrédients artificiels
+  naturalIngredients: number;           // Nombre d'ingrÃ©dients naturels
+  artificialIngredients: number;        // Nombre d'ingrÃ©dients artificiels
   processingAids: number;               // Auxiliaires technologiques
   naturalityScore: number;              // Score global 0-100
 }
 
 /**
- * Méthode de transformation
+ * MÃ©thode de transformation
  */
 export interface ProcessingMethod {
   level: number;                        // 1-5
@@ -50,7 +50,7 @@ export interface ProcessingMethod {
 }
 
 /**
- * Détails de transformation par catégorie
+ * DÃ©tails de transformation par catÃ©gorie
  */
 export interface TransformationDetails {
   mechanical: {
@@ -113,7 +113,7 @@ export interface UltraTransformReport {
   };
 }
 
-// Export pour compatibilité
+// Export pour compatibilitÃ©
 export default {
   // Types principaux disponibles
 };

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/PricingPage.tsx
+// PATH: frontend/src/pages/PricingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';

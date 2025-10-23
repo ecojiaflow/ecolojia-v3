@@ -1,4 +1,4 @@
-﻿// PATH: backend\src\services\analysis\analysisService.js
+// PATH: backend\src\services\analysis\analysisService.js
 const Product = require('../../models/Product');
 
 // ---------- require Algolia tolerant (plusieurs chemins + stub) ----------

@@ -7,7 +7,7 @@ async function fixQuotas() {
   
   const User = require('./src/models/User');
   
-  // Réinitialiser les quotas du compte demo
+  // RÃ©initialiser les quotas du compte demo
   await User.updateOne(
     { email: 'demo@test.com' },
     { 
@@ -18,7 +18,7 @@ async function fixQuotas() {
     }
   );
   
-  console.log('✅ Quotas réinitialisés');
+  console.log('âœ… Quotas rÃ©initialisÃ©s');
   process.exit(0);
 }
 

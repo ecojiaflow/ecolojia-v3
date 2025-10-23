@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
+// PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';

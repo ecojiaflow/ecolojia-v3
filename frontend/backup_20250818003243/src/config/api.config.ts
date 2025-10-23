@@ -1,4 +1,4 @@
-﻿// src/config/api.config.ts
+// src/config/api.config.ts
 export const API_BASE_URL = import.met?.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
 export const API_CONFIG = {

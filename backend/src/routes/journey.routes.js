@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 - Journey Routes ===
+// === ECOLOJIA V3 - Journey Routes ===
 const express = require('express');
 const router = express.Router();
 const UserJourney = require('../models/UserJourney');

@@ -1,4 +1,4 @@
-﻿// VisionServiceFixed.js - Version corrigée du VisionService
+// VisionServiceFixed.js - Version corrigée du VisionService
 const vision = require('@google-cloud/vision');
 const fs = require('fs');
 const path = require('path');

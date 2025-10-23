@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 async function cleanup() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('? MongoDB connecté');
+    console.log('? MongoDB connectÃ©');
     
     const Product = mongoose.model('Product', new mongoose.Schema({}, { strict: false }));
     
@@ -21,7 +21,7 @@ async function cleanup() {
       ]
     });
     
-    console.log(`? ${result.deletedCount} produits fantômes supprimés`);
+    console.log(`? ${result.deletedCount} produits fantÃ´mes supprimÃ©s`);
     
     await mongoose.disconnect();
     process.exit(0);

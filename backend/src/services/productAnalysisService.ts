@@ -20,14 +20,14 @@ interface ProductAnalysis {
   category: 'food' | 'cosmetics' | 'detergents';
   healthScore: number;
   createdAt: Date;
-  // Ajouter d'autres propriétés selon votre modèle
+  // Ajouter d'autres propriÃ©tÃ©s selon votre modÃ¨le
 }
 
 class ProductAnalysisService {
   async analyzeProduct(params: AnalyzeProductParams): Promise<ProductAnalysis> {
     logger.info(`Analyzing product: ${params.name}`);
     
-    // TODO: Implémenter la logique d'analyse réelle
+    // TODO: ImplÃ©menter la logique d'analyse rÃ©elle
     // Pour l'instant, retourner un mock
     const mockAnalysis: ProductAnalysis = {
       id: Math.random().toString(36).substr(2, 9),
@@ -44,14 +44,14 @@ class ProductAnalysisService {
   async getAnalysisById(id: string, userId: string): Promise<ProductAnalysis | null> {
     logger.info(`Getting analysis: ${id} for user: ${userId}`);
     
-    // TODO: Implémenter la récupération depuis la base de données
+    // TODO: ImplÃ©menter la rÃ©cupÃ©ration depuis la base de donnÃ©es
     return null;
   }
 
   async getUserHistory(userId: string, options: { page: number; limit: number; category?: string }) {
     logger.info(`Getting history for user: ${userId}`);
     
-    // TODO: Implémenter la récupération de l'historique
+    // TODO: ImplÃ©menter la rÃ©cupÃ©ration de l'historique
     return {
       analyses: [],
       total: 0,
@@ -63,7 +63,7 @@ class ProductAnalysisService {
   async getUserStats(userId: string) {
     logger.info(`Getting stats for user: ${userId}`);
     
-    // TODO: Implémenter les statistiques
+    // TODO: ImplÃ©menter les statistiques
     return {
       totalAnalyses: 0,
       averageScore: 0,

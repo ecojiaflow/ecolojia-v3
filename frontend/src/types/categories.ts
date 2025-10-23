@@ -1,4 +1,4 @@
-﻿export enum CategoryType {
+export enum CategoryType {
   ALIMENTAIRE = 'alimentaire',
   COSMETIQUE = 'cosmetique', 
   MODE = 'mode',

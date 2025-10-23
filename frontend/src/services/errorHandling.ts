@@ -1,4 +1,4 @@
-﻿// frontend/src/services/errorHandling.ts
+// frontend/src/services/errorHandling.ts
 // Service centralise de gestion des erreurs
 
 import { toast } from '@/components/ui/use-toast';

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { CheckCircle, AlertTriangle, XCircle, ChevronDown } from 'lucide-react';
 
 interface ScoreBarProps {

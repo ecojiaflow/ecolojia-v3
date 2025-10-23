@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 const http = axios.create({ timeout: 7000 });

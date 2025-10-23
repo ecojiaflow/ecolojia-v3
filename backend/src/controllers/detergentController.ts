@@ -7,7 +7,7 @@ function normalizeIngredients(input?: string | string[]): string[] {
   if (!input) return [];
   if (Array.isArray(input)) return input.map(s => String(s).toUpperCase().trim()).filter(Boolean);
   return String(input)
-    .replace(/INGRÉDIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
+    .replace(/INGRÃ‰DIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
     .replace(/\([^)]*\)/g, '')
     .split(/[,;]\s*|\n+/)
     .map(s => s.trim().toUpperCase())
@@ -31,13 +31,13 @@ export const analyzeDetergentController = async (req: Request, res: Response) =>
     }
 
     const scorer = new DetergentScorer();
-    const raw = await scorer.analyzeDetergent(list, name || 'Produit ménager', certifications);
+    const raw = await scorer.analyzeDetergent(list, name || 'Produit mÃ©nager', certifications);
 
     const value = Math.round(raw?.score ?? 0);
     const out = {
       id: (global as any).crypto?.randomUUID?.() || String(Date.now()),
       category: 'detergent',
-      product: { name: name || 'Produit ménager', barcode: barcode || null },
+      product: { name: name || 'Produit mÃ©nager', barcode: barcode || null },
       score: { value, label: labelFromScore(value) },
       risks: [],
       highlights: Array.isArray(raw?.insights) ? raw.insights.map((i: any) => (i?.title || i?.content || JSON.stringify(i))) : [],

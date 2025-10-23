@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
 // Composant d'analyse progressive avec gestion des valeurs manquantes
 

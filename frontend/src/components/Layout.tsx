@@ -1,4 +1,4 @@
-﻿// frontend/src/components/Layout.tsx
+// frontend/src/components/Layout.tsx
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 

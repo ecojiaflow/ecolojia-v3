@@ -13,19 +13,19 @@ const ENABLE_VISION = process.env.ENABLE_VISION === '1';
 // Middleware auth (no-op si indisponible)
 let authenticateToken = null;
 try {
-  // Préférence: index exporte authenticateToken
+  // PrÃ©fÃ©rence: index exporte authenticateToken
   const mw = require('../middleware');
   authenticateToken = typeof mw.authenticateToken === 'function' ? mw.authenticateToken : null;
 } catch (_) {
   try {
-    // Fallback: certains projets l’exportent via ../middleware/auth
+    // Fallback: certains projets lâ€™exportent via ../middleware/auth
     const mw2 = require('../middleware/auth');
     authenticateToken = typeof mw2.authenticateToken === 'function' ? mw2.authenticateToken : null;
   } catch (_) {}
 }
 const authMw = authenticateToken || ((req, res, next) => next());
 
-// Vision service (peut être partiel en dev)
+// Vision service (peut Ãªtre partiel en dev)
 let visionService = null;
 try {
   visionService = require('../services/vision/VisionService');
@@ -33,7 +33,7 @@ try {
   visionService = null;
 }
 
-// Multer (uniquement si Vision activée & upload nécessaire)
+// Multer (uniquement si Vision activÃ©e & upload nÃ©cessaire)
 let upload = null;
 if (ENABLE_VISION) {
   const storage = multer.diskStorage({
@@ -54,7 +54,7 @@ if (ENABLE_VISION) {
     fileFilter: (req, file, cb) => {
       const allowed = /jpeg|jpg|png|webp/;
       const ok = allowed.test(path.extname(file.originalname).toLowerCase()) && allowed.test(file.mimetype);
-      ok ? cb(null, true) : cb(new Error('Formats acceptés: JPEG/PNG/WebP'));
+      ok ? cb(null, true) : cb(new Error('Formats acceptÃ©s: JPEG/PNG/WebP'));
     },
   });
 }
@@ -71,18 +71,18 @@ router.get('/health', (req, res) => {
   });
 });
 
-// Si Vision OFF OU handler manquant -> stubs sûrs (pas de crash)
+// Si Vision OFF OU handler manquant -> stubs sÃ»rs (pas de crash)
 const analyzeImageHandlerOk = visionService && typeof visionService.analyzeImage === 'function';
 const extractOk = visionService && typeof visionService.extractStructuredData === 'function';
 
 if (!ENABLE_VISION || !analyzeImageHandlerOk) {
-  console.warn('⚠️ Vision désactivée ou handler indisponible — montage des stubs /api/vision/*');
+  console.warn('âš ï¸ Vision dÃ©sactivÃ©e ou handler indisponible â€” montage des stubs /api/vision/*');
 
   router.post('/analyze-image', authMw, (req, res) => {
     return res.status(503).json({
       success: false,
       message:
-        'Service OCR indisponible. Activez ENABLE_VISION=1 et fournissez VisionService.analyzeImage() pour l’utiliser.',
+        'Service OCR indisponible. Activez ENABLE_VISION=1 et fournissez VisionService.analyzeImage() pour lâ€™utiliser.',
     });
   });
 
@@ -97,7 +97,7 @@ if (!ENABLE_VISION || !analyzeImageHandlerOk) {
     return res.status(404).json({ success: false, message: 'Aucun job en cours en mode stub.' });
   });
 } else {
-  // Version complète uniquement quand Vision est prête
+  // Version complÃ¨te uniquement quand Vision est prÃªte
   const jobs = new Map();
 
   router.post('/analyze-image', authMw, upload.single('image'), async (req, res) => {
@@ -109,12 +109,12 @@ if (!ENABLE_VISION || !analyzeImageHandlerOk) {
     jobs.set(jobId, { status: 'processing', startTime: Date.now() });
 
     try {
-      // Lancer l’analyse async
+      // Lancer lâ€™analyse async
       visionService
         .analyzeImage(imagePath, { jobId, language: req.body.language || 'fr' })
         .then(() => {
-          // Le service doit lui-même mettre à jour le job (ou on peut le faire ici si on reçoit un résultat)
-          // Ici on ne force pas pour respecter ton implémentation existante.
+          // Le service doit lui-mÃªme mettre Ã  jour le job (ou on peut le faire ici si on reÃ§oit un rÃ©sultat)
+          // Ici on ne force pas pour respecter ton implÃ©mentation existante.
           setTimeout(async () => {
             try { await fs.unlink(imagePath); } catch (_) {}
           }, 30 * 60 * 1000);
@@ -123,7 +123,7 @@ if (!ENABLE_VISION || !analyzeImageHandlerOk) {
           jobs.set(jobId, { status: 'failed', error: err?.message || 'Erreur OCR' });
         });
 
-      // Petit délai pour réponse immédiate si rapide
+      // Petit dÃ©lai pour rÃ©ponse immÃ©diate si rapide
       await new Promise((r) => setTimeout(r, 1500));
       const j = jobs.get(jobId);
       if (j && j.status === 'completed') return res.json(j);
@@ -137,7 +137,7 @@ if (!ENABLE_VISION || !analyzeImageHandlerOk) {
 
   router.get('/status/:jobId', (req, res) => {
     const j = jobs.get(req.params.jobId);
-    if (!j) return res.status(404).json({ success: false, message: 'Job non trouvé' });
+    if (!j) return res.status(404).json({ success: false, message: 'Job non trouvÃ©' });
     return res.json(j);
   });
 

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/OfflineIndicator.tsx
+// PATH: frontend/src/components/OfflineIndicator.tsx
 import { useEffect, useState } from "react";
 import { notifications } from "../services/notificationService";
 

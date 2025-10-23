@@ -1,25 +1,25 @@
 [
   {
-    "name": "Lessive Ã‰cologique Lavande",
+    "name": "Lessive Ãƒâ€°cologique Lavande",
     "brand": "EcoClean",
     "barcode": "3560070123456",
     "categories": ["laundry_detergent", "liquid"],
-    "composition": "5-15% tensioactifs anioniques d'origine végétale (Sodium Coco-Sulfate), <5% tensioactifs non-ioniques (Coco Glucoside), savon, enzymes (protéase, amylase), parfum naturel de lavande, conservateur (Sodium Benzoate), eau",
+    "composition": "5-15% tensioactifs anioniques d'origine vÃ©gÃ©tale (Sodium Coco-Sulfate), <5% tensioactifs non-ioniques (Coco Glucoside), savon, enzymes (protÃ©ase, amylase), parfum naturel de lavande, conservateur (Sodium Benzoate), eau",
     "labels": ["eu_ecolabel", "vegan", "cruelty_free"],
     "certifications": ["eu_ecolabel"],
     "dosage": "30ml pour 4-5kg de linge",
-    "packaging": "Flacon 100% recyclé et recyclable"
+    "packaging": "Flacon 100% recyclÃ© et recyclable"
   },
   {
     "name": "Tablettes Lave-Vaisselle All-in-One",
     "brand": "BrightDish",
     "barcode": "3560070234567",
     "categories": ["dishwasher_detergent", "tablets"],
-    "composition": "Sodium Carbonate, Sodium Citrate, Sodium Percarbonate, TAED, enzymes (protéase, amylase), Sodium Silicate, polycarboxylates, parfum",
+    "composition": "Sodium Carbonate, Sodium Citrate, Sodium Percarbonate, TAED, enzymes (protÃ©ase, amylase), Sodium Silicate, polycarboxylates, parfum",
     "labels": ["phosphate_free", "soluble_film"],
     "certifications": [],
     "dosage": "1 tablette par cycle",
-    "features": ["Sel régénérant intégré", "Liquide de rinçage intégré", "Protection verre"]
+    "features": ["Sel rÃ©gÃ©nÃ©rant intÃ©grÃ©", "Liquide de rinÃ§age intÃ©grÃ©", "Protection verre"]
   },
   {
     "name": "Nettoyant Multi-Surfaces Citron",
@@ -33,32 +33,32 @@
     "ph": 4.5
   },
   {
-    "name": "Détergent WC Power Gel",
+    "name": "DÃ©tergent WC Power Gel",
     "brand": "SaniClean",
     "barcode": "3560070456789",
     "categories": ["toilet_cleaner", "gel"],
-    "composition": "Acide chlorhydrique 9%, tensioactifs anioniques <5%, épaississant, parfum, colorant",
+    "composition": "Acide chlorhydrique 9%, tensioactifs anioniques <5%, Ã©paississant, parfum, colorant",
     "labels": ["kills_99_9_germs"],
     "certifications": [],
-    "warnings": ["Corrosif", "Porter des gants", "Ne pas mélanger avec d'autres produits"],
-    "features": ["Formule gel adhérente", "Col coudé"]
+    "warnings": ["Corrosif", "Porter des gants", "Ne pas mÃ©langer avec d'autres produits"],
+    "features": ["Formule gel adhÃ©rente", "Col coudÃ©"]
   },
   {
     "name": "Liquide Vaisselle Main Aloe Vera",
     "brand": "GentleClean",
     "barcode": "3560070567890",
     "categories": ["dish_soap", "hand_wash"],
-    "composition": "15-30% tensioactifs anioniques (Sodium Laureth Sulfate), 5-15% tensioactifs amphotères (Cocamidopropyl Betaine), glycérine, extrait d'aloe vera, sel, conservateur (Methylisothiazolinone, Methylchloroisothiazolinone), parfum, eau",
+    "composition": "15-30% tensioactifs anioniques (Sodium Laureth Sulfate), 5-15% tensioactifs amphotÃ¨res (Cocamidopropyl Betaine), glycÃ©rine, extrait d'aloe vera, sel, conservateur (Methylisothiazolinone, Methylchloroisothiazolinone), parfum, eau",
     "labels": ["dermatologically_tested", "gentle_hands"],
     "certifications": [],
-    "features": ["Formule concentrée", "pH neutre pour la peau"]
+    "features": ["Formule concentrÃ©e", "pH neutre pour la peau"]
   },
   {
-    "name": "Détartrant Salle de Bain",
+    "name": "DÃ©tartrant Salle de Bain",
     "brand": "LimeAway",
     "barcode": "3560070678901",
     "categories": ["bathroom_cleaner", "descaler"],
-    "composition": "Acide citrique 15%, tensioactifs non-ioniques <5%, épaississant, parfum, eau",
+    "composition": "Acide citrique 15%, tensioactifs non-ioniques <5%, Ã©paississant, parfum, eau",
     "labels": ["natural_acids", "biodegradable"],
     "certifications": [],
     "usage": "Appliquer, laisser agir 5 minutes, rincer",
@@ -73,28 +73,28 @@
     "labels": ["effective_30c", "color_safe"],
     "certifications": [],
     "dosage": "75g pour eau douce, 100g pour eau dure",
-    "features": ["Anti-calcaire", "Efficace dès 30Â°C"]
+    "features": ["Anti-calcaire", "Efficace dÃ¨s 30Ã‚Â°C"]
   },
   {
     "name": "Spray Vitres et Miroirs",
     "brand": "CrystalClear",
     "barcode": "3560070890123",
     "categories": ["glass_cleaner", "spray"],
-    "composition": "Alcool isopropylique <5%, tensioactifs non-ioniques <1%, vinaigre blanc, eau déminéralisée",
+    "composition": "Alcool isopropylique <5%, tensioactifs non-ioniques <1%, vinaigre blanc, eau dÃ©minÃ©ralisÃ©e",
     "labels": ["streak_free", "quick_dry"],
     "certifications": [],
-    "features": ["Sans traces", "Séchage rapide", "Brillance éclatante"]
+    "features": ["Sans traces", "SÃ©chage rapide", "Brillance Ã©clatante"]
   },
   {
-    "name": "Désinfectant Surfaces",
+    "name": "DÃ©sinfectant Surfaces",
     "brand": "HygieneMax",
     "barcode": "3560070901234",
     "categories": ["disinfectant", "spray"],
     "composition": "Ethanol 70%, Chlorure de benzalkonium 0.1%, eau, parfum",
     "labels": ["kills_bacteria_viruses", "en14476"],
     "certifications": [],
-    "warnings": ["Inflammable", "Utiliser dans un endroit ventilé"],
-    "efficacy": "Ã‰limine 99.99% des bactéries et virus enveloppés"
+    "warnings": ["Inflammable", "Utiliser dans un endroit ventilÃ©"],
+    "efficacy": "Ãƒâ€°limine 99.99% des bactÃ©ries et virus enveloppÃ©s"
   },
   {
     "name": "Nettoyant Sol Parfum Provence",
@@ -105,27 +105,27 @@
     "labels": ["concentrated_formula", "suitable_all_floors"],
     "certifications": [],
     "dosage": "1 bouchon pour 5L d'eau",
-    "features": ["Ne nécessite pas de rinçage", "Laisse un parfum frais"]
+    "features": ["Ne nÃ©cessite pas de rinÃ§age", "Laisse un parfum frais"]
   },
   {
-    "name": "Lessive Bébé Hypoallergénique",
+    "name": "Lessive BÃ©bÃ© HypoallergÃ©nique",
     "brand": "BabySoft",
     "barcode": "3560070123457",
     "categories": ["laundry_detergent", "baby"],
-    "composition": "Savon végétal, Sodium Coco-Sulfate <5%, Sodium Carbonate, enzymes, eau",
+    "composition": "Savon vÃ©gÃ©tal, Sodium Coco-Sulfate <5%, Sodium Carbonate, enzymes, eau",
     "labels": ["hypoallergenic", "fragrance_free", "pediatrician_tested"],
     "certifications": ["dermatologically_tested"],
-    "features": ["Sans parfum", "Sans colorant", "Testé sous contrôle pédiatrique"]
+    "features": ["Sans parfum", "Sans colorant", "TestÃ© sous contrÃ´le pÃ©diatrique"]
   },
   {
-    "name": "Déboucheur Canalisations",
+    "name": "DÃ©boucheur Canalisations",
     "brand": "DrainPower",
     "barcode": "3560070234568",
     "categories": ["drain_cleaner", "gel"],
-    "composition": "Hydroxyde de sodium 30%, épaississants, inhibiteurs de corrosion, eau",
+    "composition": "Hydroxyde de sodium 30%, Ã©paississants, inhibiteurs de corrosion, eau",
     "labels": ["professional_strength"],
     "certifications": [],
-    "warnings": ["Très corrosif", "Ne jamais mélanger avec des acides", "Porter gants et lunettes"],
+    "warnings": ["TrÃ¨s corrosif", "Ne jamais mÃ©langer avec des acides", "Porter gants et lunettes"],
     "usage": "Verser lentement 250ml, laisser agir 30 min, rincer abondamment"
   },
   {
@@ -137,17 +137,17 @@
     "labels": ["long_lasting_fragrance", "anti_static"],
     "certifications": [],
     "dosage": "35ml pour une charge normale",
-    "features": ["Facilite le repassage", "Réduit l'électricité statique"]
+    "features": ["Facilite le repassage", "RÃ©duit l'Ã©lectricitÃ© statique"]
   },
   {
-    "name": "Détachant Textile Oxy-Action",
+    "name": "DÃ©tachant Textile Oxy-Action",
     "brand": "StainGone",
     "barcode": "3560070456780",
     "categories": ["stain_remover", "powder"],
     "composition": "Sodium Percarbonate >30%, Sodium Carbonate, TAED, enzymes, tensioactifs anioniques <5%",
     "labels": ["oxygen_bleach", "color_safe", "effective_30c"],
     "certifications": [],
-    "usage": "Ajouter 1 cuillère Ã  la lessive ou faire tremper",
+    "usage": "Ajouter 1 cuillÃ¨re ÃƒÂ  la lessive ou faire tremper",
     "features": ["Sans chlore", "Respecte les couleurs"]
   },
   {
@@ -155,10 +155,10 @@
     "brand": "OvenClean",
     "barcode": "3560070567891",
     "categories": ["oven_cleaner", "foam"],
-    "composition": "Hydroxyde de potassium <5%, tensioactifs non-ioniques, épaississants, solvants, propulseur (butane/propane)",
+    "composition": "Hydroxyde de potassium <5%, tensioactifs non-ioniques, Ã©paississants, solvants, propulseur (butane/propane)",
     "labels": ["powerful_degreaser", "self_acting_foam"],
     "certifications": [],
-    "warnings": ["Corrosif", "Aérer pendant utilisation", "Porter des gants"],
-    "features": ["Mousse auto-active", "Adhère aux parois verticales"]
+    "warnings": ["Corrosif", "AÃ©rer pendant utilisation", "Porter des gants"],
+    "features": ["Mousse auto-active", "AdhÃ¨re aux parois verticales"]
   }
 ]

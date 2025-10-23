@@ -1,3 +1,3 @@
 import { detectUltraTransformation } from './routes/ultraProcessing.routes';
 
-console.log(detectUltraTransformation(['maltodextrine', 'huile hydrogénée']));
+console.log(detectUltraTransformation(['maltodextrine', 'huile hydrogÃ©nÃ©e']));

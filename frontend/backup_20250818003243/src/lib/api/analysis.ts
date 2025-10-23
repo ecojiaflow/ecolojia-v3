@@ -1,4 +1,4 @@
-﻿// PATH: frontend\src\lib\api\analysis.ts
+// PATH: frontend\src\lib\api\analysis.ts
 import apiClient from './client';
 
 export interface AnalysisResult {

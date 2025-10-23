@@ -1,4 +1,4 @@
-﻿// frontend/src/components/premium/CircularScoreGauge.jsx
+// frontend/src/components/premium/CircularScoreGauge.jsx
 
 import React, { useEffect, useState } from 'react';
 

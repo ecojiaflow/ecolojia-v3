@@ -52,34 +52,34 @@ const AiPreferencesPage: React.FC = () => {
   });
 
   const toneOptions: ToneOption[] = [
-    { value: 'casual', label: 'DÃƒÂ©contractÃƒÂ©', icon: Smile, description: 'RÃƒÂ©ponses simples et amicales' },
-    { value: 'professional', label: 'Professionnel', icon: Book, description: 'Analyses dÃƒÂ©taillÃƒÂ©es et formelles' },
-    { value: 'educational', label: 'Ãƒâ€°ducatif', icon: GraduationCap, description: 'Explications pÃƒÂ©dagogiques' },
-    { value: 'fun', label: 'Ludique', icon: Sparkles, description: 'Ton lÃƒÂ©ger avec emojis' }
+    { value: 'casual', label: 'DÃƒÆ’Ã‚Â©contractÃƒÆ’Ã‚Â©', icon: Smile, description: 'RÃƒÆ’Ã‚Â©ponses simples et amicales' },
+    { value: 'professional', label: 'Professionnel', icon: Book, description: 'Analyses dÃƒÆ’Ã‚Â©taillÃƒÆ’Ã‚Â©es et formelles' },
+    { value: 'educational', label: 'ÃƒÆ’Ã¢â‚¬Â°ducatif', icon: GraduationCap, description: 'Explications pÃƒÆ’Ã‚Â©dagogiques' },
+    { value: 'fun', label: 'Ludique', icon: Sparkles, description: 'Ton lÃƒÆ’Ã‚Â©ger avec emojis' }
   ];
 
   const detailOptions: DetailOption[] = [
     { value: 'concise', label: 'Concis', description: 'L\'essentiel en quelques mots' },
-    { value: 'balanced', label: 'Ãƒâ€°quilibrÃƒÂ©', description: 'Informations complÃƒÂ¨tes mais accessibles' },
-    { value: 'detailed', label: 'DÃƒÂ©taillÃƒÂ©', description: 'Analyses approfondies avec sources' }
+    { value: 'balanced', label: 'ÃƒÆ’Ã¢â‚¬Â°quilibrÃƒÆ’Ã‚Â©', description: 'Informations complÃƒÆ’Ã‚Â¨tes mais accessibles' },
+    { value: 'detailed', label: 'DÃƒÆ’Ã‚Â©taillÃƒÆ’Ã‚Â©', description: 'Analyses approfondies avec sources' }
   ];
 
   const focusAreaOptions = [
-    { value: 'health', label: 'SantÃƒÂ©', icon: 'âÂÂ¤Ã¯Â¸Â' },
-    { value: 'environment', label: 'Environnement', icon: 'Ã°Å¸Å’Â' },
-    { value: 'ethics', label: 'Ãƒâ€°thique', icon: 'âÅ¡â€“Ã¯Â¸Â' },
-    { value: 'allergies', label: 'Allergies', icon: 'âÅ¡Â Ã¯Â¸Â' },
-    { value: 'nutrition', label: 'Nutrition', icon: 'Ã°Å¸Â¥â€”' }
+    { value: 'health', label: 'SantÃƒÆ’Ã‚Â©', icon: 'Ã¢Ã‚ÂÃ‚Â¤ÃƒÂ¯Ã‚Â¸Ã‚Â' },
+    { value: 'environment', label: 'Environnement', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â' },
+    { value: 'ethics', label: 'ÃƒÆ’Ã¢â‚¬Â°thique', icon: 'Ã¢Ã…Â¡Ã¢â‚¬â€œÃƒÂ¯Ã‚Â¸Ã‚Â' },
+    { value: 'allergies', label: 'Allergies', icon: 'Ã¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â' },
+    { value: 'nutrition', label: 'Nutrition', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã¢â‚¬â€' }
   ];
 
   const restrictionOptions = [
-    { value: 'vegan', label: 'VÃƒÂ©gane', icon: 'Ã°Å¸Å’Â±' },
-    { value: 'vegetarian', label: 'VÃƒÂ©gÃƒÂ©tarien', icon: 'Ã°Å¸Â¥â€¢' },
-    { value: 'gluten-free', label: 'Sans gluten', icon: 'Ã°Å¸Å’Â¾' },
-    { value: 'lactose-free', label: 'Sans lactose', icon: 'Ã°Å¸Â¥â€º' },
-    { value: 'halal', label: 'Halal', icon: 'âËœÂªÃ¯Â¸Â' },
-    { value: 'kosher', label: 'Casher', icon: 'âÅ“Â¡Ã¯Â¸Â' },
-    { value: 'nut-free', label: 'Sans fruits ÃƒÂ  coque', icon: 'Ã°Å¸Â¥Å“' }
+    { value: 'vegan', label: 'VÃƒÆ’Ã‚Â©gane', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â±' },
+    { value: 'vegetarian', label: 'VÃƒÆ’Ã‚Â©gÃƒÆ’Ã‚Â©tarien', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã¢â‚¬Â¢' },
+    { value: 'gluten-free', label: 'Sans gluten', icon: 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¾' },
+    { value: 'lactose-free', label: 'Sans lactose', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã¢â‚¬Âº' },
+    { value: 'halal', label: 'Halal', icon: 'Ã¢Ã‹Å“Ã‚ÂªÃƒÂ¯Ã‚Â¸Ã‚Â' },
+    { value: 'kosher', label: 'Casher', icon: 'Ã¢Ã…â€œÃ‚Â¡ÃƒÂ¯Ã‚Â¸Ã‚Â' },
+    { value: 'nut-free', label: 'Sans fruits ÃƒÆ’Ã‚Â  coque', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã…â€œ' }
   ];
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const AiPreferencesPage: React.FC = () => {
 
     const fetchPreferences = async () => {
     try {
-      // Vérifier si l'utilisateur est connecté
+      // VÃ©rifier si l'utilisateur est connectÃ©
       const token = localStorage.getItem('token');
       if (!token) {
         console.warn('No token found, redirecting to login');
@@ -106,7 +106,7 @@ const AiPreferencesPage: React.FC = () => {
       if (error.message === 'Token non fourni' || error.response?.status === 401) {
         navigate('/login');
       } else {
-        setError('Erreur lors du chargement des préférences');
+        setError('Erreur lors du chargement des prÃ©fÃ©rences');
         setLoading(false);
       }
     }
@@ -159,7 +159,7 @@ const AiPreferencesPage: React.FC = () => {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-[#3B3B3B]">PrÃƒÂ©fÃƒÂ©rences IA</h1>
+                <h1 className="text-2xl font-bold text-[#3B3B3B]">PrÃƒÆ’Ã‚Â©fÃƒÆ’Ã‚Â©rences IA</h1>
                 <p className="text-gray-600 mt-1">Personnalisez votre assistant Ecolojia</p>
               </div>
             </div>
@@ -186,7 +186,7 @@ const AiPreferencesPage: React.FC = () => {
         >
           <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 flex items-center gap-2">
             <Check className="w-5 h-5" />
-            PrÃƒÂ©fÃƒÂ©rences mises ÃƒÂ  jour avec succÃƒÂ¨s !
+            PrÃƒÆ’Ã‚Â©fÃƒÆ’Ã‚Â©rences mises ÃƒÆ’Ã‚Â  jour avec succÃƒÆ’Ã‚Â¨s !
           </div>
         </motion.div>
       )}
@@ -199,7 +199,7 @@ const AiPreferencesPage: React.FC = () => {
             <MessageSquare className="w-5 h-5 text-[#7DDE4A]" />
             Ton de l'assistant
           </h2>
-          <p className="text-gray-600 mb-4">Comment souhaitez-vous que l'IA vous rÃƒÂ©ponde ?</p>
+          <p className="text-gray-600 mb-4">Comment souhaitez-vous que l'IA vous rÃƒÆ’Ã‚Â©ponde ?</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {toneOptions.map(option => (
@@ -224,13 +224,13 @@ const AiPreferencesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Niveau de dÃƒÂ©tail */}
+        {/* Niveau de dÃƒÆ’Ã‚Â©tail */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
           <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
             <Book className="w-5 h-5 text-blue-500" />
-            Niveau de dÃƒÂ©tail
+            Niveau de dÃƒÆ’Ã‚Â©tail
           </h2>
-          <p className="text-gray-600 mb-4">Quelle quantitÃƒÂ© d'informations souhaitez-vous recevoir ?</p>
+          <p className="text-gray-600 mb-4">Quelle quantitÃƒÆ’Ã‚Â© d'informations souhaitez-vous recevoir ?</p>
           
           <div className="space-y-3">
             {detailOptions.map(option => (
@@ -259,13 +259,13 @@ const AiPreferencesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Domaines d'intÃƒÂ©rÃƒÂªt */}
+        {/* Domaines d'intÃƒÆ’Ã‚Â©rÃƒÆ’Ã‚Âªt */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
           <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
             <Focus className="w-5 h-5 text-purple-500" />
-            Domaines d'intÃƒÂ©rÃƒÂªt
+            Domaines d'intÃƒÆ’Ã‚Â©rÃƒÆ’Ã‚Âªt
           </h2>
-          <p className="text-gray-600 mb-4">Sur quoi l'IA doit-elle se concentrer en prioritÃƒÂ© ?</p>
+          <p className="text-gray-600 mb-4">Sur quoi l'IA doit-elle se concentrer en prioritÃƒÆ’Ã‚Â© ?</p>
           
           <div className="flex flex-wrap gap-3">
             {focusAreaOptions.map(option => (
@@ -289,7 +289,7 @@ const AiPreferencesPage: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
           <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
             <Utensils className="w-5 h-5 text-orange-500" />
-            RÃƒÂ©gime alimentaire
+            RÃƒÆ’Ã‚Â©gime alimentaire
           </h2>
           <p className="text-gray-600 mb-4">L'IA prendra en compte ces restrictions dans ses recommandations</p>
           
@@ -317,7 +317,7 @@ const AiPreferencesPage: React.FC = () => {
             <AlertTriangle className="w-5 h-5 text-red-500" />
             Allergies
           </h2>
-          <p className="text-gray-600 mb-4">L'IA vous alertera systÃƒÂ©matiquement sur ces allergÃƒÂ¨nes</p>
+          <p className="text-gray-600 mb-4">L'IA vous alertera systÃƒÆ’Ã‚Â©matiquement sur ces allergÃƒÆ’Ã‚Â¨nes</p>
           
           <div className="flex flex-wrap gap-2 mb-4">
             {aiPrefs.allergies.map((allergy, index) => (
@@ -333,7 +333,7 @@ const AiPreferencesPage: React.FC = () => {
                   })}
                   className="ml-1 hover:text-red-900"
                 >
-                  Ãƒâ€”
+                  ÃƒÆ’Ã¢â‚¬â€
                 </button>
               </span>
             ))}
@@ -347,9 +347,9 @@ const AiPreferencesPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Options avancÃƒÂ©es */}
+        {/* Options avancÃƒÆ’Ã‚Â©es */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-4">Options avancÃƒÂ©es</h2>
+          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-4">Options avancÃƒÆ’Ã‚Â©es</h2>
           
           <div className="space-y-4">
             <label className="flex items-center justify-between cursor-pointer">
@@ -373,7 +373,7 @@ const AiPreferencesPage: React.FC = () => {
                 <History className="w-5 h-5 text-gray-500" />
                 <div>
                   <div className="font-medium text-[#3B3B3B]">Historique des conversations</div>
-                  <div className="text-sm text-gray-600">Conserver vos ÃƒÂ©changes avec l'IA</div>
+                  <div className="text-sm text-gray-600">Conserver vos ÃƒÆ’Ã‚Â©changes avec l'IA</div>
                 </div>
               </div>
               <input
@@ -399,11 +399,11 @@ const AiPreferencesPage: React.FC = () => {
             onChange={(e) => setAiPrefs({ ...aiPrefs, language: e.target.value as AiPreferences['language'] })}
             className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           >
-            <option value="fr">Ã°Å¸â€¡Â«Ã°Å¸â€¡Â· FranÃƒÂ§ais</option>
-            <option value="en">Ã°Å¸â€¡Â¬Ã°Å¸â€¡Â§ English</option>
-            <option value="es">Ã°Å¸â€¡ÂªÃ°Å¸â€¡Â¸ EspaÃƒÂ±ol</option>
-            <option value="de">Ã°Å¸â€¡Â©Ã°Å¸â€¡Âª Deutsch</option>
-            <option value="it">Ã°Å¸â€¡Â®Ã°Å¸â€¡Â¹ Italiano</option>
+            <option value="fr">ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â«ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â· FranÃƒÆ’Ã‚Â§ais</option>
+            <option value="en">ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¬ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â§ English</option>
+            <option value="es">ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚ÂªÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¸ EspaÃƒÆ’Ã‚Â±ol</option>
+            <option value="de">ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â©ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Âª Deutsch</option>
+            <option value="it">ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â®ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¹ Italiano</option>
           </select>
         </div>
 
@@ -422,7 +422,7 @@ const AiPreferencesPage: React.FC = () => {
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                Enregistrer mes prÃƒÂ©fÃƒÂ©rences
+                Enregistrer mes prÃƒÆ’Ã‚Â©fÃƒÆ’Ã‚Â©rences
               </>
             )}
           </button>

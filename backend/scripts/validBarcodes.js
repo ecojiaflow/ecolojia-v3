@@ -1,4 +1,4 @@
-﻿const VALID_BARCODES = [
+const VALID_BARCODES = [
   // Nutella & pâtes à tartiner
   '3017620422003', // Nutella 400g
   '3017620425035', // Nutella 750g

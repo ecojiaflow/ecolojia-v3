@@ -25,7 +25,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     return 'bg-red-600';
   };
 
-  // Cas : Score non calculé
+  // Cas : Score non calculÃ©
   if (score === null || score === undefined) {
     return (
       <div className="mt-4 w-full">
@@ -33,7 +33,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
           <div className="h-full bg-gray-400 w-0" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-semibold text-gray-600 text-sm">
-              Produit non évalué
+              Produit non Ã©valuÃ©
             </span>
           </div>
         </div>
@@ -79,7 +79,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     );
   }
 
-  // Cas : Score calculé (affichage normal)
+  // Cas : Score calculÃ© (affichage normal)
   return (
     <div className="mt-4 w-full">
       <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden">

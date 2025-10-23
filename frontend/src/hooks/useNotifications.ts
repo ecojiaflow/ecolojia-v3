@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useNotifications.ts
+// PATH: frontend/src/hooks/useNotifications.ts
 import { useEffect, useState } from 'react';
 import { notifications, Toast } from '../services/notificationService';
 

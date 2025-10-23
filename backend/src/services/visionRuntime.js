@@ -1,4 +1,4 @@
-﻿const keywords = [
+const keywords = [
   "gluten","lait","lactose","arachide","noisette","noix","amande","soja",
   "oeuf","œuf","moutarde","sésame","céleri","poisson","crustacé","sulfite"
 ];

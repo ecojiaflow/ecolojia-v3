@@ -435,15 +435,15 @@ function parseDetergentsResponse(parsed, missingFields) {
  * Parse un produit depuis texte OCR avec DeepSeek IA
  * @param {string} ocrText - Texte extrait par OCR
  * @param {string} barcode - Code-barre du produit
- * @returns {Promise<Object>} Produit parsé
+ * @returns {Promise<Object>} Produit parsÃ©
  */
 async function parseProductFromOCR(ocrText, barcode) {
   try {
     console.log('[AI Enrichment] Parsing OCR text with DeepSeek...');
     
-    const prompt = `Tu es un expert en analyse d'étiquettes de produits (alimentaires, cosmétiques, détergents).
+    const prompt = `Tu es un expert en analyse d'Ã©tiquettes de produits (alimentaires, cosmÃ©tiques, dÃ©tergents).
 
-TÂCHE : Extraire les informations structurées depuis le texte OCR d'une étiquette produit.
+TÃ‚CHE : Extraire les informations structurÃ©es depuis le texte OCR d'une Ã©tiquette produit.
 
 TEXTE OCR (peut contenir erreurs) :
 """
@@ -455,19 +455,19 @@ CODE-BARRE : ${barcode}
 INSTRUCTIONS :
 1. Identifier le NOM du produit (le plus mis en valeur)
 2. Identifier la MARQUE
-3. Déterminer la CATÉGORIE : "food" | "cosmetics" | "detergents"
-4. Extraire la LISTE D'INGRÉDIENTS complète
+3. DÃ©terminer la CATÃ‰GORIE : "food" | "cosmetics" | "detergents"
+4. Extraire la LISTE D'INGRÃ‰DIENTS complÃ¨te
 5. Extraire les VALEURS NUTRITIONNELLES (si food) pour 100g/100ml
 6. Identifier les ADDITIFS alimentaires (codes E suivi de chiffres)
 7. Identifier les LABELS (Bio, Vegan, Ecocert, etc.)
-8. Évaluer la CONFIANCE de l'extraction (0-1)
+8. Ã‰valuer la CONFIANCE de l'extraction (0-1)
 
-FORMAT RÉPONSE (JSON strict) :
+FORMAT RÃ‰PONSE (JSON strict) :
 {
   "name": "Nom du produit",
   "brand": "Marque",
   "category": "food|cosmetics|detergents",
-  "ingredients_text": "Liste complète des ingrédients",
+  "ingredients_text": "Liste complÃ¨te des ingrÃ©dients",
   "nutriments": {
     "energy": 500,
     "proteins": 10,
@@ -486,26 +486,26 @@ FORMAT RÉPONSE (JSON strict) :
   "confidence": 0.85
 }
 
-RÈGLES IMPORTANTES :
-- Si catégorie = "cosmetics", remplir "inci" au lieu de "ingredients_text"
-- Si catégorie = "detergents", indiquer ingrédients chimiques
-- Si données manquantes, mettre null
-- Confiance élevée si texte clair, faible si OCR dégradé
+RÃˆGLES IMPORTANTES :
+- Si catÃ©gorie = "cosmetics", remplir "inci" au lieu de "ingredients_text"
+- Si catÃ©gorie = "detergents", indiquer ingrÃ©dients chimiques
+- Si donnÃ©es manquantes, mettre null
+- Confiance Ã©levÃ©e si texte clair, faible si OCR dÃ©gradÃ©
 
-RÉPONDS UNIQUEMENT AVEC LE JSON, PAS DE TEXTE AVANT/APRÈS.`;
+RÃ‰PONDS UNIQUEMENT AVEC LE JSON, PAS DE TEXTE AVANT/APRÃˆS.`;
 
     // Appeler DeepSeek
     const response = await deepSeekService.chat([
       { role: 'user', content: prompt }
     ], {
-      temperature: 0.1, // Précision maximale
+      temperature: 0.1, // PrÃ©cision maximale
       max_tokens: 2000
     });
     
-    // Parser réponse JSON
+    // Parser rÃ©ponse JSON
     let parsed;
     try {
-      // Nettoyer la réponse (enlever markdown si présent)
+      // Nettoyer la rÃ©ponse (enlever markdown si prÃ©sent)
       const cleanResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       parsed = JSON.parse(cleanResponse);
     } catch (parseError) {
@@ -513,7 +513,7 @@ RÉPONDS UNIQUEMENT AVEC LE JSON, PAS DE TEXTE AVANT/APRÈS.`;
       throw new Error('IA response not valid JSON');
     }
     
-    // Valider données minimales
+    // Valider donnÃ©es minimales
     if (!parsed.name) {
       throw new Error('Product name not found in OCR');
     }

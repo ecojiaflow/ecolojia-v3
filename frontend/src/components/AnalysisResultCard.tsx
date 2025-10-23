@@ -1,4 +1,4 @@
-﻿// PATH: frontend\src\components\AnalysisResultCard.tsx
+// PATH: frontend\src\components\AnalysisResultCard.tsx
 import React, { useState } from 'react';
 import { 
   Leaf, 

@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 // Schema Product inline (si modèle introuvable)

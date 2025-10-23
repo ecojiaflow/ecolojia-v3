@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/data/mockProducts.ts
+// PATH: frontend/src/data/mockProducts.ts
 export const mockProducts = [
   {
     _id: "mock-1",

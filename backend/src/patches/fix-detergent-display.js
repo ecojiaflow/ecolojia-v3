@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// Chemin vers le fichier   patcher
+// Chemin vers le fichier Â  patcher
 const filePath = path.join(__dirname, '../services/analysis/detergentAnalyzer.js');
 
 // Lire le fichier
@@ -37,9 +37,9 @@ const newCode = `        details: {
 if (content.includes(oldCode)) {
   content = content.replace(oldCode, newCode);
   fs.writeFileSync(filePath, content);
-  console.log('âœ… Patch applique avec succes !');
+  console.log('Ã¢Å“â€¦ Patch applique avec succes !');
 } else {
-  console.log('âš ï¸  Le code semble dej  etre corrige ou different.');
+  console.log('Ã¢Å¡Â Ã¯Â¸Â  Le code semble dejÂ  etre corrige ou different.');
 }
 
 console.log('\nPour appliquer ce patch :');

@@ -16,8 +16,8 @@ export default class ConversationalAI {
   public async chat(prompt: string): Promise<string> {
     const fullPrompt = [...this.conversationHistory, prompt].slice(-this.maxHistoryLength).join('\n');
 
-    // Ligne 150 : on retourne une réponse simulée
-    return `🤖 Réponse IA simulée à: "${prompt}"`;
+    // Ligne 150 : on retourne une rÃ©ponse simulÃ©e
+    return `ðŸ¤– RÃ©ponse IA simulÃ©e Ã : "${prompt}"`;
   }
 
   public getConversationHistory(): string[] {

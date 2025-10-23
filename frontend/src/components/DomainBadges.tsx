@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 // Adaptation aux catégories existantes dans votre projet
 export type DomainKey = "food" | "cosmetics" | "detergents";

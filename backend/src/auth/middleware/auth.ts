@@ -5,7 +5,7 @@ import { Logger } from '../../utils/Logger';
 
 const log = new Logger('AuthMiddleware');
 
-// Interface pour les requêtes authentifiées qui étend Express Request
+// Interface pour les requÃªtes authentifiÃ©es qui Ã©tend Express Request
 export interface AuthRequest extends Request {
   user?: {
     id: string;
@@ -21,7 +21,7 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Récupération du token depuis le header Authorization
+    // RÃ©cupÃ©ration du token depuis le header Authorization
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
@@ -34,26 +34,26 @@ export const authenticate = async (
       return;
     }
 
-    // Vérification du token
+    // VÃ©rification du token
     const decoded = await verifyToken(token);
     
     if (!decoded) {
       res.status(401).json({
         success: false,
-        message: 'Token invalide ou expiré',
+        message: 'Token invalide ou expirÃ©',
         code: 'INVALID_TOKEN'
       });
       return;
     }
 
-    // Ajout des informations utilisateur à la requête
+    // Ajout des informations utilisateur Ã  la requÃªte
     (req as AuthRequest).user = {
       id: decoded.userId,
       email: decoded.email,
       tier: (decoded.tier as 'free' | 'premium') || 'free'
     };
 
-    log.info(`Utilisateur authentifié: ${decoded.email}`);
+    log.info(`Utilisateur authentifiÃ©: ${decoded.email}`);
     next();
 
   } catch (error: any) {
@@ -62,7 +62,7 @@ export const authenticate = async (
     if (error.name === 'TokenExpiredError') {
       res.status(401).json({
         success: false,
-        message: 'Token expiré',
+        message: 'Token expirÃ©',
         code: 'TOKEN_EXPIRED'
       });
       return;
@@ -85,7 +85,7 @@ export const authenticate = async (
   }
 };
 
-// Middleware pour vérifier si l'utilisateur est premium
+// Middleware pour vÃ©rifier si l'utilisateur est premium
 export const requirePremium = async (
   req: Request,
   res: Response,
@@ -114,7 +114,7 @@ export const requirePremium = async (
   next();
 };
 
-// Middleware optionnel - authentifie si token présent mais ne bloque pas
+// Middleware optionnel - authentifie si token prÃ©sent mais ne bloque pas
 export const optionalAuth = async (
   req: Request,
   res: Response,
@@ -136,7 +136,7 @@ export const optionalAuth = async (
     }
   } catch (error) {
     // Ignorer les erreurs - authentification optionnelle
-    log.debug('Auth optionnelle échouée, continuer sans auth');
+    log.debug('Auth optionnelle Ã©chouÃ©e, continuer sans auth');
   }
 
   next();

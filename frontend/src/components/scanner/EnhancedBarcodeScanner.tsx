@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
+// PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { X, Camera, RotateCw, Zap, Upload, Eye, CheckCircle, AlertTriangle, FlashOff, Flash } from 'lucide-react';
 import { universalSearchEngine } from '../../services/search/UniversalSearchService';

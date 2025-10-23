@@ -41,7 +41,7 @@ const MultiScanPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'food' | 'cosmetic' | 'detergent'>('food');
 
-  // Ajouter un produit ƒÆ’†â€™ƒâ€š‚Â  analyser
+  // Ajouter un produit Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  analyser
   const addProduct = (name: string, barcode?: string) => {
     const newProduct: Product = {
       id: Date.now().toString(),
@@ -70,7 +70,7 @@ const MultiScanPage: React.FC = () => {
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       
-      // Mettre ƒÆ’†â€™ƒâ€š‚Â  jour le statut
+      // Mettre Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  jour le statut
       setProducts(prev => prev.map(p => 
         p.id === product.id ? { ...p, status: 'analyzing' } : p
       ));
@@ -81,10 +81,10 @@ const MultiScanPage: React.FC = () => {
           name: product.name,
           barcode: product.barcode,
           category: product.category,
-          ingredients: '' // ƒÆ’†â€™aâ€šÂ¬ ameliorer avec un vrai input
+          ingredients: '' // Æ’Ã†â€™â€ Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ ameliorer avec un vrai input
         });
         
-        // Mettre ƒÆ’†â€™ƒâ€š‚Â  jour avec le resultat
+        // Mettre Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  jour avec le resultat
         setProducts(prev => prev.map(p => 
           p.id === product.id 
             ? { ...p, status: 'completed', result } 
@@ -156,7 +156,7 @@ const MultiScanPage: React.FC = () => {
           </div>
           <div className="bg-white rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
-              {user?.subscription?.tier === 'premium' ? 'aƒâ€¹aâ‚¬Â ƒâ€¦‚Â¾' : '10'}
+              {user?.subscription?.tier === 'premium' ? 'aÆ’Ã¢â‚¬Â¹aÃ¢â€šÂ¬Ã‚Â Æ’Ã¢â‚¬Â¦â€šÃ‚Â¾' : '10'}
             </div>
             <div className="text-sm text-gray-500">Limite</div>
           </div>
@@ -166,7 +166,7 @@ const MultiScanPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Produits ƒÆ’†â€™ƒâ€š‚Â  analyser
+              Produits Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  analyser
             </h2>
             <button
               onClick={() => setShowAddModal(true)}
@@ -292,7 +292,7 @@ const MultiScanPage: React.FC = () => {
               onClick={() => navigate('/premium')}
               className="text-purple-600 hover:text-purple-700 font-medium"
             >
-              Passer ƒÆ’†â€™ƒâ€š‚Â  Premium pour des analyses illimitees aaaâ€šÂ¬‚Â aaâ€šÂ¬aâ€žÂ¢
+              Passer Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  Premium pour des analyses illimitees aaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢
             </button>
           </div>
         )}
@@ -326,9 +326,9 @@ const MultiScanPage: React.FC = () => {
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: 'food', label: 'Alimentaire', icon: 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â½' },
-                    { value: 'cosmetic', label: 'Cosmetique', icon: 'aƒâ€¦aâ‚¬Å“ƒâ€š‚Â¨' },
-                    { value: 'detergent', label: 'Detergent', icon: 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢ƒâ€š‚Â§' }
+                    { value: 'food', label: 'Alimentaire', icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½' },
+                    { value: 'cosmetic', label: 'Cosmetique', icon: 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œÆ’Ã¢â‚¬Å¡â€šÃ‚Â¨' },
+                    { value: 'detergent', label: 'Detergent', icon: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â§' }
                   ].map((cat) => (
                     <button
                       key={cat.value}

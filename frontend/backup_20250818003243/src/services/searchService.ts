@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/searchService.ts
+// PATH: frontend/src/services/searchService.ts
 import api from './api';
 import { SearchFilters, ProductHit } from '@/types';
 

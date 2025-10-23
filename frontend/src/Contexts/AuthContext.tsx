@@ -1,4 +1,4 @@
-﻿// ========================================
+// ========================================
 // FICHIER 2: src/Contexts/AuthContext.tsx
 // ========================================
 // PATH: frontend/src/Contexts/AuthContext.tsx

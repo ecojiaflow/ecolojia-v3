@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/CosmeticAnalysisPage.tsx
 
 import React, { useState } from 'react';

@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   
   const existing = await Favorite.findOne({ userId, productId });
   if (existing) {
-    return res.json({ success: true, message: 'DÈj‡ en favoris' });
+    return res.json({ success: true, message: 'D√©j√† en favoris' });
   }
   
   const favorite = await Favorite.create({ userId, productId, barcode });

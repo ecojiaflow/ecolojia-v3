@@ -85,7 +85,7 @@ class AdditivesAnalyzer {
   }
   
   /**
-   * ‰value niveau de risque global
+   * â€°value niveau de risque global
    */
   assessRisk(additives) {
     const riskFactors = [];
@@ -120,7 +120,7 @@ class AdditivesAnalyzer {
   }
   
   /**
-   * ‰value impact sur microbiote intestinal
+   * â€°value impact sur microbiote intestinal
    */
   assessMicrobiomeImpact(additives) {
     const impacts = [];

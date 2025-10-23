@@ -1,12 +1,12 @@
 /**
  * TEST RAPIDE DIAGNOSTIC SPRINT 2
- * Vérifie les imports et classes de base
+ * VÃ©rifie les imports et classes de base
  */
 
-console.log('ðŸ” === DIAGNOSTIC SPRINT 2 ===');
+console.log('Ã°Å¸â€Â === DIAGNOSTIC SPRINT 2 ===');
 
-// Test 1: Vérification fichiers Sprint 1
-console.log('\nðŸ“‚ Test 1: Vérification fichiers existants...');
+// Test 1: VÃ©rification fichiers Sprint 1
+console.log('\nÃ°Å¸â€œâ€š Test 1: VÃ©rification fichiers existants...');
 
 try {
   const fs = require('fs');
@@ -22,15 +22,15 @@ try {
   
   requiredFiles.forEach(file => {
     const exists = fs.existsSync(file);
-    console.log(`   ${exists ? 'âœ…' : 'âŒ'} ${file}`);
+    console.log(`   ${exists ? 'Ã¢Å“â€¦' : 'Ã¢ÂÅ’'} ${file}`);
   });
   
 } catch (error) {
-  console.log('   âŒ Erreur vérification fichiers:', error.message);
+  console.log('   Ã¢ÂÅ’ Erreur vÃ©rification fichiers:', error.message);
 }
 
-// Test 2: Vérification nouveaux fichiers Sprint 2
-console.log('\nðŸ“‚ Test 2: Vérification nouveaux fichiers Sprint 2...');
+// Test 2: VÃ©rification nouveaux fichiers Sprint 2
+console.log('\nÃ°Å¸â€œâ€š Test 2: VÃ©rification nouveaux fichiers Sprint 2...');
 
 try {
   const fs = require('fs');
@@ -44,83 +44,83 @@ try {
   
   newFiles.forEach(file => {
     const exists = fs.existsSync(file);
-    console.log(`   ${exists ? 'âœ…' : 'âŒ'} ${file}`);
+    console.log(`   ${exists ? 'Ã¢Å“â€¦' : 'Ã¢ÂÅ’'} ${file}`);
   });
   
 } catch (error) {
-  console.log('   âŒ Erreur vérification nouveaux fichiers:', error.message);
+  console.log('   Ã¢ÂÅ’ Erreur vÃ©rification nouveaux fichiers:', error.message);
 }
 
 // Test 3: Test imports individuels
-console.log('\nðŸ”— Test 3: Test imports individuels...');
+console.log('\nÃ°Å¸â€â€” Test 3: Test imports individuels...');
 
 // Test NovaClassifier
 try {
   const NovaClassifier = require('./src/scorers/food/novaClassifier');
-  console.log(`   âœ… NovaClassifier: ${typeof NovaClassifier === 'function' ? 'Constructor OK' : 'Type: ' + typeof NovaClassifier}`);
+  console.log(`   Ã¢Å“â€¦ NovaClassifier: ${typeof NovaClassifier === 'function' ? 'Constructor OK' : 'Type: ' + typeof NovaClassifier}`);
 } catch (error) {
-  console.log(`   âŒ NovaClassifier: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ NovaClassifier: ${error.message}`);
 }
 
 // Test AdditivesAnalyzer
 try {
   const AdditivesAnalyzer = require('./src/scorers/food/additivesAnalyzer');
-  console.log(`   âœ… AdditivesAnalyzer: ${typeof AdditivesAnalyzer === 'function' ? 'Constructor OK' : 'Type: ' + typeof AdditivesAnalyzer}`);
+  console.log(`   Ã¢Å“â€¦ AdditivesAnalyzer: ${typeof AdditivesAnalyzer === 'function' ? 'Constructor OK' : 'Type: ' + typeof AdditivesAnalyzer}`);
 } catch (error) {
-  console.log(`   âŒ AdditivesAnalyzer: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ AdditivesAnalyzer: ${error.message}`);
 }
 
 // Test NutriScorer (nouveau)
 try {
   const NutriScorer = require('./src/scorers/food/nutriScorer');
-  console.log(`   âœ… NutriScorer: ${typeof NutriScorer === 'function' ? 'Constructor OK' : 'Type: ' + typeof NutriScorer}`);
+  console.log(`   Ã¢Å“â€¦ NutriScorer: ${typeof NutriScorer === 'function' ? 'Constructor OK' : 'Type: ' + typeof NutriScorer}`);
 } catch (error) {
-  console.log(`   âŒ NutriScorer: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ NutriScorer: ${error.message}`);
 }
 
 // Test GlycemicEstimator (nouveau)
 try {
   const GlycemicEstimator = require('./src/scorers/food/glycemicEstimator');
-  console.log(`   âœ… GlycemicEstimator: ${typeof GlycemicEstimator === 'function' ? 'Constructor OK' : 'Type: ' + typeof GlycemicEstimator}`);
+  console.log(`   Ã¢Å“â€¦ GlycemicEstimator: ${typeof GlycemicEstimator === 'function' ? 'Constructor OK' : 'Type: ' + typeof GlycemicEstimator}`);
 } catch (error) {
-  console.log(`   âŒ GlycemicEstimator: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ GlycemicEstimator: ${error.message}`);
 }
 
-// Test 4: Test données JSON
-console.log('\nðŸ“Š Test 4: Test chargement données JSON...');
+// Test 4: Test donnÃ©es JSON
+console.log('\nÃ°Å¸â€œÅ  Test 4: Test chargement donnÃ©es JSON...');
 
 try {
   const nutriTables = require('./src/data/nutri-score-tables.json');
-  console.log(`   âœ… nutri-score-tables.json: ${Object.keys(nutriTables).length} sections`);
+  console.log(`   Ã¢Å“â€¦ nutri-score-tables.json: ${Object.keys(nutriTables).length} sections`);
 } catch (error) {
-  console.log(`   âŒ nutri-score-tables.json: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ nutri-score-tables.json: ${error.message}`);
 }
 
 try {
   const glycemicDB = require('./src/data/glycemic-index-db.json');
-  console.log(`   âœ… glycemic-index-db.json: ${Object.keys(glycemicDB.categories || {}).length} catégories`);
+  console.log(`   Ã¢Å“â€¦ glycemic-index-db.json: ${Object.keys(glycemicDB.categories || {}).length} catÃ©gories`);
 } catch (error) {
-  console.log(`   âŒ glycemic-index-db.json: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ glycemic-index-db.json: ${error.message}`);
 }
 
 // Test 5: Test instanciation simple
-console.log('\nðŸ—ï¸ Test 5: Test instanciation simple...');
+console.log('\nÃ°Å¸Ââ€”Ã¯Â¸Â Test 5: Test instanciation simple...');
 
 try {
   const NutriScorer = require('./src/scorers/food/nutriScorer');
   const nutriScorer = new NutriScorer();
-  console.log('   âœ… NutriScorer instancié avec succès');
+  console.log('   Ã¢Å“â€¦ NutriScorer instanciÃ© avec succÃ¨s');
 } catch (error) {
-  console.log(`   âŒ Erreur instanciation NutriScorer: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ Erreur instanciation NutriScorer: ${error.message}`);
 }
 
 try {
   const GlycemicEstimator = require('./src/scorers/food/glycemicEstimator');
   const glycemicEstimator = new GlycemicEstimator();
-  console.log('   âœ… GlycemicEstimator instancié avec succès');
+  console.log('   Ã¢Å“â€¦ GlycemicEstimator instanciÃ© avec succÃ¨s');
 } catch (error) {
-  console.log(`   âŒ Erreur instanciation GlycemicEstimator: ${error.message}`);
+  console.log(`   Ã¢ÂÅ’ Erreur instanciation GlycemicEstimator: ${error.message}`);
 }
 
-console.log('\nðŸŽ¯ === FIN DIAGNOSTIC ===');
-console.log('ðŸ“ Partage ces résultats pour diagnostic précis du problème !');
+console.log('\nÃ°Å¸Å½Â¯ === FIN DIAGNOSTIC ===');
+console.log('Ã°Å¸â€œÂ Partage ces rÃ©sultats pour diagnostic prÃ©cis du problÃ¨me !');

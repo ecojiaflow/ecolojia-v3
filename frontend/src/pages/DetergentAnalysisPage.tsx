@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/DetergentAnalysisPage.tsx
 
 // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx

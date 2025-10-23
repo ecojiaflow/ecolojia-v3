@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/types/api.ts
+// PATH: frontend/src/types/api.ts
 export type ApiResponse<T> = {
   success: boolean;
   data?: T;

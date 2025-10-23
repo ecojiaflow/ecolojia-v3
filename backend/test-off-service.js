@@ -1,4 +1,4 @@
-﻿// Test OpenFoodFacts Service
+// Test OpenFoodFacts Service
 const offService = require('./src/services/openfoodfacts.service');
 
 async function testService() {

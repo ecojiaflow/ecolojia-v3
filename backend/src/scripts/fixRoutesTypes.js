@@ -6,7 +6,7 @@ const path = require('path');
 const filePath = path.join(__dirname, '../routes/analyze.routes.cached.ts');
 let content = fs.readFileSync(filePath, 'utf8');
 
-// Remplacements   effectuer
+// Remplacements Â  effectuer
 const replacements = [
   // Remplacer AuthRequest par CacheAuthRequest
   { from: /interface AuthRequest extends Request[\s\S]*?}\n}/g, to: '' },
@@ -22,11 +22,11 @@ replacements.forEach(({ from, to }) => {
   content = content.replace(from, to);
 });
 
-// ‰crire le fichier modifie
+// â€°crire le fichier modifie
 fs.writeFileSync(filePath, content, 'utf8');
 
-console.log('âœ… Types corriges dans analyze.routes.cached.ts');
+console.log('Ã¢Å“â€¦ Types corriges dans analyze.routes.cached.ts');
 console.log('Changements effectues :');
-console.log('- AuthRequest â†’ CacheAuthRequest');
-console.log('- req.user â†’ req.cacheUser');
-console.log('- req.session â†’ req.cacheSession');
+console.log('- AuthRequest Ã¢â€ â€™ CacheAuthRequest');
+console.log('- req.user Ã¢â€ â€™ req.cacheUser');
+console.log('- req.session Ã¢â€ â€™ req.cacheSession');

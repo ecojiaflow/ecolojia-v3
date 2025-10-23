@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
+// PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';

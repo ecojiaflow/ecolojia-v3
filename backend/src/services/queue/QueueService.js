@@ -1,4 +1,4 @@
-// backend/src/services/queue/QueueService.js â€“ version autoâ€‘compatible BullMQ v3 & v4
+// backend/src/services/queue/QueueService.js Ã¢â‚¬â€œ version autoÃ¢â‚¬â€˜compatible BullMQ v3 & v4
 // -----------------------------------------------------------------------------
 const { Queue, QueueEvents } = require('bullmq');
 const IORedis = require('ioredis');
@@ -30,9 +30,9 @@ class QueueService {
   async initialize() {
     try {
       await this.connection.connect();
-      logger.info('[QueueService] âœ… BullMQ Redis connection verified');
+      logger.info('[QueueService] Ã¢Å“â€¦ BullMQ Redis connection verified');
     } catch (err) {
-      logger.error('[QueueService] âŒ Redis connection failed', err);
+      logger.error('[QueueService] Ã¢ÂÅ’ Redis connection failed', err);
       throw err;
     }
     await this.createQueue('image-analysis');
@@ -49,7 +49,7 @@ class QueueService {
       });
     } else {
       // BullMQ v4 : simple warning, la queue fonctionnera mais sans redrive automatique
-      console.warn(`[QueueService] QueueScheduler not available â€“ running without scheduler (BullMQ v4)`);
+      console.warn(`[QueueService] QueueScheduler not available Ã¢â‚¬â€œ running without scheduler (BullMQ v4)`);
     }
 
     this.queues[queueName] = new Queue(queueName, {
@@ -70,7 +70,7 @@ class QueueService {
     return this.queues[queueName];
   }
 
-  /** Ajoute un job   la queue */
+  /** Ajoute un job Â  la queue */
   async addJob(queueName, data, opts = {}) {
     const queue = this.queues[queueName] || (await this.createQueue(queueName));
     return queue.add(queueName, data, opts);

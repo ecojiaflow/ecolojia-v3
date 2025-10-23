@@ -1,7 +1,7 @@
 // PATH: backend\src\services\analysis\food.js
 /**
  * Food Analysis Service - Analyse complete alimentaire
- * Conforme   TechReference.md : NOVA (1-4), Nutri-Score (A-E), Eco-Score
+ * Conforme Â  TechReference.md : NOVA (1-4), Nutri-Score (A-E), Eco-Score
  */
 
 class FoodAnalyzer {
@@ -283,18 +283,18 @@ class FoodAnalyzer {
     const recommendations = [];
     
     if (novaAnalysis.nova === 4) {
-      recommendations.push('âš ï¸ Produit ultra-transforme :   limiter dans votre alimentation');
-      recommendations.push('ðŸ’¡ Privilegiez des alternatives moins transformees');
+      recommendations.push('Ã¢Å¡Â Ã¯Â¸Â Produit ultra-transforme : Â  limiter dans votre alimentation');
+      recommendations.push('Ã°Å¸â€™Â¡ Privilegiez des alternatives moins transformees');
     } else if (novaAnalysis.nova === 3) {
-      recommendations.push('âš¡ Produit transforme :   consommer avec moderation');
+      recommendations.push('Ã¢Å¡Â¡ Produit transforme : Â  consommer avec moderation');
     } else if (novaAnalysis.nova <= 2) {
-      recommendations.push('âœ… Bon choix : produit peu transforme');
+      recommendations.push('Ã¢Å“â€¦ Bon choix : produit peu transforme');
     }
     
     if (healthScore < 40) {
-      recommendations.push('ðŸ”´ Score sante faible : cherchez des alternatives plus saines');
+      recommendations.push('Ã°Å¸â€Â´ Score sante faible : cherchez des alternatives plus saines');
     } else if (healthScore > 70) {
-      recommendations.push('ðŸŸ¢ Excellent score sante :   privilegier');
+      recommendations.push('Ã°Å¸Å¸Â¢ Excellent score sante : Â  privilegier');
     }
     
     return recommendations;

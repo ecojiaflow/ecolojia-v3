@@ -16,7 +16,7 @@ export default function TestChatPage() {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <h1 className="text-2xl font-bold mb-4">Test Chat Widget</h1>
-      <p>Le bouton de chat devrait apparaître en bas à droite</p>
+      <p>Le bouton de chat devrait apparaÃ®tre en bas Ã  droite</p>
       
       {/* Widget avec contexte */}
       <ChatWidget productContext={testContext} />

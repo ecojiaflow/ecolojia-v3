@@ -7,7 +7,7 @@ const connectMongo = async () => {
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia';
     
     if (!uri || uri.includes('YOUR_MONGODB_PASSWORD')) {
-      console.error('âš ï¸  MONGODB_URI is not properly configured!');
+      console.error('Ã¢Å¡Â Ã¯Â¸Â  MONGODB_URI is not properly configured!');
       console.error('Please follow these steps:');
       console.error('1. Go to https://cloud.mongodb.com');
       console.error('2. Create a free cluster');

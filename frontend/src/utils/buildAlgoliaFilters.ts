@@ -1,4 +1,4 @@
-﻿// frontend/src/utils/buildAlgoliaFilters.ts
+// frontend/src/utils/buildAlgoliaFilters.ts
 export interface FilterState {
   brands?: string[];
   categories?: string[];

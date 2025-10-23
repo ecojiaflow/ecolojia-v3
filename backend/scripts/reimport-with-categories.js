@@ -2,9 +2,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const axios = require('axios');
 
-// Mapping tags OpenFoodFacts → subcategories FR lisibles
+// Mapping tags OpenFoodFacts â†’ subcategories FR lisibles
 const CATEGORY_MAP = {
-  // Légumes/Conserves
+  // LÃ©gumes/Conserves
   'en:palm-hearts': 'conserves-legumes',
   'en:canned-vegetables': 'conserves-legumes',
   'en:tomatoes': 'conserves-legumes',
@@ -21,7 +21,7 @@ const CATEGORY_MAP = {
   'en:oranges': 'fruits-frais',
   'en:compotes': 'compotes',
   'en:fruit-compotes': 'compotes',
-  'en:fruit-purées': 'compotes',
+  'en:fruit-purÃ©es': 'compotes',
   
   // Produits laitiers
   'en:yogurts': 'yaourts',
@@ -33,7 +33,7 @@ const CATEGORY_MAP = {
   'en:butter': 'beurre',
   'en:cream': 'creme',
   
-  // Céréales/Féculents
+  // CÃ©rÃ©ales/FÃ©culents
   'en:breakfast-cereals': 'cereales',
   'en:pastas': 'pates',
   'en:rice': 'riz',
@@ -67,7 +67,7 @@ const CATEGORY_MAP = {
   'en:mustards': 'moutardes',
   'en:ketchup': 'ketchup',
   
-  // Plats préparés
+  // Plats prÃ©parÃ©s
   'en:prepared-meals': 'plats-prepares',
   'en:pizzas': 'pizzas',
   'en:sandwiches': 'sandwiches',
@@ -92,30 +92,30 @@ const CATEGORY_MAP = {
 const KEYWORDS_MAP = {
   'tartiner': 'spreads',
   'nutella': 'spreads',
-  'pâte à tartiner': 'spreads',
+  'pÃ¢te Ã  tartiner': 'spreads',
   'palmier': 'conserves-legumes',
-  'cœur': 'conserves-legumes',
+  'cÅ“ur': 'conserves-legumes',
   'tomate': 'conserves-legumes',
   'haricot': 'conserves-legumes',
   'mais': 'conserves-legumes',
-  'maïs': 'conserves-legumes',
+  'maÃ¯s': 'conserves-legumes',
   'pois': 'conserves-legumes',
   'carotte': 'conserves-legumes',
   'champignon': 'conserves-legumes',
   'compote': 'compotes',
-  'purée de fruit': 'compotes',
+  'purÃ©e de fruit': 'compotes',
   'confiture': 'confitures',
   'chocolat': 'chocolat',
   'biscuit': 'biscuits',
-  'gâteau': 'biscuits',
+  'gÃ¢teau': 'biscuits',
   'yaourt': 'yaourts',
   'yogurt': 'yaourts',
   'fromage': 'fromages',
   'lait': 'produits-laitiers',
-  'pâtes': 'pates',
+  'pÃ¢tes': 'pates',
   'pasta': 'pates',
   'riz': 'riz',
-  'céréales': 'cereales',
+  'cÃ©rÃ©ales': 'cereales',
   'pain': 'pains',
   'biscotte': 'biscottes',
   'jus': 'jus',
@@ -133,14 +133,14 @@ const KEYWORDS_MAP = {
   'salade': 'salades',
   'chips': 'chips',
   'beurre': 'beurre',
-  'crème': 'creme',
+  'crÃ¨me': 'creme',
   'miel': 'miel'
 };
 
 function detectSubcategory(product) {
   const categories = product.categories_tags || [];
   
-  // Stratégie 1: Utiliser le tag le plus spécifique (dernier de la liste)
+  // StratÃ©gie 1: Utiliser le tag le plus spÃ©cifique (dernier de la liste)
   for (let i = categories.length - 1; i >= 0; i--) {
     const tag = categories[i];
     if (CATEGORY_MAP[tag]) {
@@ -148,7 +148,7 @@ function detectSubcategory(product) {
     }
   }
   
-  // Stratégie 2: Fallback keywords dans le nom du produit
+  // StratÃ©gie 2: Fallback keywords dans le nom du produit
   const name = (product.product_name || '').toLowerCase();
   for (const [keyword, subcategory] of Object.entries(KEYWORDS_MAP)) {
     if (name.includes(keyword)) {
@@ -156,7 +156,7 @@ function detectSubcategory(product) {
     }
   }
   
-  // Stratégie 3: Utiliser première catégorie générique si disponible
+  // StratÃ©gie 3: Utiliser premiÃ¨re catÃ©gorie gÃ©nÃ©rique si disponible
   if (categories.length > 0) {
     const firstCat = categories[0]
       .replace('en:', '')
@@ -173,20 +173,20 @@ async function reimportProducts() {
     await mongoose.connect(process.env.MONGODB_URI);
     const db = mongoose.connection.db;
     
-    console.log('\n🔄 RÉIMPORT DE 5000 PRODUITS AVEC CATEGORIES_TAGS\n');
-    console.log('⚠️  Les produits food existants vont être supprimés et réimportés\n');
+    console.log('\nðŸ”„ RÃ‰IMPORT DE 5000 PRODUITS AVEC CATEGORIES_TAGS\n');
+    console.log('âš ï¸  Les produits food existants vont Ãªtre supprimÃ©s et rÃ©importÃ©s\n');
     
     // Supprimer les anciens produits food
     const deleteResult = await db.collection('products').deleteMany({ category: 'food' });
-    console.log(`✓ ${deleteResult.deletedCount} anciens produits food supprimés\n`);
+    console.log(`âœ“ ${deleteResult.deletedCount} anciens produits food supprimÃ©s\n`);
     
     let imported = 0;
     let page = 1;
     const errors = [];
     
-    while (imported < 5000 && page < 100) { // Limite sécurité 100 pages
+    while (imported < 5000 && page < 100) { // Limite sÃ©curitÃ© 100 pages
       try {
-        console.log(`Requête page ${page}...`);
+        console.log(`RequÃªte page ${page}...`);
         
         const response = await axios.get('https://world.openfoodfacts.org/cgi/search.pl', {
           params: {
@@ -202,7 +202,7 @@ async function reimportProducts() {
         const products = response.data.products || [];
         
         if (products.length === 0) {
-          console.log('Plus de produits disponibles, arrêt.');
+          console.log('Plus de produits disponibles, arrÃªt.');
           break;
         }
         
@@ -250,7 +250,7 @@ async function reimportProducts() {
           imported++;
           
           if (imported % 500 === 0) {
-            console.log(`  ✓ ${imported}/5000 produits importés`);
+            console.log(`  âœ“ ${imported}/5000 produits importÃ©s`);
           }
         }
         
@@ -264,14 +264,14 @@ async function reimportProducts() {
       }
     }
     
-    console.log(`\n✅ ${imported} produits importés avec subcategories\n`);
+    console.log(`\nâœ… ${imported} produits importÃ©s avec subcategories\n`);
     
     if (errors.length > 0) {
-      console.log(`⚠️  ${errors.length} erreurs rencontrées (voir détails ci-dessous)`);
+      console.log(`âš ï¸  ${errors.length} erreurs rencontrÃ©es (voir dÃ©tails ci-dessous)`);
     }
     
     // Statistiques subcategories
-    console.log('📊 DISTRIBUTION DES SUBCATEGORIES:\n');
+    console.log('ðŸ“Š DISTRIBUTION DES SUBCATEGORIES:\n');
     const stats = await db.collection('products').aggregate([
       { $match: { category: 'food' } },
       { $group: { _id: '$subcategory', count: { $sum: 1 } } },
@@ -287,16 +287,16 @@ async function reimportProducts() {
     const autresCount = stats.find(s => s._id === 'autres')?.count || 0;
     const autresPercentage = ((autresCount / imported) * 100).toFixed(1);
     
-    console.log('\n📈 AMÉLIORATION:');
+    console.log('\nðŸ“ˆ AMÃ‰LIORATION:');
     console.log(`  Avant : 83.5% en "autres"`);
-    console.log(`  Après : ${autresPercentage}% en "autres"`);
-    console.log(`  Gain  : ${(83.5 - autresPercentage).toFixed(1)}% de produits mieux catégorisés\n`);
+    console.log(`  AprÃ¨s : ${autresPercentage}% en "autres"`);
+    console.log(`  Gain  : ${(83.5 - autresPercentage).toFixed(1)}% de produits mieux catÃ©gorisÃ©s\n`);
     
     await mongoose.connection.close();
     process.exit(0);
     
   } catch (err) {
-    console.error('❌ ERREUR CRITIQUE:', err.message);
+    console.error('âŒ ERREUR CRITIQUE:', err.message);
     process.exit(1);
   }
 }

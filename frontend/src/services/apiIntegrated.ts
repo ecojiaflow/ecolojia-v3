@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';

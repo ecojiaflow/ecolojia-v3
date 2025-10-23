@@ -1,4 +1,4 @@
-﻿// fallbackService.ts - Gestion intelligente des erreurs 404
+// fallbackService.ts - Gestion intelligente des erreurs 404
 import { API_CONFIG } from '../config/api.config';
 
 class FallbackService {

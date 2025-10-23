@@ -7,41 +7,41 @@ const mongoose = require('mongoose');
 
 class FoodAnalyzer {
   constructor() {
-    // Base de données d'additifs controversés
+    // Base de donnÃ©es d'additifs controversÃ©s
     this.controversialAdditives = {
-      'e102': { name: 'Tartrazine', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
-      'e110': { name: 'Sunset Yellow', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
-      'e124': { name: 'Ponceau 4R', risk: 'high', effects: ['Hyperactivité', 'Allergies'] },
-      'e211': { name: 'Benzoate de sodium', risk: 'medium', effects: ['Hyperactivité'] },
-      'e320': { name: 'BHA', risk: 'high', effects: ['Cancérogène possible'] },
-      'e321': { name: 'BHT', risk: 'high', effects: ['Cancérogène possible'] },
-      'e621': { name: 'Glutamate monosodique', risk: 'medium', effects: ['Maux de tête', 'Nausées'] },
+      'e102': { name: 'Tartrazine', risk: 'high', effects: ['HyperactivitÃ©', 'Allergies'] },
+      'e110': { name: 'Sunset Yellow', risk: 'high', effects: ['HyperactivitÃ©', 'Allergies'] },
+      'e124': { name: 'Ponceau 4R', risk: 'high', effects: ['HyperactivitÃ©', 'Allergies'] },
+      'e211': { name: 'Benzoate de sodium', risk: 'medium', effects: ['HyperactivitÃ©'] },
+      'e320': { name: 'BHA', risk: 'high', effects: ['CancÃ©rogÃ¨ne possible'] },
+      'e321': { name: 'BHT', risk: 'high', effects: ['CancÃ©rogÃ¨ne possible'] },
+      'e621': { name: 'Glutamate monosodique', risk: 'medium', effects: ['Maux de tÃªte', 'NausÃ©es'] },
       'e951': { name: 'Aspartame', risk: 'medium', effects: ['Controverse'] },
-      'e954': { name: 'Saccharine', risk: 'medium', effects: ['Cancérogène possible'] }
+      'e954': { name: 'Saccharine', risk: 'medium', effects: ['CancÃ©rogÃ¨ne possible'] }
     };
     
-    // Allergènes majeurs (réglementation EU)
+    // AllergÃ¨nes majeurs (rÃ©glementation EU)
     this.majorAllergens = {
-      'gluten': ['blé', 'seigle', 'orge', 'avoine', 'épeautre', 'kamut'],
-      'crustacés': ['crevette', 'homard', 'crabe', 'langouste', 'écrevisse'],
-      'œufs': ['œuf', 'albumine', 'ovalbumine', 'lysozyme'],
+      'gluten': ['blÃ©', 'seigle', 'orge', 'avoine', 'Ã©peautre', 'kamut'],
+      'crustacÃ©s': ['crevette', 'homard', 'crabe', 'langouste', 'Ã©crevisse'],
+      'Å“ufs': ['Å“uf', 'albumine', 'ovalbumine', 'lysozyme'],
       'poissons': ['poisson', 'anchois', 'saumon', 'thon', 'cabillaud'],
-      'arachides': ['arachide', 'cacahuète', 'huile d\'arachide'],
-      'soja': ['soja', 'lécithine de soja', 'protéine de soja'],
-      'lait': ['lait', 'lactose', 'caséine', 'lactosérum', 'beurre', 'crème'],
-      'fruits à coque': ['amande', 'noisette', 'noix', 'cajou', 'pécan', 'pistache'],
-      'céleri': ['céleri', 'céleri-rave'],
+      'arachides': ['arachide', 'cacahuÃ¨te', 'huile d\'arachide'],
+      'soja': ['soja', 'lÃ©cithine de soja', 'protÃ©ine de soja'],
+      'lait': ['lait', 'lactose', 'casÃ©ine', 'lactosÃ©rum', 'beurre', 'crÃ¨me'],
+      'fruits Ã  coque': ['amande', 'noisette', 'noix', 'cajou', 'pÃ©can', 'pistache'],
+      'cÃ©leri': ['cÃ©leri', 'cÃ©leri-rave'],
       'moutarde': ['moutarde', 'graines de moutarde'],
-      'sésame': ['sésame', 'huile de sésame', 'tahini'],
-      'sulfites': ['sulfite', 'bisulfite', 'métabisulfite', 'e220', 'e228'],
+      'sÃ©same': ['sÃ©same', 'huile de sÃ©same', 'tahini'],
+      'sulfites': ['sulfite', 'bisulfite', 'mÃ©tabisulfite', 'e220', 'e228'],
       'lupin': ['lupin', 'farine de lupin'],
-      'mollusques': ['huître', 'moule', 'coquille', 'escargot', 'poulpe']
+      'mollusques': ['huÃ®tre', 'moule', 'coquille', 'escargot', 'poulpe']
     };
   }
   
   /**
-   * Analyse complète d'un produit alimentaire
-   * @param {string|object} dataOrBarcode - Soit un barcode string, soit un objet avec les données
+   * Analyse complÃ¨te d'un produit alimentaire
+   * @param {string|object} dataOrBarcode - Soit un barcode string, soit un objet avec les donnÃ©es
    * @param {string} userId - ID de l'utilisateur
    */
   async analyze(dataOrBarcode, userId) {
@@ -49,11 +49,11 @@ class FoodAnalyzer {
       let product = null;
       let isManualAnalysis = false;
       
-      // Si c'est un objet avec des données (analyse manuelle)
+      // Si c'est un objet avec des donnÃ©es (analyse manuelle)
       if (typeof dataOrBarcode === 'object' && dataOrBarcode !== null) {
-        console.log('Analyse manuelle avec données:', dataOrBarcode.name);
+        console.log('Analyse manuelle avec donnÃ©es:', dataOrBarcode.name);
         isManualAnalysis = true;
-        product = dataOrBarcode; // Utiliser directement les données fournies
+        product = dataOrBarcode; // Utiliser directement les donnÃ©es fournies
         
       } 
       // Si c'est un barcode string
@@ -63,16 +63,16 @@ class FoodAnalyzer {
         product = await Product.findOne({ barcode: dataOrBarcode });
         
         if (!product) {
-          // Essayer de récupérer depuis Open Food Facts
+          // Essayer de rÃ©cupÃ©rer depuis Open Food Facts
           const offProduct = await this.fetchFromOpenFoodFacts(dataOrBarcode);
           if (!offProduct) {
-            throw new Error('Produit non trouvé');
+            throw new Error('Produit non trouvÃ©');
           }
           // Sauvegarder en base
           product = await this.saveProduct(offProduct);
         }
       } else {
-        throw new Error('Format de données invalide pour l\'analyse');
+        throw new Error('Format de donnÃ©es invalide pour l\'analyse');
       }
       
       // Analyses
@@ -118,7 +118,7 @@ class FoodAnalyzer {
       
       return {
         product: {
-          name: product.name || 'Produit analysé',
+          name: product.name || 'Produit analysÃ©',
           brand: product.brand,
           image: product.image_url,
           barcode: product.barcode
@@ -164,8 +164,8 @@ class FoodAnalyzer {
           ...this.controversialAdditives[code]
         });
       } else if (code.match(/^e[0-9]{3}[a-z]?$/)) {
-        // Additif connu mais non controversé
-        analysis.safe.push({ code, name: 'Additif autorisé' });
+        // Additif connu mais non controversÃ©
+        analysis.safe.push({ code, name: 'Additif autorisÃ©' });
       } else {
         analysis.unknown.push({ code });
       }
@@ -179,7 +179,7 @@ class FoodAnalyzer {
     const ingredients = (product.ingredients || '').toLowerCase();
     const allergenTags = product.allergens_tags || [];
     
-    // Détection par tags
+    // DÃ©tection par tags
     for (const tag of allergenTags) {
       const allergen = tag.replace('en:', '');
       if (this.majorAllergens[allergen]) {
@@ -191,7 +191,7 @@ class FoodAnalyzer {
       }
     }
     
-    // Détection dans les ingrédients
+    // DÃ©tection dans les ingrÃ©dients
     for (const [allergen, keywords] of Object.entries(this.majorAllergens)) {
       if (detected.find(d => d.type === allergen)) continue;
       
@@ -211,7 +211,7 @@ class FoodAnalyzer {
     return {
       detected,
       count: detected.length,
-      warning: detected.length > 0 ? 'Ce produit contient des allergènes' : null
+      warning: detected.length > 0 ? 'Ce produit contient des allergÃ¨nes' : null
     };
   }
   
@@ -244,7 +244,7 @@ class FoodAnalyzer {
       score += 10;
     }
     
-    // Pénalités
+    // PÃ©nalitÃ©s
     if (product.nutritionFacts?.sugars_100g > 15) score -= 5;
     if (product.nutritionFacts?.salt_100g > 1.5) score -= 5;
     if (product.nutritionFacts?.saturated_fat_100g > 5) score -= 5;
@@ -269,25 +269,25 @@ class FoodAnalyzer {
     const parts = [];
     
     // Score principal
-    parts.push(`${product.name || 'Ce produit'} obtient un score santé de ${healthScore.score}/100.`);
+    parts.push(`${product.name || 'Ce produit'} obtient un score santÃ© de ${healthScore.score}/100.`);
     
     // NOVA
     if (novaAnalysis.group === 4) {
-      parts.push(`⚠️ Produit ultra-transformé (NOVA ${novaAnalysis.group}).`);
+      parts.push(`âš ï¸ Produit ultra-transformÃ© (NOVA ${novaAnalysis.group}).`);
     } else if (novaAnalysis.group <= 2) {
-      parts.push(`✅ Transformation minimale (NOVA ${novaAnalysis.group}).`);
+      parts.push(`âœ… Transformation minimale (NOVA ${novaAnalysis.group}).`);
     }
     
     // Nutri-Score
     if (['D', 'E'].includes(nutriscoreAnalysis.grade)) {
-      parts.push(`⚠️ Qualité nutritionnelle faible (Nutri-Score ${nutriscoreAnalysis.grade}).`);
+      parts.push(`âš ï¸ QualitÃ© nutritionnelle faible (Nutri-Score ${nutriscoreAnalysis.grade}).`);
     } else if (['A', 'B'].includes(nutriscoreAnalysis.grade)) {
-      parts.push(`✅ Bonne qualité nutritionnelle (Nutri-Score ${nutriscoreAnalysis.grade}).`);
+      parts.push(`âœ… Bonne qualitÃ© nutritionnelle (Nutri-Score ${nutriscoreAnalysis.grade}).`);
     }
     
     // Points d'attention
     if (healthScore.factors.sugar > 15) {
-      parts.push(`🔴 Teneur élevée en sucre (${healthScore.factors.sugar}g/100g).`);
+      parts.push(`ðŸ”´ Teneur Ã©levÃ©e en sucre (${healthScore.factors.sugar}g/100g).`);
     }
     
     return parts.join(' ');
@@ -300,22 +300,22 @@ class FoodAnalyzer {
       advice: []
     };
     
-    // Impact santé
+    // Impact santÃ©
     if (healthScore.score >= 70) {
-      recommendations.healthImpact = 'Bon choix pour une alimentation équilibrée';
+      recommendations.healthImpact = 'Bon choix pour une alimentation Ã©quilibrÃ©e';
     } else if (healthScore.score >= 40) {
-      recommendations.healthImpact = 'À consommer avec modération';
+      recommendations.healthImpact = 'Ã€ consommer avec modÃ©ration';
     } else {
-      recommendations.healthImpact = 'À limiter dans votre alimentation';
+      recommendations.healthImpact = 'Ã€ limiter dans votre alimentation';
     }
     
-    // Conseils personnalisés
+    // Conseils personnalisÃ©s
     if (healthScore.factors.nova === 4) {
-      recommendations.advice.push('Privilégiez des alternatives moins transformées');
+      recommendations.advice.push('PrivilÃ©giez des alternatives moins transformÃ©es');
     }
     
     if (healthScore.factors.sugar > 15) {
-      recommendations.advice.push('Attention à la teneur en sucre, limitez la consommation');
+      recommendations.advice.push('Attention Ã  la teneur en sucre, limitez la consommation');
     }
     
     // TODO: Chercher des alternatives dans la base

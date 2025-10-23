@@ -1,4 +1,4 @@
-﻿const vision = require('@google-cloud/vision');
+const vision = require('@google-cloud/vision');
 
 async function diagnosticTest() {
   console.log('=== DIAGNOSTIC GOOGLE VISION ===\n');

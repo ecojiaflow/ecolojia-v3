@@ -1,4 +1,4 @@
-﻿// scripts/test-algolia-by-objectid.js
+// scripts/test-algolia-by-objectid.js
 require('dotenv').config();
 const algoliaService = require('../src/services/algolia/algoliaService');
 

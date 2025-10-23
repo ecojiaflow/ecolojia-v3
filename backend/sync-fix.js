@@ -31,6 +31,6 @@ router.post('/sync', asyncHandler(async (req, res) => {
   
   res.json({ 
     success: true, 
-    message: `${totalIndexed} produits synchronisés sur ${products.length}` 
+    message: `${totalIndexed} produits synchronisÃ©s sur ${products.length}` 
   });
 }));

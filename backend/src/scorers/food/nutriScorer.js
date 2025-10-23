@@ -1,7 +1,7 @@
 /**
- * NUTRI-SCORE OFFICIEL FRAN‡AIS
+ * NUTRI-SCORE OFFICIEL FRANâ€¡AIS
  * Calculateur base sur l'algorithme ANSES 2024
- * Sources: Arrete du 31 octobre 2017 + mises   jour ANSES
+ * Sources: Arrete du 31 octobre 2017 + mises Â  jour ANSES
  */
 
 const nutriScoreTables = require('../../data/nutri-score-tables.json');
@@ -10,7 +10,7 @@ class NutriScorer {
   constructor() {
     this.tables = nutriScoreTables;
     this.minConfidence = this.tables.confidence_factors.minimum_confidence;
-    console.log('ðŸ¥— NutriScorer initialise avec tables ANSES 2024');
+    console.log('Ã°Å¸Â¥â€” NutriScorer initialise avec tables ANSES 2024');
   }
 
   /**
@@ -21,7 +21,7 @@ class NutriScorer {
    */
   calculateNutriScore(nutritionData, options = {}) {
     try {
-      console.log('ðŸ”¬ Calcul Nutri-Score demarre');
+      console.log('Ã°Å¸â€Â¬ Calcul Nutri-Score demarre');
       
       // Validation et enrichissement des donnees
       const enrichedData = this.enrichNutritionData(nutritionData);
@@ -91,11 +91,11 @@ class NutriScorer {
         }
       };
 
-      console.log(`âœ… Nutri-Score calcule: ${grade.letter} (${finalScore} points)`);
+      console.log(`Ã¢Å“â€¦ Nutri-Score calcule: ${grade.letter} (${finalScore} points)`);
       return result;
 
     } catch (error) {
-      console.error('âŒ Erreur calcul Nutri-Score:', error);
+      console.error('Ã¢ÂÅ’ Erreur calcul Nutri-Score:', error);
       return {
         score: null,
         grade: null,
@@ -113,12 +113,12 @@ class NutriScorer {
   enrichNutritionData(data) {
     const enriched = { ...data };
     
-    // Conversion energie kcal â†’ kJ si necessaire
+    // Conversion energie kcal Ã¢â€ â€™ kJ si necessaire
     if (enriched.energy_kcal && !enriched.energy_kj) {
       enriched.energy_kj = enriched.energy_kcal * 4.184;
     }
     
-    // Conversion sel â†’ sodium si necessaire
+    // Conversion sel Ã¢â€ â€™ sodium si necessaire
     if (enriched.salt && !enriched.sodium) {
       enriched.sodium = enriched.salt / 2.5;
     }
@@ -148,7 +148,7 @@ class NutriScorer {
     
     points.total = points.energy + points.saturatedFat + points.sugars + points.sodium;
     
-    console.log('ðŸ“Š Points negatifs:', points);
+    console.log('Ã°Å¸â€œÅ  Points negatifs:', points);
     return points;
   }
 
@@ -164,7 +164,7 @@ class NutriScorer {
     
     points.total = points.fruitsVegetables + points.fiber + points.proteins;
     
-    console.log('ðŸ“Š Points positifs:', points);
+    console.log('Ã°Å¸â€œÅ  Points positifs:', points);
     return points;
   }
 
@@ -177,7 +177,7 @@ class NutriScorer {
     const table = this.tables[tableKey][nutrient]?.table;
     
     if (!table) {
-      console.warn(`âš ï¸ Table non trouvee pour: ${nutrient}`);
+      console.warn(`Ã¢Å¡Â Ã¯Â¸Â Table non trouvee pour: ${nutrient}`);
       return 0;
     }
     
@@ -205,7 +205,7 @@ class NutriScorer {
         return {
           letter,
           color: range.color,
-          range: `${range.min}   ${range.max}`,
+          range: `${range.min} Â  ${range.max}`,
           type: isBeverage ? 'beverage' : 'solid_food'
         };
       }
@@ -248,7 +248,7 @@ class NutriScorer {
     const relevance = {
       'A': 'Profil nutritionnel favorable pour la sante',
       'B': 'Profil nutritionnel plutot favorable',
-      'C': 'Profil nutritionnel moyen   surveiller',
+      'C': 'Profil nutritionnel moyen Â  surveiller',
       'D': 'Profil nutritionnel peu favorable',
       'E': 'Profil nutritionnel defavorable pour la sante'
     };
@@ -276,7 +276,7 @@ class NutriScorer {
     }
     
     const confidence = weightedSum / totalWeight;
-    console.log(`ðŸ“Š Confiance Nutri-Score: ${Math.round(confidence * 100)}%`);
+    console.log(`Ã°Å¸â€œÅ  Confiance Nutri-Score: ${Math.round(confidence * 100)}%`);
     
     return Math.round(confidence * 100) / 100;
   }
@@ -324,7 +324,7 @@ class NutriScorer {
    * Valide un calcul avec les exemples de reference
    */
   validateWithExamples() {
-    console.log('ðŸ§ª Validation avec exemples ANSES...');
+    console.log('Ã°Å¸Â§Âª Validation avec exemples ANSES...');
     
     const examples = this.tables.validation_examples;
     const results = {};
@@ -341,7 +341,7 @@ class NutriScorer {
         valid: calculated.score === expected.final_score && calculated.grade === expected.grade
       };
       
-      console.log(`${results[name].valid ? 'âœ…' : 'âŒ'} ${name}: calcule ${calculated.score}/${calculated.grade}, attendu ${expected.final_score}/${expected.grade}`);
+      console.log(`${results[name].valid ? 'Ã¢Å“â€¦' : 'Ã¢ÂÅ’'} ${name}: calcule ${calculated.score}/${calculated.grade}, attendu ${expected.final_score}/${expected.grade}`);
     }
     
     return results;

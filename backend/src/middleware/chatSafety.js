@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Middleware détection urgences médicales + questions personnelles
  * PRIORITÉ ABSOLUE sur toute réponse IA
  */

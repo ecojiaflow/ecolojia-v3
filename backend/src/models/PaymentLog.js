@@ -240,7 +240,7 @@ const paymentLogSchema = new mongoose.Schema({
     updatedAt: Date
   },
   
-  // ‰chec de paiement
+  // â€°chec de paiement
   failure: {
     code: String,
     message: String,
@@ -637,7 +637,7 @@ paymentLogSchema.statics = {
     };
   },
   
-  // Obtenir les paiements echoues   retenter
+  // Obtenir les paiements echoues Â  retenter
   async getPaymentsToRetry() {
     return this.find({
       status: 'failed',

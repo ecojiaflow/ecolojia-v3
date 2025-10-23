@@ -30,7 +30,7 @@ class CosmeticsIngredientsDatabase {
         origin: 'natural_or_synthetic',
         safety_score: 95,
         skin_compatibility: ['tous types', 'peau seche'],
-        concerns: ['Peut etre collant   forte concentration'],
+        concerns: ['Peut etre collant Â  forte concentration'],
         benefits: ['Hydratation intense', 'Non comedogene', 'Anti-age'],
         pregnancy_safe: true,
         vegan: true,
@@ -57,7 +57,7 @@ class CosmeticsIngredientsDatabase {
         safety_score: 40,
         skin_compatibility: ['peau grasse'],
         concerns: ['Irritation cutanee forte', 'Dessechement', 'Eczema', 'Barriere cutanee alteree'],
-        benefits: ['Mousse abondante', 'Nettoyage efficace', '‰conomique'],
+        benefits: ['Mousse abondante', 'Nettoyage efficace', 'â€°conomique'],
         pregnancy_safe: true,
         not_suitable_for: ['peau sensible', 'peau seche', 'dermatite atopique'],
         alternatives: ['Coco glucoside', 'Decyl glucoside', 'Sodium cocoyl isethionate']
@@ -106,7 +106,7 @@ class CosmeticsIngredientsDatabase {
         origin: 'synthetic',
         safety_score: 45,
         skin_compatibility: ['peau normale'],
-        concerns: ['Perturbateur endocrinien potentiel', 'Activite Å“strogenique', 'Bioaccumulation'],
+        concerns: ['Perturbateur endocrinien potentiel', 'Activite Ã…â€œstrogenique', 'Bioaccumulation'],
         benefits: ['Tres efficace', 'Spectre large', 'Stable'],
         pregnancy_safe: false,
         endocrine_disruptor: true,
@@ -150,7 +150,7 @@ class CosmeticsIngredientsDatabase {
         allergen_eu: true
       },
 
-      // === PARFUMS & ALLERGˆNES ===
+      // === PARFUMS & ALLERGË†NES ===
       'parfum': {
         name: 'Parfum/Fragrance',
         function: 'Parfum',
@@ -214,10 +214,10 @@ class CosmeticsIngredientsDatabase {
         allergen_eu: true
       },
 
-      // === ‰MOLLIENTS & HUILES ===
+      // === â€°MOLLIENTS & HUILES ===
       'dimethicone': {
         name: 'Dimethicone',
-        function: '‰mollient silicone',
+        function: 'â€°mollient silicone',
         origin: 'synthetic',
         safety_score: 75,
         skin_compatibility: ['tous types'],
@@ -229,12 +229,12 @@ class CosmeticsIngredientsDatabase {
 
       'cyclopentasiloxane': {
         name: 'Cyclopentasiloxane',
-        function: '‰mollient volatile',
+        function: 'â€°mollient volatile',
         origin: 'synthetic',
         safety_score: 70,
         skin_compatibility: ['tous types'],
         concerns: ['Bioaccumulation potentielle', 'Perturbateur endocrinien suspecte'],
-        benefits: ['‰vaporation rapide', 'Texture legere'],
+        benefits: ['â€°vaporation rapide', 'Texture legere'],
         pregnancy_safe: true,
         environmental_impact: 'high',
         alternatives: ['Squalane', 'Caprylic/Capric triglyceride']
@@ -242,7 +242,7 @@ class CosmeticsIngredientsDatabase {
 
       'squalane': {
         name: 'Squalane',
-        function: '‰mollient',
+        function: 'â€°mollient',
         origin: 'natural_or_synthetic',
         safety_score: 95,
         skin_compatibility: ['tous types', 'peau sensible'],
@@ -250,12 +250,12 @@ class CosmeticsIngredientsDatabase {
         benefits: ['Biomimetique', 'Anti-age', 'Non comedogene', 'Stable'],
         pregnancy_safe: true,
         vegan: true,
-        source: 'Olive, canne   sucre ou requin (eviter)'
+        source: 'Olive, canne Â  sucre ou requin (eviter)'
       },
 
       'jojoba oil': {
         name: 'Simmondsia Chinensis (Jojoba) Seed Oil',
-        function: '‰mollient/Huile',
+        function: 'â€°mollient/Huile',
         origin: 'natural',
         safety_score: 95,
         skin_compatibility: ['tous types'],
@@ -266,7 +266,7 @@ class CosmeticsIngredientsDatabase {
         comedogenic_rating: 2
       },
 
-      // === ACTIFS ANTI-‚GE ===
+      // === ACTIFS ANTI-â€šGE ===
       'retinol': {
         name: 'Retinol',
         function: 'Anti-age/Renovateur cellulaire',
@@ -300,24 +300,24 @@ class CosmeticsIngredientsDatabase {
         safety_score: 90,
         skin_compatibility: ['tous types', 'peau sensible'],
         concerns: ['Flush possible >10%'],
-        benefits: ['Regule sebum', 'Anti-inflammatoire', '‰claircit taches'],
+        benefits: ['Regule sebum', 'Anti-inflammatoire', 'â€°claircit taches'],
         pregnancy_safe: true,
         optimal_concentration: '5-10%'
       },
 
       'vitamin c': {
         name: 'L-Ascorbic Acid (Vitamin C)',
-        function: 'Antioxydant/‰claircissant',
+        function: 'Antioxydant/â€°claircissant',
         origin: 'synthetic',
         safety_score: 85,
         skin_compatibility: ['tous types'],
         concerns: ['Instabilite', 'Irritation possible', 'Oxydation'],
-        benefits: ['Antioxydant puissant', 'Stimule collagene', '‰claircit teint'],
+        benefits: ['Antioxydant puissant', 'Stimule collagene', 'â€°claircit teint'],
         pregnancy_safe: true,
         stability_forms: ['Magnesium ascorbyl phosphate', 'Sodium ascorbyl phosphate']
       },
 
-      // === INGR‰DIENTS PROBL‰MATIQUES ===
+      // === INGRâ€°DIENTS PROBLâ€°MATIQUES ===
       'triclosan': {
         name: 'Triclosan',
         function: 'Antimicrobien',
@@ -394,14 +394,14 @@ class CosmeticsIngredientsDatabase {
       'colorant': 'Coloration produit ou peau',
       'epaississant': 'Modifie viscosite, texture',
       'antioxydant': 'Previent oxydation, anti-age',
-      'exfoliant': '‰limine cellules mortes',
+      'exfoliant': 'â€°limine cellules mortes',
       'protection_solaire': 'Filtre UV, photoprotection',
       'regulateur_ph': 'Ajuste acidite formulation',
       'actif': 'Benefice cible peau (anti-age, etc.)'
     };
   }
 
-  // === M‰THODES DE RECHERCHE ===
+  // === Mâ€°THODES DE RECHERCHE ===
   getIngredient(inci_name) {
     const normalizedName = inci_name.toLowerCase().trim();
     return this.ingredients[normalizedName] || null;
@@ -466,7 +466,7 @@ class CosmeticsIngredientsDatabase {
       .map(([key, ingredient]) => ({ inci: key, ...ingredient }));
   }
 
-  // === ANALYSES SP‰CIALIS‰ES ===
+  // === ANALYSES SPâ€°CIALISâ€°ES ===
   analyzeIngredientSafety(ingredients_list) {
     const analysis = {
       total_ingredients: ingredients_list.length,
@@ -541,7 +541,7 @@ class CosmeticsIngredientsDatabase {
     }
 
     if (analysis.endocrine_disruptors.length > 0) {
-      recommendations.push('‰viter pendant grossesse/allaitement - perturbateurs endocriniens');
+      recommendations.push('â€°viter pendant grossesse/allaitement - perturbateurs endocriniens');
     }
 
     if (analysis.concerning_count > analysis.total_ingredients * 0.3) {
@@ -549,7 +549,7 @@ class CosmeticsIngredientsDatabase {
     }
 
     if (analysis.overall_safety_score < 60) {
-      recommendations.push('Produit   eviter - score securite faible');
+      recommendations.push('Produit Â  eviter - score securite faible');
     }
 
     return recommendations;

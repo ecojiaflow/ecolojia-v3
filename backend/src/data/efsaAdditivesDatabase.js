@@ -1,7 +1,7 @@
 // backend/src/data/efsaAdditivesDatabase.js
 
 /**
- * ðŸ”¬ Base de Donnees Additifs EFSA 2024
+ * Ã°Å¸â€Â¬ Base de Donnees Additifs EFSA 2024
  * Sources: EFSA, ANSES, etudes scientifiques recentes
  */
 
@@ -13,7 +13,7 @@ class EFSAAdditivesDatabase {
       "EFSA - European Food Safety Authority",
       "ANSES - Agence Nationale Securite Alimentaire", 
       "Reglement UE 1333/2008",
-      "‰tudes scientifiques peer-reviewed 2020-2024"
+      "â€°tudes scientifiques peer-reviewed 2020-2024"
     ];
   }
 
@@ -88,7 +88,7 @@ class EFSAAdditivesDatabase {
           {
             title: 'Sulfite sensitivity and asthma',
             source: 'Clinical Reviews in Allergy 2020',
-            finding: '3-10% population sensible, asthmatiques   risque'
+            finding: '3-10% population sensible, asthmatiques Â  risque'
           }
         ],
         alternatives: ['Vitamine C (E300)', 'Vitamine E (E306)', 'Extraits naturels'],
@@ -158,12 +158,12 @@ class EFSAAdditivesDatabase {
         endocrine_disruptor: true
       },
 
-      // ‰MULSIFIANTS (E400-E499)
+      // â€°MULSIFIANTS (E400-E499)
       'E471': {
         name: 'Mono- et diglycerides',
-        category: '‰mulsifiant',
+        category: 'â€°mulsifiant',
         origin: 'Vegetale/animale',
-        function: '‰mulsification, texture',
+        function: 'â€°mulsification, texture',
         efsaStatus: 'Autorise sans DJA',
         dja: 'Non specifiee (quantum satis)',
         concerns: [
@@ -191,14 +191,14 @@ class EFSAAdditivesDatabase {
 
       'E472e': {
         name: 'Esters mono- et diacetyltartriques',
-        category: '‰mulsifiant',
+        category: 'â€°mulsifiant',
         origin: 'Synthetique',
         function: 'Amelioration texture',
         efsaStatus: 'Autorise avec DJA',
         dja: '50 mg/kg/jour',
         concerns: [
           'Effet microbiote inconnu',
-          '‰tudes securite limitees',
+          'â€°tudes securite limitees',
           'Interaction autres additifs'
         ],
         studies: [
@@ -214,12 +214,12 @@ class EFSAAdditivesDatabase {
         endocrine_disruptor: false
       },
 
-      // ‰DULCORANTS (E950-E999)
+      // â€°DULCORANTS (E950-E999)
       'E951': {
         name: 'Aspartame',
-        category: '‰dulcorant',
+        category: 'â€°dulcorant',
         origin: 'Synthetique',
-        function: '‰dulcorant intense',
+        function: 'â€°dulcorant intense',
         efsaStatus: 'Reevalue 2024',
         dja: '40 mg/kg/jour',
         concerns: [
@@ -239,7 +239,7 @@ class EFSAAdditivesDatabase {
             finding: 'Perturbation metabolisme glucose via microbiote'
           }
         ],
-        alternatives: ['Stevia (E960)', '‰rythritol', 'Sucre modere'],
+        alternatives: ['Stevia (E960)', 'â€°rythritol', 'Sucre modere'],
         risk_level: 'medium',
         microbiome_impact: 'negative_confirmed',
         endocrine_disruptor: false
@@ -247,9 +247,9 @@ class EFSAAdditivesDatabase {
 
       'E952': {
         name: 'Acesulfame K',
-        category: '‰dulcorant',
+        category: 'â€°dulcorant',
         origin: 'Synthetique',
-        function: '‰dulcorant intense',
+        function: 'â€°dulcorant intense',
         efsaStatus: 'Autorise',
         dja: '9 mg/kg/jour',
         concerns: [
@@ -331,7 +331,7 @@ class EFSAAdditivesDatabase {
       }
     });
 
-    // ‰valuation risque global
+    // â€°valuation risque global
     if (analysis.byRiskLevel.high > 0 || analysis.endocrineDisruptors.length > 0) {
       analysis.overallRisk = 'high';
     } else if (analysis.byRiskLevel.medium > 1 || analysis.microbiomeDisruptors.length > 2) {
@@ -354,7 +354,7 @@ class EFSAAdditivesDatabase {
   }
 
   /**
-   * Additifs   eviter (risque eleve)
+   * Additifs Â  eviter (risque eleve)
    */
   getHighRiskAdditives() {
     return Object.entries(this.additives)
@@ -381,13 +381,13 @@ class EFSAAdditivesDatabase {
     let alertLevel = "info";
 
     if (analysis.overallRisk === 'high') {
-      message = `âš ï¸ ${analysis.byRiskLevel.high} additif(s)   risque eleve detecte(s)`;
+      message = `Ã¢Å¡Â Ã¯Â¸Â ${analysis.byRiskLevel.high} additif(s) Â  risque eleve detecte(s)`;
       alertLevel = "error";
     } else if (analysis.overallRisk === 'medium') {
-      message = `ðŸŸ¡ Presence d'additifs pouvant affecter votre sante`;
+      message = `Ã°Å¸Å¸Â¡ Presence d'additifs pouvant affecter votre sante`;
       alertLevel = "warning";
     } else {
-      message = `âœ… Additifs presents consideres comme surs`;
+      message = `Ã¢Å“â€¦ Additifs presents consideres comme surs`;
       alertLevel = "success";
     }
 
@@ -408,7 +408,7 @@ class EFSAAdditivesDatabase {
     if (analysis.endocrineDisruptors.length > 0) {
       recommendations.push({
         type: 'critical',
-        message: '‰viter ce produit : contient des perturbateurs endocriniens',
+        message: 'â€°viter ce produit : contient des perturbateurs endocriniens',
         alternatives: analysis.alternatives.slice(0, 3)
       });
     }

@@ -109,7 +109,7 @@ class DetergentAnalyzer {
     }
 
     // Patterns pour extraire les pourcentages
-    const percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-â€“]\s*(\d+(?:[.,]\d+)?)\s*%|([<>â‰¤â‰¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
+    const percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-Ã¢â‚¬â€œ]\s*(\d+(?:[.,]\d+)?)\s*%|([<>Ã¢â€°Â¤Ã¢â€°Â¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
     
     // Separer et analyser chaque ingredient
     const ingredients = ingredientsList
@@ -128,7 +128,7 @@ class DetergentAnalyzer {
               percentage = (parseFloat(percentMatch[1]) + parseFloat(percentMatch[2])) / 2;
             } else if (percentMatch[3]) {
               // Single: ">5%", "<15%", "5%"
-              percentage = parseFloat(percentMatch[3].replace(/[<>â‰¤â‰¥]/g, ''));
+              percentage = parseFloat(percentMatch[3].replace(/[<>Ã¢â€°Â¤Ã¢â€°Â¥]/g, ''));
             }
           }
         } else {
@@ -350,7 +350,7 @@ class DetergentAnalyzer {
     
     composition.forEach(chem => {
       if (chem.cdvFactor && chem.percentage) {
-        // CDV = (Concentration — CDV Factor) / EC50
+        // CDV = (Concentration â€” CDV Factor) / EC50
         const concentration = (chem.percentage / 100) * 1000; // g/L
         const cdv = concentration * chem.cdvFactor;
         totalCDV += cdv;
@@ -536,7 +536,7 @@ class DetergentAnalyzer {
     if (composition.some(c => c.enzyme)) {
       recommendations.tips.push({
         category: 'temperature',
-        message: 'Efficace des 30Â°C grace aux enzymes'
+        message: 'Efficace des 30Ã‚Â°C grace aux enzymes'
       });
     }
     
@@ -604,7 +604,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * ‰value la biodegradabilite
+   * â€°value la biodegradabilite
    */
   getBiodegradabilityRating(percentage) {
     if (percentage >= this.thresholds.biodegradability.excellent) return 'excellent';
@@ -614,7 +614,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * ‰value le CDV
+   * â€°value le CDV
    */
   getCDVRating(cdv) {
     if (cdv <= this.thresholds.cdv.excellent) return 'excellent';
@@ -653,7 +653,7 @@ class DetergentAnalyzer {
   }
 
   /**
-   * ‰value les COV
+   * â€°value les COV
    */
   getVOCRating(percentage) {
     if (percentage <= this.thresholds.voc.excellent) return 'excellent';

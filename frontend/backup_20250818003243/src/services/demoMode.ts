@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/demoMode.ts
+// PATH: frontend/src/services/demoMode.ts
 // Service de demonstration avec donnees completes
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));

@@ -18,7 +18,7 @@ const DEFAULT_QUOTAS = {
   }
 };
 
-// Interface pour étendre Request avec quota
+// Interface pour Ã©tendre Request avec quota
 declare global {
   namespace Express {
     interface Request {
@@ -39,10 +39,10 @@ class QuotaManager {
 
   async incrementUsage(userId: string, type: QuotaType): Promise<void> {
     const key = this.getKey(userId, type);
-    // ✅ FIX: increment accepte seulement un nombre
+    // âœ… FIX: increment accepte seulement un nombre
     const newValue = await cacheManager.increment(key, 1);
     
-    // Si vous voulez définir un TTL, utilisez expire séparément
+    // Si vous voulez dÃ©finir un TTL, utilisez expire sÃ©parÃ©ment
     if (newValue === 1) { // Premier increment
       // TTL handled in set/increment // 30 jours
     }
@@ -53,16 +53,16 @@ class QuotaManager {
       this.getKey(userId, type as QuotaType)
     );
     for (const key of keys) {
-      // ✅ FIX: utiliser del au lieu de remove
+      // âœ… FIX: utiliser del au lieu de remove
       await cacheManager.delete(key);
     }
   }
 
-  /** Retourne l'état de quota actuel */
+  /** Retourne l'Ã©tat de quota actuel */
   async getUserQuotaStatus(userId: string): Promise<
     { action: string; remaining: number; limit: number }[]
   > {
-    const tier = 'free'; // à remplacer si tu lis depuis Mongo
+    const tier = 'free'; // Ã  remplacer si tu lis depuis Mongo
     const types = Object.keys(DEFAULT_QUOTAS[tier]) as QuotaType[];
 
     const status = await Promise.all(
@@ -73,7 +73,7 @@ class QuotaManager {
           action: type,
           remaining: Math.max(0, limit - used),
           limit
-          // ✅ FIX: Removed 'used' property as it's not in the return type
+          // âœ… FIX: Removed 'used' property as it's not in the return type
         };
       })
     );
@@ -87,9 +87,9 @@ class QuotaManager {
         const userId = req.user?.id;
         const tier = req.user?.tier || 'free';
 
-        // Si pas d'utilisateur connecté
+        // Si pas d'utilisateur connectÃ©
         if (!userId) {
-          logger.warn('Tentative d\'accès sans authentification');
+          logger.warn('Tentative d\'accÃ¨s sans authentification');
           return res.status(401).json({
             success: false,
             message: 'Authentification requise'
@@ -98,7 +98,7 @@ class QuotaManager {
 
         // Bypass dev
         if (process.env.NODE_ENV === 'development') {
-          logger.info(`[DEV] Quota désactivé pour ${type}`);
+          logger.info(`[DEV] Quota dÃ©sactivÃ© pour ${type}`);
           return next();
         }
 
@@ -106,17 +106,17 @@ class QuotaManager {
         const current = await this.getUsage(userId, type);
 
         if (current >= allowed) {
-          logger.warn(`❌ Quota ${type} dépassé : ${current}/${allowed}`);
+          logger.warn(`âŒ Quota ${type} dÃ©passÃ© : ${current}/${allowed}`);
           return res.status(429).json({
             success: false,
-            message: `Quota ${type} dépassé.`,
+            message: `Quota ${type} dÃ©passÃ©.`,
             quota: { used: current, max: allowed }
           });
         }
 
         await this.incrementUsage(userId, type);
 
-        // Ajouter les infos de quota à la requête
+        // Ajouter les infos de quota Ã  la requÃªte
         req.quota = {
           used: current + 1,
           max: allowed

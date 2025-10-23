@@ -1,4 +1,4 @@
-﻿const scoringUnified = require('./src/services/scoringUnified');
+const scoringUnified = require('./src/services/scoringUnified');
 
 const testData = {
   novaGroup: 4,

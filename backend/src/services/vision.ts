@@ -1,4 +1,4 @@
-﻿import vision from '@google-cloud/vision';
+import vision from '@google-cloud/vision';
 
 const credsBase64 = process.env.GOOGLE_VISION_CREDENTIALS_BASE64;
 const client = new vision.ImageAnnotatorClient({

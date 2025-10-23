@@ -1,4 +1,4 @@
-// 🔴 BACKEND - backend/src/auth/repositories/UserRepository.ts
+// ðŸ”´ BACKEND - backend/src/auth/repositories/UserRepository.ts
 
 import { User } from '../types/AuthTypes';
 import { v4 as uuidv4 } from 'uuid';

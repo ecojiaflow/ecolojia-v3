@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/productSaveService.ts
+// PATH: frontend/src/services/productSaveService.ts
 import { productService } from './api';
 
 export const productSaveService = {

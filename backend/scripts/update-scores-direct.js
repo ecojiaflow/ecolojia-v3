@@ -32,7 +32,7 @@ const { calculateFoodScores } = require('../src/services/scoringEngine');
         // Ignorer erreurs individuelles
       }
     }
-    console.log(`\n? ${updated} produits mis à jour`);
+    console.log(`\n? ${updated} produits mis Ã  jour`);
     process.exit(0);
   } catch (err) {
     console.error('? Erreur:', err.message);

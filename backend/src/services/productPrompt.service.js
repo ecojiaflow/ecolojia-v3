@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 - Product Prompt Enrichment Service ===
+// === ECOLOJIA V3 - Product Prompt Enrichment Service ===
 const Product = require('../models/Product');
 
 async function enrichPromptWithProduct(productId) {

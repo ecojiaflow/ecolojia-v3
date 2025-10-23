@@ -40,9 +40,9 @@ class LemonSqueezyService {
         throw new Error('Utilisateur non trouve');
       }
 
-      // Verifier si l'utilisateur a dej  un abonnement actif
+      // Verifier si l'utilisateur a dejÂ  un abonnement actif
       if (user.tier === 'premium' && user.subscription?.status === 'active') {
-        throw new Error('Vous avez dej  un abonnement actif');
+        throw new Error('Vous avez dejÂ  un abonnement actif');
       }
 
       const variantId = plan === 'annual' ? this.variantAnnual : this.variantMonthly;
@@ -56,7 +56,7 @@ class LemonSqueezyService {
               email: email,
               name: `${user.firstName} ${user.lastName}`,
               billing_address: {
-                country: 'FR' // Par defaut,   adapter
+                country: 'FR' // Par defaut, Â  adapter
               },
               custom: {
                 user_id: userId,
@@ -76,9 +76,9 @@ class LemonSqueezyService {
             product_options: {
               enabled_variants: [variantId],
               redirect_url: `${process.env.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-              receipt_button_text: 'Retour   ECOLOJIA',
+              receipt_button_text: 'Retour Â  ECOLOJIA',
               receipt_link_url: process.env.FRONTEND_URL,
-              receipt_thank_you_note: 'Merci de votre confiance ! Vous contribuez   une consommation plus responsable.'
+              receipt_thank_you_note: 'Merci de votre confiance ! Vous contribuez Â  une consommation plus responsable.'
             },
             expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Expire dans 24h
           },
@@ -138,7 +138,7 @@ class LemonSqueezyService {
     const { meta, data } = payload;
     const eventName = meta.event_name;
 
-    console.log(`ðŸ“¨ Webhook recu: ${eventName}`);
+    console.log(`Ã°Å¸â€œÂ¨ Webhook recu: ${eventName}`);
 
     try {
       switch (eventName) {
@@ -220,7 +220,7 @@ class LemonSqueezyService {
       return;
     }
 
-    // Mettre   jour l'utilisateur
+    // Mettre Â  jour l'utilisateur
     user.tier = 'premium';
     user.subscription = {
       id: subscriptionData.id,
@@ -234,7 +234,7 @@ class LemonSqueezyService {
       updatedAt: new Date(attributes.updated_at)
     };
     
-    // Mettre   jour les quotas
+    // Mettre Â  jour les quotas
     user.quotas = {
       scansLimit: -1, // Illimite
       scansUsed: user.quotas?.scansUsed || 0,
@@ -263,11 +263,11 @@ class LemonSqueezyService {
     // Envoyer email de bienvenue Premium
     await this.sendWelcomeEmail(user);
     
-    console.log(`âœ… Abonnement cree pour l'utilisateur ${userId}`);
+    console.log(`Ã¢Å“â€¦ Abonnement cree pour l'utilisateur ${userId}`);
   }
 
   /**
-   * Gere la mise   jour d'un abonnement
+   * Gere la mise Â  jour d'un abonnement
    */
   async handleSubscriptionUpdated(subscriptionData) {
     const { attributes } = subscriptionData;
@@ -278,7 +278,7 @@ class LemonSqueezyService {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // Mettre   jour les informations d'abonnement
+    // Mettre Â  jour les informations d'abonnement
     user.subscription = {
       ...user.subscription,
       status: attributes.status,
@@ -291,7 +291,7 @@ class LemonSqueezyService {
 
     await user.save();
     
-    console.log(`âœ… Abonnement mis   jour pour l'utilisateur ${userId}`);
+    console.log(`Ã¢Å“â€¦ Abonnement mis Â  jour pour l'utilisateur ${userId}`);
   }
 
   /**
@@ -306,7 +306,7 @@ class LemonSqueezyService {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // L'abonnement reste actif jusqu'  la fin de la periode
+    // L'abonnement reste actif jusqu'Â  la fin de la periode
     user.subscription.cancelAtPeriodEnd = true;
     user.subscription.status = 'cancelled';
     user.subscription.cancelledAt = new Date();
@@ -316,7 +316,7 @@ class LemonSqueezyService {
     // Envoyer email de confirmation d'annulation
     await this.sendCancellationEmail(user);
     
-    console.log(`âŒ Abonnement annule pour l'utilisateur ${userId}`);
+    console.log(`Ã¢ÂÅ’ Abonnement annule pour l'utilisateur ${userId}`);
   }
 
   /**
@@ -351,7 +351,7 @@ class LemonSqueezyService {
     // Envoyer email d'expiration
     await this.sendExpirationEmail(user);
     
-    console.log(`â° Abonnement expire pour l'utilisateur ${userId}`);
+    console.log(`Ã¢ÂÂ° Abonnement expire pour l'utilisateur ${userId}`);
   }
 
   /**
@@ -381,13 +381,13 @@ class LemonSqueezyService {
       }
     });
 
-    // Mettre   jour la prochaine date de renouvellement
+    // Mettre Â  jour la prochaine date de renouvellement
     if (user.subscription) {
       user.subscription.currentPeriodEnd = new Date(attributes.renews_at);
       await user.save();
     }
 
-    console.log(`ðŸ’° Paiement reussi pour l'utilisateur ${user._id}`);
+    console.log(`Ã°Å¸â€™Â° Paiement reussi pour l'utilisateur ${user._id}`);
   }
 
   /**
@@ -403,7 +403,7 @@ class LemonSqueezyService {
     // Envoyer email d'alerte
     await this.sendPaymentFailedEmail(user);
     
-    console.log(`âŒ ‰chec de paiement pour l'utilisateur ${user._id}`);
+    console.log(`Ã¢ÂÅ’ â€°chec de paiement pour l'utilisateur ${user._id}`);
   }
 
   /**
@@ -431,13 +431,13 @@ class LemonSqueezyService {
     try {
       const response = await this.api.delete(`/subscriptions/${user.subscription.id}`);
       
-      // L'abonnement reste actif jusqu'  la fin de la periode
+      // L'abonnement reste actif jusqu'Â  la fin de la periode
       user.subscription.cancelAtPeriodEnd = true;
       await user.save();
       
       return {
         success: true,
-        message: 'Abonnement annule. Vous conservez l\'acces Premium jusqu\'  la fin de votre periode.',
+        message: 'Abonnement annule. Vous conservez l\'acces Premium jusqu\'Â  la fin de votre periode.',
         endsAt: user.subscription.currentPeriodEnd
       };
       
@@ -453,7 +453,7 @@ class LemonSqueezyService {
   async resumeSubscription(userId) {
     const user = await User.findById(userId);
     if (!user || !user.subscription?.id) {
-      throw new Error('Aucun abonnement   reactiver');
+      throw new Error('Aucun abonnement Â  reactiver');
     }
 
     try {
@@ -545,7 +545,7 @@ class LemonSqueezyService {
   async sendWelcomeEmail(user) {
     await sendEmail({
       to: user.email,
-      subject: 'Bienvenue dans ECOLOJIA Premium ! ðŸŽ‰',
+      subject: 'Bienvenue dans ECOLOJIA Premium ! Ã°Å¸Å½â€°',
       template: 'premium-welcome',
       data: {
         firstName: user.firstName,
@@ -595,7 +595,7 @@ class LemonSqueezyService {
   async sendPaymentFailedEmail(user) {
     await sendEmail({
       to: user.email,
-      subject: '‰chec du paiement - Action requise',
+      subject: 'â€°chec du paiement - Action requise',
       template: 'payment-failed',
       data: {
         firstName: user.firstName,

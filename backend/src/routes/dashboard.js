@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/routes/dashboard.js
+// PATH: backend/src/routes/dashboard.js
 const express = require('express');
 const router = express.Router();
 

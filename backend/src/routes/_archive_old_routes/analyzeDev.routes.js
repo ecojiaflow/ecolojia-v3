@@ -1,5 +1,5 @@
 // backend/src/routes/analyze.routes.js
-// Routes pour l'analyse universelle de produits - IMPORTS CORRIG‰S
+// Routes pour l'analyse universelle de produits - IMPORTS CORRIGâ€°S
 
 const express = require('express');
 const router = express.Router();
@@ -81,7 +81,7 @@ router.post('/',
       }
 
       // Log pour statistiques
-      console.log(`âœ… Analyse reussie: ${result.product?.name || barcode} (${result.metadata.category})`);
+      console.log(`Ã¢Å“â€¦ Analyse reussie: ${result.product?.name || barcode} (${result.metadata.category})`);
 
       res.json({
         success: true,
@@ -303,7 +303,7 @@ router.get('/:id/alternatives',
 
       const Analysis = require('mongoose').model('Analysis');
       
-      // Verifier que l'analyse appartient   l'utilisateur
+      // Verifier que l'analyse appartient Â  l'utilisateur
       const analysis = await Analysis.findOne({
         _id: req.params.id,
         userId: req.user.id

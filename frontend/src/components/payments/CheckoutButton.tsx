@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { CreditCard, Loader2, Crown } from 'lucide-react';
 import paymentsAPI from '../../services/payments/paymentsAPI';
 

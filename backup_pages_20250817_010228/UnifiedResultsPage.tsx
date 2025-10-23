@@ -64,7 +64,7 @@ export const UnifiedResultsPage: React.FC = () => {
     if (location.state?.result) {
       setResult(location.state.result);
     } else {
-      // Rediriger si pas de résultat
+      // Rediriger si pas de rÃ©sultat
       navigate('/');
     }
   }, [location, navigate]);
@@ -161,7 +161,7 @@ export const UnifiedResultsPage: React.FC = () => {
 
     const shareData = {
       title: `Analyse ECOLOJIA - ${result.product.name}`,
-      text: `Score santé : ${result.analysis.healthScore}/100. Découvrez l'analyse complète sur ECOLOJIA.`,
+      text: `Score santÃ© : ${result.analysis.healthScore}/100. DÃ©couvrez l'analyse complÃ¨te sur ECOLOJIA.`,
       url: window.location.href
     };
 
@@ -171,7 +171,7 @@ export const UnifiedResultsPage: React.FC = () => {
       } else {
         // Fallback - copier le lien
         await navigator.clipboard.writeText(window.location.href);
-        alert('Lien copié dans le presse-papier !');
+        alert('Lien copiÃ© dans le presse-papier !');
       }
     } catch (error) {
       console.error('Error sharing:', error);
@@ -194,12 +194,12 @@ export const UnifiedResultsPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500">Aucun résultat ÃƒÆ’Ã‚Â  afficher</p>
+          <p className="text-gray-500">Aucun rÃ©sultat ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  afficher</p>
           <button
             onClick={() => navigate('/')}
             className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
           >
-            Retour ÃƒÆ’Ã‚Â  l'accueil
+            Retour ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'accueil
           </button>
         </div>
       </div>
@@ -257,7 +257,7 @@ export const UnifiedResultsPage: React.FC = () => {
             <div className={`text-6xl font-bold ${getScoreColor(result.analysis.healthScore)}`}>
               {result.analysis.healthScore}/100
             </div>
-            <p className="text-gray-600 mt-2">Score Santé Global</p>
+            <p className="text-gray-600 mt-2">Score SantÃ© Global</p>
           </div>
 
           {/* Bouton Chat IA */}
@@ -266,13 +266,13 @@ export const UnifiedResultsPage: React.FC = () => {
             className="w-full bg-primary text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-primary-dark transition-colors"
           >
             <MessageCircle className="w-5 h-5" />
-            <span>Poser des questions ÃƒÆ’Ã‚Â  l'IA sur ce produit</span>
+            <span>Poser des questions ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'IA sur ce produit</span>
           </button>
         </div>
 
         {/* Contenu principal */}
         <div id="results-content" className="space-y-6">
-          {/* Analyse spécifique par catégorie */}
+          {/* Analyse spÃ©cifique par catÃ©gorie */}
           {result.product.category === 'food' && (
             <FoodAnalysis analysis={result.analysis} />
           )}
@@ -293,7 +293,7 @@ export const UnifiedResultsPage: React.FC = () => {
               <ul className="space-y-2">
                 {result.analysis.recommendations.map((rec, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-primary mr-2">ââ‚¬Ã‚Â¢</span>
+                    <span className="text-primary mr-2">Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢</span>
                     <span className="text-gray-700">{rec}</span>
                   </li>
                 ))}
@@ -362,7 +362,7 @@ const FoodAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
       <div className="mt-4">
         <h3 className="font-medium text-gray-900 mb-2 flex items-center">
           <AlertTriangle className="w-4 h-4 mr-1 text-orange-500" />
-          Additifs détectés
+          Additifs dÃ©tectÃ©s
         </h3>
         <div className="space-y-1">
           {analysis.additives.map((additive: any, index: number) => (
@@ -383,10 +383,10 @@ const FoodAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
   </div>
 );
 
-// Composant pour l'analyse cosmétique
+// Composant pour l'analyse cosmÃ©tique
 const CosmeticsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
   <div className="bg-white rounded-xl shadow-sm p-6">
-    <h2 className="text-xl font-semibold mb-4">Analyse Cosmétique</h2>
+    <h2 className="text-xl font-semibold mb-4">Analyse CosmÃ©tique</h2>
     
     {analysis.endocrineDisruptors && analysis.endocrineDisruptors.length > 0 && (
       <div className="mb-4">
@@ -409,7 +409,7 @@ const CosmeticsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
 
     {analysis.allergens && analysis.allergens.length > 0 && (
       <div className="mt-4">
-        <h3 className="font-medium text-gray-900 mb-2">Allergènes</h3>
+        <h3 className="font-medium text-gray-900 mb-2">AllergÃ¨nes</h3>
         <div className="flex flex-wrap gap-2">
           {analysis.allergens.map((allergen: string, index: number) => (
             <span key={index} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
@@ -422,7 +422,7 @@ const CosmeticsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
   </div>
 );
 
-// Composant pour l'analyse détergents
+// Composant pour l'analyse dÃ©tergents
 const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
   <div className="bg-white rounded-xl shadow-sm p-6">
     <h2 className="text-xl font-semibold mb-4">Impact Environnemental</h2>
@@ -430,7 +430,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
     {analysis.biodegradability !== undefined && (
       <div className="mb-4">
         <div className="flex items-center justify-between">
-          <span className="text-gray-700">Biodégradabilité</span>
+          <span className="text-gray-700">BiodÃ©gradabilitÃ©</span>
           <span className={`text-lg font-semibold ${
             analysis.biodegradability >= 80 ? 'text-green-600' : 'text-orange-600'
           }`}>
@@ -452,7 +452,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
       <div className="mt-4">
         <h3 className="font-medium text-gray-900 mb-2 flex items-center">
           <Wind className="w-4 h-4 mr-1 text-blue-500" />
-          Toxicité aquatique
+          ToxicitÃ© aquatique
         </h3>
         <span className={`px-3 py-1 rounded text-sm ${
           analysis.aquaticToxicity === 'low' ? 'bg-green-100 text-green-700' :
@@ -460,7 +460,7 @@ const DetergentsAnalysis: React.FC<{ analysis: any }> = ({ analysis }) => (
           'bg-red-100 text-red-700'
         }`}>
           {analysis.aquaticToxicity === 'low' ? 'Faible' :
-           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'ÃƒÆ’ââ‚¬Â°levée'}
+           analysis.aquaticToxicity === 'medium' ? 'Moyenne' : 'ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°levÃ©e'}
         </span>
       </div>
     )}

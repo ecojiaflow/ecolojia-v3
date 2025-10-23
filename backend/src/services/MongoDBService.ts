@@ -9,7 +9,7 @@ export class MongoDBService {
   // === USER MANAGEMENT ===
   
   /**
-   * Met à jour un utilisateur après paiement Lemon Squeezy
+   * Met Ã  jour un utilisateur aprÃ¨s paiement Lemon Squeezy
    */
   async updateUserToPremium(lemonSqueezyData: {
     customerId: string;
@@ -28,8 +28,8 @@ export class MongoDBService {
           subscriptionStartDate: new Date(),
           // Quotas Premium
           quotas: {
-            analyses: -1,      // Illimité
-            aiQuestions: -1,   // Illimité
+            analyses: -1,      // IllimitÃ©
+            aiQuestions: -1,   // IllimitÃ©
             exports: 10,       // 10/mois
             apiCalls: 1000     // 1000/mois
           }
@@ -38,7 +38,7 @@ export class MongoDBService {
       );
 
       if (user) {
-        // Enregistrer l'événement dans UserAnalytics
+        // Enregistrer l'Ã©vÃ©nement dans UserAnalytics
         await this.recordAnalyticsEvent((user.id || user._id?.toString() || ""), 'premium_upgrade', {
           subscriptionId: lemonSqueezyData.subscriptionId,
           plan: 'premium'
@@ -84,7 +84,7 @@ export class MongoDBService {
   // === QUOTA MANAGEMENT ===
 
   /**
-   * Vérifie si un utilisateur a encore du quota
+   * VÃ©rifie si un utilisateur a encore du quota
    */
   async checkUserQuota(userId: string, quotaType: 'analyses' | 'aiQuestions' | 'exports' | 'apiCalls'): Promise<{
     allowed: boolean;
@@ -120,7 +120,7 @@ export class MongoDBService {
   }
 
   /**
-   * Incrémente l'usage d'un quota
+   * IncrÃ©mente l'usage d'un quota
    */
   async incrementUsage(userId: string, usageType: 'analyses' | 'aiQuestions' | 'exports' | 'apiCalls'): Promise<void> {
     try {
@@ -158,10 +158,10 @@ export class MongoDBService {
       const cached = await AnalysisCache.findOne({ productHash: hash });
       
       if (cached) {
-        // Vérifier si le cache est encore valide
+        // VÃ©rifier si le cache est encore valide
         const now = new Date();
         if (cached.ttl > now) {
-          // Incrémenter le hit count
+          // IncrÃ©menter le hit count
           cached.metadata.hitCount += 1;
           cached.metadata.lastAccessed = new Date();
           await cached.save();
@@ -211,7 +211,7 @@ export class MongoDBService {
   // === CHAT HISTORY ===
 
   /**
-   * Crée une nouvelle session de chat
+   * CrÃ©e une nouvelle session de chat
    */
   async createChatSession(userId: string, productId?: string, isPremium: boolean = false): Promise<string> {
     try {
@@ -231,7 +231,7 @@ export class MongoDBService {
   }
 
   /**
-   * Ajoute un message à une session de chat
+   * Ajoute un message Ã  une session de chat
    */
   async addChatMessage(sessionId: string, message: {
     role: 'user' | 'assistant';
@@ -258,7 +258,7 @@ export class MongoDBService {
   // === ANALYTICS ===
 
   /**
-   * Enregistre un événement analytics
+   * Enregistre un Ã©vÃ©nement analytics
    */
   private async recordAnalyticsEvent(userId: string, eventType: string, metadata?: any): Promise<void> {
     try {
@@ -285,7 +285,7 @@ export class MongoDBService {
   }
 
   /**
-   * Récupère les analytics d'un utilisateur
+   * RÃ©cupÃ¨re les analytics d'un utilisateur
    */
   async getUserAnalytics(userId: string, days: number = 30): Promise<any> {
     try {
@@ -297,7 +297,7 @@ export class MongoDBService {
         date: { $gte: startDate }
       }).sort({ date: -1 });
       
-      // Calculer les métriques agrégées
+      // Calculer les mÃ©triques agrÃ©gÃ©es
       const totalScans = analytics.reduce((sum, day) => sum + day.daily.scans, 0);
       const totalAIQuestions = analytics.reduce((sum, day) => sum + day.daily.aiQuestions, 0);
       const avgHealthScore = analytics.reduce((sum, day) => sum + day.daily.averageHealthScore, 0) / analytics.length || 0;
@@ -319,7 +319,7 @@ export class MongoDBService {
   // === UTILITIES ===
 
   /**
-   * Génère un hash unique pour un produit
+   * GÃ©nÃ¨re un hash unique pour un produit
    */
   private generateProductHash(productData: any): string {
     const content = JSON.stringify({
@@ -332,20 +332,20 @@ export class MongoDBService {
   }
 
   /**
-   * Nettoie les anciennes données (job de maintenance)
+   * Nettoie les anciennes donnÃ©es (job de maintenance)
    */
   async cleanupOldData(): Promise<void> {
     try {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       
-      // Nettoyer les vieilles sessions de chat terminées
+      // Nettoyer les vieilles sessions de chat terminÃ©es
       await ChatHistory.deleteMany({
         status: 'completed',
         endedAt: { $lt: thirtyDaysAgo }
       });
       
-      console.log('✅ Old data cleanup completed');
+      console.log('âœ… Old data cleanup completed');
     } catch (error) {
       console.error('Error cleaning up old data:', error);
     }

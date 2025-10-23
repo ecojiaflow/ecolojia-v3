@@ -12,8 +12,8 @@ describe('CosmeticScorer', () => {
     cosmeticScorer = new CosmeticScorer();
   });
 
-  describe('Extraction des ingrédients INCI', () => {
-    test('Doit extraire correctement les ingrédients depuis une liste', () => {
+  describe('Extraction des ingrÃ©dients INCI', () => {
+    test('Doit extraire correctement les ingrÃ©dients depuis une liste', () => {
       const productData = {
         ingredients: "AQUA, GLYCERIN, CETYL ALCOHOL, DIMETHICONE, BUTYLPARABEN"
       };
@@ -26,7 +26,7 @@ describe('CosmeticScorer', () => {
       expect(ingredients).toHaveLength(5);
     });
 
-    test('Doit nettoyer et normaliser les ingrédients', () => {
+    test('Doit nettoyer et normaliser les ingrÃ©dients', () => {
       const productData = {
         ingredients: "ingredients: Aqua (eau), Glycerin (10%), Cetyl Alcohol"
       };
@@ -40,7 +40,7 @@ describe('CosmeticScorer', () => {
       expect(ingredients).not.toContain('10%');
     });
 
-    test('Doit gérer les sources alternatives (composition, inci)', () => {
+    test('Doit gÃ©rer les sources alternatives (composition, inci)', () => {
       const productData = {
         composition: "AQUA, NIACINAMIDE, HYALURONIC ACID"
       };
@@ -54,7 +54,7 @@ describe('CosmeticScorer', () => {
   });
 
   describe('Analyse des risques', () => {
-    test('Doit détecter les perturbateurs endocriniens', () => {
+    test('Doit dÃ©tecter les perturbateurs endocriniens', () => {
       const ingredients = ['AQUA', 'BUTYLPARABEN', 'BENZOPHENONE-3', 'GLYCERIN'];
       
       const riskAnalysis = cosmeticScorer.analyzeRisks(ingredients);
@@ -65,7 +65,7 @@ describe('CosmeticScorer', () => {
       expect(riskAnalysis.overall_risk).toBe('high');
     });
 
-    test('Doit calculer un score de risque approprié', () => {
+    test('Doit calculer un score de risque appropriÃ©', () => {
       const safeIngredients = ['AQUA', 'GLYCERIN', 'TOCOPHEROL'];
       const riskyIngredients = ['BUTYLPARABEN', 'TRICLOSAN', 'BHA'];
       
@@ -77,7 +77,7 @@ describe('CosmeticScorer', () => {
       expect(riskyAnalysis.overall_risk).toBe('high');
     });
 
-    test('Doit identifier les ingrédients pour peau sensible', () => {
+    test('Doit identifier les ingrÃ©dients pour peau sensible', () => {
       const ingredients = ['AQUA', 'PARFUM', 'SODIUM LAURYL SULFATE'];
       
       const riskAnalysis = cosmeticScorer.analyzeRisks(ingredients);
@@ -87,8 +87,8 @@ describe('CosmeticScorer', () => {
     });
   });
 
-  describe('Analyse des bénéfices', () => {
-    test('Doit identifier les ingrédients actifs bénéfiques', () => {
+  describe('Analyse des bÃ©nÃ©fices', () => {
+    test('Doit identifier les ingrÃ©dients actifs bÃ©nÃ©fiques', () => {
       const ingredients = ['AQUA', 'HYALURONIC ACID', 'NIACINAMIDE', 'RETINOL'];
       
       const benefitAnalysis = cosmeticScorer.analyzeBenefits(ingredients);
@@ -98,13 +98,13 @@ describe('CosmeticScorer', () => {
       expect(benefitAnalysis.efficacy_score).toBeGreaterThan(0);
     });
 
-    test('Doit regrouper par catégories de bénéfices', () => {
+    test('Doit regrouper par catÃ©gories de bÃ©nÃ©fices', () => {
       const ingredients = ['HYALURONIC ACID', 'GLYCERIN', 'RETINOL', 'ASCORBIC ACID'];
       
       const benefitAnalysis = cosmeticScorer.analyzeBenefits(ingredients);
       
       const hydrationCategory = benefitAnalysis.skincare_benefits.find(cat => cat.category === 'Hydratation');
-      const antiAgeCategory = benefitAnalysis.skincare_benefits.find(cat => cat.category === 'Anti-âge');
+      const antiAgeCategory = benefitAnalysis.skincare_benefits.find(cat => cat.category === 'Anti-Ã¢ge');
       
       expect(hydrationCategory).toBeDefined();
       expect(hydrationCategory.ingredients).toContain('HYALURONIC ACID');
@@ -113,18 +113,18 @@ describe('CosmeticScorer', () => {
     });
   });
 
-  describe('Analyse des allergènes', () => {
-    test('Doit détecter les allergènes connus', () => {
+  describe('Analyse des allergÃ¨nes', () => {
+    test('Doit dÃ©tecter les allergÃ¨nes connus', () => {
       const ingredients = ['AQUA', 'LIMONENE', 'LINALOOL', 'EUGENOL'];
       
       const allergenAnalysis = cosmeticScorer.analyzeAllergens(ingredients);
       
       expect(allergenAnalysis.detected_allergens).toHaveLength(3);
       expect(allergenAnalysis.total_allergens).toBe(3);
-      expect(allergenAnalysis.risk_level).toBe('high'); // 2 allergènes haute prévalence
+      expect(allergenAnalysis.risk_level).toBe('high'); // 2 allergÃ¨nes haute prÃ©valence
     });
 
-    test('Doit calculer le niveau de risque allergène', () => {
+    test('Doit calculer le niveau de risque allergÃ¨ne', () => {
       const lowRiskIngredients = ['AQUA', 'GLYCERIN'];
       const highRiskIngredients = ['LIMONENE', 'LINALOOL', 'EUGENOL', 'GERANIOL'];
       
@@ -138,7 +138,7 @@ describe('CosmeticScorer', () => {
   });
 
   describe('Analyse de formulation', () => {
-    test('Doit évaluer la complexité de formulation', () => {
+    test('Doit Ã©valuer la complexitÃ© de formulation', () => {
       const simpleFormulation = ['AQUA', 'GLYCERIN', 'TOCOPHEROL'];
       const complexFormulation = new Array(35).fill().map((_, i) => `INGREDIENT_${i}`);
       
@@ -150,7 +150,7 @@ describe('CosmeticScorer', () => {
       expect(simpleAnalysis.formulation_score).toBeGreaterThan(complexAnalysis.formulation_score);
     });
 
-    test('Doit estimer le ratio naturel/synthétique', () => {
+    test('Doit estimer le ratio naturel/synthÃ©tique', () => {
       const naturalIngredients = ['ALOE EXTRACT', 'JOJOBA OIL', 'SHEA BUTTER'];
       const syntheticIngredients = ['SODIUM CHLORIDE', 'POLYMER-1', 'PARABEN'];
       
@@ -163,7 +163,7 @@ describe('CosmeticScorer', () => {
   });
 
   describe('Calcul du score final', () => {
-    test('Doit calculer un score cohérent pour un produit sûr', async () => {
+    test('Doit calculer un score cohÃ©rent pour un produit sÃ»r', async () => {
       const safeProduct = {
         ingredients: "AQUA, GLYCERIN, HYALURONIC ACID, TOCOPHEROL, ALOE EXTRACT"
       };
@@ -175,7 +175,7 @@ describe('CosmeticScorer', () => {
       expect(result.breakdown.safety.score).toBeGreaterThan(80);
     });
 
-    test('Doit pénaliser un produit avec perturbateurs endocriniens', async () => {
+    test('Doit pÃ©naliser un produit avec perturbateurs endocriniens', async () => {
       const riskyProduct = {
         ingredients: "AQUA, BUTYLPARABEN, TRICLOSAN, BHA, BENZOPHENONE-3"
       };
@@ -189,7 +189,7 @@ describe('CosmeticScorer', () => {
   });
 
   describe('Calcul de la confidence', () => {
-    test('Doit avoir une confidence élevée avec ingrédients reconnus', async () => {
+    test('Doit avoir une confidence Ã©levÃ©e avec ingrÃ©dients reconnus', async () => {
       const knownProduct = {
         ingredients: "AQUA, GLYCERIN, HYALURONIC ACID, BUTYLPARABEN, LIMONENE"
       };
@@ -197,10 +197,10 @@ describe('CosmeticScorer', () => {
       const result = await cosmeticScorer.analyzeCosmetic(knownProduct);
       
       expect(result.confidence).toBeGreaterThan(0.7);
-      expect(result.confidence_label).toMatch(/Fiable|Très fiable/);
+      expect(result.confidence_label).toMatch(/Fiable|TrÃ¨s fiable/);
     });
 
-    test('Doit avoir une confidence faible avec ingrédients inconnus', async () => {
+    test('Doit avoir une confidence faible avec ingrÃ©dients inconnus', async () => {
       const unknownProduct = {
         ingredients: "UNKNOWN_INGREDIENT_1, UNKNOWN_INGREDIENT_2, UNKNOWN_INGREDIENT_3"
       };
@@ -208,11 +208,11 @@ describe('CosmeticScorer', () => {
       const result = await cosmeticScorer.analyzeCosmetic(unknownProduct);
       
       expect(result.confidence).toBeLessThan(0.5);
-      expect(result.confidence_label).toMatch(/Faible|Modéré/);
+      expect(result.confidence_label).toMatch(/Faible|ModÃ©rÃ©/);
     });
   });
 
-  describe('Génération d\'alternatives', () => {
+  describe('GÃ©nÃ©ration d\'alternatives', () => {
     test('Doit proposer alternatives pour produit avec perturbateurs', async () => {
       const productData = { ingredients: "BUTYLPARABEN, TRICLOSAN" };
       const analysisResult = {
@@ -227,7 +227,7 @@ describe('CosmeticScorer', () => {
       expect(alternatives.some(alt => alt.type.includes('clean'))).toBe(true);
     });
 
-    test('Doit proposer alternatives hypoallergéniques pour allergènes', async () => {
+    test('Doit proposer alternatives hypoallergÃ©niques pour allergÃ¨nes', async () => {
       const productData = { ingredients: "LIMONENE, LINALOOL, EUGENOL" };
       const analysisResult = {
         risk_analysis: { endocrine_disruptors: [] },
@@ -237,13 +237,13 @@ describe('CosmeticScorer', () => {
       
       const alternatives = await cosmeticScorer.generateAlternatives(productData, analysisResult);
       
-      expect(alternatives.some(alt => alt.type.includes('hypoallergénique'))).toBe(true);
+      expect(alternatives.some(alt => alt.type.includes('hypoallergÃ©nique'))).toBe(true);
     });
   });
 
-  describe('Détection du type de produit', () => {
+  describe('DÃ©tection du type de produit', () => {
     test('Doit identifier correctement les types de produits', () => {
-      expect(cosmeticScorer.detectProductType({ name: 'Crème hydratante' })).toBe('soin');
+      expect(cosmeticScorer.detectProductType({ name: 'CrÃ¨me hydratante' })).toBe('soin');
       expect(cosmeticScorer.detectProductType({ name: 'Shampoing doux' })).toBe('nettoyant');
       expect(cosmeticScorer.detectProductType({ category: 'makeup' })).toBe('maquillage');
       expect(cosmeticScorer.detectProductType({ name: 'Parfum' })).toBe('autre');
@@ -251,14 +251,14 @@ describe('CosmeticScorer', () => {
   });
 
   describe('Gestion des erreurs', () => {
-    test('Doit gérer les données d\'entrée invalides', async () => {
+    test('Doit gÃ©rer les donnÃ©es d\'entrÃ©e invalides', async () => {
       const invalidProduct = {};
       
       await expect(cosmeticScorer.analyzeCosmetic(invalidProduct))
         .rejects.toThrow();
     });
 
-    test('Doit gérer les ingrédients vides', () => {
+    test('Doit gÃ©rer les ingrÃ©dients vides', () => {
       const emptyProduct = { ingredients: "" };
       
       const ingredients = cosmeticScorer.extractInciIngredients(emptyProduct);
@@ -267,8 +267,8 @@ describe('CosmeticScorer', () => {
     });
   });
 
-  describe('Méta-données', () => {
-    test('Doit inclure les méta-données complètes', async () => {
+  describe('MÃ©ta-donnÃ©es', () => {
+    test('Doit inclure les mÃ©ta-donnÃ©es complÃ¨tes', async () => {
       const product = {
         ingredients: "AQUA, GLYCERIN, HYALURONIC ACID"
       };

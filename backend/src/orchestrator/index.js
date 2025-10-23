@@ -43,7 +43,7 @@ class EcolojiaOrchestrator {
     try {
       // Test connexion base
       await this.prisma.$connect();
-      this.logger.info('âœ… Orchestrateur connecte   PostgreSQL');
+      this.logger.info('Ã¢Å“â€¦ Orchestrateur connecte Â  PostgreSQL');
 
       // Demarrer les taches programmees
       this.setupCronJobs();
@@ -53,11 +53,11 @@ class EcolojiaOrchestrator {
       
       const PORT = process.env.ORCHESTRATOR_PORT || 3001;
       this.app.listen(PORT, () => {
-        this.logger.info(`ðŸš€ Orchestrateur demarre sur port ${PORT}`);
+        this.logger.info(`Ã°Å¸Å¡â‚¬ Orchestrateur demarre sur port ${PORT}`);
       });
 
     } catch (error) {
-      this.logger.error('âŒ Erreur demarrage orchestrateur:', error);
+      this.logger.error('Ã¢ÂÅ’ Erreur demarrage orchestrateur:', error);
       process.exit(1);
     }
   }
@@ -65,25 +65,25 @@ class EcolojiaOrchestrator {
   setupCronJobs() {
     // Import OpenFoodFacts quotidien (2h du matin)
     cron.schedule('0 2 * * *', async () => {
-      this.logger.info('ðŸ”„ Demarrage import OpenFoodFacts quotidien');
+      this.logger.info('Ã°Å¸â€â€ž Demarrage import OpenFoodFacts quotidien');
       const ingestion = new DataIngestion(this.prisma, this.logger);
       await ingestion.importNewProducts();
     });
 
     // Enrichissement IA (toutes les 4h)
     cron.schedule('0 */4 * * *', async () => {
-      this.logger.info('ðŸ¤– Demarrage enrichissement IA');
+      this.logger.info('Ã°Å¸Â¤â€“ Demarrage enrichissement IA');
       const enrichment = new EnrichmentService(this.prisma, this.logger);
       await enrichment.processQueue();
     });
 
     // Nettoyage base (dimanche 3h)
     cron.schedule('0 3 * * 0', async () => {
-      this.logger.info('ðŸ§¹ Nettoyage base de donnees');
+      this.logger.info('Ã°Å¸Â§Â¹ Nettoyage base de donnees');
       await this.cleanupDatabase();
     });
 
-    this.logger.info('â° Taches programmees configurees');
+    this.logger.info('Ã¢ÂÂ° Taches programmees configurees');
   }
 
   setupAPI() {
@@ -117,7 +117,7 @@ class EcolojiaOrchestrator {
     this.app.post('/import', async (req, res) => {
       try {
         const ingestion = new DataIngestion(this.prisma, this.logger);
-        const imported = await ingestion.importNewProducts(50); // Limite   50
+        const imported = await ingestion.importNewProducts(50); // Limite Â  50
         res.json({ success: true, imported });
       } catch (error) {
         res.status(500).json({ error: error.message });
@@ -138,7 +138,7 @@ class EcolojiaOrchestrator {
         )
       `;
 
-      this.logger.info(`ðŸ§¹ ${duplicates.count || 0} doublons supprimes`);
+      this.logger.info(`Ã°Å¸Â§Â¹ ${duplicates.count || 0} doublons supprimes`);
     } catch (error) {
       this.logger.error('Erreur nettoyage:', error);
     }
@@ -146,7 +146,7 @@ class EcolojiaOrchestrator {
 
   async stop() {
     await this.prisma.$disconnect();
-    this.logger.info('â¹ï¸ Orchestrateur arrete');
+    this.logger.info('Ã¢ÂÂ¹Ã¯Â¸Â Orchestrateur arrete');
   }
 }
 

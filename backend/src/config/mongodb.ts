@@ -9,7 +9,7 @@ export const connectMongoDB = async () => {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
 
-    // Options de connexion recommandées
+    // Options de connexion recommandÃ©es
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -19,20 +19,20 @@ export const connectMongoDB = async () => {
 
     await mongoose.connect(uri, options);
     
-    console.log('✅ MongoDB Atlas connected successfully');
-    console.log(`📍 Connected to database: ${mongoose.connection.db?.databaseName || "ecolojia"}`);
+    console.log('âœ… MongoDB Atlas connected successfully');
+    console.log(`ðŸ“ Connected to database: ${mongoose.connection.db?.databaseName || "ecolojia"}`);
     
     // Event listeners pour monitoring
     mongoose.connection.on('error', (error) => {
-      console.error('❌ MongoDB connection error:', error);
+      console.error('âŒ MongoDB connection error:', error);
     });
 
     mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️ MongoDB disconnected');
+      console.warn('âš ï¸ MongoDB disconnected');
     });
 
   } catch (error) {
-    console.error('❌ Failed to connect to MongoDB:', error);
+    console.error('âŒ Failed to connect to MongoDB:', error);
     process.exit(1);
   }
 };

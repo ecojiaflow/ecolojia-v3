@@ -1,4 +1,4 @@
-﻿// scripts/inspect-product-structure.js
+// scripts/inspect-product-structure.js
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Product = require('../src/models/Product');

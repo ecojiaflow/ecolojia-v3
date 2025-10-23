@@ -21,7 +21,7 @@ const HomePage: React.FC = () => {
   };
 
   const stats = [
-    { icon: Package, value: '2M+', label: 'Produits analysés', color: 'text-green-600' },
+    { icon: Package, value: '2M+', label: 'Produits analysÃ©s', color: 'text-green-600' },
     { icon: Shield, value: '100%', label: 'Scientifique', color: 'text-blue-600' },
     { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-purple-600' },
     { icon: Users, value: '500k+', label: 'Utilisateurs actifs', color: 'text-orange-600' }
@@ -30,28 +30,28 @@ const HomePage: React.FC = () => {
   const categories = [
     { 
       name: 'Alimentaire', 
-      icon: 'ðŸ¥—', 
+      icon: 'Ã°Å¸Â¥â€”', 
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
       popular: ['Nutella', 'Yaourt', 'Pain bio']
     },
     { 
-      name: 'Cosmétique', 
-      icon: 'ðŸ’„', 
+      name: 'CosmÃ©tique', 
+      icon: 'Ã°Å¸â€™â€ž', 
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
-      popular: ['Shampoing', 'Crème', 'Déodorant']
+      popular: ['Shampoing', 'CrÃ¨me', 'DÃ©odorant']
     },
     { 
       name: 'Entretien', 
-      icon: 'ðŸ§¹', 
+      icon: 'Ã°Å¸Â§Â¹', 
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
       popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
     },
     { 
-      name: 'Hygiène', 
-      icon: 'ðŸ§¼', 
+      name: 'HygiÃ¨ne', 
+      icon: 'Ã°Å¸Â§Â¼', 
       count: '180k produits',
       color: 'from-purple-400 to-purple-600',
       popular: ['Dentifrice', 'Savon', 'Gel douche']
@@ -62,19 +62,19 @@ const HomePage: React.FC = () => {
     {
       icon: Camera,
       title: 'Scanner Intelligent',
-      description: 'Analysez instantanément avec photo, code-barres ou recherche manuelle',
+      description: 'Analysez instantanÃ©ment avec photo, code-barres ou recherche manuelle',
       color: 'bg-green-100 text-green-700'
     },
     {
       icon: BarChart3,
       title: 'Analyses Scientifiques',
-      description: 'NOVA, Nutri-Score, additifs et impact environnemental détaillé',
+      description: 'NOVA, Nutri-Score, additifs et impact environnemental dÃ©taillÃ©',
       color: 'bg-blue-100 text-blue-700'
     },
     {
       icon: Sparkles,
-      title: 'IA Personnalisée',
-      description: 'Recommandations adaptées Ã  votre profil et vos objectifs santé',
+      title: 'IA PersonnalisÃ©e',
+      description: 'Recommandations adaptÃ©es ÃƒÂ  votre profil et vos objectifs santÃ©',
       color: 'bg-purple-100 text-purple-700'
     }
   ];
@@ -83,13 +83,13 @@ const HomePage: React.FC = () => {
     {
       name: 'Marie L.',
       role: 'Maman de 3 enfants',
-      content: "ECOLOJIA m'aide Ã  choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
+      content: "ECOLOJIA m'aide ÃƒÂ  choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
       rating: 5
     },
     {
       name: 'Thomas B.',
       role: 'Sportif amateur',
-      content: "Je scanne tous mes produits avant achat. L'app m'a fait découvrir des alternatives plus saines.",
+      content: "Je scanne tous mes produits avant achat. L'app m'a fait dÃ©couvrir des alternatives plus saines.",
       rating: 5
     }
   ];
@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
           >
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-6">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">IA Scientifique Multi-Catégories</span>
+              <span className="text-sm font-medium">IA Scientifique Multi-CatÃ©gories</span>
               <span className="text-xs bg-green-800 text-white px-2 py-0.5 rounded-full">Nouveau</span>
             </div>
 
@@ -120,8 +120,8 @@ const HomePage: React.FC = () => {
             </h1>
 
             <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-              Analysez instantanément vos produits alimentaires, cosmétiques et détergents
-              grâce Ã  notre IA basée sur INSERM, ANSES et EFSA
+              Analysez instantanÃ©ment vos produits alimentaires, cosmÃ©tiques et dÃ©tergents
+              grÃ¢ce ÃƒÂ  notre IA basÃ©e sur INSERM, ANSES et EFSA
             </p>
 
             {/* Barre de recherche */}
@@ -135,7 +135,7 @@ const HomePage: React.FC = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
-                  placeholder="Recherchez parmi 2M+ produits (Nutella, L'Oréal, Ariel...)"
+                  placeholder="Recherchez parmi 2M+ produits (Nutella, L'OrÃ©al, Ariel...)"
                   className="w-full pl-14 pr-4 py-5 text-lg rounded-l-2xl focus:outline-none"
                 />
 
@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
 
               {/* Suggestions */}
               <div className="flex flex-wrap gap-2 justify-center mt-4">
-                {['ðŸ« Nutella bio', 'ðŸ§´ Shampoing sans sulfate', 'ðŸ§½ Lessive écologique', 'ðŸ¦· Dentifrice naturel'].map((suggestion) => (
+                {['Ã°Å¸ÂÂ« Nutella bio', 'Ã°Å¸Â§Â´ Shampoing sans sulfate', 'Ã°Å¸Â§Â½ Lessive Ã©cologique', 'Ã°Å¸Â¦Â· Dentifrice naturel'].map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"
@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
           <div className="absolute top-20 left-10 bg-white p-3 rounded-lg shadow-lg animate-bounce">
             <div className="flex items-center gap-2">
               <Award className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm font-medium">Top App Santé 2025</span>
+              <span className="text-sm font-medium">Top App SantÃ© 2025</span>
             </div>
           </div>
 
@@ -229,12 +229,12 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Catégories */}
+      {/* CatÃ©gories */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par catégorie</h2>
-            <p className="text-lg text-gray-600">Analyse complète pour tous vos produits du quotidien</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par catÃ©gorie</h2>
+            <p className="text-lg text-gray-600">Analyse complÃ¨te pour tous vos produits du quotidien</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -280,7 +280,7 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
-            <p className="text-lg text-gray-600">La technologie au service de votre santé</p>
+            <p className="text-lg text-gray-600">La technologie au service de votre santÃ©</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -309,7 +309,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Témoignages */}
+      {/* TÃ©moignages */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -346,9 +346,9 @@ const HomePage: React.FC = () => {
       {/* CTA final */}
       <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Prêt Ã  transformer votre consommation ?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">PrÃªt ÃƒÂ  transformer votre consommation ?</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Rejoignez 500 000+ utilisateurs qui font des choix éclairés chaque jour
+            Rejoignez 500 000+ utilisateurs qui font des choix Ã©clairÃ©s chaque jour
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
@@ -367,7 +367,7 @@ const HomePage: React.FC = () => {
                        hover:bg-green-800 transition-colors inline-flex items-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
-              Découvrir Premium
+              DÃ©couvrir Premium
             </button>
           </div>
         </div>

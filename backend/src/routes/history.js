@@ -60,7 +60,7 @@ router.get('/', authOptional, async (req, res) => {
     console.error('History error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la récupération de l\'historique'
+      error: 'Erreur lors de la rÃ©cupÃ©ration de l\'historique'
     });
   }
 });

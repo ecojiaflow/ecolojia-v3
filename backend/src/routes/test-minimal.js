@@ -11,7 +11,7 @@ console.log('\n=== VERIFICATION DES ROUTES ===\n');
 console.log('1. Checking products.js...');
 try {
   const productRoutes = require('./routes/products');
-  console.log('âœ… products.js loaded successfully');
+  console.log('Ã¢Å“â€¦ products.js loaded successfully');
   console.log('Type:', typeof productRoutes);
   console.log('Is Router?', productRoutes && productRoutes.stack ? 'Yes' : 'No');
   
@@ -24,7 +24,7 @@ try {
     });
   }
 } catch (error) {
-  console.log('âŒ Error loading products.js:', error.message);
+  console.log('Ã¢ÂÅ’ Error loading products.js:', error.message);
 }
 
 console.log('\n---\n');
@@ -33,7 +33,7 @@ console.log('\n---\n');
 console.log('2. Checking dashboard.js...');
 try {
   const dashboardRoutes = require('./routes/dashboard');
-  console.log('âœ… dashboard.js loaded successfully');
+  console.log('Ã¢Å“â€¦ dashboard.js loaded successfully');
   console.log('Type:', typeof dashboardRoutes);
   console.log('Is Router?', dashboardRoutes && dashboardRoutes.stack ? 'Yes' : 'No');
   
@@ -46,7 +46,7 @@ try {
     });
   }
 } catch (error) {
-  console.log('âŒ Error loading dashboard.js:', error.message);
+  console.log('Ã¢ÂÅ’ Error loading dashboard.js:', error.message);
 }
 
 console.log('\n---\n');
@@ -55,7 +55,7 @@ console.log('\n---\n');
 console.log('3. Checking analyze.routes.js...');
 try {
   const analyzeRoutes = require('./routes/analyze.routes');
-  console.log('âœ… analyze.routes.js loaded successfully');
+  console.log('Ã¢Å“â€¦ analyze.routes.js loaded successfully');
   console.log('Type:', typeof analyzeRoutes);
   console.log('Is Router?', analyzeRoutes && analyzeRoutes.stack ? 'Yes' : 'No');
   
@@ -68,7 +68,7 @@ try {
     });
   }
 } catch (error) {
-  console.log('âŒ Error loading analyze.routes.js:', error.message);
+  console.log('Ã¢ÂÅ’ Error loading analyze.routes.js:', error.message);
 }
 
 console.log('\n---\n');
@@ -77,7 +77,7 @@ console.log('\n---\n');
 console.log('4. Checking ai.js...');
 try {
   const aiRoutes = require('./routes/ai');
-  console.log('âœ… ai.js loaded successfully');
+  console.log('Ã¢Å“â€¦ ai.js loaded successfully');
   console.log('Type:', typeof aiRoutes);
   console.log('Is Router?', aiRoutes && aiRoutes.stack ? 'Yes' : 'No');
   
@@ -90,7 +90,7 @@ try {
     });
   }
 } catch (error) {
-  console.log('âŒ Error loading ai.js:', error.message);
+  console.log('Ã¢ÂÅ’ Error loading ai.js:', error.message);
 }
 
 console.log('\n=== FIN DE LA VERIFICATION ===\n');

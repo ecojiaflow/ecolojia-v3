@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/AboutPage.tsx
+// PATH: frontend/src/pages/AboutPage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, Heart, Shield, Target, Users, Lightbulb, Award, Globe } from 'lucide-react';

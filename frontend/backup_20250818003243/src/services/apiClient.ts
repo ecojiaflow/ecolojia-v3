@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/apiClient.ts
+// PATH: frontend/src/services/apiClient.ts
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 // Base URL: env first, fallback to current origin + /api

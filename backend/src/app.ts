@@ -12,7 +12,7 @@ import historyRoutes from './routes/history';
 import exportRoutes from './routes/export';
 import ultraProcessingRoutes from './routes/ultraProcessing.routes';
 
-// ✅ Import manquant ajouté :
+// âœ… Import manquant ajoutÃ© :
 const dashboardRoutes = require('./routes/dashboard');
 
 dotenv.config();
@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// ✅ Rate limiting
+// âœ… Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -33,7 +33,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ✅ Routes principales
+// âœ… Routes principales
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/favorites', favoritesRoutes);
@@ -41,10 +41,10 @@ app.use('/api/history', historyRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/ultra', ultraProcessingRoutes);
 
-// ✅ Route dashboard ajoutée ici :
+// âœ… Route dashboard ajoutÃ©e ici :
 app.use('/api/dashboard', dashboardRoutes);
 
-// ✅ Route de test
+// âœ… Route de test
 app.get('/api/ping', (req, res) => {
   res.json({ success: true, message: 'pong' });
 });

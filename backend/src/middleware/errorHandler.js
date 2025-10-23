@@ -86,7 +86,7 @@ const setupErrorHandling = (app) => {
     }, 1000);
   });
   
-  console.log('âœ… Error handling configured');
+  console.log('Ã¢Å“â€¦ Error handling configured');
 };
 
 module.exports = {

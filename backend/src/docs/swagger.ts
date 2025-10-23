@@ -1,4 +1,4 @@
-// ✅ FICHIER COMPLET : src/docs/swagger.ts
+// âœ… FICHIER COMPLET : src/docs/swagger.ts
 
 import swaggerJSDoc from 'swagger-jsdoc';
 
@@ -10,7 +10,7 @@ const options: swaggerJSDoc.Options = {
       version: '1.0.0',
       description: 'Documentation de l\'API Ecolojia (produits, partenaires, IA)',
       contact: {
-        name: 'Équipe Ecolojia',
+        name: 'Ã‰quipe Ecolojia',
         email: 'contact@ecolojia.com',
         url: 'https://ecolojia.com'
       },
@@ -32,7 +32,7 @@ const options: swaggerJSDoc.Options = {
     tags: [
       {
         name: 'Products',
-        description: 'Gestion des produits éco-responsables'
+        description: 'Gestion des produits Ã©co-responsables'
       },
       {
         name: 'Search',
@@ -40,7 +40,7 @@ const options: swaggerJSDoc.Options = {
       },
       {
         name: 'EcoScore',
-        description: 'Score écologique IA'
+        description: 'Score Ã©cologique IA'
       },
       {
         name: 'Partners',
@@ -67,7 +67,7 @@ const options: swaggerJSDoc.Options = {
             },
             description: {
               type: 'string',
-              description: 'Description détaillée du produit'
+              description: 'Description dÃ©taillÃ©e du produit'
             },
             brand: {
               type: 'string',
@@ -76,14 +76,14 @@ const options: swaggerJSDoc.Options = {
             },
             category: {
               type: 'string',
-              description: 'Catégorie du produit'
+              description: 'CatÃ©gorie du produit'
             },
             tags: {
               type: 'array',
               items: {
                 type: 'string'
               },
-              description: 'Mots-clés associés'
+              description: 'Mots-clÃ©s associÃ©s'
             },
             images: {
               type: 'array',
@@ -97,7 +97,7 @@ const options: swaggerJSDoc.Options = {
               items: {
                 type: 'string'
               },
-              description: 'Zones de disponibilité (FR, EU, etc.)'
+              description: 'Zones de disponibilitÃ© (FR, EU, etc.)'
             },
             prices: {
               type: 'object',
@@ -112,7 +112,7 @@ const options: swaggerJSDoc.Options = {
               type: 'number',
               minimum: 0,
               maximum: 1,
-              description: 'Score écologique calculé par IA (0-1)'
+              description: 'Score Ã©cologique calculÃ© par IA (0-1)'
             },
             ai_confidence: {
               type: 'number',
@@ -134,15 +134,15 @@ const options: swaggerJSDoc.Options = {
             verified_status: {
               type: 'string',
               enum: ['pending', 'manual_review', 'ai_verified', 'expert_verified'],
-              description: 'Statut de vérification'
+              description: 'Statut de vÃ©rification'
             },
             resume_fr: {
               type: 'string',
-              description: 'Résumé en français'
+              description: 'RÃ©sumÃ© en franÃ§ais'
             },
             resume_en: {
               type: 'string',
-              description: 'Résumé en anglais'
+              description: 'RÃ©sumÃ© en anglais'
             },
             image_url: {
               type: 'string',
@@ -152,12 +152,12 @@ const options: swaggerJSDoc.Options = {
             created_at: {
               type: 'string',
               format: 'date-time',
-              description: 'Date de création'
+              description: 'Date de crÃ©ation'
             },
             updated_at: {
               type: 'string',
               format: 'date-time',
-              description: 'Date de dernière modification'
+              description: 'Date de derniÃ¨re modification'
             },
             enriched_at: {
               type: 'string',
@@ -196,7 +196,7 @@ const options: swaggerJSDoc.Options = {
               type: 'string',
               minLength: 10,
               maxLength: 2000,
-              description: 'Description détaillée'
+              description: 'Description dÃ©taillÃ©e'
             },
             brand: {
               type: 'string',
@@ -206,7 +206,7 @@ const options: swaggerJSDoc.Options = {
             category: {
               type: 'string',
               maxLength: 50,
-              description: 'Catégorie'
+              description: 'CatÃ©gorie'
             },
             tags: {
               type: 'array',
@@ -214,7 +214,7 @@ const options: swaggerJSDoc.Options = {
                 type: 'string'
               },
               maxItems: 20,
-              description: 'Mots-clés (max 20)'
+              description: 'Mots-clÃ©s (max 20)'
             },
             images: {
               type: 'array',
@@ -230,7 +230,7 @@ const options: swaggerJSDoc.Options = {
               items: {
                 type: 'string'
               },
-              description: 'Zones de disponibilité'
+              description: 'Zones de disponibilitÃ©'
             },
             prices: {
               type: 'object',
@@ -245,23 +245,23 @@ const options: swaggerJSDoc.Options = {
               type: 'number',
               minimum: 0,
               maximum: 1,
-              description: 'Score manuel (optionnel, calculé par IA sinon)'
+              description: 'Score manuel (optionnel, calculÃ© par IA sinon)'
             },
             verified_status: {
               type: 'string',
               enum: ['pending', 'manual_review', 'ai_verified', 'expert_verified'],
               default: 'pending',
-              description: 'Statut de vérification'
+              description: 'Statut de vÃ©rification'
             },
             resume_fr: {
               type: 'string',
               maxLength: 500,
-              description: 'Résumé français'
+              description: 'RÃ©sumÃ© franÃ§ais'
             },
             resume_en: {
               type: 'string',
               maxLength: 500,
-              description: 'Résumé anglais'
+              description: 'RÃ©sumÃ© anglais'
             },
             image_url: {
               type: 'string',
@@ -364,7 +364,7 @@ const options: swaggerJSDoc.Options = {
               format: 'uri'
             }
           },
-          description: 'Tous les champs sont optionnels pour la mise à jour'
+          description: 'Tous les champs sont optionnels pour la mise Ã  jour'
         },
         ErrorResponse: {
           type: 'object',
@@ -389,7 +389,7 @@ const options: swaggerJSDoc.Options = {
                   }
                 }
               ],
-              description: 'Détails supplémentaires'
+              description: 'DÃ©tails supplÃ©mentaires'
             }
           },
           required: [

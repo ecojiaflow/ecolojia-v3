@@ -14,16 +14,16 @@ function calculateFoodScores(foodData) {
     origin
   } = foodData;
 
-  // Score santé (0-100)
+  // Score santÃ© (0-100)
   let healthScore = 50;
 
-  // NOVA impact (-30 à +20)
+  // NOVA impact (-30 Ã  +20)
   if (novaGroup === 1) healthScore += 20;
   else if (novaGroup === 2) healthScore += 10;
   else if (novaGroup === 3) healthScore -= 10;
   else if (novaGroup === 4) healthScore -= 30;
 
-  // Nutri-Score impact (-20 à +20)
+  // Nutri-Score impact (-20 Ã  +20)
   if (nutriScore === 'A') healthScore += 20;
   else if (nutriScore === 'B') healthScore += 10;
   else if (nutriScore === 'C') healthScore += 0;
@@ -44,7 +44,7 @@ function calculateFoodScores(foodData) {
   else if (ecoScore === 'D') environmentScore -= 15;
   else if (ecoScore === 'E') environmentScore -= 30;
 
-  // Labels bio/équitables
+  // Labels bio/Ã©quitables
   const bioLabels = ['en:organic', 'en:eu-organic', 'fr:ab-agriculture-biologique'];
   const hasBio = Array.isArray(labels) && labels.some(l => bioLabels.includes(l));
   if (hasBio) environmentScore += 20;
@@ -63,7 +63,7 @@ function calculateFoodScores(foodData) {
   healthScore = Math.max(0, Math.min(100, healthScore));
   environmentScore = Math.max(0, Math.min(100, environmentScore));
 
-  // Score global pondéré (70% santé, 30% environnement)
+  // Score global pondÃ©rÃ© (70% santÃ©, 30% environnement)
   const overallScore = Math.round(healthScore * 0.7 + environmentScore * 0.3);
 
   return {
@@ -85,13 +85,13 @@ async function recalculateScores() {
     await mongoose.connect(process.env.MONGODB_URI);
     const db = mongoose.connection.db;
 
-    console.log('\n🔄 RECALCUL DES SCORES POUR TOUS LES PRODUITS FOOD\n');
+    console.log('\nðŸ”„ RECALCUL DES SCORES POUR TOUS LES PRODUITS FOOD\n');
 
     const products = await db.collection('products')
       .find({ category: 'food' })
       .toArray();
 
-    console.log(`📦 ${products.length} produits à traiter\n`);
+    console.log(`ðŸ“¦ ${products.length} produits Ã  traiter\n`);
 
     let updated = 0;
     let errors = 0;
@@ -124,7 +124,7 @@ async function recalculateScores() {
         updated++;
 
         if (updated % 500 === 0) {
-          console.log(`  ✓ ${updated}/${products.length} scores calculés`);
+          console.log(`  âœ“ ${updated}/${products.length} scores calculÃ©s`);
         }
 
       } catch (err) {
@@ -133,13 +133,13 @@ async function recalculateScores() {
       }
     }
 
-    console.log(`\n✅ ${updated} scores recalculés avec succès`);
+    console.log(`\nâœ… ${updated} scores recalculÃ©s avec succÃ¨s`);
     if (errors > 0) {
-      console.log(`⚠️  ${errors} erreurs rencontrées`);
+      console.log(`âš ï¸  ${errors} erreurs rencontrÃ©es`);
     }
 
     // Statistiques scores
-    console.log('\n📊 DISTRIBUTION DES SCORES:\n');
+    console.log('\nðŸ“Š DISTRIBUTION DES SCORES:\n');
     const scoreStats = await db.collection('products').aggregate([
       { $match: { category: 'food', 'scores.overallScore': { $exists: true } } },
       {
@@ -160,11 +160,11 @@ async function recalculateScores() {
     });
 
     await mongoose.connection.close();
-    console.log('\n✅ Recalcul terminé\n');
+    console.log('\nâœ… Recalcul terminÃ©\n');
     process.exit(0);
 
   } catch (err) {
-    console.error('❌ ERREUR CRITIQUE:', err.message);
+    console.error('âŒ ERREUR CRITIQUE:', err.message);
     process.exit(1);
   }
 }

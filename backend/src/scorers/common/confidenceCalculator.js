@@ -1,6 +1,6 @@
 // src/scorers/common/confidenceCalculator.js
 /**
- * ðŸŽ¯ ECOLOJIA ConfidenceCalculator Unifie v2.0
+ * Ã°Å¸Å½Â¯ ECOLOJIA ConfidenceCalculator Unifie v2.0
  * Calcule score de confiance global (0-1) pour TOUS types de produits
  * Compatible : Food, Cosmetic, Detergent
  */
@@ -8,7 +8,7 @@
 class ConfidenceCalculator {
   
   /**
-   * ðŸ§® Calcul principal unifie
+   * Ã°Å¸Â§Â® Calcul principal unifie
    * @param {Object} factors - Facteurs de confiance selon type produit
    * @param {string} productType - 'food', 'cosmetic', 'detergent'
    * @returns {number} Score 0-1
@@ -17,7 +17,7 @@ class ConfidenceCalculator {
     try {
       let confidence = 0.2; // Base minimum pour tous
       
-      // === FACTEURS COMMUNS € TOUS PRODUITS ===
+      // === FACTEURS COMMUNS â‚¬ TOUS PRODUITS ===
       
       // Presence d'ingredients/composition
       if (factors.hasIngredients || factors.hasComposition) {
@@ -40,7 +40,7 @@ class ConfidenceCalculator {
         else if (factors.ingredientsCount >= 1) confidence += 0.05;
       }
       
-      // === FACTEURS SP‰CIFIQUES PAR TYPE ===
+      // === FACTEURS SPâ€°CIFIQUES PAR TYPE ===
       
       switch (productType) {
         case 'food':
@@ -66,7 +66,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸŽ Confiance specifique alimentaire
+   * Ã°Å¸ÂÅ½ Confiance specifique alimentaire
    */
   calculateFoodSpecificConfidence(factors) {
     let foodConfidence = 0;
@@ -92,7 +92,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸ§´ Confiance specifique cosmetique
+   * Ã°Å¸Â§Â´ Confiance specifique cosmetique
    */
   calculateCosmeticSpecificConfidence(factors) {
     let cosmeticConfidence = 0;
@@ -115,7 +115,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸ§½ Confiance specifique detergent
+   * Ã°Å¸Â§Â½ Confiance specifique detergent
    */
   calculateDetergentSpecificConfidence(factors) {
     let detergentConfidence = 0;
@@ -137,7 +137,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸ” Bonus mots-cles selon type produit
+   * Ã°Å¸â€Â Bonus mots-cles selon type produit
    */
   getKeywordBonus(productName, productType) {
     const name = productName.toLowerCase();
@@ -155,7 +155,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸ“Š Interpretation textuelle du score (uniformisee)
+   * Ã°Å¸â€œÅ  Interpretation textuelle du score (uniformisee)
    * @param {number} confidence - Score 0-1
    * @returns {string} Interpretation
    */
@@ -167,7 +167,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * âœ… Determine si publication autorisee (seuil unifie)
+   * Ã¢Å“â€¦ Determine si publication autorisee (seuil unifie)
    * @param {number} confidence - Score 0-1
    * @returns {boolean} Autorisation publication
    */
@@ -176,7 +176,7 @@ class ConfidenceCalculator {
   }
   
   /**
-   * ðŸŽ¯ Methode helper pour DetergentScorer (compatibilite)
+   * Ã°Å¸Å½Â¯ Methode helper pour DetergentScorer (compatibilite)
    * @param {number} ingredientsCount - Nombre d'ingredients
    * @param {string} productName - Nom du produit
    * @param {string} productType - Type de produit

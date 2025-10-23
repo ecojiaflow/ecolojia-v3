@@ -7,17 +7,17 @@ async function cleanup() {
     const uri = process.env.MONGODB_URI;
     
     if (!uri) {
-      console.error('? MONGODB_URI non trouvé dans .env');
+      console.error('? MONGODB_URI non trouvÃ© dans .env');
       process.exit(1);
     }
     
     console.log('?? Connexion MongoDB...');
     await mongoose.connect(uri);
-    console.log('? MongoDB connecté');
+    console.log('? MongoDB connectÃ©');
     
     const Product = mongoose.model('Product', new mongoose.Schema({}, { strict: false }));
     
-    console.log('?? Recherche produits fantômes...');
+    console.log('?? Recherche produits fantÃ´mes...');
     
     // Supprimer produits avec barcode null/vide OU sans nom
     const result = await Product.deleteMany({
@@ -31,10 +31,10 @@ async function cleanup() {
       ]
     });
     
-    console.log(`? ${result.deletedCount} produits fantômes supprimés`);
+    console.log(`? ${result.deletedCount} produits fantÃ´mes supprimÃ©s`);
     
     await mongoose.disconnect();
-    console.log('? Déconnexion MongoDB');
+    console.log('? DÃ©connexion MongoDB');
     process.exit(0);
   } catch (error) {
     console.error('? Erreur:', error.message);

@@ -28,15 +28,15 @@ export default function TestLogin() {
         localStorage.setItem('userId', response.data.userId || '');
         localStorage.setItem('userEmail', 'test@ecolojia.com');
         
-        console.log('ÃƒÂ¢Ãƒâ€¦ââ‚¬Å“ÃƒÂ¢ââ€šÂ¬Ã‚Â¦ Connexion rÃƒÂ©ussie !');
+        console.log('ÃƒÆ’Ã‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ã¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Connexion rÃƒÆ’Ã‚Â©ussie !');
         navigate('/scan');
       }
     } catch (err: any) {
-      console.error('ÃƒÂ¢Ãƒâ€šÃ‚ÂÃƒâ€¦ââ‚¬â„¢ Erreur connexion:', err);
+      console.error('ÃƒÆ’Ã‚Â¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Â¦Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Erreur connexion:', err);
       
-      // Si le compte test n'existe pas, crÃƒÂ©er un token local
+      // Si le compte test n'existe pas, crÃƒÆ’Ã‚Â©er un token local
       if (err.status === 404 || err.status === 401) {
-        console.log('ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸ÃƒÂ¢ââ€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â§ CrÃƒÂ©ation d\'un token local de test...');
+        console.log('ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ CrÃƒÆ’Ã‚Â©ation d\'un token local de test...');
         
         // Token de test local
         const testToken = 'test-token-' + Date.now();
@@ -54,16 +54,16 @@ export default function TestLogin() {
     }
   };
 
-  // Connexion sans backend (mode dÃƒÂ©mo)
+  // Connexion sans backend (mode dÃƒÆ’Ã‚Â©mo)
   const handleDemoMode = () => {
-    console.log('ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â½Ãƒâ€šÃ‚Â­ Mode dÃƒÂ©mo activÃƒÂ©');
+    console.log('ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â½ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­ Mode dÃƒÆ’Ã‚Â©mo activÃƒÆ’Ã‚Â©');
     
-    // CrÃƒÂ©er un token de dÃƒÂ©monstration
+    // CrÃƒÆ’Ã‚Â©er un token de dÃƒÆ’Ã‚Â©monstration
     const demoToken = 'demo-token-' + Date.now();
     localStorage.setItem('token', demoToken);
     localStorage.setItem('userId', 'demo-user-123');
     localStorage.setItem('userEmail', 'demo@ecolojia.com');
-    localStorage.setItem('plan', 'premium'); // Premium en dÃƒÂ©mo
+    localStorage.setItem('plan', 'premium'); // Premium en dÃƒÆ’Ã‚Â©mo
     localStorage.setItem('demoMode', 'true');
     
     navigate('/scan');
@@ -74,7 +74,7 @@ export default function TestLogin() {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦ââ‚¬â„¢Ãƒâ€šÃ‚Â¿ ECOLOJIA
+            ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Â¦Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿ ECOLOJIA
           </h1>
           <p className="text-gray-600">
             Connexion rapide pour tester
@@ -104,12 +104,12 @@ export default function TestLogin() {
               </>
             ) : (
               <>
-                ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸ÃƒÂ¢ââ€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â Se connecter avec le compte test
+                ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Se connecter avec le compte test
               </>
             )}
           </button>
 
-          {/* SÃƒÂ©parateur */}
+          {/* SÃƒÆ’Ã‚Â©parateur */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -119,23 +119,23 @@ export default function TestLogin() {
             </div>
           </div>
 
-          {/* Bouton mode dÃƒÂ©mo */}
+          {/* Bouton mode dÃƒÆ’Ã‚Â©mo */}
           <button
             onClick={handleDemoMode}
             className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
           >
-            ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â½Ãƒâ€šÃ‚Â­ Mode dÃƒÂ©monstration (sans backend)
+            ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â½ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­ Mode dÃƒÆ’Ã‚Â©monstration (sans backend)
           </button>
         </div>
 
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600 text-center">
-            <strong>Note :</strong> En mode dÃƒÂ©mo, les analyses sont simulÃƒÂ©es localement.
-            Pour une expÃƒÂ©rience complÃƒÂ¨te, assurez-vous que le backend est lancÃƒÂ©.
+            <strong>Note :</strong> En mode dÃƒÆ’Ã‚Â©mo, les analyses sont simulÃƒÆ’Ã‚Â©es localement.
+            Pour une expÃƒÆ’Ã‚Â©rience complÃƒÆ’Ã‚Â¨te, assurez-vous que le backend est lancÃƒÆ’Ã‚Â©.
           </p>
         </div>
 
-        {/* Info dÃƒÂ©veloppeur */}
+        {/* Info dÃƒÆ’Ã‚Â©veloppeur */}
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500">
             Backend URL: {import.meta.env.VITE_API_URL || 'http://localhost:5001'}

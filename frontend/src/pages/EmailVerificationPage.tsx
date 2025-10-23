@@ -1,5 +1,6 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getReturnUrl } from '../utils/navigation';
 import { useEmailValidation } from '../hooks/useEmailValidation';
 import { useAuthContext } from '../Contexts/AuthContext';
 
@@ -34,7 +35,7 @@ export const EmailVerificationPage: React.FC = () => {
           
           // Rediriger vers dashboard apres 3 secondes
           setTimeout(() => {
-            navigate('/dashboard');
+            navigate(getReturnUrl());
           }, 3000);
         }
       } catch (err) {
@@ -83,7 +84,7 @@ export const EmailVerificationPage: React.FC = () => {
                   Redirection automatique vers votre dashboard...
                 </p>
                 <button
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate(getReturnUrl())}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
                   Acceder au dashboard

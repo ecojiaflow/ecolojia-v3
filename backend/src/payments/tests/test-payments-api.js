@@ -8,7 +8,7 @@ class PaymentsAPITester {
   }
 
   async runAllTests() {
-    console.log('DÉMARRAGE TESTS BACKEND M11 PAYMENTS');
+    console.log('DÃ‰MARRAGE TESTS BACKEND M11 PAYMENTS');
     console.log('===================================');
     console.log('');
 
@@ -16,11 +16,11 @@ class PaymentsAPITester {
     await this.testHealthEndpoint();
     await this.testWebhookHealth();
     
-    // Tests avec données mock
+    // Tests avec donnÃ©es mock
     await this.testCreateCheckoutValidation();
     await this.testPremiumCheckWithoutAuth();
     
-    // Affichage résultats
+    // Affichage rÃ©sultats
     this.displayResults();
   }
 
@@ -77,7 +77,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('GET', '/api/health');
       
       if (response.status === 200) {
-        this.addResult('Health Endpoint', 'PASS', 'Serveur opérationnel');
+        this.addResult('Health Endpoint', 'PASS', 'Serveur opÃ©rationnel');
       } else {
         this.addResult('Health Endpoint', 'FAIL', `Status: ${response.status}`);
       }
@@ -92,7 +92,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('GET', '/api/webhooks/health');
       
       if (response.status === 200 && response.body.success) {
-        this.addResult('Webhook Health', 'PASS', 'Webhook endpoint opérationnel');
+        this.addResult('Webhook Health', 'PASS', 'Webhook endpoint opÃ©rationnel');
       } else {
         this.addResult('Webhook Health', 'FAIL', `Status: ${response.status}`);
       }
@@ -104,7 +104,7 @@ class PaymentsAPITester {
   async testCreateCheckoutValidation() {
     console.log('TEST 3: Create Checkout Validation');
     try {
-      // Test avec données invalides
+      // Test avec donnÃ©es invalides
       const invalidData = {
         userEmail: 'invalid-email',
         userId: 'invalid-id'
@@ -113,7 +113,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('POST', '/api/payments/create-checkout', invalidData);
       
       if (response.status === 400) {
-        this.addResult('Checkout Validation', 'PASS', 'Validation des données fonctionne');
+        this.addResult('Checkout Validation', 'PASS', 'Validation des donnÃ©es fonctionne');
       } else {
         this.addResult('Checkout Validation', 'FAIL', `Status unexpected: ${response.status}`);
       }
@@ -140,7 +140,7 @@ class PaymentsAPITester {
   async testLemonSqueezyConfig() {
     console.log('TEST 5: Configuration LemonSqueezy');
     try {
-      // Vérifier que les variables d'environnement sont présentes
+      // VÃ©rifier que les variables d'environnement sont prÃ©sentes
       const envCheck = {
         hasApiKey: !!process.env.LEMONSQUEEZY_API_KEY,
         hasStoreId: !!process.env.LEMONSQUEEZY_STORE_ID,
@@ -148,7 +148,7 @@ class PaymentsAPITester {
       };
 
       if (envCheck.hasApiKey && envCheck.hasStoreId && envCheck.hasProductId) {
-        this.addResult('LemonSqueezy Config', 'PASS', 'Variables environnement configurées');
+        this.addResult('LemonSqueezy Config', 'PASS', 'Variables environnement configurÃ©es');
       } else {
         this.addResult('LemonSqueezy Config', 'FAIL', `Missing config: ${JSON.stringify(envCheck)}`);
       }
@@ -164,7 +164,7 @@ class PaymentsAPITester {
   }
 
   displayResults() {
-    console.log('RÉSULTATS TESTS BACKEND M11');
+    console.log('RÃ‰SULTATS TESTS BACKEND M11');
     console.log('===========================');
     
     const passed = this.testResults.filter(r => r.status === 'PASS').length;
@@ -178,11 +178,11 @@ class PaymentsAPITester {
     console.log('');
     
     if (failed === 0 && errors === 0) {
-      console.log('STATUT: BACKEND M11 PRÊT POUR FRONTEND');
+      console.log('STATUT: BACKEND M11 PRÃŠT POUR FRONTEND');
     } else {
       console.log('STATUT: CORRECTIONS REQUISES AVANT FRONTEND');
       console.log('');
-      console.log('DÉTAILS ERREURS:');
+      console.log('DÃ‰TAILS ERREURS:');
       this.testResults
         .filter(r => r.status !== 'PASS')
         .forEach(r => {
@@ -192,7 +192,7 @@ class PaymentsAPITester {
   }
 }
 
-// Exécution des tests si script appelé directement
+// ExÃ©cution des tests si script appelÃ© directement
 if (require.main === module) {
   const tester = new PaymentsAPITester();
   tester.runAllTests().catch(console.error);

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { visionService, productService } from '../services/apiEnhanced';
 import { Loader2 } from 'lucide-react';
 

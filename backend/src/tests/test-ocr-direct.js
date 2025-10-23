@@ -9,7 +9,7 @@ async function testOCR() {
     try {
         // Initialiser le service
         await ProductOCRService.initialize();
-        console.log("? Service initialisé");
+        console.log("? Service initialisÃ©");
         
         // Analyser l'image
         const result = await ProductOCRService.analyzeProduct(imagePath, {
@@ -17,24 +17,24 @@ async function testOCR() {
             category: 'food'
         });
         
-        console.log("\n?? Résultat OCR:");
-        console.log("- Service utilisé:", result.service);
+        console.log("\n?? RÃ©sultat OCR:");
+        console.log("- Service utilisÃ©:", result.service);
         console.log("- Confiance:", result.confidence);
         console.log("- Temps:", result.processingTime + "ms");
         
         if (result.data) {
-            console.log("\n?? Données extraites:");
+            console.log("\n?? DonnÃ©es extraites:");
             console.log("- Nom produit:", result.data.productName);
             console.log("- Marque:", result.data.brand);
-            console.log("- Catégorie:", result.data.category);
+            console.log("- CatÃ©gorie:", result.data.category);
             console.log("- Code-barres:", result.data.barcode);
-            console.log("- Ingrédients:", result.data.ingredients ? 
-                result.data.ingredients.substring(0, 100) + "..." : "Non détectés");
+            console.log("- IngrÃ©dients:", result.data.ingredients ? 
+                result.data.ingredients.substring(0, 100) + "..." : "Non dÃ©tectÃ©s");
         }
         
         // Shutdown
         await ProductOCRService.shutdown();
-        console.log("\n? Test terminé avec succès!");
+        console.log("\n? Test terminÃ© avec succÃ¨s!");
         
     } catch (error) {
         console.error("? Erreur:", error.message);

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useDeviceContext = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);

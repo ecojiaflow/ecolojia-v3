@@ -1,4 +1,4 @@
-// ðŸ“ FICHIER Ã€ CRÃ‰ER : tests/scorers/detergent/detergentScorer.test.js
+// Ã°Å¸â€œÂ FICHIER Ãƒâ‚¬ CRÃƒâ€°ER : tests/scorers/detergent/detergentScorer.test.js
 
 const { DetergentScorer } = require('../../../src/scorers/detergent/detergentScorer');
 
@@ -9,10 +9,10 @@ describe('DetergentScorer', () => {
     detergentScorer = new DetergentScorer();
   });
 
-  describe('Produits Ã‰cologiques (Score Ã‰levé)', () => {
-    test('Lessive Bio Certifiée EU Ecolabel', async () => {
+  describe('Produits Ãƒâ€°cologiques (Score Ãƒâ€°levÃ©)', () => {
+    test('Lessive Bio CertifiÃ©e EU Ecolabel', async () => {
       const ingredients = "AQUA, COCO GLUCOSIDE, SODIUM BICARBONATE, CITRIC ACID, PROTEASE, LAVANDULA ANGUSTIFOLIA OIL";
-      const productName = "Lessive Bio Concentrée";
+      const productName = "Lessive Bio ConcentrÃ©e";
       const certifications = ["EU ECOLABEL", "ECOCERT"];
 
       const result = await detergentScorer.analyzeDetergent(ingredients, productName, certifications);
@@ -25,7 +25,7 @@ describe('DetergentScorer', () => {
       expect(result.detected_issues).toHaveLength(0);
     });
 
-    test('Détergent DIY Naturel', async () => {
+    test('DÃ©tergent DIY Naturel', async () => {
       const ingredients = "SODIUM BICARBONATE, CITRIC ACID, SODIUM PERCARBONATE";
       const productName = "Poudre Nettoyante Maison";
 
@@ -38,10 +38,10 @@ describe('DetergentScorer', () => {
     });
   });
 
-  describe('Produits Problématiques (Score Faible)', () => {
+  describe('Produits ProblÃ©matiques (Score Faible)', () => {
     test('Lessive Conventionnelle Toxique', async () => {
       const ingredients = "AQUA, SODIUM LAURYL SULFATE, SODIUM TRIPOLYPHOSPHATE, METHYLISOTHIAZOLINONE, DICHLOROMETHANE, BHA";
-      const productName = "Lessive Ultra-Dégraissante";
+      const productName = "Lessive Ultra-DÃ©graissante";
 
       const result = await detergentScorer.analyzeDetergent(ingredients, productName, []);
 
@@ -53,20 +53,20 @@ describe('DetergentScorer', () => {
       expect(result.alternatives[0].type).toBe('urgent_replacement');
     });
 
-    test('Détection Perturbateurs Endocriniens', async () => {
+    test('DÃ©tection Perturbateurs Endocriniens', async () => {
       const ingredients = "AQUA, SODIUM LAURETH SULFATE, BUTYLPARABEN, TRICLOSAN, BENZISOTHIAZOLINONE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Nettoyant Multi-Surface", []);
 
       expect(result.score).toBeLessThan(60);
       const issuesText = result.detected_issues.map(i => i.issue).join(' ');
-      expect(issuesText).toContain('Très toxique');
+      expect(issuesText).toContain('TrÃ¨s toxique');
       expect(result.breakdown.ecotoxicity.penalties.length).toBeGreaterThan(2);
     });
   });
 
-  describe('Produits Moyens (Score Modéré)', () => {
-    test('Lessive Standard avec Améliorations Possibles', async () => {
+  describe('Produits Moyens (Score ModÃ©rÃ©)', () => {
+    test('Lessive Standard avec AmÃ©liorations Possibles', async () => {
       const ingredients = "AQUA, LAURYL GLUCOSIDE, SODIUM LAURETH SULFATE, PARFUM, LIMONENE, PROTEASE";
       const productName = "Lessive Classique";
 
@@ -80,8 +80,8 @@ describe('DetergentScorer', () => {
   });
 
   describe('Validation Certifications', () => {
-    test('Détection Multiple Certifications', async () => {
-      const productName = "ECOCERT Nordic Swan Cradle to Cradle Détergent";
+    test('DÃ©tection Multiple Certifications', async () => {
+      const productName = "ECOCERT Nordic Swan Cradle to Cradle DÃ©tergent";
       const ingredients = "COCO GLUCOSIDE, SODIUM BICARBONATE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, productName, ["NORDIC SWAN"]);
@@ -91,8 +91,8 @@ describe('DetergentScorer', () => {
     });
   });
 
-  describe('Normalisation Ingrédients', () => {
-    test('Format String avec Séparateurs', async () => {
+  describe('Normalisation IngrÃ©dients', () => {
+    test('Format String avec SÃ©parateurs', async () => {
       const ingredients = "AQUA; COCO GLUCOSIDE, SODIUM BICARBONATE ; CITRIC ACID";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Test", []);
@@ -122,8 +122,8 @@ describe('DetergentScorer', () => {
     });
   });
 
-  describe('Scoring Détaillé', () => {
-    test('Breakdown Ã‰cotoxicité', async () => {
+  describe('Scoring DÃ©taillÃ©', () => {
+    test('Breakdown Ãƒâ€°cotoxicitÃ©', async () => {
       const ingredients = "SODIUM TRIPOLYPHOSPHATE, DICHLOROMETHANE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Test Toxique", []);
@@ -133,10 +133,10 @@ describe('DetergentScorer', () => {
       expect(result.breakdown.ecotoxicity.issues.length).toBeGreaterThan(0);
     });
 
-    test('Breakdown Biodégradabilité', async () => {
+    test('Breakdown BiodÃ©gradabilitÃ©', async () => {
       const ingredients = "COCO GLUCOSIDE, PROTEASE, SODIUM LAURYL SULFATE";
       
-      const result = await detergentScorer.analyzeDetergent(ingredients, "Test Biodégradabilité", []);
+      const result = await detergentScorer.analyzeDetergent(ingredients, "Test BiodÃ©gradabilitÃ©", []);
 
       expect(result.breakdown.biodegradability.biodegradable_ratio).toBeGreaterThan(0);
       expect(result.breakdown.biodegradability.analysis.length).toBeGreaterThan(0);
@@ -167,7 +167,7 @@ describe('DetergentScorer', () => {
   });
 
   describe('Alternatives & Insights', () => {
-    test('Génération Alternatives selon Score', async () => {
+    test('GÃ©nÃ©ration Alternatives selon Score', async () => {
       const casTests = [
         { ingredients: "COCO GLUCOSIDE, SODIUM BICARBONATE", expectedType: 'perfection' },
         { ingredients: "LAURYL GLUCOSIDE, PARFUM", expectedType: 'eco_certified' },
@@ -180,7 +180,7 @@ describe('DetergentScorer', () => {
       }
     });
 
-    test('Insights Ã‰ducatifs avec Sources', async () => {
+    test('Insights Ãƒâ€°ducatifs avec Sources', async () => {
       const ingredients = "SODIUM TRIPOLYPHOSPHATE, COCO GLUCOSIDE";
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "Test Insights", []);
@@ -194,16 +194,16 @@ describe('DetergentScorer', () => {
   });
 
   describe('Gestion Erreurs', () => {
-    test('Ingrédients Vides', async () => {
+    test('IngrÃ©dients Vides', async () => {
       await expect(detergentScorer.analyzeDetergent("", "", [])).rejects.toThrow();
     });
 
-    test('Ingrédients Invalides', async () => {
+    test('IngrÃ©dients Invalides', async () => {
       await expect(detergentScorer.analyzeDetergent(null, "Test", [])).rejects.toThrow();
     });
 
     test('Confidence Faible', async () => {
-      const ingredients = "X"; // Ingrédient inconnu
+      const ingredients = "X"; // IngrÃ©dient inconnu
       
       const result = await detergentScorer.analyzeDetergent(ingredients, "", []);
       
@@ -211,7 +211,7 @@ describe('DetergentScorer', () => {
     });
   });
 
-  describe('Méthodologie & Sources', () => {
+  describe('MÃ©thodologie & Sources', () => {
     test('Sources Scientifiques', async () => {
       const ingredients = "COCO GLUCOSIDE, SODIUM BICARBONATE";
       
@@ -222,12 +222,12 @@ describe('DetergentScorer', () => {
       expect(result.methodology).toContain('2024');
     });
 
-    test('Cohérence Score vs Breakdown', async () => {
+    test('CohÃ©rence Score vs Breakdown', async () => {
       const ingredients = "COCO GLUCOSIDE, SODIUM BICARBONATE, CITRIC ACID, PROTEASE";
       
-      const result = await detergentScorer.analyzeDetergent(ingredients, "Test Cohérence", []);
+      const result = await detergentScorer.analyzeDetergent(ingredients, "Test CohÃ©rence", []);
 
-      // Le score final doit être cohérent avec les scores individuels
+      // Le score final doit Ãªtre cohÃ©rent avec les scores individuels
       const theoreticalScore = Math.round(
         result.breakdown.ecotoxicity.score * 0.30 +
         result.breakdown.biodegradability.score * 0.25 +
@@ -235,21 +235,21 @@ describe('DetergentScorer', () => {
         result.breakdown.environmental.score * 0.20
       );
 
-      expect(Math.abs(result.score - theoreticalScore)).toBeLessThan(5); // Tolérance 5 points
+      expect(Math.abs(result.score - theoreticalScore)).toBeLessThan(5); // TolÃ©rance 5 points
     });
   });
 });
 
-// ===== TESTS D'INTÃ‰GRATION API =====
+// ===== TESTS D'INTÃƒâ€°GRATION API =====
 
 describe('DetergentScorer - Tests API Integration', () => {
-  test('Format Réponse API Compatible', async () => {
+  test('Format RÃ©ponse API Compatible', async () => {
     const detergentScorer = new DetergentScorer();
     const ingredients = "COCO GLUCOSIDE, SODIUM BICARBONATE, CITRIC ACID";
     
     const result = await detergentScorer.analyzeDetergent(ingredients, "Test API", ["ECOCERT"]);
 
-    // Vérifier structure attendue par API
+    // VÃ©rifier structure attendue par API
     expect(result).toHaveProperty('score');
     expect(result).toHaveProperty('confidence');
     expect(result).toHaveProperty('breakdown');
@@ -259,7 +259,7 @@ describe('DetergentScorer - Tests API Integration', () => {
     expect(result).toHaveProperty('certifications_detected');
     expect(result).toHaveProperty('methodology');
 
-    // Vérifier types
+    // VÃ©rifier types
     expect(typeof result.score).toBe('number');
     expect(typeof result.confidence).toBe('number');
     expect(Array.isArray(result.alternatives)).toBe(true);

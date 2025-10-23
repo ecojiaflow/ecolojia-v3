@@ -1,4 +1,4 @@
-﻿const allergensDB = require('../data/allergens.json');
+const allergensDB = require('../data/allergens.json');
 
 class AllergenEnrichmentService {
   enrichAllergen(tag) {

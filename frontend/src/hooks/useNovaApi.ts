@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useNovaApi.ts
+// PATH: frontend/src/hooks/useNovaApi.ts
 import { useState, useCallback } from 'react';
 import { NovaAdaptedResult } from '../services/novaAdapter';
 

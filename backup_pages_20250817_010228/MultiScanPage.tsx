@@ -41,7 +41,7 @@ const MultiScanPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'food' | 'cosmetic' | 'detergent'>('food');
 
-  // Ajouter un produit ÃƒÆ’Ã‚Â  analyser
+  // Ajouter un produit ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  analyser
   const addProduct = (name: string, barcode?: string) => {
     const newProduct: Product = {
       id: Date.now().toString(),
@@ -70,21 +70,21 @@ const MultiScanPage: React.FC = () => {
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       
-      // Mettre ÃƒÆ’Ã‚Â  jour le statut
+      // Mettre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour le statut
       setProducts(prev => prev.map(p => 
         p.id === product.id ? { ...p, status: 'analyzing' } : p
       ));
       
       try {
-        // Appel API selon la catégorie
+        // Appel API selon la catÃ©gorie
         const result = await analysisService.analyze({
           name: product.name,
           barcode: product.barcode,
           category: product.category,
-          ingredients: '' // ÃƒÆ’â‚¬ améliorer avec un vrai input
+          ingredients: '' // ÃƒÆ’Ã†â€™Ã¢â€šÂ¬ amÃ©liorer avec un vrai input
         });
         
-        // Mettre ÃƒÆ’Ã‚Â  jour avec le résultat
+        // Mettre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour avec le rÃ©sultat
         setProducts(prev => prev.map(p => 
           p.id === product.id 
             ? { ...p, status: 'completed', result } 
@@ -99,14 +99,14 @@ const MultiScanPage: React.FC = () => {
         ));
       }
       
-      // Petit délai entre les analyses
+      // Petit dÃ©lai entre les analyses
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
     setIsAnalyzing(false);
   };
 
-  // Obtenir l'icône selon la catégorie
+  // Obtenir l'icÃ´ne selon la catÃ©gorie
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'food': return <Apple className="w-5 h-5" />;
@@ -152,11 +152,11 @@ const MultiScanPage: React.FC = () => {
             <div className="text-2xl font-bold text-green-600">
               {products.filter(p => p.status === 'completed').length}
             </div>
-            <div className="text-sm text-gray-500">Analysés</div>
+            <div className="text-sm text-gray-500">AnalysÃ©s</div>
           </div>
           <div className="bg-white rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
-              {user?.subscription?.tier === 'premium' ? 'âÃ‹â€ Ã…Â¾' : '10'}
+              {user?.subscription?.tier === 'premium' ? 'Ã¢Ãƒâ€¹Ã¢â‚¬Â Ãƒâ€¦Ã‚Â¾' : '10'}
             </div>
             <div className="text-sm text-gray-500">Limite</div>
           </div>
@@ -166,7 +166,7 @@ const MultiScanPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Produits ÃƒÆ’Ã‚Â  analyser
+              Produits ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  analyser
             </h2>
             <button
               onClick={() => setShowAddModal(true)}
@@ -181,7 +181,7 @@ const MultiScanPage: React.FC = () => {
           {products.length === 0 ? (
             <div className="text-center py-12">
               <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">Aucun produit ajouté</p>
+              <p className="text-gray-500">Aucun produit ajoutÃ©</p>
               <button
                 onClick={() => setShowAddModal(true)}
                 className="mt-4 text-purple-600 hover:text-purple-700 font-medium"
@@ -229,7 +229,7 @@ const MultiScanPage: React.FC = () => {
                       <span className="text-sm font-medium">
                         {product.status === 'pending' && 'En attente'}
                         {product.status === 'analyzing' && 'Analyse...'}
-                        {product.status === 'completed' && 'Terminé'}
+                        {product.status === 'completed' && 'TerminÃ©'}
                         {product.status === 'error' && 'Erreur'}
                       </span>
                     </div>
@@ -292,7 +292,7 @@ const MultiScanPage: React.FC = () => {
               onClick={() => navigate('/premium')}
               className="text-purple-600 hover:text-purple-700 font-medium"
             >
-              Passer ÃƒÆ’Ã‚Â  Premium pour des analyses illimitées âââ‚¬Â ââ‚¬â„¢
+              Passer ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  Premium pour des analyses illimitÃ©es Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢
             </button>
           </div>
         )}
@@ -319,16 +319,16 @@ const MultiScanPage: React.FC = () => {
                 Ajouter un produit
               </h3>
 
-              {/* Sélection catégorie */}
+              {/* SÃ©lection catÃ©gorie */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Catégorie
+                  CatÃ©gorie
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: 'food', label: 'Alimentaire', icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â½' },
-                    { value: 'cosmetic', label: 'Cosmétique', icon: 'âÃ…â€œÃ‚Â¨' },
-                    { value: 'detergent', label: 'Détergent', icon: 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢Ã‚Â§' }
+                    { value: 'food', label: 'Alimentaire', icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€¦Ã‚Â½' },
+                    { value: 'cosmetic', label: 'CosmÃ©tique', icon: 'Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ãƒâ€šÃ‚Â¨' },
+                    { value: 'detergent', label: 'DÃ©tergent', icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ãƒâ€šÃ‚Â§' }
                   ].map((cat) => (
                     <button
                       key={cat.value}
@@ -357,7 +357,7 @@ const MultiScanPage: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Ex: Nutella, Shampooing L'Oréal..."
+                    placeholder="Ex: Nutella, Shampooing L'OrÃ©al..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>

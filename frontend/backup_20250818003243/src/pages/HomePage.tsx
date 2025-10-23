@@ -30,28 +30,28 @@ const HomePage: React.FC = () => {
   const categories = [
     { 
       name: 'Alimentaire', 
-      icon: '°Å¸Â¥â€”', 
+      icon: 'Â°Ã…Â¸Ã‚Â¥Ã¢â‚¬â€', 
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
       popular: ['Nutella', 'Yaourt', 'Pain bio']
     },
     { 
       name: 'Cosmetique', 
-      icon: '°Å¸â€™â€ž', 
+      icon: 'Â°Ã…Â¸Ã¢â‚¬â„¢Ã¢â‚¬Å¾', 
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
       popular: ['Shampoing', 'Creme', 'Deodorant']
     },
     { 
       name: 'Entretien', 
-      icon: '°Å¸Â§Â¹', 
+      icon: 'Â°Ã…Â¸Ã‚Â§Ã‚Â¹', 
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
       popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
     },
     { 
       name: 'Hygiene', 
-      icon: '°Å¸Â§Â¼', 
+      icon: 'Â°Ã…Â¸Ã‚Â§Ã‚Â¼', 
       count: '180k produits',
       color: 'from-purple-400 to-purple-600',
       popular: ['Dentifrice', 'Savon', 'Gel douche']
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
     {
       icon: Sparkles,
       title: 'IA Personnalisee',
-      description: 'Recommandations adaptees ƒÂ  votre profil et vos objectifs sante',
+      description: 'Recommandations adaptees Æ’Ã‚Â  votre profil et vos objectifs sante',
       color: 'bg-purple-100 text-purple-700'
     }
   ];
@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
     {
       name: 'Marie L.',
       role: 'Maman de 3 enfants',
-      content: "ECOLOJIA m'aide ƒÂ  choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
+      content: "ECOLOJIA m'aide Æ’Ã‚Â  choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
       rating: 5
     },
     {
@@ -121,7 +121,7 @@ const HomePage: React.FC = () => {
 
             <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
               Analysez instantanement vos produits alimentaires, cosmetiques et detergents
-              grace ƒÂ  notre IA basee sur INSERM, ANSES et EFSA
+              grace Æ’Ã‚Â  notre IA basee sur INSERM, ANSES et EFSA
             </p>
 
             {/* Barre de recherche */}
@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
 
               {/* Suggestions */}
               <div className="flex flex-wrap gap-2 justify-center mt-4">
-                {['°Å¸ÂÂ« Nutella bio', '°Å¸Â§Â´ Shampoing sans sulfate', '°Å¸Â§Â½ Lessive ecologique', '°Å¸Â¦Â· Dentifrice naturel'].map((suggestion) => (
+                {['Â°Ã…Â¸Ã‚ÂÃ‚Â« Nutella bio', 'Â°Ã…Â¸Ã‚Â§Ã‚Â´ Shampoing sans sulfate', 'Â°Ã…Â¸Ã‚Â§Ã‚Â½ Lessive ecologique', 'Â°Ã…Â¸Ã‚Â¦Ã‚Â· Dentifrice naturel'].map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"
@@ -346,7 +346,7 @@ const HomePage: React.FC = () => {
       {/* CTA final */}
       <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Pret ƒÂ  transformer votre consommation ?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Pret Æ’Ã‚Â  transformer votre consommation ?</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Rejoignez 500 000+ utilisateurs qui font des choix eclaires chaque jour
           </p>

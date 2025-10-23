@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/RegisterPage.tsx
+// PATH: frontend/src/pages/RegisterPage.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Leaf, ArrowRight, Check } from 'lucide-react';

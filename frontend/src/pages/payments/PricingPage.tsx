@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, X, Crown, Zap, Shield, Sparkles } from 'lucide-react';
 import paymentsAPI from '../../services/payments/paymentsAPI';
 

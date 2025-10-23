@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BarcodeScanner from "../components/scanner/BarcodeScannerEnhanced";
 import CategorySelector from "../components/CategorySelector";

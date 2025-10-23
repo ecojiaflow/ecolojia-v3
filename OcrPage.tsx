@@ -41,18 +41,18 @@ export default function OcrPage() {
 
   return (
     <div className="container">
-      <div className="h1">OCR → Analyse</div>
+      <div className="h1">OCR â†’ Analyse</div>
       <Card>
-        <Field label="Image ingrédients">
+        <Field label="Image ingrÃ©dients">
           <input type="file" accept="image/*" className="file" onChange={(e)=> setFile(e.target.files?.[0]||null)} />
         </Field>
         <div style={{ marginTop:10 }}>
-          <Button onClick={doOcr} disabled={loadingOcr}>{loadingOcr ? 'OCR…' : 'Lancer l’OCR'}</Button>
+          <Button onClick={doOcr} disabled={loadingOcr}>{loadingOcr ? 'OCRâ€¦' : 'Lancer lâ€™OCR'}</Button>
         </div>
       </Card>
 
       <div className="h2">Texte OCR</div>
-      <Card><pre style={{ whiteSpace:'pre-wrap', margin:0 }}>{text || '—'}</pre></Card>
+      <Card><pre style={{ whiteSpace:'pre-wrap', margin:0 }}>{text || 'â€”'}</pre></Card>
 
       <div className="h2">Analyse</div>
       <div style={{ display:'flex', gap:8 }}>

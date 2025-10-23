@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/scanner/ManualInput.tsx
+// PATH: frontend/src/components/scanner/ManualInput.tsx
 import { useState } from "react";
 
 type Props = {

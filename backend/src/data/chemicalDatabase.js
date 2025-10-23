@@ -278,7 +278,7 @@ const chemicalDatabase = [
     cdvFactor: 5,
     irritant: "moderate",
     optimalConcentration: 10,
-    description: "Agent blanchissant   l'oxygene actif"
+    description: "Agent blanchissant Â  l'oxygene actif"
   },
   {
     name: "Sodium Hypochlorite",
@@ -541,7 +541,7 @@ const chemicalDatabase = [
     description: "Agent anti-mousse silicone"
   },
 
-  // ===== POLYMˆRES =====
+  // ===== POLYMË†RES =====
   {
     name: "Polycarboxylate",
     inci: "SODIUM POLYACRYLATE",
@@ -623,7 +623,7 @@ const chemicalDatabase = [
     description: "Nettoyant alcalin volatil"
   },
 
-  // ===== D‰SINFECTANTS =====
+  // ===== Dâ€°SINFECTANTS =====
   {
     name: "Benzalkonium Chloride",
     inci: "BENZALKONIUM CHLORIDE",
@@ -650,7 +650,7 @@ const chemicalDatabase = [
     aquaticToxicity: "very_low",
     cdvFactor: 1,
     irritant: "moderate",
-    corrosive: true, // € haute concentration
+    corrosive: true, // â‚¬ haute concentration
     optimalConcentration: 3,
     description: "Desinfectant oxydant ecologique"
   },

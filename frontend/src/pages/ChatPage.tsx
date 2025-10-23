@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import chatService from '../services/chatService';
 import { MessageCircle, Send, Loader, AlertTriangle } from 'lucide-react';

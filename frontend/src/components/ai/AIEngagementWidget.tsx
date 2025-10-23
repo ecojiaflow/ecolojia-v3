@@ -79,7 +79,7 @@ export function AIEngagementWidget({ product }: AIEngagementWidgetProps) {
           onClick={() => navigate('/chat', { 
             state: { 
               productContext: product,
-              initialMessage: "Montre-moi des alternatives mieux notées"
+              initialMessage: "Montre-moi des alternatives mieux notÃ©es"
             }
           })}
           className="quick-btn"
@@ -91,7 +91,7 @@ export function AIEngagementWidget({ product }: AIEngagementWidgetProps) {
           onClick={() => navigate('/chat', { 
             state: { 
               productContext: product,
-              initialMessage: "Ce produit est-il adapté pour moi ?"
+              initialMessage: "Ce produit est-il adaptÃ© pour moi ?"
             }
           })}
           className="quick-btn"
@@ -110,9 +110,9 @@ function generateEngagementMessage(product: Product): string {
   if (score >= 80) {
     return `Excellent choix ! ?? ${name} obtient un score de ${score}/100. Voulez-vous savoir ce qui rend ce produit si bon ?`;
   } else if (score >= 60) {
-    return `${name} obtient ${score}/100, un score correct. Je peux vous expliquer en détail les points forts et points faibles ?`;
+    return `${name} obtient ${score}/100, un score correct. Je peux vous expliquer en dÃ©tail les points forts et points faibles ?`;
   } else if (score >= 40) {
-    return `${name} a un score moyen de ${score}/100. Souhaitez-vous que je vous suggère des alternatives mieux notées disponibles en magasin ?`;
+    return `${name} a un score moyen de ${score}/100. Souhaitez-vous que je vous suggÃ¨re des alternatives mieux notÃ©es disponibles en magasin ?`;
   } else {
     return `?? ${name} obtient un score faible (${score}/100). Je peux vous expliquer pourquoi et vous recommander de meilleures options si vous le souhaitez.`;
   }

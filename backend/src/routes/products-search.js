@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const imageEnrichment = require('../services/imageEnrichment.service');
 const router = express.Router();
 const Product = require('../models/Product');

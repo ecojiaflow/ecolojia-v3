@@ -1,4 +1,4 @@
-﻿// PATH: src/components/admin/ImportProgress.tsx
+// PATH: src/components/admin/ImportProgress.tsx
 import React, { useState } from 'react';
 import { Download, Play, Pause, AlertCircle } from 'lucide-react';
 

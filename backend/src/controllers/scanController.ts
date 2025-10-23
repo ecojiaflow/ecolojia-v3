@@ -18,15 +18,15 @@ export const scanBarcodeController = async (req: Request, res: Response) => {
     if (!category || !name || !ingredients) {
       return res.status(400).json({
         success: false,
-        message: 'Catégorie, nom et ingrédients requis'
+        message: 'CatÃ©gorie, nom et ingrÃ©dients requis'
       });
     }
 
-    // TODO: Implémenter l'analyse pour scanController
+    // TODO: ImplÃ©menter l'analyse pour scanController
     
     return res.json({
       success: true,
-      message: 'Analyse scanController en cours de développement'
+      message: 'Analyse scanController en cours de dÃ©veloppement'
     });
     
   } catch (error) {

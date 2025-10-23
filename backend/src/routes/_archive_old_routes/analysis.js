@@ -139,7 +139,7 @@ router.post('/cosmetic', asyncHandler(async (req, res) => {
 
 /**
  * POST /api/analysis/detergent
- * Analyse detergent (‰cologie + CDV)
+ * Analyse detergent (â€°cologie + CDV)
  */
 router.post('/detergent', asyncHandler(async (req, res) => {
   const { productName, ingredients, category, labels } = req.body;

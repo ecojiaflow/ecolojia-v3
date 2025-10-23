@@ -9,7 +9,7 @@ class DataIngestion {
 
   async importNewProducts(limit = 100) {
     try {
-      this.logger.info(`ðŸ” Import OpenFoodFacts (limite: ${limit})`);
+      this.logger.info(`Ã°Å¸â€Â Import OpenFoodFacts (limite: ${limit})`);
       
       // Recuperer produits recents OpenFoodFacts
       const response = await axios.get(`${this.baseURL}/api/v2/search`, {
@@ -37,17 +37,17 @@ class DataIngestion {
         }
       }
 
-      this.logger.info(`âœ… Import termine: ${imported} importes, ${errors} erreurs`);
+      this.logger.info(`Ã¢Å“â€¦ Import termine: ${imported} importes, ${errors} erreurs`);
       return { imported, errors };
 
     } catch (error) {
-      this.logger.error('âŒ Erreur import OpenFoodFacts:', error);
+      this.logger.error('Ã¢ÂÅ’ Erreur import OpenFoodFacts:', error);
       throw error;
     }
   }
 
   async importProduct(offProduct) {
-    // Verifier si produit existe dej 
+    // Verifier si produit existe dejÂ 
     const existing = await this.prisma.product.findFirst({
       where: {
         OR: [
@@ -58,7 +58,7 @@ class DataIngestion {
     });
 
     if (existing) {
-      return null; // Dej  existant
+      return null; // DejÂ  existant
     }
 
     // Convertir donnees OpenFoodFacts
@@ -83,7 +83,7 @@ class DataIngestion {
     };
 
     const created = await this.prisma.product.create({ data: productData });
-    this.logger.info(`ðŸ“¦ Produit importe: ${created.title}`);
+    this.logger.info(`Ã°Å¸â€œÂ¦ Produit importe: ${created.title}`);
     
     return created;
   }
@@ -153,7 +153,7 @@ class DataIngestion {
       });
     }
     
-    return tags.slice(0, 8); // Limiter   8 tags
+    return tags.slice(0, 8); // Limiter Â  8 tags
   }
 
   convertScore(grade) {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Prompts scientifiques par catégorie
  * Sources : ANSES, EFSA, OMS, TEDX, EU Cosmetics Regulation
  */

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/utils/localScoring.ts
+// PATH: frontend/src/utils/localScoring.ts
 // Scoring local rapide basé sur les algorithmes NOVA V2, INCI V2, ECO V2
 
 export function scoreFromIngredients(ingredients: string[], category: "food" | "cosmetics" | "detergents"): number {

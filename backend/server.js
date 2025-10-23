@@ -12,10 +12,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Variable pour stocker l'état de la connexion DB
+// Variable pour stocker l'Ã©tat de la connexion DB
 let dbConnected = false;
 
-// Stockage en mémoire pour le mode sans DB
+// Stockage en mÃ©moire pour le mode sans DB
 const memoryUsers = [];
 
 // Routes de base
@@ -49,18 +49,18 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
-    // Vérifier si email existe
+    // VÃ©rifier si email existe
     if (memoryUsers.find(u => u.email === email)) {
       return res.status(400).json({
         success: false,
-        message: 'Email déjà utilisé'
+        message: 'Email dÃ©jÃ  utilisÃ©'
       });
     }
 
     // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Créer utilisateur
+    // CrÃ©er utilisateur
     const user = {
       id: Date.now().toString(),
       email,
@@ -74,7 +74,7 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Inscription réussie',
+      message: 'Inscription rÃ©ussie',
       user: {
         id: user.id,
         email: user.email,
@@ -122,7 +122,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Connexion réussie',
+      message: 'Connexion rÃ©ussie',
       user: {
         id: user.id,
         email: user.email,
@@ -143,7 +143,7 @@ app.post('/api/auth/login', async (req, res) => {
 // Route 404
 app.use((req, res) => {
   res.status(404).json({
-    error: 'Route non trouvée',
+    error: 'Route non trouvÃ©e',
     path: req.path
   });
 });
@@ -162,23 +162,23 @@ async function connectDB() {
   if (process.env.MONGODB_URI) {
     try {
       await mongoose.connect(process.env.MONGODB_URI);
-      console.log('✅ MongoDB connecté');
+      console.log('âœ… MongoDB connectÃ©');
       dbConnected = true;
     } catch (error) {
-      console.log('⚠️ MongoDB non connecté, mode mémoire activé');
+      console.log('âš ï¸ MongoDB non connectÃ©, mode mÃ©moire activÃ©');
       dbConnected = false;
     }
   }
 }
 
-// Démarrage serveur
+// DÃ©marrage serveur
 async function start() {
   await connectDB();
   
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Serveur Ecolojia démarré sur port ${PORT}`);
-    console.log(`📦 Mode: ${dbConnected ? 'MongoDB connecté' : 'Stockage mémoire'}`);
-    console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`ðŸš€ Serveur Ecolojia dÃ©marrÃ© sur port ${PORT}`);
+    console.log(`ðŸ“¦ Mode: ${dbConnected ? 'MongoDB connectÃ©' : 'Stockage mÃ©moire'}`);
+    console.log(`ðŸŒ Environnement: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 

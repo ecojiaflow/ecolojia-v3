@@ -16,56 +16,56 @@ export class DataOrchestrator {
 
   async runDailyIngestion() {
     try {
-      console.log('🌅 Début ingestion quotidienne');
+      console.log('ðŸŒ… DÃ©but ingestion quotidienne');
       
-      // Ingestion des données
+      // Ingestion des donnÃ©es
       await this.dataIngestion.ingestProducts('openfoodfacts');
       
-      // Mise à jour des scores eco
+      // Mise Ã  jour des scores eco
       await this.updateEcoScores();
       
-      console.log('✅ Ingestion quotidienne terminée');
+      console.log('âœ… Ingestion quotidienne terminÃ©e');
     } catch (error) {
-      console.error('❌ Erreur ingestion quotidienne:', error);
+      console.error('âŒ Erreur ingestion quotidienne:', error);
       throw error;
     }
   }
 
   async runWeeklyMaintenance() {
     try {
-      console.log('🗓️ Début maintenance hebdomadaire');
+      console.log('ðŸ—“ï¸ DÃ©but maintenance hebdomadaire');
       
-      // Nettoyage des données obsolètes
+      // Nettoyage des donnÃ©es obsolÃ¨tes
       await this.cleanupOldData();
       
       // Recalcul des scores
       await this.recalculateAllScores();
       
-      console.log('✅ Maintenance hebdomadaire terminée');
+      console.log('âœ… Maintenance hebdomadaire terminÃ©e');
     } catch (error) {
-      console.error('❌ Erreur maintenance hebdomadaire:', error);
+      console.error('âŒ Erreur maintenance hebdomadaire:', error);
       throw error;
     }
   }
 
   private async updateEcoScores() {
     try {
-      console.log('🔄 Mise à jour scores eco');
+      console.log('ðŸ”„ Mise Ã  jour scores eco');
       
-      const categories = ['alimentaire', 'cosmétique', 'détergent'];
+      const categories = ['alimentaire', 'cosmÃ©tique', 'dÃ©tergent'];
       
       for (const category of categories) {
         const updated = await this.ecoScoreService.updateScoresForCategory(category);
-        console.log(`✅ ${updated} scores mis à jour pour ${category}`);
+        console.log(`âœ… ${updated} scores mis Ã  jour pour ${category}`);
       }
     } catch (error) {
-      console.error('❌ Erreur mise à jour scores:', error);
+      console.error('âŒ Erreur mise Ã  jour scores:', error);
     }
   }
 
   private async cleanupOldData() {
     try {
-      console.log('🧹 Nettoyage données obsolètes');
+      console.log('ðŸ§¹ Nettoyage donnÃ©es obsolÃ¨tes');
       
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -76,26 +76,26 @@ export class DataOrchestrator {
           updated_at: {
             lt: thirtyDaysAgo
           },
-          verified_status: 'verified' // ✅ CORRECTION: utiliser valeur enum valide
+          verified_status: 'verified' // âœ… CORRECTION: utiliser valeur enum valide
         }
       });
       
-      console.log('✅ Nettoyage terminé');
+      console.log('âœ… Nettoyage terminÃ©');
     } catch (error) {
-      console.error('❌ Erreur nettoyage:', error);
+      console.error('âŒ Erreur nettoyage:', error);
     }
   }
 
   private async recalculateAllScores() {
     try {
-      console.log('🔄 Recalcul tous les scores');
+      console.log('ðŸ”„ Recalcul tous les scores');
       
       // const products = await prisma.product.findMany({
  // PRISMA DISABLED
         select: {
           id: true,
           title: true,
-          description: true, // ✅ CORRECTION: utiliser description au lieu de ingredients
+          description: true, // âœ… CORRECTION: utiliser description au lieu de ingredients
           category: true
         }
       });
@@ -107,20 +107,20 @@ export class DataOrchestrator {
           const score = await this.ecoScoreService.calculate({
             id: product.id,
             title: product.title,
-            ingredients: product.description || '', // ✅ CORRECTION: utiliser description
+            ingredients: product.description || '', // âœ… CORRECTION: utiliser description
             category: product.category || ''
           });
           
           await this.ecoScoreService.saveScoreToDatabase(product.id, score);
           recalculated++;
         } catch (error) {
-          console.error(`❌ Erreur recalcul ${product.id}:`, error);
+          console.error(`âŒ Erreur recalcul ${product.id}:`, error);
         }
       }
       
-      console.log(`✅ ${recalculated} scores recalculés`);
+      console.log(`âœ… ${recalculated} scores recalculÃ©s`);
     } catch (error) {
-      console.error('❌ Erreur recalcul global:', error);
+      console.error('âŒ Erreur recalcul global:', error);
     }
   }
 
@@ -140,7 +140,7 @@ export class DataOrchestrator {
         lastUpdate: new Date()
       };
     } catch (error) {
-      console.error('❌ Erreur status:', error);
+      console.error('âŒ Erreur status:', error);
       return {
         status: 'error',
         error: error.message,

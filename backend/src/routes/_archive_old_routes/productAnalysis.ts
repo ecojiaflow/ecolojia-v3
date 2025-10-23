@@ -23,11 +23,11 @@ router.post(
     try {
       const { productName, category, ingredients, barcode, image } = req.body;
 
-      // Validation des données
+      // Validation des donnÃ©es
       if (!productName || !category) {
         return res.status(400).json({
           success: false,
-          message: 'Nom du produit et catégorie requis'
+          message: 'Nom du produit et catÃ©gorie requis'
         });
       }
 
@@ -35,12 +35,12 @@ router.post(
       if (!validCategories.includes(category)) {
         return res.status(400).json({
           success: false,
-          message: 'Catégorie invalide',
+          message: 'CatÃ©gorie invalide',
           validCategories
         });
       }
 
-      // 1. Vérifier le cache d'abord
+      // 1. VÃ©rifier le cache d'abord
       const startTime = Date.now();
       let cachedAnalysis = null;
 
@@ -58,7 +58,7 @@ router.post(
 
       if (cachedAnalysis) {
         const cacheTime = Date.now() - startTime;
-        logger.info(`✅ Analysis Cache HIT (${cacheTime}ms): ${productName}`);
+        logger.info(`âœ… Analysis Cache HIT (${cacheTime}ms): ${productName}`);
         
         return res.json({
           success: true,
@@ -69,7 +69,7 @@ router.post(
       }
 
       // 2. Cache MISS - Effectuer l'analyse
-      logger.info(`❌ Analysis Cache MISS: ${productName}`);
+      logger.info(`âŒ Analysis Cache MISS: ${productName}`);
       
       const analysis = await productAnalysisService.analyzeProduct({
         name: productName,
@@ -95,7 +95,7 @@ router.post(
       );
 
       const totalTime = Date.now() - startTime;
-      logger.info(`⏱️ Analysis complete (${totalTime}ms): ${productName}`);
+      logger.info(`â±ï¸ Analysis complete (${totalTime}ms): ${productName}`);
 
       return res.json({
         success: true,
@@ -105,7 +105,7 @@ router.post(
       });
 
     } catch (error: any) {
-      logger.error('❌ Error analyzing product:', error);
+      logger.error('âŒ Error analyzing product:', error);
       return res.status(500).json({
         success: false,
         message: 'Erreur lors de l\'analyse du produit',
@@ -117,7 +117,7 @@ router.post(
 
 /**
  * GET /api/products/analysis/:id
- * Récupérer une analyse par ID
+ * RÃ©cupÃ©rer une analyse par ID
  */
 router.get(
   '/analysis/:id',
@@ -126,7 +126,7 @@ router.get(
     try {
       const { id } = req.params;
 
-      // Vérifier le cache d'abord
+      // VÃ©rifier le cache d'abord
       const cachedAnalysis = await analysisCache.getAnalysisById(id);
       
       if (cachedAnalysis) {
@@ -137,13 +137,13 @@ router.get(
         });
       }
 
-      // Si pas en cache, récupérer de la DB
+      // Si pas en cache, rÃ©cupÃ©rer de la DB
       const analysis = await productAnalysisService.getAnalysisById(id, req.user!.id);
       
       if (!analysis) {
         return res.status(404).json({
           success: false,
-          message: 'Analyse non trouvée'
+          message: 'Analyse non trouvÃ©e'
         });
       }
 
@@ -165,10 +165,10 @@ router.get(
       });
 
     } catch (error: any) {
-      logger.error('❌ Error getting analysis:', error);
+      logger.error('âŒ Error getting analysis:', error);
       return res.status(500).json({
         success: false,
-        message: 'Erreur lors de la récupération de l\'analyse',
+        message: 'Erreur lors de la rÃ©cupÃ©ration de l\'analyse',
         error: error.message
       });
     }
@@ -201,10 +201,10 @@ router.get(
       });
 
     } catch (error: any) {
-      logger.error('❌ Error getting history:', error);
+      logger.error('âŒ Error getting history:', error);
       return res.status(500).json({
         success: false,
-        message: 'Erreur lors de la récupération de l\'historique'
+        message: 'Erreur lors de la rÃ©cupÃ©ration de l\'historique'
       });
     }
   }
@@ -227,10 +227,10 @@ router.get(
       });
 
     } catch (error: any) {
-      logger.error('❌ Error getting stats:', error);
+      logger.error('âŒ Error getting stats:', error);
       return res.status(500).json({
         success: false,
-        message: 'Erreur lors de la récupération des statistiques'
+        message: 'Erreur lors de la rÃ©cupÃ©ration des statistiques'
       });
     }
   }
@@ -247,7 +247,7 @@ router.get(
     try {
       const quotaStatus = await quotaManager.getUserQuotaStatus(
         req.user!.id,
-        // @ts-ignore - TypeScript error temporairement ignor�
+        // @ts-ignore - TypeScript error temporairement ignoré
       );
 
       return res.json({
@@ -256,10 +256,10 @@ router.get(
       });
 
     } catch (error: any) {
-      logger.error('❌ Error getting quota status:', error);
+      logger.error('âŒ Error getting quota status:', error);
       return res.status(500).json({
         success: false,
-        message: 'Erreur lors de la récupération des quotas'
+        message: 'Erreur lors de la rÃ©cupÃ©ration des quotas'
       });
     }
   }
@@ -267,18 +267,18 @@ router.get(
 
 /**
  * POST /api/products/warmup-cache
- * Réchauffer le cache avec les produits populaires (admin only)
+ * RÃ©chauffer le cache avec les produits populaires (admin only)
  */
 router.post(
   '/warmup-cache',
   authenticate,
   async (req: Request, res: Response) => {
     try {
-      // Vérifier si l'utilisateur est admin
+      // VÃ©rifier si l'utilisateur est admin
       if (req.user!.email !== 'admin@ecolojia.com') {
         return res.status(403).json({
           success: false,
-          message: 'Accès non autorisé'
+          message: 'AccÃ¨s non autorisÃ©'
         });
       }
 
@@ -293,15 +293,15 @@ router.post(
 
       return res.json({
         success: true,
-        message: `Cache réchauffé avec ${warmedCount} produits`,
+        message: `Cache rÃ©chauffÃ© avec ${warmedCount} produits`,
         data: { warmedCount, total: popularProducts.length }
       });
 
     } catch (error: any) {
-      logger.error('❌ Error warming cache:', error);
+      logger.error('âŒ Error warming cache:', error);
       return res.status(500).json({
         success: false,
-        message: 'Erreur lors du réchauffement du cache'
+        message: 'Erreur lors du rÃ©chauffement du cache'
       });
     }
   }

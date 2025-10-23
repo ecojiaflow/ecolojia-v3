@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/analysis/RiskCard.tsx
+// PATH: frontend/src/components/analysis/RiskCard.tsx
 type Risk = { title: string; level: "low" | "medium" | "high"; details?: string };
 
 function levelToTone(level: Risk["level"]) {

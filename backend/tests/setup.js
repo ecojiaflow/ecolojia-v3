@@ -3,7 +3,7 @@
  * Garde la configuration Prisma existante + ajoute support IA
  */
 
-// Configuration Prisma existante (gardée)
+// Configuration Prisma existante (gardÃ©e)
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient({
@@ -16,7 +16,7 @@ const prisma = new PrismaClient({
 
 // ===== AJOUTS SPRINT 3 - Configuration Jest + IA =====
 
-// Timeout global étendu pour les appels IA
+// Timeout global Ã©tendu pour les appels IA
 jest.setTimeout(30000);
 
 // Variables d'environnement pour tests Sprint 3
@@ -34,10 +34,10 @@ beforeAll(() => {
     // Afficher seulement les logs de test importants
     const message = args[0];
     if (typeof message === 'string' && (
-      message.includes('âœ…') || 
-      message.includes('âŒ') || 
-      message.includes('ðŸŽ¯') ||
-      message.includes('ðŸš€') ||
+      message.includes('Ã¢Å“â€¦') || 
+      message.includes('Ã¢ÂÅ’') || 
+      message.includes('Ã°Å¸Å½Â¯') ||
+      message.includes('Ã°Å¸Å¡â‚¬') ||
       message.includes('===') ||
       message.includes('Sprint 3')
     )) {
@@ -49,7 +49,7 @@ beforeAll(() => {
   console.error = originalError;
   console.warn = originalWarn;
   
-  console.log('ðŸ”§ Jest configuré pour Sprint 3 - IA + Prisma');
+  console.log('Ã°Å¸â€Â§ Jest configurÃ© pour Sprint 3 - IA + Prisma');
 });
 
 afterAll(() => {
@@ -59,9 +59,9 @@ afterAll(() => {
 
 // ===== CONFIGURATION SPRINT 3 - MOCKS IA =====
 
-// Mock des services IA si pas de vraie clé API
+// Mock des services IA si pas de vraie clÃ© API
 if (!process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY === 'test_key_sprint3') {
-  console.warn('âš ï¸ Mode test IA - Utilisation de mocks pour DeepSeek');
+  console.warn('Ã¢Å¡Â Ã¯Â¸Â Mode test IA - Utilisation de mocks pour DeepSeek');
   
   // Mock axios pour DeepSeek API
   jest.mock('axios', () => ({
@@ -72,7 +72,7 @@ if (!process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY === 'test_key_
           data: {
             choices: [{
               message: {
-                content: "Réponse de test IA: Ce produit contient des additifs selon l'EFSA. Les études montrent que l'ultra-transformation peut impacter la santé. Source: Base de données test ECOLOJIA 2024."
+                content: "RÃ©ponse de test IA: Ce produit contient des additifs selon l'EFSA. Les Ã©tudes montrent que l'ultra-transformation peut impacter la santÃ©. Source: Base de donnÃ©es test ECOLOJIA 2024."
               }
             }]
           }
@@ -80,10 +80,10 @@ if (!process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY === 'test_key_
       }
       
       // Autres appels axios passent normalement
-      return Promise.reject(new Error(`Mock non configuré pour: ${url}`));
+      return Promise.reject(new Error(`Mock non configurÃ© pour: ${url}`));
     }),
     
-    // Méthodes axios de base
+    // MÃ©thodes axios de base
     get: jest.fn().mockResolvedValue({ data: {} }),
     defaults: { headers: { common: {} } }
   }));
@@ -112,7 +112,7 @@ beforeEach(async () => {
       where: { title: { startsWith: 'Test Product' } }
     });
     
-    // AJOUT Sprint 3: Nettoyage données IA tests
+    // AJOUT Sprint 3: Nettoyage donnÃ©es IA tests
     await prisma.product.deleteMany({
       where: { 
         OR: [
@@ -125,7 +125,7 @@ beforeEach(async () => {
   } catch (error) {
     // Ignorer les erreurs de cleanup - normal en tests
     if (!error.message.includes('Unknown argument')) {
-      // Réduire verbosité mais garder info utile
+      // RÃ©duire verbositÃ© mais garder info utile
       if (error.message.length > 100) {
         console.log('Cleanup info:', error.message.substring(0, 80) + '...');
       }
@@ -133,13 +133,13 @@ beforeEach(async () => {
   }
 });
 
-// Fermer connexions après tous les tests (existant + enrichi)
+// Fermer connexions aprÃ¨s tous les tests (existant + enrichi)
 afterAll(async () => {
   try {
     // Fermeture Prisma existante
     await prisma.$disconnect();
     
-    // AJOUT Sprint 3: Nettoyage cache IA si nécessaire
+    // AJOUT Sprint 3: Nettoyage cache IA si nÃ©cessaire
     if (global.aiCache) {
       global.aiCache.clear();
     }
@@ -151,10 +151,10 @@ afterAll(async () => {
 
 // ===== HELPERS GLOBAUX SPRINT 3 =====
 
-// Helper pour attendre résolution promesses
+// Helper pour attendre rÃ©solution promesses
 global.flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 
-// Helper pour créer produits de test
+// Helper pour crÃ©er produits de test
 global.createTestProduct = (overrides = {}) => ({
   name: "Test Product Sprint 3",
   ingredients: ["Test ingredient 1", "Test ingredient 2"],
@@ -170,9 +170,9 @@ global.createTestProduct = (overrides = {}) => ({
   ...overrides
 });
 
-// Helper pour créer profils utilisateur test
+// Helper pour crÃ©er profils utilisateur test
 global.createTestUserProfile = (overrides = {}) => ({
-  experience_level: 'débutant',
+  experience_level: 'dÃ©butant',
   health_goals: [],
   dietary_restrictions: [],
   preferences: ['bio'],
@@ -188,8 +188,8 @@ global.AI_SERVICES_AVAILABLE = !!(
   process.env.DEEPSEEK_API_KEY !== 'test_key_sprint3'
 );
 
-console.log('ðŸ”§ Setup complet:', {
-  prisma: 'âœ…',
+console.log('Ã°Å¸â€Â§ Setup complet:', {
+  prisma: 'Ã¢Å“â€¦',
   ai_mocks: global.AI_SERVICES_AVAILABLE ? 'Vraie API' : 'Mocks de test',
   jest_timeout: '30s',
   sprint: '3.0'

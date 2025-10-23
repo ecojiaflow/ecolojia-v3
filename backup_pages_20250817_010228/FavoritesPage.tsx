@@ -67,10 +67,10 @@ const FavoritesPage: React.FC = () => {
     name: '',
     description: '',
     color: '#7DDE4A',
-    icon: 'âÃ‚Â­Ã‚Â'
+    icon: 'Ã¢Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â'
   });
 
-  const listIcons = ['âÃ‚Â­Ã‚Â', 'âÃ‚ÂÃ‚Â¤Ã¯Ã‚Â¸Ã‚Â', 'ÃƒÂ°Ã…Â¸ââ‚¬Âºââ‚¬â„¢', 'ÃƒÂ°Ã…Â¸Ã‚Â¥ââ‚¬â€', 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢ââ‚¬Å¾', 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¹', 'ÃƒÂ°Ã…Â¸ââ‚¬ËœÃ‚Â¶', 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â '];
+  const listIcons = ['Ã¢Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â', 'Ã¢Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â¤ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂºÃ¢Ã¢â€šÂ¬Ã¢â€žÂ¢', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¥Ã¢Ã¢â€šÂ¬Ã¢â‚¬Â', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã¢Ã¢â€šÂ¬Ã…Â¾', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â¹', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‹Å“Ãƒâ€šÃ‚Â¶', 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â '];
   const listColors = ['#7DDE4A', '#4A90E2', '#F5A623', '#D0021B', '#9013FE', '#50E3C2'];
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const FavoritesPage: React.FC = () => {
     try {
       setLoading(true);
       
-      // Récupérer les listes et les favoris
+      // RÃ©cupÃ©rer les listes et les favoris
       const [favoritesData, listsData] = await Promise.all([
         api.get<FavoriteProduct[]>(
           selectedList === 'all' 
@@ -167,7 +167,7 @@ const FavoritesPage: React.FC = () => {
       const newList = await api.post(`${API_CONFIG.ENDPOINTS.FAVORITES.LIST}/lists`, newListForm);
       setLists(prev => [...prev, newList]);
       setShowCreateList(false);
-      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: 'âÃ‚Â­Ã‚Â' });
+      setNewListForm({ name: '', description: '', color: '#7DDE4A', icon: 'Ã¢Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â' });
     } catch (err) {
       console.error('Error creating list:', err);
     }
@@ -185,7 +185,7 @@ const FavoritesPage: React.FC = () => {
         { responseType: 'blob' }
       );
       
-      // Télécharger le fichier
+      // TÃ©lÃ©charger le fichier
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
@@ -199,12 +199,12 @@ const FavoritesPage: React.FC = () => {
   };
 
   const handleShareList = () => {
-    // Créer un lien de partage
+    // CrÃ©er un lien de partage
     const shareUrl = `${window.location.origin}/shared-list/${selectedList}`;
     navigator.clipboard.writeText(shareUrl);
     
     // Afficher une notification
-    alert('Lien copié dans le presse-papier !');
+    alert('Lien copiÃ© dans le presse-papier !');
   };
 
   const toggleItemSelection = (productId: string) => {
@@ -228,10 +228,10 @@ const FavoritesPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â½';
-      case 'cosmetic': return 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢ââ‚¬Å¾';
-      case 'household': return 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¹';
-      default: return 'ÃƒÂ°Ã…Â¸ââ‚¬Å“Ã‚Â¦';
+      case 'food': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€¦Ã‚Â½';
+      case 'cosmetic': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã¢Ã¢â€šÂ¬Ã…Â¾';
+      case 'household': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â¹';
+      default: return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃƒâ€šÃ‚Â¦';
     }
   };
 
@@ -254,7 +254,7 @@ const FavoritesPage: React.FC = () => {
             onClick={fetchFavorites}
             className="mt-4 px-6 py-3 bg-[#7DDE4A] text-white rounded-full hover:bg-[#6bc93a] transition-all"
           >
-            Réessayer
+            RÃ©essayer
           </button>
         </div>
       </div>
@@ -273,7 +273,7 @@ const FavoritesPage: React.FC = () => {
                 Mes Favoris
               </h1>
               <p className="text-gray-600 mt-1">
-                {favorites.length} produit{favorites.length !== 1 ? 's' : ''} sauvegardé{favorites.length !== 1 ? 's' : ''}
+                {favorites.length} produit{favorites.length !== 1 ? 's' : ''} sauvegardÃ©{favorites.length !== 1 ? 's' : ''}
               </p>
             </div>
             
@@ -374,7 +374,7 @@ const FavoritesPage: React.FC = () => {
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="px-4 py-3 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
               >
-                <option value="date">Plus récents</option>
+                <option value="date">Plus rÃ©cents</option>
                 <option value="score">Meilleur score</option>
                 <option value="name">Nom A-Z</option>
               </select>
@@ -402,18 +402,18 @@ const FavoritesPage: React.FC = () => {
           <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-[#DDE9DA]">
             <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-[#3B3B3B] mb-2">
-              {searchQuery ? 'Aucun favori trouvé' : 'Aucun favori pour le moment'}
+              {searchQuery ? 'Aucun favori trouvÃ©' : 'Aucun favori pour le moment'}
             </h3>
             <p className="text-gray-600 mb-6">
               {searchQuery 
                 ? 'Essayez avec d\'autres termes de recherche' 
-                : 'Ajoutez vos produits préférés pour les retrouver facilement'}
+                : 'Ajoutez vos produits prÃ©fÃ©rÃ©s pour les retrouver facilement'}
             </p>
             <button
               onClick={() => navigate('/search')}
               className="px-6 py-3 bg-[#7DDE4A] text-white rounded-full hover:bg-[#6bc93a] transition-all"
             >
-              Découvrir des produits
+              DÃ©couvrir des produits
             </button>
           </div>
         ) : (
@@ -433,7 +433,7 @@ const FavoritesPage: React.FC = () => {
                     viewMode === 'list' ? 'flex' : ''
                   }`}
                 >
-                  {/* Checkbox de sélection */}
+                  {/* Checkbox de sÃ©lection */}
                   <div className={`absolute top-4 left-4 z-10 ${viewMode === 'list' ? 'relative top-0 left-0 p-4' : ''}`}>
                     <input
                       type="checkbox"
@@ -496,7 +496,7 @@ const FavoritesPage: React.FC = () => {
                       
                       {item.price && (
                         <div className="text-lg font-semibold text-[#3B3B3B]">
-                          {item.price}âââ‚¬Å¡Ã‚Â¬
+                          {item.price}Ã¢Ã¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
                         </div>
                       )}
                     </div>
@@ -531,7 +531,7 @@ const FavoritesPage: React.FC = () => {
                         onClick={() => navigate(`/product/${item.productId}`)}
                         className="text-[#7DDE4A] hover:text-[#6bc93a] font-medium text-sm"
                       >
-                        Voir détails âââ‚¬Â ââ‚¬â„¢
+                        Voir dÃ©tails Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢
                       </button>
                       
                       <div className="flex gap-2">
@@ -560,7 +560,7 @@ const FavoritesPage: React.FC = () => {
         )}
       </div>
 
-      {/* Modal création de liste */}
+      {/* Modal crÃ©ation de liste */}
       {showCreateList && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
@@ -569,7 +569,7 @@ const FavoritesPage: React.FC = () => {
             className="bg-white rounded-2xl p-6 max-w-md w-full"
           >
             <h3 className="text-xl font-bold text-[#3B3B3B] mb-6">
-              Créer une nouvelle liste
+              CrÃ©er une nouvelle liste
             </h3>
             
             <div className="space-y-4">
@@ -601,7 +601,7 @@ const FavoritesPage: React.FC = () => {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Icône
+                  IcÃ´ne
                 </label>
                 <div className="grid grid-cols-8 gap-2">
                   {listIcons.map(icon => (
@@ -653,7 +653,7 @@ const FavoritesPage: React.FC = () => {
                 disabled={!newListForm.name.trim()}
                 className="flex-1 px-4 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6bc93a] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Créer la liste
+                CrÃ©er la liste
               </button>
             </div>
           </motion.div>
@@ -688,7 +688,7 @@ const FavoritesPage: React.FC = () => {
               
               <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4">
                 <div className="text-3xl font-bold mb-1">{lists.length}</div>
-                <div className="text-white/80">Listes créées</div>
+                <div className="text-white/80">Listes crÃ©Ã©es</div>
               </div>
             </div>
           </div>

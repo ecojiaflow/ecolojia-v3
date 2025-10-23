@@ -92,7 +92,7 @@ class MockService {
       },
       {
         _id: '3',
-        name: 'Lessive ‰cologique',
+        name: 'Lessive â€°cologique',
         brand: 'Ariel',
         category: 'detergents',
         barcode: '8001090962805',

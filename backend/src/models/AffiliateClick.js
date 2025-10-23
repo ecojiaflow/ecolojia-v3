@@ -1,5 +1,5 @@
 // backend/src/models/AffiliateClick.js
-// FICHIER CORRIG‰ - Sans index dupliques
+// FICHIER CORRIGâ€° - Sans index dupliques
 
 const mongoose = require('mongoose');
 
@@ -90,7 +90,7 @@ const affiliateClickSchema = new mongoose.Schema({
 // Index composes pour analytics
 affiliateClickSchema.index({ partner: 1, createdAt: -1 });
 affiliateClickSchema.index({ userId: 1, partner: 1, createdAt: -1 });
-// Commente car 'unique: true' cree dej  un index sur clickId
+// Commente car 'unique: true' cree dejÂ  un index sur clickId
 // affiliateClickSchema.index({ clickId: 1 }, { unique: true });
 affiliateClickSchema.index({ converted: 1, partner: 1 });
 

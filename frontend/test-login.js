@@ -1,4 +1,4 @@
-﻿// Test de connexion
+// Test de connexion
 const testAuth = async () => {
   try {
     const response = await fetch('https://ecolojia-backendvf.onrender.com/api/auth/login', {

@@ -6,30 +6,30 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const Product = require('../models/Product');
 
-console.log('🚀 ECOLOJIA - Import COMPLET (Food + Cosmetics + Detergents)');
+console.log('ðŸš€ ECOLOJIA - Import COMPLET (Food + Cosmetics + Detergents)');
 console.log('='.repeat(60));
 
 async function importAllCategories() {
   try {
     // Connexion MongoDB
-    console.log('📡 Connexion à MongoDB...');
+    console.log('ðŸ“¡ Connexion Ã  MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia');
-    console.log('✅ Connecté à MongoDB!\n');
+    console.log('âœ… ConnectÃ© Ã  MongoDB!\n');
 
     let totalImported = 0;
 
     // 1. IMPORT ALIMENTAIRE
-    console.log('🍎 === IMPORT PRODUITS ALIMENTAIRES ===');
+    console.log('ðŸŽ === IMPORT PRODUITS ALIMENTAIRES ===');
     const foodQueries = ['bio', 'chocolat', 'lait', 'coca cola', 'chips', 'biscuit', 'eau minerale', 'jus fruit', 'yaourt', 'nutella'];
     totalImported += await importFromOpenFoodFacts(foodQueries, 'food');
 
-    // 2. IMPORT COSMÉTIQUES  
-    console.log('\n💄 === IMPORT PRODUITS COSMÉTIQUES ===');
+    // 2. IMPORT COSMÃ‰TIQUES  
+    console.log('\nðŸ’„ === IMPORT PRODUITS COSMÃ‰TIQUES ===');
     const cosmeticsQueries = ['shampoing', 'creme', 'savon', 'dentifrice', 'deodorant', 'gel douche', 'lotion', 'mascara', 'rouge levres', 'parfum'];
     totalImported += await importFromOpenBeautyFacts(cosmeticsQueries, 'cosmetics');
 
-    // 3. IMPORT DÉTERGENTS
-    console.log('\n🧹 === IMPORT PRODUITS DÉTERGENTS ===');
+    // 3. IMPORT DÃ‰TERGENTS
+    console.log('\nðŸ§¹ === IMPORT PRODUITS DÃ‰TERGENTS ===');
     const detergentProducts = [
       {
         barcode: '3450970103442',
@@ -47,7 +47,7 @@ async function importAllCategories() {
       },
       {
         barcode: '8001841831015',
-        name: 'Dash Liquide Régulier',
+        name: 'Dash Liquide RÃ©gulier',
         brand: 'Dash',
         category: 'detergents',
         imageUrl: 'https://images.openfoodfacts.org/images/products/800/184/183/1015/front_fr.4.400.jpg',
@@ -61,17 +61,17 @@ async function importAllCategories() {
       },
       {
         barcode: '3178041324298',
-        name: 'L\'Arbre Vert Lessive Liquide Écologique',
+        name: 'L\'Arbre Vert Lessive Liquide Ã‰cologique',
         brand: 'L\'Arbre Vert',
         category: 'detergents',
         imageUrl: 'https://images.openfoodfacts.org/images/products/317/804/132/4298/front_fr.4.400.jpg',
         detergentsData: {
           productType: 'lessive',
           form: 'liquide',
-          ingredients: '5-15% agents de surface anioniques d\'origine végétale, <5% agents de surface non ioniques d\'origine végétale, savon',
+          ingredients: '5-15% agents de surface anioniques d\'origine vÃ©gÃ©tale, <5% agents de surface non ioniques d\'origine vÃ©gÃ©tale, savon',
           usageInstructions: '40ml pour une charge normale',
           ecoLabel: true,
-          certifications: ['Ecocert', 'Ecolabel Européen']
+          certifications: ['Ecocert', 'Ecolabel EuropÃ©en']
         }
       },
       {
@@ -83,22 +83,22 @@ async function importAllCategories() {
         detergentsData: {
           productType: 'liquide vaisselle',
           form: 'liquide',
-          ingredients: '5-15% agents de surface anioniques, <5% agents de surface amphotères, parfums, conservateurs',
-          usageInstructions: 'Quelques gouttes sur une éponge humide',
+          ingredients: '5-15% agents de surface anioniques, <5% agents de surface amphotÃ¨res, parfums, conservateurs',
+          usageInstructions: 'Quelques gouttes sur une Ã©ponge humide',
           ecoLabel: false
         }
       },
       {
         barcode: '3178041318501',
-        name: 'L\'Arbre Vert Liquide Vaisselle Écologique',
+        name: 'L\'Arbre Vert Liquide Vaisselle Ã‰cologique',
         brand: 'L\'Arbre Vert',
         category: 'detergents',
         imageUrl: 'https://images.openfoodfacts.org/images/products/317/804/131/8501/front_fr.4.400.jpg',
         detergentsData: {
           productType: 'liquide vaisselle',
           form: 'liquide',
-          ingredients: '5-15% agents de surface anioniques d\'origine végétale, <5% agents de surface amphotères d\'origine végétale',
-          usageInstructions: 'Verser sur éponge humide',
+          ingredients: '5-15% agents de surface anioniques d\'origine vÃ©gÃ©tale, <5% agents de surface amphotÃ¨res d\'origine vÃ©gÃ©tale',
+          usageInstructions: 'Verser sur Ã©ponge humide',
           ecoLabel: true,
           certifications: ['Ecocert']
         }
@@ -148,7 +148,7 @@ async function importAllCategories() {
       }
     ];
 
-    console.log(`📦 Import de ${detergentProducts.length} détergents...`);
+    console.log(`ðŸ“¦ Import de ${detergentProducts.length} dÃ©tergents...`);
     for (const product of detergentProducts) {
       try {
         await Product.findOneAndUpdate(
@@ -156,17 +156,17 @@ async function importAllCategories() {
           product,
           { upsert: true, new: true }
         );
-        console.log(`  ✅ ${product.name}`);
+        console.log(`  âœ… ${product.name}`);
         totalImported++;
       } catch (error) {
-        console.error(`  ❌ Erreur pour ${product.name}:`, error.message);
+        console.error(`  âŒ Erreur pour ${product.name}:`, error.message);
       }
     }
 
-    // RÉSUMÉ FINAL
+    // RÃ‰SUMÃ‰ FINAL
     console.log('\n' + '='.repeat(60));
-    console.log('📊 RÉSUMÉ FINAL:');
-    console.log(`✅ Total produits importés: ${totalImported}`);
+    console.log('ðŸ“Š RÃ‰SUMÃ‰ FINAL:');
+    console.log(`âœ… Total produits importÃ©s: ${totalImported}`);
     
     const counts = await Promise.all([
       Product.countDocuments({ category: 'food' }),
@@ -174,16 +174,16 @@ async function importAllCategories() {
       Product.countDocuments({ category: 'detergents' })
     ]);
     
-    console.log(`🍎 Alimentaire: ${counts[0]} produits`);
-    console.log(`💄 Cosmétiques: ${counts[1]} produits`);
-    console.log(`🧹 Détergents: ${counts[2]} produits`);
-    console.log(`📦 TOTAL EN BASE: ${counts[0] + counts[1] + counts[2]} produits`);
+    console.log(`ðŸŽ Alimentaire: ${counts[0]} produits`);
+    console.log(`ðŸ’„ CosmÃ©tiques: ${counts[1]} produits`);
+    console.log(`ðŸ§¹ DÃ©tergents: ${counts[2]} produits`);
+    console.log(`ðŸ“¦ TOTAL EN BASE: ${counts[0] + counts[1] + counts[2]} produits`);
 
   } catch (error) {
-    console.error('❌ Erreur générale:', error);
+    console.error('âŒ Erreur gÃ©nÃ©rale:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('\n👋 Import terminé!');
+    console.log('\nðŸ‘‹ Import terminÃ©!');
   }
 }
 
@@ -193,7 +193,7 @@ async function importFromOpenFoodFacts(queries, category) {
   
   for (const query of queries) {
     try {
-      console.log(`  🔍 Recherche: ${query}...`);
+      console.log(`  ðŸ” Recherche: ${query}...`);
       
       const response = await axios.get('https://world.openfoodfacts.org/cgi/search.pl', {
         params: {
@@ -240,23 +240,23 @@ async function importFromOpenFoodFacts(queries, category) {
       
       await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) {
-      console.error(`    ❌ Erreur recherche ${query}:`, error.message);
+      console.error(`    âŒ Erreur recherche ${query}:`, error.message);
     }
   }
   
-  console.log(`  ✅ ${imported} produits alimentaires importés`);
+  console.log(`  âœ… ${imported} produits alimentaires importÃ©s`);
   return imported;
 }
 
-// Fonction pour OpenBeautyFacts (cosmétiques)
+// Fonction pour OpenBeautyFacts (cosmÃ©tiques)
 async function importFromOpenBeautyFacts(queries, category) {
   let imported = 0;
   
-  // Produits cosmétiques manuels (OpenBeautyFacts moins fourni)
+  // Produits cosmÃ©tiques manuels (OpenBeautyFacts moins fourni)
   const cosmeticProducts = [
     {
       barcode: '3600523586523',
-      name: 'Mixa Intensif Crème Mains Réparation Forte',
+      name: 'Mixa Intensif CrÃ¨me Mains RÃ©paration Forte',
       brand: 'Mixa',
       imageUrl: 'https://images.openbeautyfacts.org/images/products/360/052/358/6523/front_fr.4.400.jpg',
       cosmeticsData: {
@@ -265,8 +265,8 @@ async function importFromOpenBeautyFacts(queries, category) {
     },
     {
       barcode: '3600541121584',
-      name: 'L\'Oréal Men Expert Déodorant Carbon Protect',
-      brand: 'L\'Oréal',
+      name: 'L\'OrÃ©al Men Expert DÃ©odorant Carbon Protect',
+      brand: 'L\'OrÃ©al',
       imageUrl: 'https://images.openbeautyfacts.org/images/products/360/054/112/1584/front_fr.4.400.jpg',
       cosmeticsData: {
         inciList: 'Butane, Isobutane, Propane, Aluminum Chlorohydrate, Isocetyl Stearate, Parfum'
@@ -274,7 +274,7 @@ async function importFromOpenBeautyFacts(queries, category) {
     },
     {
       barcode: '3574661467528',
-      name: 'Dove Original Déodorant',
+      name: 'Dove Original DÃ©odorant',
       brand: 'Dove',
       imageUrl: 'https://images.openbeautyfacts.org/images/products/357/466/146/7528/front_fr.4.400.jpg',
       cosmeticsData: {
@@ -301,7 +301,7 @@ async function importFromOpenBeautyFacts(queries, category) {
     },
     {
       barcode: '3600523569625',
-      name: 'Nivea Crème Hydratante',
+      name: 'Nivea CrÃ¨me Hydratante',
       brand: 'Nivea',
       imageUrl: 'https://images.openbeautyfacts.org/images/products/360/052/356/9625/front_fr.4.400.jpg',
       cosmeticsData: {
@@ -319,7 +319,7 @@ async function importFromOpenBeautyFacts(queries, category) {
     }
   ];
 
-  console.log(`  📦 Import de ${cosmeticProducts.length} cosmétiques...`);
+  console.log(`  ðŸ“¦ Import de ${cosmeticProducts.length} cosmÃ©tiques...`);
   for (const product of cosmeticProducts) {
     try {
       await Product.findOneAndUpdate(
@@ -333,7 +333,7 @@ async function importFromOpenBeautyFacts(queries, category) {
     }
   }
 
-  console.log(`  ✅ ${imported} produits cosmétiques importés`);
+  console.log(`  âœ… ${imported} produits cosmÃ©tiques importÃ©s`);
   return imported;
 }
 

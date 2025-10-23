@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/quotaService.ts
+// PATH: frontend/src/services/quotaService.ts
 import apiClient from './apiClient';
 
 // Ajouter la définition de MOCK_MODE

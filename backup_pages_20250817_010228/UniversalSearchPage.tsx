@@ -1,8 +1,8 @@
 // ============================================================================
-// APPROCHE 1 : INTÃƒÆ’ââ‚¬Â°GRATION DIRECTE DANS SEARCHPAGE EXISTANTE
+// APPROCHE 1 : INTÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°GRATION DIRECTE DANS SEARCHPAGE EXISTANTE
 // ============================================================================
 
-// PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMÃƒÆ’ââ‚¬Â°LIORÃƒÆ’ââ‚¬Â°E)
+// PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°LIORÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°E)
 
 import React, { useState, useEffect } from 'react';
 import { universalSearchEngine } from '../services/search/UniversalSearchService';
@@ -19,24 +19,24 @@ const ImprovedSearchPage: React.FC = () => {
       <div className="bg-white border-b border-gray-200 py-6">
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â Recherche Produits
+            ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â Recherche Produits
           </h1>
           
           {/* NOUVEAU : Badge "Recherche Universelle" discret */}
           <div className="flex items-center text-sm text-gray-600">
-            <span>Alimentaire ââ‚¬Ã‚Â¢ Cosmétiques ââ‚¬Ã‚Â¢ Détergents</span>
+            <span>Alimentaire Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ CosmÃ©tiques Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ DÃ©tergents</span>
             <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-              âÃ…â€œÃ‚Â¨ Multi-sources
+              Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ãƒâ€šÃ‚Â¨ Multi-sources
             </span>
           </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        {/* Interface de recherche améliorée */}
+        {/* Interface de recherche amÃ©liorÃ©e */}
         <div className="mb-8">
           // <EnhancedSearchInterface
-            placeholder="ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â Rechercher un produit... (nutella, shampoing bio, lessive écologique)"
+            placeholder="ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â Rechercher un produit... (nutella, shampoing bio, lessive Ã©cologique)"
             onResultSelect={(result) => {
               // Navigation vers analyse
               window.location.href = `/product/${result.id}`;
@@ -45,22 +45,22 @@ const ImprovedSearchPage: React.FC = () => {
           // />
         </div>
 
-        {/* Métriques discrètes SEULEMENT si recherche effectuée */}
+        {/* MÃ©triques discrÃ¨tes SEULEMENT si recherche effectuÃ©e */}
         {searchStats && (
           <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-center justify-between text-sm">
               <div className="text-blue-800">
-                <strong>{searchStats.totalResults}</strong> résultats trouvés 
+                <strong>{searchStats.totalResults}</strong> rÃ©sultats trouvÃ©s 
                 en <strong>{searchStats.searchTime}ms</strong>
               </div>
               <div className="text-blue-600">
-                Sources : {searchStats.sources.join(' ââ‚¬Ã‚Â¢ ')}
+                Sources : {searchStats.sources.join(' Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ ')}
               </div>
             </div>
           </div>
         )}
 
-        {/* Résultats */}
+        {/* RÃ©sultats */}
         <div className="space-y-4">
           {searchResults.map((result, index) => (
             <SearchResultCard key={index} result={result} // />
@@ -71,7 +71,7 @@ const ImprovedSearchPage: React.FC = () => {
         {searchResults.length === 0 && (
           <div className="mt-12">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              ÃƒÂ°Ã…Â¸ââ‚¬â„¢Ã‚Â¡ Suggestions populaires
+              ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ãƒâ€šÃ‚Â¡ Suggestions populaires
             </h2>
             <PopularSearches // />
           </div>
@@ -171,20 +171,20 @@ const SearchFirstHomePage: React.FC = () => {
           </h1>
           
           <p className="text-xl text-gray-600 mb-8">
-            Analysez instantanément vos produits alimentaires, cosmétiques et détergents
+            Analysez instantanÃ©ment vos produits alimentaires, cosmÃ©tiques et dÃ©tergents
           </p>
 
           {/* RECHERCHE CENTRALE HERO */}
           <div className="max-w-2xl mx-auto mb-12">
             // <EnhancedSearchInterface
-              placeholder="ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â Recherchez votre premier produit... (nutella, shampoing L'Oréal, lessive Ariel)"
+              placeholder="ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â Recherchez votre premier produit... (nutella, shampoing L'OrÃ©al, lessive Ariel)"
               showFilters={false}
               className="text-lg"
             // />
             
-            {/* Suggestions immédiates */}
+            {/* Suggestions immÃ©diates */}
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {['nutella bio', 'shampoing sans sulfate', 'lessive écologique'].map((suggestion) => (
+              {['nutella bio', 'shampoing sans sulfate', 'lessive Ã©cologique'].map((suggestion) => (
                 <button
                   key={suggestion}
                   className="px-4 py-2 bg-white bg-opacity-70 hover:bg-opacity-100 text-gray-700 rounded-full text-sm transition-all"
@@ -196,7 +196,7 @@ const SearchFirstHomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Métriques de confiance */}
+          {/* MÃ©triques de confiance */}
           <div className="grid grid-cols-3 gap-8 text-center">
             <div>
               <div className="text-3xl font-bold text-green-600">2M+</div>
@@ -204,7 +204,7 @@ const SearchFirstHomePage: React.FC = () => {
             </div>
             <div>
               <div className="text-3xl font-bold text-blue-600">3</div>
-              <div className="text-gray-600">Catégories couvertes</div>
+              <div className="text-gray-600">CatÃ©gories couvertes</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-purple-600">&lt;2s</div>
@@ -226,7 +226,7 @@ const SearchFirstHomePage: React.FC = () => {
 // APPROCHE 4 : WIDGET RECHERCHE UNIVERSEL
 // ============================================================================
 
-// Composant réutilisable partout
+// Composant rÃ©utilisable partout
 const UniversalSearchWidget: React.FC<{
   size?: 'small' | 'medium' | 'large';
   context?: 'navbar' | 'hero' | 'page';
@@ -246,7 +246,7 @@ const UniversalSearchWidget: React.FC<{
         
         <input
           type="text"
-          placeholder="ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â Rechercher parmi 2M+ produits..."
+          placeholder="ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â Rechercher parmi 2M+ produits..."
           className={`w-full pl-12 pr-4 ${sizeClasses[size]} border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all`}
           onFocus={() => {
             // Redirection intelligente selon contexte
@@ -270,7 +270,7 @@ const UniversalSearchWidget: React.FC<{
       {/* Stats contextuelles */}
       {showStats && (
         <div className="mt-2 text-center text-sm text-gray-500">
-          2M+ produits ââ‚¬Ã‚Â¢ 3 catégories ââ‚¬Ã‚Â¢ Recherche instantanée
+          2M+ produits Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ 3 catÃ©gories Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Recherche instantanÃ©e
         </div>
       )}
     </div>
@@ -282,30 +282,30 @@ const UniversalSearchWidget: React.FC<{
 // ============================================================================
 
 /*
-ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ APPROCHE RECOMMANDÃƒÆ’ââ‚¬Â°E : HYBRIDE
+ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â½Ãƒâ€šÃ‚Â¯ APPROCHE RECOMMANDÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°E : HYBRIDE
 
 1. HOMEPAGE = Recherche Hero (Approche 3)
-   âââ‚¬Â ââ‚¬â„¢ Positionnement immédiat comme moteur de recherche
-   âââ‚¬Â ââ‚¬â„¢ UX intuitive : voir âââ‚¬Â ââ‚¬â„¢ chercher âââ‚¬Â ââ‚¬â„¢ analyser
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Positionnement immÃ©diat comme moteur de recherche
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ UX intuitive : voir Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ chercher Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ analyser
 
 2. NAVBAR = Recherche centrale (Approche 2) 
-   âââ‚¬Â ââ‚¬â„¢ Accessible partout
-   âââ‚¬Â ââ‚¬â„¢ Dropdown intelligent avec suggestions
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Accessible partout
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Dropdown intelligent avec suggestions
 
-3. SEARCH PAGE = Version améliorée (Approche 1)
-   âââ‚¬Â ââ‚¬â„¢ Page dédiée pour recherches avancées
-   âââ‚¬Â ââ‚¬â„¢ Métriques contextuelles uniquement
+3. SEARCH PAGE = Version amÃ©liorÃ©e (Approche 1)
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Page dÃ©diÃ©e pour recherches avancÃ©es
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ MÃ©triques contextuelles uniquement
 
 4. WIDGET = Composant universel (Approche 4)
-   âââ‚¬Â ââ‚¬â„¢ Réutilisable partout
-   âââ‚¬Â ââ‚¬â„¢ Consistent UX
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ RÃ©utilisable partout
+   Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Consistent UX
 
 AVANTAGES :
-âÃ…â€œââ‚¬Â¦ UX intuitive : recherche omniprésente
-âÃ…â€œââ‚¬Â¦ SEO : Homepage optimisée "recherche produits"
-âÃ…â€œââ‚¬Â¦ Conversion : flux naturel recherche âââ‚¬Â ââ‚¬â„¢ analyse
-âÃ…â€œââ‚¬Â¦ Différenciation : "Google des produits éthiques"
-âÃ…â€œââ‚¬Â¦ Métriques : affichées dans contexte pertinent
+Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ UX intuitive : recherche omniprÃ©sente
+Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ SEO : Homepage optimisÃ©e "recherche produits"
+Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ Conversion : flux naturel recherche Ã¢Ã¢Ã¢â€šÂ¬Ã‚Â Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢ analyse
+Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ DiffÃ©renciation : "Google des produits Ã©thiques"
+Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ MÃ©triques : affichÃ©es dans contexte pertinent
 */
 
 

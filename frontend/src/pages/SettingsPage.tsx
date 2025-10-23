@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/SettingsPage.tsx
+// PATH: frontend/src/pages/SettingsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {

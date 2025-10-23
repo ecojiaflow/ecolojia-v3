@@ -65,7 +65,7 @@ router.post('/toggle', authenticateUser, asyncHandler(async (req, res) => {
   });
 }));
 
-// PUT /api/favorites/:id - Mettre   jour un favori
+// PUT /api/favorites/:id - Mettre Â  jour un favori
 router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
   const { notes, tags, notifications } = req.body;
   

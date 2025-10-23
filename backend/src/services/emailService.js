@@ -10,7 +10,7 @@ class EmailService {
     );
     
     if (!this.configured) {
-      console.log('ðŸ“§ Service email non configure - Mode simulation active');
+      console.log('Ã°Å¸â€œÂ§ Service email non configure - Mode simulation active');
     }
   }
 
@@ -26,7 +26,7 @@ class EmailService {
 
     // En developpement ou si pas configure, simuler l'envoi
     if (process.env.NODE_ENV === 'development' || !this.configured) {
-      console.log('ðŸ“§ Email simule:');
+      console.log('Ã°Å¸â€œÂ§ Email simule:');
       console.log(`   To: ${to}`);
       console.log(`   Subject: ${subject}`);
       if (template) console.log(`   Template: ${template}`);
@@ -40,7 +40,7 @@ class EmailService {
 
     // En production, utiliser le service configure
     try {
-      // Exemple avec Nodemailer (  adapter selon votre service)
+      // Exemple avec Nodemailer (Â  adapter selon votre service)
       if (process.env.SMTP_HOST) {
         const nodemailer = require('nodemailer');
         const transporter = nodemailer.createTransport({
@@ -82,7 +82,7 @@ class EmailService {
       welcome: `
         <h1>Bienvenue sur ECOLOJIA!</h1>
         <p>Bonjour ${data.name || 'Utilisateur'},</p>
-        <p>Merci de rejoindre ECOLOJIA. Commencez   scanner vos produits des maintenant!</p>
+        <p>Merci de rejoindre ECOLOJIA. Commencez Â  scanner vos produits des maintenant!</p>
       `,
       
       premium_welcome: `
@@ -104,9 +104,9 @@ class EmailService {
       `,
       
       payment_failed: `
-        <h1>‰chec du paiement</h1>
+        <h1>â€°chec du paiement</h1>
         <p>Le paiement de votre abonnement a echoue.</p>
-        <p>Veuillez mettre   jour vos informations de paiement.</p>
+        <p>Veuillez mettre Â  jour vos informations de paiement.</p>
       `
     };
 
@@ -144,7 +144,7 @@ class EmailService {
   async sendPaymentFailedEmail(user) {
     return this.sendEmail({
       to: user.email,
-      subject: '‰chec du paiement - Action requise',
+      subject: 'â€°chec du paiement - Action requise',
       template: 'payment_failed',
       data: { name: user.name }
     });

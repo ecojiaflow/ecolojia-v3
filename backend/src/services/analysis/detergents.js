@@ -1,7 +1,7 @@
 // PATH: backend\src\services\analysis\detergents.js
 /**
  * Detergents Analysis Service - Analyse des produits detergents
- * Conforme   TechReference.md : CLP, tensioactifs, biodegradabilite, parfums
+ * Conforme Â  TechReference.md : CLP, tensioactifs, biodegradabilite, parfums
  */
 
 class DetergentsAnalyzer {
@@ -53,7 +53,7 @@ class DetergentsAnalyzer {
     };
     
     // Patterns de detection
-    this.percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-â€“]\s*(\d+(?:[.,]\d+)?)\s*%|([<>â‰¤â‰¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
+    this.percentagePattern = /(\d+(?:[.,]\d+)?)\s*[-Ã¢â‚¬â€œ]\s*(\d+(?:[.,]\d+)?)\s*%|([<>Ã¢â€°Â¤Ã¢â€°Â¥]?\s*\d+(?:[.,]\d+)?)\s*%/;
     this.surfactantPattern = /(tensioactif|surfactant|anionic|cationic|nonionic|amphoteric)/i;
   }
 
@@ -163,7 +163,7 @@ class DetergentsAnalyzer {
           percentage = (parseFloat(percentMatch[1]) + parseFloat(percentMatch[2])) / 2;
         } else if (percentMatch[3]) {
           // Single: "<5%", ">30%", "15%"
-          percentage = parseFloat(percentMatch[3].replace(/[<>â‰¤â‰¥]/g, ''));
+          percentage = parseFloat(percentMatch[3].replace(/[<>Ã¢â€°Â¤Ã¢â€°Â¥]/g, ''));
         }
         // Enlever le pourcentage du nom
         name = part.replace(this.percentagePattern, '').trim();
@@ -295,7 +295,7 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * ‰value la biodegradabilite d'un tensioactif
+   * â€°value la biodegradabilite d'un tensioactif
    */
   assessSurfactantBiodegradability(name) {
     if (/glucoside|betaine|soap|savon/i.test(name)) return 'excellent';
@@ -306,7 +306,7 @@ class DetergentsAnalyzer {
   }
 
   /**
-   * ‰value la biodegradabilite globale
+   * â€°value la biodegradabilite globale
    */
   assessBiodegradability(analysis) {
     const surfactants = analysis.surfactants;
@@ -445,31 +445,31 @@ class DetergentsAnalyzer {
     
     // Recommandations sante
     if (healthScore < 50) {
-      recommendations.push('âš ï¸ Produit irritant : porter des gants lors de l\'utilisation');
-      recommendations.push('ðŸ’¨ Utiliser dans un endroit bien ventile');
+      recommendations.push('Ã¢Å¡Â Ã¯Â¸Â Produit irritant : porter des gants lors de l\'utilisation');
+      recommendations.push('Ã°Å¸â€™Â¨ Utiliser dans un endroit bien ventile');
     }
     
     if (analysis.allergens.length > 0) {
-      recommendations.push(`ðŸ”´ Contient ${analysis.allergens.length} allergene(s) parfume(s)`);
+      recommendations.push(`Ã°Å¸â€Â´ Contient ${analysis.allergens.length} allergene(s) parfume(s)`);
     }
     
     // Recommandations environnement
     if (analysis.phosphates) {
-      recommendations.push('ðŸš« Contient des phosphates : privilegier des alternatives sans phosphates');
+      recommendations.push('Ã°Å¸Å¡Â« Contient des phosphates : privilegier des alternatives sans phosphates');
     }
     
     if (environmentScore < 50) {
-      recommendations.push('ðŸŒ± Impact environnemental eleve : chercher des produits ecolabellises');
+      recommendations.push('Ã°Å¸Å’Â± Impact environnemental eleve : chercher des produits ecolabellises');
     } else if (environmentScore > 80) {
-      recommendations.push('âœ… Bon choix ecologique');
+      recommendations.push('Ã¢Å“â€¦ Bon choix ecologique');
     }
     
     // Conseils d'utilisation
     if (analysis.enzymes) {
-      recommendations.push('ðŸŒ¡ï¸ Efficace des 30Â°C grace aux enzymes');
+      recommendations.push('Ã°Å¸Å’Â¡Ã¯Â¸Â Efficace des 30Ã‚Â°C grace aux enzymes');
     }
     
-    recommendations.push('ðŸ“ Respecter les doses recommandees pour limiter l\'impact');
+    recommendations.push('Ã°Å¸â€œÂ Respecter les doses recommandees pour limiter l\'impact');
     
     return recommendations;
   }

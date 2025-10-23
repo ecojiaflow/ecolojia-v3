@@ -1,4 +1,4 @@
-﻿// PATH: src\components\UltraTransformResults.tsx
+// PATH: src\components\UltraTransformResults.tsx
 import React from 'react';
 
 /**

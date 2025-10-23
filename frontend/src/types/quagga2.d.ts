@@ -1,4 +1,4 @@
-﻿declare module '@ericblade/quagga2' {
+declare module '@ericblade/quagga2' {
   const Quagga: any;
   export default Quagga;
 }

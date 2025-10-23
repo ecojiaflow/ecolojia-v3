@@ -1,4 +1,4 @@
-﻿// frontend/src/components/dashboard/DailyAnalysesChart.tsx
+// frontend/src/components/dashboard/DailyAnalysesChart.tsx
 import React from 'react';
 import {
   LineChart,

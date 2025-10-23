@@ -14,16 +14,16 @@ export default function TestSearchPage() {
     setError('');
     
     try {
-      console.log('ðŸ” Recherche de:', query);
+      console.log('Ã°Å¸â€Â Recherche de:', query);
       const response = await searchService.searchProducts(query);
-      console.log('ðŸ“¦ Réponse brute:', response);
+      console.log('Ã°Å¸â€œÂ¦ RÃ©ponse brute:', response);
       
       const products = extractProducts(response);
-      console.log('âœ… Produits extraits:', products);
+      console.log('Ã¢Å“â€¦ Produits extraits:', products);
       
       setResults(products);
     } catch (err: any) {
-      console.error('âŒ Erreur de recherche:', err);
+      console.error('Ã¢ÂÅ’ Erreur de recherche:', err);
       setError(err.message || 'Erreur lors de la recherche');
     } finally {
       setLoading(false);
@@ -75,13 +75,13 @@ export default function TestSearchPage() {
           borderRadius: '5px',
           border: '1px solid #fcc'
         }}>
-          âŒ Erreur: {error}
+          Ã¢ÂÅ’ Erreur: {error}
         </div>
       )}
 
       <div>
         <p style={{ color: '#666', marginBottom: '15px' }}>
-          {results.length > 0 ? `${results.length} résultat(s) trouvé(s)` : 'Aucun résultat'}
+          {results.length > 0 ? `${results.length} rÃ©sultat(s) trouvÃ©(s)` : 'Aucun rÃ©sultat'}
         </p>
         
         <div style={{ display: 'grid', gap: '10px' }}>
@@ -95,10 +95,10 @@ export default function TestSearchPage() {
             }}>
               <h3 style={{ margin: '0 0 5px 0', color: '#333' }}>{product.name}</h3>
               <p style={{ margin: '5px 0', color: '#666' }}>
-                <strong>Marque:</strong> {product.brand || 'Non spécifiée'}
+                <strong>Marque:</strong> {product.brand || 'Non spÃ©cifiÃ©e'}
               </p>
               <p style={{ margin: '5px 0', color: '#888', fontSize: '14px' }}>
-                <strong>Code:</strong> {product.barcode} | <strong>Catégorie:</strong> {product.category}
+                <strong>Code:</strong> {product.barcode} | <strong>CatÃ©gorie:</strong> {product.category}
               </p>
               <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
                 {product.nutriscore_grade && (
@@ -151,9 +151,9 @@ export default function TestSearchPage() {
         fontSize: '14px',
         color: '#666'
       }}>
-        <p><strong>État:</strong> {loading ? 'â³ Chargement...' : 'âœ… Prêt'}</p>
+        <p><strong>Ã‰tat:</strong> {loading ? 'Ã¢ÂÂ³ Chargement...' : 'Ã¢Å“â€¦ PrÃªt'}</p>
         <p><strong>Backend:</strong> https://ecolojia-backendvf.onrender.com</p>
-        <p><strong>Conseil:</strong> Ouvrez la console (F12) pour voir les logs détaillés</p>
+        <p><strong>Conseil:</strong> Ouvrez la console (F12) pour voir les logs dÃ©taillÃ©s</p>
       </div>
     </div>
   );

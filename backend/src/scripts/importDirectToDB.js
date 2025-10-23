@@ -4,7 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /**
- * ðŸš€ IMPORT OPTIMIS‰ - 50+ PRODUITS GARANTIS
+ * Ã°Å¸Å¡â‚¬ IMPORT OPTIMISâ€° - 50+ PRODUITS GARANTIS
  * Version avec timeout augmente (30s) + fonctions integrees
  */
 
@@ -14,8 +14,8 @@ const CONFIG = {
   MAX_RETRIES: 3
 };
 
-console.log('ðŸŒ± ECOLOJIA - Import optimise OpenFoodFacts');
-console.log('ðŸŽ¯ Objectif: 50+ produits avec vrais codes-barres');
+console.log('Ã°Å¸Å’Â± ECOLOJIA - Import optimise OpenFoodFacts');
+console.log('Ã°Å¸Å½Â¯ Objectif: 50+ produits avec vrais codes-barres');
 console.log('='.repeat(60));
 
 async function importDirectToDatabase() {
@@ -32,7 +32,7 @@ async function importDirectToDatabase() {
       { tagtype_0: 'categories', tag_0: 'Produits biologiques', page_size: 40 }
     ];
 
-    console.log(`ðŸ” Lancement de ${searchQueries.length} requetes paralleles...\n`);
+    console.log(`Ã°Å¸â€Â Lancement de ${searchQueries.length} requetes paralleles...\n`);
 
     const promises = searchQueries.map((params, index) =>
       fetchProductsFromOpenFoodFacts(params, index + 1)
@@ -42,26 +42,26 @@ async function importDirectToDatabase() {
 
     results.forEach((result, index) => {
       if (result.status === 'fulfilled' && result.value) {
-        console.log(`âœ… Requete ${index + 1}: ${result.value.length} produits`);
+        console.log(`Ã¢Å“â€¦ Requete ${index + 1}: ${result.value.length} produits`);
         allProducts = allProducts.concat(result.value);
       } else {
-        console.log(`âŒ Requete ${index + 1}: echec`);
+        console.log(`Ã¢ÂÅ’ Requete ${index + 1}: echec`);
       }
     });
 
     const uniqueProducts = removeDuplicates(allProducts);
-    console.log(`\nðŸ“¦ Total collecte: ${allProducts.length} produits`);
-    console.log(`ðŸ”„ Apres deduplication: ${uniqueProducts.length} produits uniques`);
+    console.log(`\nÃ°Å¸â€œÂ¦ Total collecte: ${allProducts.length} produits`);
+    console.log(`Ã°Å¸â€â€ž Apres deduplication: ${uniqueProducts.length} produits uniques`);
 
     const finalProducts = uniqueProducts.slice(0, CONFIG.TARGET_PRODUCTS);
-    console.log(`ðŸŽ¯ € importer: ${finalProducts.length} produits\n`);
+    console.log(`Ã°Å¸Å½Â¯ â‚¬ importer: ${finalProducts.length} produits\n`);
 
     for (let i = 0; i < finalProducts.length; i++) {
       const product = finalProducts[i];
       const progress = `[${i + 1}/${finalProducts.length}]`;
 
       try {
-        console.log(`${progress} ðŸ“¦ ${product.product_name?.substring(0, 35) || 'Produit sans nom'}...`);
+        console.log(`${progress} Ã°Å¸â€œÂ¦ ${product.product_name?.substring(0, 35) || 'Produit sans nom'}...`);
 
         const exists = await prisma.product.findFirst({
           where: {
@@ -73,7 +73,7 @@ async function importDirectToDatabase() {
         });
 
         if (exists) {
-          console.log(`${progress} â­ï¸  Dej  en base`);
+          console.log(`${progress} Ã¢ÂÂ­Ã¯Â¸Â  DejÂ  en base`);
           skipped++;
           continue;
         }
@@ -103,35 +103,35 @@ async function importDirectToDatabase() {
           }
         });
 
-        console.log(`${progress} âœ… ${newProduct.title} (${Math.round(ecoScore.score * 100)}%)`);
+        console.log(`${progress} Ã¢Å“â€¦ ${newProduct.title} (${Math.round(ecoScore.score * 100)}%)`);
         imported++;
 
         await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_MS));
 
       } catch (error) {
-        console.error(`${progress} âŒ ${error.message}`);
+        console.error(`${progress} Ã¢ÂÅ’ ${error.message}`);
       }
     }
 
   } catch (error) {
-    console.error('ðŸ’¥ Erreur critique:', error.message);
+    console.error('Ã°Å¸â€™Â¥ Erreur critique:', error.message);
   } finally {
     await prisma.$disconnect();
   }
 
   const total = imported + skipped;
   console.log('\n' + '='.repeat(60));
-  console.log('ðŸ“Š R‰SULTATS IMPORT OPTIMIS‰:');
-  console.log(`âœ… Nouveaux produits: ${imported}`);
-  console.log(`â­ï¸  Dej  en base: ${skipped}`);
-  console.log(`ðŸ“¦ Total traite: ${total}`);
-  console.log(`ðŸ“ˆ Taux de nouveaute: ${total > 0 ? Math.round((imported / total) * 100) : 0}%`);
+  console.log('Ã°Å¸â€œÅ  Râ€°SULTATS IMPORT OPTIMISâ€°:');
+  console.log(`Ã¢Å“â€¦ Nouveaux produits: ${imported}`);
+  console.log(`Ã¢ÂÂ­Ã¯Â¸Â  DejÂ  en base: ${skipped}`);
+  console.log(`Ã°Å¸â€œÂ¦ Total traite: ${total}`);
+  console.log(`Ã°Å¸â€œË† Taux de nouveaute: ${total > 0 ? Math.round((imported / total) * 100) : 0}%`);
   console.log('='.repeat(60));
 
   if (imported > 0) {
-    console.log('\nðŸŽ‰ BASE ENRICHIE AVEC SUCCˆS !');
-    console.log('ðŸ’¡ Testez votre scanner avec les nouveaux codes-barres !');
-    console.log(`ðŸ”— Backend: https://ecolojia-backend-working.onrender.com/api/products`);
+    console.log('\nÃ°Å¸Å½â€° BASE ENRICHIE AVEC SUCCË†S !');
+    console.log('Ã°Å¸â€™Â¡ Testez votre scanner avec les nouveaux codes-barres !');
+    console.log(`Ã°Å¸â€â€” Backend: https://ecolojia-backend-working.onrender.com/api/products`);
   }
 }
 
@@ -161,7 +161,7 @@ async function fetchProductsFromOpenFoodFacts(params, queryNumber) {
     );
 
   } catch (error) {
-    console.error(`âŒ Erreur requete ${queryNumber}:`, error.message);
+    console.error(`Ã¢ÂÅ’ Erreur requete ${queryNumber}:`, error.message);
     return [];
   }
 }
@@ -294,14 +294,14 @@ function generateSlug(title, code) {
 
 // Lancement automatique
 if (require.main === module) {
-  console.log('ðŸš€ Demarrage import optimise...\n');
+  console.log('Ã°Å¸Å¡â‚¬ Demarrage import optimise...\n');
   importDirectToDatabase()
     .then(() => {
-      console.log('\nðŸŽ‰ Import termine avec succes!');
+      console.log('\nÃ°Å¸Å½â€° Import termine avec succes!');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('\nðŸ’¥ Erreur fatale:', error.message);
+      console.error('\nÃ°Å¸â€™Â¥ Erreur fatale:', error.message);
       process.exit(1);
     });
 }

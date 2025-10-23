@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/historyService.ts
+// PATH: frontend/src/services/historyService.ts
 import { API_BASE_URL } from '../config/constants';
 
 interface HistoryOptions {

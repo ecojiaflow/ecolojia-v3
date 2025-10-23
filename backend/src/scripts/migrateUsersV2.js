@@ -6,7 +6,7 @@ const User = require('../models/User');
 const logger = {
   info: (...args) => console.log('[Migration]', ...args),
   error: (...args) => console.error('[Migration ERROR]', ...args),
-  success: (...args) => console.log('âœ…', ...args)
+  success: (...args) => console.log('Ã¢Å“â€¦', ...args)
 };
 
 async function migrateUsers() {

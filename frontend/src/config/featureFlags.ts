@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/config/featureFlags.ts
+// PATH: frontend/src/config/featureFlags.ts
 export const FLAGS = {
   // OCR activé par défaut en production, désactivable en dev
   OCR_ENABLED: import.meta.env.VITE_OCR_ENABLED !== '0',

@@ -19,12 +19,12 @@ class VisionService {
         this.googleVisionClient = new vision.ImageAnnotatorClient({
           keyFilename: process.env.GOOGLE_CLOUD_KEYFILE
         });
-        console.log('âœ… Google Vision client initialise');
+        console.log('Ã¢Å“â€¦ Google Vision client initialise');
       } else {
-        console.warn('âš ï¸ GOOGLE_CLOUD_KEYFILE non configure - fallback Tesseract uniquement');
+        console.warn('Ã¢Å¡Â Ã¯Â¸Â GOOGLE_CLOUD_KEYFILE non configure - fallback Tesseract uniquement');
       }
     } catch (error) {
-      console.error('âŒ Erreur init Google Vision:', error.message);
+      console.error('Ã¢ÂÅ’ Erreur init Google Vision:', error.message);
     }
   }
 
@@ -41,9 +41,9 @@ class VisionService {
             }
           }
         });
-        console.log('âœ… Tesseract worker initialise');
+        console.log('Ã¢Å“â€¦ Tesseract worker initialise');
       } catch (error) {
-        console.error('âŒ Erreur init Tesseract:', error.message);
+        console.error('Ã¢ÂÅ’ Erreur init Tesseract:', error.message);
         throw error;
       }
     }
@@ -232,7 +232,7 @@ class VisionService {
   }
 
   extractBrand(lines, fullText) {
-    // Patterns de marques connues (  enrichir)
+    // Patterns de marques connues (Â  enrichir)
     const brandPatterns = [
       /\b(Nestle|Danone|Unilever|L'Oreal|Garnier|Nivea|Dove|Ariel|Skip)\b/i,
       /\bmarque\s*:\s*([^\n]+)/i,
@@ -310,7 +310,7 @@ class VisionService {
     const lowerText = text.toLowerCase();
     
     // Detection alimentaire
-    if (ingredients && ingredients.match(/sucre|sel|farine|lait|Å“uf|huile/i)) {
+    if (ingredients && ingredients.match(/sucre|sel|farine|lait|Ã…â€œuf|huile/i)) {
       return 'food';
     }
     

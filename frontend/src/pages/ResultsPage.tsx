@@ -1,4 +1,4 @@
-﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

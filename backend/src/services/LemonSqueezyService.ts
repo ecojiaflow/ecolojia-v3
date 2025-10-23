@@ -53,14 +53,14 @@ export class LemonSqueezyService {
 
   constructor() {
     // Debug pour voir les variables
-    console.log('🔍 Vérification variables Lemon Squeezy:', {
-      API_KEY: process.env.LEMONSQUEEZY_API_KEY ? '✅ Présent' : '❌ Manquant',
-      STORE_ID: process.env.LEMONSQUEEZY_STORE_ID ? '✅ Présent' : '❌ Manquant',
-      VARIANT_ID: process.env.LEMONSQUEEZY_VARIANT_ID ? '✅ Présent' : '❌ Manquant',
-      WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET ? '✅ Présent' : '❌ Manquant'
+    console.log('ðŸ” VÃ©rification variables Lemon Squeezy:', {
+      API_KEY: process.env.LEMONSQUEEZY_API_KEY ? 'âœ… PrÃ©sent' : 'âŒ Manquant',
+      STORE_ID: process.env.LEMONSQUEEZY_STORE_ID ? 'âœ… PrÃ©sent' : 'âŒ Manquant',
+      VARIANT_ID: process.env.LEMONSQUEEZY_VARIANT_ID ? 'âœ… PrÃ©sent' : 'âŒ Manquant',
+      WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET ? 'âœ… PrÃ©sent' : 'âŒ Manquant'
     });
 
-    // Configuration avec valeurs par défaut pour éviter le crash
+    // Configuration avec valeurs par dÃ©faut pour Ã©viter le crash
     this.config = {
       apiKey: process.env.LEMONSQUEEZY_API_KEY || '',
       storeId: process.env.LEMONSQUEEZY_STORE_ID || '',
@@ -70,25 +70,25 @@ export class LemonSqueezyService {
 
     // Avertissement si des variables manquent
     if (!this.config.apiKey || !this.config.storeId || !this.config.variantId || !this.config.webhookSecret) {
-      console.warn('⚠️ ATTENTION: Variables Lemon Squeezy manquantes ou incomplètes');
-      console.warn('Assurez-vous que le fichier .env est correctement configuré');
-      console.warn('Les fonctionnalités de paiement seront désactivées');
+      console.warn('âš ï¸ ATTENTION: Variables Lemon Squeezy manquantes ou incomplÃ¨tes');
+      console.warn('Assurez-vous que le fichier .env est correctement configurÃ©');
+      console.warn('Les fonctionnalitÃ©s de paiement seront dÃ©sactivÃ©es');
     }
   }
 
   /**
-   * Vérifie si le service est correctement configuré
+   * VÃ©rifie si le service est correctement configurÃ©
    */
   isConfigured(): boolean {
     return !!(this.config.apiKey && this.config.storeId && this.config.variantId && this.config.webhookSecret);
   }
 
   /**
-   * Crée une URL de checkout Lemon Squeezy
+   * CrÃ©e une URL de checkout Lemon Squeezy
    */
   async createCheckoutUrl(data: CheckoutData): Promise<string> {
     if (!this.isConfigured()) {
-      throw new Error('Service Lemon Squeezy non configuré. Vérifiez vos variables d\'environnement.');
+      throw new Error('Service Lemon Squeezy non configurÃ©. VÃ©rifiez vos variables d\'environnement.');
     }
 
     try {
@@ -132,17 +132,17 @@ export class LemonSqueezyService {
 
       return response.data.data.attributes.url;
     } catch (error) {
-      console.error('Erreur création checkout Lemon Squeezy:', error);
-      throw new Error('Impossible de créer la session de paiement');
+      console.error('Erreur crÃ©ation checkout Lemon Squeezy:', error);
+      throw new Error('Impossible de crÃ©er la session de paiement');
     }
   }
 
   /**
-   * Vérifie la signature du webhook
+   * VÃ©rifie la signature du webhook
    */
   verifyWebhookSignature(rawBody: string, signature: string): boolean {
     if (!this.config.webhookSecret) {
-      console.warn('⚠️ Webhook secret manquant, impossible de vérifier la signature');
+      console.warn('âš ï¸ Webhook secret manquant, impossible de vÃ©rifier la signature');
       return false;
     }
 
@@ -152,11 +152,11 @@ export class LemonSqueezyService {
   }
 
   /**
-   * Récupère les détails d'un abonnement
+   * RÃ©cupÃ¨re les dÃ©tails d'un abonnement
    */
   async getSubscription(subscriptionId: string): Promise<any> {
     if (!this.isConfigured()) {
-      throw new Error('Service Lemon Squeezy non configuré');
+      throw new Error('Service Lemon Squeezy non configurÃ©');
     }
 
     try {
@@ -172,7 +172,7 @@ export class LemonSqueezyService {
 
       return response.data.data;
     } catch (error) {
-      console.error('Erreur récupération subscription:', error);
+      console.error('Erreur rÃ©cupÃ©ration subscription:', error);
       throw error;
     }
   }
@@ -182,7 +182,7 @@ export class LemonSqueezyService {
    */
   async cancelSubscription(subscriptionId: string): Promise<any> {
     if (!this.isConfigured()) {
-      throw new Error('Service Lemon Squeezy non configuré');
+      throw new Error('Service Lemon Squeezy non configurÃ©');
     }
 
     try {
@@ -204,11 +204,11 @@ export class LemonSqueezyService {
   }
 
   /**
-   * Récupère l'URL du portail client
+   * RÃ©cupÃ¨re l'URL du portail client
    */
   async getCustomerPortalUrl(customerId: string): Promise<string> {
     if (!this.isConfigured()) {
-      throw new Error('Service Lemon Squeezy non configuré');
+      throw new Error('Service Lemon Squeezy non configurÃ©');
     }
 
     try {
@@ -225,7 +225,7 @@ export class LemonSqueezyService {
 
       return response.data.data.attributes.url;
     } catch (error) {
-      console.error('Erreur création portail client:', error);
+      console.error('Erreur crÃ©ation portail client:', error);
       throw error;
     }
   }

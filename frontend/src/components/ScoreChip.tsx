@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 type Props = {
   score?: number | null;  // 0..100 ou score éthique 0..1

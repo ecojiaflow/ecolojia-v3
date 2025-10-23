@@ -9,7 +9,7 @@ class OpenBeautyFactsService {
    */
   static async getProduct(barcode) {
     try {
-      console.log(`ðŸ” Recherche OpenBeautyFacts: ${barcode}`);
+      console.log(`Ã°Å¸â€Â Recherche OpenBeautyFacts: ${barcode}`);
       
       const response = await axios.get(
         `${this.BASE_URL}/${barcode}.json`,
@@ -54,7 +54,7 @@ class OpenBeautyFactsService {
         };
       }
 
-      console.log(`âŒ Produit cosmetique non trouve dans OpenBeautyFacts: ${barcode}`);
+      console.log(`Ã¢ÂÅ’ Produit cosmetique non trouve dans OpenBeautyFacts: ${barcode}`);
       return null;
 
     } catch (error) {

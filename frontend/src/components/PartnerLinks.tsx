@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ExternalLink, Star, Shield } from 'lucide-react';
 
 interface Partner {

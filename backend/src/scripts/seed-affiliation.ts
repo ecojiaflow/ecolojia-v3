@@ -3,7 +3,7 @@
 
 const prisma = null // new PrismaClient();
 
-// Utilisation de ton enum existant depuis le client Prisma généré
+// Utilisation de ton enum existant depuis le client Prisma gÃ©nÃ©rÃ©
 // Si VerifiedStatus n'existe pas, utilise des strings directement
 const VerifiedStatus = {
   verified: 'verified' as const,
@@ -12,15 +12,15 @@ const VerifiedStatus = {
 };
 
 async function main() {
-  console.log('🌱 Début du seed des données d\'affiliation...');
+  console.log('ðŸŒ± DÃ©but du seed des donnÃ©es d\'affiliation...');
 
   try {
-    // 1. Produit d'exemple basé sur ton format existant
+    // 1. Produit d'exemple basÃ© sur ton format existant
     const product = await prisma.product.upsert({
       where: { slug: "savon-alep-artisanal" },
       update: {
-        description: "Savon traditionnel à base d'huile d'olive et de laurier",
-        tags: ["zéro-déchet", "vegan", "bio"],
+        description: "Savon traditionnel Ã  base d'huile d'olive et de laurier",
+        tags: ["zÃ©ro-dÃ©chet", "vegan", "bio"],
         zones_dispo: ["FR", "BE"],
         affiliate_url: null,
         eco_score: 0.84,
@@ -33,8 +33,8 @@ async function main() {
       create: {
         title: "Savon d'Alep artisanal",
         slug: "savon-alep-artisanal",
-        description: "Savon traditionnel à base d'huile d'olive et de laurier",
-        tags: ["zéro-déchet", "vegan", "bio"],
+        description: "Savon traditionnel Ã  base d'huile d'olive et de laurier",
+        tags: ["zÃ©ro-dÃ©chet", "vegan", "bio"],
         zones_dispo: ["FR", "BE"],
         affiliate_url: null,
         eco_score: 0.84,
@@ -45,9 +45,9 @@ async function main() {
         image_url: "https://res.cloudinary.com/dma0ywmfb/image/upload/w_400,h_400,c_fill,q_auto,f_auto/v1750024282/savon-alep_txl6yj.jpg"
       }
     });
-    console.log("✅ Produit inséré ou mis à jour :", product.slug);
+    console.log("âœ… Produit insÃ©rÃ© ou mis Ã  jour :", product.slug);
 
-    // 2. Partenaire (findUnique → create si nécessaire)
+    // 2. Partenaire (findUnique â†’ create si nÃ©cessaire)
     let partner = await prisma.partner.findFirst({
       where: { name: "Greenweez" }
     });
@@ -61,12 +61,12 @@ async function main() {
           ethical_score: 0.91
         }
       });
-      console.log("✅ Partenaire créé :", partner.name);
+      console.log("âœ… Partenaire crÃ©Ã© :", partner.name);
     } else {
-      console.log("✅ Partenaire déjà existant :", partner.name);
+      console.log("âœ… Partenaire dÃ©jÃ  existant :", partner.name);
     }
 
-    // 3. Lien d'affiliation (upsert OK ici car clé unique composite)
+    // 3. Lien d'affiliation (upsert OK ici car clÃ© unique composite)
     const link = await prisma.partnerLink.upsert({
       where: {
         product_id_partner_id: {
@@ -87,12 +87,12 @@ async function main() {
         clicks: 0
       }
     });
-    console.log("✅ Lien affilié créé ou mis à jour :", link.tracking_id);
+    console.log("âœ… Lien affiliÃ© crÃ©Ã© ou mis Ã  jour :", link.tracking_id);
 
-    console.log('✅ Seed affiliation terminé avec succès');
+    console.log('âœ… Seed affiliation terminÃ© avec succÃ¨s');
 
   } catch (error) {
-    console.error('❌ Erreur lors du seed:', error);
+    console.error('âŒ Erreur lors du seed:', error);
   } finally {
     await prisma.$disconnect();
   }
@@ -100,7 +100,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch((e) => {
-    console.error("❌ Erreur lors du seed :", e);
+    console.error("âŒ Erreur lors du seed :", e);
     process.exit(1);
   }).finally(async () => {
     await prisma.$disconnect();

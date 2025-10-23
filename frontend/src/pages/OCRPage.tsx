@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Camera, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';

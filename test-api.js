@@ -1,4 +1,4 @@
-// Créez ce fichier test-api.js et exécutez avec: node test-api.js
+// CrÃ©ez ce fichier test-api.js et exÃ©cutez avec: node test-api.js
 
 const API_URL = 'https://ecolojia-backendvf.onrender.com/api';
 
@@ -32,31 +32,31 @@ async function testEndpoint(method, endpoint, data = null, token = null) {
     }
 
     if (response.ok) {
-      console.log(`${colors.green}✅ ${method} ${endpoint} - ${response.status}${colors.reset}`);
+      console.log(`${colors.green}âœ… ${method} ${endpoint} - ${response.status}${colors.reset}`);
       return { success: true, data: jsonResult };
     } else {
-      console.log(`${colors.red}❌ ${method} ${endpoint} - ${response.status}${colors.reset}`);
+      console.log(`${colors.red}âŒ ${method} ${endpoint} - ${response.status}${colors.reset}`);
       console.log(`   Erreur: ${JSON.stringify(jsonResult)}`);
       return { success: false, error: jsonResult };
     }
   } catch (error) {
-    console.log(`${colors.red}💥 ${method} ${endpoint} - ERREUR${colors.reset}`);
+    console.log(`${colors.red}ðŸ’¥ ${method} ${endpoint} - ERREUR${colors.reset}`);
     console.log(`   ${error.message}`);
     return { success: false, error: error.message };
   }
 }
 
 async function runTests() {
-  console.log('\n🚀 TESTS API ECOLOJIA V3\n');
+  console.log('\nðŸš€ TESTS API ECOLOJIA V3\n');
   
   // 1. Test routes de base
-  console.log('1️⃣ Routes de base:');
+  console.log('1ï¸âƒ£ Routes de base:');
   await testEndpoint('GET', '/health');
   await testEndpoint('GET', '/test');
   await testEndpoint('GET', '/auth/test');
   
-  // 2. Créer un nouvel utilisateur
-  console.log('\n2️⃣ Création utilisateur:');
+  // 2. CrÃ©er un nouvel utilisateur
+  console.log('\n2ï¸âƒ£ CrÃ©ation utilisateur:');
   const timestamp = Date.now();
   const registerResult = await testEndpoint('POST', '/auth/register', {
     email: `test${timestamp}@ecolojia.app`,
@@ -72,7 +72,7 @@ async function runTests() {
   }
   
   // 3. Test login avec le nouvel utilisateur
-  console.log('\n3️⃣ Test login:');
+  console.log('\n3ï¸âƒ£ Test login:');
   const loginResult = await testEndpoint('POST', '/auth/login', {
     email: `test${timestamp}@ecolojia.app`,
     password: 'Test123!'
@@ -83,18 +83,18 @@ async function runTests() {
   }
   
   // 4. Test routes produits
-  console.log('\n4️⃣ Routes produits:');
+  console.log('\n4ï¸âƒ£ Routes produits:');
   await testEndpoint('GET', '/products/search?q=nutella');
   await testEndpoint('GET', '/products/trending');
   await testEndpoint('GET', '/products/barcode/3017620422003');
   
   // 5. Test routes dashboard (avec auth)
-  console.log('\n5️⃣ Routes dashboard:');
+  console.log('\n5ï¸âƒ£ Routes dashboard:');
   await testEndpoint('GET', '/dashboard/stats', null, token);
   await testEndpoint('GET', '/dashboard/export', null, token);
   
   // 6. Test analyse produit (avec auth)
-  console.log('\n6️⃣ Analyse produit:');
+  console.log('\n6ï¸âƒ£ Analyse produit:');
   if (token) {
     await testEndpoint('POST', '/products/analyze', {
       barcode: '3017620422003',
@@ -102,7 +102,7 @@ async function runTests() {
     }, token);
   }
   
-  console.log('\n✨ Tests terminés!\n');
+  console.log('\nâœ¨ Tests terminÃ©s!\n');
 }
 
 // Lancer les tests

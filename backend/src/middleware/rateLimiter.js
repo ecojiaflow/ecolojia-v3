@@ -5,47 +5,47 @@
 const rateLimit = require('express-rate-limit');
 
 // ================================================================
-// LIMITEUR GÉNÉRAL (toutes les routes sauf celles spécifiques)
+// LIMITEUR GÃ‰NÃ‰RAL (toutes les routes sauf celles spÃ©cifiques)
 // ================================================================
 const generalLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 100, // Maximum 100 requêtes par minute par IP
+  max: 100, // Maximum 100 requÃªtes par minute par IP
   message: {
-    error: 'Trop de requêtes. Veuillez ralentir.',
+    error: 'Trop de requÃªtes. Veuillez ralentir.',
     retryAfter: '60 secondes'
   },
   standardHeaders: true, // Ajoute les headers RateLimit-* standards
-  legacyHeaders: false, // Désactive les anciens headers X-RateLimit-*
+  legacyHeaders: false, // DÃ©sactive les anciens headers X-RateLimit-*
   handler: (req, res) => {
-    console.log('⚠️ [RATE LIMIT] IP bloquée:', req.ip, 'Route:', req.path);
+    console.log('âš ï¸ [RATE LIMIT] IP bloquÃ©e:', req.ip, 'Route:', req.path);
     res.status(429).json({
-      error: 'Trop de requêtes',
-      message: 'Vous avez dépassé la limite de 100 requêtes par minute',
+      error: 'Trop de requÃªtes',
+      message: 'Vous avez dÃ©passÃ© la limite de 100 requÃªtes par minute',
       retryAfter: 60
     });
   }
 });
 
 // ================================================================
-// LIMITEUR IA (routes utilisant DeepSeek ou autres API coûteuses)
+// LIMITEUR IA (routes utilisant DeepSeek ou autres API coÃ»teuses)
 // ================================================================
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Maximum 10 requêtes IA par 15 minutes par IP
+  max: 10, // Maximum 10 requÃªtes IA par 15 minutes par IP
   message: {
     error: 'Limite d\'analyse IA atteinte',
     retryAfter: '15 minutes'
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skipSuccessfulRequests: false, // Compter même les requêtes réussies
+  skipSuccessfulRequests: false, // Compter mÃªme les requÃªtes rÃ©ussies
   handler: (req, res) => {
-    console.log('🚨 [AI RATE LIMIT] IP bloquée:', req.ip, 'Route:', req.path);
+    console.log('ðŸš¨ [AI RATE LIMIT] IP bloquÃ©e:', req.ip, 'Route:', req.path);
     res.status(429).json({
       error: 'Limite d\'analyse IA atteinte',
-      message: 'Vous avez utilisé vos 10 analyses gratuites. Réessayez dans 15 minutes.',
+      message: 'Vous avez utilisÃ© vos 10 analyses gratuites. RÃ©essayez dans 15 minutes.',
       retryAfter: 900, // secondes
-      premium: 'Passez à Premium pour des analyses illimitées'
+      premium: 'Passez Ã  Premium pour des analyses illimitÃ©es'
     });
   }
 });
@@ -63,10 +63,10 @@ const searchLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
-    console.log('⚠️ [SEARCH RATE LIMIT] IP bloquée:', req.ip);
+    console.log('âš ï¸ [SEARCH RATE LIMIT] IP bloquÃ©e:', req.ip);
     res.status(429).json({
       error: 'Trop de recherches',
-      message: 'Vous avez dépassé la limite de 30 recherches par minute',
+      message: 'Vous avez dÃ©passÃ© la limite de 30 recherches par minute',
       retryAfter: 60
     });
   }
@@ -84,12 +84,12 @@ const authLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skipSuccessfulRequests: true, // Ne compter QUE les échecs
+  skipSuccessfulRequests: true, // Ne compter QUE les Ã©checs
   handler: (req, res) => {
-    console.log('🔒 [AUTH RATE LIMIT] IP bloquée:', req.ip);
+    console.log('ðŸ”’ [AUTH RATE LIMIT] IP bloquÃ©e:', req.ip);
     res.status(429).json({
       error: 'Trop de tentatives de connexion',
-      message: 'Trop de tentatives échouées. Réessayez dans 15 minutes.',
+      message: 'Trop de tentatives Ã©chouÃ©es. RÃ©essayez dans 15 minutes.',
       retryAfter: 900
     });
   }

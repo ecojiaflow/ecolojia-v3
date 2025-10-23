@@ -142,7 +142,7 @@ router.get('/v2/me', authenticateToken, async (req, res) => {
 
 /**
  * PUT /api/users/v2/me
- * Mettre   jour le profil et les preferences
+ * Mettre Â  jour le profil et les preferences
  */
 router.put('/v2/me', 
   authenticateToken,
@@ -175,7 +175,7 @@ router.put('/v2/me',
         });
       }
 
-      // Mise   jour selective des champs
+      // Mise Â  jour selective des champs
       const updates = req.body;
       const allowedFields = ['name', 'profile', 'aiPrefs', 'preferences'];
 
@@ -204,7 +204,7 @@ router.put('/v2/me',
       logger.info(`Profile v2 updated for user ${user.email}`);
       res.json({
         success: true,
-        message: 'Profil mis   jour avec succes',
+        message: 'Profil mis Â  jour avec succes',
         user: {
           id: user._id,
           email: user.email,
@@ -219,7 +219,7 @@ router.put('/v2/me',
       logger.error('Error updating profile v2:', error);
       res.status(500).json({ 
         success: false, 
-        error: 'Erreur lors de la mise   jour du profil' 
+        error: 'Erreur lors de la mise Â  jour du profil' 
       });
     }
 });
@@ -255,7 +255,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
 
     const { tone, detail, language, focusAreas, foodRestrictions, allergies, autoSuggest, saveHistory } = req.body;
 
-    // Mise   jour des preferences IA
+    // Mise Â  jour des preferences IA
     if (tone) user.aiPrefs.tone = tone;
     if (detail) user.aiPrefs.detail = detail;
     if (language) user.aiPrefs.language = language;
@@ -270,7 +270,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
     logger.info(`AI preferences updated for user ${user.email}`);
     res.json({
       success: true,
-      message: 'Preferences IA mises   jour',
+      message: 'Preferences IA mises Â  jour',
       aiPrefs: user.aiPrefs
     });
 
@@ -278,7 +278,7 @@ router.put('/v2/me/ai-preferences', authenticateToken, async (req, res) => {
     logger.error('Error updating AI preferences:', error);
     res.status(500).json({ 
       success: false, 
-      error: 'Erreur lors de la mise   jour des preferences IA' 
+      error: 'Erreur lors de la mise Â  jour des preferences IA' 
     });
   }
 });
@@ -391,7 +391,7 @@ router.post('/v2/me/reset-password',
         }
       }
 
-      // Mettre   jour le mot de passe
+      // Mettre Â  jour le mot de passe
       user.password = newPassword;
       await user.save();
 

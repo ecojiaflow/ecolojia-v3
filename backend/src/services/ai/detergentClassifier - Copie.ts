@@ -17,7 +17,7 @@ export interface DetergentAnalysisResult {
 
 export class DetergentClassifier {
   
-  // Substances problématiques pour l'environnement
+  // Substances problÃ©matiques pour l'environnement
   private static readonly HARMFUL_SUBSTANCES = {
     'PHOSPHATES': {
       names: ['SODIUM TRIPOLYPHOSPHATE', 'PHOSPHATE', 'PENTASODIUM TRIPHOSPHATE'],
@@ -31,7 +31,7 @@ export class DetergentClassifier {
     },
     'EDTA': {
       names: ['EDTA', 'TETRASODIUM EDTA', 'DISODIUM EDTA'],
-      impact: 'Non biodégradable, accumulation',
+      impact: 'Non biodÃ©gradable, accumulation',
       severity: 'medium'
     },
     'OPTICAL_BRIGHTENERS': {
@@ -41,7 +41,7 @@ export class DetergentClassifier {
     },
     'SYNTHETIC_FRAGRANCE': {
       names: ['PARFUM', 'FRAGRANCE', 'LIMONENE', 'LINALOOL'],
-      impact: 'Allergènes et polluants organiques',
+      impact: 'AllergÃ¨nes et polluants organiques',
       severity: 'low'
     },
     'SLS': {
@@ -51,7 +51,7 @@ export class DetergentClassifier {
     }
   };
 
-  // Ingrédients éco-responsables
+  // IngrÃ©dients Ã©co-responsables
   private static readonly ECO_INGREDIENTS = [
     'SODIUM BICARBONATE', 'CITRIC ACID', 'VINEGAR', 'SOAP', 'COCONUT OIL',
     'PALM KERNEL OIL', 'OLIVE OIL', 'ESSENTIAL OILS', 'PLANT EXTRACTS'
@@ -64,9 +64,9 @@ export class DetergentClassifier {
     let biodegradabilityScore = 100;
     let aquaticToxicityLevel: 'low' | 'medium' | 'high' = 'low';
 
-    // Analyser chaque ingrédient
+    // Analyser chaque ingrÃ©dient
     for (const ingredient of ingredients) {
-      // Vérifier les substances nocives
+      // VÃ©rifier les substances nocives
       for (const [category, data] of Object.entries(this.HARMFUL_SUBSTANCES)) {
         if (data.names.some(name => ingredient.includes(name))) {
           environmentalRisks.push(`${data.impact} (${ingredient})`);
@@ -75,11 +75,11 @@ export class DetergentClassifier {
           const impactScore = data.severity === 'high' ? 40 : data.severity === 'medium' ? 25 : 15;
           totalImpactScore += impactScore;
           
-          // Réduire la biodégradabilité
+          // RÃ©duire la biodÃ©gradabilitÃ©
           const biodegradabilityPenalty = data.severity === 'high' ? 30 : data.severity === 'medium' ? 20 : 10;
           biodegradabilityScore -= biodegradabilityPenalty;
           
-          // Augmenter la toxicité aquatique
+          // Augmenter la toxicitÃ© aquatique
           if (data.severity === 'high') {
             aquaticToxicityLevel = 'high';
           } else if (data.severity === 'medium' && aquaticToxicityLevel !== 'high') {
@@ -92,10 +92,10 @@ export class DetergentClassifier {
     // Calculer le grade environnemental
     const ecoGrade = this.calculateEcoGrade(totalImpactScore, biodegradabilityScore);
     
-    // Évaluer l'emballage (simulation basée sur le grade)
+    // Ã‰valuer l'emballage (simulation basÃ©e sur le grade)
     const packaging = this.evaluatePackaging(ecoGrade);
     
-    // Générer les recommandations
+    // GÃ©nÃ©rer les recommandations
     const recommendations = this.generateEnvironmentalRecommendations(
       ecoGrade, 
       environmentalRisks, 
@@ -124,7 +124,7 @@ export class DetergentClassifier {
   }
 
   private static evaluatePackaging(ecoGrade: string): 'eco' | 'standard' | 'problematic' {
-    // Simulation basée sur le grade écologique
+    // Simulation basÃ©e sur le grade Ã©cologique
     switch (ecoGrade) {
       case 'A': return 'eco';
       case 'B': return Math.random() > 0.5 ? 'eco' : 'standard';
@@ -142,34 +142,34 @@ export class DetergentClassifier {
 
     switch (grade) {
       case 'A':
-        recommendations.push('Excellent choix écologique !');
+        recommendations.push('Excellent choix Ã©cologique !');
         recommendations.push('Produit respectueux de l\'environnement');
         break;
       
       case 'B':
-        recommendations.push('Bon produit avec impact environnemental limité');
-        recommendations.push('Quelques améliorations possibles');
+        recommendations.push('Bon produit avec impact environnemental limitÃ©');
+        recommendations.push('Quelques amÃ©liorations possibles');
         break;
       
       case 'C':
-        recommendations.push('Impact environnemental modéré');
-        recommendations.push('Considérez des alternatives plus écologiques');
+        recommendations.push('Impact environnemental modÃ©rÃ©');
+        recommendations.push('ConsidÃ©rez des alternatives plus Ã©cologiques');
         break;
       
       case 'D':
         recommendations.push('Fort impact environnemental');
-        recommendations.push('Recherchez des produits écolabellisés');
+        recommendations.push('Recherchez des produits Ã©colabellisÃ©s');
         break;
     }
 
-    // Recommandations spécifiques selon la biodégradabilité
+    // Recommandations spÃ©cifiques selon la biodÃ©gradabilitÃ©
     if (biodegradability < 50) {
-      recommendations.push('Composants peu biodégradables - limitez l\'usage');
+      recommendations.push('Composants peu biodÃ©gradables - limitez l\'usage');
     }
 
-    // Recommandations générales
-    recommendations.push('Dosez selon les instructions pour réduire l\'impact');
-    recommendations.push('Privilégiez les recharges pour limiter les emballages');
+    // Recommandations gÃ©nÃ©rales
+    recommendations.push('Dosez selon les instructions pour rÃ©duire l\'impact');
+    recommendations.push('PrivilÃ©giez les recharges pour limiter les emballages');
     recommendations.push('Recherchez les labels Ecocert ou EU Ecolabel');
 
     return recommendations;
@@ -178,18 +178,18 @@ export class DetergentClassifier {
   private static calculateAnalysisConfidence(ingredientCount: number): number {
     if (ingredientCount === 0) return 0.3;
     
-    // Plus il y a d'ingrédients analysés, plus la confiance est élevée
+    // Plus il y a d'ingrÃ©dients analysÃ©s, plus la confiance est Ã©levÃ©e
     const baseConfidence = Math.min(ingredientCount / 15, 1);
     return Math.max(0.4, Math.min(0.9, baseConfidence));
   }
 
-  // Analyses spécialisées par type de produit
+  // Analyses spÃ©cialisÃ©es par type de produit
   static async analyzeLaundryDetergent(composition: string): Promise<DetergentAnalysisResult> {
     const result = await this.analyzeComposition(composition);
     
-    // Recommandations spécifiques aux lessives
-    result.recommendations.push('Utilisez eau froide pour économiser l\'énergie');
-    result.recommendations.push('Vérifiez la dureté de votre eau');
+    // Recommandations spÃ©cifiques aux lessives
+    result.recommendations.push('Utilisez eau froide pour Ã©conomiser l\'Ã©nergie');
+    result.recommendations.push('VÃ©rifiez la duretÃ© de votre eau');
     
     return result;
   }
@@ -197,9 +197,9 @@ export class DetergentClassifier {
   static async analyzeDishwashingLiquid(composition: string): Promise<DetergentAnalysisResult> {
     const result = await this.analyzeComposition(composition);
     
-    // Recommandations spécifiques aux liquides vaisselle
+    // Recommandations spÃ©cifiques aux liquides vaisselle
     result.recommendations.push('Quelques gouttes suffisent');
-    result.recommendations.push('Évitez le contact prolongé avec la peau');
+    result.recommendations.push('Ã‰vitez le contact prolongÃ© avec la peau');
     
     return result;
   }
@@ -207,8 +207,8 @@ export class DetergentClassifier {
   static async analyzeAllPurposeCleaner(composition: string): Promise<DetergentAnalysisResult> {
     const result = await this.analyzeComposition(composition);
     
-    // Recommandations spécifiques aux nettoyants multi-usages
-    result.recommendations.push('Aérez lors de l\'utilisation');
+    // Recommandations spÃ©cifiques aux nettoyants multi-usages
+    result.recommendations.push('AÃ©rez lors de l\'utilisation');
     result.recommendations.push('Testez sur surface non visible');
     
     return result;
@@ -217,17 +217,17 @@ export class DetergentClassifier {
 
 /* 
 ===========================================
-RÉPONSE : OUI, LE FICHIER EST 100% COMPLET !
+RÃ‰PONSE : OUI, LE FICHIER EST 100% COMPLET !
 ===========================================
 
-✅ Interface DetergentAnalysisResult complète
-✅ Classe DetergentClassifier avec toutes les méthodes
-✅ Base de données substances nocives
-✅ Algorithme de calcul eco-grade
-✅ Recommandations environnementales
-✅ Analyses spécialisées (lessive, vaisselle, multi-usage)
-✅ Gestion biodégradabilité et toxicité aquatique
-✅ Calcul de confiance
+âœ… Interface DetergentAnalysisResult complÃ¨te
+âœ… Classe DetergentClassifier avec toutes les mÃ©thodes
+âœ… Base de donnÃ©es substances nocives
+âœ… Algorithme de calcul eco-grade
+âœ… Recommandations environnementales
+âœ… Analyses spÃ©cialisÃ©es (lessive, vaisselle, multi-usage)
+âœ… Gestion biodÃ©gradabilitÃ© et toxicitÃ© aquatique
+âœ… Calcul de confiance
 
 LE FICHIER detergentClassifier.ts DANS L'ARTIFACT EST COMPLET !
 */

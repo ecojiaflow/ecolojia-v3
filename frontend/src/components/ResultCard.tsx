@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/ResultCard.tsx
+// PATH: frontend/src/components/ResultCard.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Info, CheckCircle, Package, Droplets, Sparkles } from 'lucide-react';

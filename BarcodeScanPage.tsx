@@ -40,14 +40,14 @@ export default function BarcodeScanPage() {
 
   return (
     <div className="container">
-      <div className="h1">Scan (code‑barres)</div>
+      <div className="h1">Scan (codeâ€‘barres)</div>
       <Card>
         <Field label="Code EAN">
           <Input value={code} onChange={(e) => setCode(e.target.value)} />
         </Field>
         <div style={{ display:'flex', gap:8, marginTop:10 }}>
-          <Button onClick={getProduct} disabled={loadingP}>{loadingP ? 'Chargement…' : 'Obtenir le produit'}</Button>
-          <Button onClick={analyze} disabled={loadingA} className="secondary">{loadingA ? 'Analyse…' : 'Analyser'}</Button>
+          <Button onClick={getProduct} disabled={loadingP}>{loadingP ? 'Chargementâ€¦' : 'Obtenir le produit'}</Button>
+          <Button onClick={analyze} disabled={loadingA} className="secondary">{loadingA ? 'Analyseâ€¦' : 'Analyser'}</Button>
         </div>
       </Card>
 

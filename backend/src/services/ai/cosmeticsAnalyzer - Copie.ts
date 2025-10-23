@@ -4,7 +4,7 @@ import { Logger } from '../../utils/Logger';
 const log = new Logger('CosmeticsAnalyzer');
 const debug = (...a: unknown[]) => process.env.NODE_ENV !== 'production' && log.info(...a);
 
-/* ───── Types ───── */
+/* â”€â”€â”€â”€â”€ Types â”€â”€â”€â”€â”€ */
 export interface INCIAnalysisResult {
   hazardScore: number; // 0-3
   endocrineDisruptors: string[];
@@ -18,7 +18,7 @@ export interface INCIAnalysisResult {
   }>;
 }
 
-/* ───── Bases de données compactes ───── */
+/* â”€â”€â”€â”€â”€ Bases de donnÃ©es compactes â”€â”€â”€â”€â”€ */
 const ED = [
   'bht', 'phenoxyethanol', 'triclosan', 'oxybenzone', 'benzophenone-3',
   'octinoxate', 'ethylhexyl methoxycinnamate', 'methylparaben', 'propylparaben',
@@ -38,22 +38,22 @@ const CONTROVERSIAL: Record<string, { c: string; l: 'low' | 'medium' | 'high' }>
   'sls': { c: 'Irritant', l: 'medium' },
   'sodium lauryl sulfate': { c: 'Irritant', l: 'medium' },
   'sodium laureth sulfate': { c: 'Irritant doux', l: 'low' },
-  'peg': { c: 'Impuretés possibles', l: 'medium' },
-  'mineral oil': { c: 'Comédogène', l: 'low' },
-  'paraffinum liquidum': { c: 'Pétrochimique', l: 'low' },
-  'petrolatum': { c: 'Pétrochimique', l: 'low' },
+  'peg': { c: 'ImpuretÃ©s possibles', l: 'medium' },
+  'mineral oil': { c: 'ComÃ©dogÃ¨ne', l: 'low' },
+  'paraffinum liquidum': { c: 'PÃ©trochimique', l: 'low' },
+  'petrolatum': { c: 'PÃ©trochimique', l: 'low' },
   'dimethicone': { c: 'Silicone occlusif', l: 'low' },
-  'formaldehyde': { c: 'Cancérigène', l: 'high' },
-  'dmdm hydantoin': { c: 'Libère formaldéhyde', l: 'high' },
-  'imidazolidinyl urea': { c: 'Libère formaldéhyde', l: 'high' },
-  'quaternium-15': { c: 'Libère formaldéhyde', l: 'high' },
+  'formaldehyde': { c: 'CancÃ©rigÃ¨ne', l: 'high' },
+  'dmdm hydantoin': { c: 'LibÃ¨re formaldÃ©hyde', l: 'high' },
+  'imidazolidinyl urea': { c: 'LibÃ¨re formaldÃ©hyde', l: 'high' },
+  'quaternium-15': { c: 'LibÃ¨re formaldÃ©hyde', l: 'high' },
   'bha': { c: 'PE potentiel', l: 'medium' },
   'toluene': { c: 'Neurotoxique', l: 'high' },
   'ammonia': { c: 'Irritant respiratoire', l: 'medium' },
-  'hydroquinone': { c: 'Dépigmentant controversé', l: 'high' },
-  'coal tar': { c: 'Cancérigène potentiel', l: 'high' },
-  'lead': { c: 'Métal lourd', l: 'high' },
-  'mercury': { c: 'Métal lourd', l: 'high' }
+  'hydroquinone': { c: 'DÃ©pigmentant controversÃ©', l: 'high' },
+  'coal tar': { c: 'CancÃ©rigÃ¨ne potentiel', l: 'high' },
+  'lead': { c: 'MÃ©tal lourd', l: 'high' },
+  'mercury': { c: 'MÃ©tal lourd', l: 'high' }
 };
 
 const NAT = [
@@ -62,14 +62,14 @@ const NAT = [
   'vitamin', 'citric acid', 'sodium chloride', 'kaolin', 'zinc oxide'
 ];
 
-/* ───── Analyseur optimisé ───── */
+/* â”€â”€â”€â”€â”€ Analyseur optimisÃ© â”€â”€â”€â”€â”€ */
 export class CosmeticsAnalyzer {
   async analyzeINCI(ingredients: string[]): Promise<INCIAnalysisResult> {
-    debug(`Analyse INCI: ${ingredients.length} ingrédients`);
+    debug(`Analyse INCI: ${ingredients.length} ingrÃ©dients`);
     
     const norm = ingredients.map(i => i.toLowerCase().trim());
     
-    // Détections parallèles
+    // DÃ©tections parallÃ¨les
     const eds = this.detectED(norm);
     const algs = norm.filter(i => ALLERGENS.includes(i));
     const probs = this.detectProblematic(norm);
@@ -83,7 +83,7 @@ export class CosmeticsAnalyzer {
       !eds.includes(i) && !algs.includes(i) && !probs.some(p => p.name === i)
     );
     
-    debug(`Hazard: ${hazard}/3, Naturalité: ${naturality}/10`);
+    debug(`Hazard: ${hazard}/3, NaturalitÃ©: ${naturality}/10`);
     
     return {
       hazardScore: hazard,
@@ -112,9 +112,9 @@ export class CosmeticsAnalyzer {
       if (CONTROVERSIAL[i]) {
         probs.push({ name: i, concern: CONTROVERSIAL[i].c, level: CONTROVERSIAL[i].l });
       } else if (/peg-\d+/i.test(i)) {
-        probs.push({ name: i, concern: 'PEG dérivé', level: 'medium' });
+        probs.push({ name: i, concern: 'PEG dÃ©rivÃ©', level: 'medium' });
       } else if (/paraffin/i.test(i)) {
-        probs.push({ name: i, concern: 'Pétrochimique', level: 'low' });
+        probs.push({ name: i, concern: 'PÃ©trochimique', level: 'low' });
       } else if (/siloxane|methicone/i.test(i)) {
         probs.push({ name: i, concern: 'Silicone', level: 'low' });
       }

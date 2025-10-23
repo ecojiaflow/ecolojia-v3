@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/services/analysis/novaClassifier.js
+// PATH: backend/src/services/analysis/novaClassifier.js
 const novaRules = require('../../data/nova-rules.json');
 
 /**

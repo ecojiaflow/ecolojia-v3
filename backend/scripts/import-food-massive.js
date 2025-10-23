@@ -6,14 +6,14 @@ const { calculateFoodScores } = require('../src/services/scoringEngine');
 
 async function importFoodMassive(targetTotal = 5000) {
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log('? MongoDB connecté');
+  console.log('? MongoDB connectÃ©');
 
   const existing = await Product.countDocuments({ category: 'food' });
   console.log(`?? Produits food existants: ${existing}`);
   
   const toImport = Math.max(0, targetTotal - existing);
   if (toImport === 0) {
-    console.log('? Objectif déjà atteint');
+    console.log('? Objectif dÃ©jÃ  atteint');
     process.exit(0);
   }
 
@@ -47,7 +47,7 @@ async function importFoodMassive(targetTotal = 5000) {
       );
 
       const products = data.products || [];
-      console.log(`  ? ${products.length} produits reçus`);
+      console.log(`  ? ${products.length} produits reÃ§us`);
 
       for (const offProduct of products) {
         if (!offProduct.code || !offProduct.product_name) continue;
@@ -108,7 +108,7 @@ async function importFoodMassive(targetTotal = 5000) {
         imported++;
 
         if (imported % 50 === 0) {
-          console.log(`  ? ${imported}/${toImport} importés`);
+          console.log(`  ? ${imported}/${toImport} importÃ©s`);
         }
 
         if (imported >= toImport) break;
@@ -125,7 +125,7 @@ async function importFoodMassive(targetTotal = 5000) {
   }
 
   const finalCount = await Product.countDocuments({ category: 'food' });
-  console.log(`\n? TERMINÉ`);
+  console.log(`\n? TERMINÃ‰`);
   console.log(`?? Total food en base: ${finalCount}`);
   process.exit(0);
 }

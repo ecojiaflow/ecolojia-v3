@@ -134,17 +134,17 @@ const CosmeticAnalysisPage: React.FC = () => {
     const labels: Record<string, string> = {
       all: 'Tous types de peau',
       sensitive: 'Peaux sensibles',
-      dry: 'Peaux sèches',
+      dry: 'Peaux sÃ¨ches',
       oily: 'Peaux grasses',
       combination: 'Peaux mixtes',
-      acneic: 'Peaux ÃƒÆ’Ã‚Â  tendance acnéique'
+      acneic: 'Peaux ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tendance acnÃ©ique'
     };
     return labels[type] || type;
   };
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message="Erreur lors du chargement du produit" />;
-  if (!product || !analysis) return <ErrorMessage message="Produit non trouvé" />;
+  if (!product || !analysis) return <ErrorMessage message="Produit non trouvÃ©" />;
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -227,7 +227,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.safety)}`}>
                     <Shield className={`w-8 h-8 ${getScoreColor(analysis.scores.safety)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">Sécurité</p>
+                  <p className="mt-2 text-sm font-medium">SÃ©curitÃ©</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.safety)}`}>
                     {analysis.scores.safety}%
                   </p>
@@ -237,7 +237,7 @@ const CosmeticAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.naturalness)}`}>
                     <Leaf className={`w-8 h-8 ${getScoreColor(analysis.scores.naturalness)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">Naturalité</p>
+                  <p className="mt-2 text-sm font-medium">NaturalitÃ©</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.naturalness)}`}>
                     {analysis.scores.naturalness}%
                   </p>
@@ -247,19 +247,19 @@ const CosmeticAnalysisPage: React.FC = () => {
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${getScoreBgColor(analysis.scores.effectiveness)}`}>
                     <Droplet className={`w-8 h-8 ${getScoreColor(analysis.scores.effectiveness)}`} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">Efficacité</p>
+                  <p className="mt-2 text-sm font-medium">EfficacitÃ©</p>
                   <p className={`text-2xl font-bold ${getScoreColor(analysis.scores.effectiveness)}`}>
                     {analysis.scores.effectiveness}%
                   </p>
                 </div>
               </div>
               
-              {/* Résumé de composition */}
+              {/* RÃ©sumÃ© de composition */}
               <div className="px-6 pb-6 border-t pt-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div>
                     <p className="text-2xl font-bold text-gray-900">{analysis.analysis.totalIngredients}</p>
-                    <p className="text-sm text-gray-600">Ingrédients totaux</p>
+                    <p className="text-sm text-gray-600">IngrÃ©dients totaux</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-green-600">{analysis.analysis.naturalIngredients}</p>
@@ -267,11 +267,11 @@ const CosmeticAnalysisPage: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-blue-600">{analysis.analysis.syntheticIngredients}</p>
-                    <p className="text-sm text-gray-600">Synthétiques</p>
+                    <p className="text-sm text-gray-600">SynthÃ©tiques</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-orange-600">{analysis.analysis.concerningIngredients}</p>
-                    <p className="text-sm text-gray-600">Préoccupants</p>
+                    <p className="text-sm text-gray-600">PrÃ©occupants</p>
                   </div>
                 </div>
               </div>
@@ -280,7 +280,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      {/* Ingrédients INCI */}
+      {/* IngrÃ©dients INCI */}
       <div className="bg-white rounded-lg shadow-sm">
         <button
           onClick={() => toggleSection('ingredients')}
@@ -288,7 +288,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         >
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Package className="w-5 h-5 text-purple-500" />
-            Composition INCI ({analysis.details.inci.length} ingrédients)
+            Composition INCI ({analysis.details.inci.length} ingrÃ©dients)
           </h2>
           {expandedSections.has('ingredients') ? <ChevronUp /> : <ChevronDown />}
         </button>
@@ -309,7 +309,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      {/* Substances préoccupantes */}
+      {/* Substances prÃ©occupantes */}
       {analysis.details.concerns.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm">
           <button
@@ -318,7 +318,7 @@ const CosmeticAnalysisPage: React.FC = () => {
           >
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-orange-500" />
-              Substances préoccupantes ({analysis.details.concerns.length})
+              Substances prÃ©occupantes ({analysis.details.concerns.length})
             </h2>
             {expandedSections.has('concerns') ? <ChevronUp /> : <ChevronDown />}
           </button>
@@ -359,7 +359,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         </div>
       )}
 
-      {/* Allergènes */}
+      {/* AllergÃ¨nes */}
       {analysis.details.allergens.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm">
           <button
@@ -368,7 +368,7 @@ const CosmeticAnalysisPage: React.FC = () => {
           >
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-red-500" />
-              Allergènes potentiels ({analysis.details.allergens.length})
+              AllergÃ¨nes potentiels ({analysis.details.allergens.length})
             </h2>
             {expandedSections.has('allergens') ? <ChevronUp /> : <ChevronDown />}
           </button>
@@ -398,7 +398,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         </div>
       )}
 
-      {/* Types de peau recommandés */}
+      {/* Types de peau recommandÃ©s */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-green-500" />
@@ -429,7 +429,7 @@ const CosmeticAnalysisPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Search className="w-5 h-5 text-blue-500" />
-            Alternatives recommandées
+            Alternatives recommandÃ©es
           </h2>
           <div className="grid gap-3">
             {analysis.recommendations.alternatives.map((alt) => (

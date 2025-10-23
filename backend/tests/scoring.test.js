@@ -1,4 +1,4 @@
-﻿// backend/tests/scoring.test.js
+// backend/tests/scoring.test.js
 // Tests unitaires scoring V3
 
 const { calculateFoodScores } = require('../src/services/scoringEngine');

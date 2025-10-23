@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export const ScoreGauge: React.FC<{label:string; value:number}> = ({label, value}) => {
   const v = Math.max(0, Math.min(100, value||0));

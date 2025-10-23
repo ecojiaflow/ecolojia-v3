@@ -1,4 +1,4 @@
-// server-postgres-fixed.js - Serveur avec PostgreSQL amélioré et sécurisé
+// server-postgres-fixed.js - Serveur avec PostgreSQL amÃ©liorÃ© et sÃ©curisÃ©
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -27,24 +27,24 @@ const poolConfig = {
 
 const pool = new Pool(poolConfig);
 
-// Variable pour stocker l'état de la connexion
+// Variable pour stocker l'Ã©tat de la connexion
 let dbConnected = false;
 
-// ========== CONFIGURATION SÃ‰CURITÃ‰ ==========
+// ========== CONFIGURATION SÃƒâ€°CURITÃƒâ€° ==========
 
 // 1. Compression
 app.use(compression());
 
-// 2. Helmet pour les headers de sécurité
+// 2. Helmet pour les headers de sÃ©curitÃ©
 app.use(helmet({
-  contentSecurityPolicy: false, // Désactivé pour les APIs
+  contentSecurityPolicy: false, // DÃ©sactivÃ© pour les APIs
   crossOriginEmbedderPolicy: false
 }));
 
 // 3. Configuration CORS stricte
 const corsOptions = {
   origin: function (origin, callback) {
-    // Liste des origines autorisées
+    // Liste des origines autorisÃ©es
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5173',
@@ -60,7 +60,7 @@ const corsOptions = {
       allowedOrigins.push(...envOrigins);
     }
     
-    // Permettre les requêtes sans origine (Postman, etc.)
+    // Permettre les requÃªtes sans origine (Postman, etc.)
     if (!origin) {
       return callback(null, true);
     }
@@ -82,7 +82,7 @@ app.use(cors(corsOptions));
 // 4. Sanitization des inputs
 app.use(mongoSanitize());
 
-// 5. Headers de sécurité supplémentaires
+// 5. Headers de sÃ©curitÃ© supplÃ©mentaires
 app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -97,7 +97,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ========== GESTION D'ERREURS ==========
 
-// Classe d'erreur personnalisée
+// Classe d'erreur personnalisÃ©e
 class AppError extends Error {
   constructor(message, statusCode = 500) {
     super(message);
@@ -119,20 +119,20 @@ async function testConnection() {
     const client = await pool.connect();
     const result = await client.query('SELECT NOW()');
     client.release();
-    console.log('âœ… PostgreSQL connecté:', result.rows[0].now);
+    console.log('Ã¢Å“â€¦ PostgreSQL connectÃ©:', result.rows[0].now);
     dbConnected = true;
     return true;
   } catch (err) {
-    console.error('âŒ Erreur connexion PostgreSQL:', err.message);
+    console.error('Ã¢ÂÅ’ Erreur connexion PostgreSQL:', err.message);
     dbConnected = false;
     return false;
   }
 }
 
-// Créer les tables si elles n'existent pas
+// CrÃ©er les tables si elles n'existent pas
 async function createTables() {
   if (!dbConnected) {
-    console.log('âš ï¸ Base de données non connectée, tables non créées');
+    console.log('Ã¢Å¡Â Ã¯Â¸Â Base de donnÃ©es non connectÃ©e, tables non crÃ©Ã©es');
     return;
   }
   
@@ -171,13 +171,13 @@ async function createTables() {
       CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode);
       CREATE INDEX IF NOT EXISTS idx_analyses_user_id ON analyses(user_id);
     `);
-    console.log('âœ… Tables créées/vérifiées');
+    console.log('Ã¢Å“â€¦ Tables crÃ©Ã©es/vÃ©rifiÃ©es');
   } catch (error) {
-    console.error('âŒ Erreur création tables:', error.message);
+    console.error('Ã¢ÂÅ’ Erreur crÃ©ation tables:', error.message);
   }
 }
 
-// Stockage en mémoire pour le mode sans DB
+// Stockage en mÃ©moire pour le mode sans DB
 const memoryUsers = [];
 
 // ========== VALIDATION ==========
@@ -199,14 +199,14 @@ app.get('/', (req, res) => {
     name: 'ECOLOJIA API',
     version: '2.0.0',
     status: 'running',
-    database: dbConnected ? 'PostgreSQL connecté' : 'Mode sans base de données',
+    database: dbConnected ? 'PostgreSQL connectÃ©' : 'Mode sans base de donnÃ©es',
     security: 'enabled',
     timestamp: new Date(),
     environment: process.env.NODE_ENV || 'development'
   });
 });
 
-// Route santé
+// Route santÃ©
 app.get('/health', asyncHandler(async (req, res) => {
   const dbStatus = await testConnection();
   res.json({ 
@@ -233,34 +233,34 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
   }
 
   if (!validatePassword(password)) {
-    throw new AppError('Le mot de passe doit contenir au moins 6 caractères', 400);
+    throw new AppError('Le mot de passe doit contenir au moins 6 caractÃ¨res', 400);
   }
 
   if (name.trim().length < 2 || name.trim().length > 100) {
-    throw new AppError('Le nom doit contenir entre 2 et 100 caractères', 400);
+    throw new AppError('Le nom doit contenir entre 2 et 100 caractÃ¨res', 400);
   }
 
   // Normalisation
   const normalizedEmail = email.toLowerCase().trim();
   const normalizedName = name.trim();
 
-  // Si DB connectée, utiliser PostgreSQL
+  // Si DB connectÃ©e, utiliser PostgreSQL
   if (dbConnected) {
     try {
-      // Vérifier si utilisateur existe
+      // VÃ©rifier si utilisateur existe
       const userCheck = await pool.query(
         'SELECT * FROM users WHERE email = $1',
         [normalizedEmail]
       );
 
       if (userCheck.rows.length > 0) {
-        throw new AppError('Email déjÃ  utilisé', 409);
+        throw new AppError('Email dÃ©jÃƒÂ  utilisÃ©', 409);
       }
 
       // Hash du mot de passe
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Créer utilisateur
+      // CrÃ©er utilisateur
       const result = await pool.query(
         'INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id, email, name, tier, created_at',
         [normalizedEmail, hashedPassword, normalizedName]
@@ -268,27 +268,27 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
 
       res.status(201).json({
         success: true,
-        message: 'Inscription réussie',
+        message: 'Inscription rÃ©ussie',
         user: result.rows[0]
       });
     } catch (dbError) {
       if (dbError instanceof AppError) throw dbError;
-      console.error('Erreur DB, bascule sur mémoire:', dbError.message);
+      console.error('Erreur DB, bascule sur mÃ©moire:', dbError.message);
       dbConnected = false;
     }
   }
   
-  // Si DB non connectée, utiliser le stockage mémoire
+  // Si DB non connectÃ©e, utiliser le stockage mÃ©moire
   if (!dbConnected) {
-    // Vérifier si email existe
+    // VÃ©rifier si email existe
     if (memoryUsers.find(u => u.email === normalizedEmail)) {
-      throw new AppError('Email déjÃ  utilisé', 409);
+      throw new AppError('Email dÃ©jÃƒÂ  utilisÃ©', 409);
     }
 
     // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Créer utilisateur en mémoire
+    // CrÃ©er utilisateur en mÃ©moire
     const user = {
       id: memoryUsers.length + 1,
       email: normalizedEmail,
@@ -302,7 +302,7 @@ app.post('/api/auth/register', asyncHandler(async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Inscription réussie (stockage temporaire)',
+      message: 'Inscription rÃ©ussie (stockage temporaire)',
       user: {
         id: user.id,
         email: user.email,
@@ -330,7 +330,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
   const normalizedEmail = email.toLowerCase().trim();
   let user = null;
 
-  // Si DB connectée, chercher dans PostgreSQL
+  // Si DB connectÃ©e, chercher dans PostgreSQL
   if (dbConnected) {
     try {
       const result = await pool.query(
@@ -346,7 +346,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
     }
   }
 
-  // Si DB non connectée, chercher en mémoire
+  // Si DB non connectÃ©e, chercher en mÃ©moire
   if (!dbConnected) {
     user = memoryUsers.find(u => u.email === normalizedEmail);
   }
@@ -355,7 +355,7 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
     throw new AppError('Email ou mot de passe incorrect', 401);
   }
 
-  // Vérifier mot de passe
+  // VÃ©rifier mot de passe
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
     throw new AppError('Email ou mot de passe incorrect', 401);
@@ -363,14 +363,14 @@ app.post('/api/auth/login', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'Connexion réussie',
+    message: 'Connexion rÃ©ussie',
     user: {
       id: user.id,
       email: user.email,
       name: user.name,
       tier: user.tier || 'free'
     },
-    token: 'fake-jwt-token' // TODO: Implémenter JWT
+    token: 'fake-jwt-token' // TODO: ImplÃ©menter JWT
   });
 }));
 
@@ -408,7 +408,7 @@ app.get('/api/users', asyncHandler(async (req, res) => {
 
 // ========== GESTION ERREURS 404 ==========
 app.use((req, res, next) => {
-  const error = new AppError(`Route non trouvée: ${req.method} ${req.originalUrl}`, 404);
+  const error = new AppError(`Route non trouvÃ©e: ${req.method} ${req.originalUrl}`, 404);
   next(error);
 });
 
@@ -422,16 +422,16 @@ app.use((err, req, res, next) => {
     method: req.method
   });
 
-  // Erreur CORS spécifique
+  // Erreur CORS spÃ©cifique
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({
       success: false,
       error: 'CORS_ERROR',
-      message: 'Origine non autorisée'
+      message: 'Origine non autorisÃ©e'
     });
   }
 
-  // Status par défaut
+  // Status par dÃ©faut
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Erreur serveur interne';
 
@@ -443,61 +443,61 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ========== DÃ‰MARRAGE ==========
+// ========== DÃƒâ€°MARRAGE ==========
 async function start() {
   // Tenter la connexion DB
-  console.log('ðŸ”„ Tentative de connexion Ã  PostgreSQL...');
+  console.log('Ã°Å¸â€â€ž Tentative de connexion ÃƒÂ  PostgreSQL...');
   const connected = await testConnection();
   
   if (connected) {
     await createTables();
   } else {
-    console.log('âš ï¸ Démarrage en mode sans base de données (stockage mémoire)');
+    console.log('Ã¢Å¡Â Ã¯Â¸Â DÃ©marrage en mode sans base de donnÃ©es (stockage mÃ©moire)');
   }
   
   app.listen(PORT, '0.0.0.0', () => {
-    console.log('\nðŸŒ± ECOLOJIA API v2.0 - Serveur démarré');
+    console.log('\nÃ°Å¸Å’Â± ECOLOJIA API v2.0 - Serveur dÃ©marrÃ©');
     console.log('================================================');
-    console.log(`ðŸ“¡ URL: http://localhost:${PORT}`);
-    console.log(`ðŸ”’ Mode: ${dbConnected ? 'PostgreSQL' : 'Stockage mémoire'}`);
-    console.log(`ðŸŒ Environnement: ${process.env.NODE_ENV || 'development'}`);
-    console.log('\nðŸ“ Endpoints disponibles:');
+    console.log(`Ã°Å¸â€œÂ¡ URL: http://localhost:${PORT}`);
+    console.log(`Ã°Å¸â€â€™ Mode: ${dbConnected ? 'PostgreSQL' : 'Stockage mÃ©moire'}`);
+    console.log(`Ã°Å¸Å’Â Environnement: ${process.env.NODE_ENV || 'development'}`);
+    console.log('\nÃ°Å¸â€œÂ Endpoints disponibles:');
     console.log(`   - GET  http://localhost:${PORT}/`);
     console.log(`   - GET  http://localhost:${PORT}/health`);
     console.log(`   - POST http://localhost:${PORT}/api/auth/register`);
     console.log(`   - POST http://localhost:${PORT}/api/auth/login`);
     console.log(`   - GET  http://localhost:${PORT}/api/users`);
-    console.log('\nðŸ” Sécurité activée:');
-    console.log('   âœ… Helmet (headers sécurisés)');
-    console.log('   âœ… CORS (origines contrôlées)');
-    console.log('   âœ… Sanitization des entrées');
-    console.log('   âœ… Validation complète');
-    console.log('   âœ… Gestion d\'erreurs centralisée');
+    console.log('\nÃ°Å¸â€Â SÃ©curitÃ© activÃ©e:');
+    console.log('   Ã¢Å“â€¦ Helmet (headers sÃ©curisÃ©s)');
+    console.log('   Ã¢Å“â€¦ CORS (origines contrÃ´lÃ©es)');
+    console.log('   Ã¢Å“â€¦ Sanitization des entrÃ©es');
+    console.log('   Ã¢Å“â€¦ Validation complÃ¨te');
+    console.log('   Ã¢Å“â€¦ Gestion d\'erreurs centralisÃ©e');
     console.log('================================================\n');
   });
 }
 
-// ========== GESTION ARRÃŠT PROPRE ==========
+// ========== GESTION ARRÃƒÅ T PROPRE ==========
 process.on('SIGTERM', () => {
-  console.log('SIGTERM reçu, fermeture gracieuse...');
+  console.log('SIGTERM reÃ§u, fermeture gracieuse...');
   pool.end().then(() => {
-    console.log('Pool PostgreSQL fermé');
+    console.log('Pool PostgreSQL fermÃ©');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('\nSIGINT reçu, fermeture...');
+  console.log('\nSIGINT reÃ§u, fermeture...');
   pool.end().then(() => {
-    console.log('Pool PostgreSQL fermé');
+    console.log('Pool PostgreSQL fermÃ©');
     process.exit(0);
   });
 });
 
-// Gestion des erreurs non capturées
+// Gestion des erreurs non capturÃ©es
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Rejection:', err);
 });
 
-// Démarrer le serveur
+// DÃ©marrer le serveur
 start();
