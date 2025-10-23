@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Camera, Check, AlertCircle, Loader2, Info, Edit3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import apiClient from '../services/apiClient';
@@ -28,6 +28,14 @@ interface OCRResult {
   };
   confidence: number;
   aiAnalysis: string;
+  coherenceCheck?: {
+    isCoherent: boolean;
+    canProceed: boolean;
+    incoherenceScore: number;
+    detectedCategory: string;
+    probableCategory: string;
+    reason: string;
+  };
 }
 
 type WizardStep = 'front' | 'ingredients' | 'validation';
@@ -205,43 +213,54 @@ export default function OCRWizardPage() {
       if (frontPhoto.preview) URL.revokeObjectURL(frontPhoto.preview);
       if (ingredientsPhoto.preview) URL.revokeObjectURL(ingredientsPhoto.preview);
     };
-  }, []);
+  }, [frontPhoto.preview, ingredientsPhoto.preview]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-20">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-10">
+      <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft size={20} className="text-gray-600" />
-            </button>
-            <div className="flex items-center gap-3 flex-1">
-              <Camera className="text-blue-600" size={24} />
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Création produit par OCR
-                </h1>
-                <p className="text-sm text-gray-600">
-                  Code-barre : {barcode}
-                </p>
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft size={20} />
+            <span className="font-medium">Retour</span>
+          </button>
+        </div>
+      </div>
 
-          {/* Progress bar */}
-          <div className="mt-4 flex items-center gap-2">
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Wizard Title */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Camera className="text-blue-600" size={32} />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Création produit par OCR</h1>
+          <p className="text-gray-600">Code-barre : {barcode}</p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <span className={`text-sm font-medium ${currentStep === 'front' ? 'text-blue-600' : 'text-gray-500'}`}>
+              Face avant
+            </span>
+            <span className={`text-sm font-medium ${currentStep === 'ingredients' ? 'text-blue-600' : 'text-gray-500'}`}>
+              Ingrédients
+            </span>
+            <span className={`text-sm font-medium ${currentStep === 'validation' ? 'text-blue-600' : 'text-gray-500'}`}>
+              Validation
+            </span>
+          </div>
+          <div className="flex gap-2">
             <div className={`flex-1 h-2 rounded-full ${currentStep === 'front' || currentStep === 'ingredients' || currentStep === 'validation' ? 'bg-blue-600' : 'bg-gray-200'}`} />
             <div className={`flex-1 h-2 rounded-full ${currentStep === 'ingredients' || currentStep === 'validation' ? 'bg-blue-600' : 'bg-gray-200'}`} />
             <div className={`flex-1 h-2 rounded-full ${currentStep === 'validation' ? 'bg-blue-600' : 'bg-gray-200'}`} />
           </div>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Step 1: Front Photo */}
         {currentStep === 'front' && (
           <div className="space-y-6">
@@ -249,9 +268,9 @@ export default function OCRWizardPage() {
               <div className="flex items-start gap-3">
                 <Info className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
-                  <h3 className="font-medium text-blue-900 mb-2">Étape 1/3 : Photo de la face avant</h3>
+                  <h3 className="font-medium text-blue-900 mb-2">Étape 1/3 : Photo de face</h3>
                   <p className="text-blue-800 text-sm">
-                    Prenez une photo claire montrant le <strong>nom du produit, la marque et la quantité</strong>.
+                    Prenez une photo claire de la <strong>face avant du produit</strong> (nom, marque, quantité visibles).
                   </p>
                 </div>
               </div>
@@ -379,6 +398,32 @@ export default function OCRWizardPage() {
         {/* Step 3: Validation */}
         {currentStep === 'validation' && ocrResult && (
           <div className="space-y-6">
+            
+            {/* Alerte incohérence */}
+            {ocrResult?.coherenceCheck?.canProceed === false && (
+              <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={24} />
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-red-900 mb-2">
+                      ALERTE Incohérence détectée : {ocrResult.coherenceCheck.incoherenceScore}%
+                    </h3>
+                    <p className="text-red-800 mb-3">
+                      Les photos ne correspondent pas au même produit.
+                    </p>
+                    <div className="bg-red-100 rounded p-3 text-sm text-red-900">
+                      <p className="font-semibold mb-1">Détails :</p>
+                      <p>Face avant : {ocrResult.coherenceCheck.detectedCategory}</p>
+                      <p>Ingrédients : {ocrResult.coherenceCheck.probableCategory}</p>
+                    </div>
+                    <p className="mt-3 text-red-800 font-medium">
+                      ERREUR Veuillez reprendre vos photos avec le bon produit.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className={`border rounded-lg p-4 ${ocrResult.confidence >= 0.75 ? 'bg-green-50 border-green-200' : ocrResult.confidence >= 0.6 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200'}`}>
               <div className="flex items-start gap-3">
                 <AlertCircle className={`flex-shrink-0 mt-0.5 ${ocrResult.confidence >= 0.75 ? 'text-green-600' : ocrResult.confidence >= 0.6 ? 'text-yellow-600' : 'text-red-600'}`} size={20} />
@@ -468,7 +513,7 @@ export default function OCRWizardPage() {
                 </button>
                 <button
                   onClick={handleSaveProduct}
-                  disabled={isSaving || !editableData.productName || !editableData.ingredients}
+                  disabled={isSaving || !editableData.productName || !editableData.ingredients || ocrResult?.coherenceCheck?.canProceed === false}
                   className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isSaving ? (

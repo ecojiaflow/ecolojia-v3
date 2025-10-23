@@ -1,11 +1,11 @@
-ï»¿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { authenticateToken } = require('../middleware');
 const OCRProductService = require('../services/OCRProductService');
 const ProductOrchestrator = require('../services/ProductOrchestrator');
 
-// Configuration Multer pour upload photos (mÃ©moire temporaire)
+// Configuration Multer pour upload photos (mémoire temporaire)
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -13,7 +13,7 @@ const upload = multer({
   },
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Seules les images sont acceptÃ©es'), false);
+      return cb(new Error('Seules les images sont acceptées'), false);
     }
     cb(null, true);
   }
@@ -21,7 +21,7 @@ const upload = multer({
 
 /**
  * POST /api/products/create-from-ocr
- * Analyse 2 photos avec OCR + IA pour crÃ©er un produit
+ * Analyse 2 photos avec OCR + IA pour créer un produit
  */
 router.post('/create-from-ocr', 
   authenticateToken, 
@@ -48,16 +48,16 @@ router.post('/create-from-ocr',
       if (!frontPhoto || !ingredientsPhoto) {
         return res.status(400).json({
           success: false,
-          message: 'Les 2 photos sont requises (face avant + ingrÃ©dients)'
+          message: 'Les 2 photos sont requises (face avant + ingrédients)'
         });
       }
 
-      console.log(`[OCR] DÃ©marrage analyse pour barcode: ${barcode}`);
+      console.log(`[OCR] Démarrage analyse pour barcode: ${barcode}`);
       console.log(`[OCR] Photo face avant: ${(frontPhoto.size / 1024).toFixed(2)} KB`);
-      console.log(`[OCR] Photo ingrÃ©dients: ${(ingredientsPhoto.size / 1024).toFixed(2)} KB`);
+      console.log(`[OCR] Photo ingrédients: ${(ingredientsPhoto.size / 1024).toFixed(2)} KB`);
 
-      // Ã‰tape 1 : OCR Google Vision sur les 2 photos
-      console.log('[OCR] Ã‰tape 1/3 : Extraction texte (Google Vision)...');
+      // Étape 1 : OCR Google Vision sur les 2 photos
+      console.log('[OCR] Étape 1/4 : Extraction texte (Google Vision)...');
       const ocrTexts = await OCRProductService.extractTextFromPhotos(
         frontPhoto.buffer,
         ingredientsPhoto.buffer
@@ -71,32 +71,51 @@ router.post('/create-from-ocr',
         });
       }
 
-      console.log(`[OCR] âœ“ Texte extrait - Face: ${ocrTexts.frontText.length} chars, IngrÃ©dients: ${ocrTexts.ingredientsText.length} chars`);
+      console.log(`[OCR] ? Texte extrait - Face: ${ocrTexts.frontText.length} chars, Ingrédients: ${ocrTexts.ingredientsText.length} chars`);
+      
+      const detectedCategory = ocrTexts.detectedCategory;
+      console.log(`[OCR] Catégorie détectée: ${detectedCategory}`);
 
-      // Ã‰tape 2 : Parsing intelligent avec DeepSeek IA
-      console.log('[OCR] Ã‰tape 2/3 : Analyse IA (DeepSeek)...');
+      // Étape 2 : Parsing intelligent avec DeepSeek IA
+      console.log('[OCR] Étape 2/4 : Analyse IA (DeepSeek)...');
       const parsedData = await OCRProductService.parseWithAI(
         ocrTexts.frontText,
         ocrTexts.ingredientsText,
-        barcode
+        barcode,
+        detectedCategory
       );
 
       if (!parsedData) {
         return res.status(500).json({
           success: false,
-          message: 'Ã‰chec du parsing IA',
+          message: 'Échec du parsing IA',
           rawTexts: ocrTexts
         });
       }
 
-      console.log(`[OCR] âœ“ DonnÃ©es parsÃ©es - Produit: "${parsedData.productName}", IngrÃ©dients: ${parsedData.ingredients.length}`);
+      console.log(`[OCR] ? Données parsées - Produit: "${parsedData.productName}", Ingrédients: ${parsedData.ingredients.length}`);
 
-      // Ã‰tape 3 : Calcul confiance
-      console.log('[OCR] Ã‰tape 3/3 : Calcul confiance...');
+      // Étape 3 : Calcul confiance
+      console.log('[OCR] Étape 3/4 : Calcul confiance...');
       const confidence = OCRProductService.calculateConfidence(parsedData, ocrTexts);
-      console.log(`[OCR] âœ“ Confiance calculÃ©e: ${(confidence * 100).toFixed(1)}%`);
+      console.log(`[OCR] ? Confiance calculée: ${(confidence * 100).toFixed(1)}%`);
 
-      // Construire rÃ©sultat structurÃ©
+      // Étape 4 : Validation cohérence catégorie
+      console.log('[OCR] Étape 4/4 : Validation cohérence...');
+      const coherenceCheck = OCRProductService.validateCoherence(
+        detectedCategory,
+        ocrTexts.ingredientsText,
+        parsedData
+      );
+      
+      // ? NOUVEAU : Log mais NE PAS bloquer - Laisser le frontend gérer
+      if (!coherenceCheck.canProceed) {
+        console.log('[OCR] ?? Incohérence majeure détectée - Frontend gérera le blocage');
+      } else {
+        console.log(`[OCR] ? Cohérence validée: ${coherenceCheck.isCoherent ? 'OK' : 'ATTENTION'} (score: ${coherenceCheck.incoherenceScore}%)`);
+      }
+
+      // Construire résultat structuré (même en cas d'incohérence)
       const ocrResult = {
         frontData: {
           productName: parsedData.productName || 'Produit inconnu',
@@ -114,20 +133,22 @@ router.post('/create-from-ocr',
           ingredients: ocrTexts.ingredientsText
         },
         confidence: confidence,
-        aiAnalysis: parsedData.aiReasoning || 'Analyse automatique'
+        aiAnalysis: parsedData.aiReasoning || 'Analyse automatique',
+        detectedCategory,
+        coherenceCheck
       };
 
       const processingTime = Date.now() - startTime;
-      console.log(`[OCR] âœ“ Analyse terminÃ©e en ${processingTime}ms`);
+      console.log(`[OCR] ? Analyse terminée en ${processingTime}ms`);
 
       const finalResponse = {
         success: true,
         ocrResult,
         processingTime,
-        message: `Analyse rÃ©ussie avec ${(confidence * 100).toFixed(0)}% de confiance`
+        message: `Analyse réussie avec ${(confidence * 100).toFixed(0)}% de confiance`
       };
       
-      console.log('[OCR] RÃ©ponse envoyÃ©e au frontend:', JSON.stringify(finalResponse).substring(0, 300));
+      console.log('[OCR] Réponse envoyée au frontend:', JSON.stringify(finalResponse).substring(0, 300));
       res.json(finalResponse);
 
     } catch (error) {
@@ -143,7 +164,7 @@ router.post('/create-from-ocr',
 
 /**
  * POST /api/products/save-ocr-product
- * Sauvegarde un produit crÃ©Ã© depuis OCR
+ * Sauvegarde un produit créé depuis OCR
  */
 router.post('/save-ocr-product', authenticateToken, async (req, res) => {
   try {
@@ -161,20 +182,20 @@ router.post('/save-ocr-product', authenticateToken, async (req, res) => {
     if (!barcode || !product_name || !ingredients_text) {
       return res.status(400).json({
         success: false,
-        message: 'DonnÃ©es manquantes (barcode, nom, ingrÃ©dients requis)'
+        message: 'Données manquantes (barcode, nom, ingrédients requis)'
       });
     }
 
     console.log(`[OCR] Sauvegarde produit OCR: ${barcode} - "${product_name}"`);
 
-    // Utiliser ProductOrchestrator pour crÃ©er le produit avec scoring
+    // Utiliser ProductOrchestrator pour créer le produit avec scoring
     const product = await ProductOrchestrator.createFromOCR({
       code: barcode,
       product_name,
       brands,
       quantity,
       ingredients_text,
-      categories_tags: ['en:food'], // Par dÃ©faut alimentaire
+      categories_tags: ['en:food'], // Par défaut alimentaire
       source: 'ocr',
       confidence: confidence || 0.7,
       ocrMetadata: ocrMetadata || {}
@@ -183,16 +204,16 @@ router.post('/save-ocr-product', authenticateToken, async (req, res) => {
     if (!product) {
       return res.status(500).json({
         success: false,
-        message: 'Ã‰chec de la crÃ©ation du produit'
+        message: 'Échec de la création du produit'
       });
     }
 
-    console.log(`[OCR] âœ“ Produit sauvegardÃ©: ${product._id}`);
+    console.log(`[OCR] ? Produit sauvegardé: ${product._id}`);
 
     res.json({
       success: true,
       product,
-      message: 'Produit crÃ©Ã© avec succÃ¨s'
+      message: 'Produit créé avec succès'
     });
 
   } catch (error) {

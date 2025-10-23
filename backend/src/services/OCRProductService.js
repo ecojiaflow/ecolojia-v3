@@ -1,9 +1,9 @@
-Ôªøconst vision = require('@google-cloud/vision');
+const vision = require('@google-cloud/vision');
 const deepSeekService = require('./ai/deepSeekService');
 
 class OCRProductService {
   constructor() {
-    // Initialiser client Google Vision (si configur√©)
+    // Initialiser client Google Vision (si configurÈ)
     this.visionClient = null;
     
     if (process.env.GOOGLE_APPLICATION_CREDENTIALS || 
@@ -16,19 +16,19 @@ class OCRProductService {
             private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
           } : undefined
         });
-        console.log('‚úì Google Vision client initialis√©');
+        console.log('? Google Vision client initialisÈ');
       } catch (error) {
-        console.warn('‚ö†Ô∏è Google Vision non disponible:', error.message);
+        console.warn('?? Google Vision non disponible:', error.message);
       }
     } else {
-      console.warn('‚ö†Ô∏è Google Vision non configur√© - Mode simulation');
+      console.warn('?? Google Vision non configurÈ - Mode simulation');
     }
   }
 
   /**
    * Extrait le texte de 2 photos avec Google Vision OCR
    * @param {Buffer} frontPhotoBuffer - Buffer de la photo face avant
-   * @param {Buffer} ingredientsPhotoBuffer - Buffer de la photo ingr√©dients
+   * @param {Buffer} ingredientsPhotoBuffer - Buffer de la photo ingrÈdients
    * @returns {Promise<{frontText: string, ingredientsText: string}>}
    */
   async extractTextFromPhotos(frontPhotoBuffer, ingredientsPhotoBuffer) {
@@ -36,7 +36,7 @@ class OCRProductService {
       console.log('[OCR] Extraction texte avec Google Vision...');
 
       if (!this.visionClient) {
-        // Mode simulation si Google Vision non configur√©
+        // Mode simulation si Google Vision non configurÈ
         console.warn('[OCR] Mode simulation - Google Vision non disponible');
         return {
           frontText: this._simulateFrontText(),
@@ -50,31 +50,44 @@ class OCRProductService {
         image: { content: frontPhotoBuffer }
       });
       const frontText = frontResult.fullTextAnnotation?.text || '';
-      console.log(`[OCR] ‚úì Face avant: ${frontText.length} caract√®res extraits`);
+      console.log(`[OCR] ? Face avant: ${frontText.length} caractËres extraits`);
 
-      // OCR photo ingr√©dients
-      console.log('[OCR] Analyse photo 2/2 (ingr√©dients)...');
+      // OCR photo ingrÈdients
+      console.log('[OCR] Analyse photo 2/2 (ingrÈdients)...');
       const [ingredientsResult] = await this.visionClient.textDetection({
         image: { content: ingredientsPhotoBuffer }
       });
       const ingredientsText = ingredientsResult.fullTextAnnotation?.text || '';
-      console.log(`[OCR] ‚úì Ingr√©dients: ${ingredientsText.length} caract√®res extraits`);
+      console.log(`[OCR] ? IngrÈdients: ${ingredientsText.length} caractËres extraits`);
+
+      // DÈtecter catÈgorie depuis le texte face avant
+      const textLower = frontText.toLowerCase();
+      let detectedCategory = 'food'; // Par dÈfaut
+      
+      if (textLower.includes('lessive') || textLower.includes('dÈtergent') || 
+          textLower.includes('savon') || textLower.includes('lavage')) {
+        detectedCategory = 'detergents';
+      } else if (textLower.includes('crËme') || textLower.includes('lotion') || 
+                 textLower.includes('shampooing') || textLower.includes('gel douche')) {
+        detectedCategory = 'cosmetics';
+      }
 
       return {
         frontText: frontText.trim(),
-        ingredientsText: ingredientsText.trim()
+        ingredientsText: ingredientsText.trim(),
+        detectedCategory: detectedCategory
       };
 
     } catch (error) {
       console.error('[OCR] Erreur extraction texte:', error);
-      throw new Error(`√âchec extraction OCR: ${error.message}`);
+      throw new Error(`…chec extraction OCR: ${error.message}`);
     }
   }
 
   /**
-   * Parse les textes OCR avec DeepSeek IA pour structurer les donn√©es
+   * Parse les textes OCR avec DeepSeek IA pour structurer les donnÈes
    * @param {string} frontText - Texte de la face avant
-   * @param {string} ingredientsText - Texte des ingr√©dients
+   * @param {string} ingredientsText - Texte des ingrÈdients
    * @param {string} barcode - Code-barre du produit
    * @returns {Promise<Object>}
    */
@@ -82,30 +95,30 @@ class OCRProductService {
     try {
       console.log('[OCR] Parsing intelligent avec DeepSeek IA...');
 
-      const prompt = `Tu es un expert en analyse de produits alimentaires. Analyse ces textes extraits par OCR et structure les donn√©es.
+      const prompt = `Tu es un expert en analyse de produits alimentaires. Analyse ces textes extraits par OCR et structure les donnÈes.
 
 **TEXTE FACE AVANT:**
 ${frontText}
 
-**TEXTE INGR√âDIENTS:**
+**TEXTE INGR…DIENTS:**
 ${ingredientsText}
 
 **CODE-BARRE:** ${barcode}
 
 **INSTRUCTIONS:**
-1. Identifie le nom du produit, la marque et la quantit√© depuis le texte face avant
-2. Extrais la liste des ingr√©dients (s√©par√©s par des virgules)
-3. Identifie les allerg√®nes courants (gluten, lait, ≈ìufs, soja, fruits √† coque, etc.)
-4. Extrais les valeurs nutritionnelles si pr√©sentes (√©nergie, lipides, glucides, prot√©ines, sel)
-5. Sois tol√©rant aux fautes OCR (ex: "ingr√©di3nts" ‚Üí "ingr√©dients")
+1. Identifie le nom du produit, la marque et la quantitÈ depuis le texte face avant
+2. Extrais la liste des ingrÈdients (sÈparÈs par des virgules)
+3. Identifie les allergËnes courants (gluten, lait, úufs, soja, fruits ‡ coque, etc.)
+4. Extrais les valeurs nutritionnelles si prÈsentes (Ènergie, lipides, glucides, protÈines, sel)
+5. Sois tolÈrant aux fautes OCR (ex: "ingrÈdi3nts" ? "ingrÈdients")
 
-**R√âPONDS UNIQUEMENT EN JSON (sans markdown, sans explication):**
+**R…PONDS UNIQUEMENT EN JSON (sans markdown, sans explication):**
 {
   "productName": "nom exact du produit",
   "brand": "marque du produit",
-  "quantity": "quantit√© (ex: 400g)",
-  "ingredients": ["ingr√©dient1", "ingr√©dient2", ...],
-  "allergens": ["allerg√®ne1", "allerg√®ne2", ...],
+  "quantity": "quantitÈ (ex: 400g)",
+  "ingredients": ["ingrÈdient1", "ingrÈdient2", ...],
+  "allergens": ["allergËne1", "allergËne2", ...],
   "nutritionalValues": {
     "energy_100g": 2250,
     "fat_100g": 30.9,
@@ -119,14 +132,14 @@ ${ingredientsText}
 }`;
 
       // Appel DeepSeek avec systemPrompt pour meilleur parsing
-      const systemPrompt = 'Tu es un expert en analyse de produits alimentaires. Extrais et structure les donn√©es de mani√®re pr√©cise depuis le texte OCR fourni. R√©ponds uniquement en JSON valide.';
+      const systemPrompt = 'Tu es un expert en analyse de produits alimentaires. Extrais et structure les donnÈes de maniËre prÈcise depuis le texte OCR fourni. RÈponds uniquement en JSON valide.';
       const response = await deepSeekService.analyze(prompt, systemPrompt);
 
-      console.log('[OCR] R√©ponse brute DeepSeek:', JSON.stringify(response).substring(0, 500));
+      console.log('[OCR] RÈponse brute DeepSeek:', JSON.stringify(response).substring(0, 500));
       
       if (!response) {
         console.error('[OCR] Response est null/undefined');
-        throw new Error('R√©ponse IA vide');
+        throw new Error('RÈponse IA vide');
       }
       
       // DeepSeek peut retourner directement une string ou un objet
@@ -135,18 +148,18 @@ ${ingredientsText}
       if (!content) {
         console.error('[OCR] Content vide. Response type:', typeof response);
         console.error('[OCR] Response keys:', Object.keys(response || {}));
-        throw new Error('R√©ponse IA vide');
+        throw new Error('RÈponse IA vide');
       }
 
-      // Parser la r√©ponse JSON
+      // Parser la rÈponse JSON
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
-        console.error('[OCR] R√©ponse IA non-JSON:', response.content);
-        throw new Error('Format de r√©ponse IA invalide');
+        console.error('[OCR] RÈponse IA non-JSON:', response.content);
+        throw new Error('Format de rÈponse IA invalide');
       }
 
       const parsedData = JSON.parse(jsonMatch[0]);
-      console.log(`[OCR] ‚úì Donn√©es pars√©es: "${parsedData.productName}"`);
+      console.log(`[OCR] ? DonnÈes parsÈes: "${parsedData.productName}"`);
 
       return parsedData;
 
@@ -161,7 +174,7 @@ ${ingredientsText}
 
   /**
    * Calcule la confiance globale de l'analyse OCR
-   * @param {Object} parsedData - Donn√©es pars√©es par l'IA
+   * @param {Object} parsedData - DonnÈes parsÈes par l'IA
    * @param {Object} ocrTexts - Textes bruts OCR
    * @returns {number} - Confiance entre 0 et 1
    */
@@ -169,26 +182,26 @@ ${ingredientsText}
     let confidence = 0;
     let weights = 0;
 
-    // Crit√®re 1 : Longueur du texte OCR (20%)
+    // CritËre 1 : Longueur du texte OCR (20%)
     const frontTextQuality = Math.min(ocrTexts.frontText.length / 100, 1);
     const ingredientsTextQuality = Math.min(ocrTexts.ingredientsText.length / 200, 1);
     confidence += (frontTextQuality + ingredientsTextQuality) / 2 * 0.2;
     weights += 0.2;
 
-    // Crit√®re 2 : Pr√©sence du nom produit (25%)
+    // CritËre 2 : PrÈsence du nom produit (25%)
     if (parsedData.productName && parsedData.productName.length > 3) {
       confidence += 0.25;
     }
     weights += 0.25;
 
-    // Crit√®re 3 : Pr√©sence des ingr√©dients (30%)
+    // CritËre 3 : PrÈsence des ingrÈdients (30%)
     if (parsedData.ingredients && parsedData.ingredients.length > 0) {
       const ingredientsScore = Math.min(parsedData.ingredients.length / 10, 1);
       confidence += ingredientsScore * 0.3;
     }
     weights += 0.3;
 
-    // Crit√®re 4 : Pr√©sence de donn√©es nutritionnelles (15%)
+    // CritËre 4 : PrÈsence de donnÈes nutritionnelles (15%)
     if (parsedData.nutritionalValues) {
       const nutritionFields = Object.keys(parsedData.nutritionalValues).length;
       const nutritionScore = Math.min(nutritionFields / 6, 1);
@@ -196,16 +209,16 @@ ${ingredientsText}
     }
     weights += 0.15;
 
-    // Crit√®re 5 : Confiance IA (10%)
+    // CritËre 5 : Confiance IA (10%)
     if (parsedData.confidence) {
       confidence += parsedData.confidence * 0.1;
     }
     weights += 0.1;
 
-    // Normaliser sur les poids utilis√©s
+    // Normaliser sur les poids utilisÈs
     const finalConfidence = weights > 0 ? confidence / weights : 0.5;
 
-    console.log(`[OCR] Confiance calcul√©e: ${(finalConfidence * 100).toFixed(1)}%`);
+    console.log(`[OCR] Confiance calculÈe: ${(finalConfidence * 100).toFixed(1)}%`);
     return Math.max(0.4, Math.min(finalConfidence, 0.95)); // Entre 40% et 95%
   }
 
@@ -215,18 +228,18 @@ ${ingredientsText}
   _basicParsing(frontText, ingredientsText, barcode) {
     console.log('[OCR] Parsing basique (sans IA)...');
 
-    // Extraire nom produit (premi√®re ligne significative)
+    // Extraire nom produit (premiËre ligne significative)
     const frontLines = frontText.split('\n').filter(l => l.trim().length > 3);
     const productName = frontLines[0] || 'Produit inconnu';
 
-    // Extraire ingr√©dients (chercher "ingr√©dients:" puis splitter)
-    const ingredientsMatch = ingredientsText.match(/ingr[√©e]dients?\s*:?\s*([^.]+)/i);
+    // Extraire ingrÈdients (chercher "ingrÈdients:" puis splitter)
+    const ingredientsMatch = ingredientsText.match(/ingr[Èe]dients?\s*:?\s*([^.]+)/i);
     const ingredientsRaw = ingredientsMatch ? ingredientsMatch[1] : ingredientsText;
     const ingredients = ingredientsRaw
       .split(/,|;/)
       .map(i => i.trim())
       .filter(i => i.length > 2)
-      .slice(0, 20); // Max 20 ingr√©dients
+      .slice(0, 20); // Max 20 ingrÈdients
 
     return {
       productName,
@@ -247,20 +260,63 @@ ${ingredientsText}
     return `NUTELLA
 Ferrero
 400g
-P√¢te √† tartiner aux noisettes et au cacao`;
+P‚te ‡ tartiner aux noisettes et au cacao`;
   }
 
   _simulateIngredientsText() {
-    return `INGR√âDIENTS: Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT √©cr√©m√© en poudre 6.6%, lactos√©rum en poudre (LAIT), √©mulsifiants: l√©cithines (SOJA), vanilline.
+    return `INGR…DIENTS: Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT ÈcrÈmÈ en poudre 6.6%, lactosÈrum en poudre (LAIT), Èmulsifiants: lÈcithines (SOJA), vanilline.
 
 VALEURS NUTRITIONNELLES pour 100g:
-√ânergie: 2252 kJ / 539 kcal
-Mati√®res grasses: 30.9g
-  dont acides gras satur√©s: 10.6g
+…nergie: 2252 kJ / 539 kcal
+MatiËres grasses: 30.9g
+  dont acides gras saturÈs: 10.6g
 Glucides: 57.5g
   dont sucres: 56.3g
-Prot√©ines: 6.3g
+ProtÈines: 6.3g
 Sel: 0.107g`;
+  }
+  /**
+   * Valide la cohÈrence entre catÈgorie dÈtectÈe et ingrÈdients
+   */
+  validateCoherence(detectedCategory, ingredientsText, parsedData) {
+    console.log('[OCR] Validation cohÈrence catÈgorie...');
+    
+    const foodKeywords = ['sucre', 'huile', 'lait', 'farine', 'sel', 'cacao', 'vanille'];
+    const detergentKeywords = ['lessive', 'dÈtergent', 'savon', 'tensioactif', 'lavage'];
+    const cosmeticKeywords = ['crËme', 'lotion', 'shampooing', 'gel douche'];
+
+    const textLower = ingredientsText.toLowerCase();
+    const foodCount = foodKeywords.filter(k => textLower.includes(k)).length;
+    const detergentCount = detergentKeywords.filter(k => textLower.includes(k)).length;
+    const cosmeticCount = cosmeticKeywords.filter(k => textLower.includes(k)).length;
+
+    let probableCategory = 'food';
+    if (detergentCount > foodCount && detergentCount > cosmeticCount) {
+      probableCategory = 'detergents';
+    } else if (cosmeticCount > foodCount && cosmeticCount > detergentCount) {
+      probableCategory = 'cosmetics';
+    }
+
+    const isCoherent = detectedCategory === probableCategory;
+    
+    let incoherenceScore = 0;
+    if (!isCoherent) {
+      if ((detectedCategory === 'food' && probableCategory === 'detergents') ||
+          (detectedCategory === 'detergents' && probableCategory === 'food')) {
+        incoherenceScore = 75;
+      } else {
+        incoherenceScore = 40;
+      }
+    }
+
+    return {
+      isCoherent,
+      canProceed: incoherenceScore < 50,
+      incoherenceScore,
+      detectedCategory,
+      probableCategory,
+      reason: !isCoherent ? 'IncohÈrence dÈtectÈe' : 'CohÈrent'
+    };
   }
 }
 
