@@ -1,9 +1,11 @@
-// PATH: backend\src\services\vision\VisionService.js
+﻿// PATH: backend\src\services\vision\VisionService.js
 const vision = require('@google-cloud/vision');
 const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+const aiCache = require('../aiCache.service');
 
 class VisionService {
   constructor() {
@@ -19,12 +21,12 @@ class VisionService {
         this.googleVisionClient = new vision.ImageAnnotatorClient({
           keyFilename: process.env.GOOGLE_CLOUD_KEYFILE
         });
-        console.log('Ã¢Å“â€¦ Google Vision client initialise');
+        console.log('ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Google Vision client initialise');
       } else {
-        console.warn('Ã¢Å¡Â Ã¯Â¸Â GOOGLE_CLOUD_KEYFILE non configure - fallback Tesseract uniquement');
+        console.warn('ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â GOOGLE_CLOUD_KEYFILE non configure - fallback Tesseract uniquement');
       }
     } catch (error) {
-      console.error('Ã¢ÂÅ’ Erreur init Google Vision:', error.message);
+      console.error('ÃƒÂ¢Ã‚ÂÃ…â€™ Erreur init Google Vision:', error.message);
     }
   }
 
@@ -41,9 +43,9 @@ class VisionService {
             }
           }
         });
-        console.log('Ã¢Å“â€¦ Tesseract worker initialise');
+        console.log('ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Tesseract worker initialise');
       } catch (error) {
-        console.error('Ã¢ÂÅ’ Erreur init Tesseract:', error.message);
+        console.error('ÃƒÂ¢Ã‚ÂÃ…â€™ Erreur init Tesseract:', error.message);
         throw error;
       }
     }
@@ -232,7 +234,7 @@ class VisionService {
   }
 
   extractBrand(lines, fullText) {
-    // Patterns de marques connues (Â  enrichir)
+    // Patterns de marques connues (Ã‚Â  enrichir)
     const brandPatterns = [
       /\b(Nestle|Danone|Unilever|L'Oreal|Garnier|Nivea|Dove|Ariel|Skip)\b/i,
       /\bmarque\s*:\s*([^\n]+)/i,
@@ -310,7 +312,7 @@ class VisionService {
     const lowerText = text.toLowerCase();
     
     // Detection alimentaire
-    if (ingredients && ingredients.match(/sucre|sel|farine|lait|Ã…â€œuf|huile/i)) {
+    if (ingredients && ingredients.match(/sucre|sel|farine|lait|Ãƒâ€¦Ã¢â‚¬Å“uf|huile/i)) {
       return 'food';
     }
     
@@ -372,6 +374,22 @@ class VisionService {
     const jobId = options.jobId || uuidv4();
     
     try {
+      // ✅ CACHE: Hash du fichier image pour détecter duplicatas
+      const imageBuffer = await fs.readFile(imagePath);
+      const imageHash = crypto.createHash('md5').update(imageBuffer).digest('hex');
+      const cacheKey = `vision:ocr:${imageHash}`;
+      
+      // ✅ CACHE: Vérifier si déjà analysé
+      const cached = await aiCache.get(cacheKey);
+      if (cached) {
+        console.log(`[Vision] ✅ CACHE HIT - ${jobId} (économie: 1.5¢)`);
+        return {
+          ...cached,
+          jobId,
+          fromCache: true
+        };
+      }
+      
       console.log(`[Vision] Debut analyse ${jobId}`);
       
       // Essayer Google Vision d'abord
@@ -394,6 +412,23 @@ class VisionService {
       
       const duration = Date.now() - startTime;
       console.log(`[Vision] Analyse terminee en ${duration}ms - Service: ${finalResult.service}`);
+      
+      // ✅ CACHE: Sauvegarder le résultat (TTL 0 = permanent pour OCR)
+      const resultToCache = {
+        jobId,
+        status: 'completed',
+        result: {
+          text: finalResult.text,
+          extractedData,
+          confidence: finalResult.confidence || 0,
+          service: finalResult.service,
+          usedFallback: finalResult.usedFallback || false,
+          duration
+        }
+      };
+      
+      await aiCache.set(cacheKey, resultToCache, 0); // 0 = cache permanent
+      console.log(`[Vision] ✅ Résultat sauvegardé en cache - ${cacheKey.substring(0, 20)}...`);
       
       return {
         jobId,

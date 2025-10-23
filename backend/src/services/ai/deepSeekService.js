@@ -1,7 +1,9 @@
-// PATH: backend/src/services/ai/deepSeekService.js
-// FICHIER COMPLET - € CR‰ER TEL QUEL
+﻿// PATH: backend/src/services/ai/deepSeekService.js
+// FICHIER COMPLET - â‚¬ CRâ€°ER TEL QUEL
 
 const axios = require('axios');
+const crypto = require('crypto');
+const aiCache = require('../aiCache.service');
 
 class DeepSeekService {
   constructor() {
@@ -15,6 +17,18 @@ class DeepSeekService {
   }
 
   async analyze(prompt, systemPrompt = null) {
+    // ✅ CACHE: Hash du prompt pour détecter requêtes identiques
+    const cacheInput = JSON.stringify({ prompt, systemPrompt });
+    const cacheHash = crypto.createHash('md5').update(cacheInput).digest('hex');
+    const cacheKey = `deepseek:analyze:${cacheHash}`;
+    
+    // ✅ CACHE: Vérifier si déjà analysé
+    const cached = await aiCache.get(cacheKey);
+    if (cached) {
+      console.log('[DeepSeek] ✅ CACHE HIT (économie: ~0.02¢)');
+      return cached;
+    }
+    
     try {
       const messages = [];
       
@@ -44,7 +58,13 @@ class DeepSeekService {
       );
 
       console.log('[DeepSeek] Response received');
-      return response.data.choices[0].message.content;
+      
+      // ✅ CACHE: Sauvegarder résultat (TTL 30 jours)
+      const result = response.data.choices[0].message.content;
+      await aiCache.set(cacheKey, result, 2592000); // 30 jours
+      console.log('[DeepSeek] ✅ Résultat sauvegardé en cache');
+      
+      return result;
 
     } catch (error) {
       console.error('[DeepSeek] API error:', error.response?.data || error.message);
@@ -85,7 +105,13 @@ class DeepSeekService {
       );
 
       console.log('[DeepSeek] OpenAI fallback successful');
-      return response.data.choices[0].message.content;
+      
+      // ✅ CACHE: Sauvegarder résultat (TTL 30 jours)
+      const result = response.data.choices[0].message.content;
+      await aiCache.set(cacheKey, result, 2592000); // 30 jours
+      console.log('[DeepSeek] ✅ Résultat sauvegardé en cache');
+      
+      return result;
 
     } catch (error) {
       console.error('[DeepSeek] OpenAI fallback failed:', error.message);
@@ -196,7 +222,7 @@ Format ta reponse de maniere claire avec des titres pour chaque section.`;
           continue;
         }
 
-        const cleaned = line.replace(/^[-â€¢*]\s*/, '').trim();
+        const cleaned = line.replace(/^[-Ã¢â‚¬Â¢*]\s*/, '').trim();
         if (cleaned && items.length < 5) {
           items.push(cleaned);
         }
@@ -208,7 +234,7 @@ Format ta reponse de maniere claire avec des titres pour chaque section.`;
 
   async chat(message, context = {}) {
     const systemPrompt = `Tu es l'assistant nutritionnel ECOLOJIA. 
-    Tu aides les utilisateurs   comprendre les analyses de produits et   faire des choix plus sains.
+    Tu aides les utilisateurs Â  comprendre les analyses de produits et Â  faire des choix plus sains.
     Sois bienveillant, pedagogue et scientifiquement precis.
     ${context.product ? `Produit en contexte: ${context.product.name}` : ''}`;
 
