@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Info } from 'lucide-react';
 
 interface Ingredient {

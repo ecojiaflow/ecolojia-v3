@@ -41,7 +41,7 @@ const authenticateUser = authenticateToken;
 const checkQuota = (type) => {
   return async (req, res, next) => {
     try {
-      // Pour l'instant, on passe toujours (  implementer selon vos besoins)
+      // Pour l'instant, on passe toujours (Â  implementer selon vos besoins)
       console.log(`Checking quota for ${type} - User: ${req.user?.userId}`);
       next();
     } catch (error) {

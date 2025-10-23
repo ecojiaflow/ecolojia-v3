@@ -5,18 +5,18 @@ const scoringUnified = require('../src/services/scoringUnified');
 require('dotenv').config();
 
 async function recalculateAllScores() {
-  console.log('🔄 MIGRATION - Recalcul des scores pour tous les produits');
+  console.log('ðŸ”„ MIGRATION - Recalcul des scores pour tous les produits');
   console.log('================================================\n');
 
   try {
     // Connexion MongoDB
-    console.log('📊 Connexion à MongoDB...');
+    console.log('ðŸ“Š Connexion Ã  MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ MongoDB connecté\n');
+    console.log('âœ… MongoDB connectÃ©\n');
 
     // Compter les produits
     const totalProducts = await Product.countDocuments();
-    console.log(`📦 Total produits à recalculer : ${totalProducts}\n`);
+    console.log(`ðŸ“¦ Total produits Ã  recalculer : ${totalProducts}\n`);
 
     // Traiter par batch de 100
     const batchSize = 100;
@@ -30,11 +30,11 @@ async function recalculateAllScores() {
         .limit(batchSize)
         .lean();
 
-      console.log(`\n🔄 Batch ${Math.floor(skip / batchSize) + 1}/${Math.ceil(totalProducts / batchSize)}`);
+      console.log(`\nðŸ”„ Batch ${Math.floor(skip / batchSize) + 1}/${Math.ceil(totalProducts / batchSize)}`);
       
       for (const product of products) {
         try {
-          // Préparer les données pour le scoring
+          // PrÃ©parer les donnÃ©es pour le scoring
           const scoringData = {
             novaGroup: product.foodData?.novaGroup,
             nutriScore: product.foodData?.nutriScore,
@@ -45,7 +45,7 @@ async function recalculateAllScores() {
             nutriments: product.foodData?.nutrition?.per100g || {}
           };
 
-          // Recalculer les scores selon la catégorie
+          // Recalculer les scores selon la catÃ©gorie
           let newScores;
           if (product.category === 'cosmetics') {
             newScores = scoringUnified.calculateCosmeticScores(scoringData);
@@ -55,7 +55,7 @@ async function recalculateAllScores() {
             newScores = scoringUnified.calculateFoodScores(scoringData);
           }
 
-          // Mettre à jour le produit
+          // Mettre Ã  jour le produit
           await Product.updateOne(
             { _id: product._id },
             { 
@@ -73,39 +73,39 @@ async function recalculateAllScores() {
           // Log tous les 50 produits
           if (processed % 50 === 0) {
             const progress = ((processed / totalProducts) * 100).toFixed(1);
-            console.log(`   ✅ ${processed}/${totalProducts} (${progress}%) - ${updated} mis à jour, ${errors} erreurs`);
+            console.log(`   âœ… ${processed}/${totalProducts} (${progress}%) - ${updated} mis Ã  jour, ${errors} erreurs`);
           }
 
         } catch (error) {
           errors++;
-          console.error(`   ❌ Erreur produit ${product.barcode}: ${error.message}`);
+          console.error(`   âŒ Erreur produit ${product.barcode}: ${error.message}`);
         }
       }
     }
 
     console.log('\n================================================');
-    console.log('✅ MIGRATION TERMINÉE');
-    console.log(`📊 Résultats :`);
-    console.log(`   - Total traités : ${processed}`);
-    console.log(`   - Mis à jour : ${updated}`);
+    console.log('âœ… MIGRATION TERMINÃ‰E');
+    console.log(`ðŸ“Š RÃ©sultats :`);
+    console.log(`   - Total traitÃ©s : ${processed}`);
+    console.log(`   - Mis Ã  jour : ${updated}`);
     console.log(`   - Erreurs : ${errors}`);
-    console.log(`   - Taux de succès : ${((updated / processed) * 100).toFixed(2)}%`);
+    console.log(`   - Taux de succÃ¨s : ${((updated / processed) * 100).toFixed(2)}%`);
 
   } catch (error) {
-    console.error('\n❌ ERREUR MIGRATION:', error);
+    console.error('\nâŒ ERREUR MIGRATION:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('\n🔌 Connexion MongoDB fermée');
+    console.log('\nðŸ”Œ Connexion MongoDB fermÃ©e');
   }
 }
 
 // Lancer la migration
 recalculateAllScores()
   .then(() => {
-    console.log('\n✅ Script terminé avec succès');
+    console.log('\nâœ… Script terminÃ© avec succÃ¨s');
     process.exit(0);
   })
   .catch(error => {
-    console.error('\n❌ Script terminé avec erreur:', error);
+    console.error('\nâŒ Script terminÃ© avec erreur:', error);
     process.exit(1);
   });

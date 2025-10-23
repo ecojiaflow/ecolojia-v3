@@ -37,7 +37,7 @@ class DataExportService {
    */
   async exportUserData(userId, format = 'json') {
     try {
-      console.log(`ðŸ“¦ Export des donnees pour l'utilisateur ${userId} en format ${format}`);
+      console.log(`Ã°Å¸â€œÂ¦ Export des donnees pour l'utilisateur ${userId} en format ${format}`);
 
       // Recuperer toutes les donnees
       const userData = await this.collectUserData(userId);
@@ -97,7 +97,7 @@ class DataExportService {
       };
 
     } catch (error) {
-      console.error('âŒ Erreur export donnees:', error);
+      console.error('Ã¢ÂÅ’ Erreur export donnees:', error);
       throw error;
     }
   }
@@ -106,7 +106,7 @@ class DataExportService {
    * Collecte toutes les donnees d'un utilisateur
    */
   async collectUserData(userId) {
-    console.log('ðŸ“Š Collecte des donnees...');
+    console.log('Ã°Å¸â€œÅ  Collecte des donnees...');
 
     // Donnees utilisateur
     const user = await User.findById(userId).select('-password -refreshToken');
@@ -141,7 +141,7 @@ class DataExportService {
       exportDate: new Date().toISOString(),
       dataRetentionPolicy: {
         analyses: '2 ans',
-        personalData: 'Jusqu\'  suppression du compte',
+        personalData: 'Jusqu\'Â  suppression du compte',
         payments: '10 ans (obligations legales)'
       }
     };
@@ -392,7 +392,7 @@ class DataExportService {
     // Graphique simple des tendances
     if (stats.monthlyTrend) {
       doc.fontSize(14)
-         .text('‰volution mensuelle', 50, statsY + 100);
+         .text('â€°volution mensuelle', 50, statsY + 100);
       
       // Dessiner un mini graphique
       this.drawSimpleChart(doc, stats.monthlyTrend, 50, statsY + 130);
@@ -559,7 +559,7 @@ class DataExportService {
       doc.fontSize(8)
          .fillColor('#9CA3AF')
          .text(
-           `Export genere le ${new Date(exportDate).toLocaleDateString('fr-FR')}   ${new Date(exportDate).toLocaleTimeString('fr-FR')}`,
+           `Export genere le ${new Date(exportDate).toLocaleDateString('fr-FR')} Â  ${new Date(exportDate).toLocaleTimeString('fr-FR')}`,
            50, 760
          );
       
@@ -818,7 +818,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
       };
       
       // Sauvegarder en base si vous avez un modele ExportLog
-      console.log('ðŸ“ Export enregistre:', exportLog);
+      console.log('Ã°Å¸â€œÂ Export enregistre:', exportLog);
       
     } catch (error) {
       console.error('Erreur log export:', error);
@@ -840,7 +840,7 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
         // Supprimer les fichiers de plus de 24h
         if (now - stats.mtimeMs > 24 * 60 * 60 * 1000) {
           await fs.unlink(filepath);
-          console.log(`ðŸ—‘ï¸ Export expire supprime: ${file}`);
+          console.log(`Ã°Å¸â€”â€˜Ã¯Â¸Â Export expire supprime: ${file}`);
         }
       }
     } catch (error) {
@@ -849,11 +849,11 @@ Date d'export : ${new Date().toLocaleString('fr-FR')}
   }
 
   /**
-   * Supprime toutes les donnees d'un utilisateur (droit   l'oubli)
+   * Supprime toutes les donnees d'un utilisateur (droit Â  l'oubli)
    */
   async deleteAllUserData(userId) {
     try {
-      console.log(`ðŸ—‘ï¸ Suppression complete des donnees pour l'utilisateur ${userId}`);
+      console.log(`Ã°Å¸â€”â€˜Ã¯Â¸Â Suppression complete des donnees pour l'utilisateur ${userId}`);
       
       // Supprimer dans l'ordre pour respecter les contraintes
       await Analysis.deleteMany({ userId });

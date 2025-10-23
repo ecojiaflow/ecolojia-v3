@@ -1,4 +1,4 @@
-﻿// PATH: backend/scripts/remigrate-scores-final-v2.js
+// PATH: backend/scripts/remigrate-scores-final-v2.js
 // Re-migration COMPLÈTE avec TOUS les scores
 
 const mongoose = require('mongoose');

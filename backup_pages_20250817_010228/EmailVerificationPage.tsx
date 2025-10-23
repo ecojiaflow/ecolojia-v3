@@ -19,7 +19,7 @@ export const EmailVerificationPage: React.FC = () => {
       if (!token) {
         setVerificationResult({
           success: false,
-          message: 'Token de vérification manquant'
+          message: 'Token de vÃ©rification manquant'
         });
         return;
       }
@@ -29,10 +29,10 @@ export const EmailVerificationPage: React.FC = () => {
         setVerificationResult(result);
         
         if (result.success) {
-          // Actualiser les données utilisateur
+          // Actualiser les donnÃ©es utilisateur
           await refreshUser();
           
-          // Rediriger vers dashboard après 3 secondes
+          // Rediriger vers dashboard aprÃ¨s 3 secondes
           setTimeout(() => {
             navigate('/dashboard');
           }, 3000);
@@ -53,7 +53,7 @@ export const EmailVerificationPage: React.FC = () => {
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
               <h2 className="text-lg font-medium text-gray-900">
-                Vérification en cours...
+                VÃ©rification en cours...
               </h2>
               <p className="mt-2 text-sm text-gray-600">
                 Validation de votre adresse email
@@ -72,9 +72,9 @@ export const EmailVerificationPage: React.FC = () => {
           <div className="text-center">
             {verificationResult?.success ? (
               <>
-                <div className="text-green-500 text-6xl mb-4">âÃ…â€œââ‚¬Â¦</div>
+                <div className="text-green-500 text-6xl mb-4">Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦</div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
-                  Email vérifié !
+                  Email vÃ©rifiÃ© !
                 </h2>
                 <p className="text-gray-600 mb-6">
                   {verificationResult.message}
@@ -86,14 +86,14 @@ export const EmailVerificationPage: React.FC = () => {
                   onClick={() => navigate('/dashboard')}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
-                  Accéder au dashboard
+                  AccÃ©der au dashboard
                 </button>
               </>
             ) : (
               <>
-                <div className="text-red-500 text-6xl mb-4">âÃ‚ÂÃ…â€™</div>
+                <div className="text-red-500 text-6xl mb-4">Ã¢Ãƒâ€šÃ‚ÂÃƒâ€¦Ã¢â‚¬â„¢</div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
-                  Vérification échouée
+                  VÃ©rification Ã©chouÃ©e
                 </h2>
                 <p className="text-gray-600 mb-6">
                   {verificationResult?.message || error || 'Erreur inconnue'}
@@ -103,13 +103,13 @@ export const EmailVerificationPage: React.FC = () => {
                     onClick={() => navigate('/auth')}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
                   >
-                    Retour ÃƒÆ’Ã‚Â  la connexion
+                    Retour ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  la connexion
                   </button>
                   <button
                     onClick={() => window.location.reload()}
                     className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                   >
-                    Réessayer
+                    RÃ©essayer
                   </button>
                 </div>
               </>

@@ -5,7 +5,7 @@
 const axios = require('axios');
 const fs = require('fs');
 
-// âœ… Configuration complete
+// Ã¢Å“â€¦ Configuration complete
 const CONFIG = {
   BACKEND_URL: 'https://ecolojia-backendv1.onrender.com', // PRODUCTION RENDER
   OPENFOODFACTS_URL: 'https://world.openfoodfacts.org/cgi/search.pl',
@@ -17,10 +17,10 @@ const CONFIG = {
   DELAY_MS: 2000
 };
 
-// âœ… Recuperation produits OpenFoodFacts
+// Ã¢Å“â€¦ Recuperation produits OpenFoodFacts
 async function fetchProducts() {
   try {
-    console.log('ðŸ” Recuperation OpenFoodFacts...');
+    console.log('Ã°Å¸â€Â Recuperation OpenFoodFacts...');
     
     const params = {
       search_terms: 'bio organic',
@@ -47,16 +47,16 @@ async function fetchProducts() {
       !p.product_name.toLowerCase().includes('test')
     );
 
-    console.log(`âœ… ${products.length} produits recuperes`);
+    console.log(`Ã¢Å“â€¦ ${products.length} produits recuperes`);
     return products;
 
   } catch (error) {
-    console.error('âŒ Erreur OpenFoodFacts:', error.message);
+    console.error('Ã¢ÂÅ’ Erreur OpenFoodFacts:', error.message);
     return [];
   }
 }
 
-// âœ… Transformation enrichie
+// Ã¢Å“â€¦ Transformation enrichie
 function transformProduct(product, index) {
   const slug = generateUniqueSlug(product.product_name, index);
   const ecoScore = calculateEcoScore(product);
@@ -76,7 +76,7 @@ function transformProduct(product, index) {
     zones_dispo: ['FR'],
     prices: {
       FR: {
-        amount: Math.floor(Math.random() * 20) + 5, // Prix simule 5-25â‚¬
+        amount: Math.floor(Math.random() * 20) + 5, // Prix simule 5-25Ã¢â€šÂ¬
         currency: 'EUR'
       }
     },
@@ -94,7 +94,7 @@ function transformProduct(product, index) {
   };
 }
 
-// âœ… Fonctions utilitaires
+// Ã¢Å“â€¦ Fonctions utilitaires
 function generateUniqueSlug(title, index) {
   const base = title
     .toLowerCase()
@@ -163,9 +163,9 @@ function generateResumeEn(product) {
   return `${brand}Certified organic product from OpenFoodFacts, environmentally friendly.`;
 }
 
-// âœ… Sauvegarde directe PostgreSQL (endpoints alternatifs)
+// Ã¢Å“â€¦ Sauvegarde directe PostgreSQL (endpoints alternatifs)
 async function saveToDatabase(products) {
-  console.log('\nðŸ’¾ Sauvegarde PostgreSQL...');
+  console.log('\nÃ°Å¸â€™Â¾ Sauvegarde PostgreSQL...');
   
   let saved = 0;
   
@@ -194,7 +194,7 @@ async function saveToDatabase(products) {
             }
           );
           
-          console.log(`âœ… Sauve via ${endpoint}: ${product.title.substring(0, 40)}...`);
+          console.log(`Ã¢Å“â€¦ Sauve via ${endpoint}: ${product.title.substring(0, 40)}...`);
           saved++;
           success = true;
           break;
@@ -206,23 +206,23 @@ async function saveToDatabase(products) {
       }
       
       if (!success) {
-        console.error(`âŒ Tous endpoints echoues: ${product.title.substring(0, 30)}...`);
+        console.error(`Ã¢ÂÅ’ Tous endpoints echoues: ${product.title.substring(0, 30)}...`);
       }
       
     } catch (error) {
-      console.error(`âŒ Erreur generale: ${product.title.substring(0, 30)}...`);
+      console.error(`Ã¢ÂÅ’ Erreur generale: ${product.title.substring(0, 30)}...`);
     }
     
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
   
-  console.log(`\nðŸ’¾ PostgreSQL: ${saved}/${products.length} sauvegardes`);
+  console.log(`\nÃ°Å¸â€™Â¾ PostgreSQL: ${saved}/${products.length} sauvegardes`);
   return saved;
 }
 
-// âœ… Indexation directe Algolia
+// Ã¢Å“â€¦ Indexation directe Algolia
 async function indexToAlgolia(products) {
-  console.log('\nðŸ” Indexation Algolia...');
+  console.log('\nÃ°Å¸â€Â Indexation Algolia...');
   
   try {
     const algoliaObjects = products.map(product => ({
@@ -257,19 +257,19 @@ async function indexToAlgolia(products) {
       }
     );
     
-    console.log(`âœ… Algolia: ${algoliaObjects.length} produits indexes`);
+    console.log(`Ã¢Å“â€¦ Algolia: ${algoliaObjects.length} produits indexes`);
     return true;
     
   } catch (error) {
-    console.error('âŒ Erreur Algolia:', error.response?.data || error.message);
+    console.error('Ã¢ÂÅ’ Erreur Algolia:', error.response?.data || error.message);
     return false;
   }
 }
 
-// âœ… Import complet
+// Ã¢Å“â€¦ Import complet
 async function runDirectImport() {
-  console.log('ðŸš€ IMPORT DIRECT COMPLET - OPENFOODFACTS');
-  console.log(`ðŸ“Š Objectif: ${CONFIG.MAX_PRODUCTS} produits\n`);
+  console.log('Ã°Å¸Å¡â‚¬ IMPORT DIRECT COMPLET - OPENFOODFACTS');
+  console.log(`Ã°Å¸â€œÅ  Objectif: ${CONFIG.MAX_PRODUCTS} produits\n`);
   
   try {
     // 1. Recuperation
@@ -277,13 +277,13 @@ async function runDirectImport() {
     if (rawProducts.length === 0) return;
     
     // 2. Transformation
-    console.log('\nðŸ”„ Transformation produits...');
+    console.log('\nÃ°Å¸â€â€ž Transformation produits...');
     const enrichedProducts = rawProducts.map((product, index) => 
       transformProduct(product, index)
     );
     
     // 3. Sauvegarde base de donnees (IMPORT COMPLET)
-    console.log('\nðŸ’¾ Import complet de tous les produits...');
+    console.log('\nÃ°Å¸â€™Â¾ Import complet de tous les produits...');
     const savedCount = await saveToDatabase(enrichedProducts);
     
     // 4. Indexation Algolia
@@ -292,18 +292,18 @@ async function runDirectImport() {
     }
     
     // 5. Statistiques finales
-    console.log('\nðŸ“Š R‰SULTATS FINAUX:');
-    console.log(`âœ… Produits traites: ${enrichedProducts.length}`);
-    console.log(`ðŸ’¾ PostgreSQL: ${savedCount} sauvegardes`);
-    console.log(`ðŸ” Algolia: Indexes`);
-    console.log(`ðŸŽ¯ Taux succes: ${Math.round((savedCount / enrichedProducts.length) * 100)}%`);
+    console.log('\nÃ°Å¸â€œÅ  Râ€°SULTATS FINAUX:');
+    console.log(`Ã¢Å“â€¦ Produits traites: ${enrichedProducts.length}`);
+    console.log(`Ã°Å¸â€™Â¾ PostgreSQL: ${savedCount} sauvegardes`);
+    console.log(`Ã°Å¸â€Â Algolia: Indexes`);
+    console.log(`Ã°Å¸Å½Â¯ Taux succes: ${Math.round((savedCount / enrichedProducts.length) * 100)}%`);
     
     // 6. Sauvegarde log
     const logData = {
       timestamp: new Date().toISOString(),
       imported: savedCount,
       total: enrichedProducts.length,
-      products: enrichedProducts.slice(0, 5) // ‰chantillon
+      products: enrichedProducts.slice(0, 5) // â€°chantillon
     };
     
     fs.writeFileSync(
@@ -311,15 +311,15 @@ async function runDirectImport() {
       JSON.stringify(logData, null, 2)
     );
     
-    console.log('\nðŸ’¾ Log sauvegarde');
-    console.log('ðŸŽ‰ IMPORT TERMIN‰! Produits disponibles sur le site');
+    console.log('\nÃ°Å¸â€™Â¾ Log sauvegarde');
+    console.log('Ã°Å¸Å½â€° IMPORT TERMINâ€°! Produits disponibles sur le site');
     
   } catch (error) {
-    console.error('ðŸ’¥ Erreur import:', error.message);
+    console.error('Ã°Å¸â€™Â¥ Erreur import:', error.message);
   }
 }
 
-// âœ… Execution
+// Ã¢Å“â€¦ Execution
 if (require.main === module) {
   runDirectImport().catch(console.error);
 }

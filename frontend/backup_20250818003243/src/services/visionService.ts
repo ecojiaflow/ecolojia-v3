@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/visionService.ts
+// PATH: frontend/src/services/visionService.ts
 import api, { ApiResponse } from './apiClient';
 
 export async function analyzeImage(file: File): Promise<{

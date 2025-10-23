@@ -1,4 +1,4 @@
-﻿// Middleware d'auth désactivé pour les tests
+// Middleware d'auth désactivé pour les tests
 const authDisabled = (req, res, next) => {
   // Simuler un utilisateur authentifié
   req.user = {

@@ -1,4 +1,4 @@
-﻿class MetricsCollector {
+class MetricsCollector {
   constructor() {
     this.metrics = {
       requests: {

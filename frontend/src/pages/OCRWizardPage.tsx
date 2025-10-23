@@ -1,5 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Camera, Check, AlertCircle, Loader2, Info, Edit3 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Camera, Check, AlertCircle, Loader2, Info, Edit3, AlertTriangle } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import toast from 'react-hot-toast';
@@ -28,6 +28,12 @@ interface OCRResult {
   };
   confidence: number;
   aiAnalysis: string;
+  detectedCategory?: string; // ✅ NOUVEAU
+  coherenceCheck?: {          // ✅ NOUVEAU
+    isCoherent: boolean;
+    coherenceScore: number;
+    reasons: string[];
+  };
 }
 
 type WizardStep = 'front' | 'ingredients' | 'validation';
@@ -46,6 +52,9 @@ export default function OCRWizardPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  // ✅ NOUVEAU - Catégorie détectée et cohérence
+  const [detectedCategory, setDetectedCategory] = useState<string>('');
 
   // Editable fields for validation step
   const [editableData, setEditableData] = useState<OCRResult['frontData'] & { ingredients: string }>({
@@ -141,6 +150,12 @@ export default function OCRWizardPage() {
       if (response.data && response.data.success && response.data.ocrResult) {
         console.log('[Wizard] Résultat OCR reçu:', response.data);
         setOcrResult(response.data.ocrResult);
+        
+        // ✅ NOUVEAU - Sauvegarder la catégorie détectée
+        if (response.data.ocrResult.detectedCategory) {
+          setDetectedCategory(response.data.ocrResult.detectedCategory);
+        }
+
         setEditableData({
           productName: response.data.ocrResult.frontData.productName,
           brand: response.data.ocrResult.frontData.brand,
@@ -165,6 +180,12 @@ export default function OCRWizardPage() {
   const handleSaveProduct = async () => {
     if (!ocrResult) return;
 
+    // ✅ NOUVEAU - Vérifier cohérence avant sauvegarde
+    if (ocrResult.coherenceCheck && !ocrResult.coherenceCheck.isCoherent && ocrResult.coherenceCheck.coherenceScore < 0.4) {
+      toast.error('Impossible de créer le produit : incohérence détectée entre les photos');
+      return;
+    }
+
     setIsSaving(true);
 
     try {
@@ -179,7 +200,9 @@ export default function OCRWizardPage() {
         ocrMetadata: {
           analyzedAt: new Date().toISOString(),
           rawTexts: ocrResult.rawTexts,
-          aiAnalysis: ocrResult.aiAnalysis
+          aiAnalysis: ocrResult.aiAnalysis,
+          detectedCategory: ocrResult.detectedCategory, // ✅ NOUVEAU
+          coherenceCheck: ocrResult.coherenceCheck      // ✅ NOUVEAU
         }
       };
 
@@ -196,6 +219,75 @@ export default function OCRWizardPage() {
       toast.error(error.response?.data?.message || 'Erreur lors de la sauvegarde');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // ✅ NOUVEAU - Helper pour obtenir les instructions selon catégorie
+  const getCategoryInstructions = () => {
+    switch (detectedCategory) {
+      case 'food':
+        return {
+          title: '🍽️ Produit alimentaire détecté',
+          description: 'Prenez une photo claire de la liste des ingrédients et du tableau nutritionnel (calories, lipides, glucides, protéines, sel).',
+          icon: '🍽️'
+        };
+      case 'cosmetic':
+        return {
+          title: '💄 Cosmétique détecté',
+          description: 'Prenez une photo claire de la liste INCI (composition), les conservateurs et les allergènes éventuels.',
+          icon: '💄'
+        };
+      case 'detergent':
+        return {
+          title: '🧴 Détergent détecté',
+          description: 'Prenez une photo claire de la composition chimique (tensioactifs, agents nettoyants) et des pictogrammes de sécurité.',
+          icon: '🧴'
+        };
+      default:
+        return {
+          title: '📷 Photo de composition requise',
+          description: 'Prenez une photo claire de la liste des ingrédients et du tableau nutritionnel.',
+          icon: '📷'
+        };
+    }
+  };
+
+  // ✅ NOUVEAU - Helper pour obtenir couleur et message de cohérence
+  const getCoherenceAlertStyle = () => {
+    if (!ocrResult?.coherenceCheck) return null;
+
+    const { isCoherent, coherenceScore } = ocrResult.coherenceCheck;
+
+    if (isCoherent && coherenceScore >= 0.8) {
+      return {
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200',
+        textColor: 'text-green-900',
+        iconColor: 'text-green-600',
+        title: '✅ Photos cohérentes',
+        message: `Score de cohérence : ${Math.round(coherenceScore * 100)}% - Les deux photos semblent correspondre au même produit.`,
+        icon: Check
+      };
+    } else if (coherenceScore >= 0.6) {
+      return {
+        bgColor: 'bg-yellow-50',
+        borderColor: 'border-yellow-200',
+        textColor: 'text-yellow-900',
+        iconColor: 'text-yellow-600',
+        title: '⚠️ Cohérence moyenne',
+        message: `Score de cohérence : ${Math.round(coherenceScore * 100)}% - Vérifiez que les deux photos correspondent bien au même produit.`,
+        icon: AlertTriangle
+      };
+    } else {
+      return {
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200',
+        textColor: 'text-red-900',
+        iconColor: 'text-red-600',
+        title: '❌ Incohérence détectée',
+        message: `Score de cohérence : ${Math.round(coherenceScore * 100)}% - Les photos ne semblent pas correspondre au même produit. Création bloquée.`,
+        icon: AlertCircle
+      };
     }
   };
 
@@ -304,13 +396,16 @@ export default function OCRWizardPage() {
         {/* Step 2: Ingredients Photo */}
         {currentStep === 'ingredients' && (
           <div className="space-y-6">
+            {/* ✅ NOUVEAU - Instructions adaptées selon catégorie détectée */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <Info className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
-                  <h3 className="font-medium text-blue-900 mb-2">Étape 2/3 : Photo des ingrédients</h3>
+                  <h3 className="font-medium text-blue-900 mb-2">
+                    Étape 2/3 : {getCategoryInstructions().title}
+                  </h3>
                   <p className="text-blue-800 text-sm">
-                    Prenez une photo claire de la <strong>liste des ingrédients et du tableau nutritionnel</strong>.
+                    {getCategoryInstructions().description}
                   </p>
                 </div>
               </div>
@@ -328,7 +423,9 @@ export default function OCRWizardPage() {
                   />
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-blue-500 transition-colors">
                     <Camera className="mx-auto text-gray-400 mb-4" size={48} />
-                    <p className="text-gray-600 font-medium mb-2">Capturer les ingrédients</p>
+                    <p className="text-gray-600 font-medium mb-2">
+                      {getCategoryInstructions().icon} Capturer la composition
+                    </p>
                     <p className="text-sm text-gray-500">Cliquez pour prendre une photo</p>
                   </div>
                 </label>
@@ -379,6 +476,46 @@ export default function OCRWizardPage() {
         {/* Step 3: Validation */}
         {currentStep === 'validation' && ocrResult && (
           <div className="space-y-6">
+            {/* ✅ NOUVEAU - Alerte de cohérence selon score */}
+            {ocrResult.coherenceCheck && (() => {
+              const alertStyle = getCoherenceAlertStyle();
+              if (!alertStyle) return null;
+              
+              const IconComponent = alertStyle.icon;
+              
+              return (
+                <div className={`border rounded-lg p-4 ${alertStyle.bgColor} ${alertStyle.borderColor}`}>
+                  <div className="flex items-start gap-3">
+                    <IconComponent className={`flex-shrink-0 mt-0.5 ${alertStyle.iconColor}`} size={20} />
+                    <div className="flex-1">
+                      <h3 className={`font-medium mb-2 ${alertStyle.textColor}`}>
+                        {alertStyle.title}
+                      </h3>
+                      <p className={`text-sm ${alertStyle.textColor}`}>
+                        {alertStyle.message}
+                      </p>
+                      {ocrResult.coherenceCheck.reasons && ocrResult.coherenceCheck.reasons.length > 0 && (
+                        <div className="mt-3">
+                          <p className={`text-sm font-medium ${alertStyle.textColor} mb-1`}>
+                            Détails de l'analyse :
+                          </p>
+                          <ul className={`text-sm ${alertStyle.textColor} space-y-1`}>
+                            {ocrResult.coherenceCheck.reasons.map((reason, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <span>•</span>
+                                <span>{reason}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Alerte de fiabilité IA */}
             <div className={`border rounded-lg p-4 ${ocrResult.confidence >= 0.75 ? 'bg-green-50 border-green-200' : ocrResult.confidence >= 0.6 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200'}`}>
               <div className="flex items-start gap-3">
                 <AlertCircle className={`flex-shrink-0 mt-0.5 ${ocrResult.confidence >= 0.75 ? 'text-green-600' : ocrResult.confidence >= 0.6 ? 'text-yellow-600' : 'text-red-600'}`} size={20} />
@@ -468,8 +605,13 @@ export default function OCRWizardPage() {
                 </button>
                 <button
                   onClick={handleSaveProduct}
-                  disabled={isSaving || !editableData.productName || !editableData.ingredients}
-                  className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+                  disabled={
+                    isSaving || 
+                    !editableData.productName || 
+                    !editableData.ingredients ||
+                    (ocrResult.coherenceCheck && !ocrResult.coherenceCheck.isCoherent && ocrResult.coherenceCheck.coherenceScore < 0.4) // ✅ NOUVEAU - Blocage si incohérence > 60%
+                  }
+                  className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSaving ? (
                     <>

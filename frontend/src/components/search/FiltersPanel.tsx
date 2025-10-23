@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FiltersPanelProps {

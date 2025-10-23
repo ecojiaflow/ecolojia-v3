@@ -1,4 +1,4 @@
-﻿const vision = require('@google-cloud/vision');
+const vision = require('@google-cloud/vision');
 
 async function checkAPIStatus() {
   console.log('Verification du statut de l\'API Google Vision\n');

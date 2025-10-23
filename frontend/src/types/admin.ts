@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/types/admin.ts
+// PATH: frontend/ecolojiaFrontV3/src/types/admin.ts
 export interface AdminStats {
   totalProducts: number;
   totalImports: number;

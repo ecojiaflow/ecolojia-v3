@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/services/ai/AIAnalysisService.ts
+// PATH: backend/src/services/ai/AIAnalysisService.ts
 import { deepSeekClient } from './DeepSeekClient';
 import { Logger } from '../../utils/Logger';
 import { ProductAnalysisModel } from '../../models/ProductAnalysis';

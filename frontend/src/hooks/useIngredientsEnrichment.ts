@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useIngredientsEnrichment.ts
+// PATH: frontend/src/hooks/useIngredientsEnrichment.ts
 import { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { api } from '../services/api';

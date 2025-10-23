@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 /**
  * M11 Payments — Subscription Controller (DEV-friendly)

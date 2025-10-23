@@ -1,4 +1,4 @@
-﻿// frontend/src/services/analysisService.ts - Version unifiee et robuste
+// frontend/src/services/analysisService.ts - Version unifiee et robuste
 
 import { apiClient } from './apiClient';
 

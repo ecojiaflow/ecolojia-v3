@@ -51,7 +51,7 @@ function detectSubcategory(name) {
     if (updated % 500 === 0) console.log(`  ${updated}/${products.length}`);
   }
   
-  console.log(`\n? ${updated} subcategories détectées`);
+  console.log(`\n? ${updated} subcategories dÃ©tectÃ©es`);
   
   const stats = await db.collection('products').aggregate([
     { $match: { category: 'food' } },

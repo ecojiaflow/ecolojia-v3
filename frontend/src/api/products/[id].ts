@@ -1,1 +1,100 @@
-﻿
+[
+    {
+        "category":  "deps",
+        "name":  "node present",
+        "status":  "PASS",
+        "message":  "Version: v22.12.0",
+        "durationMs":  35
+    },
+    {
+        "category":  "deps",
+        "name":  "npm present",
+        "status":  "PASS",
+        "message":  "Version: 10.9.1",
+        "durationMs":  159
+    },
+    {
+        "category":  "config",
+        "name":  "VITE_API_URL (CLI)",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api",
+        "durationMs":  0
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics health",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/cosmetics/health -\u003e La propriÃ©tÃ© Â«Â successÂ Â» est introuvable dans cet objet. VÃ©rifiez quâ€™elle existe.",
+        "durationMs":  84
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents health",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/detergents/health -\u003e La propriÃ©tÃ© Â«Â successÂ Â» est introuvable dans cet objet. VÃ©rifiez quâ€™elle existe.",
+        "durationMs":  18
+    },
+    {
+        "category":  "api",
+        "name":  "Cosmetics analyze",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api/cosmetics/analyze [success=true]",
+        "durationMs":  23
+    },
+    {
+        "category":  "api",
+        "name":  "Detergents analyze",
+        "status":  "PASS",
+        "message":  "http://localhost:10000/api/detergents/analyze [success=true]",
+        "durationMs":  16
+    },
+    {
+        "category":  "api",
+        "name":  "Food analysis",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/analysis -\u003e La propriÃ©tÃ© Â«Â successÂ Â» est introuvable dans cet objet. VÃ©rifiez quâ€™elle existe.",
+        "durationMs":  19
+    },
+    {
+        "category":  "api",
+        "name":  "AI chat",
+        "status":  "FAIL",
+        "message":  "http://localhost:10000/api/ai/chat -\u003e Le serveur distant a retournÃ© une erreurÂ : (401) Non autorisÃ©.",
+        "durationMs":  25
+    },
+    {
+        "category":  "build",
+        "name":  "npm ci",
+        "status":  "PASS",
+        "message":  "Dependencies OK",
+        "durationMs":  0
+    },
+    {
+        "category":  "build",
+        "name":  "npm run build",
+        "status":  "PASS",
+        "message":  "Vite build OK in 7,65s",
+        "durationMs":  7655
+    },
+    {
+        "category":  "i18n",
+        "name":  "UTF-8 encoding",
+        "status":  "FAIL",
+        "message":  "Encoding artifacts detected (U+00C2/U+00C3). Fix file encoding.",
+        "durationMs":  4
+    },
+    {
+        "category":  "config",
+        "name":  "Hardcoded URLs",
+        "status":  "PASS",
+        "message":  "None",
+        "durationMs":  5
+    },
+    {
+        "category":  "preview",
+        "name":  "vite preview",
+        "status":  "FAIL",
+        "message":  "Timeout waiting for readiness",
+        "durationMs":  0
+    }
+]

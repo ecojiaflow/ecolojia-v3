@@ -3,57 +3,57 @@ const { Logger } = require('../../utils/logger');
 
 const logger = new Logger('InsightsGenerator');
 
-/* â”€â”€â”€â”€â”€ Templates d'insights â”€â”€â”€â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Templates d'insights Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 const TEMPLATES = {
   food: {
     nova: {
-      1: ['âœ¨ Non transforme', 'ðŸŒ± Base saine'],
-      2: ['ðŸ³ Ingredient culinaire', 'ðŸ’¡ Usage modere'],
-      3: ['ðŸ­ Transforme', 'ðŸ“Š Conservateurs simples'],
-      4: ['âš ï¸ Ultra-transforme', 'ðŸ§ª Additifs multiples']
+      1: ['Ã¢Å“Â¨ Non transforme', 'Ã°Å¸Å’Â± Base saine'],
+      2: ['Ã°Å¸ÂÂ³ Ingredient culinaire', 'Ã°Å¸â€™Â¡ Usage modere'],
+      3: ['Ã°Å¸ÂÂ­ Transforme', 'Ã°Å¸â€œÅ  Conservateurs simples'],
+      4: ['Ã¢Å¡Â Ã¯Â¸Â Ultra-transforme', 'Ã°Å¸Â§Âª Additifs multiples']
     },
     ultra: {
-      high: ['ðŸ­ Transformation elevee', 'ðŸ“ˆ Risque chronique'],
-      med: ['âš™ï¸ Transformation moderee', 'ðŸ’¡ Preferez moins transforme']
+      high: ['Ã°Å¸ÂÂ­ Transformation elevee', 'Ã°Å¸â€œË† Risque chronique'],
+      med: ['Ã¢Å¡â„¢Ã¯Â¸Â Transformation moderee', 'Ã°Å¸â€™Â¡ Preferez moins transforme']
     },
     reco: {
-      good: ['âœ… Excellent choix !', 'ðŸ’š Continuez ainsi'],
-      bad: ['âš¡ Consommation occasionnelle', 'ðŸ  Privilegiez maison']
+      good: ['Ã¢Å“â€¦ Excellent choix !', 'Ã°Å¸â€™Å¡ Continuez ainsi'],
+      bad: ['Ã¢Å¡Â¡ Consommation occasionnelle', 'Ã°Å¸ÂÂ  Privilegiez maison']
     }
   },
   cosmetics: {
     hazard: {
-      high: ['âš ï¸ Ingredients preoccupants', 'ðŸ”¬ Composants surveilles'],
-      pe: ['ðŸš¨ Perturbateurs endocriniens', 'ðŸ‘¶ ‰viter grossesse'],
-      allerg: ['ðŸŒ¸ Allergenes presents', 'ðŸ’¡ Test prealable']
+      high: ['Ã¢Å¡Â Ã¯Â¸Â Ingredients preoccupants', 'Ã°Å¸â€Â¬ Composants surveilles'],
+      pe: ['Ã°Å¸Å¡Â¨ Perturbateurs endocriniens', 'Ã°Å¸â€˜Â¶ â€°viter grossesse'],
+      allerg: ['Ã°Å¸Å’Â¸ Allergenes presents', 'Ã°Å¸â€™Â¡ Test prealable']
     },
     reco: {
-      good: ['âœ¨ Formulation saine', 'ðŸŒ¿ Bonne tolerance'],
-      bad: ['ðŸš« Ingredients controverses', 'ðŸ”„ Cherchez alternatives']
+      good: ['Ã¢Å“Â¨ Formulation saine', 'Ã°Å¸Å’Â¿ Bonne tolerance'],
+      bad: ['Ã°Å¸Å¡Â« Ingredients controverses', 'Ã°Å¸â€â€ž Cherchez alternatives']
     }
   },
   detergents: {
     impact: {
-      aqua: ['ðŸŸ Impact aquatique', 'ðŸ’§ Dosez minimum'],
-      bio: ['â™»ï¸ Biodegradabilite limitee', 'â³ Persistant'],
-      voc: ['ðŸ’¨ ‰missions volatiles', 'ðŸªŸ Ventilez']
+      aqua: ['Ã°Å¸ÂÅ¸ Impact aquatique', 'Ã°Å¸â€™Â§ Dosez minimum'],
+      bio: ['Ã¢â„¢Â»Ã¯Â¸Â Biodegradabilite limitee', 'Ã¢ÂÂ³ Persistant'],
+      voc: ['Ã°Å¸â€™Â¨ â€°missions volatiles', 'Ã°Å¸ÂªÅ¸ Ventilez']
     },
     reco: {
-      good: ['ðŸ§¼ Impact acceptable', 'ðŸŒ± Dosage correct'],
-      bad: ['ðŸŒ Impact eleve', 'ðŸ† Preferez ecolabel']
+      good: ['Ã°Å¸Â§Â¼ Impact acceptable', 'Ã°Å¸Å’Â± Dosage correct'],
+      bad: ['Ã°Å¸Å’Â Impact eleve', 'Ã°Å¸Ââ€  Preferez ecolabel']
     }
   },
   general: {
     score: {
-      80: ['ðŸŒŸ Excellent !', 'ðŸ’š Impact minimal'],
-      60: ['ðŸ‘ Bon produit', 'ðŸ“Š Performance correcte'],
-      40: ['âš ï¸ Moyen', 'ðŸ” Comparez'],
-      0: ['âŒ Problematique', 'ðŸš« ‰vitez']
+      80: ['Ã°Å¸Å’Å¸ Excellent !', 'Ã°Å¸â€™Å¡ Impact minimal'],
+      60: ['Ã°Å¸â€˜Â Bon produit', 'Ã°Å¸â€œÅ  Performance correcte'],
+      40: ['Ã¢Å¡Â Ã¯Â¸Â Moyen', 'Ã°Å¸â€Â Comparez'],
+      0: ['Ã¢ÂÅ’ Problematique', 'Ã°Å¸Å¡Â« â€°vitez']
     }
   }
 };
 
-/* â”€â”€â”€â”€â”€ Generateur optimise â”€â”€â”€â”€â”€ */
+/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Generateur optimise Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 class InsightsGenerator {
   async generate(req) {
     logger.info(`Generating insights for ${req.product}`);
@@ -81,8 +81,8 @@ class InsightsGenerator {
     
     // Motivation
     if (req.score < 60) {
-      recommendations.push('ðŸ’ª Chaque changement compte');
-      recommendations.push('ðŸŒ Impact positif possible');
+      recommendations.push('Ã°Å¸â€™Âª Chaque changement compte');
+      recommendations.push('Ã°Å¸Å’Â Impact positif possible');
     }
     
     return {
@@ -106,30 +106,30 @@ class InsightsGenerator {
         r.push(...TEMPLATES.food.reco.bad);
       }
       if (a.nova.additives && a.nova.additives.some(ad => ad.riskLevel === 'high')) {
-        w.push('ðŸš¨ Additifs   risque eleve');
+        w.push('Ã°Å¸Å¡Â¨ Additifs Â  risque eleve');
       }
     }
     
     // Ultra-transform
     if (a.ultra && a.ultra.score > 7) {
       i.push(...TEMPLATES.food.ultra.high);
-      w.push('ðŸ“ˆ Risque maladies chroniques');
-      t.push('ðŸ’¡ Perturbation signaux satiete');
+      w.push('Ã°Å¸â€œË† Risque maladies chroniques');
+      t.push('Ã°Å¸â€™Â¡ Perturbation signaux satiete');
     } else if (a.ultra && a.ultra.score > 4) {
       i.push(...TEMPLATES.food.ultra.med);
     }
     
     // Marqueurs specifiques
     if (a.ultra && a.ultra.markers && a.ultra.markers.some(m => /hydrogen/i.test(m))) {
-      w.push('ðŸš« Acides gras trans');
-      i.push('â¤ï¸ Risque cardiovasculaire');
+      w.push('Ã°Å¸Å¡Â« Acides gras trans');
+      i.push('Ã¢ÂÂ¤Ã¯Â¸Â Risque cardiovasculaire');
     }
     
     // Tips generaux
-    t.push('ðŸ’¡ Variez les sources');
+    t.push('Ã°Å¸â€™Â¡ Variez les sources');
     if (req.score < 40) {
-      r.push('ðŸ¥— Compensez avec du frais');
-      r.push('ðŸ’§ Hydratez-vous bien');
+      r.push('Ã°Å¸Â¥â€” Compensez avec du frais');
+      r.push('Ã°Å¸â€™Â§ Hydratez-vous bien');
     }
   }
   
@@ -142,20 +142,20 @@ class InsightsGenerator {
       }
       if (a.cosmeticsHazard.endocrineDisruptors && a.cosmeticsHazard.endocrineDisruptors.length) {
         w.push(...TEMPLATES.cosmetics.hazard.pe);
-        r.push('ðŸ”„ Alternatives sans PE');
+        r.push('Ã°Å¸â€â€ž Alternatives sans PE');
       }
       if (a.cosmeticsHazard.allergens && a.cosmeticsHazard.allergens.length) {
         i.push(...TEMPLATES.cosmetics.hazard.allerg);
-        r.push('ðŸ” Surveillez reactions');
+        r.push('Ã°Å¸â€Â Surveillez reactions');
       }
       if (a.cosmeticsHazard.naturalityScore >= 8) {
-        i.push('ðŸŒ¿ Haute naturalite');
+        i.push('Ã°Å¸Å’Â¿ Haute naturalite');
       }
     }
     
     // Tips
-    t.push('ðŸ’§ Appliquez peau propre');
-    t.push('ðŸŒž Protection solaire jour');
+    t.push('Ã°Å¸â€™Â§ Appliquez peau propre');
+    t.push('Ã°Å¸Å’Å¾ Protection solaire jour');
     
     r.push(...(req.score >= 50 ? TEMPLATES.cosmetics.reco.good : TEMPLATES.cosmetics.reco.bad));
   }
@@ -166,26 +166,26 @@ class InsightsGenerator {
     if (a.detergentImpact) {
       if (a.detergentImpact.aquaticToxicity >= 7) {
         w.push(...TEMPLATES.detergents.impact.aqua);
-        r.push('ðŸš° Jamais dans nature');
+        r.push('Ã°Å¸Å¡Â° Jamais dans nature');
       }
       if (a.detergentImpact.biodegradability <= 60) {
         w.push(...TEMPLATES.detergents.impact.bio);
       } else if (a.detergentImpact.biodegradability >= 90) {
-        i.push('âœ… Excellente biodegradabilite');
+        i.push('Ã¢Å“â€¦ Excellente biodegradabilite');
       }
       if (a.detergentImpact.vocEmissions >= 7) {
         w.push(...TEMPLATES.detergents.impact.voc);
-        r.push('ðŸ˜· ‰vitez inhalation');
+        r.push('Ã°Å¸ËœÂ· â€°vitez inhalation');
       }
       if (a.detergentImpact.ecoLabel) {
-        i.push('ðŸ† Certifie ecologique');
+        i.push('Ã°Å¸Ââ€  Certifie ecologique');
       }
     }
     
     // Tips eco
-    t.push('ðŸ“ Respectez doses');
-    t.push('ðŸŒ¡ï¸ Lavez froid si possible');
-    t.push('ðŸ’§ Surdosage inutile');
+    t.push('Ã°Å¸â€œÂ Respectez doses');
+    t.push('Ã°Å¸Å’Â¡Ã¯Â¸Â Lavez froid si possible');
+    t.push('Ã°Å¸â€™Â§ Surdosage inutile');
     
     r.push(...(req.score >= 50 ? TEMPLATES.detergents.reco.good : TEMPLATES.detergents.reco.bad));
   }
@@ -195,7 +195,7 @@ class InsightsGenerator {
     i.push(...TEMPLATES.general.score[threshold]);
     
     if (score < 60) {
-      r.push('ðŸ” Comparez options');
+      r.push('Ã°Å¸â€Â Comparez options');
     }
   }
 
@@ -236,14 +236,14 @@ class InsightsGenerator {
         });
       });
       
-      // Limiter   3 insights
+      // Limiter Â  3 insights
       return formattedInsights.slice(0, 3);
       
     } catch (error) {
       logger.error('Error generating insights:', error);
       return [{
         type: 'info',
-        icon: 'ðŸ’¡',
+        icon: 'Ã°Å¸â€™Â¡',
         title: 'Analyse en cours',
         priority: 'medium'
       }];

@@ -12,7 +12,7 @@ class ConversationalAI {
   /**
    * Dialogue principal
    * @param {string} userMsg
-   * @param {object} context   ex : { product:{â€¦}, analysis:{â€¦} }
+   * @param {object} context   ex : { product:{Ã¢â‚¬Â¦}, analysis:{Ã¢â‚¬Â¦} }
    * @param {string} [session] identifiant session
    */
   async chat(userMsg, context = {}, session = uuidv4()) {

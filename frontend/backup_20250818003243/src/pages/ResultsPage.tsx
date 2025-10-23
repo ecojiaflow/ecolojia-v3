@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/ResultsPage.tsx
+// PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';

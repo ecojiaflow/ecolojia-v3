@@ -1,4 +1,4 @@
-﻿// backend/src/services/ProductOrchestrator.js
+// backend/src/services/ProductOrchestrator.js
 /**
  * Orchestrateur central pour récupération/création produits
  * Gère enrichissement automatique et cache IA

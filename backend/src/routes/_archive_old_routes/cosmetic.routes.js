@@ -264,19 +264,19 @@ function generateCosmeticInsights(analysisResult) {
   const insights = [];
   
   if (analysisResult.risk_analysis?.endocrine_disruptors?.length > 0) {
-    insights.push('âš ï¸ Perturbateurs endocriniens detectes');
+    insights.push('Ã¢Å¡Â Ã¯Â¸Â Perturbateurs endocriniens detectes');
   }
   
   if (analysisResult.allergen_analysis?.total_allergens > 2) {
-    insights.push('âš ï¸ Plusieurs allergenes presents - test cutane recommande');
+    insights.push('Ã¢Å¡Â Ã¯Â¸Â Plusieurs allergenes presents - test cutane recommande');
   }
   
   if (analysisResult.breakdown?.naturality?.score > 80) {
-    insights.push('âœ… Formule majoritairement naturelle');
+    insights.push('Ã¢Å“â€¦ Formule majoritairement naturelle');
   }
   
   if (analysisResult.score > 80) {
-    insights.push('âœ… Produit bien formule avec peu de risques');
+    insights.push('Ã¢Å“â€¦ Produit bien formule avec peu de risques');
   }
   
   return insights;

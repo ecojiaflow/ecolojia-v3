@@ -3,24 +3,24 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /**
- * ðŸ§¹ NETTOYAGE BASE POSTGRESQL
+ * Ã°Å¸Â§Â¹ NETTOYAGE BASE POSTGRESQL
  * Supprime tous les produits de test pour avoir une base propre
  */
 
-console.log('ðŸ§¹ ECOLOJIA - Nettoyage base PostgreSQL');
-console.log('âš ï¸  ATTENTION: Cette operation va supprimer TOUS les produits !');
+console.log('Ã°Å¸Â§Â¹ ECOLOJIA - Nettoyage base PostgreSQL');
+console.log('Ã¢Å¡Â Ã¯Â¸Â  ATTENTION: Cette operation va supprimer TOUS les produits !');
 console.log('='.repeat(60));
 
 async function cleanDatabase() {
   try {
-    console.log('ðŸ” Analyse de la base actuelle...\n');
+    console.log('Ã°Å¸â€Â Analyse de la base actuelle...\n');
 
     // 1. Compter les produits actuels
     const currentCount = await prisma.product.count();
-    console.log(`ðŸ“Š Produits actuels en base: ${currentCount}`);
+    console.log(`Ã°Å¸â€œÅ  Produits actuels en base: ${currentCount}`);
 
     if (currentCount === 0) {
-      console.log('âœ… Base dej  vide - Aucun nettoyage necessaire');
+      console.log('Ã¢Å“â€¦ Base dejÂ  vide - Aucun nettoyage necessaire');
       return;
     }
 
@@ -36,39 +36,39 @@ async function cleanDatabase() {
       }
     });
 
-    console.log('\nðŸ“‹ Exemples de produits en base:');
+    console.log('\nÃ°Å¸â€œâ€¹ Exemples de produits en base:');
     sampleProducts.forEach((product, index) => {
       console.log(`  ${index + 1}. ${product.title} (${product.barcode || 'Sans code-barres'})`);
     });
 
-    console.log('\nðŸ—‘ï¸  Suppression de tous les produits...');
+    console.log('\nÃ°Å¸â€”â€˜Ã¯Â¸Â  Suppression de tous les produits...');
 
     // 3. Supprimer TOUS les produits
     const deleteResult = await prisma.product.deleteMany({});
 
-    console.log(`âœ… ${deleteResult.count} produits supprimes avec succes`);
+    console.log(`Ã¢Å“â€¦ ${deleteResult.count} produits supprimes avec succes`);
 
     // 4. Verification finale
     const finalCount = await prisma.product.count();
-    console.log(`ðŸ“Š Produits restants: ${finalCount}`);
+    console.log(`Ã°Å¸â€œÅ  Produits restants: ${finalCount}`);
 
     // 5. Reset des sequences (optionnel pour PostgreSQL)
     try {
       await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('products', 'created_at'), 1, false);`;
-      console.log('ðŸ”„ Sequences reinitialisees');
+      console.log('Ã°Å¸â€â€ž Sequences reinitialisees');
     } catch (error) {
-      console.log('âš ï¸  Reinitialisation sequences ignoree');
+      console.log('Ã¢Å¡Â Ã¯Â¸Â  Reinitialisation sequences ignoree');
     }
 
     console.log('\n' + '='.repeat(60));
-    console.log('ðŸŽ‰ BASE NETTOY‰E AVEC SUCCˆS !');
-    console.log('ðŸ’¡ Vous pouvez maintenant lancer l\'import de produits reels');
-    console.log('ðŸš€ Commande: node scripts/importDirectToDB.js');
+    console.log('Ã°Å¸Å½â€° BASE NETTOYâ€°E AVEC SUCCË†S !');
+    console.log('Ã°Å¸â€™Â¡ Vous pouvez maintenant lancer l\'import de produits reels');
+    console.log('Ã°Å¸Å¡â‚¬ Commande: node scripts/importDirectToDB.js');
     console.log('='.repeat(60));
 
   } catch (error) {
-    console.error('âŒ Erreur lors du nettoyage:', error.message);
-    console.error('ðŸ’¡ Details:', error);
+    console.error('Ã¢ÂÅ’ Erreur lors du nettoyage:', error.message);
+    console.error('Ã°Å¸â€™Â¡ Details:', error);
   } finally {
     await prisma.$disconnect();
   }
@@ -77,7 +77,7 @@ async function cleanDatabase() {
 // Fonction de nettoyage selectif (bonus)
 async function cleanTestProducts() {
   try {
-    console.log('ðŸ§¹ Nettoyage selectif - Produits de test uniquement...\n');
+    console.log('Ã°Å¸Â§Â¹ Nettoyage selectif - Produits de test uniquement...\n');
 
     // Supprimer uniquement les produits "test" ou mock
     const deleteResult = await prisma.product.deleteMany({
@@ -104,13 +104,13 @@ async function cleanTestProducts() {
       }
     });
 
-    console.log(`âœ… ${deleteResult.count} produits de test supprimes`);
+    console.log(`Ã¢Å“â€¦ ${deleteResult.count} produits de test supprimes`);
 
     const remainingCount = await prisma.product.count();
-    console.log(`ðŸ“Š Produits reels conserves: ${remainingCount}`);
+    console.log(`Ã°Å¸â€œÅ  Produits reels conserves: ${remainingCount}`);
 
   } catch (error) {
-    console.error('âŒ Erreur nettoyage selectif:', error.message);
+    console.error('Ã¢ÂÅ’ Erreur nettoyage selectif:', error.message);
   } finally {
     await prisma.$disconnect();
   }
@@ -121,18 +121,18 @@ async function main() {
   const args = process.argv.slice(2);
   
   if (args.includes('--all')) {
-    console.log('ðŸ—‘ï¸  Mode: Suppression TOTALE\n');
+    console.log('Ã°Å¸â€”â€˜Ã¯Â¸Â  Mode: Suppression TOTALE\n');
     await cleanDatabase();
   } else if (args.includes('--test-only')) {
-    console.log('ðŸ§¹ Mode: Suppression produits TEST uniquement\n');
+    console.log('Ã°Å¸Â§Â¹ Mode: Suppression produits TEST uniquement\n');
     await cleanTestProducts();
   } else {
-    console.log('ðŸ”§ SCRIPT NETTOYAGE BASE POSTGRESQL');
+    console.log('Ã°Å¸â€Â§ SCRIPT NETTOYAGE BASE POSTGRESQL');
     console.log('\nCommandes disponibles:');
     console.log('  node scripts/cleanDatabase.js --all        # Supprime TOUS les produits');
     console.log('  node scripts/cleanDatabase.js --test-only  # Supprime uniquement les produits test');
-    console.log('\nâš ï¸  RECOMMAND‰: Utilisez --all pour une base 100% propre');
-    console.log('ðŸ’¡ Puis lancez: node scripts/importDirectToDB.js');
+    console.log('\nÃ¢Å¡Â Ã¯Â¸Â  RECOMMANDâ€°: Utilisez --all pour une base 100% propre');
+    console.log('Ã°Å¸â€™Â¡ Puis lancez: node scripts/importDirectToDB.js');
   }
 }
 
@@ -145,7 +145,7 @@ function askConfirmation() {
   });
 
   return new Promise((resolve) => {
-    rl.question('âš ï¸  Štes-vous sur de vouloir supprimer les produits ? (oui/non): ', (answer) => {
+    rl.question('Ã¢Å¡Â Ã¯Â¸Â  Å tes-vous sur de vouloir supprimer les produits ? (oui/non): ', (answer) => {
       rl.close();
       resolve(answer.toLowerCase() === 'oui' || answer.toLowerCase() === 'yes');
     });

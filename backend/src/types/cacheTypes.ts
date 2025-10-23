@@ -1,7 +1,7 @@
 // PATH: backend/src/types/cacheTypes.ts
 import { Request } from 'express';
 
-// Interface pour l'utilisateur dans le cache (différente de SafeUser)
+// Interface pour l'utilisateur dans le cache (diffÃ©rente de SafeUser)
 export interface CacheUser {
   id: string;
   email: string;
@@ -15,7 +15,7 @@ export interface CacheUser {
   };
 }
 
-// Interface pour les requêtes avec cache auth
+// Interface pour les requÃªtes avec cache auth
 export interface CacheAuthRequest extends Request {
   cacheUser?: CacheUser;
   cacheSession?: {

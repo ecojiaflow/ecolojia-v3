@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { Search, Loader, ExternalLink } from "lucide-react";
 
 interface NoResultsFoundProps {

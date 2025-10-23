@@ -1,4 +1,4 @@
-﻿// frontend/src/components/MockTestPanel.tsx
+// frontend/src/components/MockTestPanel.tsx
 import React from 'react';
 import { useUser } from '../hooks/useUser';
 import { useQuota } from '../hooks/useQuota';

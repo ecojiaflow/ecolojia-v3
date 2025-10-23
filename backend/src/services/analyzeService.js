@@ -1,4 +1,4 @@
-﻿const axios = require('axios');
+const axios = require('axios');
 
 // ========== FETCH EXTERNAL DATA ==========
 async function fetchExternalData(barcode, category) {

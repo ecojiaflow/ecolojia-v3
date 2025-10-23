@@ -28,8 +28,8 @@ function uploadImage(buffer, options = {}) {
 }
 
 /**
- * Genere une signature SHAâ€‘1 pour l'upload cote client.
- * @param {Record<string, any>} params â€“ parametres upload (timestamp, public_id, etc.)
+ * Genere une signature SHAÃ¢â‚¬â€˜1 pour l'upload cote client.
+ * @param {Record<string, any>} params Ã¢â‚¬â€œ parametres upload (timestamp, public_id, etc.)
  */
 function signUpload(params = {}) {
   const apiSecret = process.env.CLOUDINARY_API_SECRET;

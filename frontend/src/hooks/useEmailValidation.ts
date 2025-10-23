@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { emailValidationService, EmailValidationResponse } from '../services/emailValidationService';
 
 export const useEmailValidation = () => {

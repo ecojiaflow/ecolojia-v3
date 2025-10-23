@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/env.ts
+// PATH: frontend/src/env.ts
 export const ENV = {
   APP_NAME: (import.meta.env.VITE_APP_NAME as string) || "ECOLOJIA",
   API_URL:

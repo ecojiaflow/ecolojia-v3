@@ -1,6 +1,6 @@
 // PATH: backend/src/services/auth/tokenService.js
 // ========================================
-// TOKEN SERVICE - VERSION CORRIG‰E
+// TOKEN SERVICE - VERSION CORRIGâ€°E
 // ========================================
 const jwt = require('jsonwebtoken');
 
@@ -76,7 +76,7 @@ class TokenService {
   /**
    * Verifie si le refresh token existe dans Redis
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} token - Token   verifier
+   * @param {string} token - Token Â  verifier
    * @returns {boolean} Token valide ou non
    */
   async verifyRefreshTokenInDB(userId, token) {
@@ -98,7 +98,7 @@ class TokenService {
   /**
    * Revoque un refresh token
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} token - Token   revoquer
+   * @param {string} token - Token Â  revoquer
    */
   async revokeRefreshToken(userId, token) {
     if (!this.redis || !this.redis.isReady) {
@@ -117,7 +117,7 @@ class TokenService {
 
   /**
    * Verifie et decode un access token
-   * @param {string} token - Token   verifier
+   * @param {string} token - Token Â  verifier
    * @returns {Object} Payload decode
    */
   verifyAccessToken(token) {
@@ -142,7 +142,7 @@ class TokenService {
 
   /**
    * Verifie et decode un refresh token
-   * @param {string} token - Token   verifier
+   * @param {string} token - Token Â  verifier
    * @returns {Object} Payload decode
    */
   verifyRefreshToken(token) {
@@ -167,5 +167,5 @@ class TokenService {
   }
 }
 
-// âš ï¸ LIGNE CRUCIALE - EXPORT DE LA CLASSE
+// Ã¢Å¡Â Ã¯Â¸Â LIGNE CRUCIALE - EXPORT DE LA CLASSE
 module.exports = TokenService;

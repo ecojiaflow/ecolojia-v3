@@ -88,17 +88,17 @@ const HistoryPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Vérifier si l'utilisateur est connecté
+      // VÃ©rifier si l'utilisateur est connectÃ©
       const token = localStorage.getItem('ecolojia_token');
       
       if (!token && !ConfigService.isDemo()) {
-        // Basculer en mode démo
+        // Basculer en mode dÃ©mo
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginPrompt(true);
       }
       
-      // Utiliser les services normalement (ils gèrent le mode démo en interne)
+      // Utiliser les services normalement (ils gÃ¨rent le mode dÃ©mo en interne)
       const [historyData, totalCount] = await Promise.all([
         historyService.getHistory(
           currentPage,
@@ -135,13 +135,13 @@ const HistoryPage: React.FC = () => {
     } catch (error: any) {
       console.error('Error fetching history:', error);
       
-      // Si on a une erreur isDemoMode, passer en mode démo
+      // Si on a une erreur isDemoMode, passer en mode dÃ©mo
       if (error.isDemoMode || error.statusCode === 401) {
         ConfigService.setMode('demo');
         setIsDemo(true);
         setShowLoginPrompt(true);
         
-        // Réessayer en mode démo
+        // RÃ©essayer en mode dÃ©mo
         fetchHistory();
       } else {
         setError('Impossible de charger votre historique');
@@ -162,11 +162,11 @@ const HistoryPage: React.FC = () => {
 
   const handleDelete = async (ids: string[]) => {
     if (isDemo) {
-      alert('La suppression n\'est pas disponible en mode démonstration');
+      alert('La suppression n\'est pas disponible en mode dÃ©monstration');
       return;
     }
     
-    if (!confirm(`ÃƒÆ’Ã…Â tes-vous sÃƒÆ’Ã‚Â»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
+    if (!confirm(`ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â tes-vous sÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â»r de vouloir supprimer ${ids.length} analyse(s) ?`)) {
       return;
     }
 
@@ -188,7 +188,7 @@ const HistoryPage: React.FC = () => {
 
     try {
       const data = await historyService.exportHistory('csv');
-      // Créer un blob et télécharger
+      // CrÃ©er un blob et tÃ©lÃ©charger
       const blob = new Blob([data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -203,10 +203,10 @@ const HistoryPage: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'food': return 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â½';
-      case 'cosmetic': return 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢ââ‚¬Å¾';
-      case 'detergent': return 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¼';
-      default: return 'ÃƒÂ°Ã…Â¸ââ‚¬Å“Ã‚Â¦';
+      case 'food': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€¦Ã‚Â½';
+      case 'cosmetic': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã¢Ã¢â€šÂ¬Ã…Â¾';
+      case 'detergent': return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â¼';
+      default: return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃƒâ€šÃ‚Â¦';
     }
   };
 
@@ -218,7 +218,7 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F7F9F4]">
-      {/* Bannière mode démo */}
+      {/* BanniÃ¨re mode dÃ©mo */}
       <AnimatePresence>
         {showLoginPrompt && (
           <motion.div 
@@ -231,7 +231,7 @@ const HistoryPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <AlertCircle className="w-5 h-5" />
                 <p className="font-medium">
-                  Mode démonstration activé - Connectez-vous pour accéder ÃƒÆ’Ã‚Â  votre historique personnel
+                  Mode dÃ©monstration activÃ© - Connectez-vous pour accÃ©der ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  votre historique personnel
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -263,8 +263,8 @@ const HistoryPage: React.FC = () => {
               </h1>
               <p className="text-gray-600 mt-2">
                 {isDemo 
-                  ? 'Découvrez des exemples d\'analyses de produits'
-                  : 'Retrouvez tous vos produits scannés'
+                  ? 'DÃ©couvrez des exemples d\'analyses de produits'
+                  : 'Retrouvez tous vos produits scannÃ©s'
                 }
               </p>
             </div>
@@ -373,7 +373,7 @@ const HistoryPage: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm">Catégorie top</p>
+                  <p className="text-gray-600 text-sm">CatÃ©gorie top</p>
                   <p className="text-2xl font-bold text-[#3B3B3B] mt-1">
                     {stats.topCategory}
                   </p>
@@ -396,10 +396,10 @@ const HistoryPage: React.FC = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* Catégorie */}
+                {/* CatÃ©gorie */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie
+                    CatÃ©gorie
                   </label>
                   <select
                     value={filters.category}
@@ -408,15 +408,15 @@ const HistoryPage: React.FC = () => {
                   >
                     <option value="all">Toutes</option>
                     <option value="food">Alimentation</option>
-                    <option value="cosmetic">Cosmétiques</option>
-                    <option value="detergent">Produits ménagers</option>
+                    <option value="cosmetic">CosmÃ©tiques</option>
+                    <option value="detergent">Produits mÃ©nagers</option>
                   </select>
                 </div>
 
-                {/* Période */}
+                {/* PÃ©riode */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Période
+                    PÃ©riode
                   </label>
                   <select
                     value={filters.dateRange}
@@ -427,7 +427,7 @@ const HistoryPage: React.FC = () => {
                     <option value="today">Aujourd'hui</option>
                     <option value="week">Cette semaine</option>
                     <option value="month">Ce mois</option>
-                    <option value="year">Cette année</option>
+                    <option value="year">Cette annÃ©e</option>
                   </select>
                 </div>
 
@@ -460,7 +460,7 @@ const HistoryPage: React.FC = () => {
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
                   >
-                    <option value="date-desc">Plus récent</option>
+                    <option value="date-desc">Plus rÃ©cent</option>
                     <option value="date-asc">Plus ancien</option>
                     <option value="score-desc">Meilleur score</option>
                     <option value="score-asc">Moins bon score</option>
@@ -508,7 +508,7 @@ const HistoryPage: React.FC = () => {
               onClick={fetchHistory}
               className="mt-4 px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              Réessayer
+              RÃ©essayer
             </button>
           </div>
         ) : history.length === 0 ? (
@@ -617,7 +617,7 @@ const HistoryPage: React.FC = () => {
                   disabled={currentPage === 1}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                 >
-                  Précédent
+                  PrÃ©cÃ©dent
                 </button>
                 
                 <div className="flex items-center gap-2">

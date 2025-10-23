@@ -22,7 +22,7 @@ const Results: React.FC = () => {
 
   const handleAnalyze = async () => {
     if (!inputText.trim()) {
-      alert('Veuillez entrer des ingredients ƒÆ’†â€™ƒâ€š‚Â  analyser');
+      alert('Veuillez entrer des ingredients Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  analyser');
       return;
     }
     
@@ -31,7 +31,7 @@ const Results: React.FC = () => {
   };
 
   const handleTestProduct = async (testFunction: () => Promise<any>, productInfo: string) => {
-    console.log(`ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â§ƒâ€š‚Âª Test rapide: ${productInfo}`);
+    console.log(`Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Âª Test rapide: ${productInfo}`);
     setProductName(productInfo);
     setInputText('Test en cours...');
     await testFunction();
@@ -49,7 +49,7 @@ const Results: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold text-gray-800">
-              ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â¬ Analyse NOVA - Intelligence Artificielle
+              Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬ Analyse NOVA - Intelligence Artificielle
             </h1>
             {data && (
               <div className="flex space-x-3">
@@ -124,15 +124,15 @@ const Results: React.FC = () => {
                 disabled={loading}
                 className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors"
               >
-                ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â¥ƒâ€š‚Â¤ Coca-Cola
+                Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¥Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤ Coca-Cola
               </button>
               
               <button
-                onClick={() => handleTestProduct(testNutella, 'Nutella Pate ƒÆ’†â€™ƒâ€š‚Â  tartiner')}
+                onClick={() => handleTestProduct(testNutella, 'Nutella Pate Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  tartiner')}
                 disabled={loading}
                 className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors"
               >
-                ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€š‚Â« Nutella
+                Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â« Nutella
               </button>
               
               <button
@@ -140,7 +140,7 @@ const Results: React.FC = () => {
                 disabled={loading}
                 className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors"
               >
-                ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âaaâ€šÂ¬‚Â¢ Pizza surgelee
+                Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¢ Pizza surgelee
               </button>
             </div>
           </div>
@@ -148,7 +148,7 @@ const Results: React.FC = () => {
           {/* Informations sur l'API */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="flex items-start">
-              <div className="text-blue-600 text-xl mr-3">aaaâ€šÂ¬…Â¾ƒâ€š‚Â¹ƒÂ¯ƒâ€š‚Â¸ƒâ€š‚Â</div>
+              <div className="text-blue-600 text-xl mr-3">aaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾Æ’Ã¢â‚¬Å¡â€šÃ‚Â¹Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â</div>
               <div>
                 <h3 className="text-blue-800 font-medium mb-1">Intelligence Artificielle ECOLOJIA</h3>
                 <p className="text-blue-700 text-sm">
@@ -166,14 +166,14 @@ const Results: React.FC = () => {
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
               <div className="flex items-start">
-                <div className="text-red-600 text-xl mr-3">aƒâ€š‚Âƒâ€¦aâ‚¬â„¢</div>
+                <div className="text-red-600 text-xl mr-3">aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢</div>
                 <div className="flex-1">
                   <h3 className="text-red-800 font-medium">Erreur d'analyse</h3>
                   <p className="text-red-700">{error}</p>
                   
                   {error.includes('quota') && (
                     <div className="mt-3 p-3 bg-red-100 rounded border border-red-200">
-                      <p className="text-red-800 text-sm font-medium">ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢ƒâ€š‚Â¡ Solutions:</p>
+                      <p className="text-red-800 text-sm font-medium">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¡ Solutions:</p>
                       <ul className="text-red-700 text-sm mt-1 list-disc list-inside">
                         <li>Attendez le renouvellement quotidien du quota</li>
                         <li>Utilisez les tests rapides predefinis</li>
@@ -184,7 +184,7 @@ const Results: React.FC = () => {
                   
                   {error.includes('confidence') && (
                     <div className="mt-3 p-3 bg-red-100 rounded border border-red-200">
-                      <p className="text-red-800 text-sm font-medium">ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢ƒâ€š‚Â¡ Ameliorez la reconnaissance:</p>
+                      <p className="text-red-800 text-sm font-medium">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¡ Ameliorez la reconnaissance:</p>
                       <ul className="text-red-700 text-sm mt-1 list-disc list-inside">
                         <li>Ajoutez le nom exact du produit</li>
                         <li>Copiez la liste d'ingredients complete</li>
@@ -212,10 +212,10 @@ const Results: React.FC = () => {
           </div>
         )}
 
-        {/* ƒÆ’†â€™aaâ€šÂ¬‚Â°tats vides */}
+        {/* Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°tats vides */}
         {!data && !loading && !error && (
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <div className="text-6xl mb-4">ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â¬</div>
+            <div className="text-6xl mb-4">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â¬</div>
             <h2 className="text-xl font-bold text-gray-800 mb-2">
               Pret pour l'analyse NOVA
             </h2>
@@ -226,19 +226,19 @@ const Results: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="text-green-600 text-2xl mb-2">ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â¥ƒâ€š‚Â¬</div>
+                <div className="text-green-600 text-2xl mb-2">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â¥Æ’Ã¢â‚¬Å¡â€šÃ‚Â¬</div>
                 <h3 className="font-medium text-green-800">Groupe NOVA 1-2</h3>
                 <p className="text-green-700">Aliments peu ou pas transformes</p>
               </div>
               
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <div className="text-orange-600 text-2xl mb-2">ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â¾</div>
+                <div className="text-orange-600 text-2xl mb-2">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â¾</div>
                 <h3 className="font-medium text-orange-800">Groupe NOVA 3</h3>
                 <p className="text-orange-700">Aliments transformes</p>
               </div>
               
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="text-red-600 text-2xl mb-2">ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â¸</div>
+                <div className="text-red-600 text-2xl mb-2">Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â¸</div>
                 <h3 className="font-medium text-red-800">Groupe NOVA 4</h3>
                 <p className="text-red-700">Aliments ultra-transformes</p>
               </div>

@@ -1,4 +1,4 @@
-﻿// Échelle scientifique optimale (Yuka-inspired + Standards académiques)
+// Échelle scientifique optimale (Yuka-inspired + Standards académiques)
 // Basée sur notation française (/20) et psychologie comportementale
 // 
 // 🔴 0-35   : MAUVAIS      - À éviter (<7/20)

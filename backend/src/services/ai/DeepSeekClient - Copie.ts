@@ -1,6 +1,6 @@
 // PATH: backend/src/services/ai/DeepSeekClient.ts
-/*  Dépendances : axios, crypto
-    Utilise cacheManager (Redis) et Logger déjà présents                  */
+/*  DÃ©pendances : axios, crypto
+    Utilise cacheManager (Redis) et Logger dÃ©jÃ  prÃ©sents                  */
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import crypto from 'crypto';
 
@@ -9,7 +9,7 @@ import { cacheManager } from '../cache/CacheManager';
 
 const logger = new Logger('DeepSeekClient');
 
-// ──────────────────────────────────── Types ───────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export interface DeepSeekMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -32,7 +32,7 @@ export interface AnalysisEnhancementRequest {
   };
 }
 
-// ────────────────────────────────── Client ───────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export class DeepSeekClient {
   private readonly client: AxiosInstance;
   private readonly CACHE_PREFIX = 'deepseek:';
@@ -57,7 +57,7 @@ export class DeepSeekClient {
     };
 
     if (!this.cfg.apiKey) {
-      logger.warn('⚠️  Clé API DeepSeek non définie – fonctions IA désactivées.');
+      logger.warn('âš ï¸  ClÃ© API DeepSeek non dÃ©finie â€“ fonctions IA dÃ©sactivÃ©es.');
     }
 
     this.client = axios.create({
@@ -78,7 +78,7 @@ export class DeepSeekClient {
     );
   }
 
-  // ─────────── API publiques ───────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ API publiques â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   async enhanceProductAnalysis(req: AnalysisEnhancementRequest) {
     const cacheKey = this.key('enhance', req);
     const cached = await cacheManager.get(cacheKey);
@@ -125,7 +125,7 @@ export class DeepSeekClient {
     return alt;
   }
 
-  // ─────────── Low-level chat ───────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Low-level chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   private async chat(msg: DeepSeekMessage[]): Promise<string> {
     if (!this.cfg.apiKey) throw new Error('DeepSeek API key absente.');
 
@@ -147,7 +147,7 @@ export class DeepSeekClient {
     }
   }
 
-  // ─────────── Prompts ───────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Prompts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   private promptEnhanceSys(cat: string) {
     const base = {
       food: 'Tu es nutritionniste expert NOVA/EFSA.',
@@ -163,25 +163,25 @@ Produit : ${r.productName}
 Analyse : ${JSON.stringify(r.baseAnalysis)}
 ${r.userQuery ? 'Question : ' + r.userQuery : ''}
 ${r.userProfile ? 'Profil : ' + JSON.stringify(r.userProfile) : ''}
-Enrichis l’analyse (insights, recommandations, alternatives, sources).`.trim();
+Enrichis lâ€™analyse (insights, recommandations, alternatives, sources).`.trim();
   }
 
   private promptChatSys(ctx?: any) {
     return `
 Assistant scientifique ECOLOJIA.
-Contexte : ${ctx ? JSON.stringify(ctx) : '—'} 
-Réponses ≤3 paragraphes, citer sources, action concrète.`.trim();
+Contexte : ${ctx ? JSON.stringify(ctx) : 'â€”'} 
+RÃ©ponses â‰¤3 paragraphes, citer sources, action concrÃ¨te.`.trim();
   }
 
   private promptAlt(p: any, cat: string, crit: string[]) {
     return `
 Alternatives saines pour : ${p.name}
-Catégorie : ${cat}
-Critères : ${crit.join(', ') || '—'}
+CatÃ©gorie : ${cat}
+CritÃ¨res : ${crit.join(', ') || 'â€”'}
 Format JSON.`.trim();
   }
 
-  // ─────────── Parsing ───────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Parsing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   private parseEnhance(txt: string) {
     try {
       const m = txt.match(/\{[\s\S]*}/);
@@ -205,8 +205,8 @@ Format JSON.`.trim();
   }
 
   private suggest(ctx?: any) {
-    const q = ['Réduire les additifs', 'Alternatives maison'];
-    if (ctx?.novaGroup >= 4) q.unshift('Pourquoi ultra-transformé ?');
+    const q = ['RÃ©duire les additifs', 'Alternatives maison'];
+    if (ctx?.novaGroup >= 4) q.unshift('Pourquoi ultra-transformÃ© ?');
     return q;
   }
 
@@ -216,7 +216,7 @@ Format JSON.`.trim();
   }
 
   private handleAxios(e: AxiosError) {
-    if (e.response?.status === 401) return new Error('Clé DeepSeek invalide');
+    if (e.response?.status === 401) return new Error('ClÃ© DeepSeek invalide');
     if (e.response?.status === 429) return new Error('Quota DeepSeek atteint');
     return new Error(e.message);
   }

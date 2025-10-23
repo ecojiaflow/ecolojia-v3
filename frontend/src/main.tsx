@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { AuthProvider } from './Contexts/AuthContext';
 import './index.css';
-// Créer le root element
+// CrÃ©er le root element
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 
@@ -49,7 +49,7 @@ root.render(
 
 
 if (import.meta.env.DEV && 'serviceWorker' in navigator) {
-  // Désactive tout SW résiduel en dev pour éviter l'erreur 'sw.js:10'
+  // DÃ©sactive tout SW rÃ©siduel en dev pour Ã©viter l'erreur 'sw.js:10'
   navigator.serviceWorker.getRegistrations().then(regs => {
     for (const r of regs) { r.unregister().catch(()=>{}); }
   }).catch(()=>{});

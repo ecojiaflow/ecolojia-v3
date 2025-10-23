@@ -3,17 +3,17 @@
     "source": "International Table of Glycemic Index and Glycemic Load Values 2024",
     "references": [
       "University of Sydney - GI Database 2024",
-      "INSERM - Ã‰tudes glycémiques françaises",
+      "INSERM - Ãƒâ€°tudes glycÃ©miques franÃ§aises",
       "Diabetes Care Journal - Meta-analyses 2024"
     ],
     "last_updated": "2024-01-15",
-    "methodology": "IG mesuré sur glucose = 100, seuil publication â‰¥ 10 sujets",
-    "legal_disclaimer": "Estimations basées sur données scientifiques - Ne remplace pas avis médical"
+    "methodology": "IG mesurÃ© sur glucose = 100, seuil publication Ã¢â€°Â¥ 10 sujets",
+    "legal_disclaimer": "Estimations basÃ©es sur donnÃ©es scientifiques - Ne remplace pas avis mÃ©dical"
   },
 
   "categories": {
     "cereals_grains": {
-      "description": "Céréales et produits céréaliers",
+      "description": "CÃ©rÃ©ales et produits cÃ©rÃ©aliers",
       "items": {
         "avoine_flocons": {"gi": 40, "gl_per_serving": 8, "confidence": 0.9},
         "ble_entier": {"gi": 30, "gl_per_serving": 6, "confidence": 0.85},
@@ -43,7 +43,7 @@
     },
 
     "pasta_noodles": {
-      "description": "Pâtes et nouilles",
+      "description": "PÃ¢tes et nouilles",
       "items": {
         "pates_blanches_cuites": {"gi": 50, "gl_per_serving": 10, "confidence": 0.9},
         "pates_completes_cuites": {"gi": 40, "gl_per_serving": 8, "confidence": 0.85},
@@ -54,7 +54,7 @@
     },
 
     "legumes": {
-      "description": "Légumineuses",
+      "description": "LÃ©gumineuses",
       "items": {
         "haricots_rouges": {"gi": 24, "gl_per_serving": 5, "confidence": 0.9},
         "haricots_blancs": {"gi": 30, "gl_per_serving": 6, "confidence": 0.85},
@@ -68,7 +68,7 @@
     },
 
     "fruits": {
-      "description": "Fruits frais et transformés",
+      "description": "Fruits frais et transformÃ©s",
       "items": {
         "pomme": {"gi": 35, "gl_per_serving": 5, "confidence": 0.95},
         "banane": {"gi": 55, "gl_per_serving": 11, "confidence": 0.95},
@@ -85,7 +85,7 @@
     },
 
     "vegetables": {
-      "description": "Légumes et tubercules",
+      "description": "LÃ©gumes et tubercules",
       "items": {
         "pomme_terre_cuite": {"gi": 70, "gl_per_serving": 14, "confidence": 0.95},
         "pomme_terre_puree": {"gi": 85, "gl_per_serving": 17, "confidence": 0.9},
@@ -99,7 +99,7 @@
     },
 
     "sugars_sweeteners": {
-      "description": "Sucres et édulcorants",
+      "description": "Sucres et Ã©dulcorants",
       "items": {
         "glucose": {"gi": 100, "gl_per_serving": 10, "confidence": 1.0},
         "sucre_blanc": {"gi": 70, "gl_per_serving": 7, "confidence": 0.95},
@@ -111,7 +111,7 @@
     },
 
     "processed_foods": {
-      "description": "Aliments transformés et ultra-transformés",
+      "description": "Aliments transformÃ©s et ultra-transformÃ©s",
       "items": {
         "biscuits_digestifs": {"gi": 70, "gl_per_serving": 14, "confidence": 0.85},
         "galettes_riz": {"gi": 87, "gl_per_serving": 17, "confidence": 0.9},
@@ -138,7 +138,7 @@
   },
 
   "modifying_factors": {
-    "description": "Facteurs modifiant l'index glycémique",
+    "description": "Facteurs modifiant l'index glycÃ©mique",
     "fiber_content": {
       "low_fiber": {"threshold": 3, "modifier": 1.0},
       "medium_fiber": {"threshold": 6, "modifier": 0.85},
@@ -198,16 +198,16 @@
 
   "health_implications": {
     "low_gi_benefits": [
-      "Meilleure régulation glycémique",
-      "Sensation de satiété prolongée",
-      "Réduction risque diabète type 2",
-      "Contrôle du poids facilité"
+      "Meilleure rÃ©gulation glycÃ©mique",
+      "Sensation de satiÃ©tÃ© prolongÃ©e",
+      "RÃ©duction risque diabÃ¨te type 2",
+      "ContrÃ´le du poids facilitÃ©"
     ],
     "high_gi_risks": [
-      "Pic glycémique rapide",
-      "Hypoglycémie réactionnelle",
+      "Pic glycÃ©mique rapide",
+      "HypoglycÃ©mie rÃ©actionnelle",
       "Augmentation risque cardiovasculaire",
-      "Perturbation métabolique"
+      "Perturbation mÃ©tabolique"
     ]
   },
 
@@ -237,8 +237,8 @@
   },
 
   "legal_compliance": {
-    "scientific_basis": "Basé sur études cliniques publiées avec â‰¥ 10 sujets",
-    "estimation_disclaimer": "Estimations Ã  titre informatif - Variabilité individuelle possible",
-    "medical_disclaimer": "Ne constitue pas un conseil médical - Consulter professionnel santé"
+    "scientific_basis": "BasÃ© sur Ã©tudes cliniques publiÃ©es avec Ã¢â€°Â¥ 10 sujets",
+    "estimation_disclaimer": "Estimations ÃƒÂ  titre informatif - VariabilitÃ© individuelle possible",
+    "medical_disclaimer": "Ne constitue pas un conseil mÃ©dical - Consulter professionnel santÃ©"
   }
 }

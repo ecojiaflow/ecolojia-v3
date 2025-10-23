@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 export const TrendSparkline: React.FC<{data:{date:string; value:number}[]}> = ({ data }) => {

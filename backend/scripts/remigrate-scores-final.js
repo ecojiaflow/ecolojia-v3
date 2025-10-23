@@ -1,4 +1,4 @@
-﻿// PATH: backend/scripts/remigrate-scores-final.js
+// PATH: backend/scripts/remigrate-scores-final.js
 // Re-migration avec nouveau scoring engine PHASE 7-BIS
 
 const mongoose = require('mongoose');

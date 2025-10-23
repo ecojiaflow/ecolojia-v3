@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { sendChatMessage } from "../services/chatService";
 
 export function useAIChat(context?: any) {

@@ -55,10 +55,10 @@ class CategoryDetection {
     };
   }
 
-  // === D‰TECTION PRINCIPALE ===
+  // === Dâ€°TECTION PRINCIPALE ===
   async detectCategory(productData) {
     try {
-      console.log('ðŸ” Detection categorie pour:', productData?.title || 'Produit sans nom');
+      console.log('Ã°Å¸â€Â Detection categorie pour:', productData?.title || 'Produit sans nom');
 
       // Calcul des scores pour chaque categorie
       const scores = await this.calculateCategoryScores(productData);
@@ -71,7 +71,7 @@ class CategoryDetection {
 
       // Seuil minimum de confiance
       if (confidence < 0.15) {
-        console.log('âš ï¸ Confiance tres faible, fallback vers food');
+        console.log('Ã¢Å¡Â Ã¯Â¸Â Confiance tres faible, fallback vers food');
         return {
           category: 'food',
           confidence: 0.4,
@@ -80,7 +80,7 @@ class CategoryDetection {
         };
       }
 
-      console.log(`âœ… Categorie detectee: ${bestMatch.category} (confiance: ${Math.round(confidence * 100)}%)`);
+      console.log(`Ã¢Å“â€¦ Categorie detectee: ${bestMatch.category} (confiance: ${Math.round(confidence * 100)}%)`);
 
       return {
         category: bestMatch.category,
@@ -101,7 +101,7 @@ class CategoryDetection {
     }
   }
 
-  // === CALCUL SCORES PAR CAT‰GORIE ===
+  // === CALCUL SCORES PAR CATâ€°GORIE ===
   async calculateCategoryScores(productData) {
     const scores = [];
     const productText = this.prepareProductText(productData);
@@ -119,7 +119,7 @@ class CategoryDetection {
     return scores;
   }
 
-  // === CALCUL SCORE POUR UNE CAT‰GORIE ===
+  // === CALCUL SCORE POUR UNE CATâ€°GORIE ===
   async calculateSingleCategoryScore(productText, productData, rules) {
     const breakdown = {
       keywords_primary: 0,
@@ -222,7 +222,7 @@ class CategoryDetection {
     };
   }
 
-  // === PR‰PARATION TEXTE PRODUIT ===
+  // === PRâ€°PARATION TEXTE PRODUIT ===
   prepareProductText(productData) {
     const textFields = [
       productData.title || '',
@@ -238,7 +238,7 @@ class CategoryDetection {
     return textFields.join(' ').toLowerCase();
   }
 
-  // === D‰TECTION SP‰CIALIS‰E PAR TYPE ===
+  // === Dâ€°TECTION SPâ€°CIALISâ€°E PAR TYPE ===
   async detectCosmetics(productData) {
     const text = this.prepareProductText(productData);
     
@@ -304,14 +304,14 @@ class CategoryDetection {
 
     const detectedCategory = validations[category];
     if (!detectedCategory || detectedCategory.confidence < 0.3) {
-      console.warn(`âš ï¸ Validation echouee pour ${category}, confidence: ${detectedCategory?.confidence || 0}`);
+      console.warn(`Ã¢Å¡Â Ã¯Â¸Â Validation echouee pour ${category}, confidence: ${detectedCategory?.confidence || 0}`);
       return false;
     }
 
     return true;
   }
 
-  // === M‰THODES UTILITAIRES ===
+  // === Mâ€°THODES UTILITAIRES ===
   getDetectionStats() {
     return {
       available_categories: Object.keys(this.detectionRules),

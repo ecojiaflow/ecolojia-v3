@@ -6,7 +6,7 @@
     {
       "id": "off_8052575090254",
       "title": "Nocciolata bio",
-      "description": "Produit bio Rigoni di Asiago. Catégorie: Petit-déjeuners. Ingrédients: Sucre brut, pâte de noisettes 18,5%, huile de tournesol, lait écrémé en poudre, cacao maigre en poudre 6,5%, beurre de cacao, émulsifiant: lécithine d...",
+      "description": "Produit bio Rigoni di Asiago. CatÃ©gorie: Petit-dÃ©jeuners. IngrÃ©dients: Sucre brut, pÃ¢te de noisettes 18,5%, huile de tournesol, lait Ã©crÃ©mÃ© en poudre, cacao maigre en poudre 6,5%, beurre de cacao, Ã©mulsifiant: lÃ©cithine d...",
       "slug": "nocciolata-bio-off-0-1755284444330",
       "brand": "Rigoni di Asiago",
       "category": "alimentation-bio",
@@ -33,17 +33,17 @@
       "confidence_pct": 75,
       "confidence_color": "yellow",
       "verified_status": "manual_review",
-      "resume_fr": "Rigoni di Asiago - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
+      "resume_fr": "Rigoni di Asiago - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
       "resume_en": "Rigoni di Asiago - Certified organic product from OpenFoodFacts, environmentally friendly.",
       "enriched_at": "2025-08-15T19:00:44.331Z",
       "created_at": "2025-08-15T19:00:44.333Z"
     },
     {
       "id": "off_3155250358788",
-      "title": "Primevère bio doux tartine & cuisson",
-      "description": "Produit bio Primevère. Catégorie: Plant-based foods and beverages. Ingrédients: Huiles végétales non hydrogénées 54.5% (colza, palme), eau, émulsifiant (lécithine de tournesol), sel, arôme naturel de noix de coco, jus de citron co...",
+      "title": "PrimevÃ¨re bio doux tartine & cuisson",
+      "description": "Produit bio PrimevÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Huiles vÃ©gÃ©tales non hydrogÃ©nÃ©es 54.5% (colza, palme), eau, Ã©mulsifiant (lÃ©cithine de tournesol), sel, arÃ´me naturel de noix de coco, jus de citron co...",
       "slug": "primev-re-bio-doux-tartine-cuisson-off-1-1755284444333",
-      "brand": "Primevère",
+      "brand": "PrimevÃ¨re",
       "category": "alimentation-bio",
       "tags": [
         "bio",
@@ -68,23 +68,23 @@
       "confidence_pct": 75,
       "confidence_color": "yellow",
       "verified_status": "manual_review",
-      "resume_fr": "Primevère - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
-      "resume_en": "Primevère - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "resume_fr": "PrimevÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "PrimevÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
       "enriched_at": "2025-08-15T19:00:44.333Z",
       "created_at": "2025-08-15T19:00:44.333Z"
     },
     {
       "id": "off_3760049794298",
-      "title": "Pain de mie Bio grandes tranches céréales & graines 500g",
-      "description": "Produit bio La Boulangère. Catégorie: Plant-based foods and beverages. Ingrédients: Farine de BLÃ‰*/** 55%, eau, levure, huile de tournesol*, sucre de canne roux*, graines de tournesol décortiquées* 3,3%, vinaigre de cidre*, flocons de...",
+      "title": "Pain de mie Bio grandes tranches cÃ©rÃ©ales & graines 500g",
+      "description": "Produit bio La BoulangÃ¨re. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: Farine de BLÃƒâ€°*/** 55%, eau, levure, huile de tournesol*, sucre de canne roux*, graines de tournesol dÃ©cortiquÃ©es* 3,3%, vinaigre de cidre*, flocons de...",
       "slug": "pain-de-mie-bio-grandes-tranches-c-r-ale-off-2-1755284444333",
-      "brand": "La Boulangère",
+      "brand": "La BoulangÃ¨re",
       "category": "alimentation-bio",
       "tags": [
         "bio",
         "alimentaire",
         "openfoodfacts",
-        "équitable"
+        "Ã©quitable"
       ],
       "images": [
         "https://images.openfoodfacts.org/images/products/376/004/979/4298/front_fr.178.400.jpg"
@@ -104,17 +104,17 @@
       "confidence_pct": 75,
       "confidence_color": "yellow",
       "verified_status": "manual_review",
-      "resume_fr": "La Boulangère - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
-      "resume_en": "La Boulangère - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "resume_fr": "La BoulangÃ¨re - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "La BoulangÃ¨re - Certified organic product from OpenFoodFacts, environmentally friendly.",
       "enriched_at": "2025-08-15T19:00:44.333Z",
       "created_at": "2025-08-15T19:00:44.333Z"
     },
     {
       "id": "off_3175681037854",
       "title": "Tartines craquantes sarrasin",
-      "description": "Produit bio Céréal Bio. Catégorie: Aliments et boissons Ã  base de végétaux. Ingrédients: SPÃ‰CIALITÃ‰S CÃ‰RÃ‰ALIÃˆRES AU SARRASIN, ISSUES DE L'AGRICULTURE BIOLOGIQUE. 4 ingrédients et c'est tout Farine de sarrasin* 72,3g, farine de riz* 37,3g, ...",
+      "description": "Produit bio CÃ©rÃ©al Bio. CatÃ©gorie: Aliments et boissons ÃƒÂ  base de vÃ©gÃ©taux. IngrÃ©dients: SPÃƒâ€°CIALITÃƒâ€°S CÃƒâ€°RÃƒâ€°ALIÃƒË†RES AU SARRASIN, ISSUES DE L'AGRICULTURE BIOLOGIQUE. 4 ingrÃ©dients et c'est tout Farine de sarrasin* 72,3g, farine de riz* 37,3g, ...",
       "slug": "tartines-craquantes-sarrasin-off-3-1755284444333",
-      "brand": "Céréal Bio",
+      "brand": "CÃ©rÃ©al Bio",
       "category": "alimentation-bio",
       "tags": [
         "bio",
@@ -122,7 +122,7 @@
         "openfoodfacts",
         "boisson",
         "collation",
-        "certifié-bio"
+        "certifiÃ©-bio"
       ],
       "images": [
         "https://images.openfoodfacts.org/images/products/317/568/103/7854/front_fr.219.400.jpg"
@@ -142,24 +142,24 @@
       "confidence_pct": 75,
       "confidence_color": "yellow",
       "verified_status": "manual_review",
-      "resume_fr": "Céréal Bio - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
-      "resume_en": "Céréal Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "resume_fr": "CÃ©rÃ©al Bio - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "CÃ©rÃ©al Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
       "enriched_at": "2025-08-15T19:00:44.333Z",
       "created_at": "2025-08-15T19:00:44.333Z"
     },
     {
       "id": "off_3175681028111",
       "title": "Les Galettes Boulgour & Quinoa - Tomate & Paprika",
-      "description": "Produit bio Céréal Bio. Catégorie: Plant-based foods and beverages. Ingrédients: whole wheat bulgur* 45,5%, quinoa* 11,9%, vegetable oils (oleic sunflower and sunflower), red peppers, onions, whole wheat flakes 5%, whole oatmeal 4,...",
+      "description": "Produit bio CÃ©rÃ©al Bio. CatÃ©gorie: Plant-based foods and beverages. IngrÃ©dients: whole wheat bulgur* 45,5%, quinoa* 11,9%, vegetable oils (oleic sunflower and sunflower), red peppers, onions, whole wheat flakes 5%, whole oatmeal 4,...",
       "slug": "les-galettes-boulgour-quinoa-tomate-papr-off-4-1755284444333",
-      "brand": "Céréal Bio",
+      "brand": "CÃ©rÃ©al Bio",
       "category": "alimentation-bio",
       "tags": [
         "bio",
         "alimentaire",
         "openfoodfacts",
         "vegan",
-        "certifié-bio"
+        "certifiÃ©-bio"
       ],
       "images": [
         "https://images.openfoodfacts.org/images/products/317/568/102/8111/front_en.220.400.jpg"
@@ -179,8 +179,8 @@
       "confidence_pct": 75,
       "confidence_color": "yellow",
       "verified_status": "manual_review",
-      "resume_fr": "Céréal Bio - Produit bio certifié OpenFoodFacts, respectueux de l'environnement.",
-      "resume_en": "Céréal Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
+      "resume_fr": "CÃ©rÃ©al Bio - Produit bio certifiÃ© OpenFoodFacts, respectueux de l'environnement.",
+      "resume_en": "CÃ©rÃ©al Bio - Certified organic product from OpenFoodFacts, environmentally friendly.",
       "enriched_at": "2025-08-15T19:00:44.333Z",
       "created_at": "2025-08-15T19:00:44.333Z"
     }

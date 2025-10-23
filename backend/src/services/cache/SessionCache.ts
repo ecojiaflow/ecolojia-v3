@@ -21,7 +21,7 @@ export class SessionCache {
   private readonly TTL = 86400; // 24 heures
 
   /**
-   * Créer une nouvelle session en cache
+   * CrÃ©er une nouvelle session en cache
    */
   async createSession(token: string, user: User): Promise<boolean> {
     try {
@@ -42,20 +42,20 @@ export class SessionCache {
       );
 
       if (success) {
-        // Ajouter le token à la liste des sessions de l'utilisateur
+        // Ajouter le token Ã  la liste des sessions de l'utilisateur
         await this.addUserSession(user.id, token);
-        logger.info(`✅ Session created for user ${user.email}`);
+        logger.info(`âœ… Session created for user ${user.email}`);
       }
 
       return success;
     } catch (error) {
-      logger.error(`❌ Error creating session:`, error);
+      logger.error(`âŒ Error creating session:`, error);
       return false;
     }
   }
 
   /**
-   * Récupérer une session du cache
+   * RÃ©cupÃ©rer une session du cache
    */
   async getSession(token: string): Promise<SessionData | null> {
     try {
@@ -64,7 +64,7 @@ export class SessionCache {
       );
 
       if (session) {
-        // Mettre à jour le lastAccess
+        // Mettre Ã  jour le lastAccess
         session.lastAccess = new Date();
         await cacheManager.set(
           `${this.PREFIX}${token}`,
@@ -75,13 +75,13 @@ export class SessionCache {
 
       return session;
     } catch (error) {
-      logger.error(`❌ Error getting session:`, error);
+      logger.error(`âŒ Error getting session:`, error);
       return null;
     }
   }
 
   /**
-   * Vérifier si une session est valide
+   * VÃ©rifier si une session est valide
    */
   async isSessionValid(token: string): Promise<boolean> {
     const session = await this.getSession(token);
@@ -109,7 +109,7 @@ export class SessionCache {
       
       return false;
     } catch (error) {
-      logger.error(`❌ Error invalidating session:`, error);
+      logger.error(`âŒ Error invalidating session:`, error);
       return false;
     }
   }
@@ -128,16 +128,16 @@ export class SessionCache {
         }
       }
 
-      logger.info(`🗑️ Invalidated ${count} sessions for user ${userId}`);
+      logger.info(`ðŸ—‘ï¸ Invalidated ${count} sessions for user ${userId}`);
       return count;
     } catch (error) {
-      logger.error(`❌ Error invalidating user sessions:`, error);
+      logger.error(`âŒ Error invalidating user sessions:`, error);
       return 0;
     }
   }
 
   /**
-   * Mettre à jour les données utilisateur dans toutes ses sessions
+   * Mettre Ã  jour les donnÃ©es utilisateur dans toutes ses sessions
    */
   async updateUserInSessions(userId: string, updatedUser: Partial<User>): Promise<void> {
     try {
@@ -156,9 +156,9 @@ export class SessionCache {
         }
       }
 
-      logger.info(`✅ Updated user data in ${tokens.length} sessions`);
+      logger.info(`âœ… Updated user data in ${tokens.length} sessions`);
     } catch (error) {
-      logger.error(`❌ Error updating user in sessions:`, error);
+      logger.error(`âŒ Error updating user in sessions:`, error);
     }
   }
 
@@ -172,13 +172,13 @@ export class SessionCache {
       );
       return tokens || [];
     } catch (error) {
-      logger.error(`❌ Error getting user sessions:`, error);
+      logger.error(`âŒ Error getting user sessions:`, error);
       return [];
     }
   }
 
   /**
-   * Ajouter un token à la liste des sessions utilisateur
+   * Ajouter un token Ã  la liste des sessions utilisateur
    */
   private async addUserSession(userId: string, token: string): Promise<void> {
     try {
@@ -193,7 +193,7 @@ export class SessionCache {
         );
       }
     } catch (error) {
-      logger.error(`❌ Error adding user session:`, error);
+      logger.error(`âŒ Error adding user session:`, error);
     }
   }
 
@@ -215,20 +215,20 @@ export class SessionCache {
         await cacheManager.delete(`${this.USER_SESSIONS_PREFIX}${userId}`);
       }
     } catch (error) {
-      logger.error(`❌ Error removing user session:`, error);
+      logger.error(`âŒ Error removing user session:`, error);
     }
   }
 
   /**
-   * Nettoyer les sessions expirées
+   * Nettoyer les sessions expirÃ©es
    */
   async cleanupExpiredSessions(): Promise<number> {
     try {
       const keys = await cacheManager.invalidate(`${this.PREFIX}*`);
-      logger.info(`🧹 Cleaned up expired sessions`);
+      logger.info(`ðŸ§¹ Cleaned up expired sessions`);
       return keys;
     } catch (error) {
-      logger.error(`❌ Error cleaning up sessions:`, error);
+      logger.error(`âŒ Error cleaning up sessions:`, error);
       return 0;
     }
   }
@@ -242,17 +242,17 @@ export class SessionCache {
     uniqueUsers: number;
   }> {
     try {
-      // Implémentation simplifiée - peut être améliorée
+      // ImplÃ©mentation simplifiÃ©e - peut Ãªtre amÃ©liorÃ©e
       const pattern = `${this.PREFIX}*`;
       const keys = await cacheManager.invalidate(pattern);
       
       return {
         totalSessions: keys,
         activeSessions: keys, // Approximation
-        uniqueUsers: 0 // À implémenter si nécessaire
+        uniqueUsers: 0 // Ã€ implÃ©menter si nÃ©cessaire
       };
     } catch (error) {
-      logger.error(`❌ Error getting session stats:`, error);
+      logger.error(`âŒ Error getting session stats:`, error);
       return {
         totalSessions: 0,
         activeSessions: 0,

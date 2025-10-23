@@ -1,4 +1,4 @@
-﻿const dataCompletenessService = require("../services/dataCompleteness.service");
+const dataCompletenessService = require("../services/dataCompleteness.service");
 
 function enrichProduct(req, res, next) {
   const originalJson = res.json.bind(res);

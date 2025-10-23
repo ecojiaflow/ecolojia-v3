@@ -1,4 +1,4 @@
-﻿// frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
+// frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
 // Page principale pour afficher et tester les categories multi-analyses - VERSION CORRIGÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°E
 
 import React, { useState, useEffect } from 'react';

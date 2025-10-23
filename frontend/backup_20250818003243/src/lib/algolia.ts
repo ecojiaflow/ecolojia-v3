@@ -1,4 +1,4 @@
-﻿import algoliasearch from 'algoliasearch';
+import algoliasearch from 'algoliasearch';
 
 // Configuration Algolia pour Ecolojia
 const ALGOLIA_APP_ID = import.met?.env.VITE_ALGOLIA_APP_ID || 'A2KJGZ2811';

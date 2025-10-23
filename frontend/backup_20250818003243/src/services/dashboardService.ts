@@ -85,7 +85,7 @@ class DashboardService {
     try {
       // Verifier que l'endpoint existe
       if (!API_CONFIG?.ENDPOINTS?.DASHBOARD?.STATS) {
-        console.log('°Å¸â€œÅ  Using mock data for dashboard stats');
+        console.log('Â°Ã…Â¸Ã¢â‚¬Å“Ã…Â  Using mock data for dashboard stats');
         return mockService.getDashboardStats();
       }
       
@@ -234,7 +234,7 @@ class DashboardService {
   }
 
   /**
-   * Mettre ƒÂ  jour la configuration des widgets
+   * Mettre Æ’Ã‚Â  jour la configuration des widgets
    */
   async updateWidgets(widgets: Array<{
     id: string;

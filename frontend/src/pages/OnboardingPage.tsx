@@ -1,6 +1,7 @@
-﻿// PATH: frontend/src/pages/OnboardingPage.tsx
+// PATH: frontend/src/pages/OnboardingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getReturnUrl } from '../utils/navigation';
 import { ChevronRight, Heart, Leaf, Shield, Check } from 'lucide-react';
 import { useAuthContext } from '../Contexts/AuthContext';
 import { authService } from '../services/api';
@@ -97,7 +98,7 @@ const OnboardingPage: React.FC = () => {
   };
 
   const handleSkip = () => {
-    navigate('/dashboard');
+    navigate(getReturnUrl());
   };
 
   const handleSubmit = async () => {
@@ -119,7 +120,7 @@ const OnboardingPage: React.FC = () => {
       });
 
       toast.success('Profil configuré avec succès !');
-      navigate('/dashboard');
+      navigate(getReturnUrl());
     } catch (error) {
       toast.error('Erreur lors de la configuration du profil');
     } finally {

@@ -6,7 +6,7 @@ async function main() {
   const product = await prisma.product.create({
     data: {
       title: "Savon test local",
-      description: "Produit de test inséré par script",
+      description: "Produit de test insÃ©rÃ© par script",
       slug: "savon-test-local",
       tags: ["test", "demo"],
       zones_dispo: ["FR"],
@@ -19,12 +19,12 @@ async function main() {
     }
   });
 
-  console.log("✅ Produit inséré avec succès :", product);
+  console.log("âœ… Produit insÃ©rÃ© avec succÃ¨s :", product);
 }
 
 main()
   .catch((err) => {
-    console.error("❌ Erreur pendant l’insertion :", err);
+    console.error("âŒ Erreur pendant lâ€™insertion :", err);
   })
   .finally(async () => {
     prisma.$disconnect();

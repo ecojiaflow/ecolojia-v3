@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/types/user.ts
+// PATH: frontend/src/types/user.ts
 export interface AIPreferences {
   tone?: 'concise' | 'detailed' | 'educational' | 'friendly';
   detailLevel?: 'minimal' | 'moderate' | 'comprehensive';

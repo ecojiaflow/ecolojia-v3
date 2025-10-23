@@ -45,13 +45,13 @@ class ProductOCRService {
       maxSize: 100
     };
 
-    // Patterns optimisés pour produits
+    // Patterns optimisÃ©s pour produits
     this.productPatterns = {
       ingredients: {
         fr: [
-          /(?:ingrédients?\s*:?\s*)([\s\S]+?)(?=valeurs?\s+nutritionnelles?|allergènes?|conservation|à conserver|$)/i,
-          /(?:composition\s*:?\s*)([\s\S]+?)(?=valeurs?\s+nutritionnelles?|allergènes?|$)/i,
-          /(?:contient\s*:?\s*)([\s\S]+?)(?=peut contenir|traces?|allergènes?|$)/i
+          /(?:ingrÃ©dients?\s*:?\s*)([\s\S]+?)(?=valeurs?\s+nutritionnelles?|allergÃ¨nes?|conservation|Ã  conserver|$)/i,
+          /(?:composition\s*:?\s*)([\s\S]+?)(?=valeurs?\s+nutritionnelles?|allergÃ¨nes?|$)/i,
+          /(?:contient\s*:?\s*)([\s\S]+?)(?=peut contenir|traces?|allergÃ¨nes?|$)/i
         ],
         en: [
           /(?:ingredients?\s*:?\s*)([\s\S]+?)(?=nutrition|allergens?|storage|$)/i
@@ -62,7 +62,7 @@ class ProductOCRService {
         /(?:marque|brand)\s*:?\s*([A-Za-z\s&\-']+)/i
       ],
       productName: [
-        /^([A-Z][a-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+){0,5})$/m,
+        /^([A-Z][a-zÃ€-Ã¿]+(?:\s+[A-Za-zÃ€-Ã¿]+){0,5})$/m,
         /(?:produit|product)\s*:?\s*([^\n]+)/i
       ],
       weight: [
@@ -81,20 +81,20 @@ class ProductOCRService {
     if (this.initialized) return;
 
     try {
-      // Initialiser Tesseract avec configuration optimisée
+      // Initialiser Tesseract avec configuration optimisÃ©e
       this.tesseractWorker = await Tesseract.createWorker({
-        logger: null, // Désactivé pour éviter DataCloneError
+        logger: null, // DÃ©sactivÃ© pour Ã©viter DataCloneError
         errorHandler: err => console.error('[Tesseract Error]', err)
       });
 
       await this.tesseractWorker.loadLanguage(['fra', 'eng']);
       await this.tesseractWorker.initialize('fra+eng');
       
-      // Configuration optimisée pour produits
+      // Configuration optimisÃ©e pour produits
       await this.tesseractWorker.setParameters({
         tessedit_ocr_engine_mode: 2, // LSTM neural net mode
         preserve_interword_spaces: '1',
-        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÂÄÇÈÉÊËÎÏÔÙÛÜàâäçèéêëîïôùûü0123456789-.,;:!?%()[] ',
+        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÃ€Ã‚Ã„Ã‡ÃˆÃ‰ÃŠÃ‹ÃŽÃÃ”Ã™Ã›ÃœÃ Ã¢Ã¤Ã§Ã¨Ã©ÃªÃ«Ã®Ã¯Ã´Ã¹Ã»Ã¼0123456789-.,;:!?%()[] ',
         tessjs_create_hocr: '0',
         tessjs_create_tsv: '0'
       });
@@ -108,7 +108,7 @@ class ProductOCRService {
   }
 
   /**
-   * Analyse une image de produit avec stratégie multi-couches
+   * Analyse une image de produit avec stratÃ©gie multi-couches
    */
   async analyzeProduct(imagePath, options = {}) {
     const {
@@ -118,7 +118,7 @@ class ProductOCRService {
       useCache = true
     } = options;
 
-    // Vérifier le cache
+    // VÃ©rifier le cache
     const cacheKey = `${imagePath}-${category}`;
     if (useCache && this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey);
@@ -133,15 +133,15 @@ class ProductOCRService {
     let serviceUsed = null;
 
     try {
-      // 1. Prétraitement de l'image
+      // 1. PrÃ©traitement de l'image
       const processedImage = await this.preprocessImage(imagePath, category);
 
-      // 2. Stratégie de sélection du service
+      // 2. StratÃ©gie de sÃ©lection du service
       if (forceService) {
         result = await this.runService(forceService, processedImage, options);
         serviceUsed = forceService;
       } else {
-        // Logique intelligente basée sur le tier et la disponibilité
+        // Logique intelligente basÃ©e sur le tier et la disponibilitÃ©
         const services = this.getServiceOrder(userTier);
         
         for (const service of services) {
@@ -161,7 +161,7 @@ class ProductOCRService {
       }
 
       if (!result) {
-        throw new Error('Tous les services OCR ont échoué');
+        throw new Error('Tous les services OCR ont Ã©chouÃ©');
       }
 
       // 3. Post-traitement et enrichissement
@@ -203,7 +203,7 @@ class ProductOCRService {
   }
 
   /**
-   * Exécute un service OCR spécifique
+   * ExÃ©cute un service OCR spÃ©cifique
    */
   async runService(serviceName, imagePath, options) {
     switch (serviceName) {
@@ -222,7 +222,7 @@ class ProductOCRService {
   }
 
   /**
-   * OCR avec Tesseract optimisé
+   * OCR avec Tesseract optimisÃ©
    */
   async runTesseract(imagePath, options) {
     await this.initialize();
@@ -235,7 +235,7 @@ class ProductOCRService {
     const text = result.data.text;
     const confidence = result.data.confidence / 100;
 
-    // Extraction structurée
+    // Extraction structurÃ©e
     const extracted = this.extractProductData(text, 'fr');
 
     return {
@@ -254,7 +254,7 @@ class ProductOCRService {
       throw new Error('OCR.space API key not configured');
     }
 
-    // Vérifier le quota
+    // VÃ©rifier le quota
     if (this.stats.ocrSpace.quotaUsed >= this.config.ocrSpace.monthlyQuota) {
       throw new Error('OCR.space monthly quota exceeded');
     }
@@ -290,13 +290,13 @@ class ProductOCRService {
       const text = result.ParsedText || '';
       const confidence = this.calculateOCRSpaceConfidence(result);
 
-      // Incrémenter le quota
+      // IncrÃ©menter le quota
       this.stats.ocrSpace.quotaUsed++;
 
-      // Extraction structurée
+      // Extraction structurÃ©e
       const extracted = this.extractProductData(text, 'fr');
 
-      // Utiliser les overlays pour améliorer l'extraction
+      // Utiliser les overlays pour amÃ©liorer l'extraction
       if (result.TextOverlay && result.TextOverlay.Lines) {
         const enhanced = this.enhanceWithOverlay(extracted, result.TextOverlay);
         return {
@@ -337,12 +337,12 @@ class ProductOCRService {
   }
 
   /**
-   * Prétraitement optimisé pour produits
+   * PrÃ©traitement optimisÃ© pour produits
    */
   async preprocessImage(imagePath, category = 'auto') {
     const outputPath = imagePath.replace(/\.[^/.]+$/, '_processed.jpg');
     
-    // Paramètres de preprocessing selon la catégorie
+    // ParamÃ¨tres de preprocessing selon la catÃ©gorie
     const presets = {
       food: {
         modulate: { brightness: 1.2, saturation: 0.8 },
@@ -364,27 +364,27 @@ class ProductOCRService {
     const preset = presets[category] || presets.food;
 
     try {
-      // Chaîne de traitement optimisée
+      // ChaÃ®ne de traitement optimisÃ©e
       await sharp(imagePath)
         // 1. Redimensionner pour OCR optimal
         .resize(2400, 2400, { 
           fit: 'inside',
-          withoutEnlargement: false // Agrandir si nécessaire
+          withoutEnlargement: false // Agrandir si nÃ©cessaire
         })
-        // 2. Améliorer le contraste
+        // 2. AmÃ©liorer le contraste
         .normalize()
         .linear(1.2, -(255 * 0.1)) // Augmenter le contraste
-        // 3. Ajuster luminosité et saturation
+        // 3. Ajuster luminositÃ© et saturation
         .modulate(preset.modulate)
-        // 4. Netteté adaptative
+        // 4. NettetÃ© adaptative
         .sharpen(preset.sharpen)
         // 5. Conversion en niveaux de gris pour texte
         .greyscale()
         // 6. Seuillage adaptatif pour texte noir sur blanc
         .threshold(preset.threshold)
-        // 7. Débruitage
+        // 7. DÃ©bruitage
         .median(3)
-        // 8. Format de sortie optimisé
+        // 8. Format de sortie optimisÃ©
         .jpeg({ 
           quality: 100,
           chromaSubsampling: '4:4:4'
@@ -401,7 +401,7 @@ class ProductOCRService {
   }
 
   /**
-   * Extraction de données structurées
+   * Extraction de donnÃ©es structurÃ©es
    */
   extractProductData(text, language = 'fr') {
     const data = {
@@ -426,7 +426,7 @@ class ProductOCRService {
     // 1. Extraction du nom du produit
     const lines = cleanText.split('\n').filter(l => l.trim().length > 2);
     if (lines.length > 0) {
-      // Le nom est souvent sur les premières lignes
+      // Le nom est souvent sur les premiÃ¨res lignes
       for (let i = 0; i < Math.min(3, lines.length); i++) {
         const line = lines[i].trim();
         if (line.length > 4 && line.length < 50 && !line.match(/^[0-9\s]+$/)) {
@@ -445,7 +445,7 @@ class ProductOCRService {
       }
     }
 
-    // 3. Extraction des ingrédients
+    // 3. Extraction des ingrÃ©dients
     const ingredientPatterns = this.productPatterns.ingredients[language] || this.productPatterns.ingredients.fr;
     for (const pattern of ingredientPatterns) {
       const match = cleanText.match(pattern);
@@ -476,7 +476,7 @@ class ProductOCRService {
       }
     }
 
-    // 6. Détection de la catégorie
+    // 6. DÃ©tection de la catÃ©gorie
     data.category = this.detectProductCategory(cleanText, data);
 
     // 7. Informations nutritionnelles
@@ -484,14 +484,14 @@ class ProductOCRService {
       data.nutritionalInfo = this.extractNutritionalInfo(cleanText);
     }
 
-    // 8. Allergènes
+    // 8. AllergÃ¨nes
     data.allergens = this.extractAllergens(cleanText);
 
     return data;
   }
 
   /**
-   * Amélioration avec les overlays OCR.space
+   * AmÃ©lioration avec les overlays OCR.space
    */
   enhanceWithOverlay(data, overlay) {
     if (!overlay || !overlay.Lines) return data;
@@ -499,25 +499,25 @@ class ProductOCRService {
     // Analyser la structure du document via les overlays
     const lines = overlay.Lines;
     
-    // Détecter les zones par position et taille de police
+    // DÃ©tecter les zones par position et taille de police
     const zones = {
       title: [],      // Haut, grande police
       ingredients: [], // Milieu, petite police dense
-      nutrition: [],   // Tableau structuré
-      barcode: []      // Chiffres isolés
+      nutrition: [],   // Tableau structurÃ©
+      barcode: []      // Chiffres isolÃ©s
     };
 
     lines.forEach((line, index) => {
       const avgHeight = line.Words.reduce((sum, w) => sum + w.Height, 0) / line.Words.length;
       const text = line.Words.map(w => w.WordText).join(' ');
       
-      // Zone titre (premières lignes, grande police)
+      // Zone titre (premiÃ¨res lignes, grande police)
       if (index < 5 && avgHeight > 30) {
         zones.title.push(text);
       }
       
-      // Zone ingrédients (texte dense)
-      if (text.match(/ingrédients?|composition/i) || 
+      // Zone ingrÃ©dients (texte dense)
+      if (text.match(/ingrÃ©dients?|composition/i) || 
           (line.Words.length > 10 && avgHeight < 20)) {
         zones.ingredients.push(text);
       }
@@ -528,7 +528,7 @@ class ProductOCRService {
       }
     });
 
-    // Améliorer les données extraites
+    // AmÃ©liorer les donnÃ©es extraites
     if (!data.productName && zones.title.length > 0) {
       data.productName = this.cleanProductName(zones.title[0]);
     }
@@ -545,22 +545,22 @@ class ProductOCRService {
   }
 
   /**
-   * Détection intelligente de catégorie
+   * DÃ©tection intelligente de catÃ©gorie
    */
   detectProductCategory(text, extractedData) {
     const lowerText = text.toLowerCase();
     
     const categoryKeywords = {
       food: {
-        keywords: ['nutritionnel', 'kcal', 'glucides', 'protéines', 'lipides', 'sucres', 'fibres', 'sodium', 'ingredients', 'conservation', 'consommer'],
+        keywords: ['nutritionnel', 'kcal', 'glucides', 'protÃ©ines', 'lipides', 'sucres', 'fibres', 'sodium', 'ingredients', 'conservation', 'consommer'],
         weight: 3
       },
       cosmetic: {
-        keywords: ['aqua', 'parfum', 'paraben', 'glycerin', 'sodium laureth', 'peau', 'cheveux', 'visage', 'corps', 'crème', 'gel', 'lotion'],
+        keywords: ['aqua', 'parfum', 'paraben', 'glycerin', 'sodium laureth', 'peau', 'cheveux', 'visage', 'corps', 'crÃ¨me', 'gel', 'lotion'],
         weight: 2
       },
       detergent: {
-        keywords: ['tensioactif', 'surfactant', 'enzyme', 'phosphate', 'lessive', 'nettoyant', 'détergent', 'javel', 'désinfectant'],
+        keywords: ['tensioactif', 'surfactant', 'enzyme', 'phosphate', 'lessive', 'nettoyant', 'dÃ©tergent', 'javel', 'dÃ©sinfectant'],
         weight: 2
       }
     };
@@ -576,24 +576,24 @@ class ProductOCRService {
       });
     });
 
-    // Bonus basé sur les données extraites
+    // Bonus basÃ© sur les donnÃ©es extraites
     if (extractedData.nutritionalInfo) scores.food += 5;
     if (extractedData.ingredients?.includes('aqua')) scores.cosmetic += 3;
 
-    // Retourner la catégorie avec le score le plus élevé
+    // Retourner la catÃ©gorie avec le score le plus Ã©levÃ©
     const maxScore = Math.max(...Object.values(scores));
     return maxScore > 0 
       ? Object.entries(scores).find(([_, score]) => score === maxScore)[0]
-      : 'food'; // Défaut
+      : 'food'; // DÃ©faut
   }
 
   /**
-   * Nettoyage des données extraites
+   * Nettoyage des donnÃ©es extraites
    */
   cleanProductName(name) {
     return name
-      .replace(/[®™©]/g, '')
-      .replace(/^\W+|\W+$/g, '') // Trim caractères spéciaux
+      .replace(/[Â®â„¢Â©]/g, '')
+      .replace(/^\W+|\W+$/g, '') // Trim caractÃ¨res spÃ©ciaux
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -615,12 +615,12 @@ class ProductOCRService {
     const info = {};
     
     const patterns = {
-      energy: /(?:énergie|energy|calories?)\s*:?\s*(\d+)\s*(?:kcal|kj)/i,
-      proteins: /(?:protéines?|proteins?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
+      energy: /(?:Ã©nergie|energy|calories?)\s*:?\s*(\d+)\s*(?:kcal|kj)/i,
+      proteins: /(?:protÃ©ines?|proteins?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
       carbs: /(?:glucides?|carbohydrates?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
       sugars: /(?:dont sucres?|of which sugars?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
-      fat: /(?:matières? grasses?|fat|lipides?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
-      saturated: /(?:acides? gras saturés?|saturated)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
+      fat: /(?:matiÃ¨res? grasses?|fat|lipides?)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
+      saturated: /(?:acides? gras saturÃ©s?|saturated)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
       fiber: /(?:fibres?|fiber)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
       salt: /(?:sel|salt)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*g/i,
       sodium: /(?:sodium)\s*:?\s*(\d+(?:[,\.]\d+)?)\s*(?:g|mg)/i
@@ -637,13 +637,13 @@ class ProductOCRService {
   }
 
   /**
-   * Extraction des allergènes
+   * Extraction des allergÃ¨nes
    */
   extractAllergens(text) {
     const allergenKeywords = {
-      fr: ['gluten', 'blé', 'seigle', 'orge', 'avoine', 'lait', 'lactose', 'œuf', 'oeuf', 
-           'poisson', 'crustacé', 'mollusque', 'soja', 'fruits à coque', 'noix', 'amande',
-           'noisette', 'arachide', 'cacahuète', 'céleri', 'moutarde', 'sésame', 'lupin',
+      fr: ['gluten', 'blÃ©', 'seigle', 'orge', 'avoine', 'lait', 'lactose', 'Å“uf', 'oeuf', 
+           'poisson', 'crustacÃ©', 'mollusque', 'soja', 'fruits Ã  coque', 'noix', 'amande',
+           'noisette', 'arachide', 'cacahuÃ¨te', 'cÃ©leri', 'moutarde', 'sÃ©same', 'lupin',
            'sulfite', 'anhydride sulfureux'],
       en: ['gluten', 'wheat', 'milk', 'egg', 'fish', 'shellfish', 'soy', 'nuts', 'peanut',
            'celery', 'mustard', 'sesame', 'sulphite', 'lupin']
@@ -704,12 +704,12 @@ class ProductOCRService {
   }
 
   /**
-   * Enrichissement du résultat final
+   * Enrichissement du rÃ©sultat final
    */
   async enrichResult(result, category) {
     const enriched = { ...result };
 
-    // Ajouter des métadonnées
+    // Ajouter des mÃ©tadonnÃ©es
     enriched.metadata = {
       extractedAt: new Date().toISOString(),
       category: result.category || category,
@@ -717,7 +717,7 @@ class ProductOCRService {
       reliability: this.calculateReliability(result)
     };
 
-    // Suggestions d'amélioration
+    // Suggestions d'amÃ©lioration
     if (enriched.metadata.dataCompleteness < 0.7) {
       enriched.suggestions = this.generateSuggestions(result);
     }
@@ -726,7 +726,7 @@ class ProductOCRService {
   }
 
   /**
-   * Calcul du taux de complétude
+   * Calcul du taux de complÃ©tude
    */
   calculateCompleteness(data) {
     const fields = ['productName', 'brand', 'ingredients', 'barcode', 'weight', 'category'];
@@ -735,12 +735,12 @@ class ProductOCRService {
   }
 
   /**
-   * Calcul de la fiabilité
+   * Calcul de la fiabilitÃ©
    */
   calculateReliability(data) {
     let score = data.confidence || 0.5;
     
-    // Bonus pour données cohérentes
+    // Bonus pour donnÃ©es cohÃ©rentes
     if (data.productName && data.productName.length > 3) score += 0.1;
     if (data.ingredients && data.ingredients.length > 20) score += 0.1;
     if (data.barcode && this.validateBarcode(data.barcode)) score += 0.1;
@@ -749,7 +749,7 @@ class ProductOCRService {
   }
 
   /**
-   * Génération de suggestions
+   * GÃ©nÃ©ration de suggestions
    */
   generateSuggestions(data) {
     const suggestions = [];
@@ -758,7 +758,7 @@ class ProductOCRService {
       suggestions.push("Prenez une photo plus nette de la face avant du produit");
     }
     if (!data.ingredients) {
-      suggestions.push("Assurez-vous que la liste d'ingrédients est visible et lisible");
+      suggestions.push("Assurez-vous que la liste d'ingrÃ©dients est visible et lisible");
     }
     if (!data.barcode) {
       suggestions.push("Incluez le code-barres dans la photo si possible");
@@ -797,7 +797,7 @@ class ProductOCRService {
   }
 
   /**
-   * Mise à jour des statistiques
+   * Mise Ã  jour des statistiques
    */
   updateStats(service, success, time) {
     if (!this.stats[service]) return;
@@ -813,12 +813,12 @@ class ProductOCRService {
   }
 
   /**
-   * Monitoring et métriques
+   * Monitoring et mÃ©triques
    */
   getStats() {
     const stats = { ...this.stats };
     
-    // Calculer les taux de succès
+    // Calculer les taux de succÃ¨s
     Object.keys(stats).forEach(service => {
       const stat = stats[service];
       stat.successRate = stat.attempts > 0 
@@ -830,7 +830,7 @@ class ProductOCRService {
   }
 
   /**
-   * Nettoyage et arrêt
+   * Nettoyage et arrÃªt
    */
   async shutdown() {
     if (this.tesseractWorker) {

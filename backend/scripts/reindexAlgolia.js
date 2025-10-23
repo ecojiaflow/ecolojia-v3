@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Product = require('../src/models/Product');
 const algoliasearch = require('algoliasearch');
 require('dotenv').config();

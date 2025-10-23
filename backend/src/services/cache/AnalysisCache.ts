@@ -12,7 +12,7 @@ interface AnalysisResult {
   barcode?: string;
   category: 'food' | 'cosmetics' | 'detergents';
   healthScore: number;
-  analysis: any; // Résultat complet de l'analyse IA
+  analysis: any; // RÃ©sultat complet de l'analyse IA
   analyzedAt: Date;
   cachedAt?: Date;
 }
@@ -21,10 +21,10 @@ export class AnalysisCache {
   private readonly PREFIX = 'analysis:';
   private readonly BARCODE_PREFIX = 'barcode:';
   private readonly HASH_PREFIX = 'hash:';
-  private readonly TTL = 86400; // 24 heures par défaut
+  private readonly TTL = 86400; // 24 heures par dÃ©faut
 
   /**
-   * Générer un hash unique pour un produit
+   * GÃ©nÃ©rer un hash unique pour un produit
    */
   private generateProductHash(
     productName: string,
@@ -66,7 +66,7 @@ export class AnalysisCache {
         await cacheManager.set(barcodeKey, analysis.id, this.TTL);
       }
 
-      // Cache par hash (nom + catégorie + ingrédients)
+      // Cache par hash (nom + catÃ©gorie + ingrÃ©dients)
       const hash = this.generateProductHash(
         analysis.productName,
         analysis.category,
@@ -75,48 +75,48 @@ export class AnalysisCache {
       const hashKey = `${this.HASH_PREFIX}${hash}`;
       await cacheManager.set(hashKey, analysis.id, this.TTL);
 
-      logger.info(`✅ Analysis cached: ${analysis.productName} (Score: ${analysis.healthScore})`);
+      logger.info(`âœ… Analysis cached: ${analysis.productName} (Score: ${analysis.healthScore})`);
       return true;
     } catch (error) {
-      logger.error(`❌ Error caching analysis:`, error);
+      logger.error(`âŒ Error caching analysis:`, error);
       return false;
     }
   }
 
   /**
-   * Récupérer une analyse par ID
+   * RÃ©cupÃ©rer une analyse par ID
    */
   async getAnalysisById(id: string): Promise<AnalysisResult | null> {
     try {
       const key = `${this.PREFIX}${id}`;
       return await cacheManager.get<AnalysisResult>(key);
     } catch (error) {
-      logger.error(`❌ Error getting analysis by ID:`, error);
+      logger.error(`âŒ Error getting analysis by ID:`, error);
       return null;
     }
   }
 
   /**
-   * Récupérer une analyse par code-barres
+   * RÃ©cupÃ©rer une analyse par code-barres
    */
   async getAnalysisByBarcode(barcode: string): Promise<AnalysisResult | null> {
     try {
-      // Récupérer l'ID associé au code-barres
+      // RÃ©cupÃ©rer l'ID associÃ© au code-barres
       const barcodeKey = `${this.BARCODE_PREFIX}${barcode}`;
       const analysisId = await cacheManager.get<string>(barcodeKey);
 
       if (!analysisId) return null;
 
-      // Récupérer l'analyse par ID
+      // RÃ©cupÃ©rer l'analyse par ID
       return await this.getAnalysisById(analysisId);
     } catch (error) {
-      logger.error(`❌ Error getting analysis by barcode:`, error);
+      logger.error(`âŒ Error getting analysis by barcode:`, error);
       return null;
     }
   }
 
   /**
-   * Récupérer une analyse par hash produit
+   * RÃ©cupÃ©rer une analyse par hash produit
    */
   async getAnalysisByProduct(
     productName: string,
@@ -124,34 +124,34 @@ export class AnalysisCache {
     ingredients?: string[]
   ): Promise<AnalysisResult | null> {
     try {
-      // Générer le hash
+      // GÃ©nÃ©rer le hash
       const hash = this.generateProductHash(productName, category, ingredients);
       const hashKey = `${this.HASH_PREFIX}${hash}`;
 
-      // Récupérer l'ID associé au hash
+      // RÃ©cupÃ©rer l'ID associÃ© au hash
       const analysisId = await cacheManager.get<string>(hashKey);
 
       if (!analysisId) {
-        logger.info(`❌ Cache MISS for product: ${productName}`);
+        logger.info(`âŒ Cache MISS for product: ${productName}`);
         return null;
       }
 
-      // Récupérer l'analyse par ID
+      // RÃ©cupÃ©rer l'analyse par ID
       const analysis = await this.getAnalysisById(analysisId);
       
       if (analysis) {
-        logger.info(`✅ Cache HIT for product: ${productName} (Score: ${analysis.healthScore})`);
+        logger.info(`âœ… Cache HIT for product: ${productName} (Score: ${analysis.healthScore})`);
       }
 
       return analysis;
     } catch (error) {
-      logger.error(`❌ Error getting analysis by product:`, error);
+      logger.error(`âŒ Error getting analysis by product:`, error);
       return null;
     }
   }
 
   /**
-   * Vérifier si une analyse existe pour un produit
+   * VÃ©rifier si une analyse existe pour un produit
    */
   async hasAnalysis(
     productName: string,
@@ -167,35 +167,35 @@ export class AnalysisCache {
    */
   async invalidateAnalysis(id: string): Promise<boolean> {
     try {
-      // Récupérer l'analyse pour obtenir les métadonnées
+      // RÃ©cupÃ©rer l'analyse pour obtenir les mÃ©tadonnÃ©es
       const analysis = await this.getAnalysisById(id);
       
       if (!analysis) return false;
 
-      // Supprimer toutes les clés associées
+      // Supprimer toutes les clÃ©s associÃ©es
       const keysToDelete = [`${this.PREFIX}${id}`];
 
       if (analysis.barcode) {
         keysToDelete.push(`${this.BARCODE_PREFIX}${analysis.barcode}`);
       }
 
-      // Note: Impossible de supprimer par hash sans connaître les ingrédients originaux
-      // Une amélioration serait de stocker les clés associées
+      // Note: Impossible de supprimer par hash sans connaÃ®tre les ingrÃ©dients originaux
+      // Une amÃ©lioration serait de stocker les clÃ©s associÃ©es
 
       for (const key of keysToDelete) {
         await cacheManager.delete(key);
       }
 
-      logger.info(`🗑️ Analysis invalidated: ${id}`);
+      logger.info(`ðŸ—‘ï¸ Analysis invalidated: ${id}`);
       return true;
     } catch (error) {
-      logger.error(`❌ Error invalidating analysis:`, error);
+      logger.error(`âŒ Error invalidating analysis:`, error);
       return false;
     }
   }
 
   /**
-   * Récupérer les statistiques du cache d'analyses
+   * RÃ©cupÃ©rer les statistiques du cache d'analyses
    */
   async getCacheStats(): Promise<{
     totalAnalyses: number;
@@ -204,14 +204,14 @@ export class AnalysisCache {
     categoriesBreakdown: Record<string, number>;
   }> {
     try {
-      // Implémentation simplifiée
-      // En production, utiliser des compteurs Redis pour un suivi précis
+      // ImplÃ©mentation simplifiÃ©e
+      // En production, utiliser des compteurs Redis pour un suivi prÃ©cis
       const stats = await cacheManager.getStats();
 
       return {
         totalAnalyses: stats.totalKeys,
-        cacheHitRate: 0, // À implémenter avec des compteurs
-        averageCacheAge: 0, // À calculer
+        cacheHitRate: 0, // Ã€ implÃ©menter avec des compteurs
+        averageCacheAge: 0, // Ã€ calculer
         categoriesBreakdown: {
           food: 0,
           cosmetics: 0,
@@ -219,7 +219,7 @@ export class AnalysisCache {
         }
       };
     } catch (error) {
-      logger.error(`❌ Error getting cache stats:`, error);
+      logger.error(`âŒ Error getting cache stats:`, error);
       return {
         totalAnalyses: 0,
         cacheHitRate: 0,
@@ -234,7 +234,7 @@ export class AnalysisCache {
   }
 
   /**
-   * Réchauffer le cache avec les produits populaires
+   * RÃ©chauffer le cache avec les produits populaires
    */
   async warmupCache(popularProducts: Array<{
     name: string;
@@ -251,36 +251,36 @@ export class AnalysisCache {
         );
 
         if (!exists) {
-          // Ici, déclencher une analyse pour réchauffer le cache
-          // À implémenter selon votre logique métier
-          logger.info(`📥 Should warm cache for: ${product.name}`);
+          // Ici, dÃ©clencher une analyse pour rÃ©chauffer le cache
+          // Ã€ implÃ©menter selon votre logique mÃ©tier
+          logger.info(`ðŸ“¥ Should warm cache for: ${product.name}`);
         } else {
           warmedCount++;
         }
       }
 
-      logger.info(`🔥 Cache warmup: ${warmedCount}/${popularProducts.length} already cached`);
+      logger.info(`ðŸ”¥ Cache warmup: ${warmedCount}/${popularProducts.length} already cached`);
       return warmedCount;
     } catch (error) {
-      logger.error(`❌ Error warming up cache:`, error);
+      logger.error(`âŒ Error warming up cache:`, error);
       return 0;
     }
   }
 
   /**
-   * Nettoyer les analyses expirées
+   * Nettoyer les analyses expirÃ©es
    */
   async cleanupExpired(): Promise<number> {
     try {
-      // Redis supprime automatiquement les clés expirées
-      // Cette méthode peut être utilisée pour un nettoyage manuel si nécessaire
+      // Redis supprime automatiquement les clÃ©s expirÃ©es
+      // Cette mÃ©thode peut Ãªtre utilisÃ©e pour un nettoyage manuel si nÃ©cessaire
       const pattern = `${this.PREFIX}*`;
       const deleted = await cacheManager.invalidate(pattern);
       
-      logger.info(`🧹 Cleaned up ${deleted} expired analyses`);
+      logger.info(`ðŸ§¹ Cleaned up ${deleted} expired analyses`);
       return deleted;
     } catch (error) {
-      logger.error(`❌ Error cleaning up analyses:`, error);
+      logger.error(`âŒ Error cleaning up analyses:`, error);
       return 0;
     }
   }

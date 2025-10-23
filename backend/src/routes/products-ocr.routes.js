@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { authenticateToken } = require('../middleware');
@@ -57,7 +57,7 @@ router.post('/create-from-ocr',
       console.log(`[OCR] Photo ingrédients: ${(ingredientsPhoto.size / 1024).toFixed(2)} KB`);
 
       // Étape 1 : OCR Google Vision sur les 2 photos
-      console.log('[OCR] Étape 1/3 : Extraction texte (Google Vision)...');
+      console.log('[OCR] Étape 1/4 : Extraction texte (Google Vision)...');
       const ocrTexts = await OCRProductService.extractTextFromPhotos(
         frontPhoto.buffer,
         ingredientsPhoto.buffer
@@ -71,14 +71,18 @@ router.post('/create-from-ocr',
         });
       }
 
-      console.log(`[OCR] ✓ Texte extrait - Face: ${ocrTexts.frontText.length} chars, Ingrédients: ${ocrTexts.ingredientsText.length} chars`);
+      console.log(`[OCR] ? Texte extrait - Face: ${ocrTexts.frontText.length} chars, Ingrédients: ${ocrTexts.ingredientsText.length} chars`);
+      
+      const detectedCategory = ocrTexts.detectedCategory;
+      console.log(`[OCR] Catégorie détectée: ${detectedCategory}`);
 
       // Étape 2 : Parsing intelligent avec DeepSeek IA
-      console.log('[OCR] Étape 2/3 : Analyse IA (DeepSeek)...');
+      console.log('[OCR] Étape 2/4 : Analyse IA (DeepSeek)...');
       const parsedData = await OCRProductService.parseWithAI(
         ocrTexts.frontText,
         ocrTexts.ingredientsText,
-        barcode
+        barcode,
+        detectedCategory
       );
 
       if (!parsedData) {
@@ -89,14 +93,29 @@ router.post('/create-from-ocr',
         });
       }
 
-      console.log(`[OCR] ✓ Données parsées - Produit: "${parsedData.productName}", Ingrédients: ${parsedData.ingredients.length}`);
+      console.log(`[OCR] ? Données parsées - Produit: "${parsedData.productName}", Ingrédients: ${parsedData.ingredients.length}`);
 
       // Étape 3 : Calcul confiance
-      console.log('[OCR] Étape 3/3 : Calcul confiance...');
+      console.log('[OCR] Étape 3/4 : Calcul confiance...');
       const confidence = OCRProductService.calculateConfidence(parsedData, ocrTexts);
-      console.log(`[OCR] ✓ Confiance calculée: ${(confidence * 100).toFixed(1)}%`);
+      console.log(`[OCR] ? Confiance calculée: ${(confidence * 100).toFixed(1)}%`);
 
-      // Construire résultat structuré
+      // Étape 4 : Validation cohérence catégorie
+      console.log('[OCR] Étape 4/4 : Validation cohérence...');
+      const coherenceCheck = OCRProductService.validateCoherence(
+        detectedCategory,
+        ocrTexts.ingredientsText,
+        parsedData
+      );
+      
+      // ? NOUVEAU : Log mais NE PAS bloquer - Laisser le frontend gérer
+      if (!coherenceCheck.canProceed) {
+        console.log('[OCR] ?? Incohérence majeure détectée - Frontend gérera le blocage');
+      } else {
+        console.log(`[OCR] ? Cohérence validée: ${coherenceCheck.isCoherent ? 'OK' : 'ATTENTION'} (score: ${coherenceCheck.incoherenceScore}%)`);
+      }
+
+      // Construire résultat structuré (même en cas d'incohérence)
       const ocrResult = {
         frontData: {
           productName: parsedData.productName || 'Produit inconnu',
@@ -114,11 +133,13 @@ router.post('/create-from-ocr',
           ingredients: ocrTexts.ingredientsText
         },
         confidence: confidence,
-        aiAnalysis: parsedData.aiReasoning || 'Analyse automatique'
+        aiAnalysis: parsedData.aiReasoning || 'Analyse automatique',
+        detectedCategory,
+        coherenceCheck
       };
 
       const processingTime = Date.now() - startTime;
-      console.log(`[OCR] ✓ Analyse terminée en ${processingTime}ms`);
+      console.log(`[OCR] ? Analyse terminée en ${processingTime}ms`);
 
       const finalResponse = {
         success: true,
@@ -187,7 +208,7 @@ router.post('/save-ocr-product', authenticateToken, async (req, res) => {
       });
     }
 
-    console.log(`[OCR] ✓ Produit sauvegardé: ${product._id}`);
+    console.log(`[OCR] ? Produit sauvegardé: ${product._id}`);
 
     res.json({
       success: true,

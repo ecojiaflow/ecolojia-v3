@@ -1,4 +1,4 @@
-﻿function calculateNovaScore(novaGroup) {
+function calculateNovaScore(novaGroup) {
   const scores = { 1: 100, 2: 75, 3: 50, 4: 25 };
   return scores[novaGroup] || 50;
 }

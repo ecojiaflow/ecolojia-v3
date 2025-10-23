@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/PremiumUpgradeModal.tsx
+// PATH: frontend/src/components/PremiumUpgradeModal.tsx
 import React, { useState } from 'react';
 import { X, Zap, Check, Shield, Infinity, Brain, FileText, HeadphonesIcon } from 'lucide-react';
 import { paymentService } from '../services/paymentService';

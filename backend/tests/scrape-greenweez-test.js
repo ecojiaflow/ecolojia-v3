@@ -1,10 +1,10 @@
 // TEST SCRAPING GREENWEEZ - 10 PRODUITS
-// Objectif : Valider extraction données avant automatisation
+// Objectif : Valider extraction donnÃ©es avant automatisation
 
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-// âœ… Configuration test
+// Ã¢Å“â€¦ Configuration test
 const CONFIG = {
   BASE_URL: 'https://www.greenweez.com',
   TEST_CATEGORIES: [
@@ -17,7 +17,7 @@ const CONFIG = {
   USER_AGENT: 'Mozilla/5.0 (compatible; EcologiaBot/1.0)'
 };
 
-// âœ… Headers respectueux
+// Ã¢Å“â€¦ Headers respectueux
 const HEADERS = {
   'User-Agent': CONFIG.USER_AGENT,
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -27,13 +27,13 @@ const HEADERS = {
   'Upgrade-Insecure-Requests': '1'
 };
 
-// âœ… Fonction délai respectueux
+// Ã¢Å“â€¦ Fonction dÃ©lai respectueux
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// âœ… Extraction données produit
+// Ã¢Å“â€¦ Extraction donnÃ©es produit
 async function extractProductData(productUrl) {
   try {
-    console.log(`ðŸ“¦ Extraction: ${productUrl}`);
+    console.log(`Ã°Å¸â€œÂ¦ Extraction: ${productUrl}`);
     
     const response = await axios.get(productUrl, { 
       headers: HEADERS,
@@ -42,7 +42,7 @@ async function extractProductData(productUrl) {
     
     const $ = cheerio.load(response.data);
     
-    // Extraction données Greenweez
+    // Extraction donnÃ©es Greenweez
     const product = {
       title: $('h1.product-name, .product-title, h1').first().text().trim(),
       description: $('.product-description, .description, .product-summary').first().text().trim(),
@@ -54,24 +54,24 @@ async function extractProductData(productUrl) {
       extracted_at: new Date().toISOString()
     };
     
-    // Validation données minimales
+    // Validation donnÃ©es minimales
     if (!product.title || !product.description) {
-      throw new Error('Données essentielles manquantes');
+      throw new Error('DonnÃ©es essentielles manquantes');
     }
     
-    console.log(`âœ… Extrait: ${product.title.substring(0, 50)}...`);
+    console.log(`Ã¢Å“â€¦ Extrait: ${product.title.substring(0, 50)}...`);
     return product;
     
   } catch (error) {
-    console.error(`âŒ Erreur extraction ${productUrl}:`, error.message);
+    console.error(`Ã¢ÂÅ’ Erreur extraction ${productUrl}:`, error.message);
     return null;
   }
 }
 
-// âœ… Découverte URLs produits
+// Ã¢Å“â€¦ DÃ©couverte URLs produits
 async function discoverProductUrls(categoryUrl, maxProducts = 5) {
   try {
-    console.log(`ðŸ” Découverte produits: ${categoryUrl}`);
+    console.log(`Ã°Å¸â€Â DÃ©couverte produits: ${categoryUrl}`);
     
     const response = await axios.get(CONFIG.BASE_URL + categoryUrl, { 
       headers: HEADERS,
@@ -81,7 +81,7 @@ async function discoverProductUrls(categoryUrl, maxProducts = 5) {
     const $ = cheerio.load(response.data);
     const productUrls = [];
     
-    // Sélecteurs produits Greenweez (Ã  ajuster selon structure)
+    // SÃ©lecteurs produits Greenweez (ÃƒÂ  ajuster selon structure)
     $('a[href*="/produit/"], .product-link, .product-item a').each((i, element) => {
       if (productUrls.length >= maxProducts) return false;
       
@@ -94,33 +94,33 @@ async function discoverProductUrls(categoryUrl, maxProducts = 5) {
       }
     });
     
-    console.log(`ðŸ“‹ Trouvé ${productUrls.length} produits dans ${categoryUrl}`);
+    console.log(`Ã°Å¸â€œâ€¹ TrouvÃ© ${productUrls.length} produits dans ${categoryUrl}`);
     return productUrls;
     
   } catch (error) {
-    console.error(`âŒ Erreur découverte ${categoryUrl}:`, error.message);
+    console.error(`Ã¢ÂÅ’ Erreur dÃ©couverte ${categoryUrl}:`, error.message);
     return [];
   }
 }
 
-// âœ… Test principal
+// Ã¢Å“â€¦ Test principal
 async function runTest() {
-  console.log('ðŸš€ DÃ‰BUT TEST SCRAPING GREENWEEZ');
-  console.log(`ðŸ“Š Objectif: ${CONFIG.MAX_PRODUCTS} produits`);
-  console.log('â±ï¸  Délai respectueux: 2s entre requêtes\n');
+  console.log('Ã°Å¸Å¡â‚¬ DÃƒâ€°BUT TEST SCRAPING GREENWEEZ');
+  console.log(`Ã°Å¸â€œÅ  Objectif: ${CONFIG.MAX_PRODUCTS} produits`);
+  console.log('Ã¢ÂÂ±Ã¯Â¸Â  DÃ©lai respectueux: 2s entre requÃªtes\n');
   
   const allProducts = [];
   
   try {
-    // Découverte URLs produits par catégorie
+    // DÃ©couverte URLs produits par catÃ©gorie
     for (const category of CONFIG.TEST_CATEGORIES) {
       if (allProducts.length >= CONFIG.MAX_PRODUCTS) break;
       
-      console.log(`\nðŸ“‚ Catégorie: ${category}`);
+      console.log(`\nÃ°Å¸â€œâ€š CatÃ©gorie: ${category}`);
       const remaining = CONFIG.MAX_PRODUCTS - allProducts.length;
       const productUrls = await discoverProductUrls(category, Math.min(remaining, 4));
       
-      // Extraction données produits
+      // Extraction donnÃ©es produits
       for (const url of productUrls) {
         if (allProducts.length >= CONFIG.MAX_PRODUCTS) break;
         
@@ -129,19 +129,19 @@ async function runTest() {
         
         if (productData) {
           allProducts.push(productData);
-          console.log(`âœ… ${allProducts.length}/${CONFIG.MAX_PRODUCTS} produits extraits`);
+          console.log(`Ã¢Å“â€¦ ${allProducts.length}/${CONFIG.MAX_PRODUCTS} produits extraits`);
         }
       }
     }
     
-    // âœ… Résultats
-    console.log('\nðŸŽ¯ RÃ‰SULTATS DU TEST:');
-    console.log(`ðŸ“¦ Produits extraits: ${allProducts.length}/${CONFIG.MAX_PRODUCTS}`);
-    console.log(`âœ… Taux de succès: ${Math.round((allProducts.length / CONFIG.MAX_PRODUCTS) * 100)}%`);
+    // Ã¢Å“â€¦ RÃ©sultats
+    console.log('\nÃ°Å¸Å½Â¯ RÃƒâ€°SULTATS DU TEST:');
+    console.log(`Ã°Å¸â€œÂ¦ Produits extraits: ${allProducts.length}/${CONFIG.MAX_PRODUCTS}`);
+    console.log(`Ã¢Å“â€¦ Taux de succÃ¨s: ${Math.round((allProducts.length / CONFIG.MAX_PRODUCTS) * 100)}%`);
     
-    // Affichage échantillon
+    // Affichage Ã©chantillon
     if (allProducts.length > 0) {
-      console.log('\nðŸ“‹ Ã‰CHANTILLON DONNÃ‰ES:');
+      console.log('\nÃ°Å¸â€œâ€¹ Ãƒâ€°CHANTILLON DONNÃƒâ€°ES:');
       allProducts.slice(0, 3).forEach((product, index) => {
         console.log(`\n${index + 1}. ${product.title}`);
         console.log(`   Prix: ${product.price}`);
@@ -157,35 +157,35 @@ async function runTest() {
       JSON.stringify(allProducts, null, 2)
     );
     
-    console.log('\nðŸ’¾ Données sauvegardées dans test-results-*.json');
-    console.log('ðŸ”„ Prêt pour intégration n8n workflow !');
+    console.log('\nÃ°Å¸â€™Â¾ DonnÃ©es sauvegardÃ©es dans test-results-*.json');
+    console.log('Ã°Å¸â€â€ž PrÃªt pour intÃ©gration n8n workflow !');
     
     return allProducts;
     
   } catch (error) {
-    console.error('ðŸ’¥ Erreur test:', error.message);
+    console.error('Ã°Å¸â€™Â¥ Erreur test:', error.message);
     return [];
   }
 }
 
-// âœ… Validation données pour n8n
+// Ã¢Å“â€¦ Validation donnÃ©es pour n8n
 function validateForN8n(products) {
-  console.log('\nðŸ” VALIDATION POUR N8N:');
+  console.log('\nÃ°Å¸â€Â VALIDATION POUR N8N:');
   
   const validProducts = products.filter(p => {
     const isValid = p.title && p.description && p.title.length > 5;
     if (!isValid) {
-      console.log(`âŒ Produit invalide: ${p.title || 'Sans titre'}`);
+      console.log(`Ã¢ÂÅ’ Produit invalide: ${p.title || 'Sans titre'}`);
     }
     return isValid;
   });
   
-  console.log(`âœ… Produits valides pour n8n: ${validProducts.length}/${products.length}`);
+  console.log(`Ã¢Å“â€¦ Produits valides pour n8n: ${validProducts.length}/${products.length}`);
   
   // Format exemple pour webhook n8n
   if (validProducts.length > 0) {
     const example = validProducts[0];
-    console.log('\nðŸ“¤ FORMAT WEBHOOK N8N:');
+    console.log('\nÃ°Å¸â€œÂ¤ FORMAT WEBHOOK N8N:');
     console.log(JSON.stringify({
       title: example.title,
       description: example.description,
@@ -198,7 +198,7 @@ function validateForN8n(products) {
   return validProducts;
 }
 
-// âœ… Exécution
+// Ã¢Å“â€¦ ExÃ©cution
 if (require.main === module) {
   runTest()
     .then(products => validateForN8n(products))

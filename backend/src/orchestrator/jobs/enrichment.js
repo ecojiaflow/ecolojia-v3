@@ -25,7 +25,7 @@ class EnrichmentService {
         take: limit
       });
 
-      this.logger.info(`ðŸ¤– ${products.length} produits   enrichir`);
+      this.logger.info(`Ã°Å¸Â¤â€“ ${products.length} produits Â  enrichir`);
 
       let enriched = 0;
       let errors = 0;
@@ -43,11 +43,11 @@ class EnrichmentService {
         }
       }
 
-      this.logger.info(`âœ… Enrichissement termine: ${enriched} enrichis, ${errors} erreurs`);
+      this.logger.info(`Ã¢Å“â€¦ Enrichissement termine: ${enriched} enrichis, ${errors} erreurs`);
       return { enriched, errors };
 
     } catch (error) {
-      this.logger.error('âŒ Erreur processQueue:', error);
+      this.logger.error('Ã¢ÂÅ’ Erreur processQueue:', error);
       throw error;
     }
   }
@@ -61,12 +61,12 @@ class EnrichmentService {
       throw new Error(`Produit ${productId} non trouve`);
     }
 
-    this.logger.info(`ðŸ” Enrichissement: ${product.title}`);
+    this.logger.info(`Ã°Å¸â€Â Enrichissement: ${product.title}`);
 
     // Appel DeepSeek pour analyse
     const enrichmentData = await this.callDeepSeekAPI(product);
     
-    // Mise   jour produit
+    // Mise Â  jour produit
     const updated = await this.prisma.product.update({
       where: { id: productId },
       data: {
@@ -81,7 +81,7 @@ class EnrichmentService {
       }
     });
 
-    this.logger.info(`âœ… Produit enrichi: ${updated.title}`);
+    this.logger.info(`Ã¢Å“â€¦ Produit enrichi: ${updated.title}`);
     return updated;
   }
 
@@ -145,16 +145,16 @@ Analyse ce produit et fournis un JSON avec cette structure exacte :
   "ai_confidence": 0.75
 }
 
-PRODUIT € ANALYSER :
+PRODUIT â‚¬ ANALYSER :
 - Titre: ${product.title}
 - Description: ${product.description}
 - Marque: ${product.brand || 'Non specifie'}
 - Categorie: ${product.category}
 - Tags: ${product.tags?.join(', ') || 'Aucun'}
 
-CRITˆRES D'‰VALUATION :
-- eco_score: Note de 0   5 basee sur durabilite, composition, packaging
-- ai_confidence: Confiance de 0   1 selon qualite des donnees
+CRITË†RES D'â€°VALUATION :
+- eco_score: Note de 0 Â  5 basee sur durabilite, composition, packaging
+- ai_confidence: Confiance de 0 Â  1 selon qualite des donnees
 - resume_fr: Analyse critique et pedagogique
 - resume_en: Version anglaise equivalente
 

@@ -1,4 +1,4 @@
-﻿// backend/src/services/ai/NutritionistChatService.js
+// backend/src/services/ai/NutritionistChatService.js
 // Service de chat avec IA nutritionniste utilisant DeepSeek
 
 const axios = require('axios');

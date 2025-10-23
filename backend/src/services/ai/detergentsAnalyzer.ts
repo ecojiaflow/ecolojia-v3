@@ -4,7 +4,7 @@ import { Logger } from '../../utils/Logger';
 const log = new Logger('DetergentsAnalyzer');
 const debug = (...a: unknown[]) => process.env.NODE_ENV !== 'production' && log.info(...a);
 
-/* ───── Types ───── */
+/* â”€â”€â”€â”€â”€ Types â”€â”€â”€â”€â”€ */
 export interface DetergentAnalysisResult {
   aquaticToxicity: number; // 0-10
   biodegradability: number; // 0-100%
@@ -19,7 +19,7 @@ export interface DetergentAnalysisResult {
   environmentalScore: number; // 0-100
 }
 
-/* ───── Données compactes ───── */
+/* â”€â”€â”€â”€â”€ DonnÃ©es compactes â”€â”€â”€â”€â”€ */
 const SURF: Record<string, { b: number; t: number }> = {
   'sodium laureth sulfate': { b: 85, t: 6 },
   'sodium lauryl sulfate': { b: 90, t: 7 },
@@ -41,13 +41,13 @@ const VOC = [
 const HAZ: Record<string, { c: string; t: number; i: 'low' | 'medium' | 'high' }> = {
   'phosphates': { c: 'Eutrophisation', t: 8, i: 'high' },
   'phosphoric acid': { c: 'Acidification', t: 7, i: 'high' },
-  'edta': { c: 'Chélateur persistant', t: 6, i: 'medium' },
-  'nta': { c: 'Chélateur risqué', t: 5, i: 'medium' },
+  'edta': { c: 'ChÃ©lateur persistant', t: 6, i: 'medium' },
+  'nta': { c: 'ChÃ©lateur risquÃ©', t: 5, i: 'medium' },
   'optical brighteners': { c: 'Polluants persistants', t: 6, i: 'medium' },
   'benzisothiazolinone': { c: 'Biocide toxique', t: 8, i: 'high' },
-  'methylisothiazolinone': { c: 'Biocide très toxique', t: 9, i: 'high' },
-  'formaldehyde': { c: 'Cancérigène', t: 9, i: 'high' },
-  'chlorine bleach': { c: 'Chlorés toxiques', t: 8, i: 'high' },
+  'methylisothiazolinone': { c: 'Biocide trÃ¨s toxique', t: 9, i: 'high' },
+  'formaldehyde': { c: 'CancÃ©rigÃ¨ne', t: 9, i: 'high' },
+  'chlorine bleach': { c: 'ChlorÃ©s toxiques', t: 8, i: 'high' },
   'ammonia': { c: 'Toxique aquatique', t: 7, i: 'high' },
   'quaternary ammonium': { c: 'Biocide persistant', t: 7, i: 'medium' },
   'triclosan': { c: 'PE aquatique', t: 9, i: 'high' }
@@ -61,15 +61,15 @@ const ECO = [
 
 const LABELS = ['ecolabel', 'ecocert', 'nature', 'nordic swan', 'green seal'];
 
-/* ───── Analyseur optimisé ───── */
+/* â”€â”€â”€â”€â”€ Analyseur optimisÃ© â”€â”€â”€â”€â”€ */
 export class DetergentsAnalyzer {
   async analyze(ingredients: string[], desc?: string): Promise<DetergentAnalysisResult> {
-    debug(`Analyse: ${ingredients.length} ingrédients`);
+    debug(`Analyse: ${ingredients.length} ingrÃ©dients`);
     
     const norm = ingredients.map(i => i.toLowerCase().trim());
     const descLow = desc?.toLowerCase() || '';
     
-    // Calculs parallèles
+    // Calculs parallÃ¨les
     const aquaTox = this.calcAquaTox(norm);
     const biodeg = this.calcBiodeg(norm);
     const voc = this.calcVOC(norm);
@@ -79,7 +79,7 @@ export class DetergentsAnalyzer {
       ECO.includes(i) || (!dangerous.some(d => d.name === i) && !VOC.includes(i))
     );
     
-    // Score environnemental (pondéré)
+    // Score environnemental (pondÃ©rÃ©)
     const envScore = Math.round(
       (10 - aquaTox) * 3 + // 30pts
       biodeg * 0.4 + // 40pts
@@ -117,7 +117,7 @@ export class DetergentsAnalyzer {
     if (!cnt) return 2;
     let avg = tot / cnt;
     
-    // Bonus éco
+    // Bonus Ã©co
     const ecoCount = ings.filter(i => ECO.some(e => i.includes(e))).length;
     if (ecoCount > ings.length / 2) avg = Math.max(0, avg - 2);
     
@@ -131,7 +131,7 @@ export class DetergentsAnalyzer {
       // Tensioactifs
       const surf = Object.entries(SURF).find(([s]) => i.includes(s));
       if (surf) { tot += surf[1].b; cnt++; }
-      // Éco = 100%
+      // Ã‰co = 100%
       else if (ECO.some(e => i.includes(e))) { tot += 100; cnt++; }
       // Hazardous = 30%
       else if (Object.keys(HAZ).some(h => i.includes(h))) { tot += 30; cnt++; }

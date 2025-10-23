@@ -1,4 +1,4 @@
-﻿// Injection utilisateur mock
+// Injection utilisateur mock
 const user = {
   id: 'mock-user',
   email: 'demo@ecolojia.app',

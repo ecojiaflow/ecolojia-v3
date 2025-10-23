@@ -157,7 +157,7 @@ paymentSchema.index({ userId: 1, status: 1 });
 paymentSchema.index({ subscriptionId: 1, createdAt: -1 });
 paymentSchema.index({ status: 1, createdAt: -1 });
 
-// Middleware pour mettre   jour updatedAt
+// Middleware pour mettre Â  jour updatedAt
 paymentSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();

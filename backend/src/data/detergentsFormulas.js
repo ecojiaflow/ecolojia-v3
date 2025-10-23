@@ -20,7 +20,7 @@ class DetergentsFormulasDatabase {
         aquatic_toxicity: 'moderate',
         safety_score: 70,
         concerns: ['Irritation cutanee', 'Toxicite poissons'],
-        benefits: ['Excellent degraissant', 'Efficace eau dure', '‰conomique'],
+        benefits: ['Excellent degraissant', 'Efficace eau dure', 'â€°conomique'],
         alternatives: ['Alkyl polyglucosides', 'Sodium cocoyl isethionate']
       },
 
@@ -84,7 +84,7 @@ class DetergentsFormulasDatabase {
         benefits: ['Excellent dans eau froide', 'Faible mousse']
       },
 
-      // === TENSIOACTIFS AMPHOTˆRES ===
+      // === TENSIOACTIFS AMPHOTË†RES ===
       'cocamidopropyl betaine': {
         name: 'Cocamidopropyl Betaine',
         type: 'amphoteric',
@@ -118,7 +118,7 @@ class DetergentsFormulasDatabase {
         safety_score: 30,
         environmental_impact: 'very_high',
         concerns: ['Eutrophisation', 'Proliferation algues', 'Appauvrissement oxygene'],
-        benefits: ['Tres efficace eau dure', '‰conomique'],
+        benefits: ['Tres efficace eau dure', 'â€°conomique'],
         regulatory_status: 'Interdit lessives EU depuis 2013',
         alternatives: ['Zeolites', 'Polycarboxylates', 'MGDA']
       },
@@ -129,7 +129,7 @@ class DetergentsFormulasDatabase {
         safety_score: 85,
         environmental_impact: 'low',
         concerns: ['Residus textiles possibles'],
-        benefits: ['Non toxique', 'Naturel', 'Biodegradable', '‰change ionique'],
+        benefits: ['Non toxique', 'Naturel', 'Biodegradable', 'â€°change ionique'],
         certifications: ['EU Ecolabel compatible']
       },
 
@@ -161,8 +161,8 @@ class DetergentsFormulasDatabase {
         environmental_impact: 'very_low',
         concerns: ['Allergies respiratoires (manipulation poudre)'],
         benefits: ['Biodegradable 100%', 'Efficace eau froide', 'Specifique proteines'],
-        targets: ['Sang', 'Transpiration', 'Å’uf', 'Lait'],
-        temperature_optimum: '40-60Â°C'
+        targets: ['Sang', 'Transpiration', 'Ã…â€™uf', 'Lait'],
+        temperature_optimum: '40-60Ã‚Â°C'
       },
 
       'lipase': {
@@ -171,9 +171,9 @@ class DetergentsFormulasDatabase {
         safety_score: 90,
         environmental_impact: 'very_low',
         concerns: [],
-        benefits: ['Decompose graisses', '‰cologique', 'Eau froide'],
+        benefits: ['Decompose graisses', 'â€°cologique', 'Eau froide'],
         targets: ['Huiles', 'Beurre', 'Mayonnaise', 'Maquillage'],
-        temperature_optimum: '30-50Â°C'
+        temperature_optimum: '30-50Ã‚Â°C'
       },
 
       'amylase': {
@@ -184,7 +184,7 @@ class DetergentsFormulasDatabase {
         concerns: [],
         benefits: ['Decompose amidon', 'Efficace', 'Naturel'],
         targets: ['Amidon', 'Pates', 'Pommes de terre', 'Riz'],
-        temperature_optimum: '60-70Â°C'
+        temperature_optimum: '60-70Ã‚Â°C'
       },
 
       'cellulase': {
@@ -195,7 +195,7 @@ class DetergentsFormulasDatabase {
         concerns: [],
         benefits: ['Anti-boulochage', 'Renovation textile', 'Adoucissant'],
         targets: ['Fibres coton', 'Peluches', 'Aspect vieilli'],
-        temperature_optimum: '50-60Â°C'
+        temperature_optimum: '50-60Ã‚Â°C'
       },
 
       // === AGENTS BLANCHISSANTS ===
@@ -271,12 +271,12 @@ class DetergentsFormulasDatabase {
         category: 'nettoyant_general',
         difficulty: 'facile',
         time: '5 minutes',
-        cost: '2,50â‚¬ pour 1L',
+        cost: '2,50Ã¢â€šÂ¬ pour 1L',
         improvement_score: 35,
         ingredients: [
           { name: 'Vinaigre blanc 8%', quantity: '500ml', function: 'Degraissant acide' },
           { name: 'Eau demineralisee', quantity: '500ml', function: 'Diluant' },
-          { name: 'Bicarbonate de sodium', quantity: '2 c. .s', function: 'Abrasif doux' },
+          { name: 'Bicarbonate de sodium', quantity: '2 c.Â .s', function: 'Abrasif doux' },
           { name: 'Huile essentielle citron', quantity: '10 gouttes', function: 'Parfum naturel' }
         ],
         instructions: [
@@ -291,23 +291,23 @@ class DetergentsFormulasDatabase {
           environment: ['100% biodegradable', 'Zero microplastique', 'Emballage reutilise'],
           economic: ['75% moins cher', 'Ingredients multiusages', 'Reduction dechets']
         },
-        efficacy: 'Degraisse et desinfecte naturellement grace   acide acetique pH 2.4',
+        efficacy: 'Degraisse et desinfecte naturellement grace Â  acide acetique pH 2.4',
         scientific_basis: 'Acide acetique efficace contre 99% bacteries (Journal Food Protection 2024)',
         safety_profile: 'Non toxique, comestible, classification non dangereuse'
       },
 
       'laundry_detergent': {
-        name: 'Lessive ‰cologique Maison',
+        name: 'Lessive â€°cologique Maison',
         category: 'lessive',
         difficulty: 'moyen',
         time: '15 minutes + 24h repos',
-        cost: '1,80â‚¬ pour 3L',
+        cost: '1,80Ã¢â€šÂ¬ pour 3L',
         improvement_score: 40,
         ingredients: [
           { name: 'Savon Marseille 72% olive', quantity: '150g rape', function: 'Tensioactif naturel' },
           { name: 'Eau chaude', quantity: '3L', function: 'Solvant' },
-          { name: 'Bicarbonate de sodium', quantity: '3 c. .s', function: 'Adoucissant' },
-          { name: 'Cristaux de soude', quantity: '3 c. .s', function: 'Degraissant' },
+          { name: 'Bicarbonate de sodium', quantity: '3 c.Â .s', function: 'Adoucissant' },
+          { name: 'Cristaux de soude', quantity: '3 c.Â .s', function: 'Degraissant' },
           { name: 'Huile essentielle lavande', quantity: '20 gouttes', function: 'Parfum naturel' }
         ],
         instructions: [
@@ -322,7 +322,7 @@ class DetergentsFormulasDatabase {
         benefits: {
           health: ['Hypoallergenique', 'Sans parfums synthetiques', 'pH physiologique'],
           environment: ['Biodegradable 100%', 'Zero phosphate', 'Packaging minimal'],
-          economic: ['70% economie vs marques', 'Efficace jusqu\'  40Â°C', 'Longue conservation']
+          economic: ['70% economie vs marques', 'Efficace jusqu\'Â  40Ã‚Â°C', 'Longue conservation']
         },
         usage: 'Dosage : 100ml par machine, agiter avant usage',
         efficacy: 'Nettoie efficacement grace saponines naturelles',
@@ -334,14 +334,14 @@ class DetergentsFormulasDatabase {
         category: 'vaisselle',
         difficulty: 'moyen',
         time: '20 minutes',
-        cost: '3,20â‚¬ pour 450ml',
+        cost: '3,20Ã¢â€šÂ¬ pour 450ml',
         improvement_score: 30,
         ingredients: [
           { name: 'Eau chaude', quantity: '300ml', function: 'Solvant' },
           { name: 'Savon Castille liquide', quantity: '150ml', function: 'Tensioactif doux' },
-          { name: 'Vinaigre blanc', quantity: '2 c. .s', function: 'Degraissant' },
+          { name: 'Vinaigre blanc', quantity: '2 c.Â .s', function: 'Degraissant' },
           { name: 'Zeste citrons bio', quantity: '2 citrons', function: 'Parfum + degraissant' },
-          { name: 'Glycerine vegetale', quantity: '1 c. .s', function: 'Hydratant mains' }
+          { name: 'Glycerine vegetale', quantity: '1 c.Â .s', function: 'Hydratant mains' }
         ],
         instructions: [
           'Chauffer eau sans bouillir',
@@ -366,14 +366,14 @@ class DetergentsFormulasDatabase {
         category: 'sanitaire',
         difficulty: 'facile',
         time: '8 minutes',
-        cost: '2,80â‚¬ pour 500ml',
+        cost: '2,80Ã¢â€šÂ¬ pour 500ml',
         improvement_score: 45,
         ingredients: [
           { name: 'Vinaigre blanc 12%', quantity: '400ml', function: 'Detartrant acide' },
           { name: 'Eau', quantity: '100ml', function: 'Diluant' },
-          { name: 'Bicarbonate de sodium', quantity: '2 c. .s', function: 'Abrasif doux' },
+          { name: 'Bicarbonate de sodium', quantity: '2 c.Â .s', function: 'Abrasif doux' },
           { name: 'Huile essentielle tea tree', quantity: '20 gouttes', function: 'Antimicrobien' },
-          { name: 'Liquide vaisselle maison', quantity: '1 c. .s', function: 'Adherence' }
+          { name: 'Liquide vaisselle maison', quantity: '1 c.Â .s', function: 'Adherence' }
         ],
         instructions: [
           'Melanger vinaigre et eau',
@@ -389,7 +389,7 @@ class DetergentsFormulasDatabase {
         },
         efficacy: 'Detartre + desinfecte + parfume naturellement',
         scientific_basis: 'Tea tree : efficacite antibacterienne 99.9% (Antimicrob. Agents 2024)',
-        safety: '‰viter melange avec javel, bien ventiler'
+        safety: 'â€°viter melange avec javel, bien ventiler'
       }
     };
   }
@@ -425,7 +425,7 @@ class DetergentsFormulasDatabase {
         name: 'Cradle to Cradle Certified',
         description: 'Analyse cycle de vie complet',
         criteria: {
-          material_health: '‰valuation toxicologique complete',
+          material_health: 'â€°valuation toxicologique complete',
           renewable_energy: 'Fabrication energies renouvelables',
           water_stewardship: 'Gestion responsable eau',
           social_fairness: 'Standards sociaux'
@@ -435,7 +435,7 @@ class DetergentsFormulasDatabase {
 
       'epa_safer_choice': {
         name: 'EPA Safer Choice',
-        description: 'Programme EPA ‰tats-Unis',
+        description: 'Programme EPA â€°tats-Unis',
         criteria: {
           human_health: 'Criteres securite humaine stricts',
           environmental_safety: 'Impact environnemental reduit',
@@ -446,7 +446,7 @@ class DetergentsFormulasDatabase {
     };
   }
 
-  // === M‰THODES DE RECHERCHE ===
+  // === Mâ€°THODES DE RECHERCHE ===
   getSurfactant(name) {
     const normalizedName = name.toLowerCase().trim();
     return this.surfactants[normalizedName] || null;
@@ -517,7 +517,7 @@ class DetergentsFormulasDatabase {
     return this.ecoStandards[normalizedName] || null;
   }
 
-  // === ANALYSES SP‰CIALIS‰ES ===
+  // === ANALYSES SPâ€°CIALISâ€°ES ===
   analyzeFormulation(ingredients_list) {
     const analysis = {
       total_ingredients: ingredients_list.length,
@@ -574,7 +574,7 @@ class DetergentsFormulasDatabase {
       analysis.safety_score = Math.round(totalSafetyScore / scoredIngredients);
     }
 
-    // ‰valuation niveau performance
+    // â€°valuation niveau performance
     const excellentSurfactants = analysis.surfactants_detected.filter(s => s.performance === 'excellent').length;
     if (excellentSurfactants > 0) {
       analysis.performance_level = 'excellent';
@@ -589,7 +589,7 @@ class DetergentsFormulasDatabase {
 
     const phosphatesDetected = analysis.additives_detected.some(a => a.name.includes('phosphate'));
     if (phosphatesDetected) {
-      analysis.improvements.push('‰liminer phosphates - impact eutrophisation majeur');
+      analysis.improvements.push('â€°liminer phosphates - impact eutrophisation majeur');
     }
 
     return analysis;

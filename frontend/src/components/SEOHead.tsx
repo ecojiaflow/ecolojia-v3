@@ -1,4 +1,4 @@
-﻿// /src/components/SEOHead.tsx
+// /src/components/SEOHead.tsx
 import React, { useEffect } from 'react';
 
 interface SEOHeadProps {

@@ -1,4 +1,4 @@
-﻿// OpenFoodFacts Service - Fetch and enrich product data
+// OpenFoodFacts Service - Fetch and enrich product data
 const axios = require('axios');
 
 class OpenFoodFactsService {

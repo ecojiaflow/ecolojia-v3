@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Service de calcul de complétude des données produit
  * AJOUTE des métadonnées SANS modifier le scoring existant
  */

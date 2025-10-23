@@ -19,7 +19,7 @@ class OpenFoodFactsIngestion {
    * Ingestion principale
    */
   async run(options = {}) {
-    console.log('ðŸš€ Demarrage ingestion OpenFoodFacts');
+    console.log('Ã°Å¸Å¡â‚¬ Demarrage ingestion OpenFoodFacts');
     
     try {
       // Connexion DB
@@ -37,7 +37,7 @@ class OpenFoodFactsIngestion {
       this.printReport();
       
     } catch (error) {
-      console.error('âŒ Erreur ingestion:', error);
+      console.error('Ã¢ÂÅ’ Erreur ingestion:', error);
       process.exit(1);
     }
   }
@@ -51,7 +51,7 @@ class OpenFoodFactsIngestion {
 
     while (hasMore && this.processedCount < totalLimit) {
       try {
-        console.log(`\nðŸ“¦ Traitement batch offset=${offset}`);
+        console.log(`\nÃ°Å¸â€œÂ¦ Traitement batch offset=${offset}`);
         
         // Recuperer un batch de produits
         const products = await this.fetchBatch(country, this.batchSize, offset);
@@ -75,7 +75,7 @@ class OpenFoodFactsIngestion {
         await this.sleep(1000);
         
       } catch (error) {
-        console.error(`âŒ Erreur batch offset=${offset}:`, error.message);
+        console.error(`Ã¢ÂÅ’ Erreur batch offset=${offset}:`, error.message);
         this.errorCount++;
         
         // Continuer malgre l'erreur
@@ -149,7 +149,7 @@ class OpenFoodFactsIngestion {
     if (operations.length > 0) {
       try {
         const result = await Product.bulkWrite(operations);
-        console.log(`âœ… ${result.upsertedCount} nouveaux, ${result.modifiedCount} mis   jour`);
+        console.log(`Ã¢Å“â€¦ ${result.upsertedCount} nouveaux, ${result.modifiedCount} mis Â  jour`);
       } catch (error) {
         console.error('Erreur bulkWrite:', error.message);
       }
@@ -273,7 +273,7 @@ class OpenFoodFactsIngestion {
    */
   async syncToAlgolia() {
     try {
-      console.log('ðŸ”„ Synchronisation Algolia...');
+      console.log('Ã°Å¸â€â€ž Synchronisation Algolia...');
       
       // Recuperer les produits non synchronises
       const products = await Product.find({
@@ -294,7 +294,7 @@ class OpenFoodFactsIngestion {
         { $set: { 'algolia.synced': true, 'algolia.syncedAt': new Date() } }
       );
       
-      console.log(`âœ… ${products.length} produits synchronises avec Algolia`);
+      console.log(`Ã¢Å“â€¦ ${products.length} produits synchronises avec Algolia`);
       
     } catch (error) {
       console.error('Erreur sync Algolia:', error.message);
@@ -311,13 +311,13 @@ class OpenFoodFactsIngestion {
   printReport() {
     const duration = (Date.now() - this.startTime) / 1000;
     
-    console.log('\nðŸ“Š RAPPORT D\'INGESTION');
-    console.log('â•'.repeat(50));
-    console.log(`âœ… Produits traites: ${this.processedCount}`);
-    console.log(`âŒ Erreurs: ${this.errorCount}`);
-    console.log(`â±ï¸ Duree: ${Math.round(duration)}s`);
-    console.log(`ðŸ“ˆ Vitesse: ${Math.round(this.processedCount / duration)} produits/s`);
-    console.log('â•'.repeat(50));
+    console.log('\nÃ°Å¸â€œÅ  RAPPORT D\'INGESTION');
+    console.log('Ã¢â€¢Â'.repeat(50));
+    console.log(`Ã¢Å“â€¦ Produits traites: ${this.processedCount}`);
+    console.log(`Ã¢ÂÅ’ Erreurs: ${this.errorCount}`);
+    console.log(`Ã¢ÂÂ±Ã¯Â¸Â Duree: ${Math.round(duration)}s`);
+    console.log(`Ã°Å¸â€œË† Vitesse: ${Math.round(this.processedCount / duration)} produits/s`);
+    console.log('Ã¢â€¢Â'.repeat(50));
   }
 }
 
@@ -337,10 +337,10 @@ if (require.main === module) {
   
   // Lancer l'ingestion
   ingestion.run(options).then(() => {
-    console.log('âœ… Ingestion terminee');
+    console.log('Ã¢Å“â€¦ Ingestion terminee');
     process.exit(0);
   }).catch(error => {
-    console.error('âŒ Erreur fatale:', error);
+    console.error('Ã¢ÂÅ’ Erreur fatale:', error);
     process.exit(1);
   });
 }
@@ -363,7 +363,7 @@ class AlgoliaSync {
   }
 
   async run(options = {}) {
-    console.log('ðŸ”„ Demarrage synchronisation Algolia');
+    console.log('Ã°Å¸â€â€ž Demarrage synchronisation Algolia');
     
     try {
       await connectDB();
@@ -377,13 +377,13 @@ class AlgoliaSync {
       this.printReport();
       
     } catch (error) {
-      console.error('âŒ Erreur sync:', error);
+      console.error('Ã¢ÂÅ’ Erreur sync:', error);
       process.exit(1);
     }
   }
 
   async clearIndex() {
-    console.log('âš ï¸ Suppression de l\'index Algolia...');
+    console.log('Ã¢Å¡Â Ã¯Â¸Â Suppression de l\'index Algolia...');
     await algoliaService.clearIndex();
   }
 
@@ -396,7 +396,7 @@ class AlgoliaSync {
     };
 
     const totalProducts = await Product.countDocuments(query);
-    console.log(`ðŸ“Š ${totalProducts} produits   synchroniser`);
+    console.log(`Ã°Å¸â€œÅ  ${totalProducts} produits Â  synchroniser`);
 
     let offset = 0;
 
@@ -424,12 +424,12 @@ class AlgoliaSync {
         );
 
         this.totalSynced += products.length;
-        console.log(`âœ… ${this.totalSynced}/${totalProducts} synchronises`);
+        console.log(`Ã¢Å“â€¦ ${this.totalSynced}/${totalProducts} synchronises`);
 
         offset += this.batchSize;
 
       } catch (error) {
-        console.error(`âŒ Erreur batch ${offset}:`, error.message);
+        console.error(`Ã¢ÂÅ’ Erreur batch ${offset}:`, error.message);
         this.errors++;
         offset += this.batchSize;
       }
@@ -437,14 +437,14 @@ class AlgoliaSync {
   }
 
   printReport() {
-    console.log('\nðŸ“Š RAPPORT DE SYNCHRONISATION');
-    console.log('â•'.repeat(50));
-    console.log(`âœ… Produits synchronises: ${this.totalSynced}`);
-    console.log(`âŒ Erreurs: ${this.errors}`);
+    console.log('\nÃ°Å¸â€œÅ  RAPPORT DE SYNCHRONISATION');
+    console.log('Ã¢â€¢Â'.repeat(50));
+    console.log(`Ã¢Å“â€¦ Produits synchronises: ${this.totalSynced}`);
+    console.log(`Ã¢ÂÅ’ Erreurs: ${this.errors}`);
     
     algoliaService.getIndexStats().then(stats => {
-      console.log(`ðŸ“ Total dans Algolia: ${stats.totalRecords || 0}`);
-      console.log('â•'.repeat(50));
+      console.log(`Ã°Å¸â€œÂ Total dans Algolia: ${stats.totalRecords || 0}`);
+      console.log('Ã¢â€¢Â'.repeat(50));
     });
   }
 }

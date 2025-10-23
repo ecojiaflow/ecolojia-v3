@@ -1,7 +1,7 @@
 // PATH: frontend/src/tests/testAllFeatures.ts
 /**
- * Script de test complet pour identifier tous les bugs et incohérences
- * À exécuter dans la console du navigateur ou comme script de test
+ * Script de test complet pour identifier tous les bugs et incohÃ©rences
+ * Ã€ exÃ©cuter dans la console du navigateur ou comme script de test
  */
 
 interface TestResult {
@@ -24,11 +24,11 @@ class EcolojiaTestSuite {
   // Utilitaire pour logger
   private log(result: TestResult) {
     this.results.push(result);
-    const emoji = result.status === 'success' ? '✅' : result.status === 'error' ? '❌' : '⚠️';
+    const emoji = result.status === 'success' ? 'âœ…' : result.status === 'error' ? 'âŒ' : 'âš ï¸';
     console.log(`${emoji} ${result.feature}: ${result.message}`, result.details || '');
   }
 
-  // Test 1: Vérifier la configuration de base
+  // Test 1: VÃ©rifier la configuration de base
   async testConfiguration() {
     this.log({
       feature: 'Configuration',
@@ -41,18 +41,18 @@ class EcolojiaTestSuite {
       }
     });
 
-    // Vérifier l'encodage
-    const testString = 'Test éàèù';
-    if (testString !== 'Test éàèù') {
+    // VÃ©rifier l'encodage
+    const testString = 'Test Ã©Ã Ã¨Ã¹';
+    if (testString !== 'Test Ã©Ã Ã¨Ã¹') {
       this.log({
         feature: 'Encodage',
         status: 'error',
-        message: 'Problème d\'encodage UTF-8 détecté'
+        message: 'ProblÃ¨me d\'encodage UTF-8 dÃ©tectÃ©'
       });
     }
   }
 
-  // Test 2: Connectivité API
+  // Test 2: ConnectivitÃ© API
   async testAPIConnectivity() {
     try {
       const response = await fetch(`${this.apiUrl}/health`);
@@ -97,7 +97,7 @@ class EcolojiaTestSuite {
         this.log({
           feature: 'Auth Login',
           status: 'warning',
-          message: 'Login échoué (credentials invalides)',
+          message: 'Login Ã©chouÃ© (credentials invalides)',
           details: { hint: 'Normal si pas de compte test' }
         });
       } else if (response.ok) {
@@ -133,9 +133,9 @@ class EcolojiaTestSuite {
           this.log({
             feature: 'Auth Refresh',
             status: 'error',
-            message: 'Token expiré ou invalide',
+            message: 'Token expirÃ© ou invalide',
             details: { 
-              hint: 'Le token stocké est périmé',
+              hint: 'Le token stockÃ© est pÃ©rimÃ©',
               solution: 'Se reconnecter'
             }
           });
@@ -174,12 +174,12 @@ class EcolojiaTestSuite {
       this.log({
         feature: 'Analysis Status',
         status: 'error',
-        message: 'Impossible de vérifier le statut',
+        message: 'Impossible de vÃ©rifier le statut',
         details: error
       });
     }
 
-    // Test analyse manuelle pour chaque catégorie
+    // Test analyse manuelle pour chaque catÃ©gorie
     const testProducts = [
       {
         name: 'Test Food',
@@ -245,9 +245,9 @@ class EcolojiaTestSuite {
         this.log({
           feature: 'Vision API (sans auth)',
           status: 'error',
-          message: 'Vision API nécessite une authentification',
+          message: 'Vision API nÃ©cessite une authentification',
           details: {
-            solution: 'S\'assurer d\'être connecté avant d\'utiliser la vision'
+            solution: 'S\'assurer d\'Ãªtre connectÃ© avant d\'utiliser la vision'
           }
         });
       }
@@ -301,10 +301,10 @@ class EcolojiaTestSuite {
     }
   }
 
-  // Test 6: Vérifier les imports de services
+  // Test 6: VÃ©rifier les imports de services
   async testServiceImports() {
     try {
-      // Vérifier si les services sont importés correctement
+      // VÃ©rifier si les services sont importÃ©s correctement
       const modules = [
         '/src/services/analysisService.js',
         '/src/services/visionService.js',
@@ -346,7 +346,7 @@ class EcolojiaTestSuite {
     }
   }
 
-  // Test 7: Vérifier les routes frontend
+  // Test 7: VÃ©rifier les routes frontend
   testFrontendRoutes() {
     const routes = [
       '/',
@@ -363,15 +363,15 @@ class EcolojiaTestSuite {
       this.log({
         feature: `Route ${route}`,
         status: 'success',
-        message: 'Route définie',
+        message: 'Route dÃ©finie',
         details: { current: window.location.pathname }
       });
     });
   }
 
-  // Générer le rapport final
+  // GÃ©nÃ©rer le rapport final
   generateReport() {
-    console.log('\n📊 RAPPORT DE TEST COMPLET\n' + '='.repeat(50));
+    console.log('\nðŸ“Š RAPPORT DE TEST COMPLET\n' + '='.repeat(50));
     
     const summary = {
       total: this.results.length,
@@ -380,37 +380,37 @@ class EcolojiaTestSuite {
       warnings: this.results.filter(r => r.status === 'warning').length
     };
 
-    console.log('Résumé:', summary);
-    console.log('\n🔴 Erreurs critiques:');
+    console.log('RÃ©sumÃ©:', summary);
+    console.log('\nðŸ”´ Erreurs critiques:');
     this.results
       .filter(r => r.status === 'error')
       .forEach(r => console.log(`- ${r.feature}: ${r.message}`));
 
-    console.log('\n⚠️ Avertissements:');
+    console.log('\nâš ï¸ Avertissements:');
     this.results
       .filter(r => r.status === 'warning')
       .forEach(r => console.log(`- ${r.feature}: ${r.message}`));
 
-    console.log('\n💡 Solutions recommandées:');
+    console.log('\nðŸ’¡ Solutions recommandÃ©es:');
     
-    // Solutions pour les problèmes courants
+    // Solutions pour les problÃ¨mes courants
     if (this.results.some(r => r.feature.includes('Auth') && r.status === 'error')) {
       console.log('1. Authentification:');
       console.log('   - Vider localStorage et se reconnecter');
-      console.log('   - Vérifier que le backend génère des tokens valides');
-      console.log('   - Implémenter un mécanisme de refresh token automatique');
+      console.log('   - VÃ©rifier que le backend gÃ©nÃ¨re des tokens valides');
+      console.log('   - ImplÃ©menter un mÃ©canisme de refresh token automatique');
     }
 
     if (this.results.some(r => r.feature.includes('Vision') && r.status === 'error')) {
       console.log('2. Vision API:');
-      console.log('   - S\'assurer d\'être authentifié avant d\'utiliser la vision');
-      console.log('   - Vérifier les clés Google Vision dans le backend');
-      console.log('   - Activer le fallback Tesseract si nécessaire');
+      console.log('   - S\'assurer d\'Ãªtre authentifiÃ© avant d\'utiliser la vision');
+      console.log('   - VÃ©rifier les clÃ©s Google Vision dans le backend');
+      console.log('   - Activer le fallback Tesseract si nÃ©cessaire');
     }
 
     if (this.results.some(r => r.feature === 'Encodage' && r.status === 'error')) {
       console.log('3. Encodage:');
-      console.log('   - Vérifier que tous les fichiers sont en UTF-8');
+      console.log('   - VÃ©rifier que tous les fichiers sont en UTF-8');
       console.log('   - Ajouter <meta charset="UTF-8"> dans index.html');
       console.log('   - Configurer le serveur pour servir en UTF-8');
     }
@@ -420,7 +420,7 @@ class EcolojiaTestSuite {
 
   // Lancer tous les tests
   async runAllTests() {
-    console.log('🚀 Démarrage des tests ECOLOJIA...\n');
+    console.log('ðŸš€ DÃ©marrage des tests ECOLOJIA...\n');
 
     await this.testConfiguration();
     await this.testAPIConnectivity();
@@ -440,7 +440,7 @@ window.testEcolojia = async () => {
   return await tester.runAllTests();
 };
 
-console.log('✨ Tests prêts ! Tapez testEcolojia() dans la console pour lancer tous les tests.');
+console.log('âœ¨ Tests prÃªts ! Tapez testEcolojia() dans la console pour lancer tous les tests.');
 
 // Export pour utilisation dans d'autres fichiers
 export default EcolojiaTestSuite;

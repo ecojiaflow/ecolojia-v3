@@ -28,7 +28,7 @@ export interface IChatHistory extends Document {
   startedAt: Date;
   endedAt?: Date;
   
-  // Méthodes
+  // MÃ©thodes
   addMessage(message: IChatMessage): Promise<void>;
   calculateTotalTokens(): number;
 }
@@ -101,11 +101,11 @@ const ChatHistorySchema = new Schema<IChatHistory>({
   timestamps: true
 });
 
-// Méthode pour ajouter un message
+// MÃ©thode pour ajouter un message
 ChatHistorySchema.methods.addMessage = async function(message: IChatMessage): Promise<void> {
   this.messages.push(message);
   
-  // Mettre à jour les métadonnées
+  // Mettre Ã  jour les mÃ©tadonnÃ©es
   if (message.tokensUsed) {
     this.metadata.totalTokensUsed += message.tokensUsed;
   }
@@ -116,7 +116,7 @@ ChatHistorySchema.methods.addMessage = async function(message: IChatMessage): Pr
   await this.save();
 };
 
-// Méthode pour calculer le total de tokens - FIX: Ajout des types explicites
+// MÃ©thode pour calculer le total de tokens - FIX: Ajout des types explicites
 ChatHistorySchema.methods.calculateTotalTokens = function(): number {
   return this.messages.reduce((total: number, msg: IChatMessage) => total + (msg.tokensUsed || 0), 0);
 };

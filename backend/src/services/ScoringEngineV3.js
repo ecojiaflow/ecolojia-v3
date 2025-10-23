@@ -1,4 +1,4 @@
-﻿// backend/src/services/ScoringEngineV3.js
+// backend/src/services/ScoringEngineV3.js
 /**
  * Moteur de scoring scientifique ECOLOJIA V3
  * PRINCIPE : Calculer uniquement sur données disponibles

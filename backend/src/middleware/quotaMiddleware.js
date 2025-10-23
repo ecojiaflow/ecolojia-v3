@@ -72,7 +72,7 @@ const checkQuota = (quotaType = 'scan') => {
             resetDate: new Date(now.getFullYear(), now.getMonth() + 1, 1)
           },
           upgrade: {
-            message: 'Passez   Premium pour des analyses illimitees',
+            message: 'Passez Â  Premium pour des analyses illimitees',
             url: '/pricing'
           }
         });
@@ -82,7 +82,7 @@ const checkQuota = (quotaType = 'scan') => {
       user.quotas[quotaField] += 1;
       await user.save();
 
-      // Ajouter les infos de quota   la requete
+      // Ajouter les infos de quota Â  la requete
       req.quotaInfo = {
         type: quotaType,
         used: user.quotas[quotaField],
@@ -101,8 +101,8 @@ const checkQuota = (quotaType = 'scan') => {
 // Middleware specifique pour les routes avec upload
 const checkQuotaAfterUpload = (quotaType = 'scan') => {
   return async (req, res, next) => {
-    // Ce middleware est concu pour etre utilise APRˆS multer
-    // Il aura acces   req.file
+    // Ce middleware est concu pour etre utilise APRË†S multer
+    // Il aura acces Â  req.file
     console.log('CheckQuotaAfterUpload - File present:', !!req.file);
     
     // Appeler la logique de quota normale

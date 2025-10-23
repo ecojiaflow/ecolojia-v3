@@ -7,7 +7,7 @@ router.get('/health', (req, res) => {
   res.json({ ok: true, service: 'cosmetics', timestamp: new Date().toISOString() });
 });
 
-// Liste produits cosmétiques
+// Liste produits cosmÃ©tiques
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find({ category: 'cosmetics' }).limit(20);

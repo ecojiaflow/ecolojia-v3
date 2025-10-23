@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useOfflineStatus.ts
+// PATH: frontend/src/hooks/useOfflineStatus.ts
 import { useEffect, useState } from 'react';
 
 export function useOfflineStatus() {

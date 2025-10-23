@@ -6,16 +6,16 @@ const User = require('./src/models/User');
 async function createTestUser() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connected to MongoDB');
+    console.log('âœ… Connected to MongoDB');
     
     // Supprimer l'ancien user
     await User.deleteOne({ email: 'demo@test.com' });
-    console.log('🗑️ Old user deleted');
+    console.log('ðŸ—‘ï¸ Old user deleted');
     
-    // Créer un nouveau user (le modèle hashera automatiquement le mot de passe)
+    // CrÃ©er un nouveau user (le modÃ¨le hashera automatiquement le mot de passe)
     const user = new User({
       email: 'demo@test.com',
-      password: 'Demo123!', // PAS de hash ici, le modèle le fera
+      password: 'Demo123!', // PAS de hash ici, le modÃ¨le le fera
       name: 'Demo User',
       profile: { firstName: 'Demo', lastName: 'User' },
       tier: 'free',
@@ -30,15 +30,15 @@ async function createTestUser() {
     });
     
     await user.save();
-    console.log('✅ User created successfully');
+    console.log('âœ… User created successfully');
     
     // Tester la connexion
     const isValid = await user.comparePassword('Demo123!');
-    console.log('🔐 Password test:', isValid ? '✅ OK' : '❌ Failed');
+    console.log('ðŸ” Password test:', isValid ? 'âœ… OK' : 'âŒ Failed');
     
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('âŒ Error:', error);
     process.exit(1);
   }
 }

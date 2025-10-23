@@ -1,4 +1,4 @@
-﻿export type ProductDomain = "food" | "beauty" | "detergent" | "unknown";
+export type ProductDomain = "food" | "beauty" | "detergent" | "unknown";
 
 type AnyObj = Record<string, any>;
 

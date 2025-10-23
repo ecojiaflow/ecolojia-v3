@@ -21,20 +21,20 @@ const name = getArg('name') || 'Test User';
 
 async function createTestUser() {
   try {
-    // Connexion Ã  MongoDB
+    // Connexion ÃƒÂ  MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('âœ… Connecté Ã  MongoDB');
+    console.log('Ã¢Å“â€¦ ConnectÃ© ÃƒÂ  MongoDB');
 
-    // Charger le modèle User
+    // Charger le modÃ¨le User
     const User = require('../../src/models/User');
 
-    // Vérifier si l'utilisateur existe
+    // VÃ©rifier si l'utilisateur existe
     let user = await User.findOne({ email });
 
     if (user) {
-      console.log('â„¹ï¸ Utilisateur existant trouvé');
+      console.log('Ã¢â€žÂ¹Ã¯Â¸Â Utilisateur existant trouvÃ©');
     } else {
-      // Créer l'utilisateur
+      // CrÃ©er l'utilisateur
       const hashedPassword = await bcrypt.hash(password, 10);
       user = new User({
         email,
@@ -53,10 +53,10 @@ async function createTestUser() {
       });
 
       await user.save();
-      console.log('âœ… Utilisateur de test créé');
+      console.log('Ã¢Å“â€¦ Utilisateur de test crÃ©Ã©');
     }
 
-    // Générer un token JWT
+    // GÃ©nÃ©rer un token JWT
     const token = jwt.sign(
       { 
         userId: user._id.toString(),
@@ -71,16 +71,16 @@ async function createTestUser() {
     const tokenPath = path.join(__dirname, 'token.txt');
     await fs.writeFile(tokenPath, token);
     
-    console.log('\nâœ… Token JWT généré avec succès!');
-    console.log('ðŸ“§ Email:', email);
-    console.log('ðŸ”‘ Password:', password);
-    console.log('ðŸŽ« Token:', token.substring(0, 50) + '...');
-    console.log('ðŸ“ Token sauvegardé dans:', tokenPath);
-    console.log('\nðŸ“‹ Pour utiliser ce token:');
+    console.log('\nÃ¢Å“â€¦ Token JWT gÃ©nÃ©rÃ© avec succÃ¨s!');
+    console.log('Ã°Å¸â€œÂ§ Email:', email);
+    console.log('Ã°Å¸â€â€˜ Password:', password);
+    console.log('Ã°Å¸Å½Â« Token:', token.substring(0, 50) + '...');
+    console.log('Ã°Å¸â€œÂ Token sauvegardÃ© dans:', tokenPath);
+    console.log('\nÃ°Å¸â€œâ€¹ Pour utiliser ce token:');
     console.log(`$env:JWT_TOKEN = "${token}"`);
 
   } catch (error) {
-    console.error('âŒ Erreur:', error.message);
+    console.error('Ã¢ÂÅ’ Erreur:', error.message);
   } finally {
     await mongoose.disconnect();
   }

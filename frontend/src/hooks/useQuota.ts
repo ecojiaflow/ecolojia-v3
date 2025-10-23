@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useQuota.ts
+// PATH: frontend/src/hooks/useQuota.ts
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthContext } from '../Contexts/AuthContext';
 import quotaService from '../services/quotaService';

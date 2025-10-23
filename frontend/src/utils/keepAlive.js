@@ -1,4 +1,4 @@
-﻿// Garder le serveur Render éveillé
+// Garder le serveur Render éveillé
 setInterval(() => {
   fetch('https://ecolojia-backendvf.onrender.com/api/products/trending')
     .then(() => console.log('Ping serveur:', new Date().toLocaleTimeString()))

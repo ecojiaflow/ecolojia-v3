@@ -1,4 +1,4 @@
-﻿// frontend/src/components/cosmetics/IngredientsList.tsx
+// frontend/src/components/cosmetics/IngredientsList.tsx
 
 import React, { useState } from 'react';
 import { 

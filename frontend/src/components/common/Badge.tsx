@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 

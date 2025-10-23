@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { NutritionBar } from './NutritionBar';
 
 interface NutritionData {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GET /api/payments/check-premium/:userId
  */
 exports.checkPremium = async (req, res) => {

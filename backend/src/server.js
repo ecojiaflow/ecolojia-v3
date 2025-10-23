@@ -1,5 +1,5 @@
 // PATH: backend/src/server.js
-// Serveur ECOLOJIA robuste et prêt pour la production
+// Serveur ECOLOJIA robuste et prÃªt pour la production
 
 require('dotenv').config();
 const express = require('express');
@@ -11,7 +11,7 @@ const Redis = require('ioredis');
 const app = express();
 
 // --------------------------------------------------------------
-// Configuration CORS optimisée
+// Configuration CORS optimisÃ©e
 // --------------------------------------------------------------
 const corsOptions = {
   origin: function (origin, callback) {
@@ -54,19 +54,19 @@ app.use((req, res, next) => {
 });
 
 // --------------------------------------------------------------
-// Fonction loadRoute DÉFINIE EN PREMIER
+// Fonction loadRoute DÃ‰FINIE EN PREMIER
 // --------------------------------------------------------------
 const loadRoute = (name, modulePath, mountPath) => {
   try {
     const route = require(modulePath);
     if (route && (typeof route === 'function' || (route.stack && route.use))) {
       app.use(mountPath, route);
-      console.log(`? Routes ${name} chargées sur ${mountPath}`);
+      console.log(`? Routes ${name} chargÃ©es sur ${mountPath}`);
     } else {
       console.log(`?? Routes ${name} non valides - type: ${typeof route}`);
     }
   } catch (error) {
-    console.log(`?? Routes ${name} non chargées: ${error.message}`);
+    console.log(`?? Routes ${name} non chargÃ©es: ${error.message}`);
   }
 };
 
@@ -76,7 +76,7 @@ const loadRoute = (name, modulePath, mountPath) => {
 loadRoute('Webhooks', './payments/routes/webhook.routes', '/api/webhooks');
 
 // --------------------------------------------------------------
-// Middleware JSON APRÈS webhooks
+// Middleware JSON APRÃˆS webhooks
 // --------------------------------------------------------------
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -140,7 +140,7 @@ loadRoute('OCR Analyze', './routes/ocr-analyze.routes', '/api/ocr-analyze');
 // Gestion 404
 app.use((req, res) => {
   res.status(404).json({
-    error: 'Endpoint non trouvé',
+    error: 'Endpoint non trouvÃ©',
     path: req.path,
     method: req.method
   });
@@ -158,7 +158,7 @@ app.use((err, req, res, next) => {
 const connectMongoDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ecolojia');
-    console.log('? MongoDB connecté');
+    console.log('? MongoDB connectÃ©');
   } catch (err) {
     console.error('? MongoDB erreur:', err.message);
   }
@@ -173,10 +173,10 @@ try {
     host: process.env.REDIS_HOST || 'localhost',
     port: process.env.REDIS_PORT || 6379
   });
-  redisClient.on('connect', () => console.log('? Redis connecté'));
+  redisClient.on('connect', () => console.log('? Redis connectÃ©'));
   redisClient.on('error', (err) => console.error('?? Redis erreur:', err.message));
 } catch (error) {
-  console.log('?? Redis non configuré');
+  console.log('?? Redis non configurÃ©');
 }
 
 app.locals.redisClient = redisClient;

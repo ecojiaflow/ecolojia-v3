@@ -1,4 +1,4 @@
-﻿const additivesDB = require('../data/additives.json');
+const additivesDB = require('../data/additives.json');
 
 class AdditiveEnrichmentService {
   /**

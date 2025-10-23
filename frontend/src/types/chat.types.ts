@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/types/chat.types.ts
+// PATH: frontend/src/types/chat.types.ts
 
 export interface ChatMessage {
   id: string;

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/NovaDetails.tsx
+// PATH: frontend/src/components/NovaDetails.tsx
 import React, { useState } from 'react';
 
 interface NovaAnalysis {

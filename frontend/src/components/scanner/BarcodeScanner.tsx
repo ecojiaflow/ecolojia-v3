@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 // SCANNER COMPLET AVEC TOUTES LES FONCTIONNALITES
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';

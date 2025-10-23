@@ -1,4 +1,4 @@
-﻿// backend/src/services/algoliaService.js
+// backend/src/services/algoliaService.js
 
 const algoliasearch = require('algoliasearch');
 

@@ -4,16 +4,16 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Types simplifiés pour éviter les erreurs d'import Prisma
+// Types simplifiÃ©s pour Ã©viter les erreurs d'import Prisma
 type ConfidenceColor = 'green' | 'orange' | 'red';
 type VerifiedStatus = 'verified' | 'pending' | 'rejected' | 'ai_analyzed' | 'manual_review';
 
-// Configuration adaptée de ton script existant
+// Configuration adaptÃ©e de ton script existant
 const CONFIG = {
   OPENFOODFACTS_URL: 'https://world.openfoodfacts.org/cgi/search.pl',
   BATCH_SIZE: 10,
   DELAY_MS: 3000,
-  MAX_PRODUCTS: 50, // Pour test, augmenter à 10000+ en production
+  MAX_PRODUCTS: 50, // Pour test, augmenter Ã  10000+ en production
   LOG_DIR: path.join(__dirname, '../../logs')
 };
 
@@ -72,7 +72,7 @@ class OpenFoodFactsImporterV2 {
   // Adaptation de ta fonction fetchOpenFoodFactsProducts
   async fetchOpenFoodFactsProducts(): Promise<OpenFoodFactsProduct[]> {
     try {
-      this.log('🔍 Récupération produits OpenFoodFacts...');
+      this.log('ðŸ” RÃ©cupÃ©ration produits OpenFoodFacts...');
       
       const params = {
         search_terms: 'bio organic',
@@ -94,7 +94,7 @@ class OpenFoodFactsImporterV2 {
       });
 
       const products = response.data.products || [];
-      this.log(`✅ ${products.length} produits récupérés`);
+      this.log(`âœ… ${products.length} produits rÃ©cupÃ©rÃ©s`);
       
       return products.filter(p => 
         p.product_name && 
@@ -105,7 +105,7 @@ class OpenFoodFactsImporterV2 {
       );
 
     } catch (error) {
-      this.log(`❌ Erreur récupération: ${error}`, 'ERROR');
+      this.log(`âŒ Erreur rÃ©cupÃ©ration: ${error}`, 'ERROR');
       return [];
     }
   }
@@ -118,17 +118,17 @@ class OpenFoodFactsImporterV2 {
     return {
       title: title,
       slug: slug,
-      description: product.ingredients_text?.substring(0, 500) || `Produit alimentaire référencé OpenFoodFacts`,
+      description: product.ingredients_text?.substring(0, 500) || `Produit alimentaire rÃ©fÃ©rencÃ© OpenFoodFacts`,
       brand: product.brands ? product.brands.split(',')[0].trim() : null,
       category: this.determineCategory(product.categories || ''),
       tags: this.extractTags(product.categories || '', product.labels || ''),
-      zones_dispo: ['FR'], // Produits français par défaut
+      zones_dispo: ['FR'], // Produits franÃ§ais par dÃ©faut
       affiliate_url: `https://world.openfoodfacts.org/product/${product.code}`,
       eco_score: this.calculateEcoScore(product.nova_group || 1),
       ai_confidence: 0.8,
       confidence_pct: 80,
-      confidence_color: this.getConfidenceColor(80) as any, // Cast pour éviter erreur TypeScript
-      verified_status: 'verified' as any, // Cast pour éviter erreur TypeScript
+      confidence_color: this.getConfidenceColor(80) as any, // Cast pour Ã©viter erreur TypeScript
+      verified_status: 'verified' as any, // Cast pour Ã©viter erreur TypeScript
       image_url: product.image_url || null,
       images: product.image_url ? [product.image_url] : []
     };
@@ -152,8 +152,8 @@ class OpenFoodFactsImporterV2 {
     if (allText.includes('organic')) tags.push('bio');
     if (allText.includes('vegan')) tags.push('vegan');
     if (allText.includes('gluten')) tags.push('sans-gluten');
-    if (allText.includes('fair-trade')) tags.push('commerce-équitable');
-    if (allText.includes('france')) tags.push('français');
+    if (allText.includes('fair-trade')) tags.push('commerce-Ã©quitable');
+    if (allText.includes('france')) tags.push('franÃ§ais');
     if (allText.includes('artisan')) tags.push('artisanal');
     
     return tags.length > 0 ? tags : ['alimentaire'];
@@ -184,25 +184,25 @@ class OpenFoodFactsImporterV2 {
 
   // Adaptation de ta fonction d'import par lots
   async importProductsBatch(products: OpenFoodFactsProduct[]): Promise<ImportResults> {
-    this.log(`🚀 Import ${products.length} produits vers PostgreSQL...`);
-    this.log(`⏱️  Délai: ${CONFIG.DELAY_MS}ms entre produits`);
+    this.log(`ðŸš€ Import ${products.length} produits vers PostgreSQL...`);
+    this.log(`â±ï¸  DÃ©lai: ${CONFIG.DELAY_MS}ms entre produits`);
     
     this.results.total = products.length;
     
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
-      this.log(`📦 ${i + 1}/${products.length}: ${product.product_name}`);
+      this.log(`ðŸ“¦ ${i + 1}/${products.length}: ${product.product_name}`);
       
       try {
         await this.importSingleProduct(product);
         
-        // Délai respectueux (gardé de ton script original)
+        // DÃ©lai respectueux (gardÃ© de ton script original)
         if (i < products.length - 1) {
           await this.sleep(CONFIG.DELAY_MS);
         }
         
       } catch (error) {
-        this.log(`💥 Erreur produit ${product.code}: ${error}`, 'ERROR');
+        this.log(`ðŸ’¥ Erreur produit ${product.code}: ${error}`, 'ERROR');
         this.results.errors++;
       }
     }
@@ -213,7 +213,7 @@ class OpenFoodFactsImporterV2 {
 
   private async importSingleProduct(product: OpenFoodFactsProduct) {
     try {
-      // Vérifier si produit existe déjà par slug
+      // VÃ©rifier si produit existe dÃ©jÃ  par slug
       const slug = this.generateSlug(product.product_name || `Produit ${product.code}`, product.code);
       const existingProduct = await this.prisma.product.findUnique({
         where: { slug: slug }
@@ -222,7 +222,7 @@ class OpenFoodFactsImporterV2 {
       const productData = this.transformForDatabase(product);
 
       if (existingProduct) {
-        // Mise à jour
+        // Mise Ã  jour
         await this.prisma.product.update({
           where: { id: existingProduct.id },
           data: {
@@ -231,14 +231,14 @@ class OpenFoodFactsImporterV2 {
           }
         });
         this.results.updated++;
-        this.log(`   🔄 Mis à jour: ${productData.title.substring(0, 30)}...`);
+        this.log(`   ðŸ”„ Mis Ã  jour: ${productData.title.substring(0, 30)}...`);
       } else {
-        // Création
+        // CrÃ©ation
         await this.prisma.product.create({
           data: productData
         });
         this.results.success++;
-        this.log(`   ✅ Créé: ${productData.title.substring(0, 30)}...`);
+        this.log(`   âœ… CrÃ©Ã©: ${productData.title.substring(0, 30)}...`);
       }
 
     } catch (error) {
@@ -252,29 +252,29 @@ class OpenFoodFactsImporterV2 {
 
   // Adaptation de ta fonction principale runImport
   async runImport(): Promise<ImportResults> {
-    this.log('🚀 IMPORT OPENFOODFACTS → POSTGRESQL');
-    this.log(`🎯 Objectif: ${CONFIG.MAX_PRODUCTS} produits max`);
+    this.log('ðŸš€ IMPORT OPENFOODFACTS â†’ POSTGRESQL');
+    this.log(`ðŸŽ¯ Objectif: ${CONFIG.MAX_PRODUCTS} produits max`);
     
     try {
-      // 1. Récupération produits (gardé de ton script)
+      // 1. RÃ©cupÃ©ration produits (gardÃ© de ton script)
       const products = await this.fetchOpenFoodFactsProducts();
       
       if (products.length === 0) {
-        this.log('❌ Aucun produit à importer');
+        this.log('âŒ Aucun produit Ã  importer');
         return this.results;
       }
       
-      // 2. Import par lots (adaptée pour Prisma)
+      // 2. Import par lots (adaptÃ©e pour Prisma)
       const results = await this.importProductsBatch(products);
       
-      // 3. Statistiques finales (gardées de ton script)
-      this.log('📊 RÉSULTATS IMPORT:', 'SUCCESS');
-      this.log(`✅ Créés: ${results.success}/${results.total}`);
-      this.log(`🔄 Mis à jour: ${results.updated}/${results.total}`);
-      this.log(`❌ Erreurs: ${results.errors}/${results.total}`);
-      this.log(`📈 Taux succès: ${Math.round(((results.success + results.updated) / results.total) * 100)}%`);
+      // 3. Statistiques finales (gardÃ©es de ton script)
+      this.log('ðŸ“Š RÃ‰SULTATS IMPORT:', 'SUCCESS');
+      this.log(`âœ… CrÃ©Ã©s: ${results.success}/${results.total}`);
+      this.log(`ðŸ”„ Mis Ã  jour: ${results.updated}/${results.total}`);
+      this.log(`âŒ Erreurs: ${results.errors}/${results.total}`);
+      this.log(`ðŸ“ˆ Taux succÃ¨s: ${Math.round(((results.success + results.updated) / results.total) * 100)}%`);
       
-      // 4. Sauvegarde log (gardée de ton script)
+      // 4. Sauvegarde log (gardÃ©e de ton script)
       const logData = {
         timestamp: new Date().toISOString(),
         results: results,
@@ -286,28 +286,28 @@ class OpenFoodFactsImporterV2 {
         JSON.stringify(logData, null, 2)
       );
       
-      this.log('💾 Log sauvegardé', 'SUCCESS');
-      this.log('🔄 Vérification dans Prisma Studio recommandée');
+      this.log('ðŸ’¾ Log sauvegardÃ©', 'SUCCESS');
+      this.log('ðŸ”„ VÃ©rification dans Prisma Studio recommandÃ©e');
       
       return results;
       
     } catch (error) {
-      this.log(`💥 Erreur import: ${error}`, 'ERROR');
+      this.log(`ðŸ’¥ Erreur import: ${error}`, 'ERROR');
       throw error;
     }
   }
 
-  // Test de connexion base de données
+  // Test de connexion base de donnÃ©es
   async testDatabaseConnection(): Promise<boolean> {
-    this.log('🧪 TEST CONNEXION POSTGRESQL');
+    this.log('ðŸ§ª TEST CONNEXION POSTGRESQL');
     
     try {
       await this.prisma.$connect();
       const productCount = await this.prisma.product.count();
-      this.log(`✅ Connexion OK - ${productCount} produits existants`);
+      this.log(`âœ… Connexion OK - ${productCount} produits existants`);
       return true;
     } catch (error) {
-      this.log(`❌ Connexion échouée: ${error}`, 'ERROR');
+      this.log(`âŒ Connexion Ã©chouÃ©e: ${error}`, 'ERROR');
       return false;
     }
   }
@@ -317,7 +317,7 @@ class OpenFoodFactsImporterV2 {
   }
 }
 
-// Menu interactif adapté de ton script
+// Menu interactif adaptÃ© de ton script
 async function main() {
   const args = process.argv.slice(2);
   const importer = new OpenFoodFactsImporterV2();
@@ -327,22 +327,22 @@ async function main() {
       await importer.testDatabaseConnection();
     } else if (args.includes('--import')) {
       const results = await importer.runImport();
-      console.log('\n📊 Import terminé:', results);
+      console.log('\nðŸ“Š Import terminÃ©:', results);
     } else {
-      console.log('🔧 SCRIPT IMPORT OPENFOODFACTS V2 (POSTGRESQL)');
+      console.log('ðŸ”§ SCRIPT IMPORT OPENFOODFACTS V2 (POSTGRESQL)');
       console.log('\nCommandes disponibles:');
       console.log('  npm run build && node dist/scripts/importOpenFoodFactsAdapted.js --test     # Test DB');
       console.log('  npm run build && node dist/scripts/importOpenFoodFactsAdapted.js --import   # Import complet');
-      console.log('\n⚠️  IMPORTANT: Configurer DATABASE_URL d\'abord!');
+      console.log('\nâš ï¸  IMPORTANT: Configurer DATABASE_URL d\'abord!');
     }
   } catch (error) {
-    console.error('💥 Erreur:', error);
+    console.error('ðŸ’¥ Erreur:', error);
   } finally {
     await importer.cleanup();
   }
 }
 
-// Exécution
+// ExÃ©cution
 if (require.main === module) {
   main().catch(console.error);
 }

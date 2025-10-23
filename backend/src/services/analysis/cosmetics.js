@@ -1,12 +1,12 @@
 // PATH: backend\src\services\analysis\cosmetics.js
 /**
  * Cosmetics Analysis Service - Analyse des produits cosmetiques
- * Conforme   TechReference.md : INCI, allergenes, perturbateurs endocriniens, microplastiques
+ * Conforme Â  TechReference.md : INCI, allergenes, perturbateurs endocriniens, microplastiques
  */
 
 class CosmeticsAnalyzer {
   constructor() {
-    // Base de donnees des ingredients   risque
+    // Base de donnees des ingredients Â  risque
     this.riskIngredients = {
       allergens: {
         'limonene': { severity: 'medium', type: 'parfum allergene' },
@@ -402,26 +402,26 @@ class CosmeticsAnalyzer {
     
     // Recommandations sante
     if (riskAnalysis.endocrineDisruptors.length > 0) {
-      recommendations.push('âš ï¸ Contient des perturbateurs endocriniens suspectes');
+      recommendations.push('Ã¢Å¡Â Ã¯Â¸Â Contient des perturbateurs endocriniens suspectes');
     }
     
     if (riskAnalysis.allergens.length > 3) {
-      recommendations.push('ðŸ”´ Nombreux allergenes :   eviter pour les peaux sensibles');
+      recommendations.push('Ã°Å¸â€Â´ Nombreux allergenes : Â  eviter pour les peaux sensibles');
     }
     
     if (healthScore < 50) {
-      recommendations.push('ðŸ’¡ Score sante faible : privilegiez des alternatives plus sures');
+      recommendations.push('Ã°Å¸â€™Â¡ Score sante faible : privilegiez des alternatives plus sures');
     } else if (healthScore > 80) {
-      recommendations.push('âœ… Bonne composition pour la sante');
+      recommendations.push('Ã¢Å“â€¦ Bonne composition pour la sante');
     }
     
     // Recommandations environnement
     if (riskAnalysis.microplastics.length > 0) {
-      recommendations.push('ðŸŒŠ Contient des microplastiques : impact negatif sur les oceans');
+      recommendations.push('Ã°Å¸Å’Å  Contient des microplastiques : impact negatif sur les oceans');
     }
     
     if (environmentScore < 50) {
-      recommendations.push('ðŸŒ± Impact environnemental eleve : cherchez des alternatives ecologiques');
+      recommendations.push('Ã°Å¸Å’Â± Impact environnemental eleve : cherchez des alternatives ecologiques');
     }
     
     return recommendations;

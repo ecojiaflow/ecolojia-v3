@@ -1,4 +1,4 @@
-﻿// PATH: src/services/configService.ts
+// PATH: src/services/configService.ts
 type AppMode = 'production' | 'demo';
 
 class ConfigService {

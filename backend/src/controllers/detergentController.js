@@ -7,25 +7,25 @@ const analyzeDetergentController = async (req, res) => {
   try {
     const { name, composition, ingredients, barcode, certifications = [], language = 'fr' } = req.body;
     
-    logger.info('🧽 Analyse détergent demandée', { name, barcode });
+    logger.info('ðŸ§½ Analyse dÃ©tergent demandÃ©e', { name, barcode });
     
     // Validation basique
     if (!composition && !ingredients) {
       return res.status(400).json({
         success: false,
         error: 'COMPOSITION_REQUIRED',
-        message: 'Composition ou liste d\'ingrédients requise'
+        message: 'Composition ou liste d\'ingrÃ©dients requise'
       });
     }
 
-    // Normalisation des ingrédients
+    // Normalisation des ingrÃ©dients
     const ingredientList = normalizeIngredients(composition || ingredients);
     
     if (ingredientList.length === 0) {
       return res.status(400).json({
         success: false,
         error: 'INVALID_INGREDIENTS',
-        message: 'Aucun ingrédient valide détecté'
+        message: 'Aucun ingrÃ©dient valide dÃ©tectÃ©'
       });
     }
 
@@ -33,18 +33,18 @@ const analyzeDetergentController = async (req, res) => {
     const scorer = new DetergentScorer();
     const analysisResult = await scorer.analyzeDetergent(
       ingredientList,
-      name || 'Produit ménager',
+      name || 'Produit mÃ©nager',
       certifications
     );
 
-    // Formatage de la réponse
+    // Formatage de la rÃ©ponse
     const response = {
       success: true,
       data: {
         id: Date.now().toString(),
         category: 'detergent',
         product: {
-          name: name || 'Produit ménager',
+          name: name || 'Produit mÃ©nager',
           barcode: barcode || null,
           certifications: certifications
         },
@@ -66,7 +66,7 @@ const analyzeDetergentController = async (req, res) => {
       }
     };
 
-    logger.info('✅ Analyse détergent terminée', { 
+    logger.info('âœ… Analyse dÃ©tergent terminÃ©e', { 
       product: name, 
       score: analysisResult.score 
     });
@@ -74,7 +74,7 @@ const analyzeDetergentController = async (req, res) => {
     return res.json(response);
 
   } catch (error) {
-    logger.error('❌ Erreur analyse détergent', { error: error.message });
+    logger.error('âŒ Erreur analyse dÃ©tergent', { error: error.message });
     return res.status(500).json({
       success: false,
       error: 'DETERGENT_ANALYSIS_FAILED',
@@ -88,16 +88,16 @@ const analyzeDetergentController = async (req, res) => {
 function normalizeIngredients(input) {
   if (!input) return [];
   
-  // Si c'est déjà un tableau
+  // Si c'est dÃ©jÃ  un tableau
   if (Array.isArray(input)) {
     return input.map(s => String(s).toUpperCase().trim()).filter(Boolean);
   }
   
-  // Si c'est une chaîne
+  // Si c'est une chaÃ®ne
   return String(input)
     .toUpperCase()
-    .replace(/INGRÉDIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
-    .replace(/\([^)]*\)/g, '') // Supprime les parenthèses
+    .replace(/INGRÃ‰DIENTS?|INGREDIENTS?\s*[:;-]?\s*/i, '')
+    .replace(/\([^)]*\)/g, '') // Supprime les parenthÃ¨ses
     .replace(/\d+[-]\d+%/g, '') // Supprime les pourcentages de type "5-15%"
     .replace(/[<>]\s*\d+%/g, '') // Supprime "<5%" ou ">15%"
     .split(/[,;]\s*|\n+/)
@@ -114,16 +114,16 @@ function getScoreLabel(score) {
 }
 
 function getConfidenceLabel(confidence) {
-  if (confidence >= 0.8) return 'Très fiable';
+  if (confidence >= 0.8) return 'TrÃ¨s fiable';
   if (confidence >= 0.6) return 'Fiable';
-  if (confidence >= 0.4) return 'Modéré';
+  if (confidence >= 0.4) return 'ModÃ©rÃ©';
   return 'Faible';
 }
 
 function formatRisks(analysisResult) {
   const risks = [];
   
-  // Issues détectées
+  // Issues dÃ©tectÃ©es
   if (analysisResult.detected_issues) {
     analysisResult.detected_issues.forEach(issue => {
       risks.push({
@@ -136,10 +136,10 @@ function formatRisks(analysisResult) {
     });
   }
 
-  // Pénalités écotoxiques
+  // PÃ©nalitÃ©s Ã©cotoxiques
   if (analysisResult.breakdown?.ecotoxicity?.penalties) {
     analysisResult.breakdown.ecotoxicity.penalties.forEach(penalty => {
-      if (penalty.penalty <= -20) { // Seulement les pénalités importantes
+      if (penalty.penalty <= -20) { // Seulement les pÃ©nalitÃ©s importantes
         risks.push({
           code: 'ECOTOXICITY',
           ingredient: penalty.ingredient,
@@ -162,10 +162,10 @@ function formatEnvironmentalImpact(analysisResult) {
       concerns: []
     },
     packaging: analysisResult.breakdown?.packaging || {},
-    carbon_footprint: 'Non évalué'
+    carbon_footprint: 'Non Ã©valuÃ©'
   };
 
-  // Ajouter les préoccupations écotoxiques
+  // Ajouter les prÃ©occupations Ã©cotoxiques
   if (analysisResult.breakdown?.ecotoxicity?.penalties) {
     analysisResult.breakdown.ecotoxicity.penalties.forEach(penalty => {
       impact.ecotoxicity.concerns.push({
@@ -184,30 +184,30 @@ function generateHighlights(analysisResult) {
   
   // Score global
   if (analysisResult.score >= 80) {
-    highlights.push("✅ Produit écologique haute performance");
+    highlights.push("âœ… Produit Ã©cologique haute performance");
   } else if (analysisResult.score >= 60) {
-    highlights.push("⚠️ Impact environnemental modéré");
+    highlights.push("âš ï¸ Impact environnemental modÃ©rÃ©");
   } else {
-    highlights.push("❌ Impact environnemental préoccupant");
+    highlights.push("âŒ Impact environnemental prÃ©occupant");
   }
 
-  // Biodégradabilité
+  // BiodÃ©gradabilitÃ©
   if (analysisResult.breakdown?.biodegradability?.score >= 80) {
-    highlights.push("🌱 Bonne biodégradabilité");
+    highlights.push("ðŸŒ± Bonne biodÃ©gradabilitÃ©");
   }
 
-  // Ecotoxicité
+  // EcotoxicitÃ©
   const ecotoxScore = analysisResult.breakdown?.ecotoxicity?.score || 0;
   if (ecotoxScore < 50) {
-    highlights.push("⚠️ Risques écotoxiques identifiés");
+    highlights.push("âš ï¸ Risques Ã©cotoxiques identifiÃ©s");
   }
 
   // Certifications
   if (analysisResult.certifications?.length > 0) {
-    highlights.push(`🏆 ${analysisResult.certifications.length} certification(s) écologique(s)`);
+    highlights.push(`ðŸ† ${analysisResult.certifications.length} certification(s) Ã©cologique(s)`);
   }
 
-  // Insights spécifiques
+  // Insights spÃ©cifiques
   if (analysisResult.insights) {
     analysisResult.insights.slice(0, 2).forEach(insight => {
       if (insight.title) {
@@ -222,24 +222,24 @@ function generateHighlights(analysisResult) {
 function generateRecommendations(analysisResult) {
   const recommendations = [];
   
-  // Basées sur le score
+  // BasÃ©es sur le score
   if (analysisResult.score < 60) {
-    recommendations.push("Rechercher des alternatives avec label écologique");
-    recommendations.push("Privilégier les produits concentrés pour réduire l'emballage");
+    recommendations.push("Rechercher des alternatives avec label Ã©cologique");
+    recommendations.push("PrivilÃ©gier les produits concentrÃ©s pour rÃ©duire l'emballage");
   }
 
-  // Basées sur la biodégradabilité
+  // BasÃ©es sur la biodÃ©gradabilitÃ©
   if (analysisResult.breakdown?.biodegradability?.score < 70) {
-    recommendations.push("Éviter le rejet direct dans l'environnement");
+    recommendations.push("Ã‰viter le rejet direct dans l'environnement");
   }
 
-  // Basées sur l'écotoxicité
+  // BasÃ©es sur l'Ã©cotoxicitÃ©
   if (analysisResult.breakdown?.ecotoxicity?.score < 50) {
     recommendations.push("Utiliser avec parcimonie et bien doser");
     recommendations.push("Ne pas surdoser - respecter les instructions");
   }
 
-  // Alternatives suggérées
+  // Alternatives suggÃ©rÃ©es
   if (analysisResult.alternatives) {
     analysisResult.alternatives.slice(0, 2).forEach(alt => {
       if (alt.title) {
@@ -250,8 +250,8 @@ function generateRecommendations(analysisResult) {
 
   // Recommandations positives
   if (recommendations.length === 0 && analysisResult.score >= 80) {
-    recommendations.push("Excellent choix écologique");
-    recommendations.push("Produit recommandé pour un usage régulier");
+    recommendations.push("Excellent choix Ã©cologique");
+    recommendations.push("Produit recommandÃ© pour un usage rÃ©gulier");
   }
 
   return recommendations;

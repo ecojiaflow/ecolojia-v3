@@ -81,7 +81,7 @@ const inciDatabase = [
     comedogenic: 0,
     natural: false,
     allergen: true,
-    concerns: ['Allergisant', 'Toxique   haute dose'],
+    concerns: ['Allergisant', 'Toxique Â  haute dose'],
     max_concentration: 1.0
   },
   {
@@ -108,7 +108,7 @@ const inciDatabase = [
     description: 'Conservateur doux autorise en bio'
   },
 
-  // === ‰MOLLIENTS & HYDRATANTS ===
+  // === â€°MOLLIENTS & HYDRATANTS ===
   {
     inci: 'GLYCERIN',
     name: 'Glycerine',
@@ -178,7 +178,7 @@ const inciDatabase = [
     irritant: 'very_low',
     comedogenic: 0,
     natural: false,
-    benefits: ['Anti-inflammatoire', 'Regulateur sebum', '‰claircissant'],
+    benefits: ['Anti-inflammatoire', 'Regulateur sebum', 'â€°claircissant'],
     description: 'Actif polyvalent tres bien tolere'
   },
   {
@@ -189,7 +189,7 @@ const inciDatabase = [
     irritant: 'medium',
     comedogenic: 0,
     natural: true,
-    benefits: ['Antioxydant', '‰claircissant', 'Stimule collagene'],
+    benefits: ['Antioxydant', 'â€°claircissant', 'Stimule collagene'],
     concerns: ['Instable', 'Peut irriter'],
     description: 'Vitamine C pure, puissante mais instable'
   },
@@ -298,7 +298,7 @@ const inciDatabase = [
     description: 'Pigment blanc mineral'
   },
 
-  // === PARFUMS & ALLERGˆNES ===
+  // === PARFUMS & ALLERGË†NES ===
   {
     inci: 'PARFUM',
     name: 'Parfum',
@@ -322,7 +322,7 @@ const inciDatabase = [
     allergen: true,
     allergen_type: 'fragrance',
     declaration_required: true,
-    description: 'Allergene du parfum   declarer'
+    description: 'Allergene du parfum Â  declarer'
   },
   {
     inci: 'LIMONENE',
@@ -395,7 +395,7 @@ const inciDatabase = [
     comedogenic: 0,
     natural: true,
     biotechnology: true,
-    description: '‰paississant naturel fermente'
+    description: 'â€°paississant naturel fermente'
   },
 
   // === ANTIOXYDANTS ===

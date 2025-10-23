@@ -26,9 +26,9 @@ const StatsPage: React.FC = () => {
     total_products: 342,
     average_eco_score: 0.72,
     categories: [
-      { name: "Alimentaire", count: 185, icon: "ðŸŽ" },
-      { name: "Cosmétiques", count: 89, icon: "ðŸ’„" },
-      { name: "Détergents", count: 68, icon: "ðŸ§¼" }
+      { name: "Alimentaire", count: 185, icon: "Ã°Å¸ÂÅ½" },
+      { name: "CosmÃ©tiques", count: 89, icon: "Ã°Å¸â€™â€ž" },
+      { name: "DÃ©tergents", count: 68, icon: "Ã°Å¸Â§Â¼" }
     ]
   };
 
@@ -47,9 +47,9 @@ const StatsPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">ðŸ“Š Statistiques Ecolojia</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Ã°Å¸â€œÅ  Statistiques Ecolojia</h1>
           <p className="text-xl text-gray-600">
-            Aperçu de notre base de données de produits éco-responsables
+            AperÃ§u de notre base de donnÃ©es de produits Ã©co-responsables
           </p>
         </div>
 
@@ -80,7 +80,7 @@ const StatsPage: React.FC = () => {
             <div className="flex items-center">
               <Award className="h-8 w-8 text-yellow-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Catégories</p>
+                <p className="text-sm font-medium text-gray-600">CatÃ©gories</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.categories.length}</p>
               </div>
             </div>
@@ -90,7 +90,7 @@ const StatsPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Répartition par Catégorie
+              RÃ©partition par CatÃ©gorie
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={stats.categories}>
@@ -105,7 +105,7 @@ const StatsPage: React.FC = () => {
 
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Distribution des Catégories
+              Distribution des CatÃ©gories
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -135,7 +135,7 @@ const StatsPage: React.FC = () => {
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>Mode démo - Données d exemple</p>
+          <p>Mode dÃ©mo - DonnÃ©es d exemple</p>
         </div>
       </div>
     </div>

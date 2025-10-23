@@ -26,7 +26,7 @@ const App: React.FC = () => {
           <Route path="*" element={
             <div className="p-8 text-center">
               <h1 className="text-2xl">Page non trouvee</h1>
-              <a href="/" className="text-blue-500 underline">Retour ƒÆ’‚Â  l'accueil</a>
+              <a href="/" className="text-blue-500 underline">Retour Æ’Ã†â€™â€šÃ‚Â  l'accueil</a>
             </div>
           } />
         </Routes>

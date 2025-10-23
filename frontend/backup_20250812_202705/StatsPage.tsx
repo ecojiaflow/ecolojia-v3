@@ -18,7 +18,7 @@ interface StatsData {
   total_products: number;
   average_eco_score: number;
   categories: Array<{ _count: { category: number }; category: string | null }>;
-  top_products?: any[]; // facultatif, ignorÃƒÂ© ici
+  top_products?: any[]; // facultatif, ignorÃƒÆ’Ã‚Â© ici
 }
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82CA9D", "#FFC658"];
@@ -42,7 +42,7 @@ const StatsPage: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸ÃƒÂ¢ââ€šÂ¬Ã…â€œÃƒâ€¦Ã‚Â  DonnÃƒÂ©es stats API :", data); // Debug temporaire
+      console.log("ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â  DonnÃƒÆ’Ã‚Â©es stats API :", data); // Debug temporaire
       setStats(data);
       setError(null);
     } catch (err) {
@@ -66,7 +66,7 @@ const StatsPage: React.FC = () => {
     return stats.categories.map((entry) => ({
       name: CATEGORIES[entry.category as CategoryType]?.name || entry.category || "Autre",
       count: entry._count.category || 0,
-      icon: CATEGORIES[entry.category as CategoryType]?.icon || "ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸ÃƒÂ¢ââ€šÂ¬Ã…â€œÃƒâ€šÃ‚Â¦",
+      icon: CATEGORIES[entry.category as CategoryType]?.icon || "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦",
     }));
   };
 
@@ -85,14 +85,14 @@ const StatsPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">ÃƒÂ¢Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â</div>
+          <div className="text-red-500 text-6xl mb-4">ÃƒÆ’Ã‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Erreur de chargement</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={fetchStats}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
-            RÃƒÂ©essayer
+            RÃƒÆ’Ã‚Â©essayer
           </button>
         </div>
       </div>
@@ -103,9 +103,9 @@ const StatsPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸ÃƒÂ¢ââ€šÂ¬Ã…â€œÃƒâ€¦Ã‚Â  Statistiques Ecolojia</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â  Statistiques Ecolojia</h1>
           <p className="text-xl text-gray-600">
-            AperÃƒÂ§u de notre base de donnÃƒÂ©es de produits ÃƒÂ©co-responsables
+            AperÃƒÆ’Ã‚Â§u de notre base de donnÃƒÆ’Ã‚Â©es de produits ÃƒÆ’Ã‚Â©co-responsables
           </p>
         </div>
 
@@ -126,7 +126,7 @@ const StatsPage: React.FC = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Score Moyen</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats?.average_eco_score ? `${(stats.average_eco_score * 100).toFixed(0)}%` : "ÃƒÂ¢ââ€šÂ¬ÃƒÂ¢ââ€šÂ¬Ã‚Â"}
+                  {stats?.average_eco_score ? `${(stats.average_eco_score * 100).toFixed(0)}%` : "ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢Ã¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â"}
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ const StatsPage: React.FC = () => {
             <div className="flex items-center">
               <Award className="h-8 w-8 text-yellow-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">CatÃƒÂ©gories</p>
+                <p className="text-sm font-medium text-gray-600">CatÃƒÆ’Ã‚Â©gories</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {stats?.categories?.length || 0}
                 </p>
@@ -148,7 +148,7 @@ const StatsPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              RÃƒÂ©partition par CatÃƒÂ©gorie
+              RÃƒÆ’Ã‚Â©partition par CatÃƒÆ’Ã‚Â©gorie
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={getCategoryData()}>
@@ -163,7 +163,7 @@ const StatsPage: React.FC = () => {
 
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Distribution des CatÃƒÂ©gories
+              Distribution des CatÃƒÆ’Ã‚Â©gories
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>

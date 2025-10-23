@@ -5,10 +5,10 @@ export const trackClick = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
-    // TODO: Implémenter le tracking sans Prisma
-    // Pour l'instant, on retourne juste un succès
+    // TODO: ImplÃ©menter le tracking sans Prisma
+    // Pour l'instant, on retourne juste un succÃ¨s
     
-    res.redirect('https://example.com'); // Remplacer par l'URL réelle
+    res.redirect('https://example.com'); // Remplacer par l'URL rÃ©elle
     
   } catch (error) {
     console.error('Track click error:', error);
@@ -16,5 +16,5 @@ export const trackClick = async (req: Request, res: Response) => {
   }
 };
 
-export const trackAffiliateClick = trackClick; // Alias pour compatibilité
+export const trackAffiliateClick = trackClick; // Alias pour compatibilitÃ©
 

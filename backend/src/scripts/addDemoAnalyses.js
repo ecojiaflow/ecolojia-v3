@@ -17,7 +17,7 @@ const demoAnalyses = [
     barcode: '3033710065967'
   },
   {
-    productName: 'Nutella Pate   Tartiner',
+    productName: 'Nutella Pate Â  Tartiner',
     category: 'food',
     healthScore: 45,
     novaGroup: 4,
@@ -55,7 +55,7 @@ const demoAnalyses = [
     barcode: '4005808119349'
   },
   {
-    productName: 'Lessive ‰cologique Arbre Vert',
+    productName: 'Lessive â€°cologique Arbre Vert',
     category: 'detergents',
     healthScore: 85,
     ingredients: 'Agents de surface anioniques, agents de surface non ioniques, savon',
@@ -72,7 +72,7 @@ const demoAnalyses = [
 ];
 
 async function addDemoAnalyses() {
-  console.log('ðŸš€ Ajout des analyses de demonstration...\n');
+  console.log('Ã°Å¸Å¡â‚¬ Ajout des analyses de demonstration...\n');
 
   for (const [index, analysis] of demoAnalyses.entries()) {
     try {
@@ -95,32 +95,32 @@ async function addDemoAnalyses() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`âœ… ${index + 1}. ${analysis.productName} - Score: ${analysis.healthScore}/100`);
+        console.log(`Ã¢Å“â€¦ ${index + 1}. ${analysis.productName} - Score: ${analysis.healthScore}/100`);
       } else {
-        console.log(`âŒ Erreur pour ${analysis.productName}: ${response.statusText}`);
+        console.log(`Ã¢ÂÅ’ Erreur pour ${analysis.productName}: ${response.statusText}`);
       }
 
     } catch (error) {
-      console.error(`âŒ Erreur pour ${analysis.productName}:`, error.message);
+      console.error(`Ã¢ÂÅ’ Erreur pour ${analysis.productName}:`, error.message);
     }
 
     // Petite pause entre les requetes
     await new Promise(resolve => setTimeout(resolve, 500));
   }
 
-  console.log('\nâœ¨ Analyses de demonstration ajoutees !');
-  console.log('ðŸ“Š Retournez sur le dashboard pour voir les resultats');
+  console.log('\nÃ¢Å“Â¨ Analyses de demonstration ajoutees !');
+  console.log('Ã°Å¸â€œÅ  Retournez sur le dashboard pour voir les resultats');
 }
 
 // Note: Pour l'instant, sans base de donnees, ces analyses ne seront pas persistees
 // Mais le dashboard affichera des donnees de demo integrees
 
-console.log('â„¹ï¸  Note: Sans MongoDB, les analyses ne sont pas persistees.');
+console.log('Ã¢â€žÂ¹Ã¯Â¸Â  Note: Sans MongoDB, les analyses ne sont pas persistees.');
 console.log('    Le dashboard affiche des donnees de demonstration integrees.\n');
 
 // Si vous voulez quand meme executer le script (pour tester l'API)
 // Decommentez la ligne suivante :
 // addDemoAnalyses();
 
-console.log('ðŸ“Š Votre dashboard devrait maintenant afficher des donnees de demo !');
-console.log('ðŸ”— Accedez  : http://localhost:3000/dashboard');
+console.log('Ã°Å¸â€œÅ  Votre dashboard devrait maintenant afficher des donnees de demo !');
+console.log('Ã°Å¸â€â€” Accedez Â : http://localhost:3000/dashboard');

@@ -1,4 +1,4 @@
-﻿import { Home, Camera, MessageCircle, Clock } from 'lucide-react';
+import { Home, Camera, MessageCircle, Clock } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export const MobileBottomNav = () => {

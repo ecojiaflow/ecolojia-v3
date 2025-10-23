@@ -1,4 +1,4 @@
-﻿// backend/src/scorers/food/foodScorer.js
+// backend/src/scorers/food/foodScorer.js
 // Module de scoring pour les produits alimentaires
 
 const novaClassifier = require('./novaClassifier');

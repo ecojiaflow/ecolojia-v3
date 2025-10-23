@@ -1,4 +1,4 @@
-﻿// backend/src/models/Product.js
+// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({

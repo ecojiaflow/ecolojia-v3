@@ -11,21 +11,21 @@ const getCorsOptions = (): cors.CorsOptions => {
   const isDevelopment = process.env.NODE_ENV === 'development';
   const isProduction = process.env.NODE_ENV === 'production';
 
-  // Liste blanche des origines autorisées
+  // Liste blanche des origines autorisÃ©es
   const allowedOrigins = [
     process.env.FRONTEND_URL || 'http://localhost:3000',
     process.env.FRONTEND_URL_PROD || 'https://ecolojia.com',
-    // Ajouter d'autres domaines si nécessaire
+    // Ajouter d'autres domaines si nÃ©cessaire
   ].filter(Boolean);
 
   return {
     origin: (origin, callback) => {
-      // Permettre les requêtes sans origine (Postman, apps mobiles)
+      // Permettre les requÃªtes sans origine (Postman, apps mobiles)
       if (!origin && isDevelopment) {
         return callback(null, true);
       }
 
-      // Vérifier si l'origine est dans la liste blanche
+      // VÃ©rifier si l'origine est dans la liste blanche
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -48,12 +48,12 @@ const getCorsOptions = (): cors.CorsOptions => {
       'X-Rate-Limit-Reset'
     ],
     maxAge: 86400, // Cache preflight pendant 24h
-    optionsSuccessStatus: 200 // Pour compatibilité IE11
+    optionsSuccessStatus: 200 // Pour compatibilitÃ© IE11
   };
 };
 
 /**
- * Configuration Helmet pour la sécurité des headers HTTP
+ * Configuration Helmet pour la sÃ©curitÃ© des headers HTTP
  */
 const getHelmetOptions = (): Parameters<typeof helmet>[0] => {
   const isDevelopment = process.env.NODE_ENV === 'development';
@@ -92,7 +92,7 @@ const getHelmetOptions = (): Parameters<typeof helmet>[0] => {
       preload: true
     },
     
-    // Autres options de sécurité
+    // Autres options de sÃ©curitÃ©
     frameguard: { action: 'deny' },
     noSniff: true,
     xssFilter: true,
@@ -113,13 +113,13 @@ const getHelmetOptions = (): Parameters<typeof helmet>[0] => {
 const getCompressionOptions = (): compression.CompressionOptions => {
   return {
     level: 6, // Niveau de compression (0-9)
-    threshold: 1024, // Ne compresser que les réponses > 1KB
+    threshold: 1024, // Ne compresser que les rÃ©ponses > 1KB
     filter: (req, res) => {
       // Ne pas compresser les EventSource/SSE
       if (res.getHeader('Content-Type')?.includes('text/event-stream')) {
         return false;
       }
-      // Utiliser la compression par défaut pour le reste
+      // Utiliser la compression par dÃ©faut pour le reste
       return compression.filter(req, res);
     }
   };
@@ -134,32 +134,32 @@ const getSanitizeOptions = (): Parameters<typeof mongoSanitize>[0] => {
     onSanitize: ({ req, key }) => {
       // Log les tentatives d'injection (en dev seulement)
       if (process.env.NODE_ENV === 'development') {
-        console.warn(`⚠️ Tentative d'injection MongoDB détectée dans ${key}`);
+        console.warn(`âš ï¸ Tentative d'injection MongoDB dÃ©tectÃ©e dans ${key}`);
       }
     }
   };
 };
 
 /**
- * Headers de sécurité supplémentaires
+ * Headers de sÃ©curitÃ© supplÃ©mentaires
  */
 const additionalSecurityHeaders = (req: Request, res: Response, next: NextFunction) => {
-  // Empêcher le clickjacking
+  // EmpÃªcher le clickjacking
   res.setHeader('X-Frame-Options', 'DENY');
   
-  // Empêcher la détection du MIME type
+  // EmpÃªcher la dÃ©tection du MIME type
   res.setHeader('X-Content-Type-Options', 'nosniff');
   
   // Protection XSS pour les anciens navigateurs
   res.setHeader('X-XSS-Protection', '1; mode=block');
   
-  // Empêcher la mise en cache des données sensibles
+  // EmpÃªcher la mise en cache des donnÃ©es sensibles
   if (req.path.includes('/api/auth') || req.path.includes('/api/payment')) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.setHeader('Pragma', 'no-cache');
   }
   
-  // Supprimer les headers qui révèlent des infos serveur
+  // Supprimer les headers qui rÃ©vÃ¨lent des infos serveur
   res.removeHeader('X-Powered-By');
   res.removeHeader('Server');
   
@@ -167,7 +167,7 @@ const additionalSecurityHeaders = (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * Middleware pour gérer les erreurs CORS
+ * Middleware pour gÃ©rer les erreurs CORS
  */
 const corsErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err.message === 'Not allowed by CORS') {
@@ -182,13 +182,13 @@ const corsErrorHandler = (err: Error, req: Request, res: Response, next: NextFun
 };
 
 /**
- * Configuration complète de la sécurité pour l'application
+ * Configuration complÃ¨te de la sÃ©curitÃ© pour l'application
  */
 export const setupSecurity = (app: Express): void => {
   // 1. Compression (avant tout pour optimiser)
   app.use(compression(getCompressionOptions()));
   
-  // 2. Headers de sécurité avec Helmet
+  // 2. Headers de sÃ©curitÃ© avec Helmet
   app.use(helmet(getHelmetOptions()));
   
   // 3. CORS avec configuration stricte
@@ -197,35 +197,35 @@ export const setupSecurity = (app: Express): void => {
   // 4. Sanitization des inputs MongoDB
   app.use(mongoSanitize(getSanitizeOptions()));
   
-  // 5. Headers de sécurité supplémentaires
+  // 5. Headers de sÃ©curitÃ© supplÃ©mentaires
   app.use(additionalSecurityHeaders);
   
   // 6. Gestion des erreurs CORS
   app.use(corsErrorHandler);
   
-  // 7. Limite de taille des requêtes
+  // 7. Limite de taille des requÃªtes
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   
   // Log de confirmation (dev seulement)
   if (process.env.NODE_ENV === 'development') {
-    console.log('✅ Security middleware configured successfully');
+    console.log('âœ… Security middleware configured successfully');
   }
 };
 
 /**
- * Fonction utilitaire pour vérifier la configuration de sécurité
+ * Fonction utilitaire pour vÃ©rifier la configuration de sÃ©curitÃ©
  */
 export const checkSecurityConfig = (): { valid: boolean; issues: string[] } => {
   const issues: string[] = [];
   
-  // Vérifier les variables d'environnement critiques
+  // VÃ©rifier les variables d'environnement critiques
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
-    issues.push('JWT_SECRET absent ou trop court (min 32 caractères)');
+    issues.push('JWT_SECRET absent ou trop court (min 32 caractÃ¨res)');
   }
   
   if (!process.env.FRONTEND_URL) {
-    issues.push('FRONTEND_URL non défini');
+    issues.push('FRONTEND_URL non dÃ©fini');
   }
   
   if (process.env.NODE_ENV === 'production') {

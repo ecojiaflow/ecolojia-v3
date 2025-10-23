@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/api/realApi.ts
+// PATH: frontend/src/api/realApi.ts
 import type { AnalysisResult } from '../types';
 
 const API_BASE_URL = import.met?.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';

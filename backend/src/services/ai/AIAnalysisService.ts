@@ -46,7 +46,7 @@ class AIAnalysisService {
     ) as ProductAnalysisResult | null;
 
     if (cached && !req.customPrompt) {
-      log.info('✅ Cache HIT');
+      log.info('âœ… Cache HIT');
       return cached;
     }
 

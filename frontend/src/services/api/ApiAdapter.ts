@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/ApiAdapter.ts
+// PATH: frontend/src/services/ApiAdapter.ts
 import type { AnalysisResult, ProductInfo, ScoreBundle } from '../types/api';
 
 const clamp01 = (n: number) => Math.max(0, Math.min(100, Math.round(n)));

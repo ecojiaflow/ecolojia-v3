@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/NovaResults.tsx
+// PATH: frontend/src/components/NovaResults.tsx
 import React from 'react';
 import { NovaAdaptedResult } from '../services/novaAdapter';
 import { CosmeticAnalysisDisplay, DetergentAnalysisDisplay } from './analysis/CosmeticAnalysisDisplay';

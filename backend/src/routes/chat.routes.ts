@@ -1,4 +1,4 @@
-﻿import { Router } from 'express';
+import { Router } from 'express';
 import { deepseekChat } from '../controllers/deepseek.controller';
 
 const router = Router();

@@ -12,7 +12,7 @@ class ProductTypeDetector {
     this.keywords = [
       // Cosmetiques
       'savon', 'shampoing', 'gel douche', 'creme', 'dentifrice',
-      'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge   levres',
+      'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge Â  levres',
       'vernis', 'lotion', 'serum', 'masque', 'gommage',
       'apres-rasage', 'baume', 'huile corps', 'lait corps',
       'soin visage', 'soin cheveux', 'coloration', 'demaquillant',
@@ -40,7 +40,7 @@ class ProductTypeDetector {
       'riz', 'huile', 'beurre', 'fromage', 'viande', 'poisson',
       'legumes', 'fruits', 'chocolat', 'confiture', 'miel',
       'cafe', 'the', 'soda', 'eau', 'vin', 'biere', 'lait',
-      'creme fraiche', 'Å“uf', 'farine', 'sucre', 'sel',
+      'creme fraiche', 'Ã…â€œuf', 'farine', 'sucre', 'sel',
       'poivre', 'epices', 'herbes', 'sauce', 'mayonnaise',
       'ketchup', 'moutarde', 'vinaigrette', 'soupe', 'potage',
       'plat prepare', 'pizza', 'sandwich', 'salade', 'dessert',
@@ -59,7 +59,7 @@ class ProductTypeDetector {
         label: 'cosmetics',
         keywords: [
           'savon', 'shampoing', 'gel douche', 'creme', 'dentifrice',
-          'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge   levres',
+          'deodorant', 'parfum', 'maquillage', 'mascara', 'rouge Â  levres',
           'vernis', 'lotion', 'serum', 'masque', 'gommage', 'gel',
           'mousse', 'spray', 'apres-rasage', 'baume', 'huile corps',
           'lait corps', 'soin visage', 'soin cheveux', 'coloration',
@@ -93,7 +93,7 @@ class ProductTypeDetector {
           'riz', 'huile', 'beurre', 'fromage', 'viande', 'poisson',
           'legumes', 'fruits', 'chocolat', 'confiture', 'miel',
           'cafe', 'the', 'soda', 'eau', 'vin', 'biere', 'lait',
-          'creme fraiche', 'Å“uf', 'farine', 'sucre', 'sel',
+          'creme fraiche', 'Ã…â€œuf', 'farine', 'sucre', 'sel',
           'poivre', 'epices', 'herbes', 'sauce', 'mayonnaise',
           'ketchup', 'moutarde', 'vinaigrette', 'soupe', 'potage',
           'plat prepare', 'pizza', 'sandwich', 'salade', 'dessert',
@@ -182,7 +182,7 @@ class ProductTypeDetector {
     return shuffled.slice(0, 5);
   }
 
-  // Methode pour verifier si un produit appartient   une categorie
+  // Methode pour verifier si un produit appartient Â  une categorie
   belongsToCategory(productName, category) {
     const pattern = this.patterns.find(p => p.label === category);
     if (!pattern) return false;
@@ -238,7 +238,7 @@ class ProductTypeDetector {
     // Cette methode est basique et peut etre amelioree
     const prefix = barcode.substring(0, 3);
     
-    // Prefixes courants (  titre d'exemple)
+    // Prefixes courants (Â  titre d'exemple)
     if (['300', '301', '302', '303', '304'].includes(prefix)) {
       return { label: 'food', score: 0.6, confidence: 0.6, source: 'barcode_prefix' };
     }

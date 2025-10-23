@@ -103,7 +103,7 @@ const ProductPage: React.FC = () => {
       if (result.success && result.data) {
         setAnalysis(result.data);
       } else {
-        throw new Error(result.message || 'Analyse non trouvée');
+        throw new Error(result.message || 'Analyse non trouvÃ©e');
       }
     } catch (e: any) {
       setError(e.message || "Impossible de charger l'analyse");
@@ -135,7 +135,7 @@ const ProductPage: React.FC = () => {
         setAnalysis(result.data);
         navigate(`/product/${result.data.productId}`, { replace: true });
       } else {
-        throw new Error(result.message || 'Analyse échouée');
+        throw new Error(result.message || 'Analyse Ã©chouÃ©e');
       }
     } catch (e: any) {
       setError(e.message || "Impossible d'analyser ce produit");
@@ -184,7 +184,7 @@ const ProductPage: React.FC = () => {
     return colors[score || ''] || 'bg-gray-400';
   };
 
-  // Préparer le contexte pour le chat
+  // PrÃ©parer le contexte pour le chat
   const chatProductContext = analysis ? createProductContext({
     ...analysis,
     productName: analysis.name,
@@ -246,7 +246,7 @@ const ProductPage: React.FC = () => {
             </div>
             <div className="text-xl font-semibold text-[#3B3B3B]">Analyse en cours...</div>
             <div className="text-gray-600 mt-2">
-              {scanMethod === 'photo' ? "Extraction des données de l'image..." : 'Classification et évaluation scientifique...'}
+              {scanMethod === 'photo' ? "Extraction des donnÃ©es de l'image..." : 'Classification et Ã©valuation scientifique...'}
             </div>
           </div>
         )}
@@ -263,7 +263,7 @@ const ProductPage: React.FC = () => {
               onClick={() => navigate('/scan')} 
               className="bg-[#7DDE4A] text-white px-6 py-3 rounded-lg hover:bg-[#6BC93B] transition-colors"
             >
-              Réessayer
+              RÃ©essayer
             </button>
           </div>
         )}
@@ -275,9 +275,9 @@ const ProductPage: React.FC = () => {
             {scanMethod !== 'direct' && (
               <div className="mb-4 flex items-center justify-center">
                 <span className="bg-gray-100 px-4 py-2 rounded-full text-sm text-gray-600 flex items-center gap-2">
-                  {scanMethod === 'barcode' && '📱 Scanné par code-barres'}
-                  {scanMethod === 'photo' && '📸 Analysé par photo avec IA'}
-                  {scanMethod === 'manual' && '✍️ Saisi manuellement'}
+                  {scanMethod === 'barcode' && 'ðŸ“± ScannÃ© par code-barres'}
+                  {scanMethod === 'photo' && 'ðŸ“¸ AnalysÃ© par photo avec IA'}
+                  {scanMethod === 'manual' && 'âœï¸ Saisi manuellement'}
                 </span>
               </div>
             )}
@@ -292,9 +292,9 @@ const ProductPage: React.FC = () => {
                   )}
                   <div className="flex flex-wrap items-center gap-3 mt-4">
                     <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-                      {analysis.category === 'food' ? '🍽 Alimentaire' : 
-                       analysis.category === 'cosmetic' ? '💄 Cosmétique' : 
-                       '🧼 Ménager'}
+                      {analysis.category === 'food' ? 'ðŸ½ Alimentaire' : 
+                       analysis.category === 'cosmetic' ? 'ðŸ’„ CosmÃ©tique' : 
+                       'ðŸ§¼ MÃ©nager'}
                     </span>
                     {analysis.barcode && (
                       <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-mono">
@@ -331,14 +331,14 @@ const ProductPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Heart className="w-5 h-5 text-red-500" />
-                      <span className="font-medium text-gray-700">Santé</span>
+                      <span className="font-medium text-gray-700">SantÃ©</span>
                     </div>
                     <span className={`text-2xl font-bold ${getScoreColor(analysis.healthScore)}`}>
                       {analysis.healthScore}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Impact sur votre santé
+                    Impact sur votre santÃ©
                   </div>
                 </div>
 
@@ -353,7 +353,7 @@ const ProductPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Empreinte écologique
+                    Empreinte Ã©cologique
                   </div>
                 </div>
 
@@ -361,20 +361,20 @@ const ProductPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Shield className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-700">Éthique</span>
+                      <span className="font-medium text-gray-700">Ã‰thique</span>
                     </div>
                     <span className={`text-2xl font-bold ${getScoreColor(analysis.ethicsScore)}`}>
                       {analysis.ethicsScore}
                     </span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    Responsabilité sociale
+                    ResponsabilitÃ© sociale
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Ingredients - remplacé par le composant unique */}
+            {/* Ingredients - remplacÃ© par le composant unique */}
             {analysis.ingredients && analysis.ingredients.length > 0 && (
               <ProductIngredientsSection
                 ingredients={analysis.ingredients}
@@ -388,7 +388,7 @@ const ProductPage: React.FC = () => {
               <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <h2 className="text-xl font-semibold text-[#3B3B3B] mb-4 flex items-center gap-2">
                   <Star className="w-5 h-5" />
-                  Alternatives recommandées
+                  Alternatives recommandÃ©es
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   {analysis.alternatives.slice(0, 4).map((alt: any, index: number) => (
@@ -410,7 +410,7 @@ const ProductPage: React.FC = () => {
             {/* OCR Debug (dev only) */}
             {ocrData && import.meta.env.DEV && (
               <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                <div className="font-medium mb-2">Données OCR extraites (debug)</div>
+                <div className="font-medium mb-2">DonnÃ©es OCR extraites (debug)</div>
                 <pre className="text-xs overflow-auto bg-white p-2 rounded">
                   {JSON.stringify(ocrData, null, 2)}
                 </pre>
@@ -420,7 +420,7 @@ const ProductPage: React.FC = () => {
         )}
       </div>
 
-      {/* Chat Widget - affiché seulement si analyse disponible */}
+      {/* Chat Widget - affichÃ© seulement si analyse disponible */}
       {analysis && chatProductContext && (
         <ChatWidget productContext={chatProductContext} />
       )}

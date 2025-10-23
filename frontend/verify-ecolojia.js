@@ -1,4 +1,4 @@
-﻿// Script de vÃ©rification ECOLOJIA
+// Script de vÃ©rification ECOLOJIA
 console.log('=== VERIFICATION ECOLOJIA ===');
 
 // 1. VÃ©rifier le token

@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 export const StatsCard: React.FC<{label:string; value:string|number; sub?:string}> = ({ label, value, sub }) => (
   <div className="bg-white rounded-xl shadow-sm p-4 border">

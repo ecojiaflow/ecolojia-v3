@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
+// PATH: frontend/ecolojiaFrontV3/src/services/search/UniversalSearchService.ts
 
 import algoliasearch from 'algoliasearch/lite';
 import { productService } from '../../services/api';

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/productService.ts
+// PATH: frontend/src/services/productService.ts
 import apiClient from "./apiClient";
 
 export type Category = "food" | "cosmetics" | "detergents";

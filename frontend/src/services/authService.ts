@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/services/authService.ts
+// PATH: frontend/src/services/authService.ts
 import apiClient from './apiClient';
 
 export interface User {

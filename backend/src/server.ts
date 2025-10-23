@@ -5,7 +5,7 @@ const cors = require('cors');
 const { connectMongo, getConnectionStats } = require('./config/db');
 const logger = require('./utils/logger');
 
-// Import des middlewares de sécurité
+// Import des middlewares de sÃ©curitÃ©
 const { setupSecurity } = require('./middleware/security');
 const { setupRateLimiting } = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
@@ -47,7 +47,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Sécurité
+// SÃ©curitÃ©
 setupSecurity(app);
 setupRateLimiting(app);
 
@@ -90,27 +90,27 @@ app.use((req, res) => {
 // Error handler global
 app.use(errorHandler);
 
-// Démarrage du serveur
+// DÃ©marrage du serveur
 async function startServer() {
   try {
     // Connexion MongoDB
     await connectMongo();
-    logger.info('✅ MongoDB connected successfully');
+    logger.info('âœ… MongoDB connected successfully');
     
-    // Démarrage serveur Express
+    // DÃ©marrage serveur Express
     app.listen(PORT, () => {
-      logger.info(`🚀 Server running on port ${PORT}`);
-      logger.info(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+      logger.info(`ðŸš€ Server running on port ${PORT}`);
+      logger.info(`ðŸ“Š Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`ðŸ”— Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
     });
     
   } catch (error) {
-    logger.error('❌ Failed to start server:', error);
+    logger.error('âŒ Failed to start server:', error);
     process.exit(1);
   }
 }
 
-// Gestion gracieuse de l'arrêt
+// Gestion gracieuse de l'arrÃªt
 process.on('unhandledRejection', (err) => {
   logger.error('Unhandled Rejection:', err);
   process.exit(1);

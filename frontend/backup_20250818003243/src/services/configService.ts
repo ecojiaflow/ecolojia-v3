@@ -4,7 +4,7 @@ type AppMode = 'production' | 'demo';
 class ConfigService {
   private static mode: AppMode = "production";
 
-  // Forcer production par dƒÂ©faut (pas de bascule implicite en demo)
+  // Forcer production par dÆ’Ã‚Â©faut (pas de bascule implicite en demo)
   static getMode(): AppMode {
     return this.mode;
   }
@@ -13,7 +13,7 @@ class ConfigService {
     return this.getMode() === 'demo';
   }
 
-  // Autoriser le setMode uniquement si explicitement demandƒÂ©
+  // Autoriser le setMode uniquement si explicitement demandÆ’Ã‚Â©
   static setMode(newMode: AppMode) {
     if (newMode === 'demo' || newMode === 'production') {
       this.mode = newMode;

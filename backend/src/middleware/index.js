@@ -43,7 +43,7 @@ const authOptional = authMiddleware; // TODO: implement optional auth
 const requirePremium = authMiddleware; // TODO: implement premium check
 const requireAdmin = authMiddleware; // TODO: implement admin check
 
-// === ALIAS CRITIQUES POUR COMPATIBILIT‰ ===
+// === ALIAS CRITIQUES POUR COMPATIBILITâ€° ===
 const authenticateToken = authenticateUser; // analyze.routes.js et vision.routes.js attendent authenticateToken
 
 // === EXTRACTION DES FONCTIONS DE VALIDATION ===
@@ -77,7 +77,7 @@ const {
 } = rateLimiter || {};
 
 /**
- * EXPORT UNIFI‰ DE TOUS LES MIDDLEWARES
+ * EXPORT UNIFIâ€° DE TOUS LES MIDDLEWARES
  * 
  * Usage:
  * const { authenticateUser, checkQuota, validateAnalysis } = require('../middleware');
@@ -124,5 +124,5 @@ module.exports = {
 };
 
 // Log pour debug
-console.log('âœ… Middleware index.js charge avec succes');
+console.log('Ã¢Å“â€¦ Middleware index.js charge avec succes');
 console.log('   Exports disponibles:', Object.keys(module.exports).join(', '));

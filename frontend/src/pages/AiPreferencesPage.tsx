@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/AiPreferencesPage.tsx
+// PATH: frontend/src/pages/AiPreferencesPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 

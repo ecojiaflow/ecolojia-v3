@@ -36,7 +36,7 @@ async function fetchFromOpenFoodFacts(barcode) {
     
     const p = parsed.data.product;
     
-    // Validation stricte : au moins product_name doit être défini
+    // Validation stricte : au moins product_name doit Ãªtre dÃ©fini
     if (!p.product_name || p.product_name.trim() === '') {
       console.log('OFF returned product but no name - treating as not found');
       return null;

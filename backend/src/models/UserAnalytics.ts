@@ -5,7 +5,7 @@ export interface IUserAnalytics extends Document {
   userId: string;
   date: Date;
   
-  // Métriques quotidiennes
+  // MÃ©triques quotidiennes
   daily: {
     scans: number;
     aiQuestions: number;
@@ -16,7 +16,7 @@ export interface IUserAnalytics extends Document {
     averageHealthScore: number;
   };
   
-  // Événements détaillés
+  // Ã‰vÃ©nements dÃ©taillÃ©s
   events: Array<{
     type: 'scan' | 'ai_question' | 'export' | 'api_call' | 'premium_upgrade' | 'login';
     timestamp: Date;
@@ -26,7 +26,7 @@ export interface IUserAnalytics extends Document {
     healthScore?: number;
   }>;
   
-  // Insights calculés
+  // Insights calculÃ©s
   insights: {
     mostScannedCategory: string;
     healthScoreTrend: 'improving' | 'stable' | 'declining';
@@ -96,16 +96,16 @@ const UserAnalyticsSchema = new Schema<IUserAnalytics>({
   timestamps: true
 });
 
-// Index composé unique pour un utilisateur par jour
+// Index composÃ© unique pour un utilisateur par jour
 UserAnalyticsSchema.index({ userId: 1, date: 1 }, { unique: true });
 
-// Index pour requêtes de range de dates
+// Index pour requÃªtes de range de dates
 UserAnalyticsSchema.index({ userId: 1, date: -1 });
 
-// TTL pour auto-suppression après 90 jours (optionnel)
+// TTL pour auto-suppression aprÃ¨s 90 jours (optionnel)
 // UserAnalyticsSchema.index({ date: 1 }, { expireAfterSeconds: 7776000 });
 
-// Méthode statique pour enregistrer un événement
+// MÃ©thode statique pour enregistrer un Ã©vÃ©nement
 UserAnalyticsSchema.statics.recordEvent = async function(
   userId: string,
   eventType: string,
@@ -135,9 +135,9 @@ UserAnalyticsSchema.statics.recordEvent = async function(
   }
 };
 
-// Méthode pour mettre à jour les insights
+// MÃ©thode pour mettre Ã  jour les insights
 UserAnalyticsSchema.methods.updateInsights = async function(): Promise<void> {
-  // Calculer la catégorie la plus scannée
+  // Calculer la catÃ©gorie la plus scannÃ©e
   const categoryCount: { [key: string]: number } = {};
   this.daily.categoriesScanned.forEach((cat: string) => {
     categoryCount[cat] = (categoryCount[cat] || 0) + 1;
@@ -156,7 +156,7 @@ UserAnalyticsSchema.methods.updateInsights = async function(): Promise<void> {
     this.insights.engagementLevel = 'low';
   }
   
-  // Calculer le risque de churn (simplifié)
+  // Calculer le risque de churn (simplifiÃ©)
   if (this.insights.engagementLevel === 'low' && this.daily.scans < 2) {
     this.insights.churnRisk = 0.8;
   } else if (this.insights.engagementLevel === 'high') {

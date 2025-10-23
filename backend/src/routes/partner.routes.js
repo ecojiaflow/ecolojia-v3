@@ -134,7 +134,7 @@ router.get('/track/:id', async (req, res) => {
       productId: productId,
       partner: partner,
       originalUrl: originalUrl,
-      affiliateUrl: '', // Sera mis   jour juste apres
+      affiliateUrl: '', // Sera mis Â  jour juste apres
       campaign: campaign,
       source: source,
       userAgent: req.headers['user-agent'],
@@ -152,7 +152,7 @@ router.get('/track/:id', async (req, res) => {
     // Generer l'URL finale avec le clickId
     const affiliateUrl = generateAffiliateUrl(partner, originalUrl, click.clickId);
     
-    // Mettre   jour le click avec l'URL finale
+    // Mettre Â  jour le click avec l'URL finale
     click.affiliateUrl = affiliateUrl;
     await click.save();
 
@@ -239,7 +239,7 @@ router.post('/conversion', async (req, res) => {
       orderId
     });
 
-    console.log(`[Affiliate] Conversion recorded: ${clickId} -> ${orderValue}â‚¬`);
+    console.log(`[Affiliate] Conversion recorded: ${clickId} -> ${orderValue}Ã¢â€šÂ¬`);
 
     res.json({
       success: true,

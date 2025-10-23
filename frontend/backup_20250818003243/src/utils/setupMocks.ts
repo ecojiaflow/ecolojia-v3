@@ -1,6 +1,6 @@
 // PATH: src/utils/setupMocks.ts
 /**
- * Mocks optaâ‚¬â€˜in : actives SEULEMENT si VITE_MOCKS === '1'
+ * Mocks optaÃ¢â€šÂ¬Ã¢â‚¬Ëœin : actives SEULEMENT si VITE_MOCKS === '1'
  * - Par defaut: n'altere PAS window.fetch
  * - Si active: on peut renvoyer des reponses simulees
  */
@@ -11,12 +11,12 @@ let originalFetch: FetchType | null = null;
 export function enableMocks() {
   const enabled = (import.meta as any)?.env?.VITE_MOCKS === '1';
   if (!enabled) {
-    // Pas de mocks -> on ne touche ƒÂ  rien
+    // Pas de mocks -> on ne touche Æ’Ã‚Â  rien
     return;
   }
 
   if (typeof window === 'undefined' || typeof window.fetch !== 'function') return;
-  if (originalFetch) return; // dejƒÂ  active
+  if (originalFetch) return; // dejÆ’Ã‚Â  active
 
   originalFetch = window.fetch;
 
@@ -33,7 +33,7 @@ export function enableMocks() {
     //   });
     // }
 
-    // Par defaut : on laisse passer VERS LE R‰EL (proxy Vite / Netlify)
+    // Par defaut : on laisse passer VERS LE Râ€°EL (proxy Vite / Netlify)
     return originalFetch!(input as any, init);
   };
 }

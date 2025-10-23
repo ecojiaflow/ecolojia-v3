@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface NovaBadgeProps {

@@ -1,4 +1,4 @@
-﻿// /src/utils/performance.ts
+// /src/utils/performance.ts
 import { useCallback } from 'react';
 
 interface SearchMetrics {

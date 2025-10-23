@@ -67,7 +67,7 @@ class ImageProcessingWorker {
         console.warn(`Job ${jobId} stalled and will be retried`);
       });
 
-      logger.info('âœ… ImageProcessingWorker started successfully');
+      logger.info('Ã¢Å“â€¦ ImageProcessingWorker started successfully');
       return worker;
     } catch (error) {
       logger.error('Failed to start ImageProcessingWorker:', error);
@@ -89,14 +89,14 @@ class ImageProcessingWorker {
       // Verifier les quotas utilisateur
       await this.checkUserQuota(userId);
       
-      // Mettre   jour le statut de l'analyse
+      // Mettre Â  jour le statut de l'analyse
       if (analysisId) {
         await this.updateAnalysisStatus(analysisId, 'processing', {
           startedAt: new Date()
         });
       }
 
-      // Mettre   jour la progression
+      // Mettre Â  jour la progression
       await job.updateProgress(10);
 
       // 1. Telecharger et optimiser l'image
@@ -152,7 +152,7 @@ class ImageProcessingWorker {
         processingTime: Date.now() - startTime
       });
 
-      // 8. Mettre   jour les quotas
+      // 8. Mettre Â  jour les quotas
       await this.updateUserQuota(userId, 'vision');
 
       // Nettoyer les fichiers temporaires
@@ -191,7 +191,7 @@ class ImageProcessingWorker {
     } catch (error) {
       logger.error(`Job ${job.id} failed:`, error);
       
-      // Mettre   jour le statut en cas d'erreur
+      // Mettre Â  jour le statut en cas d'erreur
       if (analysisId) {
         await this.updateAnalysisStatus(analysisId, 'failed', {
           error: error.message,
@@ -627,7 +627,7 @@ class ImageProcessingWorker {
         if (product) {
           logger.info(`Product found by barcode: ${processedData.barcode}`);
           
-          // Mettre   jour avec de nouvelles donnees si disponibles
+          // Mettre Â  jour avec de nouvelles donnees si disponibles
           if (processedData.ingredients && !product.ingredients?.text) {
             product.ingredients = {
               text: processedData.ingredients,
@@ -709,7 +709,7 @@ class ImageProcessingWorker {
       .map((ing, index) => ({
         name: ing,
         position: index + 1,
-        percentage: null // € enrichir plus tard si possible
+        percentage: null // â‚¬ enrichir plus tard si possible
       }));
   }
 
@@ -755,7 +755,7 @@ class ImageProcessingWorker {
     try {
       let analysis;
       
-      // Si on a un ID d'analyse existant, mettre   jour
+      // Si on a un ID d'analyse existant, mettre Â  jour
       if (analysisId) {
         analysis = await Analysis.findById(analysisId);
         if (!analysis) {
@@ -825,7 +825,7 @@ class ImageProcessingWorker {
       
       await analysis.save();
       
-      // Mettre   jour les statistiques du produit
+      // Mettre Â  jour les statistiques du produit
       if (product) {
         await Product.findByIdAndUpdate(product._id, {
           $inc: { 'stats.scanCount': 1 },

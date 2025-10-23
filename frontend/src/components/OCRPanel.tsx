@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Eye, AlertTriangle, Leaf, Zap } from 'lucide-react';
 
 interface VisionResult {

@@ -1,4 +1,4 @@
-﻿const Sentry = require('@sentry/node');
+const Sentry = require('@sentry/node');
 
 const initSentry = () => {
   const sentryEnabled = process.env.SENTRY_ENABLED === 'true';

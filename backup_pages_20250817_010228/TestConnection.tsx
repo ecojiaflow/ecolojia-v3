@@ -53,11 +53,11 @@ const TestConnection: React.FC = () => {
         body: JSON.stringify({
           name: 'Produit Test',
           category: 'food',
-          ingredients: { text: 'Eau, sucre, arômes' }
+          ingredients: { text: 'Eau, sucre, arÃ´mes' }
         })
       });
       const data = await response.json();
-      alert('Analyse réussie! Score: ' + (data.scores?.healthScore || 'N/A'));
+      alert('Analyse rÃ©ussie! Score: ' + (data.scores?.healthScore || 'N/A'));
     } catch (error) {
       alert('Erreur: ' + error.message);
     }
@@ -69,7 +69,7 @@ const TestConnection: React.FC = () => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">ðŸ§ª Test de Connexion Backend</h1>
+      <h1 className="text-2xl font-bold mb-6">Ã°Å¸Â§Âª Test de Connexion Backend</h1>
       
       <div className="space-y-4">
         <div className="bg-gray-100 p-4 rounded">
@@ -80,7 +80,7 @@ const TestConnection: React.FC = () => {
         {Object.entries(status).map(([key, value]) => (
           <div key={key} className={`p-4 rounded ${value.ok ? 'bg-green-100' : 'bg-red-100'}`}>
             <h3 className="font-semibold flex items-center gap-2">
-              {value.ok ? 'âœ…' : 'âŒ'} {key}
+              {value.ok ? 'Ã¢Å“â€¦' : 'Ã¢ÂÅ’'} {key}
             </h3>
             {value.data && (
               <pre className="text-xs mt-2 overflow-auto">
@@ -99,13 +99,13 @@ const TestConnection: React.FC = () => {
           onClick={testAllEndpoints}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          ðŸ”„ Retester
+          Ã°Å¸â€â€ž Retester
         </button>
         <button
           onClick={testAnalysis}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
-          ðŸ§ª Tester une Analyse
+          Ã°Å¸Â§Âª Tester une Analyse
         </button>
       </div>
     </div>

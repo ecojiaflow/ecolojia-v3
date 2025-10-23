@@ -20,7 +20,7 @@ export interface IAnalysisCache extends Document {
     hitCount: number;
     lastAccessed: Date;
     analysisVersion: string;
-    userId?: string; // Pour tracking si nécessaire
+    userId?: string; // Pour tracking si nÃ©cessaire
   };
   
   ttl: Date; // Time To Live pour expiration automatique
@@ -86,16 +86,16 @@ const AnalysisCacheSchema = new Schema<IAnalysisCache>({
   
   ttl: {
     type: Date,
-    default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours par défaut
+    default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours par dÃ©faut
     index: { expireAfterSeconds: 0 }
   }
 }, {
   timestamps: true
 });
 
-// Note: Les méthodes ne sont plus nécessaires car on gère directement dans le service
+// Note: Les mÃ©thodes ne sont plus nÃ©cessaires car on gÃ¨re directement dans le service
 
-// Index composé pour recherche efficace
+// Index composÃ© pour recherche efficace
 AnalysisCacheSchema.index({ category: 1, barcode: 1 });
 AnalysisCacheSchema.index({ 'metadata.lastAccessed': -1 });
 

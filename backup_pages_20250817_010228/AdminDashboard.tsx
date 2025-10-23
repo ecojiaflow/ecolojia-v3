@@ -29,9 +29,9 @@ const AdminDashboard: React.FC = () => {
   const handleImport = async () => {
     try {
       const result = await triggerImport(25);
-      alert(`âÃ…â€œââ‚¬Â¦ Import démarré: ${result.message}`);
+      alert(`Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ Import dÃ©marrÃ©: ${result.message}`);
     } catch (err) {
-      console.error('âÃ‚ÂÃ…â€™ Erreur import:', err);
+      console.error('Ã¢Ãƒâ€šÃ‚ÂÃƒâ€¦Ã¢â‚¬â„¢ Erreur import:', err);
     }
   };
 
@@ -48,7 +48,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               {lastUpdate && (
                 <div className="text-sm text-gray-500">
-                  Dernière MÃƒÆ’Ã‚Â J: {lastUpdate.toLocaleTimeString()}
+                  DerniÃ¨re MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â J: {lastUpdate.toLocaleTimeString()}
                 </div>
               )}
             </div>
@@ -90,7 +90,7 @@ const AdminDashboard: React.FC = () => {
                 onClick={clearError}
                 className="text-red-600 hover:text-red-800 text-sm"
               >
-                âÃ…â€œââ‚¬Â¢
+                Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¢
               </button>
             </div>
           </div>
@@ -101,7 +101,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Chargement des données admin...</p>
+              <p className="text-gray-600">Chargement des donnÃ©es admin...</p>
             </div>
           </div>
         )}
@@ -119,7 +119,7 @@ const AdminDashboard: React.FC = () => {
                 trend={stats.recentActivity.length > 0 ? `+${stats.recentActivity[0]?.count || 0}` : undefined}
               />
               <StatsCard
-                title="Imports Réussis"
+                title="Imports RÃ©ussis"
                 value={stats.totalImports}
                 icon={<BarChart3 className="h-6 w-6 text-green-600" />}
                 color="green"
@@ -133,7 +133,7 @@ const AdminDashboard: React.FC = () => {
                 subtitle="Moyenne"
               />
               <StatsCard
-                title="Catégories"
+                title="CatÃ©gories"
                 value={Object.values(stats.productsByCategory).reduce((a, b) => a + b, 0)}
                 icon={<Database className="h-6 w-6 text-orange-600" />}
                 color="orange"
@@ -141,16 +141,16 @@ const AdminDashboard: React.FC = () => {
               />
             </div>
 
-            {/* Répartition par catégories */}
+            {/* RÃ©partition par catÃ©gories */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Répartition par catégories</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">RÃ©partition par catÃ©gories</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.entries(stats.productsByCategory).map(([category, count]) => (
                   <div key={category} className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl mb-2">
-                      {category === 'alimentaire' && 'ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â¬'}
-                      {category === 'cosmetic' && 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢ââ‚¬Å¾'}
-                      {category === 'detergent' && 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â½'}
+                      {category === 'alimentaire' && 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬'}
+                      {category === 'cosmetic' && 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã¢Ã¢â€šÂ¬Ã…Â¾'}
+                      {category === 'detergent' && 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â½'}
                     </div>
                     <div className="text-2xl font-bold text-gray-900">{count}</div>
                     <div className="text-sm text-gray-600 capitalize">{category}</div>
@@ -162,7 +162,7 @@ const AdminDashboard: React.FC = () => {
             {/* Import Progress */}
             <ImportProgress />
 
-            {/* Table des produits récents */}
+            {/* Table des produits rÃ©cents */}
             <ProductTable
               products={recentProducts}
               onValidate={validateProduct}

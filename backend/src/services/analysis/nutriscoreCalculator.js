@@ -101,7 +101,7 @@ class NutriScoreCalculator {
     const nutriments = product.nutriments || product.nutritionFacts || {};
     
     return {
-      // ‰nergie en kJ (conversion si en kcal)
+      // â€°nergie en kJ (conversion si en kcal)
       energy: nutriments.energy || 
               nutriments['energy-kj'] || 
               nutriments['energy-kj_100g'] ||
@@ -119,7 +119,7 @@ class NutriScoreCalculator {
       sodium: nutriments.sodium || 
               nutriments.sodium_100g || 
               nutriments['sodium_100g'] || 
-              (nutriments.salt_100g ? nutriments.salt_100g * 400 : 0), // Conversion sel â†’ sodium
+              (nutriments.salt_100g ? nutriments.salt_100g * 400 : 0), // Conversion sel Ã¢â€ â€™ sodium
               
       fiber: nutriments.fiber || 
              nutriments.fiber_100g || 
@@ -184,7 +184,7 @@ class NutriScoreCalculator {
       return negativeTotal - positiveTotal;
     }
 
-    // Regle standard : si points negatifs â‰¥ 11
+    // Regle standard : si points negatifs Ã¢â€°Â¥ 11
     // On soustrait uniquement les points fruits/legumes + fibres (pas les proteines)
     const partialPositive = positiveTotal - (negativeDetails.proteins || 0);
     return negativeTotal - partialPositive;
@@ -384,7 +384,7 @@ class NutriScoreCalculator {
     const off = grades.indexOf(offGrade.toUpperCase());
     
     if (calculated === off) {
-      return { match: true, message: 'Score identique   Open Food Facts' };
+      return { match: true, message: 'Score identique Â  Open Food Facts' };
     } else {
       return {
         match: false,

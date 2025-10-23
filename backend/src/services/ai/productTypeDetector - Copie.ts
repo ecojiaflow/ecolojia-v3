@@ -24,12 +24,12 @@ export default class ProductTypeDetector {
       'shampoing',
       'lessive',
       'gel douche',
-      'détergent',
+      'dÃ©tergent',
       'nettoyant',
-      'crème',
+      'crÃ¨me',
       'dentifrice',
       'biscuit',
-      'céréales',
+      'cÃ©rÃ©ales',
       'jus',
       'yaourt'
     ];
@@ -39,15 +39,15 @@ export default class ProductTypeDetector {
     this.patterns = [
       {
         label: 'cosmetics',
-        keywords: ['savon', 'shampoing', 'gel douche', 'crème', 'dentifrice']
+        keywords: ['savon', 'shampoing', 'gel douche', 'crÃ¨me', 'dentifrice']
       },
       {
         label: 'detergents',
-        keywords: ['lessive', 'détergent', 'nettoyant']
+        keywords: ['lessive', 'dÃ©tergent', 'nettoyant']
       },
       {
         label: 'food',
-        keywords: ['biscuit', 'céréales', 'jus', 'yaourt']
+        keywords: ['biscuit', 'cÃ©rÃ©ales', 'jus', 'yaourt']
       }
     ];
   }

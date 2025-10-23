@@ -40,22 +40,22 @@ export const ManualAnalysisPage: React.FC = () => {
       icon: Package,
       color: 'bg-green-100 text-green-700',
       description: 'Analyse NOVA, additifs, ultra-transformation',
-      placeholder: 'Ex: Eau, sucre, huile de palme, cacao maigre, lait écrémé en poudre...'
+      placeholder: 'Ex: Eau, sucre, huile de palme, cacao maigre, lait Ã©crÃ©mÃ© en poudre...'
     },
     {
       id: 'cosmetics' as const,
-      name: 'Cosmétiques',
+      name: 'CosmÃ©tiques',
       icon: Heart,
       color: 'bg-pink-100 text-pink-700',
-      description: 'Perturbateurs endocriniens, allergènes, INCI',
+      description: 'Perturbateurs endocriniens, allergÃ¨nes, INCI',
       placeholder: 'Ex: Aqua, Glycerin, Cetearyl Alcohol, Parfum, Methylparaben...'
     },
     {
       id: 'detergents' as const,
-      name: 'Détergents',
+      name: 'DÃ©tergents',
       icon: Droplets,
       color: 'bg-blue-100 text-blue-700',
-      description: 'Impact environnemental, biodégradabilité',
+      description: 'Impact environnemental, biodÃ©gradabilitÃ©',
       placeholder: 'Ex: Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride...'
     }
   ];
@@ -65,7 +65,7 @@ export const ManualAnalysisPage: React.FC = () => {
     if (file) {
       setFormData({ ...formData, image: file });
       
-      // Créer preview
+      // CrÃ©er preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -94,7 +94,7 @@ export const ManualAnalysisPage: React.FC = () => {
         image: formData.image
       });
 
-      // Naviguer vers la page de résultats
+      // Naviguer vers la page de rÃ©sultats
       navigate('/results', { state: { result } });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'analyse');
@@ -113,15 +113,15 @@ export const ManualAnalysisPage: React.FC = () => {
             Analyse Manuelle de Produit
           </h1>
           <p className="text-gray-600">
-            Entrez les informations du produit pour une analyse détaillée
+            Entrez les informations du produit pour une analyse dÃ©taillÃ©e
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Sélection de catégorie */}
+          {/* SÃ©lection de catÃ©gorie */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <label className="block text-sm font-medium text-gray-700 mb-4">
-              Catégorie du produit
+              CatÃ©gorie du produit
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {categories.map((category) => {
@@ -160,7 +160,7 @@ export const ManualAnalysisPage: React.FC = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Ex: Nutella, Nivea Crème, Ariel..."
+                placeholder="Ex: Nutella, Nivea CrÃ¨me, Ariel..."
               />
             </div>
 
@@ -180,7 +180,7 @@ export const ManualAnalysisPage: React.FC = () => {
 
             <div>
               <label htmlFor="ingredients" className="block text-sm font-medium text-gray-700 mb-1">
-                {formData.category === 'cosmetics' ? 'Liste INCI' : 'Liste des ingrédients'} <span className="text-red-500">*</span>
+                {formData.category === 'cosmetics' ? 'Liste INCI' : 'Liste des ingrÃ©dients'} <span className="text-red-500">*</span>
               </label>
               <textarea
                 id="ingredients"
@@ -191,7 +191,7 @@ export const ManualAnalysisPage: React.FC = () => {
                 placeholder={selectedCategory.placeholder}
               />
               <p className="mt-1 text-xs text-gray-500">
-                Copiez la liste complète depuis l'emballage du produit
+                Copiez la liste complÃ¨te depuis l'emballage du produit
               </p>
             </div>
 
@@ -265,13 +265,13 @@ export const ManualAnalysisPage: React.FC = () => {
         <div className="mt-8 bg-blue-50 rounded-xl p-6">
           <h3 className="font-medium text-blue-900 mb-2 flex items-center">
             <Edit3 className="w-5 h-5 mr-2" />
-            Conseils pour une analyse précise
+            Conseils pour une analyse prÃ©cise
           </h3>
           <ul className="space-y-1 text-sm text-blue-800">
-            <li>ââ‚¬Ã‚Â¢ Copiez la liste complète des ingrédients dans l'ordre exact</li>
-            <li>ââ‚¬Ã‚Â¢ Pour les cosmétiques, utilisez la liste INCI (noms internationaux)</li>
-            <li>ââ‚¬Ã‚Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
-            <li>ââ‚¬Ã‚Â¢ Séparez les ingrédients par des virgules</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Copiez la liste complÃ¨te des ingrÃ©dients dans l'ordre exact</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Pour les cosmÃ©tiques, utilisez la liste INCI (noms internationaux)</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Incluez les pourcentages si disponibles (ex: "Aqua 70%")</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ SÃ©parez les ingrÃ©dients par des virgules</li>
           </ul>
         </div>
       </div>

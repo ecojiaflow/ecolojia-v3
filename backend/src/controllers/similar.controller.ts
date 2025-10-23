@@ -12,7 +12,7 @@ export const findClosestOption = async (req: Request, res: Response) => {
       });
     }
 
-    // TODO: Implémenter la recherche de similarité
+    // TODO: ImplÃ©menter la recherche de similaritÃ©
     const results = [
       { name: 'Option 1', similarity: 0.95 },
       { name: 'Option 2', similarity: 0.85 }

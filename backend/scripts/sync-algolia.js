@@ -6,9 +6,9 @@ async function sync() {
   console.log('Connexion MongoDB...');
   await mongoose.connect(process.env.MONGODB_URI);
   
-  console.log('Récupération produits...');
+  console.log('RÃ©cupÃ©ration produits...');
   const products = await mongoose.connection.db.collection('products').find().toArray();
-  console.log(`${products.length} produits trouvés`);
+  console.log(`${products.length} produits trouvÃ©s`);
   
   console.log('Initialisation Algolia...');
   const client = algoliasearch(
@@ -31,7 +31,7 @@ async function sync() {
   }));
   
   await index.saveObjects(records);
-  console.log(`? ${records.length} produits indexés dans Algolia`);
+  console.log(`? ${records.length} produits indexÃ©s dans Algolia`);
   
   process.exit(0);
 }

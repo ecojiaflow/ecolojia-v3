@@ -84,7 +84,7 @@ const analysisService = {
 
   /**
    * Analyse generale (flexible)
-   * @param {Object} data - Les donnees   analyser
+   * @param {Object} data - Les donnees Â  analyser
    * @returns {Promise<Object>} Resultat de l'analyse
    */
   async analyzeProduct(data) {
@@ -154,7 +154,7 @@ const analysisService = {
 
   /**
    * Analyse par lot (batch)
-   * @param {Array} products - Liste des produits   analyser
+   * @param {Array} products - Liste des produits Â  analyser
    * @returns {Promise<Object>} Resultats des analyses
    */
   async analyzeBatch(products) {

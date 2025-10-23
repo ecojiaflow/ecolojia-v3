@@ -25,12 +25,12 @@ const getCorsOptions = () => {
 
   return {
     origin: (origin, callback) => {
-      // Permettre les requêtes sans origine (Postman, apps mobiles)
+      // Permettre les requÃªtes sans origine (Postman, apps mobiles)
       if (!origin) {
         return callback(null, true);
       }
 
-      // Vérifier si l'origine est dans la liste blanche
+      // VÃ©rifier si l'origine est dans la liste blanche
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -49,42 +49,42 @@ const getCorsOptions = () => {
 };
 
 /**
- * Configuration Helmet pour la sécurité des headers HTTP
+ * Configuration Helmet pour la sÃ©curitÃ© des headers HTTP
  */
 const getHelmetOptions = () => {
   return {
-    contentSecurityPolicy: false, // Désactivé pour les APIs
+    contentSecurityPolicy: false, // DÃ©sactivÃ© pour les APIs
     crossOriginEmbedderPolicy: false
   };
 };
 
 /**
- * Headers de sécurité supplémentaires
+ * Headers de sÃ©curitÃ© supplÃ©mentaires
  */
 const additionalSecurityHeaders = (req, res, next) => {
-  // Empêcher le clickjacking
+  // EmpÃªcher le clickjacking
   res.setHeader('X-Frame-Options', 'DENY');
   
-  // Empêcher la détection du MIME type
+  // EmpÃªcher la dÃ©tection du MIME type
   res.setHeader('X-Content-Type-Options', 'nosniff');
   
   // Protection XSS pour les anciens navigateurs
   res.setHeader('X-XSS-Protection', '1; mode=block');
   
-  // Supprimer les headers qui révèlent des infos serveur
+  // Supprimer les headers qui rÃ©vÃ¨lent des infos serveur
   res.removeHeader('X-Powered-By');
   
   next();
 };
 
 /**
- * Configuration complète de la sécurité pour l'application
+ * Configuration complÃ¨te de la sÃ©curitÃ© pour l'application
  */
 const setupSecurity = (app) => {
   // 1. Compression
   app.use(compression());
   
-  // 2. Headers de sécurité avec Helmet
+  // 2. Headers de sÃ©curitÃ© avec Helmet
   app.use(helmet(getHelmetOptions()));
   
   // 3. CORS avec configuration stricte
@@ -93,14 +93,14 @@ const setupSecurity = (app) => {
   // 4. Sanitization des inputs MongoDB
   app.use(mongoSanitize());
   
-  // 5. Headers de sécurité supplémentaires
+  // 5. Headers de sÃ©curitÃ© supplÃ©mentaires
   app.use(additionalSecurityHeaders);
   
-  // 6. Limite de taille des requêtes
+  // 6. Limite de taille des requÃªtes
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   
-  console.log('✅ Security middleware configured');
+  console.log('âœ… Security middleware configured');
 };
 
 module.exports = {

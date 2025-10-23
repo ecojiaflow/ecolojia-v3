@@ -200,7 +200,7 @@ class UniversalAnalyzer {
   async prepareAnalysisData(category, rawData) {
     const { barcode, name, ingredients, product } = rawData;
 
-    // Si on a dej  un produit complet, l'utiliser
+    // Si on a dejÂ  un produit complet, l'utiliser
     if (product) {
       return {
         ...product.toObject(),
@@ -322,13 +322,13 @@ class UniversalAnalyzer {
         if (result.scores?.nova === 4) {
           tips.push({
             type: 'warning',
-            message: 'Produit ultra-transforme :   limiter dans votre alimentation'
+            message: 'Produit ultra-transforme : Â  limiter dans votre alimentation'
           });
         }
         if (result.scores?.nutriscore === 'A' || result.scores?.nutriscore === 'B') {
           tips.push({
             type: 'success',
-            message: 'Bonne qualite nutritionnelle,   privilegier'
+            message: 'Bonne qualite nutritionnelle, Â  privilegier'
           });
         }
         break;

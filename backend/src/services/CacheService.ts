@@ -3,23 +3,23 @@ import Redis from 'ioredis';
 import { createHash } from 'crypto';
 
 /**
- * 🚀 Service de Cache Redis pour ECOLOJIA
- * Objectif: Support 1000+ utilisateurs simultanés avec 90% réduction coûts IA
+ * ðŸš€ Service de Cache Redis pour ECOLOJIA
+ * Objectif: Support 1000+ utilisateurs simultanÃ©s avec 90% rÃ©duction coÃ»ts IA
  */
 export class CacheService {
   private redis: Redis;
-  private readonly defaultTTL = 3600; // 1 heure par défaut
+  private readonly defaultTTL = 3600; // 1 heure par dÃ©faut
   private readonly analysisPrefix = 'analysis:';
   private readonly sessionPrefix = 'session:';
   private readonly quotaPrefix = 'quota:';
   private readonly rateLimitPrefix = 'ratelimit:';
 
   constructor() {
-    console.log('🔄 Initializing Redis connection...');
+    console.log('ðŸ”„ Initializing Redis connection...');
     
-    // Support REDIS_URL ou variables séparées
+    // Support REDIS_URL ou variables sÃ©parÃ©es
     if (process.env.REDIS_URL) {
-      console.log('📡 Using REDIS_URL for connection');
+      console.log('ðŸ“¡ Using REDIS_URL for connection');
       
       // Redis Cloud Frankfurt n'utilise PAS TLS sur ce endpoint
       this.redis = new Redis(process.env.REDIS_URL, {
@@ -28,14 +28,14 @@ export class CacheService {
         connectTimeout: 10000,
         retryStrategy: (times: number) => {
           const delay = Math.min(times * 50, 2000);
-          console.log(`🔄 Redis reconnection attempt ${times}, delay: ${delay}ms`);
+          console.log(`ðŸ”„ Redis reconnection attempt ${times}, delay: ${delay}ms`);
           return delay;
         }
       });
       
     } else {
-      // Configuration avec variables séparées
-      console.log('📡 Using individual Redis variables');
+      // Configuration avec variables sÃ©parÃ©es
+      console.log('ðŸ“¡ Using individual Redis variables');
       
       const redisConfig: any = {
         host: process.env.REDIS_HOST || 'localhost',
@@ -52,7 +52,7 @@ export class CacheService {
         // Reconnexion automatique
         retryStrategy: (times: number) => {
           const delay = Math.min(times * 50, 2000);
-          console.log(`🔄 Redis reconnection attempt ${times}, delay: ${delay}ms`);
+          console.log(`ðŸ”„ Redis reconnection attempt ${times}, delay: ${delay}ms`);
           return delay;
         },
         
@@ -60,7 +60,7 @@ export class CacheService {
         reconnectOnError: (err: Error) => {
           const targetError = 'READONLY';
           if (err.message.includes(targetError)) {
-            console.error('⚠️ Redis is in readonly mode, reconnecting...');
+            console.error('âš ï¸ Redis is in readonly mode, reconnecting...');
             return true;
           }
           return false;
@@ -69,7 +69,7 @@ export class CacheService {
 
       // Support TLS pour Redis Cloud
       if (process.env.REDIS_TLS === 'true') {
-        console.log('🔒 TLS enabled for Redis Cloud');
+        console.log('ðŸ”’ TLS enabled for Redis Cloud');
         redisConfig.tls = {
           rejectUnauthorized: false,
           servername: process.env.REDIS_HOST
@@ -81,29 +81,29 @@ export class CacheService {
 
     // Event listeners pour monitoring
     this.redis.on('connect', () => {
-      console.log('✅ Redis connected successfully');
-      console.log(`📍 Connected to: ${process.env.REDIS_HOST || 'from REDIS_URL'}`);
+      console.log('âœ… Redis connected successfully');
+      console.log(`ðŸ“ Connected to: ${process.env.REDIS_HOST || 'from REDIS_URL'}`);
     });
 
     this.redis.on('error', (err) => {
-      console.error('❌ Redis error:', err.message);
+      console.error('âŒ Redis error:', err.message);
     });
 
     this.redis.on('ready', () => {
-      console.log('🚀 Redis ready for operations');
+      console.log('ðŸš€ Redis ready for operations');
     });
 
     this.redis.on('close', () => {
-      console.log('🔌 Redis connection closed');
+      console.log('ðŸ”Œ Redis connection closed');
     });
 
     this.redis.on('reconnecting', (delay: number) => {
-      console.log(`🔄 Redis reconnecting in ${delay}ms...`);
+      console.log(`ðŸ”„ Redis reconnecting in ${delay}ms...`);
     });
   }
 
   /**
-   * 🔍 Génère une clé de cache unique pour une analyse produit
+   * ðŸ” GÃ©nÃ¨re une clÃ© de cache unique pour une analyse produit
    */
   private generateAnalysisCacheKey(productData: any, category: string): string {
     const dataToHash = {
@@ -125,7 +125,7 @@ export class CacheService {
   }
 
   /**
-   * 📊 Cache une analyse de produit
+   * ðŸ“Š Cache une analyse de produit
    */
   async cacheAnalysis(
     productData: any, 
@@ -149,15 +149,15 @@ export class CacheService {
         JSON.stringify(cacheData)
       );
 
-      console.log(`✅ Analysis cached: ${key.substring(0, 50)}...`);
+      console.log(`âœ… Analysis cached: ${key.substring(0, 50)}...`);
     } catch (error) {
-      console.error('❌ Cache analysis error:', error);
-      // Ne pas faire échouer la requête si le cache échoue
+      console.error('âŒ Cache analysis error:', error);
+      // Ne pas faire Ã©chouer la requÃªte si le cache Ã©choue
     }
   }
 
   /**
-   * 🎯 Récupère une analyse depuis le cache
+   * ðŸŽ¯ RÃ©cupÃ¨re une analyse depuis le cache
    */
   async getAnalysis(productData: any, category: string): Promise<any | null> {
     try {
@@ -170,7 +170,7 @@ export class CacheService {
 
       const cacheData = JSON.parse(cached);
       
-      // Incrémenter le compteur de hits
+      // IncrÃ©menter le compteur de hits
       cacheData.hitCount = (cacheData.hitCount || 0) + 1;
       await this.redis.setex(
         key,
@@ -178,7 +178,7 @@ export class CacheService {
         JSON.stringify(cacheData)
       );
 
-      console.log(`✅ Cache hit: ${key.substring(0, 50)}... (hits: ${cacheData.hitCount})`);
+      console.log(`âœ… Cache hit: ${key.substring(0, 50)}... (hits: ${cacheData.hitCount})`);
       
       return {
         ...cacheData.result,
@@ -189,32 +189,32 @@ export class CacheService {
         }
       };
     } catch (error) {
-      console.error('❌ Get analysis cache error:', error);
+      console.error('âŒ Get analysis cache error:', error);
       return null;
     }
   }
 
   /**
-   * 🔐 Cache une session utilisateur
+   * ðŸ” Cache une session utilisateur
    */
   async cacheSession(token: string, sessionData: any, ttl?: number): Promise<void> {
     try {
       const key = `${this.sessionPrefix}${token}`;
       await this.redis.setex(
         key,
-        ttl || 86400, // 24h par défaut pour sessions
+        ttl || 86400, // 24h par dÃ©faut pour sessions
         JSON.stringify({
           ...sessionData,
           lastAccess: new Date().toISOString()
         })
       );
     } catch (error) {
-      console.error('❌ Cache session error:', error);
+      console.error('âŒ Cache session error:', error);
     }
   }
 
   /**
-   * 🔍 Récupère une session depuis le cache
+   * ðŸ” RÃ©cupÃ¨re une session depuis le cache
    */
   async getSession(token: string): Promise<any | null> {
     try {
@@ -227,31 +227,31 @@ export class CacheService {
 
       const sessionData = JSON.parse(cached);
       
-      // Mise à jour last access
+      // Mise Ã  jour last access
       sessionData.lastAccess = new Date().toISOString();
       await this.redis.expire(key, 86400); // Renouveler TTL
       
       return sessionData;
     } catch (error) {
-      console.error('❌ Get session cache error:', error);
+      console.error('âŒ Get session cache error:', error);
       return null;
     }
   }
 
   /**
-   * 🗑️ Supprime une session du cache
+   * ðŸ—‘ï¸ Supprime une session du cache
    */
   async deleteSession(token: string): Promise<void> {
     try {
       const key = `${this.sessionPrefix}${token}`;
       await this.redis.del(key);
     } catch (error) {
-      console.error('❌ Delete session error:', error);
+      console.error('âŒ Delete session error:', error);
     }
   }
 
   /**
-   * 📊 Gestion des quotas utilisateur
+   * ðŸ“Š Gestion des quotas utilisateur
    */
   async incrementQuota(userId: string, action: string): Promise<number> {
     try {
@@ -260,19 +260,19 @@ export class CacheService {
       
       const count = await this.redis.incr(key);
       
-      // Expirer à la fin du mois suivant
+      // Expirer Ã  la fin du mois suivant
       const daysUntilNextMonth = this.getDaysUntilNextMonth();
       await this.redis.expire(key, daysUntilNextMonth * 86400);
       
       return count;
     } catch (error) {
-      console.error('❌ Increment quota error:', error);
+      console.error('âŒ Increment quota error:', error);
       return 0;
     }
   }
 
   /**
-   * 🔍 Récupère le quota actuel
+   * ðŸ” RÃ©cupÃ¨re le quota actuel
    */
   async getQuota(userId: string, action: string): Promise<number> {
     try {
@@ -282,13 +282,13 @@ export class CacheService {
       const count = await this.redis.get(key);
       return parseInt(count || '0', 10);
     } catch (error) {
-      console.error('❌ Get quota error:', error);
+      console.error('âŒ Get quota error:', error);
       return 0;
     }
   }
 
   /**
-   * 🛡️ Rate limiting par IP/User
+   * ðŸ›¡ï¸ Rate limiting par IP/User
    */
   async checkRateLimit(
     identifier: string, 
@@ -312,21 +312,21 @@ export class CacheService {
         resetAt
       };
     } catch (error) {
-      console.error('❌ Rate limit check error:', error);
-      // En cas d'erreur, on autorise la requête
+      console.error('âŒ Rate limit check error:', error);
+      // En cas d'erreur, on autorise la requÃªte
       return { allowed: true, remaining: maxRequests, resetAt: new Date() };
     }
   }
 
   /**
-   * 📊 Statistiques de cache
+   * ðŸ“Š Statistiques de cache
    */
   async getCacheStats(): Promise<any> {
     try {
       const info = await this.redis.info('stats');
       const dbSize = await this.redis.dbsize();
       
-      // Compter les types de clés
+      // Compter les types de clÃ©s
       const analysisKeys = await this.redis.keys(`${this.analysisPrefix}*`);
       const sessionKeys = await this.redis.keys(`${this.sessionPrefix}*`);
       const quotaKeys = await this.redis.keys(`${this.quotaPrefix}*`);
@@ -343,17 +343,17 @@ export class CacheService {
         memory: await this.redis.info('memory')
       };
     } catch (error) {
-      console.error('❌ Get cache stats error:', error);
+      console.error('âŒ Get cache stats error:', error);
       return { error: 'Unable to get cache stats' };
     }
   }
 
   /**
-   * 🧹 Nettoyage des clés expirées
+   * ðŸ§¹ Nettoyage des clÃ©s expirÃ©es
    */
   async cleanupExpiredKeys(): Promise<number> {
     try {
-      // Redis gère automatiquement l'expiration, mais on peut forcer un scan
+      // Redis gÃ¨re automatiquement l'expiration, mais on peut forcer un scan
       const deleted = await this.redis.eval(`
         local deleted = 0
         local cursor = "0"
@@ -370,16 +370,16 @@ export class CacheService {
         return deleted
       `, 0);
       
-      console.log(`🧹 Cleaned up ${deleted} expired keys`);
+      console.log(`ðŸ§¹ Cleaned up ${deleted} expired keys`);
       return Number(deleted);
     } catch (error) {
-      console.error('❌ Cleanup error:', error);
+      console.error('âŒ Cleanup error:', error);
       return 0;
     }
   }
 
   /**
-   * 🔄 Invalidate cache patterns
+   * ðŸ”„ Invalidate cache patterns
    */
   async invalidatePattern(pattern: string): Promise<number> {
     try {
@@ -387,27 +387,27 @@ export class CacheService {
       if (keys.length === 0) return 0;
       
       const deleted = await this.redis.del(...keys);
-      console.log(`🗑️ Invalidated ${deleted} keys matching pattern: ${pattern}`);
+      console.log(`ðŸ—‘ï¸ Invalidated ${deleted} keys matching pattern: ${pattern}`);
       return deleted;
     } catch (error) {
-      console.error('❌ Invalidate pattern error:', error);
+      console.error('âŒ Invalidate pattern error:', error);
       return 0;
     }
   }
 
   /**
-   * 🔌 Fermeture propre de la connexion
+   * ðŸ”Œ Fermeture propre de la connexion
    */
   async disconnect(): Promise<void> {
     try {
       await this.redis.quit();
-      console.log('👋 Redis disconnected gracefully');
+      console.log('ðŸ‘‹ Redis disconnected gracefully');
     } catch (error) {
-      console.error('❌ Redis disconnect error:', error);
+      console.error('âŒ Redis disconnect error:', error);
     }
   }
 
-  // Méthodes utilitaires privées
+  // MÃ©thodes utilitaires privÃ©es
 
   private getDaysUntilNextMonth(): number {
     const now = new Date();

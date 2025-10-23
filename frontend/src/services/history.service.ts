@@ -1,4 +1,4 @@
-﻿export interface ScanHistoryItem {
+export interface ScanHistoryItem {
   barcode: string;
   productName: string;
   timestamp: Date;

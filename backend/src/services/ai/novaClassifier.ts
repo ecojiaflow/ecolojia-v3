@@ -1,8 +1,8 @@
 // PATH: backend/src/services/ai/novaClassifier.ts
 /**
- * 🔬 NOVA Classifier (INSERM / ANSES 2024)
- * Détection : additifs, marqueurs industriels, ultra-transformation.
- * Sortie : groupe NOVA, confiance, impact santé, recommandations.
+ * ðŸ”¬ NOVA Classifier (INSERM / ANSES 2024)
+ * DÃ©tection : additifs, marqueurs industriels, ultra-transformation.
+ * Sortie : groupe NOVA, confiance, impact santÃ©, recommandations.
  */
 
 import { Logger } from '../../utils/Logger';
@@ -11,12 +11,12 @@ const log   = new Logger('NovaClassifier');
 const debug = (...a: unknown[]) =>
   process.env.NODE_ENV !== 'production' && (log as any).info(...a);
 
-/* ═════════════════════════ CONSTANTES ═════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CONSTANTES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const NOVA_DESC = {
-  1: 'Non transformés ou minimalement transformés',
-  2: 'Ingrédients culinaires transformés',
-  3: 'Aliments transformés',
-  4: 'Aliments ultra-transformés'
+  1: 'Non transformÃ©s ou minimalement transformÃ©s',
+  2: 'IngrÃ©dients culinaires transformÃ©s',
+  3: 'Aliments transformÃ©s',
+  4: 'Aliments ultra-transformÃ©s'
 } as const;
 
 const MARKERS = {
@@ -29,11 +29,11 @@ const MARKERS = {
     'E950','E951','E952','E954','E955','E960','E961'
   ],
   indus: [
-    'sirop de glucose-fructose','glucose-fructose','protéines hydrolysées',
-    'isolat de protéine','huiles hydrogénées','sirop de maïs','maltodextrine',
-    'dextrose','inuline','arômes artificiels','huile de palme'
+    'sirop de glucose-fructose','glucose-fructose','protÃ©ines hydrolysÃ©es',
+    'isolat de protÃ©ine','huiles hydrogÃ©nÃ©es','sirop de maÃ¯s','maltodextrine',
+    'dextrose','inuline','arÃ´mes artificiels','huile de palme'
   ],
-  g1: ['eau','fruits','légumes','viande','poisson','œufs','lait'],
+  g1: ['eau','fruits','lÃ©gumes','viande','poisson','Å“ufs','lait'],
   g2: ['huile','beurre','sucre','sel','vinaigre','miel']
 };
 
@@ -43,7 +43,7 @@ const HIGH_RISK = new Set([
 
 type RiskLevel = 'low' | 'medium' | 'high';
 
-/* ═════════════════════════ TYPES ═════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• TYPES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 export interface NovaAnalysis {
   totalCount: number;
   ultraProcessingMarkers: {
@@ -68,14 +68,14 @@ export interface NovaClassification {
   recommendations: string[];
 }
 
-/* ═════════════════════════ CLASSIFIER ═════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CLASSIFIER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 class NovaClassifier {
   /** API asynchrone */
   async classify(p: { title?: string; ingredients: string[] | string }) {
     return this.classifyProduct(p);
   }
 
-  /** Méthode publique pour usage externe */
+  /** MÃ©thode publique pour usage externe */
   public classifyProduct(p: { title?: string; ingredients: string[] | string }): NovaClassification {
     const ingredients =
       Array.isArray(p.ingredients)
@@ -94,13 +94,13 @@ class NovaClassifier {
       groupInfo: { name: NOVA_DESC[group], group },
       analysis,
       confidence: this.computeConfidence(analysis),
-      scientificSource: 'NOVA – INSERM 2024',
+      scientificSource: 'NOVA â€“ INSERM 2024',
       healthImpact: this.healthImpact(group),
       recommendations: this.recommend(group)
     };
   }
 
-  /* ─────────── Helpers parsing ─────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Helpers parsing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   private parseList(str: string) {
     return str.split(/[,;]/).map((s) => s.trim()).filter(Boolean);
   }
@@ -111,23 +111,23 @@ class NovaClassifier {
 
     (text.match(/e\d{3,4}[a-z]?/gi) || []).forEach((e) => set.add(e));
     MARKERS.indus.forEach((i) => lower.includes(i) && set.add(i));
-    ['arôme','colorant','conservateur','émulsifiant','stabilisant','édulcorant']
+    ['arÃ´me','colorant','conservateur','Ã©mulsifiant','stabilisant','Ã©dulcorant']
       .forEach((w) => lower.includes(w) && set.add(w));
-    /coca-cola|soda|cola/i.test(lower) && set.add('soda ultra-transformé');
+    /coca-cola|soda|cola/i.test(lower) && set.add('soda ultra-transformÃ©');
 
     return [...set];
   }
 
-  /* ─────────── Analyse détaillée ─────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Analyse dÃ©taillÃ©e â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   private analyze(items: string[]): NovaAnalysis {
     const lower = items.map((i) => i.toLowerCase());
 
     const additives  = this.detectAdditives(lower);
     const industrial = lower.filter((i) => MARKERS.indus.some((m) => i.includes(m)));
     const naturals   = lower.filter((i) => MARKERS.g1.some((g) => i.includes(g)));
-    const suspicious = lower.filter((i) => /arôme|exhausteur|stabilisant|gélifiant/.test(i));
+    const suspicious = lower.filter((i) => /arÃ´me|exhausteur|stabilisant|gÃ©lifiant/.test(i));
 
-    /* Marqueurs typés correctement */
+    /* Marqueurs typÃ©s correctement */
     const markers: NovaAnalysis['ultraProcessingMarkers'] = [
       ...additives.map((code): NovaAnalysis['ultraProcessingMarkers'][number] => ({
         type: 'additive',
@@ -139,15 +139,15 @@ class NovaClassifier {
         type: 'industrial',
         value: val,
         risk: 'high',
-        impact: 'Procédé industriel'
+        impact: 'ProcÃ©dÃ© industriel'
       })),
       ...lower
-        .filter((v) => v.includes('arôme') && !v.includes('naturel'))
+        .filter((v) => v.includes('arÃ´me') && !v.includes('naturel'))
         .map((v): NovaAnalysis['ultraProcessingMarkers'][number] => ({
           type: 'artificial_flavor',
           value: v,
           risk: 'medium',
-          impact: 'Arôme artificiel'
+          impact: 'ArÃ´me artificiel'
         }))
     ];
 
@@ -170,7 +170,7 @@ class NovaClassifier {
     return [...set];
   }
 
-  /* ─────────── Calcul groupe & confiance ─────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Calcul groupe & confiance â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   private defineGroup(a: NovaAnalysis): 1 | 2 | 3 | 4 {
     if (a.ultraProcessingMarkers.length) return 4;
     if (a.totalCount > 5)                return 3;
@@ -187,25 +187,25 @@ class NovaClassifier {
     return Math.min(0.95, Math.max(0.6, c));
   }
 
-  /* ─────────── Impact & reco ─────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Impact & reco â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   private healthImpact(g: 1 | 2 | 3 | 4) {
     return {
-      1: { level: 'positive',  risks: [], desc: 'Bénéfique pour la santé' },
-      2: { level: 'neutral',   risks: ['Calories concentrées'], desc: 'Neutre si modéré' },
-      3: { level: 'moderate',  risks: ['Sodium','Conservateurs'], desc: 'Consommation à limiter' },
-      4: { level: 'high_risk', risks: ['↑ diabète','↑ cardio'], desc: 'À limiter fortement' }
+      1: { level: 'positive',  risks: [], desc: 'BÃ©nÃ©fique pour la santÃ©' },
+      2: { level: 'neutral',   risks: ['Calories concentrÃ©es'], desc: 'Neutre si modÃ©rÃ©' },
+      3: { level: 'moderate',  risks: ['Sodium','Conservateurs'], desc: 'Consommation Ã  limiter' },
+      4: { level: 'high_risk', risks: ['â†‘ diabÃ¨te','â†‘ cardio'], desc: 'Ã€ limiter fortement' }
     }[g];
   }
 
   private recommend(g: 1 | 2 | 3 | 4): string[] {
-    if (g === 4) return ['🚨 Ultra-transformé : remplacez-le par une alternative naturelle.'];
-    if (g === 3) return ['⚠️ À consommer occasionnellement.'];
-    if (g === 2) return ['👍 Utilisez en quantité modérée.'];
-    return ['✅ Excellent choix !'];
+    if (g === 4) return ['ðŸš¨ Ultra-transformÃ© : remplacez-le par une alternative naturelle.'];
+    if (g === 3) return ['âš ï¸ Ã€ consommer occasionnellement.'];
+    if (g === 2) return ['ðŸ‘ Utilisez en quantitÃ© modÃ©rÃ©e.'];
+    return ['âœ… Excellent choix !'];
   }
 }
 
-/* ═════════════════════════ EXPORTS ═════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• EXPORTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 export default NovaClassifier;
 export const novaClassifier = new NovaClassifier();
 // EOF

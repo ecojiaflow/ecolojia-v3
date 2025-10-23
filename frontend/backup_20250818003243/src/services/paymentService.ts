@@ -36,13 +36,13 @@ const PORTAL_PATHS = [
 
 /**
  * Cree une session de paiement (LemonSqueezy via backend).
- * Renvoie { url }. Tu peux ensuite rediriger laâ‚¬â„¢utilisateur.
+ * Renvoie { url }. Tu peux ensuite rediriger laÃ¢â€šÂ¬Ã¢â€žÂ¢utilisateur.
  */
 export async function createCheckout(plan: Plan): Promise<CheckoutSession> {
   const cleanPlan = (String(plan || 'basic').toLowerCase() as Plan);
   const res = await api.post<CheckoutSession>(CHECKOUT_PATH, { plan: cleanPlan });
   if (!res || !res.url) {
-    throw new Error('Le backend naâ‚¬â„¢a pas retourne daâ‚¬â„¢URL de paiement.');
+    throw new Error('Le backend naÃ¢â€šÂ¬Ã¢â€žÂ¢a pas retourne daÃ¢â€šÂ¬Ã¢â€žÂ¢URL de paiement.');
   }
   return res;
 }
@@ -60,7 +60,7 @@ export async function openCheckout(plan: Plan): Promise<void> {
 }
 
 /**
- * Recupere laâ‚¬â„¢etat daâ‚¬â„¢abonnement. Essaie /subscription, puis /status.
+ * Recupere laÃ¢â€šÂ¬Ã¢â€žÂ¢etat daÃ¢â€šÂ¬Ã¢â€žÂ¢abonnement. Essaie /subscription, puis /status.
  */
 export async function getSubscription(): Promise<SubscriptionStatus> {
   let lastErr: any = null;
@@ -87,15 +87,15 @@ export async function getSubscription(): Promise<SubscriptionStatus> {
       if (!msg.startsWith('HTTP 404')) break;
     }
   }
-  // si on arrive ici : aucun chemin naâ‚¬â„¢a fonctionne
+  // si on arrive ici : aucun chemin naÃ¢â€šÂ¬Ã¢â€žÂ¢a fonctionne
   throw new Error(
-    `Impossible de recuperer laâ‚¬â„¢etat daâ‚¬â„¢abonnement (${String((lastErr as Error)?.message || 'inconnu')}).`
+    `Impossible de recuperer laÃ¢â€šÂ¬Ã¢â€žÂ¢etat daÃ¢â€šÂ¬Ã¢â€žÂ¢abonnement (${String((lastErr as Error)?.message || 'inconnu')}).`
   );
 }
 
 /**
- * Recupere une URL de portail client (si le backend laâ‚¬â„¢expose), sinon leve une erreur explicite.
- * Utile pour gerer factures, cartes, annulationsaâ‚¬Â¦ (optionnel cote backend).
+ * Recupere une URL de portail client (si le backend laÃ¢â€šÂ¬Ã¢â€žÂ¢expose), sinon leve une erreur explicite.
+ * Utile pour gerer factures, cartes, annulationsaÃ¢â€šÂ¬Ã‚Â¦ (optionnel cote backend).
  */
 export async function getPortalUrl(): Promise<string> {
   let lastErr: any = null;
@@ -103,7 +103,7 @@ export async function getPortalUrl(): Promise<string> {
     try {
       const res = await api.get<{ url?: string }>(path);
       if (res?.url) return res.url;
-      throw new Error('Le backend naâ‚¬â„¢a pas renvoye daâ‚¬â„¢URL de portail.');
+      throw new Error('Le backend naÃ¢â€šÂ¬Ã¢â€žÂ¢a pas renvoye daÃ¢â€šÂ¬Ã¢â€žÂ¢URL de portail.');
     } catch (e) {
       lastErr = e;
       const msg = String((e as Error)?.message || '');

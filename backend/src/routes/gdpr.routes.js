@@ -1,7 +1,7 @@
 // backend/src/routes/gdpr.routes.js
 // Routes GDPR - Version solo dev (Non production)
-// ?? IMPORTANT: Avant production, remplacer infos DPO fictives par donn�es r�elles
-// ?? TODO: Int�grer mod�le Consent.js pour consentement explicite donn�es sant� (Art. 9)
+// ?? IMPORTANT: Avant production, remplacer infos DPO fictives par données réelles
+// ?? TODO: Intégrer modèle Consent.js pour consentement explicite données santé (Art. 9)
 
 const express = require('express');
 const router = express.Router();
@@ -86,7 +86,7 @@ router.get('/download/:exportId/:format', authenticateUser, async (req, res) => 
     const { exportId, format } = req.params;
     const exportPath = path.join(process.cwd(), 'exports');
     
-    // Verifier que l'export appartient   l'utilisateur
+    // Verifier que l'export appartient Â  l'utilisateur
     // TODO: Implementer la verification avec un modele ExportLog
     
     const filename = `ecolojia-export-${exportId}.${format}`;
@@ -112,7 +112,7 @@ router.get('/download/:exportId/:format', authenticateUser, async (req, res) => 
 
 /**
  * DELETE /api/gdpr/delete-account
- * Supprimer son compte (RGPD Art. 17 - Droit   l'oubli)
+ * Supprimer son compte (RGPD Art. 17 - Droit Â  l'oubli)
  */
 router.delete('/delete-account', authenticateUser, async (req, res) => {
   try {
@@ -140,7 +140,7 @@ router.delete('/delete-account', authenticateUser, async (req, res) => {
     console.log(`[GDPR] Demande de suppression du compte ${userId}, raison: ${reason}`);
     
     // Option 1: Suppression immediate
-    // TODO CRITIQUE: Impl�menter deleteAllUserData() compl�te
+    // TODO CRITIQUE: Implémenter deleteAllUserData() complète
     // Doit supprimer: User, Analysis, ChatHistory, Favorite, Payment, 
     // VisionAnalysis, UserJourney, et toute trace dans logs
     // const result = await DataExportService.deleteAllUserData(userId);
@@ -223,7 +223,7 @@ router.post('/cancel-deletion', authenticateUser, async (req, res) => {
 
 /**
  * PUT /api/gdpr/update-consent
- * Mettre   jour les consentements
+ * Mettre Â  jour les consentements
  */
 router.put('/update-consent', authenticateUser, async (req, res) => {
   try {
@@ -242,7 +242,7 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     
     const user = await User.findById(userId);
     
-    // Mettre   jour les consentements
+    // Mettre Â  jour les consentements
     user.privacy = user.privacy || {};
     user.privacy.consents = {
       ...user.privacy.consents,
@@ -252,11 +252,11 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     
     await user.save();
     
-    console.log(`[GDPR] Consentements mis   jour pour ${userId}:`, consents);
+    console.log(`[GDPR] Consentements mis Â  jour pour ${userId}:`, consents);
     
     res.json({
       success: true,
-      message: 'Consentements mis   jour',
+      message: 'Consentements mis Â  jour',
       consents: user.privacy.consents
     });
     
@@ -264,7 +264,7 @@ router.put('/update-consent', authenticateUser, async (req, res) => {
     console.error('[GDPR] Update consent error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la mise   jour des consentements'
+      error: 'Erreur lors de la mise Â  jour des consentements'
     });
   }
 });
@@ -286,7 +286,7 @@ router.get('/privacy-settings', authenticateUser, async (req, res) => {
       },
       dataRetention: {
         analyses: '2 ans',
-        personalData: 'Jusqu\'  suppression du compte',
+        personalData: 'Jusqu\'Â  suppression du compte',
         logs: '1 an'
       },
       rights: [
@@ -312,7 +312,7 @@ router.get('/privacy-settings', authenticateUser, async (req, res) => {
         },
         {
           name: 'Opposition',
-          description: 'Vous opposer   certains traitements',
+          description: 'Vous opposer Â  certains traitements',
           action: '/api/gdpr/update-consent'
         }
       ],
@@ -390,15 +390,15 @@ router.get('/info', (req, res) => {
     info: {
       dataController: {
         name: 'ECOLOJIA (Projet Solo)',
-        address: '� d�finir - D�veloppement en cours',
+        address: 'À définir - Développement en cours',
         email: 'privacy@ecolojia.app',
-        phone: '� d�finir'
+        phone: 'À définir'
       },
       dataProtectionOfficer: {
         name: 'Claude (Assistant IA - DPO Temporaire)',
         email: 'dpo@ecolojia.app',
-        note: 'Pour production : d�signer un DPO humain certifi� RGPD',
-        phone: '� d�finir'
+        note: 'Pour production : désigner un DPO humain certifié RGPD',
+        phone: 'À définir'
       },
       legalBasis: {
         account: 'Execution du contrat',
@@ -436,7 +436,7 @@ router.get('/info', (req, res) => {
         erasure: 'Supprimer votre compte et vos donnees',
         restriction: 'Limiter le traitement de vos donnees',
         portability: 'Recevoir vos donnees dans un format structure',
-        objection: 'Vous opposer   certains traitements',
+        objection: 'Vous opposer Â  certains traitements',
         automatedDecision: 'Ne pas faire l\'objet de decisions automatisees'
       },
       complaints: {
@@ -470,7 +470,7 @@ router.get('/processing-activities', authenticateUser, async (req, res) => {
         purpose: 'Permettre l\'acces et l\'utilisation du service',
         legalBasis: 'Execution du contrat',
         dataCategories: ['Identite', 'Contact', 'Connexion'],
-        recipients: ['‰quipe support', 'Hebergeur'],
+        recipients: ['â€°quipe support', 'Hebergeur'],
         retention: '3 ans apres fermeture',
         security: ['Chiffrement', 'Acces restreint', 'Logs']
       },

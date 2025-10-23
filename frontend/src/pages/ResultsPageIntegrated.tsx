@@ -1,4 +1,4 @@
-﻿import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { AlertTriangle, Leaf, Heart, Shield, Info } from "lucide-react";
 import { inferDomain } from '../utils/domain';
 

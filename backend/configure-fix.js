@@ -1,4 +1,4 @@
-﻿// POST /api/algolia/configure - Configurer l'index
+// POST /api/algolia/configure - Configurer l'index
 router.post('/configure', asyncHandler(async (req, res) => {
   try {
     await algoliaService.configureIndex();

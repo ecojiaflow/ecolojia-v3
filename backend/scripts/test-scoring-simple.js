@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 
 // CHEMIN CORRIGÉ depuis scripts/
 const scoringUnified = require('../src/services/scoringUnified');

@@ -24,16 +24,16 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy' });
 });
 
-// Démarrage
+// DÃ©marrage
 async function start() {
   try {
     // Connexion MongoDB
     await connectMongoDB();
-    console.log('? MongoDB connecté');
+    console.log('? MongoDB connectÃ©');
     
-    // Démarrer le serveur
+    // DÃ©marrer le serveur
     app.listen(PORT, () => {
-      console.log(`?? Serveur démarré sur http://localhost:${PORT}`);
+      console.log(`?? Serveur dÃ©marrÃ© sur http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error('? Erreur:', error);

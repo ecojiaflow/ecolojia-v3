@@ -73,9 +73,9 @@ function ProfilePage() {
         const response = await api.get('/users/me'); // Essayons l'ancien endpoint
         console.log('API Response:', response);
         
-        // Si la réponse est directement l'objet user
+        // Si la rÃ©ponse est directement l'objet user
         if (response.data && !response.data.data && !response.data.user) {
-          // Adapter la structure pour correspondre à UserProfile
+          // Adapter la structure pour correspondre Ã  UserProfile
           const userData = response.data;
           return {
             profile: {
@@ -109,7 +109,7 @@ function ProfilePage() {
           };
         }
         
-        // Si la structure est différente
+        // Si la structure est diffÃ©rente
         return response.data.data || response.data.user || response.data;
       } catch (error: any) {
         console.error('Error fetching user profile:', error);
@@ -129,10 +129,10 @@ function ProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      toast.success('Profil mis à jour avec succès');
+      toast.success('Profil mis Ã  jour avec succÃ¨s');
     },
     onError: () => {
-      toast.error('Erreur lors de la mise à jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   });
 
@@ -150,7 +150,7 @@ function ProfilePage() {
         <div className="text-center">
           <p className="text-red-600 mb-4">Erreur lors du chargement du profil</p>
           <Button onClick={() => window.location.reload()}>
-            Réessayer
+            RÃ©essayer
           </Button>
         </div>
       </div>
@@ -160,7 +160,7 @@ function ProfilePage() {
   if (!userProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Aucune donnée de profil disponible</p>
+        <p className="text-gray-600">Aucune donnÃ©e de profil disponible</p>
       </div>
     );
   }
@@ -226,7 +226,7 @@ function ProfilePage() {
               >
                 <div className="flex items-center justify-center space-x-2">
                   <Settings className="w-5 h-5" />
-                  <span>IA & Préférences</span>
+                  <span>IA & PrÃ©fÃ©rences</span>
                 </div>
               </button>
             </div>
@@ -327,7 +327,7 @@ function AccountTab({
               }}
             >
               <CreditCard className="w-4 h-4 mr-2" />
-              Passer à Premium
+              Passer Ã  Premium
             </Button>
           </div>
         )}
@@ -335,21 +335,21 @@ function AccountTab({
 
       {/* Security */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">Sécurité</h3>
+        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">SÃ©curitÃ©</h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between py-3 border-b border-[#DDE9DA]">
             <div className="flex items-center space-x-3">
               <Shield className="w-5 h-5 text-gray-400" />
               <div>
-                <p className="font-medium text-[#3B3B3B]">Email vérifié</p>
+                <p className="font-medium text-[#3B3B3B]">Email vÃ©rifiÃ©</p>
                 <p className="text-sm text-gray-500">{userProfile?.profile?.email || ''}</p>
               </div>
             </div>
             {userProfile?.profile?.emailVerified ? (
-              <Badge variant="success">Vérifié</Badge>
+              <Badge variant="success">VÃ©rifiÃ©</Badge>
             ) : (
               <Button variant="outline" size="small">
-                Vérifier
+                VÃ©rifier
               </Button>
             )}
           </div>
@@ -358,10 +358,10 @@ function AccountTab({
               <Bell className="w-5 h-5 text-gray-400" />
               <div>
                 <p className="font-medium text-[#3B3B3B]">
-                  Authentification à deux facteurs
+                  Authentification Ã  deux facteurs
                 </p>
                 <p className="text-sm text-gray-500">
-                  Sécurisez votre compte avec la 2FA
+                  SÃ©curisez votre compte avec la 2FA
                 </p>
               </div>
             </div>
@@ -380,7 +380,7 @@ function AccountTab({
           onClick={onLogout}
         >
           <LogOut className="w-4 h-4 mr-2" />
-          Se déconnecter
+          Se dÃ©connecter
         </Button>
       </div>
     </motion.div>
@@ -423,7 +423,7 @@ function PreferencesTab({
       {/* AI Preferences */}
       <div>
         <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
-          Préférences de l'IA
+          PrÃ©fÃ©rences de l'IA
         </h3>
         <div className="space-y-4">
           {/* Tone */}
@@ -439,14 +439,14 @@ function PreferencesTab({
               <option value="friendly">Amical</option>
               <option value="professional">Professionnel</option>
               <option value="concise">Concis</option>
-              <option value="detailed">Détaillé</option>
+              <option value="detailed">DÃ©taillÃ©</option>
             </select>
           </div>
 
           {/* Detail Level */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Niveau de détail
+              Niveau de dÃ©tail
             </label>
             <select
               value={preferences.detailLevel || 'balanced'}
@@ -454,7 +454,7 @@ function PreferencesTab({
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7DDE4A]"
             >
               <option value="minimal">Minimal</option>
-              <option value="balanced">Équilibré</option>
+              <option value="balanced">Ã‰quilibrÃ©</option>
               <option value="comprehensive">Complet</option>
             </select>
           </div>
@@ -482,7 +482,7 @@ function PreferencesTab({
                   />
                   <span className="text-sm">
                     {restriction === 'vegan' && 'Vegan'}
-                    {restriction === 'vegetarian' && 'Végétarien'}
+                    {restriction === 'vegetarian' && 'VÃ©gÃ©tarien'}
                     {restriction === 'gluten-free' && 'Sans gluten'}
                     {restriction === 'dairy-free' && 'Sans lactose'}
                   </span>

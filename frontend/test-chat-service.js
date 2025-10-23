@@ -3,7 +3,7 @@ import { chatService } from './src/services/chat/ChatService';
 
 // Test simple
 chatService.sendMessage("Qu'est-ce que NOVA ?").then(response => {
-  console.log("Réponse:", response);
+  console.log("RÃ©ponse:", response);
 });
 
 // Test avec contexte
@@ -15,5 +15,5 @@ const context = {
 };
 
 chatService.sendMessage("Ce produit est-il sain ?", context).then(response => {
-  console.log("Réponse contextualisée:", response);
+  console.log("RÃ©ponse contextualisÃ©e:", response);
 });

@@ -1,4 +1,4 @@
-﻿const RED_FLAGS = [/sls\b/i, /sles\b/i, /methylisothiazolinone/i, /benzisothiazolinone/i, /optical brightener/i];
+const RED_FLAGS = [/sls\b/i, /sles\b/i, /methylisothiazolinone/i, /benzisothiazolinone/i, /optical brightener/i];
 
 export function scoreDetergent(input: { ingredients?: string }) {
   const text = input.ingredients || '';

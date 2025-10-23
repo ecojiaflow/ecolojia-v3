@@ -7,24 +7,24 @@ const TestAffiliate: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Âª Test du Système d'Affiliation ECOLOJIA
+          ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Âª Test du SystÃ¨me d'Affiliation ECOLOJIA
         </h1>
         
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â« Produit Test : Nutella</h2>
+          <h2 className="text-xl font-bold mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â« Produit Test : Nutella</h2>
           <p className="text-gray-600 mb-6">
             Cliquez sur le bouton ci-dessous pour tester l'affiliation avec Nutella
           </p>
           
           <AffiliateButton 
             productId="507f1f77bcf86cd799439011"
-            productName="Nutella Pâte ÃƒÆ’Ã‚Â  tartiner"
+            productName="Nutella PÃ¢te ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tartiner"
             source="product_page"
           />
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">ÃƒÂ°Ã…Â¸Ã‚Â¥Ã‚Â¤ Produit Test : Coca-Cola</h2>
+          <h2 className="text-xl font-bold mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¥Ãƒâ€šÃ‚Â¤ Produit Test : Coca-Cola</h2>
           <p className="text-gray-600 mb-6">
             Un autre test avec Coca-Cola
           </p>
@@ -37,7 +37,7 @@ const TestAffiliate: React.FC = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">ÃƒÂ°Ã…Â¸Ã‚Â¥ââ‚¬Âº Produit Test : Yaourt Bio</h2>
+          <h2 className="text-xl font-bold mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¥Ã¢Ã¢â€šÂ¬Ã‚Âº Produit Test : Yaourt Bio</h2>
           <p className="text-gray-600 mb-6">
             Test avec un produit sain
           </p>
@@ -50,23 +50,23 @@ const TestAffiliate: React.FC = () => {
         </div>
 
         <div className="bg-blue-50 rounded-lg p-6">
-          <h3 className="font-bold text-blue-800 mb-4">ÃƒÂ°Ã…Â¸ââ‚¬Å“ââ‚¬Â¹ Instructions de test :</h3>
+          <h3 className="font-bold text-blue-800 mb-4">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃ¢Ã¢â€šÂ¬Ã‚Â¹ Instructions de test :</h3>
           <ol className="list-decimal list-inside text-blue-700 space-y-2">
-            <li>Cliquez sur "Acheter ce produit" ÃƒÂ°Ã…Â¸ââ‚¬Âºââ‚¬â„¢</li>
-            <li>Un menu déroulant apparaît avec 3 partenaires</li>
-            <li>Sélectionnez un partenaire (La Fourche, Kazidomi, ou Greenweez)</li>
-            <li>Vous serez redirigé vers le site partenaire</li>
-            <li>Vérifiez l'URL : elle contient les paramètres de tracking</li>
+            <li>Cliquez sur "Acheter ce produit" ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂºÃ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</li>
+            <li>Un menu dÃ©roulant apparaÃ®t avec 3 partenaires</li>
+            <li>SÃ©lectionnez un partenaire (La Fourche, Kazidomi, ou Greenweez)</li>
+            <li>Vous serez redirigÃ© vers le site partenaire</li>
+            <li>VÃ©rifiez l'URL : elle contient les paramÃ¨tres de tracking</li>
           </ol>
         </div>
 
         <div className="mt-6 bg-green-50 rounded-lg p-6">
-          <h3 className="font-bold text-green-800 mb-2">âÃ…â€œââ‚¬Â¦ Statut du système :</h3>
+          <h3 className="font-bold text-green-800 mb-2">Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦ Statut du systÃ¨me :</h3>
           <ul className="text-green-700 space-y-1">
-            <li>ââ‚¬Ã‚Â¢ Frontend : Connecté âÃ…â€œââ‚¬Å“</li>
-            <li>ââ‚¬Ã‚Â¢ Backend : Port 5001 âÃ…â€œââ‚¬Å“</li>
-            <li>ââ‚¬Ã‚Â¢ MongoDB : Connecté âÃ…â€œââ‚¬Å“</li>
-            <li>ââ‚¬Ã‚Â¢ Routes affiliées : Actives âÃ…â€œââ‚¬Å“</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Frontend : ConnectÃ© Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã…â€œ</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Backend : Port 5001 Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã…â€œ</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ MongoDB : ConnectÃ© Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã…â€œ</li>
+            <li>Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Routes affiliÃ©es : Actives Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã…â€œ</li>
           </ul>
         </div>
       </div>

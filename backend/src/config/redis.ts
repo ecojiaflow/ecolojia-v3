@@ -8,7 +8,7 @@ const logger = new Logger('Redis');
 // Utiliser l'URL Redis depuis les variables d'environnement
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
-// Créer l'instance Redis
+// CrÃ©er l'instance Redis
 export const redisClient = new Redis(REDIS_URL, {
   retryStrategy: (times) => {
     const delay = Math.min(times * 50, 2000);
@@ -27,28 +27,28 @@ export const redisClient = new Redis(REDIS_URL, {
 
 // Event handlers
 redisClient.on('connect', () => {
-  logger.info('✅ Redis connected successfully');
+  logger.info('âœ… Redis connected successfully');
 });
 
 redisClient.on('error', (err) => {
-  logger.error('❌ Redis connection error:', err);
+  logger.error('âŒ Redis connection error:', err);
 });
 
 redisClient.on('close', () => {
-  logger.warn('⚠️ Redis connection closed');
+  logger.warn('âš ï¸ Redis connection closed');
 });
 
 redisClient.on('reconnecting', (delay: number) => {
-  logger.info(`🔄 Redis reconnecting in ${delay}ms`);
+  logger.info(`ðŸ”„ Redis reconnecting in ${delay}ms`);
 });
 
-// Fonction pour vérifier la connexion
+// Fonction pour vÃ©rifier la connexion
 export const checkRedisConnection = async (): Promise<boolean> => {
   try {
     const pong = await redisClient.ping();
     return pong === 'PONG';
   } catch (error) {
-    logger.error('❌ Redis ping failed:', error);
+    logger.error('âŒ Redis ping failed:', error);
     return false;
   }
 };
@@ -57,8 +57,8 @@ export const checkRedisConnection = async (): Promise<boolean> => {
 export const closeRedisConnection = async (): Promise<void> => {
   try {
     await redisClient.quit();
-    logger.info('✅ Redis connection closed gracefully');
+    logger.info('âœ… Redis connection closed gracefully');
   } catch (error) {
-    logger.error('❌ Error closing Redis connection:', error);
+    logger.error('âŒ Error closing Redis connection:', error);
   }
 };

@@ -1,12 +1,12 @@
 // PATH: backend/src/services/ai/HealthScoreCalculator.ts
 import { Logger } from '../../utils/Logger';
 
-/* ───── Logger (silencieux en prod) ───── */
+/* â”€â”€â”€â”€â”€ Logger (silencieux en prod) â”€â”€â”€â”€â”€ */
 const log = new Logger('HealthScoreCalculator');
 const debug = (...a: unknown[]) =>
   process.env.NODE_ENV !== 'production' && log.info(...a);
 
-/* ───── Types ───── */
+/* â”€â”€â”€â”€â”€ Types â”€â”€â”€â”€â”€ */
 export interface HealthScoreInput {
   category: 'food' | 'cosmetics' | 'detergents';
   productName: string;
@@ -32,7 +32,7 @@ export interface HealthScoreInput {
 
 export interface HealthScoreResult {
   score: number;
-  category: 'excellent' | 'bon' | 'moyen' | 'mauvais' | 'très_mauvais';
+  category: 'excellent' | 'bon' | 'moyen' | 'mauvais' | 'trÃ¨s_mauvais';
   breakdown: {
     base: number;
     penalties: { reason: string; points: number; severity: 'low' | 'medium' | 'high' }[];
@@ -43,7 +43,7 @@ export interface HealthScoreResult {
   confidence: number;
 }
 
-/* ───── Pondérations constantes ───── */
+/* â”€â”€â”€â”€â”€ PondÃ©rations constantes â”€â”€â”€â”€â”€ */
 const FOOD_W = {
   nova: { 1: 0, 2: 10, 3: 30, 4: 50 } as Record<1 | 2 | 3 | 4, number>,
   ultraM: 5,
@@ -56,13 +56,13 @@ const FOOD_W = {
 const COS_W = { hazard: 20, endocrine: 15, allergen: 10, natThr: 50, natStep: 5 };
 const DET_W = { aqM: 5, bioTarget: 90, bioMul: 0.5, vocM: 3, bioBonus: 10, bioThr: 95 };
 
-/* ───── Catégories valides ───── */
+/* â”€â”€â”€â”€â”€ CatÃ©gories valides â”€â”€â”€â”€â”€ */
 const VALID_CATEGORIES = ['food', 'cosmetics', 'detergents'] as const;
 
-/* ───── Calculateur ───── */
+/* â”€â”€â”€â”€â”€ Calculateur â”€â”€â”€â”€â”€ */
 export class HealthScoreCalculator {
   calculate(i: HealthScoreInput): HealthScoreResult {
-    // Validation ajoutée
+    // Validation ajoutÃ©e
     if (!i.category || !VALID_CATEGORIES.includes(i.category)) {
       throw new Error(`Invalid category: ${i.category}. Must be one of: ${VALID_CATEGORIES.join(', ')}`);
     }
@@ -106,7 +106,7 @@ export class HealthScoreCalculator {
     const addPts = Math.min(FOOD_W.addCap, high * FOOD_W.addHigh + med * FOOD_W.addMed);
     addPts &&
       b.penalties.push({
-        reason: `${high + med} additifs à risque`,
+        reason: `${high + med} additifs Ã  risque`,
         points: addPts,
         severity: high ? 'high' : 'medium'
       });
@@ -118,7 +118,7 @@ export class HealthScoreCalculator {
       });
 
     const score = this.final(b);
-    const extra = i.novaAnalysis?.group === 4 ? ['🏭 Ultra-transformé'] : [];
+    const extra = i.novaAnalysis?.group === 4 ? ['ðŸ­ Ultra-transformÃ©'] : [];
     
     return {
       score,
@@ -141,7 +141,7 @@ export class HealthScoreCalculator {
     if (cx) {
       cx.hazardScore &&
         b.penalties.push({
-          reason: 'Ingrédients à risque',
+          reason: 'IngrÃ©dients Ã  risque',
           points: cx.hazardScore * COS_W.hazard,
           severity: cx.hazardScore >= 2 ? 'high' : 'medium'
         });
@@ -153,19 +153,19 @@ export class HealthScoreCalculator {
         });
       cx.allergens.length &&
         b.penalties.push({
-          reason: 'Allergènes',
+          reason: 'AllergÃ¨nes',
           points: cx.allergens.length * COS_W.allergen,
           severity: 'medium'
         });
       if (cx.naturalityScore > COS_W.natThr) {
         b.bonuses.push({
-          reason: `Naturalité ${cx.naturalityScore}%`,
+          reason: `NaturalitÃ© ${cx.naturalityScore}%`,
           points: Math.round((cx.naturalityScore - 50) / COS_W.natStep)
         });
       }
     }
     const score = this.final(b);
-    const extra = cx?.endocrineDisruptors.length ? ['👶 Éviter grossesse'] : [];
+    const extra = cx?.endocrineDisruptors.length ? ['ðŸ‘¶ Ã‰viter grossesse'] : [];
     
     return {
       score,
@@ -185,29 +185,29 @@ export class HealthScoreCalculator {
       const tox = d.aquaticToxicity * DET_W.aqM;
       tox &&
         b.penalties.push({
-          reason: 'Toxicité aquatique',
+          reason: 'ToxicitÃ© aquatique',
           points: tox,
           severity: d.aquaticToxicity >= 7 ? 'high' : 'medium'
         });
       if (d.biodegradability < DET_W.bioTarget) {
         b.penalties.push({
-          reason: `Biodégradabilité ${d.biodegradability}%`,
+          reason: `BiodÃ©gradabilitÃ© ${d.biodegradability}%`,
           points: Math.round((DET_W.bioTarget - d.biodegradability) * DET_W.bioMul),
           severity: d.biodegradability < 60 ? 'high' : 'medium'
         });
       } else if (d.biodegradability >= DET_W.bioThr) {
-        b.bonuses.push({ reason: 'Haute biodégradabilité', points: DET_W.bioBonus });
+        b.bonuses.push({ reason: 'Haute biodÃ©gradabilitÃ©', points: DET_W.bioBonus });
       }
       const voc = d.vocEmissions * DET_W.vocM;
       voc &&
         b.penalties.push({
-          reason: 'Émissions COV',
+          reason: 'Ã‰missions COV',
           points: voc,
           severity: d.vocEmissions >= 7 ? 'high' : 'low'
         });
     }
     const score = this.final(b);
-    const extra = d?.aquaticToxicity! > 7 ? ['🐟 Danger aquatique'] : [];
+    const extra = d?.aquaticToxicity! > 7 ? ['ðŸŸ Danger aquatique'] : [];
     
     return {
       score,
@@ -219,7 +219,7 @@ export class HealthScoreCalculator {
     };
   }
 
-  /* ───── utilitaires communs ───── */
+  /* â”€â”€â”€â”€â”€ utilitaires communs â”€â”€â”€â”€â”€ */
   private final(b: { base: number; penalties: any[]; bonuses: any[] }) {
     const pen = b.penalties.reduce((s, p) => s + p.points, 0);
     const bon = b.bonuses.reduce((s, p) => s + p.points, 0);
@@ -231,47 +231,47 @@ export class HealthScoreCalculator {
     if (s >= 60) return 'bon';
     if (s >= 40) return 'moyen';
     if (s >= 20) return 'mauvais';
-    return 'très_mauvais';
+    return 'trÃ¨s_mauvais';
   }
   
   private emoji(cat: HealthScoreResult['category']) {
-    return { excellent: '🟢', bon: '🟩', moyen: '🟡', mauvais: '🟠', très_mauvais: '🔴' }[cat];
+    return { excellent: 'ðŸŸ¢', bon: 'ðŸŸ©', moyen: 'ðŸŸ¡', mauvais: 'ðŸŸ ', trÃ¨s_mauvais: 'ðŸ”´' }[cat];
   }
   
   private naturalCount(list: string[]) {
-    const regex = /fruits?|légumes?|eau|sel|huile|miel|farine|bio|naturel/i;
+    const regex = /fruits?|lÃ©gumes?|eau|sel|huile|miel|farine|bio|naturel/i;
     return list.filter((i) => regex.test(i)).length;
   }
 
-  /* Recommandations génériques avec extras optionnels */
+  /* Recommandations gÃ©nÃ©riques avec extras optionnels */
   private reco(score: number, type: string, extra: string[] = []): string[] {
     const baseReco = {
       food: score >= 60 
-        ? ['🥗 Bon équilibre', '📊 Surveillez la portion']
-        : ['⚠️ Modérez la consommation', '🥕 Privilégiez le fait-maison'],
+        ? ['ðŸ¥— Bon Ã©quilibre', 'ðŸ“Š Surveillez la portion']
+        : ['âš ï¸ ModÃ©rez la consommation', 'ðŸ¥• PrivilÃ©giez le fait-maison'],
       cosmetics: score >= 60
-        ? ['🧴 Formulation correcte', '✨ Usage normal']
-        : ['🚫 Ingrédients controversés', '🔄 Cherchez des alternatives'],
+        ? ['ðŸ§´ Formulation correcte', 'âœ¨ Usage normal']
+        : ['ðŸš« IngrÃ©dients controversÃ©s', 'ðŸ”„ Cherchez des alternatives'],
       detergents: score >= 60
-        ? ['🧼 Impact acceptable', '🌱 Dosez correctement']
-        : ['🌍 Impact élevé', '🔄 Préférez un écolabel']
+        ? ['ðŸ§¼ Impact acceptable', 'ðŸŒ± Dosez correctement']
+        : ['ðŸŒ Impact Ã©levÃ©', 'ðŸ”„ PrÃ©fÃ©rez un Ã©colabel']
     };
     
     return [...(baseReco[type as keyof typeof baseReco] || []), ...extra];
   }
 
-  /* Méthode publique pour générer un résumé textuel */
+  /* MÃ©thode publique pour gÃ©nÃ©rer un rÃ©sumÃ© textuel */
   generateSummary(result: HealthScoreResult, productName: string): string {
     const msgs = {
-      'excellent': `${productName} : excellent score ${result.score}/100 🌟`,
-      'bon': `${productName} : bon score ${result.score}/100 ✅`,
-      'moyen': `${productName} : score moyen ${result.score}/100 ⚠️`,
-      'mauvais': `${productName} : score faible ${result.score}/100 ❌`,
-      'très_mauvais': `${productName} : score très faible ${result.score}/100 🚫`
+      'excellent': `${productName} : excellent score ${result.score}/100 ðŸŒŸ`,
+      'bon': `${productName} : bon score ${result.score}/100 âœ…`,
+      'moyen': `${productName} : score moyen ${result.score}/100 âš ï¸`,
+      'mauvais': `${productName} : score faible ${result.score}/100 âŒ`,
+      'trÃ¨s_mauvais': `${productName} : score trÃ¨s faible ${result.score}/100 ðŸš«`
     };
     return msgs[result.category];
   }
 }
 
-/* ───── Singleton ───── */
+/* â”€â”€â”€â”€â”€ Singleton â”€â”€â”€â”€â”€ */
 export const healthScoreCalculator = new HealthScoreCalculator();

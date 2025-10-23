@@ -1,4 +1,4 @@
-﻿// PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
+// PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
 import React from 'react';
 import useAdmin from '../hooks/useAdmin';
 import StatsCard from '../components/Admin/StatsCard';

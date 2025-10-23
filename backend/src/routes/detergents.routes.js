@@ -7,7 +7,7 @@ router.get('/health', (req, res) => {
   res.json({ ok: true, service: 'detergents', timestamp: new Date().toISOString() });
 });
 
-// Liste produits détergents
+// Liste produits dÃ©tergents
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find({ category: 'detergents' }).limit(20);

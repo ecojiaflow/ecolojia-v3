@@ -1,4 +1,4 @@
-﻿// PATH: backend/src/services/ai/DeepSeekClient.ts
+// PATH: backend/src/services/ai/DeepSeekClient.ts
 /*  Dependances : axios, crypto
     Utilise cacheManager (Redis) et Logger dejÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  presents                  */
 import axios, { AxiosInstance, AxiosError } from 'axios';

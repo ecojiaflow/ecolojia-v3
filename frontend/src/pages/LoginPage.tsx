@@ -1,10 +1,11 @@
-﻿// ========================================
+// ========================================
 // FICHIER 3: src/pages/LoginPage.tsx (avec redirection corrigée)
 // ========================================
 // PATH: frontend/src/pages/LoginPage.tsx
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { getReturnUrl } from '../utils/navigation';
 import { Mail, Lock, Eye, EyeOff, Leaf, ArrowRight } from 'lucide-react';
 import { useAuthContext } from '../Contexts/AuthContext';
 import toast from 'react-hot-toast';

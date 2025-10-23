@@ -15,50 +15,50 @@ interface DemoProduct {
 const demoProducts: DemoProduct[] = [
   {
     name: 'Coca-Cola Original',
-    description: 'Boisson gazeuse sucrée populaire',
-    ingredients: 'Eau gazéifiée, sucre, sirop de glucose-fructose, arôme naturel de cola, colorant E150d (caramel IV), acidifiant E338 (acide phosphorique), édulcorant E952 (cyclamate de sodium), conservateur E211 (benzoate de sodium)',
+    description: 'Boisson gazeuse sucrÃ©e populaire',
+    ingredients: 'Eau gazÃ©ifiÃ©e, sucre, sirop de glucose-fructose, arÃ´me naturel de cola, colorant E150d (caramel IV), acidifiant E338 (acide phosphorique), Ã©dulcorant E952 (cyclamate de sodium), conservateur E211 (benzoate de sodium)',
     expectedNova: 4,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥Ã‚Â¤',
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¥Ãƒâ€šÃ‚Â¤',
     category: 'Boisson'
   },
   {
-    name: 'Nutella Pâte ÃƒÆ’Ã‚Â  tartiner',
-    description: 'Pâte ÃƒÆ’Ã‚Â  tartiner aux noisettes et cacao',
-    ingredients: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT écrémé en poudre 6.6%, LACTOSÃƒÆ’ââ‚¬Â°RUM en poudre, émulsifiants E322 (lécithines) E471 (mono- et diglycérides d\'acides gras), arôme vanilline',
+    name: 'Nutella PÃ¢te ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tartiner',
+    description: 'PÃ¢te ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tartiner aux noisettes et cacao',
+    ingredients: 'Sucre, huile de palme, NOISETTES 13%, cacao maigre 7.4%, LAIT Ã©crÃ©mÃ© en poudre 6.6%, LACTOSÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°RUM en poudre, Ã©mulsifiants E322 (lÃ©cithines) E471 (mono- et diglycÃ©rides d\'acides gras), arÃ´me vanilline',
     expectedNova: 4,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â«',
-    category: 'Pâte ÃƒÆ’Ã‚Â  tartiner'
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â«',
+    category: 'PÃ¢te ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  tartiner'
   },
   {
-    name: 'Pizza 4 Fromages Surgelée',
-    description: 'Pizza surgelée industrielle',
-    ingredients: 'Pâte (farine de BLÃƒÆ’ââ‚¬Â°, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goÃƒÆ’Ã‚Â»t E621, stabilisant E412, colorant E150d',
+    name: 'Pizza 4 Fromages SurgelÃ©e',
+    description: 'Pizza surgelÃ©e industrielle',
+    ingredients: 'PÃ¢te (farine de BLÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°, eau, huile de tournesol, levure, sel, sucre), fromages 25% (MOZZARELLA, EMMENTAL, GORGONZOLA, PARMESAN), sauce tomate, conservateur E202, exhausteur de goÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â»t E621, stabilisant E412, colorant E150d',
     expectedNova: 4,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚Âââ‚¬Â¢',
-    category: 'Plat préparé'
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃ¢Ã¢â€šÂ¬Ã‚Â¢',
+    category: 'Plat prÃ©parÃ©'
   },
   {
     name: 'Yaourt Nature Bio',
     description: 'Yaourt nature issu de l\'agriculture biologique',
-    ingredients: 'LAIT entier pasteurisé issu de l\'agriculture biologique, ferments lactiques (Streptococcus thermophilus, Lactobacillus bulgaricus)',
+    ingredients: 'LAIT entier pasteurisÃ© issu de l\'agriculture biologique, ferments lactiques (Streptococcus thermophilus, Lactobacillus bulgaricus)',
     expectedNova: 1,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¥ââ‚¬Âº',
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¥Ã¢Ã¢â€šÂ¬Ã‚Âº',
     category: 'Produit laitier'
   },
   {
     name: 'Pain de Mie Complet',
-    description: 'Pain de mie aux céréales complètes',
-    ingredients: 'Farine complète de BLÃƒÆ’ââ‚¬Â°, eau, levure, huile de tournesol, sucre, sel, gluten de BLÃƒÆ’ââ‚¬Â°, conservateur E282, émulsifiant E471, agent de traitement de la farine E300',
+    description: 'Pain de mie aux cÃ©rÃ©ales complÃ¨tes',
+    ingredients: 'Farine complÃ¨te de BLÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°, eau, levure, huile de tournesol, sucre, sel, gluten de BLÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°, conservateur E282, Ã©mulsifiant E471, agent de traitement de la farine E300',
     expectedNova: 3,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â¾',
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€¦Ã‚Â¾',
     category: 'Boulangerie'
   },
   {
-    name: 'Biscuits Petit-Déjeuner',
+    name: 'Biscuits Petit-DÃ©jeuner',
     description: 'Biscuits enrichis en vitamines',
-    ingredients: 'Céréales 58% (farine de BLÃƒÆ’ââ‚¬Â°, flocons d\'AVOINE 14%), sucre, huile de palme, sirop de glucose-fructose, poudre ÃƒÆ’Ã‚Â  lever E500, sel, arômes, vitamines (B1, B6, B9, B12, C, E), colorant E160a, émulsifiant E322',
+    ingredients: 'CÃ©rÃ©ales 58% (farine de BLÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°, flocons d\'AVOINE 14%), sucre, huile de palme, sirop de glucose-fructose, poudre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  lever E500, sel, arÃ´mes, vitamines (B1, B6, B9, B12, C, E), colorant E160a, Ã©mulsifiant E322',
     expectedNova: 4,
-    icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Âª',
+    icon: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Âª',
     category: 'Biscuiterie'
   }
 ];
@@ -83,25 +83,25 @@ const Demo: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â¬ Démonstration ECOLOJIA
+            ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ DÃ©monstration ECOLOJIA
           </h1>
           <p className="text-xl text-gray-600 mb-6">
             Intelligence Artificielle de Classification NOVA
           </p>
           
-          {/* Info quota simulée */}
+          {/* Info quota simulÃ©e */}
           <div className="inline-flex items-center bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 text-sm">
-            <span className="text-blue-600 mr-2">ÃƒÂ°Ã…Â¸ââ‚¬Å“Ã…Â </span>
+            <span className="text-blue-600 mr-2">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃƒâ€¦Ã‚Â </span>
             <span className="text-blue-800">
-              Mode démonstration - <strong>Analyses illimitées</strong>
+              Mode dÃ©monstration - <strong>Analyses illimitÃ©es</strong>
             </span>
           </div>
         </div>
 
-        {/* Produits de démonstration */}
+        {/* Produits de dÃ©monstration */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Sélectionnez un produit ÃƒÆ’Ã‚Â  analyser
+            SÃ©lectionnez un produit ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  analyser
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -145,12 +145,12 @@ const Demo: React.FC = () => {
           </div>
         </div>
 
-        {/* Zone de résultats */}
+        {/* Zone de rÃ©sultats */}
         {(data || loading || error) && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
-                Résultats de l'analyse
+                RÃ©sultats de l'analyse
               </h2>
               {data && (
                 <button
@@ -169,7 +169,7 @@ const Demo: React.FC = () => {
         {/* Informations techniques */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            ÃƒÂ°Ã…Â¸ââ‚¬ÂºÃ‚Â Ã¯Ã‚Â¸Ã‚Â Informations Techniques
+            ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂºÃƒâ€šÃ‚Â ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â Informations Techniques
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -178,40 +178,40 @@ const Demo: React.FC = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
-                  <span><strong>Groupe 1:</strong> Aliments non transformés</span>
+                  <span><strong>Groupe 1:</strong> Aliments non transformÃ©s</span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-yellow-500 rounded-full mr-3"></div>
-                  <span><strong>Groupe 2:</strong> Ingrédients culinaires</span>
+                  <span><strong>Groupe 2:</strong> IngrÃ©dients culinaires</span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-orange-500 rounded-full mr-3"></div>
-                  <span><strong>Groupe 3:</strong> Aliments transformés</span>
+                  <span><strong>Groupe 3:</strong> Aliments transformÃ©s</span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
-                  <span><strong>Groupe 4:</strong> Ultra-transformés</span>
+                  <span><strong>Groupe 4:</strong> Ultra-transformÃ©s</span>
                 </div>
               </div>
             </div>
             
             <div>
-              <h3 className="text-lg font-bold text-gray-800 mb-3">Technologies utilisées</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">Technologies utilisÃ©es</h3>
               <ul className="space-y-1 text-sm text-gray-600">
-                <li>ÃƒÂ°Ã…Â¸Ã‚Â¤ââ‚¬â€œ <strong>IA propriétaire</strong> de classification automatique</li>
-                <li>ÃƒÂ°Ã…Â¸ââ‚¬Å“Ã…Â  <strong>Analyse multi-critères</strong> (santé, environnement, social)</li>
-                <li>ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â¬ <strong>Détection d'additifs</strong> avec évaluation des risques</li>
-                <li>ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ <strong>Recommandations</strong> personnalisées basées sur la science</li>
-                <li>ÃƒÂ°Ã…Â¸ââ‚¬Å“Ã…Â¡ <strong>Sources scientifiques</strong> INSERM, EFSA, ANSES</li>
-                <li>âÃ…Â¡Ã‚Â¡ <strong>Temps de réponse</strong> optimisé &lt; 2 secondes</li>
+                <li>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â¤Ã¢Ã¢â€šÂ¬Ã¢â‚¬Å“ <strong>IA propriÃ©taire</strong> de classification automatique</li>
+                <li>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃƒâ€¦Ã‚Â  <strong>Analyse multi-critÃ¨res</strong> (santÃ©, environnement, social)</li>
+                <li>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ <strong>DÃ©tection d'additifs</strong> avec Ã©valuation des risques</li>
+                <li>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â½Ãƒâ€šÃ‚Â¯ <strong>Recommandations</strong> personnalisÃ©es basÃ©es sur la science</li>
+                <li>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃƒâ€¦Ã‚Â¡ <strong>Sources scientifiques</strong> INSERM, EFSA, ANSES</li>
+                <li>Ã¢Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â¡ <strong>Temps de rÃ©ponse</strong> optimisÃ© &lt; 2 secondes</li>
               </ul>
             </div>
           </div>
           
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-green-700 text-sm">
-              <strong>ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â± Mission ECOLOJIA:</strong> Démocratiser l'accès ÃƒÆ’Ã‚Â  l'information nutritionnelle 
-              scientifique pour encourager une consommation plus responsable et éclairée.
+              <strong>ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â± Mission ECOLOJIA:</strong> DÃ©mocratiser l'accÃ¨s ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  l'information nutritionnelle 
+              scientifique pour encourager une consommation plus responsable et Ã©clairÃ©e.
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ const Demo: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white rounded-lg p-4 shadow-md">
               <div className="text-2xl font-bold text-green-600">98%</div>
-              <div className="text-sm text-gray-600">Précision IA</div>
+              <div className="text-sm text-gray-600">PrÃ©cision IA</div>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <div className="text-2xl font-bold text-blue-600">&lt;2s</div>
@@ -229,17 +229,17 @@ const Demo: React.FC = () => {
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <div className="text-2xl font-bold text-purple-600">500+</div>
-              <div className="text-sm text-gray-600">Additifs référencés</div>
+              <div className="text-sm text-gray-600">Additifs rÃ©fÃ©rencÃ©s</div>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <div className="text-2xl font-bold text-orange-600">24/7</div>
-              <div className="text-sm text-gray-600">Disponibilité</div>
+              <div className="text-sm text-gray-600">DisponibilitÃ©</div>
             </div>
           </div>
           
           <p className="text-gray-600">
-            ECOLOJIA ââ‚¬Ã‚Â¢ Intelligence Artificielle de Classification Nutritionnelle ââ‚¬Ã‚Â¢ 
-            <span className="text-green-600 ml-1">Mode Démonstration</span>
+            ECOLOJIA Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ Intelligence Artificielle de Classification Nutritionnelle Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ 
+            <span className="text-green-600 ml-1">Mode DÃ©monstration</span>
           </p>
         </div>
       </div>

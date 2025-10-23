@@ -17,43 +17,43 @@ interface DetergentProduct {
 const detergentProducts: DetergentProduct[] = [
   {
     id: 'lessive-ecologique',
-    name: 'Lessive ÃƒÆ’ââ‚¬Â°cologique Bio',
+    name: 'Lessive ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°cologique Bio',
     brand: 'EcoClean',
     category: 'Lessive',
-    image: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â½',
+    image: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â½',
     ingredients: ['Savon de Marseille', 'Bicarbonate de sodium', 'Cristaux de soude', 'Huiles essentielles bio'],
-    description: 'Lessive concentrée biodégradable, efficace dès 30Ãƒâ€šÃ‚Â°C, sans phosphates',
-    price: '16,90 âââ‚¬Å¡Ã‚Â¬'
+    description: 'Lessive concentrÃ©e biodÃ©gradable, efficace dÃ¨s 30ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°C, sans phosphates',
+    price: '16,90 Ã¢Ã¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬'
   },
   {
     id: 'liquide-vaisselle-concentre',
-    name: 'Liquide Vaisselle Concentré',
+    name: 'Liquide Vaisselle ConcentrÃ©',
     brand: 'GreenWash',
     category: 'Vaisselle',
-    image: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â½Ã¯Ã‚Â¸Ã‚Â',
-    ingredients: ['Tensioactifs végétaux', 'Aloe vera bio', 'Glycérine végétale', 'Huile essentielle citron'],
-    description: 'Dégraissant puissant d\'origine végétale, peaux sensibles',
-    price: '8,90 âââ‚¬Å¡Ã‚Â¬'
+    image: 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚Â½ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â',
+    ingredients: ['Tensioactifs vÃ©gÃ©taux', 'Aloe vera bio', 'GlycÃ©rine vÃ©gÃ©tale', 'Huile essentielle citron'],
+    description: 'DÃ©graissant puissant d\'origine vÃ©gÃ©tale, peaux sensibles',
+    price: '8,90 Ã¢Ã¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬'
   },
   {
     id: 'nettoyant-multi-usage',
     name: 'Nettoyant Multi-Usage',
     brand: 'CleanNature',
     category: 'Nettoyage',
-    image: 'âÃ…â€œÃ‚Â¨',
-    ingredients: ['Vinaigre blanc bio', 'Bicarbonate de sodium', 'Huiles essentielles eucalyptus', 'Eau purifiée'],
-    description: 'Solution naturelle pour toutes surfaces, anti-bactérien',
-    price: '12,50 âââ‚¬Å¡Ã‚Â¬'
+    image: 'Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ãƒâ€šÃ‚Â¨',
+    ingredients: ['Vinaigre blanc bio', 'Bicarbonate de sodium', 'Huiles essentielles eucalyptus', 'Eau purifiÃ©e'],
+    description: 'Solution naturelle pour toutes surfaces, anti-bactÃ©rien',
+    price: '12,50 Ã¢Ã¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬'
   },
   {
     id: 'lessive-industrielle',
     name: 'Lessive Industrielle',
     brand: 'SuperClean',
     category: 'Lessive',
-    image: 'âÃ…Â¡Ã‚Â Ã¯Ã‚Â¸Ã‚Â',
-    ingredients: ['Sodium Lauryl Sulfate', 'Phosphates', 'EDTA', 'Parfum synthétique', 'Colorants'],
+    image: 'Ã¢Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â',
+    ingredients: ['Sodium Lauryl Sulfate', 'Phosphates', 'EDTA', 'Parfum synthÃ©tique', 'Colorants'],
     description: 'Lessive industrielle haute performance, usage intensif',
-    price: '9,90 âââ‚¬Å¡Ã‚Â¬'
+    price: '9,90 Ã¢Ã¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬'
   }
 ];
 
@@ -81,10 +81,10 @@ export default function DetergentDemo() {
   };
 
   const getEcoIcon = (score: number) => {
-    if (score >= 80) return 'ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¿';
-    if (score >= 60) return 'âââ€žÂ¢Ã‚Â»Ã¯Ã‚Â¸Ã‚Â';
-    if (score >= 40) return 'âÃ…Â¡Ã‚Â Ã¯Ã‚Â¸Ã‚Â';
-    return 'ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨';
+    if (score >= 80) return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â¿';
+    if (score >= 60) return 'Ã¢Ã¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â»ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â';
+    if (score >= 40) return 'Ã¢Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â';
+    return 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â¨';
   };
 
   return (
@@ -93,18 +93,18 @@ export default function DetergentDemo() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
-            <span className="text-4xl mr-3">ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â½</span>
+            <span className="text-4xl mr-3">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â½</span>
             <h1 className="text-4xl font-bold text-gray-800">
-              Analyse Produits Ménagers IA
+              Analyse Produits MÃ©nagers IA
             </h1>
           </div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            ÃƒÆ’ââ‚¬Â°valuez l'impact environnemental de vos produits ménagers grâce ÃƒÆ’Ã‚Â  notre IA spécialisée.
-            Analyse de la composition chimique, biodégradabilité et recommandations écologiques.
+            ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°valuez l'impact environnemental de vos produits mÃ©nagers grÃ¢ce ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  notre IA spÃ©cialisÃ©e.
+            Analyse de la composition chimique, biodÃ©gradabilitÃ© et recommandations Ã©cologiques.
           </p>
           <div className="mt-4 inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-            <span className="mr-2">ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â </span>
-            Mode simulation - Impact environnemental réaliste
+            <span className="mr-2">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€¦Ã‚Â </span>
+            Mode simulation - Impact environnemental rÃ©aliste
           </div>
         </div>
 
@@ -167,7 +167,7 @@ export default function DetergentDemo() {
                         <span className="ml-2">Analyse...</span>
                       </span>
                     ) : (
-                      'ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â  Analyser'
+                      'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€¦Ã‚Â  Analyser'
                     )}
                   </button>
                 </div>
@@ -182,16 +182,16 @@ export default function DetergentDemo() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  Résultats de l'analyse environnementale
+                  RÃ©sultats de l'analyse environnementale
                 </h2>
                 <p className="text-gray-600">
-                  {selectedProduct.name} ââ‚¬Ã‚Â¢ {selectedProduct.brand}
+                  {selectedProduct.name} Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢ {selectedProduct.brand}
                 </p>
               </div>
               <div className="text-right">
                 <div className={`inline-flex items-center px-4 py-2 rounded-lg border-2 font-bold text-lg ${getEcoColor(result.data.product.score)}`}>
                   <span className="mr-2">{getEcoIcon(result.data.product.score)}</span>
-                  ÃƒÆ’ââ‚¬Â°co-Score: {result.data.product.score}/100
+                  ÃƒÆ’Ã†â€™Ã¢Ã¢â€šÂ¬Ã‚Â°co-Score: {result.data.product.score}/100
                 </div>
                 <p className="text-sm text-gray-600 mt-1">
                   Grade environnemental: {result.data.product.safetyGrade}
@@ -205,7 +205,7 @@ export default function DetergentDemo() {
                 {/* Environmental Impact */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                    <span className="mr-2">ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â</span>
+                    <span className="mr-2">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â</span>
                     Impact environnemental
                   </h3>
                   <div className={`inline-flex items-center px-3 py-2 rounded-full text-sm font-medium ${
@@ -214,7 +214,7 @@ export default function DetergentDemo() {
                     'bg-red-100 text-red-800'
                   }`}>
                     {result.data.product.riskLevel === 'low' ? 'Impact faible' :
-                     result.data.product.riskLevel === 'medium' ? 'Impact modéré' : 'Impact élevé'}
+                     result.data.product.riskLevel === 'medium' ? 'Impact modÃ©rÃ©' : 'Impact Ã©levÃ©'}
                   </div>
                 </div>
 
@@ -226,10 +226,10 @@ export default function DetergentDemo() {
                 }`}>
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
                     <span className="mr-2">
-                      {result.data.product.recommendation.type === 'enjoy' ? 'ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â¸' :
-                       result.data.product.recommendation.type === 'moderate' ? 'âÃ…Â¡ââ‚¬â€œÃ¯Ã‚Â¸Ã‚Â' : 'ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â«'}
+                      {result.data.product.recommendation.type === 'enjoy' ? 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€¦Ã‚Â¸' :
+                       result.data.product.recommendation.type === 'moderate' ? 'Ã¢Ãƒâ€¦Ã‚Â¡Ã¢Ã¢â€šÂ¬Ã¢â‚¬Å“ÃƒÂ¯Ãƒâ€šÃ‚Â¸Ãƒâ€šÃ‚Â' : 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã‚Â¡Ãƒâ€šÃ‚Â«'}
                     </span>
-                    Recommandation écologique
+                    Recommandation Ã©cologique
                   </h3>
                   <p className="text-gray-700 mb-3">
                     {result.data.product.recommendation.message}
@@ -241,7 +241,7 @@ export default function DetergentDemo() {
                       <ul className="space-y-1">
                         {result.data.product.recommendation.alternatives.map((alt, index) => (
                           <li key={index} className="text-sm text-gray-600 flex items-center">
-                            <span className="mr-2">ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â¿</span>
+                            <span className="mr-2">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€¦Ã¢â‚¬â„¢Ãƒâ€šÃ‚Â¿</span>
                             {alt}
                           </li>
                         ))}
@@ -256,13 +256,13 @@ export default function DetergentDemo() {
                 {/* Scientific Sources */}
                 <div className="bg-blue-50 rounded-lg p-4">
                   <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                    <span className="mr-2">ÃƒÂ°Ã…Â¸ââ‚¬Å“ââ‚¬â€œ</span>
-                    Références réglementaires
+                    <span className="mr-2">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã…â€œÃ¢Ã¢â€šÂ¬Ã¢â‚¬Å“</span>
+                    RÃ©fÃ©rences rÃ©glementaires
                   </h3>
                   <ul className="space-y-2">
                     {result.data.product.scientificSources && result.data.product.scientificSources.map((source, index) => (
                       <li key={index} className="text-sm text-blue-800 flex items-start">
-                        <span className="mr-2 mt-1">ââ‚¬Ã‚Â¢</span>
+                        <span className="mr-2 mt-1">Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢</span>
                         <span>{source}</span>
                       </li>
                     ))}
@@ -275,7 +275,7 @@ export default function DetergentDemo() {
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>
-                  Analyse effectuée le {new Date(result.data.analysis.timestamp).toLocaleString('fr-FR')}
+                  Analyse effectuÃ©e le {new Date(result.data.analysis.timestamp).toLocaleString('fr-FR')}
                 </span>
                 <span>
                   Confiance: {Math.round(result.data.analysis.confidence * 100)}%
@@ -289,7 +289,7 @@ export default function DetergentDemo() {
         {error && (
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
             <div className="flex">
-              <span className="mr-2">âÃ‚ÂÃ…â€™</span>
+              <span className="mr-2">Ã¢Ãƒâ€šÃ‚ÂÃƒâ€¦Ã¢â‚¬â„¢</span>
               <div>
                 <h3 className="text-red-800 font-medium">Erreur d'analyse</h3>
                 <p className="text-red-700 text-sm mt-1">{error}</p>

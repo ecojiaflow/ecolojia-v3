@@ -79,7 +79,7 @@ class DemoService {
     },
     {
       _id: 'demo-3',
-      name: 'Lessive Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°cologique',
+      name: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
       brand: 'Arbre Vert',
       barcode: '3450601030178',
       category: 'detergent',
@@ -145,7 +145,7 @@ class DemoService {
     },
     'demo-3': {
       productId: 'demo-3',
-      productName: 'Lessive Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°cologique',
+      productName: 'Lessive Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique',
       productBrand: 'Arbre Vert',
       category: 'detergent',
       healthScore: 85,
@@ -404,7 +404,7 @@ class DemoService {
   }
 
   private extractAllergens(ingredients: string[]): string[] {
-    const commonAllergens = ['gluten', 'lait', 'Æ’Ã†â€™aÃ¢â€šÂ¬Ã‚Â¦aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“uf', 'soja', 'fruits Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  coque', 'arachide'];
+    const commonAllergens = ['gluten', 'lait', 'Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œuf', 'soja', 'fruits Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â  coque', 'arachide'];
     const found: string[] = [];
     
     ingredients.forEach(ingredient => {
@@ -430,7 +430,7 @@ class DemoService {
         { productId: 'alt-c2', name: 'Version Solide', brand: 'ZeroWaste', score: 90, reason: 'Sans emballage' }
       ],
       detergent: [
-        { productId: 'alt-d1', name: 'Detergent Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°cologique', brand: 'EcoClean', score: 94, reason: 'Biodegradable' },
+        { productId: 'alt-d1', name: 'Detergent Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢aaÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°cologique', brand: 'EcoClean', score: 94, reason: 'Biodegradable' },
         { productId: 'alt-d2', name: 'Alternative Maison', brand: 'DIY', score: 96, reason: 'Fait maison' }
       ]
     };

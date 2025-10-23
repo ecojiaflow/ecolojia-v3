@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ScannerChoice } from '../components/ScannerChoice';
 
 const ScannerChoicePage: React.FC = () => {

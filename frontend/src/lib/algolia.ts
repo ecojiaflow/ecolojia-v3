@@ -1,4 +1,4 @@
-﻿// frontend/src/lib/algolia.ts
+// frontend/src/lib/algolia.ts
 import algoliasearch from 'algoliasearch/lite';
 import { buildAlgoliaFilters, FilterState } from '../utils/buildAlgoliaFilters';
 

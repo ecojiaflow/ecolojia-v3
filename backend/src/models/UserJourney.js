@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 - UserJourney Model ===
+// === ECOLOJIA V3 - UserJourney Model ===
 // Tracking scans utilisateurs (RGPD compliant)
 
 const mongoose = require('mongoose');

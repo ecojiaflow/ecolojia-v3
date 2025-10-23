@@ -82,10 +82,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
-  // Récupération des données depuis la navigation
+  // RÃ©cupÃ©ration des donnÃ©es depuis la navigation
   const { analysis, visionData, scanType, barcode, inputData } = location.state || {};
 
-  // Rediriger si pas de données
+  // Rediriger si pas de donnÃ©es
   useEffect(() => {
     if (!analysis) {
       navigate('/scan');
@@ -102,7 +102,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
   const saveToHistory = async () => {
     try {
       setIsSaving(true);
-      // TODO: Implémenter la sauvegarde dans l'historique
+      // TODO: ImplÃ©menter la sauvegarde dans l'historique
       console.log('Saving to history:', { analysis, scanType });
     } catch (error) {
       console.error('Error saving to history:', error);
@@ -116,7 +116,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
       try {
         await navigator.share({
           title: `${analysis.name} - Analyse ECOLOJIA`,
-          text: `Découvrez l'analyse complète de ${analysis.name} sur ECOLOJIA`,
+          text: `DÃ©couvrez l'analyse complÃ¨te de ${analysis.name} sur ECOLOJIA`,
           url: window.location.href
         });
       } catch (error) {
@@ -176,7 +176,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'Moyen';
-    return 'ÃƒÆ’â‚¬ éviter';
+    return 'ÃƒÆ’Ã†â€™Ã¢â€šÂ¬ Ã©viter';
   };
 
   const getNovaColor = (nova: number) => {
@@ -208,14 +208,14 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               </button>
               <div>
                 <h1 className="text-2xl font-bold text-[#3B3B3B]">
-                  Résultats de l'analyse
+                  RÃ©sultats de l'analyse
                 </h1>
                 <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
                   {getScanTypeIcon()}
                   <span>
-                    Scanné via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
+                    ScannÃ© via {scanType === 'barcode' ? 'code-barres' : scanType === 'photo' ? 'photo' : 'recherche manuelle'}
                   </span>
-                  <span className="text-gray-400">ââ‚¬Ã‚Â¢</span>
+                  <span className="text-gray-400">Ã¢Ã¢â€šÂ¬Ãƒâ€šÃ‚Â¢</span>
                   <Clock className="w-4 h-4" />
                   <span>{new Date().toLocaleTimeString()}</span>
                 </div>
@@ -259,9 +259,9 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               )}
               <div className="flex items-center gap-4 mt-2">
                 <span className="text-sm px-3 py-1 bg-gray-100 rounded-full">
-                  {analysis.category === 'food' ? 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ…Â½ Alimentation' : 
-                   analysis.category === 'cosmetics' ? 'ÃƒÂ°Ã…Â¸ââ‚¬â„¢ââ‚¬Å¾ Cosmétiques' : 
-                   'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¼ Produits ménagers'}
+                  {analysis.category === 'food' ? 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚ÂÃƒâ€¦Ã‚Â½ Alimentation' : 
+                   analysis.category === 'cosmetics' ? 'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã¢â€žÂ¢Ã¢Ã¢â€šÂ¬Ã…Â¾ CosmÃ©tiques' : 
+                   'ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ãƒâ€šÃ‚Â§Ãƒâ€šÃ‚Â¼ Produits mÃ©nagers'}
                 </span>
                 {analysis.barcode && (
                   <span className="text-sm text-gray-500 font-mono">
@@ -282,13 +282,13 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
 
           {/* Scores principaux */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Score santé */}
+            {/* Score santÃ© */}
             {analysis.scores.healthScore !== undefined && (
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Heart className="w-5 h-5 text-red-500" />
-                    <span className="font-medium">Santé</span>
+                    <span className="font-medium">SantÃ©</span>
                   </div>
                   <span className={`text-2xl font-bold ${getScoreColor(analysis.scores.healthScore)}`}>
                     {analysis.scores.healthScore}
@@ -366,7 +366,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </div>
         </motion.div>
 
-        {/* Badges spécifiques */}
+        {/* Badges spÃ©cifiques */}
         {analysis.category === 'food' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -426,7 +426,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </motion.div>
         )}
 
-        {/* Détails de l'analyse */}
+        {/* DÃ©tails de l'analyse */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -438,7 +438,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
             className="w-full flex items-center justify-between text-left"
           >
             <h3 className="text-lg font-semibold text-[#3B3B3B]">
-              Détails de l'analyse
+              DÃ©tails de l'analyse
             </h3>
             {showDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
           </button>
@@ -461,7 +461,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Risques cosmétiques */}
+                  {/* Risques cosmÃ©tiques */}
                   {analysis.details.riskFlags && analysis.details.riskFlags.length > 0 && (
                     <div className="p-4 bg-red-50 rounded-lg">
                       <p className="font-medium mb-2 text-red-800">Points d'attention</p>
@@ -476,10 +476,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Ingrédients notables */}
+                  {/* IngrÃ©dients notables */}
                   {analysis.details.notableIngredients && analysis.details.notableIngredients.length > 0 && (
                     <div className="p-4 bg-blue-50 rounded-lg">
-                      <p className="font-medium mb-2 text-blue-800">Ingrédients notables</p>
+                      <p className="font-medium mb-2 text-blue-800">IngrÃ©dients notables</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.details.notableIngredients.map((ingredient, index) => (
                           <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
@@ -490,10 +490,10 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
                     </div>
                   )}
 
-                  {/* Allergènes */}
+                  {/* AllergÃ¨nes */}
                   {analysis.details.allergens && analysis.details.allergens.length > 0 && (
                     <div className="p-4 bg-orange-50 rounded-lg">
-                      <p className="font-medium mb-2 text-orange-800">Allergènes détectés</p>
+                      <p className="font-medium mb-2 text-orange-800">AllergÃ¨nes dÃ©tectÃ©s</p>
                       <div className="flex flex-wrap gap-2">
                         {analysis.details.allergens.map((allergen, index) => (
                           <span key={index} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
@@ -509,7 +509,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Ingrédients */}
+        {/* IngrÃ©dients */}
         {analysis.details.ingredientsTextRaw && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -522,7 +522,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               className="w-full flex items-center justify-between text-left"
             >
               <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Liste des ingrédients
+                Liste des ingrÃ©dients
               </h3>
               {showIngredients ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
@@ -547,7 +547,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
           </motion.div>
         )}
 
-        {/* Données Vision (si photo) */}
+        {/* DonnÃ©es Vision (si photo) */}
         {visionData && scanType === 'photo' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -560,7 +560,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
               className="w-full flex items-center justify-between text-left"
             >
               <h3 className="text-lg font-semibold text-[#3B3B3B]">
-                Données extraites de l'image
+                DonnÃ©es extraites de l'image
               </h3>
               {showVisionData ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
@@ -630,7 +630,7 @@ const ResultsPage: React.FC<ResultsPageProps> = () => {
             >
               <div className="bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5" />
-                <p>Lien copié dans le presse-papiers !</p>
+                <p>Lien copiÃ© dans le presse-papiers !</p>
               </div>
             </motion.div>
           )}

@@ -27,7 +27,7 @@ pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('? Erreur connexion PostgreSQL:', err.message);
   } else {
-    console.log('? PostgreSQL connecté:', res.rows[0].now);
+    console.log('? PostgreSQL connectÃ©:', res.rows[0].now);
   }
 });
 
@@ -58,7 +58,7 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Créer les tables si elles n'existent pas
+// CrÃ©er les tables si elles n'existent pas
 async function createTables() {
   try {
     await pool.query(`
@@ -71,9 +71,9 @@ async function createTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log('? Tables créées/vérifiées');
+    console.log('? Tables crÃ©Ã©es/vÃ©rifiÃ©es');
   } catch (error) {
-    console.error('? Erreur création tables:', error.message);
+    console.error('? Erreur crÃ©ation tables:', error.message);
   }
 }
 
@@ -89,7 +89,7 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
-    // Vérifier si utilisateur existe
+    // VÃ©rifier si utilisateur existe
     const userCheck = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -98,14 +98,14 @@ app.post('/api/auth/register', async (req, res) => {
     if (userCheck.rows.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Email déjà utilisé'
+        message: 'Email dÃ©jÃ  utilisÃ©'
       });
     }
 
     // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Créer utilisateur
+    // CrÃ©er utilisateur
     const result = await pool.query(
       'INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id, email, name, tier',
       [email, hashedPassword, name]
@@ -113,7 +113,7 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Inscription réussie',
+      message: 'Inscription rÃ©ussie',
       user: result.rows[0]
     });
 
@@ -154,7 +154,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     const user = result.rows[0];
 
-    // Vérifier mot de passe
+    // VÃ©rifier mot de passe
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).json({
@@ -165,7 +165,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Connexion réussie',
+      message: 'Connexion rÃ©ussie',
       user: {
         id: user.id,
         email: user.email,
@@ -194,18 +194,18 @@ app.get('/api/users', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur récupération utilisateurs'
+      message: 'Erreur rÃ©cupÃ©ration utilisateurs'
     });
   }
 });
 
-// Démarrage
+// DÃ©marrage
 async function start() {
   await createTables();
   
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`?? Serveur Ecolojia démarré sur http://localhost:${PORT}`);
-    console.log(`?? Base de données: PostgreSQL`);
+    console.log(`?? Serveur Ecolojia dÃ©marrÃ© sur http://localhost:${PORT}`);
+    console.log(`?? Base de donnÃ©es: PostgreSQL`);
     console.log(`?? Endpoints disponibles:`);
     console.log(`   - GET  http://localhost:${PORT}/`);
     console.log(`   - GET  http://localhost:${PORT}/health`);

@@ -18,7 +18,7 @@ export default function Connectivity() {
   const [query, setQuery] = useState('yaourt bio');
   const [barcode, setBarcode] = useState('3017620422003');
   const [ocrFile, setOcrFile] = useState<File | null>(null);
-  const [ingr, setIngr] = useState('Farine de blé, sucre, huile de tournesol, sel.');
+  const [ingr, setIngr] = useState('Farine de blÃ©, sucre, huile de tournesol, sel.');
   const [plan, setPlan] = useState<'basic'|'pro'>('pro');
 
   const [logs, setLogs] = useState<LogItem[]>([]);
@@ -66,7 +66,7 @@ export default function Connectivity() {
   };
 
   const runOCR = async () => {
-    if (!ocrFile) { log('OCR /api/vision/analyze-image', false, undefined, 'Aucun fichier sélectionné'); return; }
+    if (!ocrFile) { log('OCR /api/vision/analyze-image', false, undefined, 'Aucun fichier sÃ©lectionnÃ©'); return; }
     try {
       const res = await ocrService.ocrPhoto(ocrFile);
       log('OCR /api/vision/analyze-image', true, res);
@@ -116,14 +116,14 @@ export default function Connectivity() {
     <div>
       <div className="nav">
         <div className="nav-inner container">
-          <div style={{ fontWeight: 800 }}>ECOLOJIA â€” Debug</div>
+          <div style={{ fontWeight: 800 }}>ECOLOJIA Ã¢â‚¬â€ Debug</div>
           <div className="small">API base: <b>{API_BASE}</b></div>
         </div>
       </div>
 
       <div className="container" style={{ marginTop: 16 }}>
         <div className="h1">Connectivity / Debug Harness</div>
-        <p>Test e2e contre <code>/api/*</code> (DEV via proxy Vite, PROD via Netlify â†’ Render).</p>
+        <p>Test e2e contre <code>/api/*</code> (DEV via proxy Vite, PROD via Netlify Ã¢â€ â€™ Render).</p>
 
         <div className="row">
           <div className="card" style={{ gridColumn: 'span 6' }}>
@@ -149,7 +149,7 @@ export default function Connectivity() {
 
           <div className="card" style={{ gridColumn: 'span 6' }}>
             <div className="h2">Analyse manuelle (IA)</div>
-            <Field label="Ingrédients">
+            <Field label="IngrÃ©dients">
               <TextArea rows={4} value={ingr} onChange={e => setIngr(e.target.value)} />
             </Field>
             <div style={{ marginTop: 10 }}>
@@ -158,7 +158,7 @@ export default function Connectivity() {
           </div>
 
           <div className="card" style={{ gridColumn: 'span 6' }}>
-            <div className="h2">OCR (photo â†’ texte)</div>
+            <div className="h2">OCR (photo Ã¢â€ â€™ texte)</div>
             <Field label="Fichier image">
               <input ref={refFile} type="file" accept="image/*" className="file" onChange={e => setOcrFile(e.target.files?.[0] || null)} />
             </Field>
@@ -184,7 +184,7 @@ export default function Connectivity() {
               </select>
             </Field>
             <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-              <Button onClick={runCheckout}>Créer checkout</Button>
+              <Button onClick={runCheckout}>CrÃ©er checkout</Button>
               <Button variant="secondary" onClick={runSub}>Etat abonnement</Button>
             </div>
           </div>
@@ -204,7 +204,7 @@ export default function Connectivity() {
                   )}
                 </div>
               ))}
-              {logs.length === 0 && <div className="small">Clique sur les boutons ciâ€‘dessus pour lancer les tests.</div>}
+              {logs.length === 0 && <div className="small">Clique sur les boutons ciÃ¢â‚¬â€˜dessus pour lancer les tests.</div>}
             </div>
           </Card>
         </div>

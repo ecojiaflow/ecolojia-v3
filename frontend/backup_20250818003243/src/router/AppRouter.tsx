@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // Import des pages
-import MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage from '../pages/MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage';
+import MultiCATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIESPage from '../pages/MultiCATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIESPage';
 import ProductPage from '../pages/ProductPage';
 import SearchPage from '../pages/SearchPage';
 import AdminDashboard from '../pages/AdminDashboard';
@@ -17,11 +17,11 @@ const AppRouter: React.FC = () => {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          {/* Route par defaut - Multi-CATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIES */}
-          <Route path="/" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+          {/* Route par defaut - Multi-CATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIES */}
+          <Route path="/" element={<MultiCATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIESPage />} />
           
-          {/* Page multi-CATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIES */}
-          <Route path="/CATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIES" element={<MultiCATƒÆ’†â€™aaâ€šÂ¬‚Â°GORIESPage />} />
+          {/* Page multi-CATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIES */}
+          <Route path="/CATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIES" element={<MultiCATÆ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°GORIESPage />} />
           
           {/* Page produit */}
           <Route path="/product" element={<ProductPage />} />

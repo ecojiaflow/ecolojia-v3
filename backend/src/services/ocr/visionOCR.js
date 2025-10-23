@@ -8,7 +8,7 @@ const client = new vision.ImageAnnotatorClient();
  */
 async function analyzeImageOCR(base64Image) {
   try {
-    console.log('ðŸ” Demarrage analyse OCR Google Vision...');
+    console.log('Ã°Å¸â€Â Demarrage analyse OCR Google Vision...');
     
     const [result] = await client.documentTextDetection({
       image: { content: base64Image },
@@ -23,14 +23,14 @@ async function analyzeImageOCR(base64Image) {
       };
     }
 
-    console.log('ðŸ“ Texte brut detecte:', text.substring(0, 200) + '...');
+    console.log('Ã°Å¸â€œÂ Texte brut detecte:', text.substring(0, 200) + '...');
     
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
     
     // Analyse intelligente du contenu
     const analysis = analyzeProductText(text, lines);
     
-    console.log('âœ… Analyse terminee:', {
+    console.log('Ã¢Å“â€¦ Analyse terminee:', {
       name: analysis.name,
       brand: analysis.brand,
       category: analysis.category,
@@ -51,7 +51,7 @@ async function analyzeImageOCR(base64Image) {
     };
     
   } catch (error) {
-    console.error('âŒ Vision OCR failed:', error.message);
+    console.error('Ã¢ÂÅ’ Vision OCR failed:', error.message);
     return { 
       success: false, 
       error: error.message,
@@ -65,7 +65,7 @@ async function analyzeImageOCR(base64Image) {
  */
 async function analyzeMultipleImages(photos) {
   try {
-    console.log('ðŸ“¸ Analyse multi-photos:', Object.keys(photos));
+    console.log('Ã°Å¸â€œÂ¸ Analyse multi-photos:', Object.keys(photos));
     
     const results = {};
     
@@ -74,7 +74,7 @@ async function analyzeMultipleImages(photos) {
       if (!base64) continue;
       
       const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, '');
-      console.log(`ðŸ” Analyse photo ${type}...`);
+      console.log(`Ã°Å¸â€Â Analyse photo ${type}...`);
       
       const analysis = await analyzeImageOCR(cleanBase64);
       results[type] = analysis;
@@ -83,7 +83,7 @@ async function analyzeMultipleImages(photos) {
     // Fusionner les resultats intelligemment
     const combinedAnalysis = combinePhotoAnalyses(results);
     
-    console.log('ðŸŽ¯ Analyse combinee:', {
+    console.log('Ã°Å¸Å½Â¯ Analyse combinee:', {
       name: combinedAnalysis.name,
       brand: combinedAnalysis.brand,
       ingredients_count: combinedAnalysis.ingredients.length
@@ -92,7 +92,7 @@ async function analyzeMultipleImages(photos) {
     return combinedAnalysis;
     
   } catch (error) {
-    console.error('âŒ Erreur analyse multi-photos:', error);
+    console.error('Ã¢ÂÅ’ Erreur analyse multi-photos:', error);
     throw error;
   }
 }
@@ -109,16 +109,16 @@ function analyzeProductText(text, lines) {
   // 2. EXTRACTION MARQUE (amelioree)
   const brand = extractBrandIntelligent(lines, textLower);
   
-  // 3. EXTRACTION CAT‰GORIE (amelioree)
+  // 3. EXTRACTION CATâ€°GORIE (amelioree)
   const category = extractCategoryIntelligent(textLower);
   
-  // 4. EXTRACTION INGR‰DIENTS
+  // 4. EXTRACTION INGRâ€°DIENTS
   const ingredients = extractIngredients(textLower);
   
   // 5. EXTRACTION INFOS NUTRITIONNELLES
   const nutritionalInfo = extractNutritionalInfo(textLower);
   
-  // 6. D‰TECTION CERTIFICATIONS
+  // 6. Dâ€°TECTION CERTIFICATIONS
   const certifications = extractCertifications(textLower);
   
   // 7. CALCUL CONFIANCE
@@ -145,7 +145,7 @@ function extractProductName(lines, textLower) {
   for (let i = 0; i < Math.min(5, lines.length); i++) {
     const line = lines[i];
     
-    // ‰viter les marques connues, codes-barres, etc.
+    // â€°viter les marques connues, codes-barres, etc.
     if (line.length > 3 && line.length < 50 && 
         !isBarcode(line) && 
         !isKnownBrand(line.toLowerCase()) &&

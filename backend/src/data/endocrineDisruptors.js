@@ -2,7 +2,7 @@
 // Base de donnees des perturbateurs endocriniens confirmes et suspectes
 
 const endocrineDisruptors = [
-  // === PARABˆNES ===
+  // === PARABË†NES ===
   {
     name: 'Methylparaben',
     inci: 'METHYLPARABEN',
@@ -242,7 +242,7 @@ const endocrineDisruptors = [
     sources: ['Formaldehyde release', 'Patch test data']
   },
 
-  // === MUSCS SYNTH‰TIQUES ===
+  // === MUSCS SYNTHâ€°TIQUES ===
   {
     name: 'Galaxolide',
     inci: 'HHCB',

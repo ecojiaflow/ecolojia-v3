@@ -1,5 +1,5 @@
 // PATH: frontend/src/pages/ScanDebug.tsx
-// Page temporaire pour debugger les problèmes de scanner
+// Page temporaire pour debugger les problÃ¨mes de scanner
 
 import { useState } from 'react';
 import { api } from '../services/apiClient';
@@ -55,7 +55,7 @@ export function ScanDebug() {
       addResult('Analyse Manuelle', false, error);
     }
 
-    // Test 5: Vérifier les variables d'environnement
+    // Test 5: VÃ©rifier les variables d'environnement
     addResult('Environment Variables', true, {
       VITE_API_URL: import.meta.env.VITE_API_URL,
       MODE: import.meta.env.MODE,
@@ -68,7 +68,7 @@ export function ScanDebug() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">ÃƒÂ°Ã…Â¸ââ‚¬ÂÃ‚Â§ Debug Scanner API</h1>
+      <h1 className="text-2xl font-bold mb-6">ÃƒÆ’Ã‚Â°Ãƒâ€¦Ã‚Â¸Ã¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â§ Debug Scanner API</h1>
       
       <button
         onClick={runTests}
@@ -88,7 +88,7 @@ export function ScanDebug() {
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold">
-                {result.success ? 'âÃ…â€œââ‚¬Â¦' : 'âÃ‚ÂÃ…â€™'} {result.test}
+                {result.success ? 'Ã¢Ãƒâ€¦Ã¢â‚¬Å“Ã¢Ã¢â€šÂ¬Ã‚Â¦' : 'Ã¢Ãƒâ€šÃ‚ÂÃƒâ€¦Ã¢â‚¬â„¢'} {result.test}
               </h3>
               <span className="text-sm text-gray-500">
                 {new Date(result.timestamp).toLocaleTimeString()}
@@ -103,7 +103,7 @@ export function ScanDebug() {
 
       {results.length === 0 && !loading && (
         <p className="text-gray-500 italic">
-          Cliquez sur "Lancer les tests" pour débugger les routes API
+          Cliquez sur "Lancer les tests" pour dÃ©bugger les routes API
         </p>
       )}
     </div>

@@ -34,7 +34,7 @@ import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
-// Cleanup après chaque test
+// Cleanup aprÃ¨s chaque test
 afterEach(() => {
   cleanup();
 });
@@ -177,7 +177,7 @@ describe('ScoreDisplay', () => {
   it('renders dash when no value', () => {
     render(<ScoreDisplay label="Empty Score" />);
     
-    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(screen.getByText('â€”')).toBeInTheDocument();
   });
 
   it('renders hint when provided', () => {
@@ -228,27 +228,27 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Scan Flow', () => {
   test('should complete manual analysis', async ({ page }) => {
-    // Aller à la page de scan
+    // Aller Ã  la page de scan
     await page.goto('/');
     
-    // Vérifier que la page charge
+    // VÃ©rifier que la page charge
     await expect(page.locator('h1')).toContainText('ECOLOJIA');
     
-    // Sélectionner l'onglet manuel
+    // SÃ©lectionner l'onglet manuel
     await page.click('text=Saisie manuelle');
     
     // Remplir le formulaire
     await page.fill('input[placeholder*="Yaourt"]', 'Yaourt test');
     await page.selectOption('select', 'food');
-    await page.fill('textarea', 'Lait, Sucre, Arôme vanille, E330');
+    await page.fill('textarea', 'Lait, Sucre, ArÃ´me vanille, E330');
     
     // Soumettre
     await page.click('button:has-text("Analyser")');
     
-    // Vérifier la redirection vers les résultats
+    // VÃ©rifier la redirection vers les rÃ©sultats
     await expect(page).toHaveURL(/\/result/);
     
-    // Vérifier l'affichage des résultats
+    // VÃ©rifier l'affichage des rÃ©sultats
     await expect(page.locator('h1')).toContainText('Yaourt test');
     await expect(page.locator('text=Nutri-Score')).toBeVisible();
     await expect(page.locator('text=NOVA')).toBeVisible();
@@ -261,14 +261,14 @@ test.describe('Scan Flow', () => {
     // Essayer de soumettre sans remplir
     await page.click('button:has-text("Analyser")');
     
-    // Le formulaire HTML5 devrait empêcher la soumission
-    await expect(page).toHaveURL('/'); // Toujours sur la même page
+    // Le formulaire HTML5 devrait empÃªcher la soumission
+    await expect(page).toHaveURL('/'); // Toujours sur la mÃªme page
   });
 });
 
 ---
 
-// PATH: frontend/package.json (mise à jour avec scripts de test)
+// PATH: frontend/package.json (mise Ã  jour avec scripts de test)
 {
   "name": "ecolojia-frontend",
   "version": "1.0.0",

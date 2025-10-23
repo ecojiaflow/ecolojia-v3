@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useEmailValidation } from '../hooks/useEmailValidation';
 import { useAuth } from '../auth/context/AuthContext';
 

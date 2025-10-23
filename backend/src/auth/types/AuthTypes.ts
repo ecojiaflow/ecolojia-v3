@@ -1,27 +1,27 @@
-// À REMPLACER dans backend/src/auth/types/AuthTypes.ts
+// Ã€ REMPLACER dans backend/src/auth/types/AuthTypes.ts
 
-// Interface Session complète
+// Interface Session complÃ¨te
 export interface Session {
   id: string;
   userId: string;
   token: string;
-  refreshToken: string;  // Ajouté
+  refreshToken: string;  // AjoutÃ©
   expiresAt: Date;
   createdAt: Date;
   isActive: boolean;
 }
 
-// Interface User complète
+// Interface User complÃ¨te
 export interface User {
   id: string;
   email: string;
   password: string;
-  passwordHash?: string;  // Ajouté comme alias
+  passwordHash?: string;  // AjoutÃ© comme alias
   name: string;
   tier: 'free' | 'premium';
   isEmailVerified: boolean;
-  emailVerified?: boolean;  // Ajouté comme alias
-  lastLoginAt?: Date;  // Ajouté
+  emailVerified?: boolean;  // AjoutÃ© comme alias
+  lastLoginAt?: Date;  // AjoutÃ©
   emailVerificationToken?: string;
   emailVerificationExpires?: Date;
   resetPasswordToken?: string;

@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ChatPage.tsx (Version améliorée)
+// PATH: frontend/src/pages/ChatPage.tsx (Version amÃ©liorÃ©e)
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Send, Bot, User, Package, Loader2, AlertCircle } from 'lucide-react';
@@ -37,7 +37,7 @@ export const ChatPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Récupérer le contexte produit si présent
+  // RÃ©cupÃ©rer le contexte produit si prÃ©sent
   useEffect(() => {
     if (location.state?.context) {
       setProductContext(location.state.context);
@@ -48,18 +48,18 @@ export const ChatPage: React.FC = () => {
         role: 'assistant',
         content: `Bonjour ! Je vois que vous souhaitez discuter de **${location.state.context.product.name}** (${location.state.context.product.category}).
 
-**Score santé : ${location.state.context.analysis.healthScore}/100**
+**Score santÃ© : ${location.state.context.analysis.healthScore}/100**
 
-Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questions sur ce produit. Que souhaitez-vous savoir ?`,
+Je suis lÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  pour rÃ©pondre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  toutes vos questions sur ce produit. Que souhaitez-vous savoir ?`,
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
     } else {
-      // Message de bienvenue général
+      // Message de bienvenue gÃ©nÃ©ral
       const welcomeMessage: Message = {
         id: 'welcome',
         role: 'assistant',
-        content: 'Bonjour ! Je suis votre assistant IA spécialisé en analyse de produits. Posez-moi vos questions sur l\'alimentation, les cosmétiques ou les détergents.',
+        content: 'Bonjour ! Je suis votre assistant IA spÃ©cialisÃ© en analyse de produits. Posez-moi vos questions sur l\'alimentation, les cosmÃ©tiques ou les dÃ©tergents.',
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
@@ -71,7 +71,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, streamingContent]);
 
-  // Vérifier si l'utilisateur est Premium
+  // VÃ©rifier si l'utilisateur est Premium
   const checkPremiumStatus = (): boolean => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     return user.tier === 'premium';
@@ -80,7 +80,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Vérifier le statut Premium
+    // VÃ©rifier le statut Premium
     if (!checkPremiumStatus()) {
       setShowPremiumModal(true);
       return;
@@ -97,7 +97,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
     setInputMessage('');
     setIsLoading(true);
 
-    // Créer le message assistant avec streaming
+    // CrÃ©er le message assistant avec streaming
     const assistantMessage: Message = {
       id: `assistant-${Date.now()}`,
       role: 'assistant',
@@ -110,7 +110,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
     setStreamingContent('');
 
     try {
-      // Créer un AbortController pour pouvoir annuler la requête
+      // CrÃ©er un AbortController pour pouvoir annuler la requÃªte
       abortControllerRef.current = new AbortController();
 
       const response = await fetch('https://ecolojia-backend-working.onrender.com/api/chat/deepseek', {
@@ -165,7 +165,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
         }
       }
 
-      // Mettre ÃƒÆ’Ã‚Â  jour le message final
+      // Mettre ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  jour le message final
       setMessages(prev => prev.map(msg => 
         msg.id === assistantMessage.id 
           ? { ...msg, content: fullContent, isStreaming: false }
@@ -183,7 +183,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: 'Désolé, une erreur s\'est produite. Veuillez réessayer.',
+        content: 'DÃ©solÃ©, une erreur s\'est produite. Veuillez rÃ©essayer.',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -202,16 +202,16 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
 
   const suggestedQuestions = productContext ? [
     `Pourquoi ce produit a-t-il un score de ${productContext.analysis.healthScore}/100 ?`,
-    "Quels sont les ingrédients les plus problématiques ?",
+    "Quels sont les ingrÃ©dients les plus problÃ©matiques ?",
     "Existe-t-il des alternatives plus saines ?",
     "Ce produit convient-il aux enfants ?",
     "Quel est l'impact environnemental ?"
   ] : [
-    "Comment reconnaître un produit ultra-transformé ?",
-    "Quels sont les perturbateurs endocriniens ÃƒÆ’Ã‚Â  éviter ?",
-    "Comment choisir des produits ménagers écologiques ?",
-    "Quelle est la différence entre bio et naturel ?",
-    "Comment lire une étiquette alimentaire ?"
+    "Comment reconnaÃ®tre un produit ultra-transformÃ© ?",
+    "Quels sont les perturbateurs endocriniens ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  Ã©viter ?",
+    "Comment choisir des produits mÃ©nagers Ã©cologiques ?",
+    "Quelle est la diffÃ©rence entre bio et naturel ?",
+    "Comment lire une Ã©tiquette alimentaire ?"
   ];
 
   return (
@@ -298,7 +298,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
             <div className="flex justify-start">
               <div className="flex items-center space-x-2 px-4 py-3 bg-gray-100 rounded-lg">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm text-gray-600">L'IA réfléchit...</span>
+                <span className="text-sm text-gray-600">L'IA rÃ©flÃ©chit...</span>
               </div>
             </div>
           )}
@@ -307,11 +307,11 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
         </div>
       </div>
 
-      {/* Questions suggérées */}
+      {/* Questions suggÃ©rÃ©es */}
       {messages.length <= 1 && (
         <div className="border-t bg-white">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            <p className="text-sm text-gray-600 mb-3">Questions suggérées :</p>
+            <p className="text-sm text-gray-600 mb-3">Questions suggÃ©rÃ©es :</p>
             <div className="flex flex-wrap gap-2">
               {suggestedQuestions.map((question, index) => (
                 <button
@@ -335,8 +335,8 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
             <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start">
               <AlertCircle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-amber-800">
-                <p className="font-medium">Chat IA réservé aux membres Premium</p>
-                <p className="mt-1">Passez ÃƒÆ’Ã‚Â  Premium pour poser des questions illimitées ÃƒÆ’Ã‚Â  notre IA experte.</p>
+                <p className="font-medium">Chat IA rÃ©servÃ© aux membres Premium</p>
+                <p className="mt-1">Passez ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  Premium pour poser des questions illimitÃ©es ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  notre IA experte.</p>
               </div>
             </div>
           )}
@@ -348,7 +348,7 @@ Je suis lÃƒÆ’Ã‚Â  pour répondre ÃƒÆ’Ã‚Â  toutes vos questio
               onKeyPress={handleKeyPress}
               placeholder={checkPremiumStatus() 
                 ? "Posez votre question..." 
-                : "Passez ÃƒÆ’Ã‚Â  Premium pour utiliser le chat IA"
+                : "Passez ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  Premium pour utiliser le chat IA"
               }
               disabled={isLoading || !checkPremiumStatus()}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"

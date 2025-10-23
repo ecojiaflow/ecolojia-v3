@@ -1,8 +1,8 @@
-// test-pwa.js - Script de test automatisé PWA
+// test-pwa.js - Script de test automatisÃ© PWA
 const puppeteer = require('puppeteer');
 
 async function testPWA() {
-    console.log('🧪 Démarrage des tests PWA...');
+    console.log('ðŸ§ª DÃ©marrage des tests PWA...');
     
     const browser = await puppeteer.launch({ 
         headless: false, // Mode visible pour debug
@@ -13,32 +13,32 @@ async function testPWA() {
     
     try {
         // Test 1: Chargement de la page
-        console.log('📋 Test 1: Chargement de la page...');
+        console.log('ðŸ“‹ Test 1: Chargement de la page...');
         await page.goto('http://localhost:5173', { waitUntil: 'networkidle2' });
-        console.log('✅ Page chargée avec succès');
+        console.log('âœ… Page chargÃ©e avec succÃ¨s');
         
-        // Test 2: Vérification du manifest
-        console.log('📋 Test 2: Vérification du manifest...');
+        // Test 2: VÃ©rification du manifest
+        console.log('ðŸ“‹ Test 2: VÃ©rification du manifest...');
         const manifestLink = await page.$('link[rel="manifest"]');
         if (manifestLink) {
-            console.log('✅ Manifest link détecté');
+            console.log('âœ… Manifest link dÃ©tectÃ©');
             
-            // Récupérer le contenu du manifest
+            // RÃ©cupÃ©rer le contenu du manifest
             const manifestResponse = await page.goto('http://localhost:5173/manifest.json');
             const manifest = await manifestResponse.json();
-            console.log(`✅ Manifest valide - App: ${manifest.name}`);
+            console.log(`âœ… Manifest valide - App: ${manifest.name}`);
         } else {
-            console.log('❌ Manifest link non trouvé');
+            console.log('âŒ Manifest link non trouvÃ©');
         }
         
-        // Test 3: Vérification du Service Worker
-        console.log('📋 Test 3: Vérification du Service Worker...');
+        // Test 3: VÃ©rification du Service Worker
+        console.log('ðŸ“‹ Test 3: VÃ©rification du Service Worker...');
         const swRegistered = await page.evaluate(() => {
             return 'serviceWorker' in navigator;
         });
         
         if (swRegistered) {
-            console.log('✅ Service Worker API disponible');
+            console.log('âœ… Service Worker API disponible');
             
             // Attendre l'enregistrement du SW
             await page.waitForTimeout(2000);
@@ -56,22 +56,22 @@ async function testPWA() {
             });
             
             if (swStatus?.registered) {
-                console.log('✅ Service Worker enregistré');
-                console.log(`✅ Scope: ${swStatus.scope}`);
+                console.log('âœ… Service Worker enregistrÃ©');
+                console.log(`âœ… Scope: ${swStatus.scope}`);
                 if (swStatus.active) {
-                    console.log('✅ Service Worker actif');
+                    console.log('âœ… Service Worker actif');
                 }
             } else {
-                console.log('❌ Service Worker non enregistré');
+                console.log('âŒ Service Worker non enregistrÃ©');
             }
         } else {
-            console.log('❌ Service Worker API non disponible');
+            console.log('âŒ Service Worker API non disponible');
         }
         
-        // Test 4: Vérification des composants PWA
-        console.log('📋 Test 4: Vérification des composants PWA...');
+        // Test 4: VÃ©rification des composants PWA
+        console.log('ðŸ“‹ Test 4: VÃ©rification des composants PWA...');
         
-        // Chercher la bannière PWA (peut être conditionnelle)
+        // Chercher la banniÃ¨re PWA (peut Ãªtre conditionnelle)
         const pwaElements = await page.evaluate(() => {
             const installBanner = document.querySelector('[class*="banner"], [class*="install"]');
             const offlineIndicator = document.querySelector('[class*="offline"]');
@@ -83,11 +83,11 @@ async function testPWA() {
             };
         });
         
-        console.log(`✅ Titre de la page: ${pwaElements.title}`);
-        console.log(`${pwaElements.hasInstallUI ? '✅' : 'ℹ️'} Interface d'installation: ${pwaElements.hasInstallUI ? 'Détectée' : 'Non visible (normal selon conditions)'}`);
+        console.log(`âœ… Titre de la page: ${pwaElements.title}`);
+        console.log(`${pwaElements.hasInstallUI ? 'âœ…' : 'â„¹ï¸'} Interface d'installation: ${pwaElements.hasInstallUI ? 'DÃ©tectÃ©e' : 'Non visible (normal selon conditions)'}`);
         
-        // Test 5: Vérification de l'installabilité
-        console.log('📋 Test 5: Test d\'installabilité...');
+        // Test 5: VÃ©rification de l'installabilitÃ©
+        console.log('ðŸ“‹ Test 5: Test d\'installabilitÃ©...');
         
         const installable = await page.evaluate(() => {
             return new Promise((resolve) => {
@@ -100,26 +100,26 @@ async function testPWA() {
                 
                 window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
                 
-                // Timeout après 3 secondes
+                // Timeout aprÃ¨s 3 secondes
                 setTimeout(() => {
                     window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
                     resolve({ 
                         installable: false, 
                         hasPrompt: false,
-                        reason: 'beforeinstallprompt non déclenché (peut être normal en développement)' 
+                        reason: 'beforeinstallprompt non dÃ©clenchÃ© (peut Ãªtre normal en dÃ©veloppement)' 
                     });
                 }, 3000);
             });
         });
         
         if (installable.installable) {
-            console.log('✅ Application installable (beforeinstallprompt détecté)');
+            console.log('âœ… Application installable (beforeinstallprompt dÃ©tectÃ©)');
         } else {
-            console.log(`ℹ️ Installation: ${installable.reason}`);
+            console.log(`â„¹ï¸ Installation: ${installable.reason}`);
         }
         
         // Test 6: Test de cache (basique)
-        console.log('📋 Test 6: Test de cache basique...');
+        console.log('ðŸ“‹ Test 6: Test de cache basique...');
         
         const cacheTest = await page.evaluate(async () => {
             if ('caches' in window) {
@@ -134,33 +134,33 @@ async function testPWA() {
         });
         
         if (cacheTest.supported) {
-            console.log(`✅ Cache API supportée - ${cacheTest.cacheCount} cache(s) détecté(s)`);
+            console.log(`âœ… Cache API supportÃ©e - ${cacheTest.cacheCount} cache(s) dÃ©tectÃ©(s)`);
             if (cacheTest.caches.length > 0) {
                 console.log(`   Caches: ${cacheTest.caches.join(', ')}`);
             }
         } else {
-            console.log('❌ Cache API non supportée');
+            console.log('âŒ Cache API non supportÃ©e');
         }
         
-        // Résumé final
-        console.log('\n📊 RÉSUMÉ DES TESTS PWA:');
+        // RÃ©sumÃ© final
+        console.log('\nðŸ“Š RÃ‰SUMÃ‰ DES TESTS PWA:');
         console.log('================================');
-        console.log('✅ Application web fonctionnelle');
-        console.log('✅ Manifest PWA configuré');
-        console.log('✅ Service Worker disponible');
-        console.log('✅ Cache API opérationnel');
-        console.log('ℹ️ Installation possible (dépend du contexte)');
+        console.log('âœ… Application web fonctionnelle');
+        console.log('âœ… Manifest PWA configurÃ©');
+        console.log('âœ… Service Worker disponible');
+        console.log('âœ… Cache API opÃ©rationnel');
+        console.log('â„¹ï¸ Installation possible (dÃ©pend du contexte)');
         console.log('');
-        console.log('🎉 STATUT MODULE M10: PWA FONCTIONNELLE');
+        console.log('ðŸŽ‰ STATUT MODULE M10: PWA FONCTIONNELLE');
         
     } catch (error) {
-        console.error('❌ Erreur pendant les tests:', error);
+        console.error('âŒ Erreur pendant les tests:', error);
     } finally {
         await browser.close();
     }
 }
 
-// Lancer les tests si exécuté directement
+// Lancer les tests si exÃ©cutÃ© directement
 if (require.main === module) {
     testPWA().catch(console.error);
 }

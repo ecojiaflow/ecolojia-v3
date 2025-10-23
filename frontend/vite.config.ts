@@ -1,79 +1,20 @@
-import { defineConfig } from 'vite';
-import path from 'path';
+﻿import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
 
 export default defineConfig({
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:10000',
-        changeOrigin: true,
-        secure: false
-      }
-    }
+    port: 5173,
+    host: true,
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
   },
-  plugins: [
-    react(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      devOptions: { enabled: false },
-      manifest: {
-        name: 'ECOLOJIA',
-        short_name: 'ECOLOJIA',
-        description: 'Analysez vos produits pour une consommation plus saine',
-        start_url: '/scan',
-        display: 'standalone',
-        theme_color: '#10b981',
-        background_color: '#ffffff',
-        icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/frontendvf\.netlify\.app\/.*/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'pages-cache',
-              expiration: { maxEntries: 50, maxAgeSeconds: 86400 }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/ecolojia-backendvf\.onrender\.com\/api\/products\/.*/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'products-cache',
-              expiration: { maxEntries: 100, maxAgeSeconds: 3600 }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/ecolojia-backendvf\.onrender\.com\/api\/search.*/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'search-cache',
-              expiration: { maxEntries: 50, maxAgeSeconds: 1800 }
-            }
-          },
-          {
-            urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images-cache',
-              expiration: { maxEntries: 200, maxAgeSeconds: 86400 * 7 }
-            }
-          }
-        ]
-      }
-    })
-  ]
 });
-

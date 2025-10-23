@@ -1,4 +1,4 @@
-﻿class IngredientParserService {
+class IngredientParserService {
   extractIngredients(ocrText) {
     if (!ocrText) return { ingredients: [], confidence: 0 };
     

@@ -1,4 +1,4 @@
-﻿/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -13,9 +13,9 @@ export default {
         background: '#FFFFFF',   // Blanc fond
         bgSecondary: '#F7F9F4',  // Gris clair sections
         text: '#3B3B3B',         // Gris texte
-        border: '#DDE9DA',       // Gris pâle bordures
+        border: '#DDE9DA',       // Gris pale bordures
         
-        // Emerald (existant - à garder pour compatibilité)
+        // Emerald (existant - compatibilite)
         emerald: {
           50: '#ecfdf5',
           100: '#d1fae5',

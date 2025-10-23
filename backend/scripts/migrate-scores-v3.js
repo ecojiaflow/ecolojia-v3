@@ -1,4 +1,4 @@
-﻿// backend/scripts/migrate-scores-v3.js
+// backend/scripts/migrate-scores-v3.js
 // Migration complète scoring V3 - Recalcule tous les produits en DB
 
 const mongoose = require('mongoose');

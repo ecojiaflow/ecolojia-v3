@@ -1,4 +1,4 @@
-﻿import Product from '../models/Product';
+import Product from '../models/Product';
 import { fetchFromOpenFoodFacts, fetchFromOpenBeautyFacts } from './offClient';
 import { scoreFood } from '../scorers/foodScorer';
 import { scoreCosmetics } from '../scorers/cosmeticsScorer';

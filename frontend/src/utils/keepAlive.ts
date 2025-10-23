@@ -1,4 +1,4 @@
-﻿// Fonction keepAlive désactivée
+// Fonction keepAlive désactivée
 export function startKeepAlive() {
   // Désactivé
 }

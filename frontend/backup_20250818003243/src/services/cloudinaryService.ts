@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const CLOUDINARY_UPLOAD_URL = import.met?.env.VITE_CLOUDINARY_UPLOAD_URL;
 const CLOUDINARY_PRESET = import.met?.env.VITE_CLOUDINARY_PRESET;

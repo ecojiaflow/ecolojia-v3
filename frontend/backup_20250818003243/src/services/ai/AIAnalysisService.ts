@@ -24,7 +24,7 @@ export class AIAnalysisService {
     const cached = await cacheManager.get(key);
     if (cached && !req.prompt) return cached;
 
-    // 2 : mock analyse de base (ƒÆ’†â€™ƒâ€š‚Â  remplacer par vos services internes)
+    // 2 : mock analyse de base (Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  remplacer par vos services internes)
     const base = { score: 75, issues: ['sucre'] };
 
     // 3 : DeepSeek enrichment (premium uniquement)

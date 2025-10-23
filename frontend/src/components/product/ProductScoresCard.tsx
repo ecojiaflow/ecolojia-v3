@@ -21,7 +21,7 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
           </div>
           <div className="text-center">
             <span className="text-lg font-medium text-gray-400">
-              Non évalué
+              Non Ã©valuÃ©
             </span>
           </div>
         </div>
@@ -46,13 +46,13 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Scores détaillés</h2>
+      <h2 className="text-xl font-bold text-gray-800 mb-4">Scores dÃ©taillÃ©s</h2>
       
       <div className="grid md:grid-cols-2 gap-4">
         {renderScore(
           healthScore,
           <Heart className="w-5 h-5 text-red-500" />,
-          'Score Santé'
+          'Score SantÃ©'
         )}
         {renderScore(
           environmentScore,

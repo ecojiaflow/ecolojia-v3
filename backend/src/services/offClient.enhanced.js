@@ -1,4 +1,4 @@
-﻿const { EnhancedOFFClient } = require("./EnhancedOFFClient");
+const { EnhancedOFFClient } = require("./EnhancedOFFClient");
 
 class OFFClientWrapper {
   constructor() {

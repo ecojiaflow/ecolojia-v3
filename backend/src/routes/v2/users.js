@@ -72,7 +72,7 @@ router.get('/me', authOptional, async (req, res) => {
 
 /**
  * PUT /api/users/v2/me
- * Met   jour le profil et les preferences IA
+ * Met Â  jour le profil et les preferences IA
  */
 router.put('/me', authOptional, validateAIPreferences, async (req, res) => {
   try {

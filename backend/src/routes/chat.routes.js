@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const aiCache = require('../services/aiCache.service');
 const { aiCacheMiddleware } = require('../middleware/aiCache.middleware');
 const ChatHistory = require('../models/ChatHistory');

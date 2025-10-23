@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/router/AppRouter.tsx
+// PATH: frontend/src/router/AppRouter.tsx
 // Router principal avec ErrorBoundary pour capturer toutes les erreurs
 
 import React from 'react';

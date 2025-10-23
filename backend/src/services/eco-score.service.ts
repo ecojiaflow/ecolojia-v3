@@ -37,7 +37,7 @@ export class EcoScoreService {
 
   async calculate(input: EcoScoreInput): Promise<EcoScoreResult> {
     try {
-      console.log(`🌱 Calcul eco-score pour: ${input.title}`);
+      console.log(`ðŸŒ± Calcul eco-score pour: ${input.title}`);
       
       // Calculer chaque composant du score
       const ingredientsScore = this.calculateIngredientsScore(input.ingredients || '');
@@ -45,7 +45,7 @@ export class EcoScoreService {
       const transportScore = this.calculateTransportScore(input.origin || '');
       const processingScore = this.calculateProcessingScore(input.category || '');
       
-      // Score global pondéré
+      // Score global pondÃ©rÃ©
       const ecoScore = Math.round(
         ingredientsScore * this.SCORE_WEIGHTS.ingredients +
         packagingScore * this.SCORE_WEIGHTS.packaging +
@@ -56,7 +56,7 @@ export class EcoScoreService {
       // Calcul confiance
       const confidence = this.calculateConfidence(input);
       
-      // Génération recommandations
+      // GÃ©nÃ©ration recommandations
       const recommendations = this.generateRecommendations(input, {
         ingredients: ingredientsScore,
         packaging: packagingScore,
@@ -75,16 +75,16 @@ export class EcoScoreService {
         },
         recommendations,
         sources: [
-          'Base de données ADEME 2024',
+          'Base de donnÃ©es ADEME 2024',
           'Coefficients transport CITEPA',
           'Analyse cycle de vie produits alimentaires'
         ]
       };
       
-      console.log(`✅ Eco-score calculé: ${result.eco_score}/100`);
+      console.log(`âœ… Eco-score calculÃ©: ${result.eco_score}/100`);
       return result;
     } catch (error) {
-      console.error('❌ Erreur calcul eco-score:', error);
+      console.error('âŒ Erreur calcul eco-score:', error);
       throw error;
     }
   }
@@ -95,14 +95,14 @@ export class EcoScoreService {
     const ingredientsList = ingredients.toLowerCase().split(',').map(i => i.trim());
     let score = 70; // Score de base
     
-    // Pénalités ingrédients problématiques
+    // PÃ©nalitÃ©s ingrÃ©dients problÃ©matiques
     const problematicIngredients = [
       { name: 'huile de palme', penalty: -20 },
       { name: 'glucose-fructose', penalty: -15 },
       { name: 'sirop de glucose', penalty: -10 },
       { name: 'conservateurs', penalty: -5 },
       { name: 'colorants', penalty: -5 },
-      { name: 'arômes artificiels', penalty: -5 }
+      { name: 'arÃ´mes artificiels', penalty: -5 }
     ];
     
     problematicIngredients.forEach(problematic => {
@@ -111,11 +111,11 @@ export class EcoScoreService {
       }
     });
     
-    // Bonus ingrédients naturels
+    // Bonus ingrÃ©dients naturels
     const naturalIngredients = [
       { name: 'bio', bonus: 10 },
       { name: 'local', bonus: 5 },
-      { name: 'équitable', bonus: 5 },
+      { name: 'Ã©quitable', bonus: 5 },
       { name: 'naturel', bonus: 5 }
     ];
     
@@ -137,7 +137,7 @@ export class EcoScoreService {
     const packagingScores: { [key: string]: number } = {
       'verre': 90,
       'carton': 80,
-      'métal': 75,
+      'mÃ©tal': 75,
       'plastique recyclable': 60,
       'plastique': 40,
       'aluminium': 70,
@@ -150,7 +150,7 @@ export class EcoScoreService {
       }
     }
     
-    return 50; // Score par défaut
+    return 50; // Score par dÃ©faut
   }
 
   private calculateTransportScore(origin: string): number {
@@ -158,16 +158,16 @@ export class EcoScoreService {
     
     const originLower = origin.toLowerCase();
     
-    // Scores par zone géographique (perspective France)
+    // Scores par zone gÃ©ographique (perspective France)
     const regionScores: { [key: string]: number } = {
       'local': 95,
       'france': 85,
       'europe': 70,
       'afrique du nord': 60,
-      'amérique du nord': 40,
-      'amérique du sud': 30,
+      'amÃ©rique du nord': 40,
+      'amÃ©rique du sud': 30,
       'asie': 25,
-      'océanie': 20
+      'ocÃ©anie': 20
     };
     
     for (const [region, score] of Object.entries(regionScores)) {
@@ -176,7 +176,7 @@ export class EcoScoreService {
       }
     }
     
-    return 50; // Score par défaut
+    return 50; // Score par dÃ©faut
   }
 
   private calculateProcessingScore(category: string): number {
@@ -186,14 +186,14 @@ export class EcoScoreService {
     
     // Scores par niveau de transformation
     const processingScores: { [key: string]: number } = {
-      'fruits et légumes frais': 95,
-      'légumineuses': 90,
-      'céréales': 85,
+      'fruits et lÃ©gumes frais': 95,
+      'lÃ©gumineuses': 90,
+      'cÃ©rÃ©ales': 85,
       'produits laitiers': 70,
       'viandes': 65,
       'conserves': 60,
-      'surgelés': 65,
-      'plats préparés': 40,
+      'surgelÃ©s': 65,
+      'plats prÃ©parÃ©s': 40,
       'biscuits': 35,
       'sodas': 25,
       'confiseries': 20
@@ -205,7 +205,7 @@ export class EcoScoreService {
       }
     }
     
-    return 50; // Score par défaut
+    return 50; // Score par dÃ©faut
   }
 
   private calculateConfidence(input: EcoScoreInput): number {
@@ -224,13 +224,13 @@ export class EcoScoreService {
   private generateRecommendations(input: EcoScoreInput, breakdown: any): string[] {
     const recommendations: string[] = [];
     
-    // Recommandations basées sur les scores
+    // Recommandations basÃ©es sur les scores
     if (breakdown.ingredients < 60) {
-      recommendations.push('Privilégier des produits avec moins d\'additifs');
+      recommendations.push('PrivilÃ©gier des produits avec moins d\'additifs');
     }
     
     if (breakdown.packaging < 60) {
-      recommendations.push('Choisir des emballages recyclables ou réutilisables');
+      recommendations.push('Choisir des emballages recyclables ou rÃ©utilisables');
     }
     
     if (breakdown.transport < 60) {
@@ -238,10 +238,10 @@ export class EcoScoreService {
     }
     
     if (breakdown.processing < 60) {
-      recommendations.push('Opter pour des aliments moins transformés');
+      recommendations.push('Opter pour des aliments moins transformÃ©s');
     }
     
-    // Recommandations générales
+    // Recommandations gÃ©nÃ©rales
     if (recommendations.length === 0) {
       recommendations.push('Produit avec un bon impact environnemental');
     }
@@ -264,19 +264,19 @@ export class EcoScoreService {
         data: {
           eco_score: score.eco_score,
           ai_confidence: score.ai_confidence,
-          // ✅ CORRECTION: Utiliser string au lieu de ConfidenceColor enum
+          // âœ… CORRECTION: Utiliser string au lieu de ConfidenceColor enum
           confidence_color: this.getConfidenceColor(score.ai_confidence),
           updated_at: new Date()
         }
       });
     } catch (error) {
-      console.error('❌ Erreur sauvegarde score:', error);
+      console.error('âŒ Erreur sauvegarde score:', error);
       throw error;
     }
   }
 
   private getConfidenceColor(confidence: number): any {
-    // ✅ CORRECTION: Retourner objet compatible avec Prisma
+    // âœ… CORRECTION: Retourner objet compatible avec Prisma
     if (confidence >= 0.8) return { set: 'green' };
     if (confidence >= 0.6) return { set: 'yellow' };
     return { set: 'red' };
@@ -290,27 +290,27 @@ export class EcoScoreService {
           eco_score: true,
           ai_confidence: true,
           title: true,
-          description: true, // ✅ CORRECTION: utiliser description
+          description: true, // âœ… CORRECTION: utiliser description
           category: true
         }
       });
       
       if (!product) return null;
       
-      // Si pas de score calculé, le calculer
+      // Si pas de score calculÃ©, le calculer
       if (!product.eco_score) {
         return await this.calculate({
           id: productId,
           title: product.title,
-          ingredients: product.description || '', // ✅ CORRECTION: utiliser description
+          ingredients: product.description || '', // âœ… CORRECTION: utiliser description
           category: product.category || ''
         });
       }
       
       // Retourner le score existant
       return {
-        eco_score: Number(product.eco_score), // ✅ CORRECTION: convertir Decimal en number
-        ai_confidence: Number(product.ai_confidence || 0.7), // ✅ CORRECTION: convertir Decimal
+        eco_score: Number(product.eco_score), // âœ… CORRECTION: convertir Decimal en number
+        ai_confidence: Number(product.ai_confidence || 0.7), // âœ… CORRECTION: convertir Decimal
         breakdown: {
           ingredients: 0,
           packaging: 0,
@@ -318,10 +318,10 @@ export class EcoScoreService {
           processing: 0
         },
         recommendations: [],
-        sources: ['Base de données ADEME 2024']
+        sources: ['Base de donnÃ©es ADEME 2024']
       };
     } catch (error) {
-      console.error('❌ Erreur récupération score:', error);
+      console.error('âŒ Erreur rÃ©cupÃ©ration score:', error);
       return null;
     }
   }
@@ -341,12 +341,12 @@ export class EcoScoreService {
         select: {
           id: true,
           title: true,
-          description: true, // ✅ CORRECTION: utiliser description
+          description: true, // âœ… CORRECTION: utiliser description
           category: true
         }
       });
       
-      console.log(`🔄 Mise à jour scores pour ${products.length} produits`);
+      console.log(`ðŸ”„ Mise Ã  jour scores pour ${products.length} produits`);
       
       let updatedCount = 0;
       
@@ -355,21 +355,21 @@ export class EcoScoreService {
           const score = await this.calculate({
             id: product.id,
             title: product.title,
-            ingredients: product.description || '', // ✅ CORRECTION: utiliser description
+            ingredients: product.description || '', // âœ… CORRECTION: utiliser description
             category: product.category || ''
           });
           
           await this.saveScoreToDatabase(product.id, score);
           updatedCount++;
         } catch (error) {
-          console.error(`❌ Erreur produit ${product.id}:`, error);
+          console.error(`âŒ Erreur produit ${product.id}:`, error);
         }
       }
       
-      console.log(`✅ ${updatedCount} scores mis à jour`);
+      console.log(`âœ… ${updatedCount} scores mis Ã  jour`);
       return updatedCount;
     } catch (error) {
-      console.error('❌ Erreur mise à jour catégorie:', error);
+      console.error('âŒ Erreur mise Ã  jour catÃ©gorie:', error);
       return 0;
     }
   }
@@ -393,7 +393,7 @@ export class EcoScoreService {
       
       return distribution;
     } catch (error) {
-      console.error('❌ Erreur distribution scores:', error);
+      console.error('âŒ Erreur distribution scores:', error);
       return [];
     }
   }

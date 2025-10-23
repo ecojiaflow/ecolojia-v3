@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const { metrics } = require('../monitoring/metrics');
 const { logInfo } = require('../monitoring/logs');
 const router = express.Router();

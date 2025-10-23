@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/HistoryPage.tsx
+// PATH: frontend/src/pages/HistoryPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Package, Clock, Star } from 'lucide-react';

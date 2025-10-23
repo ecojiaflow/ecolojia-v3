@@ -1,4 +1,4 @@
-﻿// backend/src/services/DataNormalizer.js
+// backend/src/services/DataNormalizer.js
 /**
  * Service de normalisation des données produit
  * GARANTIT un format uniforme peu importe la source (OFF, OCR, IA, Manuel)

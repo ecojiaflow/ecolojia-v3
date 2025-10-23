@@ -75,14 +75,14 @@ class AuthService {
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      // En mode démo, simuler une connexion réussie
+      // En mode dÃ©mo, simuler une connexion rÃ©ussie
       if (ConfigService.isDemo()) {
         const demoUser: User = {
           _id: 'demo-user-123',
           email: credentials.email,
           profile: {
             firstName: 'Utilisateur',
-            lastName: 'Démo',
+            lastName: 'DÃ©mo',
             subscription: {
               plan: 'free',
               status: 'active'
@@ -91,7 +91,7 @@ class AuthService {
           preferences: {
             dietaryRestrictions: [],
             allergies: [],
-            interests: ['santé', 'environnement']
+            interests: ['santÃ©', 'environnement']
           }
         };
 
@@ -116,7 +116,7 @@ class AuthService {
     } catch (error: any) {
       console.error('Login error:', error);
       
-      // Si le backend n'est pas accessible, passer en mode démo
+      // Si le backend n'est pas accessible, passer en mode dÃ©mo
       if (error.message?.includes('ERR_CONNECTION_REFUSED') || error.message?.includes('Failed to fetch')) {
         ConfigService.setMode('demo');
         return this.login(credentials);
@@ -128,7 +128,7 @@ class AuthService {
 
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      // En mode démo, simuler une inscription réussie
+      // En mode dÃ©mo, simuler une inscription rÃ©ussie
       if (ConfigService.isDemo()) {
         const demoUser: User = {
           _id: 'demo-user-' + Date.now(),
@@ -169,7 +169,7 @@ class AuthService {
     } catch (error: any) {
       console.error('Register error:', error);
       
-      // Si le backend n'est pas accessible, passer en mode démo
+      // Si le backend n'est pas accessible, passer en mode dÃ©mo
       if (error.message?.includes('ERR_CONNECTION_REFUSED') || error.message?.includes('Failed to fetch')) {
         ConfigService.setMode('demo');
         return this.register(data);
@@ -243,7 +243,7 @@ class AuthService {
     } catch (error: any) {
       console.error('Get profile error:', error);
       
-      // Si c'est une erreur 404, essayer un autre endpoint ou utiliser les données en cache
+      // Si c'est une erreur 404, essayer un autre endpoint ou utiliser les donnÃ©es en cache
       if (error.statusCode === 404 || error.message?.includes('404')) {
         console.log('Profile endpoint not found, using cached user data');
         return this.user;
@@ -283,7 +283,7 @@ class AuthService {
   }
 
   async checkAuthStatus(): Promise<User | null> {
-    // Éviter les appels multiples simultanés
+    // Ã‰viter les appels multiples simultanÃ©s
     if (this.authCheckPromise) {
       return this.authCheckPromise;
     }
@@ -310,14 +310,14 @@ class AuthService {
         return this.user;
       }
 
-      // Essayer de récupérer le profil
+      // Essayer de rÃ©cupÃ©rer le profil
       try {
         const user = await this.getProfile();
         return user;
       } catch (profileError: any) {
         console.log('Profile fetch failed:', profileError.message);
         
-        // Si le profil échoue mais qu'on a un utilisateur en cache, l'utiliser
+        // Si le profil Ã©choue mais qu'on a un utilisateur en cache, l'utiliser
         if (this.user) {
           console.log('Using cached user data');
           return this.user;

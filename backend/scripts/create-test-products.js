@@ -5,7 +5,7 @@ const Product = require('../src/models/Product');
 const cosmeticsProducts = [
   {
     barcode: '3600523975310',
-    name: 'Crème Visage Hydratante',
+    name: 'CrÃ¨me Visage Hydratante',
     brand: 'Nivea',
     category: 'cosmetics',
     imageUrl: 'https://images.openfoodfacts.org/images/products/360/052/397/5310/front_fr.jpg',
@@ -48,7 +48,7 @@ const cosmeticsProducts = [
   },
   {
     barcode: '3337875583389',
-    name: 'Déodorant Spray',
+    name: 'DÃ©odorant Spray',
     brand: 'Sanex',
     category: 'cosmetics',
     imageUrl: 'https://via.placeholder.com/150',
@@ -147,21 +147,21 @@ const detergentsProducts = [
 async function createProducts() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('? MongoDB connecté');
+    console.log('? MongoDB connectÃ©');
 
-    // Supprimer produits existants cosmétiques/détergents
+    // Supprimer produits existants cosmÃ©tiques/dÃ©tergents
     await Product.deleteMany({ category: { $in: ['cosmetics', 'detergents'] } });
-    console.log('??? Anciens produits cosmétiques/détergents supprimés');
+    console.log('??? Anciens produits cosmÃ©tiques/dÃ©tergents supprimÃ©s');
 
-    // Insérer cosmétiques
+    // InsÃ©rer cosmÃ©tiques
     const cosmCreated = await Product.insertMany(cosmeticsProducts);
-    console.log(`? ${cosmCreated.length} produits cosmétiques créés`);
+    console.log(`? ${cosmCreated.length} produits cosmÃ©tiques crÃ©Ã©s`);
 
-    // Insérer détergents
+    // InsÃ©rer dÃ©tergents
     const detCreated = await Product.insertMany(detergentsProducts);
-    console.log(`? ${detCreated.length} produits détergents créés`);
+    console.log(`? ${detCreated.length} produits dÃ©tergents crÃ©Ã©s`);
 
-    // Vérifier total
+    // VÃ©rifier total
     const totalFood = await Product.countDocuments({ category: 'food' });
     const totalCosm = await Product.countDocuments({ category: 'cosmetics' });
     const totalDet = await Product.countDocuments({ category: 'detergents' });

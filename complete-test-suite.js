@@ -8,113 +8,113 @@ const TEST_USER = {
   password: 'Test123!@#'
 };
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS AUTHENTIFICATION
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testAuth() {
-  console.log('\n🔐 TESTS AUTHENTIFICATION');
+  console.log('\nðŸ” TESTS AUTHENTIFICATION');
   
   try {
     // 1. Register
-    console.log('→ Register new user...');
+    console.log('â†’ Register new user...');
     const registerRes = await axios.post(`${API_URL}/api/auth/register`, {
       email: TEST_USER.email,
       password: TEST_USER.password,
       firstName: 'Test',
       lastName: 'User'
     });
-    console.log('✅ Register:', registerRes.data.success ? 'OK' : 'FAILED');
+    console.log('âœ… Register:', registerRes.data.success ? 'OK' : 'FAILED');
     
     // 2. Login
-    console.log('→ Login...');
+    console.log('â†’ Login...');
     const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
       email: TEST_USER.email,
       password: TEST_USER.password
     });
     const token = loginRes.data.token;
-    console.log('✅ Login:', token ? 'OK' : 'FAILED');
+    console.log('âœ… Login:', token ? 'OK' : 'FAILED');
     
     // 3. Get profile
-    console.log('→ Get profile...');
+    console.log('â†’ Get profile...');
     const profileRes = await axios.get(`${API_URL}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log('✅ Profile:', profileRes.data.user ? 'OK' : 'FAILED');
+    console.log('âœ… Profile:', profileRes.data.user ? 'OK' : 'FAILED');
     
     return { success: true, token };
     
   } catch (error) {
-    console.error('❌ Auth test failed:', error.response?.data || error.message);
+    console.error('âŒ Auth test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// TESTS PROXY SÉCURISÉ
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// TESTS PROXY SÃ‰CURISÃ‰
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testSecureProxy(token) {
-  console.log('\n🔒 TESTS PROXY SÉCURISÉ');
+  console.log('\nðŸ”’ TESTS PROXY SÃ‰CURISÃ‰');
   
   try {
     const headers = { Authorization: `Bearer ${token}` };
     
     // 1. Algolia token
-    console.log('→ Get Algolia search token...');
+    console.log('â†’ Get Algolia search token...');
     const algoliaRes = await axios.post(`${API_URL}/api/proxy/algolia/search-token`, 
       { indices: ['ecolojia_products'] },
       { headers }
     );
-    console.log('✅ Algolia token:', algoliaRes.data.token ? 'OK' : 'FAILED');
+    console.log('âœ… Algolia token:', algoliaRes.data.token ? 'OK' : 'FAILED');
     
     // 2. AI Chat (quota check)
-    console.log('→ Test AI chat with quota...');
+    console.log('â†’ Test AI chat with quota...');
     try {
       const aiRes = await axios.post(`${API_URL}/api/proxy/ai/chat`,
         { message: 'Qu\'est-ce que le Nutri-Score ?' },
         { headers }
       );
-      console.log('✅ AI chat:', aiRes.data.response ? 'OK' : 'FAILED');
+      console.log('âœ… AI chat:', aiRes.data.response ? 'OK' : 'FAILED');
     } catch (error) {
       if (error.response?.status === 403) {
-        console.log('⚠️ AI chat: Quota épuisé (comportement attendu pour Free)');
+        console.log('âš ï¸ AI chat: Quota Ã©puisÃ© (comportement attendu pour Free)');
       } else throw error;
     }
     
     // 3. Upload signature
-    console.log('→ Get upload signature...');
+    console.log('â†’ Get upload signature...');
     const uploadRes = await axios.post(`${API_URL}/api/proxy/upload/signature`,
       { uploadPreset: 'ecolojia_products' },
       { headers }
     );
-    console.log('✅ Upload signature:', uploadRes.data.signature ? 'OK' : 'FAILED');
+    console.log('âœ… Upload signature:', uploadRes.data.signature ? 'OK' : 'FAILED');
     
     return { success: true };
     
   } catch (error) {
-    console.error('❌ Proxy test failed:', error.response?.data || error.message);
+    console.error('âŒ Proxy test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS QUOTAS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testQuotas(token) {
-  console.log('\n📊 TESTS QUOTAS');
+  console.log('\nðŸ“Š TESTS QUOTAS');
   
   try {
     const headers = { Authorization: `Bearer ${token}` };
     
     // 1. Get quota status
-    console.log('→ Get quota status...');
+    console.log('â†’ Get quota status...');
     const statusRes = await axios.get(`${API_URL}/api/users/quota-status`, { headers });
-    console.log('✅ Quota status:', statusRes.data);
+    console.log('âœ… Quota status:', statusRes.data);
     
     // 2. Test scan quota
-    console.log('→ Test scan quota consumption...');
+    console.log('â†’ Test scan quota consumption...');
     let scansSuccess = 0;
     for (let i = 0; i < 3; i++) {
       try {
@@ -125,86 +125,86 @@ async function testQuotas(token) {
         scansSuccess++;
       } catch (error) {
         if (error.response?.status === 403) {
-          console.log(`⚠️ Scan ${i + 1}: Quota atteint`);
+          console.log(`âš ï¸ Scan ${i + 1}: Quota atteint`);
           break;
         }
       }
     }
-    console.log(`✅ Scans réussis: ${scansSuccess}/3`);
+    console.log(`âœ… Scans rÃ©ussis: ${scansSuccess}/3`);
     
     return { success: true };
     
   } catch (error) {
-    console.error('❌ Quota test failed:', error.response?.data || error.message);
+    console.error('âŒ Quota test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS RGPD
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testGDPR(token) {
-  console.log('\n🛡️ TESTS RGPD');
+  console.log('\nðŸ›¡ï¸ TESTS RGPD');
   
   try {
     const headers = { Authorization: `Bearer ${token}` };
     
-    // 1. Accès aux données
-    console.log('→ Droit d\'accès (Art. 15)...');
+    // 1. AccÃ¨s aux donnÃ©es
+    console.log('â†’ Droit d\'accÃ¨s (Art. 15)...');
     const accessRes = await axios.get(`${API_URL}/api/gdpr/access`, { headers });
-    console.log('✅ Accès données:', accessRes.data.data ? 'OK' : 'FAILED');
+    console.log('âœ… AccÃ¨s donnÃ©es:', accessRes.data.data ? 'OK' : 'FAILED');
     
     // 2. Consentements
-    console.log('→ Get consents...');
+    console.log('â†’ Get consents...');
     const consentsRes = await axios.get(`${API_URL}/api/gdpr/consent`, { headers });
-    console.log('✅ Consents:', consentsRes.data.consents);
+    console.log('âœ… Consents:', consentsRes.data.consents);
     
     // 3. Update consents
-    console.log('→ Update consents...');
+    console.log('â†’ Update consents...');
     const updateRes = await axios.put(`${API_URL}/api/gdpr/consent`,
       { consents: { analytics: true, healthData: true, marketing: false } },
       { headers }
     );
-    console.log('✅ Update consents:', updateRes.data.success ? 'OK' : 'FAILED');
+    console.log('âœ… Update consents:', updateRes.data.success ? 'OK' : 'FAILED');
     
-    // 4. Export données
-    console.log('→ Export données JSON...');
+    // 4. Export donnÃ©es
+    console.log('â†’ Export donnÃ©es JSON...');
     try {
       const exportRes = await axios.post(`${API_URL}/api/gdpr/export`,
         { format: 'json', categories: ['profile', 'preferences'] },
         { headers }
       );
-      console.log('✅ Export:', exportRes.data ? 'OK' : 'FAILED');
+      console.log('âœ… Export:', exportRes.data ? 'OK' : 'FAILED');
     } catch (error) {
       if (error.response?.status === 403) {
-        console.log('⚠️ Export: Quota épuisé (comportement attendu pour Free)');
+        console.log('âš ï¸ Export: Quota Ã©puisÃ© (comportement attendu pour Free)');
       } else throw error;
     }
     
     return { success: true };
     
   } catch (error) {
-    console.error('❌ GDPR test failed:', error.response?.data || error.message);
+    console.error('âŒ GDPR test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS WEBHOOKS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testWebhooks() {
-  console.log('\n🪝 TESTS WEBHOOKS');
+  console.log('\nðŸª TESTS WEBHOOKS');
   
   try {
     // 1. Health check
-    console.log('→ Webhook health check...');
+    console.log('â†’ Webhook health check...');
     const healthRes = await axios.get(`${API_URL}/api/webhooks/health`);
-    console.log('✅ Health:', healthRes.data.status === 'ok' ? 'OK' : 'FAILED');
+    console.log('âœ… Health:', healthRes.data.status === 'ok' ? 'OK' : 'FAILED');
     
     // 2. Test webhook signature
-    console.log('→ Test webhook signature validation...');
+    console.log('â†’ Test webhook signature validation...');
     const testPayload = {
       meta: {
         event_name: 'test',
@@ -222,38 +222,38 @@ async function testWebhooks() {
       await axios.post(`${API_URL}/api/webhooks/lemonsqueezy`, testPayload, {
         headers: { 'x-signature': signature }
       });
-      console.log('✅ Webhook signature: Valid');
+      console.log('âœ… Webhook signature: Valid');
     } catch (error) {
       if (error.response?.status === 401) {
-        console.log('❌ Webhook signature: Invalid (check secret)');
+        console.log('âŒ Webhook signature: Invalid (check secret)');
       }
     }
     
     return { success: true };
     
   } catch (error) {
-    console.error('❌ Webhook test failed:', error.response?.data || error.message);
+    console.error('âŒ Webhook test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS CIRCUIT BREAKER
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testCircuitBreaker(token) {
-  console.log('\n⚡ TESTS CIRCUIT BREAKER');
+  console.log('\nâš¡ TESTS CIRCUIT BREAKER');
   
   try {
     const headers = { Authorization: `Bearer ${token}` };
     
     // 1. Status
-    console.log('→ Circuit breaker status...');
+    console.log('â†’ Circuit breaker status...');
     const statusRes = await axios.get(`${API_URL}/api/ai/circuit-breaker/status`, { headers });
-    console.log('✅ Status:', statusRes.data);
+    console.log('âœ… Status:', statusRes.data);
     
     // 2. Simulate failures
-    console.log('→ Simulate AI failures...');
+    console.log('â†’ Simulate AI failures...');
     for (let i = 0; i < 5; i++) {
       try {
         await axios.post(`${API_URL}/api/proxy/ai/chat`,
@@ -267,27 +267,27 @@ async function testCircuitBreaker(token) {
     
     // 3. Check if circuit opened
     const newStatus = await axios.get(`${API_URL}/api/ai/circuit-breaker/status`, { headers });
-    console.log('✅ Circuit state:', newStatus.data.state);
+    console.log('âœ… Circuit state:', newStatus.data.state);
     
     return { success: true };
     
   } catch (error) {
-    console.error('❌ Circuit breaker test failed:', error.response?.data || error.message);
+    console.error('âŒ Circuit breaker test failed:', error.response?.data || error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TESTS RATE LIMITING
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function testRateLimiting(token) {
-  console.log('\n🚦 TESTS RATE LIMITING');
+  console.log('\nðŸš¦ TESTS RATE LIMITING');
   
   try {
     const headers = { Authorization: `Bearer ${token}` };
     
-    console.log('→ Stress test rate limiting...');
+    console.log('â†’ Stress test rate limiting...');
     const requests = [];
     for (let i = 0; i < 110; i++) {
       requests.push(
@@ -300,23 +300,23 @@ async function testRateLimiting(token) {
     const rateLimited = results.filter(r => r.error === 429).length;
     const success = results.filter(r => !r.error).length;
     
-    console.log(`✅ Requests: ${success} success, ${rateLimited} rate-limited`);
-    console.log(rateLimited > 0 ? '✅ Rate limiting: Working' : '❌ Rate limiting: Not working');
+    console.log(`âœ… Requests: ${success} success, ${rateLimited} rate-limited`);
+    console.log(rateLimited > 0 ? 'âœ… Rate limiting: Working' : 'âŒ Rate limiting: Not working');
     
     return { success: rateLimited > 0 };
     
   } catch (error) {
-    console.error('❌ Rate limit test failed:', error.message);
+    console.error('âŒ Rate limit test failed:', error.message);
     return { success: false };
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // TEST RUNNER
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function runAllTests() {
-  console.log('🧪 ECOLOJIA V3 - SUITE DE TESTS COMPLÈTE');
+  console.log('ðŸ§ª ECOLOJIA V3 - SUITE DE TESTS COMPLÃˆTE');
   console.log('=====================================');
   console.log(`API URL: ${API_URL}`);
   console.log(`Date: ${new Date().toLocaleString()}`);
@@ -337,7 +337,7 @@ async function runAllTests() {
     results.auth = authResult.success;
     
     if (!authResult.token) {
-      console.error('\n❌ Auth failed - cannot continue tests');
+      console.error('\nâŒ Auth failed - cannot continue tests');
       return;
     }
     
@@ -352,32 +352,32 @@ async function runAllTests() {
     results.rateLimiting = (await testRateLimiting(token)).success;
     
   } catch (error) {
-    console.error('\n❌ Test suite error:', error.message);
+    console.error('\nâŒ Test suite error:', error.message);
   }
   
   // Summary
-  console.log('\n📊 RÉSUMÉ DES TESTS');
+  console.log('\nðŸ“Š RÃ‰SUMÃ‰ DES TESTS');
   console.log('==================');
   Object.entries(results).forEach(([test, passed]) => {
-    console.log(`${passed ? '✅' : '❌'} ${test}: ${passed ? 'PASSED' : 'FAILED'}`);
+    console.log(`${passed ? 'âœ…' : 'âŒ'} ${test}: ${passed ? 'PASSED' : 'FAILED'}`);
   });
   
   const totalPassed = Object.values(results).filter(r => r).length;
   const totalTests = Object.keys(results).length;
   const successRate = ((totalPassed / totalTests) * 100).toFixed(1);
   
-  console.log(`\n🎯 Score: ${totalPassed}/${totalTests} (${successRate}%)`);
+  console.log(`\nðŸŽ¯ Score: ${totalPassed}/${totalTests} (${successRate}%)`);
   
   // Cleanup
   if (results.auth) {
-    console.log('\n🧹 Cleaning up test user...');
+    console.log('\nðŸ§¹ Cleaning up test user...');
     try {
       await axios.delete(`${API_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${authResult.token}` }
       });
-      console.log('✅ Test user deleted');
+      console.log('âœ… Test user deleted');
     } catch (error) {
-      console.log('⚠️ Could not delete test user');
+      console.log('âš ï¸ Could not delete test user');
     }
   }
 }

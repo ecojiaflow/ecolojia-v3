@@ -15,7 +15,7 @@ export class CategoryDetector {
       return 'detergent';
     }
     
-    // Par défaut : alimentaire
+    // Par dÃ©faut : alimentaire
     return 'alimentaire';
   }
 }

@@ -10,7 +10,7 @@ export interface CosmeticAnalysisResult {
 
 export class CosmeticClassifier {
   
-  // Base de données des ingrédients préoccupants
+  // Base de donnÃ©es des ingrÃ©dients prÃ©occupants
   private static readonly CONCERNING_INGREDIENTS = {
     'PARABEN': {
       names: ['METHYLPARABEN', 'PROPYLPARABEN', 'BUTYLPARABEN', 'ETHYLPARABEN'],
@@ -24,27 +24,27 @@ export class CosmeticClassifier {
     },
     'FORMALDEHYDE': {
       names: ['FORMALDEHYDE', 'FORMALIN', 'DMDM HYDANTOIN', 'IMIDAZOLIDINYL UREA'],
-      risk: 'Cancérigène possible, allergène',
+      risk: 'CancÃ©rigÃ¨ne possible, allergÃ¨ne',
       severity: 'high'
     },
     'SILICONE': {
       names: ['DIMETHICONE', 'CYCLOPENTASILOXANE', 'CYCLOHEXASILOXANE'],
-      risk: 'Non biodégradable, effet occlusif',
+      risk: 'Non biodÃ©gradable, effet occlusif',
       severity: 'low'
     },
     'MINERAL_OIL': {
       names: ['PARAFFINUM LIQUIDUM', 'PETROLATUM', 'MINERAL OIL'],
-      risk: 'Dérivé du pétrole, effet occlusif',
+      risk: 'DÃ©rivÃ© du pÃ©trole, effet occlusif',
       severity: 'medium'
     },
     'ALCOHOL': {
       names: ['ALCOHOL DENAT', 'ETHANOL', 'ISOPROPYL ALCOHOL'],
-      risk: 'Dessèchement de la peau',
+      risk: 'DessÃ¨chement de la peau',
       severity: 'low'
     }
   };
 
-  // Ingrédients bénéfiques
+  // IngrÃ©dients bÃ©nÃ©fiques
   private static readonly BENEFICIAL_INGREDIENTS = [
     'ALOE VERA', 'HYALURONIC ACID', 'GLYCERIN', 'SHEA BUTTER', 'ARGAN OIL',
     'VITAMIN E', 'VITAMIN C', 'NIACINAMIDE', 'CERAMIDE', 'PEPTIDES',
@@ -57,12 +57,12 @@ export class CosmeticClassifier {
     const benefits: string[] = [];
     let totalRiskScore = 0;
 
-    // Normaliser les ingrédients en majuscules
+    // Normaliser les ingrÃ©dients en majuscules
     const normalizedIngredients = ingredients.map(ing => ing.toUpperCase().trim());
 
-    // Analyser chaque ingrédient
+    // Analyser chaque ingrÃ©dient
     for (const ingredient of normalizedIngredients) {
-      // Vérifier les ingrédients préoccupants
+      // VÃ©rifier les ingrÃ©dients prÃ©occupants
       for (const [category, data] of Object.entries(this.CONCERNING_INGREDIENTS)) {
         if (data.names.some(name => ingredient.includes(name))) {
           concerningIngredients.push(ingredient);
@@ -74,16 +74,16 @@ export class CosmeticClassifier {
         }
       }
 
-      // Vérifier les ingrédients bénéfiques
+      // VÃ©rifier les ingrÃ©dients bÃ©nÃ©fiques
       if (this.BENEFICIAL_INGREDIENTS.some(beneficial => ingredient.includes(beneficial))) {
         benefits.push(ingredient);
       }
     }
 
-    // Calculer le grade de sécurité
+    // Calculer le grade de sÃ©curitÃ©
     const safetyGrade = this.calculateSafetyGrade(totalRiskScore, concerningIngredients.length);
     
-    // Générer les recommandations
+    // GÃ©nÃ©rer les recommandations
     const recommendations = this.generateRecommendations(safetyGrade, concerningIngredients, benefits);
 
     // Calculer la confiance
@@ -91,7 +91,7 @@ export class CosmeticClassifier {
 
     return {
       safetyGrade,
-      riskFactors: riskFactors.length > 0 ? riskFactors : ['Aucun ingrédient préoccupant identifié'],
+      riskFactors: riskFactors.length > 0 ? riskFactors : ['Aucun ingrÃ©dient prÃ©occupant identifiÃ©'],
       recommendations,
       confidence,
       concerningIngredients,
@@ -115,33 +115,33 @@ export class CosmeticClassifier {
 
     switch (grade) {
       case 'A':
-        recommendations.push('Excellent choix ! Composition très sûre');
+        recommendations.push('Excellent choix ! Composition trÃ¨s sÃ»re');
         if (benefits.length > 0) {
-          recommendations.push(`Contient des ingrédients bénéfiques : ${benefits.slice(0, 3).join(', ')}`);
+          recommendations.push(`Contient des ingrÃ©dients bÃ©nÃ©fiques : ${benefits.slice(0, 3).join(', ')}`);
         }
         break;
       
       case 'B':
         recommendations.push('Bon produit avec quelques points d\'attention');
         if (concerning.length > 0) {
-          recommendations.push('Surveillez votre tolérance aux ingrédients signalés');
+          recommendations.push('Surveillez votre tolÃ©rance aux ingrÃ©dients signalÃ©s');
         }
         break;
       
       case 'C':
         recommendations.push('Produit correct mais perfectible');
-        recommendations.push('Considérez des alternatives plus naturelles');
+        recommendations.push('ConsidÃ©rez des alternatives plus naturelles');
         break;
       
       case 'D':
-        recommendations.push('Évitez ce produit si vous avez la peau sensible');
-        recommendations.push('Recherchez des produits certifiés bio');
+        recommendations.push('Ã‰vitez ce produit si vous avez la peau sensible');
+        recommendations.push('Recherchez des produits certifiÃ©s bio');
         break;
     }
 
-    // Recommandations générales
+    // Recommandations gÃ©nÃ©rales
     recommendations.push('Testez sur une petite zone avant utilisation');
-    recommendations.push('Consultez la liste complète des ingrédients INCI');
+    recommendations.push('Consultez la liste complÃ¨te des ingrÃ©dients INCI');
 
     return recommendations;
   }
@@ -150,17 +150,17 @@ export class CosmeticClassifier {
     if (totalIngredients === 0) return 0.3;
     
     const analysisRatio = analyzedIngredients / totalIngredients;
-    const baseConfidence = Math.min(totalIngredients / 20, 1); // Plus d'ingrédients = plus de confiance
+    const baseConfidence = Math.min(totalIngredients / 20, 1); // Plus d'ingrÃ©dients = plus de confiance
     
     return Math.max(0.4, Math.min(0.95, baseConfidence + analysisRatio * 0.3));
   }
 
-  // Analyse spécialisée par type de produit
+  // Analyse spÃ©cialisÃ©e par type de produit
   static async analyzeSkinCare(ingredients: string[]): Promise<CosmeticAnalysisResult> {
     const result = await this.analyzeIngredients(ingredients);
     
-    // Ajout de recommandations spécifiques aux soins de la peau
-    result.recommendations.push('Appliquez une protection solaire en journée');
+    // Ajout de recommandations spÃ©cifiques aux soins de la peau
+    result.recommendations.push('Appliquez une protection solaire en journÃ©e');
     result.recommendations.push('Adaptez votre routine selon votre type de peau');
     
     return result;
@@ -169,9 +169,9 @@ export class CosmeticClassifier {
   static async analyzeHairCare(ingredients: string[]): Promise<CosmeticAnalysisResult> {
     const result = await this.analyzeIngredients(ingredients);
     
-    // Ajout de recommandations spécifiques aux soins capillaires
+    // Ajout de recommandations spÃ©cifiques aux soins capillaires
     result.recommendations.push('Alternez avec des shampoings doux');
-    result.recommendations.push('Utilisez un après-shampoing pour protéger');
+    result.recommendations.push('Utilisez un aprÃ¨s-shampoing pour protÃ©ger');
     
     return result;
   }

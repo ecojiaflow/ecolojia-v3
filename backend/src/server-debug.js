@@ -4,7 +4,7 @@ console.log('__dirname:', __dirname);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
 
-// Vérifier les imports
+// VÃ©rifier les imports
 try {
   console.log('Loading dotenv...');
   require('dotenv').config();
@@ -21,7 +21,7 @@ try {
   process.exit(1);
 }
 
-// Démarrer serveur minimal
+// DÃ©marrer serveur minimal
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5001;

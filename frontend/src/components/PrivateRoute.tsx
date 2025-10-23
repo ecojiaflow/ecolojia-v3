@@ -1,4 +1,4 @@
-﻿// frontend/src/components/PrivateRoute.tsx
+// frontend/src/components/PrivateRoute.tsx
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuthContext } from './Contexts/AuthContext';

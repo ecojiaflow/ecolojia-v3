@@ -1,15 +1,15 @@
 {
   "meta": {
-    "source": "ANSES - Agence nationale de sécurité sanitaire de l'alimentation",
+    "source": "ANSES - Agence nationale de sÃ©curitÃ© sanitaire de l'alimentation",
     "version": "2024",
-    "algorithm": "Nutri-Score officiel français",
-    "reference": "Arrêté du 31 octobre 2017 relatif Ã  la déclaration nutritionnelle",
+    "algorithm": "Nutri-Score officiel franÃ§ais",
+    "reference": "ArrÃªtÃ© du 31 octobre 2017 relatif ÃƒÂ  la dÃ©claration nutritionnelle",
     "last_updated": "2024-01-15",
-    "legal_disclaimer": "Calcul basé sur l'algorithme officiel Nutri-Score français - ANSES 2024"
+    "legal_disclaimer": "Calcul basÃ© sur l'algorithme officiel Nutri-Score franÃ§ais - ANSES 2024"
   },
 
   "negative_points": {
-    "description": "Points négatifs selon l'algorithme officiel Nutri-Score",
+    "description": "Points nÃ©gatifs selon l'algorithme officiel Nutri-Score",
     "unit": "pour 100g ou 100ml de produit",
     
     "energy": {
@@ -88,7 +88,7 @@
     "unit": "pour 100g ou 100ml de produit",
 
     "fruits_vegetables_nuts": {
-      "unit": "% fruits, légumes, légumineuses, fruits Ã  coque, huiles d'olive/colza/noix",
+      "unit": "% fruits, lÃ©gumes, lÃ©gumineuses, fruits ÃƒÂ  coque, huiles d'olive/colza/noix",
       "table": [
         {"min": 0, "max": 40, "points": 0},
         {"min": 40, "max": 60, "points": 1},
@@ -96,7 +96,7 @@
         {"min": 80, "max": 999999, "points": 5}
       ],
       "estimation_rules": {
-        "if_no_data": "Estimer selon position dans liste ingrédients",
+        "if_no_data": "Estimer selon position dans liste ingrÃ©dients",
         "first_ingredient_fruit": 80,
         "second_ingredient_fruit": 60,
         "third_ingredient_fruit": 40,
@@ -132,9 +132,9 @@
   "final_score_calculation": {
     "formula": "score_final = points_negatifs - points_positifs",
     "special_rules": {
-      "beverages": "Règles spécifiques pour boissons selon réglementation",
-      "cheese": "Exception fromages: si points négatifs â‰¥ 11, points protéines comptent quand même",
-      "added_fats": "Huiles et matières grasses: seuls points négatifs comptent"
+      "beverages": "RÃ¨gles spÃ©cifiques pour boissons selon rÃ©glementation",
+      "cheese": "Exception fromages: si points nÃ©gatifs Ã¢â€°Â¥ 11, points protÃ©ines comptent quand mÃªme",
+      "added_fats": "Huiles et matiÃ¨res grasses: seuls points nÃ©gatifs comptent"
     }
   },
 
@@ -157,7 +157,7 @@
   },
 
   "confidence_factors": {
-    "description": "Facteurs influençant la confiance du calcul Nutri-Score",
+    "description": "Facteurs influenÃ§ant la confiance du calcul Nutri-Score",
     "required_data": {
       "energy": {"weight": 0.25, "essential": true},
       "saturated_fat": {"weight": 0.2, "essential": true},
@@ -210,9 +210,9 @@
   },
 
   "legal_compliance": {
-    "data_protection": "Aucune donnée personnelle collectée lors du calcul",
-    "claims_prohibition": "Ne constitue pas un conseil médical ou nutritionnel",
-    "source_obligation": "Calcul selon algorithme officiel ANSES - Arrêté du 31 octobre 2017",
+    "data_protection": "Aucune donnÃ©e personnelle collectÃ©e lors du calcul",
+    "claims_prohibition": "Ne constitue pas un conseil mÃ©dical ou nutritionnel",
+    "source_obligation": "Calcul selon algorithme officiel ANSES - ArrÃªtÃ© du 31 octobre 2017",
     "liability_disclaimer": "L'utilisateur reste responsable de ses choix alimentaires"
   }
 }

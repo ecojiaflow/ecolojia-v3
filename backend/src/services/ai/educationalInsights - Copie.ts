@@ -22,9 +22,9 @@ export default class EducationalInsightsEngine {
 
   private buildScientificDatabase() {
     this.scientificDatabase = {
-      'fibres': 'Améliore le transit intestinal, selon INSERM 2022.',
-      'probiotiques': 'Renforce la flore intestinale – étude INRA 2021.',
-      'sucre': 'Trop de sucres → perturbation métabolique – EFSA 2023.'
+      'fibres': 'AmÃ©liore le transit intestinal, selon INSERM 2022.',
+      'probiotiques': 'Renforce la flore intestinale â€“ Ã©tude INRA 2021.',
+      'sucre': 'Trop de sucres â†’ perturbation mÃ©tabolique â€“ EFSA 2023.'
     };
   }
 
@@ -32,11 +32,11 @@ export default class EducationalInsightsEngine {
     this.educationalTemplates = [
       {
         goal: 'digestion',
-        advice: 'Privilégiez les aliments riches en fibres comme les légumes secs.'
+        advice: 'PrivilÃ©giez les aliments riches en fibres comme les lÃ©gumes secs.'
       },
       {
-        goal: 'immunité',
-        advice: 'Consommez des probiotiques naturels (yaourt, kéfir).'
+        goal: 'immunitÃ©',
+        advice: 'Consommez des probiotiques naturels (yaourt, kÃ©fir).'
       }
     ];
   }
@@ -45,11 +45,11 @@ export default class EducationalInsightsEngine {
     this.microLearningModules = [
       {
         title: 'Pourquoi les fibres ?',
-        description: 'Elles nourrissent vos bonnes bactéries intestinales.'
+        description: 'Elles nourrissent vos bonnes bactÃ©ries intestinales.'
       },
       {
         title: 'Les dangers du sucre',
-        description: 'Un excès quotidien augmente le risque de diabète.'
+        description: 'Un excÃ¨s quotidien augmente le risque de diabÃ¨te.'
       }
     ];
   }
@@ -77,7 +77,7 @@ export default class EducationalInsightsEngine {
 
     for (const ing of ingredients.toLowerCase().split(/[,\\s]+/)) {
       const sci = this.scientificDatabase[ing];
-      if (sci) scientific.push(`${ing} → ${sci}`);
+      if (sci) scientific.push(`${ing} â†’ ${sci}`);
     }
 
     return {

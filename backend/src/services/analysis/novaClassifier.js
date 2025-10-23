@@ -1,5 +1,5 @@
 // backend/src/services/analysis/novaClassifier.js
-// Classification NOVA : de 1 (non transforme)   4 (ultra-transforme)
+// Classification NOVA : de 1 (non transforme) Â  4 (ultra-transforme)
 
 class NovaClassifier {
   constructor() {
@@ -9,7 +9,7 @@ class NovaClassifier {
       'e102', 'e104', 'e110', 'e122', 'e124', 'e129', 'e131', 'e132', 'e133',
       'e142', 'e150c', 'e150d', 'e151', 'e154', 'e155', 'e160b', 'e160c',
       
-      // ‰dulcorants
+      // â€°dulcorants
       'e950', 'e951', 'e952', 'e954', 'e955', 'e960', 'e961', 'e962',
       'aspartame', 'acesulfame', 'sucralose', 'saccharine',
       
@@ -18,7 +18,7 @@ class NovaClassifier {
       'e629', 'e630', 'e631', 'e632', 'e633', 'e634', 'e635',
       'glutamate', 'msg',
       
-      // ‰mulsifiants
+      // â€°mulsifiants
       'e322', 'e471', 'e472a', 'e472b', 'e472c', 'e472d', 'e472e', 'e472f',
       'e473', 'e474', 'e475', 'e476', 'e477', 'e481', 'e482',
       
@@ -32,7 +32,7 @@ class NovaClassifier {
     
     // Ingredients minimalement transformes (NOVA 1-2)
     this.minimallyProcessed = [
-      'eau', 'lait', 'Å“uf', 'farine', 'sucre', 'sel', 'huile', 'beurre',
+      'eau', 'lait', 'Ã…â€œuf', 'farine', 'sucre', 'sel', 'huile', 'beurre',
       'viande', 'poisson', 'fruits', 'legumes', 'cereales', 'legumineuses',
       'noix', 'graines', 'herbes', 'epices', 'cafe', 'the', 'cacao'
     ];
@@ -68,7 +68,7 @@ class NovaClassifier {
         label: 'Ultra-transforme',
         reason: `Contient des marqueurs d'ultra-transformation: ${ultraProcessedFound.join(', ')}`,
         markers: ultraProcessedFound,
-        healthImpact: '€ limiter - Associe   des risques pour la sante'
+        healthImpact: 'â‚¬ limiter - Associe Â  des risques pour la sante'
       };
     }
     
@@ -82,7 +82,7 @@ class NovaClassifier {
         confidence: 0.8,
         label: 'Transforme',
         reason: 'Majorite d\'ingredients transformes',
-        healthImpact: '€ consommer avec moderation'
+        healthImpact: 'â‚¬ consommer avec moderation'
       };
     }
     
@@ -102,7 +102,7 @@ class NovaClassifier {
       confidence: 0.85,
       label: 'Non transforme ou minimalement transforme',
       reason: 'Ingredients naturels ou peu transformes',
-      healthImpact: '€ privilegier pour une alimentation saine'
+      healthImpact: 'â‚¬ privilegier pour une alimentation saine'
     };
   }
   
@@ -163,20 +163,20 @@ class NovaClassifier {
       2: {
         message: 'Bon choix. Transformation culinaire acceptable.',
         tips: [
-          '€ utiliser pour cuisiner des plats maison',
+          'â‚¬ utiliser pour cuisiner des plats maison',
           'Verifiez les quantites de sel/sucre ajoutes'
         ]
       },
       3: {
-        message: '€ consommer avec moderation.',
+        message: 'â‚¬ consommer avec moderation.',
         tips: [
-          'Limitez   2-3 portions par semaine',
+          'Limitez Â  2-3 portions par semaine',
           'Cherchez des alternatives moins transformees',
           'Lisez bien la liste des ingredients'
         ]
       },
       4: {
-        message: '€ eviter autant que possible.',
+        message: 'â‚¬ eviter autant que possible.',
         tips: [
           'Reservez pour les occasions exceptionnelles',
           'Remplacez par des alternatives maison',

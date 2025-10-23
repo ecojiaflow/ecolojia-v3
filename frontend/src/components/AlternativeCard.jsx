@@ -1,4 +1,4 @@
-﻿// frontend/src/components/AlternativeCard.jsx
+// frontend/src/components/AlternativeCard.jsx
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/hooks/useAuth.ts
+// PATH: frontend/src/hooks/useAuth.ts
 // Hook unifie qui utilise le contexte existant
 
 export { useAuth } from '../auth/context/AuthContext';

@@ -1,4 +1,4 @@
-﻿const aiCache = require('../services/aiCache.service');
+const aiCache = require('../services/aiCache.service');
 
 /**
  * Middleware cache IA - Production Ready

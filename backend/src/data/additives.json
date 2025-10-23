@@ -1,4 +1,4 @@
-﻿{
+{
   "en:e100": {"code": "E100", "name": "Curcumine", "function": "Colorant jaune", "riskLevel": "LOW", "healthConcerns": []},
   "en:e101": {"code": "E101", "name": "Riboflavine (Vitamine B2)", "function": "Colorant jaune-orange", "riskLevel": "LOW", "healthConcerns": []},
   "en:e102": {"code": "E102", "name": "Tartrazine", "function": "Colorant jaune", "riskLevel": "HIGH", "healthConcerns": ["Hyperactivité chez enfants", "Allergies", "Asthme"]},

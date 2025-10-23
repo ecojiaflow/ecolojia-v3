@@ -35,7 +35,7 @@ interface SearchFilters {
 // ============================================================================
 
 export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = ({
-  placeholder = "ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â Decouvrez des alternatives plus saines... (nutella bio, shampoing sans sulfate)",
+  placeholder = "Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â Decouvrez des alternatives plus saines... (nutella bio, shampoing sans sulfate)",
   onResultSelect,
   showFilters = true,
   categories = ['food', 'cosmetics', 'detergents'],
@@ -148,7 +148,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     const startTime = Date.now();
 
     try {
-      console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âƒâ€š‚Â Recherche lancee:', queryToSearch);
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â Recherche lancee:', queryToSearch);
       
       const searchResults = await universalSearchEngine.search(queryToSearch, {
         categories: filters.categories,
@@ -188,10 +188,10 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         sources
       });
 
-      console.log(`aƒâ€¦aâ‚¬Å“aaâ€šÂ¬‚Â¦ Recherche terminee: ${filteredResults.length} resultats en ${searchTime}ms`);
+      console.log(`aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â¦ Recherche terminee: ${filteredResults.length} resultats en ${searchTime}ms`);
 
     } catch (error) {
-      console.error('aƒâ€š‚Âƒâ€¦aâ‚¬â„¢ Erreur recherche:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur recherche:', error);
       setResults([]);
       setSearchStats(null);
     } finally {
@@ -237,7 +237,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     setShowScanner(false);
     
     try {
-      console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬…â€œƒâ€¦‚Â  Code-barres scanne:', barcode);
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦â€šÃ‚Â  Code-barres scanne:', barcode);
       
       const result = await universalSearchEngine.searchByBarcode(barcode);
       
@@ -262,7 +262,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         });
       }
     } catch (error) {
-      console.error('aƒâ€š‚Âƒâ€¦aâ‚¬â„¢ Erreur analyse code-barres:', error);
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur analyse code-barres:', error);
     }
   }, []);
 
@@ -283,24 +283,24 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 
     recognition.onstart = () => {
       setIsListening(true);
-      console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€¦‚Â½ƒâ€š‚Â¤ ƒÆ’†â€™aaâ€šÂ¬‚Â°coute vocale demarree');
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤ Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°coute vocale demarree');
     };
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€¦‚Â½ƒâ€š‚Â¤ Resultat vocal:', transcript);
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤ Resultat vocal:', transcript);
       setQuery(transcript);
       handleSearch(transcript);
     };
 
     recognition.onerror = (event: any) => {
-      console.error('aƒâ€š‚Âƒâ€¦aâ‚¬â„¢ Erreur reconnaissance vocale:', event.error);
+      console.error('aÆ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢ Erreur reconnaissance vocale:', event.error);
       setIsListening(false);
     };
 
     recognition.onend = () => {
       setIsListening(false);
-      console.log('ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€¦‚Â½ƒâ€š‚Â¤ ƒÆ’†â€™aaâ€šÂ¬‚Â°coute vocale terminee');
+      console.log('Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦â€šÃ‚Â½Æ’Ã¢â‚¬Å¡â€šÃ‚Â¤ Æ’Ã†â€™â€ Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â°coute vocale terminee');
     };
 
     recognition.start();
@@ -403,9 +403,9 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             result.category === 'detergents' ? 'bg-blue-100 text-blue-700' :
             'bg-gray-100 text-gray-700'
           }`}>
-            {result.category === 'food' ? 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â½ Alimentaire' :
-             result.category === 'cosmetics' ? 'aƒâ€¦aâ‚¬Å“ƒâ€š‚Â¨ Cosmetique' :
-             result.category === 'detergents' ? 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â§ƒâ€š‚Â½ Detergent' : 'ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬…â€œƒâ€š‚Â¦ Produit'}
+            {result.category === 'food' ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½ Alimentaire' :
+             result.category === 'cosmetics' ? 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œÆ’Ã¢â‚¬Å¡â€šÃ‚Â¨ Cosmetique' :
+             result.category === 'detergents' ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â½ Detergent' : 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â¦ Produit'}
           </span>
 
           {/* Source */}
@@ -414,15 +414,15 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             result.source === 'openfoodfacts' ? 'bg-orange-100 text-orange-700' :
             'bg-purple-100 text-purple-700'
           }`}>
-            {result.source === 'local' ? 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€š‚Â  Local' :
-             result.source === 'openfoodfacts' ? 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€¦aâ‚¬â„¢ƒâ€š‚Â OpenFoodFacts' :
-             'aƒâ€¦‚Â¡ƒâ€š‚Â¡ Algolia'}
+            {result.source === 'local' ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Å¡â€šÃ‚Â  Local' :
+             result.source === 'openfoodfacts' ? 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã¢â€žÂ¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â OpenFoodFacts' :
+             'aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â¡ Algolia'}
           </span>
 
           {/* Badges enrichissement */}
           {result.enrichment?.ultra_processed && (
             <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-              aƒâ€¦‚Â¡ƒâ€š‚Â ƒÂ¯ƒâ€š‚Â¸ƒâ€š‚Â Ultra-transforme
+              aÆ’Ã¢â‚¬Â¦â€šÃ‚Â¡Æ’Ã¢â‚¬Å¡â€šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â Ultra-transforme
             </span>
           )}
 
@@ -438,7 +438,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 
           {result.enrichment?.alternatives_available > 0 && (
             <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-              ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬‚Âaaâ€šÂ¬…Â¾ {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
+              Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã‚Â¾ {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
             </span>
           )}
         </div>
@@ -447,7 +447,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         {result.enrichment?.educational_tips && result.enrichment.educational_tips.length > 0 && (
           <div className="mt-2">
             <p className="text-xs text-orange-700 bg-orange-50 px-2 py-1 rounded">
-              ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬aâ€žÂ¢ƒâ€š‚Â¡ {result.enrichment.educational_tips[0]}
+              Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â¡ {result.enrichment.educational_tips[0]}
             </p>
           </div>
         )}
@@ -475,7 +475,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             disabled={isSearching}
           />
 
-          {/* Actions ƒÆ’†â€™ƒâ€š‚Â  droite */}
+          {/* Actions Æ’Ã†â€™â€ Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡â€šÃ‚Â  droite */}
           <div className="flex items-center space-x-2 px-4">
             {/* Recherche vocale */}
             <button
@@ -556,9 +556,9 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
             <label className="block text-sm font-medium text-gray-700 mb-2">Categories</label>
             <div className="flex flex-wrap gap-2">
               {[
-                { key: 'food', label: 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Âƒâ€¦‚Â½ Alimentaire' },
-                { key: 'cosmetics', label: 'aƒâ€¦aâ‚¬Å“ƒâ€š‚Â¨ Cosmetiques' },
-                { key: 'detergents', label: 'ƒÆ’‚Â°ƒâ€¦‚Â¸ƒâ€š‚Â§ƒâ€š‚Â½ Detergents' }
+                { key: 'food', label: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚ÂÆ’Ã¢â‚¬Â¦â€šÃ‚Â½ Alimentaire' },
+                { key: 'cosmetics', label: 'aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œÆ’Ã¢â‚¬Å¡â€šÃ‚Â¨ Cosmetiques' },
+                { key: 'detergents', label: 'Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸Æ’Ã¢â‚¬Å¡â€šÃ‚Â§Æ’Ã¢â‚¬Å¡â€šÃ‚Â½ Detergents' }
               ].map(cat => (
                 <label key={cat.key} className="flex items-center">
                   <input
@@ -631,8 +631,8 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-600">
                   {searchStats.totalResults} resultat{searchStats.totalResults !== 1 ? 's' : ''} 
-                  aaâ€šÂ¬ƒâ€š‚Â¢ {searchStats.searchTime}ms
-                  aaâ€šÂ¬ƒâ€š‚Â¢ {searchStats.sources.join(', ')}
+                  aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ {searchStats.searchTime}ms
+                  aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡â€šÃ‚Â¢ {searchStats.sources.join(', ')}
                 </div>
                 {searchStats.totalResults > 0 && (
                   <button
@@ -642,7 +642,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                     }}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                   >
-                    Voir tous les resultats aaaâ€šÂ¬‚Â aaâ€šÂ¬aâ€žÂ¢
+                    Voir tous les resultats aaaÃ¢â‚¬Å¡Ã‚Â¬â€šÃ‚Â aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢
                   </button>
                 )}
               </div>
@@ -680,7 +680,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                   onClick={() => setShowScanner(true)}
                   className="block w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                 >
-                  ƒÆ’‚Â°ƒâ€¦‚Â¸aaâ€šÂ¬…â€œƒâ€š‚Â· Essayer le scanner code-barres
+                  Æ’Ã†â€™â€šÃ‚Â°Æ’Ã¢â‚¬Â¦â€šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬â€¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡â€šÃ‚Â· Essayer le scanner code-barres
                 </button>
                 <button
                   onClick={() => {
@@ -689,7 +689,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
                   }}
                   className="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  aƒâ€¦aâ‚¬Å“ƒâ€š‚Â¨ Analyser un nouveau produit
+                  aÆ’Ã¢â‚¬Â¦aÃ¢â€šÂ¬Ã…â€œÆ’Ã¢â‚¬Å¡â€šÃ‚Â¨ Analyser un nouveau produit
                 </button>
               </div>
             </div>

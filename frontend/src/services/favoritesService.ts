@@ -1,4 +1,4 @@
-﻿import { get, post } from "./apiClient";
+import { get, post } from "./apiClient";
 import type { FavoriteItem, ProductInfo, ScoreBlock } from "../types/api";
 
 const LS_KEY = "ecolojia-favorites";

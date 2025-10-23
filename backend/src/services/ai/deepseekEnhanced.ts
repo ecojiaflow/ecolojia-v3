@@ -1,14 +1,14 @@
 // backend/src/services/ai/deepseekEnhanced.ts
 
 /**
- * 🤖 ECOLOJIA - Service DeepSeek Enhanced
+ * ðŸ¤– ECOLOJIA - Service DeepSeek Enhanced
  * IA conversationnelle et analyse approfondie avec sources scientifiques
  */
 
 import axios, { AxiosResponse } from 'axios';
 import { UserProfile } from '../../types/scientific-analysis.types';
 
-// Types spécifiques DeepSeek
+// Types spÃ©cifiques DeepSeek
 interface DeepSeekMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -59,20 +59,20 @@ export class DeepSeekEnhanced {
   private apiUrl: string;
   private apiKey: string;
   private maxTokens: number = 1000;
-  private temperature: number = 0.3; // Plus factuel que créatif
+  private temperature: number = 0.3; // Plus factuel que crÃ©atif
 
   constructor() {
     this.apiUrl = process.env.DEEPSEEK_API_URL || 'https://api.deepseek.com/v1/chat/completions';
     this.apiKey = process.env.DEEPSEEK_API_KEY || '';
     
     if (!this.apiKey) {
-      console.warn('⚠️ DeepSeek API key manquante - fonctionnalités IA limitées');
+      console.warn('âš ï¸ DeepSeek API key manquante - fonctionnalitÃ©s IA limitÃ©es');
     }
   }
 
   /**
-   * 🔬 ANALYSE ENRICHIE POUR CAS COMPLEXES
-   * Utilisée quand l'analyse standard ne suffit pas
+   * ðŸ”¬ ANALYSE ENRICHIE POUR CAS COMPLEXES
+   * UtilisÃ©e quand l'analyse standard ne suffit pas
    */
   async enhanceAnalysis(input: EnhancementInput): Promise<{
     enhancedInsights: EnhancedInsight[];
@@ -87,7 +87,7 @@ export class DeepSeekEnhanced {
       const systemPrompt = this.buildEnhancementSystemPrompt(input);
       const userPrompt = input.userQuery || this.generateDefaultAnalysisQuery(input);
 
-      console.log('🤖 DeepSeek analyse enrichie pour:', input.productName);
+      console.log('ðŸ¤– DeepSeek analyse enrichie pour:', input.productName);
 
       const response = await this.callDeepSeekAPI([
         { role: 'system', content: systemPrompt },
@@ -99,17 +99,17 @@ export class DeepSeekEnhanced {
       return {
         enhancedInsights,
         confidence: 0.9,
-        reasoning: "Analyse enrichie par IA avec sources scientifiques validées"
+        reasoning: "Analyse enrichie par IA avec sources scientifiques validÃ©es"
       };
 
     } catch (error) {
-      console.error('❌ Erreur DeepSeek Enhancement:', error);
+      console.error('âŒ Erreur DeepSeek Enhancement:', error);
       return this.getFallbackEnhancement(input);
     }
   }
 
   /**
-   * 💬 GÉNÉRATION RÉPONSE CONVERSATIONNELLE
+   * ðŸ’¬ GÃ‰NÃ‰RATION RÃ‰PONSE CONVERSATIONNELLE
    * Pour le chat IA avec contexte produit
    */
   async generateConversationalResponse(input: ConversationalInput): Promise<ConversationalResponse> {
@@ -120,7 +120,7 @@ export class DeepSeekEnhanced {
     try {
       const messages = this.buildConversationalMessages(input);
 
-      console.log('💬 DeepSeek chat pour question:', input.userMessage.substring(0, 50) + '...');
+      console.log('ðŸ’¬ DeepSeek chat pour question:', input.userMessage.substring(0, 50) + '...');
 
       const response = await this.callDeepSeekAPI(messages);
       const sources = this.extractSources(response);
@@ -133,71 +133,71 @@ export class DeepSeekEnhanced {
       };
 
     } catch (error) {
-      console.error('❌ Erreur DeepSeek Chat:', error);
+      console.error('âŒ Erreur DeepSeek Chat:', error);
       return this.getFallbackConversationalResponse(input);
     }
   }
 
   /**
-   * 🔧 CONSTRUCTION PROMPT SYSTÈME POUR ANALYSE
+   * ðŸ”§ CONSTRUCTION PROMPT SYSTÃˆME POUR ANALYSE
    */
   private buildEnhancementSystemPrompt(input: EnhancementInput): string {
-    return `Tu es l'assistant IA scientifique d'ECOLOJIA, expert en nutrition et sécurité alimentaire.
+    return `Tu es l'assistant IA scientifique d'ECOLOJIA, expert en nutrition et sÃ©curitÃ© alimentaire.
 
-PRODUIT À ANALYSER:
+PRODUIT Ã€ ANALYSER:
 - Nom: ${input.productName}
-- Ingrédients: ${input.ingredients?.join(', ') || 'Non spécifiés'}
+- IngrÃ©dients: ${input.ingredients?.join(', ') || 'Non spÃ©cifiÃ©s'}
 - Classification NOVA: Groupe ${input.novaGroup}
-- Additifs détectés: ${input.additives?.join(', ') || 'Aucun'}
+- Additifs dÃ©tectÃ©s: ${input.additives?.join(', ') || 'Aucun'}
 
 EXPERTISE REQUISE:
-Tu maîtrises parfaitement :
+Tu maÃ®trises parfaitement :
 - Classification NOVA officielle (INSERM 2024)
-- Base additifs EFSA avec évaluations récentes
-- Études épidémiologiques nutrition (BMJ, Nature, Lancet 2024)
-- Mécanismes physiologiques (microbiote, inflammation, métabolisme)
-- Alternatives naturelles avec preuves d'efficacité
+- Base additifs EFSA avec Ã©valuations rÃ©centes
+- Ã‰tudes Ã©pidÃ©miologiques nutrition (BMJ, Nature, Lancet 2024)
+- MÃ©canismes physiologiques (microbiote, inflammation, mÃ©tabolisme)
+- Alternatives naturelles avec preuves d'efficacitÃ©
 
-STYLE RÉPONSE:
+STYLE RÃ‰PONSE:
 - Factuel et scientifique mais accessible
-- TOUJOURS citer sources officielles (ANSES, EFSA, études peer-reviewed)
-- Expliquer mécanismes d'action quand pertinent
-- Proposer alternatives concrètes avec preuves
+- TOUJOURS citer sources officielles (ANSES, EFSA, Ã©tudes peer-reviewed)
+- Expliquer mÃ©canismes d'action quand pertinent
+- Proposer alternatives concrÃ¨tes avec preuves
 - Nuancer selon niveau de preuve scientifique
 
 INTERDICTIONS ABSOLUES:
 - Jamais critiquer marques directement
-- Jamais donner conseils médicaux personnalisés
+- Jamais donner conseils mÃ©dicaux personnalisÃ©s
 - Jamais affirmer sans source scientifique
-- Jamais utiliser termes alarmistes non justifiés
+- Jamais utiliser termes alarmistes non justifiÃ©s
 
-MISSION: Fournir analyse approfondie basée exclusivement sur science validée.`;
+MISSION: Fournir analyse approfondie basÃ©e exclusivement sur science validÃ©e.`;
   }
 
   /**
-   * 💬 CONSTRUCTION MESSAGES CONVERSATIONNELS
+   * ðŸ’¬ CONSTRUCTION MESSAGES CONVERSATIONNELS
    */
   private buildConversationalMessages(input: ConversationalInput): DeepSeekMessage[] {
     const messages: DeepSeekMessage[] = [];
 
-    // Prompt système contextuel
+    // Prompt systÃ¨me contextuel
     let systemContent = `Tu es l'assistant IA scientifique d'ECOLOJIA.
 
 STYLE CONVERSATIONNEL:
-- Bienveillant et pédagogique
-- Scientifique mais accessible à tous
-- Toujours proposer solutions concrètes
+- Bienveillant et pÃ©dagogique
+- Scientifique mais accessible Ã  tous
+- Toujours proposer solutions concrÃ¨tes
 - Encourager apprentissage progressif
 
-SOURCES PRIVILÉGIÉES:
-- ANSES, EFSA, INSERM pour références officielles
-- Études récentes BMJ, Nature, Cell, Lancet 2024
+SOURCES PRIVILÃ‰GIÃ‰ES:
+- ANSES, EFSA, INSERM pour rÃ©fÃ©rences officielles
+- Ã‰tudes rÃ©centes BMJ, Nature, Cell, Lancet 2024
 - Classification NOVA pour transformation alimentaire
 - Recherches microbiote intestinal
 
-RÉPONSES LIMITÉES:
+RÃ‰PONSES LIMITÃ‰ES:
 - Maximum 3 paragraphes courts
-- 1 conseil actionnable systématique
+- 1 conseil actionnable systÃ©matique
 - Citer 1-2 sources quand pertinent`;
 
     // Ajout contexte produit si disponible
@@ -205,9 +205,9 @@ RÉPONSES LIMITÉES:
       const { nova, additives } = input.productContext.scientificAnalysis;
       systemContent += `
 
-CONTEXTE PRODUIT ANALYSÉ:
+CONTEXTE PRODUIT ANALYSÃ‰:
 - Classification NOVA: Groupe ${nova?.novaGroup} (${nova?.groupInfo?.name})
-- Additifs analysés: ${additives?.total || 0} détectés
+- Additifs analysÃ©s: ${additives?.total || 0} dÃ©tectÃ©s
 - Niveau risque additifs: ${additives?.overallRisk || 'inconnu'}
 - Perturbateurs microbiote: ${additives?.microbiomeDisruptors?.length || 0}`;
     }
@@ -217,7 +217,7 @@ CONTEXTE PRODUIT ANALYSÉ:
       systemContent += `
 
 PROFIL UTILISATEUR:
-- Objectifs santé: ${input.userProfile.healthGoals.join(', ')}`;
+- Objectifs santÃ©: ${input.userProfile.healthGoals.join(', ')}`;
       
       if (input.userProfile.allergies?.length) {
         systemContent += `
@@ -239,7 +239,7 @@ PROFIL UTILISATEUR:
   }
 
   /**
-   * 🌐 APPEL API DEEPSEEK
+   * ðŸŒ APPEL API DEEPSEEK
    */
   private async callDeepSeekAPI(messages: DeepSeekMessage[]): Promise<string> {
     const response: AxiosResponse<DeepSeekResponse> = await axios.post(
@@ -263,12 +263,12 @@ PROFIL UTILISATEUR:
     );
 
     if (!response.data.choices?.[0]?.message?.content) {
-      throw new Error('Réponse DeepSeek invalide');
+      throw new Error('RÃ©ponse DeepSeek invalide');
     }
 
-    // Log usage pour monitoring coûts
+    // Log usage pour monitoring coÃ»ts
     if (response.data.usage) {
-      console.log('📊 DeepSeek usage:', {
+      console.log('ðŸ“Š DeepSeek usage:', {
         tokens: response.data.usage.total_tokens,
         cost_estimate: response.data.usage.total_tokens * 0.00002 // ~$0.02/1k tokens
       });
@@ -278,7 +278,7 @@ PROFIL UTILISATEUR:
   }
 
   /**
-   * 🔍 PARSING RÉPONSE ANALYSE ENRICHIE
+   * ðŸ” PARSING RÃ‰PONSE ANALYSE ENRICHIE
    */
   private parseEnhancementResponse(response: string): EnhancedInsight[] {
     const insights: EnhancedInsight[] = [];
@@ -287,7 +287,7 @@ PROFIL UTILISATEUR:
     lines.forEach(line => {
       const trimmedLine = line.trim();
       
-      // Détection insights par patterns
+      // DÃ©tection insights par patterns
       if (this.containsRiskKeywords(trimmedLine)) {
         insights.push({
           type: 'risk',
@@ -306,7 +306,7 @@ PROFIL UTILISATEUR:
           content: trimmedLine,
           priority: 'info'
         });
-      } else if (trimmedLine.length > 20) { // Éviter lignes trop courtes
+      } else if (trimmedLine.length > 20) { // Ã‰viter lignes trop courtes
         insights.push({
           type: 'general',
           content: trimmedLine,
@@ -315,17 +315,17 @@ PROFIL UTILISATEUR:
       }
     });
 
-    // Limiter à 5 insights max pour éviter surcharge
+    // Limiter Ã  5 insights max pour Ã©viter surcharge
     return insights.slice(0, 5);
   }
 
   /**
-   * 📚 EXTRACTION SOURCES SCIENTIFIQUES
+   * ðŸ“š EXTRACTION SOURCES SCIENTIFIQUES
    */
   private extractSources(response: string): string[] {
     const sources = new Set<string>();
     
-    // Patterns pour détecter sources
+    // Patterns pour dÃ©tecter sources
     const sourcePatterns = [
       /ANSES[\s\d]*/gi,
       /EFSA[\s\d]*/gi,
@@ -349,31 +349,31 @@ PROFIL UTILISATEUR:
   }
 
   /**
-   * 💡 GÉNÉRATION QUESTIONS SUGGÉRÉES
+   * ðŸ’¡ GÃ‰NÃ‰RATION QUESTIONS SUGGÃ‰RÃ‰ES
    */
   private generateSuggestedQuestions(input: ConversationalInput): string[] {
     const questions = [];
 
-    // Questions basées sur contexte produit
+    // Questions basÃ©es sur contexte produit
     if (input.productContext?.scientificAnalysis?.nova?.novaGroup === 4) {
-      questions.push("Pourquoi l'ultra-transformation est-elle problématique ?");
-      questions.push("Quelles sont les alternatives les plus faciles à adopter ?");
+      questions.push("Pourquoi l'ultra-transformation est-elle problÃ©matique ?");
+      questions.push("Quelles sont les alternatives les plus faciles Ã  adopter ?");
     }
 
     if (input.productContext?.scientificAnalysis?.additives?.microbiomeDisruptors?.length > 0) {
       questions.push("Comment ces additifs affectent-ils mon microbiote intestinal ?");
-      questions.push("Combien de temps faut-il pour réparer son microbiote ?");
+      questions.push("Combien de temps faut-il pour rÃ©parer son microbiote ?");
     }
 
-    // Questions générales utiles
-    questions.push("Comment décoder efficacement les étiquettes alimentaires ?");
-    questions.push("Quelles études récentes confirment ces effets sur la santé ?");
+    // Questions gÃ©nÃ©rales utiles
+    questions.push("Comment dÃ©coder efficacement les Ã©tiquettes alimentaires ?");
+    questions.push("Quelles Ã©tudes rÃ©centes confirment ces effets sur la santÃ© ?");
 
     return questions.slice(0, 4); // Max 4 questions
   }
 
   /**
-   * 🆘 FALLBACKS EN CAS D'ERREUR API
+   * ðŸ†˜ FALLBACKS EN CAS D'ERREUR API
    */
   private getFallbackEnhancement(input: EnhancementInput) {
     const insights: EnhancedInsight[] = [];
@@ -381,7 +381,7 @@ PROFIL UTILISATEUR:
     if (input.novaGroup === 4) {
       insights.push({
         type: 'risk',
-        content: 'Produit ultra-transformé détecté. Les études montrent des risques cardiovasculaires et métaboliques accrus.',
+        content: 'Produit ultra-transformÃ© dÃ©tectÃ©. Les Ã©tudes montrent des risques cardiovasculaires et mÃ©taboliques accrus.',
         priority: 'high'
       });
     }
@@ -389,14 +389,14 @@ PROFIL UTILISATEUR:
     if (input.additives.length > 3) {
       insights.push({
         type: 'risk',
-        content: 'Nombreux additifs détectés. Privilégier produits avec moins de 5 ingrédients reconnaissables.',
+        content: 'Nombreux additifs dÃ©tectÃ©s. PrivilÃ©gier produits avec moins de 5 ingrÃ©dients reconnaissables.',
         priority: 'medium'
       });
     }
 
     insights.push({
       type: 'alternative',
-      content: 'Alternative recommandée : version faite maison avec ingrédients simples et naturels.',
+      content: 'Alternative recommandÃ©e : version faite maison avec ingrÃ©dients simples et naturels.',
       priority: 'medium'
     });
 
@@ -409,13 +409,13 @@ PROFIL UTILISATEUR:
 
   private getFallbackConversationalResponse(input: ConversationalInput): ConversationalResponse {
     return {
-      message: "Je rencontre une difficulté technique temporaire. Peux-tu reformuler ta question ? En attendant, je peux te dire que je privilégie toujours les produits les moins transformés et avec le moins d'additifs possible.",
+      message: "Je rencontre une difficultÃ© technique temporaire. Peux-tu reformuler ta question ? En attendant, je peux te dire que je privilÃ©gie toujours les produits les moins transformÃ©s et avec le moins d'additifs possible.",
       confidence: 0.1,
-      sources: ['Principes nutrition générale'],
+      sources: ['Principes nutrition gÃ©nÃ©rale'],
       suggestedQuestions: [
         "Comment choisir des produits plus naturels ?",
-        "Quels sont les additifs à éviter en priorité ?",
-        "Comment cuisiner plus facilement à la maison ?"
+        "Quels sont les additifs Ã  Ã©viter en prioritÃ© ?",
+        "Comment cuisiner plus facilement Ã  la maison ?"
       ]
     };
   }
@@ -423,21 +423,21 @@ PROFIL UTILISATEUR:
   private generateDefaultAnalysisQuery(input: EnhancementInput): string {
     return `Analyse approfondie de ce produit alimentaire :
 
-Risques potentiels pour la santé humaine ?
-Mécanismes d'action physiologiques ?
-Alternatives naturelles scientifiquement validées ?
+Risques potentiels pour la santÃ© humaine ?
+MÃ©canismes d'action physiologiques ?
+Alternatives naturelles scientifiquement validÃ©es ?
 Conseils transition progressive ?
 
-Focus sur données factuelles avec sources récentes.`;
+Focus sur donnÃ©es factuelles avec sources rÃ©centes.`;
   }
 
   /**
-   * 🔍 UTILITAIRES DÉTECTION MOTS-CLÉS
+   * ðŸ” UTILITAIRES DÃ‰TECTION MOTS-CLÃ‰S
    */
   private containsRiskKeywords(text: string): boolean {
     const riskKeywords = [
-      'risque', 'danger', 'problématique', 'nocif', 'inflammation', 
-      'perturbation', 'toxique', 'cancérigène', 'éviter'
+      'risque', 'danger', 'problÃ©matique', 'nocif', 'inflammation', 
+      'perturbation', 'toxique', 'cancÃ©rigÃ¨ne', 'Ã©viter'
     ];
     return riskKeywords.some(keyword => 
       text.toLowerCase().includes(keyword.toLowerCase())
@@ -446,7 +446,7 @@ Focus sur données factuelles avec sources récentes.`;
 
   private containsAlternativeKeywords(text: string): boolean {
     const altKeywords = [
-      'alternative', 'remplacer', 'substitut', 'plutôt', 'préférer',
+      'alternative', 'remplacer', 'substitut', 'plutÃ´t', 'prÃ©fÃ©rer',
       'naturel', 'bio', 'maison', 'traditioanel', 'artisanal'
     ];
     return altKeywords.some(keyword => 
@@ -456,7 +456,7 @@ Focus sur données factuelles avec sources récentes.`;
 
   private containsScientificKeywords(text: string): boolean {
     const sciKeywords = [
-      'étude', 'recherche', 'selon', 'mécanisme', 'analyse',
+      'Ã©tude', 'recherche', 'selon', 'mÃ©canisme', 'analyse',
       'BMJ', 'Nature', 'Lancet', 'ANSES', 'EFSA', 'INSERM'
     ];
     return sciKeywords.some(keyword => 
@@ -465,7 +465,7 @@ Focus sur données factuelles avec sources récentes.`;
   }
 
   /**
-   * 📊 MÉTHODES MONITORING & DEBUG
+   * ðŸ“Š MÃ‰THODES MONITORING & DEBUG
    */
   getApiStatus(): { available: boolean; configured: boolean } {
     return {
@@ -479,11 +479,11 @@ Focus sur données factuelles avec sources récentes.`;
 
     try {
       await this.callDeepSeekAPI([
-        { role: 'user', content: 'Test de connexion - réponds juste "OK"' }
+        { role: 'user', content: 'Test de connexion - rÃ©ponds juste "OK"' }
       ]);
       return true;
     } catch (error) {
-      console.error('❌ Test connexion DeepSeek échoué:', error);
+      console.error('âŒ Test connexion DeepSeek Ã©chouÃ©:', error);
       return false;
     }
   }

@@ -2,7 +2,7 @@
 const API_URL = 'https://ecolojia-backendvf.onrender.com';
 
 async function testConnections() {
-  console.log('🧪 Test de connexion Frontend -> Backend\n');
+  console.log('ðŸ§ª Test de connexion Frontend -> Backend\n');
   
   const tests = [
     { name: 'Dashboard Stats', url: '/api/dashboard/stats' },
@@ -25,12 +25,12 @@ async function testConnections() {
       const data = await response.json();
       
       if (response.ok) {
-        console.log(`✅ ${test.name}: OK (${response.status})`);
+        console.log(`âœ… ${test.name}: OK (${response.status})`);
       } else {
-        console.log(`❌ ${test.name}: Erreur ${response.status}`);
+        console.log(`âŒ ${test.name}: Erreur ${response.status}`);
       }
     } catch (error) {
-      console.log(`❌ ${test.name}: ${error.message}`);
+      console.log(`âŒ ${test.name}: ${error.message}`);
     }
   }
 }

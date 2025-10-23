@@ -12,12 +12,12 @@ import { AnalysisResultCard } from '@/components/AnalysisResultCard';
 import { analysisAPI } from '@/lib/api/analysis';
 import type { AnalysisResult, ManualAnalysisPayload } from '@/lib/api/analysis';
 
-// Exemples prédéfinis pour tests rapides
+// Exemples prÃ©dÃ©finis pour tests rapides
 const EXAMPLES = {
   food_nova4: {
-    name: 'Céréales chocolat',
+    name: 'CÃ©rÃ©ales chocolat',
     category: 'food' as const,
-    ingredients: 'Céréales (blé, maÃƒÆ’Ã‚Â¯s), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arôme artificiel vanille, émulsifiant (lécithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
+    ingredients: 'CÃ©rÃ©ales (blÃ©, maÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯s), sucre, cacao maigre en poudre, sirop de glucose-fructose, huile de palme, sel, arÃ´me artificiel vanille, Ã©mulsifiant (lÃ©cithine de soja E322), vitamines (B1, B2, B3, B6, B9, B12), fer',
     brand: 'Test Brand'
   },
   food_nova1: {
@@ -27,7 +27,7 @@ const EXAMPLES = {
     brand: 'Verger Bio'
   },
   cosmetics_risk: {
-    name: 'Crème visage anti-âge',
+    name: 'CrÃ¨me visage anti-Ã¢ge',
     category: 'cosmetics' as const,
     ingredients: 'Aqua, Glycerin, Dimethicone, Cetearyl Alcohol, Parfum, Methylparaben, Propylparaben, BHT, Limonene, Linalool, Citral, CI 19140, CI 42090',
     brand: 'Beauty Lab'
@@ -39,9 +39,9 @@ const EXAMPLES = {
     brand: 'Nature Care'
   },
   detergent_harsh: {
-    name: 'Détergent surpuissant',
+    name: 'DÃ©tergent surpuissant',
     category: 'detergents' as const,
-    ingredients: '15-30% agents de blanchiment oxygénés, 5-15% tensioactifs anioniques, <5% tensioactifs non ioniques, phosphonates, parfums (Limonene)',
+    ingredients: '15-30% agents de blanchiment oxygÃ©nÃ©s, 5-15% tensioactifs anioniques, <5% tensioactifs non ioniques, phosphonates, parfums (Limonene)',
     brand: 'PowerClean'
   }
 };
@@ -120,7 +120,7 @@ export const AnalysisDevPage: React.FC = () => {
       const pong = await analysisAPI.ping();
       alert(`Ping OK: ${JSON.stringify(pong)}`);
     } catch (err) {
-      alert('Ping échoué');
+      alert('Ping Ã©chouÃ©');
     }
   };
 
@@ -132,7 +132,7 @@ export const AnalysisDevPage: React.FC = () => {
           Test d'analyse manuelle
         </h1>
         <p className="text-gray-600 mt-2">
-          Page de développement pour tester le service d'analyse
+          Page de dÃ©veloppement pour tester le service d'analyse
         </p>
       </div>
 
@@ -182,21 +182,21 @@ export const AnalysisDevPage: React.FC = () => {
                 size="sm"
                 onClick={() => loadExample('cosmetics_risk')}
               >
-                Cosmétique risqué
+                CosmÃ©tique risquÃ©
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => loadExample('cosmetics_clean')}
               >
-                Cosmétique clean
+                CosmÃ©tique clean
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => loadExample('detergent_harsh')}
               >
-                Détergent agressif
+                DÃ©tergent agressif
               </Button>
             </div>
           </div>
@@ -209,7 +209,7 @@ export const AnalysisDevPage: React.FC = () => {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Ex: Céréales chocolat"
+                placeholder="Ex: CÃ©rÃ©ales chocolat"
                 required
               />
             </div>
@@ -221,13 +221,13 @@ export const AnalysisDevPage: React.FC = () => {
                 id="brand"
                 value={formData.brand}
                 onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                placeholder="Ex: Nestlé"
+                placeholder="Ex: NestlÃ©"
               />
             </div>
 
-            {/* Catégorie */}
+            {/* CatÃ©gorie */}
             <div>
-              <Label>Catégorie</Label>
+              <Label>CatÃ©gorie</Label>
               <RadioGroup
                 value={formData.category}
                 onValueChange={(value) => setFormData({ ...formData, category: value as any })}
@@ -238,23 +238,23 @@ export const AnalysisDevPage: React.FC = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="cosmetics" id="cosmetics" />
-                  <Label htmlFor="cosmetics">Cosmétique</Label>
+                  <Label htmlFor="cosmetics">CosmÃ©tique</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="detergents" id="detergents" />
-                  <Label htmlFor="detergents">Détergent</Label>
+                  <Label htmlFor="detergents">DÃ©tergent</Label>
                 </div>
               </RadioGroup>
             </div>
 
-            {/* Ingrédients */}
+            {/* IngrÃ©dients */}
             <div>
-              <Label htmlFor="ingredients">Ingrédients</Label>
+              <Label htmlFor="ingredients">IngrÃ©dients</Label>
               <Textarea
                 id="ingredients"
                 value={formData.ingredients}
                 onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
-                placeholder="Copiez-collez la liste des ingrédients..."
+                placeholder="Copiez-collez la liste des ingrÃ©dients..."
                 rows={4}
                 required
               />
@@ -319,7 +319,7 @@ export const AnalysisDevPage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="protein">Protéines (g)</Label>
+                      <Label htmlFor="protein">ProtÃ©ines (g)</Label>
                       <Input
                         id="protein"
                         type="number"
@@ -330,7 +330,7 @@ export const AnalysisDevPage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="saturatedFat">Graisses saturées (g)</Label>
+                      <Label htmlFor="saturatedFat">Graisses saturÃ©es (g)</Label>
                       <Input
                         id="saturatedFat"
                         type="number"
@@ -362,7 +362,7 @@ export const AnalysisDevPage: React.FC = () => {
           </form>
         </Card>
 
-        {/* Résultats */}
+        {/* RÃ©sultats */}
         <div className="space-y-4">
           {error && (
             <Alert variant="destructive">

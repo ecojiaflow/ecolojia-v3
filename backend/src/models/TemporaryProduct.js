@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const temporaryProductSchema = new mongoose.Schema({
   barcode: { type: String, required: true, index: true },

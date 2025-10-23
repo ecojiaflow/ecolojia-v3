@@ -11,10 +11,10 @@ router.get('/categories', (_req, res) => {
     success: true,
     categories: [
       { id: 'food', name: 'Alimentaire' },
-      { id: 'cosmetics', name: 'Cosmétiques' },
-      { id: 'detergents', name: 'Détergents' }
+      { id: 'cosmetics', name: 'CosmÃ©tiques' },
+      { id: 'detergents', name: 'DÃ©tergents' }
     ],
-    message: 'Catégories multi-produits supportées'
+    message: 'CatÃ©gories multi-produits supportÃ©es'
   });
 });
 
@@ -32,7 +32,7 @@ router.post('/analyze', (req, res) => {
     const product = req.body.product;
 
     if (!product || !product.ingredients || !Array.isArray(product.ingredients)) {
-      return res.status(400).json({ error: 'Produit invalide ou ingrédients manquants' });
+      return res.status(400).json({ error: 'Produit invalide ou ingrÃ©dients manquants' });
     }
 
     const novaResult = nova.classifyProduct(product);

@@ -193,7 +193,7 @@ const gdprLogSchema = new mongoose.Schema({
       dpaReference: String // Data Processing Agreement
     }],
     
-    // ‰valuation des risques
+    // â€°valuation des risques
     riskAssessment: {
       level: {
         type: String,
@@ -233,7 +233,7 @@ const gdprLogSchema = new mongoose.Schema({
     // Tags pour faciliter la recherche
     tags: [String],
     
-    // Reference   d'autres logs lies
+    // Reference Â  d'autres logs lies
     relatedLogs: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'GDPRLog'

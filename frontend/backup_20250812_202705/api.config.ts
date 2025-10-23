@@ -1,18 +1,18 @@
 // PATH: frontend/src/config/api.config.ts
 /**
- * Configuration centralisÃƒÂ©e pour l'API
+ * Configuration centralisÃƒÆ’Ã‚Â©e pour l'API
  */
 
 // URLs de base selon l'environnement
 const API_URLS = {
   development: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
   production: import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com',
-  demo: '/demo' // Mode dÃƒÂ©mo local
+  demo: '/demo' // Mode dÃƒÆ’Ã‚Â©mo local
 } as const;
 
-// DÃƒÂ©terminer l'environnement actuel
+// DÃƒÆ’Ã‚Â©terminer l'environnement actuel
 const getCurrentEnvironment = (): keyof typeof API_URLS => {
-  // Si on est en mode dÃƒÂ©mo explicite
+  // Si on est en mode dÃƒÆ’Ã‚Â©mo explicite
   if (import.meta.env.VITE_APP_MODE === 'demo') return 'demo';
   
   // Si on est en production
@@ -20,7 +20,7 @@ const getCurrentEnvironment = (): keyof typeof API_URLS => {
     return 'production';
   }
   
-  // Sinon, dÃƒÂ©veloppement
+  // Sinon, dÃƒÆ’Ã‚Â©veloppement
   return 'development';
 };
 
@@ -32,10 +32,10 @@ export const API_CONFIG = {
   // Fonction pour obtenir l'URL courante
   getCurrentUrl: () => API_URLS[getCurrentEnvironment()],
   
-  // Timeout des requÃƒÂªtes (en ms)
+  // Timeout des requÃƒÆ’Ã‚Âªtes (en ms)
   TIMEOUT: 30000,
   
-  // Headers par dÃƒÂ©faut
+  // Headers par dÃƒÆ’Ã‚Â©faut
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -150,7 +150,7 @@ export const API_CONFIG = {
     }
   },
   
-  // ClÃƒÂ©s de stockage local
+  // ClÃƒÆ’Ã‚Â©s de stockage local
   STORAGE_KEYS: {
     TOKEN: 'ecolojia_token',
     REFRESH_TOKEN: 'ecolojia_refresh_token',
@@ -170,13 +170,13 @@ export const API_CONFIG = {
       ADVANCED_ANALYTICS: false,
     },
     PREMIUM: {
-      SCANS_PER_MONTH: -1, // IllimitÃƒÂ©
+      SCANS_PER_MONTH: -1, // IllimitÃƒÆ’Ã‚Â©
       AI_CHATS_PER_MONTH: 500,
       EXPORT_ENABLED: true,
       ADVANCED_ANALYTICS: true,
     },
     FAMILY: {
-      SCANS_PER_MONTH: -1, // IllimitÃƒÂ©
+      SCANS_PER_MONTH: -1, // IllimitÃƒÆ’Ã‚Â©
       AI_CHATS_PER_MONTH: 2500, // 500 par membre
       EXPORT_ENABLED: true,
       ADVANCED_ANALYTICS: true,
@@ -185,22 +185,22 @@ export const API_CONFIG = {
   }
 };
 
-// Messages d'erreur standardisÃƒÂ©s
+// Messages d'erreur standardisÃƒÆ’Ã‚Â©s
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Erreur de connexion. VÃƒÂ©rifiez votre connexion internet.',
-  SERVER_ERROR: 'Erreur serveur. Veuillez rÃƒÂ©essayer plus tard.',
-  UNAUTHORIZED: 'Non autorisÃƒÂ©. Veuillez vous reconnecter.',
-  FORBIDDEN: 'AccÃƒÂ¨s refusÃƒÂ©. Vous n\'avez pas les permissions nÃƒÂ©cessaires.',
+  NETWORK_ERROR: 'Erreur de connexion. VÃƒÆ’Ã‚Â©rifiez votre connexion internet.',
+  SERVER_ERROR: 'Erreur serveur. Veuillez rÃƒÆ’Ã‚Â©essayer plus tard.',
+  UNAUTHORIZED: 'Non autorisÃƒÆ’Ã‚Â©. Veuillez vous reconnecter.',
+  FORBIDDEN: 'AccÃƒÆ’Ã‚Â¨s refusÃƒÆ’Ã‚Â©. Vous n\'avez pas les permissions nÃƒÆ’Ã‚Â©cessaires.',
   NOT_FOUND: 'Ressource introuvable.',
-  INVALID_DATA: 'Les donnÃƒÂ©es fournies sont invalides.',
-  TIMEOUT: 'La requÃƒÂªte a pris trop de temps. Veuillez rÃƒÂ©essayer.',
-  QUOTA_EXCEEDED: 'Quota dÃƒÂ©passÃƒÂ©. Passez ÃƒÆ’Ã‚Â  Premium pour continuer.',
-  SESSION_EXPIRED: 'Votre session a expirÃƒÂ©. Veuillez vous reconnecter.',
-  TOKEN_REFRESH_FAILED: 'Impossible de rafraÃƒÂ®chir votre session.',
-  OFFLINE: 'Vous ÃƒÂªtes hors ligne. VÃƒÂ©rifiez votre connexion.',
+  INVALID_DATA: 'Les donnÃƒÆ’Ã‚Â©es fournies sont invalides.',
+  TIMEOUT: 'La requÃƒÆ’Ã‚Âªte a pris trop de temps. Veuillez rÃƒÆ’Ã‚Â©essayer.',
+  QUOTA_EXCEEDED: 'Quota dÃƒÆ’Ã‚Â©passÃƒÆ’Ã‚Â©. Passez ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  Premium pour continuer.',
+  SESSION_EXPIRED: 'Votre session a expirÃƒÆ’Ã‚Â©. Veuillez vous reconnecter.',
+  TOKEN_REFRESH_FAILED: 'Impossible de rafraÃƒÆ’Ã‚Â®chir votre session.',
+  OFFLINE: 'Vous ÃƒÆ’Ã‚Âªtes hors ligne. VÃƒÆ’Ã‚Â©rifiez votre connexion.',
 } as const;
 
-// Configuration des webhooks (si nÃƒÂ©cessaire)
+// Configuration des webhooks (si nÃƒÆ’Ã‚Â©cessaire)
 export const WEBHOOK_EVENTS = {
   USER_REGISTERED: 'user.registered',
   USER_UPGRADED: 'user.upgraded',

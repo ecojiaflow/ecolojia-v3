@@ -36,33 +36,33 @@ function getSugarEquivalent(sugars) {
 function getFatEquivalent(saturatedFat) {
   if (!saturatedFat || saturatedFat === 0) return null;
   const cuilleres = Math.round(saturatedFat / 5);
-  return cuilleres + ' cuillère' + (cuilleres > 1 ? 's' : '') + ' à café de beurre';
+  return cuilleres + ' cuillÃ¨re' + (cuilleres > 1 ? 's' : '') + ' Ã  cafÃ© de beurre';
 }
 
 function getSaltEquivalent(salt) {
   if (!salt || salt === 0) return null;
   const pincees = Math.round(salt / 0.5);
-  return pincees + ' pincée' + (pincees > 1 ? 's' : '') + ' de sel';
+  return pincees + ' pincÃ©e' + (pincees > 1 ? 's' : '') + ' de sel';
 }
 
 /**
- * Convertit les sucres en équivalent morceaux de sucre
+ * Convertit les sucres en Ã©quivalent morceaux de sucre
  * @param {number} sugars - Sucres en g/100g
- * @returns {string|null} - Équivalent en morceaux
+ * @returns {string|null} - Ã‰quivalent en morceaux
  */
 
 
 /**
- * Convertit les graisses saturées en équivalent cuillères de beurre
- * @param {number} saturatedFat - Graisses saturées en g/100g
- * @returns {string|null} - Équivalent en cuillères
+ * Convertit les graisses saturÃ©es en Ã©quivalent cuillÃ¨res de beurre
+ * @param {number} saturatedFat - Graisses saturÃ©es en g/100g
+ * @returns {string|null} - Ã‰quivalent en cuillÃ¨res
  */
 
 
 /**
- * Convertit le sel en équivalent pincées
+ * Convertit le sel en Ã©quivalent pincÃ©es
  * @param {number} salt - Sel en g/100g
- * @returns {string|null} - Équivalent en pincées
+ * @returns {string|null} - Ã‰quivalent en pincÃ©es
  */
 
 

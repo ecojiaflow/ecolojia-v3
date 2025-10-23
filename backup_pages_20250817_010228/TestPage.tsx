@@ -22,10 +22,10 @@ export default function TestPage() {
   const runAllTests = async () => {
     setRunning(true);
     
-    // Liste des tests Ã  effectuer
+    // Liste des tests ÃƒÂ  effectuer
     const testList: TestResult[] = [
       { name: '1. Recherche Algolia', status: 'pending' },
-      { name: '2. Détails produit', status: 'pending' },
+      { name: '2. DÃ©tails produit', status: 'pending' },
       { name: '3. Analyse manuelle', status: 'pending' },
       { name: '4. Analyse par code-barres', status: 'pending' },
       { name: '5. Statut service analyse', status: 'pending' },
@@ -47,19 +47,19 @@ export default function TestPage() {
         }
       });
 
-      // Test 2: Détails d'un produit
+      // Test 2: DÃ©tails d'un produit
       if (searchData.data?.products?.[0]?._id) {
         try {
           const productId = searchData.data.products[0]._id;
           const productRes = await fetch(`${API_BASE}/api/products/${productId}`);
           const productData = await productRes.json();
-          updateTest('2. Détails produit', { 
+          updateTest('2. DÃ©tails produit', { 
             status: productRes.ok ? 'success' : 'error',
             data: productData,
             error: !productRes.ok ? `Status: ${productRes.status}` : undefined
           });
         } catch (e) {
-          updateTest('2. Détails produit', { 
+          updateTest('2. DÃ©tails produit', { 
             status: 'error', 
             error: e.message 
           });
@@ -80,7 +80,7 @@ export default function TestPage() {
         body: JSON.stringify({
           name: 'Nutella',
           category: 'food',
-          ingredients: 'sucre, huile de palme, noisettes 13%, cacao maigre 7.4%, lait écrémé en poudre 6.6%, lactosérum en poudre, émulsifiants: lécithines [soja], vanilline'
+          ingredients: 'sucre, huile de palme, noisettes 13%, cacao maigre 7.4%, lait Ã©crÃ©mÃ© en poudre 6.6%, lactosÃ©rum en poudre, Ã©mulsifiants: lÃ©cithines [soja], vanilline'
         })
       });
       const analysisData = await analysisRes.json();
@@ -147,7 +147,7 @@ export default function TestPage() {
     } catch (e) {
       updateTest('6. Test des images produits', { 
         status: 'error', 
-        error: 'Cloudinary non configuré' 
+        error: 'Cloudinary non configurÃ©' 
       });
     }
 
@@ -156,7 +156,7 @@ export default function TestPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">ðŸ§ª Page de Test ECOLOJIA</h1>
+      <h1 className="text-3xl font-bold mb-8">Ã°Å¸Â§Âª Page de Test ECOLOJIA</h1>
       
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex justify-between items-center mb-6">
@@ -185,7 +185,7 @@ export default function TestPage() {
                     'text-gray-500'
                   }`}>
                     {test.status === 'pending' ? 'En attente' :
-                     test.status === 'success' ? 'Réussi' : 'Échec'}
+                     test.status === 'success' ? 'RÃ©ussi' : 'Ã‰chec'}
                   </span>
                 </div>
               </div>
@@ -199,7 +199,7 @@ export default function TestPage() {
               {test.data && (
                 <details className="mt-2">
                   <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
-                    Voir les données
+                    Voir les donnÃ©es
                   </summary>
                   <pre className="mt-2 p-2 bg-gray-50 rounded text-xs overflow-auto">
                     {JSON.stringify(test.data, null, 2)}
@@ -218,12 +218,12 @@ export default function TestPage() {
       </div>
 
       <div className="mt-8 bg-blue-50 rounded-lg p-6">
-        <h3 className="font-semibold mb-4">ðŸ“ Actions recommandées selon les résultats :</h3>
+        <h3 className="font-semibold mb-4">Ã°Å¸â€œÂ Actions recommandÃ©es selon les rÃ©sultats :</h3>
         <ul className="space-y-2 text-sm">
-          <li>â€¢ Si la recherche fonctionne mais pas les détails produit â†’ Vérifier la route `/api/products/:id`</li>
-          <li>â€¢ Si l'analyse ne fonctionne pas â†’ Vérifier que le service d'analyse est déployé</li>
-          <li>â€¢ Si les images ne s'affichent pas â†’ Configurer Cloudinary ou utiliser des URLs publiques</li>
-          <li>â€¢ Si tout échoue â†’ Vérifier que le backend est bien déployé et les CORS configurés</li>
+          <li>Ã¢â‚¬Â¢ Si la recherche fonctionne mais pas les dÃ©tails produit Ã¢â€ â€™ VÃ©rifier la route `/api/products/:id`</li>
+          <li>Ã¢â‚¬Â¢ Si l'analyse ne fonctionne pas Ã¢â€ â€™ VÃ©rifier que le service d'analyse est dÃ©ployÃ©</li>
+          <li>Ã¢â‚¬Â¢ Si les images ne s'affichent pas Ã¢â€ â€™ Configurer Cloudinary ou utiliser des URLs publiques</li>
+          <li>Ã¢â‚¬Â¢ Si tout Ã©choue Ã¢â€ â€™ VÃ©rifier que le backend est bien dÃ©ployÃ© et les CORS configurÃ©s</li>
         </ul>
       </div>
     </div>

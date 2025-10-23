@@ -8,17 +8,17 @@
       "nova_indicator": 4
     },
     {
-      "name": "protéines hydrolysées", 
+      "name": "protÃ©ines hydrolysÃ©es", 
       "category": "protein_modifier",
       "nova_indicator": 4
     },
     {
-      "name": "isolat de protéines",
+      "name": "isolat de protÃ©ines",
       "category": "protein_isolate", 
       "nova_indicator": 4
     },
     {
-      "name": "huiles hydrogénées",
+      "name": "huiles hydrogÃ©nÃ©es",
       "category": "modified_fat",
       "nova_indicator": 4
     },
@@ -28,30 +28,30 @@
       "nova_indicator": 3
     },
     {
-      "name": "sirop de maÃ¯s",
+      "name": "sirop de maÃƒÂ¯s",
       "category": "sweetener",
       "nova_indicator": 3
     }
   ],
   "process_indicators": [
-    "extrudé",
-    "atomisé", 
-    "hydrogéné",
-    "interestérifié",
-    "texturé",
-    "reconstitué",
-    "fractionné"
+    "extrudÃ©",
+    "atomisÃ©", 
+    "hydrogÃ©nÃ©",
+    "interestÃ©rifiÃ©",
+    "texturÃ©",
+    "reconstituÃ©",
+    "fractionnÃ©"
   ],
   "ultra_processed_terms": [
     "nuggets",
-    "bâtonnets",
-    "galettes soufflées",
-    "barres céréales",
-    "plat cuisiné",
-    "pizza surgelée",
-    "biscuits fourrés",
-    "céréales petit-déjeuner",
-    "boisson énergisante",
+    "bÃ¢tonnets",
+    "galettes soufflÃ©es",
+    "barres cÃ©rÃ©ales",
+    "plat cuisinÃ©",
+    "pizza surgelÃ©e",
+    "biscuits fourrÃ©s",
+    "cÃ©rÃ©ales petit-dÃ©jeuner",
+    "boisson Ã©nergisante",
     "substitut de repas"
   ]
 }

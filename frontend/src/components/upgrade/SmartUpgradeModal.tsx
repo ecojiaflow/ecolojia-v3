@@ -1,4 +1,4 @@
-﻿// frontend/src/components/upgrade/SmartUpgradeModal.tsx
+// frontend/src/components/upgrade/SmartUpgradeModal.tsx
 
 import React, { useState, useEffect } from 'react';
 import { useQuota } from '../../hooks/useQuota';

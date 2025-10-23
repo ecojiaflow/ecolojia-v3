@@ -488,7 +488,7 @@ webhookLogSchema.statics = {
     }).sort({ 'processing.receivedAt': -1 });
   },
   
-  // Obtenir les webhooks   retenter
+  // Obtenir les webhooks Â  retenter
   async getWebhooksToRetry() {
     return this.find({
       status: 'retrying',

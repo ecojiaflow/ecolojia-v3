@@ -28,8 +28,8 @@ const getCategoryIcon = (category: string) => {
 const getCategoryLabel = (category: string) => {
   switch (category) {
     case 'food': return 'Alimentaire';
-    case 'cosmetics': return 'Cosmétique';
-    case 'detergents': return 'Détergent';
+    case 'cosmetics': return 'CosmÃ©tique';
+    case 'detergents': return 'DÃ©tergent';
     default: return 'Produit';
   }
 };

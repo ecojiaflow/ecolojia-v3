@@ -48,7 +48,7 @@ class AlgoliaSync {
           'status'
         ],
         
-        // Attributs   recuperer
+        // Attributs Â  recuperer
         attributesToRetrieve: [
           'objectID',
           'name',
@@ -89,9 +89,9 @@ class AlgoliaSync {
         paginationLimitedTo: 1000
       });
       
-      console.log('âœ… Index Algolia configure');
+      console.log('Ã¢Å“â€¦ Index Algolia configure');
     } catch (error) {
-      console.error('âŒ Erreur configuration Algolia:', error);
+      console.error('Ã¢ÂÅ’ Erreur configuration Algolia:', error);
     }
   }
 
@@ -172,17 +172,17 @@ class AlgoliaSync {
     try {
       const product = await Product.findById(productId);
       if (!product) {
-        console.log(`â­ï¸  Produit ${productId} ignore (inexistant)`);
+        console.log(`Ã¢ÂÂ­Ã¯Â¸Â  Produit ${productId} ignore (inexistant)`);
         return false;
       }
       
       const algoliaObject = this.transformProductForAlgolia(product);
       await this.index.saveObject(algoliaObject);
       
-      console.log(`âœ… Produit synchronise: ${product.name}`);
+      console.log(`Ã¢Å“â€¦ Produit synchronise: ${product.name}`);
       return true;
     } catch (error) {
-      console.error(`âŒ Erreur sync produit ${productId}:`, error);
+      console.error(`Ã¢ÂÅ’ Erreur sync produit ${productId}:`, error);
       return false;
     }
   }
@@ -197,7 +197,7 @@ class AlgoliaSync {
       onProgress = null
     } = options;
     
-    console.log('ðŸš€ Demarrage synchronisation Algolia...');
+    console.log('Ã°Å¸Å¡â‚¬ Demarrage synchronisation Algolia...');
     
     try {
       // Construire la requete
@@ -208,7 +208,7 @@ class AlgoliaSync {
       
       // Compter le total
       const totalCount = await Product.countDocuments(query);
-      console.log(`ðŸ“Š ${totalCount} produits   synchroniser`);
+      console.log(`Ã°Å¸â€œÅ  ${totalCount} produits Â  synchroniser`);
       
       let processed = 0;
       let synced = 0;
@@ -225,7 +225,7 @@ class AlgoliaSync {
           try {
             return this.transformProductForAlgolia(product);
           } catch (error) {
-            console.error(`âŒ Erreur transformation ${product.name}:`, error);
+            console.error(`Ã¢ÂÅ’ Erreur transformation ${product.name}:`, error);
             errors++;
             return null;
           }
@@ -235,9 +235,9 @@ class AlgoliaSync {
           try {
             await this.index.saveObjects(algoliaObjects);
             synced += algoliaObjects.length;
-            console.log(`âœ… Batch ${skip / batchSize + 1}: ${algoliaObjects.length} produits`);
+            console.log(`Ã¢Å“â€¦ Batch ${skip / batchSize + 1}: ${algoliaObjects.length} produits`);
           } catch (error) {
-            console.error(`âŒ Erreur batch:`, error);
+            console.error(`Ã¢ÂÅ’ Erreur batch:`, error);
             errors += algoliaObjects.length;
           }
         }
@@ -259,15 +259,15 @@ class AlgoliaSync {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      console.log('\nðŸ“Š Synchronisation terminee:');
-      console.log(`âœ… Synchronises: ${synced}`);
-      console.log(`âŒ Erreurs: ${errors}`);
-      console.log(`â±ï¸  Total traites: ${processed}`);
+      console.log('\nÃ°Å¸â€œÅ  Synchronisation terminee:');
+      console.log(`Ã¢Å“â€¦ Synchronises: ${synced}`);
+      console.log(`Ã¢ÂÅ’ Erreurs: ${errors}`);
+      console.log(`Ã¢ÂÂ±Ã¯Â¸Â  Total traites: ${processed}`);
       
       return { synced, errors, processed };
       
     } catch (error) {
-      console.error('âŒ Erreur synchronisation globale:', error);
+      console.error('Ã¢ÂÅ’ Erreur synchronisation globale:', error);
       throw error;
     }
   }
@@ -278,10 +278,10 @@ class AlgoliaSync {
   async deleteProduct(productId) {
     try {
       await this.index.deleteObject(productId.toString());
-      console.log(`ðŸ—‘ï¸  Produit ${productId} supprime d'Algolia`);
+      console.log(`Ã°Å¸â€”â€˜Ã¯Â¸Â  Produit ${productId} supprime d'Algolia`);
       return true;
     } catch (error) {
-      console.error(`âŒ Erreur suppression ${productId}:`, error);
+      console.error(`Ã¢ÂÅ’ Erreur suppression ${productId}:`, error);
       return false;
     }
   }
@@ -290,7 +290,7 @@ class AlgoliaSync {
    * Nettoie l'index (supprime les produits qui n'existent plus)
    */
   async cleanIndex() {
-    console.log('ðŸ§¹ Nettoyage de l\'index Algolia...');
+    console.log('Ã°Å¸Â§Â¹ Nettoyage de l\'index Algolia...');
     
     try {
       // Recuperer tous les IDs dans MongoDB
@@ -317,16 +317,16 @@ class AlgoliaSync {
           if (toDelete.length > 0) {
             this.index.deleteObjects(toDelete);
             deletedCount += toDelete.length;
-            console.log(`ðŸ—‘ï¸  Suppression de ${toDelete.length} produits obsoletes`);
+            console.log(`Ã°Å¸â€”â€˜Ã¯Â¸Â  Suppression de ${toDelete.length} produits obsoletes`);
           }
         }
       });
       
-      console.log(`âœ… Nettoyage termine: ${deletedCount} produits supprimes`);
+      console.log(`Ã¢Å“â€¦ Nettoyage termine: ${deletedCount} produits supprimes`);
       return deletedCount;
       
     } catch (error) {
-      console.error('âŒ Erreur nettoyage:', error);
+      console.error('Ã¢ÂÅ’ Erreur nettoyage:', error);
       throw error;
     }
   }
@@ -348,7 +348,7 @@ class AlgoliaSync {
         byNutriscore: stats.facets?.nutriscore || {}
       };
     } catch (error) {
-      console.error('âŒ Erreur stats:', error);
+      console.error('Ã¢ÂÅ’ Erreur stats:', error);
       return null;
     }
   }

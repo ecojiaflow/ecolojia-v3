@@ -4,18 +4,18 @@ const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || 'A2KJGZ2811';
 const ALGOLIA_ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY || '8a6393c1ff95165413e7f0bfea804357';
 const ALGOLIA_INDEX_NAME = 'products';
 
-// 🔧 Initialisation du client + index principal
+// ðŸ”§ Initialisation du client + index principal
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
 const algoliaIndex: SearchIndex = client.initIndex(ALGOLIA_INDEX_NAME);
 
-// ✅ Export direct de l'index pour usage dans syncAlgolia.ts
+// âœ… Export direct de l'index pour usage dans syncAlgolia.ts
 export default algoliaIndex;
 
-// ✅ Export séparé du client pour SearchExperience
+// âœ… Export sÃ©parÃ© du client pour SearchExperience
 export const searchClient = client;
 export { ALGOLIA_INDEX_NAME };
 
-// ✅ Interface des objets produits Algolia
+// âœ… Interface des objets produits Algolia
 export interface AlgoliaProduct {
   objectID: string;
   id?: string;
@@ -31,7 +31,7 @@ export interface AlgoliaProduct {
   _snippetResult?: any;
 }
 
-// 🔧 Paramètres par défaut pour les recherches
+// ðŸ”§ ParamÃ¨tres par dÃ©faut pour les recherches
 export const defaultSearchParams = {
   hitsPerPage: 20,
   attributesToRetrieve: [

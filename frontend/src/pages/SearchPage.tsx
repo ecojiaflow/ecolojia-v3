@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchProducts, toDisplayProduct } from "../lib/api";
 import { useQuerySync } from '../hooks/useQuerySync';
