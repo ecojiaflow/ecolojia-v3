@@ -5,9 +5,9 @@ const { asyncHandler } = require('../middleware');
 
 // GET /api/algolia/search - avec support complet des filtres
 router.get('/search', asyncHandler(async (req, res) => {
-  const { 
-    q = '', 
-    page = 0, 
+  const {
+    q = '',
+    page = 0,
     limit = 20,
     // Nouveaux paramètres de filtres
     brands,
@@ -16,12 +16,12 @@ router.get('/search', asyncHandler(async (req, res) => {
     minScore,
     maxScore
   } = req.query;
-  
+
   try {
     // Construire les filtres Algolia
     const facetFilters = [];
     const numericFilters = [];
-    
+
     // Filtres par marques (peut être un array ou une string)
     if (brands) {
       const brandList = Array.isArray(brands) ? brands : [brands];
@@ -29,7 +29,7 @@ router.get('/search', asyncHandler(async (req, res) => {
         facetFilters.push([`brand:${brand}`]);
       });
     }
-    
+
     // Filtres par catégories
     if (categories) {
       const categoryList = Array.isArray(categories) ? categories : [categories];
@@ -37,12 +37,12 @@ router.get('/search', asyncHandler(async (req, res) => {
         facetFilters.push([`category:${category}`]);
       });
     }
-    
+
     // Filtre par type de produit
     if (productType) {
       facetFilters.push([`productType:${productType}`]);
     }
-    
+
     // Filtres numériques pour le score
     if (minScore) {
       numericFilters.push(`healthScore>=${minScore}`);
@@ -50,25 +50,25 @@ router.get('/search', asyncHandler(async (req, res) => {
     if (maxScore) {
       numericFilters.push(`healthScore<=${maxScore}`);
     }
-    
+
     // Options de recherche Algolia
     const searchOptions = {
       page: parseInt(page),
       hitsPerPage: parseInt(limit)
     };
-    
+
     if (facetFilters.length > 0) {
       searchOptions.facetFilters = facetFilters;
     }
-    
+
     if (numericFilters.length > 0) {
       searchOptions.numericFilters = numericFilters;
     }
-    
+
     console.log('Algolia search:', { query: q, options: searchOptions });
-    
+
     const results = await algoliaService.searchProducts(q, {}, searchOptions);
-    
+
     // Normaliser TOUS les champs
     const normalizedProducts = (results.hits || []).map(hit => ({
       _id: hit.objectID || hit._id,
@@ -92,7 +92,7 @@ router.get('/search', asyncHandler(async (req, res) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }));
-    
+
     res.json({
       success: true,
       data: {
@@ -126,15 +126,78 @@ router.get('/search', asyncHandler(async (req, res) => {
   }
 }));
 
+// GET /api/algolia/autocomplete - Autocomplétion rapide (NOUVEAU)
+router.get('/autocomplete', asyncHandler(async (req, res) => {
+  const { q = '', limit = 5 } = req.query;
+
+  // Si query vide, retourner suggestions populaires
+  if (!q || q.trim().length === 0) {
+    return res.json({
+      success: true,
+      data: {
+        suggestions: [
+          { query: 'Nutella', category: 'Alimentaire', icon: '🍫' },
+          { query: 'Shampoing bio', category: 'Cosmétiques', icon: '🧴' },
+          { query: 'Lessive écologique', category: 'Détergents', icon: '🧽' },
+          { query: 'Dentifrice naturel', category: 'Hygiène', icon: '🦷' },
+          { query: 'Yaourt grec', category: 'Alimentaire', icon: '🥛' }
+        ]
+      }
+    });
+  }
+
+  try {
+    // Recherche Algolia optimisée pour autocomplete
+    const searchOptions = {
+      page: 0,
+      hitsPerPage: parseInt(limit),
+      attributesToRetrieve: ['name', 'brand', 'category', 'imageUrl', 'healthScore', 'barcode'],
+      attributesToHighlight: ['name', 'brand'],
+      typoTolerance: true,
+      minProximity: 2
+    };
+
+    const results = await algoliaService.searchProducts(q, {}, searchOptions);
+
+    // Formater les suggestions
+    const suggestions = (results.hits || []).map(hit => ({
+      id: hit.objectID,
+      name: hit.name || hit.title || hit.brand,
+      brand: hit.brand || '',
+      category: hit.category || 'food',
+      imageUrl: hit.imageUrl || hit.images?.[0] || '/images/default-product.jpg',
+      score: hit.healthScore || 50,
+      barcode: hit.barcode || ''
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        suggestions,
+        total: results.nbHits || 0
+      }
+    });
+  } catch (error) {
+    console.error('Autocomplete error:', error);
+    res.json({
+      success: true,
+      data: {
+        suggestions: [],
+        total: 0
+      }
+    });
+  }
+}));
+
 // POST /api/algolia/sync - CORRIGÉ pour inclure TOUS les champs
 router.post('/sync', asyncHandler(async (req, res) => {
   const Product = require('../models/Product');
   const products = await Product.find({}).lean();
-  
+
   if (!algoliaService.isConfigured()) {
     return res.status(500).json({ error: 'Service Algolia non configuré' });
   }
-  
+
   // Transformation complète avec TOUS les champs
   const transformProduct = (product) => {
     const obj = {
@@ -158,40 +221,40 @@ router.post('/sync', asyncHandler(async (req, res) => {
       imageUrl: product.imageUrl || product.image_url || product.images?.front || '',
       image_url: product.imageUrl || product.image_url || product.images?.front || ''
     };
-    
+
     // Log pour debug
     if (!obj.name) {
       console.log('⚠️ Produit sans nom:', product._id, product);
     }
-    
+
     return obj;
   };
-  
+
   const batchSize = 100;
   let totalIndexed = 0;
   let productsWithoutName = 0;
-  
+
   for (let i = 0; i < products.length; i += batchSize) {
     const batch = products.slice(i, i + batchSize);
     const transformed = batch.map(transformProduct);
-    
+
     // Compter les produits sans nom
     productsWithoutName += transformed.filter(p => !p.name).length;
-    
+
     await algoliaService.productsIndex.saveObjects(transformed);
     totalIndexed += transformed.length;
     console.log(`Indexé: ${totalIndexed}/${products.length}`);
   }
-  
-  res.json({ 
-    success: true, 
+
+  res.json({
+    success: true,
     message: `${totalIndexed} produits synchronisés`,
     total: products.length,
     warnings: productsWithoutName > 0 ? `${productsWithoutName} produits sans nom` : null
   });
 }));
 
-// Les autres routes...
+// POST /api/algolia/configure - Configuration de l'index
 router.post('/configure', asyncHandler(async (req, res) => {
   try {
     await algoliaService.configureIndex();
@@ -201,6 +264,7 @@ router.post('/configure', asyncHandler(async (req, res) => {
   }
 }));
 
+// GET /api/algolia/stats - Statistiques de l'index
 router.get('/stats', asyncHandler(async (req, res) => {
   const stats = await algoliaService.getIndexStats();
   res.json({
