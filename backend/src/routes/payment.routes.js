@@ -12,13 +12,13 @@ try {
   authenticateUser = typeof mw.authenticateUser === 'function' ? mw.authenticateUser : null;
 } catch (_) {
   try {
-    const mw2 = require('../middleware'); // parfois exportÃ© ici
+    const mw2 = require('../middleware'); // parfois exporté ici
     authenticateUser = typeof mw2.authenticateUser === 'function' ? mw2.authenticateUser : null;
   } catch (_) {}
 }
 const authMw = authenticateUser || ((req, res, next) => next());
 
-// Service LemonSqueezy (peut Ãªtre absent en dev)
+// Service LemonSqueezy (peut être absent en dev)
 let LS = null;
 try {
   LS = require('../services/payment/LemonSqueezyService');
@@ -55,18 +55,18 @@ router.get('/health', (req, res) => {
 
 // Si paiements OFF ou handlers manquants -> stubs
 if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) {
-  console.warn('âš ï¸ Paiements dÃ©sactivÃ©s ou handlers indisponibles â€” montage des stubs /api/payment/*');
+  console.warn('âš ï¸ Paiements désactivés ou handlers indisponibles â€” montage des stubs /api/payment/*');
 
   router.post('/create-checkout', authMw, (req, res) => {
     return res.status(501).json({
       success: false,
       message:
-        'Paiements indisponibles en dev. Activez ENABLE_PAYMENTS=1 et implÃ©mentez LemonSqueezyService pour utiliser cette route.',
+        'Paiements indisponibles en dev. Activez ENABLE_PAYMENTS=1 et implémentez LemonSqueezyService pour utiliser cette route.',
     });
   });
 
   router.post('/webhook', (req, res) => {
-    // LemonSqueezy prÃ©fÃ¨re un 2xx pour Ã©viter des retries agressifs
+    // LemonSqueezy préfère un 2xx pour éviter des retries agressifs
     return res.status(200).json({ success: false, message: 'Webhook stub (paiements off).' });
   });
 
@@ -98,7 +98,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
     return res.status(403).json({ success: false, message: 'Stats indisponibles en dev.' });
   });
 } else {
-  // Version rÃ©elle quand tout est prÃªt
+  // Version réelle quand tout est prêt
   router.post('/create-checkout', authMw, async (req, res) => {
     try {
       const { plan = 'monthly' } = req.body || {};
@@ -107,7 +107,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
       const result = await LS.createCheckoutSession(userId, email, plan);
       res.json({ success: true, checkoutUrl: result.checkoutUrl, checkoutId: result.checkoutId, expiresAt: result.expiresAt });
     } catch (e) {
-      res.status(500).json({ success: false, error: e?.message || 'Erreur crÃ©ation checkout' });
+      res.status(500).json({ success: false, error: e?.message || 'Erreur création checkout' });
     }
   });
 
@@ -118,7 +118,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
       await LS.handleWebhook(req.body, signature);
       res.json({ success: true });
     } catch (e) {
-      // LemonSqueezy tolÃ¨re un 200
+      // LemonSqueezy tolère un 200
       res.status(200).json({ success: false, error: e?.message });
     }
   });
@@ -137,7 +137,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
       const result = await LS.resumeSubscription(req.userId);
       res.json({ success: true, message: result.message });
     } catch (e) {
-      res.status(500).json({ success: false, error: e?.message || 'Erreur rÃ©activation' });
+      res.status(500).json({ success: false, error: e?.message || 'Erreur réactivation' });
     }
   });
 
@@ -176,7 +176,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
         },
       });
     } catch (e) {
-      res.status(500).json({ success: false, error: 'Erreur rÃ©cupÃ©ration statut' });
+      res.status(500).json({ success: false, error: 'Erreur récupération statut' });
     }
   });
 
@@ -186,7 +186,7 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
       const history = has('getPaymentHistory') ? await LS.getPaymentHistory(req.userId, limit) : [];
       res.json({ success: true, payments: history, count: history.length });
     } catch (e) {
-      res.status(500).json({ success: false, error: 'Erreur rÃ©cupÃ©ration historique' });
+      res.status(500).json({ success: false, error: 'Erreur récupération historique' });
     }
   });
 
@@ -197,11 +197,11 @@ if (!ENABLE_PAYMENTS || !has('createCheckoutSession') || !has('handleWebhook')) 
 
   router.get('/stats', authMw, async (req, res) => {
     try {
-      if (!req.user?.isAdmin) return res.status(403).json({ success: false, error: 'AccÃ¨s non autorisÃ©' });
+      if (!req.user?.isAdmin) return res.status(403).json({ success: false, error: 'Accès non autorisé' });
       const stats = has('getSubscriptionStats') ? await LS.getSubscriptionStats() : {};
       res.json({ success: true, stats });
     } catch (e) {
-      res.status(500).json({ success: false, error: 'Erreur rÃ©cupÃ©ration statistiques' });
+      res.status(500).json({ success: false, error: 'Erreur récupération statistiques' });
     }
   });
 }

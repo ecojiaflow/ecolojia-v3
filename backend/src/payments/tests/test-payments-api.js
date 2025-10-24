@@ -16,11 +16,11 @@ class PaymentsAPITester {
     await this.testHealthEndpoint();
     await this.testWebhookHealth();
     
-    // Tests avec donnÃ©es mock
+    // Tests avec données mock
     await this.testCreateCheckoutValidation();
     await this.testPremiumCheckWithoutAuth();
     
-    // Affichage rÃ©sultats
+    // Affichage résultats
     this.displayResults();
   }
 
@@ -77,7 +77,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('GET', '/api/health');
       
       if (response.status === 200) {
-        this.addResult('Health Endpoint', 'PASS', 'Serveur opÃ©rationnel');
+        this.addResult('Health Endpoint', 'PASS', 'Serveur opérationnel');
       } else {
         this.addResult('Health Endpoint', 'FAIL', `Status: ${response.status}`);
       }
@@ -92,7 +92,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('GET', '/api/webhooks/health');
       
       if (response.status === 200 && response.body.success) {
-        this.addResult('Webhook Health', 'PASS', 'Webhook endpoint opÃ©rationnel');
+        this.addResult('Webhook Health', 'PASS', 'Webhook endpoint opérationnel');
       } else {
         this.addResult('Webhook Health', 'FAIL', `Status: ${response.status}`);
       }
@@ -104,7 +104,7 @@ class PaymentsAPITester {
   async testCreateCheckoutValidation() {
     console.log('TEST 3: Create Checkout Validation');
     try {
-      // Test avec donnÃ©es invalides
+      // Test avec données invalides
       const invalidData = {
         userEmail: 'invalid-email',
         userId: 'invalid-id'
@@ -113,7 +113,7 @@ class PaymentsAPITester {
       const response = await this.makeRequest('POST', '/api/payments/create-checkout', invalidData);
       
       if (response.status === 400) {
-        this.addResult('Checkout Validation', 'PASS', 'Validation des donnÃ©es fonctionne');
+        this.addResult('Checkout Validation', 'PASS', 'Validation des données fonctionne');
       } else {
         this.addResult('Checkout Validation', 'FAIL', `Status unexpected: ${response.status}`);
       }
@@ -140,7 +140,7 @@ class PaymentsAPITester {
   async testLemonSqueezyConfig() {
     console.log('TEST 5: Configuration LemonSqueezy');
     try {
-      // VÃ©rifier que les variables d'environnement sont prÃ©sentes
+      // Vérifier que les variables d'environnement sont présentes
       const envCheck = {
         hasApiKey: !!process.env.LEMONSQUEEZY_API_KEY,
         hasStoreId: !!process.env.LEMONSQUEEZY_STORE_ID,
@@ -148,7 +148,7 @@ class PaymentsAPITester {
       };
 
       if (envCheck.hasApiKey && envCheck.hasStoreId && envCheck.hasProductId) {
-        this.addResult('LemonSqueezy Config', 'PASS', 'Variables environnement configurÃ©es');
+        this.addResult('LemonSqueezy Config', 'PASS', 'Variables environnement configurées');
       } else {
         this.addResult('LemonSqueezy Config', 'FAIL', `Missing config: ${JSON.stringify(envCheck)}`);
       }
@@ -192,7 +192,7 @@ class PaymentsAPITester {
   }
 }
 
-// ExÃ©cution des tests si script appelÃ© directement
+// Exécution des tests si script appelé directement
 if (require.main === module) {
   const tester = new PaymentsAPITester();
   tester.runAllTests().catch(console.error);

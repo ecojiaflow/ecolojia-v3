@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/Navbar.tsx
+﻿// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDeviceContext } from '@/hooks/useDeviceContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';

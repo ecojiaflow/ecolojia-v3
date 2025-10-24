@@ -3,13 +3,13 @@ const asyncHandler = require('../../utils/asyncHandler');
 
 class PremiumMiddleware {
   /**
-   * VÃ©rifier si l'utilisateur a un abonnement premium actif
+   * Vérifier si l'utilisateur a un abonnement premium actif
    * Utilisation: requirePremium('chatAI')
    */
   requirePremium = (requiredFeature = null) => {
     return asyncHandler(async (req, res, next) => {
       try {
-        // RÃ©cupÃ©rer l'ID utilisateur depuis le token JWT (ajoutÃ© par authMiddleware)
+        // Récupérer l'ID utilisateur depuis le token JWT (ajouté par authMiddleware)
         const userId = req.user?.id || req.user?._id;
         
         if (!userId) {
@@ -20,13 +20,13 @@ class PremiumMiddleware {
           });
         }
 
-        // VÃ©rifier l'abonnement actif
+        // Vérifier l'abonnement actif
         const subscription = await Subscription.findActiveByUserId(userId);
         
         if (!subscription) {
           return res.status(403).json({
             success: false,
-            message: 'Abonnement Premium requis pour accÃ©der Ã  cette fonctionnalitÃ©',
+            message: 'Abonnement Premium requis pour accéder Ã  cette fonctionnalité',
             code: 'PREMIUM_REQUIRED',
             data: {
               feature: requiredFeature,
@@ -35,11 +35,11 @@ class PremiumMiddleware {
           });
         }
 
-        // VÃ©rifier si l'abonnement n'est pas expirÃ©
+        // Vérifier si l'abonnement n'est pas expiré
         if (!subscription.isActive) {
           return res.status(403).json({
             success: false,
-            message: 'Votre abonnement Premium a expirÃ©',
+            message: 'Votre abonnement Premium a expiré',
             code: 'SUBSCRIPTION_EXPIRED',
             data: {
               expiredAt: subscription.currentPeriodEnd,
@@ -48,11 +48,11 @@ class PremiumMiddleware {
           });
         }
 
-        // VÃ©rifier la fonctionnalitÃ© spÃ©cifique si demandÃ©e
+        // Vérifier la fonctionnalité spécifique si demandée
         if (requiredFeature && !subscription.hasFeature(requiredFeature)) {
           return res.status(403).json({
             success: false,
-            message: `La fonctionnalitÃ© ${requiredFeature} n'est pas incluse dans votre plan`,
+            message: `La fonctionnalité ${requiredFeature} n'est pas incluse dans votre plan`,
             code: 'FEATURE_NOT_INCLUDED',
             data: {
               feature: requiredFeature,
@@ -62,18 +62,18 @@ class PremiumMiddleware {
           });
         }
 
-        // Ajouter les informations de l'abonnement Ã  la requÃªte
+        // Ajouter les informations de l'abonnement Ã  la requête
         req.subscription = subscription;
         req.isPremium = true;
 
-        console.log(`âœ… AccÃ¨s premium autorisÃ© pour user ${userId} - feature: ${requiredFeature || 'any'}`);
+        console.log(`âœ… Accès premium autorisé pour user ${userId} - feature: ${requiredFeature || 'any'}`);
         next();
 
       } catch (error) {
         console.error('âŒ Erreur middleware premium:', error);
         return res.status(500).json({
           success: false,
-          message: 'Erreur lors de la vÃ©rification de l\'abonnement',
+          message: 'Erreur lors de la vérification de l\'abonnement',
           code: 'SUBSCRIPTION_CHECK_ERROR'
         });
       }
@@ -81,7 +81,7 @@ class PremiumMiddleware {
   };
 
   /**
-   * VÃ©rifier les limites d'utilisation
+   * Vérifier les limites d'utilisation
    * Utilisation: checkUsageLimit('scans')
    */
   checkUsageLimit = (usageType) => {
@@ -97,7 +97,7 @@ class PremiumMiddleware {
           });
         }
 
-        // VÃ©rifier les limites
+        // Vérifier les limites
         if (!subscription.isWithinLimits(usageType)) {
           const currentUsage = subscription.usage[`currentMonth${usageType.charAt(0).toUpperCase() + usageType.slice(1)}`];
           const limit = subscription.limits[usageType];
@@ -118,10 +118,10 @@ class PremiumMiddleware {
         next();
 
       } catch (error) {
-        console.error('âŒ Erreur vÃ©rification limites:', error);
+        console.error('âŒ Erreur vérification limites:', error);
         return res.status(500).json({
           success: false,
-          message: 'Erreur lors de la vÃ©rification des limites',
+          message: 'Erreur lors de la vérification des limites',
           code: 'USAGE_CHECK_ERROR'
         });
       }
@@ -129,7 +129,7 @@ class PremiumMiddleware {
   };
 
   /**
-   * Middleware optionnel: enrichir la requÃªte avec les infos premium
+   * Middleware optionnel: enrichir la requête avec les infos premium
    * Utilisation: enrichWithPremiumInfo() - n'bloque pas si pas premium
    */
   enrichWithPremiumInfo = () => {
@@ -166,23 +166,23 @@ class PremiumMiddleware {
   };
 
   /**
-   * IncrÃ©menter automatiquement l'usage aprÃ¨s une action rÃ©ussie
+   * Incrémenter automatiquement l'usage après une action réussie
    * Utilisation: trackUsageAfter('scans', 1)
    */
   trackUsageAfter = (usageType, amount = 1) => {
     return asyncHandler(async (req, res, next) => {
-      // Stocker la fonction de tracking pour l'exÃ©cuter aprÃ¨s la rÃ©ponse
+      // Stocker la fonction de tracking pour l'exécuter après la réponse
       const originalSend = res.send;
       
       res.send = function(data) {
-        // Appeler la mÃ©thode send originale
+        // Appeler la méthode send originale
         originalSend.call(this, data);
         
-        // Tracker l'usage de maniÃ¨re asynchrone (ne pas attendre)
+        // Tracker l'usage de manière asynchrone (ne pas attendre)
         if (req.subscription && this.statusCode < 400) {
           req.subscription.incrementUsage(usageType, amount)
             .then(() => {
-              console.log(`ðŸ“Š Usage trackÃ©: ${usageType} +${amount} pour user ${req.user?.id}`);
+              console.log(`ðŸ“Š Usage tracké: ${usageType} +${amount} pour user ${req.user?.id}`);
             })
             .catch(error => {
               console.error('âŒ Erreur tracking usage:', error);
@@ -204,7 +204,7 @@ class PremiumMiddleware {
       if (userRole !== 'admin' && userRole !== 'superadmin') {
         return res.status(403).json({
           success: false,
-          message: 'AccÃ¨s administrateur requis',
+          message: 'Accès administrateur requis',
           code: 'ADMIN_ACCESS_REQUIRED'
         });
       }
@@ -214,7 +214,7 @@ class PremiumMiddleware {
   };
 
   /**
-   * Rate limiting spÃ©cifique pour les actions premium
+   * Rate limiting spécifique pour les actions premium
    */
   premiumRateLimit = (maxRequests = 100, windowMs = 60 * 1000) => {
     const requestCounts = new Map();
@@ -231,14 +231,14 @@ class PremiumMiddleware {
         }
       }
       
-      // VÃ©rifier le compteur pour cet utilisateur
+      // Vérifier le compteur pour cet utilisateur
       const userKey = `${userId}`;
       const userData = requestCounts.get(userKey);
       
       if (userData && userData.count >= maxRequests) {
         return res.status(429).json({
           success: false,
-          message: 'Trop de requÃªtes. Veuillez patienter.',
+          message: 'Trop de requêtes. Veuillez patienter.',
           code: 'RATE_LIMIT_EXCEEDED',
           data: {
             retryAfter: Math.ceil((userData.timestamp + windowMs - now) / 1000)
@@ -246,7 +246,7 @@ class PremiumMiddleware {
         });
       }
       
-      // IncrÃ©menter le compteur
+      // Incrémenter le compteur
       requestCounts.set(userKey, {
         count: (userData?.count || 0) + 1,
         timestamp: now

@@ -7,20 +7,20 @@ const analyzeCosmeticController = async (req, res) => {
   try {
     const { name, ingredients, inciList, barcode, language = 'fr' } = req.body;
     
-    logger.info('ðŸ§´ Analyse cosmÃ©tique demandÃ©e', { name, barcode });
+    logger.info('ðŸ§´ Analyse cosmétique demandée', { name, barcode });
     
     // Validation basique
     if (!ingredients && !inciList) {
       return res.status(400).json({
         success: false,
         error: 'INGREDIENTS_REQUIRED',
-        message: 'Liste des ingrÃ©dients requise'
+        message: 'Liste des ingrédients requise'
       });
     }
 
-    // PrÃ©paration des donnÃ©es pour le scorer
+    // Préparation des données pour le scorer
     const productData = {
-      name: name || 'Produit cosmÃ©tique',
+      name: name || 'Produit cosmétique',
       ingredients: ingredients || inciList,
       barcode
     };
@@ -29,7 +29,7 @@ const analyzeCosmeticController = async (req, res) => {
     const scorer = new CosmeticScorer();
     const analysisResult = await scorer.analyzeCosmetic(productData);
 
-    // Formatage de la rÃ©ponse
+    // Formatage de la réponse
     const response = {
       success: true,
       data: {
@@ -58,7 +58,7 @@ const analyzeCosmeticController = async (req, res) => {
       }
     };
 
-    logger.info('âœ… Analyse cosmÃ©tique terminÃ©e', { 
+    logger.info('âœ… Analyse cosmétique terminée', { 
       product: name, 
       score: analysisResult.score,
       confidence: analysisResult.confidence 
@@ -67,7 +67,7 @@ const analyzeCosmeticController = async (req, res) => {
     return res.json(response);
 
   } catch (error) {
-    logger.error('âŒ Erreur analyse cosmÃ©tique', { error: error.message });
+    logger.error('âŒ Erreur analyse cosmétique', { error: error.message });
     return res.status(500).json({
       success: false,
       error: 'COSMETIC_ANALYSIS_FAILED',
@@ -102,7 +102,7 @@ function formatRisks(analysisResult) {
     });
   }
 
-  // IngrÃ©dients toxiques/irritants
+  // Ingrédients toxiques/irritants
   if (analysisResult.risk_analysis?.toxic_ingredients) {
     analysisResult.risk_analysis.toxic_ingredients.forEach(item => {
       risks.push({
@@ -144,29 +144,29 @@ function generateHighlights(analysisResult) {
   
   // Score global
   if (analysisResult.score >= 80) {
-    highlights.push("âœ… Formulation de haute qualitÃ©");
+    highlights.push("âœ… Formulation de haute qualité");
   } else if (analysisResult.score >= 60) {
-    highlights.push("âš ï¸ Formulation correcte avec quelques rÃ©serves");
+    highlights.push("âš ï¸ Formulation correcte avec quelques réserves");
   } else {
-    highlights.push("âŒ Formulation problÃ©matique");
+    highlights.push("âŒ Formulation problématique");
   }
 
   // Risques
   const endocrineCount = analysisResult.risk_analysis?.endocrine_disruptors?.length || 0;
   if (endocrineCount > 0) {
-    highlights.push(`âš ï¸ ${endocrineCount} perturbateur(s) endocrinien(s) dÃ©tectÃ©(s)`);
+    highlights.push(`âš ï¸ ${endocrineCount} perturbateur(s) endocrinien(s) détecté(s)`);
   }
 
-  // AllergÃ¨nes
+  // Allergènes
   const allergenCount = analysisResult.allergen_analysis?.total_allergens || 0;
   if (allergenCount > 0) {
-    highlights.push(`ðŸŒ¿ ${allergenCount} allergÃ¨ne(s) parfumÃ©(s) dÃ©tectÃ©(s)`);
+    highlights.push(`ðŸŒ¿ ${allergenCount} allergène(s) parfumé(s) détecté(s)`);
   }
 
-  // BÃ©nÃ©fices
+  // Bénéfices
   const benefitCount = analysisResult.benefit_analysis?.active_ingredients?.length || 0;
   if (benefitCount > 0) {
-    highlights.push(`ðŸ’« ${benefitCount} ingrÃ©dient(s) actif(s) bÃ©nÃ©fique(s)`);
+    highlights.push(`ðŸ’« ${benefitCount} ingrédient(s) actif(s) bénéfique(s)`);
   }
 
   return highlights;
@@ -175,29 +175,29 @@ function generateHighlights(analysisResult) {
 function generateRecommendations(analysisResult) {
   const recommendations = [];
   
-  // BasÃ©es sur le score
+  // Basées sur le score
   if (analysisResult.score < 60) {
-    recommendations.push("Rechercher des alternatives avec moins d'ingrÃ©dients controversÃ©s");
+    recommendations.push("Rechercher des alternatives avec moins d'ingrédients controversés");
   }
 
-  // BasÃ©es sur les risques
+  // Basées sur les risques
   if (analysisResult.risk_analysis?.overall_risk === 'high') {
     recommendations.push("Ã‰viter en cas de peau sensible ou de grossesse");
   }
 
-  // BasÃ©es sur les allergÃ¨nes
+  // Basées sur les allergènes
   if (analysisResult.allergen_analysis?.risk_level === 'high') {
-    recommendations.push("Faire un test cutanÃ© avant utilisation");
-    recommendations.push("Ã‰viter en cas d'antÃ©cÃ©dents allergiques");
+    recommendations.push("Faire un test cutané avant utilisation");
+    recommendations.push("Ã‰viter en cas d'antécédents allergiques");
   }
 
-  // Recommandations gÃ©nÃ©rales
+  // Recommandations générales
   if (analysisResult.breakdown?.formulation?.details?.complexity === 'complex') {
-    recommendations.push("PrivilÃ©gier des formulations plus simples si possible");
+    recommendations.push("Privilégier des formulations plus simples si possible");
   }
 
   if (recommendations.length === 0 && analysisResult.score >= 80) {
-    recommendations.push("Produit recommandÃ© pour un usage rÃ©gulier");
+    recommendations.push("Produit recommandé pour un usage régulier");
   }
 
   return recommendations;

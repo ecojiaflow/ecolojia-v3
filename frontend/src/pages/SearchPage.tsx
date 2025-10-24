@@ -26,7 +26,7 @@ const indexName = 'products';
 const ProductHit = ({ hit }: { hit: any }) => {
   const navigate = useNavigate();
 
-  // Debug: voir les données disponibles
+  // Debug: voir les donn?es disponibles
   React.useEffect(() => {
     console.log('Algolia hit:', hit);
   }, [hit]);
@@ -42,12 +42,12 @@ const ProductHit = ({ hit }: { hit: any }) => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'Moyen';
-    return 'À éviter';
+    return '? ?viter';
   };
 
   const globalScore = hit.scores?.global || 0;
   
-  // Essayer différents champs pour le nom du produit
+  // Essayer diff?rents champs pour le nom du produit
   const productName = hit.product_name || hit.name || hit.product_name_fr || hit.generic_name || 'Produit sans nom';
   const productBrand = hit.brands || hit.brand || '';
   const productImage = hit.imageUrl || hit.image_url || hit.image_front_url || hit.image_small_url || hit.images?.[0] || '/images/default-product.jpg';
@@ -152,7 +152,7 @@ const SearchPage: React.FC = () => {
             {/* SearchBox */}
             <div className="mb-4">
               <SearchBox
-                placeholder="Rechercher un produit (Nutella, L'Oréal, Ariel...)"
+                placeholder="Rechercher un produit (Nutella, L'Or?al, Ariel...)"
                 classNames={{
                   root: 'relative',
                   form: 'relative',
@@ -215,14 +215,14 @@ const SearchPage: React.FC = () => {
                         'w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium'
                     }}
                     translations={{
-                      resetButtonText: 'Réinitialiser les filtres'
+                      resetButtonText: 'RÃ©initialiser les filtres'
                     }}
                   />
 
-                  {/* Catégories */}
+                  {/* CatÃ©gories */}
                   <div className="mb-6">
                     <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                      Catégorie
+                      CatÃ©gorie
                     </h3>
                     <RefinementList
                       attribute="categories"
@@ -334,7 +334,7 @@ const SearchPage: React.FC = () => {
               </aside>
             )}
 
-            {/* Résultats */}
+            {/* R?sultats */}
             <main className="flex-1">
               <Hits
                 hitComponent={ProductHit}
@@ -363,10 +363,10 @@ const SearchPage: React.FC = () => {
                     lastPageItem: isMobile ? 'hidden' : ''
                   }}
                   translations={{
-                    firstPageItemText: '«',
-                    previousPageItemText: '‹',
-                    nextPageItemText: '›',
-                    lastPageItemText: '»'
+                    firstPageItemText: '?',
+                    previousPageItemText: '?',
+                    nextPageItemText: '?',
+                    lastPageItemText: '?'
                   }}
                 />
               </div>

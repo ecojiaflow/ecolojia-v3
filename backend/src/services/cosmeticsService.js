@@ -1,7 +1,7 @@
 const { Logger } = require('../utils/logger');
 const logger = new Logger('CosmeticsService');
 
-// Import des scorers cosmÃ©tiques
+// Import des scorers cosmétiques
 let CosmeticScorer;
 try {
   CosmeticScorer = require('../scorers/cosmetic/cosmeticScorer');
@@ -19,11 +19,11 @@ try {
         grade: score >= 90 ? 'A' : score >= 75 ? 'B' : score >= 60 ? 'C' : score >= 40 ? 'D' : 'E',
         confidence: 0.85,
         risk_analysis: {
-          endocrine_disruptors: hasEndocrine ? ['Perturbateurs dÃ©tectÃ©s'] : [],
-          silicones: hasSilicone ? ['Silicones prÃ©sents'] : []
+          endocrine_disruptors: hasEndocrine ? ['Perturbateurs détectés'] : [],
+          silicones: hasSilicone ? ['Silicones présents'] : []
         },
         allergen_analysis: { total_allergens: 0, detected: [] },
-        recommendations: score < 70 ? ['PrivilÃ©gier des alternatives sans perturbateurs'] : ['Produit bien formulÃ©'],
+        recommendations: score < 70 ? ['Privilégier des alternatives sans perturbateurs'] : ['Produit bien formulé'],
         highlights: [],
         meta: { sources: ['ANSM', 'SCCS'] }
       };
@@ -37,19 +37,19 @@ class CosmeticsService {
   }
 
   /**
-   * Analyse un produit cosmÃ©tique
+   * Analyse un produit cosmétique
    */
   async analyzeCosmetic({ barcode, name, ingredients, photoUrl, locale = 'fr' }) {
     try {
       logger.info('Analyzing cosmetic product', { barcode, name, hasIngredients: !!ingredients });
 
-      // Si pas d'ingrÃ©dients fournis, essayer de les rÃ©cupÃ©rer depuis OBF
+      // Si pas d'ingrédients fournis, essayer de les récupérer depuis OBF
       if (!ingredients && barcode) {
         try {
           const obfData = await this.fetchFromOBF(barcode, locale);
           if (obfData?.product) {
             ingredients = obfData.product.ingredients_text || '';
-            name = name || obfData.product.product_name || 'Produit cosmÃ©tique';
+            name = name || obfData.product.product_name || 'Produit cosmétique';
           }
         } catch (err) {
           logger.warn('OBF fetch failed', { error: err.message });
@@ -62,16 +62,16 @@ class CosmeticsService {
 
       // Analyser avec le scorer
       const analysisResult = await this.scorer.analyzeCosmetic({
-        name: name || 'Produit cosmÃ©tique',
+        name: name || 'Produit cosmétique',
         ingredients,
         barcode
       });
 
-      // Formatter la rÃ©ponse unifiÃ©e
+      // Formatter la réponse unifiée
       return {
         product: {
           barcode,
-          name: name || 'Produit cosmÃ©tique',
+          name: name || 'Produit cosmétique',
           category: 'cosmetics',
           brand: null,
           image: null
@@ -109,7 +109,7 @@ class CosmeticsService {
   }
 
   /**
-   * RÃ©cupÃ©rer les donnÃ©es depuis Open Beauty Facts
+   * Récupérer les données depuis Open Beauty Facts
    */
   async fetchFromOBF(barcode, locale = 'fr') {
     const axios = require('axios');
@@ -127,7 +127,7 @@ class CosmeticsService {
   }
 
   /**
-   * GÃ©nÃ©rer les labels pour l'affichage
+   * Générer les labels pour l'affichage
    */
   generateLabels(analysisResult) {
     const labels = [];
@@ -146,7 +146,7 @@ class CosmeticsService {
   }
 
   /**
-   * GÃ©nÃ©rer les flags d'alerte
+   * Générer les flags d'alerte
    */
   generateFlags(analysisResult) {
     const flags = [];
@@ -171,7 +171,7 @@ class CosmeticsService {
   }
 
   /**
-   * GÃ©nÃ©rer les insights
+   * Générer les insights
    */
   generateInsights(analysisResult) {
     const insights = [];
@@ -179,7 +179,7 @@ class CosmeticsService {
     if (analysisResult.score >= 80) {
       insights.push({
         type: 'positive',
-        message: 'Produit bien formulÃ© avec peu de risques identifiÃ©s'
+        message: 'Produit bien formulé avec peu de risques identifiés'
       });
     }
     

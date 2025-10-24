@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV === 'development' || process.env.ALLOW_UNAUTH
 
 // Middleware conditionnel pour dev
 const authMiddleware = isDev ? (req, res, next) => {
-  // En dev, crÃ©er un utilisateur fictif
+  // En dev, créer un utilisateur fictif
   req.userId = 'dev-user';
   req.user = {
     _id: 'dev-user',
@@ -24,7 +24,7 @@ const authMiddleware = isDev ? (req, res, next) => {
   next();
 } : authenticateUser;
 
-// Service de chat simplifiÃ© pour dev si NutritionistChatService n'existe pas
+// Service de chat simplifié pour dev si NutritionistChatService n'existe pas
 let chatService;
 try {
   chatService = require('../services/ai/NutritionistChatService');
@@ -34,7 +34,7 @@ try {
   // Service fallback pour dev
   chatService = {
     async sendMessage(userId, message, context) {
-      // Si DeepSeek configurÃ©
+      // Si DeepSeek configuré
       if (process.env.DEEPSEEK_API_KEY) {
         const axios = require('axios');
         try {
@@ -71,9 +71,9 @@ try {
         }
       }
       
-      // Mode dÃ©mo sans API
+      // Mode démo sans API
       return {
-        response: `Je suis ECOLOJIA. Vous demandez: "${message}". ${context?.productName ? `Pour ${context.productName}, ` : ''}je recommande de privilÃ©gier les produits NOVA 1-2 et Nutri-Score A-B.`,
+        response: `Je suis ECOLOJIA. Vous demandez: "${message}". ${context?.productName ? `Pour ${context.productName}, ` : ''}je recommande de privilégier les produits NOVA 1-2 et Nutri-Score A-B.`,
         conversationId: 'demo-' + Date.now(),
         quotaRemaining: 999
       };
@@ -85,7 +85,7 @@ try {
     
     async compareProducts(userId, productIds) {
       return {
-        response: `Comparaison de ${productIds.length} produits: PrivilÃ©giez toujours les produits avec le meilleur score NOVA et Nutri-Score.`,
+        response: `Comparaison de ${productIds.length} produits: Privilégiez toujours les produits avec le meilleur score NOVA et Nutri-Score.`,
         quotaRemaining: 999
       };
     },
@@ -94,18 +94,18 @@ try {
       return [
         "Qu'est-ce que la classification NOVA ?",
         "Comment lire un Nutri-Score ?",
-        "Quels additifs Ã©viter ?",
-        "Ce produit est-il bon pour la santÃ© ?",
-        "Quelle est la diffÃ©rence entre bio et conventionnel ?"
+        "Quels additifs éviter ?",
+        "Ce produit est-il bon pour la santé ?",
+        "Quelle est la différence entre bio et conventionnel ?"
       ];
     },
     
     async generateSuggestions(userId) {
       return {
         suggestions: [
-          "PrivilÃ©giez les aliments bruts et peu transformÃ©s",
-          "Lisez toujours la liste des ingrÃ©dients",
-          "MÃ©fiez-vous des produits avec plus de 5 additifs"
+          "Privilégiez les aliments bruts et peu transformés",
+          "Lisez toujours la liste des ingrédients",
+          "Méfiez-vous des produits avec plus de 5 additifs"
         ]
       };
     },
@@ -117,13 +117,13 @@ try {
         timestamp: new Date()
       }, {
         role: 'assistant',
-        message: 'RÃ©ponse de test',
+        message: 'Réponse de test',
         timestamp: new Date()
       }];
     },
     
     async clearConversation(userId) {
-      return { message: 'Conversation rÃ©initialisÃ©e' };
+      return { message: 'Conversation réinitialisée' };
     }
   };
 }
@@ -148,7 +148,7 @@ router.post('/chat', authMiddleware, async (req, res) => {
     if (message.length > 1000) {
       return res.status(400).json({
         success: false,
-        error: 'Message trop long (max 1000 caractÃ¨res)'
+        error: 'Message trop long (max 1000 caractères)'
       });
     }
     
@@ -182,14 +182,14 @@ router.post('/chat', authMiddleware, async (req, res) => {
     
     res.status(500).json({
       success: false,
-      error: error.message || 'Erreur lors de la gÃ©nÃ©ration de la rÃ©ponse'
+      error: error.message || 'Erreur lors de la génération de la réponse'
     });
   }
 });
 
 /**
  * POST /api/ai/product-question
- * Poser une question sur un produit spÃ©cifique
+ * Poser une question sur un produit spécifique
  */
 router.post('/product-question', authMiddleware, async (req, res) => {
   try {
@@ -269,7 +269,7 @@ router.post('/compare-products', authMiddleware, async (req, res) => {
 
 /**
  * GET /api/ai/suggestions
- * Obtenir des suggestions personnalisÃ©es
+ * Obtenir des suggestions personnalisées
  */
 router.get('/suggestions', authMiddleware, async (req, res) => {
   try {
@@ -293,7 +293,7 @@ router.get('/suggestions', authMiddleware, async (req, res) => {
       result = { suggestions };
       
     } else {
-      // Conseils personnalisÃ©s
+      // Conseils personnalisés
       result = await chatService.generateSuggestions(userId);
     }
     
@@ -306,14 +306,14 @@ router.get('/suggestions', authMiddleware, async (req, res) => {
     console.error('[AI] Suggestions error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la gÃ©nÃ©ration des suggestions'
+      error: 'Erreur lors de la génération des suggestions'
     });
   }
 });
 
 /**
  * GET /api/ai/conversation/:conversationId
- * RÃ©cupÃ©rer une conversation complÃ¨te
+ * Récupérer une conversation complète
  */
 router.get('/conversation/:conversationId', authMiddleware, async (req, res) => {
   try {
@@ -328,7 +328,7 @@ router.get('/conversation/:conversationId', authMiddleware, async (req, res) => 
     if (!conversation || conversation.length === 0) {
       return res.status(404).json({
         success: false,
-        error: 'Conversation non trouvÃ©e'
+        error: 'Conversation non trouvée'
       });
     }
     
@@ -342,14 +342,14 @@ router.get('/conversation/:conversationId', authMiddleware, async (req, res) => 
     console.error('[AI] Get conversation error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©cupÃ©ration de la conversation'
+      error: 'Erreur lors de la récupération de la conversation'
     });
   }
 });
 
 /**
  * DELETE /api/ai/conversation
- * RÃ©initialiser la conversation
+ * Réinitialiser la conversation
  */
 router.delete('/conversation', authMiddleware, async (req, res) => {
   try {
@@ -366,7 +366,7 @@ router.delete('/conversation', authMiddleware, async (req, res) => {
     console.error('[AI] Clear conversation error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©initialisation'
+      error: 'Erreur lors de la réinitialisation'
     });
   }
 });
@@ -404,7 +404,7 @@ router.get('/quota-status', authMiddleware, async (req, res) => {
     console.error('[AI] Quota status error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©cupÃ©ration du quota'
+      error: 'Erreur lors de la récupération du quota'
     });
   }
 });
@@ -421,45 +421,45 @@ router.get('/faq', async (req, res) => {
       nova: [
         {
           question: "Qu'est-ce que la classification NOVA ?",
-          answer: "NOVA est un systÃ¨me qui classe les aliments en 4 groupes selon leur degrÃ© de transformation : 1) Non transformÃ©s, 2) IngrÃ©dients culinaires, 3) TransformÃ©s, 4) Ultra-transformÃ©s. Les aliments du groupe 4 sont Ã  limiter.",
+          answer: "NOVA est un système qui classe les aliments en 4 groupes selon leur degré de transformation : 1) Non transformés, 2) Ingrédients culinaires, 3) Transformés, 4) Ultra-transformés. Les aliments du groupe 4 sont Ã  limiter.",
           keywords: ['nova', 'classification', 'transformation']
         },
         {
-          question: "Pourquoi Ã©viter les aliments NOVA 4 ?",
-          answer: "Les aliments ultra-transformÃ©s contiennent souvent de nombreux additifs, du sucre et du sel en excÃ¨s. Ils sont associÃ©s Ã  un risque accru d'obÃ©sitÃ©, de diabÃ¨te et de maladies cardiovasculaires.",
-          keywords: ['nova 4', 'ultra-transformÃ©', 'santÃ©']
+          question: "Pourquoi éviter les aliments NOVA 4 ?",
+          answer: "Les aliments ultra-transformés contiennent souvent de nombreux additifs, du sucre et du sel en excès. Ils sont associés Ã  un risque accru d'obésité, de diabète et de maladies cardiovasculaires.",
+          keywords: ['nova 4', 'ultra-transformé', 'santé']
         }
       ],
       additifs: [
         {
           question: "Tous les additifs E sont-ils dangereux ?",
-          answer: "Non, tous les additifs ne sont pas dangereux. Certains sont naturels (E100 - curcumine, E322 - lÃ©cithines). D'autres sont plus controversÃ©s. L'important est leur quantitÃ© et frÃ©quence de consommation.",
+          answer: "Non, tous les additifs ne sont pas dangereux. Certains sont naturels (E100 - curcumine, E322 - lécithines). D'autres sont plus controversés. L'important est leur quantité et fréquence de consommation.",
           keywords: ['additifs', 'e', 'dangereux']
         },
         {
-          question: "Quels additifs Ã©viter absolument ?",
-          answer: "Les plus controversÃ©s incluent : E102, E110, E124 (colorants azoÃ¯ques), E320-E321 (BHA/BHT), E249-E252 (nitrites/nitrates). Ils peuvent causer hyperactivitÃ©, allergies ou Ãªtre cancÃ©rogÃ¨nes.",
-          keywords: ['additifs', 'Ã©viter', 'dangereux']
+          question: "Quels additifs éviter absolument ?",
+          answer: "Les plus controversés incluent : E102, E110, E124 (colorants azoïques), E320-E321 (BHA/BHT), E249-E252 (nitrites/nitrates). Ils peuvent causer hyperactivité, allergies ou être cancérogènes.",
+          keywords: ['additifs', 'éviter', 'dangereux']
         }
       ],
       nutrition: [
         {
-          question: "Comment lire une Ã©tiquette nutritionnelle ?",
-          answer: "VÃ©rifiez d'abord la liste d'ingrÃ©dients (ordre dÃ©croissant). Regardez les valeurs pour 100g : sucres (<5g idÃ©al), graisses saturÃ©es (<2g), sel (<1g). MÃ©fiez-vous des portions trompeuses.",
-          keywords: ['Ã©tiquette', 'nutritionnel', 'lire']
+          question: "Comment lire une étiquette nutritionnelle ?",
+          answer: "Vérifiez d'abord la liste d'ingrédients (ordre décroissant). Regardez les valeurs pour 100g : sucres (<5g idéal), graisses saturées (<2g), sel (<1g). Méfiez-vous des portions trompeuses.",
+          keywords: ['étiquette', 'nutritionnel', 'lire']
         },
         {
           question: "Qu'est-ce que le Nutri-Score ?",
-          answer: "Le Nutri-Score est un logo qui note la qualitÃ© nutritionnelle de A (meilleur) Ã  E. Il prend en compte les nutriments favorables (fibres, protÃ©ines) et dÃ©favorables (sucre, sel, graisses saturÃ©es).",
+          answer: "Le Nutri-Score est un logo qui note la qualité nutritionnelle de A (meilleur) Ã  E. Il prend en compte les nutriments favorables (fibres, protéines) et défavorables (sucre, sel, graisses saturées).",
           keywords: ['nutriscore', 'score', 'nutritionnel']
         }
       ]
     };
     
-    // Filtrer par catÃ©gorie si spÃ©cifiÃ©e
+    // Filtrer par catégorie si spécifiée
     let results = category && faq[category] ? faq[category] : Object.values(faq).flat();
     
-    // Recherche par mots-clÃ©s si spÃ©cifiÃ©e
+    // Recherche par mots-clés si spécifiée
     if (search) {
       const searchLower = search.toLowerCase();
       results = results.filter(item => 
@@ -479,7 +479,7 @@ router.get('/faq', async (req, res) => {
     console.error('[AI] FAQ error:', error);
     res.status(500).json({
       success: false,
-      error: 'Erreur lors de la rÃ©cupÃ©ration de la FAQ'
+      error: 'Erreur lors de la récupération de la FAQ'
     });
   }
 });
@@ -509,7 +509,7 @@ router.get('/health', (req, res) => {
     quotas: {
       free: '5 questions/jour',
       premium: '500 questions/mois',
-      dev: 'IllimitÃ©'
+      dev: 'Illimité'
     },
     timestamp: new Date()
   });

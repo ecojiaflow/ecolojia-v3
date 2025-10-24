@@ -48,7 +48,7 @@ const CategoryPage: React.FC = () => {
       const categoryProducts = allProducts.filter(product => 
         product.category === category || 
         product.tagsKeys.some(tag => 
-          categoryConfig?.criteri?.includes(tag.toLowerCase())
+          categoryConfig?.critères?.includes(tag.toLowerCase())
         )
       );
       
@@ -61,7 +61,7 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  // aa FONCTION: Generation de slug securisee
+  // 🔧 FONCTION: Generation de slug securisee
   const generateSlug = (product: Product): string => {
     if (product.slug && product.slug !== 'undefined') {
       return product.slug;
@@ -76,22 +76,22 @@ const CategoryPage: React.FC = () => {
       .replace(/^-|-$/g, '') || `product-${product.id}`;
   };
 
-  //  FONCTION CRITIQUE: Navigation vers produit
+  //  🔧 FONCTION CRITIQUE: Navigation vers produit
   const handleProductClick = (product: Product) => {
-    console.log('a CategoryPage - Clic produit detecte:', {
+    console.log('🔍 CategoryPage - Clic produit detecte:', {
       id: product.id,
       nameKey: product.nameKey,
       slug: product.slug
     });
     
     const slug = generateSlug(product);
-    console.log('aa CategoryPage - Slug genere:', slug);
+    console.log('🔍 CategoryPage - Slug genere:', slug);
     
     if (slug && slug !== 'undefined') {
-      console.log('aaaa CategoryPage - Navigation vers:', `/product/${slug}`);
+      console.log('🔍 CategoryPage - Navigation vers:', `/product/${slug}`);
       navigate(`/product/${slug}`);
     } else {
-      console.error('aa CategoryPage - Slug invalide:', slug);
+      console.error('🔍 CategoryPage - Slug invalide:', slug);
     }
   };
 
@@ -143,8 +143,8 @@ const CategoryPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">aa</div>
-          <h2 className="text-2xl font-bold text-gray-800">Categorie non trouvee</h2>
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-2xl font-bold text-gray-800">Catégorie non trouvée</h2>
         </div>
       </div>
     );
@@ -160,19 +160,19 @@ const CategoryPage: React.FC = () => {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{categoryConfig.name}</h1>
               <p className="text-gray-600 mt-2">
-                Decouvrez des produits {categoryConfig.name.toLowerCase()} eco-responsables
+                Découvrez des produits {categoryConfig.name.toLowerCase()} eco-responsables
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="text-sm text-gray-600">Criteres importants :</span>
-            {categoryConfig.criteri?.map(criterion => (
+            <span className="text-sm text-gray-600">Critères importants :</span>
+            {categoryConfig.critères?.map(critèreson => (
               <span
-                key={criterion}
+                key={critèreson}
                 className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium"
               >
-                {criterion}
+                {critèreson}
               </span>
             ))}
           </div>
@@ -237,7 +237,7 @@ const CategoryPage: React.FC = () => {
             {/* Resultats avec filtres */}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">
-                {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''} trouve{filteredProducts.length !== 1 ? 's' : ''}
+                {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
                 {products.length !== filteredProducts.length && (
                   <span className="text-gray-500 text-base font-normal">
                     {' '}sur {products.length} total
@@ -259,12 +259,12 @@ const CategoryPage: React.FC = () => {
                   ))}
                   {filters.minScore > 0 && (
                     <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                      Score aaa {filters.minScore}%
+                      Score ≥ {filters.minScore}%
                     </span>
                   )}
                   {filters.verified !== null && (
                     <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
-                      {filters.verified ? 'Verifies' : 'Non verifies'}
+                      {filters.verified ? 'Vérifiés' : 'Non vérifiés'}
                     </span>
                   )}
                 </div>
@@ -288,8 +288,8 @@ const CategoryPage: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">aa</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Aucun produit trouve</h3>
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Aucun produit trouvé</h3>
                 <p className="text-gray-600">
                   Essayez de modifier vos filtres ou votre recherche
                 </p>
@@ -306,7 +306,7 @@ const CategoryPage: React.FC = () => {
                   }}
                   className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-green-700"
                 >
-                  Reinitialiser les filtres
+                  Réinitialiser les filtres
                 </button>
               </div>
             )}
@@ -317,22 +317,22 @@ const CategoryPage: React.FC = () => {
   );
 };
 
-//  PRODUCTCARD AVEC NAVIGATION CLIQUABLE
+//  🔗 PRODUCTCARD AVEC NAVIGATION CLIQUABLE
 interface ProductCardProps {
   product: Product;
   viewMode: 'grid' | 'list';
-  onClick: () => void; //  AJOUT DE LA PROP ONCLICK
+  onClick: () => void; //  ✅ AJOUT DE LA PROP ONCLICK
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick }) => {
   const isListMode = viewMode === 'list';
 
-  //  GESTION DU CLIC
+  //  🖱️ GESTION DU CLIC
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('a ProductCard - Clic detecte sur:', product.nameKey);
+    console.log('ProductCard - Clic detecte sur:', product.nameKey);
     onClick();
   };
 
@@ -395,13 +395,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick })
             </div>
             {product.verified && (
               <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                aaaa Verifie
+                ✓ Vérifié
               </div>
             )}
           </div>
           <div className="text-right">
             <span className="text-lg font-bold text-gray-900">
-              {product.price}aaa
+              {product.price}€
             </span>
             <div className="text-xs text-primary font-medium group-hover:underline">
               Voir details
@@ -414,7 +414,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode, onClick })
 };
 
 export default CategoryPage;
-
-
-
-

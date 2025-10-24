@@ -1,5 +1,5 @@
 // PATH: backend/src/services/analysis/index.js
-// Service d'analyse orchestrÃ© pour les 3 catÃ©gories
+// Service d'analyse orchestré pour les 3 catégories
 
 const foodExpert = require('../expert/food.rules');
 const cosmeticsExpert = require('../expert/cosmetics.rules');
@@ -9,7 +9,7 @@ const normalizeProduct = require('../normalizer/normalizeProduct');
 
 async function analyzeProduct(productData, options = {}) {
   try {
-    // Si on a un barcode, rÃ©cupÃ©rer les donnÃ©es
+    // Si on a un barcode, récupérer les données
     if (productData.barcode && !productData.ingredients) {
       const externalData = await openFactsService.getProductByBarcode(
         productData.barcode,
@@ -20,10 +20,10 @@ async function analyzeProduct(productData, options = {}) {
       }
     }
 
-    // Normaliser les donnÃ©es
+    // Normaliser les données
     const normalizedProduct = normalizeProduct(productData);
     
-    // Analyser selon la catÃ©gorie
+    // Analyser selon la catégorie
     let analysis;
     switch (normalizedProduct.category) {
       case 'cosmetics':
@@ -55,8 +55,8 @@ function getSupportedCategories() {
     main: ['food', 'cosmetics', 'detergents'],
     aliases: {
       'alimentaire': 'food',
-      'cosmÃ©tique': 'cosmetics',
-      'dÃ©tergent': 'detergents'
+      'cosmétique': 'cosmetics',
+      'détergent': 'detergents'
     }
   };
 }

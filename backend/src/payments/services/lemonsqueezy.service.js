@@ -19,11 +19,11 @@ class LemonSqueezyService {
   }
 
   /**
-   * CrÃ©er une session de checkout pour un abonnement
+   * Créer une session de checkout pour un abonnement
    */
   async createCheckoutSession(userEmail, userId, customData = {}) {
     try {
-      console.log('ðŸ›’ CrÃ©ation checkout session pour:', userEmail);
+      console.log('ðŸ›’ Création checkout session pour:', userEmail);
 
       const checkoutData = {
         data: {
@@ -39,7 +39,7 @@ class LemonSqueezyService {
             product_options: {
               enabled_variants: [parseInt(this.productId)],
               redirect_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/subscription/success`,
-              receipt_button_text: 'AccÃ©der Ã  ECOLOJIA Premium',
+              receipt_button_text: 'Accéder Ã  ECOLOJIA Premium',
               receipt_link_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard`
             },
             checkout_options: {
@@ -69,38 +69,38 @@ class LemonSqueezyService {
       const response = await createCheckout(this.storeId, checkoutData.data);
       
       if (response.error) {
-        throw new Error(`Erreur crÃ©ation checkout: ${response.error.message}`);
+        throw new Error(`Erreur création checkout: ${response.error.message}`);
       }
 
-      console.log('âœ… Checkout crÃ©Ã©:', response.data.attributes.url);
+      console.log('âœ… Checkout créé:', response.data.attributes.url);
       
       return {
         checkoutUrl: response.data.attributes.url,
         checkoutId: response.data.id
       };
     } catch (error) {
-      console.error('âŒ Erreur crÃ©ation checkout:', error);
-      throw new Error(`Impossible de crÃ©er la session de paiement: ${error.message}`);
+      console.error('âŒ Erreur création checkout:', error);
+      throw new Error(`Impossible de créer la session de paiement: ${error.message}`);
     }
   }
 
   /**
-   * RÃ©cupÃ©rer les dÃ©tails d'un abonnement
+   * Récupérer les détails d'un abonnement
    */
   async getSubscriptionDetails(subscriptionId) {
     try {
-      console.log('ðŸ“‹ RÃ©cupÃ©ration abonnement:', subscriptionId);
+      console.log('ðŸ“‹ Récupération abonnement:', subscriptionId);
       
       const response = await getSubscription(subscriptionId);
       
       if (response.error) {
-        throw new Error(`Erreur rÃ©cupÃ©ration abonnement: ${response.error.message}`);
+        throw new Error(`Erreur récupération abonnement: ${response.error.message}`);
       }
 
       return this.formatSubscriptionData(response.data);
     } catch (error) {
-      console.error('âŒ Erreur rÃ©cupÃ©ration abonnement:', error);
-      throw new Error(`Impossible de rÃ©cupÃ©rer l'abonnement: ${error.message}`);
+      console.error('âŒ Erreur récupération abonnement:', error);
+      throw new Error(`Impossible de récupérer l'abonnement: ${error.message}`);
     }
   }
 
@@ -109,7 +109,7 @@ class LemonSqueezyService {
    */
   async getUserSubscriptions(customerEmail) {
     try {
-      console.log('ðŸ“‹ RÃ©cupÃ©ration abonnements pour:', customerEmail);
+      console.log('ðŸ“‹ Récupération abonnements pour:', customerEmail);
       
       const response = await listSubscriptions({
         filter: {
@@ -119,13 +119,13 @@ class LemonSqueezyService {
       });
       
       if (response.error) {
-        throw new Error(`Erreur rÃ©cupÃ©ration abonnements: ${response.error.message}`);
+        throw new Error(`Erreur récupération abonnements: ${response.error.message}`);
       }
 
       return response.data.map(sub => this.formatSubscriptionData(sub));
     } catch (error) {
-      console.error('âŒ Erreur rÃ©cupÃ©ration abonnements:', error);
-      throw new Error(`Impossible de rÃ©cupÃ©rer les abonnements: ${error.message}`);
+      console.error('âŒ Erreur récupération abonnements:', error);
+      throw new Error(`Impossible de récupérer les abonnements: ${error.message}`);
     }
   }
 
@@ -142,7 +142,7 @@ class LemonSqueezyService {
         throw new Error(`Erreur annulation: ${response.error.message}`);
       }
 
-      console.log('âœ… Abonnement annulÃ© avec succÃ¨s');
+      console.log('âœ… Abonnement annulé avec succès');
       return this.formatSubscriptionData(response.data);
     } catch (error) {
       console.error('âŒ Erreur annulation abonnement:', error);
@@ -151,7 +151,7 @@ class LemonSqueezyService {
   }
 
   /**
-   * VÃ©rifier la signature des webhooks
+   * Vérifier la signature des webhooks
    */
   verifyWebhookSignature(payload, signature) {
     try {
@@ -165,13 +165,13 @@ class LemonSqueezyService {
         Buffer.from(computedSignature)
       );
     } catch (error) {
-      console.error('âŒ Erreur vÃ©rification signature webhook:', error);
+      console.error('âŒ Erreur vérification signature webhook:', error);
       return false;
     }
   }
 
   /**
-   * Formater les donnÃ©es d'abonnement pour l'application
+   * Formater les données d'abonnement pour l'application
    */
   formatSubscriptionData(lemonData) {
     const attrs = lemonData.attributes;
@@ -216,14 +216,14 @@ class LemonSqueezyService {
   }
 
   /**
-   * Obtenir les dÃ©tails du client
+   * Obtenir les détails du client
    */
   async getCustomerDetails(customerId) {
     try {
       const response = await getCustomer(customerId);
       
       if (response.error) {
-        throw new Error(`Erreur rÃ©cupÃ©ration client: ${response.error.message}`);
+        throw new Error(`Erreur récupération client: ${response.error.message}`);
       }
 
       return {
@@ -233,8 +233,8 @@ class LemonSqueezyService {
         createdAt: new Date(response.data.attributes.created_at)
       };
     } catch (error) {
-      console.error('âŒ Erreur rÃ©cupÃ©ration client:', error);
-      throw new Error(`Impossible de rÃ©cupÃ©rer le client: ${error.message}`);
+      console.error('âŒ Erreur récupération client:', error);
+      throw new Error(`Impossible de récupérer le client: ${error.message}`);
     }
   }
 }

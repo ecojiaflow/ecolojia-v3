@@ -1,5 +1,5 @@
 // backend/src/models/Consent.js
-// ModÃ¨le de consentement RGPD - Version solo dev minimum viable
+// Modèle de consentement RGPD - Version solo dev minimum viable
 // Conforme : Art. 6.1, Art. 7, Art. 9 RGPD
 
 const mongoose = require('mongoose');
@@ -12,10 +12,10 @@ const ConsentSchema = new mongoose.Schema({
     required: true,
     index: true,
     unique: true
-    // GÃ©nÃ©rÃ© via : crypto.createHash('sha256').update(email).digest('hex')
+    // Généré via : crypto.createHash('sha256').update(email).digest('hex')
   },
   
-  // Email stockÃ© pour droits RGPD (accÃ¨s, rectification, suppression)
+  // Email stocké pour droits RGPD (accès, rectification, suppression)
   email: {
     type: String,
     required: true,
@@ -26,7 +26,7 @@ const ConsentSchema = new mongoose.Schema({
   
   // === CONSENTEMENTS GRANULAIRES ===
   consents: {
-    // 1. Traitement essentiel (base lÃ©gale : contrat Art. 6.1.b)
+    // 1. Traitement essentiel (base légale : contrat Art. 6.1.b)
     // Toujours true si utilisateur utilise l'app
     essential: {
       accepted: {
@@ -39,8 +39,8 @@ const ConsentSchema = new mongoose.Schema({
       }
     },
     
-    // 2. DonnÃ©es de santÃ© (base lÃ©gale : consentement explicite Art. 9.2.a)
-    // CRITIQUE : Requis pour analyser produits alimentaires/cosmÃ©tiques
+    // 2. Données de santé (base légale : consentement explicite Art. 9.2.a)
+    // CRITIQUE : Requis pour analyser produits alimentaires/cosmétiques
     healthProfiling: {
       accepted: {
         type: Boolean,
@@ -49,20 +49,20 @@ const ConsentSchema = new mongoose.Schema({
       },
       acceptedAt: Date,
       
-      // Texte du consentement explicite (preuve lÃ©gale)
+      // Texte du consentement explicite (preuve légale)
       explicitText: {
         type: String,
-        default: "J'accepte explicitement que ECOLOJIA traite mes donnÃ©es relatives Ã  la santÃ© (scans de produits alimentaires et cosmÃ©tiques, habitudes de consommation) pour me fournir des analyses personnalisÃ©es. Je peux retirer ce consentement Ã  tout moment."
+        default: "J'accepte explicitement que ECOLOJIA traite mes données relatives Ã  la santé (scans de produits alimentaires et cosmétiques, habitudes de consommation) pour me fournir des analyses personnalisées. Je peux retirer ce consentement Ã  tout moment."
       },
       
-      // Version de la politique acceptÃ©e
+      // Version de la politique acceptée
       policyVersion: {
         type: String,
         default: '1.0'
       }
     },
     
-    // 3. Statistiques anonymisÃ©es (base lÃ©gale : intÃ©rÃªt lÃ©gitime Art. 6.1.f)
+    // 3. Statistiques anonymisées (base légale : intérêt légitime Art. 6.1.f)
     analytics: {
       accepted: {
         type: Boolean,
@@ -71,7 +71,7 @@ const ConsentSchema = new mongoose.Schema({
       acceptedAt: Date
     },
     
-    // 4. Marketing (base lÃ©gale : consentement Art. 6.1.a)
+    // 4. Marketing (base légale : consentement Art. 6.1.a)
     marketing: {
       accepted: {
         type: Boolean,
@@ -95,7 +95,7 @@ const ConsentSchema = new mongoose.Schema({
       required: false
     },
     
-    // Version CGU/Politique confidentialitÃ© acceptÃ©e
+    // Version CGU/Politique confidentialité acceptée
     termsVersion: {
       type: String,
       default: '1.0'
@@ -121,13 +121,13 @@ const ConsentSchema = new mongoose.Schema({
     action: {
       type: String,
       enum: [
-        'consent_given',        // Consentement initial donnÃ©
-        'consent_updated',      // Consentement modifiÃ©
-        'consent_withdrawn',    // Consentement retirÃ© (Art. 7.3)
-        'data_accessed',        // Exercice droit d'accÃ¨s (Art. 15)
+        'consent_given',        // Consentement initial donné
+        'consent_updated',      // Consentement modifié
+        'consent_withdrawn',    // Consentement retiré (Art. 7.3)
+        'data_accessed',        // Exercice droit d'accès (Art. 15)
         'data_rectified',       // Exercice droit de rectification (Art. 16)
         'data_deleted',         // Exercice droit Ã  l'effacement (Art. 17)
-        'data_exported'         // Exercice droit Ã  la portabilitÃ© (Art. 20)
+        'data_exported'         // Exercice droit Ã  la portabilité (Art. 20)
       ],
       required: true
     },
@@ -144,20 +144,20 @@ const ConsentSchema = new mongoose.Schema({
   
   // === GESTION RÃ‰TENTION DONNÃ‰ES (Art. 5.1.e) ===
   retention: {
-    // Date de crÃ©ation du consentement
+    // Date de création du consentement
     createdAt: {
       type: Date,
       default: Date.now
     },
     
-    // DerniÃ¨re activitÃ© utilisateur (mise Ã  jour Ã  chaque connexion)
+    // Dernière activité utilisateur (mise Ã  jour Ã  chaque connexion)
     lastActivity: {
       type: Date,
       default: Date.now
     },
     
-    // Date de suppression prÃ©vue (calculÃ©e automatiquement)
-    // RÃ¨gle : 3 ans aprÃ¨s derniÃ¨re activitÃ©
+    // Date de suppression prévue (calculée automatiquement)
+    // Règle : 3 ans après dernière activité
     scheduledDeletion: {
       type: Date,
       required: false
@@ -176,13 +176,13 @@ ConsentSchema.index({ 'retention.scheduledDeletion': 1 }); // Pour nettoyage aut
 // === MÃ‰THODES INSTANCE ===
 
 /**
- * Mettre Ã  jour la derniÃ¨re activitÃ©
+ * Mettre Ã  jour la dernière activité
  * Ã€ appeler Ã  chaque connexion utilisateur
  */
 ConsentSchema.methods.updateActivity = function() {
   this.retention.lastActivity = new Date();
   
-  // Recalculer date de suppression : 3 ans aprÃ¨s lastActivity
+  // Recalculer date de suppression : 3 ans après lastActivity
   const threeYearsLater = new Date();
   threeYearsLater.setFullYear(threeYearsLater.getFullYear() + 3);
   this.retention.scheduledDeletion = threeYearsLater;
@@ -263,7 +263,7 @@ ConsentSchema.methods.logGDPRAction = function(action, ipAddress = null) {
 };
 
 /**
- * VÃ©rifier si l'utilisateur a donnÃ© le consentement pour donnÃ©es de santÃ©
+ * Vérifier si l'utilisateur a donné le consentement pour données de santé
  * CRITIQUE : Requis avant toute analyse produit
  */
 ConsentSchema.methods.hasHealthConsent = function() {
@@ -271,7 +271,7 @@ ConsentSchema.methods.hasHealthConsent = function() {
 };
 
 /**
- * Obtenir un rÃ©sumÃ© du consentement (pour affichage utilisateur)
+ * Obtenir un résumé du consentement (pour affichage utilisateur)
  */
 ConsentSchema.methods.getSummary = function() {
   return {
@@ -301,7 +301,7 @@ ConsentSchema.statics.findByHash = function(userHash) {
 };
 
 /**
- * CrÃ©er un nouveau consentement avec valeurs par dÃ©faut
+ * Créer un nouveau consentement avec valeurs par défaut
  */
 ConsentSchema.statics.createConsent = async function(email, healthConsent = false, ipAddress = null, userAgent = null) {
   const crypto = require('crypto');
@@ -366,5 +366,5 @@ ConsentSchema.statics.createConsent = async function(email, healthConsent = fals
   return consent.save();
 };
 
-// Export du modÃ¨le
+// Export du modèle
 module.exports = mongoose.model('Consent', ConsentSchema);

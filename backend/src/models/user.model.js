@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: false // Peut Ãªtre vide pour les utilisateurs crÃ©Ã©s via LemonSqueezy
+    required: false // Peut être vide pour les utilisateurs créés via LemonSqueezy
   },
   isEmailVerified: {
     type: Boolean,
