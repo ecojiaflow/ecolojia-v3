@@ -1,0 +1,233 @@
+/**
+ * MEAL PLAN VALIDATOR SERVICE
+ * Validation qualité des plans repas générés par IA
+ * Critères: Budget, Allergènes, Macros, Variété, Quantités
+ * Version: 1.0.0
+ */
+
+class MealPlanValidator {
+  constructor() {
+    this.rules = {
+      budgetMax: 150, // €/semaine max raisonnable
+      budgetMin: 20,  // €/semaine min réaliste
+      caloriesMax: 3500, // kcal/jour max
+      caloriesMin: 1200, // kcal/jour min
+      proteinMaxRatio: 0.35, // 35% des calories
+      carbsMinRatio: 0.40,   // 40% minimum
+      fatsMaxRatio: 0.40,    // 40% maximum
+      maxRepeatIngredient: 2 // Même ingrédient principal max 2x/semaine
+    };
+  }
+
+  /**
+   * Validation complète d'un plan hebdomadaire
+   * @param {Object} plan - Plan généré par IA
+   * @param {Object} userPreferences - Préférences utilisateur
+   * @returns {Object} { isValid, errors, warnings }
+   */
+  validate(plan, userPreferences = {}) {
+    const errors = [];
+    const warnings = [];
+
+    // 1. Validation budget
+    const budgetCheck = this.validateBudget(plan.estimatedBudget);
+    if (!budgetCheck.isValid) errors.push(...budgetCheck.errors);
+    warnings.push(...budgetCheck.warnings);
+
+    // 2. Validation allergènes
+    const allergenCheck = this.validateAllergens(plan.meals, userPreferences.allergens || []);
+    if (!allergenCheck.isValid) errors.push(...allergenCheck.errors);
+
+    // 3. Validation macros nutritionnels
+    const macrosCheck = this.validateMacros(plan.nutrition);
+    if (!macrosCheck.isValid) errors.push(...macrosCheck.errors);
+    warnings.push(...macrosCheck.warnings);
+
+    // 4. Validation variété
+    const varietyCheck = this.validateVariety(plan.meals);
+    if (!varietyCheck.isValid) errors.push(...varietyCheck.errors);
+    warnings.push(...varietyCheck.warnings);
+
+    // 5. Validation quantités
+    const quantityCheck = this.validateQuantities(plan.shoppingList);
+    warnings.push(...quantityCheck.warnings);
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+      warnings,
+      score: this.calculateQualityScore(errors, warnings)
+    };
+  }
+
+  validateBudget(budget) {
+    const errors = [];
+    const warnings = [];
+
+    if (!budget || typeof budget !== 'number') {
+      errors.push('Budget manquant ou invalide');
+      return { isValid: false, errors, warnings };
+    }
+
+    if (budget > this.rules.budgetMax) {
+      errors.push(`Budget irréaliste: ${budget}€ (max ${this.rules.budgetMax}€/semaine)`);
+    }
+
+    if (budget < this.rules.budgetMin) {
+      warnings.push(`Budget très bas: ${budget}€ - Vérifier faisabilité`);
+    }
+
+    if (budget > 100) {
+      warnings.push(`Budget élevé: ${budget}€ - Optimisation possible`);
+    }
+
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  validateAllergens(meals, userAllergens) {
+    const errors = [];
+
+    if (!userAllergens || userAllergens.length === 0) {
+      return { isValid: true, errors };
+    }
+
+    const normalizedUserAllergens = userAllergens.map(a => a.toLowerCase().trim());
+
+    meals.forEach((meal, index) => {
+      const mealIngredients = (meal.ingredients || []).map(i => i.toLowerCase());
+      const detected = normalizedUserAllergens.filter(allergen => 
+        mealIngredients.some(ingredient => ingredient.includes(allergen))
+      );
+
+      if (detected.length > 0) {
+        errors.push(
+          `Jour ${index + 1} (${meal.name}): Allergène détecté - ${detected.join(', ')}`
+        );
+      }
+    });
+
+    return { isValid: errors.length === 0, errors };
+  }
+
+  validateMacros(nutrition) {
+    const errors = [];
+    const warnings = [];
+
+    if (!nutrition || !nutrition.avgPerDay) {
+      errors.push('Données nutritionnelles manquantes');
+      return { isValid: false, errors, warnings };
+    }
+
+    const { calories, protein, carbs, fats } = nutrition.avgPerDay;
+
+    // Validation calories
+    if (calories > this.rules.caloriesMax) {
+      errors.push(`Calories trop élevées: ${calories}kcal/jour (max ${this.rules.caloriesMax})`);
+    }
+    if (calories < this.rules.caloriesMin) {
+      errors.push(`Calories trop basses: ${calories}kcal/jour (min ${this.rules.caloriesMin})`);
+    }
+
+    // Validation ratios macros (conversion g → calories)
+    const proteinCal = protein * 4;
+    const carbsCal = carbs * 4;
+    const fatsCal = fats * 9;
+    const totalCal = proteinCal + carbsCal + fatsCal;
+
+    const proteinRatio = proteinCal / totalCal;
+    const carbsRatio = carbsCal / totalCal;
+    const fatsRatio = fatsCal / totalCal;
+
+    if (proteinRatio > this.rules.proteinMaxRatio) {
+      warnings.push(
+        `Protéines élevées: ${(proteinRatio * 100).toFixed(0)}% (recommandé <35%)`
+      );
+    }
+
+    if (carbsRatio < this.rules.carbsMinRatio) {
+      warnings.push(
+        `Glucides faibles: ${(carbsRatio * 100).toFixed(0)}% (recommandé >40%)`
+      );
+    }
+
+    if (fatsRatio > this.rules.fatsMaxRatio) {
+      warnings.push(
+        `Lipides élevés: ${(fatsRatio * 100).toFixed(0)}% (recommandé <40%)`
+      );
+    }
+
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  validateVariety(meals) {
+    const errors = [];
+    const warnings = [];
+
+    if (!meals || meals.length < 7) {
+      errors.push('Plan incomplet: moins de 7 jours');
+      return { isValid: false, errors, warnings };
+    }
+
+    // Compter les ingrédients principaux (premier ingrédient de chaque repas)
+    const mainIngredients = {};
+    meals.forEach(meal => {
+      if (meal.ingredients && meal.ingredients.length > 0) {
+        const main = meal.ingredients[0].toLowerCase().trim();
+        mainIngredients[main] = (mainIngredients[main] || 0) + 1;
+      }
+    });
+
+    // Détecter répétitions excessives
+    Object.entries(mainIngredients).forEach(([ingredient, count]) => {
+      if (count > this.rules.maxRepeatIngredient) {
+        warnings.push(
+          `Ingrédient répété: "${ingredient}" apparaît ${count}x (max ${this.rules.maxRepeatIngredient}x recommandé)`
+        );
+      }
+    });
+
+    return { isValid: errors.length === 0, errors, warnings };
+  }
+
+  validateQuantities(shoppingList) {
+    const warnings = [];
+
+    if (!shoppingList || shoppingList.length === 0) {
+      warnings.push('Liste de courses vide');
+      return { warnings };
+    }
+
+    // Seuils absurdes (détection erreurs IA)
+    const absurdThresholds = {
+      'kg': 10,   // >10kg d'un ingrédient = suspect
+      'l': 5,     // >5L = suspect
+      'unité': 50 // >50 unités = suspect
+    };
+
+    shoppingList.forEach(item => {
+      const quantity = parseFloat(item.quantity);
+      const unit = item.unit?.toLowerCase();
+
+      if (unit === 'kg' && quantity > absurdThresholds.kg) {
+        warnings.push(`Quantité suspecte: ${item.name} - ${quantity}kg`);
+      }
+      if (unit === 'l' && quantity > absurdThresholds.l) {
+        warnings.push(`Quantité suspecte: ${item.name} - ${quantity}L`);
+      }
+      if (unit === 'unité' && quantity > absurdThresholds.unité) {
+        warnings.push(`Quantité suspecte: ${item.name} - ${quantity} unités`);
+      }
+    });
+
+    return { warnings };
+  }
+
+  calculateQualityScore(errors, warnings) {
+    let score = 100;
+    score -= errors.length * 20; // -20 points par erreur critique
+    score -= warnings.length * 5; // -5 points par warning
+    return Math.max(0, score);
+  }
+}
+
+module.exports = new MealPlanValidator();

@@ -8,7 +8,6 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/ProtectedRoute';
 import { DisclaimerModal, hasAcceptedDisclaimer } from './components/legal/DisclaimerModal';
 import OCRWizardPage from './pages/OCRWizardPage';
-import AuthCallbackPage from './pages/AuthCallbackPage';
 import { MealPlanPage } from './pages/MealPlanPage';
 
 // Lazy loading des pages
@@ -22,6 +21,8 @@ const ScanPage = lazy(() => import('./pages/ScanPage'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+import AuthCallbackPage from './pages
+import { MealPlanPage } from './pages/MealPlanPage';/AuthCallbackPage';
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PremiumPage = lazy(() => import('./pages/PremiumPage'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage'));
@@ -36,12 +37,12 @@ const App: React.FC = () => {
 
   return (
     <>
-      {!window.location.pathname.startsWith('/auth/callback') && showDisclaimer && (
-        <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />
-      )}
+      
+      {!window.location.pathname.startsWith('/auth/callback') && showDisclaimer && <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />}
       
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
+          {/* Route callback HORS Layout - pas de vÃ©rification auth */}
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
           <Route path="/" element={<Layout />}>
@@ -50,12 +51,13 @@ const App: React.FC = () => {
             <Route path="results" element={<ResultsPage />} />
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />
+            {/* âœ… SUPPRIMÃ‰ : Ancienne page OCR simple - Redirection vers scan */}
             <Route path="ocr" element={<Navigate to="/scan" replace />} />
             <Route path="ocr-wizard" element={<OCRWizardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="multi-scan" element={<MultiScanPage />} />
             <Route path="premium" element={<PremiumPage />} />
-            <Route path="meal-plan" element={<MealPlanPage />} />
+          <Route path="meal-plan" element={<MealPlanPage />} />
             <Route path="diagnostic" element={<DiagnosticPage />} />
 
             <Route
@@ -66,8 +68,7 @@ const App: React.FC = () => {
               path="register"
               element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
             />
-
-            <Route element={<ProtectedRoute />}>
+<Route element={<ProtectedRoute />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="chat" element={<ChatPage />} />
               <Route path="profile" element={<ProfilePage />} />

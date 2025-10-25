@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion...</title>
+  <style>
+    body { margin: 0; font-family: system-ui; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(to bottom right, #f0fdf4, #dbeafe); }
+    .container { text-align: center; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .spinner { font-size: 48px; margin-bottom: 20px; animation: spin 2s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    h1 { color: #1f2937; font-size: 24px; margin-bottom: 10px; }
+    p { color: #6b7280; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner">⏳</div>
+    <h1>Connexion en cours...</h1>
+    <p id="status">Authentification...</p>
+  </div>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      const refreshToken = params.get('refreshToken');
+      const userStr = params.get('user');
+      
+      if (!token || !userStr) {
+        window.location.replace('/login');
+        return;
+      }
+      
+      try {
+        const user = JSON.parse(decodeURIComponent(userStr));
+        
+        // Stockage
+        localStorage.setItem('ecolojia_token', token);
+        localStorage.setItem('ecolojia_refresh', refreshToken || token);
+        localStorage.setItem('ecolojia_user', JSON.stringify(user));
+        
+        console.log('✅ Tokens stockés');
+        
+        // CRITICAL: Utiliser replace + reload pour forcer React à re-initialiser
+        window.location.replace('/');
+        window.location.reload(true);
+      } catch (error) {
+        console.error('❌ Erreur:', error);
+        window.location.replace('/login');
+      }
+    })();
+  </script>
+</body>
+</html>

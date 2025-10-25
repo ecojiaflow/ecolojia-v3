@@ -4,7 +4,7 @@ import BarcodeScanner from '../components/scanner/BarcodeScanner';
 import { UnknownProductModal } from '../components/scanner/UnknownProductModal';
 import { OCRGuide } from '../components/scanner/OCRGuide';
 import { analyzeWithOCR } from '../services/ocr-api';
-import { AlertCircle, Camera, Sparkles } from 'lucide-react';
+import { AlertCircle, Camera } from 'lucide-react';
 
 export const ScanPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const ScanPage: React.FC = () => {
   }, [scanAttempts]);
 
   const handleScanSuccess = async (barcode: string) => {
-    console.log('Code-barres scanne:', barcode);
+    console.log('Code-barres scann�:', barcode);
     
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products?barcode=${barcode}`);
@@ -35,13 +35,13 @@ export const ScanPage: React.FC = () => {
         }
       }
       
-      setScanError(`Produit ${barcode} non trouve en base`);
+      setScanError(`Produit ${barcode} non trouv� en base`);
       setScanAttempts(prev => prev + 1);
       setShowOCRFallback(true);
       
     } catch (error) {
       console.error('Erreur recherche produit:', error);
-      setScanError('Erreur reseau');
+      setScanError('Erreur r�seau');
       setScanAttempts(prev => prev + 1);
     }
   };
@@ -65,7 +65,7 @@ export const ScanPage: React.FC = () => {
         barcodeImage: photos.barcode
       });
 
-      console.log('Analyse OCR reussie:', result);
+      console.log('Analyse OCR r�ussie:', result);
 
       if (result.success && result.product) {
         navigate(`/product/${result.product.barcode}`, {
@@ -76,7 +76,7 @@ export const ScanPage: React.FC = () => {
           }
         });
       } else {
-        throw new Error('Analyse incomplete');
+        throw new Error('Analyse incompl�te');
       }
 
     } catch (error: any) {
@@ -96,61 +96,56 @@ export const ScanPage: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-neutral-900">
-        <div className="relative h-screen">
-          <BarcodeScanner
-            onScanSuccess={handleScanSuccess}
-            onScanError={handleScanError}
-          />
+      <div className="min-h-screen bg-gray-50">
+      <div className="relative h-screen">
+        <BarcodeScanner
+          onScanSuccess={handleScanSuccess}
+          onScanError={handleScanError}
+        />
 
-          {scanError && !showOCRFallback && (
-            <div className="absolute bottom-20 left-4 right-4 bg-neutral-0 rounded-lg p-4 z-10 shadow-3 border border-danger/20">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-danger flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm text-neutral-900 font-medium">{scanError}</p>
-                  <button
-                    onClick={() => setShowOCRFallback(true)}
-                    className="mt-3 w-full h-11 bg-info text-white rounded-lg flex items-center justify-center gap-2 hover:bg-info/90 transition-all shadow-2 font-medium"
-                  >
-                    <Camera className="w-4 h-4" />
-                    Analyser avec photos (OCR)
-                  </button>
-                </div>
+        {scanError && !showOCRFallback && (
+          <div className="absolute bottom-20 left-4 right-4 bg-red-50 border border-red-200 rounded-lg p-4 z-10">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-red-800 font-medium">{scanError}</p>
+                <button
+                  onClick={() => setShowOCRFallback(true)}
+                  className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700"
+                >
+                  <Camera className="w-4 h-4" />
+                  Analyser avec photos (OCR)
+                </button>
               </div>
-            </div>
-          )}
-
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-neutral-900 via-neutral-900/80 to-transparent p-6 text-neutral-0 z-10">
-            <div className="max-w-md mx-auto text-center">
-              <p className="text-sm leading-relaxed">
-                {scanAttempts === 0 ? 'Placez le code-barres dans le cadre' : 
-                 scanAttempts < 3 ? 'Code-barres introuvable ? Utilisez OCR !' :
-                 'Passez en mode photo (OCR) pour une analyse complete'}
-              </p>
             </div>
           </div>
-        </div>
-
-        {showOCRFallback && (
-          isAnalyzing ? (
-            <div className="fixed inset-0 bg-neutral-900/90 backdrop-blur-sm z-50 flex items-center justify-center">
-              <div className="bg-neutral-0 rounded-xl p-8 text-center shadow-4 max-w-sm mx-4">
-                <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Sparkles className="w-5 h-5 text-primary-600" />
-                  <h3 className="text-lg font-semibold text-neutral-900">Analyse en cours</h3>
-                </div>
-                <p className="text-sm text-neutral-600">Intelligence artificielle au travail</p>
-              </div>
-            </div>
-          ) : (
-            <OCRGuide
-              onComplete={handleOCRComplete}
-              onCancel={handleOCRCancel}
-            />
-          )
         )}
+
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white z-10">
+          <p className="text-center text-sm">
+            {scanAttempts === 0 ? '?? Placez le code-barres dans le cadre' : 
+             scanAttempts < 3 ? '?? Code-barres introuvable ? Utilisez l\'OCR !' :
+             '?? Passez en mode photo (OCR) pour une analyse compl�te'}
+          </p>
+        </div>
+      </div>
+
+      {showOCRFallback && (
+        isAnalyzing ? (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white rounded-xl p-8 text-center">
+              <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p className="text-lg font-semibold">Analyse en cours...</p>
+              <p className="text-sm text-gray-600 mt-2">Intelligence artificielle au travail ??</p>
+            </div>
+          </div>
+        ) : (
+          <OCRGuide
+            onComplete={handleOCRComplete}
+            onCancel={handleOCRCancel}
+          />
+        )
+      )}
       </div>
 
       <UnknownProductModal

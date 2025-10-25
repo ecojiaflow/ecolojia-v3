@@ -1,0 +1,245 @@
+/**
+ * MEAL PLAN GENERATOR SERVICE
+ * Génération de plans repas hebdomadaires via DeepSeek AI + validation qualité
+ * Intégration: deepSeekService + mealPlanValidator
+ * Version: 1.0.0
+ */
+
+const deepSeekService = require('./deepSeekService');
+const validator = require('./mealPlanValidator.service');
+
+class MealPlanGenerator {
+  constructor() {
+    this.maxRetries = 2; // Tentatives si validation échoue
+  }
+
+  /**
+   * Génère un plan repas hebdomadaire personnalisé
+   * @param {Object} userPreferences - Préférences utilisateur
+   * @returns {Object} Plan validé + métadonnées
+   */
+  async generateWeeklyPlan(userPreferences) {
+    const {
+      budget = 80,
+      calories = 2000,
+      allergens = [],
+      dietType = 'balanced', // balanced, vegetarian, vegan, low-carb
+      cookingTime = 'medium', // quick (<30min), medium (30-60min), elaborate (>60min)
+      people = 1
+    } = userPreferences;
+
+    let attempt = 0;
+    let lastError = null;
+
+    while (attempt < this.maxRetries) {
+      try {
+        console.log(`🔄 [MealPlan] Tentative ${attempt + 1}/${this.maxRetries}`);
+
+        // 1. Construire le prompt structuré
+        const prompt = this.buildPrompt({
+          budget,
+          calories,
+          allergens,
+          dietType,
+          cookingTime,
+          people
+        });
+
+        // 2. Appel DeepSeek
+        const response = await deepSeekService.getChatCompletion(
+          prompt,
+          { temperature: 0.7, max_tokens: 3000 }
+        );
+
+        // 3. Parser la réponse JSON
+        const plan = this.parsePlanFromResponse(response);
+
+        // 4. Validation qualité
+        const validationResult = validator.validate(plan, userPreferences);
+
+        if (validationResult.isValid) {
+          console.log(`✅ [MealPlan] Plan validé (score: ${validationResult.score}/100)`);
+          
+          return {
+            success: true,
+            plan,
+            validation: {
+              score: validationResult.score,
+              warnings: validationResult.warnings
+            },
+            metadata: {
+              generatedAt: new Date(),
+              attempt: attempt + 1,
+              preferences: userPreferences
+            }
+          };
+        } else {
+          // Validation échouée
+          lastError = {
+            errors: validationResult.errors,
+            warnings: validationResult.warnings
+          };
+          console.warn(`⚠️ [MealPlan] Validation échouée:`, validationResult.errors);
+          attempt++;
+        }
+
+      } catch (error) {
+        console.error(`❌ [MealPlan] Erreur génération:`, error);
+        lastError = error;
+        attempt++;
+      }
+    }
+
+    // Échec après max tentatives
+    return {
+      success: false,
+      error: 'Impossible de générer un plan valide après plusieurs tentatives',
+      details: lastError
+    };
+  }
+
+  /**
+   * Construit le prompt DeepSeek avec contraintes
+   */
+  buildPrompt(prefs) {
+    const allergensText = prefs.allergens.length > 0 
+      ? `ALLERGÈNES À ÉVITER ABSOLUMENT: ${prefs.allergens.join(', ')}`
+      : 'Aucun allergène spécifié';
+
+    const dietConstraints = {
+      balanced: 'Régime équilibré avec viandes, poissons, légumes',
+      vegetarian: 'Végétarien (sans viande ni poisson, œufs et produits laitiers autorisés)',
+      vegan: 'Végétalien strict (aucun produit animal)',
+      'low-carb': 'Faible en glucides (<100g/jour), riche en protéines et lipides sains'
+    };
+
+    const timeConstraints = {
+      quick: 'Temps de préparation < 30 minutes',
+      medium: 'Temps de préparation 30-60 minutes',
+      elaborate: 'Temps de préparation > 60 minutes (recettes élaborées)'
+    };
+
+    return `Tu es un nutritionniste expert. Génère un plan repas hebdomadaire (7 jours) personnalisé.
+
+CONTRAINTES OBLIGATOIRES:
+- Budget total: ${prefs.budget}€ pour ${prefs.people} personne(s)
+- Calories cibles: ${prefs.calories} kcal/jour/personne
+- Régime: ${dietConstraints[prefs.dietType]}
+- Temps de cuisine: ${timeConstraints[prefs.cookingTime]}
+- ${allergensText}
+
+RÈGLES STRICTES:
+1. RESPECTER LE BUDGET (répartition réaliste)
+2. NE JAMAIS inclure les allergènes listés
+3. VARIER les ingrédients principaux (max 2x le même/semaine)
+4. Calculer précisément les macros (protéines/glucides/lipides)
+5. Liste de courses exhaustive avec quantités
+
+FORMAT DE RÉPONSE (JSON STRICT):
+{
+  "weekPlan": {
+    "meals": [
+      {
+        "day": 1,
+        "name": "Poulet rôti aux légumes",
+        "ingredients": ["poulet", "carottes", "courgettes", "huile d'olive"],
+        "nutrition": {
+          "calories": 650,
+          "protein": 45,
+          "carbs": 35,
+          "fats": 28
+        },
+        "cookingTime": 45,
+        "cost": 8.50
+      }
+      // ... 6 autres jours
+    ],
+    "nutrition": {
+      "avgPerDay": {
+        "calories": 2000,
+        "protein": 120,
+        "carbs": 200,
+        "fats": 70
+      }
+    },
+    "estimatedBudget": 75,
+    "shoppingList": [
+      {
+        "name": "Poulet entier",
+        "quantity": 1.5,
+        "unit": "kg",
+        "category": "Viande",
+        "estimatedPrice": 12
+      }
+      // ... autres articles
+    ]
+  }
+}
+
+GÉNÈRE UNIQUEMENT le JSON, sans texte additionnel.`;
+  }
+
+  /**
+   * Parse et nettoie la réponse IA
+   */
+  parsePlanFromResponse(response) {
+    try {
+      // Nettoyer la réponse (enlever markdown, etc.)
+      let cleaned = response.trim();
+      
+      // Enlever les blocs markdown ```json ... ```
+      if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/```json?\n?/g, '').replace(/```\n?$/g, '');
+      }
+
+      const parsed = JSON.parse(cleaned);
+      
+      // Extraire weekPlan si présent
+      return parsed.weekPlan || parsed;
+      
+    } catch (error) {
+      console.error('❌ [MealPlan] Erreur parsing JSON:', error);
+      throw new Error('Réponse IA invalide (JSON malformé)');
+    }
+  }
+
+  /**
+   * Génère une liste de courses optimisée (regroupement catégories)
+   */
+  async generateShoppingList(planMeals) {
+    // Agrégation des ingrédients par catégorie
+    const grouped = {};
+    
+    planMeals.forEach(meal => {
+      meal.ingredients.forEach(ingredient => {
+        const category = this.categorizeIngredient(ingredient);
+        if (!grouped[category]) grouped[category] = [];
+        grouped[category].push(ingredient);
+      });
+    });
+
+    return Object.entries(grouped).map(([category, items]) => ({
+      category,
+      items: [...new Set(items)] // Dédupliquer
+    }));
+  }
+
+  categorizeIngredient(ingredient) {
+    const categories = {
+      'Fruits & Légumes': ['tomate', 'carotte', 'pomme', 'banane', 'salade', 'courgette'],
+      'Viandes & Poissons': ['poulet', 'bœuf', 'porc', 'saumon', 'thon', 'dinde'],
+      'Produits laitiers': ['lait', 'yaourt', 'fromage', 'beurre', 'crème'],
+      'Féculents': ['pâtes', 'riz', 'pain', 'pomme de terre', 'quinoa'],
+      'Épicerie': ['huile', 'sel', 'poivre', 'farine', 'sucre']
+    };
+
+    for (const [cat, keywords] of Object.entries(categories)) {
+      if (keywords.some(kw => ingredient.toLowerCase().includes(kw))) {
+        return cat;
+      }
+    }
+    return 'Autres';
+  }
+}
+
+module.exports = new MealPlanGenerator();

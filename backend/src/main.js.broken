@@ -1,4 +1,4 @@
-// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+﻿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
 // ?? CHARGEMENT ENVIRONNEMENT (développement + production)
@@ -91,7 +91,6 @@ const aiCache = require('./services/aiCache.service');
 const mongoSanitize = require('express-mongo-sanitize');
 const { generalLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 // Configuration
@@ -111,7 +110,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // app.use(generalLimiter); // DÉSACTIVÉ TEMPORAIREMENT
@@ -211,8 +209,7 @@ const routesToLoad = [
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
   { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
   { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },
-  { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' },
-  { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' }
+  { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' }
 ];
 
 routesToLoad.forEach(route => {
@@ -359,6 +356,9 @@ async function startServer() {
   }
 }
 
+}
 
-// Lancement de l'application
-startServer();
+
+
+
+
