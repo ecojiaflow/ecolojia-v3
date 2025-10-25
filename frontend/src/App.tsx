@@ -20,6 +20,7 @@ const ScanPage = lazy(() => import('./pages/ScanPage'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+import AuthCallbackPage from './pages/AuthCallbackPage';
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PremiumPage = lazy(() => import('./pages/PremiumPage'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage'));
@@ -35,10 +36,13 @@ const App: React.FC = () => {
   return (
     <>
       
-      {showDisclaimer && <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />}
+      {!window.location.pathname.startsWith('/auth/callback') && showDisclaimer && <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />}
       
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
+          {/* Route callback HORS Layout - pas de vérification auth */}
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="search" element={<SearchPage />} />
@@ -61,8 +65,7 @@ const App: React.FC = () => {
               path="register"
               element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
             />
-
-            <Route element={<ProtectedRoute />}>
+<Route element={<ProtectedRoute />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="chat" element={<ChatPage />} />
               <Route path="profile" element={<ProfilePage />} />

@@ -91,9 +91,13 @@ const aiCache = require('./services/aiCache.service');
 const mongoSanitize = require('express-mongo-sanitize');
 const { generalLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 // Configuration
+const passport = require('./config/passport');
+const session = require('express-session');
+
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -107,9 +111,21 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(generalLimiter);
+// app.use(generalLimiter); // DÉSACTIVÉ TEMPORAIREMENT
+// Session pour Passport
+app.use(session({
+  secret: process.env.JWT_SECRET || 'ecolojia_session_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Initialiser Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Middleware de monitoring (si disponible)
 if (sentryInitialized) {
@@ -190,6 +206,7 @@ const routesToLoad = [
     { path: '/api/favorites', file: './routes/favorites.routes.js', name: 'Favorites' },
   { path: '/api/journey', file: './routes/journey.routes.js', name: 'Journey' },
   { path: '/api/auth', file: './routes/auth.simple.js', name: 'Auth' },
+  { path: '/api/auth', file: './routes/auth.google.js', name: 'Auth Google' },
   { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
   { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
@@ -341,18 +358,6 @@ async function startServer() {
   }
 }
 
+
 // Lancement de l'application
 startServer();
-// Stats endpoint
-try {
-  const statsRoutes = require('./routes/stats.routes');
-  app.use('/api/stats', statsRoutes);
-  console.log('? [ROUTE] Stats montée sur /api/stats');
-} catch (err) {
-  console.log('?? Stats routes non disponibles');
-}
-
-
-
-
-

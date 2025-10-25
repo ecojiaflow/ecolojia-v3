@@ -7,6 +7,7 @@ const API_URL =
   "https://ecolojia-backendvf.onrender.com/api";
 
 export const api = axios.create({
+  withCredentials: true,
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
   timeout: 15000,
