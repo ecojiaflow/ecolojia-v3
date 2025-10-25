@@ -4,7 +4,7 @@ import axiosRetry from "axios-retry";
 // Base URL: .env > fallback prod
 const API_URL =
   import.meta?.env?.VITE_API_URL?.toString() ||
-  "https://ecolojia-backendvf.onrender.com/api";
+  "https://ecolojia-backendvf.onrender.com";
 
 export const api = axios.create({
   withCredentials: true,
