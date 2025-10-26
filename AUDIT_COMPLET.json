@@ -1,0 +1,1617 @@
+﻿{
+    "analysis":  {
+                     "issues":  [
+                                    {
+                                        "items":  [
+                                                      "Créer Sidebar.tsx pour desktop"
+                                                  ],
+                                        "type":  "Sidebar desktop manquant",
+                                        "severity":  "MEDIUM"
+                                    }
+                                ]
+                 },
+    "backend":  {
+                    "models":  [
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "AffiliateClick.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "Analysis.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "ChatHistory.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "Consent.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "ContributionRequest.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "Favorite.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "GDPRLog.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "Payment.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "PaymentLog.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "Product.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "TemporaryProduct.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "User.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "user.model.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "UserJourney.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "VisionAnalysis.js"
+                                   },
+                                   {
+                                       "hasSchema":  false,
+                                       "file":  "WebhookLog.js"
+                                   }
+                               ],
+                    "routes":  [
+                                   {
+                                       "linesCount":  518,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/chat"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/product-question"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/compare-products"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/suggestions"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/conversation/:conversationId"
+                                                         },
+                                                         {
+                                                             "method":  "DELETE",
+                                                             "path":  "/conversation"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/quota-status"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/faq"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         }
+                                                     ],
+                                       "file":  "ai.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  278,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/search"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/autocomplete"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/sync"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/configure"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats"
+                                                         }
+                                                     ],
+                                       "file":  "algolia-unified.js"
+                                   },
+                                   {
+                                       "linesCount":  31,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/barcode"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/manual"
+                                                         }
+                                                     ],
+                                       "file":  "analysis-simple.js"
+                                   },
+                                   {
+                                       "linesCount":  79,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/"
+                                                         }
+                                                     ],
+                                       "file":  "analysis.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  49,
+                                       "endpoints":  {
+                                                         "method":  "POST",
+                                                         "path":  "/auto"
+                                                     },
+                                       "file":  "analyze.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  75,
+                                       "endpoints":  {
+
+                                                     },
+                                       "file":  "auth.google.js"
+                                   },
+                                   {
+                                       "linesCount":  293,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/register"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/login"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/profile"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/refresh"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/test"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/logout"
+                                                         }
+                                                     ],
+                                       "file":  "auth.js"
+                                   },
+                                   {
+                                       "linesCount":  571,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/register"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/login"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/refresh"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/logout"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/me"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/me"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/password"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/forgot-password"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/reset-password"
+                                                         },
+                                                         {
+                                                             "method":  "DELETE",
+                                                             "path":  "/account"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/demo"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/validate"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         }
+                                                     ],
+                                       "file":  "auth.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  95,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/login"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/logout"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/verify"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/profile"
+                                                         }
+                                                     ],
+                                       "file":  "auth.simple.js"
+                                   },
+                                   {
+                                       "linesCount":  97,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/deepseek"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/product-chat"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/cache-stats"
+                                                         }
+                                                     ],
+                                       "file":  "chat.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  31,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze"
+                                                         }
+                                                     ],
+                                       "file":  "cosmetics.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  147,
+                                       "endpoints":  {
+                                                         "method":  "GET",
+                                                         "path":  "/stats"
+                                                     },
+                                       "file":  "dashboard.js"
+                                   },
+                                   {
+                                       "linesCount":  17,
+                                       "endpoints":  {
+                                                         "method":  "POST",
+                                                         "path":  "/debug-log"
+                                                     },
+                                       "file":  "debug.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  30,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze"
+                                                         }
+                                                     ],
+                                       "file":  "detergents.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  147,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/enrich/:barcode"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/create-and-enrich"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/check-off/:barcode"
+                                                         }
+                                                     ],
+                                       "file":  "enrich.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  441,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/pdf"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/csv"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/report"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/templates"
+                                                         }
+                                                     ],
+                                       "file":  "export.js"
+                                   },
+                                   {
+                                       "linesCount":  116,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/toggle"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/:id"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/check/:productId"
+                                                         }
+                                                     ],
+                                       "file":  "favorites.js"
+                                   },
+                                   {
+                                       "linesCount":  42,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "DELETE",
+                                                             "path":  "/:id"
+                                                         }
+                                                     ],
+                                       "file":  "favorites.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  514,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/download-data/:format?"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/download/:exportId/:format"
+                                                         },
+                                                         {
+                                                             "method":  "DELETE",
+                                                             "path":  "/delete-account"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/cancel-deletion"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/update-consent"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/privacy-settings"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/data-breach-notification"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/info"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/processing-activities"
+                                                         }
+                                                     ],
+                                       "file":  "gdpr.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  89,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/count"
+                                                         }
+                                                     ],
+                                       "file":  "history.js"
+                                   },
+                                   {
+                                       "linesCount":  73,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/scan"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats/:userId"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/history/:userId"
+                                                         }
+                                                     ],
+                                       "file":  "journey.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  133,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/generate"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/preferences"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/validate"
+                                                         }
+                                                     ],
+                                       "file":  "mealPlan.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  147,
+                                       "endpoints":  {
+                                                         "method":  "POST",
+                                                         "path":  "/:barcode"
+                                                     },
+                                       "file":  "ocr-analyze.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  321,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/track/:id"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/conversion"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/test"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/info"
+                                                         }
+                                                     ],
+                                       "file":  "partner.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  210,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/create-checkout"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/webhook"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/cancel-subscription"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/resume-subscription"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/change-plan"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/subscription-status"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/history"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/customer-portal"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/create-checkout"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/webhook"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/cancel-subscription"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/resume-subscription"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/change-plan"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/subscription-status"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/history"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/customer-portal"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats"
+                                                         }
+                                                     ],
+                                       "file":  "payment.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  229,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/create-from-ocr"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/save-ocr-product"
+                                                         }
+                                                     ],
+                                       "file":  "products-ocr.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  66,
+                                       "endpoints":  {
+                                                         "method":  "GET",
+                                                         "path":  "/"
+                                                     },
+                                       "file":  "products-search.js"
+                                   },
+                                   {
+                                       "linesCount":  540,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/stats"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/test"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/search"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/trending"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/:id/alternatives"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/:id/report"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/:id"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/"
+                                                         }
+                                                     ],
+                                       "file":  "products.js"
+                                   },
+                                   {
+                                       "linesCount":  73,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/:id"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/:id/contribute"
+                                                         }
+                                                     ],
+                                       "file":  "provisional.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  549,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/algolia/search-token"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/algolia/search"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/lemonsqueezy/checkout"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/lemonsqueezy/subscription"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/ai/chat"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/upload/signature"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         }
+                                                     ],
+                                       "file":  "proxy.js"
+                                   },
+                                   {
+                                       "linesCount":  240,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/status"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/increment"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/scan"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/ai-question"
+                                                         }
+                                                     ],
+                                       "file":  "quota.js"
+                                   },
+                                   {
+                                       "linesCount":  480,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/:productId"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/:productId/calculate"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/calculate-all"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/barcode/:barcode"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/:productId/recalculate"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/:barcode/ai-enrich"
+                                                         }
+                                                     ],
+                                       "file":  "scoring.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  80,
+                                       "endpoints":  {
+                                                         "method":  "GET",
+                                                         "path":  "/"
+                                                     },
+                                       "file":  "stats.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  97,
+                                       "endpoints":  {
+
+                                                     },
+                                       "file":  "test-minimal.js"
+                                   },
+                                   {
+                                       "linesCount":  30,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/test"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/info"
+                                                         }
+                                                     ],
+                                       "file":  "test-partner.js"
+                                   },
+                                   {
+                                       "linesCount":  413,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/profile"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/profile"
+                                                         },
+                                                         {
+                                                             "method":  "DELETE",
+                                                             "path":  "/"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/me"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/v2/me"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/v2/me"
+                                                         },
+                                                         {
+                                                             "method":  "PUT",
+                                                             "path":  "/v2/me/ai-preferences"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/v2/me/quotas"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/v2/me/reset-password"
+                                                         }
+                                                     ],
+                                       "file":  "user.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  23,
+                                       "endpoints":  {
+                                                         "method":  "GET",
+                                                         "path":  "/"
+                                                     },
+                                       "file":  "version.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  33,
+                                       "endpoints":  {
+                                                         "method":  "POST",
+                                                         "path":  "/analyze-image"
+                                                     },
+                                       "file":  "vision.analyze.js"
+                                   },
+                                   {
+                                       "linesCount":  60,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze-image"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/analyze-image"
+                                                         }
+                                                     ],
+                                       "file":  "vision.ocr.public.js"
+                                   },
+                                   {
+                                       "linesCount":  160,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze-image"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/extract-test"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/status/:jobId"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze-image"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/status/:jobId"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/extract-test"
+                                                         }
+                                                     ],
+                                       "file":  "vision.routes.js"
+                                   },
+                                   {
+                                       "linesCount":  43,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/analyze"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         }
+                                                     ],
+                                       "file":  "vision.simple.js"
+                                   },
+                                   {
+                                       "linesCount":  540,
+                                       "endpoints":  [
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/lemonsqueezy"
+                                                         },
+                                                         {
+                                                             "method":  "GET",
+                                                             "path":  "/health"
+                                                         },
+                                                         {
+                                                             "method":  "POST",
+                                                             "path":  "/test"
+                                                         }
+                                                     ],
+                                       "file":  "webhooks.js"
+                                   }
+                               ],
+                    "services":  [
+                                     {
+                                         "linesCount":  80,
+                                         "file":  "backend\\src\\services\\additiveEnrichment.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  67,
+                                         "file":  "backend\\src\\services\\aiCache.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  560,
+                                         "file":  "backend\\src\\services\\aiEnrichment.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  362,
+                                         "file":  "backend\\src\\services\\aiService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  67,
+                                         "file":  "backend\\src\\services\\allergenEnrichment.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  329,
+                                         "file":  "backend\\src\\services\\analyzeService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  465,
+                                         "file":  "backend\\src\\services\\circuitBreaker.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  198,
+                                         "file":  "backend\\src\\services\\cosmeticsService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  380,
+                                         "file":  "backend\\src\\services\\cronJobs.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  152,
+                                         "file":  "backend\\src\\services\\dataCompleteness.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  342,
+                                         "file":  "backend\\src\\services\\DataNormalizer.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  156,
+                                         "file":  "backend\\src\\services\\emailService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  87,
+                                         "file":  "backend\\src\\services\\EnhancedOFFClient.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  484,
+                                         "file":  "backend\\src\\services\\gdprService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  48,
+                                         "file":  "backend\\src\\services\\imageEnrichment.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  62,
+                                         "file":  "backend\\src\\services\\ingredientParser.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  151,
+                                         "file":  "backend\\src\\services\\ocr-parser.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  324,
+                                         "file":  "backend\\src\\services\\OCRProductService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  19,
+                                         "file":  "backend\\src\\services\\offClient.enhanced.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  94,
+                                         "file":  "backend\\src\\services\\offClient.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  81,
+                                         "file":  "backend\\src\\services\\offClient.UTF16_BACKUP.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  200,
+                                         "file":  "backend\\src\\services\\openfoodfacts.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  956,
+                                         "file":  "backend\\src\\services\\productAnalysisService.js",
+                                         "exportsCount":  2
+                                     },
+                                     {
+                                         "linesCount":  540,
+                                         "file":  "backend\\src\\services\\ProductOrchestrator.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  60,
+                                         "file":  "backend\\src\\services\\productPrompt.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  368,
+                                         "file":  "backend\\src\\services\\quotaService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  57,
+                                         "file":  "backend\\src\\services\\scoring.service.OLD_20251013.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  0,
+                                         "file":  "backend\\src\\services\\scoringEngine.AVANT_NOV.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  346,
+                                         "file":  "backend\\src\\services\\scoringEngine.AVANT_NOVA_FIX_20251007_232733.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  342,
+                                         "file":  "backend\\src\\services\\scoringEngine.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  400,
+                                         "file":  "backend\\src\\services\\ScoringEngineV3.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  971,
+                                         "file":  "backend\\src\\services\\scoringUnified.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  89,
+                                         "file":  "backend\\src\\services\\visionRuntime.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  456,
+                                         "file":  "backend\\src\\services\\webhookService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  168,
+                                         "file":  "backend\\src\\services\\ai\\alternativesEngine.js",
+                                         "exportsCount":  2
+                                     },
+                                     {
+                                         "linesCount":  55,
+                                         "file":  "backend\\src\\services\\ai\\conversationalAI.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  249,
+                                         "file":  "backend\\src\\services\\ai\\deepSeekService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  222,
+                                         "file":  "backend\\src\\services\\ai\\eco-score.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  258,
+                                         "file":  "backend\\src\\services\\ai\\insightsGenerator.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  217,
+                                         "file":  "backend\\src\\services\\ai\\mealPlanGenerator.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  217,
+                                         "file":  "backend\\src\\services\\ai\\mealPlanValidator.service.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  554,
+                                         "file":  "backend\\src\\services\\ai\\NutritionistChatService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  253,
+                                         "file":  "backend\\src\\services\\ai\\productTypeDetector.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  660,
+                                         "file":  "backend\\src\\services\\algolia\\algoliaService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  359,
+                                         "file":  "backend\\src\\services\\algolia\\algoliaSync.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  386,
+                                         "file":  "backend\\src\\services\\analysis\\analysisService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  415,
+                                         "file":  "backend\\src\\services\\analysis\\CosmeticAnalysisService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  455,
+                                         "file":  "backend\\src\\services\\analysis\\cosmetics.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  696,
+                                         "file":  "backend\\src\\services\\analysis\\DetergentAnalysisService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  478,
+                                         "file":  "backend\\src\\services\\analysis\\detergents.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  304,
+                                         "file":  "backend\\src\\services\\analysis\\food.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  374,
+                                         "file":  "backend\\src\\services\\analysis\\FoodAnalysisService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  68,
+                                         "file":  "backend\\src\\services\\analysis\\index.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  198,
+                                         "file":  "backend\\src\\services\\analysis\\novaClassifier.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  399,
+                                         "file":  "backend\\src\\services\\analysis\\nutriscoreCalculator.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  788,
+                                         "file":  "backend\\src\\services\\analysis\\universalAnalyzer.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  193,
+                                         "file":  "backend\\src\\services\\auth\\authService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  172,
+                                         "file":  "backend\\src\\services\\auth\\tokenService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  152,
+                                         "file":  "backend\\src\\services\\external\\openBeautyFactsService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  181,
+                                         "file":  "backend\\src\\services\\external\\openFoodFactsService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  877,
+                                         "file":  "backend\\src\\services\\gdpr\\DataExportService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  400,
+                                         "file":  "backend\\src\\services\\ocr\\visionOCR.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  652,
+                                         "file":  "backend\\src\\services\\payment\\LemonSqueezyService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  97,
+                                         "file":  "backend\\src\\services\\queue\\QueueService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  50,
+                                         "file":  "backend\\src\\services\\upload\\CloudinaryService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  849,
+                                         "file":  "backend\\src\\services\\vision\\ProductOCRService.js",
+                                         "exportsCount":  0
+                                     },
+                                     {
+                                         "linesCount":  467,
+                                         "file":  "backend\\src\\services\\vision\\VisionService.js",
+                                         "exportsCount":  0
+                                     }
+                                 ]
+                },
+    "timestamp":  "2025-10-26 15:33:20",
+    "frontend":  {
+                     "pages":  {
+                                   "Duplicates":  [
+
+                                                  ],
+                                   "Core":  [
+                                                "AboutPage",
+                                                "AnalysisDevPage",
+                                                "CategoryPage",
+                                                "ComparePage",
+                                                "CosmeticAnalysisPage",
+                                                "DetergentAnalysisPage",
+                                                "DiagnosticPage",
+                                                "FavoritesPage",
+                                                "HistoryPage",
+                                                "HomePage",
+                                                "LegalPage",
+                                                "ManualAnalysisPage",
+                                                "MealPlanPage",
+                                                "MultiCategoriesPage",
+                                                "OCRPage",
+                                                "OCRWizardPage",
+                                                "OnboardingPage",
+                                                "PricingPage",
+                                                "PrivacyPage",
+                                                "ProfilePage",
+                                                "SettingsPage",
+                                                "TermsPage",
+                                                "TestPage"
+                                            ],
+                                   "Premium":  [
+                                                   "PremiumPage"
+                                               ],
+                                   "Chat":  [
+                                                "AiPreferencesPage",
+                                                "ChatPage",
+                                                "EmailVerificationPage"
+                                            ],
+                                   "Admin":  [
+                                                 "AdminDashboard",
+                                                 "DashboardPage"
+                                             ],
+                                   "Auth":  [
+                                                "AuthCallbackPage",
+                                                "LoginPage",
+                                                "RegisterPage"
+                                            ],
+                                   "Product":  [
+                                                   "MultiScanPage",
+                                                   "ProductDetailPage",
+                                                   "ProductNotFoundPage",
+                                                   "ProductPage",
+                                                   "ResultPage",
+                                                   "Results",
+                                                   "ResultsPage",
+                                                   "ResultsPageIntegrated",
+                                                   "ScannerChoicePage",
+                                                   "ScanPage",
+                                                   "ScanPageIntegrated",
+                                                   "SearchPage.OLD",
+                                                   "SearchPage",
+                                                   "UnifiedResultsPage",
+                                                   "UniversalSearchPage"
+                                               ]
+                               },
+                     "navigation":  {
+                                        "Footer":  false,
+                                        "MobileBottomNav":  true,
+                                        "Navbar":  false,
+                                        "Sidebar":  false
+                                    },
+                     "hooks":  [
+
+                               ],
+                     "components":  {
+                                        "chat":  [
+                                                     "ChatBubble",
+                                                     "ChatWidget"
+                                                 ],
+                                        "ai":  [
+                                                   "AIEngagementWidget"
+                                               ],
+                                        "layout":  [
+                                                       "Layout",
+                                                       "MobileBottomNav"
+                                                   ],
+                                        "mealplan":  [
+                                                         "MealPlanWizard",
+                                                         "Step1BudgetPersonnes",
+                                                         "Step2RegimeCuisine",
+                                                         "Step3Allergenes"
+                                                     ],
+                                        "__tests__":  [
+                                                          "BarcodeScanner.spec"
+                                                      ],
+                                        "upgrade":  [
+                                                        "SmartUpgradeModal"
+                                                    ],
+                                        "analysis":  [
+                                                         "AIChat",
+                                                         "AlternativesList",
+                                                         "AlternativesSuggestions",
+                                                         "CosmeticAnalysisDisplay",
+                                                         "NovaAlert",
+                                                         "ProgressiveAnalysis",
+                                                         "QuickStatsWidget",
+                                                         "RiskCard",
+                                                         "ScientificScore",
+                                                         "ScoreDisplay",
+                                                         "ScoreGauge",
+                                                         "ScoreGaugeEnhanced",
+                                                         "UnifiedAnalysisResult"
+                                                     ],
+                                        "scanner":  [
+                                                        "BarcodeScanner",
+                                                        "BarcodeScannerEnhanced",
+                                                        "CategoryAutoDetector",
+                                                        "EnhancedBarcodeScanner",
+                                                        "ManualInput",
+                                                        "ManualSearch",
+                                                        "OCRGuide",
+                                                        "PhotoCapture",
+                                                        "UnknownProductModal"
+                                                    ],
+                                        "dashboard":  [
+                                                          "CommunityComparison",
+                                                          "DailyAnalysesChart",
+                                                          "RecommendationsSection",
+                                                          "StatsCard",
+                                                          "TrendSparkline",
+                                                          "WeeklySummary"
+                                                      ],
+                                        "ui":  [
+                                                   "LoadingStates",
+                                                   "ScoreBar"
+                                               ],
+                                        "premium":  [
+                                                        "PremiumModal"
+                                                    ],
+                                        "product":  [
+                                                        "AllergensSection",
+                                                        "LabelsSection",
+                                                        "NutritionBar",
+                                                        "ProductActions",
+                                                        "ProductAlternatives",
+                                                        "ProductChatActions",
+                                                        "ProductHeader",
+                                                        "ProductIngredients",
+                                                        "ProductIngredientsSection",
+                                                        "ProductNutrition",
+                                                        "ProductScoresCard",
+                                                        "ScoreBreakdown"
+                                                    ],
+                                        "components":  [
+                                                           "AdvancedFilters",
+                                                           "AffiliateButton",
+                                                           "AlgoliaProductCard",
+                                                           "AnalysisResultCard",
+                                                           "CategoryCard",
+                                                           "CategoryFilter",
+                                                           "CategoryNavigation",
+                                                           "CategorySelector",
+                                                           "ConfidenceBadge",
+                                                           "CookieBanner",
+                                                           "DomainBadges",
+                                                           "EcoScoreBadge",
+                                                           "EmailVerificationBanner",
+                                                           "EnvironmentScore",
+                                                           "ErrorBoundary",
+                                                           "ErrorMessage",
+                                                           "EthicalScoreBadge",
+                                                           "Footer",
+                                                           "HealthScoreCircle",
+                                                           "LanguageSelector",
+                                                           "Layout",
+                                                           "MockTestPanel",
+                                                           "Navbar",
+                                                           "NoResultsFound",
+                                                           "NotificationContainer",
+                                                           "NovaBadge",
+                                                           "NovaDetails",
+                                                           "NovaResults",
+                                                           "OCRPanel",
+                                                           "OCRUpload",
+                                                           "OfflineIndicator",
+                                                           "PartnerLinks",
+                                                           "PhotoAnalyzerEnhanced",
+                                                           "PhotoCapture",
+                                                           "PremiumCTA",
+                                                           "PremiumUpgradeModal",
+                                                           "PrivateRoute",
+                                                           "ProductCard",
+                                                           "ProductCardSkeleton",
+                                                           "ProductDetail",
+                                                           "ProductHit",
+                                                           "ProtectedRoute",
+                                                           "PWAInstallBanner",
+                                                           "ResultCard",
+                                                           "ScanFloatingButton",
+                                                           "ScannerChoice",
+                                                           "ScoreChip",
+                                                           "ScoreProgressBar",
+                                                           "SEOHead",
+                                                           "SimilarProductsCarousel",
+                                                           "TranslatedContent",
+                                                           "UltraProcessingPanel",
+                                                           "UltraTransformResults"
+                                                       ],
+                                        "search":  [
+                                                       "FiltersPanel",
+                                                       "SearchBar",
+                                                       "SearchExperience"
+                                                   ],
+                                        "payments":  [
+                                                         "CheckoutButton"
+                                                     ],
+                                        "quota":  [
+                                                      "QuotaAlert",
+                                                      "QuotaBanner",
+                                                      "QuotaBar"
+                                                  ],
+                                        "gdpr":  [
+                                                     "ConsentManager"
+                                                 ],
+                                        "common":  [
+                                                       "Badge",
+                                                       "Button",
+                                                       "LoadingSpinner"
+                                                   ],
+                                        "legal":  [
+                                                      "DisclaimerModal"
+                                                  ],
+                                        "profile":  [
+                                                        "PreferencesTab"
+                                                    ],
+                                        "Admin":  [
+                                                      "ImportProgress",
+                                                      "LogViewer",
+                                                      "ProductTable",
+                                                      "StatsCard"
+                                                  ]
+                                    },
+                     "routes":  [
+                                    "/auth/callback",
+                                    "/",
+                                    "search",
+                                    "results",
+                                    "product/:id",
+                                    "scan",
+                                    "ocr",
+                                    "ocr-wizard",
+                                    "favorites",
+                                    "multi-scan",
+                                    "premium",
+                                    "meal-plan",
+                                    "diagnostic",
+                                    "login",
+                                    "register",
+                                    "dashboard",
+                                    "chat",
+                                    "profile",
+                                    "history",
+                                    "onboarding",
+                                    "*"
+                                ]
+                 }
+}

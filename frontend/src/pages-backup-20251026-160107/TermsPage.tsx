@@ -1,0 +1,173 @@
+// PATH: frontend/src/pages/TermsPage.tsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FileText, Users, AlertTriangle, Scale, Clock, Mail } from 'lucide-react';
+
+const TermsPage: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-white py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header avec lien retour */}
+        <div className="text-center mb-12">
+          <Link to="/" className="inline-flex items-center justify-center mb-6 hover:scale-105 transition-transform">
+            <FileText className="h-16 w-16 text-[#7DDE4A]" />
+          </Link>
+          <h1 className="text-4xl font-bold text-[#3B3B3B] mb-4">
+            Conditions Generales d'Utilisation
+          </h1>
+          <p className="text-[#3B3B3B]/70 text-lg">
+            Derniere mise Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  jour : {new Date().toLocaleDateString('fr-FR')}
+          </p>
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 mt-4 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
+          >
+            aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â Æ’Ã¢â‚¬Å¡'šÃ‚Â Retour Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'accueil
+          </Link>
+        </div>
+
+        <div className="prose prose-lg max-w-none text-[#3B3B3B]/80">
+          
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4 flex items-center gap-2">
+              <Users className="h-6 w-6 text-[#7DDE4A]" />
+              1. Objet
+            </h2>
+            <p className="text-[#3B3B3B]/70 mb-4">
+              Les presentes Conditions Generales d'Utilisation (CGU) regissent l'utilisation du service ECOLOJIA, 
+              plateforme d'analyse de produits alimentaires, cosmetiques et menagers.
+            </p>
+            <p className="text-[#3B3B3B]/70">
+              En utilisant ECOLOJIA, vous acceptez sans reserve les presentes CGU. 
+              Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser notre service.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4 flex items-center gap-2">
+              <Scale className="h-6 w-6 text-[#7DDE4A]" />
+              2. Description du service
+            </h2>
+            <div className="bg-[#7DDE4A]/5 p-6 rounded-xl mb-6 border border-[#7DDE4A]/20">
+              <h3 className="text-lg font-semibold text-[#3B3B3B] mb-3">ECOLOJIA propose :</h3>
+              <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
+                <li>L'analyse instantanee de produits via scan, photo ou recherche manuelle</li>
+                <li>Des scores de Santé, environnement et ethique bases sur des criteres scientifiques</li>
+                <li>Des recommandations d'alternatives plus saines</li>
+                <li>Un assistant IA pour repondre Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  vos questions nutritionnelles</li>
+                <li>Un tableau de bord personnalise pour suivre vos habitudes</li>
+              </ul>
+            </div>
+            <p className="text-[#3B3B3B]/70">
+              Nos analyses sont basees sur des algorithmes proprietaires et des sources scientifiques reconnues 
+              (INSERM, ANSES, EFSA). Cependant, elles ne remplacent pas l'avis d'un professionnel de Santé.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4 flex items-center gap-2">
+              <AlertTriangle className="h-6 w-6 text-[#7DDE4A]" />
+              3. Conditions d'utilisation
+            </h2>
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-[#3B3B3B]">Vous vous engagez Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  :</h3>
+              <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
+                <li>Fournir des informations exactes lors de votre inscription</li>
+                <li>Utiliser le service de maniere responsable et legale</li>
+                <li>Ne pas tenter d'extraire ou copier massivement nos donnees</li>
+                <li>Respecter les droits de propriete intellectuelle</li>
+                <li>Ne pas diffuser de contenu inapproprie via nos services</li>
+              </ul>
+              
+              <h3 className="text-xl font-semibold text-[#3B3B3B] mt-6">Il est interdit de :</h3>
+              <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
+                <li>Utiliser des robots ou scripts automatises sans autorisation</li>
+                <li>Tenter d'acceder aux systemes informatiques d'ECOLOJIA</li>
+                <li>Reproduire ou redistribuer nos analyses sans autorisation</li>
+                <li>Utiliser le service Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  des fins commerciales sans accord prealable</li>
+                <li>Usurper l'identite d'une autre personne</li>
+              </ul>
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4 flex items-center gap-2">
+              <Clock className="h-6 w-6 text-[#7DDE4A]" />
+              4. Disponibilite du service
+            </h2>
+            <p className="text-[#3B3B3B]/70 mb-4">
+              Nous nous efforcons de maintenir ECOLOJIA disponible 24h/24, 7j/7. 
+              Cependant, nous ne garantissons pas une disponibilite ininterrompue du service.
+            </p>
+            <p className="text-[#3B3B3B]/70">
+              Nous nous reservons le droit de suspendre temporairement l'acces pour maintenance, 
+              mise Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  jour ou en cas de force majeure, sans preavis.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4">
+              5. Propriete intellectuelle
+            </h2>
+            <p className="text-[#3B3B3B]/70 mb-4">
+              Tous les contenus presents sur ECOLOJIA (textes, images, logos, bases de donnees, algorithmes) 
+              sont proteges par le droit de la propriete intellectuelle et appartiennent Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  ECOLOJIA ou ses partenaires.
+            </p>
+            <p className="text-[#3B3B3B]/70">
+              Toute reproduction, representation ou exploitation non autorisee est interdite et 
+              peut donner lieu Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  des poursuites judiciaires.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4">
+              6. Limitation de responsabilite
+            </h2>
+            <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+              <p className="text-[#3B3B3B]/70 mb-4">
+                <strong>Important :</strong> Les informations fournies par ECOLOJIA sont Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  titre informatif uniquement.
+              </p>
+              <p className="text-[#3B3B3B]/70">
+                ECOLOJIA ne saurait etre tenu responsable des decisions prises sur la base de nos analyses. 
+                Pour tout probleme de Santé ou regime specifique, consultez un professionnel qualifie.
+              </p>
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4 flex items-center gap-2">
+              <Mail className="h-6 w-6 text-[#7DDE4A]" />
+              7. Contact
+            </h2>
+            <div className="bg-[#7DDE4A]/5 p-6 rounded-xl border border-[#7DDE4A]/20">
+              <p className="text-[#3B3B3B]/70 mb-4">
+                Pour toute question concernant ces CGU :
+              </p>
+              <div className="space-y-2 text-[#3B3B3B]/70">
+                <p><strong>Email :</strong> legal@ecoloji?.app</p>
+                <p><strong>Support :</strong> support@ecoloji?.app</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="border-t border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-[#3B3B3B] mb-4">
+              8. Droit applicable
+            </h2>
+            <p className="text-[#3B3B3B]/70">
+              Les presentes CGU sont regies par le droit francais. 
+              Tout litige relatif Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  leur interpretation ou execution releve de la competence 
+              exclusive des tribunaux francais.
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TermsPage;
+
+
+

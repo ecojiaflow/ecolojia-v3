@@ -18,7 +18,6 @@ const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
-const ScanPage = lazy(() => import('./pages/ScanPage'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
