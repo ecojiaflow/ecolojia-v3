@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/App.tsx
+// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -15,7 +15,9 @@ import { MealPlanPage } from './pages/MealPlanPage';
 // Lazy loading des pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
-const ResultsPage = lazy(() => import('./pages/ResultsPageIntegrated'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
+const AssistantPage = lazy(() => import('./pages/AssistantPage'));
+const ShoppingListPage = lazy(() => import('./pages/ShoppingListPage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
@@ -67,6 +69,10 @@ const App: React.FC = () => {
               path="register"
               element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
             />
+
+            <Route path="assistant" element={<AssistantPage />} />
+            <Route path="shopping-list" element={<ShoppingListPage />} />
+            <Route path="results" element={<ResultsPage />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="dashboard" element={<DashboardPage />} />
