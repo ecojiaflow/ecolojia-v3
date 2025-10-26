@@ -1,22 +1,20 @@
 ﻿// PATH: frontend/src/components/layout/Sidebar.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
-  Home, Search, Camera, MessageCircle, ShoppingCart, BarChart3,
-  Heart, History, User, Settings, LogOut, Crown, Leaf, 
+  Home, Search, MessageCircle, ShoppingCart, BarChart3,
+  Heart, History, User, Settings, LogOut, Crown, Leaf,
   Apple, Droplet, Sparkles
 } from 'lucide-react';
 import { useAuthContext } from '../../Contexts/AuthContext';
 import { useQuota } from '../../hooks/useQuota';
-import { useCategory, CATEGORY_CONFIG } from '../../Contexts/CategoryContext';
-
-type Category = 'food' | 'cosmetics' | 'detergents';
+import { useCategory } from '../../Contexts/CategoryContext';
 
 const CATEGORIES = [
-  { id: 'food' as Category, label: 'Alimentaire', icon: Apple, color: 'text-green-600' },
-  { id: 'cosmetics' as Category, label: 'Cosm�tiques', icon: Sparkles, color: 'text-pink-600' },
-  { id: 'detergents' as Category, label: 'D�tergents', icon: Droplet, color: 'text-blue-600' }
-];
+  { id: 'food', label: 'Alimentaire', icon: Apple, color: 'text-green-600' },
+  { id: 'cosmetics', label: 'Cosmetiques', icon: Sparkles, color: 'text-pink-600' },
+  { id: 'detergents', label: 'Detergents', icon: Droplet, color: 'text-blue-600' }
+] as const;
 
 export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -61,15 +59,18 @@ export const Sidebar: React.FC = () => {
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex-1 flex flex-col items-center justify-center py-2 px-2 rounded-md transition-all ${
-                  isActive 
-                    ? 'bg-white shadow-sm' 
+                onClick={() => {
+                  setActiveCategory(cat.id as any);
+                  navigate('/search');
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-md transition-all ${
+                  isActive
+                    ? 'bg-white shadow-sm'
                     : 'hover:bg-gray-50'
                 }`}
               >
                 <Icon className={`h-5 w-5 ${isActive ? cat.color : 'text-gray-400'}`} />
-                <span className={`text-xs mt-1 font-medium ${
+                <span className={`text-xs mt-1 font-medium text-center leading-tight ${
                   isActive ? 'text-gray-800' : 'text-gray-500'
                 }`}>
                   {cat.label}
@@ -92,8 +93,8 @@ export const Sidebar: React.FC = () => {
                 to={item.to}
                 className={({ isActive }) => `
                   flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors
-                  ${isActive 
-                    ? 'bg-green-50 text-green-700 font-medium' 
+                  ${isActive
+                    ? 'bg-green-50 text-green-700 font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                   }
                 `}
@@ -115,8 +116,8 @@ export const Sidebar: React.FC = () => {
                   to={item.to}
                   className={({ isActive }) => `
                     flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors
-                    ${isActive 
-                      ? 'bg-green-50 text-green-700 font-medium' 
+                    ${isActive
+                      ? 'bg-green-50 text-green-700 font-medium'
                       : 'text-gray-700 hover:bg-gray-50'
                     }
                   `}
@@ -133,17 +134,15 @@ export const Sidebar: React.FC = () => {
       <div className="border-t border-gray-200 p-4">
         {isAuthenticated ? (
           <>
-            {/* Quota Display */}
             {quotas && (
               <div className="mb-3 px-3 py-2 bg-gray-50 rounded-lg">
                 <div className="text-xs text-gray-600 mb-1">Scans restants</div>
                 <div className="font-semibold text-gray-800">
-                  {quotas.scansRemaining}/{user?.subscription?.tier === 'premium' ? '8' : '30'}
+                  {quotas.scansRemaining}/{user?.subscription?.tier === 'premium' ? '∞' : '30'}
                 </div>
               </div>
             )}
 
-            {/* Premium CTA */}
             {user?.subscription?.tier === 'free' && (
               <Link
                 to="/premium"
@@ -154,7 +153,6 @@ export const Sidebar: React.FC = () => {
               </Link>
             )}
 
-            {/* User Profile */}
             <div className="flex items-center space-x-3 mb-2">
               <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">
                 {user?.firstName?.[0]?.toUpperCase()}
@@ -169,7 +167,6 @@ export const Sidebar: React.FC = () => {
               </div>
             </div>
 
-            {/* User Actions */}
             <div className="space-y-1">
               <NavLink
                 to="/profile"
@@ -183,14 +180,14 @@ export const Sidebar: React.FC = () => {
                 className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
               >
                 <Settings className="h-4 w-4" />
-                <span>Param�tres</span>
+                <span>Parametres</span>
               </NavLink>
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
               >
                 <LogOut className="h-4 w-4" />
-                <span>D�connexion</span>
+                <span>Deconnexion</span>
               </button>
             </div>
           </>

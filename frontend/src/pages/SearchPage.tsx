@@ -7,6 +7,7 @@ import {
 } from 'react-instantsearch';
 import { Package, Filter, X, SlidersHorizontal } from 'lucide-react';
 import { useDeviceContext } from '../hooks/useDeviceContext';
+import { useCategory } from '../Contexts/CategoryContext';
 
 const searchClient = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID || '',
@@ -90,10 +91,29 @@ const ProductHit = ({ hit }: { hit: any }) => {
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { isMobile } = useDeviceContext();
+  const { category, metadata } = useCategory();
   const [showFilters, setShowFilters] = React.useState(!isMobile);
 
   const initialQuery = searchParams.get('q') || '';
-  const initialCategory = searchParams.get('category') || '';
+
+  // Determiner le filtre de categorie selon le Context
+  const categoryFilter = React.useMemo(() => {
+    if (category === 'food') return 'category:food OR category:alimentaire';
+    if (category === 'cosmetics') return 'category:cosmetics OR category:cosmetique';
+    if (category === 'detergents') return 'category:detergents OR category:entretien';
+    return '';
+  }, [category]);
+
+  // Determiner le placeholder selon la categorie
+  const getPlaceholder = () => {
+    if (category === 'food') return 'Rechercher un produit alimentaire...';
+    if (category === 'cosmetics') return 'Rechercher un produit cosmetique...';
+    if (category === 'detergents') return 'Rechercher un produit menager...';
+    return 'Rechercher un produit...';
+  };
+
+  // Determiner si on affiche les filtres NOVA/Nutri-Score (uniquement pour food)
+  const showFoodFilters = category === 'food';
 
   return (
     <InstantSearch
@@ -101,23 +121,28 @@ const SearchPage: React.FC = () => {
       indexName={indexName}
       initialUiState={{
         [indexName]: {
-          query: initialQuery,
-          refinementList: initialCategory ? { categories: [initialCategory] } : undefined
+          query: initialQuery
         }
       }}
     >
-      <Configure hitsPerPage={20} />
+      <Configure 
+        hitsPerPage={20}
+        filters={categoryFilter}
+      />
 
       <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100">
         <div className="bg-neutral-0 border-b border-neutral-300 sticky top-0 z-10 shadow-1">
           <div className="container mx-auto px-4 py-4">
-            <h1 className="text-2xl font-bold text-neutral-900 mb-4">
-              Recherche de produits
-            </h1>
+            <div className="flex items-center gap-3 mb-4">
+              <h1 className="text-2xl font-bold text-neutral-900">
+                Recherche - {metadata.label}
+              </h1>
+              <span className="text-lg">{metadata.icon === 'Apple' ? '🥫' : metadata.icon === 'Sparkles' ? '💄' : '🧼'}</span>
+            </div>
 
             <div className="mb-4">
               <SearchBox
-                placeholder="Rechercher un produit (Nutella, Loreal, Ariel...)"
+                placeholder={getPlaceholder()}
                 classNames={{
                   root: 'relative',
                   form: 'relative',
@@ -170,10 +195,126 @@ const SearchPage: React.FC = () => {
                   />
 
                   <div className="space-y-6">
+                    {/* Afficher filtres NOVA et Nutri-Score UNIQUEMENT pour food */}
+                    {showFoodFilters && (
+                      <>
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Groupe NOVA</h3>
+                          <RefinementList
+                            attribute="nova_group"
+                            sortBy={['name:asc']}
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Nutri-Score</h3>
+                          <RefinementList
+                            attribute="nutriscore_grade"
+                            sortBy={['name:asc']}
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800 uppercase',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Filtres pour cosmetiques */}
+                    {category === 'cosmetics' && (
+                      <>
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Type de produit</h3>
+                          <RefinementList
+                            attribute="product_type"
+                            limit={5}
+                            showMore={true}
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Certification</h3>
+                          <RefinementList
+                            attribute="certifications"
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Filtres pour detergents */}
+                    {category === 'detergents' && (
+                      <>
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Type de produit</h3>
+                          <RefinementList
+                            attribute="product_type"
+                            limit={5}
+                            showMore={true}
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Label eco</h3>
+                          <RefinementList
+                            attribute="eco_labels"
+                            classNames={{
+                              root: 'text-sm',
+                              list: 'space-y-2',
+                              item: 'flex items-center',
+                              label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
+                              checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
+                              labelText: 'text-neutral-800',
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Marques - commun a toutes categories */}
                     <div>
-                      <h3 className="text-sm font-semibold text-neutral-900 mb-2">Categorie</h3>
+                      <h3 className="text-sm font-semibold text-neutral-900 mb-2">Marque</h3>
                       <RefinementList
-                        attribute="categories"
+                        attribute="brands"
                         limit={5}
                         showMore={true}
                         showMoreLimit={20}
@@ -191,40 +332,6 @@ const SearchPage: React.FC = () => {
                           showMoreButtonText({ isShowingMore }) {
                             return isShowingMore ? 'Voir moins' : 'Voir plus';
                           }
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <h3 className="text-sm font-semibold text-neutral-900 mb-2">Groupe NOVA</h3>
-                      <RefinementList
-                        attribute="nova_group"
-                        sortBy={['name:asc']}
-                        classNames={{
-                          root: 'text-sm',
-                          list: 'space-y-2',
-                          item: 'flex items-center',
-                          label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
-                          checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
-                          labelText: 'text-neutral-800',
-                          count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <h3 className="text-sm font-semibold text-neutral-900 mb-2">Nutri-Score</h3>
-                      <RefinementList
-                        attribute="nutriscore_grade"
-                        sortBy={['name:asc']}
-                        classNames={{
-                          root: 'text-sm',
-                          list: 'space-y-2',
-                          item: 'flex items-center',
-                          label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
-                          checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
-                          labelText: 'text-neutral-800 uppercase',
-                          count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
                         }}
                       />
                     </div>

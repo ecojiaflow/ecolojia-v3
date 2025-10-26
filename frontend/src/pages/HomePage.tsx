@@ -22,7 +22,6 @@ import {
   UtensilsCrossed
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
 import { motion } from 'framer-motion';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import { useCategory } from '../Contexts/CategoryContext';
@@ -53,23 +52,23 @@ const HomePage: React.FC = () => {
       icon: '🥫',
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
-      popular: ['Nutella', 'Yaourt', 'Pain bio']
+      popular: ['Cereales bio', 'Yaourt nature', 'Fruits secs']
     },
     {
-      name: 'Cosmétiques',
+      name: 'Cosmetiques',
       id: 'cosmetics' as const,
       icon: '💄',
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
-      popular: ['Shampoing', 'Crème', 'Déodorant']
+      popular: ['Savon naturel', 'Creme bio', 'Dentifrice eco']
     },
     {
-      name: 'Détergents',
+      name: 'Detergents',
       id: 'detergents' as const,
       icon: '🧼',
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
-      popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
+      popular: ['Lessive eco', 'Produit vaisselle', 'Nettoyant eco']
     }
   ];
 
@@ -89,7 +88,7 @@ const HomePage: React.FC = () => {
     {
       icon: Sparkles,
       title: 'IA Personnalisee',
-      description: 'Recommandations adaptees a votre profil et vos objectifs Santé',
+      description: 'Recommandations adaptees a votre profil et vos objectifs Sante',
       color: 'bg-purple-100 text-purple-700'
     }
   ];
@@ -98,104 +97,50 @@ const HomePage: React.FC = () => {
     {
       name: 'Marie L.',
       role: 'Maman de 3 enfants',
-      content: "ECOLOJIA m'aide a choisir les meilleurs produits pour ma famille. Les analyses sont claires et fiables.",
+      content: "ECOLOJIA m'a aidee a faire des choix plus sains pour ma famille. L'analyse detaillee des additifs est vraiment utile.",
       rating: 5
     },
     {
       name: 'Thomas B.',
       role: 'Sportif amateur',
-      content: "Je scanne tous mes produits avant achat. L'app m'a fait decouvrir des alternatives plus saines.",
+      content: "Application indispensable pour suivre mon alimentation. Les scores sont clairs et precis.",
+      rating: 5
+    },
+    {
+      name: 'Sophie M.',
+      role: 'Professionnelle de sante',
+      content: "Enfin une app basee sur des donnees scientifiques solides. Je la recommande a mes patients.",
       rating: 5
     }
   ];
 
-  
-      {/* Section Premium - Plans Repas IA */}
-      <section className="py-8 md:py-16 lg:py-24 bg-gradient-to-br from-purple-50 via-blue-50 to-green-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-4">
-              <Sparkles size={16} />
-              Nouveau - Premium
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Votre nutritionniste IA personnelle
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Generez des plans repas hebdomadaires adaptes a votre budget, regime et allergenes
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                <Euro className="text-green-600" size={24} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Budget maitrise</h3>
-              <p className="text-gray-600">
-                Definissez votre budget hebdomadaire et recevez des recettes adaptees
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                <Leaf className="text-blue-600" size={24} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Tous les regimes</h3>
-              <p className="text-gray-600">
-                Equilibre, vegetarien, vegan, low-carb - Nous nous adaptons a vous
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-shadow">
-              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
-                <AlertCircle className="text-red-600" size={24} />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Sans allergenes</h3>
-              <p className="text-gray-600">
-                Vos allergenes sont automatiquement exclus des suggestions
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <Link
-              to="/meal-plan"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all"
-            >
-              <UtensilsCrossed size={24} />
-              <span>Creer mon plan repas</span>
-              <ChevronRight size={20} />
-            </Link>
-            <p className="text-sm text-gray-500 mt-4">
-              Fonctionnalite Premium - 7 jours d essai gratuit
-            </p>
-          </div>
-        </div>
-      </section>
-
-return (
+  return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {isMobile ? (
-        <section className="container mx-auto px-4 py-8">
+        <section className="px-4 pt-6 pb-20">
           <div className="space-y-6">
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-4">
+            <div className="text-center mb-4">
+              <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full mb-4">
                 <Sparkles className="w-4 h-4" />
-                <span className="text-sm font-medium">Scanner instantané</span>
+                <span className="text-xs font-medium">Scanner instantane</span>
               </div>
+              
+              <h1 className="text-2xl font-bold text-gray-900 mb-6">
+                Scannez vos produits
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold text-center text-gray-900">Scannez vos produits</h1>
-            <button 
-              onClick={() => navigate('/scan?mode=camera')} 
-              className="w-full flex flex-col items-center justify-center bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-3xl h-64 shadow-2xl active:scale-95 transition-transform"
-            >
-              <Camera size={80} strokeWidth={1.5} />
-              <span className="text-2xl font-bold mt-4">Scanner</span>
-              <span className="text-sm opacity-90 mt-2">Analysez instantanément</span>
-            </button>
 
-            {/* SearchBar avec autocomplétion pour Mobile */}
+            <Link
+              to="/scan"
+              className="block w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all"
+            >
+              <div className="flex flex-col items-center justify-center text-white space-y-3">
+                <Camera className="w-16 h-16 stroke-[2]" />
+                <div className="text-xl font-bold">Scanner</div>
+                <div className="text-sm opacity-90">Analysez instantanement</div>
+              </div>
+            </Link>
+
             <details className="bg-white p-4 rounded-xl shadow-md">
               <summary className="cursor-pointer font-medium text-gray-700 flex items-center justify-between">
                 <span>Ou rechercher par nom</span>
@@ -204,7 +149,7 @@ return (
               <div className="mt-4">
                 <SearchBar 
                   onSearch={handleSearch}
-                  placeholder="Nutella, L'Oréal..."
+                  placeholder="Rechercher un produit..."
                   showSuggestions={true}
                   autoFocus={false}
                 />
@@ -238,25 +183,24 @@ return (
                 <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-sm font-medium">IA Scientifique Multi-Categories</span>
-                  <span className="text-xs bg-green-800 text-white px-2 py-0.5 rounded-full">Nouveau</span>
                 </div>
                 
                 <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-                  L'assistant IA pour une{' '}
+                  Consommation{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
-                    consommation consciente
+                    consciente
                   </span>
                 </h1>
                 
-                <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                  Analysez instantanement vos produits alimentaires, cosmetiques et detergents grace a notre IA basee sur INSERM, ANSES et EFSA
+                <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                  Analysez vos produits alimentaires, cosmetiques et detergents avec notre IA scientifique. 
+                  Scores detailles, recommendations personnalisees et alternatives eco-responsables.
                 </p>
 
-                {/* SearchBar avec autocomplétion pour Desktop */}
                 <div className="mb-8">
                   <SearchBar 
                     onSearch={handleSearch}
-                    placeholder="Recherchez parmi 2M+ produits (Nutella, L'Oréal, Ariel...)"
+                    placeholder="Rechercher parmi 2M+ produits..."
                     showSuggestions={true}
                     autoFocus={false}
                     className="max-w-3xl mx-auto"
@@ -314,14 +258,17 @@ return (
                 <p className="text-lg text-gray-600">Analyse complete pour tous vos produits du quotidien</p>
               </div>
               
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {categories.map((category, index) => (
                   <motion.div 
                     key={category.name} 
                     initial={{ opacity: 0, scale: 0.9 }} 
                     animate={{ opacity: 1, scale: 1 }} 
                     transition={{ delay: index * 0.1 }} 
-                    onClick={() => navigate(`/search?category=${category.name}`)} 
+                    onClick={() => {
+                      setCategory(category.id);
+                      navigate('/search');
+                    }}
                     className="group cursor-pointer"
                   >
                     <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
@@ -351,58 +298,55 @@ return (
             </div>
           </section>
 
-          <section className="py-20 bg-gray-50">
+          <section className="py-20 bg-gradient-to-b from-white to-gray-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
-                <p className="text-lg text-gray-600">La technologie au service de votre Santé</p>
+                <p className="text-lg text-gray-600">Une plateforme complete pour une consommation responsable</p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-3 gap-8">
                 {features.map((feature, index) => (
                   <motion.div 
-                    key={index} 
+                    key={feature.title} 
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: 0 }} 
                     transition={{ delay: index * 0.1 }} 
-                    className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"
+                    className="bg-white rounded-2xl p-6 shadow-lg"
                   >
-                    <div className={`inline-flex p-4 rounded-xl ${feature.color} mb-6`}>
+                    <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center mb-4`}>
                       <feature.icon className="w-6 h-6" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <button className="text-primary font-medium inline-flex items-center hover:text-primary transition-colors">
-                      En savoir plus
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </button>
+                    <p className="text-gray-600">{feature.description}</p>
                   </motion.div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section className="py-20">
+          <section className="py-20 bg-white">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
+                <p className="text-lg text-gray-600">Rejoignez les 500k+ utilisateurs satisfaits</p>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-3 gap-8">
                 {testimonials.map((testimonial, index) => (
                   <motion.div 
-                    key={index} 
-                    initial={{ opacity: 0, scale: 0.9 }} 
-                    animate={{ opacity: 1, scale: 1 }} 
+                    key={testimonial.name} 
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
                     transition={{ delay: index * 0.1 }} 
-                    className="bg-white rounded-2xl p-8 shadow-lg"
+                    className="bg-gray-50 rounded-2xl p-6"
                   >
-                    <div className="flex gap-1 mb-4">
+                    <div className="flex items-center mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
+                    <p className="text-gray-600 mb-4">"{testimonial.content}"</p>
                     <div>
                       <p className="font-semibold text-gray-900">{testimonial.name}</p>
                       <p className="text-sm text-gray-500">{testimonial.role}</p>
@@ -412,104 +356,29 @@ return (
               </div>
             </div>
           </section>
-      {/* Section Premium - Plans Repas IA */}
-      <section className="py-8 md:py-16 lg:py-24 bg-gradient-to-br from-primary-50 via-neutral-50 to-primary-100">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold mb-4 shadow-1">
-              <Sparkles className="w-4 h-4" />
-              Nouveau - Premium
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold text-neutral-900 mb-4 tracking-tight">
-              Votre nutritionniste IA personnelle
-            </h2>
-            <p className="text-base md:text-lg lg:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-              Generez des plans repas hebdomadaires adaptes a votre budget, regime et allergenes
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
-            <div className="bg-neutral-0 rounded-lg p-6 shadow-2 border border-neutral-300 hover:shadow-3 transition-all duration-200">
-              <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/>
-                  <line x1="2" y1="10" x2="22" y2="10"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-neutral-900 mb-2">Budget maitrise</h3>
-              <p className="text-neutral-600 leading-relaxed">
-                Definissez votre budget hebdomadaire et recevez des recettes adaptees
-              </p>
-            </div>
-
-            <div className="bg-neutral-0 rounded-lg p-6 shadow-2 border border-neutral-300 hover:shadow-3 transition-all duration-200">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                <Leaf className="w-6 h-6 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-neutral-900 mb-2">Tous les regimes</h3>
-              <p className="text-neutral-600 leading-relaxed">
-                Equilibre, vegetarien, vegan, low-carb - Nous nous adaptons a vous
-              </p>
-            </div>
-
-            <div className="bg-neutral-0 rounded-lg p-6 shadow-2 border border-neutral-300 hover:shadow-3 transition-all duration-200">
-              <div className="w-12 h-12 bg-danger/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="8" x2="12" y2="12"/>
-                  <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-neutral-900 mb-2">Sans allergenes</h3>
-              <p className="text-neutral-600 leading-relaxed">
-                Vos allergenes sont automatiquement exclus des suggestions
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <Link
-              to="/meal-plan"
-              className="inline-flex items-center gap-3 h-12 px-8 rounded-lg bg-primary-500 text-[#0E1A0D] font-semibold text-base shadow-2 transition-all duration-200 hover:bg-primary-600 hover:shadow-3 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#236D3E]"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
-                <path d="M7 2v20"/>
-                <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
-              </svg>
-              <span>Creer mon plan repas</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <p className="text-sm text-neutral-600 mt-4">
-              Fonctionnalite Premium - Essai gratuit disponible
-            </p>
-          </div>
-        </div>
-      </section>
-
 
           <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
             <div className="container mx-auto px-4 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Pret a transformer votre consommation ?
+                Pret a faire des choix plus eclaires ?
               </h2>
               <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                Rejoignez 500 000+ utilisateurs qui font des choix eclaires chaque jour
+                Rejoignez la communaute ECOLOJIA et commencez a analyser vos produits des maintenant
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <button 
-                  onClick={() => navigate('/auth')} 
-                  className="bg-white text-primary px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
+                  onClick={() => navigate('/scan')} 
+                  className="inline-flex items-center gap-2 bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
                 >
-                  <CheckCircle className="w-5 h-5" />
-                  Commencer gratuitement
+                  <Camera className="w-5 h-5" />
+                  <span>Scanner maintenant</span>
                 </button>
                 <button 
-                  onClick={() => navigate('/premium')} 
-                  className="bg-green-700 text-white px-8 py-4 rounded-xl font-medium hover:bg-green-800 transition-colors inline-flex items-center gap-2"
+                  onClick={() => navigate('/register')} 
+                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition-colors"
                 >
-                  <Sparkles className="w-5 h-5" />
-                  Decouvrir Premium
+                  <span>Creer un compte gratuit</span>
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
