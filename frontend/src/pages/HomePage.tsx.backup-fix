@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertCircle,
@@ -25,13 +25,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
 import { useDeviceContext } from '../hooks/useDeviceContext';
-import { useCategory } from '../Contexts/CategoryContext';
 import SearchBar from '../components/search/SearchBar';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isMobile } = useDeviceContext();
-  const { setCategory } = useCategory();
 
   const handleSearch = (query: string) => {
     if (query.trim()) {
@@ -49,27 +47,31 @@ const HomePage: React.FC = () => {
   const categories = [
     {
       name: 'Alimentaire',
-      id: 'food' as const,
       icon: '🥫',
       count: '1.2M produits',
       color: 'from-green-400 to-green-600',
       popular: ['Nutella', 'Yaourt', 'Pain bio']
     },
     {
-      name: 'Cosmétiques',
-      id: 'cosmetics' as const,
+      name: 'Cosmetique',
       icon: '💄',
       count: '450k produits',
       color: 'from-pink-400 to-pink-600',
-      popular: ['Shampoing', 'Crème', 'Déodorant']
+      popular: ['Shampoing', 'Creme', 'Deodorant']
     },
     {
-      name: 'Détergents',
-      id: 'detergents' as const,
+      name: 'Entretien',
       icon: '🧼',
       count: '250k produits',
       color: 'from-blue-400 to-blue-600',
       popular: ['Lessive', 'Liquide vaisselle', 'Nettoyant']
+    },
+    {
+      name: 'Hygiene',
+      icon: '🪥',
+      count: '180k produits',
+      color: 'from-purple-400 to-purple-600',
+      popular: ['Dentifrice', 'Savon', 'Gel douche']
     }
   ];
 
