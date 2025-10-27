@@ -53,7 +53,7 @@ class DeepSeekService {
             'Authorization': `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json'
           },
-          timeout: 30000
+          timeout: 90000
         }
       );
 
@@ -100,7 +100,7 @@ class DeepSeekService {
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
             'Content-Type': 'application/json'
           },
-          timeout: 30000
+          timeout: 90000
         }
       );
 
