@@ -1,0 +1,19 @@
+﻿═══════════════════════════════════════
+   AUDIT AUTHENTIFICATION GOOGLE
+═══════════════════════════════════════
+
+--- BACKEND : Routes Auth ---
+✓ auth.js trouvé
+  ⚠️ Endpoint Google OAuth NON TROUVÉ
+
+--- BACKEND : Passport Config ---
+✓ passport.js trouvé
+
+--- FRONTEND : Bouton Google ---
+✓ LoginPage.tsx : Bouton Google présent
+⚠️ RegisterPage.tsx : Bouton Google ABSENT
+
+--- VARIABLES ENVIRONNEMENT ---
+✓ GOOGLE_CLIENT_ID configuré
+✓ GOOGLE_CLIENT_SECRET configuré
+

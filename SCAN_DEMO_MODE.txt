@@ -1,0 +1,37 @@
+﻿═══════════════════════════════════════
+   DÉTECTION MODE DÉMO
+═══════════════════════════════════════
+
+--- BACKEND : Mentions Demo/Test ---
+  ⚠️ middleware\authDisabled.js
+  ⚠️ models\WebhookLog.js
+  ⚠️ payments\services\lemonsqueezy.service.js
+  ⚠️ routes\ai.routes.js
+  ⚠️ routes\auth.routes.js
+  ⚠️ routes\dashboard.js
+  ⚠️ scripts\addDemoAnalyses.js
+
+--- FRONTEND : Mentions Demo/Test ---
+  ⚠️ chat\DeepSeekChat.tsx
+  ⚠️ chat\UpgradeModal.tsx
+  ⚠️ components\EmailVerificationBanner.tsx
+  ⚠️ components\MockTestPanel.tsx
+  ⚠️ components\PhotoCapture.tsx
+  ⚠️ components\PremiumUpgradeModal.tsx
+  ⚠️ components\SimilarProductsCarousel.tsx
+  ⚠️ components\analysis\NovaAlert.tsx
+  ⚠️ components\analysis\QuickStatsWidget.tsx
+  ⚠️ components\scanner\__tests__\BarcodeScanner.spec.tsx
+  ⚠️ components\upgrade\SmartUpgradeModal.tsx
+  ⚠️ pages\AboutPage.tsx
+  ⚠️ pages\DiagnosticPage.tsx
+  ⚠️ pages\LoginPage.tsx
+  ⚠️ pages\TestPage.tsx
+  ⚠️ pages-backup-20251026-160107\AboutPage.tsx
+  ⚠️ pages-backup-20251026-160107\DiagnosticPage.tsx
+  ⚠️ pages-backup-20251026-160107\LoginPage.tsx
+  ⚠️ pages-backup-20251026-160107\Results.tsx
+  ⚠️ pages-backup-20251026-160107\TestPage.tsx
+
+--- USER MODEL : Flag Premium/Demo ---
+

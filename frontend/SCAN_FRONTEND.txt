@@ -1,0 +1,189 @@
+﻿═══════════════════════════════════════
+   SCAN FRONTEND ECOLOJIA V3
+═══════════════════════════════════════
+
+--- PAGES (src/pages/) ---
+✓ AboutPage.tsx
+✓ AiPreferencesPage.tsx
+✓ AssistantPage.tsx
+✓ AuthCallbackPage.tsx
+✓ CategoryPage.tsx
+✓ ChatPage.tsx
+✓ ComparePage.tsx
+✓ DashboardPage.tsx
+✓ DiagnosticPage.tsx
+✓ EmailVerificationPage.tsx
+✓ FavoritesPage.tsx
+✓ HistoryPage.tsx
+✓ HomePage.tsx
+✓ LegalPage.tsx
+✓ LoginPage.tsx
+✓ MealPlanPage.tsx
+✓ MultiCategoriesPage.tsx
+✓ MultiScanPage.tsx
+✓ OCRWizardPage.tsx
+✓ OnboardingPage.tsx
+✓ PremiumPage.tsx
+✓ PricingPage.tsx
+✓ PrivacyPage.tsx
+✓ ProductDetailPage.tsx
+✓ ProductNotFoundPage.tsx
+✓ ProductPage.tsx
+✓ ProfilePage.tsx
+✓ RegisterPage.tsx
+✓ ResultsPage.tsx
+✓ ScanPageIntegrated.tsx
+✓ SearchPage.tsx
+✓ SettingsPage.tsx
+✓ ShoppingListPage.tsx
+✓ TermsPage.tsx
+✓ TestPage.tsx
+✓ UniversalSearchPage.tsx
+
+--- COMPONENTS (src/components/) ---
+
+  📁 Admin:
+    ✓ ImportProgress.tsx
+    ✓ LogViewer.tsx
+    ✓ ProductTable.tsx
+    ✓ StatsCard.tsx
+
+  📁 ai:
+    ✓ AIEngagementWidget.tsx
+
+  📁 analysis:
+    ✓ AIChat.tsx
+    ✓ AlternativesList.tsx
+    ✓ AlternativesSuggestions.tsx
+    ✓ CosmeticAnalysisDisplay.tsx
+    ✓ NovaAlert.tsx
+    ✓ ProgressiveAnalysis.tsx
+    ✓ QuickStatsWidget.tsx
+    ✓ RiskCard.tsx
+    ✓ ScientificScore.tsx
+    ✓ ScoreDisplay.tsx
+    ✓ ScoreGauge.tsx
+    ✓ ScoreGaugeEnhanced.tsx
+    ✓ UnifiedAnalysisResult.tsx
+
+  📁 chat:
+    ✓ ChatBubble.tsx
+    ✓ ChatWidget.tsx
+
+  📁 common:
+    ✓ Badge.tsx
+    ✓ Button.tsx
+    ✓ LoadingSpinner.tsx
+
+  📁 dashboard:
+    ✓ CommunityComparison.tsx
+    ✓ DailyAnalysesChart.tsx
+    ✓ RecommendationsSection.tsx
+    ✓ StatsCard.tsx
+    ✓ TrendSparkline.tsx
+    ✓ WeeklySummary.tsx
+
+  📁 gdpr:
+    ✓ ConsentManager.tsx
+
+  📁 layout:
+    ✓ Layout.tsx
+    ✓ MobileBottomNav.tsx
+    ✓ Sidebar.tsx
+
+  📁 legal:
+    ✓ DisclaimerModal.tsx
+
+  📁 mealplan:
+    ✓ MealPlanWizard.tsx
+    ✓ Step1BudgetPersonnes.tsx
+    ✓ Step2RegimeCuisine.tsx
+    ✓ Step3Allergenes.tsx
+
+  📁 payments:
+    ✓ CheckoutButton.tsx
+
+  📁 premium:
+    ✓ PremiumModal.tsx
+
+  📁 product:
+    ✓ AllergensSection.tsx
+    ✓ LabelsSection.tsx
+    ✓ NutritionBar.tsx
+    ✓ ProductActions.tsx
+    ✓ ProductAlternatives.tsx
+    ✓ ProductChatActions.tsx
+    ✓ ProductHeader.tsx
+    ✓ ProductIngredients.tsx
+    ✓ ProductIngredientsSection.tsx
+    ✓ ProductNutrition.tsx
+    ✓ ProductScoresCard.tsx
+    ✓ ScoreBreakdown.tsx
+
+  📁 profile:
+    ✓ PreferencesTab.tsx
+
+  📁 quota:
+    ✓ QuotaAlert.tsx
+    ✓ QuotaBanner.tsx
+    ✓ QuotaBar.tsx
+
+  📁 scanner:
+    ✓ BarcodeScanner.tsx
+    ✓ BarcodeScannerEnhanced.tsx
+    ✓ CategoryAutoDetector.tsx
+    ✓ EnhancedBarcodeScanner.tsx
+    ✓ ManualInput.tsx
+    ✓ ManualSearch.tsx
+    ✓ OCRGuide.tsx
+    ✓ PhotoCapture.tsx
+    ✓ UnknownProductModal.tsx
+
+  📁 search:
+    ✓ FiltersPanel.tsx
+    ✓ SearchBar.tsx
+    ✓ SearchExperience.tsx
+
+  📁 ui:
+    ✓ LoadingStates.tsx
+    ✓ ScoreBar.tsx
+
+  📁 upgrade:
+    ✓ SmartUpgradeModal.tsx
+
+--- HOOKS (src/hooks/) ---
+✓ index.ts
+✓ use-debounce.ts
+✓ use-toast.ts
+✓ useAdmin.ts
+✓ useAIChat.ts
+✓ useAnalysis.ts
+✓ useAutocomplete.ts
+✓ useCamera.ts
+✓ useChat.ts
+✓ useDebounce.ts
+✓ useDeviceContext.ts
+✓ useDeviceContext.tsx
+✓ useEmailValidation.ts
+✓ useFavorites.ts
+✓ useHistory.ts
+✓ useIngredientsEnrichment.ts
+✓ useIntersectionObserver.ts
+✓ useNotifications.ts
+✓ useNovaApi.ts
+✓ useOfflineStatus.ts
+✓ useProductAnalysis.ts
+✓ useProductCache.ts
+✓ usePWA.ts
+✓ useQuerySync.ts
+✓ useQuota.ts
+✓ useScanner.ts
+✓ useSEO.ts
+✓ useSimilarProducts.ts
+✓ useUniversalSearch.ts
+✓ useUserAnalytics.ts
+
+--- CONTEXTS (src/Contexts/) ---
+✓ AuthContext.tsx
+✓ CategoryContext.tsx
+

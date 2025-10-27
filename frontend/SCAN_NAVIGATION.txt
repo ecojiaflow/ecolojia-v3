@@ -1,0 +1,30 @@
+﻿═══════════════════════════════════════
+   ANALYSE NAVIGATION ECOLOJIA V3
+═══════════════════════════════════════
+
+--- ROUTES DÉCLARÉES (App.tsx) ---
+  //auth/callback → AuthCallbackPage /
+  // → Layout /
+  /search → SearchPage /
+  /results → ResultsPage /
+  /product/:id → ProductPage /
+  /scan → BarcodeScanPage /
+  /ocr → Navigate to="/scan" replace /
+  /ocr-wizard → OCRWizardPage /
+  /favorites → FavoritesPage /
+  /multi-scan → MultiScanPage /
+  /premium → PremiumPage /
+  /meal-plan → MealPlanPage /
+  /diagnostic → DiagnosticPage /
+  /assistant → AssistantPage /
+  /shopping-list → ShoppingListPage /
+  /results → ResultsPage /
+  /dashboard → DashboardPage /
+  /chat → ChatPage /
+  /profile → ProfilePage /
+  /history → HistoryPage /
+  /onboarding → OnboardingPage /
+  /* → Navigate to="/" replace /
+
+--- BOTTOM NAVIGATION (Mobile) ---
+

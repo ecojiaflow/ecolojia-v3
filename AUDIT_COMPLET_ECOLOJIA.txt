@@ -1,0 +1,481 @@
+﻿╔═══════════════════════════════════════════════════════════════╗
+║                 AUDIT COMPLET ECOLOJIA V3                     ║
+║                   26/10/2025 19:57                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════
+   SCAN BACKEND ECOLOJIA V3
+═══════════════════════════════════════
+
+--- ROUTES (src/routes/) ---
+✓ ai.routes.js
+✓ algolia-unified.js
+✓ analysis-simple.js
+✓ analysis.routes.js
+✓ analyze.routes.js
+✓ auth.google.js
+✓ auth.js
+✓ auth.routes.js
+✓ auth.simple.js
+✓ chat.routes.js
+✓ cosmetics.routes.js
+✓ dashboard.js
+✓ debug.routes.js
+✓ detergents.routes.js
+✓ enrich.routes.js
+✓ export.js
+✓ favorites.js
+✓ favorites.routes.js
+✓ gdpr.routes.js
+✓ history.js
+✓ journey.routes.js
+✓ mealPlan.routes.js
+✓ ocr-analyze.routes.js
+✓ partner.routes.js
+✓ payment.routes.js
+✓ products-ocr.routes.js
+✓ products-search.js
+✓ products.js
+✓ provisional.routes.js
+✓ proxy.js
+✓ quota.js
+✓ scoring.routes.js
+✓ stats.routes.js
+✓ test-minimal.js
+✓ test-partner.js
+✓ user.routes.js
+✓ version.routes.js
+✓ vision.analyze.js
+✓ vision.ocr.public.js
+✓ vision.routes.js
+✓ vision.simple.js
+✓ webhooks.js
+
+--- SERVICES (src/services/) ---
+✓ additiveEnrichment.service.js
+✓ aiCache.service.js
+✓ aiEnrichment.service.js
+✓ aiService.js
+✓ allergenEnrichment.service.js
+✓ analyzeService.js
+✓ circuitBreaker.js
+✓ cosmeticsService.js
+✓ cronJobs.js
+✓ dataCompleteness.service.js
+✓ DataNormalizer.js
+✓ emailService.js
+✓ EnhancedOFFClient.js
+✓ gdprService.js
+✓ imageEnrichment.service.js
+✓ ingredientParser.service.js
+✓ ocr-parser.service.js
+✓ OCRProductService.js
+✓ offClient.enhanced.js
+✓ offClient.js
+✓ offClient.UTF16_BACKUP.js
+✓ openfoodfacts.service.js
+✓ productAnalysisService.js
+✓ ProductOrchestrator.js
+✓ productPrompt.service.js
+✓ quotaService.js
+✓ scoring.service.OLD_20251013.js
+✓ scoringEngine.AVANT_NOV.js
+✓ scoringEngine.AVANT_NOVA_FIX_20251007_232733.js
+✓ scoringEngine.js
+✓ ScoringEngineV3.js
+✓ scoringUnified.js
+✓ visionRuntime.js
+✓ webhookService.js
+✓ ai\alternativesEngine.js
+✓ ai\conversationalAI.js
+✓ ai\deepSeekService.js
+✓ ai\eco-score.service.js
+✓ ai\insightsGenerator.js
+✓ ai\mealPlanGenerator.service.js
+✓ ai\mealPlanValidator.service.js
+✓ ai\NutritionistChatService.js
+✓ ai\productTypeDetector.js
+✓ algolia\algoliaService.js
+✓ algolia\algoliaSync.js
+✓ analysis\analysisService.js
+✓ analysis\CosmeticAnalysisService.js
+✓ analysis\cosmetics.js
+✓ analysis\DetergentAnalysisService.js
+✓ analysis\detergents.js
+✓ analysis\food.js
+✓ analysis\FoodAnalysisService.js
+✓ analysis\index.js
+✓ analysis\novaClassifier.js
+✓ analysis\nutriscoreCalculator.js
+✓ analysis\universalAnalyzer.js
+✓ auth\authService.js
+✓ auth\tokenService.js
+✓ external\openBeautyFactsService.js
+✓ external\openFoodFactsService.js
+✓ gdpr\DataExportService.js
+✓ ocr\visionOCR.js
+✓ payment\LemonSqueezyService.js
+✓ queue\QueueService.js
+✓ upload\CloudinaryService.js
+✓ vision\ProductOCRService.js
+✓ vision\VisionService.js
+
+--- MODELS (src/models/) ---
+✓ AffiliateClick.js
+✓ Analysis.js
+✓ ChatHistory.js
+✓ Consent.js
+✓ ContributionRequest.js
+✓ Favorite.js
+✓ GDPRLog.js
+✓ Payment.js
+✓ PaymentLog.js
+✓ Product.js
+✓ TemporaryProduct.js
+✓ User.js
+✓ user.model.js
+✓ UserJourney.js
+✓ VisionAnalysis.js
+✓ WebhookLog.js
+
+--- MIDDLEWARE (src/middleware/) ---
+✓ aiCache.middleware.js
+✓ auth.js
+✓ authDisabled.js
+✓ authenticateToken.js
+✓ authMiddleware.js
+✓ authSimple.js
+✓ chatSafety.js
+✓ enrichProduct.js
+✓ errorHandler.js
+✓ index.js
+✓ quotaMiddleware.js
+✓ rateLimiter.js
+✓ validation.js
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   SCAN FRONTEND ECOLOJIA V3
+═══════════════════════════════════════
+
+--- PAGES (src/pages/) ---
+✓ AboutPage.tsx
+✓ AiPreferencesPage.tsx
+✓ AssistantPage.tsx
+✓ AuthCallbackPage.tsx
+✓ CategoryPage.tsx
+✓ ChatPage.tsx
+✓ ComparePage.tsx
+✓ DashboardPage.tsx
+✓ DiagnosticPage.tsx
+✓ EmailVerificationPage.tsx
+✓ FavoritesPage.tsx
+✓ HistoryPage.tsx
+✓ HomePage.tsx
+✓ LegalPage.tsx
+✓ LoginPage.tsx
+✓ MealPlanPage.tsx
+✓ MultiCategoriesPage.tsx
+✓ MultiScanPage.tsx
+✓ OCRWizardPage.tsx
+✓ OnboardingPage.tsx
+✓ PremiumPage.tsx
+✓ PricingPage.tsx
+✓ PrivacyPage.tsx
+✓ ProductDetailPage.tsx
+✓ ProductNotFoundPage.tsx
+✓ ProductPage.tsx
+✓ ProfilePage.tsx
+✓ RegisterPage.tsx
+✓ ResultsPage.tsx
+✓ ScanPageIntegrated.tsx
+✓ SearchPage.tsx
+✓ SettingsPage.tsx
+✓ ShoppingListPage.tsx
+✓ TermsPage.tsx
+✓ TestPage.tsx
+✓ UniversalSearchPage.tsx
+
+--- COMPONENTS (src/components/) ---
+
+  📁 Admin:
+    ✓ ImportProgress.tsx
+    ✓ LogViewer.tsx
+    ✓ ProductTable.tsx
+    ✓ StatsCard.tsx
+
+  📁 ai:
+    ✓ AIEngagementWidget.tsx
+
+  📁 analysis:
+    ✓ AIChat.tsx
+    ✓ AlternativesList.tsx
+    ✓ AlternativesSuggestions.tsx
+    ✓ CosmeticAnalysisDisplay.tsx
+    ✓ NovaAlert.tsx
+    ✓ ProgressiveAnalysis.tsx
+    ✓ QuickStatsWidget.tsx
+    ✓ RiskCard.tsx
+    ✓ ScientificScore.tsx
+    ✓ ScoreDisplay.tsx
+    ✓ ScoreGauge.tsx
+    ✓ ScoreGaugeEnhanced.tsx
+    ✓ UnifiedAnalysisResult.tsx
+
+  📁 chat:
+    ✓ ChatBubble.tsx
+    ✓ ChatWidget.tsx
+
+  📁 common:
+    ✓ Badge.tsx
+    ✓ Button.tsx
+    ✓ LoadingSpinner.tsx
+
+  📁 dashboard:
+    ✓ CommunityComparison.tsx
+    ✓ DailyAnalysesChart.tsx
+    ✓ RecommendationsSection.tsx
+    ✓ StatsCard.tsx
+    ✓ TrendSparkline.tsx
+    ✓ WeeklySummary.tsx
+
+  📁 gdpr:
+    ✓ ConsentManager.tsx
+
+  📁 layout:
+    ✓ Layout.tsx
+    ✓ MobileBottomNav.tsx
+    ✓ Sidebar.tsx
+
+  📁 legal:
+    ✓ DisclaimerModal.tsx
+
+  📁 mealplan:
+    ✓ MealPlanWizard.tsx
+    ✓ Step1BudgetPersonnes.tsx
+    ✓ Step2RegimeCuisine.tsx
+    ✓ Step3Allergenes.tsx
+
+  📁 payments:
+    ✓ CheckoutButton.tsx
+
+  📁 premium:
+    ✓ PremiumModal.tsx
+
+  📁 product:
+    ✓ AllergensSection.tsx
+    ✓ LabelsSection.tsx
+    ✓ NutritionBar.tsx
+    ✓ ProductActions.tsx
+    ✓ ProductAlternatives.tsx
+    ✓ ProductChatActions.tsx
+    ✓ ProductHeader.tsx
+    ✓ ProductIngredients.tsx
+    ✓ ProductIngredientsSection.tsx
+    ✓ ProductNutrition.tsx
+    ✓ ProductScoresCard.tsx
+    ✓ ScoreBreakdown.tsx
+
+  📁 profile:
+    ✓ PreferencesTab.tsx
+
+  📁 quota:
+    ✓ QuotaAlert.tsx
+    ✓ QuotaBanner.tsx
+    ✓ QuotaBar.tsx
+
+  📁 scanner:
+    ✓ BarcodeScanner.tsx
+    ✓ BarcodeScannerEnhanced.tsx
+    ✓ CategoryAutoDetector.tsx
+    ✓ EnhancedBarcodeScanner.tsx
+    ✓ ManualInput.tsx
+    ✓ ManualSearch.tsx
+    ✓ OCRGuide.tsx
+    ✓ PhotoCapture.tsx
+    ✓ UnknownProductModal.tsx
+
+  📁 search:
+    ✓ FiltersPanel.tsx
+    ✓ SearchBar.tsx
+    ✓ SearchExperience.tsx
+
+  📁 ui:
+    ✓ LoadingStates.tsx
+    ✓ ScoreBar.tsx
+
+  📁 upgrade:
+    ✓ SmartUpgradeModal.tsx
+
+--- HOOKS (src/hooks/) ---
+✓ index.ts
+✓ use-debounce.ts
+✓ use-toast.ts
+✓ useAdmin.ts
+✓ useAIChat.ts
+✓ useAnalysis.ts
+✓ useAutocomplete.ts
+✓ useCamera.ts
+✓ useChat.ts
+✓ useDebounce.ts
+✓ useDeviceContext.ts
+✓ useDeviceContext.tsx
+✓ useEmailValidation.ts
+✓ useFavorites.ts
+✓ useHistory.ts
+✓ useIngredientsEnrichment.ts
+✓ useIntersectionObserver.ts
+✓ useNotifications.ts
+✓ useNovaApi.ts
+✓ useOfflineStatus.ts
+✓ useProductAnalysis.ts
+✓ useProductCache.ts
+✓ usePWA.ts
+✓ useQuerySync.ts
+✓ useQuota.ts
+✓ useScanner.ts
+✓ useSEO.ts
+✓ useSimilarProducts.ts
+✓ useUniversalSearch.ts
+✓ useUserAnalytics.ts
+
+--- CONTEXTS (src/Contexts/) ---
+✓ AuthContext.tsx
+✓ CategoryContext.tsx
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   ANALYSE NAVIGATION ECOLOJIA V3
+═══════════════════════════════════════
+
+--- ROUTES DÉCLARÉES (App.tsx) ---
+  //auth/callback → AuthCallbackPage /
+  // → Layout /
+  /search → SearchPage /
+  /results → ResultsPage /
+  /product/:id → ProductPage /
+  /scan → BarcodeScanPage /
+  /ocr → Navigate to="/scan" replace /
+  /ocr-wizard → OCRWizardPage /
+  /favorites → FavoritesPage /
+  /multi-scan → MultiScanPage /
+  /premium → PremiumPage /
+  /meal-plan → MealPlanPage /
+  /diagnostic → DiagnosticPage /
+  /assistant → AssistantPage /
+  /shopping-list → ShoppingListPage /
+  /results → ResultsPage /
+  /dashboard → DashboardPage /
+  /chat → ChatPage /
+  /profile → ProfilePage /
+  /history → HistoryPage /
+  /onboarding → OnboardingPage /
+  /* → Navigate to="/" replace /
+
+--- BOTTOM NAVIGATION (Mobile) ---
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   AUDIT MODULE PAIEMENT PREMIUM
+═══════════════════════════════════════
+
+--- BACKEND : Routes Paiement ---
+⚠️ payments.js NON TROUVÉ
+
+--- BACKEND : Service LemonSqueezy ---
+⚠️ lemonsqueezy.service.js NON TROUVÉ
+
+--- FRONTEND : Pages Premium ---
+✓ PremiumPage.tsx trouvé
+
+--- VARIABLES ENVIRONNEMENT ---
+✓ LEMONSQUEEZY_API_KEY configuré
+✓ LEMONSQUEEZY_STORE_ID configuré
+⚠️ LEMONSQUEEZY_PRODUCT_ID MANQUANT
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   AUDIT AUTHENTIFICATION GOOGLE
+═══════════════════════════════════════
+
+--- BACKEND : Routes Auth ---
+✓ auth.js trouvé
+  ⚠️ Endpoint Google OAuth NON TROUVÉ
+
+--- BACKEND : Passport Config ---
+✓ passport.js trouvé
+
+--- FRONTEND : Bouton Google ---
+✓ LoginPage.tsx : Bouton Google présent
+⚠️ RegisterPage.tsx : Bouton Google ABSENT
+
+--- VARIABLES ENVIRONNEMENT ---
+✓ GOOGLE_CLIENT_ID configuré
+✓ GOOGLE_CLIENT_SECRET configuré
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   DÉTECTION MODE DÉMO
+═══════════════════════════════════════
+
+--- BACKEND : Mentions Demo/Test ---
+  ⚠️ middleware\authDisabled.js
+  ⚠️ models\WebhookLog.js
+  ⚠️ payments\services\lemonsqueezy.service.js
+  ⚠️ routes\ai.routes.js
+  ⚠️ routes\auth.routes.js
+  ⚠️ routes\dashboard.js
+  ⚠️ scripts\addDemoAnalyses.js
+
+--- FRONTEND : Mentions Demo/Test ---
+  ⚠️ chat\DeepSeekChat.tsx
+  ⚠️ chat\UpgradeModal.tsx
+  ⚠️ components\EmailVerificationBanner.tsx
+  ⚠️ components\MockTestPanel.tsx
+  ⚠️ components\PhotoCapture.tsx
+  ⚠️ components\PremiumUpgradeModal.tsx
+  ⚠️ components\SimilarProductsCarousel.tsx
+  ⚠️ components\analysis\NovaAlert.tsx
+  ⚠️ components\analysis\QuickStatsWidget.tsx
+  ⚠️ components\scanner\__tests__\BarcodeScanner.spec.tsx
+  ⚠️ components\upgrade\SmartUpgradeModal.tsx
+  ⚠️ pages\AboutPage.tsx
+  ⚠️ pages\DiagnosticPage.tsx
+  ⚠️ pages\LoginPage.tsx
+  ⚠️ pages\TestPage.tsx
+  ⚠️ pages-backup-20251026-160107\AboutPage.tsx
+  ⚠️ pages-backup-20251026-160107\DiagnosticPage.tsx
+  ⚠️ pages-backup-20251026-160107\LoginPage.tsx
+  ⚠️ pages-backup-20251026-160107\Results.tsx
+  ⚠️ pages-backup-20251026-160107\TestPage.tsx
+
+--- USER MODEL : Flag Premium/Demo ---
+
+
+
+────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════
+   STATISTIQUES GLOBALES
+═══════════════════════════════════════
+Backend Routes:     42 fichiers
+Backend Services:   67 fichiers
+Backend Models:     16 fichiers
+Frontend Pages:     36 fichiers
+Frontend Components: 125 fichiers
+
