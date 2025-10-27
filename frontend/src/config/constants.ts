@@ -1,5 +1,5 @@
-// PATH: frontend/src/config/constants.ts
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
+﻿// PATH: frontend/src/config/constants.ts
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}';
 
 export const ROUTES = {
   AUTH: {

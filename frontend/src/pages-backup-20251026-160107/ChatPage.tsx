@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import chatService from '../services/chatService';
 import { MessageCircle, Send, Loader, AlertTriangle } from 'lucide-react';
@@ -21,7 +21,7 @@ const ChatPage = () => {
   
   useEffect(() => {
     if (productBarcode) {
-      fetch(`${import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com'}/api/products/${productBarcode}`)
+      fetch(`${import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}'}/api/products/${productBarcode}`)
         .then(res => res.json())
         .then(data => setProduct(data.product))
         .catch(err => console.error('Erreur chargement produit:', err));

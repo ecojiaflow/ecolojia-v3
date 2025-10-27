@@ -1,4 +1,4 @@
-// src/services/aiAnalysisService.ts
+﻿// src/services/aiAnalysisService.ts
 // Service FRONTEND pour gerer l'historique et les analyses cote client
 
 interface AnalysisHistory {
@@ -18,7 +18,7 @@ interface AnalysisHistory {
 
 class AIAnalysisService {
   private readonly HISTORY_KEY = 'ecolojia_analysis_history';
-  private readonly API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';
+  private readonly API_URL = import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}';
 
   // Methodes localStorage (pour mode offline/demo)
   async getHistory(limit: number = 50): Promise<AnalysisHistory[]> {

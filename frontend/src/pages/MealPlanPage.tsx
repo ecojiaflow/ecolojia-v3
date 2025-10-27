@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Download, ArrowLeft } from 'lucide-react';
 import { MealPlanWizard } from '../components/mealplan/MealPlanWizard';
@@ -42,7 +42,7 @@ export const MealPlanPage: React.FC = () => {
       console.log('[MealPlan] Debut verification Premium...');
       
       try {
-        const token = localStorage.getItem('ecolojia_token');
+        const token = localStorage.getItem('token');
         console.log('[MealPlan] Token:', token ? 'Present' : 'Absent');
         
         if (!token) {
@@ -52,15 +52,15 @@ export const MealPlanPage: React.FC = () => {
           return;
         }
 
-        console.log('[MealPlan] Appel API:', `${API_URL}/api/users/profile`);
+        console.log('[MealPlan] Appel API:', `${API_URL}/api/auth/profile`);
         
-        const response = await axios.get(`${API_URL}/api/users/profile`, {
+        const response = await axios.get(`${API_URL}/api/auth/profile`, {
           headers: { Authorization: `Bearer ${token}` },
           timeout: 5000 // Timeout 5 secondes
         });
 
         console.log('[MealPlan] Reponse API:', response.data);
-        const premium = response.data.user?.isPremium || false;
+        const premium = response.data.user?.plan === 'premium';
         console.log('[MealPlan] isPremium =', premium);
         setIsPremium(premium);
         
@@ -125,7 +125,7 @@ export const MealPlanPage: React.FC = () => {
     setError(null);
 
     try {
-      const token = localStorage.getItem('ecolojia_token');
+      const token = localStorage.getItem('token');
       
       const response = await axios.post(
         `${API_URL}/api/meal-plan/generate`,

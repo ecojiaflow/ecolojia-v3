@@ -1,7 +1,7 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}';
 
 export const api = axios.create({ baseURL: API_URL, headers: { 'Content-Type': 'application/json' }, timeout: 12000 });
 

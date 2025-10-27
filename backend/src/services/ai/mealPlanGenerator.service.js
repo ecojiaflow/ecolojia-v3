@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MEAL PLAN GENERATOR SERVICE
  * Generation de plans repas hebdomadaires via DeepSeek AI + validation qualite
  * Integration: deepSeekService + mealPlanValidator
@@ -39,10 +39,7 @@ class MealPlanGenerator {
           people
         });
 
-        const response = await deepSeekService.getChatCompletion(
-          prompt,
-          { temperature: 0.7, max_tokens: 3000 }
-        );
+        const response = await deepSeekService.chat(prompt);
 
         const plan = this.parsePlanFromResponse(response);
         const validationResult = validator.validate(plan, userPreferences);
