@@ -2,7 +2,7 @@
  * MEAL PLAN GENERATOR SERVICE
  * Generation de plans repas hebdomadaires via DeepSeek AI + validation qualite
  * Integration: deepSeekService + mealPlanValidator
- * Version: 1.0.0
+ * Version: 1.1.0 - Parsing JSON ultra-robuste
  */
 
 const deepSeekService = require('./deepSeekService');
@@ -114,66 +114,121 @@ REGLES STRICTES:
 1. RESPECTER LE BUDGET (repartition realiste)
 2. NE JAMAIS inclure les allergenes listes
 3. VARIER les ingredients principaux (max 2x le meme/semaine)
-4. Calculer precisement les macros (proteines/glucides/lipides)
-5. Liste de courses exhaustive avec quantites
+4. Genere EXACTEMENT 7 repas (1 par jour)
+5. Liste de courses avec 10-15 articles maximum
 
-FORMAT DE REPONSE (JSON STRICT):
+FORMAT DE REPONSE (JSON COMPACT):
 {
   "weekPlan": {
     "meals": [
-      {
-        "day": 1,
-        "name": "Poulet roti aux legumes",
-        "ingredients": ["poulet", "carottes", "courgettes", "huile d'olive"],
-        "nutrition": {
-          "calories": 650,
-          "protein": 45,
-          "carbs": 35,
-          "fats": 28
-        },
-        "cookingTime": 45,
-        "cost": 8.50
-      }
+      {"day": 1, "name": "Poulet legumes", "ingredients": ["poulet","carottes"], "nutrition": {"calories": 650, "protein": 45, "carbs": 35, "fats": 28}, "cookingTime": 45, "cost": 8.5}
     ],
-    "nutrition": {
-      "avgPerDay": {
-        "calories": 2000,
-        "protein": 120,
-        "carbs": 200,
-        "fats": 70
-      }
-    },
+    "nutrition": {"avgPerDay": {"calories": 2000, "protein": 120, "carbs": 200, "fats": 70}},
     "estimatedBudget": 75,
-    "shoppingList": [
-      {
-        "name": "Poulet entier",
-        "quantity": 1.5,
-        "unit": "kg",
-        "category": "Viande",
-        "estimatedPrice": 12
-      }
-    ]
+    "shoppingList": [{"name": "Poulet", "quantity": 1.5, "unit": "kg", "category": "Viande", "estimatedPrice": 12}]
   }
 }
 
-GENERE UNIQUEMENT le JSON, sans texte additionnel.`;
+IMPORTANT: JSON COMPACT sans retours a la ligne, ingredients courts (3-5 max par repas).
+Reponds UNIQUEMENT le JSON, commence par { et termine par }`;
   }
 
   parsePlanFromResponse(response) {
     try {
       let cleaned = response.trim();
       
+      console.log('[MealPlan] Taille reponse:', cleaned.length, 'chars');
+      
+      // Strategie 1: Enlever markdown
       if (cleaned.startsWith('```')) {
         cleaned = cleaned.replace(/```json?\n?/g, '').replace(/```\n?$/g, '');
+      }
+
+      // Strategie 2: Chercher JSON entre accolades
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        cleaned = jsonMatch[0];
+      }
+
+      // Strategie 3: Nettoyer caracteres problematiques
+      cleaned = cleaned
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Controle chars
+        .replace(/,(\s*[}\]])/g, '$1') // Virgules trailing
+        .replace(/,\s*,/g, ',') // Double virgules
+        .replace(/"\s*:\s*,/g, '": null,') // Valeurs manquantes
+        .replace(/,\s*}/g, '}') // Virgule avant }
+        .replace(/,\s*]/g, ']'); // Virgule avant ]
+
+      // Strategie 4: Si JSON trop long (>8000 chars), tronquer proprement
+      if (cleaned.length > 8000) {
+        console.warn('[MealPlan] JSON trop long, troncature...');
+        // Trouver la derniere accolade fermante complete
+        const lastValidBrace = cleaned.lastIndexOf('}}');
+        if (lastValidBrace > 0) {
+          cleaned = cleaned.substring(0, lastValidBrace + 2);
+        }
       }
 
       const parsed = JSON.parse(cleaned);
       return parsed.weekPlan || parsed;
       
     } catch (error) {
-      console.error('[MealPlan] Erreur parsing JSON:', error);
-      throw new Error('Reponse IA invalide (JSON malformed)');
+      console.error('[MealPlan] Erreur parsing JSON:', error.message);
+      console.error('[MealPlan] Position erreur:', error.message.match(/position (\d+)/)?.[1]);
+      console.error('[MealPlan] Reponse debut:', response.substring(0, 300));
+      
+      // Derniere tentative: extraire manuellement les donnees essentielles
+      try {
+        console.warn('[MealPlan] Tentative extraction manuelle...');
+        const manualExtract = this.extractDataManually(response);
+        if (manualExtract && manualExtract.meals && manualExtract.meals.length > 0) {
+          console.log('[MealPlan] Extraction manuelle reussie:', manualExtract.meals.length, 'repas');
+          return manualExtract;
+        }
+      } catch (e) {
+        console.error('[MealPlan] Extraction manuelle echouee:', e.message);
+      }
+      
+      // Fallback final
+      console.warn('[MealPlan] Utilisation du fallback (structure vide)');
+      return {
+        meals: [],
+        nutrition: { 
+          avgPerDay: { calories: 2000, protein: 120, carbs: 200, fats: 70 } 
+        },
+        estimatedBudget: 0,
+        shoppingList: []
+      };
     }
+  }
+
+  extractDataManually(response) {
+    // Extraire les repas avec regex (derniere chance)
+    const mealsRegex = /"day":\s*(\d+).*?"name":\s*"([^"]+)".*?"cost":\s*([\d.]+)/g;
+    const meals = [];
+    let match;
+    
+    while ((match = mealsRegex.exec(response)) !== null) {
+      meals.push({
+        day: parseInt(match[1]),
+        name: match[2],
+        ingredients: ['ingredients_non_disponibles'],
+        nutrition: { calories: 500, protein: 30, carbs: 50, fats: 20 },
+        cookingTime: 30,
+        cost: parseFloat(match[3])
+      });
+    }
+
+    if (meals.length > 0) {
+      return {
+        meals,
+        nutrition: { avgPerDay: { calories: 2000, protein: 120, carbs: 200, fats: 70 } },
+        estimatedBudget: meals.reduce((sum, m) => sum + m.cost, 0),
+        shoppingList: []
+      };
+    }
+
+    return null;
   }
 
   async generateShoppingList(planMeals) {

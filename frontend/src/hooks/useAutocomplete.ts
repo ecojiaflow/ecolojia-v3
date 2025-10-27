@@ -41,7 +41,7 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
       setError(null);
 
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
-      const response = await axios.get(`${API_URL}/api/algolia/autocomplete`, {
+      const response = await axios.get(`${API_URL}/algolia/autocomplete`, {
         params: { q: searchQuery, limit: 5 },
         signal: abortControllerRef.current.signal
       });

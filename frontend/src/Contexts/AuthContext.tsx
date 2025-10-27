@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiClient as api } from '../services/api';
 
 interface User {
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(response.data.user);
         // Stocker token
         if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('ecolojia_token', response.data.token);
           localStorage.setItem('ecolojia_user', JSON.stringify(response.data.user));
         }
       }

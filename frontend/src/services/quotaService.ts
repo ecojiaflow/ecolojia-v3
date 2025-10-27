@@ -77,7 +77,7 @@ class QuotaService {
     const token = localStorage.getItem('ecolojia_token');
     if (token) {
       try {
-        const response = await apiClient.get('/auth/profile');
+        const response = await apiClient.get('auth/profile');
         if (response.data) {
           // Extraire les quotas depuis la réponse user
           const user = response.data.user || response.data;
@@ -209,7 +209,7 @@ class QuotaService {
     const token = localStorage.getItem('ecolojia_token');
     if (token) {
       try {
-        const response = await apiClient.post('/quotas/consume', { type: 'scan' });
+        const response = await apiClient.post('quotas/consume', { type: 'scan' });
         return response.data;
       } catch (error: any) {
         // Si l'endpoint n'existe pas, continuer quand même
@@ -243,7 +243,7 @@ class QuotaService {
     const token = localStorage.getItem('ecolojia_token');
     if (token) {
       try {
-        const response = await apiClient.post('/quotas/consume', { type: 'ai_chat' });
+        const response = await apiClient.post('quotas/consume', { type: 'ai_chat' });
         return response.data;
       } catch (error: any) {
         // Si l'endpoint n'existe pas, continuer quand même
@@ -275,7 +275,7 @@ class QuotaService {
     const token = localStorage.getItem('ecolojia_token');
     if (token) {
       try {
-        await apiClient.post('/quotas/consume', { type: 'export' });
+        await apiClient.post('quotas/consume', { type: 'export' });
       } catch (error) {
         console.error('Erreur lors de la consommation du quota:', error);
       }
