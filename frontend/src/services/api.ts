@@ -2,9 +2,9 @@
 import axiosRetry from "axios-retry";
 
 // Base URL: .env > fallback prod
-const API_URL =
-  import.meta?.env?.VITE_API_URL?.toString() ||
-  import.meta.env.VITE_API_URL || "http://localhost:10000";
+const API_URL = import.meta.env.VITE_API_URL 
+  ? import.meta.env.VITE_API_URL + '/api'
+  : 'http://localhost:10000/api';
 
 export const api = axios.create({
   withCredentials: true,
