@@ -84,7 +84,7 @@ async function estimateMissingData(product, missingFields = []) {
   try {
     // Utiliser analyzeProduct() qui route automatiquement par categorie
     const response = await deepSeekService.analyzeProduct(product, category);
-    console.log("[AI] Raw response:", response.substring(0, 200) + "...");
+    console.log("[AI] Raw response:", typeof response === "string" ? response.substring(0, 200) + "..." : JSON.stringify(response).substring(0, 200) + "...");
 
     // Parser selon categorie
     const parsed = parseAIResponseByCategory(response, category, missingFields);
