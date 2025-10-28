@@ -1,90 +1,28 @@
-// backend/src/services/aiEnrichment.service.js
-/**
- * Service enrichissement IA multi-categories (Food/Cosmetics/Detergents)
- * Utilise deepSeekService.analyzeProduct() avec routing automatique
- */
-
-const deepSeekService = require('./ai/deepSeekService');
-const { calculateScores } = require('./scoringUnified');
+﻿const deepSeekService = require('./ai/deepSeekService');
+const logger = require('../utils/logger');
 
 /**
- * Enrichit un produit avec IA si confiance < 70%
- * @param {Object} product - Produit a enrichir
- * @param {Object} scores - Scores calcules
- * @returns {Promise<Object>} Scores enrichis
+ * ✅ ECOLOJIA V3 - AI Enrichment Service
+ * Enrichit les produits avec données manquantes via DeepSeek AI
  */
-async function enrichProductWithAI(product, scores) {
-  // Si confiance >= 70%, pas besoin enrichissement
-  if (scores.confidence >= 0.7) {
-    return {
-      ...scores,
-      aiEnrichmentUsed: false
-    };
-  }
 
-  // Verifier si estimations recentes existent deja
-  const existingEstimations = product.scores?.aiEstimations;
-  if (existingEstimations && isEstimationRecent(existingEstimations)) {
-    console.log('[AI] Using cached estimations for', product.barcode);
-    return {
-      ...scores,
-      aiEstimations: existingEstimations,
-      aiEnrichmentUsed: true,
-      aiEnrichmentSource: 'CACHED'
-    };
-  }
+// Listes des additifs par risque
+const ADDITIVES_LISTS = {
+  SAFE: ['E300', 'E330', 'E440', 'E500', 'E322'],
+  MODERATE: ['E250', 'E251', 'E338'],
+  DANGEROUS: ['E102', 'E110', 'E123', 'E129', 'E951']
+};
 
-  // Appeler IA pour nouvelles estimations
-  console.log('[AI] Requesting new estimations for', product.barcode, 'category:', product.category);
-
+/**
+ * Enrichir produit alimentaire avec IA
+ */
+async function enrichFoodProduct(product, missingFields = []) {
   try {
-    const estimations = await estimateMissingData(product, scores.missingData);
-
-    // Merger estimations dans le produit
-    const enrichedProduct = mergeEstimations(product, estimations);
-
-    // Recalculer scores avec donnees enrichies
-    const recalculatedScores = calculateScores(enrichedProduct);
-
-    return {
-      ...recalculatedScores,
-      aiEstimations: {
-        ...estimations,
-        estimatedAt: new Date(),
-        estimatedBy: 'deepseek-v3'
-      },
-      aiEnrichmentUsed: true,
-      aiEnrichmentSource: 'FRESH'
-    };
-  } catch (error) {
-    console.error('[AI] Enrichment failed:', error.message);
-    return {
-      ...scores,
-      aiEnrichmentUsed: false,
-      aiEnrichmentError: error.message
-    };
-  }
-}
-
-/**
- * Estime donnees manquantes via IA (multi-categories)
- * @param {Object} product - Produit
- * @param {Array} missingFields - Champs manquants
- * @returns {Promise<Object>} Estimations IA
- */
-async function estimateMissingData(product, missingFields = []) {
-  if (missingFields.length === 0) {
-    return null;
-  }
-
-  const category = product.category || 'food';
-  
-  console.log(`[AI] Estimating ${missingFields.join(', ')} for category: ${category}`);
-
-  try {
-    // Utiliser analyzeProduct() qui route automatiquement par categorie
-    const response = await deepSeekService.analyzeProduct(product, category);
-        // ? FIX: S�curiser l'affichage de la r�ponse
+    console.log(`[AI] Requesting new estimations for ${product.barcode} category: food`);
+    
+    const response = await deepSeekService.analyzeProduct(product, 'food');
+    
+    // ✅ FIX: Sécuriser l'affichage de la réponse
     const displayResponse = () => {
       if (!response) return "Response is null/undefined";
       if (typeof response === "string") return response.substring(0, 200) + "...";
@@ -97,177 +35,248 @@ async function estimateMissingData(product, missingFields = []) {
     };
     console.log("[AI] Raw response:", displayResponse());
 
-    // Parser selon categorie
-    const parsed = parseAIResponseByCategory(response, category, missingFields);
-    console.log("[AI] Parsed estimations:", parsed ? Object.keys(parsed) : "NULL");
-
-    return parsed;
+    const parsed = parseAIResponseByCategory(response, 'food', missingFields);
+    
+    return {
+      success: true,
+      estimations: parsed,
+      aiEnriched: true
+    };
   } catch (error) {
-    console.error('[AI] estimateMissingData failed:', error.message);
-    throw error;
+    console.error('[AI] enrichFoodProduct failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }
 
 /**
- * Analyse qualitative pour produits tres incomplets
- * @param {Object} product - Produit
- * @returns {Promise<Object>} Analyse qualitative
+ * Estimer valeurs nutritionnelles manquantes
  */
-async function qualitativeAnalysis(product) {
-  const category = product.category || 'food';
-  
+async function estimateMissingData(product, category = 'food', missingFields = []) {
+  try {
+    console.log(`[AI] Estimating ${missingFields.join(', ')} for category: ${category}`);
+    
+    const response = await deepSeekService.analyzeProduct(product, category);
+    
+    const parsed = parseAIResponseByCategory(response, category, missingFields);
+    
+    if (!parsed) {
+      console.log('[AI] Parsed estimations: NULL');
+      return null;
+    }
+    
+    console.log('[AI] Parsed estimations:', JSON.stringify(parsed).substring(0, 200));
+    
+    return {
+      estimations: parsed,
+      estimatedAt: new Date(),
+      estimatedBy: 'deepseek-v3',
+      confidence: 0.75
+    };
+  } catch (error) {
+    console.error('[AI] estimateMissingData failed:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Enrichir avec résumé textuel IA
+ */
+async function enrichWithAISummary(product, category = 'food') {
   try {
     const response = await deepSeekService.analyzeProduct(product, category);
-
+    
     return {
-      qualitativeAnalysis: {
+      success: true,
+      data: {
         summary: response,
-        category: category,
-        analyzedAt: new Date()
+        generatedAt: new Date()
       }
     };
   } catch (error) {
-    console.error('[AI] qualitativeAnalysis failed:', error.message);
-    throw error;
+    console.error('[AI] enrichWithAISummary failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
-
 /**
- * Verifie si estimations sont recentes (< 30 jours)
+ * Enrichir produit cosmétique
  */
-function isEstimationRecent(estimations) {
-  if (!estimations.estimatedAt && !estimations.qualitativeAnalysis?.analyzedAt) {
-    return false;
+async function enrichCosmeticsProduct(product, missingFields = []) {
+  try {
+    const response = await deepSeekService.analyzeProduct(product, 'cosmetics');
+    const parsed = parseAIResponseByCategory(response, 'cosmetics', missingFields);
+    
+    let enriched = {
+      cosmeticsData: {
+        ingredients: product.cosmeticsData?.ingredients || [],
+        allergens: product.cosmeticsData?.allergens || [],
+        endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
+        certifications: product.cosmeticsData?.certifications || []
+      }
+    };
+    
+    if (parsed) {
+      if (parsed.ingredients?.length) {
+        enriched.cosmeticsData.ingredients = parsed.ingredients;
+      }
+      if (parsed.allergens?.length) {
+        enriched.cosmeticsData.allergens = parsed.allergens;
+      }
+      if (parsed.endocrineDisruptors?.length) {
+        enriched.cosmeticsData.endocrineDisruptors = parsed.endocrineDisruptors;
+      }
+    }
+    
+    return {
+      success: true,
+      enriched,
+      aiEnriched: true
+    };
+  } catch (error) {
+    console.error('[AI] enrichCosmeticsProduct failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
   }
-
-  const estimatedAt = new Date(
-    estimations.estimatedAt || estimations.qualitativeAnalysis.analyzedAt
-  );
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-
-  return estimatedAt > thirtyDaysAgo;
 }
 
 /**
- * Merge estimations IA dans le produit
+ * Enrichir produit détergent
  */
-function mergeEstimations(product, estimations) {
-  if (!estimations) return product;
-
-  const enriched = { ...product };
-  const category = product.category || 'food';
-
-  switch(category) {
-    case 'food':
-      return mergeFoodEstimations(enriched, estimations);
-    case 'cosmetics':
-      return mergeCosmeticsEstimations(enriched, estimations);
-    case 'detergents':
-      return mergeDetergentsEstimations(enriched, estimations);
-    default:
-      return enriched;
+async function enrichDetergentsProduct(product, missingFields = []) {
+  try {
+    const response = await deepSeekService.analyzeProduct(product, 'detergents');
+    const parsed = parseAIResponseByCategory(response, 'detergents', missingFields);
+    
+    let enriched = {
+      detergentsData: {
+        composition: product.detergentsData?.composition || [],
+        surfactants: product.detergentsData?.surfactants || [],
+        ecolabels: product.detergentsData?.ecolabels || []
+      }
+    };
+    
+    if (parsed) {
+      if (parsed.composition?.length) {
+        enriched.detergentsData.composition = parsed.composition;
+      }
+      if (parsed.surfactants?.detected) {
+        enriched.detergentsData.surfactants = parsed.surfactants.detected;
+      }
+      if (parsed.ecolabels?.detected) {
+        enriched.detergentsData.ecolabels = parsed.ecolabels.detected;
+      }
+    }
+    
+    return {
+      success: true,
+      enriched,
+      aiEnriched: true
+    };
+  } catch (error) {
+    console.error('[AI] enrichDetergentsProduct failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
   }
-}
-
-function mergeFoodEstimations(product, estimations) {
-  const enriched = { ...product };
-  
-  if (estimations.nova?.value) {
-    enriched.novaGroup = estimations.nova.value;
-  }
-  
-  if (estimations.nutriScore?.value) {
-    enriched.nutriScore = estimations.nutriScore.value;
-  }
-  
-  if (estimations.ecoScore?.value) {
-    enriched.ecoScore = estimations.ecoScore.value;
-  }
-
-  // Nutriments
-  if (!enriched.nutriments) enriched.nutriments = {};
-  
-  if (estimations.sugars?.estimated) {
-    enriched.nutriments.sugars_100g = estimations.sugars.estimated;
-  }
-  
-  if (estimations.saturatedFat?.estimated) {
-    enriched.nutriments['saturated-fat_100g'] = estimations.saturatedFat.estimated;
-  }
-  
-  if (estimations.salt?.estimated) {
-    enriched.nutriments.salt_100g = estimations.salt.estimated;
-  }
-
-  return enriched;
-}
-
-function mergeCosmeticsEstimations(product, estimations) {
-  const enriched = { ...product };
-  
-  if (!enriched.cosmeticsData) enriched.cosmeticsData = {};
-  
-  if (estimations.endocrineDisruptors?.detected) {
-    enriched.cosmeticsData.endocrineDisruptors = estimations.endocrineDisruptors.detected;
-  }
-  
-  if (estimations.allergens?.detected) {
-    enriched.cosmeticsData.allergens = estimations.allergens.detected;
-  }
-  
-  if (estimations.cmrSubstances?.detected) {
-    enriched.cosmeticsData.cmrSubstances = estimations.cmrSubstances.detected;
-  }
-  
-  if (estimations.certifications?.detected) {
-    enriched.cosmeticsData.certifications = estimations.certifications.detected;
-  }
-
-  return enriched;
-}
-
-function mergeDetergentsEstimations(product, estimations) {
-  const enriched = { ...product };
-  
-  if (!enriched.detergentsData) enriched.detergentsData = {};
-  
-  if (estimations.biodegradability?.score !== undefined) {
-    enriched.detergentsData.biodegradable = estimations.biodegradability.score > 60;
-  }
-  
-  if (estimations.aquaticToxicity?.clpCodes) {
-    enriched.detergentsData.aquaticToxicity = estimations.aquaticToxicity.clpCodes;
-  }
-  
-  if (estimations.phosphates?.detected !== undefined) {
-    enriched.detergentsData.phosphates = estimations.phosphates.detected;
-  }
-  
-  if (estimations.ecolabels?.detected) {
-    enriched.detergentsData.ecolabels = estimations.ecolabels.detected;
-  }
-
-  return enriched;
 }
 
 /**
- * Parse reponse IA selon categorie
+ * Enrichir produit avec IA selon catégorie
+ */
+async function enrichProductWithAI(product, category = 'food') {
+  try {
+    if (!product || !product.barcode) {
+      throw new Error('Produit invalide ou barcode manquant');
+    }
+    
+    const missingFields = identifyMissingFields(product, category);
+    
+    if (missingFields.length === 0) {
+      return {
+        success: true,
+        message: 'Produit déjà complet',
+        aiEnriched: false
+      };
+    }
+    
+    let result;
+    switch(category) {
+      case 'food':
+        result = await enrichFoodProduct(product, missingFields);
+        break;
+      case 'cosmetics':
+        result = await enrichCosmeticsProduct(product, missingFields);
+        break;
+      case 'detergents':
+        result = await enrichDetergentsProduct(product, missingFields);
+        break;
+      default:
+        throw new Error(`Catégorie non supportée: ${category}`);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('[AI] Enrichment failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Identifier champs manquants
+ */
+function identifyMissingFields(product, category) {
+  const missing = [];
+  
+  if (category === 'food') {
+    const nutriments = product.foodData?.nutritionalInfo || product.nutriments || {};
+    
+    if (!nutriments.sugars && nutriments.sugars !== 0) missing.push('sugars');
+    if (!nutriments.saturatedFat && nutriments.saturatedFat !== 0) missing.push('saturatedFat');
+    if (!nutriments.salt && nutriments.salt !== 0) missing.push('salt');
+    if (!nutriments.fiber && nutriments.fiber !== 0) missing.push('fiber');
+  }
+  
+  return missing;
+}
+
+/**
+ * ✅ CORRECTION COMPLÈTE: Parser réponse IA selon catégorie
  */
 function parseAIResponseByCategory(response, category, missingFields) {
   try {
-    // Extraire JSON de la reponse
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.warn('[AI] No JSON found in response');
+    // ✅ FIX: Gérer response objet OU string
+    let parsed;
+    
+    if (typeof response === 'object' && response !== null) {
+      // DeepSeek retourne déjà un objet parsé
+      parsed = response;
+      console.log('[AI] Response is already an object');
+    } else if (typeof response === 'string') {
+      // Extraire JSON de la string
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        console.warn('[AI] No JSON found in response string');
+        return null;
+      }
+      parsed = JSON.parse(jsonMatch[0]);
+      console.log('[AI] Parsed JSON from string');
+    } else {
+      console.error('[AI] Invalid response type:', typeof response);
       return null;
     }
-
-    const parsed = JSON.parse(jsonMatch[0]);
-
+    
     switch(category) {
       case 'food':
         return parseFoodResponse(parsed, missingFields);
@@ -284,287 +293,120 @@ function parseAIResponseByCategory(response, category, missingFields) {
   }
 }
 
+/**
+ * Parser réponse alimentaire
+ */
 function parseFoodResponse(parsed, missingFields) {
   const result = {};
-
-  if (missingFields.includes('nova') && parsed.nova) {
-    result.nova = {
-      value: parsed.nova.value || parsed.nova,
-      confidence: parsed.nova.confidence || 0.7,
-      reasoning: parsed.nova.reasoning || ''
-    };
+  
+  if (parsed.nutriments || parsed.nutritionalInfo) {
+    const nutriments = parsed.nutriments || parsed.nutritionalInfo;
+    
+    if (missingFields.includes('sugars') && nutriments.sugars !== undefined) {
+      result.sugars = parseFloat(nutriments.sugars);
+    }
+    if (missingFields.includes('saturatedFat') && nutriments.saturatedFat !== undefined) {
+      result.saturatedFat = parseFloat(nutriments.saturatedFat);
+    }
+    if (missingFields.includes('salt') && nutriments.salt !== undefined) {
+      result.salt = parseFloat(nutriments.salt);
+    }
+    if (missingFields.includes('fiber') && nutriments.fiber !== undefined) {
+      result.fiber = parseFloat(nutriments.fiber);
+    }
   }
-
-  if (missingFields.includes('nutriScore') && parsed.nutriScore) {
-    result.nutriScore = {
-      value: parsed.nutriScore.value || parsed.nutriScore,
-      confidence: parsed.nutriScore.confidence || 0.7,
-      reasoning: parsed.nutriScore.reasoning || ''
-    };
+  
+  if (parsed.additives) {
+    result.additives = parsed.additives;
   }
-
-  if (missingFields.includes('ecoScore') && parsed.ecoScore) {
-    result.ecoScore = {
-      value: parsed.ecoScore.value || parsed.ecoScore,
-      confidence: parsed.ecoScore.confidence || 0.6,
-      reasoning: parsed.ecoScore.reasoning || ''
-    };
+  
+  if (parsed.novaGroup) {
+    result.novaGroup = parseInt(parsed.novaGroup);
   }
-
-  if (missingFields.includes('sugars') && parsed.sugars) {
-    result.sugars = {
-      estimated: parsed.sugars.estimated || parsed.sugars.value || 0,
-      min: parsed.sugars.min || 0,
-      max: parsed.sugars.max || 0,
-      confidence: parsed.sugars.confidence || 0.6,
-      reasoning: parsed.sugars.reasoning || ''
-    };
-  }
-
-  if (missingFields.includes('saturatedFat') && parsed.saturatedFat) {
-    result.saturatedFat = {
-      estimated: parsed.saturatedFat.estimated || parsed.saturatedFat.value || 0,
-      min: parsed.saturatedFat.min || 0,
-      max: parsed.saturatedFat.max || 0,
-      confidence: parsed.saturatedFat.confidence || 0.6,
-      reasoning: parsed.saturatedFat.reasoning || ''
-    };
-  }
-
-  if (missingFields.includes('salt') && parsed.salt) {
-    result.salt = {
-      estimated: parsed.salt.estimated || parsed.salt.value || 0,
-      min: parsed.salt.min || 0,
-      max: parsed.salt.max || 0,
-      confidence: parsed.salt.confidence || 0.6,
-      reasoning: parsed.salt.reasoning || ''
-    };
-  }
-
+  
   return result;
 }
-
-function parseCosmeticsResponse(parsed, missingFields) {
-  const result = {};
-
-  if (parsed.endocrineDisruptors) {
-    result.endocrineDisruptors = {
-      detected: parsed.endocrineDisruptors.detected || [],
-      count: parsed.endocrineDisruptors.count || 0,
-      severity: parsed.endocrineDisruptors.severity || 'NONE',
-      score: parsed.endocrineDisruptors.score || 100,
-      confidence: parsed.endocrineDisruptors.confidence || 0.7,
-      reasoning: parsed.endocrineDisruptors.reasoning || ''
-    };
-  }
-
-  if (parsed.allergens) {
-    result.allergens = {
-      detected: parsed.allergens.detected || [],
-      count: parsed.allergens.count || 0,
-      euMandatory: parsed.allergens.euMandatory || false,
-      score: parsed.allergens.score || 100,
-      confidence: parsed.allergens.confidence || 0.8,
-      reasoning: parsed.allergens.reasoning || ''
-    };
-  }
-
-  if (parsed.cmrSubstances) {
-    result.cmrSubstances = {
-      detected: parsed.cmrSubstances.detected || [],
-      count: parsed.cmrSubstances.count || 0,
-      categoryECHA: parsed.cmrSubstances.categoryECHA || 'None',
-      score: parsed.cmrSubstances.score || 100,
-      confidence: parsed.cmrSubstances.confidence || 0.9,
-      reasoning: parsed.cmrSubstances.reasoning || ''
-    };
-  }
-
-  if (parsed.certifications) {
-    result.certifications = {
-      detected: parsed.certifications.detected || [],
-      verified: parsed.certifications.verified || false,
-      score: parsed.certifications.score || 50,
-      confidence: parsed.certifications.confidence || 0.6,
-      reasoning: parsed.certifications.reasoning || ''
-    };
-  }
-
-  return result;
-}
-
-function parseDetergentsResponse(parsed, missingFields) {
-  const result = {};
-
-  if (parsed.biodegradability) {
-    result.biodegradability = {
-      score: parsed.biodegradability.score || 50,
-      surfactantsType: parsed.biodegradability.surfactantsType || 'unknown',
-      biodegradablePercent: parsed.biodegradability.biodegradablePercent || 0,
-      standard: parsed.biodegradability.standard || 'Unknown',
-      confidence: parsed.biodegradability.confidence || 0.6,
-      reasoning: parsed.biodegradability.reasoning || ''
-    };
-  }
-
-  if (parsed.aquaticToxicity) {
-    result.aquaticToxicity = {
-      clpCodes: parsed.aquaticToxicity.clpCodes || [],
-      severity: parsed.aquaticToxicity.severity || 'NONE',
-      score: parsed.aquaticToxicity.score || 100,
-      confidence: parsed.aquaticToxicity.confidence || 0.7,
-      reasoning: parsed.aquaticToxicity.reasoning || ''
-    };
-  }
-
-  if (parsed.phosphates) {
-    result.phosphates = {
-      detected: parsed.phosphates.detected || false,
-      estimatedContent: parsed.phosphates.estimatedContent || '0g',
-      compliantEU: parsed.phosphates.compliantEU !== false,
-      score: parsed.phosphates.score || 100,
-      confidence: parsed.phosphates.confidence || 0.7,
-      reasoning: parsed.phosphates.reasoning || ''
-    };
-  }
-
-  if (parsed.ecolabels) {
-    result.ecolabels = {
-      detected: parsed.ecolabels.detected || [],
-      verified: parsed.ecolabels.verified || false,
-      score: parsed.ecolabels.score || 50,
-      confidence: parsed.ecolabels.confidence || 0.6,
-      reasoning: parsed.ecolabels.reasoning || ''
-    };
-  }
-
-  return result;
-}
-
 
 /**
- * Parse un produit depuis texte OCR avec DeepSeek IA
- * @param {string} ocrText - Texte extrait par OCR
- * @param {string} barcode - Code-barre du produit
- * @returns {Promise<Object>} Produit parsé
+ * Parser réponse cosmétique
  */
-async function parseProductFromOCR(ocrText, barcode) {
-  try {
-    console.log('[AI Enrichment] Parsing OCR text with DeepSeek...');
-    
-    const prompt = `Tu es un expert en analyse d'étiquettes de produits (alimentaires, cosmétiques, détergents).
-
-TÂCHE : Extraire les informations structurées depuis le texte OCR d'une étiquette produit.
-
-TEXTE OCR (peut contenir erreurs) :
-"""
-${ocrText}
-"""
-
-CODE-BARRE : ${barcode}
-
-INSTRUCTIONS :
-1. Identifier le NOM du produit (le plus mis en valeur)
-2. Identifier la MARQUE
-3. Déterminer la CATÉGORIE : "food" | "cosmetics" | "detergents"
-4. Extraire la LISTE D'INGRÉDIENTS complète
-5. Extraire les VALEURS NUTRITIONNELLES (si food) pour 100g/100ml
-6. Identifier les ADDITIFS alimentaires (codes E suivi de chiffres)
-7. Identifier les LABELS (Bio, Vegan, Ecocert, etc.)
-8. Évaluer la CONFIANCE de l'extraction (0-1)
-
-FORMAT RÉPONSE (JSON strict) :
-{
-  "name": "Nom du produit",
-  "brand": "Marque",
-  "category": "food|cosmetics|detergents",
-  "ingredients_text": "Liste complète des ingrédients",
-  "nutriments": {
-    "energy": 500,
-    "proteins": 10,
-    "carbohydrates": 60,
-    "sugars": 25,
-    "fat": 15,
-    "saturated_fat": 5,
-    "salt": 0.5,
-    "fiber": 3
-  },
-  "additives": ["E150d", "E322"],
-  "labels": ["Bio", "Vegan"],
-  "novaGroup": 4,
-  "nutriScore": "d",
-  "inci": ["Aqua", "Glycerin"],
-  "confidence": 0.85
+function parseCosmeticsResponse(parsed, missingFields) {
+  const result = {};
+  
+  if (parsed.ingredients) {
+    result.ingredients = parsed.ingredients;
+  }
+  
+  if (parsed.allergens) {
+    result.allergens = parsed.allergens;
+  }
+  
+  if (parsed.endocrineDisruptors) {
+    result.endocrineDisruptors = parsed.endocrineDisruptors;
+  }
+  
+  return result;
 }
 
-RÈGLES IMPORTANTES :
-- Si catégorie = "cosmetics", remplir "inci" au lieu de "ingredients_text"
-- Si catégorie = "detergents", indiquer ingrédients chimiques
-- Si données manquantes, mettre null
-- Confiance élevée si texte clair, faible si OCR dégradé
+/**
+ * Parser réponse détergent
+ */
+function parseDetergentsResponse(parsed, missingFields) {
+  const result = {};
+  
+  if (parsed.composition) {
+    result.composition = parsed.composition;
+  }
+  
+  if (parsed.surfactants) {
+    result.surfactants = parsed.surfactants;
+  }
+  
+  if (parsed.ecolabels) {
+    result.ecolabels = parsed.ecolabels;
+  }
+  
+  return result;
+}
 
-RÉPONDS UNIQUEMENT AVEC LE JSON, PAS DE TEXTE AVANT/APRÈS.`;
-
-    // Appeler DeepSeek
-    const response = await deepSeekService.chat([
-      { role: 'user', content: prompt }
-    ], {
-      temperature: 0.1, // Précision maximale
-      max_tokens: 2000
-    });
+/**
+ * Générer alternatives via IA
+ */
+async function generateAlternatives(product, category = 'food', count = 3) {
+  try {
+    const messages = [
+      {
+        role: 'system',
+        content: `Tu es un expert en nutrition. Suggère ${count} alternatives plus saines au produit donné. Réponds en JSON avec: { "alternatives": [{ "name": "...", "reason": "..." }] }`
+      },
+      {
+        role: 'user',
+        content: `Produit: ${product.name || product.product_name}\nMarque: ${product.brand || product.brands}\nCatégorie: ${category}`
+      }
+    ];
     
-    // Parser réponse JSON
-    let parsed;
+    const response = await deepSeekService.chat(messages);
+    
     try {
-      // Nettoyer la réponse (enlever markdown si présent)
       const cleanResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       parsed = JSON.parse(cleanResponse);
+      return parsed.alternatives || [];
     } catch (parseError) {
-      console.error('[AI Enrichment] JSON parse error:', parseError);
       throw new Error('IA response not valid JSON');
     }
-    
-    // Valider données minimales
-    if (!parsed.name) {
-      throw new Error('Product name not found in OCR');
-    }
-    
-    console.log('[AI Enrichment] ? Product parsed:', parsed.name);
-    
-    return {
-      barcode: barcode,
-      name: parsed.name,
-      brand: parsed.brand || 'Marque inconnue',
-      category: parsed.category || 'food',
-      
-      // Food data
-      ingredients_text: parsed.ingredients_text,
-      nutriments: parsed.nutriments || {},
-      additives: parsed.additives || [],
-      labels: parsed.labels || [],
-      novaGroup: parsed.novaGroup,
-      nutriScore: parsed.nutriScore,
-      
-      // Cosmetics data
-      inci: parsed.inci || [],
-      
-      // Detergents data
-      ingredients: parsed.ingredients || [],
-      
-      // Confidence
-      confidence: parsed.confidence || 0.5
-    };
-    
   } catch (error) {
-    console.error('[AI Enrichment] ? Error parsing OCR:', error);
-    throw error;
+    console.error('[AI] generateAlternatives failed:', error.message);
+    return [];
   }
 }
 
 module.exports = {
   enrichProductWithAI,
+  enrichFoodProduct,
+  enrichCosmeticsProduct,
+  enrichDetergentsProduct,
   estimateMissingData,
-  qualitativeAnalysis,
-  parseProductFromOCR
+  enrichWithAISummary,
+  generateAlternatives,
+  identifyMissingFields
 };
-
