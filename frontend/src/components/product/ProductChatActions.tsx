@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 
@@ -39,11 +39,17 @@ export const ProductChatActions: React.FC<ProductChatActionsProps> = ({ product 
   const questions = CONTEXTUAL_QUESTIONS[product.category];
 
   const handleQuestionClick = (question: string) => {
-    const params = new URLSearchParams({
-      product: product.barcode || product.name,
-      q: question
-    });
-    navigate(`/chat?${params.toString()}`);
+    const chatUrl = `/chat?product=${encodeURIComponent(product.barcode || product.name)}&q=${encodeURIComponent(question)}`;
+    
+    // Sauvegarder returnUrl pour revenir après login
+    const token = localStorage.getItem('ecolojia_token');
+    if (!token) {
+      // Pas authentifié : rediriger vers login avec returnUrl
+      navigate(`/login?returnUrl=${encodeURIComponent(chatUrl)}`);
+    } else {
+      // Authentifié : aller directement au chat
+      navigate(chatUrl);
+    }
   };
 
   return (

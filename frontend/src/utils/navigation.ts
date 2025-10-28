@@ -1,30 +1,32 @@
-// PATH: frontend/src/utils/navigation.ts
+﻿// PATH: frontend/src/utils/navigation.ts
 
-/**
- * Sauvegarde l'URL actuelle avant de rediriger vers login
- * Utile pour revenir à la page d'origine après authentification
- */
+import { Location } from 'react-router-dom';
+
 export const saveReturnUrl = (url: string) => {
-  // Ne pas sauvegarder les URLs de login/register
   if (url.includes('/login') || url.includes('/register')) {
     return;
   }
   sessionStorage.setItem('returnUrl', url);
 };
 
-/**
- * Récupère et supprime l'URL de retour sauvegardée
- * @returns URL de retour ou '/dashboard' par défaut
- */
-export const getReturnUrl = (): string => {
-  const url = sessionStorage.getItem('returnUrl');
-  sessionStorage.removeItem('returnUrl');
-  return url || '/dashboard';
+export const getReturnUrl = (location?: Location): string => {
+  if (location) {
+    const params = new URLSearchParams(location.search);
+    const returnUrl = params.get('returnUrl');
+    if (returnUrl) {
+      return decodeURIComponent(returnUrl);
+    }
+  }
+  
+  const storedUrl = sessionStorage.getItem('returnUrl');
+  if (storedUrl) {
+    sessionStorage.removeItem('returnUrl');
+    return storedUrl;
+  }
+  
+  return '/dashboard';
 };
 
-/**
- * Nettoie l'URL de retour sauvegardée
- */
 export const clearReturnUrl = () => {
   sessionStorage.removeItem('returnUrl');
 };

@@ -1,5 +1,7 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../Contexts/AuthContext';
 import chatService from '../services/chatService';
 import { MessageCircle, Send, Loader, AlertTriangle } from 'lucide-react';
 
