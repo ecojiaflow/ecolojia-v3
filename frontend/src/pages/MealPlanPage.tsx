@@ -26,13 +26,13 @@ export const MealPlanPage: React.FC = () => {
     try {
       const token = localStorage.getItem('ecolojia_token');
       const response = await axiosInstance.post('/meal-plan/generate', formData, {
-        timeout: 60000, // 60 secondes pour génération IA
+        timeout: 60000, // 60 secondes pour génégénération IA
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlanData(response.data);
     } catch (error: any) {
-      console.error('Erreur génération plan:', error);
-      const message = error.response?.data?.error || 'Erreur lors de la génération du plan';
+      console.error('Erreur génégénération plan:', error);
+      const message = error.response?.data?.error || 'Erreur lors de la génégénération du plan';
       alert(message);
     } finally {
       setIsGenerating(false);
@@ -73,7 +73,7 @@ export const MealPlanPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    ?? Budget hebdomadaire
+                    é Budget hebdomadaire
                   </label>
                   <div className="relative">
                     <input
@@ -91,7 +91,7 @@ export const MealPlanPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    ?? Calories par jour
+                    é Calories par jour
                   </label>
                   <div className="relative">
                     <input
@@ -111,7 +111,7 @@ export const MealPlanPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    ?? Nombre de personnes
+                    é Nombre de personnes
                   </label>
                   <select
                     value={formData.people}
@@ -128,7 +128,7 @@ export const MealPlanPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    ?? Type de régime
+                    é Type de régime
                   </label>
                   <select
                     value={formData.dietType}
@@ -176,7 +176,7 @@ export const MealPlanPage: React.FC = () => {
                 {isGenerating ? (
                   <>
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
-                    <span>génération en cours...</span>
+                    <span>génégénération en cours...</span>
                   </>
                 ) : (
                   <>
@@ -187,7 +187,7 @@ export const MealPlanPage: React.FC = () => {
               </button>
 
               <p className="text-center text-xs text-neutral-700 mt-4">
-                ? génération en ~15 secondes € ?? Feature Premium
+                ? génégénération en ~15 secondes € é Feature Premium
               </p>
             </div>
           </div>
@@ -244,7 +244,7 @@ export const MealPlanPage: React.FC = () => {
               </div>
               <div className="mt-2 h-2 bg-primary-50/20 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-primary-50 transition-all duration-500"
+                  className="h-full bg-primary-50 transition-all dugénération-500"
                   style={{ width: `${planData.validation.score}%` }}
                 />
               </div>

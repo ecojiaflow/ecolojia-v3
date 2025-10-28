@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/FavoritesPage.tsx
+﻿// PATH: frontend/src/pages/FavoritesPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Trash2, Search, Package } from 'lucide-react';
@@ -55,7 +55,7 @@ const FavoritesPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9F4] py-8">
+    <div className="min-h-screen bg-primary-50 pb-24">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">

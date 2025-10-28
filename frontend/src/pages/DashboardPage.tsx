@@ -165,9 +165,9 @@ const DashboardPage: React.FC = () => {
                   )}
                   <div className="flex-1">
                     <div className="font-medium text-neutral-900">{p.name || "Produit"}</div>
-                    <div className="text-xs text-neutral-600">EAN {p.barcode || "-"} • Score {Math.round(p.score ?? 0)}%</div>
+                    <div className="text-xs text-neutral-600">EAN {p.barcode || "-"} • Score {Math.round(p.score || 0)}%</div>
                   </div>
-                  <div className="text-sm text-neutral-600">{p.hits?.toLocaleString("fr-FR") ?? "-"}</div>
+                  <div className="text-sm text-neutral-600">{p.hits?.toLocaleString("fr-FR") || "-"}</div>
                 </li>
               ))}
               {(!stats?.topProducts || stats.topProducts.length === 0) && (
@@ -182,7 +182,7 @@ const DashboardPage: React.FC = () => {
               {(stats?.topCategories || []).slice(0,8).map((c, i) => (
                 <li key={i} className="flex items-center justify-between py-2 border-b border-neutral-200 last:border-0">
                   <span className="text-neutral-800 font-medium">{c.name}</span>
-                  <span className="text-neutral-600 font-semibold">{c.count?.toLocaleString("fr-FR") ?? "-"}</span>
+                  <span className="text-neutral-600 font-semibold">{c.count?.toLocaleString("fr-FR") || "-"}</span>
                 </li>
               ))}
               {(!stats?.topCategories || stats.topCategories.length === 0) && (

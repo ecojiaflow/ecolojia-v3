@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ProfilePage.tsx
+﻿// PATH: frontend/src/pages/ProfilePage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -166,7 +166,7 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-primary-50 pb-24">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-6">
@@ -279,7 +279,7 @@ const ProfilePage: React.FC = () => {
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-50"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-primary-50"
                 />
               </div>
 
@@ -292,7 +292,7 @@ const ProfilePage: React.FC = () => {
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-50"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-primary-50"
                 />
               </div>
 
@@ -304,7 +304,7 @@ const ProfilePage: React.FC = () => {
                   type="email"
                   value={formData.email}
                   disabled
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-primary-50"
                 />
               </div>
 
@@ -329,7 +329,7 @@ const ProfilePage: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                    className="px-4 py-2 bg-primary-100 text-gray-700 rounded-lg hover:bg-gray-200"
                   >
                     Annuler
                   </button>
@@ -340,7 +340,7 @@ const ProfilePage: React.FC = () => {
             {/* Abonnement */}
             <div className="mt-8 pt-8 border-t">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Abonnement</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-primary-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">
                     {user?.subscription?.tier === 'premium' ? 'Premium' : 'Gratuit'}
