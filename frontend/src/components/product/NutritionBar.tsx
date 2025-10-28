@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface NutritionBarProps {
   label: string;
@@ -43,7 +43,7 @@ export const NutritionBar: React.FC<NutritionBarProps> = ({
         />
       </div>
       
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-neutral-700">
         {levelText[level]} • Recommandé: &lt;{max}{unit}
       </p>
     </div>

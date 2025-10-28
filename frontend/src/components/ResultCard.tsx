@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/ResultCard.tsx
+﻿// PATH: frontend/src/components/ResultCard.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Info, CheckCircle, Package, Droplets, Sparkles } from 'lucide-react';
@@ -74,14 +74,14 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
               </h2>
             )}
             {brand && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-600 dark:text-neutral-600 mt-1">
                 {brand}
               </p>
             )}
           </div>
           <div className="flex items-center space-x-2">
-            <CategoryIcon className="w-5 h-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-500 capitalize">
+            <CategoryIcon className="w-5 h-5 text-neutral-700" />
+            <span className="text-sm font-medium text-neutral-700 capitalize">
               {category === 'cosmetics' ? 'Cosmetique' : category === 'detergents' ? 'Detergent' : 'Alimentaire'}
             </span>
           </div>
@@ -90,13 +90,13 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
         {/* Score global */}
         <div className="mt-4 flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Score global</p>
+            <p className="text-sm text-gray-600 dark:text-neutral-600">Score global</p>
             <p className={`text-3xl font-bold ${getGlobalScoreColor(globalScore)}`}>
               {globalScore}/100
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-neutral-700 dark:text-neutral-600">
               Confiance: {Math.round(confidence * 100)}%
             </p>
           </div>
@@ -126,7 +126,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
           {scores.nova && <NovaBadge nova={scores.nova} size="large" />}
           {scores.nutriscore && (
             <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2">
-              <p className="text-xs text-gray-600 dark:text-gray-400">Nutri-Score</p>
+              <p className="text-xs text-gray-600 dark:text-neutral-600">Nutri-Score</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{scores.nutriscore}</p>
             </div>
           )}
@@ -186,7 +186,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, productName, brand }) =
               Ingredients  surveiller :
             </p>
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+              <ul className="text-sm text-gray-600 dark:text-neutral-600 space-y-1">
                 {details.notableIngredients.map((ingredient, index) => (
                   <li key={index} className="flex items-center space-x-2">
                     <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>

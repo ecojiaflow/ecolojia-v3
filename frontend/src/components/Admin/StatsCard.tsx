@@ -1,4 +1,4 @@
-// PATH: src/components/admin/StatsCard.tsx
+﻿// PATH: src/components/admin/StatsCard.tsx
 import React from 'react';
 
 interface StatsCardProps {
@@ -58,7 +58,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
           </div>
           
           {subtitle && (
-            <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-xs text-neutral-700 mt-1">{subtitle}</p>
           )}
           
           {percentage !== undefined && (

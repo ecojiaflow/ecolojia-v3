@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { AlertCircle, X } from 'lucide-react';
 
 interface Step3Props {
@@ -157,7 +157,7 @@ export const Step3Allergenes: React.FC<Step3Props> = ({
       )}
 
       {allergens.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-neutral-700">
           <p>Aucun allergene selectionne</p>
           <p className="text-sm mt-1">Le plan contiendra tous types d'ingredients</p>
         </div>

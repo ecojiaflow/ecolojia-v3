@@ -1,4 +1,4 @@
-// frontend/src/components/upgrade/SmartUpgradeModal.tsx
+﻿// frontend/src/components/upgrade/SmartUpgradeModal.tsx
 
 import React, { useState, useEffect } from 'react';
 import { useQuota } from '../../hooks/useQuota';
@@ -170,7 +170,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              className="text-neutral-600 hover:text-gray-600 text-2xl leading-none"
             >
               aaa
             </button>
@@ -272,13 +272,13 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
                 <p className="text-gray-700 italic mb-2">
                   "aaconomise 200aaa en evitant produits toxiques pour ma famille"
                 </p>
-                <p className="text-gray-500">aaaa Marie D., maman de 2 enfants</p>
+                <p className="text-neutral-700">aaaa Marie D., maman de 2 enfants</p>
               </div>
               <div className="bg-white p-3 rounded">
                 <p className="text-gray-700 italic mb-2">
                   "IA revolutionnaire, analyses bien plus poussees que Yuka"
                 </p>
-                <p className="text-gray-500">aaaa Thomas L., nutritionniste</p>
+                <p className="text-neutral-700">aaaa Thomas L., nutritionniste</p>
               </div>
             </div>
           </div>
@@ -316,7 +316,7 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
 
           {/* Infos legales */}
           <div className="mt-4 text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-neutral-700">
               Paiement securise aa Annulation  tout moment aa Sans engagement
             </p>
           </div>

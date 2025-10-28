@@ -1,4 +1,4 @@
-// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
+﻿// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, Info, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -101,7 +101,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
             </div>
           ))}
         </div>
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-neutral-700">
           Classification officielle INSERM aa aatudes peer-reviewed 2024
         </div>
       </div>
@@ -134,7 +134,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
               {markers.industrial_ingredients.slice(0, 3).map((ingredient, idx) => (
                 <div key={idx} className="text-xs">
                   <span className="font-medium text-gray-700">{ingredient.name}</span>
-                  <span className="text-gray-500 ml-2">- {ingredient.reason}</span>
+                  <span className="text-neutral-700 ml-2">- {ingredient.reason}</span>
                 </div>
               ))}
             </div>
@@ -164,7 +164,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
             <ul className="space-y-1">
               {reasoning.map((reason, idx) => (
                 <li key={idx} className="text-xs text-gray-600 flex items-start gap-1">
-                  <span className="text-gray-400 mt-0.5">aa</span>
+                  <span className="text-neutral-600 mt-0.5">aa</span>
                   {reason}
                 </li>
               ))}

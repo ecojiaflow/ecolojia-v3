@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/chat/ChatWidget.tsx
+﻿// PATH: frontend/src/components/chat/ChatWidget.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -132,7 +132,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
-                <div className="text-center text-gray-500 mt-8">
+                <div className="text-center text-neutral-700 mt-8">
                   <Bot className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                   <p className="text-sm">
                     👋 Je suis votre assistant nutritionnel ECOLOJIA !
@@ -187,7 +187,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
             {/* Suggestions */}
             {suggestions && suggestions.length > 0 && (
               <div className="px-4 pb-2">
-                <p className="text-xs text-gray-500 mb-2">Suggestions :</p>
+                <p className="text-xs text-neutral-700 mb-2">Suggestions :</p>
                 <div className="flex flex-wrap gap-2">
                   {suggestions.slice(0, 4).map((suggestion, index) => (
                     <button

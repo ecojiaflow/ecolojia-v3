@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/profile/PreferencesTab.tsx
+﻿// PATH: frontend/src/components/profile/PreferencesTab.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Plus, X, Info } from 'lucide-react';
@@ -95,7 +95,7 @@ export function PreferencesTab({
         <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
           Ton des reponses IA
         </h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-neutral-700 mb-4">
           Choisissez comment l'assistant IA communique avec vous
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -113,7 +113,7 @@ export function PreferencesTab({
               <div className="flex items-start justify-between">
                 <div>
                   <p className="font-medium text-[#3B3B3B]">{option.label}</p>
-                  <p className="text-sm text-gray-500 mt-1">{option.description}</p>
+                  <p className="text-sm text-neutral-700 mt-1">{option.description}</p>
                 </div>
                 {preferences.tone === option.value && (
                   <Check className="w-5 h-5 text-[#7DDE4A] flex-shrink-0" />
@@ -129,7 +129,7 @@ export function PreferencesTab({
         <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
           Niveau de detail
         </h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-neutral-700 mb-4">
           Controlez la profondeur des analyses
         </p>
         <div className="flex gap-3">
@@ -158,7 +158,7 @@ export function PreferencesTab({
         <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
           Restrictions alimentaires
         </h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-neutral-700 mb-4">
           Nous prendrons en compte ces restrictions dans nos analyses
         </p>
         <div className="space-y-3">
@@ -196,7 +196,7 @@ export function PreferencesTab({
       {/* Allergens */}
       <div>
         <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">Allergenes</h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-neutral-700 mb-4">
           Nous vous alerterons en priorite sur ces allergenes
         </p>
         <div className="space-y-3">
@@ -240,7 +240,7 @@ export function PreferencesTab({
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-[#3B3B3B]">Alertes par email</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-neutral-700">
                 Recevez des alertes sur les rappels de produits
               </p>
             </div>
@@ -260,7 +260,7 @@ export function PreferencesTab({
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-[#3B3B3B]">Rappels de produits</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-neutral-700">
                 Alertes immediates pour les produits rappeles
               </p>
             </div>
@@ -280,7 +280,7 @@ export function PreferencesTab({
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-[#3B3B3B]">Resume hebdomadaire</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-neutral-700">
                 Recevez un resume de vos scans de la semaine
               </p>
             </div>

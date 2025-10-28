@@ -1,4 +1,4 @@
-// frontend/src/components/AffiliateButton.tsx
+﻿// frontend/src/components/AffiliateButton.tsx
 import React, { useState } from 'react';
 import { ShoppingCart, ExternalLink, Leaf, Check } from 'lucide-react';
 
@@ -144,7 +144,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
                     {clickedPartner === partner.id ? (
                       <Check className="w-5 h-5 text-green-700" />
                     ) : (
-                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-green-700 transition-colors" />
+                      <ExternalLink className="w-4 h-4 text-neutral-600 group-hover:text-green-700 transition-colors" />
                     )}
                   </div>
                 </div>
@@ -153,7 +153,7 @@ const AffiliateButton: React.FC<AffiliateButtonProps> = ({
           </div>
 
           <div className="p-3 bg-gray-50 text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-neutral-700">
               Commission reversee pour soutenir ECOLOJIA
             </p>
           </div>

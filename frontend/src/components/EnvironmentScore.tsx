@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/EnvironmentScore.tsx
+﻿// PATH: frontend/src/components/EnvironmentScore.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, TreePine, Sprout, Factory } from 'lucide-react';
@@ -106,7 +106,7 @@ const EnvironmentScore: React.FC<EnvironmentScoreProps> = ({
             transition={{ delay: 0.8 }}
           >
             <p className="text-sm font-medium" style={{ color }}>{label}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Impact environnemental</p>
+            <p className="text-xs text-neutral-700 dark:text-neutral-600">Impact environnemental</p>
           </motion.div>
         )}
       </div>
@@ -143,7 +143,7 @@ const EnvironmentScore: React.FC<EnvironmentScoreProps> = ({
         {showLabel && (
           <div className="mt-2 text-center">
             <p className="text-sm font-medium" style={{ color }}>{label}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Score: {score}/100</p>
+            <p className="text-xs text-neutral-700 dark:text-neutral-600">Score: {score}/100</p>
           </div>
         )}
       </div>

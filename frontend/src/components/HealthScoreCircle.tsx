@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/HealthScoreCircle.tsx
+﻿// PATH: frontend/src/components/HealthScoreCircle.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
@@ -115,7 +115,7 @@ const HealthScoreCircle: React.FC<HealthScoreCircleProps> = ({
           <p className="text-sm font-medium" style={{ color }}>
             {label}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-neutral-700 dark:text-neutral-600">
             Score Santé
           </p>
         </motion.div>

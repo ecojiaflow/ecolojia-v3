@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
 import { CategoryType, CATEGORIES } from '../types/categories';
 
@@ -229,7 +229,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               <X className="h-4 w-4" />
               <span>Reinitialiser</span>
             </button>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-neutral-700">
               {activeFiltersCount} filtre{activeFiltersCount !== 1 ? 's' : ''} actif{activeFiltersCount !== 1 ? 's' : ''}
             </span>
           </div>

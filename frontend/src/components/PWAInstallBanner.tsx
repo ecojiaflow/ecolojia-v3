@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone } from 'lucide-react';
 
 const PWAInstallBanner: React.FC = () => {
@@ -130,7 +130,7 @@ aaa L'icone ECOLOJIA apparaitra !`);
                 
                 <button
                   onClick={handleDismiss}
-                  className="text-gray-400 hover:text-gray-600 p-1"
+                  className="text-neutral-600 hover:text-gray-600 p-1"
                   aria-label="Fermer"
                 >
                   <X className="w-5 h-5" />

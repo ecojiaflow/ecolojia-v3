@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/ScoreDisplay.tsx
+﻿// PATH: frontend/src/components/analysis/ScoreDisplay.tsx
 type Props = {
   label: string;
   value: string | number | undefined;
@@ -18,9 +18,9 @@ export default function ScoreDisplay({ label, value, tone = "neutral", hint }: P
 
   return (
     <div className={classes.wrap}>
-      <div className="text-sm text-gray-500">{label}</div>
+      <div className="text-sm text-neutral-700">{label}</div>
       <div className={`text-2xl font-bold ${classes.value}`}>{value ?? "'”"}</div>
-      {hint && <div className="text-xs text-gray-500 mt-1">{hint}</div>}
+      {hint && <div className="text-xs text-neutral-700 mt-1">{hint}</div>}
     </div>
   );
 }

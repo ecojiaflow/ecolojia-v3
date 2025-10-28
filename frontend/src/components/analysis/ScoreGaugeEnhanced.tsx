@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export const ScoreGauge: React.FC<{label:string; value:number}> = ({label, value}) => {
   const v = Math.max(0, Math.min(100, value||0));
@@ -11,7 +11,7 @@ export const ScoreGauge: React.FC<{label:string; value:number}> = ({label, value
           fill="none" strokeLinecap="round" strokeDasharray={`${dash} ${c-dash}`} transform="rotate(-90 48 48)" />
         <text x="50%" y="52%" dominantBaseline="middle" textAnchor="middle" fontSize="18" fill="#111">{v}%</text>
       </svg>
-      <div><div className="text-sm text-gray-600">{label}</div><div className="text-xs text-gray-500">Plus élevé = meilleur</div></div>
+      <div><div className="text-sm text-gray-600">{label}</div><div className="text-xs text-neutral-700">Plus élevé = meilleur</div></div>
     </div>
   );
 };

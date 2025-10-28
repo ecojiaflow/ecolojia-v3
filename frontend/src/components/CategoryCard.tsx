@@ -1,4 +1,4 @@
-// src/components/CategoryCard.tsx
+﻿// src/components/CategoryCard.tsx
 // Composant carte pour afficher une categorie et permettre l'analyse - VERSION SaaCURISaaE COMPLaTE
 
 import React, { useState } from 'react';
@@ -20,8 +20,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
       <div className="bg-white rounded-3xl shadow-lg border-2 border-gray-200 p-6">
         <div className="text-center">
           <div className="text-4xl mb-4">a</div>
-          <h3 className="text-lg font-bold text-gray-500 mb-2">Categorie indisponible</h3>
-          <p className="text-sm text-gray-400">
+          <h3 className="text-lg font-bold text-neutral-700 mb-2">Categorie indisponible</h3>
+          <p className="text-sm text-neutral-600">
             Les donnees de cette categorie n'ont pas pu etre chargees.
           </p>
         </div>
@@ -152,7 +152,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
           ))}
           {categoryFeatures.length === 0 && (
             <div className="col-span-2 bg-white rounded-lg p-2 text-center">
-              <span className="text-xs text-gray-400">Fonctionnalites  venir</span>
+              <span className="text-xs text-neutral-600">Fonctionnalites  venir</span>
             </div>
           )}
         </div>
@@ -227,7 +227,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onAnalysisComplet
               </div>
 
               {/* Metadonnees */}
-              <div className="mt-3 text-xs text-gray-500 text-center">
+              <div className="mt-3 text-xs text-neutral-700 text-center">
                 Temps de traitement: {analysisResult.metadata?.processing_time_ms || 'N/A'}ms aa 
                 API: {analysisResult.metadata?.api_version || 'N/A'}
               </div>

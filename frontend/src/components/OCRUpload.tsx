@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
 
 interface VisionResult {
@@ -137,11 +137,11 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
               </div>
             ) : (
               <>
-                <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <Upload className="h-12 w-12 mx-auto text-neutral-600 mb-4" />
                 <p className="text-lg font-medium text-gray-700 mb-2">
                   Déposez une image ici
                 </p>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-neutral-700 mb-4">
                   ou utilisez les boutons ci-dessous
                 </p>
               </>
@@ -192,7 +192,7 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
       />
 
       {/* Instructions */}
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-neutral-700 text-center">
         Formats acceptés: JPG, PNG, WebP '¢ Taille max: 5MB
       </div>
     </div>

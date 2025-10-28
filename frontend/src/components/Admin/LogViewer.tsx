@@ -1,4 +1,4 @@
-// PATH: src/components/admin/LogViewer.tsx
+﻿// PATH: src/components/admin/LogViewer.tsx
 import React, { useState } from 'react';
 import { ImportLog } from '../../types/admin';
 import { FileText, CheckCircle, XCircle, Clock, ChevronDown, ChevronUp } from 'lucide-react';
@@ -60,7 +60,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
     return (
       <div className="bg-white rounded-lg shadow-sm p-8">
         <div className="text-center">
-          <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <FileText className="h-12 w-12 text-neutral-600 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun log d'import</h3>
           <p className="text-gray-600">Les logs d'import apparaitront ici apres votre premier import.</p>
         </div>
@@ -97,7 +97,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
                 {getStatusBadge(log.status)}
                 <button
                   onClick={() => toggleLogExpansion(log.id)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-neutral-600 hover:text-gray-600"
                 >
                   {expandedLogs.has(log.id) ? (
                     <ChevronUp className="h-5 w-5" />
@@ -119,8 +119,8 @@ const LogViewer: React.FC<LogViewerProps> = ({ logs }) => {
             {/* Barre de progression */}
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-gray-500">Taux de reussite</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-neutral-700">Taux de reussite</span>
+                <span className="text-xs text-neutral-700">
                   {log.productsProcessed > 0 
                     ? Math.round((log.productsSuccess / log.productsProcessed) * 100)
                     : 0}%

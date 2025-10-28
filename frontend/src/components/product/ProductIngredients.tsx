@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Info } from 'lucide-react';
 
 interface Ingredient {
@@ -36,7 +36,7 @@ export const ProductIngredients: React.FC<ProductIngredientsProps> = ({ ingredie
             <div className="flex items-center gap-2">
               <span className="font-medium">{ingredient.name}</span>
               {ingredient.percentage && (
-                <span className="text-sm text-gray-500">({ingredient.percentage}%)</span>
+                <span className="text-sm text-neutral-700">({ingredient.percentage}%)</span>
               )}
               {ingredient.isAllergen && (
                 <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">

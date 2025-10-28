@@ -1,4 +1,4 @@
-// src/components/ui/LoadingStates.tsx
+﻿// src/components/ui/LoadingStates.tsx
 import React from 'react';
 
 export const AnalysisLoadingStates = {
@@ -66,7 +66,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
 
       {/* Barre de progression intelligente */}
       <div className="mb-4">
-        <div className="flex justify-between text-xs text-gray-500 mb-2">
+        <div className="flex justify-between text-xs text-neutral-700 mb-2">
           <span>Progression</span>
           <span>{progress}%</span>
         </div>
@@ -100,12 +100,12 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
                 <div className={`text-sm font-medium ${
                   isActive ? 'text-blue-700' :
                   isCompleted ? 'text-green-700' :
-                  'text-gray-500'
+                  'text-neutral-700'
                 }`}>
                   {state.title}
                 </div>
                 {isActive && (
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-neutral-700">
                     {state.duration}
                   </div>
                 )}
@@ -117,7 +117,7 @@ export const SmartLoading: React.FC<SmartLoadingProps> = ({ stage, progress, cat
 
       {/* Message d'encouragement */}
       <div className="mt-6 text-center">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-neutral-700">
           ? Analyse scientifique en temps reel
         </p>
       </div>

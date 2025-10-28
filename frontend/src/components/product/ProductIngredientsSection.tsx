@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/product/ProductIngredientsSection.tsx
+﻿// PATH: frontend/src/components/product/ProductIngredientsSection.tsx
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Info, X, ExternalLink, ChevronDown } from 'lucide-react';
@@ -199,7 +199,7 @@ export function ProductIngredientsSection({
                     onClick={() => setSelectedIngredient(null)}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-neutral-700" />
                   </button>
                 </div>
                 

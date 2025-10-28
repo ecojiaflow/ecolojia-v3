@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/WeeklySummary.tsx
+﻿// frontend/src/components/dashboard/WeeklySummary.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Award, Target, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react';
@@ -123,7 +123,7 @@ export const WeeklySummary: React.FC = () => {
         </div>
       );
     }
-    return <span className="text-gray-500">Stable</span>;
+    return <span className="text-neutral-700">Stable</span>;
   };
 
   if (loading && !summaryData) {
@@ -287,7 +287,7 @@ export const WeeklySummary: React.FC = () => {
                       </motion.div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-sm">Aucun objectif specifique cette semaine</p>
+                    <p className="text-neutral-700 text-sm">Aucun objectif specifique cette semaine</p>
                   )}
                 </div>
               </div>

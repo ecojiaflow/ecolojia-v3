@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, ChefHat, Clock, Users, TrendingUp, MessageCircle, Check, Sparkles } from 'lucide-react';
 import axios from 'axios';
 
@@ -204,7 +204,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
                 </span>
                 <button
                   onClick={() => setShowAIChat(false)}
-                  className="text-xs text-gray-500 hover:text-gray-700"
+                  className="text-xs text-neutral-700 hover:text-gray-700"
                 >
                   Fermer
                 </button>
@@ -224,7 +224,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
                   </div>
                 ))}
                 {aiLoading && (
-                  <div className="text-center text-gray-500 text-xs">
+                  <div className="text-center text-neutral-700 text-xs">
                     L'IA réfléchit...
                   </div>
                 )}

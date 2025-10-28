@@ -1,4 +1,4 @@
-// frontend/src/components/scanner/PhotoCapture.tsx
+﻿// frontend/src/components/scanner/PhotoCapture.tsx
 import React, { useState, useRef, useCallback } from 'react';
 import { Camera, Upload, X, Loader2, Check, AlertCircle, RotateCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -377,7 +377,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
               </button>
             </div>
             
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-neutral-700 text-center">
               Assurez-vous que le texte est lisible et que l'image n'est pas floue
             </p>
           </motion.div>

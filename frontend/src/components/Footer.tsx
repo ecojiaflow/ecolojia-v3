@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Leaf, Heart } from 'lucide-react';
@@ -37,16 +37,16 @@ const Footer: React.FC = () => {
               <Link to="/" className="block text-eco-text/70 hover:text-eco-leaf transition-colors text-sm">
                 {t('common.home')}
               </Link>
-              <span className="block text-gray-400 text-sm cursor-not-allowed">
+              <span className="block text-neutral-600 text-sm cursor-not-allowed">
                 {t('common.products')}
               </span>
-              <span className="block text-gray-400 text-sm cursor-not-allowed">
+              <span className="block text-neutral-600 text-sm cursor-not-allowed">
                 {t('common.categories')}
               </span>
               <Link to="/about" className="block text-eco-text/70 hover:text-eco-leaf transition-colors text-sm">
                 {t('common.about')}
               </Link>
-              <span className="block text-gray-400 text-sm cursor-not-allowed">
+              <span className="block text-neutral-600 text-sm cursor-not-allowed">
                 {t('common.blog')}
               </span>
             </div>
@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
               <Link to="/privacy" className="block text-eco-text/70 hover:text-eco-leaf transition-colors text-sm">
                 {t('footer.privacy')}
               </Link>
-              <span className="block text-gray-400 text-sm cursor-not-allowed">
+              <span className="block text-neutral-600 text-sm cursor-not-allowed">
                 {t('footer.cookies')}
               </span>
               <Link to="/legal" className="block text-eco-text/70 hover:text-eco-leaf transition-colors text-sm">

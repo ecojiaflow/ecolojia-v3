@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface ScoreProgressBarProps {
   score: number | null;
@@ -63,7 +63,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
                 </>
               )}
             </button>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-neutral-700 mt-2">
               Utilisez l'IA pour analyser ce produit et obtenir un score
             </p>
           </div>

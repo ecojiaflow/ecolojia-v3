@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/PremiumUpgradeModal.tsx
+﻿// PATH: frontend/src/components/PremiumUpgradeModal.tsx
 import React, { useState } from 'react';
 import { X, Zap, Check, Shield, Infinity, Brain, FileText, HeadphonesIcon } from 'lucide-react';
 import { paymentService } from '../services/paymentService';
@@ -106,7 +106,7 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-neutral-700" />
             </button>
           </div>
         </div>
@@ -157,21 +157,21 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Analyses par mois</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-500">Gratuit: 30</span>
+                  <span className="text-neutral-700">Gratuit: 30</span>
                   <span className="font-medium text-primary">Premium: aa</span>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Questions IA</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-500">Gratuit: 0</span>
+                  <span className="text-neutral-700">Gratuit: 0</span>
                   <span className="font-medium text-primary">Premium: aa</span>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Export PDF</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-500">Gratuit: aa</span>
+                  <span className="text-neutral-700">Gratuit: aa</span>
                   <span className="font-medium text-primary">Premium: aaaa</span>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export const PremiumUpgradeModal: React.FC<PremiumUpgradeModalProps> = ({
 
         {/* Trust badges */}
         <div className="px-6 pb-6">
-          <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+          <div className="flex items-center justify-center space-x-4 text-xs text-neutral-700">
             <div className="flex items-center">
               <Shield className="w-4 h-4 mr-1" />
               Paiement securise

@@ -1,4 +1,4 @@
-// frontend/ecolojiaFrontV3/src/components/analysis/CosmeticAnalysisDisplay.tsx
+﻿// frontend/ecolojiaFrontV3/src/components/analysis/CosmeticAnalysisDisplay.tsx
 import React from 'react';
 import { AlertTriangle, Shield, Leaf, Star, ExternalLink, Droplets } from 'lucide-react';
 
@@ -192,7 +192,7 @@ export const CosmeticAnalysisDisplay: React.FC<CosmeticAnalysisDisplayProps> = (
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-green-700">{alt.score}/100</div>
-                    <div className="text-xs text-gray-500">+{alt.score - analysis.healthScore} points</div>
+                    <div className="text-xs text-neutral-700">+{alt.score - analysis.healthScore} points</div>
                   </div>
                 </div>
                 
@@ -384,7 +384,7 @@ export const DetergentAnalysisDisplay: React.FC<DetergentAnalysisDisplayProps> =
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-green-700">{alt.score}/100</div>
-                    <div className="text-xs text-gray-500">+{alt.score - (analysis.environmentalScore || 0)} points</div>
+                    <div className="text-xs text-neutral-700">+{alt.score - (analysis.environmentalScore || 0)} points</div>
                   </div>
                 </div>
                 

@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/NovaResults.tsx
+﻿// PATH: frontend/src/components/NovaResults.tsx
 import React from 'react';
 import { NovaAdaptedResult } from '../services/novaAdapter';
 import { CosmeticAnalysisDisplay, DetergentAnalysisDisplay } from './analysis/CosmeticAnalysisDisplay';
@@ -124,7 +124,7 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">{product.name}</h2>
             <p className="text-lg text-gray-600 mb-4">{product.category}</p>
             
-            <div className="flex items-center space-x-6 text-sm text-gray-500">
+            <div className="flex items-center space-x-6 text-sm text-neutral-700">
               <div className="flex items-center">
                 <span className="mr-1">a</span>
                 <span>Analyse en {analysis.processingTime}ms</span>
@@ -141,7 +141,7 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
           </div>
           
           <div className="text-right">
-            <div className="text-3xl font-bold text-gray-800">{product.score}<span className="text-lg text-gray-500">/100</span></div>
+            <div className="text-3xl font-bold text-gray-800">{product.score}<span className="text-lg text-neutral-700">/100</span></div>
             <div className="text-sm text-gray-600">Score global</div>
           </div>
         </div>
@@ -234,7 +234,7 @@ const NovaResults: React.FC<NovaResultsProps> = ({ result, loading = false }) =>
                     <span className="font-bold text-gray-800 text-lg">{additive.code}</span>
                     <span className="text-gray-600 ml-3">{additive.name}</span>
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">{additive.category}</div>
+                  <div className="text-sm text-neutral-700 mt-1">{additive.category}</div>
                 </div>
                 
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${

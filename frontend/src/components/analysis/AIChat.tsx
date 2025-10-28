@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles, Zap, Brain, FileText, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface Message {
@@ -337,7 +337,7 @@ Posez-moi une question plus specifique pour une analyse detaillee !`;
             <Send className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 mt-2 text-xs text-neutral-700">
           <Zap className="w-3 h-3" />
           <span>Powered by IA avancee aa Analyses scientifiques en temps reel</span>
         </div>

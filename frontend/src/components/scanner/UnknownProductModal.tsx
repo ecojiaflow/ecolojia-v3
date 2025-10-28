@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface UnknownProductModalProps {
@@ -35,7 +35,7 @@ export const UnknownProductModal: React.FC<UnknownProductModalProps> = ({
           <p className="text-gray-600 mb-2">
             Code-barre : <span className="font-mono font-semibold">{barcode}</span>
           </p>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-neutral-700 mb-6">
             Ce produit n'est pas encore dans notre base de donnees
           </p>
         </div>
@@ -59,7 +59,7 @@ export const UnknownProductModal: React.FC<UnknownProductModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-full text-gray-500 hover:text-gray-700 font-medium py-2"
+            className="w-full text-neutral-700 hover:text-gray-700 font-medium py-2"
           >
             Annuler
           </button>

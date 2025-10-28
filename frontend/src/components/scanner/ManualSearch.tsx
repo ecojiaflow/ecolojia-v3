@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/ManualSearch.tsx
+﻿// PATH: frontend/src/components/scanner/ManualSearch.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -231,7 +231,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   >
-                    <Search className="w-5 h-5 text-gray-400" />
+                    <Search className="w-5 h-5 text-neutral-600" />
                   </motion.div>
                 </div>
               )}
@@ -289,7 +289,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
                       <p className="font-medium text-gray-900">{suggestion.name}</p>
                       <p className="text-sm text-gray-600">{suggestion.brand}</p>
                     </div>
-                    <ChevronDown className="w-5 h-5 text-gray-400 rotate-[-90deg]" />
+                    <ChevronDown className="w-5 h-5 text-neutral-600 rotate-[-90deg]" />
                   </button>
                 ))}
               </div>
@@ -346,7 +346,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent resize-none"
               placeholder="Copiez la liste des ingredients telle qu'elle apparait sur l'emballage..."
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-neutral-700">
               Plus la liste est complete, plus l'analyse sera precise
             </p>
           </div>

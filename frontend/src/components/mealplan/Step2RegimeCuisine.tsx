@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Leaf, Fish, Apple, Zap, Clock, ChefHat } from 'lucide-react';
 
 interface Step2Props {
@@ -114,7 +114,7 @@ export const Step2RegimeCuisine: React.FC<Step2Props> = ({
                   </div>
                   <div>
                     <div className="font-semibold text-gray-800">{option.label}</div>
-                    <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                    <div className="text-xs text-neutral-700 mt-1">{option.description}</div>
                   </div>
                 </div>
                 
@@ -170,7 +170,7 @@ export const Step2RegimeCuisine: React.FC<Step2Props> = ({
                     <div className={`font-semibold ${isSelected ? 'text-white' : 'text-gray-800'}`}>
                       {option.label}
                     </div>
-                    <div className={`text-sm ${isSelected ? 'text-white/80' : 'text-gray-500'}`}>
+                    <div className={`text-sm ${isSelected ? 'text-white/80' : 'text-neutral-700'}`}>
                       {option.description}
                     </div>
                   </div>

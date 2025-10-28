@@ -77,19 +77,19 @@ const HomePage: React.FC = () => {
       icon: Camera,
       title: 'Scanner Intelligent',
       description: 'Analysez instantanement avec photo, code-barres ou recherche manuelle',
-      color: 'bg-green-100 text-primary'
+      color: 'bg-neutral-100 text-primary'
     },
     {
       icon: BarChart3,
       title: 'Analyses Scientifiques',
       description: 'NOVA, Nutri-Score, additifs et impact environnemental detaille',
-      color: 'bg-blue-100 text-blue-700'
+      color: 'bg-neutral-100 text-blue-700'
     },
     {
       icon: Sparkles,
       title: 'IA Personnalisee',
       description: 'Recommandations adaptees a votre profil et vos objectifs Sante',
-      color: 'bg-purple-100 text-purple-700'
+      color: 'bg-neutral-100 text-purple-700'
     }
   ];
 
@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
         <section className="px-4 pt-6 pb-20">
           <div className="space-y-6">
             <div className="text-center mb-4">
-              <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 bg-neutral-100 text-green-800 px-3 py-1 rounded-full mb-4">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-xs font-medium">Scanner instantane</span>
               </div>
@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
             <details className="bg-white p-4 rounded-xl shadow-md">
               <summary className="cursor-pointer font-medium text-gray-700 flex items-center justify-between">
                 <span>Ou rechercher par nom</span>
-                <Sparkles className="w-5 h-5 text-gray-400" />
+                <Sparkles className="w-5 h-5 text-neutral-600" />
               </summary>
               <div className="mt-4">
                 <SearchBar 
@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }} 
                 className="text-center max-w-4xl mx-auto"
               >
-                <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 bg-neutral-100 text-green-800 px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-sm font-medium">IA Scientifique Multi-Categories</span>
                 </div>
@@ -214,7 +214,7 @@ const HomePage: React.FC = () => {
                   >
                     <Camera className="w-5 h-5 text-primary" />
                     <span className="font-medium">Scanner un produit</span>
-                    <ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:translate-x-1 transition-transform" />
                   </button>
                   
                   <button 
@@ -276,9 +276,9 @@ const HomePage: React.FC = () => {
                         <span className="text-3xl">{category.icon}</span>
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
-                      <p className="text-sm text-gray-500 mb-4">{category.count}</p>
+                      <p className="text-sm text-neutral-700 mb-4">{category.count}</p>
                       <div className="space-y-1">
-                        <p className="text-xs text-gray-400">Populaires :</p>
+                        <p className="text-xs text-neutral-600">Populaires :</p>
                         <div className="flex flex-wrap gap-1">
                           {category.popular.map((item) => (
                             <span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">
@@ -349,7 +349,7 @@ const HomePage: React.FC = () => {
                     <p className="text-gray-600 mb-4">"{testimonial.content}"</p>
                     <div>
                       <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                      <p className="text-sm text-neutral-700">{testimonial.role}</p>
                     </div>
                   </motion.div>
                 ))}

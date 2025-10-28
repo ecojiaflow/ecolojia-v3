@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/scanner/EnhancedBarcodeScanner.tsx
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { X, Camera, RotateCw, Zap, Upload, Eye, CheckCircle, AlertTriangle, FlashOff, Flash } from 'lucide-react';
 import { universalSearchEngine } from '../../services/search/UniversalSearchService';
@@ -541,7 +541,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
             </>
           ) : scanMode === 'photo' ? (
             <div className="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-8">
-              <Upload className="w-16 h-16 mb-4 text-gray-400" />
+              <Upload className="w-16 h-16 mb-4 text-neutral-600" />
               <h3 className="text-xl font-semibold mb-2">Analyser une photo</h3>
               <p className="text-gray-300 text-center mb-6">
                 Prenez une photo du code-barres ou de la liste d'ingredients
@@ -580,7 +580,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-8">
-              <Eye className="w-16 h-16 mb-4 text-gray-400" />
+              <Eye className="w-16 h-16 mb-4 text-neutral-600" />
               <h3 className="text-xl font-semibold mb-2">Saisie manuelle</h3>
               <p className="text-gray-300 text-center mb-6">
                 Entrez le code-barres manuellement
@@ -618,7 +618,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
             <button
               onClick={() => setScanMode('camera')}
               className={`flex flex-col items-center p-2 rounded-lg transition-all ${
-                scanMode === 'camera' ? 'text-green-500' : 'text-gray-400'
+                scanMode === 'camera' ? 'text-green-500' : 'text-neutral-600'
               }`}
             >
               <Camera className="w-6 h-6 mb-1" />
@@ -629,7 +629,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
               <button
                 onClick={() => setScanMode('photo')}
                 className={`flex flex-col items-center p-2 rounded-lg transition-all ${
-                  scanMode === 'photo' ? 'text-green-500' : 'text-gray-400'
+                  scanMode === 'photo' ? 'text-green-500' : 'text-neutral-600'
                 }`}
               >
                 <Upload className="w-6 h-6 mb-1" />
@@ -641,7 +641,7 @@ export const EnhancedBarcodeScanner: React.FC<EnhancedBarcodeScannerProps> = ({
               <button
                 onClick={() => setScanMode('manual')}
                 className={`flex flex-col items-center p-2 rounded-lg transition-all ${
-                  scanMode === 'manual' ? 'text-green-500' : 'text-gray-400'
+                  scanMode === 'manual' ? 'text-green-500' : 'text-neutral-600'
                 }`}
               >
                 <Eye className="w-6 h-6 mb-1" />

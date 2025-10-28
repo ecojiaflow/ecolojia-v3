@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 // SCANNER COMPLET AVEC TOUTES LES FONCTIONNALITES
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -432,7 +432,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
             <div className="p-6">
               {/* Indicateur d'etapes */}
               <div className="flex justify-between mb-8">
-                <div className={`flex-1 text-center ${photoStep === 'front' ? 'text-green-700' : capturedPhotos.front ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'front' ? 'text-green-700' : capturedPhotos.front ? 'text-green-500' : 'text-neutral-600'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'front' ? 'bg-green-600 text-white' :
                     capturedPhotos.front ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -442,7 +442,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   <span className="text-xs">Face avant</span>
                 </div>
 
-                <div className={`flex-1 text-center ${photoStep === 'ingredients' ? 'text-green-700' : capturedPhotos.ingredients ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'ingredients' ? 'text-green-700' : capturedPhotos.ingredients ? 'text-green-500' : 'text-neutral-600'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'ingredients' ? 'bg-green-600 text-white' :
                     capturedPhotos.ingredients ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -452,7 +452,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                   <span className="text-xs">Ingredients</span>
                 </div>
 
-                <div className={`flex-1 text-center ${photoStep === 'barcode' ? 'text-green-700' : capturedPhotos.barcode ? 'text-green-500' : 'text-gray-400'}`}>
+                <div className={`flex-1 text-center ${photoStep === 'barcode' ? 'text-green-700' : capturedPhotos.barcode ? 'text-green-500' : 'text-neutral-600'}`}>
                   <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-2 ${
                     photoStep === 'barcode' ? 'bg-green-600 text-white' :
                     capturedPhotos.barcode ? 'bg-green-500 text-white' : 'bg-gray-200'
@@ -584,12 +584,12 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
                     maxLength={13}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-neutral-700 mt-1">
                     Le code-barres se trouve generalement au dos du produit
                   </p>
                 </div>
 
-                <div className="text-center text-gray-500">
+                <div className="text-center text-neutral-700">
                   <span className="bg-white px-4">OU</span>
                 </div>
 
@@ -631,7 +631,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
               <p className="text-gray-600 text-center">
                 Analyse en cours...
               </p>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-neutral-700 mt-2">
                 Cela peut prendre quelques secondes
               </p>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { CheckCircle, AlertTriangle, XCircle, ChevronDown } from 'lucide-react';
 
 interface ScoreBarProps {
@@ -22,7 +22,7 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
     if (s >= 50) return { bg: 'bg-green-300', text: 'text-green-600', border: 'border-green-100', bgLight: 'bg-green-50' };
     if (s >= 30) return { bg: 'bg-orange-400', text: 'text-orange-700', border: 'border-orange-200', bgLight: 'bg-orange-50' };
     if (s > 0) return { bg: 'bg-red-500', text: 'text-red-700', border: 'border-red-200', bgLight: 'bg-red-50' };
-    return { bg: 'bg-gray-300', text: 'text-gray-500', border: 'border-gray-200', bgLight: 'bg-gray-50' };
+    return { bg: 'bg-gray-300', text: 'text-neutral-700', border: 'border-gray-200', bgLight: 'bg-gray-50' };
   };
 
   const getIcon = (s: number) => {
@@ -39,8 +39,8 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
     return (
       <div className="py-3 opacity-50">
         <div className="flex items-center justify-between mb-2">
-          <span className="font-medium text-gray-500">{label}</span>
-          <span className="text-sm text-gray-400">Non disponible</span>
+          <span className="font-medium text-neutral-700">{label}</span>
+          <span className="text-sm text-neutral-600">Non disponible</span>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full" />
       </div>
@@ -62,7 +62,7 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
             <span className={`text-base font-bold ${colors.text}`}>
               {score}/100
             </span>
-            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-neutral-700 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </div>
         </div>
         

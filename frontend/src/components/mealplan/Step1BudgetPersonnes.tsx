@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Users, Euro } from 'lucide-react';
 
 interface Step1Props {
@@ -35,7 +35,7 @@ export const Step1BudgetPersonnes: React.FC<Step1Props> = ({
           </label>
           <div className="text-right">
             <span className="text-3xl font-bold text-green-600">{budget}</span>
-            <span className="text-xl text-gray-500 ml-1">EUR</span>
+            <span className="text-xl text-neutral-700 ml-1">EUR</span>
           </div>
         </div>
 
@@ -49,7 +49,7 @@ export const Step1BudgetPersonnes: React.FC<Step1Props> = ({
           className="w-full h-3 bg-gradient-to-r from-green-200 to-green-400 rounded-lg appearance-none cursor-pointer slider-thumb"
         />
 
-        <div className="flex justify-between text-sm text-gray-500">
+        <div className="flex justify-between text-sm text-neutral-700">
           <span>20 EUR</span>
           <span>200 EUR</span>
         </div>

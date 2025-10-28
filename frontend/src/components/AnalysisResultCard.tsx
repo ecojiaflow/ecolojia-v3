@@ -1,4 +1,4 @@
-// PATH: frontend\src\components\AnalysisResultCard.tsx
+﻿// PATH: frontend\src\components\AnalysisResultCard.tsx
 import React, { useState } from 'react';
 import { 
   Leaf, 
@@ -86,7 +86,7 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
           <div className={`text-5xl font-bold ${getScoreColor(result.globalScore)}`}>
             {Math.round(result.globalScore)}
           </div>
-          <div className="absolute -bottom-6 text-xs text-gray-500">
+          <div className="absolute -bottom-6 text-xs text-neutral-700">
             Score Global
           </div>
         </div>
@@ -134,13 +134,13 @@ export const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({
         {result.scores.nutriscore && (
           <div className="text-center">
             {getNutriScoreBadge(result.scores.nutriscore)}
-            <p className="text-xs text-gray-500 mt-1">Nutri-Score</p>
+            <p className="text-xs text-neutral-700 mt-1">Nutri-Score</p>
           </div>
         )}
         {result.details.ecoscore && (
           <div className="text-center">
             {getNutriScoreBadge(result.details.ecoscore)}
-            <p className="text-xs text-gray-500 mt-1">Eco-Score</p>
+            <p className="text-xs text-neutral-700 mt-1">Eco-Score</p>
           </div>
         )}
       </div>

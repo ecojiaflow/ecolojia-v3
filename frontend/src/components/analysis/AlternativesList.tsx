@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/analysis/AlternativesList.tsx
+﻿// PATH: frontend/src/components/analysis/AlternativesList.tsx
 import type { ProductInfo } from "../../types/api";
 
 export default function AlternativesList({ items }: { items: ProductInfo[] }) {
@@ -12,7 +12,7 @@ export default function AlternativesList({ items }: { items: ProductInfo[] }) {
             {a.brand ? `${a.brand} '¢ ` : ""} {a.category || "'”"} {a.ean ? `'¢ EAN ${a.ean}` : ""}
           </div>
           {a.ingredients && a.ingredients.length > 0 && (
-            <div className="text-xs text-gray-500 mt-1">Ingr?dients: {a.ingredients.slice(0, 7).join(", ")}{a.ingredients.length > 7 ? "'¦" : ""}</div>
+            <div className="text-xs text-neutral-700 mt-1">Ingr?dients: {a.ingredients.slice(0, 7).join(", ")}{a.ingredients.length > 7 ? "'¦" : ""}</div>
           )}
         </div>
       ))}

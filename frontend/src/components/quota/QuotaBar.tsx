@@ -1,4 +1,4 @@
-// frontend/src/components/quota/QuotaBar.tsx
+﻿// frontend/src/components/quota/QuotaBar.tsx
 
 import React from 'react';
 import { useQuota } from '../../hooks/useQuota';
@@ -111,10 +111,10 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
           </div>
           
           <div className="flex justify-between items-center mt-1">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-neutral-700">
               {config.used}/{config.limit}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-neutral-700">
               Reset {formatResetDate(config.resetDate)}
             </span>
           </div>

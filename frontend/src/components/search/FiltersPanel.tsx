@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FiltersPanelProps {
@@ -95,9 +95,9 @@ export default function FiltersPanel({
             Marques {selectedBrands.length > 0 && `(${selectedBrands.length})`}
           </span>
           {expandedSections.brands ? (
-            <ChevronUp className="w-4 h-4 text-gray-500" />
+            <ChevronUp className="w-4 h-4 text-neutral-700" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <ChevronDown className="w-4 h-4 text-neutral-700" />
           )}
         </button>
         
@@ -112,11 +112,11 @@ export default function FiltersPanel({
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 flex-1">{brand.name}</span>
-                <span className="text-xs text-gray-500">({brand.count})</span>
+                <span className="text-xs text-neutral-700">({brand.count})</span>
               </label>
             ))}
             {availableBrands.length === 0 && (
-              <p className="text-sm text-gray-500 py-2">Aucune marque disponible</p>
+              <p className="text-sm text-neutral-700 py-2">Aucune marque disponible</p>
             )}
           </div>
         )}
@@ -132,9 +132,9 @@ export default function FiltersPanel({
             Catégories {selectedCategories.length > 0 && `(${selectedCategories.length})`}
           </span>
           {expandedSections.categories ? (
-            <ChevronUp className="w-4 h-4 text-gray-500" />
+            <ChevronUp className="w-4 h-4 text-neutral-700" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <ChevronDown className="w-4 h-4 text-neutral-700" />
           )}
         </button>
         
@@ -149,11 +149,11 @@ export default function FiltersPanel({
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 flex-1">{category.name}</span>
-                <span className="text-xs text-gray-500">({category.count})</span>
+                <span className="text-xs text-neutral-700">({category.count})</span>
               </label>
             ))}
             {availableCategories.length === 0 && (
-              <p className="text-sm text-gray-500 py-2">Aucune catégorie disponible</p>
+              <p className="text-sm text-neutral-700 py-2">Aucune catégorie disponible</p>
             )}
           </div>
         )}
@@ -167,9 +167,9 @@ export default function FiltersPanel({
         >
           <span className="font-medium text-gray-900">Score Santé</span>
           {expandedSections.healthScore ? (
-            <ChevronUp className="w-4 h-4 text-gray-500" />
+            <ChevronUp className="w-4 h-4 text-neutral-700" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <ChevronDown className="w-4 h-4 text-neutral-700" />
           )}
         </button>
         
@@ -182,7 +182,7 @@ export default function FiltersPanel({
             </div>
             
             <div className="space-y-2">
-              <label className="block text-xs text-gray-500">Minimum</label>
+              <label className="block text-xs text-neutral-700">Minimum</label>
               <input
                 type="range"
                 min="0"
@@ -194,7 +194,7 @@ export default function FiltersPanel({
             </div>
             
             <div className="space-y-2">
-              <label className="block text-xs text-gray-500">Maximum</label>
+              <label className="block text-xs text-neutral-700">Maximum</label>
               <input
                 type="range"
                 min="0"

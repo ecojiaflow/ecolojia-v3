@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/Navbar.tsx
+﻿// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDeviceContext } from '@/hooks/useDeviceContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -283,7 +283,7 @@ const Navbar: React.FC = () => {
           <div className="flex-1 max-w-2xl mx-8 relative" ref={dropdownRef}>
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-600" />
                 
                 <input
                   ref={searchInputRef}
@@ -304,7 +304,7 @@ const Navbar: React.FC = () => {
                   </span>
                   
                   {/* Raccourci clavier */}
-                  <div className="hidden lg:flex items-center space-x-1 text-xs text-gray-400">
+                  <div className="hidden lg:flex items-center space-x-1 text-xs text-neutral-600">
                     <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">Ctrl</kbd>
                     <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">K</kbd>
                   </div>
@@ -349,7 +349,7 @@ const Navbar: React.FC = () => {
                 {isLoadingSuggestions && (
                   <div className="p-6 text-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7DDE4A] mx-auto mb-2"></div>
-                    <span className="text-sm text-gray-500">Analyse IA en cours...</span>
+                    <span className="text-sm text-neutral-700">Analyse IA en cours...</span>
                   </div>
                 )}
 
@@ -367,14 +367,14 @@ const Navbar: React.FC = () => {
                             {suggestion.icon ? (
                               <span className="text-lg">{suggestion.icon}</span>
                             ) : (
-                              <Search className="w-4 h-4 text-gray-500" />
+                              <Search className="w-4 h-4 text-neutral-700" />
                             )}
                           </div>
                           
                           <div className="flex-1">
                             <div className="font-medium text-[#3B3B3B]">{suggestion.query}</div>
                             {suggestion.category && (
-                              <div className="text-xs text-gray-500 mt-0.5">
+                              <div className="text-xs text-neutral-700 mt-0.5">
                                 {suggestion.category}
                               </div>
                             )}
@@ -389,7 +389,7 @@ const Navbar: React.FC = () => {
                                 {suggestion.score}
                               </span>
                             )}
-                            <ArrowRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ArrowRight className="w-4 h-4 text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         </button>
                       ))}
@@ -420,7 +420,7 @@ const Navbar: React.FC = () => {
                           </button>
                         </div>
                         
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-neutral-700">
                           Appuyez <kbd className="px-1 bg-[#DDE9DA] rounded">?</kbd> pour rechercher
                         </div>
                       </div>
@@ -433,7 +433,7 @@ const Navbar: React.FC = () => {
                   <div className="p-6 text-center">
                     <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <h3 className="font-medium text-[#3B3B3B] mb-2">Aucune suggestion</h3>
-                    <p className="text-sm text-gray-500 mb-4">
+                    <p className="text-sm text-neutral-700 mb-4">
                       Appuyez Entree pour rechercher "<span className="font-medium text-[#7DDE4A]">{quickSearchQuery}</span>"
                     </p>
                   </div>
@@ -464,7 +464,7 @@ const Navbar: React.FC = () => {
 
             {/* Notifications */}
             {isAuthenticated && (
-              <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors relative">
+              <button className="p-2 text-neutral-600 hover:text-gray-600 transition-colors relative">
                 <Bell className="w-5 h-5" />
                 {notifications > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#7DDE4A] text-white text-xs rounded-full flex items-center justify-center">
@@ -492,7 +492,7 @@ const Navbar: React.FC = () => {
                   {user?.plan === 'premium' && (
                     <Crown className="w-4 h-4 text-[#FFD700]" />
                   )}
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Profile Dropdown */}
@@ -500,7 +500,7 @@ const Navbar: React.FC = () => {
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 border border-[#DDE9DA]">
                     <div className="px-4 py-2 border-b border-[#DDE9DA]">
                       <p className="text-sm font-medium text-[#3B3B3B]">{user?.email}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-neutral-700">
                         Plan {user?.plan === 'premium' ? 'Premium ?' : 'Gratuit'}
                       </p>
                     </div>

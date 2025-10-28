@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface NovaBadgeProps {
@@ -133,7 +133,7 @@ export const NovaBadge: React.FC<NovaBadgeProps> = ({
             <h4 className="font-bold text-gray-900">🔬 Comprendre NOVA</h4>
             <button
               onClick={() => setShowInfo(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-neutral-600 hover:text-gray-600"
             >
               ✕
             </button>
@@ -179,7 +179,7 @@ export const NovaBadge: React.FC<NovaBadgeProps> = ({
 
             {/* Source */}
             <div className="pt-2 border-t border-gray-200">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-neutral-700">
                 Classification selon <strong>INSERM / ANSES 2024</strong>
               </p>
             </div>

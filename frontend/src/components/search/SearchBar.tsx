@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/search/SearchBar.tsx
+﻿// PATH: frontend/src/components/search/SearchBar.tsx
 import React, { useState, useEffect } from 'react';
 import { Search, TrendingUp, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -88,7 +88,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <div className={`relative ${className}`}>
       <form onSubmit={handleSubmit}>
         <div className="relative flex items-center bg-white rounded-2xl shadow-xl">
-          <Search className="absolute left-6 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-6 w-5 h-5 text-neutral-600" />
 
           <input
             type="text"
@@ -118,7 +118,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               }}
               className="absolute right-36 p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <X className="w-4 h-4 text-gray-400" />
+              <X className="w-4 h-4 text-neutral-600" />
             </button>
           )}
 
@@ -152,7 +152,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
             <div className="py-2 max-h-96 overflow-y-auto">
               {suggestions.length === 0 && !loading && query.trim().length >= 2 && (
-                <div className="px-4 py-6 text-center text-gray-500">
+                <div className="px-4 py-6 text-center text-neutral-700">
                   Aucun produit trouvé pour "{query}"
                 </div>
               )}
@@ -192,7 +192,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                       {suggestion.name || suggestion.query}
                     </div>
                     {(suggestion.brand || suggestion.category) && (
-                      <div className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                      <div className="text-xs text-neutral-700 flex items-center gap-2 mt-0.5">
                         {suggestion.brand && <span className="truncate">{suggestion.brand}</span>}
                         {suggestion.brand && suggestion.category && <span>•</span>}
                         {suggestion.category && <span className="truncate">{suggestion.category}</span>}

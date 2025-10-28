@@ -1,4 +1,4 @@
-// aa src/components/analysis/AlternativesSuggestions.tsx
+﻿// aa src/components/analysis/AlternativesSuggestions.tsx
 
 import React from 'react';
 import { Lightbulb, ArrowUpRight } from 'lucide-react';
@@ -36,7 +36,7 @@ export const AlternativesSuggestions: React.FC<Props> = ({ alternatives }) => {
               ? {alt.name} {alt.price && `- ${alt.price.toFixed(2)}aaa`}
             </p>
             <p className="text-sm text-gray-600 italic">{alt.benefits}</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-neutral-600 mt-1">
               aa Source : {alt.source}
             </p>
             {alt.where_to_buy && (

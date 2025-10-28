@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Camera, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,7 +71,7 @@ export const OCRGuide: React.FC<OCRGuideProps> = ({ onComplete, onCancel }) => {
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
                 step > s.num ? 'bg-green-500 text-white' :
                 step === s.num ? 'bg-blue-500 text-white' :
-                'bg-gray-200 text-gray-500'
+                'bg-gray-200 text-neutral-700'
               }`}>
                 {step > s.num ? <CheckCircle className="w-6 h-6" /> : s.num}
               </div>

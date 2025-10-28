@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   InstantSearch,
   SearchBox,
@@ -22,7 +22,7 @@ interface Props {
 const CustomStats: React.FC<{ nbHits: number; timeSpentMS: number }> = ({ nbHits, timeSpentMS }) => {
   const { t } = useTranslation();
   return (
-    <p className="text-sm text-gray-500 mb-4">
+    <p className="text-sm text-neutral-700 mb-4">
       {nbHits > 0
         ? `${t('common.productsFound', { count: nbHits })} ${t('common.in')} ${timeSpentMS}ms`
         : t('common.noResults')}

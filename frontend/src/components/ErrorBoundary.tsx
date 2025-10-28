@@ -1,4 +1,4 @@
-// =============================
+﻿// =============================
 // frontend/src/components/ErrorBoundary.tsx
 // =============================
 
@@ -89,7 +89,7 @@ class ErrorBoundary extends Component<Props, State> {
                   </div>
                   <span className="font-bold text-gray-800">ECOLOJIA</span>
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-neutral-700">
                   Si le probleme persiste, notre equipe technique ? ete automatiquement notifiee.
                 </p>
               </div>

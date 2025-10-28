@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Eye, AlertTriangle, Leaf, Zap } from 'lucide-react';
 
 interface VisionResult {
@@ -87,7 +87,7 @@ export function OCRPanel({ result, className = '' }: OCRPanelProps) {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-sm italic">
+            <p className="text-neutral-700 text-sm italic">
               Aucun ingrédient détecté automatiquement
             </p>
           )}
@@ -125,9 +125,9 @@ export function OCRPanel({ result, className = '' }: OCRPanelProps) {
           >
             <span className="font-medium text-gray-900">Texte complet extrait</span>
             {showRawText ? (
-              <ChevronUp className="text-gray-500" size={20} />
+              <ChevronUp className="text-neutral-700" size={20} />
             ) : (
-              <ChevronDown className="text-gray-500" size={20} />
+              <ChevronDown className="text-neutral-700" size={20} />
             )}
           </button>
           
@@ -138,7 +138,7 @@ export function OCRPanel({ result, className = '' }: OCRPanelProps) {
                   {result.rawText || 'Aucun texte brut disponible'}
                 </pre>
               </div>
-              <div className="mt-2 text-xs text-gray-500">
+              <div className="mt-2 text-xs text-neutral-700">
                 Ce texte peut contenir des erreurs de reconnaissance. 
                 Vérifiez les informations importantes sur l'emballage original.
               </div>

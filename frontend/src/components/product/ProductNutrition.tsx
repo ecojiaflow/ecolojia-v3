@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NutritionBar } from './NutritionBar';
 
 interface NutritionData {
@@ -120,7 +120,7 @@ export const ProductNutrition: React.FC<ProductNutritionProps> = ({ nutrition })
         </table>
       </div>
 
-      <p className="text-xs text-gray-500 mt-3">
+      <p className="text-xs text-neutral-700 mt-3">
         Source : OpenFoodFacts • Les données peuvent être incomplètes
       </p>
     </div>

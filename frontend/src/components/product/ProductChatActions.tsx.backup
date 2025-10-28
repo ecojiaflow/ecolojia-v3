@@ -71,7 +71,7 @@ export const ProductChatActions: React.FC<ProductChatActionsProps> = ({ product 
         ))}
       </div>
 
-      <p className="text-xs text-neutral-700 mt-3 text-center">
+      <p className="text-xs text-gray-500 mt-3 text-center">
         Questions personnalisées selon la catégorie {product.category}
       </p>
     </div>

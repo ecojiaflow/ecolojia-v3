@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 const CookieBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -107,7 +107,7 @@ const CookieBanner: React.FC = () => {
 
         {/* Liens legaux */}
         <div className="mt-3 pt-3 border-t border-gray-100">
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+          <div className="flex flex-wrap gap-4 text-xs text-neutral-700">
             <a href="/privacy" className="hover:text-eco-leaf transition-colors">
               Politique de confidentialite
             </a>

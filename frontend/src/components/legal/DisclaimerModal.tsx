@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Check } from 'lucide-react';
 
 const DISCLAIMER_VERSION = '1.0';
@@ -133,7 +133,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ onAccept }) =>
 
           {/* Scroll indicator */}
           {!hasReadAll && (
-            <div className="text-center text-sm text-gray-500 italic animate-pulse">
+            <div className="text-center text-sm text-neutral-700 italic animate-pulse">
               ↓ Faites défiler pour lire l'intégralité ↓
             </div>
           )}
@@ -170,7 +170,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ onAccept }) =>
               className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-all ${
                 accepted
                   ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-gray-300 text-neutral-700 cursor-not-allowed'
               }`}
             >
               <Check className="w-5 h-5 inline mr-2" />
@@ -179,7 +179,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ onAccept }) =>
           </div>
 
           {/* Legal links */}
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-neutral-700 text-center mt-4">
             En continuant, vous acceptez nos{' '}
             <a href="/terms" target="_blank" className="text-green-600 hover:underline">
               Conditions d'Utilisation

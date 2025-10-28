@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/CommunityComparison.tsx
+﻿// frontend/src/components/dashboard/CommunityComparison.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Award, BarChart3, Info } from 'lucide-react';
@@ -187,10 +187,10 @@ export const CommunityComparison: React.FC = () => {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-600">Votre score moyen</span>
-                <Info className="w-4 h-4 text-gray-400" />
+                <Info className="w-4 h-4 text-neutral-600" />
               </div>
               <div className="text-2xl font-bold text-gray-800">{comparisondata?.user.avgHealthScore}/100</div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-neutral-700">
                 vs {comparisondata?.community.avgHealthScore}/100 communaute
               </div>
             </div>
@@ -198,10 +198,10 @@ export const CommunityComparison: React.FC = () => {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-600">Vos analyses</span>
-                <Info className="w-4 h-4 text-gray-400" />
+                <Info className="w-4 h-4 text-neutral-600" />
               </div>
               <div className="text-2xl font-bold text-gray-800">{comparisondata?.user.totalAnalyses}</div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-neutral-700">
                 vs {Math.round(comparisondata?.community.avgAnalysesPerUser)} en moyenne
               </div>
             </div>
@@ -209,10 +209,10 @@ export const CommunityComparison: React.FC = () => {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-600">Position globale</span>
-                <Info className="w-4 h-4 text-gray-400" />
+                <Info className="w-4 h-4 text-neutral-600" />
               </div>
               <div className="text-2xl font-bold text-blue-600">#{Math.round((100 - comparisondata?.percentile) * comparisondata?.community.totalUsers / 100)}</div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-neutral-700">
                 sur {comparisondata?.community.totalUsers} utilisateurs
               </div>
             </div>

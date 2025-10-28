@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/RecommendationsSection.tsx
+﻿// frontend/src/components/dashboard/RecommendationsSection.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, AlertTriangle, Sparkles, ChevronRight, Target, Heart, Leaf } from 'lucide-react';
@@ -154,7 +154,7 @@ export const RecommendationsSection: React.FC = () => {
                       </div>
                     </div>
                     <ChevronRight 
-                      className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                      className={`w-5 h-5 text-neutral-600 transform transition-transform ${
                         expandedCards.has(rec.id) ? 'rotate-90' : ''
                       }`}
                     />
@@ -203,7 +203,7 @@ export const RecommendationsSection: React.FC = () => {
                               >
                                 <span className="text-sm font-medium">{product.name}</span>
                                 <div className="flex items-center space-x-2">
-                                  <span className="text-xs text-gray-500">Score: {product.healthScore}/100</span>
+                                  <span className="text-xs text-neutral-700">Score: {product.healthScore}/100</span>
                                   <span className="text-xs font-medium text-green-700">
                                     +{product.improvement} pts
                                   </span>
@@ -242,7 +242,7 @@ export const RecommendationsSection: React.FC = () => {
       {filteredRecommendations.length === 0 && (
         <div className="text-center py-8">
           <Sparkles className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">Aucune recommandation pour cette priorite</p>
+          <p className="text-neutral-700">Aucune recommandation pour cette priorite</p>
         </div>
       )}
     </div>

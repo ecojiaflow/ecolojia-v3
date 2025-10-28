@@ -1,4 +1,4 @@
-// PATH: src/components/admin/ImportProgress.tsx
+﻿// PATH: src/components/admin/ImportProgress.tsx
 import React, { useState } from 'react';
 import { Download, Play, Pause, AlertCircle } from 'lucide-react';
 
@@ -48,7 +48,7 @@ const ImportProgress: React.FC = () => {
             onClick={handleStartImport}
             disabled={isImporting}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-              isImporting ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              isImporting ? 'bg-gray-100 text-neutral-600 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white'
             }`}
           >
@@ -72,7 +72,7 @@ const ImportProgress: React.FC = () => {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">{importStatus}</span>
-            <span className="text-sm text-gray-500">{progress}%</span>
+            <span className="text-sm text-neutral-700">{progress}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div

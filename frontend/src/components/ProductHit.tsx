@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Shield, MapPin, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -145,7 +145,7 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
               </span>
             ))}
             {hit.tags.length > 3 && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-neutral-700">
                 +{hit.tags.length - 3}
               </span>
             )}
@@ -154,7 +154,7 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
 
         {/* Zones disponibles */}
         {hit.zones_dispo && hit.zones_dispo.length > 0 && (
-          <div className="flex items-center gap-1 mb-3 text-sm text-gray-500">
+          <div className="flex items-center gap-1 mb-3 text-sm text-neutral-700">
             <MapPin className="w-4 h-4" />
             <span>{hit.zones_dispo.join(', ')}</span>
           </div>
@@ -162,7 +162,7 @@ const ProductHit: React.FC<ProductHitProps> = ({ hit, onClick, viewMode = 'grid'
 
         {/* Footer avec confiance IA */}
         <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-neutral-700">
             {t('common.confidence')}: 
             <span className={`font-semibold ml-1 ${getConfidenceColor(aiConfidence)}`}>
               {confidencePct}%

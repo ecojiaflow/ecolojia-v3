@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // aa src/components/analysis/ScientificScore.tsx - VERSION ENRICHIE
 import React, { useState } from 'react';
 import { CircleGauge, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Activity } from 'lucide-react';
@@ -106,14 +106,14 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
             <ul className="text-xs text-gray-700 space-y-1">
               {nov?.reasoning.slice(0, 3).map((reason, idx) => (
                 <li key={idx} className="flex items-start gap-1">
-                  <span className="text-gray-400">aa</span>
+                  <span className="text-neutral-600">aa</span>
                   {reason}
                 </li>
               ))}
             </ul>
           </div>
         )}
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-neutral-700">
           Confiance : {Math.round(nov?.confidence * 100)}% aa Source : INSERM 2024
         </div>
       </div>
@@ -163,7 +163,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
             </div>
           </div>
         )}
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-neutral-700">
           Source : Base EFSA 2024
         </div>
       </div>
@@ -197,7 +197,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
             <div className="text-xs text-gray-600">Confiance : {Math.round(nutrition.confidence * 100)}%</div>
           </div>
         </div>
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-neutral-700">
           Algorithme officiel ANSES 2024
         </div>
       </div>
@@ -235,7 +235,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
         <div className={`mt-2 inline-flex px-2 py-1 rounded-full text-xs font-medium ${categoryStyle.bg} ${categoryStyle.color}`}>
           Impact {categoryStyle.label}
         </div>
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-neutral-700">
           Table Internationale + INSERM 2024
         </div>
       </div>
@@ -309,8 +309,8 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
               </div>
               {section.hasDetails && (
                 expandedSection === section.key ? 
-                <ChevronUp className="w-4 h-4 text-gray-400" /> : 
-                <ChevronDown className="w-4 h-4 text-gray-400" />
+                <ChevronUp className="w-4 h-4 text-neutral-600" /> : 
+                <ChevronDown className="w-4 h-4 text-neutral-600" />
               )}
             </button>
             
@@ -336,7 +336,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
       </div>
 
       {/* Footer sources */}
-      <div className="mt-6 pt-4 border-t text-xs text-gray-500 text-center">
+      <div className="mt-6 pt-4 border-t text-xs text-neutral-700 text-center">
         Sources : INSERM aa ANSES aa EFSA aa ECHA aa Base Internationale IG 2024
       </div>
     </div>

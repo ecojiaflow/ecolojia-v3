@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -189,7 +189,7 @@ const ProductPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
           <div className="space-y-3">
-            <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
+            <Link to="/search" className="bg-neutral-1000 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
               Rechercher un produit
             </Link>
             {error?.includes('OCR') && (
@@ -304,7 +304,7 @@ const ProductPage: React.FC = () => {
           </div>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
-            <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-gray-500">Non disponible</p>}</div>
+            <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-neutral-700">Non disponible</p>}</div>
           </details>
           <details className="bg-white" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
@@ -352,7 +352,7 @@ const ProductPage: React.FC = () => {
           <div id="alternatives-section" className="bg-white p-4">
             <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
-              <p className="text-gray-500">Chargement...</p>
+              <p className="text-neutral-700">Chargement...</p>
             ) : alternatives.length > 0 ? (
               <div className="space-y-3">
                 {alternatives.slice(0, 5).map(alt => (
@@ -360,14 +360,14 @@ const ProductPage: React.FC = () => {
                     {getProductImage(alt) && <img src={getProductImage(alt)} alt={alt.name} className="w-12 h-12 object-contain" />}
                     <div className="flex-1">
                       <p className="font-medium text-sm">{alt.name}</p>
-                      <p className="text-xs text-gray-500">{alt.brand}</p>
+                      <p className="text-xs text-neutral-700">{alt.brand}</p>
                     </div>
                     <div className={`text-lg font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>{alt.scores?.overallScore || 0}</div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">Aucune alternative disponible</p>
+              <p className="text-neutral-700">Aucune alternative disponible</p>
             )}
           </div>
         </div>
@@ -451,7 +451,7 @@ const ProductPage: React.FC = () => {
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-neutral-100 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
                 <span className="text-3xl font-bold text-primary">
                   {product.scores?.environmentScore || 'N/A'}/100

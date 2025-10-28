@@ -1,4 +1,4 @@
-// frontend/src/components/gdpr/ConsentManager.tsx
+﻿// frontend/src/components/gdpr/ConsentManager.tsx
 import React, { useState, useEffect } from 'react';
 import { Shield, Cookie, Eye, Settings, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -243,9 +243,9 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
                       <span className="font-semibold">{category.name}</span>
                     </div>
                     {expandedCategory === category.id ? (
-                      <ChevronUp className="w-5 h-5 text-gray-400" />
+                      <ChevronUp className="w-5 h-5 text-neutral-600" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                      <ChevronDown className="w-5 h-5 text-neutral-600" />
                     )}
                   </button>
                   
@@ -282,7 +282,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
                                     <span className="font-mono text-sm">{cookie.name}</span>
                                     <p className="text-xs text-gray-600 mt-1">{cookie.purpose}</p>
                                   </div>
-                                  <span className="text-xs text-gray-500">{cookie.duration}</span>
+                                  <span className="text-xs text-neutral-700">{cookie.duration}</span>
                                 </div>
                               </div>
                             ))}
@@ -327,7 +327,7 @@ export const ConsentManager: React.FC<ConsentManagerProps> = ({ onAccept, onReje
             </button>
           </div>
           
-          <p className="text-xs text-center text-gray-500 mt-4">
+          <p className="text-xs text-center text-neutral-700 mt-4">
             En cliquant sur "Accepter", vous consentez  l'utilisation de cookies et au traitement de vos donnees conformement  notre{' '}
             <a href="/privacy" className="text-green-700 hover:underline">politique de confidentialite</a>.
           </p>

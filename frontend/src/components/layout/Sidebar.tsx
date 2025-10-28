@@ -69,9 +69,9 @@ export const Sidebar: React.FC = () => {
                     : 'hover:bg-gray-50'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${isActive ? cat.color : 'text-gray-400'}`} />
+                <Icon className={`h-5 w-5 ${isActive ? cat.color : 'text-neutral-600'}`} />
                 <span className={`text-xs mt-1 font-medium text-center leading-tight ${
-                  isActive ? 'text-gray-800' : 'text-gray-500'
+                  isActive ? 'text-gray-800' : 'text-neutral-700'
                 }`}>
                   {cat.label}
                 </span>
@@ -161,7 +161,7 @@ export const Sidebar: React.FC = () => {
                 <div className="text-sm font-medium text-gray-800 truncate">
                   {user?.firstName} {user?.lastName}
                 </div>
-                <div className="text-xs text-gray-500 truncate">
+                <div className="text-xs text-neutral-700 truncate">
                   {user?.email}
                 </div>
               </div>

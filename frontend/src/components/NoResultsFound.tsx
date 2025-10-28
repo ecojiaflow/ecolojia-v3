@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Search, Loader, ExternalLink } from "lucide-react";
 
 interface NoResultsFoundProps {
@@ -84,7 +84,7 @@ const NoResultsFound: React.FC<NoResultsFoundProps> = ({
         )}
 
         <footer className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-neutral-700">
             Suggestions : essayez des mots-cles plus simples ou verifiez
             laaaaorthographe.
           </p>

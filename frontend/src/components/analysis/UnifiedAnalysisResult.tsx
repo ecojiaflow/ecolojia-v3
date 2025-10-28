@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { AlertCircle, CheckCircle, Info, TrendingUp, Leaf, Heart, Shield } from 'lucide-react';
 
 // Types
@@ -339,7 +339,7 @@ function EmptyState() {
     <div className="max-w-4xl mx-auto p-4">
       <div className="bg-white rounded-xl shadow-lg p-12 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-          <Info className="w-8 h-8 text-gray-400" />
+          <Info className="w-8 h-8 text-neutral-600" />
         </div>
         <p className="text-gray-600">Aucune analyse disponible</p>
       </div>

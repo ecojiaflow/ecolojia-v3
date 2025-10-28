@@ -1,4 +1,4 @@
-// frontend/src/components/product/ScoreBreakdown.tsx
+﻿// frontend/src/components/product/ScoreBreakdown.tsx
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
@@ -38,7 +38,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
   };
 
   const getScoreTextColor = (score: number | null) => {
-    if (score === null) return 'text-gray-500';
+    if (score === null) return 'text-neutral-700';
     if (score >= 70) return 'text-green-700';
     if (score >= 50) return 'text-yellow-700';
     if (score >= 30) return 'text-orange-700';
@@ -148,7 +148,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-900">Analyse détaillée du score</h3>
           <div className="flex items-center gap-2">
-            <Info className="w-5 h-5 text-gray-500" />
+            <Info className="w-5 h-5 text-neutral-700" />
             <span className="text-sm text-gray-600">
               Confiance : {Math.round(scores.confidence * 100)}%
             </span>
@@ -236,9 +236,9 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                     {hasScore ? score : "N/A"}
                   </div>
                   {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-gray-500" />
+                    <ChevronUp className="w-5 h-5 text-neutral-700" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                    <ChevronDown className="w-5 h-5 text-neutral-700" />
                   )}
                 </div>
               </button>
@@ -289,7 +289,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
                       <div className="text-sm text-gray-600">
                         {component.data.value} {component.data.unit}
                         {component.data.equivalent && (
-                          <span className="ml-2 text-gray-500">
+                          <span className="ml-2 text-neutral-700">
                             (≈ {component.data.equivalent})
                           </span>
                         )}
@@ -364,7 +364,7 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
 
                   {/* Source scientifique */}
                   {component.data?.source && (
-                    <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
+                    <div className="text-xs text-neutral-700 pt-2 border-t border-gray-200">
                       <strong>Source :</strong> {component.data.source}
                     </div>
                   )}

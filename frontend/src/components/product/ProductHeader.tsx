@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React from 'react';
 import { Package } from 'lucide-react';
 
@@ -77,7 +77,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
           
           {barcode && (
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-500">Code-barres</p>
+              <p className="text-sm text-neutral-700">Code-barres</p>
               <p className="font-mono text-lg">{barcode}</p>
             </div>
           )}
@@ -101,7 +101,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
               <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
                 {overallScore}
               </div>
-              <p className="text-sm text-gray-500 mt-1">Score global</p>
+              <p className="text-sm text-neutral-700 mt-1">Score global</p>
             </div>
           </div>
 

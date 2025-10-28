@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/components/analysis/ProgressiveAnalysis.tsx
 // Composant d'analyse progressive avec gestion des valeurs manquantes
 
@@ -40,7 +40,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
   if (!analysis) {
     return (
       <div className="bg-white rounded-xl shadow-lg p-6">
-        <p className="text-gray-500 text-center">Aucune analyse disponible</p>
+        <p className="text-neutral-700 text-center">Aucune analyse disponible</p>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
             <div className="flex items-center justify-between">
               <span className="text-2xl font-bold">{novaScore}/4</span>
               <div className="text-right">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-neutral-700">
                   {novaScore <= 1 && 'Non transforme'}
                   {novaScore === 2 && 'Peu transforme'}
                   {novaScore === 3 && 'Transforme'}
@@ -213,7 +213,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 mt-2">Aucun additif detecte</p>
+                  <p className="text-sm text-neutral-700 mt-2">Aucun additif detecte</p>
                 )}
               </motion.div>
             )}
@@ -308,7 +308,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
                   <span className={`text-lg font-bold ${getScoreColor(alt.healthScore || 0)}`}>
                     {alt.healthScore || 0}
                   </span>
-                  <p className="text-xs text-gray-500">Score Santé</p>
+                  <p className="text-xs text-neutral-700">Score Santé</p>
                 </div>
               </div>
             ))}

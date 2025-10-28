@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ExternalLink, Star, Shield } from 'lucide-react';
 
 interface Partner {
@@ -77,7 +77,7 @@ const PartnerLinks: React.FC<PartnerLinksProps> = ({ partnerLinks, productTitle 
               </div>
 
               {link.partner.website && (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-neutral-700">
                   {link.partner.website
                     .replace(/^httpsa:\/\//, '')
                     .replace(/^www\./, '')}

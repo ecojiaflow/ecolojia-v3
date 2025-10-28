@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import React from 'react';
 import { Heart, Leaf } from 'lucide-react';
 
@@ -20,7 +20,7 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
             <h3 className="font-semibold text-gray-700">{label}</h3>
           </div>
           <div className="text-center">
-            <span className="text-lg font-medium text-gray-400">
+            <span className="text-lg font-medium text-neutral-600">
               Non évalué
             </span>
           </div>

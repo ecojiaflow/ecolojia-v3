@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/Admin/ProductTable.tsx
 import React, { useState } from 'react';
 import { RecentProduct } from '../../types/admin';
 import { Eye, Trash2, Check, X, ExternalLink, Calendar } from 'lucide-react';
@@ -106,12 +106,12 @@ const ProductTable: React.FC<ProductTableProps> = ({
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categorie</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Confiance IA</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Produit</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Categorie</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Confiance IA</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Statut</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-neutral-700 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -130,7 +130,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       <div className="text-sm font-medium text-gray-900 line-clamp-1">
                         {product.title}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-neutral-700">
                         {product.brand && <span className="mr-2">aaa {product.brand}</span>}
                         <span className="font-mono text-xs bg-gray-100 px-1 rounded">
                           {product.slug}
@@ -151,7 +151,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <div className="flex items-center space-x-2">
                     {getConfidenceBadge(product.ai_confidence, product.confidence_color)}
                     {product.eco_score && (
-                      <span className="text-xs text-gray-500">Eco: {product.eco_score}</span>
+                      <span className="text-xs text-neutral-700">Eco: {product.eco_score}</span>
                     )}
                   </div>
                 </td>
@@ -160,7 +160,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   {getStatusBadge(product.verified_status)}
                 </td>
 
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-700">
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
                     {new Date(product.created_at).toLocaleDateString('fr-FR')}
@@ -219,7 +219,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
       {products.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-4xl mb-4">aa</div>
+          <div className="text-neutral-600 text-4xl mb-4">aa</div>
           <p className="text-gray-600">Aucun produit trouve</p>
         </div>
       )}

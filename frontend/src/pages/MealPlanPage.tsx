@@ -84,9 +84,9 @@ export const MealPlanPage: React.FC = () => {
                       min="20"
                       max="500"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">€</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 font-medium">€</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Entre 20€ et 500€</p>
+                  <p className="text-xs text-neutral-700 mt-1">Entre 20€ et 500€</p>
                 </div>
 
                 <div>
@@ -102,9 +102,9 @@ export const MealPlanPage: React.FC = () => {
                       min="1200"
                       max="4000"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">kcal</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 font-medium">kcal</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Entre 1200 et 4000 kcal</p>
+                  <p className="text-xs text-neutral-700 mt-1">Entre 1200 et 4000 kcal</p>
                 </div>
               </div>
 
@@ -186,7 +186,7 @@ export const MealPlanPage: React.FC = () => {
                 )}
               </button>
 
-              <p className="text-center text-xs text-gray-500 mt-4">
+              <p className="text-center text-xs text-neutral-700 mt-4">
                 ? génération en ~15 secondes € ?? Feature Premium
               </p>
             </div>
@@ -273,7 +273,7 @@ export const MealPlanPage: React.FC = () => {
                   <span>{tab.label}</span>
                   {tab.count !== null && (
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                      isActive ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600'
+                      isActive ? 'bg-primary-100 text-primary-700' : 'bg-neutral-100 text-gray-600'
                     }`}>
                       {tab.count}
                     </span>
@@ -319,16 +319,16 @@ export const MealPlanPage: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-md overflow-hidden">
               {plan.shoppingList && plan.shoppingList.length > 0 ? (
                 plan.shoppingList.map((item: any, idx: number) => (
-                  <div key={idx} className="p-4 border-b hover:bg-gray-50 flex justify-between">
+                  <div key={idx} className="p-4 border-b hover:bg-neutral-50 flex justify-between">
                     <div>
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-gray-500">{item.quantity} {item.unit}</p>
+                      <p className="text-sm text-neutral-700">{item.quantity} {item.unit}</p>
                     </div>
                     <span className="font-semibold">{item.estimatedPrice?.toFixed(2)}€</span>
                   </div>
                 ))
               ) : (
-                <div className="p-8 text-center text-gray-500">Aucun article</div>
+                <div className="p-8 text-center text-neutral-700">Aucun article</div>
               )}
             </div>
           </div>

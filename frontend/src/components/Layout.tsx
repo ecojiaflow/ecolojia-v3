@@ -1,4 +1,4 @@
-// frontend/src/components/Layout.tsx
+﻿// frontend/src/components/Layout.tsx
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -90,7 +90,7 @@ export function Layout() {
               <div className="hidden lg:flex items-center space-x-4 text-sm">
                 <div className="text-gray-600">
                   <span className="font-medium">{user?.currentUsage?.scansThisMonth || 0}</span>
-                  <span className="text-gray-400">/{user?.quotas?.scansPerMonth === -1 ? 'aa' : user?.quotas?.scansPerMonth || 30} scans</span>
+                  <span className="text-neutral-600">/{user?.quotas?.scansPerMonth === -1 ? 'aa' : user?.quotas?.scansPerMonth || 30} scans</span>
                 </div>
                 {user?.tier === 'premium' && (
                   <span className="px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs rounded-full font-medium">
@@ -285,7 +285,7 @@ export function Layout() {
             to="/"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-700' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-neutral-700'
               }`
             }
           >
@@ -297,7 +297,7 @@ export function Layout() {
             to="/search"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-700' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-neutral-700'
               }`
             }
           >
@@ -309,7 +309,7 @@ export function Layout() {
             to="/scan"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 relative ${
-                isActive ? 'text-green-700' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-neutral-700'
               }`
             }
           >
@@ -322,7 +322,7 @@ export function Layout() {
             to="/dashboard"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-700' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-neutral-700'
               }`
             }
           >
@@ -334,7 +334,7 @@ export function Layout() {
             to="/history"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center space-y-1 ${
-                isActive ? 'text-green-700' : 'text-gray-500'
+                isActive ? 'text-green-700' : 'text-neutral-700'
               }`
             }
           >

@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/DailyAnalysesChart.tsx
+﻿// frontend/src/components/dashboard/DailyAnalysesChart.tsx
 import React from 'react';
 import {
   LineChart,
@@ -260,19 +260,19 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
         {/* Mini statistiques */}
         <div className="grid grid-cols-4 gap-3 mb-4">
           <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-xs text-gray-500">Total analyses</p>
+            <p className="text-xs text-neutral-700">Total analyses</p>
             <p className="text-lg font-semibold text-gray-800">{totalAnalyses}</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-xs text-gray-500">Moyenne/jour</p>
+            <p className="text-xs text-neutral-700">Moyenne/jour</p>
             <p className="text-lg font-semibold text-gray-800">{avgDailyAnalyses}</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-xs text-gray-500">Max/jour</p>
+            <p className="text-xs text-neutral-700">Max/jour</p>
             <p className="text-lg font-semibold text-gray-800">{maxAnalyses}</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-xs text-gray-500">Score moyen</p>
+            <p className="text-xs text-neutral-700">Score moyen</p>
             <p className="text-lg font-semibold text-green-700">{avgGlobalScore}/100</p>
           </div>
         </div>
@@ -287,7 +287,7 @@ export const DailyAnalysesChart: React.FC<DailyAnalysesChartProps> = ({
 
       {/* Message si pas de donnees */}
       {data?.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-neutral-700">
           <p>Aucune donnee disponible pour cette periode</p>
         </div>
       )}

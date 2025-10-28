@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface WizardProps {
@@ -29,7 +29,7 @@ export const MealPlanWizard: React.FC<WizardProps> = ({
             <span className="text-sm md:text-base font-medium text-gray-700">
               Etape {currentStep} sur {totalSteps}
             </span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-neutral-700">
               {Math.round((currentStep / totalSteps) * 100)}%
             </span>
           </div>

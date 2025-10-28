@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/CategorySelector.tsx
 import React, { useState } from 'react';
 import { Apple, Droplets, Sparkles } from 'lucide-react';
 
@@ -103,7 +103,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                 </p>
                 
                 {/* Examples */}
-                <p className="text-xs text-gray-500 mb-4 italic">
+                <p className="text-xs text-neutral-700 mb-4 italic">
                   {category.examples}
                 </p>
                 

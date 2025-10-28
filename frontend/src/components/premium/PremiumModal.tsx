@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/premium/PremiumModal.tsx
+﻿// PATH: frontend/src/components/premium/PremiumModal.tsx
 import React, { useState } from 'react';
 import { X, Check, Zap, Infinity, Brain, Download, Users, Shield } from 'lucide-react';
 import { paymentService } from '../../services/api';
@@ -139,19 +139,19 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
                   </div>
                   <div className="flex gap-8">
                     <div className="text-center">
-                      <p className="text-xs text-gray-500 mb-1">Gratuit</p>
+                      <p className="text-xs text-neutral-700 mb-1">Gratuit</p>
                       {typeof feature.free === 'boolean' ? (
                         feature.free ? (
                           <Check className="h-5 w-5 text-green-500 mx-auto" />
                         ) : (
-                          <X className="h-5 w-5 text-gray-400 mx-auto" />
+                          <X className="h-5 w-5 text-neutral-600 mx-auto" />
                         )
                       ) : (
                         <span className="text-sm text-gray-600">{feature.free}</span>
                       )}
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-500 mb-1">Premium</p>
+                      <p className="text-xs text-neutral-700 mb-1">Premium</p>
                       {typeof feature.premium === 'boolean' ? (
                         <Check className="h-5 w-5 text-green-500 mx-auto" />
                       ) : (
