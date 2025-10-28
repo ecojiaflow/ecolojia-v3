@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+ï»¿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 // SCANNER COMPLET AVEC TOUTES LES FONCTIONNALITES
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -55,11 +55,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
       // Si on a un code-barres, chercher d'abord dans la base
       if (barcode) {
         try {
-          console.log("?? [DEBUG] Recherche barcode:", barcode);
           const product = await productService.getByBarcode(barcode);
-          console.log("? [DEBUG] Réponse:", product);
           if (product && product._id) {
-            console.log("? [DEBUG] Navigation vers:", `/product/${product._id}`);
             toast.success('Produit trouve !');
             navigate(`/product/${product._id}`);
             onClose();
@@ -154,8 +151,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
       Quagga.onDetected((result: any) => {
         if (result?.codeResult?.code) {
           const code = result.codeResult.code;
-          console.log("?? [DEBUG] CODE DÉTECTÉ:", code);
-          alert("Code détecté: " + code);
+          console.log('Code detecte:', code);
           Quagga.stop();
           stopStream();
           handleProductSearch(code);
@@ -199,8 +195,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
               const barcodes = await barcodeDetector.detect(videoRef.current);
               if (barcodes.length > 0) {
                 const code = barcodes[0].rawValue;
-                console.log("?? [DEBUG] CODE NATIF DÉTECTÉ:", code);
-          alert("Code natif détecté: " + code);
+                console.log('Code natif detecte:', code);
                 stopStream();
                 handleProductSearch(code);
                 return;
@@ -442,7 +437,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'front' ? 'bg-green-600 text-white' :
                     capturedPhotos.front ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.front ? '?' : '1'}
+                    {capturedPhotos.front ? 'âœ“' : '1'}
                   </div>
                   <span className="text-xs">Face avant</span>
                 </div>
@@ -452,7 +447,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'ingredients' ? 'bg-green-600 text-white' :
                     capturedPhotos.ingredients ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.ingredients ? '?' : '2'}
+                    {capturedPhotos.ingredients ? 'âœ“' : '2'}
                   </div>
                   <span className="text-xs">Ingredients</span>
                 </div>
@@ -462,7 +457,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                     photoStep === 'barcode' ? 'bg-green-600 text-white' :
                     capturedPhotos.barcode ? 'bg-green-500 text-white' : 'bg-gray-200'
                   }`}>
-                    {capturedPhotos.barcode ? '?' : '3'}
+                    {capturedPhotos.barcode ? 'âœ“' : '3'}
                   </div>
                   <span className="text-xs">Code-barres</span>
                 </div>

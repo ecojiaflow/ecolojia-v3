@@ -1,0 +1,1144 @@
+﻿[
+    {
+        "Status":  "FAIL",
+        "Error":  "Le serveur distant a retourné une erreur : (404) Introuvable.",
+        "Name":  "Health Check"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Product Nutella (3017620422003)",
+        "Response":  {
+                         "success":  true,
+                         "product":  {
+                                         "_id":  "68e2c64546db866b232c4d35",
+                                         "barcode":  "3017620422003",
+                                         "name":  "Nutella",
+                                         "brand":  "Ferrero",
+                                         "category":  "food",
+                                         "subcategory":  "spreads",
+                                         "categories_tags":  [
+                                                                 "en:breakfasts",
+                                                                 "en:spreads",
+                                                                 "en:sweet-spreads",
+                                                                 "fr:pates-a-tartiner",
+                                                                 "en:hazelnut-spreads"
+                                                             ],
+                                         "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg",
+                                         "foodData":  {
+                                                          "novaGroup":  4,
+                                                          "nutriScore":  "E",
+                                                          "ecoScore":  "E",
+                                                          "additives":  [
+                                                                            "@{tag=en:e322; code=E322; name=e322; riskLevel=LOW; healthConcerns=System.Object[]}",
+                                                                            "@{tag=en:e322i; code=E322I; name=e322i; riskLevel=LOW; healthConcerns=System.Object[]}"
+                                                                        ],
+                                                          "allergens":  [
+                                                                            "@{tag=en:milk; name=milk; riskLevel=MEDIUM; concerns=System.Object[]}",
+                                                                            "@{tag=en:nuts; name=nuts; riskLevel=MEDIUM; concerns=System.Object[]}",
+                                                                            "@{tag=en:soybeans; name=soybeans; riskLevel=MEDIUM; concerns=System.Object[]}"
+                                                                        ],
+                                                          "ingredients":  "Sucre, huile de palme, NOISETTES 13%, cacao maigre 7,4%, LAIT écrémé en poudre 6,6%, LACTOSERUM en poudre, émulsifiants: lécithines [SOJA), vanilline. Sans gluten.",
+                                                          "labels":  [
+                                                                         "en:vegetarian",
+                                                                         "en:no-gluten",
+                                                                         "en:no-preservatives",
+                                                                         "en:no-hydrogenated-fats",
+                                                                         "fr:triman"
+                                                                     ],
+                                                          "nutritionalInfo":  {
+                                                                                  "energy":  539,
+                                                                                  "fat":  30.9,
+                                                                                  "saturatedFat":  10.6,
+                                                                                  "carbohydrates":  57.5,
+                                                                                  "sugars":  56.3,
+                                                                                  "fiber":  0,
+                                                                                  "protein":  6.3,
+                                                                                  "salt":  0.107
+                                                                              }
+                                                      },
+                                         "packaging":  "Plastic,fr:Pot en verre",
+                                         "origin":  "",
+                                         "viewCount":  0,
+                                         "scanCount":  0,
+                                         "createdAt":  "2025-10-05T19:25:57.393Z",
+                                         "updatedAt":  "2025-10-22T12:53:40.059Z",
+                                         "__v":  1,
+                                         "cosmeticsData":  {
+                                                               "allergens":  [
+
+                                                                             ],
+                                                               "certifications":  [
+
+                                                                                  ],
+                                                               "endocrineDisruptors":  [
+
+                                                                                       ],
+                                                               "ingredients":  [
+
+                                                                               ]
+                                                           },
+                                         "detergentsData":  {
+                                                                "composition":  [
+
+                                                                                ],
+                                                                "ecoLabels":  [
+
+                                                                              ],
+                                                                "surfactants":  [
+
+                                                                                ]
+                                                            },
+                                         "lastScoreUpdate":  "2025-10-07T23:51:28.448Z",
+                                         "scoringVersion":  "3.0.0",
+                                         "nutritionEnrichedAt":  "2025-10-07T21:49:19.350Z",
+                                         "nutritionSource":  "openfoodfacts",
+                                         "scores":  {
+                                                        "overallScore":  35,
+                                                        "confidence":  1,
+                                                        "breakdown":  {
+                                                                          "nova":  "@{available=True; score=25; value=4; label=Groupe 4; explanation=Aliments ultra-transformés - À limiter; originalWeight=0.15; adjustedWeight=0.15; contribution=3.75}",
+                                                                          "nutriScore":  "@{available=True; score=15; value=E; label=Nutri-Score E; explanation=Qualité nutritionnelle très faible; originalWeight=0.2; adjustedWeight=0.2; contribution=3}",
+                                                                          "additives":  "@{available=True; score=70; count=2; dangerous=0; label=2 additif(s); explanation=2 additif(s) jugé(s) acceptables; originalWeight=0.15; adjustedWeight=0.15; contribution=10.5}",
+                                                                          "sugars":  "@{available=True; score=15; value=56.3; unit=g/100g; label=56.3g/100g; equivalent=11 morceaux de sucre; explanation=Teneur très élevée en sucres - OMS recommande max 25g/jour; originalWeight=0.1; adjustedWeight=0.1; contribution=1.5}",
+                                                                          "saturatedFat":  "@{available=True; score=15; value=10.6; unit=g/100g; label=10.6g/100g; equivalent=2 cuillères à café de beurre; explanation=Teneur élevée en graisses saturées - À limiter; originalWeight=0.1; adjustedWeight=0.1; contribution=1.5}",
+                                                                          "salt":  "@{available=True; score=100; value=0.107; unit=g/100g; label=0.107g/100g; equivalent=0 pincée de sel; explanation=Faible teneur en sel; originalWeight=0.1; adjustedWeight=0.1; contribution=10}",
+                                                                          "ecoScore":  "@{available=True; score=15; value=E; label=Eco-Score E; explanation=Impact environnemental très élevé; originalWeight=0.15; adjustedWeight=0.15; contribution=2.25}",
+                                                                          "labels":  "@{available=True; score=50; list=System.Object[]; isBio=False; label=Aucun label significatif; explanation=Pas de certification bio; originalWeight=0.05; adjustedWeight=0.05; contribution=2.5}"
+                                                                      },
+                                                        "calculatedAt":  "2025-10-22T14:24:10.693Z",
+                                                        "dataCompleteness":  "EXCELLENT",
+                                                        "environmentScore":  null,
+                                                        "healthScore":  35,
+                                                        "scoringMetadata":  {
+                                                                                "category":  "food",
+                                                                                "totalComponents":  8,
+                                                                                "availableCount":  8,
+                                                                                "missingCount":  0,
+                                                                                "calculatedAt":  "2025-10-22T14:24:10.693Z",
+                                                                                "scoringVersion":  "3.1.0-scientific"
+                                                                            }
+                                                    }
+                                     },
+                         "source":  "DATABASE",
+                         "cached":  true,
+                         "aiEnrichmentUsed":  false
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Algolia Search \u0027nutella\u0027",
+        "Response":  {
+                         "success":  true,
+                         "data":  {
+                                      "products":  [
+                                                       {
+                                                           "_id":  "68e2c6b346db866b232c5cb0",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero, Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500278802",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/027/8802/front_en.33.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c69346db866b232c57f6",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero,Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "5020411121151",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/502/041/112/1151/front_en.19.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c69146db866b232c57d9",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500398418",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/039/8418/front_en.23.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c69146db866b232c57a7",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500357729",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/035/7729/front_en.48.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c68646db866b232c564f",
+                                                           "name":  "Nutella-Eis",
+                                                           "brand":  "Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500425183",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/042/5183/front_en.70.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c66a46db866b232c5238",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "80050865",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/000/008/005/0865/front_en.64.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c65d46db866b232c5062",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero, Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "4008400409627",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/400/840/040/9627/front_en.128.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c65c46db866b232c504b",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero, Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "4008400402222",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/400/840/040/2222/front_en.161.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c65046db866b232c4ea7",
+                                                           "name":  "nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500082379",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/008/2379/front_en.151.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64b46db866b232c4dfa",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "4008400404127",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/400/840/040/4127/front_en.251.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64946db866b232c4dc7",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero,Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500179864",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/017/9864/front_fr.152.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64946db866b232c4db5",
+                                                           "name":  "nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "4008400401621",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/400/840/040/1621/front_en.287.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64846db866b232c4d8e",
+                                                           "name":  "nutella",
+                                                           "brand":  "Ferrero,Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "59032823",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/000/005/903/2823/front_fr.262.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64846db866b232c4d84",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero, Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "3017620429484",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/9484/front_en.373.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64546db866b232c4d35",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "3017620422003",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c64446db866b232c4d26",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "3017620425035",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/5035/front_en.583.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "3017620422003",
+                                                           "name":  "Nutella",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "3017620422003",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c6c346db866b232c5ee1",
+                                                           "name":  "Nutella Hazelnut Spread With Cocoa",
+                                                           "brand":  "Ferrero, Nutella",
+                                                           "category":  "food",
+                                                           "barcode":  "80177128",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/000/008/017/7128/front_en.10.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c6a046db866b232c59ca",
+                                                           "name":  "Nutella biscuits",
+                                                           "brand":  "Ferrero",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500390306",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/039/0306/front_en.85.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       },
+                                                       {
+                                                           "_id":  "68e2c68846db866b232c568d",
+                                                           "name":  "Nutella B-ready",
+                                                           "brand":  "Ferrero,Nutella b-ready",
+                                                           "category":  "food",
+                                                           "barcode":  "8000500217078",
+                                                           "imageUrl":  "https://images.openfoodfacts.org/images/products/800/050/021/7078/front_en.97.400.jpg",
+                                                           "ingredients":  "@{text=}",
+                                                           "nova_group":  null,
+                                                           "nutriscore_grade":  null,
+                                                           "analysisData":  "@{healthScore=0; environmentScore=0; socialScore=0}",
+                                                           "scanCount":  0,
+                                                           "viewCount":  0,
+                                                           "createdAt":  "2025-10-28T17:23:20.747Z",
+                                                           "updatedAt":  "2025-10-28T17:23:20.747Z"
+                                                       }
+                                                   ],
+                                      "pagination":  {
+                                                         "total":  32,
+                                                         "page":  0,
+                                                         "pages":  2,
+                                                         "limit":  20,
+                                                         "hasNext":  true,
+                                                         "hasPrev":  false
+                                                     }
+                                  }
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Algolia Autocomplete",
+        "Response":  {
+                         "success":  true,
+                         "data":  {
+                                      "suggestions":  [
+                                                          {
+                                                              "id":  "68e2c6dc46db866b232c5f94",
+                                                              "name":  "Nuts\u0027n Berries",
+                                                              "brand":  "Seeberger",
+                                                              "category":  "food",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/400/825/805/1030/front_en.73.400.jpg",
+                                                              "score":  50,
+                                                              "barcode":  "4008258051030"
+                                                          },
+                                                          {
+                                                              "id":  "68e2c6d946db866b232c5f32",
+                                                              "name":  "Nusskernmischung",
+                                                              "brand":  "Seeberger",
+                                                              "category":  "food",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/400/825/815/0092/front_en.11.400.jpg",
+                                                              "score":  50,
+                                                              "barcode":  "4008258150092"
+                                                          },
+                                                          {
+                                                              "id":  "68e2c6c346db866b232c5ee1",
+                                                              "name":  "Nutella Hazelnut Spread With Cocoa",
+                                                              "brand":  "Ferrero, Nutella",
+                                                              "category":  "food",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/000/008/017/7128/front_en.10.400.jpg",
+                                                              "score":  50,
+                                                              "barcode":  "80177128"
+                                                          },
+                                                          {
+                                                              "id":  "68e2c6c246db866b232c5e96",
+                                                              "name":  "Nuts \u0026 seeds muesli",
+                                                              "brand":  "Tesco",
+                                                              "category":  "food",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/505/700/810/0947/front_en.10.400.jpg",
+                                                              "score":  50,
+                                                              "barcode":  "5057008100947"
+                                                          },
+                                                          {
+                                                              "id":  "68e2c6c246db866b232c5e8e",
+                                                              "name":  "Nudeln Spaghetti",
+                                                              "brand":  "Combino, Lidl",
+                                                              "category":  "food",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/401/315/960/4599/front_de.52.400.jpg",
+                                                              "score":  50,
+                                                              "barcode":  "4013159604599"
+                                                          }
+                                                      ],
+                                      "total":  123
+                                  }
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Trending Products",
+        "Response":  {
+                         "success":  true,
+                         "products":  [
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  "",
+                                                                    "ingredients":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "Tensioactifs cationiques Parfum",
+                                                                     "surfactants":  "Quaternium-15",
+                                                                     "phosphateFree":  true,
+                                                                     "biodegradable":  true,
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{biodegradability=; aquaticToxicity=; phosphates=; ecolabels=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.528Z",
+                                                             "environmentScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f71",
+                                              "barcode":  "3234567890123",
+                                              "name":  "Adoucissant Lavande",
+                                              "brand":  "Lenor",
+                                              "category":  "detergents",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.324Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.898Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.202Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  "",
+                                                                    "ingredients":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "Phosphates Enzymes Agent blanchissant",
+                                                                     "surfactants":  "Alkyl Polyglucoside",
+                                                                     "phosphateFree":  false,
+                                                                     "biodegradable":  false,
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{biodegradability=; aquaticToxicity=; phosphates=; ecolabels=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.514Z",
+                                                             "environmentScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f70",
+                                              "barcode":  "5412345678901",
+                                              "name":  "Pastilles Lave-Vaisselle",
+                                              "brand":  "Finish",
+                                              "category":  "detergents",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.324Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.884Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.186Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "inciList":  "Aqua, Sorbitol, Sodium Fluoride, Menthol",
+                                                                    "ingredients":  "",
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "",
+                                                                     "surfactants":  "",
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{endocrineDisruptors=; allergens=; cmrSubstances=; certifications=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.448Z",
+                                                             "healthScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f6b",
+                                              "barcode":  "3760194624076",
+                                              "name":  "Dentifrice Menthe",
+                                              "brand":  "Signal",
+                                              "category":  "cosmetics",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.292Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.827Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.127Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  "",
+                                                                    "ingredients":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "Coco-Glucoside Huiles essentielles",
+                                                                     "surfactants":  "Coco-Glucoside",
+                                                                     "phosphateFree":  true,
+                                                                     "biodegradable":  true,
+                                                                     "ecoLabels":  "Ecocert"
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{biodegradability=; aquaticToxicity=; phosphates=; ecolabels=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.490Z",
+                                                             "environmentScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f6f",
+                                              "barcode":  "3456780123456",
+                                              "name":  "Nettoyant Multi-Surfaces Bio",
+                                              "brand":  "Ecover",
+                                              "category":  "detergents",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.323Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.870Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.170Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  "",
+                                                                    "ingredients":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "Tensioactifs anioniques 15-30% Enzymes Parfum",
+                                                                     "surfactants":  "Sodium Laureth Sulfate Alcohol Ethoxylate",
+                                                                     "phosphateFree":  true,
+                                                                     "biodegradable":  true,
+                                                                     "ecoLabels":  "EU Ecolabel"
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{biodegradability=; aquaticToxicity=; phosphates=; ecolabels=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.462Z",
+                                                             "environmentScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f6d",
+                                              "barcode":  "4015000961472",
+                                              "name":  "Lessive Liquide Ariel",
+                                              "brand":  "Ariel",
+                                              "category":  "detergents",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.323Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.841Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.142Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "inciList":  "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine",
+                                                                    "ingredients":  "",
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "",
+                                                                     "surfactants":  "",
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{endocrineDisruptors=; allergens=; cmrSubstances=; certifications=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.392Z",
+                                                             "healthScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f68",
+                                              "barcode":  "3600541005006",
+                                              "name":  "Shampooing Doux",
+                                              "brand":  "Garnier",
+                                              "category":  "cosmetics",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.291Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.784Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.085Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "inciList":  "Aqua, Glycerin, Cetearyl Alcohol, Dimethicone, Parfum",
+                                                                    "ingredients":  "  ",
+                                                                    "certifications":  "cruelty-free",
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "",
+                                                                     "surfactants":  "",
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{endocrineDisruptors=; allergens=; cmrSubstances=; certifications=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.372Z",
+                                                             "healthScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f67",
+                                              "barcode":  "3600523975310",
+                                              "name":  "Cr�me Visage Hydratante",
+                                              "brand":  "Nivea",
+                                              "category":  "cosmetics",
+                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/360/052/397/5310/front_fr.jpg",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.291Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.765Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.066Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "inciList":  "Alcohol Denat, Aqua, Aluminum Chlorohydrate",
+                                                                    "ingredients":  "",
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "",
+                                                                     "surfactants":  "",
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{endocrineDisruptors=; allergens=; cmrSubstances=; certifications=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.428Z",
+                                                             "healthScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f6a",
+                                              "barcode":  "3337875583389",
+                                              "name":  "D�odorant Spray",
+                                              "brand":  "Sanex",
+                                              "category":  "cosmetics",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.292Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.812Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.112Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "inciList":  "Aqua, Aloe Barbadensis Leaf Juice, Coco-Glucoside",
+                                                                    "ingredients":  "",
+                                                                    "certifications":  "ecocert bio",
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "",
+                                                                     "surfactants":  "",
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{endocrineDisruptors=; allergens=; cmrSubstances=; certifications=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.410Z",
+                                                             "healthScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f69",
+                                              "barcode":  "3574661323534",
+                                              "name":  "Gel Douche Bio",
+                                              "brand":  "Cien",
+                                              "category":  "cosmetics",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.292Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.800Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.098Z",
+                                              "scoringVersion":  "3.0.0"
+                                          },
+                                          {
+                                              "foodData":  {
+                                                               "labels":  "",
+                                                               "additives":  "",
+                                                               "allergens":  ""
+                                                           },
+                                              "cosmeticsData":  {
+                                                                    "endocrineDisruptors":  "",
+                                                                    "allergens":  "",
+                                                                    "certifications":  "",
+                                                                    "ingredients":  ""
+                                                                },
+                                              "detergentsData":  {
+                                                                     "composition":  "Tensioactifs anioniques 5-15% Conservateurs",
+                                                                     "surfactants":  "Sodium Lauryl Sulfate",
+                                                                     "phosphateFree":  true,
+                                                                     "biodegradable":  true,
+                                                                     "ecoLabels":  ""
+                                                                 },
+                                              "scores":  {
+                                                             "scoringVersion":  "3.0.0",
+                                                             "missingData":  "",
+                                                             "aiEnrichmentUsed":  false,
+                                                             "overallScore":  50,
+                                                             "confidence":  0,
+                                                             "breakdown":  "@{biodegradability=; aquaticToxicity=; phosphates=; ecolabels=}",
+                                                             "scoringMetadata":  "@{version=3.1.0}",
+                                                             "calculatedAt":  "2025-10-22T13:26:10.476Z",
+                                                             "environmentScore":  50
+                                                         },
+                                              "_id":  "68e28854b83865ac173d5f6e",
+                                              "barcode":  "8410436212342",
+                                              "name":  "Liquide Vaisselle Fairy",
+                                              "brand":  "Fairy",
+                                              "category":  "detergents",
+                                              "imageUrl":  "https://via.placeholder.com/150",
+                                              "viewCount":  0,
+                                              "scanCount":  0,
+                                              "createdAt":  "2025-10-05T15:01:40.323Z",
+                                              "updatedAt":  "2025-10-08T16:09:26.856Z",
+                                              "__v":  0,
+                                              "lastScoreUpdate":  "2025-10-07T23:51:27.156Z",
+                                              "scoringVersion":  "3.0.0"
+                                          }
+                                      ]
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Login Premium User",
+        "Token":  "dev-token-1761672201165"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "User Profile (authenticated)",
+        "Response":  {
+                         "success":  true,
+                         "user":  {
+                                      "id":  1,
+                                      "email":  "user@test.com",
+                                      "name":  "Test User",
+                                      "plan":  "premium"
+                                  }
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Dashboard Stats",
+        "Response":  {
+                         "success":  true,
+                         "data":  {
+                                      "totals":  {
+                                                     "scans":  0,
+                                                     "products":  5344,
+                                                     "favorites":  0
+                                                 },
+                                      "averages":  {
+                                                       "health":  0,
+                                                       "environment":  0,
+                                                       "ethics":  0
+                                                   },
+                                      "weeklyTrend":  [
+                                                          {
+                                                              "day":  "Mer",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Jeu",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Ven",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Sam",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Dim",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Lun",
+                                                              "scans":  0
+                                                          },
+                                                          {
+                                                              "day":  "Mar",
+                                                              "scans":  0
+                                                          }
+                                                      ],
+                                      "recentAnalyses":  [
+
+                                                         ],
+                                      "topProducts":  [
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f71",
+                                                              "barcode":  "3234567890123",
+                                                              "name":  "Adoucissant Lavande",
+                                                              "brand":  "Lenor",
+                                                              "category":  "detergents",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f70",
+                                                              "barcode":  "5412345678901",
+                                                              "name":  "Pastilles Lave-Vaisselle",
+                                                              "brand":  "Finish",
+                                                              "category":  "detergents",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f6b",
+                                                              "barcode":  "3760194624076",
+                                                              "name":  "Dentifrice Menthe",
+                                                              "brand":  "Signal",
+                                                              "category":  "cosmetics",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f6f",
+                                                              "barcode":  "3456780123456",
+                                                              "name":  "Nettoyant Multi-Surfaces Bio",
+                                                              "brand":  "Ecover",
+                                                              "category":  "detergents",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f6d",
+                                                              "barcode":  "4015000961472",
+                                                              "name":  "Lessive Liquide Ariel",
+                                                              "brand":  "Ariel",
+                                                              "category":  "detergents",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f68",
+                                                              "barcode":  "3600541005006",
+                                                              "name":  "Shampooing Doux",
+                                                              "brand":  "Garnier",
+                                                              "category":  "cosmetics",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f67",
+                                                              "barcode":  "3600523975310",
+                                                              "name":  "Cr�me Visage Hydratante",
+                                                              "brand":  "Nivea",
+                                                              "category":  "cosmetics",
+                                                              "imageUrl":  "https://images.openfoodfacts.org/images/products/360/052/397/5310/front_fr.jpg"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f6a",
+                                                              "barcode":  "3337875583389",
+                                                              "name":  "D�odorant Spray",
+                                                              "brand":  "Sanex",
+                                                              "category":  "cosmetics",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f69",
+                                                              "barcode":  "3574661323534",
+                                                              "name":  "Gel Douche Bio",
+                                                              "brand":  "Cien",
+                                                              "category":  "cosmetics",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          },
+                                                          {
+                                                              "_id":  "68e28854b83865ac173d5f6e",
+                                                              "barcode":  "8410436212342",
+                                                              "name":  "Liquide Vaisselle Fairy",
+                                                              "brand":  "Fairy",
+                                                              "category":  "detergents",
+                                                              "imageUrl":  "https://via.placeholder.com/150"
+                                                          }
+                                                      ]
+                                  }
+                     }
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Frontend Homepage",
+        "Response":  "\u003c!doctype html\u003e\n\u003chtml lang=\"fr\"\u003e\n  \u003chead\u003e\n    \u003cmeta charset=\"UTF-8\" /\u003e\n    \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" /\u003e\n    \u003cmeta name=\"theme-color\" content=\"#10b981\" /\u003e\n    \u003clink rel=\"manifest\" href=\"/manifest.json\" /\u003e\n    \u003clink rel=\"apple-touch-icon\" href=\"/icon-192.png\" /\u003e\n    \u003ctitle\u003eECOLOJIA\u003c/title\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.googleapis.com\" /\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin /\u003e\n    \u003clink href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800\u0026display=swap\" rel=\"stylesheet\" /\u003e\n    \u003cscript type=\"module\" crossorigin src=\"/assets/index-bo2k7vJN.js\"\u003e\u003c/script\u003e\n    \u003clink rel=\"stylesheet\" crossorigin href=\"/assets/index-CrtXi4Sm.css\"\u003e\n  \u003c/head\u003e\n  \u003cbody\u003e\n    \u003cdiv id=\"root\"\u003e\u003c/div\u003e\n    \u003cscript\u003e\n      if (\u0027serviceWorker\u0027 in navigator \u0026\u0026 window.location.hostname !== \u0027localhost\u0027) {\n        navigator.serviceWorker.register(\u0027/sw.js\u0027);\n      }\n    \u003c/script\u003e\n  \u003c/body\u003e\n\u003c/html\u003e\n"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Login Page",
+        "Response":  "\u003c!doctype html\u003e\n\u003chtml lang=\"fr\"\u003e\n  \u003chead\u003e\n    \u003cmeta charset=\"UTF-8\" /\u003e\n    \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" /\u003e\n    \u003cmeta name=\"theme-color\" content=\"#10b981\" /\u003e\n    \u003clink rel=\"manifest\" href=\"/manifest.json\" /\u003e\n    \u003clink rel=\"apple-touch-icon\" href=\"/icon-192.png\" /\u003e\n    \u003ctitle\u003eECOLOJIA\u003c/title\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.googleapis.com\" /\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin /\u003e\n    \u003clink href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800\u0026display=swap\" rel=\"stylesheet\" /\u003e\n    \u003cscript type=\"module\" crossorigin src=\"/assets/index-bo2k7vJN.js\"\u003e\u003c/script\u003e\n    \u003clink rel=\"stylesheet\" crossorigin href=\"/assets/index-CrtXi4Sm.css\"\u003e\n  \u003c/head\u003e\n  \u003cbody\u003e\n    \u003cdiv id=\"root\"\u003e\u003c/div\u003e\n    \u003cscript\u003e\n      if (\u0027serviceWorker\u0027 in navigator \u0026\u0026 window.location.hostname !== \u0027localhost\u0027) {\n        navigator.serviceWorker.register(\u0027/sw.js\u0027);\n      }\n    \u003c/script\u003e\n  \u003c/body\u003e\n\u003c/html\u003e\n"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Premium Page",
+        "Response":  "\u003c!doctype html\u003e\n\u003chtml lang=\"fr\"\u003e\n  \u003chead\u003e\n    \u003cmeta charset=\"UTF-8\" /\u003e\n    \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" /\u003e\n    \u003cmeta name=\"theme-color\" content=\"#10b981\" /\u003e\n    \u003clink rel=\"manifest\" href=\"/manifest.json\" /\u003e\n    \u003clink rel=\"apple-touch-icon\" href=\"/icon-192.png\" /\u003e\n    \u003ctitle\u003eECOLOJIA\u003c/title\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.googleapis.com\" /\u003e\n    \u003clink rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin /\u003e\n    \u003clink href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800\u0026display=swap\" rel=\"stylesheet\" /\u003e\n    \u003cscript type=\"module\" crossorigin src=\"/assets/index-bo2k7vJN.js\"\u003e\u003c/script\u003e\n    \u003clink rel=\"stylesheet\" crossorigin href=\"/assets/index-CrtXi4Sm.css\"\u003e\n  \u003c/head\u003e\n  \u003cbody\u003e\n    \u003cdiv id=\"root\"\u003e\u003c/div\u003e\n    \u003cscript\u003e\n      if (\u0027serviceWorker\u0027 in navigator \u0026\u0026 window.location.hostname !== \u0027localhost\u0027) {\n        navigator.serviceWorker.register(\u0027/sw.js\u0027);\n      }\n    \u003c/script\u003e\n  \u003c/body\u003e\n\u003c/html\u003e\n"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "API Response Time",
+        "Value":  "212 ms"
+    },
+    {
+        "Status":  "PASS",
+        "Name":  "Frontend Response Time",
+        "Value":  "290 ms"
+    }
+]
