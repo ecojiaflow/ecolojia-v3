@@ -25,7 +25,7 @@ export const MealPlanPage: React.FC = () => {
     setIsGenerating(true);
     try {
       const token = localStorage.getItem('ecolojia_token');
-      const response = await axiosInstance.post('${import.meta.env.VITE_API_URL || ""}/api/meal-plan/generate', formData, {
+      const response = await axiosInstance.post('/meal-plan/generate', formData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlanData(response.data);
