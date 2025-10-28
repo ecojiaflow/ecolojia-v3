@@ -3,7 +3,7 @@
   const logDebug = (message) => {
     console.log('[DEBUG]', message);
     // Envoyer au backend pour logger
-    fetch('${import.meta.env.VITE_API_URL || "http://localhost:10000"}/api/debug-log', {
+    fetch('${import.meta.env.VITE_API_URL || "${import.meta.env.VITE_API_URL || "http://localhost:10000"}"}/api/debug-log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Calendar, ShoppingCart, TrendingUp, Download, Sparkles, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MealCard } from '../components/mealplan/MealCard';
@@ -25,7 +25,7 @@ export const MealPlanPage: React.FC = () => {
     setIsGenerating(true);
     try {
       const token = localStorage.getItem('ecolojia_token');
-      const response = await axios.post('http://localhost:10000/api/meal-plan/generate', formData, {
+      const response = await axios.post('${import.meta.env.VITE_API_URL || "http://localhost:10000"}/api/meal-plan/generate', formData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlanData(response.data);
