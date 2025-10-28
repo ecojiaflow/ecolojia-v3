@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+﻿/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -7,43 +7,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        // CHARTE ECOLOJIA
-        primary: '#7DDE4A',      // Vert primaire
-        secondary: '#E9F8DF',    // Vert secondaire clair
-        background: '#FFFFFF',   // Blanc fond
-        bgSecondary: '#F7F9F4',  // Gris clair sections
-        text: '#3B3B3B',         // Gris texte
-        border: '#DDE9DA',       // Gris pale bordures
+        // CHARTE ECOLOJIA - ÉCHELLE COMPLÈTE
+        primary: {
+          50: '#F3FBEA',   // Background ultra-léger ✅
+          100: '#E9F8DF',  // Background léger ✅
+          200: '#D4F1C0',  // Borders actifs
+          300: '#B7E99C',  // Accents doux
+          400: '#98E073',  // Secondary CTA
+          500: '#7DDE4A',  // CTA principal (défaut)
+          600: '#5FC72F',  // Hover CTA
+          700: '#489E26',  // Active CTA
+          800: '#377A1F',  // Texte sur fond clair
+          900: '#295D19',  // Texte foncé
+        },
+        forest: '#236D3E',       // Accents premium
+        secondary: '#E9F8DF',    // Alias primary-100
+        background: '#FFFFFF',
+        bgSecondary: '#F7F9F4',
         
-        // Emerald (existant - compatibilite)
-        emerald: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+        // Neutrals (pour textes lisibles)
+        neutral: {
+          50: '#F9FAF8',
+          100: '#F7F9F4',
+          200: '#EDF2EA',
+          300: '#DDE9DA',
+          600: '#6B6B6B',
+          700: '#4A4A4A',
+          800: '#3B3B3B',
+          900: '#232323',
         }
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'], // Police ECOLOJIA
-      },
-      fontSize: {
-        'display': '48px',  // H1
-        'heading': '32px',  // H2
-        'body': '16px',     // Texte courant
-        'small': '14px',    // Tags
-      },
-      borderRadius: {
-        'card': '16px',     // Cartes ECOLOJIA
-      },
-      spacing: {
-        'section': '64px',  // Espacement sections
-      }
     },
   },
   plugins: [],
