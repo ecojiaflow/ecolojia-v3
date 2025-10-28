@@ -291,7 +291,7 @@ const ShoppingListPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] pb-20">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         
-        <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+        <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <ShoppingCart className="w-8 h-8 text-[#2E7DD7]" />
@@ -367,7 +367,7 @@ const ShoppingListPage: React.FC = () => {
 
         {activeList ? (
           <>
-            <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowNewItemForm(true)}
@@ -399,7 +399,7 @@ const ShoppingListPage: React.FC = () => {
             </div>
 
             {showNewItemForm && (
-              <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#D4F1C0]">
+              <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#D4F1C0]">
                 <h3 className="text-lg font-bold text-[#232323] mb-4">Nouvel article</h3>
                 
                 <div className="space-y-3">
@@ -473,7 +473,7 @@ const ShoppingListPage: React.FC = () => {
                 const checkedCount = items.filter(i => i.checked).length;
 
                 return (
-                  <div key={category.id} className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-[#DDE9DA] overflow-hidden">
+                  <div key={category.id} className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-[#DDE9DA] overflow-hidden">
                     <button
                       onClick={() => toggleCategory(category.id)}
                       className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F7F9F4] transition-colors"
@@ -498,7 +498,7 @@ const ShoppingListPage: React.FC = () => {
                             className={`flex items-center gap-3 p-3 rounded-[14px] border transition-all ${
                               item.checked 
                                 ? 'bg-[#F7F9F4] border-[#EDF2EA]' 
-                                : 'bg-white border-[#DDE9DA] hover:border-[#D4F1C0]'
+                                : 'bg-primary-50 border-[#DDE9DA] hover:border-[#D4F1C0]'
                             }`}
                           >
                             <button
@@ -544,7 +544,7 @@ const ShoppingListPage: React.FC = () => {
               })}
             </div>
 
-            <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
               <h3 className="text-lg font-bold text-[#232323] mb-4">Statistiques</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
@@ -574,7 +574,7 @@ const ShoppingListPage: React.FC = () => {
 
           </>
         ) : (
-          <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-12 text-center border border-[#DDE9DA]">
+          <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-12 text-center border border-[#DDE9DA]">
             <Package className="w-16 h-16 text-[#DDE9DA] mx-auto mb-4" />
             <h3 className="text-xl font-bold text-[#232323] mb-2">Aucune liste</h3>
             <p className="text-[#6B6B6B] mb-6">Creez votre premiere liste de courses</p>

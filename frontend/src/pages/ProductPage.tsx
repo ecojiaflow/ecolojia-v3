@@ -172,10 +172,10 @@ const ProductPage: React.FC = () => {
   };
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-primary-50 flex items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="large" />
-          <p className="mt-4 text-gray-600">Chargement du produit...</p>
+          <p className="mt-4 text-gray-900">Chargement du produit...</p>
         </div>
       </div>
     );
@@ -183,11 +183,11 @@ const ProductPage: React.FC = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+      <div className="min-h-screen bg-primary-50 flex items-center justify-center">
+        <div className="bg-primary-50 rounded-xl shadow-lg p-8 max-w-md w-full text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
-          <p className="text-gray-600 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
+          <p className="text-gray-900 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
           <div className="space-y-3">
             <Link to="/search" className="bg-neutral-1000 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
               Rechercher un produit
@@ -252,20 +252,20 @@ const ProductPage: React.FC = () => {
 
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-20">
-        <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-3 sticky top-0 z-10">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg">
+      <div className="min-h-screen bg-primary-50 pb-20">
+        <div className="bg-primary-50 border-b border-gray-200 p-4 flex items-center gap-3 sticky top-0 z-10">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-primary-100 rounded-lg">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold truncate">{product.name}</h1>
         </div>
         <div className="space-y-2">
-          <div className="bg-white p-6">
+          <div className="bg-primary-50 p-6">
             {getProductImage(product) && <img src={getProductImage(product)} alt={product.name} className="w-32 h-32 object-contain mx-auto mb-4" />}
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
-              {product.brand && <p className="text-gray-600 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center bg-white text-white rounded-2xl p-6">
+              {product.brand && <p className="text-gray-900 mb-4">{product.brand}</p>}
+              <div className="inline-flex items-center justify-center bg-primary-50 text-white rounded-2xl p-6">
                 <div className="text-center">
                   <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
@@ -273,7 +273,7 @@ const ProductPage: React.FC = () => {
               </div>
               <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} />
               {product.category === 'food' && product.foodData?.novaGroup && (
-                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
                   <NovaBadge 
                     novaGroup={product.foodData.novaGroup} 
@@ -283,18 +283,18 @@ const ProductPage: React.FC = () => {
                 </div>
               )}
               {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-                <div className="bg-white p-4">
+                <div className="bg-primary-50 p-4">
                   <AllergensSection allergens={product.foodData.allergens} />
                 </div>
               )}
               {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-                <div className="bg-white p-4">
+                <div className="bg-primary-50 p-4">
                   <LabelsSection labels={product.foodData.labels} />
                 </div>
               )}
             </div>
           </div>
-          <div className="bg-white p-4 space-y-2">
+          <div className="bg-primary-50 p-4 space-y-2">
             <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <MessageCircle className="w-5 h-5" />Poser une question IA
             </button>
@@ -302,22 +302,22 @@ const ProductPage: React.FC = () => {
               <Sparkles className="w-5 h-5" />Voir alternatives
             </button>
           </div>
-          <details className="bg-white" open>
+          <details className="bg-primary-50" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-neutral-700">Non disponible</p>}</div>
           </details>
-          <details className="bg-white" open>
+          <details className="bg-primary-50" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
             <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
-            <details className="bg-white" open>
+            <details className="bg-primary-50" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Valeurs nutritionnelles</summary>
               <div className="p-4"><ProductNutrition nutrition={product.foodData.nutrition.per100g} /></div>
             </details>
           )}
           {product.category === 'cosmetics' && (
-            <details className="bg-white" open>
+            <details className="bg-primary-50" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
               <div className="p-4">
                 <CosmeticAnalysisDisplay 
@@ -332,7 +332,7 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           {product.category === 'detergents' && (
-            <details className="bg-white" open>
+            <details className="bg-primary-50" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
               <div className="p-4">
                 <div className="space-y-4">
@@ -342,21 +342,21 @@ const ProductPage: React.FC = () => {
                       {product.scores?.environmentScore || 'N/A'}/100
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-900">
                     Impact aquatique, biodégradabilité et composition évalués
                   </p>
                 </div>
               </div>
             </details>
           )}
-          <div id="alternatives-section" className="bg-white p-4">
+          <div id="alternatives-section" className="bg-primary-50 p-4">
             <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
             {loadingAlternatives ? (
               <p className="text-neutral-700">Chargement...</p>
             ) : alternatives.length > 0 ? (
               <div className="space-y-3">
                 {alternatives.slice(0, 5).map(alt => (
-                  <div key={alt._id} onClick={() => navigate(`/product/${alt.barcode}`)} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <div key={alt._id} onClick={() => navigate(`/product/${alt.barcode}`)} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-primary-50">
                     {getProductImage(alt) && <img src={getProductImage(alt)} alt={alt.name} className="w-12 h-12 object-contain" />}
                     <div className="flex-1">
                       <p className="font-medium text-sm">{alt.name}</p>
@@ -377,10 +377,10 @@ const ProductPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-primary-50">
+      <div className="bg-primary-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <button onClick={() => navigate(-1)} className="flex items-center text-gray-600 hover:text-gray-900">
+          <button onClick={() => navigate(-1)} className="flex items-center text-gray-900 hover:text-gray-900">
             <ArrowLeft className="w-5 h-5 mr-2" />Retour
           </button>
         </div>
@@ -411,7 +411,7 @@ const ProductPage: React.FC = () => {
         )}
         <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} />
         {product.category === 'food' && product.foodData?.novaGroup && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
             <NovaBadge 
               novaGroup={product.foodData.novaGroup} 
@@ -421,12 +421,12 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-          <div className="bg-white p-4">
+          <div className="bg-primary-50 p-4">
             <AllergensSection allergens={product.foodData.allergens} />
           </div>
         )}
         {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-          <div className="bg-white p-4">
+          <div className="bg-primary-50 p-4">
             <LabelsSection labels={product.foodData.labels} />
           </div>
         )}
@@ -435,7 +435,7 @@ const ProductPage: React.FC = () => {
 
         {/* AI Engagement Widget */}
         <AIEngagementWidget product={product} />
-        {product.foodData?.ingredients && (<div className="bg-white rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
+        {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
         {product.category === 'cosmetics' && (
           <CosmeticAnalysisDisplay 
@@ -448,7 +448,7 @@ const ProductPage: React.FC = () => {
           />
         )}
         {product.category === 'detergents' && (
-          <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="bg-primary-50 rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-neutral-100 rounded-lg">
@@ -457,7 +457,7 @@ const ProductPage: React.FC = () => {
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>
-              <p className="text-gray-600">
+              <p className="text-gray-900">
                 Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
               </p>
             </div>

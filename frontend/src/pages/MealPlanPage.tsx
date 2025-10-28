@@ -46,7 +46,7 @@ export const MealPlanPage: React.FC = () => {
 
   if (!planData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-primary-50 pb-24">
+      <div className="min-h-screen bg-primary-50 pb-24">
         <div className="max-w-3xl mx-auto px-4 py-12">
           <button
             onClick={() => navigate('/assistant')}
@@ -56,7 +56,7 @@ export const MealPlanPage: React.FC = () => {
             <span className="font-medium">Retour</span>
           </button>
 
-          <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 border border-gray-100">
+          <div className="bg-primary-50 rounded-3xl shadow-2xl p-8 sm:p-12 border border-gray-100">
             <div className="text-center mb-10">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl mb-4 shadow-lg">
                 <Sparkles className="w-8 h-8 text-white" />
@@ -116,7 +116,7 @@ export const MealPlanPage: React.FC = () => {
                   <select
                     value={formData.people}
                     onChange={(e) => setFormData({ ...formData, people: parseInt(e.target.value) })}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-lg font-medium appearance-none bg-white"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-lg font-medium appearance-none bg-primary-50"
                   >
                     <option value={1}>1 personne</option>
                     <option value={2}>2 personnes</option>
@@ -133,7 +133,7 @@ export const MealPlanPage: React.FC = () => {
                   <select
                     value={formData.dietType}
                     onChange={(e) => setFormData({ ...formData, dietType: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-lg font-medium appearance-none bg-white"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-lg font-medium appearance-none bg-primary-50"
                   >
                     <option value="balanced">équilibré</option>
                     <option value="vegetarian">végétarien</option>
@@ -237,14 +237,14 @@ export const MealPlanPage: React.FC = () => {
           </div>
 
           {planData.validation && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mt-4">
+            <div className="bg-primary-50/10 backdrop-blur-sm rounded-xl p-4 mt-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Qualit€ du plan</span>
                 <span className="text-2xl font-bold">{planData.validation.score}/100</span>
               </div>
-              <div className="mt-2 h-2 bg-white/20 rounded-full overflow-hidden">
+              <div className="mt-2 h-2 bg-primary-50/20 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-white transition-all duration-500"
+                  className="h-full bg-primary-50 transition-all duration-500"
                   style={{ width: `${planData.validation.score}%` }}
                 />
               </div>
@@ -253,7 +253,7 @@ export const MealPlanPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 z-10 bg-primary-50 border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-1 overflow-x-auto hide-scrollbar">
             {tabs.map((tab) => {
@@ -316,7 +316,7 @@ export const MealPlanPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div className="bg-primary-50 rounded-2xl shadow-md overflow-hidden">
               {plan.shoppingList && plan.shoppingList.length > 0 ? (
                 plan.shoppingList.map((item: any, idx: number) => (
                   <div key={idx} className="p-4 border-b hover:bg-neutral-50 flex justify-between">
@@ -344,7 +344,7 @@ export const MealPlanPage: React.FC = () => {
                 { label: 'Glucides', value: plan.nutrition?.avgPerDay?.carbs || 0, unit: 'g' },
                 { label: 'Lipides', value: plan.nutrition?.avgPerDay?.fats || 0, unit: 'g' },
               ].map((stat) => (
-                <div key={stat.label} className="bg-white rounded-xl shadow-md p-6">
+                <div key={stat.label} className="bg-primary-50 rounded-xl shadow-md p-6">
                   <p className="text-sm text-gray-600 mb-2">{stat.label}</p>
                   <p className="text-3xl font-bold text-primary-600">
                     {stat.value}<span className="text-lg ml-1">{stat.unit}</span>

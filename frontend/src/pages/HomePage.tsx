@@ -77,19 +77,19 @@ const HomePage: React.FC = () => {
       icon: Camera,
       title: 'Scanner Intelligent',
       description: 'Analysez instantanement avec photo, code-barres ou recherche manuelle',
-      color: 'bg-neutral-100 text-primary'
+      color: 'bg-primary-100 text-primary'
     },
     {
       icon: BarChart3,
       title: 'Analyses Scientifiques',
       description: 'NOVA, Nutri-Score, additifs et impact environnemental detaille',
-      color: 'bg-neutral-100 text-blue-700'
+      color: 'bg-primary-100 text-blue-700'
     },
     {
       icon: Sparkles,
       title: 'IA Personnalisee',
       description: 'Recommandations adaptees a votre profil et vos objectifs Sante',
-      color: 'bg-neutral-100 text-purple-700'
+      color: 'bg-primary-100 text-purple-700'
     }
   ];
 
@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
         <section className="px-4 pt-6 pb-20">
           <div className="space-y-6">
             <div className="text-center mb-4">
-              <div className="inline-flex items-center gap-2 bg-neutral-100 text-green-800 px-3 py-1 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 bg-primary-100 text-green-800 px-3 py-1 rounded-full mb-4">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-xs font-medium">Scanner instantane</span>
               </div>
@@ -141,7 +141,7 @@ const HomePage: React.FC = () => {
               </div>
             </Link>
 
-            <details className="bg-white p-4 rounded-xl shadow-md">
+            <details className="bg-primary-50 p-4 rounded-xl shadow-md">
               <summary className="cursor-pointer font-medium text-gray-700 flex items-center justify-between">
                 <span>Ou rechercher par nom</span>
                 <Sparkles className="w-5 h-5 text-neutral-600" />
@@ -157,15 +157,15 @@ const HomePage: React.FC = () => {
             </details>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
-              <div className="bg-white p-4 rounded-xl shadow-md text-center">
+              <div className="bg-primary-50 p-4 rounded-xl shadow-md text-center">
                 <Package className="w-8 h-8 text-primary mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">2M+</div>
-                <div className="text-xs text-gray-600">Produits</div>
+                <div className="text-xs text-gray-900">Produits</div>
               </div>
-              <div className="bg-white p-4 rounded-xl shadow-md text-center">
+              <div className="bg-primary-50 p-4 rounded-xl shadow-md text-center">
                 <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-gray-900">500k+</div>
-                <div className="text-xs text-gray-600">Utilisateurs</div>
+                <div className="text-xs text-gray-900">Utilisateurs</div>
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }} 
                 className="text-center max-w-4xl mx-auto"
               >
-                <div className="inline-flex items-center gap-2 bg-neutral-100 text-green-800 px-4 py-2 rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 bg-primary-100 text-green-800 px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-sm font-medium">IA Scientifique Multi-Categories</span>
                 </div>
@@ -192,7 +192,7 @@ const HomePage: React.FC = () => {
                   </span>
                 </h1>
                 
-                <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                <p className="text-xl text-gray-900 mb-12 max-w-3xl mx-auto">
                   Analysez vos produits alimentaires, cosmetiques et detergents avec notre IA scientifique. 
                   Scores detailles, recommendations personnalisees et alternatives eco-responsables.
                 </p>
@@ -210,7 +210,7 @@ const HomePage: React.FC = () => {
                 <div className="flex flex-wrap gap-4 justify-center">
                   <button 
                     onClick={() => navigate('/scan?mode=camera')} 
-                    className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"
+                    className="inline-flex items-center gap-2 bg-primary-50 px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"
                   >
                     <Camera className="w-5 h-5 text-primary" />
                     <span className="font-medium">Scanner un produit</span>
@@ -229,7 +229,7 @@ const HomePage: React.FC = () => {
             </div>
           </section>
 
-          <section className="py-16 bg-white">
+          <section className="py-16 bg-primary-50">
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {stats.map((stat, index) => (
@@ -240,11 +240,11 @@ const HomePage: React.FC = () => {
                     transition={{ delay: index * 0.1 }} 
                     className="text-center"
                   >
-                    <div className={`inline-flex p-3 rounded-lg bg-gray-50 ${stat.color} mb-3`}>
+                    <div className={`inline-flex p-3 rounded-lg bg-primary-50 ${stat.color} mb-3`}>
                       <stat.icon className="w-6 h-6" />
                     </div>
                     <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                    <div className="text-sm text-gray-600">{stat.label}</div>
+                    <div className="text-sm text-gray-900">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -255,7 +255,7 @@ const HomePage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par categorie</h2>
-                <p className="text-lg text-gray-600">Analyse complete pour tous vos produits du quotidien</p>
+                <p className="text-lg text-gray-900">Analyse complete pour tous vos produits du quotidien</p>
               </div>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -271,7 +271,7 @@ const HomePage: React.FC = () => {
                     }}
                     className="group cursor-pointer"
                   >
-                    <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <div className="bg-primary-50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                       <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <span className="text-3xl">{category.icon}</span>
                       </div>
@@ -281,7 +281,7 @@ const HomePage: React.FC = () => {
                         <p className="text-xs text-neutral-600">Populaires :</p>
                         <div className="flex flex-wrap gap-1">
                           {category.popular.map((item) => (
-                            <span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                            <span key={item} className="text-xs bg-primary-100 px-2 py-1 rounded">
                               {item}
                             </span>
                           ))}
@@ -302,7 +302,7 @@ const HomePage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
-                <p className="text-lg text-gray-600">Une plateforme complete pour une consommation responsable</p>
+                <p className="text-lg text-gray-900">Une plateforme complete pour une consommation responsable</p>
               </div>
               
               <div className="grid md:grid-cols-3 gap-8">
@@ -312,24 +312,24 @@ const HomePage: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: 0 }} 
                     transition={{ delay: index * 0.1 }} 
-                    className="bg-white rounded-2xl p-6 shadow-lg"
+                    className="bg-primary-50 rounded-2xl p-6 shadow-lg"
                   >
                     <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center mb-4`}>
                       <feature.icon className="w-6 h-6" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <p className="text-gray-900">{feature.description}</p>
                   </motion.div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section className="py-20 bg-white">
+          <section className="py-20 bg-primary-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
-                <p className="text-lg text-gray-600">Rejoignez les 500k+ utilisateurs satisfaits</p>
+                <p className="text-lg text-gray-900">Rejoignez les 500k+ utilisateurs satisfaits</p>
               </div>
               
               <div className="grid md:grid-cols-3 gap-8">
@@ -339,14 +339,14 @@ const HomePage: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: 0 }} 
                     transition={{ delay: index * 0.1 }} 
-                    className="bg-gray-50 rounded-2xl p-6"
+                    className="bg-primary-50 rounded-2xl p-6"
                   >
                     <div className="flex items-center mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    <p className="text-gray-600 mb-4">"{testimonial.content}"</p>
+                    <p className="text-gray-900 mb-4">"{testimonial.content}"</p>
                     <div>
                       <p className="font-semibold text-gray-900">{testimonial.name}</p>
                       <p className="text-sm text-neutral-700">{testimonial.role}</p>
@@ -368,14 +368,14 @@ const HomePage: React.FC = () => {
               <div className="flex flex-wrap gap-4 justify-center">
                 <button 
                   onClick={() => navigate('/scan')} 
-                  className="inline-flex items-center gap-2 bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-primary-50 text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-primary-100 transition-colors"
                 >
                   <Camera className="w-5 h-5" />
                   <span>Scanner maintenant</span>
                 </button>
                 <button 
                   onClick={() => navigate('/register')} 
-                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition-colors"
+                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-primary-50/10 transition-colors"
                 >
                   <span>Creer un compte gratuit</span>
                   <ArrowRight className="w-5 h-5" />
