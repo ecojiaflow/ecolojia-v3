@@ -26,6 +26,7 @@ export const MealPlanPage: React.FC = () => {
     try {
       const token = localStorage.getItem('ecolojia_token');
       const response = await axiosInstance.post('/meal-plan/generate', formData, {
+        timeout: 60000, // 60 secondes pour génération IA
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlanData(response.data);
