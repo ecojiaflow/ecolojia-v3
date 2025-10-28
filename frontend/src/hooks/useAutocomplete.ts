@@ -1,6 +1,6 @@
-// frontend/src/hooks/useAutocomplete.ts
+﻿// frontend/src/hooks/useAutocomplete.ts
 import { useState, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/config/axios';
 
 interface Suggestion {
   id?: string;
@@ -40,8 +40,8 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
       setLoading(true);
       setError(null);
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
-      const response = await axios.get(`${API_URL}/algolia/autocomplete`, {
+      
+      const response = await axiosInstance.get(`/algolia/autocomplete`, {
         params: { q: searchQuery, limit: 5 },
         signal: abortControllerRef.current.signal
       });
