@@ -1,4 +1,4 @@
-﻿// PATH: src/components/admin/ImportProgress.tsx
+// PATH: src/components/admin/ImportProgress.tsx
 import React, { useState } from 'react';
 import { Download, Play, Pause, AlertCircle } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const ImportProgress: React.FC = () => {
     // Simulation du processus d'import
     const steps = [
       { progress: 10, status: 'Connexion  OpenFoodFacts...' },
-      { progress: 25, status: 'Recuperation des produits...' },
+      { progress: 25, status: 'Récupération des produits...' },
       { progress: 50, status: 'Analyse des ingredients...' },
       { progress: 75, status: 'Classification NOV?...' },
       { progress: 90, status: 'Sauvegarde en base...' },

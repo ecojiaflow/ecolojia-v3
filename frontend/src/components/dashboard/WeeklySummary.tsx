@@ -1,4 +1,4 @@
-﻿// frontend/src/components/dashboard/WeeklySummary.tsx
+// frontend/src/components/dashboard/WeeklySummary.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Award, Target, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react';
@@ -223,7 +223,7 @@ export const WeeklySummary: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-orange-600 font-medium">a ameliorer</p>
+                    <p className="text-sm text-orange-600 font-medium">à améliorer</p>
                     <p className="text-lg font-bold text-gray-800 truncate">{summarydata?.stats.worstProduct.name}</p>
                     <p className="text-sm text-gray-600">{summarydata?.stats.worstProduct.score}/100</p>
                   </div>

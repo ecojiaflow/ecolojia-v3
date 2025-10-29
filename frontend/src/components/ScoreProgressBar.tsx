@@ -33,7 +33,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
           <div className="h-full bg-gray-400 w-0" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-semibold text-gray-600 text-sm">
-              Produit non valu
+              Produit non évalué
             </span>
           </div>
         </div>

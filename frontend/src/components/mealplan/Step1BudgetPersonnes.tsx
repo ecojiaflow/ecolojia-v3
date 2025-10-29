@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Users, Euro } from 'lucide-react';
 
 interface Step1Props {
@@ -57,7 +57,7 @@ export const Step1BudgetPersonnes: React.FC<Step1Props> = ({
         {/* Budget guidance */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
           {budget < 50 && "Budget economique - Favorisera les produits de base"}
-          {budget >= 50 && budget < 100 && "Budget equilibre - Large choix de produits"}
+          {budget >= 50 && budget < 100 && "Budget équilibré - Large choix de produits"}
           {budget >= 100 && "Budget confortable - Ingredients premium possibles"}
         </div>
       </div>

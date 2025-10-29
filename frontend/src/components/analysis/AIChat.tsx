@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles, Zap, Brain, FileText, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface Message {
@@ -38,7 +38,7 @@ const PREDEFINED_QUESTIONS = [
     questions: [
       { text: 'Quel est l\'impact glycemique de ce produit a', type: 'glycemic_impact' },
       { text: 'Ce produit convient-il aux diabetiques a', type: 'diabetes_suitability' },
-      { text: 'Analyse nutritionnelle detaillee', type: 'nutrition_analysis' },
+      { text: 'Analyse nutritionnelle détaillée', type: 'nutrition_analysis' },
       { text: 'Comparaison avec les recommandations ANSES', type: 'anses_comparison' }
     ]
   },
@@ -46,7 +46,7 @@ const PREDEFINED_QUESTIONS = [
     category: 'a Alternatives & Conseils',
     questions: [
       { text: 'Suggere des alternatives plus saines', type: 'alternatives' },
-      { text: 'Comment ameliorer mon alimentation a', type: 'nutrition_tips' },
+      { text: 'Comment améliorer mon alimentation a', type: 'nutrition_tips' },
       { text: 'Recettes maison pour remplacer ce produit', type: 'homemade_recipes' },
       { text: 'Marques recommandees dans cette categorie', type: 'brand_recommendations' }
     ]
@@ -187,7 +187,7 @@ aa L'impact sur votre Santé selon les dernieres etudes
 aa Des alternatives plus saines et naturelles
 aa Des conseils personnalises
 
-Posez-moi une question plus specifique pour une analyse detaillee !`;
+Posez-moi une question plus specifique pour une analyse détaillée !`;
     }
   };
 

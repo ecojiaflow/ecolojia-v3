@@ -1,4 +1,4 @@
-﻿// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
+// aa src/components/analysis/NovaAlert.tsx - VERSION RaaVOLUTIONNAIRE
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, Info, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -47,7 +47,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
       color: "bg-yellow-50 border-yellow-300 text-yellow-800", 
       icon: <CheckCircle className="w-5 h-5 text-yellow-500" />,
       impact: "Impact Santé neutre  positif",
-      recommendation: "Consommation recommandee dans le cadre d'une alimentation equilibree",
+      recommendation: "Consommation recommandée dans le cadre d'une alimentation équilibrée",
       scientificBacking: "Pas d'association negative demontree (Classification NOVA INSERM)"
     },
     3: {
@@ -65,7 +65,7 @@ export const NovaAlert: React.FC<Props> = ({ novaGroup, novaData, productName })
       color: "bg-red-50 border-red-300 text-red-800",
       icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
       impact: "Impact negatif sur la Santé demontre scientifiquement",
-      recommendation: "a REMPLACER par des alternatives naturelles recommandees ci-dessous",
+      recommendation: "a REMPLACER par des alternatives naturelles recommandées ci-dessous",
       scientificBacking: "Risque +53% diabete, +22% depression, +10% maladies cardiovasculaires (BMJ 2024)"
     }
   };

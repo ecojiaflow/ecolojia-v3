@@ -112,7 +112,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             </div>
           </div>
 
-          {/* Avantages Premium detailles */}
+          {/* Avantages Premium détaillés */}
           <div className="space-y-3 mb-6">
             <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
               <Unlock className="w-5 h-5 text-green-700" />
