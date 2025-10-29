@@ -1,4 +1,4 @@
-﻿import axiosInstance from '@/config/axios';
+import { api } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getReturnUrl } from '../utils/navigation';
@@ -18,10 +18,10 @@ const LoginPage: React.FC = () => {
     password: ''
   });
 
-  // ✅ CORRECTION: Utiliser getReturnUrl pour gérer tous les cas
+  // ? CORRECTION: Utiliser getReturnUrl pour grer tous les cas
   const returnUrl = getReturnUrl(location);
 
-  // Redirection si déjà connecté
+  // Redirection si dj connect
   useEffect(() => {
     if (isAuthenticated) {
       navigate(returnUrl, { replace: true });
@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login(formData.email, formData.password);
-      toast.success('Connexion réussie !');
+      toast.success('Connexion russie !');
 
       // La redirection se fera automatiquement via useEffect
     } catch (error: any) {
@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  // Connexion rapide pour démo
+  // Connexion rapide pour dmo
   const handleDemoLogin = async () => {
     setFormData({
       email: 'demo@ecolojia.app',
@@ -67,12 +67,12 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       await login('demo@ecolojia.app', 'demo123');
-      toast.success('Connexion démo réussie !');
+      toast.success('Connexion dmo russie !');
 
       // La redirection se fera automatiquement via useEffect
     } catch (error: any) {
-      console.error('Erreur connexion démo:', error);
-      toast.error(error?.message || 'Compte démo non disponible');
+      console.error('Erreur connexion dmo:', error);
+      toast.error(error?.message || 'Compte dmo non disponible');
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
             Bon retour sur ECOLOJIA !
           </h1>
           <p className="text-gray-600">
-            Connectez-vous pour continuer votre parcours santé
+            Connectez-vous pour continuer votre parcours sant
           </p>
         </div>
 
@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
                   to="/forgot-password"
                   className="text-sm text-primary hover:text-primary"
                 >
-                  Mot de passe oublié ?
+                  Mot de passe oubli ?
                 </Link>
               </div>
               <div className="relative">
@@ -138,7 +138,7 @@ const LoginPage: React.FC = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="••••••••"
+                  placeholder=""
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
                 />
@@ -197,13 +197,13 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Bouton démo */}
+            {/* Bouton dmo */}
             <button
               type="button"
               onClick={handleDemoLogin}
               className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
-              🎯 Essayer avec le compte démo
+              ?? Essayer avec le compte dmo
             </button>
           </form>
 
@@ -215,7 +215,7 @@ const LoginPage: React.FC = () => {
                 to="/register"
                 className="text-primary font-medium hover:text-primary"
               >
-                Créer un compte gratuit
+                Crer un compte gratuit
               </Link>
             </p>
           </div>
@@ -224,22 +224,22 @@ const LoginPage: React.FC = () => {
         {/* Features reminder */}
         <div className="mt-8 grid grid-cols-3 gap-4 text-center">
           <div className="bg-white bg-opacity-50 rounded-lg p-4">
-            <div className="text-2xl mb-2">🔬</div>
+            <div className="text-2xl mb-2">??</div>
             <p className="text-sm text-gray-600">Analyse IA</p>
           </div>
           <div className="bg-white bg-opacity-50 rounded-lg p-4">
-            <div className="text-2xl mb-2">📊</div>
+            <div className="text-2xl mb-2">??</div>
             <p className="text-sm text-gray-600">Dashboard</p>
           </div>
           <div className="bg-white bg-opacity-50 rounded-lg p-4">
-            <div className="text-2xl mb-2">💬</div>
+            <div className="text-2xl mb-2">??</div>
             <p className="text-sm text-gray-600">Chat Expert</p>
           </div>
         </div>
 
         {/* Identifiants de test */}
         <div className="mt-4 p-4 bg-blue-50 rounded-lg text-center">
-          <p className="text-sm text-blue-800 font-semibold mb-2">🧪 Comptes de test disponibles :</p>
+          <p className="text-sm text-blue-800 font-semibold mb-2">?? Comptes de test disponibles :</p>
           <div className="text-xs text-blue-700">
             <p>Premium : demo@ecolojia.app / demo123</p>
             <p>Gratuit : test@example.com / password123</p>

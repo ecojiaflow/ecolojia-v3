@@ -61,7 +61,7 @@ const PricingPage: React.FC = () => {
       name: 'Premium',
       description: 'Pour les consommateurs avertis',
       price: billingPeriod === 'monthly' ? 2.49 : 24.90,
-      priceLabel: billingPeriod === 'monthly' ? '2,49 aÃ¢â‚¬Å¡Ã‚Â¬/mois' : '24,90 aÃ¢â‚¬Å¡Ã‚Â¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '2,49 aââ‚¬Å¡Ã‚Â¬/mois' : '24,90 aââ‚¬Å¡Ã‚Â¬/an',
       color: 'green',
       icon: <Star className="w-6 h-6" />,
       popular: true,
@@ -83,7 +83,7 @@ const PricingPage: React.FC = () => {
       name: 'Famille',
       description: 'Pour toute la famille',
       price: billingPeriod === 'monthly' ? 4.99 : 49.90,
-      priceLabel: billingPeriod === 'monthly' ? '4,99 aÃ¢â‚¬Å¡Ã‚Â¬/mois' : '49,90 aÃ¢â‚¬Å¡Ã‚Â¬/an',
+      priceLabel: billingPeriod === 'monthly' ? '4,99 aââ‚¬Å¡Ã‚Â¬/mois' : '49,90 aââ‚¬Å¡Ã‚Â¬/an',
       color: 'purple',
       icon: <Users className="w-6 h-6" />,
       features: [
@@ -224,7 +224,7 @@ const PricingPage: React.FC = () => {
 
                   <div className="text-4xl font-bold text-[#3B3B3B]">{plan.priceLabel}</div>
                   {plan.price > 0 && billingPeriod === 'yearly' && (
-                    <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} aÃ¢â‚¬Å¡Ã‚Â¬/mois</p>
+                    <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} aââ‚¬Å¡Ã‚Â¬/mois</p>
                   )}
                 </div>
 
@@ -321,7 +321,7 @@ const PricingPage: React.FC = () => {
             <Zap className="w-5 h-5" />
             Commencer l'essai gratuit
           </button>
-          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise aÃ¢'šÂ¬Ã‚Â¢ Annulation Æ’Ã‚Â  tout moment</p>
+          <p className="mt-4 text-sm text-white/80">Aucune carte bancaire requise aâ'šÂ¬Ã‚Â¢ Annulation Æ’Ã‚Â  tout moment</p>
         </div>
       </div>
     </div>

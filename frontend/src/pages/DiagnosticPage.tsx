@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/pages/DiagnosticPage.tsx
+// PATH: frontend/src/pages/DiagnosticPage.tsx
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, RefreshCw, Package, Database, Globe, Shield, Cpu } from 'lucide-react';
 
@@ -23,19 +23,19 @@ const DiagnosticPage: React.FC = () => {
         id: 'mode',
         name: 'Mode de l\'application',
         status: 'checking',
-        message: 'VÃ©rification du mode...'
+        message: 'Vérification du mode...'
       },
       {
         id: 'encoding',
-        name: 'Encodage des caractÃ¨res',
+        name: 'Encodage des caractères',
         status: 'checking',
-        message: 'Test des caractÃ¨res franÃ§ais...'
+        message: 'Test des caractères français...'
       },
       {
         id: 'routes',
         name: 'Routes de navigation',
         status: 'checking',
-        message: 'VÃ©rification des routes...'
+        message: 'Vérification des routes...'
       },
       {
         id: 'localStorage',
@@ -45,9 +45,9 @@ const DiagnosticPage: React.FC = () => {
       },
       {
         id: 'mockData',
-        name: 'DonnÃ©es mockÃ©es',
+        name: 'Données mockées',
         status: 'checking',
-        message: 'VÃ©rification des mocks...'
+        message: 'Vérification des mocks...'
       },
       {
         id: 'apiEndpoint',
@@ -59,7 +59,7 @@ const DiagnosticPage: React.FC = () => {
         id: 'environment',
         name: 'Variables d\'environnement',
         status: 'checking',
-        message: 'VÃ©rification des variables...'
+        message: 'Vérification des variables...'
       },
       {
         id: 'performance',
@@ -75,18 +75,18 @@ const DiagnosticPage: React.FC = () => {
     await delay(500);
     updateTest('mode', {
       status: MOCK_MODE ? 'warning' : 'success',
-      message: MOCK_MODE ? 'Mode MOCK activÃ©' : 'Mode PRODUCTION',
-      details: MOCK_MODE ? 'Les donnÃ©es proviennent des mocks locaux' : 'ConnectÃ© au backend rÃ©el'
+      message: MOCK_MODE ? 'Mode MOCK activé' : 'Mode PRODUCTION',
+      details: MOCK_MODE ? 'Les données proviennent des mocks locaux' : 'Connecté au backend réel'
     });
 
     // Test 2: Encodage
     await delay(500);
-    const testString = 'Ã©Ã¨Ã Ã§Ã´Ã¢ÃªÃ®Ã¹Ã»Ã¼Ã¶Ã¤Ã¯Ã«';
-    const encodingOk = testString === 'Ã©Ã¨Ã Ã§Ã´Ã¢ÃªÃ®Ã¹Ã»Ã¼Ã¶Ã¤Ã¯Ã«';
+    const testString = 'éèÃ çôâÃªîùûÃ¼Ã¶Ã¤Ã¯ë';
+    const encodingOk = testString === 'éèÃ çôâÃªîùûÃ¼Ã¶Ã¤Ã¯ë';
     updateTest('encoding', {
       status: encodingOk ? 'success' : 'error',
-      message: encodingOk ? 'Encodage UTF-8 correct' : 'ProblÃ¨me d\'encodage dÃ©tectÃ©',
-      details: encodingOk ? 'Tous les caractÃ¨res franÃ§ais s\'affichent correctement' : 'ExÃ©cutez le script fix-encoding.ps1'
+      message: encodingOk ? 'Encodage UTF-8 correct' : 'Problème d\'encodage détecté',
+      details: encodingOk ? 'Tous les caractères français s\'affichent correctement' : 'Exécutez le script fix-encoding.ps1'
     });
 
     // Test 3: Routes
@@ -108,7 +108,7 @@ const DiagnosticPage: React.FC = () => {
       updateTest('localStorage', {
         status: testValue === 'ok' ? 'success' : 'error',
         message: 'LocalStorage fonctionnel',
-        details: 'Lecture/Ã©criture OK'
+        details: 'Lecture/écriture OK'
       });
     } catch (error) {
       updateTest('localStorage', {
@@ -130,7 +130,7 @@ const DiagnosticPage: React.FC = () => {
       updateTest('mockData', {
         status: 'warning',
         message: 'Mode production',
-        details: 'Les mocks sont dÃ©sactivÃ©s'
+        details: 'Les mocks sont désactivés'
       });
     }
 
@@ -152,8 +152,8 @@ const DiagnosticPage: React.FC = () => {
       } else {
         updateTest('apiEndpoint', {
           status: 'warning',
-          message: 'Test API ignorÃ© (mode mock)',
-          details: `URL configurÃ©e: ${apiUrl}`
+          message: 'Test API ignoré (mode mock)',
+          details: `URL configurée: ${apiUrl}`
         });
       }
     } catch (error) {
@@ -183,7 +183,7 @@ const DiagnosticPage: React.FC = () => {
       message: 'Variables d\'environnement',
       details: missingVars.length > 0 
         ? `Variables manquantes: ${missingVars.join(', ')}` 
-        : 'Toutes les variables sont dÃ©finies'
+        : 'Toutes les variables sont définies'
     });
 
     // Test 8: Performance
@@ -192,7 +192,7 @@ const DiagnosticPage: React.FC = () => {
     updateTest('performance', {
       status: loadTime < 3000 ? 'success' : loadTime < 5000 ? 'warning' : 'error',
       message: `Temps de chargement: ${loadTime}ms`,
-      details: loadTime < 3000 ? 'Performance optimale' : 'Performance Ã  amÃ©liorer'
+      details: loadTime < 3000 ? 'Performance optimale' : 'Performance Ã  améliorer'
     });
 
     setIsRunning(false);
@@ -248,7 +248,7 @@ const DiagnosticPage: React.FC = () => {
                 Diagnostic ECOLOJIA V3
               </h1>
               <p className="text-gray-600 mt-2">
-                VÃ©rification complÃ¨te de l'Ã©tat de l'application
+                Vérification complète de l'état de l'application
               </p>
             </div>
             <button
@@ -268,12 +268,12 @@ const DiagnosticPage: React.FC = () => {
             {MOCK_MODE ? (
               <>
                 <Database className="w-4 h-4 mr-2" />
-                Mode MOCK (donnÃ©es locales)
+                Mode MOCK (données locales)
               </>
             ) : (
               <>
                 <Globe className="w-4 h-4 mr-2" />
-                Mode PRODUCTION (backend rÃ©el)
+                Mode PRODUCTION (backend réel)
               </>
             )}
           </div>
@@ -307,13 +307,13 @@ const DiagnosticPage: React.FC = () => {
         {/* Summary */}
         {!isRunning && diagnostics.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">RÃ©sumÃ©</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-4">Résumé</h2>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-primary">
                   {diagnostics.filter(t => t.status === 'success').length}
                 </div>
-                <div className="text-sm text-gray-600">SuccÃ¨s</div>
+                <div className="text-sm text-gray-600">Succès</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-500">
@@ -333,23 +333,23 @@ const DiagnosticPage: React.FC = () => {
 
         {/* Actions */}
         <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mt-6">
-          <h3 className="font-bold text-blue-800 mb-3">Actions recommandÃ©es :</h3>
+          <h3 className="font-bold text-blue-800 mb-3">Actions recommandées :</h3>
           <ul className="space-y-2 text-blue-700">
             {diagnostics.some(t => t.id === 'encoding' && t.status === 'error') && (
               <li className="flex items-start">
                 <span className="mr-2">â€¢</span>
-                <span>ExÃ©cutez <code className="bg-blue-100 px-2 py-1 rounded">./fix-encoding.ps1</code> pour corriger l'encodage</span>
+                <span>Exécutez <code className="bg-blue-100 px-2 py-1 rounded">./fix-encoding.ps1</code> pour corriger l'encodage</span>
               </li>
             )}
             {MOCK_MODE && (
               <li className="flex items-start">
                 <span className="mr-2">â€¢</span>
-                <span>Pour tester avec le backend rÃ©el, changez <code className="bg-blue-100 px-2 py-1 rounded">MOCK_MODE = false</code> dans mock.config.ts</span>
+                <span>Pour tester avec le backend réel, changez <code className="bg-blue-100 px-2 py-1 rounded">MOCK_MODE = false</code> dans mock.config.ts</span>
               </li>
             )}
             <li className="flex items-start">
               <span className="mr-2">â€¢</span>
-              <span>Utilisez la checklist de test pour vÃ©rifier chaque fonctionnalitÃ©</span>
+              <span>Utilisez la checklist de test pour vérifier chaque fonctionnalité</span>
             </li>
           </ul>
         </div>

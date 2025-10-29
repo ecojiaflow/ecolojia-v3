@@ -20,7 +20,7 @@ const Layout: React.FC = () => {
           <Outlet />
         </main>
 
-        {/* Footer - masqué sur mobile */}
+        {/* Footer - masqu sur mobile */}
         <footer className={`${isMobile ? 'hidden' : 'block'}`}>
           <Footer />
         </footer>

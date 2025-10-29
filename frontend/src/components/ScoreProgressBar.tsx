@@ -25,7 +25,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     return 'bg-red-600';
   };
 
-  // Cas : Score non calculé
+  // Cas : Score non calcul
   if (score === null || score === undefined) {
     return (
       <div className="mt-4 w-full">
@@ -33,7 +33,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
           <div className="h-full bg-gray-400 w-0" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-semibold text-gray-600 text-sm">
-              Produit non évalué
+              Produit non valu
             </span>
           </div>
         </div>
@@ -79,7 +79,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     );
   }
 
-  // Cas : Score calculé (affichage normal)
+  // Cas : Score calcul (affichage normal)
   return (
     <div className="mt-4 w-full">
       <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden">
@@ -100,14 +100,14 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
         <span className="text-green-700 font-medium">76 Excellent</span>
       </div>
 
-      {/* ? Bouton enrichissement IA même si score existe */}
+      {/* ? Bouton enrichissement IA mme si score existe */}
       {onRequestScore && (
         <div className="mt-3 text-center">
           <button
             onClick={onRequestScore}
             disabled={isAnalyzing}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-2 text-sm"
-            aria-label="Améliorer le score avec l'IA"
+            aria-label="Amliorer le score avec l'IA"
           >
             {isAnalyzing ? (
               <>
@@ -122,12 +122,12 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Améliorer avec IA
+                Amliorer avec IA
               </>
             )}
           </button>
           <p className="text-xs text-gray-600 mt-2">
-            Enrichir les données manquantes avec l'IA
+            Enrichir les donnes manquantes avec l'IA
           </p>
         </div>
       )}

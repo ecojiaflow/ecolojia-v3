@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/Navbar.tsx
+// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDeviceContext } from '@/hooks/useDeviceContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -91,7 +91,7 @@ class NavbarSearchService {
     if (queryLower.includes('bio') || queryLower.includes('sans')) {
       contextual.push(
         { query: `${query} NOVA 1`, icon: '??', category: 'Alimentaire sain', score: 'A' },
-        { query: `${query} nutri-score A`, icon: '??', category: 'Top SantÃ©', score: 'A' }
+        { query: `${query} nutri-score A`, icon: '??', category: 'Top Santé', score: 'A' }
       );
     }
 
@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
   // Navigation items (conditionnel Desktop/Mobile)
   const navigationItems = [
     { name: 'Recherche', href: '/search', icon: Search },
-    { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÃ‰ MOBILE
+    { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÉ MOBILE
     { name: 'Historique', href: '/history', icon: History },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle },
   ];
@@ -632,7 +632,7 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#FF6B6B] rounded-full mr-2"></span>
-                      Score SantÃ©
+                      Score Santé
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="w-2 h-2 bg-[#4A90E2] rounded-full mr-2"></span>

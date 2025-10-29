@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { visionService, productService } from '../services/apiEnhanced';
+import { visionService, productService } from '../services/api';
 import { Loader2 } from 'lucide-react';
 
 export const PhotoAnalyzer: React.FC<{ onResult: (p:any)=>void; defaultCategory?: 'food'|'cosmetics'|'detergents' }> =

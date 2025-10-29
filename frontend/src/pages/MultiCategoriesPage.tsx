@@ -1,5 +1,5 @@
 // frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
-// Page principale pour afficher et tester les categories multi-analyses - VERSION CORRIGÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°E
+// Page principale pour afficher et tester les categories multi-analyses - VERSION CORRIGÆ’Ã†'' ââ‚¬â„¢aaââ‚¬Å¡Ã‚Â¬'šÃ‚Â°E
 
 import React, { useState, useEffect } from 'react';
 import CategoryCard from '../components/CategoryCard';
@@ -34,20 +34,20 @@ const MultiCategoriesPage: React.FC = () => {
     }
   };
 
-  // Fonction pour charger les categories - CORRIGÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°E
+  // Fonction pour charger les categories - CORRIGÆ’Ã†'' ââ‚¬â„¢aaââ‚¬Å¡Ã‚Â¬'šÃ‚Â°E
   const loadCategories = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Chargement des categories...');
+      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Chargement des categories...');
       const response: CategoriesResponse = await multiCategoryApi.getCategories();
       
-      // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Inspection de la reponse et adaptation dynamique
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Reponse API recue:', response);
+      // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Inspection de la reponse et adaptation dynamique
+      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Reponse API recue:', response);
       
       if (response.success) {
-        // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Gestion flexible de la structure de reponse
+        // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Gestion flexible de la structure de reponse
         let categoriesData: Category[] = [];
         let totalCount = 0;
         
@@ -55,7 +55,7 @@ const MultiCategoriesPage: React.FC = () => {
           categoriesData = response.categories;
           totalCount = response.total_categories || response.categories.length;
         } else if ((response as any).data && Array.isArray((response as any).data)) {
-          // Cas oÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â¹ les categories sont dans response.data
+          // Cas oÆ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â¹ les categories sont dans response.data
           categoriesData = (response as any).data;
           totalCount = (response as any).total || categoriesdata?.length;
         } else {
@@ -63,14 +63,14 @@ const MultiCategoriesPage: React.FC = () => {
         }
         
         setCategories(categoriesData);
-        console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Categories chargees:', totalCount, 'categories trouvees');
+        console.log('aÆ’ââ‚¬Â¦aâ'šÂ¬Ã…'œaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Categories chargees:', totalCount, 'categories trouvees');
       } else {
         throw new Error(response.error || 'Reponse API invalide');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur chargement categories:', errorMessage);
+      console.error('aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Erreur chargement categories:', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const MultiCategoriesPage: React.FC = () => {
   // Callback appele quand une analyse est terminee
   const handleAnalysisComplete = (result: AnalysisResponse) => {
     setLastAnalysis(result);
-    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Nouvelle analyse terminee:', result.category, result.analysis?.overall_score);
+    console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Nouvelle analyse terminee:', result.category, result.analysis?.overall_score);
   };
 
   // Fonction pour reessayer le chargement
@@ -91,9 +91,9 @@ const MultiCategoriesPage: React.FC = () => {
   // Rendu du statut de connexion
   const renderConnectionStatus = () => {
     const statusConfig = {
-      checking: { color: 'text-green-500', bg: 'bg-yellow-50', icon: 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾', text: 'Verification...' },
-      connected: { color: 'text-primary', bg: 'bg-green-50', icon: 'aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦', text: 'API Connectee' },
-      disconnected: { color: 'text-red-600', bg: 'bg-red-50', icon: 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢', text: 'API Deconnectee' }
+      checking: { color: 'text-green-500', bg: 'bg-yellow-50', icon: 'Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾', text: 'Verification...' },
+      connected: { color: 'text-primary', bg: 'bg-green-50', icon: 'aÆ’ââ‚¬Â¦aâ'šÂ¬Ã…'œaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â¦', text: 'API Connectee' },
+      disconnected: { color: 'text-red-600', bg: 'bg-red-50', icon: 'aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢', text: 'API Deconnectee' }
     };
     
     const config = statusConfig[connectionStatus];
@@ -114,7 +114,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
+              Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢Æ’ââ‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
             </h1>
             <p className="text-xl text-gray-600">
               Analyse IA scientifique pour tous vos produits
@@ -125,7 +125,7 @@ const MultiCategoriesPage: React.FC = () => {
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-lg text-gray-600">Chargement des categories...</p>
-            <p className="text-sm text-gray-500 mt-2">Connexion Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'API ECOLOJIA</p>
+            <p className="text-sm text-gray-500 mt-2">Connexion Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  l'API ECOLOJIA</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
+              Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢Æ’ââ‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
             </h1>
             <p className="text-xl text-gray-600">
               Analyse IA scientifique pour tous vos produits
@@ -150,7 +150,7 @@ const MultiCategoriesPage: React.FC = () => {
           {/* Error state */}
           <div className="max-w-2xl mx-auto">
             <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-8 text-center">
-              <div className="text-6xl mb-4">aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢</div>
+              <div className="text-6xl mb-4">aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢</div>
               <h2 className="text-2xl font-bold text-red-800 mb-4">
                 Erreur de Connexion
               </h2>
@@ -162,7 +162,7 @@ const MultiCategoriesPage: React.FC = () => {
                 onClick={handleRetry}
                 className="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-2xl transition-colors"
               >
-                Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Reessayer
+                Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Reessayer
               </button>
             </div>
           </div>
@@ -171,18 +171,18 @@ const MultiCategoriesPage: React.FC = () => {
     );
   }
 
-  // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Verification que les categories sont bien chargees
+  // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Verification que les categories sont bien chargees
   if (!categories || categories.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
+              Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢Æ’ââ‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
             </h1>
             <div className="max-w-2xl mx-auto">
               <div className="bg-yellow-50 border-2 border-yellow-200 rounded-3xl p-8 text-center">
-                <div className="text-6xl mb-4">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Å¡'šÃ‚Â­</div>
+                <div className="text-6xl mb-4">Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Å¡'šÃ‚Â­</div>
                 <h2 className="text-2xl font-bold text-yellow-800 mb-4">
                   Aucune Categorie Disponible
                 </h2>
@@ -193,7 +193,7 @@ const MultiCategoriesPage: React.FC = () => {
                   onClick={handleRetry}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-2xl transition-colors"
                 >
-                  Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Recharger
+                  Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Recharger
                 </button>
               </div>
             </div>
@@ -210,7 +210,7 @@ const MultiCategoriesPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
-            Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
+            Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢Æ’ââ‚¬Å¡'šÃ‚Â± ECOLOJIA Multi-Categories
           </h1>
           <p className="text-xl text-gray-600 mb-6">
             Analyse IA scientifique pour tous vos produits de consommation
@@ -245,7 +245,7 @@ const MultiCategoriesPage: React.FC = () => {
           <div className="max-w-4xl mx-auto mb-12">
             <div className="bg-white rounded-3xl shadow-lg border-2 border-green-200 p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
-                Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Derniere Analyse Terminee
+                Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Derniere Analyse Terminee
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -296,12 +296,12 @@ const MultiCategoriesPage: React.FC = () => {
         <div className="max-w-4xl mx-auto mt-16">
           <div className="bg-white rounded-3xl shadow-lg p-8">
             <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â§Æ’Ã¢â‚¬Å¡'šÃ‚Âª Comment tester les analyses ?
+              Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Å¡'šÃ‚Â§Æ’ââ‚¬Å¡'šÃ‚Âª Comment tester les analyses ?
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦'šÃ‚Â½</div>
+                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦'šÃ‚Â½</div>
                 <h4 className="font-bold text-primary mb-2">Alimentaire</h4>
                 <p className="text-sm text-gray-600">
                   Test avec cereales bio + additifs pour detecter l'ultra-transformation
@@ -309,7 +309,7 @@ const MultiCategoriesPage: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬aÃ¢â‚¬Å¾Ã‚Â¢aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾</div>
+                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬aââ‚¬Å¾Ã‚Â¢aaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾</div>
                 <h4 className="font-bold text-pink-600 mb-2">Cosmetiques</h4>
                 <p className="text-sm text-gray-600">
                   Test avec shampooing + sulfates pour analyser les ingredients controverses
@@ -317,7 +317,7 @@ const MultiCategoriesPage: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â§Æ’Ã¢â‚¬Å¡'šÃ‚Â½</div>
+                <div className="text-4xl mb-3">Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Å¡'šÃ‚Â§Æ’ââ‚¬Å¡'šÃ‚Â½</div>
                 <h4 className="font-bold text-blue-600 mb-2">Detergents</h4>
                 <p className="text-sm text-gray-600">
                   Test avec lessive + tensioactifs pour evaluer l'impact environnemental
@@ -330,11 +330,11 @@ const MultiCategoriesPage: React.FC = () => {
         {/* Footer */}
         <div className="text-center mt-16 py-8">
           <p className="text-gray-500">
-            Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ Powered by ECOLOJIA Scientific AI aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ 
-            Backend API: {connectionStatus === 'connected' ? 'aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Operationnel' : 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Indisponible'}
+            Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â¬ Powered by ECOLOJIA Scientific AI aaââ‚¬Å¡Ã‚Â¬Æ’ââ‚¬Å¡'šÃ‚Â¢ 
+            Backend API: {connectionStatus === 'connected' ? 'aÆ’ââ‚¬Â¦aâ'šÂ¬Ã…'œaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Operationnel' : 'aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Indisponible'}
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            Sources: ANSES, EFSA, INSERM, OMS aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Classification NOVA aaÃ¢â‚¬Å¡Ã‚Â¬Æ’Ã¢â‚¬Å¡'šÃ‚Â¢ Bases scientifiques officielles
+            Sources: ANSES, EFSA, INSERM, OMS aaââ‚¬Å¡Ã‚Â¬Æ’ââ‚¬Å¡'šÃ‚Â¢ Classification NOVA aaââ‚¬Å¡Ã‚Â¬Æ’ââ‚¬Å¡'šÃ‚Â¢ Bases scientifiques officielles
           </p>
         </div>
       </div>

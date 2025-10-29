@@ -55,11 +55,11 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
       // Si on a un code-barres, chercher d'abord dans la base
       if (barcode) {
         try {
-          console.log("?? [DEBUG] Recherche barcode:", barcode);
+          console.log("?üîç [DEBUG] Recherche barcode:", barcode);
           const product = await productService.getByBarcode(barcode);
-          console.log("? [DEBUG] RÈponse:", product);
+          console.log("üîç [DEBUG] Rponse:", product);
           if (product && product._id) {
-            console.log("? [DEBUG] Navigation vers:", `/product/${product._id}`);
+            console.log("üîç [DEBUG] Navigation vers:", `/product/${product._id}`);
             toast.success('Produit trouve !');
             navigate(`/product/${product._id}`);
             onClose();
@@ -154,8 +154,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
       Quagga.onDetected((result: any) => {
         if (result?.codeResult?.code) {
           const code = result.codeResult.code;
-          console.log("?? [DEBUG] CODE D…TECT…:", code);
-          alert("Code dÈtectÈ: " + code);
+          console.log("?üîç [DEBUG] CODE DTECT:", code);
+          alert("Code dtect: " + code);
           Quagga.stop();
           stopStream();
           handleProductSearch(code);
@@ -199,8 +199,8 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
               const barcodes = await barcodeDetector.detect(videoRef.current);
               if (barcodes.length > 0) {
                 const code = barcodes[0].rawValue;
-                console.log("?? [DEBUG] CODE NATIF D…TECT…:", code);
-          alert("Code natif dÈtectÈ: " + code);
+                console.log("?üîç [DEBUG] CODE NATIF DTECT:", code);
+          alert("Code natif dtect: " + code);
                 stopStream();
                 handleProductSearch(code);
                 return;

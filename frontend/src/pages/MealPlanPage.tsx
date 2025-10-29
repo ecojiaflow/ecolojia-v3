@@ -1,9 +1,9 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Calendar, ShoppingCart, TrendingUp, Download, Sparkles, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MealCard } from '../components/mealplan/MealCard';
 import { RecipeDetailModal } from '../components/mealplan/RecipeDetailModal';
-import axiosInstance from '@/config/axios';
+import { api } from '../services/api';
 
 export const MealPlanPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,14 +25,14 @@ export const MealPlanPage: React.FC = () => {
     setIsGenerating(true);
     try {
       const token = localStorage.getItem('ecolojia_token');
-      const response = await axiosInstance.post('/meal-plan/generate', formData, {
-        timeout: 60000, // 60 secondes pour génégénération IA
+      const response = await api.post('/meal-plan/generate', formData, {
+        timeout: 60000, // 60 secondes pour gngnration IA
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlanData(response.data);
     } catch (error: any) {
-      console.error('Erreur génégénération plan:', error);
-      const message = error.response?.data?.error || 'Erreur lors de la génégénération du plan';
+      console.error('Erreur gngnration plan:', error);
+      const message = error.response?.data?.error || 'Erreur lors de la gngnration du plan';
       alert(message);
     } finally {
       setIsGenerating(false);
@@ -62,10 +62,10 @@ export const MealPlanPage: React.FC = () => {
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h1 className="text-4xl font-bold text-gray-900 mb-3">
-                Générer un plan repas IA
+                Gnrer un plan repas IA
               </h1>
               <p className="text-lg text-gray-600">
-                Votre nutritionniste personnel basé sur l'intelligence artificielle
+                Votre nutritionniste personnel bas sur l'intelligence artificielle
               </p>
             </div>
 
@@ -73,7 +73,7 @@ export const MealPlanPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    é Budget hebdomadaire
+                     Budget hebdomadaire
                   </label>
                   <div className="relative">
                     <input
@@ -84,14 +84,14 @@ export const MealPlanPage: React.FC = () => {
                       min="20"
                       max="500"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 font-medium">€</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 font-medium"></span>
                   </div>
-                  <p className="text-xs text-neutral-700 mt-1">Entre 20€ et 500€</p>
+                  <p className="text-xs text-neutral-700 mt-1">Entre 20 et 500</p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    é Calories par jour
+                     Calories par jour
                   </label>
                   <div className="relative">
                     <input
@@ -111,7 +111,7 @@ export const MealPlanPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    é Nombre de personnes
+                     Nombre de personnes
                   </label>
                   <select
                     value={formData.people}
@@ -128,15 +128,15 @@ export const MealPlanPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    é Type de régime
+                     Type de rgime
                   </label>
                   <select
                     value={formData.dietType}
                     onChange={(e) => setFormData({ ...formData, dietType: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all text-lg font-medium appearance-none bg-primary-50"
                   >
-                    <option value="balanced">équilibré</option>
-                    <option value="vegetarian">végétarien</option>
+                    <option value="balanced">quilibr</option>
+                    <option value="vegetarian">vgtarien</option>
                     <option value="vegan">Vegan</option>
                     <option value="low-carb">Faible en glucides</option>
                   </select>
@@ -151,15 +151,15 @@ export const MealPlanPage: React.FC = () => {
                 <ul className="space-y-2 text-sm text-gray-700">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-0.5">?</span>
-                    <span><strong>7 repas</strong> équilibrés avec recettes détaillées</span>
+                    <span><strong>7 repas</strong> quilibrs avec recettes dtailles</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-0.5">?</span>
-                    <span><strong>Liste courses</strong> automatique avec quantités</span>
+                    <span><strong>Liste courses</strong> automatique avec quantits</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-0.5">?</span>
-                    <span><strong>Suggestions produits</strong> bien notés ECOLOJIA</span>
+                    <span><strong>Suggestions produits</strong> bien nots ECOLOJIA</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500 mt-0.5">?</span>
@@ -176,18 +176,18 @@ export const MealPlanPage: React.FC = () => {
                 {isGenerating ? (
                   <>
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
-                    <span>génégénération en cours...</span>
+                    <span>gngnration en cours...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-6 h-6" />
-                    <span>Générer mon plan repas</span>
+                    <span>Gnrer mon plan repas</span>
                   </>
                 )}
               </button>
 
               <p className="text-center text-xs text-neutral-700 mt-4">
-                ? génégénération en ~15 secondes € é Feature Premium
+                ? gngnration en ~15 secondes   Feature Premium
               </p>
             </div>
           </div>
@@ -224,13 +224,13 @@ export const MealPlanPage: React.FC = () => {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-6 h-6" />
-                <span className="text-sm font-medium opacity-90">Plan g€n€r€ par IA</span>
+                <span className="text-sm font-medium opacity-90">Plan gnr par IA</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-bold mb-2">
                 Votre plan repas hebdomadaire
               </h1>
               <p className="text-primary-100 text-sm sm:text-base">
-                {plan.meals?.length || 0} repas € {plan.estimatedBudget?.toFixed(2) || 0}€ budget € 
+                {plan.meals?.length || 0} repas  {plan.estimatedBudget?.toFixed(2) || 0} budget  
                 {plan.nutrition?.avgPerDay?.calories || 2000} kcal/jour
               </p>
             </div>
@@ -239,12 +239,12 @@ export const MealPlanPage: React.FC = () => {
           {planData.validation && (
             <div className="bg-primary-50/10 backdrop-blur-sm rounded-xl p-4 mt-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Qualit€ du plan</span>
+                <span className="text-sm font-medium">Qualit du plan</span>
                 <span className="text-2xl font-bold">{planData.validation.score}/100</span>
               </div>
               <div className="mt-2 h-2 bg-primary-50/20 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-primary-50 transition-all dugénération-500"
+                  className="h-full bg-primary-50 transition-all dugnration-500"
                   style={{ width: `${planData.validation.score}%` }}
                 />
               </div>
@@ -291,7 +291,7 @@ export const MealPlanPage: React.FC = () => {
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Vos {plan.meals?.length || 0} repas de la semaine</h2>
               <p className="text-gray-600 text-sm">
-                Cliquez sur une carte pour voir la recette détaillée et l'assistant IA
+                Cliquez sur une carte pour voir la recette dtaille et l'assistant IA
               </p>
             </div>
 
@@ -312,7 +312,7 @@ export const MealPlanPage: React.FC = () => {
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Liste de courses</h2>
               <p className="text-gray-600 text-sm">
-                {plan.shoppingList?.length || 0} articles € Budget: {plan.estimatedBudget?.toFixed(2) || 0}€
+                {plan.shoppingList?.length || 0} articles  Budget: {plan.estimatedBudget?.toFixed(2) || 0}
               </p>
             </div>
 
@@ -324,7 +324,7 @@ export const MealPlanPage: React.FC = () => {
                       <p className="font-medium">{item.name}</p>
                       <p className="text-sm text-neutral-700">{item.quantity} {item.unit}</p>
                     </div>
-                    <span className="font-semibold">{item.estimatedPrice?.toFixed(2)}€</span>
+                    <span className="font-semibold">{item.estimatedPrice?.toFixed(2)}</span>
                   </div>
                 ))
               ) : (
@@ -340,7 +340,7 @@ export const MealPlanPage: React.FC = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 { label: 'Calories', value: plan.nutrition?.avgPerDay?.calories || 0, unit: 'kcal' },
-                { label: 'protéines', value: plan.nutrition?.avgPerDay?.protein || 0, unit: 'g' },
+                { label: 'protines', value: plan.nutrition?.avgPerDay?.protein || 0, unit: 'g' },
                 { label: 'Glucides', value: plan.nutrition?.avgPerDay?.carbs || 0, unit: 'g' },
                 { label: 'Lipides', value: plan.nutrition?.avgPerDay?.fats || 0, unit: 'g' },
               ].map((stat) => (

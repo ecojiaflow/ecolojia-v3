@@ -1,6 +1,6 @@
-ï»¿// frontend/src/hooks/useAutocomplete.ts
+// frontend/src/hooks/useAutocomplete.ts
 import { useState, useEffect, useCallback, useRef } from 'react';
-import axiosInstance from '@/config/axios';
+import { api } from '../services/api';
 
 interface Suggestion {
   id?: string;
@@ -28,12 +28,12 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchSuggestions = useCallback(async (searchQuery: string) => {
-    // Annuler requÃªte prÃ©cÃ©dente
+    // Annuler requête précédente
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
 
-    // CrÃ©er nouveau AbortController
+    // Créer nouveau AbortController
     abortControllerRef.current = new AbortController();
 
     try {
@@ -41,7 +41,7 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
       setError(null);
 
       
-      const response = await axiosInstance.get(`/algolia/autocomplete`, {
+      const response = await api.get(`/algolia/autocomplete`, {
         params: { q: searchQuery, limit: 5 },
         signal: abortControllerRef.current.signal
       });
@@ -63,7 +63,7 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
   }, []);
 
   useEffect(() => {
-    // Clear timeout prÃ©cÃ©dent
+    // Clear timeout précédent
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -74,7 +74,7 @@ export const useAutocomplete = (query: string, debounceMs: number = 300): Autoco
       return;
     }
 
-    // Si query < 2 caractÃ¨res, ne pas chercher
+    // Si query < 2 caractères, ne pas chercher
     if (query.trim().length < 2) {
       setSuggestions([]);
       return;

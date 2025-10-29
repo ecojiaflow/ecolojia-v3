@@ -11,7 +11,7 @@ import { useAuthContext } from '../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
 import api from '../services/apiClient';
-import { API_CONFIG } from '../config/api.config';
+import { ENV } from '../env';
 
 interface Settings {
   notifications: {
@@ -108,7 +108,7 @@ const SettingsPage: React.FC = () => {
   const loadSettings = async () => {
     try {
       setLoading(true);
-      const userSettings = await api.get(`${API_CONFIG.ENDPOINTS.USER.PREFERENCES}`);
+      const userSettings = await api.get(`${ENV.ENDPOINTS.USER.PREFERENCES}`);
       if (userSettings) {
         setSettings(userSettings);
       }
@@ -122,7 +122,7 @@ const SettingsPage: React.FC = () => {
   const saveSettings = async () => {
     try {
       setSaving(true);
-      await api.put(API_CONFIG.ENDPOINTS.USER.PREFERENCES, settings);
+      await api.put(ENV.ENDPOINTS.USER.PREFERENCES, settings);
       
       // Afficher une notification de succes
       alert('Parametres sauvegardes avec succes !');
@@ -135,7 +135,7 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    if (window.confirm('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â tes-vous sÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»r de vouloir vous deconnecter ?')) {
+    if (window.confirm('Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã‚Â¦ââ‚¬Å¡Ãƒ'šÃ‚Â tes-vous sÃ†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â»r de vouloir vous deconnecter ?')) {
       await logout();
       navigate('/');
     }
@@ -159,7 +159,7 @@ const SettingsPage: React.FC = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await api.delete(API_CONFIG.ENDPOINTS.GDPR.DELETE_ACCOUNT);
+      await api.delete(ENV.ENDPOINTS.GDPR.DELETE_ACCOUNT);
       await logout();
       navigate('/');
     } catch (err) {
@@ -171,7 +171,7 @@ const SettingsPage: React.FC = () => {
   const handleExportData = async () => {
     try {
       const response = await api.get(
-        API_CONFIG.ENDPOINTS.GDPR.DOWNLOAD_DATA,
+        ENV.ENDPOINTS.GDPR.DOWNLOAD_DATA,
         { responseType: 'blob' }
       );
       
@@ -248,7 +248,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Emails de mise Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  jour</span>
+                <span className="text-[#3B3B3B] font-medium">Emails de mise Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  jour</span>
                 <p className="text-sm text-gray-600 mt-1">Nouvelles fonctionnalites et ameliorations</p>
               </div>
               <Switch
@@ -271,7 +271,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Alertes produits</span>
-                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  jour</p>
+                <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  jour</p>
               </div>
               <Switch
                 checked={settings.notifications.productAlerts}
@@ -329,7 +329,7 @@ const SettingsPage: React.FC = () => {
               >
                 <option value="fr">Francais</option>
                 <option value="en">English</option>
-                <option value="es">EspaÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â±ol</option>
+                <option value="es">EspaÃ†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â±ol</option>
                 <option value="de">Deutsch</option>
               </select>
             </div>
@@ -365,7 +365,7 @@ const SettingsPage: React.FC = () => {
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
                 <span className="text-[#3B3B3B] font-medium">Partager les analyses anonymes</span>
-                <p className="text-sm text-gray-600 mt-1">Aidez Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  ameliorer notre base de donnees</p>
+                <p className="text-sm text-gray-600 mt-1">Aidez Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  ameliorer notre base de donnees</p>
               </div>
               <Switch
                 checked={settings.privacy.shareAnalytics}
@@ -424,7 +424,7 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between p-4 bg-[#E9F8DF] rounded-lg">
               <div>
-                <h4 className="font-medium text-[#3B3B3B]">Authentification Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  deux facteurs</h4>
+                <h4 className="font-medium text-[#3B3B3B]">Authentification Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  deux facteurs</h4>
                 <p className="text-sm text-gray-600 mt-1">
                   {settings.security.twoFactorEnabled 
                     ? 'Votre compte est protege par 2FA'
@@ -535,7 +535,7 @@ const SettingsPage: React.FC = () => {
               {user?.tier !== 'free' && (
                 <div className="space-y-2 text-sm text-gray-600">
                   <p>Prochaine facturation : 1er du mois prochain</p>
-                  <p>Methode de paiement : aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢ 4242</p>
+                  <p>Methode de paiement : aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢ 4242</p>
                 </div>
               )}
             </div>
@@ -688,10 +688,10 @@ const SettingsPage: React.FC = () => {
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-red-800 mb-2">Vous allez perdre :</h4>
               <ul className="text-sm text-red-700 space-y-1">
-                <li>aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢ Toutes vos analyses de produits</li>
-                <li>aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢ Vos favoris et listes personnalisees</li>
-                <li>aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢ Votre historique et statistiques</li>
-                <li>aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¢ Votre abonnement actif</li>
+                <li>aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢ Toutes vos analyses de produits</li>
+                <li>aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢ Vos favoris et listes personnalisees</li>
+                <li>aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢ Votre historique et statistiques</li>
+                <li>aaÃƒÂ¢â'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â¢ Votre abonnement actif</li>
               </ul>
             </div>
             
@@ -717,6 +717,3 @@ const SettingsPage: React.FC = () => {
 };
 
 export default SettingsPage;
-
-
-

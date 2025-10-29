@@ -28,7 +28,17 @@ const ScanPage: React.FC = () => {
         : result;
 
       if (normalizedResult?.product?._id) {
-        navigate(`/product/${normalizedResult.product._id}`);
+        // Redirection intelligente selon catgorie
+        const detectedCategory = normalizedResult.product?.domain || selectedCategory;
+        
+        if (detectedCategory === 'cosmetics' && normalizedResult.product?.barcode) {
+          navigate(`/cosmetics/${normalizedResult.product.barcode}`);
+        } else if (detectedCategory === 'detergents' && normalizedResult.product?.barcode) {
+          navigate(`/detergents/${normalizedResult.product.barcode}`);
+        } else {
+          // Fallback: food ou auto-dtection
+          navigate(`/product/${normalizedResult.product._id}`);
+        }
       } else {
         setError("Produit trouvé mais ID manquant");
         setLoading(false);

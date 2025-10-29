@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
 
 interface VisionResult {
@@ -64,7 +64,7 @@ export function OCRUpload({ onAnalysis, isLoading = false, className = '' }: OCR
         source: 'stub',
         ingredients: ['Sucre', 'Huile de palme', 'Noisettes 13%', 'Cacao maigre en poudre 7.4%'],
         warnings: ['Contient des fruits Ã  coque', 'Peut contenir du gluten'],
-        rawText: `NUTELLA\nSucre, huile de palme, noisettes 13%, cacao maigre en poudre 7.4%, lait écrémé en poudre 6.6%, émulsifiants : lécithines [soja], vanilline.\n\nÃ€ conserver dans un endroit frais et sec.`,
+        rawText: `NUTELLA\nSucre, huile de palme, noisettes 13%, cacao maigre en poudre 7.4%, lait écrémé en poudre 6.6%, émulsifiants : lécithines [soja], vanilline.\n\nÀ conserver dans un endroit frais et sec.`,
         confidence: 0.85
       };
       onAnalysis(stubResult);

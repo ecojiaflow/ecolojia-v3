@@ -31,6 +31,8 @@ const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
 const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
+const CosmeticAnalysisPage = lazy(() => import('./pages/CosmeticAnalysisPage'));
+const DetergentAnalysisPage = lazy(() => import('./pages/DetergentAnalysisPage'));
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
@@ -52,6 +54,8 @@ const App: React.FC = () => {
             <Route path="search" element={<SearchPage />} />
             <Route path="results" element={<ResultsPage />} />
             <Route path="product/:id" element={<ProductPage />} />
+            <Route path="cosmetics/:barcode" element={<CosmeticAnalysisPage />} />
+            <Route path="detergents/:barcode" element={<DetergentAnalysisPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />
             <Route path="ocr" element={<Navigate to="/scan" replace />} />
             <Route path="ocr-wizard" element={<OCRWizardPage />} />

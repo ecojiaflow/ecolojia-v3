@@ -17,13 +17,13 @@ const PrivacyPage: React.FC = () => {
             Politique de Confidentialite
           </h1>
           <p className="text-[#3B3B3B]/70 text-lg">
-            Derniere mise Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  jour : {new Date().toLocaleDateString('fr-FR')}
+            Derniere mise Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  jour : {new Date().toLocaleDateString('fr-FR')}
           </p>
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 mt-4 text-[#7DDE4A] hover:text-[#3B3B3B] transition-colors text-sm"
           >
-            aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â Æ’Ã¢â‚¬Å¡'šÃ‚Â Retour Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'accueil
+            aaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â Æ’ââ‚¬Å¡'šÃ‚Â Retour Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  l'accueil
           </Link>
         </div>
 
@@ -38,7 +38,7 @@ const PrivacyPage: React.FC = () => {
                   Notre engagement
                 </h3>
                 <p className="text-[#3B3B3B]/70">
-                  Chez ECOLOJIA, nous nous engageons Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  proteger votre vie privee et vos donnees personnelles. 
+                  Chez ECOLOJIA, nous nous engageons Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  proteger votre vie privee et vos donnees personnelles. 
                   Cette politique explique comment nous collectons, utilisons et protegeons vos informations.
                 </p>
               </div>
@@ -79,7 +79,7 @@ const PrivacyPage: React.FC = () => {
               <li>Fournir et ameliorer nos services d'analyse de produits</li>
               <li>Personnaliser votre experience utilisateur</li>
               <li>Vous envoyer des notifications pertinentes (avec votre consentement)</li>
-              <li>Repondre Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  vos questions et demandes de support</li>
+              <li>Repondre Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  vos questions et demandes de support</li>
               <li>Ameliorer nos algorithmes d'analyse</li>
               <li>Respecter nos obligations legales</li>
             </ul>
@@ -101,7 +101,7 @@ const PrivacyPage: React.FC = () => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-[#3B3B3B] mb-2">Cookies analytiques</h3>
                 <p className="text-[#3B3B3B]/70">
-                  Nous aident Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  comprendre comment vous utilisez ECOLOJIA (anonymises)
+                  Nous aident Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  comprendre comment vous utilisez ECOLOJIA (anonymises)
                 </p>
               </div>
             </div>
@@ -114,13 +114,13 @@ const PrivacyPage: React.FC = () => {
             </h2>
             <p className="text-[#3B3B3B]/70 mb-4">Conformement au RGPD, vous disposez des droits suivants :</p>
             <ul className="list-disc list-inside space-y-2 text-[#3B3B3B]/70">
-              <li>Droit d'acces Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  vos donnees personnelles</li>
+              <li>Droit d'acces Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  vos donnees personnelles</li>
               <li>Droit de rectification des donnees inexactes</li>
-              <li>Droit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'effacement (droit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  l'oubli)</li>
-              <li>Droit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  la limitation du traitement</li>
-              <li>Droit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  la portabilite des donnees</li>
+              <li>Droit Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  l'effacement (droit Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  l'oubli)</li>
+              <li>Droit Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  la limitation du traitement</li>
+              <li>Droit Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  la portabilite des donnees</li>
               <li>Droit d'opposition au traitement</li>
-              <li>Droit de retirer votre consentement Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  tout moment</li>
+              <li>Droit de retirer votre consentement Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  tout moment</li>
             </ul>
           </section>
 
@@ -146,9 +146,9 @@ const PrivacyPage: React.FC = () => {
               Modifications
             </h2>
             <p className="text-[#3B3B3B]/70">
-              Nous pouvons mettre Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  jour cette politique de confidentialite. 
+              Nous pouvons mettre Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  jour cette politique de confidentialite. 
               Les modifications importantes seront notifiees par email ou via l'application.
-              Nous vous encourageons Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  consulter regulierement cette page.
+              Nous vous encourageons Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  consulter regulierement cette page.
             </p>
           </section>
         </div>

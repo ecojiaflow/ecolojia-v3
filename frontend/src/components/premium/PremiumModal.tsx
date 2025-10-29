@@ -1,4 +1,4 @@
-﻿// PATH: frontend/src/components/premium/PremiumModal.tsx
+// PATH: frontend/src/components/premium/PremiumModal.tsx
 import React, { useState } from 'react';
 import { X, Check, Zap, Infinity, Brain, Download, Users, Shield } from 'lucide-react';
 import { paymentService } from '../../services/api';
@@ -114,7 +114,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, reason }) 
                 <span className="text-3xl font-bold">24,99â‚¬</span>
                 <span className="text-gray-600">/an</span>
               </div>
-              <p className="text-gray-600">Ã‰conomisez 17%</p>
+              <p className="text-gray-600">Économisez 17%</p>
               {selectedPlan === 'annual' && (
                 <div className="absolute top-4 right-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
