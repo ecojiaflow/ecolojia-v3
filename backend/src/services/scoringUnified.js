@@ -1,4 +1,4 @@
-// backend/src/services/scoringUnified.js
+﻿// backend/src/services/scoringUnified.js
 
 // ============================================
 // LISTES D'ADDITIFS
@@ -217,10 +217,10 @@ function calculateFoodScores(data) {
   const sugars = nutriments.sugars_100g !== undefined ? nutriments.sugars_100g : (nutriments.sugars !== undefined ? nutriments.sugars : null);
   if (sugars !== null) {
     if (sugars < 5) sugarsScore = 85;
-    else if (sugars < 10) sugarsScore = 70;
-    else if (sugars < 15) sugarsScore = 50;
-    else if (sugars < 25) sugarsScore = 30;
-    else sugarsScore = 15;
+    else if (sugars < 10) sugarsScore = 60;
+    else if (sugars < 15) sugarsScore = 35;
+    else if (sugars < 25) sugarsScore = 15;
+    else sugarsScore = 5;
   }
   const sugarsContribution = (sugarsScore || 0) * 0.10;
   

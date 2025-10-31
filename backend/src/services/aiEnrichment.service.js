@@ -192,7 +192,8 @@ async function enrichDetergentsProduct(product, missingFields = []) {
 /**
  * Enrichir produit avec IA selon catégorie
  */
-async function enrichProductWithAI(product, category = 'food') {
+async function enrichProductWithAI(product, category = 'food', options = {}) {
+  const { force = false } = options;
   try {
     if (!product || !product.barcode) {
       throw new Error('Produit invalide ou barcode manquant');
@@ -200,12 +201,17 @@ async function enrichProductWithAI(product, category = 'food') {
     
     const missingFields = identifyMissingFields(product, category);
     
-    if (missingFields.length === 0) {
+    if (missingFields.length === 0 && !force) {
       return {
         success: true,
-        message: 'Produit déjà complet',
+        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand même',
         aiEnriched: false
       };
+    }
+    
+    // Si force=true, on enrichit même sans champs manquants
+    if (force && missingFields.length === 0) {
+      console.log('[AI] Enrichissement forcé demandé - recalcul avec IA pour améliorer précision');
     }
     
     let result;
@@ -302,16 +308,16 @@ function parseFoodResponse(parsed, missingFields) {
   if (parsed.nutriments || parsed.nutritionalInfo) {
     const nutriments = parsed.nutriments || parsed.nutritionalInfo;
     
-    if (missingFields.includes('sugars') && nutriments.sugars !== undefined) {
+    if (missingFields.includes('sugars') && nutriments.sugars !== undefined && nutriments.sugars !== null) {
       result.sugars = parseFloat(nutriments.sugars);
     }
-    if (missingFields.includes('saturatedFat') && nutriments.saturatedFat !== undefined) {
+    if (missingFields.includes('saturatedFat') && nutriments.saturatedFat !== undefined && nutriments.saturatedFat !== null) {
       result.saturatedFat = parseFloat(nutriments.saturatedFat);
     }
-    if (missingFields.includes('salt') && nutriments.salt !== undefined) {
+    if (missingFields.includes('salt') && nutriments.salt !== undefined && nutriments.salt !== null) {
       result.salt = parseFloat(nutriments.salt);
     }
-    if (missingFields.includes('fiber') && nutriments.fiber !== undefined) {
+    if (missingFields.includes('fiber') && nutriments.fiber !== undefined && nutriments.fiber !== null) {
       result.fiber = parseFloat(nutriments.fiber);
     }
   }

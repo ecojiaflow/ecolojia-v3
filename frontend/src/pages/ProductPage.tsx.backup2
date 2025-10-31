@@ -1,6 +1,6 @@
 ﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
 import { AIEngagementWidget } from '../components/ai/AIEngagementWidget';
@@ -78,8 +78,8 @@ const ProductPage: React.FC = () => {
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
 
   // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
-  // CORRECTION : fetchProduct extrait pour être réutilisable
-  const fetchProduct = useCallback(async () => {
+  useEffect(() => {
+    const fetchProduct = async () => {
       if (!id || id === 'undefined') {
         setError('ID produit manquant ou invalide');
         setLoading(false);
@@ -127,11 +127,10 @@ const ProductPage: React.FC = () => {
       } finally {
         setLoading(false);
       }
-  }, [id]);
+    };
     
-  useEffect(() => {
     fetchProduct();
-  }, [fetchProduct]);
+  }, [id]);
 
   const loadAlternatives = async (productId: string) => {
     try {
@@ -163,8 +162,7 @@ const ProductPage: React.FC = () => {
       });
       if (response.ok) {
         const result = await response.json();
-        // Recharger le produit complet depuis la base
-        await fetchProduct();
+        setProduct(result.product || result);
       }
     } catch (error) {
       console.error('Erreur analyse:', error);
@@ -273,7 +271,7 @@ const ProductPage: React.FC = () => {
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
                 </div>
               </div>
-                <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
+              <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} />
               {product.category === 'food' && product.foodData?.novaGroup && (
                 <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
@@ -411,7 +409,7 @@ const ProductPage: React.FC = () => {
             </div>
           </div>
         )}
-          <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
+        <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} />
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>

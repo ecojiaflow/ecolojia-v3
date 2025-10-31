@@ -6,9 +6,7 @@ const additiveSchema = new mongoose.Schema({
   code: String,
   name: String,
   function: String,
-  riskLevel: {
-    type: String,
-    enum: ['LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH'],
+  riskLevel: { type: String, enum: ['low', 'moderate', 'high', 'LOW', 'MODERATE', 'HIGH', 'MEDIUM'],
     default: 'LOW'
   },
   healthConcerns: [String],
@@ -19,9 +17,7 @@ const allergenSchema = new mongoose.Schema({
   tag: String,
   name: String,
   category: String,
-  riskLevel: {
-    type: String,
-    enum: ['LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH'],
+  riskLevel: { type: String, enum: ['low', 'moderate', 'high', 'LOW', 'MODERATE', 'HIGH', 'MEDIUM'],
     default: 'MEDIUM'
   },
   description: String,
@@ -45,7 +41,7 @@ const cosmeticIngredientSchema = new mongoose.Schema({
   function: String,
   origin: {
     type: String,
-    enum: ['natural', 'synthetic', 'derived']
+    enum: ['a-plus', 'a', 'b', 'c', 'd', 'e', 'unknown']
   },
   concerns: [String],
   isEndocrineDisruptor: { type: Boolean, default: false }
@@ -67,10 +63,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  category: {
-    type: String,
-    required: true,
-    enum: ['food', 'cosmetics', 'detergents']
+  category: { type: String, enum: ['food', 'cosmetics', 'detergents', 'supplements', 'household', 'FOOD', 'COSMETICS']
   },
   subcategory: {
     type: String,
@@ -82,12 +75,12 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ? Modifi� en objets
+    allergens: [allergenSchema],  // ? Modifi? en objets
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },
-    nutriScore: { type: String, enum: ['A', 'B', 'C', 'D', 'E'] },
-    ecoScore: { type: String, enum: ['A', 'B', 'C', 'D', 'E'] }
+    nutriScore: { type: String, enum: ['a', 'b', 'c', 'd', 'e', 'A', 'B', 'C', 'D', 'E', 'unknown'] },
+    ecoScore: { type: String, enum: ['a-plus', 'a', 'b', 'c', 'd', 'e', 'unknown', 'A-PLUS', 'A', 'B', 'C', 'D', 'E', 'UNKNOWN'] }
   },
 
   cosmeticsData: {
@@ -231,6 +224,8 @@ productSchema.pre('save', async function(next) {
   next();
 });
 module.exports = mongoose.model('Product', productSchema);
+
+
 
 
 

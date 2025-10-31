@@ -47,9 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Charger user au démarrage
-  useEffect(() => {
-    refreshUser();
-  }, []);
+  // useEffect(() => {
+  //   refreshUser();
+  // }, []);
 
   // Login classique
   const login = async (email: string, password: string) => {

@@ -1,15 +1,19 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface ScoreProgressBarProps {
   score: number | null;
   onRequestScore?: () => void;
   isAnalyzing?: boolean;
+  dataCompleteness?: string;
+  confidence?: number;
 }
 
-export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({ 
-  score, 
+export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
+  score,
   onRequestScore,
-  isAnalyzing 
+  isAnalyzing,
+  dataCompleteness,
+  confidence
 }) => {
   const getScoreLabel = (score: number): string => {
     if (score >= 76) return 'Excellent';
@@ -25,7 +29,20 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     return 'bg-red-600';
   };
 
-  // Cas : Score non calcul
+  // ✅ Détermine si le bouton d'enrichissement doit s'afficher
+  const shouldShowEnrichButton = () => {
+    if (!onRequestScore) return false;
+    
+    // Si données excellentes ET confiance haute → masquer
+    if (dataCompleteness === 'Excellente' && (confidence || 0) >= 0.85) {
+      return false;
+    }
+    
+    // Sinon afficher
+    return true;
+  };
+
+  // Cas : Score non calculé
   if (score === null || score === undefined) {
     return (
       <div className="mt-4 w-full">
@@ -37,7 +54,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
             </span>
           </div>
         </div>
-        
+
         {onRequestScore && (
           <div className="mt-3 text-center">
             <button
@@ -68,7 +85,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
             </p>
           </div>
         )}
-        
+
         <div className="flex justify-between mt-2 text-xs text-gray-600">
           <span className="text-red-600 font-medium">0 Mauvais</span>
           <span className="text-orange-500 font-medium">36 Passable</span>
@@ -79,7 +96,7 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     );
   }
 
-  // Cas : Score calcul (affichage normal)
+  // Cas : Score calculé (affichage normal)
   return (
     <div className="mt-4 w-full">
       <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden">
@@ -100,14 +117,14 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
         <span className="text-green-700 font-medium">76 Excellent</span>
       </div>
 
-      {/* ? Bouton enrichissement IA mme si score existe */}
-      {onRequestScore && (
+      {/* ✅ Bouton enrichissement IA - Conditionnel */}
+      {shouldShowEnrichButton() && (
         <div className="mt-3 text-center">
           <button
             onClick={onRequestScore}
             disabled={isAnalyzing}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-2 text-sm"
-            aria-label="Amliorer le score avec l'IA"
+            aria-label="Améliorer le score avec l'IA"
           >
             {isAnalyzing ? (
               <>
@@ -122,12 +139,12 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Amliorer avec IA
+                Améliorer avec IA
               </>
             )}
           </button>
           <p className="text-xs text-gray-600 mt-2">
-            Enrichir les donnes manquantes avec l'IA
+            Enrichir les données manquantes avec l'IA
           </p>
         </div>
       )}

@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import { MessageCircle, AlertCircle, Sparkles, Loader } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+interface ProductActionsProps {
+  product: any;
+  onProductUpdated?: (updatedProduct: any) => void;
+}
+
+export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProductUpdated }) => {
+  const navigate = useNavigate();
+  const [isEnriching, setIsEnriching] = useState(false);
+
+  const handleChatQuestion = (question: string) => {
+    navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent(question)}`);
+  };
+
+  // ? LOGIQUE INTELLIGENTE : afficher bouton seulement si nécessaire
+  // ? LOGIQUE SCIENTIFIQUE ROBUSTE (Expert 15+ ans)
+  const shouldShowEnrichButton = () => {
+    console.log('?? DEBUG shouldShowEnrichButton:', {
+      dataCompleteness: product?.scores?.dataCompleteness,
+      confidence: product?.scores?.confidence,
+      overallScore: product?.scores?.overallScore,
+      hasNullScores: Object.values(product?.scores?.breakdown || {}).some(comp => comp.score === null)
+    });
+    const scores = product?.scores;
+    if (!scores) return false;
+    if (scores.dataCompleteness === 'Excellente' && scores.confidence >= 0.9) return false;
+    if (scores.dataCompleteness === 'Insuffisante' || scores.confidence < 0.5) return true;
+    if (scores.confidence < 0.7 && scores.overallScore < 60) return true;
+    return Object.values(scores.breakdown || {}).some(comp => comp.score === null);
+  };
+
+  // ? APPEL API ENRICHISSEMENT
+  const handleEnrichWithAI = async () => {
+    setIsEnriching(true);
+    
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+      const response = await fetch(`${apiUrl}/api/products/${product.barcode}/enrich`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        throw new Error('Enrichissement �chou�');
+      }
+
+      const result = await response.json();
+      
+      toast.success('? Produit enrichi avec succ�s !');
+      
+      // Notifier le parent pour rafra�chir
+      if (onProductUpdated) {
+        onProductUpdated(result.product);
+      } else {
+        // Recharger la page si pas de callback
+        window.location.reload();
+      }
+
+    } catch (error) {
+      console.error('Erreur enrichissement:', error);
+      toast.error('Impossible d\'enrichir le produit');
+    } finally {
+      setIsEnriching(false);
+    }
+  };
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-sm font-medium text-gray-700 mb-3">
+        ?? Posez vos questions � l'IA
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button
+          onClick={() => handleChatQuestion("Pourquoi ce score ?")}
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <MessageCircle className="w-4 h-4" />
+          <span className="text-sm font-medium">Explique le score</span>
+        </button>
+
+        <button
+          onClick={() => handleChatQuestion("Détails composition")}
+          className="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-colors"
+        >
+          <AlertCircle className="w-4 h-4" />
+          <span className="text-sm font-medium">Composition</span>
+        </button>
+
+        <button
+          onClick={() => handleChatQuestion("Alternatives plus saines")}
+          className="flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span className="text-sm font-medium">Alternatives</span>
+        </button>
+      </div>
+
+      {/* ? NOUVEAU BOUTON "AM�LIORER AVEC IA" - Affich� uniquement si nécessaire */}
+      {shouldShowEnrichButton() && (
+        <div className="mt-4">
+          <button
+            onClick={handleEnrichWithAI}
+            disabled={isEnriching}
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-3 rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isEnriching ? (
+              <>
+                <Loader className="w-5 h-5 animate-spin" />
+                <span className="font-medium">Enrichissement en cours...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">? Am�liorer le score avec IA</span>
+              </>
+            )}
+          </button>
+          <p className="text-xs text-gray-500 text-center mt-2">
+            Confiance actuelle : {Math.round((product?.scores?.confidence || 0) * 100)}% � 
+            Score : {product?.scores?.overallScore || 'N/A'}/100
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+

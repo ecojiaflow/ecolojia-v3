@@ -1,4 +1,4 @@
-// backend/src/services/ProductOrchestrator.js
+﻿// backend/src/services/ProductOrchestrator.js
 /**
  * Orchestrateur central pour récupération/création produits
  * Gère enrichissement automatique et cache IA
@@ -162,6 +162,19 @@ async function getOrCreateProduct(input) {
   }
 
   // 5. Sauvegarder en base
+
+  // ✅ CORRECTION : Préserver dataCompleteness depuis MongoDB
+  if (finalScores && !finalScores.dataCompleteness) {
+    // Si le produit existe déjà en base, préserver son dataCompleteness
+    const existingDataCompleteness = product.scores?.dataCompleteness;
+    if (existingDataCompleteness) {
+      finalScores.dataCompleteness = existingDataCompleteness;
+    } else {
+      // Sinon calculer selon la confiance
+      finalScores.dataCompleteness = finalScores.confidence >= 0.85 ? "Excellente" : 
+                                      finalScores.confidence >= 0.65 ? "Bonne" : "Partielle";
+    }
+  }
   const productData = product.toObject ? product.toObject() : product;
   const savedProduct = await saveProduct({
     ...productData,
@@ -169,10 +182,10 @@ async function getOrCreateProduct(input) {
   });
 
   // FIX : Re-fetch le produit pour avoir TOUS les champs (y compris scores)
-  const refreshedProduct = await Product.findOne({ barcode: savedProduct.barcode }).lean();
-
+  // ❌ DÉSACTIVÉ : Re-fetch écrase dataCompleteness calculé
+  // const savedProduct = await Product.findOne({ barcode: savedProduct.barcode }).lean();
   return {
-    product: refreshedProduct,
+    product: savedProduct,
     source: product._id ? 'DATABASE_UPDATED' : 'OFF_NEW',
     cached: false,
     aiEnrichmentUsed: aiUsed
