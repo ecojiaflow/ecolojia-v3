@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const router = express.Router();
 const { authenticateToken, authenticateUser } = require("../middleware");
 const User = require("../models/User");
@@ -410,4 +410,120 @@ router.post('/v2/me/reset-password',
     }
 });
 
+
+// ═══════════════════════════════════════════════════════════════════
+// ⭐ ROUTES PROFIL V3.2 - PERSONNALISATION
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * PUT /api/user/profile
+ * Mettre à jour profil personnalisation
+ */
+router.put('/profile', async (req, res) => {
+  try {
+    const userId = req.user?._id || req.userId;
+    
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentification requise'
+      });
+    }
+
+    const { diet, allergens, goal, budget, labels, preferences, excludedIngredients } = req.body;
+
+    const User = require('../models/User');
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Utilisateur non trouvé'
+      });
+    }
+
+    // Initialiser profile si inexistant
+    if (!user.profile) {
+      user.profile = {};
+    }
+
+    // Mise à jour profil
+    if (diet !== undefined) user.profile.diet = diet;
+    if (allergens !== undefined) user.profile.allergens = allergens;
+    if (goal !== undefined) user.profile.goal = goal;
+    if (budget !== undefined) user.profile.budget = { ...user.profile.budget, ...budget };
+    if (labels !== undefined) user.profile.labels = { ...user.profile.labels, ...labels };
+    if (preferences !== undefined) user.profile.preferences = { ...user.profile.preferences, ...preferences };
+    if (excludedIngredients !== undefined) user.profile.excludedIngredients = excludedIngredients;
+
+    // Recalculer complétude
+    user.calculateProfileCompleteness();
+
+    await user.save();
+
+    console.log('[User Profile] Updated for:', user.email);
+
+    res.json({
+      success: true,
+      message: 'Profil mis à jour',
+      profile: user.profile,
+      completeness: user.profile.completeness
+    });
+
+  } catch (error) {
+    console.error('[User Profile] Update failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/user/profile
+ * Récupérer profil
+ */
+router.get('/profile', async (req, res) => {
+  try {
+    const userId = req.user?._id || req.userId;
+    
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentification requise'
+      });
+    }
+
+    const User = require('../models/User');
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Utilisateur non trouvé'
+      });
+    }
+
+    // Migration auto si nécessaire
+    if (!user.profile?.migratedFromAiPreferences && user.aiPreferences) {
+      console.log('[User Profile] Auto-migration triggered');
+      user.migrateToV32Profile();
+      await user.save();
+    }
+
+    res.json({
+      success: true,
+      profile: user.profile || {},
+      completeness: user.profile?.completeness || 0,
+      dietLabel: user.getDietLabel()
+    });
+
+  } catch (error) {
+    console.error('[User Profile] Get failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 module.exports = router;

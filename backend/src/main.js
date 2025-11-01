@@ -1,4 +1,4 @@
-// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+﻿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
 // ?? CHARGEMENT ENVIRONNEMENT (développement + production)
@@ -298,6 +298,42 @@ async function connectDatabase() {
 
 // === GDPR Routes (RGPD Art. 15-22) ===
 const gdprRoutes = require('./routes/gdpr.routes');
+
+// ═══════════════════════════════════════════════════════════════════
+// ⭐ V3.2 - AI ROUTES (Chat contextuel + profil)
+// ═══════════════════════════════════════════════════════════════════
+try {
+  const aiRoutes = require('./routes/ai.routes');
+  app.use('/api/ai', aiRoutes);
+  console.log('✅ [ROUTE] AI montée sur /api/ai');
+  console.log('Route montée: /api/ai', { path: require('path').resolve(__dirname, 'routes/ai.routes.js') });
+} catch (err) {
+  console.error('❌ [ROUTE] AI routes error:', err.message);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ⭐ V3.2 - USER ROUTES (Profil personnalisé)
+// ═══════════════════════════════════════════════════════════════════
+try {
+  const userRoutes = require('./routes/user.routes');
+  app.use('/api/user', userRoutes);
+  console.log('✅ [ROUTE] User montée sur /api/user');
+  console.log('Route montée: /api/user', { path: require('path').resolve(__dirname, 'routes/user.routes.js') });
+} catch (err) {
+  console.error('❌ [ROUTE] User routes error:', err.message);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ⭐ V3.2 - ALTERNATIVES ROUTES (Cascade DB→IA)
+// ═══════════════════════════════════════════════════════════════════
+try {
+  const alternativesRoutes = require('./routes/alternatives.routes');
+  app.use('/api/alternatives', alternativesRoutes);
+  console.log('✅ [ROUTE] Alternatives montée sur /api/alternatives');
+  console.log('Route montée: /api/alternatives', { path: require('path').resolve(__dirname, 'routes/alternatives.routes.js') });
+} catch (err) {
+  console.error('❌ [ROUTE] Alternatives routes error:', err.message);
+}
 app.use('/api/gdpr', gdprRoutes);
 console.log('? [ROUTE] GDPR montée sur /api/gdpr');
 
