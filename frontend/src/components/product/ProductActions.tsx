@@ -99,10 +99,14 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
         toast.success('✨ Données complétées avec succès');
         // Notifier le parent du produit mis à jour
         onProductUpdated?.(result.product);
+      } else if (result.success) {
+        // Fallback : pas d'objet enrichment (ancien format) → Reload direct
+        toast.success('✨ Données complétées avec succès');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
-        // Fallback : pas d'objet enrichment (ancien format)
-        toast.success('Produit mis à jour');
-        onProductUpdated?.(result.product);
+        toast.error('Enrichissement échoué');
       }
 
     } catch (error) {
@@ -220,3 +224,4 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
     </div>
   );
 };
+

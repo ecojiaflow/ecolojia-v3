@@ -1,5 +1,5 @@
-// PATH: frontend/src/services/alternativesService.ts
-import { get } from "./apiClient";
+﻿// PATH: frontend/src/services/alternativesService.ts
+import apiClient from "./apiClient";
 import type { ProductInfo } from "../types/api";
 
 export type AlternativeSearchParams = {
@@ -20,7 +20,7 @@ export type Alternative = ProductInfo & {
 export async function findAlternatives(params: AlternativeSearchParams): Promise<Alternative[]> {
   try {
     // Tentative via l'API
-    const response = await get("/products/alternatives", { params });
+    const response = await apiClient.get("/products/alternatives", { params });
     return normalizeAlternatives(response);
   } catch {
     // Fallback: suggestions statiques basées sur la catégorie
@@ -33,7 +33,7 @@ export async function findAlternatives(params: AlternativeSearchParams): Promise
  */
 export async function findAlternativesByProductId(productId: string): Promise<Alternative[]> {
   try {
-    const response = await get(`/products/${productId}/alternatives`);
+    const response = await apiClient.get(`/products/${productId}/alternatives`);
     return normalizeAlternatives(response);
   } catch {
     return [];

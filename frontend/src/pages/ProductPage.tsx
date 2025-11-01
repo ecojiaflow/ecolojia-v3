@@ -12,7 +12,7 @@ import { ProductScoresCard } from '../components/product/ProductScoresCard';
 import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
-import { ProductAlternatives } from '../components/product/ProductAlternatives';
+import AlternativesPanel from '../components/product/AlternativesPanel';
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { AllergensSection } from '../components/product/AllergensSection';
@@ -466,7 +466,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         <ProductChatActions product={product} />
-        <ProductAlternatives alternatives={alternatives} loading={loadingAlternatives} />
+        <AlternativesPanel productId={product._id} currentScore={product.scores?.global} productName={product.name} />
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
     </div>
