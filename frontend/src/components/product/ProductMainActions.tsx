@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sparkles, ShoppingCart, UtensilsCrossed, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { mealPlanService } from '../../services/mealPlanService';
 
 interface ProductMainActionsProps {
   product: {
@@ -78,12 +79,55 @@ export const ProductMainActions: React.FC<ProductMainActionsProps> = ({
     }
   };
 
-  const handleAddToMeal = () => {
+  const handleAddToMeal = async () => {
     if (product.category !== 'food') {
       toast.error('Reserve aux produits alimentaires');
       return;
     }
-    toast('Fonctionnalite en developpement', { icon: '🚧', style: { background: '#FFF8E6', color: '#6B4D00', border: '1px solid #FFE8A8' } });
+    
+    setIsLoading('meal');
+    try {
+      const token = localStorage.getItem('ecolojia_token');
+      if (!token) {
+        toast.error('Connectez-vous pour gerer vos repas');
+        navigate('/login');
+        return;
+      }
+      
+      const mealPlans = await mealPlanService.getMealPlans();
+      
+      let activePlan = mealPlans.find(plan => {
+        const now = new Date();
+        return new Date(plan.startDate) <= now && new Date(plan.endDate) >= now;
+      });
+      
+      if (!activePlan) {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+        
+        activePlan = await mealPlanService.createMealPlan({
+          name: 'Ma semaine',
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString()
+        });
+      }
+      
+      navigate(`/meal-plan/${activePlan._id}/add`, {
+        state: { productId: product._id }
+      });
+      
+    } catch (error: any) {
+      console.error('Erreur ajout repas:', error);
+      if (error.response?.status === 401) {
+        toast.error('Session expiree, reconnectez-vous');
+        navigate('/login');
+      } else {
+        toast.error('Erreur lors de l\'ajout');
+      }
+    } finally {
+      setIsLoading(null);
+    }
   };
 
   return (
@@ -97,8 +141,8 @@ export const ProductMainActions: React.FC<ProductMainActionsProps> = ({
           {isLoading === 'list' ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
           <span>Ajouter a ma liste</span>
         </button>
-        <button onClick={handleAddToMeal} disabled={product.category !== 'food'} className="flex items-center justify-center gap-2 px-4 py-3 bg-[#1B9E4B] hover:bg-[#178A3E] text-white rounded-[16px] font-semibold transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#DDE9DA] disabled:text-[#9CA3AF]">
-          <UtensilsCrossed className="w-5 h-5" />
+        <button onClick={handleAddToMeal} disabled={isLoading === 'meal' || product.category !== 'food'} className="flex items-center justify-center gap-2 px-4 py-3 bg-[#1B9E4B] hover:bg-[#178A3E] text-white rounded-[16px] font-semibold transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#DDE9DA] disabled:text-[#9CA3AF]">
+          {isLoading === 'meal' ? <Loader2 className="w-5 h-5 animate-spin" /> : <UtensilsCrossed className="w-5 h-5" />}
           <span>Ajouter a un repas</span>
         </button>
       </div>

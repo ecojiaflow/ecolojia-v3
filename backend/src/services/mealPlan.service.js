@@ -1,0 +1,136 @@
+const MealPlan = require('../models/MealPlan');
+const Product = require('../models/Product');
+
+class MealPlanService {
+  
+  async createMealPlan(userId, data) {
+    const mealPlan = new MealPlan({
+      userId,
+      name: data.name || 'Mon plan repas',
+      startDate: data.startDate || new Date(),
+      endDate: data.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      dietaryPreferences: data.dietaryPreferences || [],
+      targetScore: data.targetScore || 70
+    });
+    
+    await mealPlan.save();
+    return mealPlan;
+  }
+  
+  async getUserMealPlans(userId) {
+    return await MealPlan.find({ userId })
+      .sort({ startDate: -1 })
+      .populate('meals.productId')
+      .lean();
+  }
+  
+  async getMealPlanById(userId, mealPlanId) {
+    const mealPlan = await MealPlan.findOne({ 
+      _id: mealPlanId, 
+      userId 
+    }).populate('meals.productId');
+    
+    if (!mealPlan) {
+      throw new Error('Plan repas introuvable');
+    }
+    
+    return mealPlan;
+  }
+  
+  async addMealToPlan(userId, mealPlanId, mealData) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+    
+    const product = await Product.findById(mealData.productId);
+    if (!product) {
+      throw new Error('Produit introuvable');
+    }
+    
+    if (product.category !== 'food') {
+      throw new Error('Seuls les produits alimentaires peuvent etre ajoutes');
+    }
+    
+    const meal = {
+      productId: product._id,
+      productName: product.name,
+      productScore: product.scores?.overallScore || 0,
+      category: mealData.category,
+      date: new Date(mealData.date),
+      portion: mealData.portion || 1,
+      notes: mealData.notes || ''
+    };
+    
+    mealPlan.meals.push(meal);
+    await mealPlan.save();
+    
+    return mealPlan;
+  }
+  
+  async removeMealFromPlan(userId, mealPlanId, mealId) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+    
+    mealPlan.meals = mealPlan.meals.filter(
+      meal => meal._id.toString() !== mealId
+    );
+    
+    await mealPlan.save();
+    return mealPlan;
+  }
+  
+  async updateMeal(userId, mealPlanId, mealId, updates) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+    
+    const meal = mealPlan.meals.id(mealId);
+    if (!meal) {
+      throw new Error('Repas introuvable');
+    }
+    
+    Object.assign(meal, updates);
+    await mealPlan.save();
+    
+    return mealPlan;
+  }
+  
+  async deleteMealPlan(userId, mealPlanId) {
+    const result = await MealPlan.findOneAndDelete({
+      _id: mealPlanId,
+      userId
+    });
+    
+    if (!result) {
+      throw new Error('Plan repas introuvable');
+    }
+    
+    return { message: 'Plan repas supprime' };
+  }
+  
+  async getWeekStats(userId, mealPlanId) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+    
+    const stats = {
+      averageScore: mealPlan.getAverageScore(),
+      totalMeals: mealPlan.meals.length,
+      mealsByCategory: {},
+      scoreDistribution: {
+        excellent: 0,
+        good: 0,
+        average: 0,
+        poor: 0
+      }
+    };
+    
+    mealPlan.meals.forEach(meal => {
+      stats.mealsByCategory[meal.category] = 
+        (stats.mealsByCategory[meal.category] || 0) + 1;
+      
+      const score = meal.productScore || 0;
+      if (score >= 80) stats.scoreDistribution.excellent++;
+      else if (score >= 60) stats.scoreDistribution.good++;
+      else if (score >= 40) stats.scoreDistribution.average++;
+      else stats.scoreDistribution.poor++;
+    });
+    
+    return stats;
+  }
+}
+
+module.exports = new MealPlanService();

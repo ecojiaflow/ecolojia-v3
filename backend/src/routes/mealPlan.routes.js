@@ -1,132 +1,106 @@
-/**
- * MEAL PLAN ROUTES
- * Endpoints pour generation plans repas hebdomadaires (Premium)
- * Version: 1.0.0
- */
-
 const express = require('express');
 const router = express.Router();
-const mealPlanGenerator = require('../services/ai/mealPlanGenerator.service');
-const { authenticateToken, requirePremium } = require('../middleware');
+const { authenticateToken } = require('../middleware/authMiddleware');
+const mealPlanService = require('../services/mealPlan.service');
 
-router.post('/generate', authenticateToken, requirePremium, async (req, res) => {
+// POST /api/meal-plan - Créer un nouveau plan repas
+router.post('/', authenticateToken, async (req, res) => {
   try {
-    const {
-      budget = 80,
-      calories = 2000,
-      allergens = [],
-      dietType = 'balanced',
-      cookingTime = 'medium',
-      people = 1
-    } = req.body;
-
-    if (budget < 20 || budget > 500) {
-      return res.status(400).json({
-        success: false,
-        error: 'Budget invalide (entre 20 EUR et 500 EUR)'
-      });
-    }
-
-    if (calories < 1200 || calories > 4000) {
-      return res.status(400).json({
-        success: false,
-        error: 'Calories invalides (entre 1200 et 4000 kcal)'
-      });
-    }
-
-    const validDietTypes = ['balanced', 'vegetarian', 'vegan', 'low-carb'];
-    if (!validDietTypes.includes(dietType)) {
-      return res.status(400).json({
-        success: false,
-        error: `Type de regime invalide. Valeurs acceptees: ${validDietTypes.join(', ')}`
-      });
-    }
-
-    console.log(`[MealPlan] Generation demandee par user ${req.user.id}`);
-    console.log(`   Budget: ${budget} EUR | Calories: ${calories} | Regime: ${dietType}`);
-
-    const result = await mealPlanGenerator.generateWeeklyPlan({
-      budget,
-      calories,
-      allergens,
-      dietType,
-      cookingTime,
-      people
-    });
-
-    if (!result.success) {
-      return res.status(500).json({
-        success: false,
-        error: result.error,
-        details: result.details
-      });
-    }
-
-    console.log(`[MealPlan] Plan genere avec succes (score: ${result.validation.score}/100)`);
-
-    const disclaimers = {
-      health: "INFORMATION IMPORTANTE : ECOLOJIA n'est pas un dispositif medical. Les plans repas sont informatifs, bases sur des recommandations nutritionnelles generales (OMS, ANSES). Ils ne remplacent pas l'avis d'un professionnel de sante. Consultez un medecin ou nutritionniste diplome avant tout changement alimentaire majeur, surtout en cas de pathologie.",
-      ai: "RAPPEL : Ce plan est genere par une intelligence artificielle. Bien que valide selon des criteres nutritionnels, il peut contenir des erreurs. Verifiez toujours la coherence des recettes et adaptez selon vos besoins. En cas de doute, consultez un professionnel.",
-      allergens: "ALLERGENES : Meme si vos allergenes ont ete exclus automatiquement, verifiez TOUJOURS les etiquettes des produits achetes. Les contaminations croisees existent. En cas d'allergie severe, cette fonction ne remplace pas votre vigilance."
-    };
-
-    res.json({
-      success: true,
-      data: result.plan,
-      disclaimers,
-      validation: result.validation,
-      metadata: result.metadata
-    });
-
+    const mealPlan = await mealPlanService.createMealPlan(req.user.userId, req.body);
+    res.status(201).json({ success: true, mealPlan });
   } catch (error) {
-    console.error('[MealPlan] Erreur route:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur lors de la generation du plan repas',
-      message: error.message
-    });
+    console.error('[MealPlan] Create error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-router.get('/preferences', authenticateToken, requirePremium, (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      dietTypes: [
-        { value: 'balanced', label: 'Equilibre', description: 'Viandes, poissons, legumes' },
-        { value: 'vegetarian', label: 'Vegetarien', description: 'Sans viande ni poisson' },
-        { value: 'vegan', label: 'Vegetalien', description: 'Aucun produit animal' },
-        { value: 'low-carb', label: 'Low-Carb', description: 'Faible en glucides (<100g/jour)' }
-      ],
-      cookingTimes: [
-        { value: 'quick', label: 'Rapide', description: '< 30 minutes' },
-        { value: 'medium', label: 'Modere', description: '30-60 minutes' },
-        { value: 'elaborate', label: 'Elabore', description: '> 60 minutes' }
-      ],
-      budgetRange: { min: 20, max: 500, default: 80 },
-      caloriesRange: { min: 1200, max: 4000, default: 2000 },
-      peopleRange: { min: 1, max: 8, default: 1 }
-    }
-  });
+// GET /api/meal-plan - Obtenir tous les plans repas de l'utilisateur
+router.get('/', authenticateToken, async (req, res) => {
+  try {
+    const mealPlans = await mealPlanService.getUserMealPlans(req.user.userId);
+    res.json({ success: true, mealPlans });
+  } catch (error) {
+    console.error('[MealPlan] Get all error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
-router.post('/validate', authenticateToken, requirePremium, async (req, res) => {
+// GET /api/meal-plan/:id - Obtenir un plan repas spécifique
+router.get('/:id', authenticateToken, async (req, res) => {
   try {
-    const { plan, userPreferences } = req.body;
-    const validator = require('../services/ai/mealPlanValidator.service');
-    
-    const result = validator.validate(plan, userPreferences);
-
-    res.json({
-      success: true,
-      validation: result
-    });
-
+    const mealPlan = await mealPlanService.getMealPlanById(req.user.userId, req.params.id);
+    res.json({ success: true, mealPlan });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error('[MealPlan] Get by ID error:', error);
+    res.status(404).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/meal-plan/:id/meals - Ajouter un repas au plan
+router.post('/:id/meals', authenticateToken, async (req, res) => {
+  try {
+    const mealPlan = await mealPlanService.addMealToPlan(
+      req.user.userId,
+      req.params.id,
+      req.body
+    );
+    res.json({ success: true, mealPlan });
+  } catch (error) {
+    console.error('[MealPlan] Add meal error:', error);
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE /api/meal-plan/:id/meals/:mealId - Supprimer un repas du plan
+router.delete('/:id/meals/:mealId', authenticateToken, async (req, res) => {
+  try {
+    const mealPlan = await mealPlanService.removeMealFromPlan(
+      req.user.userId,
+      req.params.id,
+      req.params.mealId
+    );
+    res.json({ success: true, mealPlan });
+  } catch (error) {
+    console.error('[MealPlan] Remove meal error:', error);
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// PUT /api/meal-plan/:id/meals/:mealId - Modifier un repas du plan
+router.put('/:id/meals/:mealId', authenticateToken, async (req, res) => {
+  try {
+    const mealPlan = await mealPlanService.updateMeal(
+      req.user.userId,
+      req.params.id,
+      req.params.mealId,
+      req.body
+    );
+    res.json({ success: true, mealPlan });
+  } catch (error) {
+    console.error('[MealPlan] Update meal error:', error);
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE /api/meal-plan/:id - Supprimer un plan repas
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const result = await mealPlanService.deleteMealPlan(req.user.userId, req.params.id);
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error('[MealPlan] Delete error:', error);
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/meal-plan/:id/stats - Obtenir les statistiques du plan repas
+router.get('/:id/stats', authenticateToken, async (req, res) => {
+  try {
+    const stats = await mealPlanService.getWeekStats(req.user.userId, req.params.id);
+    res.json({ success: true, stats });
+  } catch (error) {
+    console.error('[MealPlan] Stats error:', error);
+    res.status(400).json({ success: false, error: error.message });
   }
 });
 
