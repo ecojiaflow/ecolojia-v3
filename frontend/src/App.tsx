@@ -1,4 +1,4 @@
-// PATH: frontend/src/App.tsx
+﻿// PATH: frontend/src/App.tsx
 import React, { lazy, Suspense, useState } from 'react';
 import './utils/keepAlive';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -19,6 +19,7 @@ const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 const AssistantPage = lazy(() => import('./pages/AssistantPage'));
 const ShoppingListPage = lazy(() => import('./pages/ShoppingListPage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
+const LearnPage = lazy(() => import('./pages/LearnPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
@@ -54,6 +55,7 @@ const App: React.FC = () => {
             <Route path="search" element={<SearchPage />} />
             <Route path="results" element={<ResultsPage />} />
             <Route path="product/:id" element={<ProductPage />} />
+            <Route path="learn" element={<LearnPage />} />
             <Route path="cosmetics/:barcode" element={<CosmeticAnalysisPage />} />
             <Route path="detergents/:barcode" element={<DetergentAnalysisPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />

@@ -3,7 +3,7 @@
 // SOLUTION ROBUSTE POUR PRODUCTION
 
 // === IMPORTS DES MIDDLEWARES EXISTANTS ===
-const authMiddleware = require('./auth');
+const { authMiddleware, requirePremium: premiumMiddleware, checkQuota: quotaChecker } = require('./authMiddleware');
 const { checkQuota, checkQuotaAfterUpload } = require('./quotaMiddleware');
 const errorHandler = require('./errorHandler');
 const rateLimiter = require('./rateLimiter');

@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
 // ?? CHARGEMENT ENVIRONNEMENT (développement + production)
@@ -212,7 +212,8 @@ const routesToLoad = [
   { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
   { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },
   { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' },
-  { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' }
+  { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' },
+  { path: '/api/shopping-lists', file: './routes/shopping-list.routes.js', name: 'Shopping Lists' }
 ];
 
 routesToLoad.forEach(route => {

@@ -1,9 +1,9 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ShoppingCart, 
-  Plus, 
-  Trash2, 
+import {
+  ShoppingCart,
+  Plus,
+  Trash2,
   Check,
   Download,
   Share2,
@@ -55,7 +55,7 @@ const ShoppingListPage: React.FC = () => {
   const [activeListId, setActiveListId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
-  
+
   const [showNewListForm, setShowNewListForm] = useState(false);
   const [newListName, setNewListName] = useState('');
   const [showNewItemForm, setShowNewItemForm] = useState(false);
@@ -69,35 +69,117 @@ const ShoppingListPage: React.FC = () => {
 
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['fruits-legumes']);
 
+  // Fonction d'optimisation IA
+  const handleOptimize = async (replacements) => {
+    if (!activeListId) return;
+
+    try {
+      const activeList = lists.find(l => l._id === activeListId);
+      if (!activeList) return;
+
+      const updatedItems = activeList.items.map(item => {
+        const replacement = replacements.find(r => r.original.name === item.name);
+        if (replacement) {
+          return {
+            ...item,
+            name: replacement.suggestion.name,
+            score: replacement.suggestion.score
+          };
+        }
+        return item;
+      });
+
+      const updatedList = { ...activeList, items: updatedItems };
+      setLists(lists.map(l => l._id === activeListId ? updatedList : l));
+
+      try {
+        await axios.put(API_URL + "/api/shopping-list/" + activeListId, updatedList, {
+          headers: { Authorization: "Bearer " + localStorage.getItem('ecolojia_token') }
+        });
+      } catch (err) {
+        console.log('Sauvegarde serveur échouée:', err);
+      }
+    } catch (error) {
+      console.error('Erreur optimisation:', error);
+    }
+  };
+
   useEffect(() => {
     checkPremiumAndLoadLists();
   }, []);
 
+  /**
+   * STRATÉGIE HYBRIDE ROBUSTE (Production-Ready)
+   * 1. Tenter localStorage (rapide, pas de latence)
+   * 2. Si échec ou vide, fallback sur API
+   * 3. Mettre à jour cache si API réussit
+   */
   const checkPremiumAndLoadLists = async () => {
     try {
       const token = localStorage.getItem('ecolojia_token');
       if (!token) {
+        console.log('⚠️ Pas de token - utilisateur non connecté');
         setLoading(false);
         return;
       }
 
-      const profileRes = await axios.get(`${API_URL}/api/users/profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setIsPremium(profileRes.data.user?.isPremium || false);
-
-      const listsRes = await axios.get(`${API_URL}/api/shopping-lists`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // STRATÉGIE 1 : Lecture localStorage (préféré car instantané)
+      let premiumLoaded = false;
+      const storedUser = localStorage.getItem('ecolojia_user');
       
-      const fetchedLists = listsRes.data.lists || [];
-      setLists(fetchedLists);
-      
-      if (fetchedLists.length > 0) {
-        setActiveListId(fetchedLists[0]._id);
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          const premium = user.tier === 'premium' || user.isPremium || false;
+          setIsPremium(premium);
+          premiumLoaded = true;
+          console.log('✅ User chargé depuis cache local:', { tier: user.tier, isPremium: premium });
+        } catch (parseError) {
+          console.warn('⚠️ Cache local corrompu, fallback API');
+        }
       }
+
+      // STRATÉGIE 2 : Fallback API si cache vide ou corrompu
+      if (!premiumLoaded) {
+        try {
+          const profileRes = await axios.get(`${API_URL}/api/user/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          const user = profileRes.data.profile || profileRes.data.user || {};
+          const premium = user.tier === 'premium' || user.isPremium || false;
+          setIsPremium(premium);
+          
+          // Mettre à jour le cache local pour prochaine fois
+          localStorage.setItem('ecolojia_user', JSON.stringify(user));
+          console.log('✅ User chargé depuis API et mis en cache:', { tier: user.tier, isPremium: premium });
+        } catch (apiError) {
+          console.error('❌ Impossible de charger user depuis API:', apiError);
+          // Définir isPremium = false par défaut en cas d'erreur
+          setIsPremium(false);
+        }
+      }
+
+      // STRATÉGIE 3 : Charger les listes (indépendant du statut premium)
+      try {
+        const listsRes = await axios.get(`${API_URL}/api/shopping-lists`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const fetchedLists = listsRes.data.lists || [];
+        setLists(fetchedLists);
+
+        if (fetchedLists.length > 0) {
+          setActiveListId(fetchedLists[0]._id);
+        }
+        
+        console.log('✅ Listes chargées:', fetchedLists.length);
+      } catch (listsError) {
+        console.error('❌ Erreur chargement listes:', listsError);
+      }
+
     } catch (error) {
-      console.error('Erreur chargement listes:', error);
+      console.error('❌ Erreur fatale chargement:', error);
     } finally {
       setLoading(false);
     }
@@ -135,7 +217,7 @@ const ShoppingListPage: React.FC = () => {
 
       const updatedLists = lists.filter(l => l._id !== listId);
       setLists(updatedLists);
-      
+
       if (activeListId === listId && updatedLists.length > 0) {
         setActiveListId(updatedLists[0]._id);
       } else if (updatedLists.length === 0) {
@@ -176,7 +258,7 @@ const ShoppingListPage: React.FC = () => {
 
       const updatedList = response.data.list;
       setLists(lists.map(l => l._id === activeListId ? updatedList : l));
-      
+
       setNewItem({
         name: '',
         quantity: 1,
@@ -204,11 +286,11 @@ const ShoppingListPage: React.FC = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const updatedItems = activeList.items.map(item => 
+      const updatedItems = activeList.items.map(item =>
         item._id === itemId ? { ...item, checked: !item.checked } : item
       );
 
-      setLists(lists.map(l => 
+      setLists(lists.map(l =>
         l._id === activeListId ? { ...l, items: updatedItems } : l
       ));
     } catch (error) {
@@ -229,7 +311,7 @@ const ShoppingListPage: React.FC = () => {
       const activeList = lists.find(l => l._id === activeListId);
       if (activeList) {
         const updatedItems = activeList.items.filter(item => item._id !== itemId);
-        setLists(lists.map(l => 
+        setLists(lists.map(l =>
           l._id === activeListId ? { ...l, items: updatedItems } : l
         ));
       }
@@ -260,8 +342,8 @@ const ShoppingListPage: React.FC = () => {
   };
 
   const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryId) 
+    setExpandedCategories(prev =>
+      prev.includes(categoryId)
         ? prev.filter(c => c !== categoryId)
         : [...prev, categoryId]
     );
@@ -290,7 +372,7 @@ const ShoppingListPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] pb-20">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-        
+
         <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -302,7 +384,7 @@ const ShoppingListPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            
+
             <button
               onClick={() => navigate('/scan')}
               className="px-4 py-2 bg-[#7DDE4A] text-[#0E1A0D] rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center gap-2"
@@ -327,7 +409,7 @@ const ShoppingListPage: React.FC = () => {
                 {list.shared && <Share2 className="w-3 h-3" />}
               </button>
             ))}
-            
+
             <button
               onClick={() => setShowNewListForm(true)}
               className="px-4 py-2 bg-[#F7F9F4] text-[#6B6B6B] rounded-[14px] font-medium hover:bg-[#EDF2EA] transition-all flex items-center gap-2"
@@ -376,7 +458,7 @@ const ShoppingListPage: React.FC = () => {
                   <Plus className="w-5 h-5" />
                   Ajouter article
                 </button>
-                
+
                 <button
                   onClick={exportToPDF}
                   className={`px-4 py-3 rounded-[16px] font-semibold transition-all flex items-center gap-2 ${
@@ -388,7 +470,7 @@ const ShoppingListPage: React.FC = () => {
                   <Download className="w-5 h-5" />
                   {isPremium ? 'Exporter' : <Crown className="w-4 h-4" />}
                 </button>
-                
+
                 <button
                   onClick={() => deleteList(activeList._id)}
                   className="px-4 py-3 bg-[#FEF3F3] text-[#D04343] rounded-[16px] font-semibold hover:bg-[#FECACA] transition-all flex items-center gap-2"
@@ -401,7 +483,7 @@ const ShoppingListPage: React.FC = () => {
             {showNewItemForm && (
               <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#D4F1C0]">
                 <h3 className="text-lg font-bold text-[#232323] mb-4">Nouvel article</h3>
-                
+
                 <div className="space-y-3">
                   <input
                     type="text"
@@ -410,7 +492,7 @@ const ShoppingListPage: React.FC = () => {
                     placeholder="Nom de l'article"
                     className="w-full px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                   />
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <input
                       type="number"
@@ -420,7 +502,7 @@ const ShoppingListPage: React.FC = () => {
                       min="1"
                       className="px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                     />
-                    
+
                     <select
                       value={newItem.unit || 'unite'}
                       onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
@@ -435,7 +517,7 @@ const ShoppingListPage: React.FC = () => {
                       <option value="paquet">paquet(s)</option>
                     </select>
                   </div>
-                  
+
                   <select
                     value={newItem.category || 'autres'}
                     onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
@@ -447,7 +529,7 @@ const ShoppingListPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <div className="flex gap-3">
                     <button
                       onClick={addItem}
@@ -496,8 +578,8 @@ const ShoppingListPage: React.FC = () => {
                           <div
                             key={item._id}
                             className={`flex items-center gap-3 p-3 rounded-[14px] border transition-all ${
-                              item.checked 
-                                ? 'bg-[#F7F9F4] border-[#EDF2EA]' 
+                              item.checked
+                                ? 'bg-[#F7F9F4] border-[#EDF2EA]'
                                 : 'bg-primary-50 border-[#DDE9DA] hover:border-[#D4F1C0]'
                             }`}
                           >
@@ -592,7 +674,7 @@ const ShoppingListPage: React.FC = () => {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-[#E9A100] flex-shrink-0 mt-0.5" />
               <div className="text-sm text-[#6B4D00]">
-                <strong>Limite gratuite:</strong> {activeList.items.length}/20 articles. 
+                <strong>Limite gratuite:</strong> {activeList.items.length}/20 articles.
                 Passez Premium pour listes illimitees et export PDF.
                 <button
                   onClick={() => navigate('/premium')}

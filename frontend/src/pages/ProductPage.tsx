@@ -12,12 +12,13 @@ import { ProductScoresCard } from '../components/product/ProductScoresCard';
 import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
-import AlternativesPanel from '../components/product/AlternativesPanel';
+// import AlternativesPanel supprimé (doublon avec section alternatives unifiée)
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { AllergensSection } from '../components/product/AllergensSection';
 import { LabelsSection } from '../components/product/LabelsSection';
 import { ProductChatActions } from '../components/product/ProductChatActions';
+import { ProductMainActions } from '../components/product/ProductMainActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import NovaBadge from '../components/NovaBadge';
 
@@ -351,25 +352,68 @@ const ProductPage: React.FC = () => {
               </div>
             </details>
           )}
-          <div id="alternatives-section" className="bg-primary-50 p-4">
-            <h3 className="font-semibold text-lg mb-3">Alternatives recommandées</h3>
+          {/* Section alternatives unifiée - design Ecolojia v3.1 */}
+          <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
+              <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+            </div>
+            
             {loadingAlternatives ? (
-              <p className="text-neutral-700">Chargement...</p>
+              <div className="flex items-center justify-center py-8">
+                <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+                <p className="ml-3 text-neutral-700">Recherche d'alternatives...</p>
+              </div>
             ) : alternatives.length > 0 ? (
               <div className="space-y-3">
-                {alternatives.slice(0, 5).map(alt => (
-                  <div key={alt._id} onClick={() => navigate(`/product/${alt.barcode}`)} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-primary-50">
-                    {getProductImage(alt) && <img src={getProductImage(alt)} alt={alt.name} className="w-12 h-12 object-contain" />}
-                    <div className="flex-1">
-                      <p className="font-medium text-sm">{alt.name}</p>
-                      <p className="text-xs text-neutral-700">{alt.brand}</p>
+                {alternatives.slice(0, 5).map((alt) => {
+                  const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
+                  return (
+                    <div 
+                      key={alt._id} 
+                      onClick={() => navigate(`/product/${alt.barcode}`)} 
+                      className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md transition-all"
+                    >
+                      {getProductImage(alt) ? (
+                        <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
+                          <Package className="w-8 h-8 text-gray-400" />
+                        </div>
+                      )}
+                      
+                      <div className="flex-1">
+                        <p className="font-semibold text-[#3B3B3B]">{alt.name}</p>
+                        <p className="text-sm text-neutral-600">{alt.brand}</p>
+                        {scoreImprovement > 0 && (
+                          <p className="text-xs text-[#7DDE4A] mt-1 flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            +{scoreImprovement} points
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="text-right">
+                        <div className={`text-2xl font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>
+                          {alt.scores?.overallScore || 0}
+                        </div>
+                        <p className="text-xs text-neutral-500">/ 100</p>
+                      </div>
                     </div>
-                    <div className={`text-lg font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>{alt.scores?.overallScore || 0}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
-              <p className="text-neutral-700">Aucune alternative disponible</p>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+                <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
+                <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
+                <p className="text-sm text-yellow-800 mb-4">
+                  Notre base de données ne contient pas encore d'alternative pour ce produit.
+                </p>
+                <p className="text-xs text-yellow-700">
+                  💡 Recherchez des produits similaires avec labels bio ou équitables
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -389,6 +433,19 @@ const ProductPage: React.FC = () => {
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
+
+        {/* Actions standardisées Ecolojia v3.1 */}
+        <ProductMainActions 
+          product={product} 
+          onShowAlternatives={() => {
+            setTimeout(() => {
+              const section = document.getElementById('alternatives-section');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }, 300);
+          }}
+        />
 
         {/* Disclaimer OCR si produit créé via OCR */}
         {product.source === 'ocr' && (
@@ -465,8 +522,68 @@ const ProductPage: React.FC = () => {
             </div>
           </div>
         )}
+        {/* Section alternatives unifiée - design Ecolojia v3.1 */}
+        <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
+            <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+          </div>
+          
+          {loadingAlternatives ? (
+            <div className="flex items-center justify-center py-8">
+              <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+              <p className="ml-3 text-neutral-700">Recherche d''alternatives...</p>
+            </div>
+          ) : alternatives.length > 0 ? (
+            <div className="space-y-3">
+              {alternatives.slice(0, 5).map((alt) => {
+                const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
+                return (
+                  <div 
+                    key={alt._id} 
+                    onClick={() => navigate(`/product/${alt.barcode}`)} 
+                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md transition-all"
+                  >
+                    {getProductImage(alt) ? (
+                      <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
+                        <span className="text-gray-400 text-xs">Pas d''image</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900">{alt.name}</h4>
+                      {alt.brand && <p className="text-sm text-gray-600">{alt.brand}</p>}
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`text-sm font-semibold ${getScoreColor(alt.scores?.overallScore)}`}>
+                          {alt.scores?.overallScore}/100
+                        </span>
+                        {scoreImprovement > 0 && (
+                          <span className="text-xs text-green-600 font-medium">
+                            +{scoreImprovement} points
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+              <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
+              <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
+              <p className="text-sm text-yellow-800 mb-4">
+                Notre base de données ne contient pas encore d''alternative pour ce produit.
+              </p>
+              <p className="text-xs text-yellow-700">
+                💡 Recherchez des produits similaires avec labels bio ou équitables
+              </p>
+            </div>
+          )}
+        </div>
         <ProductChatActions product={product} />
-        <AlternativesPanel productId={product._id} currentScore={product.scores?.global} productName={product.name} />
+                {/* AlternativesPanel supprimé - utilise section alternatives unifiée ci-dessus */}
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
     </div>

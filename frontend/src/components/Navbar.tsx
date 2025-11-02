@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/Navbar.tsx
+﻿// PATH: frontend/src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDeviceContext } from '@/hooks/useDeviceContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -147,6 +147,7 @@ const Navbar: React.FC = () => {
   // Navigation items (conditionnel Desktop/Mobile)
   const navigationItems = [
     { name: 'Recherche', href: '/search', icon: Search },
+    { name: 'Apprendre', href: '/learn', icon: BookOpen },
     { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÉ MOBILE
     { name: 'Historique', href: '/history', icon: History },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle },

@@ -5,9 +5,30 @@ const User = require('../models/User');
 // Middleware d'authentification principal
 const authMiddleware = async (req, res, next) => {
   try {
-    // Extraire le token du header Authorization
+    // Extraire le token du header Authorization EN PREMIER
     const token = req.headers.authorization?.replace('Bearer ', '');
 
+    // === MODE DÉVELOPPEMENT : Accepter les tokens dev ===
+    if (process.env.NODE_ENV === 'development' && token && token.startsWith('dev-token-')) {
+      console.log('[Auth Dev] ✅ Token dev accepté:', token);
+      req.user = {
+        _id: '507f1f77bcf86cd799439011',
+        email: 'test@ecolojia.fr',
+        name: 'Test User Premium',
+        tier: 'premium',
+        status: 'active',
+        quotas: {
+          scansRemaining: 999999,
+          aiChatsRemaining: 999999,
+          exportsRemaining: 999999
+        }
+      };
+      req.userId = req.user._id.toString();
+      req.token = token;
+      return next();
+    }
+
+    // Si pas de token du tout
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -15,11 +36,11 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // Vérifier et décoder le token
+    // Vérifier et décoder le token JWT
     let decoded;
     try {
       decoded = jwt.verify(
-        token, 
+        token,
         process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
       );
     } catch (error) {
@@ -47,7 +68,7 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // Attacher l'utilisateur Ã  la requête
+    // Attacher l'utilisateur à la requête
     req.user = user;
     req.userId = user._id.toString();
     req.token = token;
@@ -71,13 +92,13 @@ const authOptionalMiddleware = async (req, res, next) => {
       try {
         // Vérifier le token
         const decoded = jwt.verify(
-          token, 
+          token,
           process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
         );
 
         // Récupérer l'utilisateur
         const user = await User.findById(decoded.userId).select('-password');
-        
+
         if (user && user.status !== 'suspended' && user.status !== 'deleted') {
           req.user = user;
           req.userId = user._id.toString();

@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const router = express.Router();
 const { authenticateToken, authenticateUser } = require("../middleware");
 const User = require("../models/User");
@@ -483,7 +483,7 @@ router.put('/profile', async (req, res) => {
  * GET /api/user/profile
  * Récupérer profil
  */
-router.get('/profile', async (req, res) => {
+router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const userId = req.user?._id || req.userId;
     
