@@ -1,5 +1,7 @@
-﻿const deepSeekService = require('./ai/deepSeekService');
+const deepSeekService = require('./ai/deepSeekService');
+const nutrientCalculator = require('./nutrientCalculator');
 const logger = require('../utils/logger');
+const Product = require('../models/Product');
 
 /**
  * ✅ ECOLOJIA V3 - AI Enrichment Service
@@ -36,6 +38,81 @@ async function enrichFoodProduct(product, missingFields = []) {
     console.log("[AI] Raw response:", displayResponse());
 
     const parsed = parseAIResponseByCategory(response, 'food', missingFields);
+    console.log('[DEBUG] Parsed food:', JSON.stringify(parsed, null, 2));
+
+    // ============================================================================
+    // ✅ CALCULS AUTOMATIQUES (si DeepSeek n'a pas renvoyé)
+    // ============================================================================
+
+    // NOVA Group (si manquant)
+    if (!parsed.novaGroup && product.ingredients_text) {
+      parsed.novaGroup = nutrientCalculator.calculateNovaGroup(
+        product.ingredients_text,
+        product.product_name || ''
+      );
+      console.log('[AI] ✅ NOVA calculé automatiquement:', parsed.novaGroup);
+    }
+
+    // Nutri-Score (si manquant ET si nutriments disponibles)
+    if (!parsed.nutriScore && (parsed.sugars || product.nutriments)) {
+      const nutriments = {
+        energy: parsed.energy || product.nutriments?.energy,
+        sugars: parsed.sugars || product.nutriments?.sugars,
+        saturatedFat: parsed.saturatedFat || product.nutriments?.['saturated-fat'],
+        salt: parsed.salt || product.nutriments?.salt,
+        fiber: parsed.fiber || product.nutriments?.fiber,
+        proteins: parsed.protein || product.nutriments?.proteins
+      };
+      parsed.nutriScore = nutrientCalculator.calculateNutriScore(nutriments);
+      console.log('[AI] ✅ Nutri-Score calculé automatiquement:', parsed.nutriScore);
+    }
+
+    // Additifs (si manquant)
+    if ((!parsed.additives || parsed.additives.length === 0) && product.ingredients_text) {
+      parsed.additives = nutrientCalculator.extractAdditives(product.ingredients_text);
+      console.log('[AI] ✅ Additifs calculés automatiquement:', parsed.additives);
+    }
+
+    // Eco-Score (si manquant)
+    if (!parsed.ecoScore) {
+      parsed.ecoScore = nutrientCalculator.estimateEcoScore({
+        labels: product.labels || [],
+        novaGroup: parsed.novaGroup
+      });
+      console.log('[AI] ✅ Eco-Score calculé automatiquement:', parsed.ecoScore);
+    }
+
+
+    // ✅ NOUVEAU : Sauvegarder en base
+    if (parsed && Object.keys(parsed).length > 0) {
+      const updateData = {};
+      
+      // Nutrition
+      if (parsed.sugars !== undefined) updateData['foodData.nutritionalInfo.sugars'] = parsed.sugars;
+      if (parsed.saturatedFat !== undefined) updateData['foodData.nutritionalInfo.saturatedFat'] = parsed.saturatedFat;
+      if (parsed.salt !== undefined) updateData['foodData.nutritionalInfo.salt'] = parsed.salt;
+      if (parsed.fiber !== undefined) updateData['foodData.nutritionalInfo.fiber'] = parsed.fiber;
+      if (parsed.protein !== undefined) updateData['foodData.nutritionalInfo.protein'] = parsed.protein;
+      if (parsed.carbs !== undefined) updateData['foodData.nutritionalInfo.carbs'] = parsed.carbs;
+      
+      // Nova & Scores
+      if (parsed.novaGroup !== undefined) updateData['foodData.novaGroup'] = parsed.novaGroup;
+      if (parsed.nutriScore !== undefined) updateData['foodData.nutriScore'] = parsed.nutriScore;
+
+      // ✅ Additifs, EcoScore, Product Info
+      if (parsed.additives) updateData['foodData.additives'] = parsed.additives;
+      if (parsed.ecoScore !== undefined) updateData['foodData.ecoScore'] = parsed.ecoScore;
+      if (parsed.product_name !== undefined) updateData['product_name'] = parsed.product_name;
+      if (parsed.brands !== undefined) updateData['brands'] = parsed.brands;
+      
+      // Metadata
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+      
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Alimentaire sauvegardé en base');
+    }
+
     
     return {
       success: true,
@@ -109,86 +186,75 @@ async function enrichWithAISummary(product, category = 'food') {
  */
 async function enrichCosmeticsProduct(product, missingFields = []) {
   try {
+    console.log('[DEBUG enrichCosmeticsProduct] Barcode:', product.barcode);
     const response = await deepSeekService.analyzeProduct(product, 'cosmetics');
     const parsed = parseAIResponseByCategory(response, 'cosmetics', missingFields);
-    
-    let enriched = {
-      cosmeticsData: {
-        ingredients: product.cosmeticsData?.ingredients || [],
-        allergens: product.cosmeticsData?.allergens || [],
-        endocrineDisruptors: product.cosmeticsData?.endocrineDisruptors || [],
-        certifications: product.cosmeticsData?.certifications || []
-      }
-    };
-    
-    if (parsed) {
-      if (parsed.ingredients?.length) {
-        enriched.cosmeticsData.ingredients = parsed.ingredients;
-      }
-      if (parsed.allergens?.length) {
-        enriched.cosmeticsData.allergens = parsed.allergens;
-      }
-      if (parsed.endocrineDisruptors?.length) {
-        enriched.cosmeticsData.endocrineDisruptors = parsed.endocrineDisruptors;
-      }
+    console.log('[DEBUG] Parsed:', JSON.stringify(parsed, null, 2));
+
+    if (parsed && (parsed.ingredients?.length || parsed.allergens?.length)) {
+      const updateData = {};
+      if (parsed.ingredients?.length) updateData['cosmeticsData.ingredients'] = parsed.ingredients;
+      if (parsed.allergens?.length) updateData['cosmeticsData.allergens'] = parsed.allergens;
+      if (parsed.endocrineDisruptors?.length) updateData['cosmeticsData.endocrineDisruptors'] = parsed.endocrineDisruptors;
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+      
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Cosmétique sauvegardé en base');
+      return { success: true, enriched: parsed };
     }
-    
-    return {
-      success: true,
-      enriched,
-      aiEnriched: true
-    };
+    return { success: true, enriched: {} };
   } catch (error) {
-    console.error('[AI] enrichCosmeticsProduct failed:', error.message);
-    return {
-      success: false,
-      error: error.message
-    };
+    console.error('[AI] ❌ Erreur:', error.message);
+    return { success: false, error: error.message };
   }
 }
-
-/**
- * Enrichir produit détergent
- */
 async function enrichDetergentsProduct(product, missingFields = []) {
   try {
+    console.log('[DEBUG enrichDetergentsProduct] Barcode:', product.barcode);
     const response = await deepSeekService.analyzeProduct(product, 'detergents');
     const parsed = parseAIResponseByCategory(response, 'detergents', missingFields);
-    
-    let enriched = {
-      detergentsData: {
-        composition: product.detergentsData?.composition || [],
-        surfactants: product.detergentsData?.surfactants || [],
-        ecolabels: product.detergentsData?.ecolabels || []
-      }
-    };
-    
-    if (parsed) {
-      if (parsed.composition?.length) {
-        enriched.detergentsData.composition = parsed.composition;
-      }
-      if (parsed.surfactants?.detected) {
-        enriched.detergentsData.surfactants = parsed.surfactants.detected;
-      }
-      if (parsed.ecolabels?.detected) {
-        enriched.detergentsData.ecolabels = parsed.ecolabels.detected;
-      }
+    console.log('[DEBUG] Parsed detergent:', JSON.stringify(parsed, null, 2));
+
+    // ✅ NOUVEAU : Sauvegarder en base
+    if (parsed && Object.keys(parsed).length > 0) {
+      const updateData = {};
+      
+      // Composition
+      if (parsed.composition?.length) updateData['detergentsData.composition'] = parsed.composition;
+      if (parsed.surfactants?.length) updateData['detergentsData.surfactants'] = parsed.surfactants;
+      if (parsed.ecolabels?.length) updateData['detergentsData.ecolabels'] = parsed.ecolabels;
+      if (parsed.biodegradability !== undefined) updateData['detergentsData.biodegradability'] = parsed.biodegradability;
+      if (parsed.ecotoxicity !== undefined) updateData['detergentsData.ecotoxicity'] = parsed.ecotoxicity;
+      
+      // Metadata
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+      
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Détergent sauvegardé en base');
     }
-    
-    return {
-      success: true,
-      enriched,
-      aiEnriched: true
-    };
+
+    console.log('[DEBUG] Parsed:', JSON.stringify(parsed, null, 2));
+
+    if (parsed && (parsed.composition?.length || parsed.surfactants?.length)) {
+      const updateData = {};
+      if (parsed.composition?.length) updateData['detergentsData.composition'] = parsed.composition;
+      if (parsed.surfactants?.length) updateData['detergentsData.surfactants'] = parsed.surfactants;
+      if (parsed.ecolabels?.length) updateData['detergentsData.ecolabels'] = parsed.ecolabels;
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+      
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Détergent sauvegardé en base');
+      return { success: true, enriched: parsed };
+    }
+    return { success: true, enriched: {} };
   } catch (error) {
-    console.error('[AI] enrichDetergentsProduct failed:', error.message);
-    return {
-      success: false,
-      error: error.message
-    };
+    console.error('[AI] ❌ Erreur:', error.message);
+    return { success: false, error: error.message };
   }
 }
-
 /**
  * Enrichir produit avec IA selon catégorie
  */
@@ -229,6 +295,50 @@ async function enrichProductWithAI(product, category = 'food', options = {}) {
         throw new Error(`Catégorie non supportée: ${category}`);
     }
     
+    // ✅ NOUVEAU : Recharger le produit et recalculer le score
+    if (result.success) {
+      console.log('[AI] ✅ Données enrichies sauvegardées, recalcul du score...');
+      
+      // Recharger le produit avec les données fraîches
+      const freshProduct = await Product.findOne({ barcode: product.barcode });
+      
+      if (freshProduct) {
+        // Recalculer le score avec le scoring engine
+        const scoringUnified = require('./scoringUnified');
+        
+        // Préparer données pour scoring
+        const scoringData = {
+          category: freshProduct.category || category,
+          ...freshProduct.toObject()
+        };
+        
+        console.log('[AI] 🔍 scoringData:', JSON.stringify({
+          category: scoringData.category,
+          hasIngredients: !!scoringData.cosmeticsData?.ingredients,
+          ingredientsCount: scoringData.cosmeticsData?.ingredients?.length
+        }, null, 2));
+        
+        const newScores = scoringUnified.calculateScores(scoringData);
+        
+        console.log('[AI] 🔍 newScores:', JSON.stringify(newScores, null, 2));
+        
+        // Sauvegarder le nouveau score
+        await Product.updateOne(
+          { _id: freshProduct._id },
+          {
+            $set: {
+              scores: newScores,
+              'metadata.lastScored': new Date()
+            }
+          }
+        );
+        
+        console.log('[AI] ✅ Score recalculé:', newScores?.overallScore || 'N/A');
+        
+        result.newScore = newScores?.overallScore;
+      }
+    }
+
     return result;
   } catch (error) {
     console.error('[AI] Enrichment failed:', error.message);
@@ -304,32 +414,59 @@ function parseAIResponseByCategory(response, category, missingFields) {
  */
 function parseFoodResponse(parsed, missingFields) {
   const result = {};
-  
+
+  // ✅ NOUVEAU : Extraire TOUS les nutriments renvoyés par l'IA
   if (parsed.nutriments || parsed.nutritionalInfo) {
     const nutriments = parsed.nutriments || parsed.nutritionalInfo;
-    
-    if (missingFields.includes('sugars') && nutriments.sugars !== undefined && nutriments.sugars !== null) {
+
+    // Extraire tous les nutriments disponibles (pas uniquement ceux manquants)
+    if (nutriments.sugars !== undefined && nutriments.sugars !== null) {
       result.sugars = parseFloat(nutriments.sugars);
     }
-    if (missingFields.includes('saturatedFat') && nutriments.saturatedFat !== undefined && nutriments.saturatedFat !== null) {
+    if (nutriments.saturatedFat !== undefined && nutriments.saturatedFat !== null) {
       result.saturatedFat = parseFloat(nutriments.saturatedFat);
     }
-    if (missingFields.includes('salt') && nutriments.salt !== undefined && nutriments.salt !== null) {
+    if (nutriments.salt !== undefined && nutriments.salt !== null) {
       result.salt = parseFloat(nutriments.salt);
     }
-    if (missingFields.includes('fiber') && nutriments.fiber !== undefined && nutriments.fiber !== null) {
+    if (nutriments.fiber !== undefined && nutriments.fiber !== null) {
       result.fiber = parseFloat(nutriments.fiber);
     }
+    if (nutriments.energy !== undefined && nutriments.energy !== null) {
+      result.energy = parseFloat(nutriments.energy);
+    }
+    if (nutriments.proteins !== undefined && nutriments.proteins !== null) {
+      result.proteins = parseFloat(nutriments.proteins);
+    }
+    if (nutriments.carbohydrates !== undefined && nutriments.carbohydrates !== null) {
+      result.carbohydrates = parseFloat(nutriments.carbohydrates);
+    }
+    if (nutriments.fat !== undefined && nutriments.fat !== null) {
+      result.fat = parseFloat(nutriments.fat);
+    }
   }
-  
+
+  // Additifs
   if (parsed.additives) {
     result.additives = parsed.additives;
   }
-  
+
+  // NOVA
   if (parsed.novaGroup) {
     result.novaGroup = parseInt(parsed.novaGroup);
   }
-  
+
+
+  // ✅ Extraire product_name et brands si présents
+  if (parsed.product_info) {
+    if (parsed.product_info.product_name) {
+      result.product_name = parsed.product_info.product_name;
+    }
+    if (parsed.product_info.brands) {
+      result.brands = parsed.product_info.brands;
+    }
+  }
+
   return result;
 }
 
@@ -359,19 +496,39 @@ function parseCosmeticsResponse(parsed, missingFields) {
  */
 function parseDetergentsResponse(parsed, missingFields) {
   const result = {};
-  
-  if (parsed.composition) {
-    result.composition = parsed.composition;
+
+  // ✅ NOUVEAU : Normaliser composition en array de strings
+  if (parsed.composition && Array.isArray(parsed.composition)) {
+    // Si l'IA renvoie des objets détaillés
+    if (typeof parsed.composition[0] === 'object' && parsed.composition[0]?.ingredient) {
+      result.composition = parsed.composition.map(item => item.ingredient);
+      result._compositionDetails = parsed.composition; // Garder détails pour metadata
+    } else {
+      // Déjà des strings simples
+      result.composition = parsed.composition.map(c => String(c));
+    }
   }
-  
-  if (parsed.surfactants) {
-    result.surfactants = parsed.surfactants;
+
+  // ✅ NOUVEAU : Normaliser surfactants
+  if (parsed.surfactants && Array.isArray(parsed.surfactants)) {
+    result.surfactants = parsed.surfactants.map(s => String(s));
   }
-  
-  if (parsed.ecolabels) {
-    result.ecolabels = parsed.ecolabels;
+
+  // ✅ Ecolabels
+  if (parsed.ecolabels && Array.isArray(parsed.ecolabels)) {
+    result.ecolabels = parsed.ecolabels.map(e => String(e));
   }
-  
+
+  // ✅ Biodegradabilité (si présent)
+  if (parsed.biodegradability !== undefined) {
+    result.biodegradability = parsed.biodegradability;
+  }
+
+  // ✅ Écotoxicité (si présent)
+  if (parsed.ecotoxicity !== undefined) {
+    result.ecotoxicity = parsed.ecotoxicity;
+  }
+
   return result;
 }
 

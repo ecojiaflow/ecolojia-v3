@@ -1,12 +1,12 @@
 ﻿// PATH: backend/src/services/ai/deepSeekService.js
-// VERSION: v2.1 - PROMPT SCIENTIFIQUE ROBUSTE - CORRECTION ESTIMATION FORCÉE
+// VERSION: v3.2 - PROMPT JSON POUR COSMETICS + DETERGENTS
 
 const axios = require('axios');
 const crypto = require('crypto');
 const aiCache = require('../aiCache.service');
 
 // 📄 CACHE VERSION
-const CACHE_VERSION = 'v3.1'; // v3.1: Force estimation (pas de null accepté)
+const CACHE_VERSION = 'v3.2'; // v3.2: Prompt JSON cosmétiques + détergents + Force estimation
 
 class DeepSeekService {
   constructor() {
@@ -174,38 +174,91 @@ Si ingrédients = "Cacahuètes 55%, sirop de riz, miel"
 → saturated_fat_100g: 8-10 (cacahuètes typiques)
 → salt_100g: 0.3-0.5 (trace naturelle + possible ajout)`,
 
-      cosmetics: `Tu es un expert en cosmétique et dermatologie.
-                  Analyse les produits selon leur composition INCI, les perturbateurs endocriniens, et les allergènes.
-                  Base-toi sur les données ANSM et SCCS.
-                  Sois précis sur les risques cutanés.`,
+      cosmetics: `Tu es un expert certifié en cosmétique et dermatologie (ANSM/SCCS).
 
-      detergents: `Tu es un expert en produits ménagers et impact environnemental.
-                   Analyse les produits selon leur toxicité, biodégradabilité, et impact aquatique.
-                   Base-toi sur les données REACH et ECHA.
-                   Mets l'accent sur la sécurité domestique.`
+RÈGLES ABSOLUES :
+1. Réponds UNIQUEMENT en JSON valide (aucun texte avant/après)
+2. Analyse la liste INCI complète
+3. Identifie TOUS les ingrédients problématiques
+
+FORMAT JSON OBLIGATOIRE :
+{
+  "ingredients": [
+    {
+      "inci": "nom INCI exact",
+      "function": "émollient|conservateur|tensioactif|parfum|colorant|autre",
+      "origin": "naturel|synthétique|unknown",
+      "concerns": ["irritant", "allergène", "comedogène"],
+      "isEndocrineDisruptor": false
+    }
+  ],
+  "allergens": ["nom ingrédient allergène 1", "nom ingrédient allergène 2"],
+  "endocrineDisruptors": ["nom perturbateur 1"],
+  "certifications": ["Bio", "Vegan", "Cruelty-Free"],
+  "healthScore": 0-100,
+  "environmentScore": 0-100,
+  "confidence": 0-100
+}
+
+INGRÉDIENTS À SIGNALER :
+- Perturbateurs endocriniens : parabènes, phtalates, BHA/BHT
+- Allergènes : parfum, linalool, limonene, citral
+- Irritants : SLS, SLES, alcool dénaturé
+- Comédogènes : huile de coco, silicones lourds
+
+RETOURNE LE JSON (rien d'autre).`,
+
+      detergents: `Tu es un expert en produits ménagers (REACH/ECHA).
+
+RÈGLES ABSOLUES :
+1. Réponds UNIQUEMENT en JSON valide
+2. Analyse composition et impact environnemental
+
+FORMAT JSON OBLIGATOIRE :
+{
+  "composition": [
+    {
+      "ingredient": "nom",
+      "function": "tensioactif|solvant|parfum|agent blanchissant",
+      "concerns": ["irritant", "toxique"],
+      "biodegradable": true
+    }
+  ],
+  "surfactants": ["tensioactif1"],
+  "ecolabels": ["Ecolabel EU", "Nature & Progrès"],
+  "healthScore": 0-100,
+  "environmentScore": 0-100,
+  "confidence": 0-100
+}
+
+RETOURNE LE JSON (rien d'autre).`
     };
 
     return prompts[category] || prompts.food;
   }
 
   buildProductPrompt(productData, category) {
-    if (category !== 'food') {
-      return `Analyse le produit suivant de manière détaillée :
+    if (category === 'cosmetics') {
+      return `Analyse ce produit cosmétique :
 
 Nom: ${productData.name || productData.product_name || 'Non spécifié'}
 Marque: ${productData.brand || 'Non spécifiée'}
-Catégorie: ${category}
-Ingredients: ${productData.ingredients || productData.composition || productData.inci || 'Non spécifiés'}
+Liste INCI: ${productData.inci || productData.ingredients || productData.composition || 'Non fournie'}
 
-Fournis une analyse structurée avec :
-1. Score de santé global (0-100)
-2. Score environnemental (0-100)
-3. Points positifs (liste)
-4. Points négatifs (liste)
-5. Recommandations personnalisées (3 maximum)
-6. Alternatives suggérées (3 maximum)`;
+RETOURNE LE JSON.`;
     }
 
+    if (category === 'detergents') {
+      return `Analyse ce produit ménager :
+
+Nom: ${productData.name || productData.product_name || 'Non spécifié'}
+Marque: ${productData.brand || 'Non spécifiée'}
+Composition: ${productData.composition || productData.ingredients || 'Non fournie'}
+
+RETOURNE LE JSON.`;
+    }
+
+    // Alimentaire
     const existingNutriments = productData.nutriments || {};
     const ingredients = productData.ingredients_text || productData.ingredients || 'Non fournis';
     const categories = productData.categories || 'Non spécifiée';
@@ -251,24 +304,60 @@ RETOURNE LE JSON (rien d'autre, pas de texte explicatif avant ou après).`;
   }
 
   parseAIResponse(response, category) {
-    if (category !== 'food') {
-      return {
-        analysis: response,
-        scores: {
-          health: this.extractScore(response, 'santé'),
-          environment: this.extractScore(response, 'environnement'),
-          ethics: 70
-        },
-        positives: this.extractListItems(response, 'positif'),
-        negatives: this.extractListItems(response, 'négatif'),
-        recommendations: this.extractListItems(response, 'recommandation'),
-        alternatives: this.extractListItems(response, 'alternative'),
-        timestamp: new Date(),
-        aiModel: 'deepseek',
-        category
-      };
+    // COSMETICS : Parser JSON
+    if (category === 'cosmetics') {
+      try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error('[DeepSeek] ❌ Pas de JSON cosmetics:', response.substring(0, 200));
+          return { ingredients: [], allergens: [], endocrineDisruptors: [], certifications: [] };
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        console.log('[DeepSeek] ✅ Cosmetics parsed:', JSON.stringify(parsed).substring(0, 200));
+        
+        return {
+          ingredients: parsed.ingredients || [],
+          allergens: parsed.allergens || [],
+          endocrineDisruptors: parsed.endocrineDisruptors || [],
+          certifications: parsed.certifications || [],
+          healthScore: parsed.healthScore || 50,
+          environmentScore: parsed.environmentScore || 50,
+          confidence: parsed.confidence || 30
+        };
+      } catch (error) {
+        console.error('[DeepSeek] ❌ Erreur parsing cosmetics:', error.message);
+        return { ingredients: [], allergens: [], endocrineDisruptors: [], certifications: [] };
+      }
     }
 
+    // DETERGENTS : Parser JSON
+    if (category === 'detergents') {
+      try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error('[DeepSeek] ❌ Pas de JSON detergents:', response.substring(0, 200));
+          return { composition: [], surfactants: [], ecolabels: [] };
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        console.log('[DeepSeek] ✅ Detergents parsed:', JSON.stringify(parsed).substring(0, 200));
+        
+        return {
+          composition: parsed.composition || [],
+          surfactants: parsed.surfactants || [],
+          ecolabels: parsed.ecolabels || [],
+          healthScore: parsed.healthScore || 50,
+          environmentScore: parsed.environmentScore || 50,
+          confidence: parsed.confidence || 30
+        };
+      } catch (error) {
+        console.error('[DeepSeek] ❌ Erreur parsing detergents:', error.message);
+        return { composition: [], surfactants: [], ecolabels: [] };
+      }
+    }
+
+    // FOOD : Parser JSON nutritionnel
     try {
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
@@ -279,11 +368,9 @@ RETOURNE LE JSON (rien d'autre, pas de texte explicatif avant ou après).`;
       const parsed = JSON.parse(jsonMatch[0]);
       const validated = this.validateNutrientData(parsed);
 
-      // ✅ ADAPTER LE FORMAT pour aiEnrichment.service.js
       const adaptedNutriments = {};
       const n = validated.nutriments;
       
-      // Mapper _100g vers format attendu par aiEnrichment
       if (n.sugars_100g !== undefined && n.sugars_100g !== null) adaptedNutriments.sugars = n.sugars_100g;
       if (n.saturated_fat_100g !== undefined && n.saturated_fat_100g !== null) adaptedNutriments.saturatedFat = n.saturated_fat_100g;
       if (n.salt_100g !== undefined && n.salt_100g !== null) adaptedNutriments.salt = n.salt_100g;
