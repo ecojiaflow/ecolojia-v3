@@ -1,4 +1,5 @@
 ﻿// backend/src/models/Product.js
+// VERSION 3.2.0 - Système de filtrage multi-catégories production-ready
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -59,23 +60,47 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  categoryType: {
-    type: String,
-    enum: ['food', 'cosmetic', 'detergent'],
-    index: true,
-    required: false
-  },
   brand: {
     type: String,
     trim: true
   },
+  
+  // ============================================================================
+  // NOUVEAU V3.2 : Système de filtrage multi-catégories
+  // ============================================================================
+  
   categoryType: {
     type: String,
     enum: ['food', 'cosmetic', 'detergent'],
     index: true,
     required: false
   },
-  category: { type: String, enum: ['food', 'cosmetics', 'detergents', 'supplements', 'household', 'FOOD', 'COSMETICS']
+  
+  // Type de produit spécifique (ex: "shampooing", "lessive liquide")
+  productType: {
+    type: String,
+    index: true,
+    sparse: true,
+    trim: true
+  },
+  
+  // Metadata pour filtrage et recherche Algolia
+  filterMetadata: {
+    categoryLabels: [String],     // Labels lisibles (ex: ["Bio", "Vegan"])
+    searchTerms: [String],         // Termes recherche (ex: ["shampooing", "cheveux"])
+    popularityScore: {             // Score popularité (pour tri)
+      type: Number,
+      default: 0,
+      min: 0
+    },
+    lastEnriched: Date             // Date dernier enrichissement
+  },
+  
+  // ============================================================================
+  
+  category: { 
+    type: String, 
+    enum: ['food', 'cosmetics', 'detergents', 'supplements', 'household', 'FOOD', 'COSMETICS']
   },
   subcategory: {
     type: String,
@@ -87,7 +112,7 @@ const productSchema = new mongoose.Schema({
     ingredients: String,
     ingredientsParsed: mongoose.Schema.Types.Mixed,
     additives: [additiveSchema],
-    allergens: [allergenSchema],  // ? Modifi? en objets
+    allergens: [allergenSchema],
     labels: [String],
     nutritionalInfo: nutritionSchema,
     novaGroup: { type: Number, min: 1, max: 4 },
@@ -111,7 +136,6 @@ const productSchema = new mongoose.Schema({
     ecoLabels: [String]
   },
 
-  // Scores scientifiques (Calculate Once, Store Forever)
   scores: {
     overallScore: { type: Number, min: 0, max: 100, index: true },
     healthScore: { type: Number, min: 0, max: 100 },
@@ -126,7 +150,6 @@ const productSchema = new mongoose.Schema({
     aiEnrichmentUsed: { type: Boolean, default: false },
     aiEnrichmentSource: String,
     aiEnrichmentError: String,
-    // Champs plats v3.1.0 (workaround Mongoose)
     scoringMetadata: mongoose.Schema.Types.Mixed,
     dataQualityInfo: mongoose.Schema.Types.Mixed
   },
@@ -144,8 +167,29 @@ const productSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
+// ============================================================================
+// INDEX COMPOSÉS V3.2 (Optimisation filtrage)
+// ============================================================================
+
+productSchema.index({ categoryType: 1, 'scores.overallScore': -1 });
+productSchema.index({ categoryType: 1, productType: 1 });
+productSchema.index({ categoryType: 1, brand: 1 });
 productSchema.index({ category: 1, 'analysisData.healthScore': -1 });
 productSchema.index({ name: 'text', brand: 'text' });
+
+// Index pour filtres food
+productSchema.index({ categoryType: 1, 'foodData.novaGroup': 1 });
+productSchema.index({ categoryType: 1, 'foodData.nutriScore': 1 });
+
+// Index pour filtres cosmétiques
+productSchema.index({ categoryType: 1, 'cosmeticsData.certifications': 1 });
+
+// Index pour filtres détergents
+productSchema.index({ categoryType: 1, 'detergentsData.ecoLabels': 1 });
+
+// ============================================================================
+// MÉTHODES & MIDDLEWARE
+// ============================================================================
 
 productSchema.pre('save', function(next) {
   this.updatedAt = new Date();
@@ -168,13 +212,12 @@ productSchema.statics.findByBarcode = function(barcode) {
 productSchema.statics.searchProducts = async function(query, category = null) {
   const searchCriteria = { $text: { $search: query } };
   if (category) searchCriteria.category = category;
-  
+
   return this.find(searchCriteria)
     .select('-__v')
     .limit(20)
     .sort({ score: { $meta: 'textScore' } });
 };
-
 
 // ============================================================================
 // MIDDLEWARE AUTO-CALCUL SCORES V3.0.0
@@ -185,13 +228,13 @@ productSchema.pre('save', async function(next) {
   if (this.scores?.scoringVersion === '3.0.0' && this.scores?.overallScore) {
     return next();
   }
-  
+
   try {
     let calculatedScores;
-    
+
     if (this.category === 'food' || !this.category) {
       const nutritionalInfo = this.foodData?.nutritionalInfo || {};
-      
+
       const scoringData = {
         novaGroup: this.nova_group || this.foodData?.novaGroup,
         nutriScore: this.nutriscore_grade || this.foodData?.nutriScore,
@@ -207,16 +250,16 @@ productSchema.pre('save', async function(next) {
           salt_100g: nutritionalInfo.salt
         }
       };
-      
+
       calculatedScores = scoringUnified.calculateFoodScores(scoringData);
-    } 
+    }
     else if (this.category === 'cosmetics') {
       calculatedScores = scoringUnified.calculateCosmeticScores(this);
-    } 
+    }
     else if (this.category === 'detergents') {
       calculatedScores = scoringUnified.calculateDetergentScores(this);
     }
-    
+
     if (calculatedScores) {
       this.scores = {
         overallScore: calculatedScores.overallScore,
@@ -232,14 +275,8 @@ productSchema.pre('save', async function(next) {
   } catch (error) {
     console.error('[Middleware]', error.message);
   }
-  
+
   next();
 });
+
 module.exports = mongoose.model('Product', productSchema);
-
-
-
-
-
-
-

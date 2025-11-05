@@ -193,7 +193,7 @@ router.post('/calculate-all', asyncHandler(async (req, res) => {
 router.get('/barcode/:barcode', asyncHandler(async (req, res) => {
   const { barcode } = req.params;
   
-  const product = await Product.findOne({ barcode });
+  const product = await Product.findOne({ barcode }).lean();
   if (!product) {
     return res.status(404).json({ 
       success: false, 
@@ -282,12 +282,15 @@ router.post('/:productId/recalculate', async (req, res) => {
   }
 });
 
+
 // POST /api/scoring/:barcode/ai-enrich - Enrichir avec IA et recalculer scores
 router.post('/:barcode/ai-enrich', asyncHandler(async (req, res) => {
   const { barcode } = req.params;
 
-  // 1. Trouver produit par barcode
-  const product = await Product.findOne({ barcode });
+  console.log(`[AI-ENRICH] Enrichissement IA demandé pour barcode: ${barcode}`);
+
+  // 1. Trouver produit
+  const product = await Product.findOne({ barcode }).lean();
   if (!product) {
     return res.status(404).json({
       success: false,
@@ -296,233 +299,22 @@ router.post('/:barcode/ai-enrich', asyncHandler(async (req, res) => {
     });
   }
 
-  console.log(`[AI-ENRICH] Enrichissement IA demandé pour ${product.name} (${barcode})`);
-
   try {
-    // 2. Calculer scores actuels
-    // Préparer données format scoringUnified
-    const initialScoringData = {
-      category: product.category,
-      product_name: product.name || '',
-      brands: product.brand || '',
-      ingredients_text: product.foodData?.ingredients || '',
-      novaGroup: product.foodData?.novaGroup,
-      nutriScore: product.foodData?.nutriScore,
-      ecoScore: product.foodData?.ecoScore,
-      additives: product.foodData?.additives || [],
-      labels: product.foodData?.labels || [],
-      nutriments: {
-        sugars_100g: product.foodData?.nutritionalInfo?.sugars,
-        'saturated-fat_100g': product.foodData?.nutritionalInfo?.saturatedFat,
-        salt_100g: product.foodData?.nutritionalInfo?.salt
-      }
-    };
-    const currentScores = scoringUnified.calculateFoodScores(initialScoringData);
-
-    // 💾 SAUVEGARDER LE SCORE AVANT ENRICHISSEMENT (pour UX delta)
-    const scoresBefore = {
-      overallScore: currentScores.overallScore,
-      healthScore: currentScores.healthScore,
-      confidence: currentScores.confidence,
-      dataCompleteness: currentScores.dataCompleteness,
-      breakdown: currentScores.breakdown
-    };
-    console.log('[AI-ENRICH] 📊 Score AVANT enrichissement:', {
-      score: scoresBefore.overallScore,
-      confidence: Math.round(scoresBefore.confidence * 100) + '%',
-      completeness: scoresBefore.dataCompleteness
-    });
-    
-    // 3. GARDE-FOUS RENFORCÉS : 4 niveaux de vérification
-    
-    // Niveau 1 : Données EXCELLENTES + Confidence HAUTE → Refus
-    if (currentScores.dataCompleteness === 'Excellente' && currentScores.confidence >= 0.85) {
-      console.log('[AI-ENRICH] ❌ REFUS: Données excellentes (confidence: '+ (currentScores.confidence * 100).toFixed(1) + '%)');
-      
-      // Sauvegarder les scores existants quand même
-      await Product.updateOne(
-        { _id: product._id },
-        {
-          $set: {
-            'scores.overallScore': currentScores.overallScore,
-            'scores.globalScore': currentScores.overallScore,
-            'scores.healthScore': currentScores.healthScore,
-            'scores.environmentScore': currentScores.environmentScore,
-            'scores.confidence': currentScores.confidence,
-            'scores.dataCompleteness': currentScores.dataCompleteness,
-            'scores.breakdown': currentScores.breakdown,
-            'lastScoreUpdate': new Date()
-          }
-        }
-      );
-      
-      return res.json({
-        success: false,
-        reason: 'ALREADY_EXCELLENT',
-        message: 'Ce produit a déjà des données excellentes et fiables. Enrichissement non nécessaire.',
-        product: {
-          ...product.toObject(),
-          scores: currentScores
-        },
-        confidence: currentScores.confidence,
-        dataCompleteness: currentScores.dataCompleteness
-      });
-    }
-    
-    // Niveau 2 : Score ÉLEVÉ + Confidence BONNE → Refus
-    if (currentScores.overallScore >= 75 && currentScores.confidence >= 0.8) {
-      console.log('[AI-ENRICH] ❌ REFUS: Score élevé (' + currentScores.overallScore + '/100) et confiance bonne (' + (currentScores.confidence * 100).toFixed(1) + '%)');
-      
-      await Product.updateOne(
-        { _id: product._id },
-        { $set: {
-            'scores.overallScore': currentScores.overallScore,
-            'scores.confidence': currentScores.confidence,
-            'scores.breakdown': currentScores.breakdown,
-            'lastScoreUpdate': new Date()
-        }}
-      );
-      
-      return res.json({
-        success: false,
-        reason: 'HIGH_SCORE',
-        message: 'Ce produit a un excellent score (' + currentScores.overallScore + '/100). Enrichissement non nécessaire.',
-        product: { ...product.toObject(), scores: currentScores },
-        confidence: currentScores.confidence
-      });
-    }
-    
-    // Niveau 3 : Rate limiting - Enrichi récemment ? → Refus
-    if (product.lastAIEnrichment) {
-      const hoursSinceLastEnrich = (Date.now() - new Date(product.lastAIEnrichment).getTime()) / (1000 * 60 * 60);
-      if (hoursSinceLastEnrich < 24) {
-        console.log('[AI-ENRICH] ❌ REFUS: Enrichi il y a ' + hoursSinceLastEnrich.toFixed(1) + 'h (< 24h)');
-        return res.json({
-          success: false,
-          reason: 'RATE_LIMITED',
-          message: 'Ce produit a déjà été enrichi récemment. Réessayez dans ' + Math.ceil(24 - hoursSinceLastEnrich) + 'h.',
-          product: product.toObject(),
-          lastEnrichment: product.lastAIEnrichment
-        });
-      }
-    }
-    
-    // Niveau 4 : Confidence suffisante (>= 80%) mais pas excellente → Message informatif
-    if (currentScores.confidence >= 0.8 && currentScores.confidence < 0.85) {
-      console.log('[AI-ENRICH] ⚠️ Confidence bonne mais enrichissement autorisé (' + (currentScores.confidence * 100).toFixed(1) + '%)');
-    }
-    
-    // ✅ SI ON ARRIVE ICI : Enrichissement JUSTIFIÉ
-    console.log('[AI-ENRICH] ✅ AUTORISATION: Confidence ' + (currentScores.confidence * 100).toFixed(1) + '%, complétude: ' + currentScores.dataCompleteness);
-
-    // 4. Enrichir avec IA
+    // 2. Enrichir avec IA (le service fait TOUT : enrichir + scorer + sauvegarder)
     const aiEnrichment = require('../services/aiEnrichment.service');
-    const enrichedScores = await aiEnrichment.enrichProductWithAI(product, product.category || 'food', { force: true });
-      console.log('[DEBUG] enrichedScores:', JSON.stringify(enrichedScores, null, 2));
+    await aiEnrichment.enrichProductWithAI(product, product.category || 'food', { force: true });
 
-    // 5. Merger estimations IA dans le produit
-      console.log('[DEBUG] Vérification estimations...');
-    if (enrichedScores.estimations) {
-      console.log('[DEBUG] enrichedScores.estimations:', enrichedScores.estimations);
-      const estimations = enrichedScores.estimations;
-      
-      // Merger selon catégorie
-      if (product.category === 'food') {
-        if (estimations.sugars !== undefined && estimations.sugars !== null && !isNaN(estimations.sugars)) {
-          product.foodData = product.foodData || {};
-          product.foodData.nutritionalInfo = product.foodData.nutritionalInfo || {};
-          product.foodData.nutritionalInfo.sugars = estimations.sugars;
-        }
-        if (estimations.saturatedFat !== undefined && estimations.saturatedFat !== null && !isNaN(estimations.saturatedFat)) {
-          product.foodData.nutritionalInfo.saturatedFat = estimations.saturatedFat;
-        }
-        if (estimations.salt !== undefined && estimations.salt !== null && !isNaN(estimations.salt)) {
-          product.foodData.nutritionalInfo.salt = estimations.salt;
-        }
-        if (estimations.novaGroup !== undefined) {
-          product.foodData.novaGroup = estimations.novaGroup;
-        }
-      }
-
-      // Recalculer scores avec données enrichies
-      // Préparer les données au format attendu par calculateScores
-      const scoringData = {
-        category: product.category,
-        product_name: product.name || '',
-        brands: product.brand || '',
-        ingredients_text: product.foodData?.ingredients || '',
-        novaGroup: product.foodData?.novaGroup,
-        nutriScore: product.foodData?.nutriScore,
-        ecoScore: product.foodData?.ecoScore,
-        additives: product.foodData?.additives || [],
-        labels: product.foodData?.labels || [],
-        nutriments: {
-          sugars_100g: product.foodData?.nutritionalInfo?.sugars || product.foodData?.nutrition?.per100g?.sugars,
-          'saturated-fat_100g': product.foodData?.nutritionalInfo?.saturatedFat || product.foodData?.nutrition?.per100g?.saturatedFat,
-          salt_100g: product.foodData?.nutritionalInfo?.salt || product.foodData?.nutrition?.per100g?.salt,
-          sugars: product.foodData?.nutritionalInfo?.sugars || product.foodData?.nutrition?.per100g?.sugars,
-          saturated_fat: product.foodData?.nutritionalInfo?.saturatedFat || product.foodData?.nutrition?.per100g?.saturatedFat,
-          salt: product.foodData?.nutritionalInfo?.salt || product.foodData?.nutrition?.per100g?.salt
-        }
-      };
-      const recalculatedScores = scoringUnified.calculateFoodScores(scoringData);
-      console.log('[AI-ENRICH] scoringData envoyé:', JSON.stringify(scoringData, null, 2));
-      console.log('[AI-ENRICH] recalculatedScores reçu:', JSON.stringify(recalculatedScores, null, 2));
-      product.scores = recalculatedScores;
-    } else {
-      product.scores = enrichedScores;
-    }
-
-    // 6. Sauvegarder EXPLICITEMENT avec updateOne pour forcer la persistence MongoDB
-    product.lastScoreUpdate = new Date();
-    
-    // Logs AVANT sauvegarde
-    console.log('[AI-ENRICH] 💾 Tentative sauvegarde scores:', {
-      overallScore: product.scores?.overallScore,
-      healthScore: product.scores?.healthScore,
-      confidence: product.scores?.confidence,
-      hasBreakdown: !!product.scores?.breakdown
-    });
-
-    // ✅ CORRECTION CRITIQUE : updateOne au lieu de .save()
-    const updateResult = await Product.updateOne(
-      { _id: product._id },
-      {
-        $set: {
-          'scores.overallScore': product.scores.overallScore,
-          'scores.globalScore': product.scores.overallScore, // Alias pour compatibilité
-          'scores.healthScore': product.scores.healthScore,
-          'scores.environmentScore': product.scores.environmentScore,
-          'scores.confidence': product.scores.confidence,
-          'scores.dataCompleteness': product.scores.dataCompleteness,
-          'scores.breakdown': product.scores.breakdown,
-          'lastScoreUpdate': product.lastScoreUpdate,
-          'foodData.nutritionalInfo': product.foodData?.nutritionalInfo,
-          'foodData.novaGroup': product.foodData?.novaGroup
-        }
-      }
-    );
-
-    console.log('[AI-ENRICH] 💾 Résultat updateOne:', {
-      matched: updateResult.matchedCount,
-      modified: updateResult.modifiedCount,
-      acknowledged: updateResult.acknowledged
-    });
-
-    // 7. Recharger le produit depuis la base pour garantir les données fraîches
+    // 3. Recharger le produit depuis la base (pour avoir les scores frais)
     const freshProduct = await Product.findById(product._id).lean();
 
-    // Logs APRÈS rechargement
-    console.log('[AI-ENRICH] ✅ Produit rechargé - Scores:', {
-      overallScore: freshProduct.scores?.overallScore,
-      healthScore: freshProduct.scores?.healthScore,
-      confidence: freshProduct.scores?.confidence,
-      hasBreakdown: !!freshProduct.scores?.breakdown
+    console.log(`[AI-ENRICH] ✅ Enrichissement réussi - Score: ${freshProduct.scores?.overallScore}/100`);
+
+    // 4. Retourner le produit enrichi
+    res.json({
+      success: true,
+      product: freshProduct,
+      scores: freshProduct.scores
     });
-
-    console.log(`[AI-ENRICH] Enrichissement réussi - Confiance: ${(enrichedScores.confidence || 0.75) * 100}%`);
-
-    // 8. Retourner produit enrichi avec données fraîches
 
   } catch (error) {
     console.error('[AI-ENRICH] Erreur:', error);

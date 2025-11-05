@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import algoliasearch from 'algoliasearch/lite';
 import {
@@ -30,13 +30,18 @@ const ProductHit = ({ hit }: { hit: any }) => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Bon';
     if (score >= 40) return 'Moyen';
-    return 'A eviter';
+    return 'À éviter';
   };
 
-  const globalScore = hit.scores?.global || 0;
-  const productName = hit.product_name || hit.name || hit.product_name_fr || hit.generic_name || 'Produit sans nom';
-  const productBrand = hit.brands || hit.brand || '';
+  // ⭐ CORRECTION : Utiliser les bons champs Algolia
+  const globalScore = hit.overallScore || hit.scores?.global || 0;
+  const productName = hit.name || hit.product_name || hit.product_name_fr || hit.generic_name || 'Produit sans nom';
+  const productBrand = hit.brand || hit.brands || '';
   const productImage = hit.imageUrl || hit.image_url || hit.image_front_url || '/images/default-product.jpg';
+  
+  // ⭐ NOUVEAUX CHAMPS : Nova et Nutri-Score depuis foodData
+  const novaGroup = hit['foodData.novaGroup'];
+  const nutriScore = hit['foodData.nutriScore'];
 
   return (
     <div
@@ -66,20 +71,20 @@ const ProductHit = ({ hit }: { hit: any }) => {
               {globalScore}/100 - {getScoreLabel(globalScore)}
             </span>
           )}
-          {hit.nova_group && (
+          {novaGroup && (
             <span className="px-2 py-1 bg-neutral-100 text-neutral-800 rounded text-xs font-medium">
-              NOVA {hit.nova_group}
+              NOVA {novaGroup}
             </span>
           )}
-          {hit.nutriscore_grade && (
+          {nutriScore && (
             <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
-              hit.nutriscore_grade === 'a' ? 'bg-success text-white' :
-              hit.nutriscore_grade === 'b' ? 'bg-primary-400 text-white' :
-              hit.nutriscore_grade === 'c' ? 'bg-warning text-white' :
-              hit.nutriscore_grade === 'd' ? 'bg-[#E9A100] text-white' :
+              nutriScore === 'a' ? 'bg-success text-white' :
+              nutriScore === 'b' ? 'bg-primary-400 text-white' :
+              nutriScore === 'c' ? 'bg-warning text-white' :
+              nutriScore === 'd' ? 'bg-[#E9A100] text-white' :
               'bg-danger text-white'
             }`}>
-              Nutri-Score {hit.nutriscore_grade}
+              Nutri-Score {nutriScore}
             </span>
           )}
         </div>
@@ -96,19 +101,19 @@ const SearchPage: React.FC = () => {
 
   const initialQuery = searchParams.get('q') || '';
 
-  // Determiner le filtre de categorie selon le Context
+  // ⭐ CORRECTION : Utiliser categoryType au lieu de category
   const categoryFilter = React.useMemo(() => {
-    if (category === 'food') return 'category:food OR category:alimentaire';
-    if (category === 'cosmetics') return 'category:cosmetics OR category:cosmetique';
-    if (category === 'detergents') return 'category:detergents OR category:entretien';
+    if (category === 'food') return 'categoryType:food';
+    if (category === 'cosmetics') return 'categoryType:cosmetic';
+    if (category === 'detergents') return 'categoryType:detergent';
     return '';
   }, [category]);
 
   // Determiner le placeholder selon la categorie
   const getPlaceholder = () => {
     if (category === 'food') return 'Rechercher un produit alimentaire...';
-    if (category === 'cosmetics') return 'Rechercher un produit cosmetique...';
-    if (category === 'detergents') return 'Rechercher un produit menager...';
+    if (category === 'cosmetics') return 'Rechercher un produit cosmétique...';
+    if (category === 'detergents') return 'Rechercher un produit ménager...';
     return 'Rechercher un produit...';
   };
 
@@ -125,7 +130,7 @@ const SearchPage: React.FC = () => {
         }
       }}
     >
-      <Configure 
+      <Configure
         hitsPerPage={20}
         filters={categoryFilter}
       />
@@ -191,17 +196,17 @@ const SearchPage: React.FC = () => {
                       root: 'mb-4',
                       button: 'w-full h-10 px-4 py-2 bg-neutral-100 text-neutral-800 rounded-lg hover:bg-neutral-200 transition-colors text-sm font-medium'
                     }}
-                    translations={{ resetButtonText: 'Reinitialiser les filtres' }}
+                    translations={{ resetButtonText: 'Réinitialiser les filtres' }}
                   />
 
                   <div className="space-y-6">
-                    {/* Afficher filtres NOVA et Nutri-Score UNIQUEMENT pour food */}
+                    {/* ⭐ CORRECTION : Afficher filtres NOVA et Nutri-Score avec bons attributs */}
                     {showFoodFilters && (
                       <>
                         <div>
                           <h3 className="text-sm font-semibold text-neutral-900 mb-2">Groupe NOVA</h3>
                           <RefinementList
-                            attribute="nova_group"
+                            attribute="foodData.novaGroup"
                             sortBy={['name:asc']}
                             classNames={{
                               root: 'text-sm',
@@ -212,13 +217,19 @@ const SearchPage: React.FC = () => {
                               labelText: 'text-neutral-800',
                               count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
                             }}
+                            transformItems={(items) =>
+                              items.map(item => ({
+                                ...item,
+                                label: `Groupe ${item.label}`
+                              }))
+                            }
                           />
                         </div>
 
                         <div>
                           <h3 className="text-sm font-semibold text-neutral-900 mb-2">Nutri-Score</h3>
                           <RefinementList
-                            attribute="nutriscore_grade"
+                            attribute="foodData.nutriScore"
                             sortBy={['name:asc']}
                             classNames={{
                               root: 'text-sm',
@@ -234,13 +245,13 @@ const SearchPage: React.FC = () => {
                       </>
                     )}
 
-                    {/* Filtres pour cosmetiques */}
+                    {/* ⭐ CORRECTION : Filtres pour cosmétiques avec bons attributs */}
                     {category === 'cosmetics' && (
                       <>
                         <div>
                           <h3 className="text-sm font-semibold text-neutral-900 mb-2">Type de produit</h3>
                           <RefinementList
-                            attribute="product_type"
+                            attribute="productType"
                             limit={5}
                             showMore={true}
                             classNames={{
@@ -250,14 +261,20 @@ const SearchPage: React.FC = () => {
                               label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
                               checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
                               labelText: 'text-neutral-800',
-                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600',
+                              showMore: 'mt-2 text-primary-600 hover:text-primary-700 text-sm font-medium'
+                            }}
+                            translations={{
+                              showMoreButtonText({ isShowingMore }) {
+                                return isShowingMore ? 'Voir moins' : 'Voir plus';
+                              }
                             }}
                           />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Certification</h3>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Certifications</h3>
                           <RefinementList
-                            attribute="certifications"
+                            attribute="cosmeticsData.certifications"
                             classNames={{
                               root: 'text-sm',
                               list: 'space-y-2',
@@ -272,13 +289,13 @@ const SearchPage: React.FC = () => {
                       </>
                     )}
 
-                    {/* Filtres pour detergents */}
+                    {/* ⭐ CORRECTION : Filtres pour détergents avec bons attributs */}
                     {category === 'detergents' && (
                       <>
                         <div>
                           <h3 className="text-sm font-semibold text-neutral-900 mb-2">Type de produit</h3>
                           <RefinementList
-                            attribute="product_type"
+                            attribute="productType"
                             limit={5}
                             showMore={true}
                             classNames={{
@@ -288,14 +305,20 @@ const SearchPage: React.FC = () => {
                               label: 'flex items-center gap-2 cursor-pointer hover:text-primary-600',
                               checkbox: 'w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-600',
                               labelText: 'text-neutral-800',
-                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600'
+                              count: 'ml-auto text-xs bg-neutral-100 px-2 py-0.5 rounded-full text-neutral-600',
+                              showMore: 'mt-2 text-primary-600 hover:text-primary-700 text-sm font-medium'
+                            }}
+                            translations={{
+                              showMoreButtonText({ isShowingMore }) {
+                                return isShowingMore ? 'Voir moins' : 'Voir plus';
+                              }
                             }}
                           />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Label eco</h3>
+                          <h3 className="text-sm font-semibold text-neutral-900 mb-2">Labels écologiques</h3>
                           <RefinementList
-                            attribute="eco_labels"
+                            attribute="detergentsData.ecoLabels"
                             classNames={{
                               root: 'text-sm',
                               list: 'space-y-2',
@@ -310,11 +333,11 @@ const SearchPage: React.FC = () => {
                       </>
                     )}
 
-                    {/* Marques - commun a toutes categories */}
+                    {/* ⭐ CORRECTION : Marques avec bon attribut */}
                     <div>
                       <h3 className="text-sm font-semibold text-neutral-900 mb-2">Marque</h3>
                       <RefinementList
-                        attribute="brands"
+                        attribute="brand"
                         limit={5}
                         showMore={true}
                         showMoreLimit={20}

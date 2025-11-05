@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { MessageCircle, AlertCircle, Sparkles, Loader, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -33,10 +33,10 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
       return false;
     }
 
-    // Déjà enrichi par IA récemment ? Ne pas proposer à nouveau
-    if (product.aiEnriched && scores.confidence >= 0.80) {
+    // ✅ Déjà enrichi par IA récemment ? Ne pas proposer à nouveau
+    const isAIEnriched = product.metadata?.aiEnriched || product.metadata?.lastEnriched;
+    if (isAIEnriched && scores.confidence >= 0.70) {  // ✅ Seuil abaissé à 70%
       return false;
-    }
 
     // Règle 2 : Vérifier si données nutritionnelles critiques manquantes
     const breakdown = scores.breakdown || {};
@@ -123,7 +123,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
   return (
     <div className="mt-6 space-y-4">
       {/* ✅ Badge "Données incomplètes" si nécessaire */}
-      {showEnrich && missingFields.length > 0 && !product.aiEnriched && (
+      {showEnrich && missingFields.length > 0 && !(product.metadata?.aiEnriched || product.metadata?.lastEnriched) && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -137,7 +137,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
       )}
 
       {/* ✅ Badge "Enrichi par IA" si déjà enrichi */}
-      {product.aiEnriched && (
+      {(product.metadata?.aiEnriched || product.metadata?.lastEnriched) && (
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-purple-600" />
@@ -224,4 +224,3 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
     </div>
   );
 };
-

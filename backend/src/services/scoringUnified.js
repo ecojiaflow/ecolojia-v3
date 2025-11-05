@@ -1,4 +1,4 @@
-﻿// backend/src/services/scoringUnified.js
+// backend/src/services/scoringUnified.js
 
 // ============================================
 // LISTES D'ADDITIFS
@@ -10,11 +10,13 @@ const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471',
 // SEUILS DE CONFIANCE ET TRANSPARENCE
 // ============================================
 const CONFIDENCE_THRESHOLDS = {
-  EXCELLENT: 85,      // Donn?es compl?tes et v?rifi?es
-  GOOD: 70,           // Donn?es suffisantes pour scoring fiable
-  ACCEPTABLE: 60,     // Minimum pour afficher un score
-  INSUFFICIENT: 0     // Donn?es insuffisantes - pas de score
+  EXCELLENT: 85,      // Données complètes et vérifiées
+  GOOD: 70,           // Données suffisantes pour scoring fiable
+  ACCEPTABLE: 60,     // Scoring standard
+  DEGRADED: 40,       // ✅ NOUVEAU : Mode dégradé (données partielles IA)
+  INSUFFICIENT: 0     // Impossible de scorer
 };
+
 
 const SCORING_WEIGHTS = {
   nova: 0.15,
@@ -149,7 +151,7 @@ function calculateDataConfidence(product, category = 'food') {
     missingCritical,
     missingImportant,
     availableData,
-    canScore: confidence >= CONFIDENCE_THRESHOLDS.ACCEPTABLE
+    canScore: confidence >= CONFIDENCE_THRESHOLDS.DEGRADED  // ✅ Accepte mode dégradé (40+)
   };
 }
 
