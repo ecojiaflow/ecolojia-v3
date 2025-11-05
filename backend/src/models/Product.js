@@ -1,4 +1,4 @@
-// backend/src/models/Product.js
+﻿// backend/src/models/Product.js
 const mongoose = require('mongoose');
 
 const additiveSchema = new mongoose.Schema({
@@ -59,9 +59,21 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  categoryType: {
+    type: String,
+    enum: ['food', 'cosmetic', 'detergent'],
+    index: true,
+    required: false
+  },
   brand: {
     type: String,
     trim: true
+  },
+  categoryType: {
+    type: String,
+    enum: ['food', 'cosmetic', 'detergent'],
+    index: true,
+    required: false
   },
   category: { type: String, enum: ['food', 'cosmetics', 'detergents', 'supplements', 'household', 'FOOD', 'COSMETICS']
   },
