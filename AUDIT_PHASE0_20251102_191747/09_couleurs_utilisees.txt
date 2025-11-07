@@ -1,0 +1,15 @@
+﻿
+              <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
+              <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+                <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+                      className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md 
+transition-all"
+                        <p className="font-semibold text-[#3B3B3B]">{alt.name}</p>
+                          <p className="text-xs text-[#7DDE4A] mt-1 flex items-center gap-1">
+            <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
+            <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+              <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md 
+transition-all"
+
+

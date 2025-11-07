@@ -1,0 +1,66 @@
+﻿
+    MAX_RESULTS: 5,                 // Maximum d'alternatives à retourner
+    MIN_SCORE_IMPROVEMENT: 5,       // Amélioration minimale de score (points)
+>   BUDGET_TOLERANCE: 1.15,         // +15% tolérance prix
+    CACHE_TTL: 3600000,             // 1h cache en mémoire (optionnel)
+    ENABLE_AI_FALLBACK: true        // Activer fallback IA si DB insuffisant
+        metrics: {
+          duration: Date.now() - startTime,
+>         dbHits: alternatives.filter(a => a._id).length,
+>         aiHits: alternatives.filter(a => !a._id).length,
+          cached: false
+        }
+    };
+  
+>   // Filtres utilisateur (allergènes, labels, budget)
+    if (params.userPreferences) {
+>     applyUserFilters(query, params.userPreferences);
+    }
+  
+    // Critères relaxés
+    if (params.userPreferences) {
+>     applyUserFilters(query, params.userPreferences, { relaxed: true });
+    }
+  
+      );
+  
+>     return alternatives.filter(Boolean); // Retirer nulls
+  
+    } catch (error) {
+  }
+  
+> function applyUserFilters(query, prefs, options = {}) {
+    const relaxed = options.relaxed || false;
+  
+    // Allergènes (strict)
+>   if (prefs.allergens && prefs.allergens.length > 0 && !relaxed) {
+>     query['foodData.allergens'] = { $nin: prefs.allergens };
+    }
+  
+>   // Labels (ex: bio, vegan)
+    if (prefs.labels && prefs.labels.length > 0) {
+      if (relaxed) {
+    }
+  
+>   // Budget (si disponible dans params)
+    if (prefs.maxPrice) {
+>     query['price'] = { $lte: prefs.maxPrice * (relaxed ? CONFIG.BUDGET_TOLERANCE : 1) };
+    }
+  }
+    // Préférences utilisateur
+    if (userPrefs?.labels && alternative.labels) {
+>     const matchingLabels = userPrefs.labels.filter(l => alternative.labels.includes(l));
+      score += matchingLabels.length * 3;
+    }
+    }
+    
+>   if (alternative.labels?.includes('vegan')) {
+      reasons.push('Sans produits d\'origine animale');
+    }
+    // Format attendu : liste de noms
+    if (typeof aiResponse === 'string') {
+>     return aiResponse.split('\n').filter(line => line.trim().length > 0).slice(0, 3);
+    }
+    return [];
+
+

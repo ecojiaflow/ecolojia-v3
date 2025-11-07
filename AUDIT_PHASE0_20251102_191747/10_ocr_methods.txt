@@ -1,0 +1,6 @@
+﻿
+class OCRProductService {
+  async extractTextFromPhotos(frontPhotoBuffer, ingredientsPhotoBuffer) {
+  async parseWithAI(frontText, ingredientsText, barcode) {
+
+

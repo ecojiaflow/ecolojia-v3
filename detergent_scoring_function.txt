@@ -1,0 +1,242 @@
+/**
+ * SCORING DÉTERGENTS/MÉNAGE - MÉTHODOLOGIE SCIENTIFIQUE ECOLOJIA V3.1
+ * Sources : Règlement Détergents CE 648/2004, ADEME, Ecolabel Européen
+ * 
+ * Formule : 8 composantes pondérées
+ * 1. Composition (25%) - Tensioactifs végétaux vs synthétiques
+ * 2. Biodégradabilité (20%) - Dégradation <28 jours
+ * 3. Toxicité humaine (15%) - Irritations, allergies
+ * 4. Efficacité (15%) - Tests consommateurs
+ * 5. Labels éco (10%) - Ecolabel UE, Nature & Progrès
+ * 6. Emballage (10%) - Plastique recyclé
+ * 7. Concentration (3%) - Doses/litre
+ * 8. Origine (2%) - Fabrication UE
+ * 
+ * @param {Object} data - Produit détergent
+ * @returns {Object} scores - Score global + détail 8 composantes
+ */
+function calculateDetergentScores(data) {
+  const detergentData = data.detergentsData || {};
+  
+  // Sécurité : retour par défaut si données insuffisantes
+  if (!detergentData.composition && !data.ingredients) {
+    return {
+      overallScore: 50,
+      confidence: 0.3,
+      dataCompleteness: 'Faible',
+      breakdown: {
+        composition: { score: 50, weight: 25, label: 'Non défini' },
+        biodegradability: { score: 50, weight: 20, label: 'Non vérifié' },
+        toxicity: { score: 50, weight: 15, label: 'Non défini' },
+        efficiency: { score: 50, weight: 15, label: 'Standard' },
+        labels: { score: 50, weight: 10, label: 'Aucun' },
+        packaging: { score: 50, weight: 10, label: 'Standard' },
+        concentration: { score: 50, weight: 3, label: 'Non défini' },
+        origin: { score: 50, weight: 2, label: 'Non défini' }
+      }
+    };
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 1 : COMPOSITION (25%)
+  // ============================================================================
+  
+  const composition = (detergentData.composition || data.ingredients || '').toLowerCase();
+  
+  // Tensioactifs végétaux = bon
+  const vegetalTensioactives = ['coco', 'palm', 'olive', 'coconut', 'vegetal', 'plant-based', 'vegetale'];
+  // Tensioactifs synthétiques = moins bon
+  const syntheticTensioactives = ['sles', 'sls', 'sodium laureth sulfate', 'sodium lauryl sulfate'];
+  // Solvants toxiques = mauvais
+  const toxicSolvents = ['chlorine', 'chlore', 'ammonia', 'ammoniac', 'phosphate', 'formaldehyde', 'formaldehyde'];
+  
+  let compositionScore = 50;
+  
+  if (vegetalTensioactives.some(v => composition.includes(v))) {
+    compositionScore = 90;
+  } else if (syntheticTensioactives.some(s => composition.includes(s))) {
+    compositionScore = 50;
+  }
+  
+  if (toxicSolvents.some(t => composition.includes(t))) {
+    compositionScore = Math.max(20, compositionScore - 30);
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 2 : BIODÉGRADABILITÉ (20%)
+  // Règlement CE 648/2004 : >60% en 28 jours
+  // ============================================================================
+  
+  const biodegradable = detergentData.biodegradable;
+  const phosphateFree = detergentData.phosphateFree;
+  
+  let biodegradabilityScore = 50;
+  
+  if (biodegradable === true) {
+    biodegradabilityScore = 90;
+  } else if (biodegradable === false) {
+    biodegradabilityScore = 20;
+  }
+  
+  if (phosphateFree === true) {
+    biodegradabilityScore = Math.min(100, biodegradabilityScore + 10);
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 3 : TOXICITÉ HUMAINE (15%)
+  // ============================================================================
+  
+  const allergens = detergentData.allergens || [];
+  const irritants = detergentData.irritants || [];
+  
+  let toxicityScore = 100;
+  
+  if (allergens.length >= 3) toxicityScore = 40;
+  else if (allergens.length >= 1) toxicityScore = 70;
+  
+  if (irritants.length >= 2) toxicityScore = Math.max(30, toxicityScore - 20);
+  
+  // ============================================================================
+  // COMPOSANTE 4 : EFFICACITÉ (15%)
+  // ============================================================================
+  
+  const efficiency = detergentData.efficiency || data.efficiency;
+  let efficiencyScore = 70; // Neutre par défaut
+  
+  if (efficiency === 'excellent') efficiencyScore = 100;
+  else if (efficiency === 'good' || efficiency === 'bon') efficiencyScore = 80;
+  else if (efficiency === 'average' || efficiency === 'moyen') efficiencyScore = 60;
+  else if (efficiency === 'poor' || efficiency === 'faible') efficiencyScore = 40;
+  
+  // ============================================================================
+  // COMPOSANTE 5 : LABELS ÉCO (10%)
+  // ============================================================================
+  
+  const labels = data.labels || detergentData.labels || [];
+  const labelsList = Array.isArray(labels) ? labels : [];
+  
+  let labelsScore = 30;
+  
+  if (labelsList.some(l => l.toLowerCase().includes('ecolabel') && (l.toLowerCase().includes('eu') || l.toLowerCase().includes('ue')))) {
+    labelsScore = 100;
+  } else if (labelsList.some(l => l.toLowerCase().includes('nature') || l.toLowerCase().includes('progres'))) {
+    labelsScore = 90;
+  } else if (labelsList.some(l => l.toLowerCase().includes('ecocert'))) {
+    labelsScore = 80;
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 6 : EMBALLAGE (10%)
+  // ============================================================================
+  
+  const packaging = data.packaging || '';
+  let packagingScore = 50;
+  
+  if (packaging.toLowerCase().includes('recycle') && (packaging.toLowerCase().includes('100') || packaging.toLowerCase().includes('recyclé à 100'))) {
+    packagingScore = 100;
+  } else if (packaging.toLowerCase().includes('recycle') || packaging.toLowerCase().includes('recyclé')) {
+    packagingScore = 70;
+  } else if (packaging.toLowerCase().includes('plastique') || packaging.toLowerCase().includes('plastic')) {
+    packagingScore = 40;
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 7 : CONCENTRATION (3%)
+  // ============================================================================
+  
+  const concentration = detergentData.concentration || data.concentration;
+  let concentrationScore = 50;
+  
+  if (concentration && concentration >= 30) concentrationScore = 90; // Concentré = moins d'emballage
+  else if (concentration && concentration >= 20) concentrationScore = 70;
+  else if (concentration && concentration < 10) concentrationScore = 30;
+  
+  // ============================================================================
+  // COMPOSANTE 8 : ORIGINE (2%)
+  // ============================================================================
+  
+  const origin = data.origin || '';
+  let originScore = 50;
+  
+  if (origin.toLowerCase().includes('france')) originScore = 100;
+  else if (['allemagne', 'italie', 'belgique', 'germany', 'italy', 'belgium'].some(c => origin.toLowerCase().includes(c))) originScore = 80;
+  else if (origin.toLowerCase().includes('europe') || origin.toLowerCase().includes('eu') || origin.toLowerCase().includes('ue')) originScore = 70;
+  
+  // ============================================================================
+  // CALCUL SCORE GLOBAL
+  // ============================================================================
+  
+  const breakdown = {
+    composition: { 
+      score: compositionScore, 
+      weight: 25, 
+      label: compositionScore >= 80 ? 'Végétale' : 'Synthétique' 
+    },
+    biodegradability: { 
+      score: biodegradabilityScore, 
+      weight: 20, 
+      label: biodegradable === true ? 'Oui' : 'Non vérifié' 
+    },
+    toxicity: { 
+      score: toxicityScore, 
+      weight: 15, 
+      label: toxicityScore >= 80 ? 'Faible' : 'Modérée' 
+    },
+    efficiency: { 
+      score: efficiencyScore, 
+      weight: 15, 
+      label: efficiency || 'Standard' 
+    },
+    labels: { 
+      score: labelsScore, 
+      weight: 10, 
+      label: labelsList.length > 0 ? labelsList.join(', ') : 'Aucun' 
+    },
+    packaging: { 
+      score: packagingScore, 
+      weight: 10, 
+      label: packaging || 'Standard' 
+    },
+    concentration: { 
+      score: concentrationScore, 
+      weight: 3, 
+      label: concentration ? `${concentration} doses/L` : 'Non défini' 
+    },
+    origin: { 
+      score: originScore, 
+      weight: 2, 
+      label: origin || 'Non défini' 
+    }
+  };
+  
+  const overallScore = Math.round(
+    (compositionScore * 0.25) +
+    (biodegradabilityScore * 0.20) +
+    (toxicityScore * 0.15) +
+    (efficiencyScore * 0.15) +
+    (labelsScore * 0.10) +
+    (packagingScore * 0.10) +
+    (concentrationScore * 0.03) +
+    (originScore * 0.02)
+  );
+  
+  let componentsAvailable = 0;
+  if (composition.length > 10) componentsAvailable++;
+  if (biodegradable !== undefined) componentsAvailable++;
+  if (allergens.length > 0 || toxicityScore !== 100) componentsAvailable++;
+  if (efficiency) componentsAvailable++;
+  if (labelsList.length > 0) componentsAvailable++;
+  if (packaging) componentsAvailable++;
+  if (concentration) componentsAvailable++;
+  if (origin) componentsAvailable++;
+  
+  const confidence = componentsAvailable / 8;
+  const dataCompleteness = confidence >= 0.875 ? 'Excellente' : confidence >= 0.75 ? 'Bonne' : confidence >= 0.5 ? 'Moyenne' : 'Faible';
+  
+  return {
+    overallScore,
+    confidence,
+    dataCompleteness,
+    breakdown
+  };
+}

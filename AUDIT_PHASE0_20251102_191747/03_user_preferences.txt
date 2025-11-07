@@ -1,0 +1,99 @@
+﻿
+  
+> const aiPreferencesSchema = new mongoose.Schema({
+    tone: {
+      type: String,
+>     enum: ['vegan', 'vegetarian', 'gluten-free', 'lactose-free', 'halal', 'kosher', 'low-sodium', 'diabetic']
+    }],
+>   allergens: [{
+      type: String,
+    }],
+>   cosmeticPreferences: {
+      avoidIngredients: [String],
+    },
+>   notificationPreferences: {
+      emailAlerts: { type: Boolean, default: true },
+      type: String,
+>     enum: ['omnivore', 'vegetarian', 'vegan', 'pescatarian', 'flexitarian'],
+      default: 'omnivore'
+    },
+>   allergens: [{
+      type: String,
+    }],
+>   goal: {
+      type: String,
+>     enum: ['health', 'eco', 'budget', 'weight-loss', 'muscle-gain', 'general'],
+      default: 'health'
+    },
+>   budget: {
+      monthly: { type: Number, default: 300, min: 50, max: 2000 },
+    },
+>   labels: {
+      bioRequired: { type: Boolean, default: false },
+    excludedIngredients: [String],
+>   preferences: {
+      cosmetic: {
+        natural: { type: Boolean, default: true },
+>       vegan: { type: Boolean, default: false },
+        skinType: {
+    completeness: { type: Number, default: 0, min: 0, max: 100 },
+>   migratedFromAiPreferences: { type: Boolean, default: false }
+  }, { _id: false });
+    
+>   // AI Preferences
+>   aiPreferences: {
+>     type: aiPreferencesSchema,
+      default: () => ({})
+    },
+>   // ⭐ PROFIL V3.2 - COHABITE avec aiPreferences
+    profile: {
+  
+> // ⭐ MÉTHODE : Migration automatique aiPreferences → profile
+  userSchema.methods.migrateToV32Profile = function() {
+>   if (this.profile?.migratedFromAiPreferences) return false;
+    if (!this.profile) this.profile = {};
+  
+>   const aiPrefs = this.aiPreferences || {};
+    
+      const restrictions = aiPrefs.foodRestrictions;
+>     if (restrictions.includes('vegan')) this.profile.diet = 'vegan';
+>     else if (restrictions.includes('vegetarian')) this.profile.diet = 'vegetarian';
+      else this.profile.diet = 'omnivore';
+  
+>   if (aiPrefs.allergens?.length > 0) {
+>     this.profile.allergens = aiPrefs.allergens.map(a => {
+        const mapping = { 'tree-nuts': 'nuts', 'wheat': 'gluten', 'soy': 'soybeans', 'shellfish': 'crustaceans' };
+  
+>   if (!this.profile.goal) this.profile.goal = 'health';
+>   if (!this.profile.budget) this.profile.budget = { monthly: 300, preferStick: false };
+>   if (!this.profile.labels) this.profile.labels = { bioRequired: false, bioPriority: true, localPriority: false, fairTrade: false };
+  
+>   this.profile.migratedFromAiPreferences = true;
+    this.calculateProfileCompleteness();
+    if (this.profile.diet && this.profile.diet !== 'omnivore') score += 20;
+>   if (this.profile.allergens?.length > 0) score += 20;
+>   if (this.profile.goal && this.profile.goal !== 'general') score += 20;
+>   if (this.profile.budget?.monthly && this.profile.budget.monthly !== 300) score += 20;
+>   if (this.profile.labels && (this.profile.labels.bioRequired || this.profile.labels.localPriority || this.profile.labels.fairTrade)) score += 20;
+    this.profile.completeness = score;
+  // ⭐ HELPER : Libellé régime
+> userSchema.methods.getDietLabel = function() {
+>   const labels = { 'omnivore': 'Omnivore', 'vegetarian': 'Végétarien', 'vegan': 'Végane', 'pescatarian': 'Pescétarien', 'flexitarian': 'Flexitarien' };
+>   return labels[this.profile?.diet] || 'Omnivore';
+  };
+    const diet = this.profile.diet;
+>   const allergens = this.profile.allergens || [];
+    const ingredients = product.ingredients_text?.toLowerCase() || '';
+  
+>   if (diet === 'vegan') {
+      const animalKeywords = ['lait', 'œuf', 'oeuf', 'miel', 'viande', 'poisson', 'crustacé', 'gélatine'];
+  
+>   if (diet === 'vegetarian') {
+      const meatKeywords = ['viande', 'poisson', 'poulet', 'bœuf', 'porc', 'agneau'];
+  
+>   if (allergens.length > 0) {
+>     const productAllergens = product.allergens || [];
+>     const conflict = allergens.find(a => productAllergens.includes(a) || ingredients.includes(a));
+      if (conflict) return { compatible: false, reason: `⚠️ ALLERGIE : Contient ${conflict}` };
+
+

@@ -1,0 +1,100 @@
+﻿import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Check, X, Sparkles, Zap, Shield, Crown, Star,
+  TrendingUp, Users, Award, ArrowRight, CheckCircle,
+  MessageCircle, Download, Clock, Infinity
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useDeviceContext } from '../hooks/useDeviceContext';
+import { checkPremium } from '../utils/checkPremium';
+
+const PremiumPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { isMobile } = useDeviceContext();
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('yearly');
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      checkPremium(userId).then(setIsPremium);
+    }
+  }, []);
+
+  const plans = {
+    monthly: {
+      price: '4.99',
+      period: 'mois',
+      total: '4.99€/mois',
+      savings: null
+    },
+    yearly: {
+      price: '49',
+      period: 'an',
+      total: '4.08€/mois',
+      savings: 'Économisez 11€ (18%)'
+    }
+  };
+
+  const features = {
+    free: [
+      { text: '10 scans par jour', included: true },
+      { text: '5 messages IA par jour', included: true },
+      { text: 'Historique 7 jours', included: true },
+      { text: 'Scores de base', included: true },
+      { text: 'Publicités', included: true, isNegative: true },
+      { text: 'Export PDF', included: false },
+      { text: 'Comparaisons illimitées', included: false },
+      { text: 'Alertes produits', included: false },
+      { text: 'Support prioritaire', included: false },
+      { text: 'Accès API', included: false }
+    ],
+    premium: [
+      { text: 'Scans illimités', included: true, highlight: true },
+      { text: 'Messages IA illimités', included: true, highlight: true },
+      { text: 'Historique illimité', included: true },
+      { text: 'Analyses détaillées', included: true },
+      { text: 'Sans publicité', included: true, highlight: true },
+      { text: 'Export PDF', included: true },
+      { text: 'Comparaisons illimitées', included: true },
+      { text: 'Alertes produits', included: true },
+      { text: 'Support prioritaire 24h', included: true },
+      { text: 'Accès API développeur', included: true }
+    ]
+  };
+
+  const premiumBenefits = [
+    {
+      icon: Infinity,
+      title: 'Scans & IA Illimités',
+      description: 'Analysez autant de produits que vous voulez. Chat IA disponible 24/7 sans limitation.',
+      color: 'text-green-600 bg-green-100'
+    },
+    {
+      icon: Download,
+      title: 'Export & Partage',
+      description: 'Exportez vos analyses en PDF, partagez avec votre famille ou professionnel de santé.',
+      color: 'text-blue-600 bg-blue-100'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Analyses Avancées',
+      description: 'Accédez aux recommandations personnalisées IA et insights détaillés.',
+      color: 'text-purple-600 bg-purple-100'
+    },
+    {
+      icon: Shield,
+      title: 'Support Prioritaire',
+      description: 'Réponses sous 24h par notre équipe d\'experts en nutrition et cosmétiques.',
+      color: 'text-orange-600 bg-orange-100'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Sophie M.',
+      role: 'Maman de 2 enfants',
+      avatar: '👩',
+      rating: 5,
+      content: 'Premium a transformé mes courses ! Je scanne tout maintenant et je fais de bien meilleurs choix pour ma famille.'

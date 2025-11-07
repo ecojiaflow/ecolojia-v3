@@ -1,0 +1,129 @@
+﻿
+> // ECOLOJIA SCORING ENGINE V3 - MÉTHODOLOGIE SCIENTIFIQUE VALIDÉE
+  // ============================================================================
+  // Sources officielles :
+> // - Santé Publique France (Programme National Nutrition Santé 2019-2023)
+  // - Base Carbone ADEME v12.1 (2024)
+  //
+> // Validation : En cours (consulter nutritionniste diplômé recommandé)
+  // ============================================================================
+  
+>  * Formule : Santé (50%) + Nutrition (30%) + Environnement (15%) + Éthique (5%)
+   * 
+   * @param {Object} product - Produit depuis OpenFoodFacts/MongoDB
+>   // NOVA
+>   if (data.novaGroup) {
+>     const nova = parseInt(data.novaGroup);
+>     if (nova === 1) healthScore += 30;
+>     else if (nova === 2) healthScore += 15;
+>     else if (nova === 3) healthScore += 5;
+>     else if (nova === 4) healthScore -= 30; // Ultra-transformé
+    }
+  
+>   // Nutri-Score
+>   if (data.nutriScore) {
+>     const nutri = data.nutriScore.toLowerCase();
+>     if (nutri === 'a') healthScore += 25;
+>     else if (nutri === 'b') healthScore += 15;
+>     else if (nutri === 'c') healthScore += 5;
+>     else if (nutri === 'd') healthScore -= 10;
+>     else if (nutri === 'e') healthScore -= 20; // Très mauvais
+    }
+  
+>   // Additifs
+    const additives = data.additives || [];
+    if (additives.length > 0) {
+>   // Eco-Score
+>   if (data.ecoScore) {
+>     const eco = data.ecoScore.toLowerCase();
+>     if (eco === 'a') environmentScore += 30;
+>     else if (eco === 'b') environmentScore += 20;
+>     else if (eco === 'c') environmentScore += 5;
+>     else if (eco === 'd') environmentScore -= 10;
+>     else if (eco === 'e') environmentScore -= 20;
+    }
+  
+>       nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: data.novaGroup ? `Groupe 
+${data.novaGroup}` : 'Non défini' },
+>       nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 
+20, label: data.nutriScore ? data.nutriScore.toUpperCase() : 'Non défini' },
+>       additives: { score: Math.max(0, 50 - (additives.length * 5)), label: `${additives.length} additif${additives.length > 1 ? 's' : ''}` },
+>       ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: data.ecoScore ? 
+data.ecoScore.toUpperCase() : 'Non défini' },
+        packaging: { score: 50, label: 'Standard' },
+        origin: { score: 50, label: data.origin || 'Non défini' }
+>  * Score NOVA (25 points max)
+>  * Source : Classification NOVA (Monteiro et al., 2019)
+   */
+> function calculateNovaScore(novaGroup) {
+    const mapping = {
+      1: 25,  // Aliments non transformés ou minimalement transformés
+>   return novaGroup in mapping ? mapping[novaGroup] : 12; // Défaut si inconnu
+  }
+  
+>  * Score Additifs (25 points max)
+   * Source : EFSA (European Food Safety Authority)
+   */
+>   let orangeCount = 0;
+  
+    additives.forEach(additive => {
+>     else if (orangeList.some(orange => code.includes(orange))) orangeCount++;
+    });
+  
+>   if (orangeCount >= 3) return 10;          // 3+ orange = 10
+>   if (orangeCount >= 1) return 15;          // 1-2 orange = 15
+>   if (additives.length <= 3) return 20;     // 1-3 additifs verts = 20
+>   return 25;                                 // Aucun additif = 25
+  }
+  
+>  * Score Nutrition (30 points max)
+>  * Source : PNNS 2019-2023 (Programme National Nutrition Santé)
+   * Repères ANSES 2017
+   */
+> function calculateNutritionScore(nutrition) {
+>   if (!nutrition || !nutrition.per100g) return 15; // Score neutre si données manquantes
+  
+>   const n = nutrition.per100g;
+    let score = 30; // On part du max et on enlève
+  
+>   // PÉNALITÉ SUCRES (OMS : max 10% apport énergétique = ~50g/jour)
+    const sugars = n.sugars || n.sugars_100g || 0;
+    if (sugars > 22.5) score -= 15;      // Très élevé (ex: sodas, confiseries)
+>   // PÉNALITÉ SEL (OMS : max 5g/jour, ANSES : max 8g/jour)
+    const salt = n.salt || n.salt_100g || n.sodium ? (n.sodium * 2.5) : 0;
+    if (salt > 2.0) score -= 15;         // Très élevé (ex: chips, charcuterie)
+> function convertEcoScoreToPoints(ecoScore) {
+    const mapping = {
+      'A': 10, 'a': 10,
+>   return mapping[ecoScore] || 5; // Défaut neutre
+  }
+  
+>  * Bonus nutritionnels (max +10 points)
+>  * Source : Recommandations PNNS
+   */
+> function calculateBonuses(nutrition, product) {
+>   if (!nutrition || !nutrition.per100g) return 0;
+  
+>   const n = nutrition.per100g;
+    let bonus = 0;
+  
+>   // Fibres élevées (ANSES : 25-30g/jour recommandés)
+    const fiber = n.fiber || n.fiber_100g || 0;
+    if (fiber > 6) bonus += 5;        // Source de fibres
+> function calculateCosmeticScores(product) {
+    // TODO: Appliquer même rigueur scientifique
+    return {
+>       nova: { score: data.novaGroup === 1 ? 70 : data.novaGroup === 2 ? 55 : data.novaGroup === 3 ? 45 : 10, label: data.novaGroup ? `Groupe 
+${data.novaGroup}` : 'Non défini' },
+>       nutriscore: { score: data.nutriScore === 'a' ? 65 : data.nutriScore === 'b' ? 55 : data.nutriScore === 'c' ? 45 : data.nutriScore === 'd' ? 30 : 
+20, label: data.nutriScore ? data.nutriScore.toUpperCase() : 'Non défini' },
+>       additives: { score: Math.max(0, 50 - (additives.length * 5)), label: `${additives.length} additif${additives.length > 1 ? 's' : ''}` },
+>       ecoscore: { score: data.ecoScore === 'a' ? 70 : data.ecoScore === 'b' ? 60 : data.ecoScore === 'c' ? 45 : 20, label: data.ecoScore ? 
+data.ecoScore.toUpperCase() : 'Non défini' },
+        packaging: { score: 50, label: 'Standard' },
+        origin: { score: 50, label: data.origin || 'Non défini' }
+>   calculateCosmeticScores,
+    calculateDetergentScores
+  };
+
+

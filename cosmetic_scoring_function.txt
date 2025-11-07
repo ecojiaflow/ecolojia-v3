@@ -1,0 +1,275 @@
+/**
+ * SCORING COSMÉTIQUES - MÉTHODOLOGIE SCIENTIFIQUE ECOLOJIA V3.1
+ * Sources : ANSM, INCI Beauty, Règlement CE 1223/2009
+ * 
+ * Formule : 8 composantes pondérées
+ * 1. Ingrédients (25%) - Naturel vs synthétique
+ * 2. Perturbateurs endocriniens (20%) - Parabènes, phtalates, etc.
+ * 3. Biodégradabilité (15%) - Écotoxicité aquatique
+ * 4. Labels (15%) - COSMOS, Ecocert, Vegan
+ * 5. Emballage (10%) - Plastique recyclable
+ * 6. Origine (5%) - Fabrication France/UE
+ * 7. Tests animaux (5%) - Cruelty-free
+ * 8. Transparence (5%) - Liste INCI complète
+ * 
+ * @param {Object} product - Produit cosmétique
+ * @returns {Object} scores - Score global + détail 8 composantes
+ */
+function calculateCosmeticScores(product) {
+  const data = product.cosmeticsData || {};
+  
+  // Sécurité : retour par défaut si données insuffisantes
+  if (!data.inciList && !product.ingredients) {
+    return {
+      overallScore: 50,
+      confidence: 0.3,
+      dataCompleteness: 'Faible',
+      breakdown: {
+        ingredients: { score: 50, weight: 25, label: 'Non défini' },
+        endocrineDisruptors: { score: 50, weight: 20, label: 'Non défini' },
+        biodegradability: { score: 50, weight: 15, label: 'Non défini' },
+        labels: { score: 50, weight: 15, label: 'Aucun' },
+        packaging: { score: 50, weight: 10, label: 'Standard' },
+        origin: { score: 50, weight: 5, label: 'Non défini' },
+        animalTesting: { score: 50, weight: 5, label: 'Non vérifié' },
+        transparency: { score: 50, weight: 5, label: 'Partielle' }
+      }
+    };
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 1 : INGRÉDIENTS (25%) - Naturel vs Synthétique
+  // ============================================================================
+  
+  const inciList = data.inciList || product.ingredients || '';
+  const ingredients = inciList.toLowerCase().split(',').map(i => i.trim()).filter(i => i.length > 0);
+  
+  let naturalCount = 0;
+  let syntheticCount = 0;
+  
+  // Liste ingrédients naturels courants
+  const naturalKeywords = [
+    'aqua', 'water', 'aloe', 'oil', 'butter', 'extract', 'wax',
+    'glycerin', 'tocopherol', 'squalane', 'lecithin', 'stearic acid',
+    'shea', 'coconut', 'jojoba', 'argan', 'olive', 'castor'
+  ];
+  
+  // Liste ingrédients synthétiques à risque
+  const syntheticKeywords = [
+    'paraben', 'siloxane', 'silicone', 'peg-', 'propylene glycol',
+    'mineral oil', 'petrolatum', 'dimethicone', 'cyclopentasiloxane',
+    'phenoxyethanol', 'methylisothiazolinone'
+  ];
+  
+  ingredients.forEach(ing => {
+    if (naturalKeywords.some(k => ing.includes(k))) naturalCount++;
+    if (syntheticKeywords.some(k => ing.includes(k))) syntheticCount++;
+  });
+  
+  const totalIngredients = ingredients.length || 1;
+  const naturalPercent = (naturalCount / totalIngredients) * 100;
+  
+  let ingredientsScore = 0;
+  if (naturalPercent >= 90) ingredientsScore = 100;
+  else if (naturalPercent >= 70) ingredientsScore = 80;
+  else if (naturalPercent >= 50) ingredientsScore = 60;
+  else if (naturalPercent >= 30) ingredientsScore = 40;
+  else ingredientsScore = 20;
+  
+  // ============================================================================
+  // COMPOSANTE 2 : PERTURBATEURS ENDOCRINIENS (20%)
+  // Source : Liste ANSM + Règlement REACH
+  // ============================================================================
+  
+  const endocrineDisruptors = [
+    'paraben', 'methylparaben', 'propylparaben', 'butylparaben',
+    'triclosan', 'triclocarban', 'phthalate', 'bpa', 'bisphenol',
+    'oxybenzone', 'octinoxate', 'homosalate', 'resorcinol',
+    'benzophenone', 'ethylhexyl methoxycinnamate'
+  ];
+  
+  let disruptorCount = 0;
+  let highRiskCount = 0;
+  
+  const highRiskDisruptors = ['triclosan', 'phthalate', 'bpa', 'benzophenone'];
+  
+  endocrineDisruptors.forEach(ed => {
+    if (inciList.toLowerCase().includes(ed)) {
+      disruptorCount++;
+      if (highRiskDisruptors.includes(ed)) highRiskCount++;
+    }
+  });
+  
+  let endocrineScore = 100;
+  if (highRiskCount > 0) endocrineScore = 20; // Haut risque = 20/100
+  else if (disruptorCount >= 3) endocrineScore = 40;
+  else if (disruptorCount >= 1) endocrineScore = 70;
+  
+  // ============================================================================
+  // COMPOSANTE 3 : BIODÉGRADABILITÉ (15%)
+  // Source : Règlement Détergents CE 648/2004 (applicable cosmétiques)
+  // ============================================================================
+  
+  const biodegradableKeywords = [
+    'biodegradable', 'plant-based', 'vegetal', 'coconut', 'palm',
+    'degradable', 'eco-friendly'
+  ];
+  
+  const nonBiodegradableKeywords = [
+    'silicone', 'microplastic', 'polyethylene', 'polypropylene',
+    'acrylate', 'polymethyl'
+  ];
+  
+  let biodegradabilityScore = 50; // Neutre par défaut
+  
+  if (biodegradableKeywords.some(k => inciList.toLowerCase().includes(k))) {
+    biodegradabilityScore = 90;
+  } else if (nonBiodegradableKeywords.some(k => inciList.toLowerCase().includes(k))) {
+    biodegradabilityScore = 20;
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 4 : LABELS (15%)
+  // ============================================================================
+  
+  const labels = data.labels || product.labels || [];
+  const labelsList = Array.isArray(labels) ? labels : [];
+  
+  let labelsScore = 0;
+  
+  // COSMOS Organic = 100 points
+  if (labelsList.some(l => l.toLowerCase().includes('cosmos') && l.toLowerCase().includes('organic'))) {
+    labelsScore = 100;
+  }
+  // Ecocert / Nature & Progrès = 90 points
+  else if (labelsList.some(l => l.toLowerCase().includes('ecocert') || l.toLowerCase().includes('nature'))) {
+    labelsScore = 90;
+  }
+  // Vegan / Cruelty-Free seul = 70 points
+  else if (labelsList.some(l => l.toLowerCase().includes('vegan') || l.toLowerCase().includes('cruelty'))) {
+    labelsScore = 70;
+  }
+  // Aucun label = 30 points
+  else {
+    labelsScore = 30;
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 5 : EMBALLAGE (10%)
+  // ============================================================================
+  
+  const packaging = product.packaging || '';
+  let packagingScore = 50;
+  
+  if (packaging.toLowerCase().includes('recyclable') || packaging.toLowerCase().includes('glass') || packaging.toLowerCase().includes('verre')) {
+    packagingScore = 80;
+  } else if (packaging.toLowerCase().includes('plastic') || packaging.toLowerCase().includes('plastique')) {
+    packagingScore = 40;
+  }
+  
+  // ============================================================================
+  // COMPOSANTE 6 : ORIGINE (5%)
+  // ============================================================================
+  
+  const origin = product.origin || data.manufacturingCountry || '';
+  let originScore = 50;
+  
+  if (origin.toLowerCase().includes('france')) originScore = 100;
+  else if (['allemagne', 'italie', 'espagne', 'germany', 'italy', 'spain'].some(c => origin.toLowerCase().includes(c))) originScore = 80;
+  else if (origin.toLowerCase().includes('europe') || origin.toLowerCase().includes('eu') || origin.toLowerCase().includes('ue')) originScore = 70;
+  
+  // ============================================================================
+  // COMPOSANTE 7 : TESTS ANIMAUX (5%)
+  // ============================================================================
+  
+  const crueltyFree = data.crueltyFree || labelsList.some(l => l.toLowerCase().includes('cruelty'));
+  const animalTestingScore = crueltyFree ? 100 : 30;
+  
+  // ============================================================================
+  // COMPOSANTE 8 : TRANSPARENCE (5%)
+  // ============================================================================
+  
+  let transparencyScore = 50;
+  
+  if (inciList && inciList.length > 50) transparencyScore = 100; // Liste INCI complète
+  else if (inciList && inciList.length > 20) transparencyScore = 70;
+  else transparencyScore = 30;
+  
+  // ============================================================================
+  // CALCUL SCORE GLOBAL (moyenne pondérée)
+  // ============================================================================
+  
+  const breakdown = {
+    ingredients: { 
+      score: ingredientsScore, 
+      weight: 25, 
+      label: `${Math.round(naturalPercent)}% naturel` 
+    },
+    endocrineDisruptors: { 
+      score: endocrineScore, 
+      weight: 20, 
+      label: disruptorCount === 0 ? 'Aucun détecté' : `${disruptorCount} détecté(s)` 
+    },
+    biodegradability: { 
+      score: biodegradabilityScore, 
+      weight: 15, 
+      label: biodegradabilityScore >= 80 ? 'Bon' : biodegradabilityScore >= 50 ? 'Moyen' : 'Faible' 
+    },
+    labels: { 
+      score: labelsScore, 
+      weight: 15, 
+      label: labelsList.length > 0 ? labelsList.join(', ') : 'Aucun' 
+    },
+    packaging: { 
+      score: packagingScore, 
+      weight: 10, 
+      label: packaging || 'Standard' 
+    },
+    origin: { 
+      score: originScore, 
+      weight: 5, 
+      label: origin || 'Non défini' 
+    },
+    animalTesting: { 
+      score: animalTestingScore, 
+      weight: 5, 
+      label: crueltyFree ? 'Cruelty-free ✓' : 'Non vérifié' 
+    },
+    transparency: { 
+      score: transparencyScore, 
+      weight: 5, 
+      label: transparencyScore >= 80 ? 'Complète' : 'Partielle' 
+    }
+  };
+  
+  // Calcul pondéré
+  const overallScore = Math.round(
+    (ingredientsScore * 0.25) +
+    (endocrineScore * 0.20) +
+    (biodegradabilityScore * 0.15) +
+    (labelsScore * 0.15) +
+    (packagingScore * 0.10) +
+    (originScore * 0.05) +
+    (animalTestingScore * 0.05) +
+    (transparencyScore * 0.05)
+  );
+  
+  // Calcul confiance
+  let componentsAvailable = 0;
+  if (inciList.length > 10) componentsAvailable += 3; // ingredients + endocrine + biodeg
+  if (labelsList.length > 0) componentsAvailable++;
+  if (packaging) componentsAvailable++;
+  if (origin) componentsAvailable++;
+  if (crueltyFree !== undefined) componentsAvailable++;
+  if (inciList.length > 20) componentsAvailable++; // transparency
+  
+  const confidence = componentsAvailable / 8;
+  const dataCompleteness = confidence >= 0.875 ? 'Excellente' : confidence >= 0.75 ? 'Bonne' : confidence >= 0.5 ? 'Moyenne' : 'Faible';
+  
+  return {
+    overallScore,
+    confidence,
+    dataCompleteness,
+    breakdown
+  };
+}

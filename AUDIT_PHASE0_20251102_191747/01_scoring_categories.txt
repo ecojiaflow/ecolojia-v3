@@ -1,0 +1,13 @@
+﻿
+  
+> function calculateCosmeticScores(product) {
+    // TODO: Appliquer même rigueur scientifique
+  
+> function calculateDetergentScores(data) {
+    const additives = data.additives || [];
+    calculateFoodScores,
+>   calculateCosmeticScores,
+>   calculateDetergentScores
+  };
+
+

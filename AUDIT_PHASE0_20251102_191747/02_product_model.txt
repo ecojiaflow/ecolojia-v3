@@ -1,0 +1,70 @@
+﻿
+  tag: String,
+  code: String,
+  name: String,
+  function: String,
+  riskLevel: { type: String, enum: ['low', 'moderate', 'high', 'LOW', 'MODERATE', 'HIGH', 'MEDIUM'],
+  origin: String
+  tag: String,
+  name: String,
+  category: String,
+  riskLevel: { type: String, enum: ['low', 'moderate', 'high', 'LOW', 'MODERATE', 'HIGH', 'MEDIUM'],
+  description: String,
+  icon: String
+  energy: Number,
+  fat: Number,
+  saturatedFat: Number,
+  carbohydrates: Number,
+  sugars: Number,
+  fiber: Number,
+  protein: Number,
+  salt: Number
+  inci: String,
+  function: String,
+  origin: {
+    type: String,
+  isEndocrineDisruptor: { type: Boolean, default: false }
+  barcode: {
+    type: String,
+  name: {
+    type: String,
+  brand: {
+    type: String,
+  category: { type: String, enum: ['food', 'cosmetics', 'detergents', 'supplements', 'household', 'FOOD', 'COSMETICS']
+  subcategory: {
+    type: String,
+  imageUrl: String,
+  foodData: {
+    ingredients: String,
+    novaGroup: { type: Number, min: 1, max: 4 },
+    nutriScore: { type: String, enum: ['a', 'b', 'c', 'd', 'e', 'A', 'B', 'C', 'D', 'E', 'unknown'] },
+    ecoScore: { type: String, enum: ['a-plus', 'a', 'b', 'c', 'd', 'e', 'unknown', 'A-PLUS', 'A', 'B', 'C', 'D', 'E', 'UNKNOWN'] }
+  cosmeticsData: {
+    inciList: String,
+  detergentsData: {
+    phosphateFree: Boolean,
+    biodegradable: Boolean,
+  scores: {
+    overallScore: { type: Number, min: 0, max: 100, index: true },
+    healthScore: { type: Number, min: 0, max: 100 },
+    environmentScore: { type: Number, min: 0, max: 100 },
+    confidence: Number,
+    dataCompleteness: String,
+    calculatedAt: { type: Date, default: Date.now },
+    scoringVersion: { type: String, default: '3.0.0' },
+    aiEnrichmentUsed: { type: Boolean, default: false },
+    aiEnrichmentSource: String,
+    aiEnrichmentError: String,
+  analysisData: {
+    healthScore: { type: Number, min: 0, max: 100 },
+    version: String,
+    confidence: Number
+  viewCount: { type: Number, default: 0 },
+  scanCount: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+  const searchCriteria = { $text: { $search: query } };
+    .sort({ score: { $meta: 'textScore' } });
+        nutriments: {
+
+

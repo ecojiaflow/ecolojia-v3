@@ -1,0 +1,1728 @@
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "`n========================================" -ForegroundColor Cyan
+
+========================================
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "  ANALYSE SERVICES IA CRITIQUES" -ForegroundColor Cyan
+  ANALYSE SERVICES IA CRITIQUES
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "========================================`n" -ForegroundColor Cyan
+========================================
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> # 1. Analyser le service DeepSeek principal
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "🤖 Analyse deepSeekService.js...`n" -ForegroundColor Yellow
+🤖 Analyse deepSeekService.js...
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> if (Test-Path "backend\src\services\ai\deepSeekService.js") {
+>>     $deepseekContent = Get-Content "backend\src\services\ai\deepSeekService.js" -Encoding UTF8 -Raw
+>>     $lineCount = ($deepseekContent -split "`n").Count
+>>
+>>     Write-Host "  📊 Nombre de lignes : $lineCount`n" -ForegroundColor White
+>>     Write-Host "========== DÉBUT deepSeekService.js ==========" -ForegroundColor Cyan
+>>     Write-Host $deepseekContent -ForegroundColor White
+>>     Write-Host "========== FIN deepSeekService.js ==========" -ForegroundColor Cyan
+>> } else {
+>>     Write-Host "  ❌ Fichier non trouvé" -ForegroundColor Red
+>> }
+  📊 Nombre de lignes : 517
+
+========== DÉBUT deepSeekService.js ==========
+// PATH: backend/src/services/ai/deepSeekService.js
+// VERSION: v3.2 - PROMPT JSON POUR COSMETICS + DETERGENTS
+
+const axios = require('axios');
+const crypto = require('crypto');
+const aiCache = require('../aiCache.service');
+
+// 📄 CACHE VERSION
+const CACHE_VERSION = 'v3.2'; // v3.2: Prompt JSON cosmétiques + détergents + Force estimation
+
+class DeepSeekService {
+  constructor() {
+    this.apiKey = process.env.DEEPSEEK_API_KEY || '';
+    this.apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+    this.model = 'deepseek-chat';
+
+    if (!this.apiKey) {
+      console.warn('[DeepSeek] API key not configured');
+    }
+  }
+
+  async analyze(prompt, systemPrompt = null) {
+    const cacheInput = JSON.stringify({ prompt, systemPrompt });
+    const cacheHash = crypto.createHash('md5').update(cacheInput).digest('hex');
+    const cacheKey = `deepseek:analyze:${CACHE_VERSION}:${cacheHash}`;
+
+    const cached = await aiCache.get(cacheKey);
+    if (cached) {
+      console.log('[DeepSeek] ✅ CACHE HIT');
+      return cached;
+    }
+
+    try {
+      const messages = [];
+      if (systemPrompt) {
+        messages.push({ role: 'system', content: systemPrompt });
+      }
+      messages.push({ role: 'user', content: prompt });
+
+      console.log('[DeepSeek] Sending request...');
+
+      const response = await axios.post(
+        this.apiUrl,
+        {
+          model: this.model,
+          messages,
+          temperature: 0.3,
+          max_tokens: 2000
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 90000
+        }
+      );
+
+      console.log('[DeepSeek] Response received');
+
+      const result = response.data.choices[0].message.content;
+      await aiCache.set(cacheKey, result, 2592000);
+      console.log('[DeepSeek] ✅ Résultat sauvegardé en cache');
+
+      return result;
+
+    } catch (error) {
+      console.error('[DeepSeek] API error:', error.response?.data || error.message);
+
+      if (process.env.OPENAI_API_KEY) {
+        return this.fallbackToOpenAI(prompt, systemPrompt);
+      }
+
+      throw new Error('AI analysis failed');
+    }
+  }
+
+  async fallbackToOpenAI(prompt, systemPrompt) {
+    console.log('[DeepSeek] Falling back to OpenAI...');
+    try {
+      const messages = [];
+      if (systemPrompt) {
+        messages.push({ role: 'system', content: systemPrompt });
+      }
+      messages.push({ role: 'user', content: prompt });
+
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-4-turbo',
+          messages,
+          temperature: 0.3,
+          max_tokens: 2000
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 90000
+        }
+      );
+
+      console.log('[DeepSeek] OpenAI fallback successful');
+      const result = response.data.choices[0].message.content;
+      await aiCache.set(cacheKey, result, 2592000);
+      return result;
+
+    } catch (error) {
+      console.error('[DeepSeek] OpenAI fallback failed:', error.message);
+      throw new Error('Both AI services failed');
+    }
+  }
+
+  async analyzeProduct(productData, category) {
+    const systemPrompt = this.getSystemPromptForCategory(category);
+    const userPrompt = this.buildProductPrompt(productData, category);
+
+    const response = await this.analyze(userPrompt, systemPrompt);
+
+    return this.parseAIResponse(response, category);
+  }
+
+  getSystemPromptForCategory(category) {
+    const prompts = {
+      food: `Tu es un expert certifié en nutrition (équivalent ANSES/EFSA).
+
+RÈGLES ABSOLUES :
+1. Réponds UNIQUEMENT en JSON valide (aucun texte avant/après le JSON)
+2. Base tes estimations sur des SOURCES scientifiques (tables CIQUAL, USDA, études publiées)
+3. Tu DOIS TOUJOURS estimer les valeurs nutritionnelles manquantes en analysant :
+   - La liste d'ingrédients (ordre = proportions relatives)
+   - Les valeurs typiques des aliments similaires documentés
+   - Les tables nutritionnelles officielles (CIQUAL, USDA, études)
+4. Si tu ne peux vraiment pas estimer avec >30% de confiance, mets 0 (JAMAIS null)
+5. Indique TOUJOURS ton niveau de confiance par nutriment (0-100%)
+
+FORMAT JSON OBLIGATOIRE :
+{
+  "nutriments": {
+    "energy_100g": number (JAMAIS null),
+    "proteins_100g": number (JAMAIS null),
+    "carbohydrates_100g": number (JAMAIS null),
+    "sugars_100g": number (JAMAIS null),
+    "fat_100g": number (JAMAIS null),
+    "saturated_fat_100g": number (JAMAIS null),
+    "salt_100g": number (JAMAIS null),
+    "sodium_100g": number (JAMAIS null),
+    "fiber_100g": number (JAMAIS null)
+  },
+  "confidence": {
+    "global": number (0-100),
+    "per_nutrient": {
+      "sugars_100g": number,
+      "saturated_fat_100g": number,
+      "salt_100g": number
+    }
+  },
+  "methodology": "string expliquant ta méthode d'estimation",
+  "sources": ["source1", "source2"],
+  "warnings": ["avertissement1 si pertinent"]
+}
+
+GARDE-FOUS PHYSIQUES (rejette si dépassé) :
+- sugars_100g : 0-100 g/100g
+- saturated_fat_100g : 0-50 g/100g
+- salt_100g : 0-10 g/100g
+- COHÉRENCE : sugars_100g ≤ carbohydrates_100g
+- COHÉRENCE : saturated_fat_100g ≤ fat_100g
+
+EXEMPLE CONCRET :
+Si ingrédients = "Cacahuètes 55%, sirop de riz, miel"
+→ sugars_100g: 25-30 (sirop+miel dominants après cacahuètes)
+→ saturated_fat_100g: 8-10 (cacahuètes typiques)
+→ salt_100g: 0.3-0.5 (trace naturelle + possible ajout)`,
+
+      cosmetics: `Tu es un expert certifié en cosmétique et dermatologie (ANSM/SCCS).
+
+RÈGLES ABSOLUES :
+1. Réponds UNIQUEMENT en JSON valide (aucun texte avant/après)
+2. Analyse la liste INCI complète
+3. Identifie TOUS les ingrédients problématiques
+
+FORMAT JSON OBLIGATOIRE :
+{
+  "ingredients": [
+    {
+      "inci": "nom INCI exact",
+      "function": "émollient|conservateur|tensioactif|parfum|colorant|autre",
+      "origin": "naturel|synthétique|unknown",
+      "concerns": ["irritant", "allergène", "comedogène"],
+      "isEndocrineDisruptor": false
+    }
+  ],
+  "allergens": ["nom ingrédient allergène 1", "nom ingrédient allergène 2"],
+  "endocrineDisruptors": ["nom perturbateur 1"],
+  "certifications": ["Bio", "Vegan", "Cruelty-Free"],
+  "healthScore": 0-100,
+  "environmentScore": 0-100,
+  "confidence": 0-100
+}
+
+INGRÉDIENTS À SIGNALER :
+- Perturbateurs endocriniens : parabènes, phtalates, BHA/BHT
+- Allergènes : parfum, linalool, limonene, citral
+- Irritants : SLS, SLES, alcool dénaturé
+- Comédogènes : huile de coco, silicones lourds
+
+RETOURNE LE JSON (rien d'autre).`,
+
+      detergents: `Tu es un expert en produits ménagers (REACH/ECHA).
+
+RÈGLES ABSOLUES :
+1. Réponds UNIQUEMENT en JSON valide
+2. Analyse composition et impact environnemental
+
+FORMAT JSON OBLIGATOIRE :
+{
+  "composition": [
+    {
+      "ingredient": "nom",
+      "function": "tensioactif|solvant|parfum|agent blanchissant",
+      "concerns": ["irritant", "toxique"],
+      "biodegradable": true
+    }
+  ],
+  "surfactants": ["tensioactif1"],
+  "ecolabels": ["Ecolabel EU", "Nature & Progrès"],
+  "healthScore": 0-100,
+  "environmentScore": 0-100,
+  "confidence": 0-100
+}
+
+RETOURNE LE JSON (rien d'autre).`
+    };
+
+    return prompts[category] || prompts.food;
+  }
+
+  buildProductPrompt(productData, category) {
+    if (category === 'cosmetics') {
+      return `Analyse ce produit cosmétique :
+
+Nom: ${productData.name || productData.product_name || 'Non spécifié'}
+Marque: ${productData.brand || 'Non spécifiée'}
+Liste INCI: ${productData.inci || productData.ingredients || productData.composition || 'Non fournie'}
+
+RETOURNE LE JSON.`;
+    }
+
+    if (category === 'detergents') {
+      return `Analyse ce produit ménager :
+
+Nom: ${productData.name || productData.product_name || 'Non spécifié'}
+Marque: ${productData.brand || 'Non spécifiée'}
+Composition: ${productData.composition || productData.ingredients || 'Non fournie'}
+
+RETOURNE LE JSON.`;
+    }
+
+    // Alimentaire
+    const existingNutriments = productData.nutriments || {};
+    const ingredients = productData.ingredients_text || productData.ingredients || 'Non fournis';
+    const categories = productData.categories || 'Non spécifiée';
+
+    return `PRODUIT À ANALYSER :
+- Nom : ${productData.name || productData.product_name || 'Non spécifié'}
+- Marque : ${productData.brand || 'Non spécifiée'}
+- Ingrédients : ${ingredients}
+- Catégorie : ${categories}
+
+DONNÉES NUTRITIONNELLES EXISTANTES (ne PAS ré-estimer ces valeurs) :
+${JSON.stringify(existingNutriments, null, 2)}
+
+MISSION CRITIQUE :
+1. Identifie les nutriments MANQUANTS (ceux qui sont null, undefined ou absents)
+2. ESTIME-LES TOUJOURS en te basant sur :
+   - Position des ingrédients (ordre = importance décroissante)
+   - Catégorie du produit (tables moyennes CIQUAL/USDA)
+   - Produits similaires documentés dans la littérature scientifique
+3. Analyse les PROPORTIONS :
+   - 1er ingrédient = souvent 40-60% du produit
+   - 2ème ingrédient = souvent 15-25%
+   - 3ème ingrédient = souvent 5-15%
+
+PRIORITÉ D'ESTIMATION (si manquants) :
+- sugars_100g : ANALYSE les sucres ajoutés (sirop, miel, dextrose) + sucres naturels
+- saturated_fat_100g : ANALYSE les huiles/graisses indiquées (palme, coco = élevé)
+- salt_100g : ANALYSE le sel/sodium + ingrédients salés (sauce soja, fromage)
+
+GARDE-FOUS À RESPECTER :
+- Sucres : 0-100 g/100g (max physique)
+- Graisses saturées : 0-50 g/100g
+- Sel : 0-10 g/100g
+- Cohérence : sugars_100g ≤ carbohydrates_100g
+- Cohérence : saturated_fat_100g ≤ fat_100g
+
+IMPORTANT CRITIQUE :
+- NE METS JAMAIS null pour un nutriment
+- Si vraiment impossible d'estimer (liste ingrédients vide), mets 0
+- Indique une confiance faible (20-40%) mais ESTIME quand même
+
+RETOURNE LE JSON (rien d'autre, pas de texte explicatif avant ou après).`;
+  }
+
+  parseAIResponse(response, category) {
+    // COSMETICS : Parser JSON
+    if (category === 'cosmetics') {
+      try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error('[DeepSeek] ❌ Pas de JSON cosmetics:', response.substring(0, 200));
+          return { ingredients: [], allergens: [], endocrineDisruptors: [], certifications: [] };
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        console.log('[DeepSeek] ✅ Cosmetics parsed:', JSON.stringify(parsed).substring(0, 200));
+
+        return {
+          ingredients: parsed.ingredients || [],
+          allergens: parsed.allergens || [],
+          endocrineDisruptors: parsed.endocrineDisruptors || [],
+          certifications: parsed.certifications || [],
+          healthScore: parsed.healthScore || 50,
+          environmentScore: parsed.environmentScore || 50,
+          confidence: parsed.confidence || 30
+        };
+      } catch (error) {
+        console.error('[DeepSeek] ❌ Erreur parsing cosmetics:', error.message);
+        return { ingredients: [], allergens: [], endocrineDisruptors: [], certifications: [] };
+      }
+    }
+
+    // DETERGENTS : Parser JSON
+    if (category === 'detergents') {
+      try {
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error('[DeepSeek] ❌ Pas de JSON detergents:', response.substring(0, 200));
+          return { composition: [], surfactants: [], ecolabels: [] };
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        console.log('[DeepSeek] ✅ Detergents parsed:', JSON.stringify(parsed).substring(0, 200));
+
+        return {
+          composition: parsed.composition || [],
+          surfactants: parsed.surfactants || [],
+          ecolabels: parsed.ecolabels || [],
+          healthScore: parsed.healthScore || 50,
+          environmentScore: parsed.environmentScore || 50,
+          confidence: parsed.confidence || 30
+        };
+      } catch (error) {
+        console.error('[DeepSeek] ❌ Erreur parsing detergents:', error.message);
+        return { composition: [], surfactants: [], ecolabels: [] };
+      }
+    }
+
+    // FOOD : Parser JSON nutritionnel
+    try {
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        console.error('[DeepSeek] ❌ Pas de JSON dans la réponse:', response.substring(0, 200));
+        throw new Error('No valid JSON in AI response');
+      }
+
+      const parsed = JSON.parse(jsonMatch[0]);
+      const validated = this.validateNutrientData(parsed);
+
+      const adaptedNutriments = {};
+      const n = validated.nutriments;
+
+      if (n.sugars_100g !== undefined && n.sugars_100g !== null) adaptedNutriments.sugars = n.sugars_100g;
+      if (n.saturated_fat_100g !== undefined && n.saturated_fat_100g !== null) adaptedNutriments.saturatedFat = n.saturated_fat_100g;
+      if (n.salt_100g !== undefined && n.salt_100g !== null) adaptedNutriments.salt = n.salt_100g;
+      if (n.fiber_100g !== undefined && n.fiber_100g !== null) adaptedNutriments.fiber = n.fiber_100g;
+      if (n.energy_100g !== undefined && n.energy_100g !== null) adaptedNutriments.energy = n.energy_100g;
+      if (n.proteins_100g !== undefined && n.proteins_100g !== null) adaptedNutriments.proteins = n.proteins_100g;
+      if (n.carbohydrates_100g !== undefined && n.carbohydrates_100g !== null) adaptedNutriments.carbohydrates = n.carbohydrates_100g;
+      if (n.fat_100g !== undefined && n.fat_100g !== null) adaptedNutriments.fat = n.fat_100g;
+
+      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', JSON.stringify(adaptedNutriments));
+
+      return {
+        nutriments: adaptedNutriments,
+        confidence: validated.confidence,
+        methodology: validated.methodology || 'Estimation IA basée sur ingrédients et catégorie',
+        sources: validated.sources || ['Tables CIQUAL', 'USDA'],
+        warnings: validated.warnings || [],
+        timestamp: new Date(),
+        aiModel: 'deepseek',
+        category: 'food',
+        validated: true
+      };
+
+    } catch (error) {
+      console.error('[DeepSeek] ❌ Erreur parsing JSON:', error.message);
+      console.error('[DeepSeek] Réponse brute:', response.substring(0, 500));
+
+      return {
+        nutriments: {},
+        confidence: { global: 0, per_nutrient: {} },
+        methodology: 'Échec extraction',
+        sources: [],
+        warnings: ['Impossible de parser la réponse IA'],
+        timestamp: new Date(),
+        aiModel: 'deepseek',
+        category: 'food',
+        validated: false,
+        error: error.message
+      };
+    }
+  }
+
+  validateNutrientData(parsed) {
+    const nutriments = parsed.nutriments || {};
+    const warnings = parsed.warnings || [];
+
+    const limits = {
+      sugars_100g: { min: 0, max: 100 },
+      saturated_fat_100g: { min: 0, max: 50 },
+      salt_100g: { min: 0, max: 10 },
+      sodium_100g: { min: 0, max: 4000 },
+      fat_100g: { min: 0, max: 100 },
+      carbohydrates_100g: { min: 0, max: 100 },
+      proteins_100g: { min: 0, max: 100 },
+      fiber_100g: { min: 0, max: 50 }
+    };
+
+    Object.keys(nutriments).forEach(key => {
+      const value = nutriments[key];
+      if (value !== null && limits[key]) {
+        if (value < limits[key].min || value > limits[key].max) {
+          console.warn(`[DeepSeek]⚠️ ${key} hors limites (${value}) → null`);
+          nutriments[key] = null;
+          warnings.push(`${key} hors limites physiques`);
+        }
+      }
+    });
+
+    if (nutriments.sugars_100g > nutriments.carbohydrates_100g && nutriments.carbohydrates_100g !== null) {
+      console.warn('[DeepSeek] ⚠️ sugars > carbs → correction');
+      nutriments.sugars_100g = nutriments.carbohydrates_100g;
+      warnings.push('Sucres corrigés pour cohérence');
+    }
+
+    if (nutriments.saturated_fat_100g > nutriments.fat_100g && nutriments.fat_100g !== null) {
+      console.warn('[DeepSeek] ⚠️ sat_fat > fat → correction');
+      nutriments.saturated_fat_100g = nutriments.fat_100g;
+      warnings.push('Graisses saturées corrigées pour cohérence');
+    }
+
+    return {
+      ...parsed,
+      nutriments,
+      warnings
+    };
+  }
+
+  extractScore(text, type) {
+    const patterns = [
+      new RegExp(`${type}[:\\s]*(\\d+)`, 'i'),
+      new RegExp(`score[\\s]+${type}[:\\s]*(\\d+)`, 'i'),
+      new RegExp(`${type}[\\s]*:[\\s]*(\\d+)`, 'i')
+    ];
+
+    for (const pattern of patterns) {
+      const match = text.match(pattern);
+      if (match) {
+        return Math.min(100, Math.max(0, parseInt(match[1])));
+      }
+    }
+
+    return 50;
+  }
+
+  extractListItems(text, keyword) {
+    const lines = text.split('\n');
+    const items = [];
+    let capturing = false;
+
+    for (const line of lines) {
+      if (line.toLowerCase().includes(keyword)) {
+        capturing = true;
+        continue;
+      }
+
+      if (capturing && line.trim()) {
+        if (line.match(/^[A-Z]/)) {
+          capturing = false;
+          continue;
+        }
+
+        const cleaned = line.replace(/^[-•*]\s*/, '').trim();
+        if (cleaned && items.length < 5) {
+          items.push(cleaned);
+        }
+      }
+    }
+
+    return items;
+  }
+
+  async chat(message, context = {}) {
+    const systemPrompt = `Tu es l'assistant nutritionnel ECOLOJIA.
+    Tu aides les utilisateurs à comprendre les analyses de produits et à faire des choix plus sains.
+    Sois bienveillant, pédagogue et scientifiquement précis.
+    ${context.product ? `Produit en contexte: ${context.product.name}` : ''}`;
+
+    const userPrompt = message;
+
+    return this.analyze(userPrompt, systemPrompt);
+  }
+}
+
+module.exports = new DeepSeekService();
+========== FIN deepSeekService.js ==========
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> # 2. Analyser aiEducation.service.js
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "`n📚 Analyse aiEducation.service.js...`n" -ForegroundColor Yellow
+
+📚 Analyse aiEducation.service.js...
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> if (Test-Path "backend\src\services\aiEducation.service.js") {
+>>     $eduContent = Get-Content "backend\src\services\aiEducation.service.js" -Encoding UTF8 -Raw
+>>     $lineCount = ($eduContent -split "`n").Count
+>>
+>>     Write-Host "  📊 Nombre de lignes : $lineCount`n" -ForegroundColor White
+>>     Write-Host "========== DÉBUT aiEducation.service.js ==========" -ForegroundColor Cyan
+>>     Write-Host $eduContent -ForegroundColor White
+>>     Write-Host "========== FIN aiEducation.service.js ==========" -ForegroundColor Cyan
+>> } else {
+>>     Write-Host "  ❌ Fichier non trouvé" -ForegroundColor Red
+>> }
+  📊 Nombre de lignes : 390
+
+========== DÉBUT aiEducation.service.js ==========
+const deepSeekService = require('./ai/deepSeekService');
+
+/**
+ * AI EDUCATION SERVICE - ECOLOJIA V3.1
+ * Service IA pédagogique pour cosmétiques/détergents
+ * Répond questions scientifiques, compare produits, explique scores
+ *
+ * RÈGLES STRICTES :
+ * - Jamais d'allégation médicale
+ * - Toujours sourcer (ANSES, EFSA, SCCS, OMS)
+ * - Ton neutre et pédagogique
+ * - Disclaimers santé automatiques
+ */
+
+class AIEducationService {
+
+  /**
+   * MÉTHODE 1 : Expliquer le score d'un produit
+   * Usage : User scanne crème Nivea 58/100 → "Pourquoi ce score ?"
+   */
+  async explainProductScore(product, userProfile = {}) {
+    try {
+      console.log(`[AI Education] Explication score produit : ${product.name}`);
+
+      // Construire contexte produit
+      const productContext = this._buildProductContext(product);
+
+      // Prompt éducatif strict
+      const prompt = `Tu es un éducateur scientifique spécialisé en cosmétiques/détergents.
+
+PRODUIT À EXPLIQUER :
+${productContext}
+
+PROFIL UTILISATEUR :
+- Régime : ${userProfile.diet || 'Non spécifié'}
+- Allergies : ${userProfile.allergens?.join(', ') || 'Aucune'}
+- Objectifs : ${userProfile.goals?.join(', ') || 'Santé générale'}
+
+CONSIGNE :
+Explique en 4 blocs POURQUOI ce produit a ce score. Utilise un ton pédagogique, neutre, sourcé.
+
+FORMAT OBLIGATOIRE :
+1. **CONSTAT** (1-2 phrases simples)
+   "Ce produit obtient [score]/100 principalement à cause de [raison principale]."
+
+2. **EXPLICATION SCIENTIFIQUE** (3-4 phrases avec sources)
+   Explique les composants problématiques ou positifs.
+   Cite TOUJOURS les sources : ANSES, EFSA, SCCS, OMS, études PubMed.
+   Donne des chiffres concrets (ex: "peut affecter 2-5% population").
+
+3. **COMPARAISON CONTEXTE** (2-3 phrases)
+   Compare avec standards du marché.
+   "La moyenne des crèmes hydratantes est de 65/100."
+
+4. **ÉDUCATION SANS ALARME** (2-3 phrases)
+   Nuance : "Cela ne signifie pas dangereux, mais..."
+   Conseil : "Privilégier produits sans X si peau sensible."
+
+RÈGLES STRICTES :
+❌ Jamais "ce produit est dangereux"
+❌ Jamais "vous devez arrêter"
+❌ Jamais d'allégation médicale
+✅ Toujours "contient X classé Y par ANSES"
+✅ Toujours "peut provoquer Z chez W% population"
+✅ Toujours sourcer avec organisme officiel
+
+Réponds maintenant :`;
+
+      // Appeler DeepSeek
+      const response = await deepSeekService.analyze(prompt);
+
+      // Ajouter disclaimers automatiques
+      const explanation = this._addDisclaimers(response, 'explanation');
+
+      console.log(`[AI Education] ✅ Explication générée (${explanation.length} caractères)`);
+
+      return {
+        success: true,
+        explanation,
+        sources: this._extractSources(response),
+        disclaimerShown: true
+      };
+
+    } catch (error) {
+      console.error('[AI Education] ❌ Erreur explication score :', error);
+      return {
+        success: false,
+        error: 'Impossible de générer l\'explication pour le moment.'
+      };
+    }
+  }
+
+  /**
+   * MÉTHODE 2 : Comparer 2-3 produits scientifiquement
+   * Usage : User hésite entre 3 crèmes → "Laquelle choisir ?"
+   */
+  async compareProducts(products, userProfile = {}, comparisonCriteria = 'overall') {
+    try {
+      console.log(`[AI Education] Comparaison de ${products.length} produits`);
+
+      if (products.length < 2 || products.length > 3) {
+        throw new Error('Comparaison limitée à 2-3 produits');
+      }
+
+      // Construire tableau comparatif
+      const productsContext = products.map((p, i) =>
+        `PRODUIT ${i + 1} : ${p.name} (${p.brand || 'Marque inconnue'})
+- Score global : ${p.scores?.overallScore || 'N/A'}/100
+- Score santé : ${p.scores?.healthScore || 'N/A'}/100
+- Score environnement : ${p.scores?.environmentScore || 'N/A'}/100
+- Perturbateurs endocriniens : ${p.cosmeticData?.endocrineDisruptors?.length || 0}
+- Prix estimé : ${p.price || 'N/A'}€
+- Labels : ${p.cosmeticData?.labels?.join(', ') || 'Aucun'}`
+      ).join('\n\n');
+
+      const prompt = `Tu es un comparateur scientifique neutre spécialisé en cosmétiques/détergents.
+
+PRODUITS À COMPARER :
+${productsContext}
+
+PROFIL UTILISATEUR :
+- Priorité : ${comparisonCriteria === 'health' ? 'Santé avant tout' : comparisonCriteria === 'eco' ? 'Impact environnemental' : 'Équilibre global'}
+- Budget : ${userProfile.budget || 'Non spécifié'}
+- Peau sensible : ${userProfile.sensitiveSkin ? 'Oui' : 'Non'}
+
+CONSIGNE :
+Compare ces produits de manière FACTUELLE et ÉDUCATIVE.
+
+FORMAT OBLIGATOIRE :
+1. **CLASSEMENT OBJECTIF** (1-2 phrases)
+   "Selon votre priorité [critère], le classement est : Produit X > Y > Z."
+
+2. **ANALYSE PAR PRODUIT** (3-4 phrases chacun)
+   - Points forts factuels (ex: "sans parabènes", "bio certifié")
+   - Points faibles factuels (ex: "contient parfum synthétique")
+   - Pour qui c'est adapté (ex: "idéal peau normale, à éviter si allergies")
+
+3. **RECOMMANDATION PERSONNALISÉE** (2-3 phrases)
+   "Selon votre profil (${userProfile.sensitiveSkin ? 'peau sensible' : 'peau normale'}), je recommande le Produit X car..."
+
+4. **ÉDUCATION TRANSPARENTE** (2-3 phrases)
+   "Aucun produit n'est parfait à 100/100. L'important est..."
+
+RÈGLES STRICTES :
+❌ Jamais dénigrer une marque ("Nivea est mauvais")
+✅ Toujours factuel ("Nivea contient X, classé Y par SCCS")
+❌ Jamais absolu ("le meilleur produit")
+✅ Toujours contextuel ("le plus adapté à votre profil")
+
+Réponds maintenant :`;
+
+      const response = await deepSeekService.analyze(prompt);
+
+      const comparison = this._addDisclaimers(response, 'comparison');
+
+      console.log(`[AI Education] ✅ Comparaison générée`);
+
+      return {
+        success: true,
+        comparison,
+        productsCompared: products.map(p => ({ id: p._id, name: p.name })),
+        disclaimerShown: true
+      };
+
+    } catch (error) {
+      console.error('[AI Education] ❌ Erreur comparaison :', error);
+      return {
+        success: false,
+        error: 'Impossible de comparer les produits pour le moment.'
+      };
+    }
+  }
+
+  /**
+   * MÉTHODE 3 : Répondre question libre utilisateur
+   * Usage : "C'est quoi un parabène ?", "Le silicone est-il mauvais ?"
+   */
+  async answerQuestion(question, context = {}) {
+    try {
+      console.log(`[AI Education] Question : "${question}"`);
+
+      // Vérifier question valide (pas vide, pas trop longue)
+      if (!question || question.length < 5) {
+        throw new Error('Question trop courte');
+      }
+
+      if (question.length > 500) {
+        throw new Error('Question trop longue (max 500 caractères)');
+      }
+
+      // Contexte produit si disponible
+      const productContext = context.product ?
+        `CONTEXTE PRODUIT :
+Produit scanné : ${context.product.name}
+Score : ${context.product.scores?.overallScore || 'N/A'}/100
+Catégorie : ${context.product.categoryType || 'N/A'}` :
+        'CONTEXTE : Question générale (pas de produit scanné)';
+
+      const prompt = `Tu es un éducateur scientifique spécialisé en cosmétiques/détergents/ingrédients.
+
+${productContext}
+
+QUESTION UTILISATEUR :
+"${question}"
+
+CONSIGNE :
+Réponds de manière PÉDAGOGIQUE, SOURCÉE, NEUTRE.
+
+FORMAT OBLIGATOIRE :
+1. **RÉPONSE DIRECTE** (2-3 phrases simples)
+   Réponds à la question clairement.
+
+2. **EXPLICATION SCIENTIFIQUE** (3-5 phrases)
+   - Définition claire (ex: "Un parabène est un conservateur chimique...")
+   - Pourquoi c'est utilisé (ex: "Empêche croissance bactérienne...")
+   - Ce que dit la science (ex: "Selon ANSES 2019, les parabènes...")
+
+3. **NUANCE IMPORTANTE** (2-3 phrases)
+   - Pas tout noir ou blanc
+   - "Certains sont autorisés, d'autres interdits"
+   - "Danger dépend de concentration, fréquence, type"
+
+4. **SOURCES OFFICIELLES** (liste)
+   - ANSES rapport X (URL)
+   - SCCS opinion Y (URL)
+   - Étude PubMed Z (URL)
+
+RÈGLES STRICTES :
+❌ Jamais "c'est dangereux" sans nuance
+❌ Jamais "vous devez éviter" (prescriptif)
+✅ Toujours "classé X par organisme Y"
+✅ Toujours "peut affecter Z% population selon étude W"
+✅ Toujours sourcer avec organisme officiel
+
+Si question hors sujet (politique, religion, etc.) :
+"Je suis spécialisé en cosmétiques/détergents/ingrédients. Je ne peux pas répondre à cette question."
+
+Réponds maintenant :`;
+
+      const response = await deepSeekService.analyze(prompt);
+
+      const answer = this._addDisclaimers(response, 'question');
+
+      console.log(`[AI Education] ✅ Réponse générée`);
+
+      return {
+        success: true,
+        answer,
+        question,
+        sources: this._extractSources(response),
+        disclaimerShown: true
+      };
+
+    } catch (error) {
+      console.error('[AI Education] ❌ Erreur réponse question :', error);
+      return {
+        success: false,
+        error: error.message || 'Impossible de répondre pour le moment.'
+      };
+    }
+  }
+
+  /**
+   * MÉTHODE 4 : Suggérer alternatives selon profil
+   * Usage : Produit 58/100 → "Alternatives adaptées à MOI"
+   */
+  async suggestAlternatives(product, userProfile = {}, count = 3) {
+    try {
+      console.log(`[AI Education] Recherche ${count} alternatives pour : ${product.name}`);
+
+      // Cette méthode sera enrichie avec recherche en base MongoDB
+      // Pour l'instant, on retourne une structure de réponse
+
+      return {
+        success: true,
+        message: 'Méthode en cours d\'implémentation. Connecter à MongoDB pour recherche.',
+        product: { id: product._id, name: product.name, score: product.scores?.overallScore }
+      };
+
+    } catch (error) {
+      console.error('[AI Education] ❌ Erreur suggestions alternatives :', error);
+      return {
+        success: false,
+        error: 'Impossible de suggérer alternatives pour le moment.'
+      };
+    }
+  }
+
+  // ============================================================================
+  // MÉTHODES UTILITAIRES PRIVÉES
+  // ============================================================================
+
+  /**
+   * Construire contexte produit pour prompt IA
+   */
+  _buildProductContext(product) {
+    const category = product.categoryType || 'cosmetic';
+
+    if (category === 'cosmetic') {
+      return `Nom : ${product.name}
+Marque : ${product.brand || 'Non spécifiée'}
+Catégorie : Cosmétique
+Score global : ${product.scores?.overallScore || 'N/A'}/100
+Score santé : ${product.scores?.healthScore || 'N/A'}/100
+Score environnement : ${product.scores?.environmentScore || 'N/A'}/100
+
+Détail scores :
+- Ingrédients : ${product.scores?.breakdown?.ingredients?.score || 'N/A'}/100
+- Perturbateurs endocriniens : ${product.cosmeticData?.endocrineDisruptors?.length || 0} détectés
+- Allergènes : ${product.cosmeticData?.allergens?.length || 0} détectés
+- Biodégradabilité : ${product.cosmeticData?.biodegradability || 'N/A'}%
+- Labels : ${product.cosmeticData?.labels?.join(', ') || 'Aucun'}
+
+Composition INCI (premiers ingrédients) :
+${product.cosmeticData?.inci?.slice(0, 10).join(', ') || 'Non disponible'}`;
+    }
+
+    if (category === 'detergent') {
+      return `Nom : ${product.name}
+Marque : ${product.brand || 'Non spécifiée'}
+Catégorie : Détergent/Ménage
+Score global : ${product.scores?.overallScore || 'N/A'}/100
+Score santé : ${product.scores?.healthScore || 'N/A'}/100
+Score environnement : ${product.scores?.environmentScore || 'N/A'}/100
+
+Détail scores :
+- Composition : ${product.scores?.breakdown?.composition?.score || 'N/A'}/100
+- Biodégradabilité : ${product.detergentData?.biodegradability || 'N/A'}%
+- Écotoxicité : ${product.detergentData?.ecotoxicity || 'N/A'}
+- Labels : ${product.detergentData?.labels?.join(', ') || 'Aucun'}
+
+Composition (principaux composants) :
+${product.detergentData?.composition?.slice(0, 8).join(', ') || 'Non disponible'}`;
+    }
+
+    return `Produit : ${product.name}
+Score : ${product.scores?.overallScore || 'N/A'}/100
+Catégorie : ${category}`;
+  }
+
+  /**
+   * Ajouter disclaimers santé/IA selon contexte
+   */
+  _addDisclaimers(content, type) {
+    const disclaimers = {
+      explanation: `
+
+---
+⚠️ **Information santé** : Cette analyse est générée par intelligence artificielle et ne remplace pas un avis médical personnalisé. En cas de doute, consultez un dermatologue ou professionnel de santé.
+
+📚 **Sources** : Les informations sont basées sur les données ANSES, EFSA, SCCS (Comité Scientifique Cosmétiques EU), et études scientifiques référencées.`,
+
+      comparison: `
+
+---
+⚠️ **Disclaimer comparaison** : Cette comparaison est basée sur des critères scientifiques objectifs. Le "meilleur" produit dépend de votre profil personnel (type de peau, allergies, budget). Toujours tester sur petite zone 48h avant utilisation complète.`,
+
+      question: `
+
+---
+🤖 **Assistant IA** : Je suis un assistant éducatif, pas un professionnel de santé. Mes réponses sont générées par intelligence artificielle et visent à informer, pas à prescrire. Toujours vérifier avec un professionnel en cas de doute.`
+    };
+
+    return content + (disclaimers[type] || disclaimers.question);
+  }
+
+  /**
+   * Extraire sources mentionnées dans réponse IA
+   */
+  _extractSources(content) {
+    const sources = [];
+
+    // Détecter mentions d'organismes
+    const organizations = ['ANSES', 'EFSA', 'SCCS', 'OMS', 'WHO', 'PubMed', 'ADEME', 'INSERM'];
+    organizations.forEach(org => {
+      if (content.includes(org)) {
+        sources.push({
+          organization: org,
+          mentioned: true
+        });
+      }
+    });
+
+    return sources.length > 0 ? sources : [{ organization: 'Général', mentioned: true }];
+  }
+}
+
+module.exports = new AIEducationService();
+
+
+========== FIN aiEducation.service.js ==========
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> # 3. Analyser aiEnrichment.service.js
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "`n🔧 Analyse aiEnrichment.service.js...`n" -ForegroundColor Yellow
+
+🔧 Analyse aiEnrichment.service.js...
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> if (Test-Path "backend\src\services\aiEnrichment.service.js") {
+>>     $enrichContent = Get-Content "backend\src\services\aiEnrichment.service.js" -Encoding UTF8 -Raw
+>>     $lineCount = ($enrichContent -split "`n").Count
+>>
+>>     Write-Host "  📊 Nombre de lignes : $lineCount`n" -ForegroundColor White
+>>     Write-Host "========== DÉBUT aiEnrichment.service.js ==========" -ForegroundColor Cyan
+>>     Write-Host $enrichContent -ForegroundColor White
+>>     Write-Host "========== FIN aiEnrichment.service.js ==========" -ForegroundColor Cyan
+>> } else {
+>>     Write-Host "  ❌ Fichier non trouvé" -ForegroundColor Red
+>> }
+  📊 Nombre de lignes : 576
+
+========== DÉBUT aiEnrichment.service.js ==========
+const deepSeekService = require('./ai/deepSeekService');
+const nutrientCalculator = require('./nutrientCalculator');
+const logger = require('../utils/logger');
+const Product = require('../models/Product');
+
+/**
+ * ✅ ECOLOJIA V3 - AI Enrichment Service
+ * Enrichit les produits avec données manquantes via DeepSeek AI
+ */
+
+// Listes des additifs par risque
+const ADDITIVES_LISTS = {
+  SAFE: ['E300', 'E330', 'E440', 'E500', 'E322'],
+  MODERATE: ['E250', 'E251', 'E338'],
+  DANGEROUS: ['E102', 'E110', 'E123', 'E129', 'E951']
+};
+
+/**
+ * Enrichir produit alimentaire avec IA
+ */
+async function enrichFoodProduct(product, missingFields = []) {
+  try {
+    console.log(`[AI] Requesting new estimations for ${product.barcode} category: food`);
+
+    const response = await deepSeekService.analyzeProduct(product, 'food');
+
+    // ✅ FIX: Sécuriser l'affichage de la réponse
+    const displayResponse = () => {
+      if (!response) return "Response is null/undefined";
+      if (typeof response === "string") return response.substring(0, 200) + "...";
+      try {
+        const jsonStr = JSON.stringify(response);
+        return jsonStr ? jsonStr.substring(0, 200) + "..." : "Cannot stringify response";
+      } catch (e) {
+        return "Response not serializable";
+      }
+    };
+    console.log("[AI] Raw response:", displayResponse());
+
+    const parsed = parseAIResponseByCategory(response, 'food', missingFields);
+    console.log('[DEBUG] Parsed food:', JSON.stringify(parsed, null, 2));
+
+    // ============================================================================
+    // ✅ CALCULS AUTOMATIQUES (si DeepSeek n'a pas renvoyé)
+    // ============================================================================
+
+    // NOVA Group (si manquant)
+    if (!parsed.novaGroup && product.ingredients_text) {
+      parsed.novaGroup = nutrientCalculator.calculateNovaGroup(
+        product.ingredients_text,
+        product.product_name || ''
+      );
+      console.log('[AI] ✅ NOVA calculé automatiquement:', parsed.novaGroup);
+    }
+
+    // Nutri-Score (si manquant ET si nutriments disponibles)
+    if (!parsed.nutriScore && (parsed.sugars || product.nutriments)) {
+      const nutriments = {
+        energy: parsed.energy || product.nutriments?.energy,
+        sugars: parsed.sugars || product.nutriments?.sugars,
+        saturatedFat: parsed.saturatedFat || product.nutriments?.['saturated-fat'],
+        salt: parsed.salt || product.nutriments?.salt,
+        fiber: parsed.fiber || product.nutriments?.fiber,
+        proteins: parsed.protein || product.nutriments?.proteins
+      };
+      parsed.nutriScore = nutrientCalculator.calculateNutriScore(nutriments);
+      console.log('[AI] ✅ Nutri-Score calculé automatiquement:', parsed.nutriScore);
+    }
+
+    // Additifs (si manquant)
+    if ((!parsed.additives || parsed.additives.length === 0) && product.ingredients_text) {
+      parsed.additives = nutrientCalculator.extractAdditives(product.ingredients_text);
+      console.log('[AI] ✅ Additifs calculés automatiquement:', parsed.additives);
+    }
+
+    // Eco-Score (si manquant)
+    if (!parsed.ecoScore) {
+      parsed.ecoScore = nutrientCalculator.estimateEcoScore({
+        labels: product.labels || [],
+        novaGroup: parsed.novaGroup
+      });
+      console.log('[AI] ✅ Eco-Score calculé automatiquement:', parsed.ecoScore);
+    }
+
+
+    // ✅ NOUVEAU : Sauvegarder en base
+    if (parsed && Object.keys(parsed).length > 0) {
+      const updateData = {};
+
+      // Nutrition
+      if (parsed.sugars !== undefined) updateData['foodData.nutritionalInfo.sugars'] = parsed.sugars;
+      if (parsed.saturatedFat !== undefined) updateData['foodData.nutritionalInfo.saturatedFat'] = parsed.saturatedFat;
+      if (parsed.salt !== undefined) updateData['foodData.nutritionalInfo.salt'] = parsed.salt;
+      if (parsed.fiber !== undefined) updateData['foodData.nutritionalInfo.fiber'] = parsed.fiber;
+      if (parsed.protein !== undefined) updateData['foodData.nutritionalInfo.protein'] = parsed.protein;
+      if (parsed.carbs !== undefined) updateData['foodData.nutritionalInfo.carbs'] = parsed.carbs;
+
+      // Nova & Scores
+      if (parsed.novaGroup !== undefined) updateData['foodData.novaGroup'] = parsed.novaGroup;
+      if (parsed.nutriScore !== undefined) updateData['foodData.nutriScore'] = parsed.nutriScore;
+
+      // ✅ Additifs, EcoScore, Product Info
+      if (parsed.additives) updateData['foodData.additives'] = parsed.additives;
+      if (parsed.ecoScore !== undefined) updateData['foodData.ecoScore'] = parsed.ecoScore;
+      if (parsed.product_name !== undefined) updateData['product_name'] = parsed.product_name;
+      if (parsed.brands !== undefined) updateData['brands'] = parsed.brands;
+
+      // Metadata
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Alimentaire sauvegardé en base');
+    }
+
+
+    return {
+      success: true,
+      estimations: parsed,
+      aiEnriched: true
+    };
+  } catch (error) {
+    console.error('[AI] enrichFoodProduct failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Estimer valeurs nutritionnelles manquantes
+ */
+async function estimateMissingData(product, category = 'food', missingFields = []) {
+  try {
+    console.log(`[AI] Estimating ${missingFields.join(', ')} for category: ${category}`);
+
+    const response = await deepSeekService.analyzeProduct(product, category);
+
+    const parsed = parseAIResponseByCategory(response, category, missingFields);
+
+    if (!parsed) {
+      console.log('[AI] Parsed estimations: NULL');
+      return null;
+    }
+
+    console.log('[AI] Parsed estimations:', JSON.stringify(parsed).substring(0, 200));
+
+    return {
+      estimations: parsed,
+      estimatedAt: new Date(),
+      estimatedBy: 'deepseek-v3',
+      confidence: 0.75
+    };
+  } catch (error) {
+    console.error('[AI] estimateMissingData failed:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Enrichir avec résumé textuel IA
+ */
+async function enrichWithAISummary(product, category = 'food') {
+  try {
+    const response = await deepSeekService.analyzeProduct(product, category);
+
+    return {
+      success: true,
+      data: {
+        summary: response,
+        generatedAt: new Date()
+      }
+    };
+  } catch (error) {
+    console.error('[AI] enrichWithAISummary failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Enrichir produit cosmétique
+ */
+async function enrichCosmeticsProduct(product, missingFields = []) {
+  try {
+    console.log('[DEBUG enrichCosmeticsProduct] Barcode:', product.barcode);
+    const response = await deepSeekService.analyzeProduct(product, 'cosmetics');
+    const parsed = parseAIResponseByCategory(response, 'cosmetics', missingFields);
+    console.log('[DEBUG] Parsed:', JSON.stringify(parsed, null, 2));
+
+    if (parsed && (parsed.ingredients?.length || parsed.allergens?.length)) {
+      const updateData = {};
+      if (parsed.ingredients?.length) updateData['cosmeticsData.ingredients'] = parsed.ingredients;
+      if (parsed.allergens?.length) updateData['cosmeticsData.allergens'] = parsed.allergens;
+      if (parsed.endocrineDisruptors?.length) updateData['cosmeticsData.endocrineDisruptors'] = parsed.endocrineDisruptors;
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Cosmétique sauvegardé en base');
+      return { success: true, enriched: parsed };
+    }
+    return { success: true, enriched: {} };
+  } catch (error) {
+    console.error('[AI] ❌ Erreur:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+async function enrichDetergentsProduct(product, missingFields = []) {
+  try {
+    console.log('[DEBUG enrichDetergentsProduct] Barcode:', product.barcode);
+    const response = await deepSeekService.analyzeProduct(product, 'detergents');
+    const parsed = parseAIResponseByCategory(response, 'detergents', missingFields);
+    console.log('[DEBUG] Parsed detergent:', JSON.stringify(parsed, null, 2));
+
+    // ✅ NOUVEAU : Sauvegarder en base
+    if (parsed && Object.keys(parsed).length > 0) {
+      const updateData = {};
+
+      // Composition
+      if (parsed.composition?.length) updateData['detergentsData.composition'] = parsed.composition;
+      if (parsed.surfactants?.length) updateData['detergentsData.surfactants'] = parsed.surfactants;
+      if (parsed.ecolabels?.length) updateData['detergentsData.ecolabels'] = parsed.ecolabels;
+      if (parsed.biodegradability !== undefined) updateData['detergentsData.biodegradability'] = parsed.biodegradability;
+      if (parsed.ecotoxicity !== undefined) updateData['detergentsData.ecotoxicity'] = parsed.ecotoxicity;
+
+      // Metadata
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Détergent sauvegardé en base');
+    }
+
+    console.log('[DEBUG] Parsed:', JSON.stringify(parsed, null, 2));
+
+    if (parsed && (parsed.composition?.length || parsed.surfactants?.length)) {
+      const updateData = {};
+      if (parsed.composition?.length) updateData['detergentsData.composition'] = parsed.composition;
+      if (parsed.surfactants?.length) updateData['detergentsData.surfactants'] = parsed.surfactants;
+      if (parsed.ecolabels?.length) updateData['detergentsData.ecolabels'] = parsed.ecolabels;
+      updateData['metadata.lastEnriched'] = new Date();
+      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+
+      await Product.updateOne({ _id: product._id }, { $set: updateData });
+      console.log('[AI] ✅ Détergent sauvegardé en base');
+      return { success: true, enriched: parsed };
+    }
+    return { success: true, enriched: {} };
+  } catch (error) {
+    console.error('[AI] ❌ Erreur:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+/**
+ * Enrichir produit avec IA selon catégorie
+ */
+async function enrichProductWithAI(product, category = 'food', options = {}) {
+  const { force = false } = options;
+  try {
+    if (!product || !product.barcode) {
+      throw new Error('Produit invalide ou barcode manquant');
+    }
+
+    const missingFields = identifyMissingFields(product, category);
+
+    if (missingFields.length === 0 && !force) {
+      return {
+        success: true,
+        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand même',
+        aiEnriched: false
+      };
+    }
+
+    // Si force=true, on enrichit même sans champs manquants
+    if (force && missingFields.length === 0) {
+      console.log('[AI] Enrichissement forcé demandé - recalcul avec IA pour améliorer précision');
+    }
+
+    let result;
+    switch(category) {
+      case 'food':
+        result = await enrichFoodProduct(product, missingFields);
+        break;
+      case 'cosmetics':
+        result = await enrichCosmeticsProduct(product, missingFields);
+        break;
+      case 'detergents':
+        result = await enrichDetergentsProduct(product, missingFields);
+        break;
+      default:
+        throw new Error(`Catégorie non supportée: ${category}`);
+    }
+
+    // ✅ NOUVEAU : Recharger le produit et recalculer le score
+    if (result.success) {
+      console.log('[AI] ✅ Données enrichies sauvegardées, recalcul du score...');
+
+      // Recharger le produit avec les données fraîches
+      const freshProduct = await Product.findOne({ barcode: product.barcode });
+
+      if (freshProduct) {
+        // Recalculer le score avec le scoring engine
+        const scoringUnified = require('./scoringUnified');
+
+        // Préparer données pour scoring
+        const scoringData = {
+          category: freshProduct.category || category,
+          ...freshProduct.toObject()
+        };
+
+        console.log('[AI] 🔍 scoringData:', JSON.stringify({
+          category: scoringData.category,
+          hasIngredients: !!scoringData.cosmeticsData?.ingredients,
+          ingredientsCount: scoringData.cosmeticsData?.ingredients?.length
+        }, null, 2));
+
+        const newScores = scoringUnified.calculateScores(scoringData);
+
+        console.log('[AI] 🔍 newScores:', JSON.stringify(newScores, null, 2));
+
+        // Sauvegarder le nouveau score
+        await Product.updateOne(
+          { _id: freshProduct._id },
+          {
+            $set: {
+              scores: newScores,
+              'metadata.lastScored': new Date()
+            }
+          }
+        );
+
+        console.log('[AI] ✅ Score recalculé:', newScores?.overallScore || 'N/A');
+
+        result.newScore = newScores?.overallScore;
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('[AI] Enrichment failed:', error.message);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Identifier champs manquants
+ */
+function identifyMissingFields(product, category) {
+  const missing = [];
+
+  if (category === 'food') {
+    const nutriments = product.foodData?.nutritionalInfo || product.nutriments || {};
+
+    if (!nutriments.sugars && nutriments.sugars !== 0) missing.push('sugars');
+    if (!nutriments.saturatedFat && nutriments.saturatedFat !== 0) missing.push('saturatedFat');
+    if (!nutriments.salt && nutriments.salt !== 0) missing.push('salt');
+    if (!nutriments.fiber && nutriments.fiber !== 0) missing.push('fiber');
+  }
+
+  return missing;
+}
+
+/**
+ * ✅ CORRECTION COMPLÈTE: Parser réponse IA selon catégorie
+ */
+function parseAIResponseByCategory(response, category, missingFields) {
+  try {
+    // ✅ FIX: Gérer response objet OU string
+    let parsed;
+
+    if (typeof response === 'object' && response !== null) {
+      // DeepSeek retourne déjà un objet parsé
+      parsed = response;
+      console.log('[AI] Response is already an object');
+    } else if (typeof response === 'string') {
+      // Extraire JSON de la string
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        console.warn('[AI] No JSON found in response string');
+        return null;
+      }
+      parsed = JSON.parse(jsonMatch[0]);
+      console.log('[AI] Parsed JSON from string');
+    } else {
+      console.error('[AI] Invalid response type:', typeof response);
+      return null;
+    }
+
+    switch(category) {
+      case 'food':
+        return parseFoodResponse(parsed, missingFields);
+      case 'cosmetics':
+        return parseCosmeticsResponse(parsed, missingFields);
+      case 'detergents':
+        return parseDetergentsResponse(parsed, missingFields);
+      default:
+        return parsed;
+    }
+  } catch (error) {
+    console.error('[AI] Parse error:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Parser réponse alimentaire
+ */
+function parseFoodResponse(parsed, missingFields) {
+  const result = {};
+
+  // ✅ NOUVEAU : Extraire TOUS les nutriments renvoyés par l'IA
+  if (parsed.nutriments || parsed.nutritionalInfo) {
+    const nutriments = parsed.nutriments || parsed.nutritionalInfo;
+
+    // Extraire tous les nutriments disponibles (pas uniquement ceux manquants)
+    if (nutriments.sugars !== undefined && nutriments.sugars !== null) {
+      result.sugars = parseFloat(nutriments.sugars);
+    }
+    if (nutriments.saturatedFat !== undefined && nutriments.saturatedFat !== null) {
+      result.saturatedFat = parseFloat(nutriments.saturatedFat);
+    }
+    if (nutriments.salt !== undefined && nutriments.salt !== null) {
+      result.salt = parseFloat(nutriments.salt);
+    }
+    if (nutriments.fiber !== undefined && nutriments.fiber !== null) {
+      result.fiber = parseFloat(nutriments.fiber);
+    }
+    if (nutriments.energy !== undefined && nutriments.energy !== null) {
+      result.energy = parseFloat(nutriments.energy);
+    }
+    if (nutriments.proteins !== undefined && nutriments.proteins !== null) {
+      result.proteins = parseFloat(nutriments.proteins);
+    }
+    if (nutriments.carbohydrates !== undefined && nutriments.carbohydrates !== null) {
+      result.carbohydrates = parseFloat(nutriments.carbohydrates);
+    }
+    if (nutriments.fat !== undefined && nutriments.fat !== null) {
+      result.fat = parseFloat(nutriments.fat);
+    }
+  }
+
+  // Additifs
+  if (parsed.additives) {
+    result.additives = parsed.additives;
+  }
+
+  // NOVA
+  if (parsed.novaGroup) {
+    result.novaGroup = parseInt(parsed.novaGroup);
+  }
+
+
+  // ✅ Extraire product_name et brands si présents
+  if (parsed.product_info) {
+    if (parsed.product_info.product_name) {
+      result.product_name = parsed.product_info.product_name;
+    }
+    if (parsed.product_info.brands) {
+      result.brands = parsed.product_info.brands;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Parser réponse cosmétique
+ */
+function parseCosmeticsResponse(parsed, missingFields) {
+  const result = {};
+
+  if (parsed.ingredients) {
+    result.ingredients = parsed.ingredients;
+  }
+
+  if (parsed.allergens) {
+    result.allergens = parsed.allergens;
+  }
+
+  if (parsed.endocrineDisruptors) {
+    result.endocrineDisruptors = parsed.endocrineDisruptors;
+  }
+
+  return result;
+}
+
+/**
+ * Parser réponse détergent
+ */
+function parseDetergentsResponse(parsed, missingFields) {
+  const result = {};
+
+  // ✅ NOUVEAU : Normaliser composition en array de strings
+  if (parsed.composition && Array.isArray(parsed.composition)) {
+    // Si l'IA renvoie des objets détaillés
+    if (typeof parsed.composition[0] === 'object' && parsed.composition[0]?.ingredient) {
+      result.composition = parsed.composition.map(item => item.ingredient);
+      result._compositionDetails = parsed.composition; // Garder détails pour metadata
+    } else {
+      // Déjà des strings simples
+      result.composition = parsed.composition.map(c => String(c));
+    }
+  }
+
+  // ✅ NOUVEAU : Normaliser surfactants
+  if (parsed.surfactants && Array.isArray(parsed.surfactants)) {
+    result.surfactants = parsed.surfactants.map(s => String(s));
+  }
+
+  // ✅ Ecolabels
+  if (parsed.ecolabels && Array.isArray(parsed.ecolabels)) {
+    result.ecolabels = parsed.ecolabels.map(e => String(e));
+  }
+
+  // ✅ Biodegradabilité (si présent)
+  if (parsed.biodegradability !== undefined) {
+    result.biodegradability = parsed.biodegradability;
+  }
+
+  // ✅ Écotoxicité (si présent)
+  if (parsed.ecotoxicity !== undefined) {
+    result.ecotoxicity = parsed.ecotoxicity;
+  }
+
+  return result;
+}
+
+/**
+ * Générer alternatives via IA
+ */
+async function generateAlternatives(product, category = 'food', count = 3) {
+  try {
+    const messages = [
+      {
+        role: 'system',
+        content: `Tu es un expert en nutrition. Suggère ${count} alternatives plus saines au produit donné. Réponds en JSON avec: { "alternatives": [{ "name": "...", "reason": "..." }] }`
+      },
+      {
+        role: 'user',
+        content: `Produit: ${product.name || product.product_name}\nMarque: ${product.brand || product.brands}\nCatégorie: ${category}`
+      }
+    ];
+
+    const response = await deepSeekService.chat(messages);
+
+    try {
+      const cleanResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      parsed = JSON.parse(cleanResponse);
+      return parsed.alternatives || [];
+    } catch (parseError) {
+      throw new Error('IA response not valid JSON');
+    }
+  } catch (error) {
+    console.error('[AI] generateAlternatives failed:', error.message);
+    return [];
+  }
+}
+
+module.exports = {
+  enrichProductWithAI,
+  enrichFoodProduct,
+  enrichCosmeticsProduct,
+  enrichDetergentsProduct,
+  estimateMissingData,
+  enrichWithAISummary,
+  generateAlternatives,
+  identifyMissingFields
+};
+
+========== FIN aiEnrichment.service.js ==========
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> # 4. Analyser mealPlan.service.js
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "`n🍽️  Analyse mealPlan.service.js...`n" -ForegroundColor Yellow
+
+🍽️  Analyse mealPlan.service.js...
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> if (Test-Path "backend\src\services\mealPlan.service.js") {
+>>     $mealContent = Get-Content "backend\src\services\mealPlan.service.js" -Encoding UTF8 -Raw
+>>     $lineCount = ($mealContent -split "`n").Count
+>>
+>>     Write-Host "  📊 Nombre de lignes : $lineCount`n" -ForegroundColor White
+>>     Write-Host "========== DÉBUT mealPlan.service.js ==========" -ForegroundColor Cyan
+>>     Write-Host $mealContent -ForegroundColor White
+>>     Write-Host "========== FIN mealPlan.service.js ==========" -ForegroundColor Cyan
+>> } else {
+>>     Write-Host "  ❌ Fichier non trouvé" -ForegroundColor Red
+>> }
+  📊 Nombre de lignes : 136
+
+========== DÉBUT mealPlan.service.js ==========
+const MealPlan = require('../models/MealPlan');
+const Product = require('../models/Product');
+
+class MealPlanService {
+
+  async createMealPlan(userId, data) {
+    const mealPlan = new MealPlan({
+      userId,
+      name: data.name || 'Mon plan repas',
+      startDate: data.startDate || new Date(),
+      endDate: data.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      dietaryPreferences: data.dietaryPreferences || [],
+      targetScore: data.targetScore || 70
+    });
+
+    await mealPlan.save();
+    return mealPlan;
+  }
+
+  async getUserMealPlans(userId) {
+    return await MealPlan.find({ userId })
+      .sort({ startDate: -1 })
+      .populate('meals.productId')
+      .lean();
+  }
+
+  async getMealPlanById(userId, mealPlanId) {
+    const mealPlan = await MealPlan.findOne({
+      _id: mealPlanId,
+      userId
+    }).populate('meals.productId');
+
+    if (!mealPlan) {
+      throw new Error('Plan repas introuvable');
+    }
+
+    return mealPlan;
+  }
+
+  async addMealToPlan(userId, mealPlanId, mealData) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+
+    const product = await Product.findById(mealData.productId);
+    if (!product) {
+      throw new Error('Produit introuvable');
+    }
+
+    if (product.category !== 'food') {
+      throw new Error('Seuls les produits alimentaires peuvent etre ajoutes');
+    }
+
+    const meal = {
+      productId: product._id,
+      productName: product.name,
+      productScore: product.scores?.overallScore || 0,
+      category: mealData.category,
+      date: new Date(mealData.date),
+      portion: mealData.portion || 1,
+      notes: mealData.notes || ''
+    };
+
+    mealPlan.meals.push(meal);
+    await mealPlan.save();
+
+    return mealPlan;
+  }
+
+  async removeMealFromPlan(userId, mealPlanId, mealId) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+
+    mealPlan.meals = mealPlan.meals.filter(
+      meal => meal._id.toString() !== mealId
+    );
+
+    await mealPlan.save();
+    return mealPlan;
+  }
+
+  async updateMeal(userId, mealPlanId, mealId, updates) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+
+    const meal = mealPlan.meals.id(mealId);
+    if (!meal) {
+      throw new Error('Repas introuvable');
+    }
+
+    Object.assign(meal, updates);
+    await mealPlan.save();
+
+    return mealPlan;
+  }
+
+  async deleteMealPlan(userId, mealPlanId) {
+    const result = await MealPlan.findOneAndDelete({
+      _id: mealPlanId,
+      userId
+    });
+
+    if (!result) {
+      throw new Error('Plan repas introuvable');
+    }
+
+    return { message: 'Plan repas supprime' };
+  }
+
+  async getWeekStats(userId, mealPlanId) {
+    const mealPlan = await this.getMealPlanById(userId, mealPlanId);
+
+    const stats = {
+      averageScore: mealPlan.getAverageScore(),
+      totalMeals: mealPlan.meals.length,
+      mealsByCategory: {},
+      scoreDistribution: {
+        excellent: 0,
+        good: 0,
+        average: 0,
+        poor: 0
+      }
+    };
+
+    mealPlan.meals.forEach(meal => {
+      stats.mealsByCategory[meal.category] =
+        (stats.mealsByCategory[meal.category] || 0) + 1;
+
+      const score = meal.productScore || 0;
+      if (score >= 80) stats.scoreDistribution.excellent++;
+      else if (score >= 60) stats.scoreDistribution.good++;
+      else if (score >= 40) stats.scoreDistribution.average++;
+      else stats.scoreDistribution.poor++;
+    });
+
+    return stats;
+  }
+}
+
+module.exports = new MealPlanService();
+========== FIN mealPlan.service.js ==========
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "`n========================================" -ForegroundColor Cyan
+
+========================================
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "  ANALYSE SERVICES IA TERMINÉE" -ForegroundColor Cyan
+  ANALYSE SERVICES IA TERMINÉE
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "========================================`n" -ForegroundColor Cyan
+========================================
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN> Write-Host "📋 Prochaine étape : Analyser routes IA`n" -ForegroundColor Green
+📋 Prochaine étape : Analyser routes IA
+
+PS C:\Users\salim\Desktop\ECOLOJIA VF CLEAN>
