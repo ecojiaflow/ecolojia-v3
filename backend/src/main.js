@@ -431,3 +431,5 @@ startServer();
 
 
 
+
+app.use('/api/ai', require('./routes/ai.routes'));
