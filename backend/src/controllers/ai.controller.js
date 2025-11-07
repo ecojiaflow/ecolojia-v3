@@ -1,5 +1,4 @@
 ﻿const path = require('path');
-const enrichment = require(path.resolve(__dirname, '..\services\aiEnrichment.service.BACKUP_20251104_223326.js'));
 
 /**
  * POST /api/ai (/enrich)
@@ -26,5 +25,6 @@ async function enrichHandler(req, res) {
 }
 
 module.exports = { enrichHandler };
+
 
 
