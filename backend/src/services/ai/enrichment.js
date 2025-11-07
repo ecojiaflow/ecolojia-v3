@@ -1,4 +1,4 @@
-const deepSeekService = require('./ai/deepSeekService');
+﻿const deepSeekService = require('./deepSeekService');
 const nutrientCalculator = require('./nutrientCalculator');
 const logger = require('../utils/logger');
 const Product = require('../models/Product');
@@ -573,3 +573,4 @@ module.exports = {
   generateAlternatives,
   identifyMissingFields
 };
+
