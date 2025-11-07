@@ -1,5 +1,6 @@
 ﻿const express = require('express');
 const router = express.Router();
+const { enrichHandler } = require\('../controllers/ai.controller'\');
 const { authenticateUser, checkQuota } = require('../middleware/auth');
 const conversationalAI = require('../services/ai/conversationalAI');
 
@@ -26,6 +27,18 @@ const authMiddleware = isDev ? (req, res, next) => {
   };
   next();
 } : authenticateUser;
+
+/**
+ * POST /api/ai/enrich
+ * Alias de /api/ai pour compat mobile
+ */
+router.post('/enrich', authMiddleware, enrichHandler);
+
+/**
+ * POST /api/ai
+ * Enrichissement IA universel (barcode/category/name + OCR)
+ */
+router.post('/', authMiddleware, enrichHandler);
 
 /**
  * POST /api/ai/chat
