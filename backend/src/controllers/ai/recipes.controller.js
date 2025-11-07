@@ -8,9 +8,12 @@ const ping = async (req, res) => {
 const suggest = async (req, res) => {
   try {
     const product = {
-      name: req.query.name || req.body?.name,
-      categoryType: req.query.categoryType || req.body?.categoryType || "food",
-    };
+  name: req.query.name || (req.body && req.body.name),
+  categoryType: normalizeCategory(
+    req.query.categoryType || req.query.category ||
+    (req.body && (req.body.categoryType || req.body.category))
+  ),
+};
     const recipes = suggestFromProduct(product);
     return res.json({ success: true, count: recipes.length, recipes });
   } catch (e) {
@@ -18,4 +21,13 @@ const suggest = async (req, res) => {
   }
 };
 
+const normalizeCategory = (raw) => {
+  const s = String(raw || '').toLowerCase();
+  if (s === 'cosmetics')  return 'cosmetic';
+  if (s === 'detergents') return 'detergent';
+  if (['food','cosmetic','detergent'].includes(s)) return s;
+  return 'food';
+};
+
 module.exports = { ping, suggest };
+
