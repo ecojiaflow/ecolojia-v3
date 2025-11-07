@@ -365,6 +365,7 @@ try {
 }
 
 app.use('/api/gdpr', gdprRoutes);
+app.use('/api/ai/recipes', require('./routes/ai.recipes.routes'));
 console.log('✅ [ROUTE] GDPR montée sur /api/gdpr');
 
 async function startServer() {
@@ -428,5 +429,6 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
 
 
