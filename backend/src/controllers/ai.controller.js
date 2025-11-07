@@ -1,5 +1,5 @@
 ﻿'use strict';
-const enrichment = require('../services/aiEnrichment.service.BACKUP_20251104_223326');
+const enrichment = require('../services/ai/enrichment');
 /**
  * POST /api/ai (/enrich)
  * Body: { barcode?, category?, name?, imageUrl?, imageBase64?, source?, force? }
@@ -18,6 +18,7 @@ async function enrichHandler(req, res) {
       force: !!p.force
     };
     if (!input.barcode) { input.barcode = 'NOBARCODE_' + Date.now(); }
+if (!input.barcode) { input.barcode = 'NOBARCODE_' + Date.now(); }
 const result = await enrichment.enrichProductWithAI(input, { userId });
     return res.json({ success: true, ...result });
   } catch (err) {
@@ -27,5 +28,6 @@ const result = await enrichment.enrichProductWithAI(input, { userId });
 }
 
 module.exports = { enrichHandler };
+
 
 
