@@ -100,7 +100,8 @@ const session = require('express-session');
 
 const app = express();
 const { monitorMiddleware, errorLogger } = require('./monitoring/local-monitor');
-app.use(monitorMiddleware);// === SECURITY PATCH START ===
+app.use(monitorMiddleware);
+// === SECURITY PATCH START ===
 const helmet = require('helmet');
 const compression = require('compression');
 app.use(helmet({ crossOriginResourcePolicy: false, contentSecurityPolicy: false }));
@@ -243,7 +244,9 @@ routesToLoad.forEach(route => {
   }
 });
 
-app.use(errorLogger);\r\n\r\n// Middleware d'erreur global
+app.use(errorLogger);
+
+// Middleware d'erreur global
 app.use((error, req, res, next) => {
   console.error('❌ [ERROR] Erreur non gérée:', error.message);
   logError('Erreur non gérée', error);
@@ -425,4 +428,5 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
 
