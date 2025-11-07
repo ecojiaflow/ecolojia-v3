@@ -222,7 +222,7 @@ const routesToLoad = [
   { path: '/api/auth', file: './routes/auth.google.js', name: 'Auth Google' },
   { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
-  { path: '/api/algolia', file: './routes/algolia.js', name: 'Algolia Legacy' },
+
   { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },
   { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' },
   { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' },
@@ -428,10 +428,5 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
-
-
-
-
-app.use('/api/ai', require('./routes/ai.routes'));
 
 

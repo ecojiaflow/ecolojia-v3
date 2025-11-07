@@ -19,7 +19,7 @@ async function enrichHandler(req, res) {
     };
     if (!input.barcode) { input.barcode = 'NOBARCODE_' + Date.now(); }
 if (!input.barcode) { input.barcode = 'NOBARCODE_' + Date.now(); }
-const result = await enrichment.enrichProductWithAI(input, { userId });
+const result = await enrichment.enrichProductWithAI(input, p.category || 'food', { userId, force: !!p.force });
     return res.json({ success: true, ...result });
   } catch (err) {
     console.error('[AI ENRICH] error:', err);
@@ -28,6 +28,7 @@ const result = await enrichment.enrichProductWithAI(input, { userId });
 }
 
 module.exports = { enrichHandler };
+
 
 
 

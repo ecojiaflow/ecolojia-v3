@@ -1,7 +1,7 @@
 ﻿const deepSeekService = require('./deepSeekService');
-const nutrientCalculator = require('./nutrientCalculator');
-const logger = require('../utils/logger');
-const Product = require('../models/Product');
+const nutrientCalculator = require('../nutrientCalculator');
+const logger = require('../../utils/logger');
+const Product = require('../../models/Product');
 
 /**
  * ✅ ECOLOJIA V3 - AI Enrichment Service
@@ -573,4 +573,6 @@ module.exports = {
   generateAlternatives,
   identifyMissingFields
 };
+
+
 
