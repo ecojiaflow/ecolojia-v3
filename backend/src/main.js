@@ -99,7 +99,14 @@ const passport = require('./config/passport');
 const session = require('express-session');
 
 const app = express();
-
+const { monitorMiddleware, errorLogger } = require('./monitoring/local-monitor');
+app.use(monitorMiddleware);// === SECURITY PATCH START ===
+const helmet = require('helmet');
+const compression = require('compression');
+app.use(helmet({ crossOriginResourcePolicy: false, contentSecurityPolicy: false }));
+app.use(compression());
+app.disable('x-powered-by');
+// === SECURITY PATCH END ===
 // ========================================
 // MIDDLEWARES BODY PARSER (AJOUTÉ)
 // ========================================
@@ -118,15 +125,13 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // app.use(generalLimiter); // DÉSACTIVÉ TEMPORAIREMENT
 // Session pour Passport
 app.use(session({
   secret: process.env.JWT_SECRET || 'ecolojia_session_secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  cookie: { secure: process.env.NODE_ENV === 'production' , sameSite: 'lax' }
 }));
 
 // Initialiser Passport
@@ -238,7 +243,7 @@ routesToLoad.forEach(route => {
   }
 });
 
-// Middleware d'erreur global
+app.use(errorLogger);\r\n\r\n// Middleware d'erreur global
 app.use((error, req, res, next) => {
   console.error('❌ [ERROR] Erreur non gérée:', error.message);
   logError('Erreur non gérée', error);
@@ -313,7 +318,7 @@ const gdprRoutes = require('./routes/gdpr.routes');
 // ═══════════════════════════════════════════════════════════════════
 try {
   const aiRoutes = require('./routes/ai.routes');
-  app.use('/api/ai', aiRoutes);
+  app.use('/api/ai', aiLimiter, aiRoutes);
   console.log('✅ [ROUTE] AI montée sur /api/ai');
   console.log('Route montée: /api/ai', { path: require('path').resolve(__dirname, 'routes/ai.routes.js') });
 } catch (err) {
@@ -420,3 +425,4 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
