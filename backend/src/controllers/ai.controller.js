@@ -1,29 +1,24 @@
 ﻿'use strict';
-
-// Import direct (sans path.resolve) vers le service d'enrichissement IA
-const enrichment = require('../services/aiEnrichment.service.BACKUP_20251104_223326');
+const enrichment = require('../');
 
 /**
  * POST /api/ai (/enrich)
- * Body: { barcode?, category?, name?, imageUrl?, imageBase64?, source? }
+ * Body: { barcode?, category?, name?, imageUrl?, imageBase64?, source?, force? }
  */
 async function enrichHandler(req, res) {
   try {
     const userId = req.userId || 'anonymous';
     const p = req.body || {};
     const input = {
-      barcode: p.barcode || null,
+      barcode: p.barcode || ('NOBARCODE_' + Date.now()),
       category: p.category || null,
       name: p.name || null,
       imageUrl: p.imageUrl || null,
       imageBase64: p.imageBase64 || null,
-      source: p.source || 'mobile'
+      source: p.source || 'mobile',
+      force: !!p.force
     };
-    if (!input.barcode) {
-  // Fallback barcode pour déclencher le pipeline d'enrichissement même sans vrai code-barres
-  input.barcode = 'NOBARCODE_' + Date.now();
-}
-const result = await enrichment.enrichProductWithAI(input, { userId });
+    const result = await enrichment.enrichProductWithAI(input, { userId });
     return res.json({ success: true, ...result });
   } catch (err) {
     console.error('[AI ENRICH] error:', err);
@@ -32,5 +27,3 @@ const result = await enrichment.enrichProductWithAI(input, { userId });
 }
 
 module.exports = { enrichHandler };
-
-
