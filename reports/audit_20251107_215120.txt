@@ -1,0 +1,100 @@
+﻿ECOLOJIA - AUDIT TECHNIQUE (20251107_215120)
+===================================
+Machine : DELL-HOME
+Chemin  : C:\Users\salim\Desktop\ECOLOJIA VF CLEAN
+Node/npm/OS : (à remplir ci-dessous)
+-----------------------------------
+Node/npm versions:
+v22.12.0
+10.9.1
+
+
+== npm ci ==
+# npm audit report
+
+validator  <13.15.20
+Severity: moderate
+validator.js has a URL validation bypass vulnerability in its isURL function - https://github.com/advisories/GHSA-9965-vmph-33xx
+fix available via `npm audit fix`
+node_modules/validator
+  express-validator  0.2.0 - 6.4.1 || 7.1.0 - 7.2.1
+  Depends on vulnerable versions of validator
+  node_modules/express-validator
+
+2 moderate severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+
+== ESLint ==
+ESLint non détecté (skip)
+
+
+== TypeScript check ==
+error TS2688: Cannot find type definition file for 'request'.
+  The file is in the program because:
+    Entry point for implicit type library 'request'
+
+
+== Recherche patterns risqués ==
+--- NaN / unknown / TODO / console.log ---
+
+
+--- Indices Mongoose potentiellement dupliqués ---
+
+
+--- Montage routes IA (doublons possibles) ---
+
+
+--- Fichiers BACKUP / Copie ---
+
+
+--- Vérification catégories ---
+
+-- Valeurs de catégorie utilisées dans le code --
+
+
+--- Vérification champs scoring clés ---
+
+
+== Tests HTTP ==
+Local /api/health -> {
+    "status":  "healthy",
+    "timestamp":  "2025-11-07T20:51:37.375Z",
+    "version":  "3.0.0",
+    "database":  "connected",
+    "environment":  "development",
+    "monitoring":  {
+                       "sentry":  false,
+                       "metrics":  false
+                   }
+}
+Local /api/ai/health -> {
+    "ok":  true,
+    "service":  "ai"
+}
+Prod  /api/health -> {
+    "status":  "healthy",
+    "timestamp":  "2025-11-07T20:51:38.317Z",
+    "version":  "3.0.0",
+    "database":  "connected",
+    "environment":  "production",
+    "monitoring":  {
+                       "sentry":  false,
+                       "metrics":  false
+                   }
+}
+Prod  /api/ai/health -> {
+    "ok":  true,
+    "service":  "ai"
+}
+Prod  /api/products/trending -> {
+    "success":  true,
+    "products":  [
+                     {
+                         "filterMetadata":  {
+                                                "categoryLabels":  "en:green-dot Nutri-Score A",
+                                                "searchTerms":  "sidi ali eaux alimen ...
+
+== FIN AUDIT ==

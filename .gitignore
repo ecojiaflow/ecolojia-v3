@@ -53,3 +53,4 @@ fix-*.cjs
 produit-enrichi.json
 _NEW_FILES/
 *.bak_*
+commit_message_*.txt

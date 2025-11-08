@@ -1,4 +1,4 @@
-﻿// PATH: backend\src\services\vision\VisionService.js
+// PATH: backend\src\services\vision\VisionService.js
 const vision = require('@google-cloud/vision');
 const sharp = require('sharp');
 const fs = require('fs').promises;
@@ -455,6 +455,53 @@ class VisionService {
   /**
    * Nettoyage des ressources
    */
+
+  /**
+   * Wrapper simplifié pour extraction de texte depuis image
+   * Compatible avec ProductOrchestrator
+   * @param {Buffer|String} imageFile - Buffer image ou chemin fichier
+   * @returns {Promise<Object>} { text: string, confidence: number, service: string }
+   */
+  async extractText(imageFile) {
+    try {
+      // Si Buffer, sauvegarder temporairement
+      let imagePath = imageFile;
+      let tempFile = false;
+
+      if (Buffer.isBuffer(imageFile)) {
+        const tempDir = path.join(__dirname, '../../temp');
+        await fs.mkdir(tempDir, { recursive: true });
+        imagePath = path.join(tempDir, `ocr-${uuidv4()}.jpg`);
+        await fs.writeFile(imagePath, imageFile);
+        tempFile = true;
+      }
+
+      // Appeler analyzeImage
+      const result = await this.analyzeImage(imagePath);
+
+      // Nettoyer fichier temporaire si créé
+      if (tempFile) {
+        await fs.unlink(imagePath).catch(() => {});
+      }
+
+      // Retourner format compatible ProductOrchestrator
+      if (result.status === 'completed' && result.result?.text) {
+        return {
+          text: result.result.text,
+          confidence: result.result.confidence || 0,
+          service: result.result.service,
+          extractedData: result.result.extractedData,
+          jobId: result.jobId
+        };
+      } else {
+        throw new Error(result.error || 'OCR échoué');
+      }
+
+    } catch (error) {
+      console.error('[VisionService] Error extractText:', error.message);
+      throw error;
+    }
+  }
   async cleanup() {
     if (this.tesseractWorker) {
       await this.tesseractWorker.terminate();

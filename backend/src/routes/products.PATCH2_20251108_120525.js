@@ -1,4 +1,4 @@
-// PATH: backend/src/routes/products.js
+﻿// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
 // const enrichProduct = require('../middleware/enrichProduct');
@@ -13,7 +13,6 @@ const imageEnrichment = require('../services/imageEnrichment.service');
 const scoringUnified = require('../services/scoringUnified');
 const ProductOrchestrator = require('../services/ProductOrchestrator');
 const alternativesService = require('../services/alternatives.service');
-const recipeAdapter = require('../services/recipeAdapter.service');
 const contextualService = require('../services/contextual.service');
 
 /* Middleware debug */
@@ -80,108 +79,6 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 });
 
 /* ========== ROUTES ========== */
-
-// === FONCTION ENRICHISSEMENT RÉPONSE ===
-async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
-  try {
-    logger.info('[ENRICH_START] ====== FONCTION APPELÉE ====== Product type:', typeof product);
-    logger.info('[ENRICH_START] Product exists?', !!product);
-    logger.info('[ENRICH_START] Source:', source, 'Cached:', cached);
-    // Convertir produit Mongoose en plain object
-    const plainProduct = product.toObject ? product.toObject() : product;
-    
-    // Normaliser score (support ancien format)
-    const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
-    logger.info('[ENRICH_DEBUG] Product type:', typeof product, 'Has toObject?', typeof product?.toObject);
-    logger.info('[ENRICH_DEBUG] plainProduct.scores:', JSON.stringify(plainProduct.scores));
-    logger.info('[ENRICH_DEBUG] currentScore:', currentScore);
-    
-    // 1. Alternatives IA (3 max)
-    let alternatives = [];
-    try {
-      const altResult = await alternativesService.findAlternatives({
-        productId: plainProduct._id,
-        barcode: plainProduct.barcode,
-        maxResults: 3,
-        userPreferences: {
-          minScore: currentScore + 5
-        }
-      });
-      alternatives = altResult.alternatives || [];
-      if (alternatives.length === 0) {
-        logger.info('[ALTERNATIVES] Aucune alternative trouvée pour:', product.name);
-      }
-    } catch (altError) {
-      logger.error('[ALTERNATIVES] Error:', altError.message);
-    }
-
-    // 2. Recettes/Routines (food uniquement, 3 max)
-    let recipes = [];
-    if (plainProduct.categoryType === 'food') {
-      try {
-        const userProfile = {
-          dietary: 'omnivore',
-          targetCaloriesPerMeal: 500,
-          allergens: [],
-          goals: ['health']
-        };
-        const recipesResult = await recipeAdapter.recommendRecipes(userProfile, {
-          category: null,
-          count: 3
-        });
-        recipes = recipesResult || [];
-        logger.info('[RECIPES] Recettes recommandées:', recipes.length);
-      } catch (recipeError) {
-        logger.error('[RECIPES] Error:', recipeError.message);
-      }
-    }
-
-    // 3. Cartes pédagogiques CIL (2 max)
-    let contextCards = [];
-    try {
-      contextCards = contextualService.selectRelevantCards(plainProduct, 2);
-    } catch (cardError) {
-      logger.error('[CONTEXTUAL] Error:', cardError.message);
-    }
-
-    // === RÉPONSE ENRICHIE ===
-    return {
-      success: true,
-      product: product,
-      source: source,
-      cached: cached,
-      
-      // Infos enrichissement IA
-      enrichment: {
-        aiUsed: aiEnrichmentUsed,
-        confidence: product.scores?.confidence || null,
-        dataCompleteness: product.scores?.dataCompleteness || null
-      },
-      
-      // Alternatives (3 max)
-      alternatives: alternatives.length > 0 ? alternatives : [],
-      
-      // Recettes/Routines (3 max)
-      recipes: recipes.length > 0 ? recipes : [],
-      
-      // Cartes pédagogiques (2 max)
-      contextCards: contextCards.length > 0 ? contextCards : []
-    };
-    
-  } catch (enrichError) {
-    logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
-    
-    // Fallback : retourner produit sans enrichissement
-    return {
-      success: true,
-      product: product,
-      source: source,
-      cached: cached,
-      aiEnrichmentUsed: aiEnrichmentUsed
-    };
-  }
-}
-
 
 /* Route par défaut */
 
@@ -488,10 +385,11 @@ router.get('/:id', handleAsync(async (req, res) => {
     
     if (product) {
       logger.info('Product found by MongoDB ID');
-      const enrichedResponse = await enrichProductResponse(product, 'MONGODB_ID', false, false);
-      return res.json(enrichedResponse);
+      return res.json({ 
+        success: true, 
+        product: product.toObject ? product.toObject() : product
+      });
     }
-
   }
 
   // Tentative 2 : Utiliser ProductOrchestrator (barcode)
@@ -526,8 +424,89 @@ router.get('/:id', handleAsync(async (req, res) => {
     // Cas 3 : Produit trouvé et enrichi
     if (result.product) {
       logger.info('Product found/created via Orchestrator:', result.source);
-      const enrichedResponse = await enrichProductResponse(result.product, result.source, result.cached || false, result.aiEnrichmentUsed || false);
-      return res.json(enrichedResponse);
+      
+      // === ENRICHISSEMENT RÉPONSE API ===
+      try {
+        // 1. Alternatives IA (3 max)
+        let alternatives = [];
+        try {
+          const altResult = await alternativesService.findAlternatives(
+            result.product._id || result.product.barcode,
+            { limit: 3, minScore: result.product.scores?.overallScore || 0 }
+          );
+          alternatives = altResult.alternatives || [];
+        } catch (altError) {
+          logger.error('Error fetching alternatives:', altError.message);
+        }
+        
+        // 2. Recettes/Routines (food only pour MVP)
+        let recipes = [];
+        if (result.product.categoryType === 'food') {
+          try {
+            // Appeler le service AI recipes (déjà existant)
+            const recipeResponse = await fetch('http://localhost:10000/api/ai/recipes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                productName: result.product.name,
+                category: result.product.categoryType,
+                userProfile: { dietary: 'omnivore' } // Fallback
+              })
+            });
+            
+            if (recipeResponse.ok) {
+              const recipeData = await recipeResponse.json();
+              recipes = recipeData.recipes?.slice(0, 3) || [];
+            }
+          } catch (recipeError) {
+            logger.error('Error fetching recipes:', recipeError.message);
+          }
+        }
+        
+        // 3. Cartes pédagogiques CIL (2 max)
+        let contextCards = [];
+        try {
+          contextCards = contextualService.selectRelevantCards(result.product, 2);
+        } catch (cardError) {
+          logger.error('Error selecting context cards:', cardError.message);
+        }
+        
+        // === RÉPONSE ENRICHIE ===
+        return res.json({
+          success: true,
+          product: result.product,
+          source: result.source,
+          cached: result.cached || false,
+          
+          // Infos enrichissement IA
+          enrichment: {
+            aiUsed: result.aiEnrichmentUsed || false,
+            confidence: result.product.scores?.confidence || null,
+            dataCompleteness: result.product.scores?.dataCompleteness || null
+          },
+          
+          // Alternatives (3 max)
+          alternatives: alternatives.length > 0 ? alternatives : [],
+          
+          // Recettes/Routines (3 max)
+          recipes: recipes.length > 0 ? recipes : [],
+          
+          // Cartes pédagogiques (2 max)
+          contextCards: contextCards.length > 0 ? contextCards : []
+        });
+        
+      } catch (enrichError) {
+        logger.error('Error enriching response:', enrichError.message);
+        
+        // Fallback : retourner produit sans enrichissement
+        return res.json({
+          success: true,
+          product: result.product,
+          source: result.source,
+          cached: result.cached || false,
+          aiEnrichmentUsed: result.aiEnrichmentUsed || false
+        });
+      }
     }
 
     // Cas 4 : Erreur inattendue

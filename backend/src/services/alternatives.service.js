@@ -1,4 +1,4 @@
-﻿// ═══════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // ECOLOJIA V3.2 - SERVICE ALTERNATIVES INTELLIGENTES
 // ═══════════════════════════════════════════════════════════════════
 // 
@@ -66,7 +66,7 @@ async function findAlternatives(params) {
     }
 
     console.log(`[ALTERNATIVES] Recherche alternatives pour : ${originalProduct.name}`);
-    console.log(`[ALTERNATIVES] Score actuel : ${originalProduct.scores?.global || 'N/A'}/100`);
+    console.log(`[ALTERNATIVES] Score actuel : ${(originalProduct.scores?.overallScore || originalProduct.scores?.global) || 'N/A'}/100`);
 
     // ─────────────────────────────────────────────────────────────
     // 2. VÉRIFIER CACHE (optionnel)
@@ -113,7 +113,8 @@ async function findAlternatives(params) {
         // Niveau 3 : IA (uniquement si <3 résultats)
         console.log(`[ALTERNATIVES] ⚠️ DB insuffisant (${alternatives.length}), appel IA...`);
         
-        const aiAlternatives = await searchWithAI(originalProduct, params);
+        // const aiAlternatives = await searchWithAI(originalProduct, params); // Désactivé MVP
+        const aiAlternatives = []; // Fallback vide pour MVP
         alternatives = [...alternatives, ...aiAlternatives];
         source = alternatives.length > 0 ? 'ai' : 'none';
         
@@ -140,7 +141,7 @@ async function findAlternatives(params) {
       original: {
         id: originalProduct._id,
         name: originalProduct.name,
-        score: originalProduct.scores?.global
+        score: (originalProduct.scores?.overallScore || originalProduct.scores?.global)
       },
       metrics: {
         duration: Date.now() - startTime,
@@ -176,7 +177,7 @@ async function searchDatabaseStrict(originalProduct, params) {
   const query = {
     categoryType: originalProduct.categoryType,
     _id: { $ne: originalProduct._id },
-    'scores.global': { $gte: (originalProduct.scores?.global || 0) + CONFIG.MIN_SCORE_IMPROVEMENT }
+    'scores.overallScore': { $gte: (originalProduct.scores?.global || 0) + CONFIG.MIN_SCORE_IMPROVEMENT }
   };
 
   // Filtres utilisateur (allergènes, labels, budget)
@@ -205,7 +206,7 @@ async function searchDatabaseRelaxed(originalProduct, params) {
   const query = {
     categoryType: originalProduct.categoryType,
     _id: { $ne: originalProduct._id },
-    'scores.global': { $gte: originalProduct.scores?.global || 0 } // Pas d'amélioration minimale
+    'scores.overallScore': { $gte: originalProduct.scores?.global || 0 } // Pas d'amélioration minimale
   };
 
   // Critères relaxés
@@ -238,7 +239,7 @@ async function searchWithAI(originalProduct, params) {
     const response = await conversationalAI.getAlternatives({
       productName: originalProduct.name,
       category: originalProduct.categoryType,
-      currentScore: originalProduct.scores?.global,
+      currentScore: (originalProduct.scores?.overallScore || originalProduct.scores?.global),
       userPreferences: params.userPreferences
     });
 
@@ -310,8 +311,8 @@ async function enrichAlternatives(alternatives, originalProduct, params) {
 function calculateImprovements(alternative, original) {
   const improvements = [];
   
-  const altScore = alternative.scores?.global || 0;
-  const origScore = original.scores?.global || 0;
+  const altScore = (alternative.scores?.overallScore || alternative.scores?.global) || 0;
+  const origScore = (original.scores?.overallScore || original.scores?.global) || 0;
   const scoreDiff = altScore - origScore;
 
   if (scoreDiff > 0) {
@@ -341,7 +342,7 @@ function calculateMatchScore(alternative, original, userPrefs) {
   let score = 70; // Base
 
   // Score global
-  const scoreDiff = (alternative.scores?.global || 0) - (original.scores?.global || 0);
+  const scoreDiff = ((alternative.scores?.overallScore || alternative.scores?.global) || 0) - ((original.scores?.overallScore || original.scores?.global) || 0);
   score += Math.min(scoreDiff, 20);
 
   // Préférences utilisateur
@@ -369,8 +370,8 @@ function generateReasons(alternative, original) {
     reasons.push('Sans produits d\'origine animale');
   }
 
-  const altScore = alternative.scores?.global || 0;
-  const origScore = original.scores?.global || 0;
+  const altScore = (alternative.scores?.overallScore || alternative.scores?.global) || 0;
+  const origScore = (original.scores?.overallScore || original.scores?.global) || 0;
   
   if (altScore > origScore + 15) {
     reasons.push('Score nettement supérieur');
@@ -380,7 +381,7 @@ function generateReasons(alternative, original) {
 }
 
 function buildAIPrompt(product, params) {
-  return `Suggère 3 alternatives plus saines pour "${product.name}" (catégorie: ${product.categoryType}, score: ${product.scores?.global}/100).`;
+  return `Suggère 3 alternatives plus saines pour "${product.name}" (catégorie: ${product.categoryType}, score: ${(product.scores?.overallScore || product.scores?.global)}/100).`;
 }
 
 function extractProductNames(aiResponse) {

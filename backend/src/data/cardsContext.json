@@ -1,0 +1,274 @@
+{
+  "cards": [
+    {
+      "id": "sugar-impact",
+      "title": "🍬 Impact du sucre",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["nutrition.perServing.sugar > 15"]
+      },
+      "content": {
+        "short": "Ce produit contient beaucoup de sucre",
+        "detail": "L'OMS recommande moins de 25g de sucres ajoutés par jour. Un excès augmente les risques de diabète type 2 (+40% selon études INSERM), surpoids et problèmes cardiovasculaires.",
+        "action": "Privilégiez les alternatives à faible teneur en sucre ou préparez une version maison."
+      },
+      "source": "OMS 2015, INSERM 2020",
+      "visual": {
+        "icon": "🍬",
+        "color": "#FF6B6B"
+      }
+    },
+    {
+      "id": "ultra-processed",
+      "title": "⚠️ Ultra-transformé",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["foodData.nova >= 4"]
+      },
+      "content": {
+        "short": "Produit ultra-transformé (NOVA 4)",
+        "detail": "Les aliments ultra-transformés augmentent de 12% le risque de maladies cardiovasculaires et de 11% celui de diabète (étude BMJ 2019, 105 000 participants).",
+        "action": "Optez pour des aliments bruts ou peu transformés (NOVA 1-2)."
+      },
+      "source": "BMJ 2019, PAHO",
+      "visual": {
+        "icon": "⚠️",
+        "color": "#FFA500"
+      }
+    },
+    {
+      "id": "additives-concern",
+      "title": "🧪 Additifs à surveiller",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["foodData.additives.length > 0"]
+      },
+      "content": {
+        "short": "Ce produit contient des additifs controversés",
+        "detail": "Certains additifs (E102, E110, E124...) sont suspectés d'hyperactivité chez l'enfant. L'EFSA réévalue régulièrement leur innocuité.",
+        "action": "Consultez la liste INCI complète et privilégiez les produits sans additifs suspects."
+      },
+      "source": "EFSA 2021, ANSES",
+      "visual": {
+        "icon": "🧪",
+        "color": "#9B59B6"
+      }
+    },
+    {
+      "id": "salt-excess",
+      "title": "🧂 Excès de sel",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["nutrition.perServing.salt > 1.5"]
+      },
+      "content": {
+        "short": "Teneur en sel élevée",
+        "detail": "L'OMS recommande moins de 5g de sel par jour. Un excès favorise l'hypertension (+20% de risque) et les maladies cardiovasculaires.",
+        "action": "Réduisez progressivement le sel et utilisez des épices pour rehausser le goût."
+      },
+      "source": "OMS 2012",
+      "visual": {
+        "icon": "🧂",
+        "color": "#3498DB"
+      }
+    },
+    {
+      "id": "palm-oil",
+      "title": "🌴 Huile de palme",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["foodData.ingredients.includes('palm')"]
+      },
+      "content": {
+        "short": "Contient de l'huile de palme",
+        "detail": "L'huile de palme contribue à la déforestation (36% en Indonésie) et est riche en graisses saturées. Préférez huile d'olive, colza ou tournesol.",
+        "action": "Choisissez des produits certifiés RSPO ou sans huile de palme."
+      },
+      "source": "WWF 2020, ADEME",
+      "visual": {
+        "icon": "🌴",
+        "color": "#27AE60"
+      }
+    },
+    {
+      "id": "endocrine-disruptors",
+      "title": "⚠️ Perturbateurs endocriniens",
+      "triggers": {
+        "category": ["cosmetics"],
+        "conditions": ["cosmeticData.endocrineDisruptors.length > 0"]
+      },
+      "content": {
+        "short": "Contient des perturbateurs endocriniens suspectés",
+        "detail": "Les parabènes, phtalates et certains filtres UV interfèrent avec le système hormonal. L'ANSES recommande d'éviter ces substances, surtout chez les femmes enceintes et enfants.",
+        "action": "Privilégiez cosmétiques bio ou clean sans parabènes ni phtalates."
+      },
+      "source": "ANSES 2019, EFSA",
+      "visual": {
+        "icon": "⚠️",
+        "color": "#E74C3C"
+      }
+    },
+    {
+      "id": "allergens-cosmetic",
+      "title": "🌸 Allergènes potentiels",
+      "triggers": {
+        "category": ["cosmetics"],
+        "conditions": ["cosmeticData.allergens.length > 3"]
+      },
+      "content": {
+        "short": "Plusieurs allergènes détectés",
+        "detail": "26 allergènes parfumants sont réglementés (Règlement CE 1223/2009). Linalool, limonène et géraniol peuvent provoquer réactions cutanées chez 2-3% de la population.",
+        "action": "Testez sur petite zone (avant-bras) 24h avant utilisation complète."
+      },
+      "source": "Règlement UE 1223/2009",
+      "visual": {
+        "icon": "🌸",
+        "color": "#E91E63"
+      }
+    },
+    {
+      "id": "microplastics",
+      "title": "🌊 Microplastiques",
+      "triggers": {
+        "category": ["cosmetics"],
+        "conditions": ["cosmeticData.microplastics = true"]
+      },
+      "content": {
+        "short": "Contient des microplastiques",
+        "detail": "Les microbilles de polyéthylène contaminent océans et chaîne alimentaire. Interdites en France depuis 2018 mais d'autres polymères restent autorisés.",
+        "action": "Préférez exfoliants naturels (sucre, marc de café, noyaux broyés)."
+      },
+      "source": "Loi Biodiversité 2016",
+      "visual": {
+        "icon": "🌊",
+        "color": "#00BCD4"
+      }
+    },
+    {
+      "id": "biodegradability-low",
+      "triggers": {
+        "category": ["detergents"],
+        "conditions": ["detergentData.biodegradability < 60"]
+      },
+      "title": "🧼 Faible biodégradabilité",
+      "content": {
+        "short": "Ce produit se dégrade lentement",
+        "detail": "Un détergent doit être biodégradable à >90% en 28 jours (Règlement UE 648/2004). Les tensioactifs non biodégradables polluent eaux et écosystèmes aquatiques.",
+        "action": "Choisissez produits Ecolabel UE ou faites votre lessive maison."
+      },
+      "source": "Règlement UE 648/2004",
+      "visual": {
+        "icon": "🧼",
+        "color": "#4CAF50"
+      }
+    },
+    {
+      "id": "phosphates",
+      "title": "💧 Phosphates",
+      "triggers": {
+        "category": ["detergents"],
+        "conditions": ["detergentData.phosphates = true"]
+      },
+      "content": {
+        "short": "Contient des phosphates",
+        "detail": "Les phosphates causent eutrophisation (prolifération algues) des cours d'eau. Interdits dans lessives EU depuis 2013 mais autorisés dans lave-vaisselle.",
+        "action": "Optez pour formules sans phosphates et zéro déchets (savon Marseille, vinaigre)."
+      },
+      "source": "Règlement UE 259/2012",
+      "visual": {
+        "icon": "💧",
+        "color": "#2196F3"
+      }
+    },
+    {
+      "id": "fiber-health",
+      "title": "🌾 Fibres bénéfiques",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["nutrition.perServing.fiber >= 3"]
+      },
+      "content": {
+        "short": "Riche en fibres",
+        "detail": "Les fibres réduisent le risque de maladies cardiovasculaires (-30%), diabète type 2 et cancer colorectal. L'ANSES recommande 25-30g/jour.",
+        "action": "Maintenez cet apport en fibres dans votre alimentation quotidienne."
+      },
+      "source": "ANSES 2016, OMS",
+      "visual": {
+        "icon": "🌾",
+        "color": "#8BC34A"
+      }
+    },
+    {
+      "id": "protein-quality",
+      "title": "💪 Protéines de qualité",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["nutrition.perServing.protein >= 10"]
+      },
+      "content": {
+        "short": "Bonne source de protéines",
+        "detail": "Les protéines sont essentielles pour muscles, peau et système immunitaire. Besoins : 0,8g/kg/jour (adulte sédentaire) à 1,6g/kg/jour (sportif).",
+        "action": "Variez les sources (végétales et animales) pour un profil complet en acides aminés."
+      },
+      "source": "ANSES 2016",
+      "visual": {
+        "icon": "💪",
+        "color": "#FF5722"
+      }
+    },
+    {
+      "id": "organic-certified",
+      "title": "🌱 Certifié bio",
+      "triggers": {
+        "category": ["food", "cosmetics"],
+        "conditions": ["foodData.labels.includes('bio')"]
+      },
+      "content": {
+        "short": "Produit certifié agriculture biologique",
+        "detail": "Le label AB garantit absence de pesticides de synthèse, OGM et respecte le bien-être animal. Les aliments bio contiennent 20-40% plus d'antioxydants.",
+        "action": "Privilégiez bio pour fruits/légumes à peau fine et produits laitiers."
+      },
+      "source": "Règlement UE 2018/848",
+      "visual": {
+        "icon": "🌱",
+        "color": "#4CAF50"
+      }
+    },
+    {
+      "id": "local-sourcing",
+      "title": "🚜 Circuit court",
+      "triggers": {
+        "category": ["food"],
+        "conditions": ["environmental.localSourcing > 70"]
+      },
+      "content": {
+        "short": "Produit local ou de saison",
+        "detail": "Les produits locaux réduisent l'empreinte carbone du transport (-75% CO2) et soutiennent l'économie locale. Privilégiez produits de saison.",
+        "action": "Consultez le calendrier des saisons et favorisez circuits courts (AMAP, marchés)."
+      },
+      "source": "ADEME 2020",
+      "visual": {
+        "icon": "🚜",
+        "color": "#795548"
+      }
+    },
+    {
+      "id": "minimal-packaging",
+      "title": "♻️ Emballage minimal",
+      "triggers": {
+        "category": ["food", "cosmetics", "detergents"],
+        "conditions": ["environmental.packaging >= 75"]
+      },
+      "content": {
+        "short": "Emballage éco-responsable",
+        "detail": "L'emballage représente 30% de l'impact environnemental d'un produit. Privilégiez vrac, verre consigné ou carton recyclé.",
+        "action": "Réutilisez contenants et compostez emballages biodégradables."
+      },
+      "source": "ADEME 2021",
+      "visual": {
+        "icon": "♻️",
+        "color": "#009688"
+      }
+    }
+  ]
+}

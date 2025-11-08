@@ -17,8 +17,7 @@ const userJourneySchema = new mongoose.Schema({
   productBarcode: String,
   scanDate: {
     type: Date,
-    default: Date.now,
-    index: true
+    default: Date.now
   },
   location: {
     type: String,
@@ -44,12 +43,12 @@ userJourneySchema.index({ scanDate: 1 }, { expireAfterSeconds: 7776000 });
 userJourneySchema.statics.getUserStats = async function(userHash, days = 30) {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
-  
+
   const scans = await this.find({
     userHash,
     scanDate: { $gte: startDate }
   }).populate('productId');
-  
+
   return {
     totalScans: scans.length,
     uniqueProducts: new Set(scans.map(s => s.productBarcode)).size,
