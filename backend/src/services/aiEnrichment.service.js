@@ -1,4 +1,4 @@
-const deepSeekService = require('./ai/deepSeekService');
+﻿const deepSeekService = require('./ai/deepSeekService');
 const nutrientCalculator = require('./nutrientCalculator');
 const logger = require('../utils/logger');
 const Product = require('../models/Product');
@@ -261,6 +261,9 @@ async function enrichDetergentsProduct(product, missingFields = []) {
 async function enrichProductWithAI(product, category = 'food', options = {}) {
   const { force = false } = options;
   try {
+    console.log('[DEBUG enrichProductWithAI] DÉBUT - barcode:', product.barcode);
+    console.log('[DEBUG enrichProductWithAI] category:', category);
+    console.log('[DEBUG enrichProductWithAI] product keys:', Object.keys(product));
     if (!product || !product.barcode) {
       throw new Error('Produit invalide ou barcode manquant');
     }
@@ -298,44 +301,47 @@ async function enrichProductWithAI(product, category = 'food', options = {}) {
     // ✅ NOUVEAU : Recharger le produit et recalculer le score
     if (result.success) {
       console.log('[AI] ✅ Données enrichies sauvegardées, recalcul du score...');
-      
-      // Recharger le produit avec les données fraîches
-      const freshProduct = await Product.findOne({ barcode: product.barcode });
-      
-      if (freshProduct) {
-        // Recalculer le score avec le scoring engine
-        const scoringUnified = require('./scoringUnified');
-        
-        // Préparer données pour scoring
-        const scoringData = {
-          category: freshProduct.category || category,
-          ...freshProduct.toObject()
-        };
-        
-        console.log('[AI] 🔍 scoringData:', JSON.stringify({
-          category: scoringData.category,
-          hasIngredients: !!scoringData.cosmeticsData?.ingredients,
-          ingredientsCount: scoringData.cosmeticsData?.ingredients?.length
-        }, null, 2));
-        
-        const newScores = scoringUnified.calculateScores(scoringData);
-        
-        console.log('[AI] 🔍 newScores:', JSON.stringify(newScores, null, 2));
-        
-        // Sauvegarder le nouveau score
-        await Product.updateOne(
-          { _id: freshProduct._id },
-          {
-            $set: {
-              scores: newScores,
-              'metadata.lastScored': new Date()
-            }
+
+      try {
+        // Recharger le produit avec les données fraîches
+        const freshProduct = await Product.findOne({ barcode: product.barcode });
+
+        if (freshProduct) {
+          // Recalculer le score avec le scoring engine
+          const ScoringEngineV3 = require('./ScoringEngineV3');
+
+          // Calculer le nouveau score avec le produit complet enrichi
+          const newScores = ScoringEngineV3.calculateScore(freshProduct);
+
+          console.log('[AI] 🔍 newScores:', JSON.stringify({
+            overallScore: newScores?.overallScore,
+            healthScore: newScores?.healthScore,
+            environmentScore: newScores?.environmentScore,
+            confidence: newScores?.confidence
+          }, null, 2));
+
+          // Sauvegarder le nouveau score si valide
+          if (newScores && newScores.overallScore !== null && newScores.overallScore !== undefined) {
+            await Product.updateOne(
+              { _id: freshProduct._id },
+              {
+                $set: {
+                  scores: newScores,
+                  'metadata.lastScored': new Date()
+                }
+              }
+            );
+
+            console.log('[AI] ✅ Score recalculé:', newScores.overallScore);
+            result.newScore = newScores.overallScore;
+          } else {
+            console.log('[AI] ⚠️ Score recalculé invalide, conservation score actuel');
+            result.newScore = freshProduct.scores?.overallScore;
           }
-        );
-        
-        console.log('[AI] ✅ Score recalculé:', newScores?.overallScore || 'N/A');
-        
-        result.newScore = newScores?.overallScore;
+        }
+      } catch (scoringError) {
+        console.error('[AI] ⚠️ Erreur recalcul score:', scoringError.message);
+        // On continue même si le recalcul échoue (enrichissement déjà sauvegardé)
       }
     }
 
@@ -356,7 +362,11 @@ function identifyMissingFields(product, category) {
   const missing = [];
   
   if (category === 'food') {
-    const nutriments = product.foodData?.nutritionalInfo || product.nutriments || {};
+    const nutriments = product.nutritionalInfo || product.foodData?.nutritionalInfo || product.nutriments || {};
+    
+    console.log('[DEBUG identifyMissingFields] nutriments:', JSON.stringify(nutriments, null, 2));
+    console.log('[DEBUG identifyMissingFields] sugars:', nutriments.sugars);
+    console.log('[DEBUG identifyMissingFields] saturatedFat:', nutriments.saturatedFat);
     
     if (!nutriments.sugars && nutriments.sugars !== 0) missing.push('sugars');
     if (!nutriments.saturatedFat && nutriments.saturatedFat !== 0) missing.push('saturatedFat');

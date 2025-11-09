@@ -84,17 +84,11 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 // === FONCTION ENRICHISSEMENT RÉPONSE ===
 async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
   try {
-    logger.info('[ENRICH_START] ====== FONCTION APPELÉE ====== Product type:', typeof product);
-    logger.info('[ENRICH_START] Product exists?', !!product);
-    logger.info('[ENRICH_START] Source:', source, 'Cached:', cached);
     // Convertir produit Mongoose en plain object
     const plainProduct = product.toObject ? product.toObject() : product;
     
     // Normaliser score (support ancien format)
     const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
-    logger.info('[ENRICH_DEBUG] Product type:', typeof product, 'Has toObject?', typeof product?.toObject);
-    logger.info('[ENRICH_DEBUG] plainProduct.scores:', JSON.stringify(plainProduct.scores));
-    logger.info('[ENRICH_DEBUG] currentScore:', currentScore);
     
     // 1. Alternatives IA (3 max)
     let alternatives = [];

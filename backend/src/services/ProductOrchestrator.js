@@ -1,588 +1,522 @@
-﻿// backend/src/services/ProductOrchestrator.js
-/**
- * Orchestrateur central pour récupération/création produits
- * Gère enrichissement automatique et cache IA
- * 
- * CORRECTION CRITIQUE : Crée le produit en base AVANT enrichissement IA
- * pour garantir un _id MongoDB valide
- */
+// === ECOLOJIA V3 - Product Orchestrator ===
+// Gère l'obtention complète d'un produit avec :
+// - Fetch depuis OFF ou DB
+// - Gère enrichissement automatique et cache IA
+// - Scoring unifié
+// CORRECTION CRITIQUE : Support dual format barcode (STRING ou OBJET)
 
+const mongoose = require('mongoose');
 const Product = require('../models/Product');
-const DataNormalizer = require('./DataNormalizer');
 const ScoringEngineV3 = require('./ScoringEngineV3');
+const DataNormalizer = require('./DataNormalizer');
+const logger = require('../utils/logger');
 const offClient = require('./offClient');
-const scoringUnified = require('./scoringUnified');
 const aiEnrichment = require('./aiEnrichment.service');
 const visionService = require('./vision/VisionService');
 
+// ============================================================================
+// FONCTION UTILITAIRE : DÉTECTION PRODUIT INCOMPLET (ENRICHISSEMENT IA AUTO)
+// ============================================================================
+
 /**
- * Détecte si un code-barre correspond à une catégorie valide
- * @param {string} barcode - Code-barre du produit
- * @returns {Object} { isValid, reason, detectedType }
+ * Détermine si un produit nécessite un enrichissement IA automatique.
+ * 
+ * Critères de déclenchement (ordre de priorité) :
+ * 1. Scoring impossible (canScore = false)
+ * 2. Confiance scoring très faible (< 70%)
+ * 3. Confiance scoring moyenne (70-85%) ET données incomplètes
+ * 4. Complétude faible ou moyenne
+ * 5. Score global bas (< 60) dû à des données manquantes
+ * 
+ * @param {Object} scoringResult - Résultat du scoring initial
+ * @param {Object} normalizedProduct - Produit normalisé
+ * @param {Object} existingProduct - Produit en base (si existe)
+ * @returns {Object} { shouldEnrich: boolean, reasons: string[] }
  */
-function detectProductCategory(barcode) {
-  if (!barcode || typeof barcode !== 'string') {
-    return { isValid: false, reason: 'Barcode invalide', detectedType: 'INVALID' };
-  }
-
-  // Livres (ISBN-13)
-  if (barcode.startsWith('978') || barcode.startsWith('979')) {
-    return {
-      isValid: false,
-      reason: 'Code-barre de livre (ISBN) détecté',
-      detectedType: 'BOOK'
+function shouldEnrichProduct(scoringResult, normalizedProduct, existingProduct = null) {
+  const reasons = [];
+  
+  // ============================================================================
+  // CAS 1 : Scoring impossible (CRITIQUE)
+  // ============================================================================
+  
+  if (!scoringResult.canScore) {
+    reasons.push('Scoring impossible (canScore = false)');
+    return { 
+      shouldEnrich: true, 
+      reasons,
+      priority: 'CRITICAL',
+      estimatedImprovement: '+40 points'
     };
   }
-
-  // Médicaments France (codes CIP)
-  if (barcode.startsWith('3400') || barcode.startsWith('3401')) {
-    return {
-      isValid: false,
-      reason: 'Code-barre de médicament détecté',
-      detectedType: 'MEDICINE'
+  
+  // ============================================================================
+  // CAS 2 : Confiance très faible (< 70%)
+  // ============================================================================
+  
+  if (scoringResult.confidence < 70) {
+    reasons.push(`Confiance très faible (${scoringResult.confidence}% < 70%)`);
+    
+    // Identifier les composantes manquantes
+    const missing = scoringResult.missingComponents || [];
+    if (missing.length > 0) {
+      reasons.push(`${missing.length} composante(s) manquante(s): ${missing.slice(0, 3).join(', ')}`);
+    }
+    
+    return { 
+      shouldEnrich: true, 
+      reasons,
+      priority: 'HIGH',
+      estimatedImprovement: '+30 points'
     };
   }
-
-  // Médicaments internationaux (codes spécifiques)
-  if (barcode.length === 13 && barcode.startsWith('34')) {
-    return {
-      isValid: false,
-      reason: 'Code-barre pharmaceutique détecté',
-      detectedType: 'MEDICINE'
+  
+  // ============================================================================
+  // CAS 3 : Confiance moyenne (70-85%) + Complétude faible/moyenne
+  // ============================================================================
+  
+  if (scoringResult.confidence >= 70 && scoringResult.confidence < 85) {
+    const completeness = scoringResult.dataCompleteness || 
+                        existingProduct?.scores?.dataCompleteness || 
+                        'Inconnue';
+    
+    if (completeness === 'Faible' || completeness === 'Moyenne') {
+      reasons.push(`Confiance moyenne (${scoringResult.confidence}%)`);
+      reasons.push(`Complétude: ${completeness}`);
+      
+      return { 
+        shouldEnrich: true, 
+        reasons,
+        priority: 'MEDIUM',
+        estimatedImprovement: '+15 points'
+      };
+    }
+  }
+  
+  // ============================================================================
+  // CAS 4 : Score global bas (< 60) + Données nutritionnelles manquantes
+  // ============================================================================
+  
+  const currentScore = scoringResult.overallScore || 
+                       existingProduct?.scores?.overallScore || 
+                       0;
+  
+  if (currentScore < 60) {
+    // Vérifier si c'est dû à des données manquantes (pas un mauvais produit)
+    const hasNutrition = normalizedProduct.nutritionalInfo && 
+                        Object.keys(normalizedProduct.nutritionalInfo).length > 3;
+    
+    const hasIngredients = normalizedProduct.ingredients && 
+                          normalizedProduct.ingredients.length > 0;
+    
+    if (!hasNutrition || !hasIngredients) {
+      reasons.push(`Score bas (${currentScore}/100) dû à données manquantes`);
+      
+      if (!hasNutrition) {
+        reasons.push('Informations nutritionnelles absentes');
+      }
+      if (!hasIngredients) {
+        reasons.push('Liste ingrédients absente');
+      }
+      
+      return { 
+        shouldEnrich: true, 
+        reasons,
+        priority: 'MEDIUM',
+        estimatedImprovement: '+20 points'
+      };
+    }
+  }
+  
+  // ============================================================================
+  // CAS 5 : Produit existant avec dataCompleteness = 'Faible'
+  // ============================================================================
+  
+  if (existingProduct?.scores?.dataCompleteness === 'Faible') {
+    reasons.push('Produit en base avec complétude "Faible"');
+    
+    return { 
+      shouldEnrich: true, 
+      reasons,
+      priority: 'LOW',
+      estimatedImprovement: '+10 points'
     };
   }
-
-  // Codes-barres valides pour nos catégories
-  return { isValid: true, detectedType: 'VALID' };
+  
+  // ============================================================================
+  // CAS 6 : Pas d'enrichissement nécessaire
+  // ============================================================================
+  
+  return { 
+    shouldEnrich: false, 
+    reasons: [
+      `Confiance: ${scoringResult.confidence}% (≥85%)`,
+      `Score: ${currentScore}/100 (≥60)`,
+      'Données suffisantes pour scoring fiable'
+    ],
+    priority: 'NONE'
+  };
 }
 
+// ============================================================================
+// FONCTION PRINCIPALE : GET PRODUCT
+// ============================================================================
+
 /**
- * Point d'entrée unique pour obtenir un produit (avec enrichissement auto)
- * @param {Object} input - { barcode, source }
- * @returns {Promise<Object>} Produit enrichi
+ * Point d'entrée unique pour obtenir un produit (avec enrichissement IA si nécessaire)
+ * SUPPORT DUAL FORMAT : barcode en string OU objet { barcode, source }
  */
-async function getOrCreateProduct(input) {
-  const { barcode, source = 'OFF' } = input;
+async function getProductByBarcode(barcodeOrOptions, options = {}) {
+  try {
+    // ============================================================================
+    // RÉTROCOMPATIBILITÉ : Accepter STRING ou OBJET
+    // ============================================================================
+    
+    let barcode;
+    let source = options.source || 'OFF';
+    
+    if (typeof barcodeOrOptions === 'string') {
+      // Format moderne : getProductByBarcode('3017620422003', { source: 'OFF' })
+      barcode = barcodeOrOptions;
+    } else if (typeof barcodeOrOptions === 'object' && barcodeOrOptions !== null && barcodeOrOptions.barcode) {
+      // Format legacy : getProductByBarcode({ barcode: '3017620422003', source: 'OFF' })
+      barcode = barcodeOrOptions.barcode;
+      source = barcodeOrOptions.source || 'OFF';
+      
+      // Fusionner les options de l'objet avec les options passées
+      options = { ...barcodeOrOptions, ...options };
+      
+      console.log('[Orchestrator] ⚠️  Format legacy détecté - Migration recommandée vers string');
+    } else {
+      throw new Error('Invalid barcode parameter: must be string or object with barcode property');
+    }
+    
+    console.log(`\n[Orchestrator] 🔍 Recherche produit: ${barcode}`);
 
-  if (!barcode) {
-    throw new Error('Barcode requis');
-  }
+    // ============================================================================
+    // ÉTAPE 1 : Vérifier si produit existe en base
+    // ============================================================================
 
-  // 0. Vérifier catégorie valide (filtrage médicaments/livres)
-  const categoryCheck = detectProductCategory(barcode);
-  if (!categoryCheck.isValid) {
-    console.log('[Orchestrator] Invalid category detected:', categoryCheck);
-    return {
-      product: null,
-      source: 'INVALID_CATEGORY',
-      error: categoryCheck.reason,
-      detectedType: categoryCheck.detectedType,
-      suggestion: 'Ce type de produit n\'est pas analysable par ECOLOJIA'
-    };
-  }
+    let product = await Product.findOne({ barcode }).lean();
 
-  // 1. Chercher en base
-  let product = await Product.findOne({ barcode }).lean();
+    if (product) {
+      console.log('[Orchestrator] ✅ Produit trouvé en base MongoDB');
+      
+      // Vérifier si le produit en base nécessite un enrichissement
+      const existingScore = product.scores?.overallScore || 0;
+      const existingCompleteness = product.scores?.dataCompleteness || 'Inconnue';
+      
+      console.log(`[Orchestrator] 📊 Score actuel: ${existingScore}/100, Complétude: ${existingCompleteness}`);
+      
+      // Si produit complet et récent (< 30 jours), le retourner directement
+      const ageInDays = product.scores?.calculatedAt 
+        ? (Date.now() - new Date(product.scores.calculatedAt).getTime()) / (1000 * 60 * 60 * 24)
+        : 999;
+      
+      if (existingScore >= 60 && existingCompleteness === 'Excellente' && ageInDays < 30) {
+        console.log('[Orchestrator] ✅ Produit complet et récent - Retour direct');
+        return {
+          product,
+          source: 'db_complete',
+          cached: true
+        };
+      }
+    }
 
-  // ✅ CORRECTION : Ne pas recalculer si un score valide existe
-  if (product && product.scores?.overallScore !== null && product.scores?.overallScore !== undefined) {
-    console.log('[Orchestrator] Product found in DB with valid score:', barcode, '- Score:', product.scores.overallScore);
-    return {
-      product,
-      source: 'DATABASE',
-      cached: true
-    };
-  }
+    // ============================================================================
+    // ÉTAPE 2 : Fetch depuis Open Food Facts
+    // ============================================================================
 
-  // 2. Récupérer depuis OpenFoodFacts si pas en base
-  if (!product) {
-    console.log('[Orchestrator] Fetching from OFF:', barcode);
-    const offData = await offClient.fetchFromOpenFoodFacts(barcode);
+    console.log('[Orchestrator] 🌐 Tentative fetch Open Food Facts...');
+
+    let offData;
+    try {
+      offData = await offClient.fetchFromOpenFoodFacts(barcode);
+    } catch (error) {
+      console.log('[Orchestrator] ⚠️  Erreur OFF:', error.message);
+      offData = null;
+    }
+
+    let normalizedProduct;
 
     if (!offData) {
       console.log('[Orchestrator] ⚠️  OFF échoué - Création produit minimal pour enrichissement IA');
-      
+
       // Créer un objet produit minimal (cosmétique par défaut)
-      product = {
+      normalizedProduct = {
         barcode,
-        name: input.name || 'Produit cosmétique',
-        brand: input.brand || '',
-        category: 'cosmetics',
-        source: 'USER_SCAN',
-        cosmeticsData: {
-          ingredients: [],
-          allergens: [],
-          endocrineDisruptors: [],
-          certifications: []
-        }
+        product_name: product?.name || 'Produit inconnu',
+        brands: product?.brand || '',
+        category: product?.category || 'cosmetics',
+        source: 'MINIMAL',
+        ingredients: product?.ingredients || [],
+        nutritionalInfo: product?.nutritionalInfo || {},
+        allergens: product?.allergens || [],
+        labels: product?.labels || [],
+        packaging: product?.packaging || '',
+        origin: product?.origin || ''
       };
-      
+
       console.log('[Orchestrator] ✅ Produit minimal créé, enrichissement IA va suivre');
     } else {
       // Mapper données OFF → format ECOLOJIA
-      product = mapOFFToProduct(offData);
+      normalizedProduct = DataNormalizer.normalizeProduct(offData, 'OFF');
+      console.log('[Orchestrator] ✅ Données OFF normalisées');
     }
 
-  }
+    // ============================================================================
+    // ÉTAPE 3 : Scoring initial
+    // ============================================================================
 
-  // 3. NOUVELLE ARCHITECTURE : Normaliser puis scorer
-  console.log('📦 [Orchestrator] Normalisation des données...');
-  const normalizedProduct = DataNormalizer.normalizeProduct(product, product._id ? 'DATABASE' : 'OFF');
+    console.log('[Orchestrator] 🔢 Calcul scoring initial...');
 
-  console.log('🎯 [Orchestrator] Calcul scientifique du score...');
-  const scoringResult = ScoringEngineV3.calculateScore(normalizedProduct);
+    const scoringResult = ScoringEngineV3.calculateScore(normalizedProduct);
 
-  console.log('📊 [Orchestrator] Résultat:', {
-    canScore: scoringResult.canScore,
-    score: scoringResult.overallScore,
-    confidence: scoringResult.confidence,
-    available: scoringResult.availableComponents?.length || 0,
-    missing: scoringResult.missingComponents?.length || 0
-  });
+    console.log('[Orchestrator] 📊 Scoring initial:', {
+      canScore: scoringResult.canScore,
+      overallScore: scoringResult.overallScore || 'N/A',
+      confidence: scoringResult.confidence,
+      dataCompleteness: scoringResult.dataCompleteness,
+      available: scoringResult.availableComponents?.length || 0,
+      missing: scoringResult.missingComponents?.length || 0
+    });
 
-  // 4. Enrichir avec IA UNIQUEMENT si confiance < 70%
-  let finalScores = scoringResult;
-  let aiUsed = false;
+    let finalScores = scoringResult;
+    let aiUsed = false;
 
-  // ============================================================================
-  // 🔧 CORRECTION CRITIQUE : CRÉER LE PRODUIT EN BASE AVANT ENRICHISSEMENT IA
-  // ============================================================================
-  
-  if (!scoringResult.canScore || scoringResult.confidence < 70) {
-    console.log('⚠️ [Orchestrator] Données insuffisantes - Enrichissement IA nécessaire');
-    
-    // ✅ NOUVEAU : Si le produit n'existe pas en base, le créer MAINTENANT
-    if (!product._id) {
-      console.log('[Orchestrator] 💾 Création produit en base AVANT enrichissement IA...');
-      
-      const tempProduct = new Product({
-        barcode,
-        name: normalizedProduct.product_name || 'Produit inconnu',
-        brand: normalizedProduct.brands || '',
-        category: normalizedProduct.category || 'cosmetics',
-        source: 'OFF',
-        scores: {
-          overallScore: 50,
-          confidence: 0.3,
-          dataCompleteness: 'Faible',
-          calculatedAt: new Date()
-        },
-        // Préserver les données OFF/normalized
-        ...normalizedProduct
+    // ============================================================================
+    // ÉTAPE 4 : DÉCISION ENRICHISSEMENT IA (LOGIQUE INTELLIGENTE)
+    // ============================================================================
+
+    const enrichmentDecision = shouldEnrichProduct(scoringResult, normalizedProduct, product);
+
+    if (enrichmentDecision.shouldEnrich) {
+      console.log('\n🤖 [Orchestrator] ENRICHISSEMENT IA DÉCLENCHÉ');
+      console.log(`   Priorité: ${enrichmentDecision.priority}`);
+      console.log(`   Raisons:`);
+      enrichmentDecision.reasons.forEach(reason => {
+        console.log(`     → ${reason}`);
       });
-      
-      product = await tempProduct.save();
-      console.log('[Orchestrator] ✅ Produit créé avec _id:', product._id);
-      
-      // Mettre à jour normalizedProduct avec l'_id
-      normalizedProduct._id = product._id;
-    }
-    
-    // Maintenant on peut enrichir avec l'IA (le produit a un _id valide)
-    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, scoringResult);
+      console.log(`   Amélioration estimée: ${enrichmentDecision.estimatedImprovement}\n`);
 
-    // Re-normaliser avec données IA
-    const enrichedProduct = DataNormalizer.normalizeProduct({
-      ...normalizedProduct,
-      ...aiResult.estimations
-    }, 'AI');
+      // ✅ Si le produit n'existe pas en base, le créer MAINTENANT
+      if (!product) {
+        console.log('[Orchestrator] 💾 Création produit en base AVANT enrichissement IA...');
 
-    // Re-calculer scores
-    finalScores = ScoringEngineV3.calculateScore(enrichedProduct);
-    aiUsed = true;
-  } else {
-    console.log('✅ [Orchestrator] Données suffisantes - Pas d\'enrichissement IA nécessaire');
-  }
+        const tempProduct = new Product({
+          barcode,
+          name: normalizedProduct.product_name || 'Produit inconnu',
+          brand: normalizedProduct.brands || '',
+          category: normalizedProduct.category || 'cosmetics',
+          source: 'OFF',
+          scores: {
+            overallScore: scoringResult.overallScore || 50,
+            confidence: scoringResult.confidence || 0.3,
+            dataCompleteness: scoringResult.dataCompleteness || 'Faible',
+            calculatedAt: new Date()
+          },
+          // Préserver les données OFF/normalized
+          ...normalizedProduct
+        });
 
-  // 5. Sauvegarder scores finaux en base
-  // ✅ CORRECTION : Préserver dataCompleteness depuis MongoDB
-  if (finalScores && !finalScores.dataCompleteness) {
-    // Si le produit existe déjà en base, préserver son dataCompleteness
-    const existingDataCompleteness = product.scores?.dataCompleteness;
-    if (existingDataCompleteness) {
-      finalScores.dataCompleteness = existingDataCompleteness;
-    } else {
-      // Sinon calculer selon la confiance
-      finalScores.dataCompleteness = finalScores.confidence >= 0.85 ? "Excellente" :
-                                      finalScores.confidence >= 0.65 ? "Bonne" : "Partielle";
-    }
-  }
+        product = await tempProduct.save();
+        console.log('[Orchestrator] ✅ Produit créé avec _id:', product._id);
 
-  const productData = product.toObject ? product.toObject() : product;
-  const savedProduct = await saveProduct({
-    ...productData,
-    scores: finalScores
-  });
-
-  return {
-    product: savedProduct,
-    source: product._id ? 'DATABASE_UPDATED' : 'OFF_NEW',
-    cached: false,
-    aiEnrichmentUsed: aiUsed
-  };
-}
-
-/**
- * Crée un produit depuis une image (OCR + IA)
- * Utilisé quand OpenFoodFacts ne trouve pas le produit
- */
-async function createProductFromImage(input) {
-  const { barcode, imageFile } = input;
-
-  try {
-    console.log('[Orchestrator] 🔍 Analyse image pour produit inconnu:', barcode);
-
-    // 1. OCR avec Google Vision
-    console.log('[Orchestrator] 📷 Extraction texte via OCR...');
-    const ocrResult = await visionService.extractText(imageFile);
-
-    if (!ocrResult || !ocrResult.text) {
-      throw new Error('OCR échoué : aucun texte extrait');
-    }
-
-    console.log('[Orchestrator] ✅ Texte extrait:', ocrResult.text.substring(0, 200) + '...');
-
-    // 2. Parser avec DeepSeek IA
-    console.log('[Orchestrator] 🤖 Parsing IA des données produit...');
-    const parsedProduct = await aiEnrichment.parseProductFromOCR(ocrResult.text, barcode);
-
-    if (!parsedProduct || !parsedProduct.name) {
-      throw new Error('IA parsing échoué : données insuffisantes');
-    }
-
-    console.log('[Orchestrator] ✅ Produit parsé:', parsedProduct.name);
-
-    // 3. Calculer scores selon catégorie détectée
-    const scoringData = prepareScoringData(parsedProduct);
-
-    let scores;
-    if (parsedProduct.category === 'cosmetics') {
-      scores = scoringUnified.calculateCosmeticsScores(scoringData);
-    } else if (parsedProduct.category === 'detergents') {
-      scores = scoringUnified.calculateDetergentsScores(scoringData);
-    } else {
-      scores = scoringUnified.calculateFoodScores(scoringData);
-    }
-
-    console.log('[Orchestrator] 📊 Score calculé:', scores.overallScore);
-
-    // 4. Créer produit en base avec flag IA
-    const productToSave = {
-      barcode: barcode,
-      name: parsedProduct.name,
-      brand: parsedProduct.brand,
-      category: parsedProduct.category || 'food',
-
-      foodData: parsedProduct.category === 'food' ? {
-        ingredients: parsedProduct.ingredients_text,
-        nutrition: { per100g: parsedProduct.nutriments },
-        novaGroup: parsedProduct.novaGroup,
-        nutriScore: parsedProduct.nutriScore,
-        additives: parsedProduct.additives,
-        labels: parsedProduct.labels
-      } : undefined,
-
-      cosmeticsData: parsedProduct.category === 'cosmetics' ? {
-        inci: parsedProduct.inci || [],
-        concerns: parsedProduct.concerns || []
-      } : undefined,
-
-      detergentsData: parsedProduct.category === 'detergents' ? {
-        ingredients: parsedProduct.ingredients || [],
-        hazards: parsedProduct.hazards || []
-      } : undefined,
-
-      scores: scores,
-      aiGenerated: true,
-      aiConfidence: parsedProduct.confidence || scores.dataQuality?.confidence || 0.5,
-      source: 'AI_OCR',
-      createdAt: new Date(),
-      lastSync: new Date()
-    };
-
-    const savedProduct = await saveProduct(productToSave);
-
-    console.log('[Orchestrator] ✅ Produit IA créé avec succès:', savedProduct._id);
-
-    return {
-      product: savedProduct,
-      source: 'AI_GENERATED',
-      cached: false,
-      aiEnrichmentUsed: true,
-      method: 'OCR + DeepSeek'
-    };
-
-  } catch (error) {
-    console.error('[Orchestrator] ❌ Erreur création produit IA:', error);
-    return {
-      product: null,
-      source: 'AI_ERROR',
-      error: `Analyse IA échouée : ${error.message}`
-    };
-  }
-}
-
-// ============================================================================
-// HELPERS
-// ============================================================================
-
-function isScoreRecent(scores) {
-  if (!scores.calculatedAt) return false;
-
-  const calculatedAt = new Date(scores.calculatedAt);
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-
-  return calculatedAt > sevenDaysAgo;
-}
-
-function mapOFFToProduct(offData) {
-  return {
-    barcode: offData.code,
-    name: offData.product_name || offData.generic_name,
-    brand: offData.brands,
-    category: 'food',
-    image_url: offData.image_url,
-
-    // Données food
-    nova_group: offData.nova_group,
-    nutriscore_grade: offData.nutriscore_grade,
-    ecoscore_grade: offData.ecoscore_grade,
-    additives_tags: offData.additives_tags || [],
-    labels_tags: offData.labels_tags || [],
-    ingredients_text: offData.ingredients_text,
-    packaging: offData.packaging,
-    origins: offData.origins,
-
-    // Nutriments
-    nutriments: offData.nutriments || {},
-
-    // Metadata
-    source: 'openfoodfacts',
-    lastSync: new Date()
-  };
-}
-
-function prepareScoringData(product) {
-  // Structure flexible qui supporte produits OFF bruts ET produits MongoDB
-
-  // 1. Identifier la source des données
-  const isMongoProduct = product.foodData !== undefined;
-
-  // 2. Extraire les nutriments selon la source
-  let nutriments = {};
-  if (isMongoProduct) {
-    // Produit MongoDB : chercher dans foodData
-    const nutrition = product.foodData?.nutrition?.per100g || {};
-    const nutritionalInfo = product.foodData?.nutritionalInfo || {};
-    nutriments = {
-      sugars_100g: nutrition.sugars || nutritionalInfo.sugars,
-      sugars: nutrition.sugars || nutritionalInfo.sugars,
-      'saturated-fat_100g': nutrition.saturatedFat || nutritionalInfo.saturatedFat,
-      saturated_fat: nutrition.saturatedFat || nutritionalInfo.saturatedFat,
-      salt_100g: nutrition.salt || nutritionalInfo.salt,
-      salt: nutrition.salt || nutritionalInfo.salt
-    };
-  } else {
-    // Produit OFF brut : utiliser nutriments directement
-    const rawNutriments = product.nutriments || {};
-    nutriments = {
-      sugars_100g: rawNutriments.sugars_100g || rawNutriments.sugars,
-      sugars: rawNutriments.sugars_100g || rawNutriments.sugars,
-      'saturated-fat_100g': rawNutriments['saturated-fat_100g'] || rawNutriments.saturated_fat,
-      saturated_fat: rawNutriments['saturated-fat_100g'] || rawNutriments.saturated_fat,
-      salt_100g: rawNutriments.salt_100g || rawNutriments.salt,
-      salt: rawNutriments.salt_100g || rawNutriments.salt
-    };
-  }
-
-  // 3. Construire l'objet de scoring unifié
-  return {
-    // Champs requis pour calculateDataConfidence
-    product_name: product.product_name || product.name || '',
-    brands: product.brands || product.brand || '',
-    ingredients_text: product.ingredients_text || product.foodData?.ingredients || '',
-
-    // Scores et labels
-    novaGroup: product.nova_group || product.foodData?.novaGroup,
-    nutriScore: product.nutriscore_grade || product.foodData?.nutriScore,
-    ecoScore: product.ecoscore_grade || product.foodData?.ecoScore,
-
-    // Additifs (extraire les codes si objets)
-    additives: isMongoProduct
-      ? (product.foodData?.additives?.map(a => a.code || a) || [])
-      : (product.additives_tags || []),
-
-    // Labels
-    labels: product.labels_tags || product.foodData?.labels || [],
-
-    // Catégories et packaging
-    categories: product.categories_tags || [],
-    packaging: product.packaging || '',
-
-    // Nutriments unifiés
-    nutriments
-  };
-}
-
-async function saveProduct(productData) {
-  const { barcode } = productData;
-
-  // Update ou insert
-  const updated = await Product.findOneAndUpdate(
-    { barcode },
-    { $set: productData },
-    { upsert: true, new: true }
-  );
-
-  return updated;
-}
-
-/**
- * Crée un produit depuis données OCR avec scoring ajusté
- * @param {Object} ocrData - Données extraites par OCR
- * @returns {Promise<Object>} - Produit créé avec scores
- */
-async function createFromOCR(ocrData) {
-  try {
-    const {
-      code,
-      product_name,
-      brands,
-      quantity,
-      ingredients_text,
-      categories_tags = ['en:food'],
-      source = 'ocr',
-      confidence = 0.7,
-      ocrMetadata = {}
-    } = ocrData;
-
-    console.log(`[Orchestrator] Création produit OCR: ${code} - "${product_name}"`);
-
-    // Vérifier si le produit existe déjà
-    const existingProduct = await Product.findOne({ code });
-    if (existingProduct) {
-      console.log(`[Orchestrator] Produit ${code} existe déjà, mise à jour...`);
-
-      // Mettre à jour avec données OCR si meilleure confiance
-      if (existingProduct.confidence && existingProduct.confidence >= confidence) {
-        console.log(`[Orchestrator] Confiance existante supérieure, abandon mise à jour`);
-        return existingProduct;
+        // Mettre à jour normalizedProduct avec l'_id
+        normalizedProduct._id = product._id;
       }
+
+      // Enrichissement IA
+      console.log('[Orchestrator] 🚀 Appel service enrichissement IA...');
+      
+      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, normalizedProduct.category || 'food');
+
+      console.log('[Orchestrator] ✅ Enrichissement IA terminé');
+      console.log(`   Champs enrichis: ${Object.keys(aiResult.estimations || {}).length}`);
+
+      // Re-normaliser avec données IA
+      const enrichedProduct = DataNormalizer.normalizeProduct({
+        ...normalizedProduct,
+        ...aiResult.estimations
+      }, 'AI');
+
+      // Re-calculer scores
+      finalScores = ScoringEngineV3.calculateScore(enrichedProduct);
+      
+      console.log('[Orchestrator] 📊 Nouveau score après enrichissement:', {
+        ancien: scoringResult.overallScore || 'N/A',
+        nouveau: finalScores.overallScore || 'N/A',
+        gain: finalScores.overallScore && scoringResult.overallScore 
+          ? `+${finalScores.overallScore - scoringResult.overallScore} points`
+          : 'N/A'
+      });
+
+      aiUsed = true;
+    } else {
+      console.log('\n✅ [Orchestrator] Enrichissement IA NON nécessaire');
+      console.log('   Raisons:');
+      enrichmentDecision.reasons.forEach(reason => {
+        console.log(`     → ${reason}`);
+      });
+      console.log('');
     }
 
-    // Normaliser les données avec DataNormalizer
-    const normalizedData = DataNormalizer.normalizeFromOCR({
-      code,
-      product_name,
-      brands,
-      quantity,
-      ingredients_text,
-      categories_tags
-    });
+    // ============================================================================
+    // ÉTAPE 5 : Sauvegarde en base avec scores finaux
+    // ============================================================================
 
-    console.log('[Orchestrator] Données normalisées:', {
-      name: normalizedData.product_name,
-      ingredients: normalizedData.ingredients?.length || 0
-    });
+    // ✅ CORRECTION : Préserver dataCompleteness depuis MongoDB si disponible
+    const dataCompletenessToSave = product?.scores?.dataCompleteness || 
+                                   finalScores.dataCompleteness || 
+                                   'Moyenne';
 
-    // Calculer les scores avec ScoringEngineV3
-    console.log('[Orchestrator] Calcul des scores...');
-    const category = _detectCategory(categories_tags);
-    const scores = ScoringEngineV3.calculateScores(normalizedData, category);
-
-    // Ajuster la confiance des scores selon la confiance OCR
-    if (scores && confidence < 1) {
-      scores.confidence = scores.confidence * confidence;
-      scores.metadata = scores.metadata || {};
-      scores.metadata.ocrConfidence = confidence;
-      scores.metadata.adjustedByOCR = true;
-
-      console.log(`[Orchestrator] Confiance ajustée: ${scores.confidence.toFixed(2)} (base × OCR ${confidence})`);
-    }
-
-    // Créer l'objet produit avec métadonnées OCR
     const productData = {
-      code,
-      product_name,
-      brands,
-      quantity,
-      ingredients_text,
-      categories_tags,
-
-      // Scores calculés
-      scores: scores || null,
-
-      // Métadonnées OCR
-      source,
-      confidence,
-      dataQuality: _assessDataQuality(normalizedData, confidence),
-      ocrMetadata: {
-        ...ocrMetadata,
-        createdAt: new Date(),
-        version: '3.2.0'
+      barcode,
+      name: normalizedProduct.product_name || product?.name || 'Produit inconnu',
+      brand: normalizedProduct.brands || product?.brand || '',
+      category: normalizedProduct.category || product?.category || 'food',
+      source: normalizedProduct.source || 'OFF',
+      
+      // Scores finaux (avec ou sans IA)
+      scores: {
+        overallScore: finalScores.overallScore || 50,
+        healthScore: finalScores.healthScore || 50,
+        environmentScore: finalScores.environmentScore || 50,
+        confidence: finalScores.confidence || 0.5,
+        dataCompleteness: dataCompletenessToSave,
+        breakdown: finalScores.breakdown || {},
+        calculatedAt: new Date()
       },
 
-      // Flags spéciaux
-      needsVerification: confidence < 0.75,
-      isOCRProduct: true,
+      // Données produit
+      ingredients: normalizedProduct.ingredients || [],
+      nutritionalInfo: normalizedProduct.nutritionalInfo || {},
+      allergens: normalizedProduct.allergens || [],
+      labels: normalizedProduct.labels || [],
+      packaging: normalizedProduct.packaging || '',
+      origin: normalizedProduct.origin || '',
+      image: normalizedProduct.image_url || '',
 
-      // Audit
-      lastUpdated: new Date(),
-      createdAt: new Date()
+      // Métadonnées IA
+      aiEnriched: aiUsed,
+      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+
+      updatedAt: new Date()
     };
 
-    // Sauvegarder en base
-    const product = existingProduct
-      ? await Product.findOneAndUpdate({ code }, productData, { new: true })
-      : await Product.create(productData);
-
-    console.log(`[Orchestrator] ✓ Produit ${existingProduct ? 'mis à jour' : 'créé'}: ${product._id}`);
-
-    // Indexer dans Algolia (si disponible)
-    try {
-      if (typeof algoliaService !== 'undefined') {
-        await algoliaService.indexProduct(product);
-        console.log('[Orchestrator] ✓ Produit indexé dans Algolia');
-      }
-    } catch (algoliaError) {
-      console.warn('[Orchestrator] Erreur indexation Algolia:', algoliaError.message);
+    // Sauvegarder ou mettre à jour
+    if (product && product._id) {
+      await Product.findByIdAndUpdate(product._id, productData, { new: true });
+      console.log('[Orchestrator] ✅ Produit mis à jour en base');
+    } else {
+      product = await new Product(productData).save();
+      console.log('[Orchestrator] ✅ Nouveau produit créé en base');
     }
 
-    return product;
+    // ============================================================================
+    // ÉTAPE 6 : Retour final
+    // ============================================================================
+
+    return {
+      product: await Product.findOne({ barcode }).lean(),
+      source: aiUsed ? 'off_enriched' : 'off',
+      cached: false,
+      aiUsed,
+      enrichmentDecision: aiUsed ? enrichmentDecision : null
+    };
 
   } catch (error) {
-    console.error('[Orchestrator] Erreur création produit OCR:', error);
+    logger.error('[Orchestrator] Erreur getProductByBarcode:', error);
     throw error;
   }
 }
 
-/**
- * Détecte la catégorie depuis tags
- */
-function _detectCategory(categories_tags) {
-  // TODO: Implémenter détection catégorie
-  return 'food';
-}
+// ============================================================================
+// SCAN PHOTO (OCR) - Pour produits inconnus
+// ============================================================================
 
 /**
- * Évalue la qualité des données OCR
+ * Scan photo étiquette → OCR → Enrichissement IA → Création produit
  */
-function _assessDataQuality(data, confidence) {
-  const hasName = !!data.product_name && data.product_name.length > 3;
-  const hasIngredients = !!data.ingredients_text && data.ingredients_text.length > 10;
-  const hasBrand = !!data.brands && data.brands.length > 0;
+async function scanProductFromPhoto(photoBase64, options = {}) {
+  try {
+    console.log('[Orchestrator] 📸 Analyse photo produit...');
 
-  if (confidence >= 0.8 && hasName && hasIngredients && hasBrand) {
-    return 'EXCELLENT';
-  } else if (confidence >= 0.65 && hasName && hasIngredients) {
-    return 'BON';
-  } else if (confidence >= 0.5 && hasName) {
-    return 'MOYEN';
-  } else {
-    return 'FAIBLE';
+    // OCR via Google Vision
+    const ocrResult = await visionService.extractProductInfo(photoBase64);
+
+    if (!ocrResult.success) {
+      throw new Error('OCR échoué: ' + ocrResult.error);
+    }
+
+    console.log('[Orchestrator] ✅ OCR réussi:', {
+      ingredients: ocrResult.ingredients?.length || 0,
+      nutrition: Object.keys(ocrResult.nutrition || {}).length,
+      labels: ocrResult.labels?.length || 0
+    });
+
+    // Créer produit minimal avec données OCR
+    const minimalProduct = {
+      product_name: ocrResult.productName || 'Produit scanné',
+      brands: ocrResult.brand || '',
+      category: ocrResult.category || 'food',
+      source: 'OCR',
+      ingredients: ocrResult.ingredients || [],
+      nutritionalInfo: ocrResult.nutrition || {},
+      allergens: ocrResult.allergens || [],
+      labels: ocrResult.labels || []
+    };
+
+    // Normaliser
+    const normalizedProduct = DataNormalizer.normalizeProduct(minimalProduct, 'OCR');
+
+    // Scoring initial
+    const scoringResult = ScoringEngineV3.calculateScore(normalizedProduct);
+
+    // Enrichissement IA (toujours nécessaire pour OCR)
+    console.log('[Orchestrator] 🤖 Enrichissement IA du produit scanné...');
+    
+    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, normalizedProduct.category || 'food');
+
+    // Créer produit en base
+    const productData = {
+      barcode: ocrResult.barcode || `OCR_${Date.now()}`,
+      name: normalizedProduct.product_name,
+      brand: normalizedProduct.brands,
+      category: normalizedProduct.category,
+      source: 'OCR',
+      scores: aiResult.scores || scoringResult,
+      ingredients: normalizedProduct.ingredients,
+      nutritionalInfo: normalizedProduct.nutritionalInfo,
+      aiEnriched: true,
+      aiEnrichedAt: new Date(),
+      image: options.imageUrl || ''
+    };
+
+    const product = await new Product(productData).save();
+
+    console.log('[Orchestrator] ✅ Produit OCR créé avec _id:', product._id);
+
+    return {
+      product: product.toObject(),
+      source: 'ocr',
+      cached: false,
+      aiUsed: true
+    };
+
+  } catch (error) {
+    logger.error('[Orchestrator] Erreur scanProductFromPhoto:', error);
+    throw error;
   }
 }
 
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
 module.exports = {
-  getOrCreateProduct
+  getProductByBarcode,
+  getOrCreateProduct: getProductByBarcode, // Alias pour rétrocompatibilité
+  scanProductFromPhoto,
+  shouldEnrichProduct // Export pour tests
 };
