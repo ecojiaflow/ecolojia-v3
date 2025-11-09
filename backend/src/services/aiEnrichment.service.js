@@ -333,7 +333,7 @@ async function enrichProductWithAI(product, category = 'food', options = {}) {
             );
 
             console.log('[AI] ✅ Score recalculé:', newScores.overallScore);
-            result.newScore = newScores.overallScore;
+            result.scores = newScores;  // ✅ Retourner objet complet
           } else {
             console.log('[AI] ⚠️ Score recalculé invalide, conservation score actuel');
             result.newScore = freshProduct.scores?.overallScore;

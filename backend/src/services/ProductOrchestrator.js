@@ -1,4 +1,4 @@
-// === ECOLOJIA V3 - Product Orchestrator ===
+﻿// === ECOLOJIA V3 - Product Orchestrator ===
 // Gère l'obtention complète d'un produit avec :
 // - Fetch depuis OFF ou DB
 // - Gère enrichissement automatique et cache IA
@@ -337,11 +337,12 @@ async function getProductByBarcode(barcodeOrOptions, options = {}) {
       // Re-normaliser avec données IA
       const enrichedProduct = DataNormalizer.normalizeProduct({
         ...normalizedProduct,
-        ...aiResult.estimations
+        ...aiResult.estimations,
+        scores: aiResult.scores  // ✅ Injecter scores recalculés par IA
       }, 'AI');
 
-      // Re-calculer scores
-      finalScores = ScoringEngineV3.calculateScore(enrichedProduct);
+      // ✅ Utiliser scores IA directement (plus fiable que recalcul)
+      finalScores = aiResult.scores || ScoringEngineV3.calculateScore(enrichedProduct);
       
       console.log('[Orchestrator] 📊 Nouveau score après enrichissement:', {
         ancien: scoringResult.overallScore || 'N/A',
