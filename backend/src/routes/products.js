@@ -1,4 +1,4 @@
-// PATH: backend/src/routes/products.js
+﻿// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
 // const enrichProduct = require('../middleware/enrichProduct');
@@ -119,9 +119,9 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
           allergens: [],
           goals: ['health']
         };
-        const recipesResult = await recipeAdapter.recommendRecipes(userProfile, {
-          category: null,
-          count: 3
+        const recipesResult = await recipeAdapter.recommendRecipesForProduct(plainProduct, {
+          count: 3,
+          userProfile: userProfile
         });
         recipes = recipesResult || [];
         logger.info('[RECIPES] Recettes recommandées:', recipes.length);

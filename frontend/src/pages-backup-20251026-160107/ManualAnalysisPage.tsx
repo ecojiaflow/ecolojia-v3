@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/ManualAnalysisPage.tsx
+﻿// PATH: frontend/src/pages/ManualAnalysisPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -244,7 +244,7 @@ export const ManualAnalysisPage: React.FC = () => {
             <button
               type="submit"
               disabled={isAnalyzing}
-              className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="flex-1 px-6 py-3 bg-primary text-forest rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isAnalyzing ? (
                 <>

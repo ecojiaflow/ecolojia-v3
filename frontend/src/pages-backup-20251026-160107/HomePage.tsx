@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertCircle,
@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
     { icon: Shield, value: '100%', label: 'Scientifique', color: 'text-blue-600' },
-    { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-purple-600' },
+    { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-forest-dark' },
     { icon: Users, value: '500k+', label: 'Utilisateurs actifs', color: 'text-orange-600' }
   ];
 
@@ -92,7 +92,7 @@ const HomePage: React.FC = () => {
       icon: Sparkles,
       title: 'IA Personnalisee',
       description: 'Recommandations adaptees a votre profil et vos objectifs Santé',
-      color: 'bg-purple-100 text-purple-700'
+      color: 'bg-primary-100 text-forest-dark'
     }
   ];
 
@@ -116,7 +116,7 @@ const HomePage: React.FC = () => {
       <section className="py-8 md:py-16 lg:py-24 bg-gradient-to-br from-purple-50 via-blue-50 to-green-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-forest-dark rounded-full text-sm font-medium mb-4">
               <Sparkles size={16} />
               Nouveau - Premium
             </div>
@@ -472,7 +472,7 @@ return (
           <div className="text-center">
             <Link
               to="/meal-plan"
-              className="inline-flex items-center gap-3 h-12 px-8 rounded-lg bg-primary-500 text-[#0E1A0D] font-semibold text-base shadow-2 transition-all duration-200 hover:bg-primary-600 hover:shadow-3 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#236D3E]"
+              className="inline-flex items-center gap-3 h-12 px-8 rounded-lg bg-primary-500 text-forest font-semibold text-base shadow-2 transition-all duration-200 hover:bg-primary-600 hover:shadow-3 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#236D3E]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>

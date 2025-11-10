@@ -1,4 +1,4 @@
-// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
+﻿// PATH: frontend/src/components/scanner/BarcodeScanner.tsx
 // SCANNER COMPLET AVEC TOUTES LES FONCTIONNALITES
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -376,10 +376,10 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
 
               <button
                 onClick={() => setMode('manual')}
-                className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all flex items-center space-x-4"
+                className="w-full p-6 bg-white border-2 border-gray-200 rounded-lg hover:border-primary hover:bg-primary-50 transition-all flex items-center space-x-4"
               >
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <Keyboard className="w-8 h-8 text-purple-600" />
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                  <Keyboard className="w-8 h-8 text-forest-dark" />
                 </div>
                 <div className="text-left flex-1">
                   <h4 className="font-semibold text-gray-800">Saisie manuelle</h4>
@@ -492,7 +492,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
 
                 {photoStep === 'barcode' && (
                   <>
-                    <Camera className="w-20 h-20 text-purple-600 mx-auto mb-4" />
+                    <Camera className="w-20 h-20 text-forest-dark mx-auto mb-4" />
                     <h4 className="text-xl font-semibold mb-2">Code-barres</h4>
                     <p className="text-gray-600">
                       Prenez le code-barres en photo (pour une meilleure identification)
@@ -524,7 +524,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ isOpen, onClose, onScan
                       <img
                         src={capturedPhotos.barcode}
                         alt="Code-barres"
-                        className="w-20 h-20 object-cover rounded-lg border-2 border-purple-500"
+                        className="w-20 h-20 object-cover rounded-lg border-2 border-primary"
                       />
                     )}
                   </div>

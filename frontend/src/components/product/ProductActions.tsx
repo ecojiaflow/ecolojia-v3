@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { MessageCircle, AlertCircle, Sparkles, Loader, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -138,10 +138,10 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
 
       {/* ✅ Badge "Enrichi par IA" si déjà enrichi */}
       {(product.metadata?.aiEnriched || product.metadata?.lastEnriched) && (
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+        <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-purple-600" />
-            <div className="text-sm text-purple-900">
+            <Sparkles className="w-5 h-5 text-forest-dark" />
+            <div className="text-sm text-forest-900">
               <strong>✨ Données complétées par IA</strong> : Les valeurs nutritionnelles manquantes 
               ont été estimées scientifiquement. Confiance actuelle :{' '}
               <strong>{Math.round((product?.scores?.confidence || 0) * 100)}%</strong>
@@ -206,7 +206,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product, onProdu
 
           <button
             onClick={() => handleChatQuestion("Détails composition")}
-            className="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-colors"
+            className="flex items-center justify-center gap-2 bg-primary-hover text-white px-4 py-3 rounded-lg hover:bg-primary-active transition-colors"
           >
             <AlertCircle className="w-4 h-4" />
             <span className="text-sm font-medium">Composition</span>

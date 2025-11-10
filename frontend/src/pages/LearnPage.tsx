@@ -140,14 +140,14 @@ export const LearnPage: React.FC = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <Link to="/" className="inline-flex items-center text-[#3B3B3B] hover:text-[#7DDE4A] mb-4 transition-colors">
+          <Link to="/" className="inline-flex items-center text-neutral-800 hover:text-primary mb-4 transition-colors">
             <ArrowLeft className="w-5 h-5 mr-2" />
             Retour à l'accueil
           </Link>
           
           <div className="flex items-center gap-3 mb-2">
-            <BookOpen className="w-8 h-8 text-[#7DDE4A]" />
-            <h1 className="text-4xl font-bold text-[#3B3B3B]">Bibliothèque Ecolojia</h1>
+            <BookOpen className="w-8 h-8 text-primary" />
+            <h1 className="text-4xl font-bold text-neutral-800">Bibliothèque Ecolojia</h1>
           </div>
           <p className="text-lg text-gray-600">
             Comprendre ce que vous consommez : ingrédients, additifs, labels et idées reçues
@@ -165,7 +165,7 @@ export const LearnPage: React.FC = () => {
               placeholder="Rechercher un ingrédient, additif, label..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-[#7DDE4A] focus:outline-none text-lg"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none text-lg"
             />
           </div>
         </div>
@@ -180,8 +180,8 @@ export const LearnPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`flex items-center gap-2 px-5 py-3 rounded-lg font-medium transition-all ${
                   selectedCategory === cat.id
-                    ? 'bg-[#7DDE4A] text-white shadow-md scale-105'
-                    : 'bg-white text-[#3B3B3B] hover:bg-[#E9F8DF] border border-gray-200'
+                    ? 'bg-primary text-forest shadow-md scale-105'
+                    : 'bg-white text-neutral-800 hover:bg-nature-100 border border-gray-200'
                 }`}
               >
                 <Icon className="w-5 h-5" style={{ color: selectedCategory === cat.id ? 'white' : cat.color }} />
@@ -211,7 +211,7 @@ export const LearnPage: React.FC = () => {
                   <div className="flex items-start gap-3 mb-3">
                     <CategoryIcon className="w-6 h-6 flex-shrink-0 mt-1" style={{ color: CATEGORIES.find(c => c.id === item.category)?.color }} />
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-[#3B3B3B] mb-1">{item.title}</h3>
+                      <h3 className="text-xl font-bold text-neutral-800 mb-1">{item.title}</h3>
                       <p className="text-sm text-gray-600">{item.description}</p>
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export const LearnPage: React.FC = () => {
 
                   <button
                     onClick={() => setExpandedCard(isExpanded ? null : item.id)}
-                    className="mt-4 text-[#7DDE4A] hover:text-[#6BC93B] font-medium text-sm transition-colors"
+                    className="mt-4 text-primary hover:text-[#6BC93B] font-medium text-sm transition-colors"
                   >
                     {isExpanded ? '▲ Réduire' : '▼ En savoir plus'}
                   </button>

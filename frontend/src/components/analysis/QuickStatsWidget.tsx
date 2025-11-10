@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/analytics/QuickStatsWidget.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart3, TrendingUp, Target, Award } from 'lucide-react';
@@ -21,7 +21,7 @@ const QuickStatsWidget: React.FC = () => {
   // Si pas de donnees, afficher widget demo
   if (!hasData()) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-primary-200">
         <div className="text-center mb-6">
           <div className="text-4xl mb-3">aa</div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -43,8 +43,8 @@ const QuickStatsWidget: React.FC = () => {
             <p className="text-xs text-blue-700 font-medium">Analyses</p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg text-center">
-            <div className="text-2xl font-bold text-purple-600">--</div>
-            <p className="text-xs text-purple-700 font-medium">Objectifs</p>
+            <div className="text-2xl font-bold text-forest-dark">--</div>
+            <p className="text-xs text-forest-dark font-medium">Objectifs</p>
           </div>
           <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-orange-600">--</div>
@@ -54,14 +54,14 @@ const QuickStatsWidget: React.FC = () => {
 
         <button
           onClick={() => navigate('/dashboard')}
-          className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center"
+          className="w-full bg-primary hover:bg-primary-hover text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center"
         >
           <BarChart3 className="w-5 h-5 mr-2" />
           Decouvrir mon Dashboard
         </button>
 
-        <div className="mt-4 p-3 bg-purple-50 rounded-lg text-center">
-          <p className="text-purple-700 text-xs">
+        <div className="mt-4 p-3 bg-primary-50 rounded-lg text-center">
+          <p className="text-forest-dark text-xs">
             <strong> Premiere etape :</strong> Analysez 3 produits pour commencer !
           </p>
         </div>
@@ -87,7 +87,7 @@ const QuickStatsWidget: React.FC = () => {
   const trend = avgRecent - avgPrevious;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-primary-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -134,9 +134,9 @@ const QuickStatsWidget: React.FC = () => {
         </div>
         
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-purple-600">{activeGoals}</div>
-          <p className="text-xs text-purple-700 font-medium">Objectifs</p>
-          <p className="text-xs text-purple-600 mt-1">en cours</p>
+          <div className="text-2xl font-bold text-forest-dark">{activeGoals}</div>
+          <p className="text-xs text-forest-dark font-medium">Objectifs</p>
+          <p className="text-xs text-forest-dark mt-1">en cours</p>
         </div>
         
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg text-center">
@@ -169,13 +169,13 @@ const QuickStatsWidget: React.FC = () => {
         {goalsProgress.length > 0 && (
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Target className="w-4 h-4 text-purple-500 mr-2" />
+              <Target className="w-4 h-4 text-primary-1000 mr-2" />
               <span className="text-sm font-medium text-gray-700">Objectif Principal</span>
             </div>
             <div className="flex items-center">
               <div className="w-20 h-2 bg-gray-200 rounded-full mr-2">
                 <div 
-                  className="h-full bg-purple-500 rounded-full transition-all duration-500"
+                  className="h-full bg-primary rounded-full transition-all duration-500"
                   style={{ width: `${goalsProgress[0]?.progress || 0}%` }}
                 />
               </div>
@@ -189,7 +189,7 @@ const QuickStatsWidget: React.FC = () => {
       <div className="space-y-2">
         <button
           onClick={() => navigate('/dashboard')}
-          className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center"
+          className="w-full bg-primary hover:bg-primary-hover text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center"
         >
           <BarChart3 className="w-5 h-5 mr-2" />
           Voir Dashboard Complet
@@ -204,8 +204,8 @@ const QuickStatsWidget: React.FC = () => {
       </div>
 
       {/* Insight du jour */}
-      <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-        <p className="text-purple-700 text-xs text-center">
+      <div className="mt-4 p-3 bg-primary-50 rounded-lg">
+        <p className="text-forest-dark text-xs text-center">
           <strong>aaa Insight :</strong> 
           {currentScore >= 75 ? " Excellente hygiene alimentaire ! Continuez ainsi."
             : currentScore >= 50 ? " Bon progres ! Reduisez les produits ultra-transformes."

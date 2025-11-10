@@ -196,11 +196,11 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
           <div className="mb-8 text-center">
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-6 mb-4">
               <div className="text-4xl font-bold mb-2">4.99aaa</div>
-              <div className="text-purple-100 mb-4">/mois aa Annulable  tout moment</div>
+              <div className="text-primary-200 mb-4">/mois aa Annulable  tout moment</div>
               <div className="text-lg font-semibold">
                 = 0.16aaa par jour
               </div>
-              <div className="text-purple-200 text-sm">
+              <div className="text-primary text-sm">
                 Moins qu'un cafe aaa
               </div>
             </div>
@@ -218,11 +218,11 @@ export const SmartUpgradeModal: React.FC<SmartUpgradeModalProps> = ({
                 </div>
                 <div className="text-xs text-blue-700">ROI annuel</div>
               </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">
+              <div className="p-3 bg-primary-50 rounded-lg">
+                <div className="text-2xl font-bold text-forest-dark">
                   aa
                 </div>
-                <div className="text-xs text-purple-700">Analyses illimitees</div>
+                <div className="text-xs text-forest-dark">Analyses illimitees</div>
               </div>
             </div>
           </div>

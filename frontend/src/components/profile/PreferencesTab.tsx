@@ -92,7 +92,7 @@ export function PreferencesTab({
     >
       {/* AI Tone */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-1">
           Ton des reponses IA
         </h3>
         <p className="text-sm text-neutral-700 mb-4">
@@ -106,17 +106,17 @@ export function PreferencesTab({
                 setPreferences({ ...preferences, tone: option.value })
               }
               className={`p-4 rounded-xl border-2 text-left transition-all ${
-                preferences.tone === option.value ? 'border-[#7DDE4A] bg-[#E9F8DF]'
-                  : 'border-[#DDE9DA] hover:border-gray-300'
+                preferences.tone === option.value ? 'border-primary bg-nature-100'
+                  : 'border-nature-300 hover:border-gray-300'
               }`}
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-medium text-[#3B3B3B]">{option.label}</p>
+                  <p className="font-medium text-neutral-800">{option.label}</p>
                   <p className="text-sm text-neutral-700 mt-1">{option.description}</p>
                 </div>
                 {preferences.tone === option.value && (
-                  <Check className="w-5 h-5 text-[#7DDE4A] flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                 )}
               </div>
             </button>
@@ -126,7 +126,7 @@ export function PreferencesTab({
 
       {/* Detail Level */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-1">
           Niveau de detail
         </h3>
         <p className="text-sm text-neutral-700 mb-4">
@@ -140,13 +140,13 @@ export function PreferencesTab({
                 setPreferences({ ...preferences, detailLevel: option.value })
               }
               className={`flex-1 p-4 rounded-xl border-2 transition-all ${
-                preferences.detailLevel === option.value ? 'border-[#7DDE4A] bg-[#E9F8DF]'
-                  : 'border-[#DDE9DA] hover:border-gray-300'
+                preferences.detailLevel === option.value ? 'border-primary bg-nature-100'
+                  : 'border-nature-300 hover:border-gray-300'
               }`}
             >
               <div className="text-center">
                 <span className="text-2xl mb-2">{option.icon}</span>
-                <p className="font-medium text-[#3B3B3B]">{option.label}</p>
+                <p className="font-medium text-neutral-800">{option.label}</p>
               </div>
             </button>
           ))}
@@ -155,7 +155,7 @@ export function PreferencesTab({
 
       {/* Food Restrictions */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-1">
           Restrictions alimentaires
         </h3>
         <p className="text-sm text-neutral-700 mb-4">
@@ -195,7 +195,7 @@ export function PreferencesTab({
 
       {/* Allergens */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-1">Allergenes</h3>
+        <h3 className="text-lg font-semibold text-neutral-800 mb-1">Allergenes</h3>
         <p className="text-sm text-neutral-700 mb-4">
           Nous vous alerterons en priorite sur ces allergenes
         </p>
@@ -233,13 +233,13 @@ export function PreferencesTab({
 
       {/* Notifications */}
       <div>
-        <h3 className="text-lg font-semibold text-[#3B3B3B] mb-4">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-4">
           Notifications
         </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[#3B3B3B]">Alertes par email</p>
+              <p className="font-medium text-neutral-800">Alertes par email</p>
               <p className="text-sm text-neutral-700">
                 Recevez des alertes sur les rappels de produits
               </p>
@@ -259,7 +259,7 @@ export function PreferencesTab({
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[#3B3B3B]">Rappels de produits</p>
+              <p className="font-medium text-neutral-800">Rappels de produits</p>
               <p className="text-sm text-neutral-700">
                 Alertes immediates pour les produits rappeles
               </p>
@@ -279,7 +279,7 @@ export function PreferencesTab({
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[#3B3B3B]">Resume hebdomadaire</p>
+              <p className="font-medium text-neutral-800">Resume hebdomadaire</p>
               <p className="text-sm text-neutral-700">
                 Recevez un resume de vos scans de la semaine
               </p>
@@ -301,7 +301,7 @@ export function PreferencesTab({
       </div>
 
       {/* Save Button */}
-      <div className="pt-4 border-t border-[#DDE9DA]">
+      <div className="pt-4 border-t border-nature-300">
         <Button
           variant="primary"
           onClick={handleSave}

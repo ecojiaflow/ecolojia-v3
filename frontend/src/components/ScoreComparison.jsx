@@ -1,11 +1,11 @@
-// frontend/src/components/ScoreComparison.jsx
+﻿// frontend/src/components/ScoreComparison.jsx
 
 import React from 'react';
 
 const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analysisDetails }) => {
   const getDifferenceStyle = (diff) => {
     if (diff > 5) return { color: 'text-green-600', bg: 'bg-green-50', message: 'Plus indulgent', icon: 'a' };
-    if (diff < -5) return { color: 'text-purple-600', bg: 'bg-purple-50', message: 'Plus strict (IA)', icon: 'a' };
+    if (diff < -5) return { color: 'text-forest-dark', bg: 'bg-primary-50', message: 'Plus strict (IA)', icon: 'a' };
     return { color: 'text-gray-600', bg: 'bg-gray-50', message: 'Similaire', icon: 'aai' };
   };
 
@@ -14,10 +14,10 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
   return (
     <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 mt-6 border border-purple-100">
       <div className="text-center mb-4">
-        <h3 className="text-lg font-bold text-purple-800 mb-1">
+        <h3 className="text-lg font-bold text-forest-900 mb-1">
           ? ECOLOJIA vs Autres Apps
         </h3>
-        <p className="text-sm text-purple-600">
+        <p className="text-sm text-forest-dark">
           Analyse scientifique revolutionnaire vs scoring classique
         </p>
       </div>
@@ -35,10 +35,10 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
 
         {/* Score ECOLOJIA */}
         <div className="text-center">
-          <div className="bg-purple-100 rounded-lg p-4 border-2 border-purple-200">
-            <div className="text-purple-600 text-sm mb-1 font-medium">ECOLOJIA IA</div>
-            <div className="text-3xl font-bold text-purple-700 mb-1">{ecoloJiaScore}/100</div>
-            <div className="text-xs text-purple-600">Analyse revolutionnaire</div>
+          <div className="bg-primary-100 rounded-lg p-4 border-2 border-primary-200">
+            <div className="text-forest-dark text-sm mb-1 font-medium">ECOLOJIA IA</div>
+            <div className="text-3xl font-bold text-forest-dark mb-1">{ecoloJiaScore}/100</div>
+            <div className="text-xs text-forest-dark">Analyse revolutionnaire</div>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
 
       {/* Avantages ECOLOJIA */}
       <div className="mt-4 bg-white rounded-lg p-4 border border-purple-100">
-        <h4 className="font-semibold text-purple-800 text-sm mb-2">
+        <h4 className="font-semibold text-forest-900 text-sm mb-2">
           ? Ce que ECOLOJIA ajoute en plus :
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
@@ -112,7 +112,7 @@ const ScoreComparison = ({ ecoloJiaScore, yukaEstimatedScore, difference, analys
 
       {/* Call to Action */}
       <div className="text-center mt-4">
-        <div className="text-xs text-purple-600">
+        <div className="text-xs text-forest-dark">
            <strong>ECOLOJIA</strong> - Premier assistant IA scientifique pour consommation responsable
         </div>
       </div>

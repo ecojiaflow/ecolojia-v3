@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/DetergentAnalysisPage.tsx
 
 // PATH: frontend/src/pages/CosmeticAnalysisPage.tsx
@@ -394,7 +394,7 @@ const DetergentAnalysisPage: React.FC = () => {
             className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
           >
             <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Wind className="w-5 h-5 text-purple-500" />
+              <Wind className="w-5 h-5 text-primary-1000" />
               Composes Organiques Volatils (COV)
             </h2>
             {expandedSections.has('voc') ? <ChevronUp /> : <ChevronDown />}
@@ -553,7 +553,7 @@ const DetergentAnalysisPage: React.FC = () => {
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">Performance</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.certifications.performance.map(cert => (
-                    <span key={cert.id} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                    <span key={cert.id} className="px-3 py-1 bg-primary-100 text-forest-dark rounded-full text-sm">
                       {cert.name}
                     </span>
                   ))}

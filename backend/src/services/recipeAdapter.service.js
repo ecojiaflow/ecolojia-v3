@@ -1,218 +1,329 @@
 ﻿const Recipe = require('../models/Recipe');
-const Product = require('../models/Product');
+const productCategorizationService = require('./productCategorization.service');
 
 /**
- * RECIPE ADAPTER SERVICE - ECOLOJIA V3.1
- * 
- * ✅ APPROCHE SÉCURISÉE :
- * - Stock de recettes scientifiques pré-validées
- * - IA adapte UNIQUEMENT (portions, substitutions)
- * - JAMAIS de génération from scratch
- * 
- * Philosophie Ecolojia :
- * - Recettes éprouvées et testées
- * - Nutrition calculée scientifiquement
- * - Toujours healthy (score >75/100)
- * - Ingrédients naturels et sains
+ * RECIPE ADAPTER INTELLIGENT - PRODUCTION
+ * IA + MongoDB + Scoring + Cache + Profil utilisateur
  */
 
 class RecipeAdapterService {
-  
-  /**
-   * Recommander recettes du stock selon profil utilisateur
-   */
-  async recommendRecipes(userProfile, options = {}) {
-    const {
-      category = null, // breakfast, lunch, dinner, snack
-      count = 5
-    } = options;
-    
-    const {
-      dietary = 'omnivore',
-      targetCaloriesPerMeal = 500,
-      allergens = [],
-      goals = ['health']
-    } = userProfile;
-    
-    console.log('[RecipeAdapter] Recommandation:', { dietary, targetCaloriesPerMeal, category });
-    
-    // Construire query
-    const query = {
-      isStock: true, // Uniquement recettes stock (pré-validées)
-      isPublic: true,
-      'scores.overallScore': { $gte: 75 } // Minimum 75/100 (healthy)
-    };
-    
-    if (category) {
-      query.category = category;
-    }
-    
-    // Filtrer par régime
-    if (dietary !== 'omnivore') {
-      query['targetProfiles.dietary'] = dietary;
-    }
-    
-    // Filtrer allergènes
-    if (allergens.length > 0) {
-      query['targetProfiles.allergens'] = { $nin: allergens };
-    }
-    
-    // Récupérer recettes
-    const recipes = await Recipe.find(query)
-      .sort({ 'scores.overallScore': -1 }) // Meilleures en premier
-      .limit(count);
-    
-    // Adapter portions selon calories cibles
-    const adaptedRecipes = recipes.map(recipe => 
-      this._adaptPortions(recipe, targetCaloriesPerMeal)
-    );
-    
-    console.log(`[RecipeAdapter] ✅ ${adaptedRecipes.length} recettes recommandées`);
-    
-    return adaptedRecipes;
+
+  constructor() {
+    this.recentlyShown = new Map(); // Éviter doublons
   }
-  
   /**
-   * Générer plan repas hebdomadaire depuis stock
+   * MAPPER CATÉGORIES IA → MONGODB
+   * Convertit catégories IA françaises → catégories base anglaises
    */
-  async generateWeeklyMealPlan(userProfile) {
-    const {
-      dietary = 'omnivore',
-      targetCaloriesPerDay = 2000,
-      allergens = [],
-      goals = ['health']
-    } = userProfile;
-    
-    console.log('[RecipeAdapter] Génération plan hebdomadaire depuis STOCK');
-    
-    const mealPlan = [];
-    
-    // Répartition calories par repas
-    const caloriesBreakfast = Math.round(targetCaloriesPerDay * 0.25); // 25%
-    const caloriesLunch = Math.round(targetCaloriesPerDay * 0.40); // 40%
-    const caloriesDinner = Math.round(targetCaloriesPerDay * 0.35); // 35%
-    
-    // Pour chaque jour de la semaine
-    for (let day = 0; day < 7; day++) {
-      const dayDate = new Date();
-      dayDate.setDate(dayDate.getDate() + day);
-      
+  mapAICategoriesToDB(aiCategories) {
+    const mapping = {
       // Petit-déjeuner
-      const breakfasts = await this.recommendRecipes(
-        { ...userProfile, targetCaloriesPerMeal: caloriesBreakfast },
-        { category: 'breakfast', count: 1 }
-      );
-      
-      if (breakfasts.length > 0) {
-        mealPlan.push({
-          type: 'recipe',
-          recipeId: breakfasts[0]._id,
-          recipeName: breakfasts[0].name,
-          recipeScore: breakfasts[0].scores.overallScore,
-          category: 'breakfast',
-          date: dayDate,
-          portion: breakfasts[0].adaptedServings || 1,
-          nutrition: breakfasts[0].nutrition.perServing
-        });
-      }
+      'petits-déjeuners': 'breakfast',
+      'petit-déjeuner': 'breakfast',
+      'breakfast': 'breakfast',
       
       // Déjeuner
-      const lunches = await this.recommendRecipes(
-        { ...userProfile, targetCaloriesPerMeal: caloriesLunch },
-        { category: 'lunch', count: 1 }
-      );
-      
-      if (lunches.length > 0) {
-        mealPlan.push({
-          type: 'recipe',
-          recipeId: lunches[0]._id,
-          recipeName: lunches[0].name,
-          recipeScore: lunches[0].scores.overallScore,
-          category: 'lunch',
-          date: dayDate,
-          portion: lunches[0].adaptedServings || 1,
-          nutrition: lunches[0].nutrition.perServing
-        });
-      }
+      'déjeuners': 'lunch',
+      'déjeuner': 'lunch',
+      'lunch': 'lunch',
       
       // Dîner
-      const dinners = await this.recommendRecipes(
-        { ...userProfile, targetCaloriesPerMeal: caloriesDinner },
-        { category: 'dinner', count: 1 }
-      );
+      'dîners': 'dinner',
+      'dîner': 'dinner',
+      'dinner': 'dinner',
       
-      if (dinners.length > 0) {
-        mealPlan.push({
-          type: 'recipe',
-          recipeId: dinners[0]._id,
-          recipeName: dinners[0].name,
-          recipeScore: dinners[0].scores.overallScore,
-          category: 'dinner',
-          date: dayDate,
-          portion: dinners[0].adaptedServings || 1,
-          nutrition: dinners[0].nutrition.perServing
-        });
+      // Snacks
+      'snacks': 'snack',
+      'snack': 'snack',
+      'goûters': 'snack',
+      'snacks sucrés': 'snack',
+      'snacks salés': 'snack',
+      
+      // Desserts
+      'desserts': 'dessert',
+      'dessert': 'dessert',
+      'desserts au chocolat': 'dessert',
+      'desserts fruités': 'dessert',
+      'pâtisserie': 'dessert'
+    };
+    
+    const dbCategories = [];
+    
+    for (const aiCat of aiCategories) {
+      const normalized = aiCat.toLowerCase().trim();
+      
+      // Chercher mapping exact
+      if (mapping[normalized]) {
+        if (!dbCategories.includes(mapping[normalized])) {
+          dbCategories.push(mapping[normalized]);
+        }
+        continue;
+      }
+      
+      // Chercher mapping partiel (contient)
+      for (const [key, value] of Object.entries(mapping)) {
+        if (normalized.includes(key) || key.includes(normalized)) {
+          if (!dbCategories.includes(value)) {
+            dbCategories.push(value);
+          }
+          break;
+        }
       }
     }
     
-    console.log(`[RecipeAdapter] ✅ Plan créé: ${mealPlan.length} repas`);
+    console.log('[RecipeAdapter] Mapping catégories:', aiCategories, '→', dbCategories);
     
-    return mealPlan;
+    return dbCategories;
   }
-  
+
   /**
-   * Adapter portions recette selon calories cibles
+   * MÉTHODE PRINCIPALE : Recommander recettes intelligentes
    */
-  _adaptPortions(recipe, targetCalories) {
-    const recipeCalories = recipe.nutrition.perServing.calories;
+  async recommendRecipesForProduct(product, options = {}) {
+    const {
+      count = 3,
+      userProfile = {},
+      excludeIds = []
+    } = options;
+
+    const userId = userProfile.userId || 'anonymous';
+
+    console.log('[RecipeAdapter] Recommandation intelligente pour:', product.name);
+
+    // ========================================
+    // ÉTAPE 1 : IA analyse produit
+    // ========================================
+    const categorization = await productCategorizationService.categorizeForRecipes(product);
     
-    if (!recipeCalories || recipeCalories === 0) {
-      return recipe;
+    if (categorization.categories.length === 0) {
+      console.log('[RecipeAdapter] Produit non alimentaire');
+      return [];
+    }
+
+    console.log('[RecipeAdapter] Catégories IA:', categorization.categories);
+    console.log('[RecipeAdapter] Ingrédient principal:', categorization.mainIngredient);
+
+        // ========================================
+        // ÉTAPE 1.5 : MAPPER CATÉGORIES IA → DB
+        // ========================================
+        const dbCategories = this.mapAICategoriesToDB(categorization.categories);
+
+    // ========================================
+    // ÉTAPE 2 : Construire query MongoDB
+    // ========================================
+    const query = {
+      isStock: true,
+      isPublic: true,
+      'scores.overallScore': { $gte: 75 }
+    };
+
+    // Exclure recettes déjà vues
+    const recentIds = this._getRecentlyShown(userId);
+    if (recentIds.length > 0 || excludeIds.length > 0) {
+      query._id = { $nin: [...recentIds, ...excludeIds] };
+    }
+
+        // Filtrer par catégories DB
+        if (dbCategories.length > 0) {
+          query.category = { $in: dbCategories };
+        }
+
+    // Filtrer par ingrédient principal IA
+    if (categorization.mainIngredient && categorization.mainIngredient !== 'inconnu') {
+      query.$or = [
+        { name: { $regex: categorization.mainIngredient, $options: 'i' } },
+        { description: { $regex: categorization.mainIngredient, $options: 'i' } },
+        { 'ingredients.name': { $regex: categorization.mainIngredient, $options: 'i' } }
+      ];
+    }
+
+    // Préférences utilisateur
+    if (userProfile.dietary && userProfile.dietary !== 'omnivore') {
+      query['targetProfiles.dietary'] = userProfile.dietary;
+    }
+
+    if (userProfile.allergens && userProfile.allergens.length > 0) {
+      query['targetProfiles.allergens'] = { $nin: userProfile.allergens };
+    }
+
+    // ========================================
+    // ÉTAPE 3 : Recherche MongoDB
+    // ========================================
+    
+    // 🔍 LOG DEBUG : Requête complète
+    console.log('[RecipeAdapter] Query MongoDB:', JSON.stringify(query, null, 2));
+    
+    let recipes = await Recipe.find(query)
+      .sort({ 'scores.overallScore': -1 })
+      .limit(count * 3)
+      .lean();
+
+    console.log(`[RecipeAdapter] ${recipes.length} recettes trouvées dans MongoDB`);
+
+    // ========================================
+    // FALLBACK : Si 0 résultats ET filtre ingrédient actif
+    // ========================================
+    if (recipes.length === 0 && query.$or) {
+      console.log('[RecipeAdapter] ⚠️  0 résultats avec filtre ingrédient');
+      console.log('[RecipeAdapter] Réessai SANS filtre ingrédient...');
+      
+      // Supprimer le filtre ingrédient
+      const queryWithoutIngredient = { ...query };
+      delete queryWithoutIngredient.$or;
+      
+      recipes = await Recipe.find(queryWithoutIngredient)
+        .sort({ 'scores.overallScore': -1 })
+        .limit(count * 3)
+        .lean();
+      
+      console.log('[RecipeAdapter] ' + recipes.length + ' recettes trouvées (fallback)');
+    }
+
+    // ========================================
+    // ÉTAPE 4 : Scoring pertinence
+    // ========================================
+    if (recipes.length > 0) {
+      const scoredRecipes = recipes.map(recipe => ({
+        ...recipe,
+        relevanceScore: this._calculateIntelligentRelevance(
+          recipe,
+          categorization,
+          userProfile
+        )
+      }));
+
+      // Trier par pertinence
+      scoredRecipes.sort((a, b) => {
+        if (b.relevanceScore !== a.relevanceScore) {
+          return b.relevanceScore - a.relevanceScore;
+        }
+        return b.scores.overallScore - a.scores.overallScore;
+      });
+
+      // Top N
+      const topRecipes = scoredRecipes.slice(0, count);
+
+      // Marquer comme vues
+      topRecipes.forEach(r => this._markAsShown(userId, r._id));
+
+      console.log('[RecipeAdapter] Top recettes:');
+      topRecipes.forEach(r => {
+        console.log(`  • ${r.name} (pertinence: ${r.relevanceScore}, santé: ${r.scores.overallScore})`);
+      });
+
+      return topRecipes;
+    }
+
+    // ========================================
+    // ÉTAPE 5 : Fallback si rien trouvé
+    // ========================================
+    console.log('[RecipeAdapter] Fallback recettes génériques');
+    return this._getFallbackRecipes(count, userProfile);
+  }
+
+  /**
+   * Calculer pertinence intelligente
+   */
+  _calculateIntelligentRelevance(recipe, categorization, userProfile) {
+    let score = 0;
+
+    const recipeName = recipe.name.toLowerCase();
+    const recipeDesc = (recipe.description || '').toLowerCase();
+    const recipeIngredients = (recipe.ingredients || [])
+      .map(i => i.name.toLowerCase())
+      .join(' ');
+
+    // 1. Match ingrédient principal IA (poids 5)
+    const mainIng = categorization.mainIngredient.toLowerCase();
+    if (recipeName.includes(mainIng)) score += 5;
+    if (recipeIngredients.includes(mainIng)) score += 3;
+    if (recipeDesc.includes(mainIng)) score += 2;
+
+    // 2. Match catégories IA (poids 3)
+    categorization.categories.forEach(cat => {
+      const catWords = cat.split('-');
+      catWords.forEach(word => {
+        if (recipeName.includes(word)) score += 3;
+        if (recipeDesc.includes(word)) score += 1;
+      });
+    });
+
+    // 3. Préférences utilisateur calories
+    if (userProfile.targetCaloriesPerMeal) {
+      const recipeCalories = recipe.nutrition?.perServing?.calories || 500;
+      const diff = Math.abs(recipeCalories - userProfile.targetCaloriesPerMeal);
+      
+      if (diff < 100) score += 2; // Très proche
+      else if (diff < 200) score += 1; // Proche
+    }
+
+    // 4. Score santé bonus
+    if (recipe.scores.overallScore >= 85) score += 2;
+
+    return score;
+  }
+
+  /**
+   * Gérer recettes récemment affichées (éviter doublons)
+   */
+  _getRecentlyShown(userId) {
+    return this.recentlyShown.get(userId) || [];
+  }
+
+  _markAsShown(userId, recipeId) {
+    const recent = this.recentlyShown.get(userId) || [];
+    recent.push(recipeId);
+    
+    // Garder max 20 dernières
+    if (recent.length > 20) {
+      recent.shift();
     }
     
-    // Calculer ratio portions
-    const ratio = targetCalories / recipeCalories;
-    
-    // Si trop éloigné (>50% différence), garder portion normale
-    if (ratio < 0.5 || ratio > 1.5) {
-      return recipe;
-    }
-    
-    // Adapter servings
-    const adapted = recipe.toObject ? recipe.toObject() : recipe;
-    adapted.adaptedServings = ratio;
-    
-    // Recalculer nutrition
-    adapted.nutrition.perServing = {
-      calories: Math.round(recipeCalories * ratio),
-      protein: Math.round(recipe.nutrition.perServing.protein * ratio),
-      carbs: Math.round(recipe.nutrition.perServing.carbs * ratio),
-      fat: Math.round(recipe.nutrition.perServing.fat * ratio),
-      fiber: Math.round(recipe.nutrition.perServing.fiber * ratio)
-    };
-    
-    return adapted;
+    this.recentlyShown.set(userId, recent);
   }
-  
+
   /**
-   * Substituer ingrédient (ex: vegan, sans gluten)
+   * Fallback recettes génériques
    */
-  async substituteIngredient(recipeId, ingredientName, reason = 'dietary') {
-    // TODO: Implémenter substitutions intelligentes
-    // Ex: "œuf" → "graines de lin" (vegan)
-    // Ex: "farine blé" → "farine amande" (sans gluten)
-    
-    console.log(`[RecipeAdapter] Substitution: ${ingredientName} (raison: ${reason})`);
-    
-    // Base de substitutions
-    const substitutions = {
-      'œuf': { vegan: 'graines de lin moulues (1 càs + 3 càs eau)' },
-      'lait': { vegan: 'lait d\'amande', 'lactose-free': 'lait sans lactose' },
-      'farine de blé': { 'gluten-free': 'farine d\'amande' },
-      'beurre': { vegan: 'huile de coco' }
+  async _getFallbackRecipes(count, userProfile) {
+    const query = {
+      isStock: true,
+      isPublic: true,
+      'scores.overallScore': { $gte: 80 }
     };
+
+    if (userProfile.dietary && userProfile.dietary !== 'omnivore') {
+      query['targetProfiles.dietary'] = userProfile.dietary;
+    }
+
+    const recipes = await Recipe.find(query)
+      .sort({ 'scores.overallScore': -1 })
+      .limit(count)
+      .lean();
+
+    return recipes;
+  }
+
+  /**
+   * Méthode legacy (compatibilité)
+   */
+  async recommendRecipes(userProfile, options = {}) {
+    const { category = null, count = 5 } = options;
     
-    return substitutions[ingredientName.toLowerCase()]?.[reason] || null;
+    const query = {
+      isStock: true,
+      isPublic: true,
+      'scores.overallScore': { $gte: 75 }
+    };
+
+    if (category) query.category = category;
+
+    const recipes = await Recipe.find(query)
+      .sort({ 'scores.overallScore': -1 })
+      .limit(count)
+      .lean();
+
+    return recipes;
   }
 }
 

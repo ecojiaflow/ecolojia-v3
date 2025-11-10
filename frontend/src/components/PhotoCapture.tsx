@@ -312,7 +312,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
               
               <button
                 onClick={capturePhoto}
-                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-forest rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Camera className="w-5 h-5" />
                 Capturer
@@ -370,7 +370,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
               
               <button
                 onClick={confirmCapture}
-                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-forest rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <Check className="w-5 h-5" />
                 Analyser

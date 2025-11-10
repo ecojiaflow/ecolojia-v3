@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
             <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full border border-blue-200">
               FSC
             </span>
-            <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full border border-purple-200">
+            <span className="px-3 py-1 bg-primary-100 text-forest-900 text-xs rounded-full border border-primary-200">
               Cruelty Free
             </span>
             <span className="px-3 py-1 bg-eco-leaf/10 text-eco-leaf text-xs rounded-full border border-eco-leaf/20">

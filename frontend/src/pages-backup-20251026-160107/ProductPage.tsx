@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -189,7 +189,7 @@ const ProductPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
           <div className="space-y-3">
-            <Link to="/search" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
+            <Link to="/search" className="bg-green-500 text-forest px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
               Rechercher un produit
             </Link>
             {error?.includes('OCR') && (

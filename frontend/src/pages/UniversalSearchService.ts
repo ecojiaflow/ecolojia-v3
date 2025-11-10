@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/pages/UniversalSearchPage.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/pages/UniversalSearchPage.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -216,7 +216,7 @@ const UniversalSearchPage: React.FC = () => {
             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
               result.source === 'local' ? 'text-blue-600 bg-blue-50 border-blue-200' :
               result.source === 'openfoodfacts' ? 'text-orange-600 bg-orange-50 border-orange-200' :
-              'text-purple-600 bg-purple-50 border-purple-200'
+              'text-forest-dark bg-primary-50 border-primary-200'
             }`}>
               {result.source === 'local' ? 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â  Base ECOLOJIA' :
                result.source === 'openfoodfacts' ? 'Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â OpenFoodFacts' :
@@ -245,7 +245,7 @@ const UniversalSearchPage: React.FC = () => {
 
             {/* Alternatives */}
             {result.enrichment?.alternatives_available > 0 && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 border border-purple-200 rounded-full text-xs font-medium">
+              <span className="px-3 py-1 bg-primary-100 text-forest-dark border border-primary-200 rounded-full text-xs font-medium">
                 Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
               </span>
             )}
@@ -403,7 +403,7 @@ const UniversalSearchPage: React.FC = () => {
           </div>
           
           <div className="text-center">
-            <div className="text-3xl font-bold text-purple-600">{sourcesCount}</div>
+            <div className="text-3xl font-bold text-forest-dark">{sourcesCount}</div>
             <div className="text-gray-600">Sources interrogees</div>
           </div>
         </div>

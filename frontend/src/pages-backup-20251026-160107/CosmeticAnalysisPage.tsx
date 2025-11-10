@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // frontend/src/pages/CosmeticAnalysisPage.tsx
 
 import React, { useState } from 'react';
@@ -283,7 +283,7 @@ const CosmeticAnalysisPage: React.FC = () => {
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
         >
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Package className="w-5 h-5 text-purple-500" />
+            <Package className="w-5 h-5 text-primary-1000" />
             Composition INCI ({analysis.details.inci.length} ingredients)
           </h2>
           {expandedSections.has('ingredients') ? <ChevronUp /> : <ChevronDown />}

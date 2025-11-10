@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/pages/AdminDashboard.tsx
 import React from 'react';
 import useAdmin from '../hooks/useAdmin';
 import StatsCard from '../components/Admin/StatsCard';
@@ -64,7 +64,7 @@ const AdminDashboard: React.FC = () => {
               <button
                 onClick={handleImport}
                 disabled={loading}
-                className="flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                className="flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-green-700 text-forest rounded-lg transition-colors disabled:opacity-50"
               >
                 <Plus className="h-4 w-4" />
                 <span>Importer produits</span>
@@ -128,7 +128,7 @@ const AdminDashboard: React.FC = () => {
               <StatsCard
                 title="Confiance IA"
                 value={`${Math.round(stats.averageConfidence)}%`}
-                icon={<BarChart3 className="h-6 w-6 text-purple-600" />}
+                icon={<BarChart3 className="h-6 w-6 text-forest-dark" />}
                 color="purple"
                 subtitle="Moyenne"
               />

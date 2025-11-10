@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
@@ -8,7 +8,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const colorByVariant: Record<BadgeVariant, string> = {
-  success: 'bg-[#E9F8DF] text-[#256029] border-[#DDE9DA]',
+  success: 'bg-nature-100 text-[#256029] border-nature-300',
   warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
   danger:  'bg-red-100 text-red-700 border-red-200',
   info:    'bg-blue-100 text-blue-700 border-blue-200',

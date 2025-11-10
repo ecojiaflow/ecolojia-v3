@@ -182,7 +182,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
       {/* Header */}
-      <div className="sticky top-0 bg-[#7DDE4A] text-white p-4 shadow-lg">
+      <div className="sticky top-0 bg-primary text-forest p-4 shadow-lg">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <h2 className="text-xl font-semibold">Recherche manuelle</h2>
           <button
@@ -362,7 +362,7 @@ export const ManualSearch: React.FC<ManualSearchProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-[#7DDE4A] text-white rounded-lg font-medium hover:bg-[#6BC93B] transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-primary text-forest rounded-lg font-medium hover:bg-[#6BC93B] transition-colors flex items-center justify-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
               Analyser

@@ -17,6 +17,7 @@ import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysis
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { AllergensSection } from '../components/product/AllergensSection';
 import { LabelsSection } from '../components/product/LabelsSection';
+import { RecipesList } from '../components/product/RecipesList';
 import { ProductChatActions } from '../components/product/ProductChatActions';
 import { ProductMainActions } from '../components/product/ProductMainActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
@@ -49,6 +50,21 @@ const getJSON = async (endpoint: string): Promise<any> => {
   };
 };
 
+interface Recipe {
+  _id: string;
+  name: string;
+  description: string;
+  image?: string;
+  prepTime: number;
+  servings: number;
+  scores: {
+    overallScore: number;
+    healthScore: number;
+    environmentScore: number;
+  };
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
 interface Product {
   _id: string;
   name: string;
@@ -77,6 +93,8 @@ const ProductPage: React.FC = () => {
   const [alternatives, setAlternatives] = useState<Product[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loadingRecipes, setLoadingRecipes] = useState(false);
 
   // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
   // CORRECTION : fetchProduct extrait pour être réutilisable
@@ -119,6 +137,16 @@ const ProductPage: React.FC = () => {
         
         // Succès
         setProduct(result.data.product || result.data);
+        
+        // Extraire recettes si disponibles
+        if (result.data.recipes && Array.isArray(result.data.recipes)) {
+          setRecipes(result.data.recipes);
+          console.log('[Frontend] 🍽️ Recettes reçues:', result.data.recipes.length);
+        } else {
+          setRecipes([]);
+          console.log('[Frontend] ⚠️ Aucune recette disponible');
+        }
+        
         loadAlternatives(id);
         
       } catch (err: any) {
@@ -192,7 +220,7 @@ const ProductPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-900 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
           <div className="space-y-3">
-            <Link to="/search" className="bg-neutral-1000 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
+            <Link to="/search" className="bg-neutral-1000 text-forest px-6 py-3 rounded-lg font-medium hover:bg-primary inline-block">
               Rechercher un produit
             </Link>
             {error?.includes('OCR') && (
@@ -268,7 +296,7 @@ const ProductPage: React.FC = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
               {product.brand && <p className="text-gray-900 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center bg-primary-50 text-white rounded-2xl p-6">
+              <div className="inline-flex items-center justify-center bg-primary-50 text-forest rounded-2xl p-6">
                 <div className="text-center">
                   <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
                   <div className="text-sm opacity-90 mt-1">/ 100</div>
@@ -355,13 +383,13 @@ const ProductPage: React.FC = () => {
           {/* Section alternatives unifiée - design Ecolojia v3.1 */}
           <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
-              <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+              <Sparkles className="w-5 h-5 text-primary" />
+              <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
             </div>
             
             {loadingAlternatives ? (
               <div className="flex items-center justify-center py-8">
-                <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+                <Sparkles className="w-6 h-6 animate-spin text-primary" />
                 <p className="ml-3 text-neutral-700">Recherche d'alternatives...</p>
               </div>
             ) : alternatives.length > 0 ? (
@@ -372,7 +400,7 @@ const ProductPage: React.FC = () => {
                     <div 
                       key={alt._id} 
                       onClick={() => navigate(`/product/${alt.barcode}`)} 
-                      className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md transition-all"
+                      className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all"
                     >
                       {getProductImage(alt) ? (
                         <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
@@ -383,10 +411,10 @@ const ProductPage: React.FC = () => {
                       )}
                       
                       <div className="flex-1">
-                        <p className="font-semibold text-[#3B3B3B]">{alt.name}</p>
+                        <p className="font-semibold text-neutral-800">{alt.name}</p>
                         <p className="text-sm text-neutral-600">{alt.brand}</p>
                         {scoreImprovement > 0 && (
-                          <p className="text-xs text-[#7DDE4A] mt-1 flex items-center gap-1">
+                          <p className="text-xs text-primary mt-1 flex items-center gap-1">
                             <CheckCircle className="w-3 h-3" />
                             +{scoreImprovement} points
                           </p>
@@ -492,7 +520,12 @@ const ProductPage: React.FC = () => {
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
         <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
 
-        {/* AI Engagement Widget */}
+        
+          {/* Section recettes - design Ecolojia v3.1 */}
+          {recipes.length > 0 && (
+            <RecipesList recipes={recipes} />
+          )}
+{/* AI Engagement Widget */}
         <AIEngagementWidget product={product} />
         {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
@@ -525,13 +558,13 @@ const ProductPage: React.FC = () => {
         {/* Section alternatives unifiée - design Ecolojia v3.1 */}
         <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-[#7DDE4A]" />
-            <h3 className="text-xl font-semibold text-[#3B3B3B]">Alternatives plus saines</h3>
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
           </div>
           
           {loadingAlternatives ? (
             <div className="flex items-center justify-center py-8">
-              <Sparkles className="w-6 h-6 animate-spin text-[#7DDE4A]" />
+              <Sparkles className="w-6 h-6 animate-spin text-primary" />
               <p className="ml-3 text-neutral-700">Recherche d''alternatives...</p>
             </div>
           ) : alternatives.length > 0 ? (
@@ -542,7 +575,7 @@ const ProductPage: React.FC = () => {
                   <div 
                     key={alt._id} 
                     onClick={() => navigate(`/product/${alt.barcode}`)} 
-                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-[#7DDE4A] hover:shadow-md transition-all"
+                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all"
                   >
                     {getProductImage(alt) ? (
                       <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
@@ -583,7 +616,7 @@ const ProductPage: React.FC = () => {
           )}
         </div>
         <ProductChatActions product={product} />
-                {/* AlternativesPanel supprimé - utilise section alternatives unifiée ci-dessus */}
+
       </div>
       {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
     </div>

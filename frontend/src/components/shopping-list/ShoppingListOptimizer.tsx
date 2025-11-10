@@ -146,12 +146,12 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
     <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-[#7DDE4A]" />
-          <h3 className="text-xl font-semibold text-[#3B3B3B]">Optimisation IA</h3>
+          <Sparkles className="w-6 h-6 text-primary" />
+          <h3 className="text-xl font-semibold text-neutral-800">Optimisation IA</h3>
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-600">Score moyen actuel</p>
-          <p className="text-2xl font-bold text-[#3B3B3B]">{Math.round(currentAverageScore)}/100</p>
+          <p className="text-2xl font-bold text-neutral-800">{Math.round(currentAverageScore)}/100</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
           <button
             onClick={analyzeAndSuggest}
             disabled={isAnalyzing}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#7DDE4A] hover:bg-[#6BC93B] text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-[#6BC93B] text-forest rounded-lg font-medium transition-colors disabled:opacity-50"
           >
             {isAnalyzing ? (
               <>
@@ -198,7 +198,7 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
                 key={index}
                 className={`border rounded-lg p-4 transition-all ${
                   selectedReplacements.has(index)
-                    ? 'border-[#7DDE4A] bg-green-50'
+                    ? 'border-primary bg-green-50'
                     : 'border-gray-200 bg-white'
                 }`}
               >
@@ -207,7 +207,7 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
                     onClick={() => toggleReplacement(index)}
                     className={`flex-shrink-0 w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
                       selectedReplacements.has(index)
-                        ? 'border-[#7DDE4A] bg-[#7DDE4A]'
+                        ? 'border-primary bg-primary'
                         : 'border-gray-300'
                     }`}
                   >
@@ -222,9 +222,9 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
                     </div>
 
                     <div className="flex items-center gap-2 mb-2">
-                      <Check className="w-4 h-4 text-[#7DDE4A]" />
-                      <span className="font-medium text-[#3B3B3B]">{replacement.suggestion.name}</span>
-                      <span className="text-sm font-semibold text-[#7DDE4A]">{replacement.suggestion.score}/100</span>
+                      <Check className="w-4 h-4 text-primary" />
+                      <span className="font-medium text-neutral-800">{replacement.suggestion.name}</span>
+                      <span className="text-sm font-semibold text-primary">{replacement.suggestion.score}/100</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-xs">
@@ -240,7 +240,7 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
                           {(replacement.suggestion.price - replacement.original.price).toFixed(2)}€)
                         </span>
                       )}
-                      <span className="font-medium text-[#7DDE4A]">
+                      <span className="font-medium text-primary">
                         +{replacement.improvement} points
                       </span>
                     </div>
@@ -254,7 +254,7 @@ export const ShoppingListOptimizer: React.FC<ShoppingListOptimizerProps> = ({ it
             <button
               onClick={applyReplacements}
               disabled={selectedReplacements.size === 0}
-              className="flex-1 bg-[#7DDE4A] hover:bg-[#6BC93B] text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-primary hover:bg-[#6BC93B] text-forest py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Appliquer les changements ({selectedReplacements.size})
             </button>

@@ -1,4 +1,4 @@
-// frontend/src/components/dashboard/WeeklySummary.tsx
+﻿// frontend/src/components/dashboard/WeeklySummary.tsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, TrendingUp, TrendingDown, Award, Target, ChevronLeft, ChevronRight, Download, Mail } from 'lucide-react';
@@ -142,7 +142,7 @@ export const WeeklySummary: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-            <Calendar className="w-6 h-6 mr-2 text-purple-600" />
+            <Calendar className="w-6 h-6 mr-2 text-forest-dark" />
             Resume Hebdomadaire
           </h2>
           <p className="text-gray-600 mt-1">
@@ -209,7 +209,7 @@ export const WeeklySummary: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-purple-600 font-medium">Meilleur score</p>
+                    <p className="text-sm text-forest-dark font-medium">Meilleur score</p>
                     <p className="text-lg font-bold text-gray-800 truncate">{summarydata?.stats.bestProduct.name}</p>
                     <p className="text-sm text-gray-600">{summarydata?.stats.bestProduct.score}/100</p>
                   </div>
@@ -246,7 +246,7 @@ export const WeeklySummary: React.FC = () => {
                       insight.type === 'achievement' ? 'border-green-500 bg-green-50' :
                       insight.type === 'improvement' ? 'border-blue-500 bg-blue-50' :
                       insight.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
-                      'border-purple-500 bg-purple-50'
+                      'border-primary bg-primary-50'
                     }`}
                   >
                     <div className="flex items-start space-x-3">

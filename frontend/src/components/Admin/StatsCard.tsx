@@ -23,7 +23,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
   const colorClasses = {
     blue: 'bg-blue-50 border-blue-200',
     green: 'bg-green-50 border-green-200',
-    purple: 'bg-purple-50 border-purple-200',
+    purple: 'bg-primary-50 border-primary-200',
     orange: 'bg-orange-50 border-orange-200',
     red: 'bg-red-50 border-red-200'
   };
@@ -31,7 +31,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
   const textColorClasses = {
     blue: 'text-blue-700',
     green: 'text-green-700',
-    purple: 'text-purple-700',
+    purple: 'text-forest-dark',
     orange: 'text-orange-700',
     red: 'text-red-700'
   };
@@ -72,7 +72,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
                   className={`h-2 rounded-full transition-all duration-300 ${
                     color === 'green' ? 'bg-green-500' :
                     color === 'blue' ? 'bg-blue-500' :
-                    color === 'purple' ? 'bg-purple-500' :
+                    color === 'purple' ? 'bg-primary' :
                     color === 'orange' ? 'bg-orange-500' :
                     'bg-red-500'
                   }`}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Package, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -88,7 +88,7 @@ const HistoryPage: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/scan')}
-              className="h-11 px-6 bg-primary-500 text-[#0E1A0D] rounded-lg font-medium hover:bg-primary-600 transition-all shadow-2"
+              className="h-11 px-6 bg-primary-500 text-forest rounded-lg font-medium hover:bg-primary-600 transition-all shadow-2"
             >
               Scanner un produit
             </button>

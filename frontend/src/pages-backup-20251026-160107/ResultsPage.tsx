@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/ResultsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -457,7 +457,7 @@ const ResultsPage: React.FC = () => {
         >
           <button
             onClick={() => navigate('/scan')}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-forest rounded-lg hover:bg-green-700 transition-colors"
           >
             <Camera className="w-5 h-5" />
             Scanner un autre produit

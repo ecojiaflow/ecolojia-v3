@@ -1,4 +1,4 @@
-// frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
+﻿// frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
 // Page principale pour afficher et tester les categories multi-analyses - VERSION CORRIGÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°E
 
 import React, { useState, useEffect } from 'react';
@@ -234,7 +234,7 @@ const MultiCategoriesPage: React.FC = () => {
               <div className="text-sm text-gray-600">Disponibles</div>
             </div>
             <div className="bg-white rounded-2xl p-4 shadow-lg">
-              <div className="text-2xl font-bold text-purple-600">IA</div>
+              <div className="text-2xl font-bold text-forest-dark">IA</div>
               <div className="text-sm text-gray-600">Scientifique</div>
             </div>
           </div>
@@ -263,8 +263,8 @@ const MultiCategoriesPage: React.FC = () => {
                   <div className="text-sm text-gray-600">Categorie</div>
                 </div>
                 
-                <div className="text-center p-4 bg-purple-50 rounded-2xl">
-                  <div className="text-lg font-bold text-purple-600">
+                <div className="text-center p-4 bg-primary-50 rounded-2xl">
+                  <div className="text-lg font-bold text-forest-dark">
                     {Math.round((lastAnalysis.detection_confidence || 0) * 100)}%
                   </div>
                   <div className="text-sm text-gray-600">Confiance IA</div>

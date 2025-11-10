@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // APPROCHE 1 : INTƒÆ’†'aa'šÂ¬‚Â°GRATION DIRECTE DANS SEARCHPAGE EXISTANTE
 // ============================================================================
 
@@ -207,7 +207,7 @@ const SearchFirstHomePage: React.FC = () => {
               <div className="text-gray-600">Categories couvertes</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-600">&lt;2s</div>
+              <div className="text-3xl font-bold text-forest-dark">&lt;2s</div>
               <div className="text-gray-600">Temps d'analyse</div>
             </div>
           </div>

@@ -67,7 +67,7 @@ const DashboardPage: React.FC = () => {
           <p className="text-danger mb-4 font-medium">{error}</p>
           <button 
             onClick={()=> location.reload()} 
-            className="h-10 px-6 rounded-lg bg-primary-500 text-[#0E1A0D] font-medium hover:bg-primary-600 transition-all shadow-2"
+            className="h-10 px-6 rounded-lg bg-primary-500 text-forest font-medium hover:bg-primary-600 transition-all shadow-2"
           >
             Reessayer
           </button>
@@ -90,7 +90,7 @@ const DashboardPage: React.FC = () => {
           </div>
           <Link 
             to="/scan" 
-            className="h-11 px-6 rounded-lg bg-primary-500 text-[#0E1A0D] font-medium hover:bg-primary-600 transition-all shadow-2 flex items-center gap-2"
+            className="h-11 px-6 rounded-lg bg-primary-500 text-forest font-medium hover:bg-primary-600 transition-all shadow-2 flex items-center gap-2"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -107,9 +107,9 @@ const DashboardPage: React.FC = () => {
         </div>
 
         {/* Card Premium - Plans Repas */}
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-3 p-6 border-2 border-purple-200">
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-3 p-6 border-2 border-primary-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
               <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
                 <path d="M7 2v20"/>
@@ -120,14 +120,14 @@ const DashboardPage: React.FC = () => {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <h3 className="text-lg font-bold text-neutral-900">Plans Repas Personnalises</h3>
-                <span className="px-2 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">Premium</span>
+                <span className="px-2 py-1 bg-primary text-white text-xs font-semibold rounded-full">Premium</span>
               </div>
               <p className="text-neutral-600 text-sm mb-4">
                 Generez des menus hebdomadaires adaptes a votre budget, regime et allergenes avec notre IA nutritionniste
               </p>
               <Link
                 to="/meal-plan"
-                className="inline-flex items-center gap-2 h-10 px-6 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-all shadow-2"
+                className="inline-flex items-center gap-2 h-10 px-6 bg-primary-hover text-white rounded-lg font-medium hover:bg-primary-active transition-all shadow-2"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"/>

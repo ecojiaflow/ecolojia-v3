@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getReturnUrl } from '../utils/navigation';
 import { useEmailValidation } from '../hooks/useEmailValidation';
@@ -85,7 +85,7 @@ export const EmailVerificationPage: React.FC = () => {
                 </p>
                 <button
                   onClick={() => navigate(getReturnUrl())}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-forest bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
                   Acceder au dashboard
                 </button>
@@ -102,7 +102,7 @@ export const EmailVerificationPage: React.FC = () => {
                 <div className="space-y-3">
                   <button
                     onClick={() => navigate('/auth')}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-green-700"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-forest bg-primary hover:bg-green-700"
                   >
                     Retour ƒÆ’†'ƒ'š‚Â  la connexion
                   </button>

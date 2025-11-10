@@ -268,14 +268,14 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-[#DDE9DA] sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white border-b border-nature-300 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link to="/" className="flex items-center group">
               <EcolojiaLogo className="h-8 w-8 mr-2 group-hover:scale-110 transition-transform" />
-              <span className="text-xl font-bold text-[#3B3B3B]">ECOLOJIA {String(isMobile)}</span>
+              <span className="text-xl font-bold text-neutral-800">ECOLOJIA {String(isMobile)}</span>
               <span className='text-xs bg-red-500 text-white px-2 py-1 rounded ml-2'>Desktop: {isMobile ? 'NON' : 'OUI'}</span>
             </Link>
           </div>
@@ -293,21 +293,21 @@ const Navbar: React.FC = () => {
                   onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={handleSearchFocus}
                   placeholder="Rechercher parmi 2M+ produits (Nutella, L'Oreal, Ariel...)"
-                  className="w-full pl-11 pr-32 py-3 border-2 border-[#DDE9DA] rounded-full 
-                           focus:border-[#7DDE4A] focus:ring-4 focus:ring-[#E9F8DF] 
-                           transition-all placeholder-gray-500 text-sm bg-[#F7F9F4]"
+                  className="w-full pl-11 pr-32 py-3 border-2 border-nature-300 rounded-full 
+                           focus:border-primary focus:ring-4 focus:ring-[#E9F8DF] 
+                           transition-all placeholder-gray-500 text-sm bg-nature-100"
                 />
                 
                 {/* Badges */}
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <span className="text-xs bg-[#E9F8DF] text-[#7DDE4A] px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs bg-nature-100 text-primary px-2 py-1 rounded-full font-medium">
                     IA
                   </span>
                   
                   {/* Raccourci clavier */}
                   <div className="hidden lg:flex items-center space-x-1 text-xs text-neutral-600">
-                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">Ctrl</kbd>
-                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-[#DDE9DA] rounded text-xs">K</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-nature-300 rounded text-xs">Ctrl</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-gray-100 border border-nature-300 rounded text-xs">K</kbd>
                   </div>
                 </div>
               </div>
@@ -315,16 +315,16 @@ const Navbar: React.FC = () => {
 
             {/* Dropdown suggestions */}
             {showSearchDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#DDE9DA] rounded-2xl shadow-xl z-50 max-h-96 overflow-hidden">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-nature-300 rounded-2xl shadow-xl z-50 max-h-96 overflow-hidden">
                 
                 {/* Header dropdown */}
-                <div className="p-4 border-b border-[#DDE9DA] bg-gradient-to-r from-[#E9F8DF] to-[#F7F9F4]">
+                <div className="p-4 border-b border-nature-300 bg-gradient-to-r from-[#E9F8DF] to-[#F7F9F4]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-[#3B3B3B]">
+                    <span className="text-sm font-semibold text-neutral-800">
                       {quickSearchQuery ? 'Suggestions intelligentes' : 'Recherches populaires'}
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-gray-600">
-                      <Zap className="w-3 h-3 text-[#7DDE4A]" />
+                      <Zap className="w-3 h-3 text-primary" />
                       <span>IA Scientifique â€¢ Temps reel</span>
                     </div>
                   </div>
@@ -332,7 +332,7 @@ const Navbar: React.FC = () => {
                   {/* Metriques */}
                   <div className="flex items-center space-x-4 text-xs text-gray-600">
                     <div className="flex items-center">
-                      <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-1"></span>
+                      <span className="w-2 h-2 bg-primary rounded-full mr-1"></span>
                       Alimentaire
                     </div>
                     <div className="flex items-center">
@@ -349,7 +349,7 @@ const Navbar: React.FC = () => {
                 {/* Loading */}
                 {isLoadingSuggestions && (
                   <div className="p-6 text-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7DDE4A] mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2"></div>
                     <span className="text-sm text-neutral-700">Analyse IA en cours...</span>
                   </div>
                 )}
@@ -362,9 +362,9 @@ const Navbar: React.FC = () => {
                         <button
                           key={index}
                           onClick={() => handleSuggestionClick(suggestion)}
-                          className="w-full flex items-center px-4 py-3 hover:bg-[#F7F9F4] transition-colors text-left group"
+                          className="w-full flex items-center px-4 py-3 hover:bg-nature-100 transition-colors text-left group"
                         >
-                          <div className="w-10 h-10 bg-[#E9F8DF] rounded-xl flex items-center justify-center mr-3 group-hover:bg-[#7DDE4A] group-hover:text-white transition-all">
+                          <div className="w-10 h-10 bg-nature-100 rounded-xl flex items-center justify-center mr-3 group-hover:bg-primary group-hover:text-forest transition-all">
                             {suggestion.icon ? (
                               <span className="text-lg">{suggestion.icon}</span>
                             ) : (
@@ -373,7 +373,7 @@ const Navbar: React.FC = () => {
                           </div>
                           
                           <div className="flex-1">
-                            <div className="font-medium text-[#3B3B3B]">{suggestion.query}</div>
+                            <div className="font-medium text-neutral-800">{suggestion.query}</div>
                             {suggestion.category && (
                               <div className="text-xs text-neutral-700 mt-0.5">
                                 {suggestion.category}
@@ -397,7 +397,7 @@ const Navbar: React.FC = () => {
                     </div>
                     
                     {/* Footer suggestions */}
-                    <div className="border-t border-[#DDE9DA] p-3 bg-[#F7F9F4]">
+                    <div className="border-t border-nature-300 p-3 bg-nature-100">
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-3">
                           <button
@@ -405,7 +405,7 @@ const Navbar: React.FC = () => {
                               setShowSearchDropdown(false);
                               navigate('/scan');
                             }}
-                            className="flex items-center text-xs text-gray-600 hover:text-[#7DDE4A] transition-colors"
+                            className="flex items-center text-xs text-gray-600 hover:text-primary transition-colors"
                           >
                             <Camera className="w-3 h-3 mr-1" />
                           </button>
@@ -414,7 +414,7 @@ const Navbar: React.FC = () => {
                               setShowSearchDropdown(false);
                               navigate('/multi-scan');
                             }}
-                            className="flex items-center text-xs text-gray-600 hover:text-purple-600 transition-colors"
+                            className="flex items-center text-xs text-gray-600 hover:text-forest-dark transition-colors"
                           >
                             <Sparkles className="w-3 h-3 mr-1" />
                             Multi-Produits
@@ -433,9 +433,9 @@ const Navbar: React.FC = () => {
                 {!isLoadingSuggestions && suggestions.length === 0 && quickSearchQuery && (
                   <div className="p-6 text-center">
                     <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <h3 className="font-medium text-[#3B3B3B] mb-2">Aucune suggestion</h3>
+                    <h3 className="font-medium text-neutral-800 mb-2">Aucune suggestion</h3>
                     <p className="text-sm text-neutral-700 mb-4">
-                      Appuyez Entree pour rechercher "<span className="font-medium text-[#7DDE4A]">{quickSearchQuery}</span>"
+                      Appuyez Entree pour rechercher "<span className="font-medium text-primary">{quickSearchQuery}</span>"
                     </p>
                   </div>
                 )}
@@ -451,10 +451,10 @@ const Navbar: React.FC = () => {
               return (
                 <Link
                   className={lex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${item.className || ''} ${
-                    isActive(item.href) ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                    isActive(item.href) ? 'bg-nature-100 text-primary'
                   className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive(item.href) ? 'bg-[#E9F8DF] text-[#7DDE4A]'
-                      : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
+                    isActive(item.href) ? 'bg-nature-100 text-primary'
+                      : 'text-gray-600 hover:text-primary hover:bg-nature-100'
                   }`}
                 >
                   <Icon className="w-4 h-4 mr-1" />
@@ -468,7 +468,7 @@ const Navbar: React.FC = () => {
               <button className="p-2 text-neutral-600 hover:text-gray-600 transition-colors relative">
                 <Bell className="w-5 h-5" />
                 {notifications > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#7DDE4A] text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-forest text-xs rounded-full flex items-center justify-center">
                     {notifications}
                   </span>
                 )}
@@ -480,14 +480,14 @@ const Navbar: React.FC = () => {
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#F7F9F4] transition-colors"
+                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-nature-100 transition-colors"
                 >
-                  <div className="w-8 h-8 bg-[#E9F8DF] rounded-full flex items-center justify-center">
-                    <span className="text-[#7DDE4A] font-semibold">
+                  <div className="w-8 h-8 bg-nature-100 rounded-full flex items-center justify-center">
+                    <span className="text-primary font-semibold">
                       {user?.username?.[0]?.toUpperCase() || 'U'}
                     </span>
                   </div>
-                  <span className="hidden lg:block text-sm font-medium text-[#3B3B3B]">
+                  <span className="hidden lg:block text-sm font-medium text-neutral-800">
                     {user?.username}
                   </span>
                   {user?.plan === 'premium' && (
@@ -498,9 +498,9 @@ const Navbar: React.FC = () => {
 
                 {/* Profile Dropdown */}
                 {showProfileMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 border border-[#DDE9DA]">
-                    <div className="px-4 py-2 border-b border-[#DDE9DA]">
-                      <p className="text-sm font-medium text-[#3B3B3B]">{user?.email}</p>
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 border border-nature-300">
+                    <div className="px-4 py-2 border-b border-nature-300">
+                      <p className="text-sm font-medium text-neutral-800">{user?.email}</p>
                       <p className="text-xs text-neutral-700">
                         Plan {user?.plan === 'premium' ? 'Premium ?' : 'Gratuit'}
                       </p>
@@ -508,7 +508,7 @@ const Navbar: React.FC = () => {
                     
                     <Link
                       to="/profile"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-nature-100 transition-colors"
                       onClick={() => setShowProfileMenu(false)}
                     >
                       <User className="w-4 h-4 mr-2" />
@@ -517,7 +517,7 @@ const Navbar: React.FC = () => {
                     
                     <Link
                       to="/favorites"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-nature-100 transition-colors"
                       onClick={() => setShowProfileMenu(false)}
                     >
                       <Heart className="w-4 h-4 mr-2" />
@@ -526,7 +526,7 @@ const Navbar: React.FC = () => {
                     
                     <Link
                       to="/settings"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#F7F9F4] transition-colors"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-nature-100 transition-colors"
                       onClick={() => setShowProfileMenu(false)}
                     >
                       <Settings className="w-4 h-4 mr-2" />
@@ -544,14 +544,14 @@ const Navbar: React.FC = () => {
                 <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
               </svg>
               <span>Plans Repas</span>
-              <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+              <span className="ml-2 px-2 py-0.5 bg-primary-100 text-forest-dark text-xs font-semibold rounded-full">
                 Premium
               </span>
             </Link>
 
                       <Link
                         to="/pricing"
-                        className="flex items-center px-4 py-2 text-sm text-[#7DDE4A] hover:bg-[#E9F8DF] transition-colors font-medium"
+                        className="flex items-center px-4 py-2 text-sm text-primary hover:bg-nature-100 transition-colors font-medium"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         <Crown className="w-4 h-4 mr-2" />
@@ -559,7 +559,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     )}
                     
-                    <div className="border-t border-[#DDE9DA] mt-2 pt-2">
+                    <div className="border-t border-nature-300 mt-2 pt-2">
                       <button
                         onClick={handleLogout}
                         className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
@@ -575,13 +575,13 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-[#3B3B3B] hover:text-[#7DDE4A] transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-neutral-800 hover:text-primary transition-colors"
                 >
                   Connexion
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 bg-[#7DDE4A] hover:bg-[#6bc93a] text-white text-sm font-medium rounded-full transition-colors"
+                  className="px-4 py-2 bg-primary hover:bg-[#6bc93a] text-forest text-sm font-medium rounded-full transition-colors"
                 >
                   S'inscrire
                 </Link>
@@ -593,7 +593,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4] transition-all"
+              className="p-2 rounded-lg text-gray-600 hover:text-primary hover:bg-nature-100 transition-all"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -602,7 +602,7 @@ const Navbar: React.FC = () => {
 
         {/* Menu mobile */}
         {isOpen && (
-          <div className="md:hidden border-t border-[#DDE9DA] py-4">
+          <div className="md:hidden border-t border-nature-300 py-4">
             <div className="space-y-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -611,8 +611,8 @@ const Navbar: React.FC = () => {
                     key={item.name}
                     to={item.href}
                     className={`flex items-center px-3 py-2 rounded-lg transition-all ${
-                      isActive(item.href) ? 'bg-[#E9F8DF] text-[#7DDE4A]'
-                        : 'text-gray-600 hover:text-[#7DDE4A] hover:bg-[#F7F9F4]'
+                      isActive(item.href) ? 'bg-nature-100 text-primary'
+                        : 'text-gray-600 hover:text-primary hover:bg-nature-100'
                     }`}
                     onClick={() => setIsOpen(false)}
                   >
@@ -623,12 +623,12 @@ const Navbar: React.FC = () => {
               })}
               
               {/* Section IA Mobile */}
-              <div className="border-t border-[#DDE9DA] pt-3 mt-3">
+              <div className="border-t border-nature-300 pt-3 mt-3">
                 <div className="px-3 py-2">
-                  <h3 className="text-sm font-semibold text-[#3B3B3B] mb-2">?? IA Scientifique</h3>
+                  <h3 className="text-sm font-semibold text-neutral-800 mb-2">?? IA Scientifique</h3>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center text-gray-600">
-                      <span className="w-2 h-2 bg-[#7DDE4A] rounded-full mr-2"></span>
+                      <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                       2M+ produits
                     </div>
                     <div className="flex items-center text-gray-600">
@@ -640,7 +640,7 @@ const Navbar: React.FC = () => {
                       Impact eco
                     </div>
                     <div className="flex items-center text-gray-600">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                      <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                       Valide ANSES
                     </div>
                   </div>
@@ -648,17 +648,17 @@ const Navbar: React.FC = () => {
               </div>
               
               {!isAuthenticated && (
-                <div className="border-t border-[#DDE9DA] pt-3 mt-3 space-y-2">
+                <div className="border-t border-nature-300 pt-3 mt-3 space-y-2">
                   <Link
                     to="/login"
-                    className="block px-3 py-2 text-center text-[#7DDE4A] font-medium"
+                    className="block px-3 py-2 text-center text-primary font-medium"
                     onClick={() => setIsOpen(false)}
                   >
                     Connexion
                   </Link>
                   <Link
                     to="/register"
-                    className="block px-3 py-2 text-center bg-[#7DDE4A] text-white rounded-lg font-medium"
+                    className="block px-3 py-2 text-center bg-primary text-forest rounded-lg font-medium"
                     onClick={() => setIsOpen(false)}
                   >
                     S'inscrire gratuitement

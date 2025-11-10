@@ -82,7 +82,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             onClick={() => setIsOpen(true)}
-            className={`fixed bottom-6 right-6 w-14 h-14 bg-[#7DDE4A] rounded-full shadow-lg flex items-center justify-center hover:bg-[#6BCF3A] transition-colors ${className}`}
+            className={`fixed bottom-6 right-6 w-14 h-14 bg-primary rounded-full shadow-lg flex items-center justify-center hover:bg-[#6BCF3A] transition-colors ${className}`}
           >
             <MessageCircle className="w-6 h-6 text-white" />
           </motion.button>
@@ -100,7 +100,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
             className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
           >
             {/* Header */}
-            <div className="bg-[#7DDE4A] text-white p-4 flex items-center justify-between">
+            <div className="bg-primary text-forest p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Bot className="w-6 h-6" />
                 <div>
@@ -151,7 +151,7 @@ export function ChatWidget({ productContext, className = '' }: ChatWidgetProps) 
                   <div
                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                       message.type === 'user'
-                        ? 'bg-[#7DDE4A] text-white'
+                        ? 'bg-primary text-forest'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >

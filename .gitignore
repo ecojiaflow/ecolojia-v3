@@ -54,3 +54,14 @@ produit-enrichi.json
 _NEW_FILES/
 *.bak_*
 commit_message_*.txt
+
+# Audits temporaires
+AUDIT_*.json
+*-audit-*.json
+npm-audit-report.json
+npm-outdated-report.json
+
+# Fichiers de test
+product_full.json
+result_product.json
+audit-response-scan.json

@@ -59,7 +59,7 @@ const FavoritesPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#3B3B3B] flex items-center gap-3 mb-2">
+          <h1 className="text-3xl font-bold text-neutral-800 flex items-center gap-3 mb-2">
             <Heart className="w-8 h-8 text-red-500" />
             Mes Favoris
           </h1>
@@ -87,7 +87,7 @@ const FavoritesPage: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/search')}
-              className="px-6 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6BC93B]"
+              className="px-6 py-2 bg-primary text-forest rounded-lg hover:bg-[#6BC93B]"
             >
               Découvrir des produits
             </button>
@@ -105,7 +105,7 @@ const FavoritesPage: React.FC = () => {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-[#3B3B3B] text-lg mb-1">
+                    <h3 className="font-semibold text-neutral-800 text-lg mb-1">
                       {product.productName}
                     </h3>
                     <p className="text-gray-600 text-sm">{product.productBrand}</p>

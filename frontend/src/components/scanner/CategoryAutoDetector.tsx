@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/scanner/CategoryAutoDetector.tsx
 import React from 'react';
 
 export interface ProductCategory {
@@ -62,7 +62,7 @@ export const CategoryAutoDetector: React.FC<CategoryAutoDetectorProps> = ({
         </p>
       </div>
 
-      <div className="rounded-xl p-4 mb-6 bg-[#E9F8DF] border-2 border-[#7DDE4A]">
+      <div className="rounded-xl p-4 mb-6 bg-nature-100 border-2 border-primary">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <span className="text-2xl">{category.icon}</span>
@@ -80,7 +80,7 @@ export const CategoryAutoDetector: React.FC<CategoryAutoDetectorProps> = ({
 
       <button
         onClick={onConfirm}
-        className="w-full bg-[#7DDE4A] text-white py-3 rounded-xl font-semibold hover:bg-[#6BC93A] transition-colors"
+        className="w-full bg-primary text-forest py-3 rounded-xl font-semibold hover:bg-[#6BC93A] transition-colors"
       >
         Analyser ce produit {category.icon}
       </button>

@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const aiCache = require('../services/aiCache.service');
 const { aiCacheMiddleware } = require('../middleware/aiCache.middleware');
 const ChatHistory = require('../models/ChatHistory');
@@ -23,6 +23,59 @@ router.get('/health', (_req, res) => {
 });
 
 router.post('/deepseek', aiLimiter, aiCacheMiddleware, deepseekChat);
+// POST / - Chat générique (recipe_assistance, etc.)
+router.post('/', aiLimiter, async (req, res) => {
+  try {
+    const { message, context } = req.body;
+
+    // 🔍 DEBUG : Voir ce que le frontend envoie
+    console.log('[Chat] 📩 Message reçu :', message);
+    console.log('[Chat] 📦 Context reçu :', JSON.stringify(context, null, 2));
+
+    if (!message) {
+      return res.status(400).json({ error: 'message requis' });
+    }
+
+    // Construire le prompt système
+    let systemPrompt = 'Tu es un assistant culinaire expert pour Ecolojia.';
+    
+    if (context && context.type === 'recipe_assistance') {
+      const meal = context.meal || 'cette recette';
+      systemPrompt = systemPrompt + ' Aide l utilisateur avec cette recette : ' + meal + '.';
+      
+      if (context.ingredients && context.ingredients.length > 0) {
+        systemPrompt = systemPrompt + ' Ingredients disponibles : ';
+        context.ingredients.forEach(function(ing) {
+          systemPrompt = systemPrompt + ing.name + ' (' + ing.quantity + '), ';
+        });
+      }
+      
+      if (context.currentStep) {
+        systemPrompt = systemPrompt + ' Etape actuelle : ' + context.currentStep;
+      }
+      
+      systemPrompt = systemPrompt + ' Reponds de facon concise, pratique et bienveillante.';
+
+    // 🔍 DEBUG : Voir le prompt système final
+    console.log('[Chat] 🤖 System Prompt :', systemPrompt);
+    }
+
+    // Appel DeepSeek
+    const deepseekService = require('../services/ai/deepSeekService');
+    const aiResponse = await deepseekService.chat({
+      apiKey: process.env.DEEPSEEK_API_KEY,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ]
+    });
+
+    res.json({ response: aiResponse.text });
+  } catch (error) {
+    console.error('[Chat] Erreur :', error);
+    res.status(500).json({ error: 'Erreur IA' });
+  }
+});
 
 
 // POST /product-chat - Chat contextuel produit
@@ -92,5 +145,6 @@ router.get('/cache-stats', (req, res) => {
 });
 
 module.exports = router;
+
 
 

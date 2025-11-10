@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/OnboardingPage.tsx
+﻿// PATH: frontend/src/pages/OnboardingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getReturnUrl } from '../utils/navigation';
@@ -379,7 +379,7 @@ const OnboardingPage: React.FC = () => {
           <button
             onClick={handleNext}
             disabled={isLoading}
-            className="px-8 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-primary transition-colors flex items-center disabled:opacity-50"
+            className="px-8 py-3 bg-green-500 text-forest rounded-lg font-medium hover:bg-primary transition-colors flex items-center disabled:opacity-50"
           >
             {currentStep === 3 ? 'Terminer' : 'Suivant'}
             <ChevronRight className="w-5 h-5 ml-2" />

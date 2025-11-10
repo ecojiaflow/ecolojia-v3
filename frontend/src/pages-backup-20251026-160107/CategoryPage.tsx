@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Search, Filter, Grid, List } from 'lucide-react';
 import { CATEGORIES, CategoryType } from '../types/categories';
@@ -263,7 +263,7 @@ const CategoryPage: React.FC = () => {
                     </span>
                   )}
                   {filters.verified !== null && (
-                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                    <span className="bg-primary-100 text-forest-900 px-2 py-1 rounded text-xs">
                       {filters.verified ? 'Vérifiés' : 'Non vérifiés'}
                     </span>
                   )}
@@ -304,7 +304,7 @@ const CategoryPage: React.FC = () => {
                     });
                     setSearchQuery('');
                   }}
-                  className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-green-700"
+                  className="mt-4 bg-primary text-forest px-6 py-2 rounded-lg hover:bg-green-700"
                 >
                   Réinitialiser les filtres
                 </button>

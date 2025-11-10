@@ -1,4 +1,4 @@
-// frontend/src/pages/MultiScanPage.tsx
+﻿// frontend/src/pages/MultiScanPage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -171,7 +171,7 @@ const MultiScanPage: React.FC = () => {
             <button
               onClick={() => setShowAddModal(true)}
               disabled={products.length >= 10 && user?.subscription?.tier !== 'premium'}
-              className="inline-flex items-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4 mr-2" />
               Ajouter
@@ -184,7 +184,7 @@ const MultiScanPage: React.FC = () => {
               <p className="text-gray-500">Aucun produit ajoute</p>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="mt-4 text-purple-600 hover:text-purple-700 font-medium"
+                className="mt-4 text-forest-dark hover:text-forest-dark font-medium"
               >
                 Ajouter votre premier produit
               </button>
@@ -238,7 +238,7 @@ const MultiScanPage: React.FC = () => {
                     {product.status === 'completed' && (
                       <button
                         onClick={() => navigate(`/products/${product.id}/${product.category}`)}
-                        className="text-purple-600 hover:text-purple-700"
+                        className="text-forest-dark hover:text-forest-dark"
                       >
                         <ChevronRight className="w-5 h-5" />
                       </button>
@@ -284,13 +284,13 @@ const MultiScanPage: React.FC = () => {
 
         {/* Note Premium */}
         {user?.subscription?.tier !== 'premium' && products.length >= 5 && (
-          <div className="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
-            <p className="text-purple-700 mb-2">
+          <div className="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 text-center">
+            <p className="text-forest-dark mb-2">
               Limite gratuite : 10 produits par analyse
             </p>
             <button
               onClick={() => navigate('/premium')}
-              className="text-purple-600 hover:text-purple-700 font-medium"
+              className="text-forest-dark hover:text-forest-dark font-medium"
             >
               Passer ƒÆ’†'ƒ'š‚Â  Premium pour des analyses illimitees aaa'šÂ¬‚Â aa'šÂ¬a'žÂ¢
             </button>
@@ -335,7 +335,7 @@ const MultiScanPage: React.FC = () => {
                       onClick={() => setSelectedCategory(cat.value as any)}
                       className={`p-3 rounded-lg border-2 transition-colors ${
                         selectedCategory === cat.value
-                          ? 'border-purple-500 bg-purple-50'
+                          ? 'border-primary bg-primary-50'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -358,7 +358,7 @@ const MultiScanPage: React.FC = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Ex: Nutella, Shampooing L'Oreal..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ const MultiScanPage: React.FC = () => {
                 <button
                   onClick={() => searchQuery && addProduct(searchQuery)}
                   disabled={!searchQuery}
-                  className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Ajouter
                 </button>

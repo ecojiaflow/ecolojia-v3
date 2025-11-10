@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from "react-router-dom";
+﻿import { useLocation, useSearchParams } from "react-router-dom";
 import { AlertTriangle, Leaf, Heart, Shield, Info } from "lucide-react";
 import { inferDomain } from '../utils/domain';
 
@@ -102,7 +102,7 @@ const ResultsPage: React.FC = () => {
           )}
           
           <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-3xl font-bold text-purple-600">{overallScore}%</div>
+            <div className="text-3xl font-bold text-forest-dark">{overallScore}%</div>
             <p className="text-sm text-gray-600 mt-1">Score Global</p>
           </div>
         </div>

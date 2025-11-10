@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Download, ArrowLeft } from 'lucide-react';
 import { MealPlanWizard } from '../components/mealplan/MealPlanWizard';
@@ -193,8 +193,8 @@ export const MealPlanPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50 flex items-center justify-center p-4">
         <div className="max-w-md bg-white rounded-2xl shadow-xl p-8 text-center border border-purple-100">
-          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Sparkles className="text-purple-600" size={32} />
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Sparkles className="text-forest-dark" size={32} />
           </div>
           
           <h2 className="text-2xl font-bold text-gray-900 mb-3">

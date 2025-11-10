@@ -1,4 +1,4 @@
-// PATH: frontend/src/data/ingredientsKnowledge.ts
+﻿// PATH: frontend/src/data/ingredientsKnowledge.ts
 export interface HazardInfo {
   name: string;
   synonyms: string[];
@@ -192,7 +192,7 @@ function calculateMatchScore(ingredient: string, hazard: HazardInfo): number {
 export function sortByRiskLevel(ingredients: EnrichedIngredient[]): EnrichedIngredient[] {
   const levelOrder = { high: 0, moderate: 1, low: 2, unknown: 3 };
   return [...ingredients].sort((a, b) => {
-    return levelOrder[?.level] - levelOrder[b.level];
+    return levelOrder[a?.level] - levelOrder[b.level];
   });
 }
 
