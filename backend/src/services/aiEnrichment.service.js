@@ -1,4 +1,12 @@
 ﻿const deepSeekService = require('./ai/deepSeekService');
+
+// ============================================================================
+// DEEPSEEK API KEY (chargement depuis .env)
+// ============================================================================
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+if (!DEEPSEEK_API_KEY) {
+  console.warn('[aiEnrichment] ⚠️  DEEPSEEK_API_KEY manquante dans .env');
+}
 const nutrientCalculator = require('./nutrientCalculator');
 const logger = require('../utils/logger');
 const Product = require('../models/Product');
@@ -22,7 +30,11 @@ async function enrichFoodProduct(product, missingFields = []) {
   try {
     console.log(`[AI] Requesting new estimations for ${product.barcode} category: food`);
     
-    const response = await deepSeekService.analyzeProduct(product, 'food');
+    const response = await deepSeekService.analyzeProduct({
+      apiKey: DEEPSEEK_API_KEY,
+      product: product,
+      category: 'food'
+    });
     
     // ✅ FIX: Sécuriser l'affichage de la réponse
     const displayResponse = () => {
@@ -135,7 +147,11 @@ async function estimateMissingData(product, category = 'food', missingFields = [
   try {
     console.log(`[AI] Estimating ${missingFields.join(', ')} for category: ${category}`);
     
-    const response = await deepSeekService.analyzeProduct(product, category);
+    const response = await deepSeekService.analyzeProduct({
+      apiKey: DEEPSEEK_API_KEY,
+      product: product,
+      category: category
+    });
     
     const parsed = parseAIResponseByCategory(response, category, missingFields);
     
@@ -163,7 +179,11 @@ async function estimateMissingData(product, category = 'food', missingFields = [
  */
 async function enrichWithAISummary(product, category = 'food') {
   try {
-    const response = await deepSeekService.analyzeProduct(product, category);
+    const response = await deepSeekService.analyzeProduct({
+      apiKey: DEEPSEEK_API_KEY,
+      product: product,
+      category: category
+    });
     
     return {
       success: true,
@@ -187,7 +207,11 @@ async function enrichWithAISummary(product, category = 'food') {
 async function enrichCosmeticsProduct(product, missingFields = []) {
   try {
     console.log('[DEBUG enrichCosmeticsProduct] Barcode:', product.barcode);
-    const response = await deepSeekService.analyzeProduct(product, 'cosmetics');
+    const response = await deepSeekService.analyzeProduct({
+      apiKey: DEEPSEEK_API_KEY,
+      product: product,
+      category: 'cosmetics'
+    });
     const parsed = parseAIResponseByCategory(response, 'cosmetics', missingFields);
     console.log('[DEBUG] Parsed:', JSON.stringify(parsed, null, 2));
 
@@ -212,7 +236,11 @@ async function enrichCosmeticsProduct(product, missingFields = []) {
 async function enrichDetergentsProduct(product, missingFields = []) {
   try {
     console.log('[DEBUG enrichDetergentsProduct] Barcode:', product.barcode);
-    const response = await deepSeekService.analyzeProduct(product, 'detergents');
+    const response = await deepSeekService.analyzeProduct({
+      apiKey: DEEPSEEK_API_KEY,
+      product: product,
+      category: 'detergents'
+    });
     const parsed = parseAIResponseByCategory(response, 'detergents', missingFields);
     console.log('[DEBUG] Parsed detergent:', JSON.stringify(parsed, null, 2));
 
