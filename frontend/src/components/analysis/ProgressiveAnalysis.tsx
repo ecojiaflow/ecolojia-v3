@@ -147,19 +147,19 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
 
         {/* Teaser pour le niveau superieur */}
         {userTier === 'free' && (
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-primary-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Lock className="w-5 h-5 text-purple-600 mr-2" />
-                <span className="text-sm font-medium text-purple-800">
+                <Lock className="w-5 h-5 text-forest-dark mr-2" />
+                <span className="text-sm font-medium text-forest-900">
                   Debloquez l'analyse complete
                 </span>
               </div>
-              <button className="text-xs bg-purple-600 text-white px-3 py-1 rounded-full hover:bg-purple-700 transition-colors">
+              <button className="text-xs bg-primary-hover text-white px-3 py-1 rounded-full hover:bg-primary-active transition-colors">
                 Passer Premium
               </button>
             </div>
-            <ul className="mt-3 text-xs text-purple-700 space-y-1">
+            <ul className="mt-3 text-xs text-forest-dark space-y-1">
               <li>aa Liste complete des additifs</li>
               <li>aa Alternatives personnalisees</li>
               <li>aa Impact environnemental detaille</li>
@@ -315,7 +315,7 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
             
             {userTier === 'free' && alternatives.length >= 3 && (
               <div className="text-center">
-                <button className="text-sm text-purple-600 hover:text-purple-700">
+                <button className="text-sm text-forest-dark hover:text-forest-dark">
                   <Lock className="w-4 h-4 inline mr-1" />
                   Voir plus d'alternatives (Premium)
                 </button>
@@ -332,14 +332,14 @@ export const ProgressiveAnalysis: React.FC<ProgressiveAnalysisProps> = ({
     if (userTier !== 'premium') {
       return (
         <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl p-8 text-center">
-          <Lock className="w-16 h-16 text-purple-600 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-purple-800 mb-2">
+          <Lock className="w-16 h-16 text-forest-dark mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-forest-900 mb-2">
             Analyse Expert Premium
           </h3>
-          <p className="text-purple-600 mb-4">
+          <p className="text-forest-dark mb-4">
             Debloquez l'analyse complete avec impact environnemental, social et recommandations personnalisees
           </p>
-          <button className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+          <button className="bg-primary-hover text-white px-6 py-3 rounded-lg hover:bg-primary-active transition-colors">
             Passer au Premium
           </button>
         </div>

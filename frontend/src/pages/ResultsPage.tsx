@@ -117,17 +117,17 @@ const ResultsPage: React.FC = () => {
   if (!data) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#F9FAF8] to-[#F7F9F4] flex items-center justify-center p-4">
-        <div className="max-w-md bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-8 text-center border border-[#DDE9DA]">
+        <div className="max-w-md bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-8 text-center border border-nature-300">
           <AlertTriangle className="w-16 h-16 text-[#E9A100] mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-[#232323] mb-3">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-3">
             Aucune donnee disponible
           </h2>
-          <p className="text-[#6B6B6B] mb-6">
+          <p className="text-neutral-600 mb-6">
             Nous n'avons pas trouve de resultats d'analyse. Veuillez scanner un produit.
           </p>
           <button
             onClick={() => navigate('/scan')}
-            className="w-full px-6 py-3 bg-[#7DDE4A] text-[#0E1A0D] rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)]"
+            className="w-full px-6 py-3 bg-primary text-forest rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)]"
           >
             Scanner un produit
           </button>
@@ -140,14 +140,14 @@ const ResultsPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#F9FAF8] to-[#F7F9F4] pb-20">
       <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
         
-        <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+        <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
           <div className="flex items-start gap-4 mb-4">
             <div className="text-4xl">{categoryInfo.icon}</div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-[#232323] mb-1">
+              <h1 className="text-2xl font-bold text-neutral-900 mb-1">
                 {product?.name || 'Produit inconnu'}
               </h1>
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-sm text-neutral-600">
                 Code-barres: {barcode || product?.barcode || 'Non disponible'}
               </p>
             </div>
@@ -163,16 +163,16 @@ const ResultsPage: React.FC = () => {
         </div>
 
         {strengths.length > 0 && (
-          <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+          <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircle className="w-6 h-6 text-[#1B9E4B]" />
-              <h2 className="text-xl font-bold text-[#232323]">Points Forts</h2>
+              <h2 className="text-xl font-bold text-neutral-900">Points Forts</h2>
             </div>
             <ul className="space-y-3">
               {strengths.map((strength, idx) => (
                 <li key={idx} className="flex items-start gap-3">
                   <div className="w-2 h-2 rounded-full bg-[#1B9E4B] mt-2 flex-shrink-0" />
-                  <span className="text-[#3B3B3B]">{strength}</span>
+                  <span className="text-neutral-800">{strength}</span>
                 </li>
               ))}
             </ul>
@@ -180,16 +180,16 @@ const ResultsPage: React.FC = () => {
         )}
 
         {weaknesses.length > 0 && (
-          <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+          <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="w-6 h-6 text-[#E9A100]" />
-              <h2 className="text-xl font-bold text-[#232323]">Points d'Attention</h2>
+              <h2 className="text-xl font-bold text-neutral-900">Points d'Attention</h2>
             </div>
             <ul className="space-y-3">
               {weaknesses.map((weakness, idx) => (
                 <li key={idx} className="flex items-start gap-3">
                   <div className="w-2 h-2 rounded-full bg-[#E9A100] mt-2 flex-shrink-0" />
-                  <span className="text-[#3B3B3B]">{weakness}</span>
+                  <span className="text-neutral-800">{weakness}</span>
                 </li>
               ))}
             </ul>
@@ -246,7 +246,7 @@ const ResultsPage: React.FC = () => {
 
           <button
             onClick={() => navigate('/scan')}
-            className="w-full bg-white border-2 border-[#DDE9DA] text-[#3B3B3B] py-4 rounded-[16px] font-semibold hover:bg-[#F7F9F4] transition-all flex items-center justify-center gap-2"
+            className="w-full bg-white border-2 border-nature-300 text-neutral-800 py-4 rounded-[16px] font-semibold hover:bg-nature-100 transition-all flex items-center justify-center gap-2"
           >
             <Camera className="w-5 h-5" />
             <span>Scanner produit suivant</span>

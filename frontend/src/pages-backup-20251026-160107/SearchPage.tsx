@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import algoliasearch from 'algoliasearch/lite';
 import {
@@ -72,11 +72,11 @@ const ProductHit = ({ hit }: { hit: any }) => {
           )}
           {hit.nutriscore_grade && (
             <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
-              hit.nutriscore_grade === 'a' ? 'bg-success text-white' :
-              hit.nutriscore_grade === 'b' ? 'bg-primary-400 text-white' :
+              hit.nutriscore_grade === 'a' ? 'bg-success text-forest' :
+              hit.nutriscore_grade === 'b' ? 'bg-primary-400 text-forest' :
               hit.nutriscore_grade === 'c' ? 'bg-warning text-white' :
               hit.nutriscore_grade === 'd' ? 'bg-[#E9A100] text-white' :
-              'bg-danger text-white'
+              'bg-danger text-forest'
             }`}>
               Nutri-Score {hit.nutriscore_grade}
             </span>
@@ -134,7 +134,7 @@ const SearchPage: React.FC = () => {
               {isMobile && (
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-500 text-[#0E1A0D] font-medium hover:bg-primary-600 transition-all shadow-1 min-h-[44px]"
+                  className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-500 text-forest font-medium hover:bg-primary-600 transition-all shadow-1 min-h-[44px]"
                 >
                   <Filter className="w-4 h-4" />
                   Filtres
@@ -249,7 +249,7 @@ const SearchPage: React.FC = () => {
                     list: 'flex items-center gap-2',
                     item: '',
                     link: 'h-10 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors flex items-center justify-center',
-                    selectedItem: 'h-10 px-4 bg-primary-500 text-[#0E1A0D] rounded-lg font-medium',
+                    selectedItem: 'h-10 px-4 bg-primary-500 text-forest rounded-lg font-medium',
                     disabledItem: 'opacity-50 cursor-not-allowed',
                     firstPageItem: isMobile ? 'hidden' : '',
                     lastPageItem: isMobile ? 'hidden' : ''

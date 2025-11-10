@@ -78,7 +78,7 @@ export function Layout() {
                   <item.icon className="w-4 h-4" />
                   <span>{item.name}</span>
                   {item.premium && user?.tier !== 'premium' && (
-                    <Crown className="w-3 h-3 text-purple-500" />
+                    <Crown className="w-3 h-3 text-primary-1000" />
                   )}
                 </NavLink>
               ))}
@@ -174,7 +174,7 @@ export function Layout() {
                         {user?.tier !== 'premium' && (
                           <NavLink
                             to="/premium"
-                            className="block px-4 py-2 text-sm text-purple-600 hover:bg-purple-50"
+                            className="block px-4 py-2 text-sm text-forest-dark hover:bg-primary-50"
                             onClick={() => setShowUserMenu(false)}
                           >
                             <Crown className="w-4 h-4 inline mr-2" />
@@ -239,7 +239,7 @@ export function Layout() {
                   <item.icon className="w-5 h-5" />
                   <span>{item.name}</span>
                   {item.premium && user?.tier !== 'premium' && (
-                    <Crown className="w-4 h-4 text-purple-500 ml-auto" />
+                    <Crown className="w-4 h-4 text-primary-1000 ml-auto" />
                   )}
                 </NavLink>
               ))}

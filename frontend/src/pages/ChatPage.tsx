@@ -122,7 +122,7 @@ const ChatPage = () => {
                 <div
                   className={`max-w-[80%] rounded-lg p-4 shadow-2 ${
                     msg.role === 'user'
-                      ? 'bg-primary-500 text-[#0E1A0D]'
+                      ? 'bg-primary-500 text-forest'
                       : msg.isUrgent
                       ? 'bg-danger/10 border-2 border-danger text-danger'
                       : 'bg-neutral-100 text-neutral-900 border border-neutral-300'
@@ -163,7 +163,7 @@ const ChatPage = () => {
               <button
                 onClick={() => handleSendMessage()}
                 disabled={loading || !input.trim()}
-                className="h-11 px-6 bg-primary-500 text-[#0E1A0D] rounded-lg font-medium hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-2 transition-all"
+                className="h-11 px-6 bg-primary-500 text-forest rounded-lg font-medium hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-2 transition-all"
               >
                 <Send className="w-4 h-4" />
                 Envoyer

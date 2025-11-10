@@ -115,7 +115,7 @@ export const CommunityComparison: React.FC = () => {
   ];
 
   // Score distribution colors
-  const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+  const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#7DDE4A'];
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">

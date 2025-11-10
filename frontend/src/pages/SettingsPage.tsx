@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/SettingsPage.tsx
+﻿// PATH: frontend/src/pages/SettingsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -46,7 +46,7 @@ const Switch: React.FC<{
     <button
       onClick={() => onChange(!checked)}
       className={`relative w-12 h-6 rounded-full transition-colors ${
-        checked ? 'bg-[#7DDE4A]' : 'bg-gray-300'
+        checked ? 'bg-primary' : 'bg-gray-300'
       }`}
     >
       <motion.div
@@ -201,9 +201,9 @@ const SettingsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7F9F4] flex items-center justify-center">
+      <div className="min-h-screen bg-nature-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#7DDE4A] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
           <p className="text-gray-600">Chargement des parametres...</p>
         </div>
       </div>
@@ -211,11 +211,11 @@ const SettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9F4]">
+    <div className="min-h-screen bg-nature-100">
       {/* Header */}
-      <div className="bg-white border-b border-[#DDE9DA]">
+      <div className="bg-white border-b border-nature-300">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-[#3B3B3B]">Parametres</h1>
+          <h1 className="text-3xl font-bold text-neutral-800">Parametres</h1>
           <p className="text-gray-600 mt-1">Gerez vos preferences et la securite de votre compte</p>
         </div>
       </div>
@@ -225,11 +225,11 @@ const SettingsPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+          className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
         >
-          <div className="p-6 border-b border-[#DDE9DA]">
-            <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
-              <Bell className="w-5 h-5 mr-3 text-[#7DDE4A]" />
+          <div className="p-6 border-b border-nature-300">
+            <h2 className="text-xl font-semibold text-neutral-800 flex items-center">
+              <Bell className="w-5 h-5 mr-3 text-primary" />
               Notifications
             </h2>
           </div>
@@ -237,7 +237,7 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 space-y-4">
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Notifications push</span>
+                <span className="text-neutral-800 font-medium">Notifications push</span>
                 <p className="text-sm text-gray-600 mt-1">Recevez des alertes sur vos produits scannes</p>
               </div>
               <Switch
@@ -248,7 +248,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Emails de mise Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  jour</span>
+                <span className="text-neutral-800 font-medium">Emails de mise Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  jour</span>
                 <p className="text-sm text-gray-600 mt-1">Nouvelles fonctionnalites et ameliorations</p>
               </div>
               <Switch
@@ -259,7 +259,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Rapport hebdomadaire</span>
+                <span className="text-neutral-800 font-medium">Rapport hebdomadaire</span>
                 <p className="text-sm text-gray-600 mt-1">Resume de vos analyses et progres</p>
               </div>
               <Switch
@@ -270,7 +270,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Alertes produits</span>
+                <span className="text-neutral-800 font-medium">Alertes produits</span>
                 <p className="text-sm text-gray-600 mt-1">Notifications sur les rappels et mises Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  jour</p>
               </div>
               <Switch
@@ -286,18 +286,18 @@ const SettingsPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+          className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
         >
-          <div className="p-6 border-b border-[#DDE9DA]">
-            <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
-              <Sun className="w-5 h-5 mr-3 text-[#7DDE4A]" />
+          <div className="p-6 border-b border-nature-300">
+            <h2 className="text-xl font-semibold text-neutral-800 flex items-center">
+              <Sun className="w-5 h-5 mr-3 text-primary" />
               Apparence
             </h2>
           </div>
           
           <div className="p-6 space-y-4">
             <div>
-              <label className="block text-[#3B3B3B] font-medium mb-2">Theme</label>
+              <label className="block text-neutral-800 font-medium mb-2">Theme</label>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { value: 'light', label: 'Clair', icon: <Sun className="w-4 h-4" /> },
@@ -309,8 +309,8 @@ const SettingsPage: React.FC = () => {
                     onClick={() => updateSetting('appearance', 'theme', theme.value)}
                     className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all ${
                       settings.appearance.theme === theme.value
-                        ? 'border-[#7DDE4A] bg-[#E9F8DF]'
-                        : 'border-[#DDE9DA] hover:border-gray-300'
+                        ? 'border-primary bg-nature-100'
+                        : 'border-nature-300 hover:border-gray-300'
                     }`}
                   >
                     {theme.icon}
@@ -321,11 +321,11 @@ const SettingsPage: React.FC = () => {
             </div>
             
             <div>
-              <label className="block text-[#3B3B3B] font-medium mb-2">Langue</label>
+              <label className="block text-neutral-800 font-medium mb-2">Langue</label>
               <select
                 value={settings.appearance.language}
                 onChange={(e) => updateSetting('appearance', 'language', e.target.value)}
-                className="w-full px-4 py-3 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+                className="w-full px-4 py-3 border border-nature-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
               >
                 <option value="fr">Francais</option>
                 <option value="en">English</option>
@@ -336,7 +336,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Mode compact</span>
+                <span className="text-neutral-800 font-medium">Mode compact</span>
                 <p className="text-sm text-gray-600 mt-1">Affichage condense pour plus d'informations</p>
               </div>
               <Switch
@@ -352,11 +352,11 @@ const SettingsPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+          className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
         >
-          <div className="p-6 border-b border-[#DDE9DA]">
-            <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
-              <Shield className="w-5 h-5 mr-3 text-[#7DDE4A]" />
+          <div className="p-6 border-b border-nature-300">
+            <h2 className="text-xl font-semibold text-neutral-800 flex items-center">
+              <Shield className="w-5 h-5 mr-3 text-primary" />
               Confidentialite
             </h2>
           </div>
@@ -364,7 +364,7 @@ const SettingsPage: React.FC = () => {
           <div className="p-6 space-y-4">
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Partager les analyses anonymes</span>
+                <span className="text-neutral-800 font-medium">Partager les analyses anonymes</span>
                 <p className="text-sm text-gray-600 mt-1">Aidez Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  ameliorer notre base de donnees</p>
               </div>
               <Switch
@@ -375,7 +375,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Publicites personnalisees</span>
+                <span className="text-neutral-800 font-medium">Publicites personnalisees</span>
                 <p className="text-sm text-gray-600 mt-1">Afficher des publicites selon vos interets</p>
               </div>
               <Switch
@@ -386,7 +386,7 @@ const SettingsPage: React.FC = () => {
             
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex-1">
-                <span className="text-[#3B3B3B] font-medium">Profil public</span>
+                <span className="text-neutral-800 font-medium">Profil public</span>
                 <p className="text-sm text-gray-600 mt-1">Permettre aux autres de voir vos statistiques</p>
               </div>
               <Switch
@@ -395,10 +395,10 @@ const SettingsPage: React.FC = () => {
               />
             </label>
             
-            <div className="pt-4 border-t border-[#DDE9DA]">
+            <div className="pt-4 border-t border-nature-300">
               <button
                 onClick={handleExportData}
-                className="flex items-center gap-2 text-[#7DDE4A] hover:text-[#6bc93a] font-medium"
+                className="flex items-center gap-2 text-primary hover:text-[#6bc93a] font-medium"
               >
                 <Download className="w-4 h-4" />
                 Telecharger mes donnees (RGPD)
@@ -412,19 +412,19 @@ const SettingsPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+          className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
         >
-          <div className="p-6 border-b border-[#DDE9DA]">
-            <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
-              <Lock className="w-5 h-5 mr-3 text-[#7DDE4A]" />
+          <div className="p-6 border-b border-nature-300">
+            <h2 className="text-xl font-semibold text-neutral-800 flex items-center">
+              <Lock className="w-5 h-5 mr-3 text-primary" />
               Securite
             </h2>
           </div>
           
           <div className="p-6 space-y-4">
-            <div className="flex items-center justify-between p-4 bg-[#E9F8DF] rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-nature-100 rounded-lg">
               <div>
-                <h4 className="font-medium text-[#3B3B3B]">Authentification Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  deux facteurs</h4>
+                <h4 className="font-medium text-neutral-800">Authentification Ã†'Ãƒ' ââ‚¬â„¢ââ‚¬Â ÃƒÂ¢â'šÂ¬â'žÂ¢Ã†'ÃƒÂ¢â'šÂ¬Ã…Â¡ââ‚¬Å¡Ãƒ'šÃ‚Â  deux facteurs</h4>
                 <p className="text-sm text-gray-600 mt-1">
                   {settings.security.twoFactorEnabled 
                     ? 'Votre compte est protege par 2FA'
@@ -435,7 +435,7 @@ const SettingsPage: React.FC = () => {
               <button className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 settings.security.twoFactorEnabled
                   ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  : 'bg-[#7DDE4A] text-white hover:bg-[#6bc93a]'
+                  : 'bg-primary text-forest hover:bg-[#6bc93a]'
               }`}>
                 {settings.security.twoFactorEnabled ? 'Desactiver' : 'Activer'}
               </button>
@@ -447,19 +447,19 @@ const SettingsPage: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <Lock className="w-5 h-5 text-gray-400" />
-                <span className="font-medium text-[#3B3B3B]">Changer le mot de passe</span>
+                <span className="font-medium text-neutral-800">Changer le mot de passe</span>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </button>
             
             <div>
-              <label className="block text-[#3B3B3B] font-medium mb-2">
+              <label className="block text-neutral-800 font-medium mb-2">
                 Expiration de session (minutes)
               </label>
               <select
                 value={settings.security.sessionTimeout}
                 onChange={(e) => updateSetting('security', 'sessionTimeout', parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
+                className="w-full px-4 py-3 border border-nature-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent"
               >
                 <option value={15}>15 minutes</option>
                 <option value={30}>30 minutes</option>
@@ -469,7 +469,7 @@ const SettingsPage: React.FC = () => {
               </select>
             </div>
             
-            <div className="pt-4 border-t border-[#DDE9DA] space-y-3">
+            <div className="pt-4 border-t border-nature-300 space-y-3">
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all"
@@ -495,11 +495,11 @@ const SettingsPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+            className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
           >
-            <div className="p-6 border-b border-[#DDE9DA]">
-              <h2 className="text-xl font-semibold text-[#3B3B3B] flex items-center">
-                <CreditCard className="w-5 h-5 mr-3 text-[#7DDE4A]" />
+            <div className="p-6 border-b border-nature-300">
+              <h2 className="text-xl font-semibold text-neutral-800 flex items-center">
+                <CreditCard className="w-5 h-5 mr-3 text-primary" />
                 Abonnement
               </h2>
             </div>
@@ -507,7 +507,7 @@ const SettingsPage: React.FC = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-lg font-medium text-[#3B3B3B]">
+                  <h3 className="text-lg font-medium text-neutral-800">
                     Plan {user?.tier === 'premium' ? 'Premium' : user?.tier === 'family' ? 'Famille' : 'Gratuit'}
                   </h3>
                   <p className="text-gray-600">
@@ -521,7 +521,7 @@ const SettingsPage: React.FC = () => {
                 {user?.tier === 'free' ? (
                   <button
                     onClick={() => navigate('/pricing')}
-                    className="px-4 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6bc93a] transition-all"
+                    className="px-4 py-2 bg-primary text-forest rounded-lg hover:bg-[#6bc93a] transition-all"
                   >
                     Passer Premium
                   </button>
@@ -552,7 +552,7 @@ const SettingsPage: React.FC = () => {
           <button
             onClick={saveSettings}
             disabled={saving}
-            className="px-6 py-3 bg-[#7DDE4A] text-white rounded-full font-semibold hover:bg-[#6bc93a] transition-all disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-3 bg-primary text-forest rounded-full font-semibold hover:bg-[#6bc93a] transition-all disabled:opacity-50 flex items-center gap-2"
           >
             {saving ? (
               <>
@@ -577,7 +577,7 @@ const SettingsPage: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-2xl p-6 max-w-md w-full"
           >
-            <h3 className="text-xl font-bold text-[#3B3B3B] mb-6">
+            <h3 className="text-xl font-bold text-neutral-800 mb-6">
               Changer le mot de passe
             </h3>
             
@@ -591,7 +591,7 @@ const SettingsPage: React.FC = () => {
                     type={showPasswords.current ? 'text' : 'password'}
                     value={passwords.current}
                     onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
+                    className="w-full px-4 py-2 border border-nature-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
                   />
                   <button
                     type="button"
@@ -612,7 +612,7 @@ const SettingsPage: React.FC = () => {
                     type={showPasswords.new ? 'text' : 'password'}
                     value={passwords.new}
                     onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
+                    className="w-full px-4 py-2 border border-nature-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
                   />
                   <button
                     type="button"
@@ -633,7 +633,7 @@ const SettingsPage: React.FC = () => {
                     type={showPasswords.confirm ? 'text' : 'password'}
                     value={passwords.confirm}
                     onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#DDE9DA] rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
+                    className="w-full px-4 py-2 border border-nature-300 rounded-lg focus:ring-2 focus:ring-[#7DDE4A] focus:border-transparent pr-10"
                   />
                   <button
                     type="button"
@@ -658,7 +658,7 @@ const SettingsPage: React.FC = () => {
               </button>
               <button
                 onClick={handleChangePassword}
-                className="flex-1 px-4 py-2 bg-[#7DDE4A] text-white rounded-lg hover:bg-[#6bc93a] transition-all"
+                className="flex-1 px-4 py-2 bg-primary text-forest rounded-lg hover:bg-[#6bc93a] transition-all"
               >
                 Modifier
               </button>
@@ -677,7 +677,7 @@ const SettingsPage: React.FC = () => {
           >
             <div className="text-center mb-6">
               <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-[#3B3B3B] mb-2">
+              <h3 className="text-xl font-bold text-neutral-800 mb-2">
                 Supprimer votre compte ?
               </h3>
               <p className="text-gray-600">

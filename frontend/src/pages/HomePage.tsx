@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
     { icon: Shield, value: '100%', label: 'Scientifique', color: 'text-blue-600' },
-    { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-purple-600' },
+    { icon: Clock, value: '<2s', label: "Temps d'analyse", color: 'text-forest-dark' },
     { icon: Users, value: '500k+', label: 'Utilisateurs actifs', color: 'text-orange-600' }
   ];
 
@@ -89,7 +89,7 @@ const HomePage: React.FC = () => {
       icon: Sparkles,
       title: 'IA Personnalisee',
       description: 'Recommandations adaptees a votre profil et vos objectifs Sante',
-      color: 'bg-primary-100 text-purple-700'
+      color: 'bg-primary-100 text-forest-dark'
     }
   ];
 
@@ -375,7 +375,7 @@ const HomePage: React.FC = () => {
                 </button>
                 <button 
                   onClick={() => navigate('/register')} 
-                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-primary-50/10 transition-colors"
+                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-forest px-8 py-4 rounded-xl font-semibold hover:bg-primary-50/10 transition-colors"
                 >
                   <span>Creer un compte gratuit</span>
                   <ArrowRight className="w-5 h-5" />

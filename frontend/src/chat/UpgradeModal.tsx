@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/chat/UpgradeModal.tsx
 
 import React from 'react';
 import { Crown, Zap, TrendingUp, Calculator, X, Sparkles, Lock, Unlock } from 'lucide-react';
@@ -36,7 +36,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           <div className="text-center">
             <Crown className="w-16 h-16 text-yellow-300 mx-auto mb-3" />
             <h2 className="text-2xl font-bold mb-2">Upgrade vers Premium</h2>
-            <p className="text-purple-100">
+            <p className="text-primary-200">
               Debloquez toute la puissance de DeepSeek
             </p>
           </div>
@@ -86,26 +86,26 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             </div>
 
             {/* Premium */}
-            <div className="border-2 border-purple-300 bg-purple-50 rounded-lg p-4">
-              <h3 className="font-bold text-purple-800 mb-3 flex items-center gap-2">
-                <Crown className="w-4 h-4 text-purple-600" />
+            <div className="border-2 border-purple-300 bg-primary-50 rounded-lg p-4">
+              <h3 className="font-bold text-forest-900 mb-3 flex items-center gap-2">
+                <Crown className="w-4 h-4 text-forest-dark" />
                 Premium
               </h3>
-              <ul className="space-y-2 text-sm text-purple-700">
+              <ul className="space-y-2 text-sm text-forest-dark">
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
+                  <span className="w-1 h-1 bg-primary rounded-full"></span>
                   Questions illimitees
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
+                  <span className="w-1 h-1 bg-primary rounded-full"></span>
                   Toutes categories
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
+                  <span className="w-1 h-1 bg-primary rounded-full"></span>
                   DeepSeek Reasoner
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
+                  <span className="w-1 h-1 bg-primary rounded-full"></span>
                   Analyses expertes
                 </li>
               </ul>
@@ -130,11 +130,11 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
+            <div className="flex items-center gap-3 p-3 bg-primary-50 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-forest-dark" />
               <div>
-                <div className="font-medium text-purple-800">Multi-categories</div>
-                <div className="text-sm text-purple-600">Alimentaire + Cosmetiques + Detergents</div>
+                <div className="font-medium text-forest-900">Multi-categories</div>
+                <div className="text-sm text-forest-dark">Alimentaire + Cosmetiques + Detergents</div>
               </div>
             </div>
 
@@ -165,8 +165,8 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           {/* Pricing */}
           <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-4 mb-6 text-center">
             <div className="text-sm text-gray-600 mb-1">Tarification transparente</div>
-            <div className="text-2xl font-bold text-purple-800">Pay-as-you-use</div>
-            <div className="text-sm text-purple-600">Seulement ce que vous consommez aa Pas d'abonnement</div>
+            <div className="text-2xl font-bold text-forest-900">Pay-as-you-use</div>
+            <div className="text-sm text-forest-dark">Seulement ce que vous consommez aa Pas d'abonnement</div>
           </div>
 
           {/* Actions */}
@@ -254,7 +254,7 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-gray-800 flex items-center gap-2">
           {userTier === 'premium' ? (
-            <Crown className="w-4 h-4 text-purple-500" />
+            <Crown className="w-4 h-4 text-primary-1000" />
           ) : (
             <Clock className="w-4 h-4 text-gray-500" />
           )}
@@ -264,7 +264,7 @@ export const UsageTracker: React.FC<UsageTrackerProps> = ({
         {userTier === 'free' && onUpgrade && (
           <button
             onClick={onUpgrade}
-            className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors"
+            className="text-xs bg-primary-100 text-forest-dark px-2 py-1 rounded-full hover:bg-primary-200 transition-colors"
           >
             Upgrade
           </button>

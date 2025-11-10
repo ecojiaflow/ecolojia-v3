@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/PricingPage.tsx
+﻿// PATH: frontend/src/pages/PricingPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -135,12 +135,12 @@ const PricingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F9F4]">
+    <div className="min-h-screen bg-nature-100">
       {/* Header */}
-      <div className="bg-white border-b border-[#DDE9DA]">
+      <div className="bg-white border-b border-nature-300">
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl font-bold text-[#3B3B3B] mb-4">
+            <h1 className="text-4xl font-bold text-neutral-800 mb-4">
               Choisissez votre plan ECOLOJIA
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -150,7 +150,7 @@ const PricingPage: React.FC = () => {
 
           {/* Toggle facturation */}
           <div className="mt-8 flex items-center justify-center gap-4">
-            <span className={`font-medium ${billingPeriod === 'monthly' ? 'text-[#3B3B3B]' : 'text-gray-400'}`}>
+            <span className={`font-medium ${billingPeriod === 'monthly' ? 'text-neutral-800' : 'text-gray-400'}`}>
               Mensuel
             </span>
             <button
@@ -158,29 +158,29 @@ const PricingPage: React.FC = () => {
               className="relative w-14 h-8 bg-gray-200 rounded-full transition-colors duration-200"
             >
               <motion.div
-                className="absolute top-1 w-6 h-6 bg-[#7DDE4A] rounded-full shadow-md"
+                className="absolute top-1 w-6 h-6 bg-primary rounded-full shadow-md"
                 animate={{ left: billingPeriod === 'monthly' ? 4 : 24 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             </button>
-            <span className={`font-medium ${billingPeriod === 'yearly' ? 'text-[#3B3B3B]' : 'text-gray-400'}`}>
+            <span className={`font-medium ${billingPeriod === 'yearly' ? 'text-neutral-800' : 'text-gray-400'}`}>
               Annuel
-              <span className="ml-2 px-2 py-1 bg-[#7DDE4A] text-white text-xs rounded-full">-17%</span>
+              <span className="ml-2 px-2 py-1 bg-primary text-forest text-xs rounded-full">-17%</span>
             </span>
           </div>
 
           {/* Garanties */}
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-[#7DDE4A]" />
+              <Shield className="w-5 h-5 text-primary" />
               <span>Paiement securise</span>
             </div>
             <div className="flex items-center gap-2">
-              <Gift className="w-5 h-5 text-[#7DDE4A]" />
+              <Gift className="w-5 h-5 text-primary" />
               <span>7 jours d'essai gratuit</span>
             </div>
             <div className="flex items-center gap-2">
-              <Lock className="w-5 h-5 text-[#7DDE4A]" />
+              <Lock className="w-5 h-5 text-primary" />
               <span>Donnees protegees RGPD</span>
             </div>
           </div>
@@ -199,7 +199,7 @@ const PricingPage: React.FC = () => {
               className={`relative bg-white rounded-2xl shadow-lg overflow-hidden ${plan.popular ? 'ring-2 ring-[#7DDE4A]' : ''}`}
             >
               {plan.popular && (
-                <div className="absolute top-0 right-0 bg-[#7DDE4A] text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
+                <div className="absolute top-0 right-0 bg-primary text-forest px-4 py-1 rounded-bl-lg text-sm font-medium">
                   Le plus populaire
                 </div>
               )}
@@ -210,19 +210,19 @@ const PricingPage: React.FC = () => {
                   <div
                     className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
                       plan.color === 'green'
-                        ? 'bg-[#E9F8DF] text-[#7DDE4A]'
+                        ? 'bg-nature-100 text-primary'
                         : plan.color === 'purple'
-                        ? 'bg-purple-100 text-purple-600'
+                        ? 'bg-primary-100 text-forest-dark'
                         : 'bg-gray-100 text-gray-600'
                     }`}
                   >
                     {plan.icon}
                   </div>
 
-                  <h3 className="text-2xl font-bold text-[#3B3B3B] mb-2">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-neutral-800 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 mb-4">{plan.description}</p>
 
-                  <div className="text-4xl font-bold text-[#3B3B3B]">{plan.priceLabel}</div>
+                  <div className="text-4xl font-bold text-neutral-800">{plan.priceLabel}</div>
                   {plan.price > 0 && billingPeriod === 'yearly' && (
                     <p className="text-sm text-gray-500 mt-1">soit {(plan.price / 12).toFixed(2)} aÃ¢â‚¬Å¡Ã‚Â¬/mois</p>
                   )}
@@ -233,11 +233,11 @@ const PricingPage: React.FC = () => {
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
                       {feature.included ? (
-                        <Check className="w-5 h-5 text-[#7DDE4A] mt-0.5 flex-shrink-0" />
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mt-0.5 flex-shrink-0" />
                       )}
-                      <span className={`text-sm ${feature.included ? 'text-[#3B3B3B]' : 'text-gray-400'}`}>
+                      <span className={`text-sm ${feature.included ? 'text-neutral-800' : 'text-gray-400'}`}>
                         {feature.name}
                         {feature.tooltip && <Info className="w-4 h-4 inline-block ml-1 text-gray-400" />}
                       </span>
@@ -251,10 +251,10 @@ const PricingPage: React.FC = () => {
                   disabled={loadingPlan === plan.id}
                   className={`w-full py-3 px-6 rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${
                     plan.popular
-                      ? 'bg-[#7DDE4A] text-white hover:bg-[#6bc93a]'
+                      ? 'bg-primary text-forest hover:bg-[#6bc93a]'
                       : plan.color === 'purple'
-                      ? 'bg-purple-600 text-white hover:bg-purple-700'
-                      : 'bg-gray-100 text-[#3B3B3B] hover:bg-gray-200'
+                      ? 'bg-primary-hover text-forest hover:bg-primary-active'
+                      : 'bg-gray-100 text-neutral-800 hover:bg-gray-200'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {loadingPlan === plan.id ? (
@@ -274,7 +274,7 @@ const PricingPage: React.FC = () => {
 
       {/* FAQ */}
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-[#3B3B3B] mb-8 text-center">Questions frequentes</h2>
+        <h2 className="text-2xl font-bold text-neutral-800 mb-8 text-center">Questions frequentes</h2>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
@@ -283,13 +283,13 @@ const PricingPage: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-sm border border-[#DDE9DA] overflow-hidden"
+              className="bg-white rounded-xl shadow-sm border border-nature-300 overflow-hidden"
             >
               <button
                 onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
-                <span className="font-semibold text-[#3B3B3B]">{faq.question}</span>
+                <span className="font-semibold text-neutral-800">{faq.question}</span>
                 <HelpCircle
                   className={`w-5 h-5 text-gray-400 transition-transform ${
                     openFaqIndex === index ? 'rotate-180' : ''
@@ -316,7 +316,7 @@ const PricingPage: React.FC = () => {
           </p>
           <button
             onClick={() => handleSelectPlan('premium')}
-            className="px-8 py-4 bg-white text-[#7DDE4A] rounded-full font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2"
+            className="px-8 py-4 bg-white text-primary rounded-full font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2"
           >
             <Zap className="w-5 h-5" />
             Commencer l'essai gratuit

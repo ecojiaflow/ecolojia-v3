@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/chat/DeepSeekChat.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Crown, Zap, Lock, Calculator, Clock, Brain, AlertTriangle, TrendingUp } from 'lucide-react';
@@ -314,7 +314,7 @@ ${productData ? `Pret pour une analyse experte de "${productdata?.productName}" 
                   : message.type === 'system'
                   ? 'bg-red-100 border border-red-200 text-red-800'
                   : userTier === 'premium'
-                  ? 'bg-purple-50 border border-purple-200'
+                  ? 'bg-primary-50 border border-primary-200'
                   : 'bg-white border border-gray-200'
               }`}
             >
@@ -394,7 +394,7 @@ ${productData ? `Pret pour une analyse experte de "${productdata?.productName}" 
             disabled={!canSendMessage()}
             className={`px-6 py-3 rounded-lg font-medium transition-colors ${
               userTier === 'premium'
-                ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                ? 'bg-primary hover:bg-primary-hover text-white'
                 : 'bg-blue-500 hover:bg-blue-600 text-white'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
@@ -415,7 +415,7 @@ ${productData ? `Pret pour une analyse experte de "${productdata?.productName}" 
             </div>
             <button
               onClick={() => setShowUpgradeModal(true)}
-              className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1"
+              className="text-forest-dark hover:text-forest-dark font-medium flex items-center gap-1"
             >
               <Crown className="w-3 h-3" />
               Upgrade Premium

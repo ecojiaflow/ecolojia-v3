@@ -1,4 +1,4 @@
-// frontend/src/components/NaturalAlternatives.jsx - Version Simplifiee
+﻿// frontend/src/components/NaturalAlternatives.jsx - Version Simplifiee
 
 import React, { useState } from 'react';
 
@@ -137,11 +137,11 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
 
                   {/* Preuves Scientifiques */}
                   {alternative.sources && alternative.sources.length > 0 && (
-                    <div className="bg-purple-50 rounded-lg p-3 mb-4">
-                      <h5 className="font-semibold text-purple-800 text-sm mb-2">
+                    <div className="bg-primary-50 rounded-lg p-3 mb-4">
+                      <h5 className="font-semibold text-forest-900 text-sm mb-2">
                         ? Preuves Scientifiques
                       </h5>
-                      <div className="text-xs text-purple-700 space-y-1">
+                      <div className="text-xs text-forest-dark space-y-1">
                         {alternative.sources.slice(0, 2).map((source, idx) => (
                           <div key={idx}>a {source}</div>
                         ))}
@@ -182,8 +182,8 @@ const NaturalAlternatives = ({ alternatives, productType, novaGroup }) => {
             <div className="text-blue-600">Qualite nutritionnelle</div>
           </div>
           <div>
-            <div className="font-bold text-purple-700">-30%</div>
-            <div className="text-purple-600">Impact environnemental</div>
+            <div className="font-bold text-forest-dark">-30%</div>
+            <div className="text-forest-dark">Impact environnemental</div>
           </div>
         </div>
       </div>

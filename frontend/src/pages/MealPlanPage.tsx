@@ -12,13 +12,13 @@ export const MealPlanPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#F3FBF5] to-white pt-20 pb-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header succès */}
-        <div className="bg-white rounded-[24px] shadow-lg p-8 mb-6 text-center border-2 border-[#7DDE4A]">
+        <div className="bg-white rounded-[24px] shadow-lg p-8 mb-6 text-center border-2 border-primary">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-[#F3FBF5] rounded-full flex items-center justify-center">
               <CheckCircle className="w-10 h-10 text-[#1B9E4B]" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-[#0E1A0D] mb-3">
+          <h1 className="text-3xl font-bold text-forest mb-3">
             Plan repas créé avec succès ! 🎉
           </h1>
           <p className="text-lg text-[#4A5568] mb-6">
@@ -40,7 +40,7 @@ export const MealPlanPage: React.FC = () => {
           {/* Message temporaire */}
           <div className="bg-[#E6F4FF] border border-[#91D5FF] rounded-[16px] p-6 mb-6">
             <Calendar className="w-12 h-12 text-[#1890FF] mx-auto mb-3" />
-            <h2 className="text-xl font-semibold text-[#0E1A0D] mb-2">
+            <h2 className="text-xl font-semibold text-forest mb-2">
               Calendrier de repas en développement
             </h2>
             <p className="text-[#4A5568]">
@@ -60,7 +60,7 @@ export const MealPlanPage: React.FC = () => {
             </button>
             <button
               onClick={() => navigate('/')}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-[#7DDE4A] hover:bg-[#5FC72F] text-[#0E1A0D] rounded-[16px] font-semibold transition-all"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-[#5FC72F] text-forest rounded-[16px] font-semibold transition-all"
             >
               Retour à l'accueil
             </button>
@@ -69,24 +69,24 @@ export const MealPlanPage: React.FC = () => {
 
         {/* Prochaines étapes */}
         <div className="bg-white rounded-[24px] shadow-lg p-6">
-          <h3 className="text-xl font-semibold text-[#0E1A0D] mb-4">
+          <h3 className="text-xl font-semibold text-forest mb-4">
             📋 Prochainement disponible
           </h3>
           <ul className="space-y-3 text-[#4A5568]">
             <li className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-[#7DDE4A] flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               <span>Calendrier interactif pour visualiser vos repas de la semaine</span>
             </li>
             <li className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-[#7DDE4A] flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               <span>Ajout de produits par catégorie (petit-déjeuner, déjeuner, dîner, snack)</span>
             </li>
             <li className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-[#7DDE4A] flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               <span>Score nutritionnel moyen de votre semaine</span>
             </li>
             <li className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-[#7DDE4A] flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
               <span>Export PDF de votre plan repas</span>
             </li>
           </ul>

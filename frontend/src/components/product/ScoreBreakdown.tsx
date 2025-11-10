@@ -1,4 +1,4 @@
-// frontend/src/components/product/ScoreBreakdown.tsx
+﻿// frontend/src/components/product/ScoreBreakdown.tsx
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
@@ -198,10 +198,10 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         <h4 className="font-semibold text-lg text-gray-900">
       {/* ✨ Badge Enrichi par IA */}
       {product.aiEnriched && (
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+        <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-4">
           <div className="flex items-center gap-3">
             <span className="text-2xl">✨</span>
-            <div className="text-sm text-purple-800">
+            <div className="text-sm text-forest-900">
               <strong>Données enrichies par IA</strong> : Ce produit a été complété automatiquement
               par notre intelligence artificielle pour estimer les valeurs nutritionnelles manquantes.
               Confiance : <strong>{Math.round(scores.confidence * 100)}%</strong>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Check, X, Sparkles, Zap, Shield, Crown, Star,
@@ -81,7 +81,7 @@ const PremiumPage: React.FC = () => {
       icon: TrendingUp,
       title: 'Analyses Avancées',
       description: 'Accédez aux recommandations personnalisées IA et insights détaillés.',
-      color: 'text-purple-600 bg-purple-100'
+      color: 'text-forest-dark bg-primary-100'
     },
     {
       icon: Shield,
@@ -185,7 +185,7 @@ const PremiumPage: React.FC = () => {
                 <p className="text-sm text-gray-600 mt-1">Assistance illimitée</p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-md">
-                <Shield className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+                <Shield className="w-8 h-8 text-forest-dark mx-auto mb-3" />
                 <p className="font-semibold text-gray-900">Support prioritaire</p>
                 <p className="text-sm text-gray-600 mt-1">Réponse sous 24h</p>
               </div>
@@ -231,7 +231,7 @@ const PremiumPage: React.FC = () => {
                 onClick={() => setSelectedPlan('monthly')}
                 className={`px-6 py-3 rounded-xl font-medium transition-all ${
                   selectedPlan === 'monthly'
-                    ? 'bg-primary text-white shadow-lg'
+                    ? 'bg-primary text-forest shadow-lg'
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -241,7 +241,7 @@ const PremiumPage: React.FC = () => {
                 onClick={() => setSelectedPlan('yearly')}
                 className={`px-6 py-3 rounded-xl font-medium transition-all relative ${
                   selectedPlan === 'yearly'
-                    ? 'bg-primary text-white shadow-lg'
+                    ? 'bg-primary text-forest shadow-lg'
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >

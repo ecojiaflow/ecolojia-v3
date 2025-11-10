@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/AiPreferencesPage.tsx
+﻿// PATH: frontend/src/pages/AiPreferencesPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -146,7 +146,7 @@ const AiPreferencesPage: React.FC = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-[#F7F9F4]">
+    <div className="min-h-screen bg-nature-100">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,11 +159,11 @@ const AiPreferencesPage: React.FC = () => {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-[#3B3B3B]">Prfrences IA</h1>
+                <h1 className="text-2xl font-bold text-neutral-800">Prfrences IA</h1>
                 <p className="text-gray-600 mt-1">Personnalisez votre assistant Ecolojia</p>
               </div>
             </div>
-            <Brain className="w-8 h-8 text-[#7DDE4A]" />
+            <Brain className="w-8 h-8 text-primary" />
           </div>
         </div>
       </div>
@@ -195,8 +195,8 @@ const AiPreferencesPage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Ton de l'IA */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-[#7DDE4A]" />
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-primary" />
             Ton de l'assistant
           </h2>
           <p className="text-gray-600 mb-4">Comment souhaitez-vous que l'IA vous rponde a</p>
@@ -207,14 +207,14 @@ const AiPreferencesPage: React.FC = () => {
                 key={option.value}
                 onClick={() => setAiPrefs({ ...aiPrefs, tone: option.value })}
                 className={`p-4 rounded-xl border-2 transition text-left ${
-                  aiPrefs.tone === option.value ? 'border-[#7DDE4A] bg-[#E9F8DF]'
+                  aiPrefs.tone === option.value ? 'border-primary bg-nature-100'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <option.icon className="w-5 h-5 text-gray-700 mt-0.5" />
                   <div>
-                    <div className="font-medium text-[#3B3B3B]">{option.label}</div>
+                    <div className="font-medium text-neutral-800">{option.label}</div>
                     <div className="text-sm text-gray-600">{option.description}</div>
                   </div>
                 </div>
@@ -225,7 +225,7 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Niveau de dtail */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
             <Book className="w-5 h-5 text-blue-500" />
             Niveau de dtail
           </h2>
@@ -249,7 +249,7 @@ const AiPreferencesPage: React.FC = () => {
                   className="sr-only"
                 />
                 <div>
-                  <div className="font-medium text-[#3B3B3B]">{option.label}</div>
+                  <div className="font-medium text-neutral-800">{option.label}</div>
                   <div className="text-sm text-gray-600">{option.description}</div>
                 </div>
               </label>
@@ -259,8 +259,8 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Domaines d'intrt */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
-            <Focus className="w-5 h-5 text-purple-500" />
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
+            <Focus className="w-5 h-5 text-primary-1000" />
             Domaines d'intrt
           </h2>
           <p className="text-gray-600 mb-4">Sur quoi l'IA doit-elle se concentrer en priorit a</p>
@@ -271,7 +271,7 @@ const AiPreferencesPage: React.FC = () => {
                 key={option.value}
                 onClick={() => toggleArrayItem('focusAreas', option.value)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition ${
-                  aiPrefs.focusAreas.includes(option.value) ? 'border-purple-500 bg-purple-50 text-purple-700'
+                  aiPrefs.focusAreas.includes(option.value) ? 'border-primary bg-primary-50 text-forest-dark'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -284,7 +284,7 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Restrictions alimentaires */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
             <Utensils className="w-5 h-5 text-orange-500" />
             Rgime alimentaire
           </h2>
@@ -309,7 +309,7 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Allergies */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-red-500" />
             Allergies
           </h2>
@@ -345,14 +345,14 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Options avances */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-4">Options avances</h2>
+          <h2 className="text-lg font-semibold text-neutral-800 mb-4">Options avances</h2>
           
           <div className="space-y-4">
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-3">
                 <Lightbulb className="w-5 h-5 text-yellow-500" />
                 <div>
-                  <div className="font-medium text-[#3B3B3B]">Suggestions automatiques</div>
+                  <div className="font-medium text-neutral-800">Suggestions automatiques</div>
                   <div className="text-sm text-gray-600">L'IA propose des questions pertinentes</div>
                 </div>
               </div>
@@ -360,7 +360,7 @@ const AiPreferencesPage: React.FC = () => {
                 type="checkbox"
                 checked={aiPrefs.autoSuggest}
                 onChange={(e) => setAiPrefs({ ...aiPrefs, autoSuggest: e.target.checked })}
-                className="w-5 h-5 text-[#7DDE4A] rounded focus:ring-[#7DDE4A]"
+                className="w-5 h-5 text-primary rounded focus:ring-[#7DDE4A]"
               />
             </label>
             
@@ -368,7 +368,7 @@ const AiPreferencesPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <History className="w-5 h-5 text-gray-500" />
                 <div>
-                  <div className="font-medium text-[#3B3B3B]">Historique des conversations</div>
+                  <div className="font-medium text-neutral-800">Historique des conversations</div>
                   <div className="text-sm text-gray-600">Conserver vos changes avec l'IA</div>
                 </div>
               </div>
@@ -376,7 +376,7 @@ const AiPreferencesPage: React.FC = () => {
                 type="checkbox"
                 checked={aiPrefs.saveHistory}
                 onChange={(e) => setAiPrefs({ ...aiPrefs, saveHistory: e.target.checked })}
-                className="w-5 h-5 text-[#7DDE4A] rounded focus:ring-[#7DDE4A]"
+                className="w-5 h-5 text-primary rounded focus:ring-[#7DDE4A]"
               />
             </label>
           </div>
@@ -384,7 +384,7 @@ const AiPreferencesPage: React.FC = () => {
 
         {/* Langue */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-gray-100">
-          <h2 className="text-lg font-semibold text-[#3B3B3B] mb-1 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-neutral-800 mb-1 flex items-center gap-2">
             <Globe className="w-5 h-5 text-indigo-500" />
             Langue
           </h2>

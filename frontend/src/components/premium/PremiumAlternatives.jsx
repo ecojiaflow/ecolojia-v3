@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 // Remplacer dans : frontend/src/components/premium/PremiumAlternatives.jsx
 
@@ -57,7 +57,7 @@ const PremiumAlternatives = ({ alternatives = [], currentScore = 0 }) => {
             <div className="text-xs text-gray-400">Additifs evites</div>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4">
-            <div className="text-2xl font-bold text-purple-400">
+            <div className="text-2xl font-bold text-forest">
               {alternatives.filter(alt => alt.time && parseInt(alt.time) <= 10).length}
             </div>
             <div className="text-xs text-gray-400">Solutions rapides</div>
@@ -165,8 +165,8 @@ const PremiumAlternatives = ({ alternatives = [], currentScore = 0 }) => {
                 </div>
 
                 {/* Guide Transition */}
-                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-4 border border-purple-500/20">
-                  <h4 className="font-bold text-purple-400 mb-3"> Plan de Transition (4 semaines)</h4>
+                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-4 border border-primary/20">
+                  <h4 className="font-bold text-forest mb-3"> Plan de Transition (4 semaines)</h4>
                   <div className="grid grid-cols-4 gap-2 text-xs">
                     <div className="text-center bg-white/5 rounded-lg p-2">
                       <div className="font-bold text-white">S1</div>
@@ -224,7 +224,7 @@ const PremiumAlternatives = ({ alternatives = [], currentScore = 0 }) => {
             <div className="text-sm text-gray-300">Qualite nutritionnelle</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-purple-400 mb-2">-45%</div>
+            <div className="text-3xl font-bold text-forest mb-2">-45%</div>
             <div className="text-sm text-gray-300">Impact environnemental</div>
           </div>
           <div className="text-center">

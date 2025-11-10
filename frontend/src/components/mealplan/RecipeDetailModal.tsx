@@ -2,12 +2,21 @@
 import { X, ChefHat, Clock, Users, TrendingUp, MessageCircle, Check, Sparkles } from 'lucide-react';
 import axios from 'axios';
 
+// ✅ INTERFACE CORRIGÉE avec ingredients structurés
+interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+  role?: string;
+  score?: number;
+}
+
 interface RecipeDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   meal: {
     name: string;
-    ingredients: string[];
+    ingredients: Ingredient[];  // ✅ OBJETS au lieu de string[]
     nutrition: {
       calories: number;
       protein: number;
@@ -27,8 +36,16 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
   const [aiInput, setAIInput] = useState('');
   const [aiLoading, setAILoading] = useState(false);
 
+  // ✅ FORMATTER les ingrédients pour l'affichage
+  const formatIngredient = (ing: Ingredient) => {
+    if (ing.quantity && ing.unit) {
+      return `${ing.name} (${ing.quantity} ${ing.unit})`;
+    }
+    return ing.name;
+  };
+
   const recipeSteps = [
-    `Préparer et laver tous les ingrédients : ${meal.ingredients.join(', ')}`,
+    `Préparer et laver tous les ingrédients : ${meal.ingredients.map(formatIngredient).join(', ')}`,
     'Préchauffer le four à 180°C (ou préparer la poêle/casserole)',
     'Découper les ingrédients selon les besoins de la recette',
     'Commencer la cuisson en suivant les temps recommandés',
@@ -60,20 +77,20 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
         context: {
           type: 'recipe_assistance',
           meal: meal.name,
-          ingredients: meal.ingredients,
+          ingredients: meal.ingredients,  // ✅ ENVOIE LES OBJETS STRUCTURÉS
           currentStep: recipeSteps[currentStep]
         }
       });
 
-      setAIMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: response.data.response 
+      setAIMessages(prev => [...prev, {
+        role: 'assistant',
+        content: response.data.response
       }]);
     } catch (error) {
       console.error('Erreur IA:', error);
-      setAIMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Désolé, je ne peux pas répondre pour le moment. Réessayez !' 
+      setAIMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Désolé, je ne peux pas répondre pour le moment. Réessayez !'
       }]);
     } finally {
       setAILoading(false);
@@ -87,14 +104,14 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white relative">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
-          
+
           <div className="flex items-center gap-3 mb-3">
             <ChefHat className="w-8 h-8" />
             <h2 className="text-2xl font-bold">{meal.name}</h2>
@@ -121,7 +138,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
               <span>{Math.round(progress)}%</span>
             </div>
             <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-white transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
@@ -132,14 +149,14 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
         <div className="flex-1 overflow-y-auto p-6">
           <div className="mb-6">
             <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <span className="text-primary-600">📋</span>
+              <span className="text-green-600">📋</span>
               Ingrédients
             </h3>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {meal.ingredients.map((ingredient, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                  <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
-                  <span>{ingredient}</span>
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                  <span>{formatIngredient(ingredient)}</span>
                 </div>
               ))}
             </div>
@@ -147,7 +164,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
 
           <div>
             <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <span className="text-primary-600">👨‍🍳</span>
+              <span className="text-green-600">👨‍🍳</span>
               Étapes de préparation
             </h3>
             <div className="space-y-3">
@@ -158,7 +175,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
                     completedSteps.has(idx)
                       ? 'bg-green-50 border-green-200'
                       : currentStep === idx
-                      ? 'bg-primary-50 border-primary-300'
+                      ? 'bg-green-50 border-green-300'
                       : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                   }`}
                   onClick={() => {
@@ -190,7 +207,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
           {!showAIChat ? (
             <button
               onClick={() => setShowAIChat(true)}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md"
             >
               <Sparkles className="w-5 h-5" />
               <span>Besoin d'aide ? Demandez à l'IA</span>
@@ -199,7 +216,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4 text-purple-600" />
+                  <MessageCircle className="w-4 h-4 text-forest-dark" />
                   Assistant cuisine IA
                 </span>
                 <button
@@ -216,7 +233,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
                     key={idx}
                     className={`p-2 rounded-lg ${
                       msg.role === 'user'
-                        ? 'bg-primary-100 text-primary-900 ml-8'
+                        ? 'bg-green-100 text-green-900 ml-8'
                         : 'bg-gray-100 text-gray-900 mr-8'
                     }`}
                   >
@@ -237,13 +254,13 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({ isOpen, on
                   onChange={(e) => setAIInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && sendAIMessage()}
                   placeholder="Ex: Comment savoir si le poulet est cuit ?"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
                   disabled={aiLoading}
                 />
                 <button
                   onClick={sendAIMessage}
                   disabled={aiLoading || !aiInput.trim()}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-primary-hover hover:bg-primary-active disabled:bg-gray-300 text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   Envoyer
                 </button>

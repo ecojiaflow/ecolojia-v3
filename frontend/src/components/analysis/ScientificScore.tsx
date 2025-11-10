@@ -219,7 +219,7 @@ export const ScientificScore: React.FC<Props> = ({ score, breakdown, confidence 
     return (
       <div className="mt-3 p-3 border rounded-lg bg-gray-50">
         <div className="flex items-center gap-2 mb-2">
-          <Activity className="w-4 h-4 text-purple-500" />
+          <Activity className="w-4 h-4 text-primary-1000" />
           <span className="font-medium text-sm">Index Glycemique</span>
         </div>
         <div className="grid grid-cols-2 gap-3">

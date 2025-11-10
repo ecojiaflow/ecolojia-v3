@@ -1,4 +1,4 @@
-// backend/src/services/EmailService.ts
+﻿// backend/src/services/EmailService.ts
 import nodemailer from 'nodemailer';
 import { Logger } from '../utils/Logger';
 
@@ -285,10 +285,10 @@ L'equipe ECOLOJIA
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { text-align: center; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px 10px 0 0; }
+            .header { text-align: center; background: linear-gradient(135deg, #7DDE4A, #7c3aed); color: white; padding: 30px; border-radius: 10px 10px 0 0; }
             .content { background: white; padding: 30px; border: 1px solid #e5e7eb; }
-            .button { display: inline-block; background: #8b5cf6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
-            .feature { background: #f8fafc; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #8b5cf6; }
+            .button { display: inline-block; background: #7DDE4A; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .feature { background: #f8fafc; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #7DDE4A; }
             .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
         </style>
     </head>

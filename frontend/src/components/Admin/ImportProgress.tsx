@@ -1,4 +1,4 @@
-// PATH: src/components/admin/ImportProgress.tsx
+﻿// PATH: src/components/admin/ImportProgress.tsx
 import React, { useState } from 'react';
 import { Download, Play, Pause, AlertCircle } from 'lucide-react';
 
@@ -100,8 +100,8 @@ const ImportProgress: React.FC = () => {
           <div className="text-sm text-gray-600">aachecs</div>
         </div>
         
-        <div className="bg-purple-50 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-purple-600">92%</div>
+        <div className="bg-primary-50 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-forest-dark">92%</div>
           <div className="text-sm text-gray-600">Taux de reussite</div>
         </div>
       </div>

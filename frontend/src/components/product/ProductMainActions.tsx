@@ -131,9 +131,9 @@ export const ProductMainActions: React.FC<ProductMainActionsProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 mb-6 border border-[#DDE9DA]">
+    <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 mb-6 border border-nature-300">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <button onClick={handleAlternatives} className="flex items-center justify-center gap-2 px-4 py-3 bg-[#7DDE4A] hover:bg-[#5FC72F] text-[#0E1A0D] rounded-[16px] font-semibold transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(125,222,74,0.3)]">
+        <button onClick={handleAlternatives} className="flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-[#5FC72F] text-forest rounded-[16px] font-semibold transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(125,222,74,0.3)]">
           <Sparkles className="w-5 h-5" />
           <span>Alternatives IA</span>
         </button>

@@ -1,4 +1,4 @@
-// frontend/src/components/quotas/QuotaAlert.tsx
+﻿// frontend/src/components/quotas/QuotaAlert.tsx
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, X, Zap, TrendingUp, Calendar } from 'lucide-react';
 import { useAuthContext } from '../../Contexts/AuthContext';
@@ -194,7 +194,7 @@ export const QuotaAlert: React.FC<QuotaAlertProps> = ({
               </div>
               
               <div className="flex items-start">
-                <Zap className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0 mt-0.5" />
+                <Zap className="w-5 h-5 text-primary-1000 mr-3 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-gray-800">Toutes les fonctionnalites Premium</p>
                   <p className="text-xs text-gray-600 mt-1">

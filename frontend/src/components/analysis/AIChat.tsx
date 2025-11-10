@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles, Zap, Brain, FileText, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface Message {
@@ -223,7 +223,7 @@ Posez-moi une question plus specifique pour une analyse détaillée !`;
             <p className="text-sm text-gray-600">Analyse basee sur INSERM aa ANSES aa EFSA 2024</p>
           </div>
           <div className="ml-auto">
-            <Sparkles className="w-5 h-5 text-purple-500" />
+            <Sparkles className="w-5 h-5 text-primary-1000" />
           </div>
         </div>
       </div>

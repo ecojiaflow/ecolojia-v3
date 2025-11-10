@@ -1,4 +1,4 @@
-// frontend/src/components/cosmetics/CertificationBadges.tsx
+﻿// frontend/src/components/cosmetics/CertificationBadges.tsx
 
 import React from 'react';
 import { 
@@ -114,8 +114,8 @@ const certificationData: Record<string, CertificationInfo> = {
     name: 'Hypoallergenique',
     description: 'Formule minimisant les risques d\'allergie',
     icon: <ShieldCheck className="w-full h-full" />,
-    color: 'text-purple-700',
-    bgColor: 'bg-purple-100'
+    color: 'text-forest-dark',
+    bgColor: 'bg-primary-100'
   },
   'made_in_france': {
     id: 'made_in_france',
@@ -271,7 +271,7 @@ export const CertificationSummary: React.FC<{ certifications: string[] }> = ({ c
       
       {categorizedCerts.origin.length > 0 && (
         <div className="text-center">
-          <Globe className="w-8 h-8 mx-auto text-purple-600 mb-2" />
+          <Globe className="w-8 h-8 mx-auto text-forest-dark mb-2" />
           <p className="text-sm font-medium">Origine</p>
           <p className="text-xs text-gray-500">{categorizedCerts.origin.length} certification(s)</p>
         </div>

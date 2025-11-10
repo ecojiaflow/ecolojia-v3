@@ -1,4 +1,4 @@
-import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
+﻿import { getScoreColor, getScoreBgColor } from '@/utils/scoreColors';
 // PATH: frontend/src/pages/UnifiedResultsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -198,7 +198,7 @@ export const UnifiedResultsPage: React.FC = () => {
           <p className="text-gray-500">Aucun resultat ƒÆ’†'ƒ'š‚Â  afficher</p>
           <button
             onClick={() => navigate('/')}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
+            className="mt-4 px-4 py-2 bg-primary text-forest rounded-lg"
           >
             Retour ƒÆ’†'ƒ'š‚Â  l'accueil
           </button>
@@ -264,7 +264,7 @@ export const UnifiedResultsPage: React.FC = () => {
           {/* Bouton Chat IA */}
           <button
             onClick={startChatWithContext}
-            className="w-full bg-primary text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-primary-dark transition-colors"
+            className="w-full bg-primary text-forest py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-primary-dark transition-colors"
           >
             <MessageCircle className="w-5 h-5" />
             <span>Poser des questions ƒÆ’†'ƒ'š‚Â  l'IA sur ce produit</span>

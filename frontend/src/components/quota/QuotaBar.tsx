@@ -93,7 +93,7 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
         
         <div className={`text-sm font-medium ${getTextColor(config.progress)}`}>
           {isPremium || config.limit === -1 ? (
-            <span className="text-purple-600">Illimite</span>
+            <span className="text-forest-dark">Illimite</span>
           ) : (
             <span>{config.remaining} restant{config.remaining > 1 ? 's' : ''}</span>
           )}
@@ -172,8 +172,8 @@ export const QuotaBar: React.FC<QuotaBarProps> = ({
 
       {/* Message Premium */}
       {isPremium && (
-        <div className="p-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
-          <p className="text-xs text-purple-800">
+        <div className="p-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-primary-200 rounded-lg">
+          <p className="text-xs text-forest-900">
             ? <strong>Premium actif</strong> - {config.label} illimite{config.label === 'Questions IA' ? 'es' : 's'} !
           </p>
         </div>

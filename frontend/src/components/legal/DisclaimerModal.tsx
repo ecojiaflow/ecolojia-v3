@@ -121,7 +121,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({ onAccept }) =>
           </div>
 
           {/* Intelligence Artificielle */}
-          <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+          <div className="bg-primary-50 border-l-4 border-primary p-4 rounded-r-lg">
             <h4 className="font-semibold text-gray-900 mb-2">🤖 À propos de notre IA :</h4>
             <p className="text-sm text-gray-700">
               Notre assistant utilise l'intelligence artificielle pour combler 

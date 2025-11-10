@@ -61,7 +61,7 @@ export function ProductIngredientsSection({
   return (
     <div className={`${className}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-[#3B3B3B]">
+        <h3 className="text-lg font-semibold text-neutral-800">
           Composition {category === 'food' ? '& Additifs' : '& Ingredients'}
         </h3>
         {(ingredientsByLevel.high.length > 0 || ingredientsByLevel.moderate.length > 0) && (
@@ -117,7 +117,7 @@ export function ProductIngredientsSection({
       
       {/* Resume par niveau */}
       {enrichedIngredients.length > 0 && (
-        <div className="mt-4 p-3 bg-[#E9F8DF] rounded-xl">
+        <div className="mt-4 p-3 bg-nature-100 rounded-xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div className="text-center">
               <div className="text-2xl mb-1"></div>
@@ -172,7 +172,7 @@ export function ProductIngredientsSection({
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-[#3B3B3B]">
+                    <h3 className="text-xl font-semibold text-neutral-800">
                       {selectedIngredient.hazard.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-2">
@@ -206,12 +206,12 @@ export function ProductIngredientsSection({
                 {/* Contenu */}
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-medium text-[#3B3B3B] mb-2">Resume</h4>
+                    <h4 className="font-medium text-neutral-800 mb-2">Resume</h4>
                     <p className="text-gray-600">{selectedIngredient.hazard.summary}</p>
                   </div>
                   
                   <div>
-                    <h4 className="font-medium text-[#3B3B3B] mb-2">Details</h4>
+                    <h4 className="font-medium text-neutral-800 mb-2">Details</h4>
                     <p className="text-gray-600 text-sm">
                       {selectedIngredient.hazard.details}
                     </p>
@@ -219,7 +219,7 @@ export function ProductIngredientsSection({
                   
                   {selectedIngredient.hazard.synonyms.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-[#3B3B3B] mb-2">
+                      <h4 className="font-medium text-neutral-800 mb-2">
                         Autres noms
                       </h4>
                       <div className="flex flex-wrap gap-2">
@@ -237,7 +237,7 @@ export function ProductIngredientsSection({
                   
                   {selectedIngredient.hazard.references.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-[#3B3B3B] mb-2">
+                      <h4 className="font-medium text-neutral-800 mb-2">
                         Sources
                       </h4>
                       <div className="space-y-2">
@@ -247,7 +247,7 @@ export function ProductIngredientsSection({
                             href={ref.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-[#7DDE4A] hover:underline"
+                            className="flex items-center gap-2 text-sm text-primary hover:underline"
                           >
                             <ExternalLink className="w-4 h-4" />
                             {ref.label}

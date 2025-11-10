@@ -1,4 +1,4 @@
-// === ECOLOJIA V3 - UserJourney Model ===
+﻿// === ECOLOJIA V3 - UserJourney Model ===
 // Tracking scans utilisateurs (RGPD compliant)
 
 const mongoose = require('mongoose');
@@ -33,13 +33,23 @@ const userJourneySchema = new mongoose.Schema({
   collection: 'userJourneys'
 });
 
-// Index composé pour requêtes rapides
-userJourneySchema.index({ userHash: 1, scanDate: -1 });
+// ========================================
+// INDEX OPTIMISÉS (pas de doublon)
+// ========================================
 
-// TTL automatique : suppression après 90 jours (RGPD)
-userJourneySchema.index({ scanDate: 1 }, { expireAfterSeconds: 7776000 });
+// Index composé pour requêtes rapides + TTL combiné
+userJourneySchema.index(
+  { userHash: 1, scanDate: -1 },
+  { expireAfterSeconds: 7776000 } // 90 jours RGPD
+);
 
-// Méthode : Obtenir stats utilisateur
+// ========================================
+// MÉTHODES
+// ========================================
+
+/**
+ * Obtenir stats utilisateur
+ */
 userJourneySchema.statics.getUserStats = async function(userHash, days = 30) {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);

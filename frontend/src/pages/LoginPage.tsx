@@ -1,4 +1,4 @@
-import { api } from '../services/api';
+﻿import { api } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getReturnUrl } from '../utils/navigation';
@@ -160,7 +160,7 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-primary transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-green-500 text-forest py-3 rounded-lg font-medium hover:bg-primary transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

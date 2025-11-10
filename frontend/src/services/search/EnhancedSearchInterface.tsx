@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
+﻿// PATH: frontend/ecolojiaFrontV3/src/components/search/EnhancedSearchInterface.tsx
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -412,7 +412,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
             result.source === 'local' ? 'bg-blue-100 text-blue-700' :
             result.source === 'openfoodfacts' ? 'bg-orange-100 text-orange-700' :
-            'bg-purple-100 text-purple-700'
+            'bg-primary-100 text-forest-dark'
           }`}>
             {result.source === 'local' ? 'ƒÆ’‚Â°ƒ'¦‚Â¸ƒ'š‚Âƒ'š‚Â  Local' :
              result.source === 'openfoodfacts' ? 'ƒÆ’‚Â°ƒ'¦‚Â¸ƒ'¦aâ‚¬â„¢ƒ'š‚Â OpenFoodFacts' :
@@ -437,7 +437,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
           )}
 
           {result.enrichment?.alternatives_available > 0 && (
-            <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+            <span className="px-2 py-1 bg-primary-100 text-forest-dark rounded-full text-xs font-medium">
               ƒÆ’‚Â°ƒ'¦‚Â¸aa'šÂ¬‚Âaa'šÂ¬…Â¾ {result.enrichment.alternatives_available} alternative{result.enrichment.alternatives_available > 1 ? 's' : ''}
             </span>
           )}

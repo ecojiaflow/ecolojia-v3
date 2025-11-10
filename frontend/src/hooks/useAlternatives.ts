@@ -123,7 +123,7 @@ export function useAlternatives(
     }));
 
     try {
-      // Appel service (qui appelle /api/alternatives/:productId)
+// Appel service (qui appelle /api/alternatives/:productId)
       const response = await findAlternativesByProductId(productId);
 
       console.log(`[useAlternatives] ✅ ${response.alternatives?.length || 0} alternatives reçues`);

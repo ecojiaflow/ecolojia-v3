@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Calendar, Clock, TrendingUp, ChefHat, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -120,7 +120,7 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, onViewRecipe }) => {
 
         <button
           onClick={onViewRecipe}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-forest font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
           <ChefHat className="w-5 h-5" />
           <span>Voir la recette détaillée</span>

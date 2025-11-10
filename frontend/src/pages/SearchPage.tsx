@@ -78,11 +78,11 @@ const ProductHit = ({ hit }: { hit: any }) => {
           )}
           {nutriScore && (
             <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
-              nutriScore === 'a' ? 'bg-success text-white' :
-              nutriScore === 'b' ? 'bg-primary-400 text-white' :
+              nutriScore === 'a' ? 'bg-success text-forest' :
+              nutriScore === 'b' ? 'bg-primary-400 text-forest' :
               nutriScore === 'c' ? 'bg-warning text-white' :
               nutriScore === 'd' ? 'bg-[#E9A100] text-white' :
-              'bg-danger text-white'
+              'bg-danger text-forest'
             }`}>
               Nutri-Score {nutriScore}
             </span>
@@ -164,7 +164,7 @@ const SearchPage: React.FC = () => {
               {isMobile && (
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-500 text-[#0E1A0D] font-medium hover:bg-primary-600 transition-all shadow-1 min-h-[44px]"
+                  className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-500 text-forest font-medium hover:bg-primary-600 transition-all shadow-1 min-h-[44px]"
                 >
                   <Filter className="w-4 h-4" />
                   Filtres
@@ -379,7 +379,7 @@ const SearchPage: React.FC = () => {
                     list: 'flex items-center gap-2',
                     item: '',
                     link: 'h-10 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors flex items-center justify-center',
-                    selectedItem: 'h-10 px-4 bg-primary-500 text-[#0E1A0D] rounded-lg font-medium',
+                    selectedItem: 'h-10 px-4 bg-primary-500 text-forest rounded-lg font-medium',
                     disabledItem: 'opacity-50 cursor-not-allowed',
                     firstPageItem: isMobile ? 'hidden' : '',
                     lastPageItem: isMobile ? 'hidden' : ''

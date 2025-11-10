@@ -1,4 +1,4 @@
-// PATH: frontend/src/pages/Results.tsx
+﻿// PATH: frontend/src/pages/Results.tsx
 import React, { useState } from 'react';
 import { useQuickNovaTest } from '../hooks/useNovaApi';
 import NovaResults from '../components/NovaResults';
@@ -104,7 +104,7 @@ const Results: React.FC = () => {
             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="bg-green-500 hover:bg-primary disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
+              className="bg-green-500 hover:bg-primary disabled:bg-gray-400 text-forest px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
             >
               {loading ? (
                 <>

@@ -94,7 +94,7 @@ const AssistantPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#D4F1C0] border-t-[#7DDE4A] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#6B6B6B]">Chargement...</p>
+          <p className="text-neutral-600">Chargement...</p>
         </div>
       </div>
     );
@@ -105,19 +105,19 @@ const AssistantPage: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
         
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-[#E9F8DF] text-[#489E26] px-4 py-2 rounded-full mb-4 border border-[#D4F1C0]">
+          <div className="inline-flex items-center gap-2 bg-nature-100 text-[#489E26] px-4 py-2 rounded-full mb-4 border border-[#D4F1C0]">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">Assistant IA Expert</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-[#232323] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
             Votre coach nutrition{' '}
             <span className="text-[#236D3E]">
               intelligent
             </span>
           </h1>
           
-          <p className="text-lg text-[#6B6B6B] max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
             Utilisez l'intelligence artificielle pour optimiser votre alimentation, 
             generer des plans repas et analyser vos produits en profondeur.
           </p>
@@ -157,8 +157,8 @@ const AssistantPage: React.FC = () => {
                 onClick={() => handleActionClick(action)}
                 className={`bg-white rounded-[16px] p-6 shadow-[0_2px_6px_rgba(0,0,0,0.08)] border-2 transition-all cursor-pointer ${
                   isLocked || isQuotaExceeded 
-                    ? 'border-[#DDE9DA] opacity-75 hover:opacity-100' 
-                    : 'border-[#DDE9DA] hover:border-[#D4F1C0] hover:shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:-translate-y-1'
+                    ? 'border-nature-300 opacity-75 hover:opacity-100' 
+                    : 'border-nature-300 hover:border-[#D4F1C0] hover:shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:-translate-y-1'
                 }`}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -166,24 +166,24 @@ const AssistantPage: React.FC = () => {
                     <Icon className="w-7 h-7 text-white" />
                   </div>
                   {(isLocked || isQuotaExceeded) && (
-                    <div className="px-3 py-1 bg-[#E9F8DF] text-[#236D3E] rounded-full text-xs font-semibold flex items-center gap-1 border border-[#D4F1C0]">
+                    <div className="px-3 py-1 bg-nature-100 text-[#236D3E] rounded-full text-xs font-semibold flex items-center gap-1 border border-[#D4F1C0]">
                       <Crown className="w-3 h-3" />
                       Premium
                     </div>
                   )}
                 </div>
 
-                <h3 className="text-xl font-bold text-[#232323] mb-2">
+                <h3 className="text-xl font-bold text-neutral-900 mb-2">
                   {action.title}
                 </h3>
-                <p className="text-[#6B6B6B] text-sm mb-4">
+                <p className="text-neutral-600 text-sm mb-4">
                   {action.description}
                 </p>
 
                 {action.quotaLimit > 0 && (
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs text-[#6B6B6B]">Utilisation</span>
+                      <span className="text-xs text-neutral-600">Utilisation</span>
                       <span className={`text-xs font-semibold ${getQuotaColor(action.quotaUsed, action.quotaLimit)}`}>
                         {action.quotaUsed}/{action.quotaLimit}
                       </span>
@@ -205,7 +205,7 @@ const AssistantPage: React.FC = () => {
 
                 <button className={`w-full py-3 rounded-[16px] font-semibold flex items-center justify-center gap-2 transition-all ${
                   isLocked || isQuotaExceeded
-                    ? 'bg-[#F7F9F4] text-[#6B6B6B]'
+                    ? 'bg-nature-100 text-neutral-600'
                     : 'bg-gradient-to-r ' + action.gradient + ' text-white hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]'
                 }`}>
                   {isLocked || isQuotaExceeded ? 'Debloquer avec Premium' : 'Lancer'}
@@ -216,8 +216,8 @@ const AssistantPage: React.FC = () => {
           })}
         </div>
 
-        <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-[#DDE9DA]">
-          <h3 className="text-xl font-bold text-[#232323] mb-6 flex items-center gap-2">
+        <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-nature-300">
+          <h3 className="text-xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
             <Zap className="w-6 h-6 text-[#E9A100]" />
             Pourquoi utiliser l'Assistant IA ?
           </h3>
@@ -225,22 +225,22 @@ const AssistantPage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-6">
             <div>
               <TrendingUp className="w-8 h-8 text-[#1B9E4B] mb-3" />
-              <h4 className="font-semibold text-[#232323] mb-2">Personnalise</h4>
-              <p className="text-sm text-[#6B6B6B]">
+              <h4 className="font-semibold text-neutral-900 mb-2">Personnalise</h4>
+              <p className="text-sm text-neutral-600">
                 Conseils adaptes a votre profil, regime et objectifs sante
               </p>
             </div>
             <div>
               <Shield className="w-8 h-8 text-[#2E7DD7] mb-3" />
-              <h4 className="font-semibold text-[#232323] mb-2">Scientifique</h4>
-              <p className="text-sm text-[#6B6B6B]">
+              <h4 className="font-semibold text-neutral-900 mb-2">Scientifique</h4>
+              <p className="text-sm text-neutral-600">
                 Base sur donnees OMS, ANSES et etudes nutritionnelles recentes
               </p>
             </div>
             <div>
               <Sparkles className="w-8 h-8 text-[#236D3E] mb-3" />
-              <h4 className="font-semibold text-[#232323] mb-2">Intelligent</h4>
-              <p className="text-sm text-[#6B6B6B]">
+              <h4 className="font-semibold text-neutral-900 mb-2">Intelligent</h4>
+              <p className="text-sm text-neutral-600">
                 Apprentissage continu pour des recommandations toujours plus precises
               </p>
             </div>

@@ -363,7 +363,7 @@ const ShoppingListPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#D4F1C0] border-t-[#7DDE4A] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#6B6B6B]">Chargement...</p>
+          <p className="text-neutral-600">Chargement...</p>
         </div>
       </div>
     );
@@ -373,13 +373,13 @@ const ShoppingListPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] pb-20">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
-        <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+        <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <ShoppingCart className="w-8 h-8 text-[#2E7DD7]" />
               <div>
-                <h1 className="text-2xl font-bold text-[#232323]">Mes Courses</h1>
-                <p className="text-sm text-[#6B6B6B]">
+                <h1 className="text-2xl font-bold text-neutral-900">Mes Courses</h1>
+                <p className="text-sm text-neutral-600">
                   {lists.length} liste{lists.length > 1 ? 's' : ''}
                 </p>
               </div>
@@ -387,7 +387,7 @@ const ShoppingListPage: React.FC = () => {
 
             <button
               onClick={() => navigate('/scan')}
-              className="px-4 py-2 bg-[#7DDE4A] text-[#0E1A0D] rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center gap-2"
+              className="px-4 py-2 bg-primary text-forest rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center gap-2"
             >
               <Camera className="w-4 h-4" />
               Scanner
@@ -401,8 +401,8 @@ const ShoppingListPage: React.FC = () => {
                 onClick={() => setActiveListId(list._id)}
                 className={`px-4 py-2 rounded-[14px] font-medium whitespace-nowrap transition-all flex items-center gap-2 ${
                   activeListId === list._id
-                    ? 'bg-[#E9F8DF] text-[#236D3E] border border-[#D4F1C0]'
-                    : 'bg-[#F7F9F4] text-[#6B6B6B] hover:bg-[#EDF2EA]'
+                    ? 'bg-nature-100 text-[#236D3E] border border-[#D4F1C0]'
+                    : 'bg-nature-100 text-neutral-600 hover:bg-[#EDF2EA]'
                 }`}
               >
                 {list.name}
@@ -412,7 +412,7 @@ const ShoppingListPage: React.FC = () => {
 
             <button
               onClick={() => setShowNewListForm(true)}
-              className="px-4 py-2 bg-[#F7F9F4] text-[#6B6B6B] rounded-[14px] font-medium hover:bg-[#EDF2EA] transition-all flex items-center gap-2"
+              className="px-4 py-2 bg-nature-100 text-neutral-600 rounded-[14px] font-medium hover:bg-[#EDF2EA] transition-all flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Nouvelle liste
@@ -426,7 +426,7 @@ const ShoppingListPage: React.FC = () => {
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
                 placeholder="Nom de la liste"
-                className="w-full px-4 py-2 border border-[#DDE9DA] rounded-[14px] mb-3 focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
+                className="w-full px-4 py-2 border border-nature-300 rounded-[14px] mb-3 focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                 onKeyPress={(e) => e.key === 'Enter' && createList()}
               />
               <div className="flex gap-2">
@@ -438,7 +438,7 @@ const ShoppingListPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setShowNewListForm(false)}
-                  className="px-4 py-2 bg-[#EDF2EA] text-[#3B3B3B] rounded-[14px] font-semibold hover:bg-[#DDE9DA]"
+                  className="px-4 py-2 bg-[#EDF2EA] text-neutral-800 rounded-[14px] font-semibold hover:bg-[#DDE9DA]"
                 >
                   Annuler
                 </button>
@@ -449,11 +449,11 @@ const ShoppingListPage: React.FC = () => {
 
         {activeList ? (
           <>
-            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
+            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowNewItemForm(true)}
-                  className="flex-1 min-w-[200px] px-4 py-3 bg-[#7DDE4A] text-[#0E1A0D] rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center gap-2"
+                  className="flex-1 min-w-[200px] px-4 py-3 bg-primary text-forest rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center gap-2"
                 >
                   <Plus className="w-5 h-5" />
                   Ajouter article
@@ -464,7 +464,7 @@ const ShoppingListPage: React.FC = () => {
                   className={`px-4 py-3 rounded-[16px] font-semibold transition-all flex items-center gap-2 ${
                     isPremium
                       ? 'bg-[#EFF6FF] text-[#2E7DD7] hover:bg-[#DBEAFE]'
-                      : 'bg-[#F7F9F4] text-[#6B6B6B]'
+                      : 'bg-nature-100 text-neutral-600'
                   }`}
                 >
                   <Download className="w-5 h-5" />
@@ -482,7 +482,7 @@ const ShoppingListPage: React.FC = () => {
 
             {showNewItemForm && (
               <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#D4F1C0]">
-                <h3 className="text-lg font-bold text-[#232323] mb-4">Nouvel article</h3>
+                <h3 className="text-lg font-bold text-neutral-900 mb-4">Nouvel article</h3>
 
                 <div className="space-y-3">
                   <input
@@ -490,7 +490,7 @@ const ShoppingListPage: React.FC = () => {
                     value={newItem.name || ''}
                     onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
                     placeholder="Nom de l'article"
-                    className="w-full px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
+                    className="w-full px-4 py-3 border border-nature-300 rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                   />
 
                   <div className="grid grid-cols-2 gap-3">
@@ -500,13 +500,13 @@ const ShoppingListPage: React.FC = () => {
                       onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value) })}
                       placeholder="Quantite"
                       min="1"
-                      className="px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
+                      className="px-4 py-3 border border-nature-300 rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                     />
 
                     <select
                       value={newItem.unit || 'unite'}
                       onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
-                      className="px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
+                      className="px-4 py-3 border border-nature-300 rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                     >
                       <option value="unite">unite(s)</option>
                       <option value="kg">kg</option>
@@ -521,7 +521,7 @@ const ShoppingListPage: React.FC = () => {
                   <select
                     value={newItem.category || 'autres'}
                     onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-[#DDE9DA] rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
+                    className="w-full px-4 py-3 border border-nature-300 rounded-[14px] focus:outline-none focus:ring-2 focus:ring-[#236D3E]"
                   >
                     {CATEGORIES.map(cat => (
                       <option key={cat.id} value={cat.id}>
@@ -539,7 +539,7 @@ const ShoppingListPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setShowNewItemForm(false)}
-                      className="px-4 py-3 bg-[#EDF2EA] text-[#3B3B3B] rounded-[14px] font-semibold hover:bg-[#DDE9DA]"
+                      className="px-4 py-3 bg-[#EDF2EA] text-neutral-800 rounded-[14px] font-semibold hover:bg-[#DDE9DA]"
                     >
                       Annuler
                     </button>
@@ -555,21 +555,21 @@ const ShoppingListPage: React.FC = () => {
                 const checkedCount = items.filter(i => i.checked).length;
 
                 return (
-                  <div key={category.id} className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-[#DDE9DA] overflow-hidden">
+                  <div key={category.id} className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-nature-300 overflow-hidden">
                     <button
                       onClick={() => toggleCategory(category.id)}
-                      className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F7F9F4] transition-colors"
+                      className="w-full px-6 py-4 flex items-center justify-between hover:bg-nature-100 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{category.icon}</span>
                         <div className="text-left">
-                          <h3 className="font-semibold text-[#232323]">{category.label}</h3>
-                          <p className="text-xs text-[#6B6B6B]">
+                          <h3 className="font-semibold text-neutral-900">{category.label}</h3>
+                          <p className="text-xs text-neutral-600">
                             {checkedCount}/{items.length} coche{items.length > 1 ? 's' : ''}
                           </p>
                         </div>
                       </div>
-                      {isExpanded ? <ChevronDown className="w-5 h-5 text-[#6B6B6B]" /> : <ChevronRight className="w-5 h-5 text-[#6B6B6B]" />}
+                      {isExpanded ? <ChevronDown className="w-5 h-5 text-neutral-600" /> : <ChevronRight className="w-5 h-5 text-neutral-600" />}
                     </button>
 
                     {isExpanded && (
@@ -579,8 +579,8 @@ const ShoppingListPage: React.FC = () => {
                             key={item._id}
                             className={`flex items-center gap-3 p-3 rounded-[14px] border transition-all ${
                               item.checked
-                                ? 'bg-[#F7F9F4] border-[#EDF2EA]'
-                                : 'bg-primary-50 border-[#DDE9DA] hover:border-[#D4F1C0]'
+                                ? 'bg-nature-100 border-[#EDF2EA]'
+                                : 'bg-primary-50 border-nature-300 hover:border-[#D4F1C0]'
                             }`}
                           >
                             <button
@@ -588,15 +588,15 @@ const ShoppingListPage: React.FC = () => {
                               className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
                                 item.checked
                                   ? 'bg-[#1B9E4B] border-[#1B9E4B]'
-                                  : 'border-[#DDE9DA] hover:border-[#1B9E4B]'
+                                  : 'border-nature-300 hover:border-[#1B9E4B]'
                               }`}
                             >
                               {item.checked && <Check className="w-4 h-4 text-white" />}
                             </button>
 
-                            <div className={`flex-1 ${item.checked ? 'line-through text-[#6B6B6B]' : 'text-[#232323]'}`}>
+                            <div className={`flex-1 ${item.checked ? 'line-through text-neutral-600' : 'text-neutral-900'}`}>
                               <div className="font-medium">{item.name}</div>
-                              <div className="text-sm text-[#6B6B6B]">
+                              <div className="text-sm text-neutral-600">
                                 {item.quantity} {item.unit}
                               </div>
                             </div>
@@ -626,43 +626,43 @@ const ShoppingListPage: React.FC = () => {
               })}
             </div>
 
-            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-[#DDE9DA]">
-              <h3 className="text-lg font-bold text-[#232323] mb-4">Statistiques</h3>
+            <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 border border-nature-300">
+              <h3 className="text-lg font-bold text-neutral-900 mb-4">Statistiques</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#2E7DD7]">{activeList.items.length}</div>
-                  <div className="text-sm text-[#6B6B6B]">Articles</div>
+                  <div className="text-sm text-neutral-600">Articles</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#1B9E4B]">
                     {activeList.items.filter(i => i.checked).length}
                   </div>
-                  <div className="text-sm text-[#6B6B6B]">Coches</div>
+                  <div className="text-sm text-neutral-600">Coches</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#236D3E]">
                     {Object.keys(itemsByCategory).length}
                   </div>
-                  <div className="text-sm text-[#6B6B6B]">Rayons</div>
+                  <div className="text-sm text-neutral-600">Rayons</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#E9A100]">
                     {Math.round((activeList.items.filter(i => i.checked).length / activeList.items.length) * 100) || 0}%
                   </div>
-                  <div className="text-sm text-[#6B6B6B]">Complete</div>
+                  <div className="text-sm text-neutral-600">Complete</div>
                 </div>
               </div>
             </div>
 
           </>
         ) : (
-          <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-12 text-center border border-[#DDE9DA]">
+          <div className="bg-primary-50 rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-12 text-center border border-nature-300">
             <Package className="w-16 h-16 text-[#DDE9DA] mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-[#232323] mb-2">Aucune liste</h3>
-            <p className="text-[#6B6B6B] mb-6">Creez votre premiere liste de courses</p>
+            <h3 className="text-xl font-bold text-neutral-900 mb-2">Aucune liste</h3>
+            <p className="text-neutral-600 mb-6">Creez votre premiere liste de courses</p>
             <button
               onClick={() => setShowNewListForm(true)}
-              className="px-6 py-3 bg-[#7DDE4A] text-[#0E1A0D] rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)]"
+              className="px-6 py-3 bg-primary text-forest rounded-[16px] font-semibold hover:bg-[#5FC72F] transition-all shadow-[0_2px_6px_rgba(0,0,0,0.08)]"
             >
               Creer ma premiere liste
             </button>
