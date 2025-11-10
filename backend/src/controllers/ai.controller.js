@@ -1,5 +1,5 @@
 ﻿'use strict';
-const enrichment = require('../services/ai/enrichment');
+const enrichment = require('../services/aiEnrichment.service');
 /**
  * POST /api/ai (/enrich)
  * Body: { barcode?, category?, name?, imageUrl?, imageBase64?, source?, force? }
