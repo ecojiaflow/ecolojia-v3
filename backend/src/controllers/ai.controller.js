@@ -323,4 +323,107 @@ async function enrichHandler(req, res) {
   }
 }
 
-module.exports = { enrichHandler };
+
+// =====================================================
+// OCR HANDLER - Analyse image produit
+// =====================================================
+
+/**
+ * POST /api/ai/ocr
+ * Body: { imageBase64: string }
+ * Response: { ingredients, nutrition, category, rawText, confidence }
+ */
+async function ocrHandler(req, res) {
+  try {
+    console.log('[OCR CONTROLLER] ════════════════════════════════════════');
+    console.log('[OCR CONTROLLER] Nouvelle requête OCR');
+
+    const userId = req.userId || 'anonymous';
+    const { imageBase64 } = req.body;
+
+    // ============================================================================
+    // VALIDATION INPUT
+    // ============================================================================
+
+    if (!imageBase64 || typeof imageBase64 !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'Le champ "imageBase64" est requis (string)'
+      });
+    }
+
+    // Validation format base64 basique
+    if (!/^[A-Za-z0-9+/=]+$/.test(imageBase64)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Format base64 invalide'
+      });
+    }
+
+    console.log('[OCR CONTROLLER] Image size:', Math.round(imageBase64.length / 1024), 'KB');
+
+    // ============================================================================
+    // APPEL SERVICE OCR
+    // ============================================================================
+
+    const ocrService = require('../services/ocr.service');
+    
+    const result = await ocrService.extractFromImage(imageBase64);
+
+    console.log('[OCR CONTROLLER] ✅ Extraction réussie');
+    console.log('[OCR CONTROLLER] - Ingrédients:', result.ingredients.length);
+    console.log('[OCR CONTROLLER] - Nutrition:', Object.keys(result.nutrition).length, 'valeurs');
+    console.log('[OCR CONTROLLER] - Catégorie:', result.category);
+    console.log('[OCR CONTROLLER] - Confiance:', result.confidence + '%');
+
+    // ============================================================================
+    // CONSTRUIRE RÉPONSE
+    // ============================================================================
+
+    const response = {
+      success: true,
+      data: {
+        ingredients: result.ingredients,
+        nutrition: result.nutrition,
+        category: result.category,
+        rawText: result.rawText,
+        confidence: result.confidence,
+        processingTime: result.processingTime
+      },
+      metadata: {
+        userId,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    console.log('[OCR CONTROLLER] ════════════════════════════════════════');
+
+    return res.json(response);
+
+  } catch (err) {
+    console.error('[OCR CONTROLLER] ❌ Erreur OCR:', err.message);
+    
+    // Erreurs spécifiques
+    if (err.message.includes('trop lourde')) {
+      return res.status(413).json({
+        success: false,
+        error: err.message
+      });
+    }
+
+    if (err.message.includes('Format base64')) {
+      return res.status(400).json({
+        success: false,
+        error: err.message
+      });
+    }
+
+    // Erreur générique
+    return res.status(500).json({
+      success: false,
+      error: 'Erreur lors de l\'analyse OCR : ' + err.message
+    });
+  }
+}
+
+module.exports = { enrichHandler, ocrHandler };

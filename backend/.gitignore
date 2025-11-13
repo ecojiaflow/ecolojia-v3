@@ -28,3 +28,6 @@ test-*.json
 # IDE
 .vscode/
 .idea/
+
+# Google Cloud credentials (SECRET)
+config/google-cloud-credentials.json
