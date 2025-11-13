@@ -1,6 +1,7 @@
-// frontend/src/services/scanService.ts
+﻿// frontend/src/services/scanService.ts
 import { apiClient, getErrorMessage } from './apiClient';
 import { cloudinaryService } from './cloudinaryService';
+import { ocrService, OCRResult } from './ocrService';
 
 // Types
 export interface ScanResult {
@@ -15,6 +16,16 @@ export interface ScanResult {
     brand?: string;
     category?: string;
   };
+  // Nouveau : données OCR
+  ocrData?: {
+    rawText: string;
+    ingredients: Array<{ name: string; role?: string }>;
+    nutrition: any;
+    category: string;
+    confidence: number;
+    processingTime: number;
+  };
+  isOCRResult?: boolean; // Flag pour savoir si c'est un résultat OCR
 }
 
 export interface ScanError {
@@ -38,8 +49,8 @@ export class ScanService {
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
       // Essayer d'abord de recuperer le produit
-      const response = await apiClient.get(`/products/barcode/${code}`);
-      
+      const response = await apiClient.get(/products/barcode/);
+
       if (response.data?.product) {
         return {
           productId: response.data?.product._id,
@@ -47,38 +58,72 @@ export class ScanService {
           confidence: 1.0
         };
       }
-      
+
       // Si pas trouve, lancer une analyse
       const analysisResponse = await apiClient.post('/analysis', {
         barcode: code,
         method: 'barcode',
         source: 'web'
       });
-      
+
       return analysisResponse.data;
     } catch (error: any) {
       throw this.handleError(error, 'BARCODE_SCAN_FAILED');
     }
   }
 
-  // Analyse par photo
+  /**
+   * NOUVEAU : Scanner un produit inconnu avec OCR
+   * Utilisé quand le code-barres n'est pas trouvé
+   */
+  async scanUnknownProduct(file: File): Promise<ScanResult> {
+    try {
+      // 1. Analyser avec Google Vision OCR
+      const ocrResult: OCRResult = await ocrService.analyzeImage(file);
+
+      if (!ocrResult.success || !ocrResult.data) {
+        throw new Error('Échec analyse OCR');
+      }
+
+      // 2. Convertir le résultat OCR en ScanResult
+      return {
+        isOCRResult: true,
+        confidence: ocrResult.data.confidence / 100, // Convertir % en 0-1
+        ocrData: ocrResult.data,
+        extractedData: {
+          category: ocrResult.data.category,
+          ingredients: ocrResult.data.ingredients.map(i => i.name).join(', ')
+        }
+      };
+    } catch (error: any) {
+      throw this.handleError(error, 'OCR_SCAN_FAILED');
+    }
+  }
+
+  // Analyse par photo (améliorée avec OCR)
   async analyzePhoto(file: File, useOCR: boolean = false): Promise<ScanResult> {
     try {
+      // Si OCR explicitement demandé, utiliser la nouvelle méthode
+      if (useOCR) {
+        return await this.scanUnknownProduct(file);
+      }
+
+      // Sinon, utiliser l'ancien flux (Cloudinary + vision/analyze-image)
       // 1. Upload vers Cloudinary
       const imageUrl = await cloudinaryService.uploadImage(file);
-      
+
       // 2. Choisir l'endpoint selon le mode
-      const endpoint = useOCR ? '/vision/analyze-image' : '/analysis';
-      
+      const endpoint = '/vision/analyze-image';
+
       // 3. Analyser l'image
       const response = await apiClient.post(endpoint, {
         imageUrl,
         method: 'photo',
         source: 'web',
-        category: 'food', // Æ’Ã†'' Ã¢â‚¬â„¢aÃ¢â‚¬Å¡Ã‚Â¬ detecter automatiquement plus tard
+        category: 'food',
         extractText: useOCR
       });
-      
+
       return response.data;
     } catch (error: any) {
       throw this.handleError(error, 'PHOTO_ANALYSIS_FAILED');
@@ -98,7 +143,7 @@ export class ScanService {
           ...options
         }
       });
-      
+
       return {
         products: response.data?.products || [],
         confidence: response.data?.confidence || 0.8
@@ -123,26 +168,22 @@ export class ScanService {
     return /^(\d{8}|\d{12}|\d{13})$/.test(code);
   }
 
-  // Methode pour detecter la categorie d'un produit Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  partir de son nom
+  // Methode pour detecter la categorie d'un produit à partir de son nom
   static detectCategory(productName: string): string {
     const categories = {
       food: ['yaourt', 'lait', 'pain', 'pates', 'riz', 'chocolat', 'biscuit', 'cereales'],
       cosmetic: ['creme', 'shampoing', 'savon', 'dentifrice', 'deodorant', 'parfum'],
       detergent: ['lessive', 'liquide vaisselle', 'nettoyant', 'javel']
     };
-    
+
     const lowerName = productName.toLowerCase();
-    
+
     for (const [category, keywords] of Object.entries(categories)) {
       if (keywords.some(keyword => lowerName.includes(keyword))) {
         return category;
       }
     }
-    
+
     return 'food'; // Par defaut
   }
 }
-
-
-
-
