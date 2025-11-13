@@ -31,3 +31,9 @@ test-*.json
 
 # Google Cloud credentials (SECRET)
 config/google-cloud-credentials.json
+
+# Backups temporaires
+backups/
+
+# Fichiers cassés/tests
+src/services/ai/*.BROKEN_*
