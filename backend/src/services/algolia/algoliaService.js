@@ -1,4 +1,4 @@
-// backend/src/services/algoliaService.js
+﻿// backend/src/services/algoliaService.js
 
 const algoliasearch = require('algoliasearch');
 
@@ -649,6 +649,85 @@ class AlgoliaService {
     } catch (error) {
       console.error('❌ Erreur promotion staging:', error);
       throw error;
+    }
+  }
+
+
+  /**
+   * Recherche de produits similaires par nom/marque
+   * Utilisé quand un barcode n'est pas trouvé
+   * 
+   * @param {string} productName - Nom du produit à chercher
+   * @param {string} category - Catégorie (food/cosmetic/detergent)
+   * @param {object} options - Options de recherche
+   * @returns {Promise<Array>} - Liste de produits similaires avec score
+   */
+  async searchSimilarProducts(productName, category, options = {}) {
+    if (!this.isConfigured()) {
+      console.warn('Algolia non configuré - recherche similarité impossible');
+      return [];
+    }
+
+    if (!productName || productName.trim().length < 2) {
+      console.warn('Nom de produit trop court pour recherche similarité');
+      return [];
+    }
+
+    try {
+      const index = options.useStaging ? this.stagingIndex : this.productsIndex;
+
+      // Options de recherche optimisées pour la similarité
+      const searchOptions = {
+        page: 0,
+        hitsPerPage: options.limit || 5,
+        filters: category ? `category:${category}` : undefined,
+        typoTolerance: 'min',
+        minWordSizefor1Typo: 3,
+        minWordSizefor2Typos: 6,
+        removeWordsIfNoResults: 'allOptional',
+        attributesToRetrieve: ['*'],
+        attributesToHighlight: ['title', 'brand'],
+        analytics: false,
+        clickAnalytics: false
+      };
+
+      if (options.excludeBarcode) {
+        searchOptions.filters = searchOptions.filters 
+          ? ` AND NOT barcode:${options.excludeBarcode}`
+          : `NOT barcode:${options.excludeBarcode}`;
+      }
+
+      console.log(`🔍 Recherche similarité: "${productName}" (${category || 'toutes catégories'})`);
+
+      const result = await index.search(productName, searchOptions);
+
+      const minScore = options.minScore || 0.5;
+      const similarProducts = result.hits
+        .filter(hit => {
+          const position = result.hits.indexOf(hit);
+          const similarityScore = Math.max(0, 1 - (position * 0.15));
+          return similarityScore >= minScore;
+        })
+        .map((hit, index) => ({
+          ...hit,
+          _similarityScore: Math.max(0, 1 - (index * 0.15)),
+          _position: index + 1
+        }));
+
+      console.log(`✅ ${similarProducts.length} produits similaires trouvés (seuil: ${minScore * 100}%)`);
+
+      if (similarProducts.length > 0) {
+        console.log('Top 3 résultats:');
+        similarProducts.slice(0, 3).forEach(p => {
+          console.log(`  • ${p.title} (${p.brand || 'sans marque'}) - Score: ${Math.round(p._similarityScore * 100)}%`);
+        });
+      }
+
+      return similarProducts;
+
+    } catch (error) {
+      console.error('❌ Erreur recherche similarité:', error);
+      return [];
     }
   }
 }

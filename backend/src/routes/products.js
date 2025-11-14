@@ -1,20 +1,16 @@
 ﻿// PATH: backend/src/routes/products.js
 const express = require('express');
 const router = express.Router();
-// const enrichProduct = require('../middleware/enrichProduct');
 const mongoose = require('mongoose');
 
-// Middleware enrichissement métadonnées global
-// router.use(enrichProduct);
-
-// SCORING ENGINE SCIENTIFIQUE
+// SERVICES
 const imageEnrichment = require('../services/imageEnrichment.service');
-
 const scoringUnified = require('../services/scoringUnified');
 const ProductOrchestrator = require('../services/ProductOrchestrator');
 const alternativesService = require('../services/alternatives.service');
 const recipeAdapter = require('../services/recipeAdapter.service');
 const contextualService = require('../services/contextual.service');
+const algoliaService = require('../services/algolia/algoliaService'); // ✨ NOUVEAU
 
 /* Middleware debug */
 router.use((req, _res, next) => {
@@ -30,31 +26,31 @@ try {
   checkPremium = auth.checkPremium || auth.requirePremium || ((_req, _res, next) => next());
 } catch {
   console.log('[Products] Auth middleware not found, using fallback');
-  authenticateUser = (_req, _res, next) => { 
+  authenticateUser = (_req, _res, next) => {
     const authHeader = _req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       _req.userId = 'test-user-id';
       _req.user = { _id: 'test-user-id', tier: 'free' };
     }
-    next(); 
+    next();
   };
   checkPremium = (_req, _res, next) => { next(); };
 }
 
 /* Models (fallback mocks) */
 let Product, Analysis;
-try { 
-  Product = require('../models/Product'); 
-} catch (error) { 
-  console.log('[Products] Product model not found, using mock'); 
-  Product = mockModel(); 
+try {
+  Product = require('../models/Product');
+} catch (error) {
+  console.log('[Products] Product model not found, using mock');
+  Product = mockModel();
 }
 
-try { 
-  Analysis = require('../models/Analysis'); 
-} catch (error) { 
-  console.log('[Products] Analysis model not found, using mock'); 
-  Analysis = mockModel(); 
+try {
+  Analysis = require('../models/Analysis');
+} catch (error) {
+  console.log('[Products] Analysis model not found, using mock');
+  Analysis = mockModel();
 }
 
 /* Nova classifier (sécurisé) */
@@ -75,7 +71,7 @@ const logger = {
 
 /* Helper async */
 const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(err => {
-  logger.error('Async error:', err); 
+  logger.error('Async error:', err);
   res.status(500).json({ success: false, error: err.message });
 });
 
@@ -84,12 +80,9 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 // === FONCTION ENRICHISSEMENT RÉPONSE ===
 async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
   try {
-    // Convertir produit Mongoose en plain object
     const plainProduct = product.toObject ? product.toObject() : product;
-    
-    // Normaliser score (support ancien format)
     const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
-    
+
     // 1. Alternatives IA (3 max)
     let alternatives = [];
     try {
@@ -97,14 +90,9 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
         productId: plainProduct._id,
         barcode: plainProduct.barcode,
         maxResults: 3,
-        userPreferences: {
-          minScore: currentScore + 5
-        }
+        userPreferences: { minScore: currentScore + 5 }
       });
       alternatives = altResult.alternatives || [];
-      if (alternatives.length === 0) {
-        logger.info('[ALTERNATIVES] Aucune alternative trouvée pour:', product.name);
-      }
     } catch (altError) {
       logger.error('[ALTERNATIVES] Error:', altError.message);
     }
@@ -124,7 +112,6 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
           userProfile: userProfile
         });
         recipes = recipesResult || [];
-        logger.info('[RECIPES] Recettes recommandées:', recipes.length);
       } catch (recipeError) {
         logger.error('[RECIPES] Error:', recipeError.message);
       }
@@ -138,34 +125,22 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
       logger.error('[CONTEXTUAL] Error:', cardError.message);
     }
 
-    // === RÉPONSE ENRICHIE ===
     return {
       success: true,
       product: product,
       source: source,
       cached: cached,
-      
-      // Infos enrichissement IA
       enrichment: {
         aiUsed: aiEnrichmentUsed,
         confidence: product.scores?.confidence || null,
         dataCompleteness: product.scores?.dataCompleteness || null
       },
-      
-      // Alternatives (3 max)
       alternatives: alternatives.length > 0 ? alternatives : [],
-      
-      // Recettes/Routines (3 max)
       recipes: recipes.length > 0 ? recipes : [],
-      
-      // Cartes pédagogiques (2 max)
       contextCards: contextCards.length > 0 ? contextCards : []
     };
-    
   } catch (enrichError) {
     logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
-    
-    // Fallback : retourner produit sans enrichissement
     return {
       success: true,
       product: product,
@@ -176,10 +151,7 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
   }
 }
 
-
 /* Route par défaut */
-
-// GET /api/products/stats
 router.get('/stats', async (req, res) => {
   try {
     const stats = await Product.aggregate([
@@ -201,7 +173,6 @@ router.get('/', (_req, res) => {
   });
 });
 
-/* Test simple */
 router.get('/test', (_req, res) => {
   logger.info('Test route called!');
   res.json({
@@ -239,16 +210,14 @@ router.get('/search', handleAsync(async (req, res) => {
           { barcode: q }
         ]
       };
-      
+
       if (category) searchQuery.category = category;
-      
+
       const products = await Product.find(searchQuery)
         .limit(parseInt(limit))
         .skip((parseInt(page) - 1) * parseInt(limit));
 
       const total = await Product.countDocuments(searchQuery);
-
-      // Enrichir les produits avec images OpenFoodFacts
       const enrichedProducts = await imageEnrichment.batchEnrich(products);
 
       return res.json({
@@ -280,7 +249,7 @@ router.get('/trending', handleAsync(async (req, res) => {
       const products = await Product.find({})
         .sort({ scanCount: -1, viewCount: -1 })
         .limit(parseInt(limit));
-      
+
       if (products.length > 0) {
         return res.json({ success: true, products });
       }
@@ -299,10 +268,10 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
   logger.info('Analysis request:', { userId, productId, barcode, category });
 
   if (req.user && req.user.quotas && req.user.quotas.scansRemaining <= 0) {
-    return res.status(403).json({ 
-      success: false, 
-      error: 'Quota de scans dépassé', 
-      quotas: req.user.quotas 
+    return res.status(403).json({
+      success: false,
+      error: 'Quota de scans dépassé',
+      quotas: req.user.quotas
     });
   }
 
@@ -312,26 +281,26 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
              : productId ? await Product.findById(productId).lean()
              : null;
   }
-  
+
   if (!product) {
-    product = { 
-      _id: Date.now().toString(), 
+    product = {
+      _id: Date.now().toString(),
       name: manualData?.name || 'Produit inconnu',
-      brand: manualData?.brand || 'Marque inconnue', 
-      category, 
+      brand: manualData?.brand || 'Marque inconnue',
+      category,
       barcode: barcode || 'unknown',
-      ingredients: manualData?.ingredients || '' 
+      ingredients: manualData?.ingredients || ''
     };
   }
 
   const ingredientsText = product.ingredients || '';
   let novaGroup = product.nova_group || product.foodData?.nova || product.nova || null;
-  
+
   if (!novaGroup && ingredientsText.length > 3) {
-    try { 
-      novaGroup = novaClassifier.classify(ingredientsText, product.name).group; 
-    } catch(err) { 
-      console.warn('NOVA classification failed:', err.message); 
+    try {
+      novaGroup = novaClassifier.classify(ingredientsText, product.name).group;
+    } catch(err) {
+      console.warn('NOVA classification failed:', err.message);
     }
   }
 
@@ -351,44 +320,44 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
       nutritionFacts: product.nutritionFacts || {},
       ingredients: ingredientsText
     },
-    summary: { 
-      fr: generateSummary(novaGroup, nutriScore), 
-      en: 'Summary in English…' 
+    summary: {
+      fr: generateSummary(novaGroup, nutriScore),
+      en: 'Summary in English…'
     },
     recommendations: generateRecommendations(novaGroup, nutriScore)
   };
 
   if (Analysis && mongoose.connection.readyState === 1) {
-    try { 
-      await Analysis.create({ 
-        userId, 
-        productId: product._id, 
-        timestamp: new Date(), 
-        results: analysisResult 
-      }); 
-    } catch(e) { 
-      console.warn('Could not save analysis:', e.message); 
+    try {
+      await Analysis.create({
+        userId,
+        productId: product._id,
+        timestamp: new Date(),
+        results: analysisResult
+      });
+    } catch(e) {
+      console.warn('Could not save analysis:', e.message);
     }
   }
 
-  res.json({ 
+  res.json({
     success: true,
-    data: { 
-      product: { 
-        name: product.name, 
-        brand: product.brand, 
+    data: {
+      product: {
+        name: product.name,
+        brand: product.brand,
         barcode: product.barcode,
         image: product.image_url || product.imageUrl || product.images?.front
       },
-      scores: analysisResult.scores, 
+      scores: analysisResult.scores,
       details: analysisResult.details,
-      summary: analysisResult.summary, 
-      recommendations: analysisResult.recommendations 
+      summary: analysisResult.summary,
+      recommendations: analysisResult.recommendations
     }
   });
 }));
 
-/* Obtenir alternatives - CORRIGÉ */
+/* Obtenir alternatives */
 router.get('/:id/alternatives', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get alternatives for product:', id);
@@ -407,14 +376,12 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     return res.status(404).json({ success: false, error: 'Produit introuvable' });
   }
 
-  // FIX: Support scores.global OU scores.overallScore
   const currentScore = product.scores?.overallScore || product.scores?.global || 0;
 
   if (currentScore >= 70) {
     return res.json({ success: true, alternatives: [], message: 'Ce produit est déjà excellent' });
   }
 
-  // FIX: Requête flexible avec subcategory optionnelle
   const query = {
     category: product.category,
     _id: { $ne: product._id },
@@ -433,7 +400,6 @@ router.get('/:id/alternatives', handleAsync(async (req, res) => {
     .limit(5)
     .lean();
 
-  // FIX: Mapping score avec fallback
   const formattedAlternatives = alternatives.map(alt => ({
     _id: alt._id,
     barcode: alt.barcode,
@@ -457,20 +423,22 @@ router.post('/:id/report', authenticateUser, handleAsync(async (req, res) => {
   const userId = req.userId || req.user?._id || 'anonymous';
 
   if (!reason) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'La raison du signalement est requise' 
+    return res.status(400).json({
+      success: false,
+      error: 'La raison du signalement est requise'
     });
   }
 
-  res.json({ 
-    success: true, 
-    message: 'Signalement enregistré avec succès', 
-    reportId: new Date().getTime().toString() 
+  res.json({
+    success: true,
+    message: 'Signalement enregistré avec succès',
+    reportId: new Date().getTime().toString()
   });
 }));
 
-/* GET PRODUCT BY ID - Accepte barcode OU _id MongoDB */
+/* ============================================================================
+   ✨ GET PRODUCT BY ID - AVEC RECHERCHE SIMILARITÉ
+   ============================================================================ */
 router.get('/:id', handleAsync(async (req, res) => {
   const { id } = req.params;
   logger.info('Get product by ID:', id);
@@ -479,48 +447,110 @@ router.get('/:id', handleAsync(async (req, res) => {
   let product = null;
   if (mongoose.connection.readyState === 1 && mongoose.Types.ObjectId.isValid(id)) {
     product = await Product.findById(id);
-    
+
     if (product) {
       logger.info('Product found by MongoDB ID');
       const enrichedResponse = await enrichProductResponse(product, 'MONGODB_ID', false, false);
       return res.json(enrichedResponse);
     }
-
   }
 
   // Tentative 2 : Utiliser ProductOrchestrator (barcode)
   try {
-    const result = await ProductOrchestrator.getOrCreateProduct({ 
-      barcode: id, 
-      source: 'OFF' 
+    const result = await ProductOrchestrator.getOrCreateProduct({
+      barcode: id,
+      source: 'OFF'
     });
 
-    // Cas 1 : Catégorie invalide (médicament, livre, etc.)
+    // Cas 1 : Catégorie invalide
     if (result.source === 'INVALID_CATEGORY') {
       return res.status(400).json({
         success: false,
         error: result.error,
         detectedType: result.detectedType,
         suggestion: result.suggestion,
-        redirectTo: null // Pas de redirection OCR pour médicaments
+        redirectTo: null
       });
     }
 
-    // Cas 2 : Produit non trouvé ? Rediriger vers OCR
+    // ============================================================================
+    // ✨ CAS 2 : PRODUIT NON TROUVÉ → RECHERCHE SIMILARITÉ (NOUVEAU)
+    // ============================================================================
     if (result.source === 'NOT_FOUND') {
+      logger.info('🔍 Produit non trouvé, recherche similarité...');
+
+      // Extraire nom potentiel du barcode (si connu) ou utiliser ID
+      const searchQuery = result.searchQuery || id;
+
+      // Recherche similarité avec Algolia
+      let similarProducts = [];
+      try {
+        similarProducts = await algoliaService.searchSimilarProducts(
+          searchQuery,
+          null, // Toutes catégories
+          {
+            limit: 5,
+            minScore: 0.5, // Seuil 50% de similarité
+            excludeBarcode: id
+          }
+        );
+      } catch (algoliaError) {
+        logger.error('[ALGOLIA] Erreur recherche similarité:', algoliaError.message);
+      }
+
+      // Si des produits similaires trouvés → proposer choix
+      if (similarProducts && similarProducts.length > 0) {
+        logger.info(`✅ ${similarProducts.length} produits similaires trouvés`);
+
+        return res.status(200).json({
+          success: false,
+          productNotFound: true,
+          barcode: id,
+          message: 'Produit non trouvé, mais voici des produits similaires',
+          similarProducts: similarProducts.map(p => ({
+            _id: p.objectID || p._id,
+            name: p.name || p.title,
+            brand: p.brand,
+            barcode: p.barcode,
+            imageUrl: p.imageUrl || p.image,
+            scores: {
+              overallScore: p.scores?.overallScore || p.score || 75
+            },
+            similarityScore: p._similarityScore || 0,
+            position: p._position || 0
+          })),
+          actions: {
+            selectProduct: 'Choisir un de ces produits',
+            useOCR: 'Ou scanner l\'étiquette avec OCR'
+          },
+          redirectTo: '/ocr' // Fallback si user refuse tous
+        });
+      }
+
+      // Si AUCUN produit similaire → redirect OCR direct
+      logger.info('❌ Aucun produit similaire, redirect OCR');
+
       return res.status(404).json({
         success: false,
+        productNotFound: true,
+        barcode: id,
         error: 'Produit non trouvé dans OpenFoodFacts',
         suggestion: 'Utilisez la fonctionnalité OCR pour analyser ce produit',
-        redirectTo: '/ocr',
-        barcode: id
+        redirectTo: '/ocr'
       });
     }
 
+    // ============================================================================
     // Cas 3 : Produit trouvé et enrichi
+    // ============================================================================
     if (result.product) {
       logger.info('Product found/created via Orchestrator:', result.source);
-      const enrichedResponse = await enrichProductResponse(result.product, result.source, result.cached || false, result.aiEnrichmentUsed || false);
+      const enrichedResponse = await enrichProductResponse(
+        result.product,
+        result.source,
+        result.cached || false,
+        result.aiEnrichmentUsed || false
+      );
       return res.json(enrichedResponse);
     }
 
@@ -545,16 +575,16 @@ router.post('/', authenticateUser, checkPremium, handleAsync(async (req, res) =>
   logger.info('Create product manually:', { name, brand, category });
 
   if (!name || !category) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'Le nom et la catégorie sont requis' 
+    return res.status(400).json({
+      success: false,
+      error: 'Le nom et la catégorie sont requis'
     });
   }
 
   if (!['food', 'cosmetics', 'detergents'].includes(category)) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'Catégorie invalide. Doit être: food, cosmetics, ou detergents' 
+    return res.status(400).json({
+      success: false,
+      error: 'Catégorie invalide. Doit être: food, cosmetics, ou detergents'
     });
   }
 
@@ -579,52 +609,52 @@ function calculateHealthScore(prod, nova, nutri) {
   let score = 50;
   if (nova) score += (5 - nova) * 6;
   if (nutri) score += ({ a: 30, b: 22, c: 15, d: 7, e: 0 }[nutri.toLowerCase()] || 0);
-  
+
   if (prod.nutritionFacts) {
     if (prod.nutritionFacts.sugars_100g > 20) score -= 5;
     if (prod.nutritionFacts.saturated_fat_100g > 5) score -= 5;
     if (prod.nutritionFacts.salt_100g > 1.5) score -= 5;
   }
-  
+
   return Math.max(0, Math.min(100, Math.round(score)));
 }
 
 function generateSummary(nova, nutri) {
   const arr = [];
-  if (nova === 4) arr.push('? Produit ultra-transformé.');
+  if (nova === 4) arr.push('⚠ Produit ultra-transformé.');
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
-    arr.push('? Mauvais Nutri-Score.');
+    arr.push('⚠ Mauvais Nutri-Score.');
   }
   return arr.join(' ') || 'Analyse complète du produit.';
 }
 
 function generateRecommendations(nova, nutri) {
-  const rec = { 
-    healthImpact: 'À consommer avec modération', 
-    alternatives: [], 
-    advice: [] 
+  const rec = {
+    healthImpact: 'À consommer avec modération',
+    alternatives: [],
+    advice: []
   };
-  
-  if (nova === 4) { 
-    rec.healthImpact = 'À limiter – ultra-transformé'; 
-    rec.advice.push('Privilégiez des alternatives moins transformées'); 
+
+  if (nova === 4) {
+    rec.healthImpact = 'À limiter – ultra-transformé';
+    rec.advice.push('Privilégiez des alternatives moins transformées');
   }
-  
+
   if (nutri && ['d', 'e'].includes(nutri.toLowerCase())) {
     rec.advice.push('Cherchez des alternatives avec un meilleur Nutri-Score');
   }
-  
+
   return rec;
 }
 
-function mockModel() { 
-  return { 
-    find: async () => [], 
-    findOne: async () => null, 
-    findById: async () => null, 
+function mockModel() {
+  return {
+    find: async () => [],
+    findOne: async () => null,
+    findById: async () => null,
     create: async d => d,
     countDocuments: async () => 0
-  }; 
+  };
 }
 
 console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');

@@ -1,7 +1,15 @@
-// backend/src/services/aiService.js
+﻿// backend/src/services/aiService.js
 const axios = require('axios');
 const { deepSeekCircuitBreaker } = require('./circuitBreaker');
-const OpenAI = require('openai');
+// Import optionnel OpenAI (fallback)
+let OpenAI = null;
+try {
+  OpenAI = require('openai');
+  console.log('[AIService] ✅ Module OpenAI disponible');
+} catch (error) {
+  console.warn('[AIService] ⚠️ Module OpenAI non installé (fallback désactivé)');
+  OpenAI = null;
+}
 
 class AIService {
   constructor() {
@@ -15,9 +23,19 @@ class AIService {
     });
 
     // OpenAI comme fallback
-    this.openaiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
+    // OpenAI client (optionnel)
+    this.openaiClient = null;
+    if (OpenAI && process.env.OPENAI_API_KEY) {
+      try {
+        this.openaiClient = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY
+        });
+        console.log('[AIService] ✅ Client OpenAI initialisé');
+      } catch (error) {
+        console.warn('[AIService] ⚠️ Erreur initialisation OpenAI:', error.message);
+        this.openaiClient = null;
+      }
+    }
 
     // Cache de reponses pour economiser les appels API
     this.responseCache = new Map();
@@ -143,6 +161,11 @@ class AIService {
   }
 
   async callOpenAI(message, context, userId) {
+    // Vérifier que le client OpenAI est disponible
+    if (!this.openaiClient) {
+      throw new Error('OpenAI client not available. Install: npm install openai');
+    }
+    
     console.log('[AIService] Fallback to OpenAI GPT-4');
     
     const systemPrompt = this.buildSystemPrompt(context);
