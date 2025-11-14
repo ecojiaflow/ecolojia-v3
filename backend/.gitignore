@@ -1,39 +1,23 @@
-﻿# Logs
-*.log
-npm-debug.log*
+﻿# Backups JSON (trop lourds)
+backup-*.json
 
-# Dependencies
+# Scripts de cleanup temporaires (optionnel)
+cleanup-complete.js
+cleanup-db-final.js
+cleanup-final.js
+cleanup-test-products.js
+
+# Logs
+logs/
+*.log
+
+# Node modules
 node_modules/
-.pnp/
 
 # Environment
 .env
 .env.local
-.env.*.local
 
-# Build
-dist/
-build/
-
-# Tests
-coverage/
-
-# Temp files
-*.backup
-*.backup*
-*.old
-test-*.json
+# OS
 .DS_Store
-
-# IDE
-.vscode/
-.idea/
-
-# Google Cloud credentials (SECRET)
-config/google-cloud-credentials.json
-
-# Backups temporaires
-backups/
-
-# Fichiers cassés/tests
-src/services/ai/*.BROKEN_*
+Thumbs.db
