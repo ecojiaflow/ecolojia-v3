@@ -80,7 +80,80 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 // === FONCTION ENRICHISSEMENT RÉPONSE ===
 async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
   try {
-    const plainProduct = product.toObject ? product.toObject() : product;
+    let plainProduct = product.toObject ? product.toObject() : product;
+    // ============================================================================
+    // 🔧 RECALCUL AUTOMATIQUE DU BREAKDOWN SI ABSENT (V3.1)
+    // ============================================================================
+    // Si le produit n'a pas de breakdown (ancien format), on recalcule
+    if (product.scores && (!product.scores.breakdown || product.scores.scoringVersion !== '3.1.0')) {
+      logger.info('[SCORING] Recalcul breakdown pour produit ancien format');
+      
+      try {
+        // Préparer les données pour le scoring
+        const scoringData = {
+          // Nom et marque (requis pour calculateDataConfidence)
+          product_name: plainProduct.name,
+          brands: plainProduct.brand,
+          
+          // NOVA Group
+          novaGroup: plainProduct.nova_group || plainProduct.foodData?.novaGroup,
+          
+          // Nutri-Score
+          nutriScore: plainProduct.nutriscore_grade || plainProduct.foodData?.nutriScore,
+          
+          // Eco-Score
+          ecoScore: plainProduct.ecoscore_grade || plainProduct.foodData?.ecoScore,
+          
+          // Additifs
+          additives: plainProduct.additives_tags || plainProduct.foodData?.additivesTags || [],
+          
+          // Labels
+          labels: plainProduct.labels || plainProduct.labels_tags || plainProduct.foodData?.labels || [],
+          
+          // Nutriments (CRITICAL)
+          nutriments: plainProduct.nutriments || plainProduct.foodData?.nutritionFacts || {},
+          
+          // Catégorie
+          category: plainProduct.categoryType || plainProduct.category
+        };
+
+        // Recalculer avec scoringUnified
+        const newScores = scoringUnified.calculateFoodScores(scoringData);
+        
+        if (newScores && newScores.breakdown) {
+          logger.info('[SCORING] ✅ Breakdown recalculé avec succès');
+          
+          // Mettre à jour le produit
+          product.scores = {
+            ...product.scores,
+            ...newScores,
+            scoringVersion: '3.1.0',
+            recalculatedAt: new Date()
+          };
+          
+          // Sauvegarder en base ET attendre
+          if (product.save) {
+            // product.markModified('scores'); // SKIP - on utilise updateOne à la place
+            // await product.save(); // SKIP - save() écrase les scores !
+            
+            // CRITICAL: Recharger depuis DB pour forcer la mise à jour
+            await product.constructor.updateOne(
+              { _id: product._id },
+              { $set: { scores: product.scores } }
+            );
+            logger.info('[SCORING] ✅ Scores forcés en DB via updateOne');
+            logger.info('[SCORING] Produit sauvegardé en base avec breakdown');
+            
+            // Mettre à jour plainProduct
+            plainProduct = product.toObject ? product.toObject() : product;
+          }
+        }
+      } catch (scoringError) {
+        logger.error('[SCORING] Erreur recalcul:', scoringError.message);
+      }
+    }
+    // ============================================================================
+
     const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
 
     // 1. Alternatives IA (3 max)
@@ -127,8 +200,8 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
 
     return {
       success: true,
-      product: product,
-      source: source,
+      product: plainProduct,
+      product: product.toObject ? product.toObject() : product,
       cached: cached,
       enrichment: {
         aiUsed: aiEnrichmentUsed,
@@ -143,7 +216,7 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
     logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
     return {
       success: true,
-      product: product,
+      product: plainProduct,
       source: source,
       cached: cached,
       aiEnrichmentUsed: aiEnrichmentUsed
@@ -315,7 +388,7 @@ router.post('/analyze', authenticateUser, handleAsync(async (req, res) => {
       health: calculateHealthScore(product, novaGroup, nutriScore)
     },
     details: {
-      additives: product.additives_tags || product.additives || [],
+      additives: plainProduct.additives_tags || product.additives || [],
       allergens: product.allergens_tags || [],
       nutritionFacts: product.nutritionFacts || {},
       ingredients: ingredientsText
@@ -660,3 +733,12 @@ function mockModel() {
 console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
