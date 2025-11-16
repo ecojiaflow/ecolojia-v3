@@ -1,0 +1,252 @@
+﻿[
+    {
+        "File":  "ai.js",
+        "Routes":  "GET /health, POST /, POST /enrich",
+        "Count":  3
+    },
+    {
+        "File":  "ai.recipes.routes.js",
+        "Routes":  "GET /health, GET /suggest, POST /suggest",
+        "Count":  3
+    },
+    {
+        "File":  "ai.routes.js",
+        "Routes":  "POST /query, POST /chat, POST /analyze",
+        "Count":  3
+    },
+    {
+        "File":  "aiEducation.routes.js",
+        "Routes":  "GET /test, POST /explain, POST /compare, POST /ask, GET /alternatives/:productId, GET /stats",
+        "Count":  6
+    },
+    {
+        "File":  "algolia-unified.js",
+        "Routes":  "GET /search, GET /autocomplete, POST /sync, POST /configure, GET /stats",
+        "Count":  5
+    },
+    {
+        "File":  "alternatives.routes.js",
+        "Routes":  "GET /health, GET /barcode/:barcode, GET /:productId, GET /products/:productId/alternatives",
+        "Count":  4
+    },
+    {
+        "File":  "analysis-simple.js",
+        "Routes":  "GET /, POST /barcode, POST /manual",
+        "Count":  3
+    },
+    {
+        "File":  "analysis.routes.js",
+        "Routes":  "GET /, POST /",
+        "Count":  2
+    },
+    {
+        "File":  "analyze.routes.js",
+        "Routes":  "POST /auto",
+        "Count":  1
+    },
+    {
+        "File":  "auth.google.js",
+        "Routes":  "GET /google, GET /google/callback",
+        "Count":  2
+    },
+    {
+        "File":  "auth.js",
+        "Routes":  "POST /register, POST /login, GET /profile, POST /refresh, GET /test, POST /logout",
+        "Count":  6
+    },
+    {
+        "File":  "auth.routes.js",
+        "Routes":  "POST /register, POST /login, POST /refresh, POST /logout, GET /me, PUT /me, PUT /password, POST /forgot-password, POST /reset-password, DELETE /account, POST /demo, GET /validate, GET /health",
+        "Count":  13
+    },
+    {
+        "File":  "auth.simple.js",
+        "Routes":  "GET /, POST /login, POST /logout, GET /verify, GET /profile",
+        "Count":  5
+    },
+    {
+        "File":  "chat.routes.js",
+        "Routes":  "GET /health, POST /deepseek, POST /, POST /product-chat, GET /cache-stats",
+        "Count":  5
+    },
+    {
+        "File":  "cosmetics.routes.js",
+        "Routes":  "GET /health, GET /, POST /analyze",
+        "Count":  3
+    },
+    {
+        "File":  "dashboard.js",
+        "Routes":  "GET /stats",
+        "Count":  1
+    },
+    {
+        "File":  "debug.routes.js",
+        "Routes":  "POST /debug-log",
+        "Count":  1
+    },
+    {
+        "File":  "detergents.routes.js",
+        "Routes":  "GET /health, GET /, POST /analyze",
+        "Count":  3
+    },
+    {
+        "File":  "enrich.routes.js",
+        "Routes":  "POST /enrich/:barcode, POST /create-and-enrich, GET /check-off/:barcode",
+        "Count":  3
+    },
+    {
+        "File":  "export.js",
+        "Routes":  "POST /pdf, GET /csv, POST /report, GET /templates",
+        "Count":  4
+    },
+    {
+        "File":  "favorites.js",
+        "Routes":  "GET /, POST /toggle, PUT /:id, GET /check/:productId",
+        "Count":  4
+    },
+    {
+        "File":  "favorites.routes.js",
+        "Routes":  "GET /, POST /, DELETE /:id",
+        "Count":  3
+    },
+    {
+        "File":  "gdpr.routes.js",
+        "Routes":  "GET /download-data/:format?, GET /download/:exportId/:format, DELETE /delete-account, POST /cancel-deletion, PUT /update-consent, GET /privacy-settings, POST /data-breach-notification, GET /info, GET /processing-activities",
+        "Count":  9
+    },
+    {
+        "File":  "history.js",
+        "Routes":  "GET /, GET /count",
+        "Count":  2
+    },
+    {
+        "File":  "journey.routes.js",
+        "Routes":  "POST /scan, GET /stats/:userId, GET /history/:userId",
+        "Count":  3
+    },
+    {
+        "File":  "mealPlan.routes.js",
+        "Routes":  "POST /, GET /, GET /:id, POST /:id/meals, DELETE /:id/meals/:mealId, PUT /:id/meals/:mealId, DELETE /:id, GET /:id/stats",
+        "Count":  8
+    },
+    {
+        "File":  "ocr-analyze.routes.js",
+        "Routes":  "POST /:barcode",
+        "Count":  1
+    },
+    {
+        "File":  "partner.routes.js",
+        "Routes":  "GET /track/:id, GET /stats, POST /conversion, GET /test, GET /info",
+        "Count":  5
+    },
+    {
+        "File":  "payment.routes.js",
+        "Routes":  "GET /health, POST /create-checkout, POST /webhook, POST /cancel-subscription, POST /resume-subscription, POST /change-plan, GET /subscription-status, GET /history, GET /customer-portal, GET /stats, POST /create-checkout, POST /webhook, POST /cancel-subscription, POST /resume-subscription, POST /change-plan, GET /subscription-status, GET /history, GET /customer-portal, GET /stats",
+        "Count":  19
+    },
+    {
+        "File":  "products-ocr.routes.js",
+        "Routes":  "POST /create-from-ocr, POST /save-ocr-product",
+        "Count":  2
+    },
+    {
+        "File":  "products-search.js",
+        "Routes":  "GET /",
+        "Count":  1
+    },
+    {
+        "File":  "products.js",
+        "Routes":  "GET /stats, GET /, GET /test, GET /search, GET /trending, POST /analyze, GET /:id/alternatives, POST /:id/report, GET /:id, POST /",
+        "Count":  10
+    },
+    {
+        "File":  "products.PATCH2_20251108_120525.js",
+        "Routes":  "GET /stats, GET /, GET /test, GET /search, GET /trending, POST /analyze, GET /:id/alternatives, POST /:id/report, GET /:id, POST /",
+        "Count":  10
+    },
+    {
+        "File":  "products.PATCH3_20251108_121009.js",
+        "Routes":  "GET /stats, GET /, GET /test, GET /search, GET /trending, POST /analyze, GET /:id/alternatives, POST /:id/report, GET /:id, POST /",
+        "Count":  10
+    },
+    {
+        "File":  "provisional.routes.js",
+        "Routes":  "POST /analyze, GET /:id, POST /:id/contribute",
+        "Count":  3
+    },
+    {
+        "File":  "proxy.js",
+        "Routes":  "POST /algolia/search-token, POST /algolia/search, POST /lemonsqueezy/checkout, GET /lemonsqueezy/subscription, POST /ai/chat, POST /upload/signature, GET /health",
+        "Count":  7
+    },
+    {
+        "File":  "quota.js",
+        "Routes":  "GET /status, POST /increment, POST /scan, POST /ai-question",
+        "Count":  4
+    },
+    {
+        "File":  "recipes.routes.js",
+        "Routes":  "GET /, GET /recommend, GET /:id, POST /generate-meal-plan",
+        "Count":  4
+    },
+    {
+        "File":  "scoring.routes.js",
+        "Routes":  "GET /:productId, POST /:productId/calculate, POST /calculate-all, GET /barcode/:barcode, POST /:productId/recalculate, POST /:barcode/ai-enrich",
+        "Count":  6
+    },
+    {
+        "File":  "shopping-list.routes.js",
+        "Routes":  "GET /, POST /, POST /:listId/items, PATCH /:listId/items/:itemId/toggle, DELETE /:listId/items/:itemId, PUT /:listId, DELETE /:listId, POST /optimize",
+        "Count":  8
+    },
+    {
+        "File":  "stats.routes.js",
+        "Routes":  "GET /",
+        "Count":  1
+    },
+    {
+        "File":  "test-minimal.js",
+        "Routes":  "",
+        "Count":  0
+    },
+    {
+        "File":  "test-partner.js",
+        "Routes":  "GET /test, GET /info",
+        "Count":  2
+    },
+    {
+        "File":  "user.routes.js",
+        "Routes":  "GET /profile, PUT /profile, DELETE /, GET /me, GET /v2/me, PUT /v2/me, PUT /v2/me/ai-preferences, GET /v2/me/quotas, POST /v2/me/reset-password, PUT /profile, GET /profile",
+        "Count":  11
+    },
+    {
+        "File":  "version.routes.js",
+        "Routes":  "GET /",
+        "Count":  1
+    },
+    {
+        "File":  "vision.analyze.js",
+        "Routes":  "POST /analyze-image",
+        "Count":  1
+    },
+    {
+        "File":  "vision.ocr.public.js",
+        "Routes":  "POST /analyze-image, GET /analyze-image",
+        "Count":  2
+    },
+    {
+        "File":  "vision.routes.js",
+        "Routes":  "GET /health, POST /analyze-image, POST /extract-test, GET /status/:jobId, POST /analyze-image, GET /status/:jobId, POST /extract-test",
+        "Count":  7
+    },
+    {
+        "File":  "vision.simple.js",
+        "Routes":  "POST /analyze, GET /health",
+        "Count":  2
+    },
+    {
+        "File":  "webhooks.js",
+        "Routes":  "POST /lemonsqueezy, GET /health, POST /test",
+        "Count":  3
+    }
+]

@@ -1,0 +1,197 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-16",
+  "category": "food",
+  "subcategory": "oils",
+  "description": "Base de connaissance scientifique exhaustive sur les huiles alimentaires, leurs variants, risques, bénéfices et alternatives",
+  "oils": [
+    {
+      "name": "Huile de tournesol",
+      "commonNames": ["Sunflower oil", "Huile de tournesol"],
+      "variants": [
+        {
+          "type": "raffinée",
+          "score": 25,
+          "description": "Huile de tournesol raffinée industriellement par procédés chimiques",
+          "risks": [
+            {
+              "category": "Procédé chimique destructeur",
+              "severity": "high",
+              "details": "Raffinage à haute température (>200°C) avec désodorisation, blanchiment et neutralisation chimique. Ce processus détruit les vitamines E et caroténoïdes naturels et crée des composés toxiques comme l'acroléine et les peroxydes lipidiques.",
+              "healthImpact": "Stress oxydatif, inflammation cellulaire",
+              "sources": [
+                "Anses (2023) - Rapport sur les procédés de raffinage des huiles",
+                "EFSA (2024) - Process contaminants in refined oils"
+              ]
+            },
+            {
+              "category": "Déséquilibre oméga-6/oméga-3",
+              "severity": "critical",
+              "details": "Contient 70% d'acide linoléique (oméga-6) et quasiment 0% d'oméga-3. Le ratio occidental moderne est de 15:1 alors que le ratio optimal est de 5:1 maximum.",
+              "healthImpact": "Inflammation chronique de bas grade, augmentation du risque cardiovasculaire, résistance à l'insuline",
+              "sources": [
+                "OMS (2024) - Guidelines on fatty acids intake",
+                "JAMA Cardiology (2023) - Omega-6/Omega-3 ratio and cardiovascular disease"
+              ]
+            },
+            {
+              "category": "Oxydation rapide",
+              "severity": "high",
+              "details": "Très instable à la chaleur et à la lumière. S'oxyde rapidement en créant des peroxydes lipidiques et des aldéhydes toxiques (acroléine, malondialdéhyde).",
+              "healthImpact": "Dommages cellulaires, accélération du vieillissement",
+              "sources": [
+                "European Journal of Lipid Science and Technology (2024)",
+                "Free Radical Biology and Medicine (2023)"
+              ]
+            }
+          ],
+          "nutritionalProfile": {
+            "omega6": "70%",
+            "omega3": "<1%",
+            "omega9": "20%",
+            "saturatedFat": "10%",
+            "vitaminE": "Détruite par raffinage"
+          },
+          "usage": "À ÉVITER",
+          "alternatives": [
+            {
+              "name": "Huile d'olive vierge extra",
+              "score": 92,
+              "why": "Pressée à froid, riche en oméga-9 anti-inflammatoires, polyphénols antioxydants puissants"
+            },
+            {
+              "name": "Huile de colza vierge",
+              "score": 88,
+              "why": "Bon ratio oméga-6/3 (2:1), stable en cuisson douce, riche en vitamine E"
+            }
+          ]
+        },
+        {
+          "type": "pressée à froid bio",
+          "score": 65,
+          "description": "Huile de tournesol bio pressée mécaniquement à froid (<60°C) sans solvants",
+          "risks": [
+            {
+              "category": "Déséquilibre oméga-6 persistant",
+              "severity": "moderate",
+              "details": "Même bio et pressée à froid, l'huile de tournesol reste naturellement très riche en oméga-6 (70%) avec très peu d'oméga-3.",
+              "healthImpact": "Contribution au déséquilibre inflammatoire si consommation régulière",
+              "sources": ["ANSES (2024) - Profil lipidique des huiles végétales"]
+            }
+          ],
+          "benefits": [
+            "Conservation de la vitamine E naturelle",
+            "Pas de résidus chimiques",
+            "Goût préservé"
+          ],
+          "nutritionalProfile": {
+            "omega6": "70%",
+            "omega3": "<1%",
+            "omega9": "20%",
+            "saturatedFat": "10%",
+            "vitaminE": "Présente (tocopherols)"
+          },
+          "usage": "Assaisonnement uniquement (jamais de cuisson)",
+          "alternatives": [
+            {
+              "name": "Huile de lin bio",
+              "score": 90,
+              "why": "Très riche en oméga-3 (57%), rééquilibre le ratio oméga-6/3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Huile de palme",
+      "commonNames": ["Palm oil", "Huile de palme"],
+      "variants": [
+        {
+          "type": "raffinée",
+          "score": 15,
+          "description": "Huile de palme raffinée industriellement, première cause de déforestation mondiale",
+          "risks": [
+            {
+              "category": "Déforestation massive",
+              "severity": "critical",
+              "details": "Culture industrielle de palmiers à huile = première cause de déforestation en Asie du Sud-Est (Indonésie, Malaisie, Bornéo, Sumatra). Destruction de l'habitat des orangs-outans, tigres de Sumatra, rhinocéros. Émissions massives de CO2 par brûlis.",
+              "environmentalImpact": "Extinction d'espèces, réchauffement climatique, pertes de biodiversité irréversibles",
+              "sources": [
+                "Greenpeace Report (2024) - Deforestation for palm oil",
+                "WWF (2024) - Palm oil and biodiversity loss"
+              ]
+            },
+            {
+              "category": "Composés génotoxiques cancérigènes",
+              "severity": "critical",
+              "details": "Le raffinage à très haute température (>200°C) crée des esters de 3-MCPD (3-monochloropropane-1,2-diol) et du glycidol, classés comme génotoxiques probablement cancérigènes.",
+              "healthImpact": "Dommages à l'ADN, risque cancérigène à long terme",
+              "sources": [
+                "EFSA (2023) - Risks to human health related to process contaminants in palm oil",
+                "IARC Monographs (2023) - Glycidol carcinogenicity"
+              ]
+            }
+          ],
+          "nutritionalProfile": {
+            "saturatedFat": "50%",
+            "omega9": "39%",
+            "omega6": "10%",
+            "omega3": "0%"
+          },
+          "usage": "À BANNIR",
+          "alternatives": [
+            {
+              "name": "Huile de coco vierge bio",
+              "score": 78,
+              "why": "Également riche en graisses saturées mais acides gras à chaîne moyenne (MCT) mieux métabolisés"
+            },
+            {
+              "name": "Beurre de cacao bio",
+              "score": 85,
+              "why": "Texture similaire, stable, riche en antioxydants"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Huile d'olive",
+      "commonNames": ["Olive oil", "Huile d'olive"],
+      "variants": [
+        {
+          "type": "vierge extra",
+          "score": 92,
+          "description": "Or liquide de la Méditerranée - huile extraite mécaniquement à froid",
+          "benefits": [
+            {
+              "category": "Polyphénols antioxydants puissants",
+              "details": "Très riche en hydroxytyrosol, oléocanthal, oleuropéine",
+              "healthImpact": "Protection cardiovasculaire, anti-cancer, neuroprotection",
+              "sources": ["New England Journal of Medicine (2024) - PREDIMED study"]
+            }
+          ],
+          "nutritionalProfile": {
+            "omega9": "75%",
+            "omega6": "10%",
+            "omega3": "1%",
+            "saturatedFat": "14%",
+            "polyphenols": "Élevés (200-500 mg/kg)",
+            "vitaminE": "Présente"
+          },
+          "usage": "Assaisonnement ++ | Cuisson douce-moyenne (<180°C)"
+        }
+      ]
+    }
+  ],
+  "generalRecommendations": {
+    "dailyUse": [
+      "Huile d'olive vierge extra (assaisonnement quotidien)",
+      "Huile de colza vierge (cuisson douce quotidienne)"
+    ],
+    "toAvoid": [
+      "Huile de palme raffinée",
+      "Huile de tournesol raffinée",
+      "Huiles hydrogénées"
+    ]
+  }
+}

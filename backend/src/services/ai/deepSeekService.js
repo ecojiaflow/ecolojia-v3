@@ -1,16 +1,17 @@
-﻿const fetch = require('node-fetch');
+// ============================================================================
+// ECOLOJIA - DeepSeek Service HYBRIDE
+// Service IA utilisant DeepSeek API avec contexte scientifique
+// Version 3.1-hybrid
+// ============================================================================
 
 function toText(value) {
   if (value === null || value === undefined) return '';
-  // Si c'est déjà une chaîne
   if (typeof value === 'string') return value;
-  // Si c'est un tableau de segments {type,text} → concat
   if (Array.isArray(value)) {
     try {
       return value.map(v => (typeof v === 'string' ? v : JSON.stringify(v))).join(' ');
     } catch { return String(value); }
   }
-  // Objets divers → JSON compact
   try { return JSON.stringify(value); } catch { return String(value); }
 }
 
@@ -18,8 +19,7 @@ function normalizeMessages(rawMessages = [], context = {}) {
   const base = [
     {
       role: 'system',
-      content:
-        'Tu es Ecolojia, assistant recettes & nutrition. Réponds brièvement, en français, avec des conseils concrets et sûrs.'
+      content: 'Tu es Ecolojia, assistant recettes & nutrition. Réponds brièvement, en français, avec des conseils concrets et sûrs.'
     }
   ];
 
@@ -28,7 +28,6 @@ function normalizeMessages(rawMessages = [], context = {}) {
     content: toText(m && m.content)
   }));
 
-  // Ajout contexte produit/recette s'ils existent
   if (context && (context.product || context.recipe)) {
     const ctxText = toText({ product: context.product || null, recipe: context.recipe || null });
     mapped.unshift({ role: 'system', content: `Contexte: ${ctxText}` });
@@ -68,28 +67,28 @@ async function chat({ apiKey, model = 'deepseek-chat', messages = [], temperatur
   return { text, raw: json };
 }
 
-// Compat: ancien nom "analyze" utilisé par chat.routes.js
 async function analyze(opts) {
   return chat(opts);
 }
 
 /**
- * NOUVELLE FONCTION : analyzeProduct()
- * Analyse un produit et retourne des données enrichies
- * selon sa catégorie (food/cosmetic/detergent)
+ * ============================================================================
+ * FONCTION HYBRIDE : analyzeProduct()
+ * Analyse produit avec contexte scientifique de la knowledge base
+ * ============================================================================
  */
 async function analyzeProduct({ apiKey, product, category = 'food' }) {
   if (!apiKey) throw new Error('DeepSeek API key manquante');
   if (!product) throw new Error('Product manquant');
 
-  // Construire prompt selon catégorie
+  // Construire prompt enrichi selon catégorie
   const prompt = buildPromptForCategory(product, category);
 
   // Appeler chat avec température basse (factuel)
   const result = await chat({
     apiKey,
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.2 // Faible = réponses factuelles
+    temperature: 0.2
   });
 
   // Parser réponse JSON
@@ -98,45 +97,219 @@ async function analyzeProduct({ apiKey, product, category = 'food' }) {
   return {
     ...enrichedData,
     confidence: enrichedData.confidence || 0.75,
-    source: 'deepseek-ai',
+    source: 'deepseek-ai-hybrid',
     analyzedAt: new Date().toISOString()
   };
 }
 
 /**
- * Construire prompt selon catégorie produit
+ * ============================================================================
+ * NOUVEAU : Construire prompt HYBRIDE avec contexte scientifique
+ * ============================================================================
  */
 function buildPromptForCategory(product, category) {
   const productName = product.name || product.product_name || 'Produit inconnu';
   const brand = product.brand || '';
+  
+  // NOUVEAU : Extraire contexte scientifique si disponible
+  const scientificContext = product.scientificContext;
 
   switch (category) {
     case 'food':
-      return buildFoodPrompt(product, productName, brand);
-    
+      return buildFoodPromptHybrid(product, productName, brand, scientificContext);
+
     case 'cosmetic':
       return buildCosmeticPrompt(product, productName, brand);
-    
+
     case 'detergent':
       return buildDetergentPrompt(product, productName, brand);
-    
+
     default:
-      return buildFoodPrompt(product, productName, brand);
+      return buildFoodPromptHybrid(product, productName, brand, scientificContext);
   }
 }
 
 /**
- * Prompt alimentaire
+ * ============================================================================
+ * NOUVEAU : Prompt alimentaire HYBRIDE (avec contexte scientifique)
+ * ============================================================================
  */
-function buildFoodPrompt(product, productName, brand) {
+function buildFoodPromptHybrid(product, productName, brand, scientificContext) {
   const ingredients = product.ingredients_text || product.foodData?.ingredients?.join(', ') || 'Non disponibles';
-  
-  return `Analyse nutritionnelle du produit "${productName}" ${brand ? `(${brand})` : ''}.
 
+  // Construction prompt de base
+  let prompt = `Tu es un expert scientifique en nutrition pour Ecolojia.
+
+PRODUIT À ANALYSER :
+Nom : "${productName}" ${brand ? `(${brand})` : ''}
 Ingrédients : ${ingredients}
 
-Estime les valeurs nutritionnelles manquantes. Réponds UNIQUEMENT en JSON valide :
+`;
+
+  // ============================================================================
+  // AJOUT CONTEXTE SCIENTIFIQUE SI DISPONIBLE
+  // ============================================================================
+  if (scientificContext && scientificContext.knowledgeBaseAnalysis) {
+    const kb = scientificContext.knowledgeBaseAnalysis;
+    
+    prompt += `════════════════════════════════════════════════════════════════
+🔬 BASE DE CONNAISSANCE SCIENTIFIQUE (À UTILISER EN PRIORITÉ)
+════════════════════════════════════════════════════════════════
+
+Notre base de données scientifique a détecté les éléments suivants :
+
+📊 ANALYSE GLOBALE :
+- Total ingrédients analysés : ${kb.totalIngredients}
+- Impact estimé sur le score : ${kb.scoreImpact} points
+
+`;
+
+    // Problèmes critiques
+    if (kb.criticalIssues && kb.criticalIssues.length > 0) {
+      prompt += `🔴 PROBLÈMES CRITIQUES (${kb.criticalIssues.length}) :
+`;
+      kb.criticalIssues.forEach((issue, idx) => {
+        prompt += `${idx + 1}. ${issue.ingredient || issue.type || issue.flag}
+   ${issue.issue || issue.details || issue.reason}
+`;
+      });
+      prompt += `
+`;
+    }
+
+    // Problèmes élevés
+    if (kb.highIssues && kb.highIssues.length > 0) {
+      prompt += `🟠 PROBLÈMES ÉLEVÉS (${kb.highIssues.length}) :
+`;
+      kb.highIssues.forEach((issue, idx) => {
+        prompt += `${idx + 1}. ${issue.ingredient}
+   ${issue.issue || issue.details}
+`;
+      });
+      prompt += `
+`;
+    }
+
+    // Problèmes modérés
+    if (kb.moderateIssues && kb.moderateIssues.length > 0) {
+      prompt += `🟡 PROBLÈMES MODÉRÉS (${kb.moderateIssues.length}) :
+`;
+      kb.moderateIssues.slice(0, 3).forEach((issue, idx) => {
+        prompt += `${idx + 1}. ${issue.ingredient || issue.type}
+`;
+      });
+      if (kb.moderateIssues.length > 3) {
+        prompt += `... et ${kb.moderateIssues.length - 3} autres
+`;
+      }
+      prompt += `
+`;
+    }
+
+    // Red flags
+    if (kb.redFlags && kb.redFlags.length > 0) {
+      prompt += `🚩 RED FLAGS DÉTECTÉS :
+`;
+      kb.redFlags.forEach(flag => {
+        prompt += `- ${flag.flag?.description || 'Flag détecté'}
+`;
+      });
+      prompt += `
+`;
+    }
+
+    // Procédés cachés
+    if (kb.hiddenProcesses && kb.hiddenProcesses.length > 0) {
+      prompt += `⚙️ PROCÉDÉS CACHÉS DÉTECTÉS :
+`;
+      kb.hiddenProcesses.forEach(proc => {
+        prompt += `- ${proc.process?.processName} (Sévérité: ${proc.process?.severity?.toUpperCase()})
+  ${proc.process?.description}
+`;
+      });
+      prompt += `
+`;
+    }
+
+    prompt += `════════════════════════════════════════════════════════════════
+
+`;
+  }
+
+  // ============================================================================
+  // INSTRUCTIONS POUR CALCUL DES 8 COMPOSANTES
+  // ============================================================================
+  prompt += `MISSION : Calculer les 8 composantes du score Ecolojia (0-100 chacune)
+
+${scientificContext ? `IMPORTANT : Utilise OBLIGATOIREMENT les détections de la base scientifique ci-dessus.
+- Applique l'impact score détecté (${scientificContext.knowledgeBaseAnalysis?.scoreImpact || 0} points) sur les composantes concernées
+- Cite les sources détectées dans tes justifications
+- Pour ingrédients critiques → scores très bas (<30)
+- Pour procédés cachés → réduire processingScore significativement
+- Pour red flags → impact fort sur composantes concernées
+
+` : ''}LES 8 COMPOSANTES À CALCULER :
+
+1. naturalScore (0-100) - Degré de naturalité
+   → Plus le produit est transformé/raffiné, plus le score est BAS
+   → Raffinage, additifs, procédés chimiques → score BAS
+
+2. healthScore (0-100) - Impact santé
+   → Ingrédients nocifs (palme, sucre raffiné, trans fats) → score BAS
+   → Ingrédients sains (fruits, légumes, grains entiers) → score HAUT
+
+3. environmentScore (0-100) - Impact écologique
+   → Déforestation (palme), élevage intensif, pesticides → score BAS
+   → Bio, local, durable → score HAUT
+
+4. nutriScore (0-100) - Qualité nutritionnelle
+   → Profil macro/micro nutriments
+   → Fibres, protéines, vitamines → score HAUT
+   → Sucres, graisses saturées, sel → score BAS
+
+5. additivesScore (0-100) - Additifs
+   → Nombre et dangerosité des additifs
+   → E-numbers problématiques → score BAS
+
+6. processingScore (0-100) - Niveau de transformation
+   → NOVA 1 (non transformé) → 90-100
+   → NOVA 4 (ultra-transformé) → 0-30
+   → Extrusion, hydrogénation, UHT → score BAS
+
+7. originScore (0-100) - Traçabilité origine
+   → Labels (AOP, Bio, MSC) → score HAUT
+   → Origine floue → score BAS
+
+8. labelsScore (0-100) - Labels & certifications
+   → Bio AB, Label Rouge, MSC, Fair Trade → score HAUT
+   → Aucun label → score BAS
+
+────────────────────────────────────────────────────────────────
+
+RÉPONDS UNIQUEMENT EN JSON VALIDE (pas de markdown, pas de \`\`\`) :
+
 {
+  "scores": {
+    "naturalScore": <nombre 0-100>,
+    "healthScore": <nombre 0-100>,
+    "environmentScore": <nombre 0-100>,
+    "nutriScore": <nombre 0-100>,
+    "additivesScore": <nombre 0-100>,
+    "processingScore": <nombre 0-100>,
+    "originScore": <nombre 0-100>,
+    "labelsScore": <nombre 0-100>,
+    "confidence": <nombre 0.0-1.0>
+  },
+  "justifications": {
+    "naturalScore": "Justification courte avec sources si disponibles",
+    "healthScore": "Justification courte avec sources si disponibles",
+    "environmentScore": "Justification courte avec sources si disponibles",
+    "nutriScore": "Justification courte",
+    "additivesScore": "Justification courte",
+    "processingScore": "Justification courte",
+    "originScore": "Justification courte",
+    "labelsScore": "Justification courte"
+  },
   "nutrition": {
     "calories": <nombre ou null>,
     "protein": <nombre ou null>,
@@ -146,88 +319,112 @@ Estime les valeurs nutritionnelles manquantes. Réponds UNIQUEMENT en JSON valid
     "sugar": <nombre ou null>,
     "salt": <nombre ou null>
   },
-  "allergens": [<liste allergènes détectés>],
-  "nova": <groupe 1-4 ou null>,
-  "confidence": <0-1>
+  "warnings": ["Liste des alertes principales"],
+  "recommendations": ["Liste des recommandations"]
 }
 
-Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
+RAPPEL : 
+- JSON pur UNIQUEMENT (pas de \`\`\`json)
+- Tous les scores entre 0 et 100
+- Confidence entre 0.0 et 1.0
+${scientificContext ? '- UTILISE OBLIGATOIREMENT les détections de la base scientifique' : ''}`;
+
+  return prompt;
 }
 
 /**
- * Prompt cosmétique
+ * Prompt cosmétique (conservé)
  */
 function buildCosmeticPrompt(product, productName, brand) {
-  const inci = product.cosmeticsData?.inci?.join(', ') || product.ingredients_text || 'Non disponible';
-  
+  const ingredients = product.ingredients_text || 'Non disponibles';
+
   return `Analyse cosmétique du produit "${productName}" ${brand ? `(${brand})` : ''}.
 
-Composition INCI : ${inci}
+Ingrédients : ${ingredients}
 
-Analyse les ingrédients. Réponds UNIQUEMENT en JSON valide :
+Réponds UNIQUEMENT en JSON valide :
 {
-  "allergens": [<liste allergènes>],
-  "endocrineDisruptors": [<liste perturbateurs endocriniens>],
-  "biodegradability": <0-100 ou null>,
-  "naturalPercentage": <0-100 ou null>,
-  "confidence": <0-1>
-}
-
-Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
+  "scores": {
+    "naturalScore": <0-100>,
+    "healthScore": <0-100>,
+    "environmentScore": <0-100>,
+    "confidence": <0.0-1.0>
+  },
+  "warnings": ["Liste des alertes"],
+  "recommendations": ["Recommandations"]
+}`;
 }
 
 /**
- * Prompt détergent
+ * Prompt détergent (conservé)
  */
 function buildDetergentPrompt(product, productName, brand) {
-  const composition = product.detergentsData?.composition?.join(', ') || product.ingredients_text || 'Non disponible';
-  
-  return `Analyse détergent/ménager "${productName}" ${brand ? `(${brand})` : ''}.
+  const ingredients = product.ingredients_text || 'Non disponibles';
 
-Composition : ${composition}
+  return `Analyse détergent du produit "${productName}" ${brand ? `(${brand})` : ''}.
 
-Analyse écologique. Réponds UNIQUEMENT en JSON valide :
+Ingrédients : ${ingredients}
+
+Réponds UNIQUEMENT en JSON valide :
 {
-  "biodegradability": <0-100 ou null>,
-  "toxicity": <"low"|"medium"|"high" ou null>,
-  "ecotoxicity": <"low"|"medium"|"high" ou null>,
-  "confidence": <0-1>
-}
-
-Réponds UNIQUEMENT avec le JSON, sans texte avant ou après.`;
+  "scores": {
+    "naturalScore": <0-100>,
+    "environmentScore": <0-100>,
+    "healthScore": <0-100>,
+    "confidence": <0.0-1.0>
+  },
+  "warnings": ["Liste des alertes"],
+  "recommendations": ["Recommandations"]
+}`;
 }
 
 /**
- * Parser réponse IA (robuste)
+ * Parser réponse DeepSeek
  */
 function parseAnalysisResponse(text, category) {
   try {
-    // Retirer markdown si présent (```json ... ```)
-    const cleaned = text
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
-    
+    // Nettoyer markdown si présent
+    let cleaned = text.trim();
+    cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
     const parsed = JSON.parse(cleaned);
-    
-    // Valider structure selon catégorie
-    if (category === 'food' && !parsed.nutrition) {
-      console.warn('[deepSeekService] Nutrition manquante dans réponse IA');
+
+    // Validation scores
+    if (parsed.scores) {
+      Object.keys(parsed.scores).forEach(key => {
+        const val = parsed.scores[key];
+        if (typeof val === 'number') {
+          if (key === 'confidence') {
+            parsed.scores[key] = Math.max(0, Math.min(1, val));
+          } else {
+            parsed.scores[key] = Math.max(0, Math.min(100, val));
+          }
+        }
+      });
     }
-    
+
     return parsed;
-    
+
   } catch (error) {
-    console.error('[deepSeekService] Erreur parse JSON IA:', error.message);
-    console.error('[deepSeekService] Texte reçu:', text.substring(0, 200));
-    
-    // Retour par défaut si parse échoue
+    console.error('[DeepSeek] Erreur parsing JSON:', error.message);
+    console.error('[DeepSeek] Texte reçu:', text.substring(0, 200));
+
     return {
-      error: 'PARSE_ERROR',
-      confidence: 0,
-      rawText: text.substring(0, 500)
+      scores: {
+        naturalScore: 50,
+        healthScore: 50,
+        environmentScore: 50,
+        confidence: 0.3
+      },
+      warnings: ['Erreur parsing réponse IA'],
+      recommendations: [],
+      parseError: true
     };
   }
 }
 
-module.exports = { chat, analyze, analyzeProduct, normalizeMessages };
+module.exports = {
+  chat,
+  analyze,
+  analyzeProduct
+};

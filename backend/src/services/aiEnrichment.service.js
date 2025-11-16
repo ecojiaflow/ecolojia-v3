@@ -1,6 +1,7 @@
-﻿// PATH: backend/src/services/aiEnrichment.service.js
+// PATH: backend/src/services/aiEnrichment.service.js
 const deepSeekService = require('./ai/deepSeekService');
 const scoringUnified = require('./scoringUnified');
+const knowledgeService = require('../knowledge/knowledge.service');
 
 const logger = {
   info: (...args) => console.log('[AI-ENRICH]', ...args),
@@ -10,71 +11,94 @@ const logger = {
 
 /**
  * ============================================================================
- * AI ENRICHMENT SERVICE - VERSION CORRIGÉE
+ * AI ENRICHMENT SERVICE - VERSION HYBRIDE 3.1
  * ============================================================================
- * 
- * Service d'enrichissement produit par IA (DeepSeek)
- * 
- * CORRECTIONS :
- * ✅ Validation entrées (ingredients = array)
- * ✅ Validation score calculé (pas NaN/undefined)
- * ✅ Gestion erreurs robuste
- * ✅ Retry si échec API
- * ✅ Timeout 30s sur appel DeepSeek
- * ✅ Logs détaillés
+ *
+ * Système hybride intelligent combinant :
+ * ✅ Base de connaissance scientifique (knowledge.service)
+ * ✅ Analyse IA contextuelle (DeepSeek)
+ * ✅ Scoring précis avec sources
+ *
+ * @version 3.1.0-hybrid
+ * @date 2025-11-16
  */
 
 class AIEnrichmentService {
-  
+
   /**
-   * Point d'entrée principal - Enrichir un produit avec l'IA
+   * Point d'entrée principal - Enrichir un produit avec système hybride
    */
   static async enrichProductWithAI(product) {
     const startTime = Date.now();
-    logger.info(`🤖 Début enrichissement IA - Produit: ${product.name}`);
+    logger.info(`🤖 Début enrichissement HYBRIDE - Produit: ${product.name}`);
 
     try {
+      // Initialiser knowledge service si pas encore fait
+      if (!knowledgeService.initialized) {
+        logger.info('📚 Initialisation knowledge service...');
+        await knowledgeService.initialize();
+      }
+
       // ============================================================================
-      // ✨ VALIDATION DONNÉES D'ENTRÉE (NOUVEAU)
+      // 1️⃣ VALIDATION DONNÉES D'ENTRÉE
       // ============================================================================
       const validatedProduct = this.validateProductData(product);
 
-      // Construire le contexte pour l'IA
-      const context = this.buildEnrichmentContext(validatedProduct);
+      // ============================================================================
+      // 2️⃣ ANALYSE BASE DE CONNAISSANCE SCIENTIFIQUE (NOUVEAU)
+      // ============================================================================
+      logger.info('🔬 Analyse base de connaissance scientifique...');
+      const knowledgeAnalysis = await this.analyzeWithKnowledgeBase(validatedProduct);
 
-      // Appel IA avec timeout et retry
-      logger.info('📡 Appel DeepSeek API...');
-      const aiResponse = await this.callDeepSeekWithRetry(context, 2); // 2 tentatives max
+      // ============================================================================
+      // 3️⃣ CONSTRUCTION CONTEXTE ENRICHI POUR DEEPSEEK
+      // ============================================================================
+      logger.info('📝 Construction contexte hybride pour DeepSeek...');
+      const hybridContext = this.buildHybridContext(validatedProduct, knowledgeAnalysis);
+
+      // ============================================================================
+      // 4️⃣ APPEL DEEPSEEK AVEC CONTEXTE SCIENTIFIQUE
+      // ============================================================================
+      logger.info('📡 Appel DeepSeek API (avec contexte scientifique)...');
+      const aiResponse = await this.callDeepSeekWithRetry(hybridContext, 2);
 
       if (!aiResponse || !aiResponse.enrichedData) {
         throw new Error('Réponse IA invalide ou vide');
       }
 
-      // Merger les données enrichies
-      logger.info('🔄 Merge données enrichies...');
-      const enrichedProduct = this.mergeEnrichedData(validatedProduct, aiResponse.enrichedData);
+      // ============================================================================
+      // 5️⃣ MERGE DONNÉES : Knowledge base + IA + Produit original
+      // ============================================================================
+      logger.info('🔄 Merge données hybrides...');
+      const enrichedProduct = this.mergeHybridData(
+        validatedProduct,
+        knowledgeAnalysis,
+        aiResponse.enrichedData
+      );
 
       // ============================================================================
-      // ✨ RECALCUL SCORE AVEC VALIDATION (NOUVEAU)
+      // 6️⃣ RECALCUL SCORE AVEC VALIDATION
       // ============================================================================
-      logger.info('📊 Recalcul score avec données enrichies...');
+      logger.info('📊 Recalcul score avec données hybrides...');
       const scoredProduct = await this.recalculateScoreWithValidation(enrichedProduct);
 
-      // Marquer comme enrichi par IA
+      // Métadonnées enrichissement
       scoredProduct.aiEnriched = true;
       scoredProduct.aiEnrichmentDate = new Date();
-      scoredProduct.aiEnrichmentVersion = '3.1';
+      scoredProduct.aiEnrichmentVersion = '3.1-hybrid';
+      scoredProduct.knowledgeBaseUsed = true;
+      scoredProduct.knowledgeAnalysis = knowledgeAnalysis;
 
       const duration = Date.now() - startTime;
       const finalScore = scoredProduct.scores?.overallScore || scoredProduct.scores?.global || 50;
-      
-      logger.info(`✅ Enrichissement réussi - Score: ${finalScore}/100 (Confiance: ${Math.round((scoredProduct.scores?.confidence || 0.7) * 100)}%) - Durée: ${duration}ms`);
+
+      logger.info(`✅ Enrichissement HYBRIDE réussi - Score: ${finalScore}/100 (Confiance: ${Math.round((scoredProduct.scores?.confidence || 0.8) * 100)}%) - Durée: ${duration}ms`);
 
       return scoredProduct;
 
     } catch (error) {
       const duration = Date.now() - startTime;
-      logger.error(`❌ Échec enrichissement IA - Durée: ${duration}ms - Erreur:`, error.message);
+      logger.error(`❌ Échec enrichissement HYBRIDE - Durée: ${duration}ms - Erreur:`, error.message);
 
       // Retourner le produit original non modifié en cas d'erreur
       return {
@@ -88,444 +112,302 @@ class AIEnrichmentService {
 
   /**
    * ============================================================================
-   * ✨ VALIDATION DONNÉES PRODUIT (NOUVEAU)
+   * NOUVELLE MÉTHODE : Analyser avec base de connaissance scientifique
    * ============================================================================
    */
-  static validateProductData(product) {
-    logger.info('🔍 Validation données produit...');
-
-    const validated = { ...product };
-
-    // Validation ingrédients (doit être string, pas array)
-    if (validated.foodData?.ingredients) {
-      if (Array.isArray(validated.foodData.ingredients)) {
-        // ✅ CORRECTION DU BUG ingredients.join
-        logger.warn('⚠️ Ingredients est un array, conversion en string');
-        validated.foodData.ingredients = validated.foodData.ingredients.join(', ');
-      } else if (typeof validated.foodData.ingredients !== 'string') {
-        logger.warn('⚠️ Ingredients invalide, conversion en string');
-        validated.foodData.ingredients = String(validated.foodData.ingredients || '');
-      }
-    }
-
-    // Validation ingredientsTags (doit être array)
-    if (validated.foodData?.ingredientsTags) {
-      if (typeof validated.foodData.ingredientsTags === 'string') {
-        logger.warn('⚠️ IngredientsTags est une string, conversion en array');
-        validated.foodData.ingredientsTags = validated.foodData.ingredientsTags.split(',').map(s => s.trim());
-      } else if (!Array.isArray(validated.foodData.ingredientsTags)) {
-        logger.warn('⚠️ IngredientsTags invalide, initialisation array vide');
-        validated.foodData.ingredientsTags = [];
-      }
-    }
-
-    // Validation additives (doit être array)
-    if (validated.foodData?.additives) {
-      if (typeof validated.foodData.additives === 'string') {
-        validated.foodData.additives = validated.foodData.additives.split(',').map(s => s.trim());
-      } else if (!Array.isArray(validated.foodData.additives)) {
-        validated.foodData.additives = [];
-      }
-    }
-
-    // Validation allergens (doit être array)
-    if (validated.foodData?.allergens) {
-      if (typeof validated.foodData.allergens === 'string') {
-        validated.foodData.allergens = validated.foodData.allergens.split(',').map(s => s.trim());
-      } else if (!Array.isArray(validated.foodData.allergens)) {
-        validated.foodData.allergens = [];
-      }
-    }
-
-    // Validation nutritionFacts (doit être objet)
-    if (!validated.foodData?.nutritionFacts || typeof validated.foodData.nutritionFacts !== 'object') {
-      validated.foodData = validated.foodData || {};
-      validated.foodData.nutritionFacts = {};
-    }
-
-    logger.info('✅ Validation terminée');
-    return validated;
-  }
-
-  /**
-   * Construire le contexte pour l'IA
-   */
-  static buildEnrichmentContext(product) {
-    const context = {
-      name: product.name || 'Produit inconnu',
-      brand: product.brand || 'Marque inconnue',
-      category: product.categoryType || product.category || 'food',
-      barcode: product.barcode,
-      
-      existingData: {
-        ingredients: product.foodData?.ingredients || '',
-        ingredientsTags: product.foodData?.ingredientsTags || [],
-        allergens: product.foodData?.allergens || [],
-        additives: product.foodData?.additives || [],
-        nutritionFacts: product.foodData?.nutritionFacts || {},
-        nova: product.foodData?.nova || null,
-        nutriscore: product.foodData?.nutriscore || null,
-        ecoscore: product.foodData?.ecoscore || null,
-        labels: product.foodData?.labels || []
-      },
-      
-      missingFields: this.identifyMissingFields(product),
-      dataQuality: product.dataQuality || 'unknown'
-    };
-
-    return context;
-  }
-
-  /**
-   * Identifier les champs manquants
-   */
-  static identifyMissingFields(product) {
-    const missing = [];
-
-    if (!product.foodData?.ingredients || product.foodData.ingredients.length < 10) {
-      missing.push('ingredients');
-    }
-
-    if (!product.foodData?.nutritionFacts || Object.keys(product.foodData.nutritionFacts).length < 3) {
-      missing.push('nutritionFacts');
-    }
-
-    if (!product.foodData?.nova) {
-      missing.push('nova');
-    }
-
-    if (!product.foodData?.nutriscore) {
-      missing.push('nutriscore');
-    }
-
-    if (!product.foodData?.allergens || product.foodData.allergens.length === 0) {
-      missing.push('allergens');
-    }
-
-    return missing;
-  }
-
-  /**
-   * ============================================================================
-   * ✨ APPEL DEEPSEEK AVEC RETRY ET TIMEOUT (NOUVEAU)
-   * ============================================================================
-   */
-  static async callDeepSeekWithRetry(context, maxRetries = 2) {
-    let lastError = null;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        logger.info(`📡 Tentative ${attempt}/${maxRetries}...`);
-
-        // Construire le prompt
-        const prompt = this.buildEnrichmentPrompt(context);
-
-        // Appel avec timeout 30s
-        const response = await this.callWithTimeout(
-          deepSeekService.query(prompt),
-          30000, // 30 secondes timeout
-          'Timeout DeepSeek API (30s)'
-        );
-
-        if (!response) {
-          throw new Error('Réponse DeepSeek vide');
-        }
-
-        // Parser la réponse
-        const enrichedData = this.parseDeepSeekResponse(response);
-
-        logger.info(`✅ Réponse IA reçue (tentative ${attempt})`);
-        return { enrichedData };
-
-      } catch (error) {
-        lastError = error;
-        logger.warn(`⚠️ Tentative ${attempt} échouée:`, error.message);
-
-        // Si c'est la dernière tentative, on throw
-        if (attempt === maxRetries) {
-          throw new Error(`Échec après ${maxRetries} tentatives: ${lastError.message}`);
-        }
-
-        // Attendre 2s avant retry
-        await this.sleep(2000);
-      }
-    }
-
-    throw lastError;
-  }
-
-  /**
-   * Wrapper timeout pour promesse
-   */
-  static callWithTimeout(promise, timeoutMs, timeoutMessage) {
-    return Promise.race([
-      promise,
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs)
-      )
-    ]);
-  }
-
-  /**
-   * Sleep helper
-   */
-  static sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  /**
-   * Construire le prompt pour DeepSeek
-   */
-  static buildEnrichmentPrompt(context) {
-    const { name, brand, category, existingData, missingFields } = context;
-
-    const prompt = `Tu es un expert en analyse produits ${category === 'food' ? 'alimentaires' : category === 'cosmetics' ? 'cosmétiques' : 'détergents'}.
-
-Produit à enrichir :
-- Nom : ${name}
-- Marque : ${brand}
-- Catégorie : ${category}
-- Barcode : ${context.barcode}
-
-Données existantes :
-${JSON.stringify(existingData, null, 2)}
-
-Champs manquants à compléter :
-${missingFields.join(', ') || 'Aucun (amélioration qualité)'}
-
-Tâche :
-1. Analyser les données existantes
-2. Compléter/améliorer les champs manquants
-3. Estimer NOVA group (1-4) si manquant
-4. Estimer Nutri-Score (A-E) si manquant
-5. Identifier allergènes probables
-6. Estimer valeurs nutritionnelles manquantes (si alimentaire)
-
-Réponds UNIQUEMENT avec un JSON valide (sans markdown) :
-{
-  "ingredients": "liste complète ingrédients",
-  "ingredientsTags": ["tag1", "tag2"],
-  "allergens": ["allergène1", "allergène2"],
-  "additives": ["E330", "E415"],
-  "nutritionFacts": {
-    "energy": 250,
-    "fat": 5.2,
-    "saturatedFat": 1.5,
-    "carbohydrates": 45,
-    "sugars": 12,
-    "fiber": 3,
-    "proteins": 8,
-    "salt": 0.8
-  },
-  "nova": 3,
-  "nutriscore": "C",
-  "ecoscore": "B",
-  "labels": ["bio", "vegan"],
-  "confidence": 0.75,
-  "reasoning": "Explication brève de l'estimation"
-}`;
-
-    return prompt;
-  }
-
-  /**
-   * Parser la réponse DeepSeek
-   */
-  static parseDeepSeekResponse(response) {
+  static async analyzeWithKnowledgeBase(product) {
     try {
-      // Nettoyer le texte (enlever markdown si présent)
-      let text = response;
-      
-      if (typeof text !== 'string') {
-        text = JSON.stringify(text);
+      const ingredientsText = product.ingredients_text || 
+                            product.foodData?.ingredients?.join(', ') || 
+                            '';
+
+      if (!ingredientsText) {
+        logger.warn('⚠️  Pas d\'ingrédients à analyser avec knowledge base');
+        return {
+          analyzed: false,
+          reason: 'no_ingredients',
+          criticalIssues: [],
+          highIssues: [],
+          moderateIssues: []
+        };
       }
 
-      // Enlever les markdown code blocks
-      text = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      // Appeler knowledge service
+      const analysis = knowledgeService.analyzeProductComplete({
+        name: product.name || product.product_name,
+        ingredients: ingredientsText
+      });
 
-      // Parser JSON
-      const parsed = JSON.parse(text);
+      logger.info(`📊 Knowledge base: ${analysis.criticalIssues.length} critiques, ${analysis.highIssues.length} élevés, ${analysis.moderateIssues.length} modérés`);
 
-      // Validation structure minimale
-      if (!parsed || typeof parsed !== 'object') {
-        throw new Error('Réponse IA invalide (pas un objet)');
-      }
-
-      return parsed;
+      return {
+        analyzed: true,
+        ...analysis,
+        timestamp: new Date()
+      };
 
     } catch (error) {
-      logger.error('❌ Erreur parsing réponse IA:', error.message);
-      logger.error('Réponse brute:', response);
-      throw new Error('Impossible de parser la réponse IA');
+      logger.error('❌ Erreur analyse knowledge base:', error.message);
+      return {
+        analyzed: false,
+        error: error.message,
+        criticalIssues: [],
+        highIssues: [],
+        moderateIssues: []
+      };
     }
   }
 
   /**
-   * Merger les données enrichies
+   * ============================================================================
+   * NOUVELLE MÉTHODE : Construire contexte hybride pour DeepSeek
+   * ============================================================================
    */
-  static mergeEnrichedData(product, enrichedData) {
-    const merged = { ...product };
+  static buildHybridContext(product, knowledgeAnalysis) {
+    const baseContext = this.buildEnrichmentContext(product);
 
-    // Merger foodData
-    if (!merged.foodData) {
-      merged.foodData = {};
-    }
+    // Ajouter contexte scientifique si disponible
+    if (knowledgeAnalysis.analyzed) {
+      baseContext.scientificContext = {
+        knowledgeBaseAnalysis: {
+          totalIngredients: knowledgeAnalysis.totalIngredients,
+          criticalIssues: knowledgeAnalysis.criticalIssues,
+          highIssues: knowledgeAnalysis.highIssues,
+          moderateIssues: knowledgeAnalysis.moderateIssues,
+          scoreImpact: knowledgeAnalysis.scoreImpact,
+          redFlags: knowledgeAnalysis.redFlags,
+          hiddenProcesses: knowledgeAnalysis.hiddenProcesses
+        },
+        instructions: `
+IMPORTANT : Une base de connaissance scientifique a pré-analysé ce produit.
+Utilise ces détections pour affiner ton analyse des 8 composantes Ecolojia.
 
-    // Ingredients (préférer enrichedData si plus complet)
-    if (enrichedData.ingredients && enrichedData.ingredients.length > (merged.foodData.ingredients?.length || 0)) {
-      merged.foodData.ingredients = enrichedData.ingredients;
-    }
+Règles :
+- Si un ingrédient est dans criticalIssues → impact FORT sur scores concernés
+- Si procédé caché détecté → réduire processingScore significativement
+- Si red flag détecté → réduire scores concernés
+- Cite les sources scientifiques fournies par la knowledge base
+- Ajoute ton expertise pour aspects non couverts par la base
 
-    // Tags
-    if (enrichedData.ingredientsTags && enrichedData.ingredientsTags.length > 0) {
-      merged.foodData.ingredientsTags = [
-        ...(merged.foodData.ingredientsTags || []),
-        ...enrichedData.ingredientsTags
-      ].filter((v, i, a) => a.indexOf(v) === i); // Dédupliquer
-    }
-
-    // Allergens
-    if (enrichedData.allergens && enrichedData.allergens.length > 0) {
-      merged.foodData.allergens = [
-        ...(merged.foodData.allergens || []),
-        ...enrichedData.allergens
-      ].filter((v, i, a) => a.indexOf(v) === i);
-    }
-
-    // Additives
-    if (enrichedData.additives && enrichedData.additives.length > 0) {
-      merged.foodData.additives = [
-        ...(merged.foodData.additives || []),
-        ...enrichedData.additives
-      ].filter((v, i, a) => a.indexOf(v) === i);
-    }
-
-    // Nutrition facts
-    if (enrichedData.nutritionFacts) {
-      merged.foodData.nutritionFacts = {
-        ...(merged.foodData.nutritionFacts || {}),
-        ...enrichedData.nutritionFacts
+Score impact détecté : ${knowledgeAnalysis.scoreImpact} points
+Ceci doit influencer tes calculs de composantes.
+        `.trim()
       };
     }
 
-    // NOVA (si manquant)
-    if (enrichedData.nova && !merged.foodData.nova) {
-      merged.foodData.nova = enrichedData.nova;
-    }
+    return baseContext;
+  }
 
-    // Nutri-Score (si manquant)
-    if (enrichedData.nutriscore && !merged.foodData.nutriscore) {
-      merged.foodData.nutriscore = enrichedData.nutriscore;
-    }
+  /**
+   * ============================================================================
+   * NOUVELLE MÉTHODE : Merger données hybrides
+   * ============================================================================
+   */
+  static mergeHybridData(product, knowledgeAnalysis, aiData) {
+    const merged = this.mergeEnrichedData(product, aiData);
 
-    // Eco-Score (si manquant)
-    if (enrichedData.ecoscore && !merged.foodData.ecoscore) {
-      merged.foodData.ecoscore = enrichedData.ecoscore;
-    }
+    // Enrichir avec détections knowledge base
+    if (knowledgeAnalysis.analyzed) {
+      merged.knowledgeDetections = {
+        criticalIssues: knowledgeAnalysis.criticalIssues,
+        highIssues: knowledgeAnalysis.highIssues,
+        moderateIssues: knowledgeAnalysis.moderateIssues,
+        redFlags: knowledgeAnalysis.redFlags,
+        hiddenProcesses: knowledgeAnalysis.hiddenProcesses,
+        recommendations: knowledgeAnalysis.recommendations
+      };
 
-    // Labels
-    if (enrichedData.labels && enrichedData.labels.length > 0) {
-      merged.foodData.labels = [
-        ...(merged.foodData.labels || []),
-        ...enrichedData.labels
-      ].filter((v, i, a) => a.indexOf(v) === i);
+      // Ajuster confiance selon détections
+      if (merged.scores) {
+        const baseConfidence = merged.scores.confidence || 0.7;
+        const knowledgeBonus = knowledgeAnalysis.analyzed ? 0.15 : 0;
+        merged.scores.confidence = Math.min(baseConfidence + knowledgeBonus, 0.95);
+      }
     }
-
-    // Métadonnées enrichissement
-    merged.aiEnrichmentMetadata = {
-      confidence: enrichedData.confidence || 0.7,
-      reasoning: enrichedData.reasoning || 'Enrichissement automatique par IA',
-      fieldsEnriched: Object.keys(enrichedData)
-    };
 
     return merged;
   }
 
   /**
    * ============================================================================
-   * ✨ RECALCUL SCORE AVEC VALIDATION (NOUVEAU)
+   * MÉTHODES EXISTANTES (conservées)
    * ============================================================================
    */
+
+  static validateProductData(product) {
+    logger.info('🔍 Validation données produit...');
+
+    const validated = { ...product };
+
+    // Validation ingrédients
+    if (validated.foodData?.ingredients) {
+      if (Array.isArray(validated.foodData.ingredients)) {
+        validated.ingredients_text = validated.foodData.ingredients.join(', ');
+      } else if (typeof validated.foodData.ingredients === 'string') {
+        validated.ingredients_text = validated.foodData.ingredients;
+      }
+    }
+
+    // Nettoyer NaN potentiels
+    if (validated.scores) {
+      Object.keys(validated.scores).forEach(key => {
+        if (typeof validated.scores[key] === 'number' && isNaN(validated.scores[key])) {
+          logger.warn(`⚠️  Score ${key} est NaN - Remplacé par null`);
+          validated.scores[key] = null;
+        }
+      });
+    }
+
+    return validated;
+  }
+
+  static buildEnrichmentContext(product) {
+    const category = product.category || 'food';
+
+    return {
+      productName: product.name || product.product_name || 'Produit inconnu',
+      brand: product.brand || '',
+      category: category,
+      ingredients: product.ingredients_text || '',
+      currentScores: product.scores || {},
+      barcode: product.barcode || product.code || '',
+      existingData: {
+        hasNutritionFacts: !!(product.foodData?.nutrition || product.nutrition),
+        hasIngredients: !!(product.ingredients_text || product.foodData?.ingredients),
+        hasImages: !!(product.image_url || product.images)
+      }
+    };
+  }
+
+  static async callDeepSeekWithRetry(context, maxRetries = 2) {
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+
+    if (!apiKey) {
+      throw new Error('DEEPSEEK_API_KEY manquante');
+    }
+
+    let lastError;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        logger.info(`🔄 Tentative ${attempt}/${maxRetries}...`);
+
+        const category = context.category || 'food';
+        
+        const result = await deepSeekService.analyzeProduct({
+          apiKey,
+          product: {
+            name: context.productName,
+            brand: context.brand,
+            ingredients_text: context.ingredients,
+            category: category,
+            scientificContext: context.scientificContext // NOUVEAU : Contexte hybride
+          },
+          category
+        });
+
+        logger.info('✅ Appel DeepSeek réussi');
+        return { enrichedData: result };
+
+      } catch (error) {
+        lastError = error;
+        logger.warn(`⚠️  Tentative ${attempt} échouée:`, error.message);
+
+        if (attempt < maxRetries) {
+          const delay = 1000 * attempt;
+          logger.info(`⏳ Retry dans ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    throw lastError;
+  }
+
+  static mergeEnrichedData(product, enrichedData) {
+    return {
+      ...product,
+      ...enrichedData,
+      scores: {
+        ...(product.scores || {}),
+        ...(enrichedData.scores || {})
+      },
+      foodData: {
+        ...(product.foodData || {}),
+        ...(enrichedData.foodData || {}),
+        nutrition: {
+          ...(product.foodData?.nutrition || {}),
+          ...(enrichedData.nutrition || {})
+        }
+      }
+    };
+  }
+
   static async recalculateScoreWithValidation(product) {
     try {
-      // Recalculer le score avec données enrichies
-      const scoredProduct = await scoringUnified.calculateScores(product);
-
-      // ✅ VALIDATION SCORE (pas NaN, pas undefined)
-      if (!scoredProduct.scores) {
-        logger.warn('⚠️ Aucun score calculé, structure par défaut');
-        scoredProduct.scores = {
-          overallScore: 50,
-          global: 50,
-          confidence: 0.5,
-          dataCompleteness: 'partial'
-        };
-      }
-
-      const overallScore = scoredProduct.scores.overallScore || scoredProduct.scores.global;
-
-      if (overallScore === undefined || overallScore === null || isNaN(overallScore)) {
-        logger.warn('⚠️ Score invalide après recalcul, application score par défaut 50');
-        scoredProduct.scores.overallScore = 50;
-        scoredProduct.scores.global = 50;
-      } else {
-        // S'assurer que le score est entre 0 et 100
-        scoredProduct.scores.overallScore = Math.max(0, Math.min(100, Math.round(overallScore)));
-        scoredProduct.scores.global = scoredProduct.scores.overallScore;
-      }
-
-      // Ajuster confiance (enrichissement IA = confiance réduite)
-      const originalConfidence = scoredProduct.scores.confidence || 0.9;
-      const aiConfidence = scoredProduct.aiEnrichmentMetadata?.confidence || 0.7;
+      // ✅ NOUVEAU : Utiliser les scores DeepSeek directement
+      // Les scores IA sont déjà calculés et validés par DeepSeek
       
-      // Confiance finale = moyenne pondérée
-      scoredProduct.scores.confidence = Math.round((originalConfidence * 0.4 + aiConfidence * 0.6) * 100) / 100;
+      const scores = product.scores || {};
+      
+      // Validation anti-NaN de tous les scores
+      Object.keys(scores).forEach(key => {
+        if (typeof scores[key] === 'number' && isNaN(scores[key])) {
+          logger.warn(`⚠️  Score ${key} est NaN - Remplacé par 50`);
+          scores[key] = 50;
+        }
+      });
 
-      // Mettre à jour dataCompleteness
-      const completeness = this.calculateDataCompleteness(scoredProduct);
-      scoredProduct.scores.dataCompleteness = completeness;
+      // Calculer le score global à partir des 8 composantes si disponibles
+      let globalScore = scores.overallScore || scores.global;
+      
+      if (!globalScore || isNaN(globalScore)) {
+        // Calculer à partir des composantes disponibles
+        const components = [
+          scores.naturalScore,
+          scores.healthScore,
+          scores.environmentScore,
+          scores.nutriScore,
+          scores.additivesScore,
+          scores.processingScore,
+          scores.originScore,
+          scores.labelsScore
+        ].filter(s => typeof s === 'number' && !isNaN(s));
+        
+        if (components.length > 0) {
+          globalScore = Math.round(components.reduce((a, b) => a + b, 0) / components.length);
+          logger.info(`📊 Score global recalculé : ${globalScore}/100 (moyenne de ${components.length} composantes)`);
+        } else {
+          globalScore = 50;
+          logger.warn('⚠️  Aucune composante valide - Score global par défaut : 50');
+        }
+      }
 
-      logger.info(`✅ Score validé: ${scoredProduct.scores.overallScore}/100 (Confiance: ${Math.round(scoredProduct.scores.confidence * 100)}%, Complétude: ${completeness})`);
+      // Validation finale du score global
+      if (globalScore < 0) globalScore = 0;
+      if (globalScore > 100) globalScore = 100;
 
-      return scoredProduct;
-
-    } catch (error) {
-      logger.error('❌ Erreur recalcul score:', error.message);
-
-      // Fallback : retourner produit avec score par défaut
       return {
         ...product,
         scores: {
+          ...scores,
+          overallScore: globalScore,
+          global: globalScore
+        }
+      };
+
+    } catch (error) {
+      logger.error('❌ Erreur recalcul score:', error.message);
+      return {
+        ...product,
+        scores: {
+          ...(product.scores || {}),
           overallScore: 50,
           global: 50,
-          confidence: 0.5,
-          dataCompleteness: 'partial'
+          confidence: 0.5
         }
       };
     }
-  }
-
-  /**
-   * Calculer complétude des données
-   */
-  static calculateDataCompleteness(product) {
-    const checks = [
-      product.name,
-      product.brand,
-      product.categoryType,
-      product.foodData?.ingredients,
-      product.foodData?.nutritionFacts?.energy !== undefined,
-      product.foodData?.nova,
-      product.foodData?.nutriscore,
-      product.imageUrl
-    ];
-
-    const score = checks.filter(Boolean).length;
-
-    if (score >= 7) return 'excellent';
-    if (score >= 5) return 'good';
-    if (score >= 3) return 'partial';
-    return 'minimal';
   }
 }
 

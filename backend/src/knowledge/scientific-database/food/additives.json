@@ -1,0 +1,709 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2025-11-16",
+  "category": "food",
+  "subcategory": "additives",
+  "description": "Base scientifique des additifs alimentaires critiques avec sources officielles",
+  "additives": [
+    {
+      "code": "E621",
+      "name": "Glutamate monosodique (MSG)",
+      "score": 20,
+      "severity": "high",
+      "category": "exhausteur_gout",
+      "risks": [
+        {
+          "type": "Neurotoxicité",
+          "details": "Excitotoxine pouvant suractiver les neurones. Effet 'Chinese Restaurant Syndrome'",
+          "healthImpact": "Maux de tête, nausées, palpitations, sensations de brûlure",
+          "population": "Sensible chez 1-2% population, enfants vulnérables",
+          "severity": "high"
+        },
+        {
+          "type": "Appétit",
+          "details": "Augmente appétit et surconsommation (masque satiété)",
+          "healthImpact": "Risque obésité, diabète type 2",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "EFSA 2017 - Re-evaluation of glutamic acid (E620-E625)",
+        "WHO/FAO JECFA 2004 - Safety evaluation",
+        "Anses 2022 - Additifs alimentaires"
+      ],
+      "alternatives": [
+        "Levure nutritionnelle",
+        "Bouillon naturel maison",
+        "Champignons séchés (umami naturel)",
+        "Algues (kombu)"
+      ],
+      "found_in": [
+        "Chips aromatisées",
+        "Soupes instantanées",
+        "Sauces industrielles",
+        "Plats préparés"
+      ]
+    },
+    {
+      "code": "E951",
+      "name": "Aspartame",
+      "score": 15,
+      "severity": "critical",
+      "category": "edulcorant",
+      "risks": [
+        {
+          "type": "Cancérogénicité possible",
+          "details": "Classé 2B par CIRC (cancérogène possible). Métabolites : méthanol, phénylalanine, acide aspartique",
+          "healthImpact": "Risque leucémie/lymphome (débat scientifique)",
+          "population": "Contre-indiqué phénylcétonurie",
+          "severity": "critical"
+        },
+        {
+          "type": "Microbiote intestinal",
+          "details": "Altère composition microbiote. Paradoxalement favorise prise de poids",
+          "healthImpact": "Dysbiose, intolérance glucose",
+          "severity": "high"
+        },
+        {
+          "type": "Neurologique",
+          "details": "Maux de tête, migraines chez personnes sensibles",
+          "healthImpact": "Céphalées, vertiges",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "CIRC 2023 - Classification 2B (cancérogène possible)",
+        "EFSA 2013 - Re-evaluation aspartame",
+        "Nature 2022 - Artificial sweeteners and glucose intolerance",
+        "Anses 2024 - Édulcorants intenses"
+      ],
+      "alternatives": [
+        "Stévia (E960)",
+        "Érythritol",
+        "Xylitol",
+        "Sucre de coco (naturel)"
+      ],
+      "found_in": [
+        "Sodas light/zero",
+        "Chewing-gums sans sucre",
+        "Desserts allégés",
+        "Yaourts 0%"
+      ]
+    },
+    {
+      "code": "E320",
+      "name": "BHA (Butylhydroxyanisole)",
+      "score": 10,
+      "severity": "critical",
+      "category": "antioxydant",
+      "risks": [
+        {
+          "type": "Cancérogénicité",
+          "details": "Cancérogène sur animaux (tumeurs estomac). Perturbateur endocrinien",
+          "healthImpact": "Risque cancer gastrique, déséquilibres hormonaux",
+          "population": "Tous, enfants particulièrement vulnérables",
+          "severity": "critical"
+        },
+        {
+          "type": "Allergie",
+          "details": "Réactions allergiques cutanées",
+          "healthImpact": "Urticaire, dermatite",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "CIRC - Groupe 2B (cancérogène possible)",
+        "EFSA 2011 - Re-evaluation BHA",
+        "FDA - GRAS status controversé",
+        "Anses 2023 - Antioxydants synthétiques"
+      ],
+      "alternatives": [
+        "Vitamine E (E306-E309)",
+        "Vitamine C (E300)",
+        "Extrait de romarin (E392)"
+      ],
+      "found_in": [
+        "Céréales petit-déjeuner",
+        "Chips",
+        "Margarines",
+        "Chewing-gums"
+      ]
+    },
+    {
+      "code": "E321",
+      "name": "BHT (Butylhydroxytoluène)",
+      "score": 10,
+      "severity": "critical",
+      "category": "antioxydant",
+      "risks": [
+        {
+          "type": "Cancérogénicité",
+          "details": "Suspect cancérogène. Promoteur tumoral sur animaux",
+          "healthImpact": "Risque tumeurs foie, poumons",
+          "severity": "critical"
+        },
+        {
+          "type": "Perturbation endocrinienne",
+          "details": "Interfère avec hormones thyroïdiennes et œstrogènes",
+          "healthImpact": "Déséquilibres hormonaux, fertilité",
+          "severity": "high"
+        }
+      ],
+      "sources": [
+        "CIRC - Groupe 3 (non classifiable)",
+        "EFSA 2012 - Re-evaluation BHT",
+        "Environmental Health Perspectives 2020",
+        "Anses 2023 - Perturbateurs endocriniens"
+      ],
+      "alternatives": [
+        "Vitamine E naturelle",
+        "Extrait de romarin",
+        "Extrait de thé vert"
+      ],
+      "found_in": [
+        "Céréales",
+        "Beurres",
+        "Huiles",
+        "Cosmétiques"
+      ]
+    },
+    {
+      "code": "E102",
+      "name": "Tartrazine (jaune citron)",
+      "score": 25,
+      "severity": "high",
+      "category": "colorant_azoique",
+      "risks": [
+        {
+          "type": "Hyperactivité enfants",
+          "details": "Lien établi EFSA avec troubles attention (TDAH)",
+          "healthImpact": "Hyperactivité, troubles concentration",
+          "population": "Enfants <10 ans particulièrement sensibles",
+          "severity": "high"
+        },
+        {
+          "type": "Allergies",
+          "details": "Réactions allergiques type urticaire, asthme",
+          "healthImpact": "Urticaire, rhinite, asthme",
+          "population": "Sensibilité aspirine corrélée",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "EFSA 2009 - Hyperactivity study",
+        "Lancet 2007 - Southampton study",
+        "Anses 2021 - Colorants alimentaires",
+        "UK FSA - Warning labels required"
+      ],
+      "alternatives": [
+        "Curcumine (E100)",
+        "Bêta-carotène (E160a)",
+        "Lutéine (E161b)"
+      ],
+      "found_in": [
+        "Bonbons",
+        "Sodas jaunes/oranges",
+        "Moutarde",
+        "Gâteaux industriels"
+      ]
+    },
+    {
+      "code": "E110",
+      "name": "Jaune orangé S (Sunset Yellow)",
+      "score": 25,
+      "severity": "high",
+      "category": "colorant_azoique",
+      "risks": [
+        {
+          "type": "Hyperactivité",
+          "details": "Lien EFSA troubles comportement enfants",
+          "healthImpact": "TDAH, agitation",
+          "severity": "high"
+        },
+        {
+          "type": "Génotoxicité",
+          "details": "Dommages ADN sur cellules humaines in vitro",
+          "healthImpact": "Risque mutagène",
+          "severity": "high"
+        }
+      ],
+      "sources": [
+        "EFSA 2009 - Re-evaluation",
+        "Food Chemistry 2019 - Genotoxicity",
+        "Anses 2021 - Colorants azoïques"
+      ],
+      "alternatives": [
+        "Extrait paprika (E160c)",
+        "Bêta-carotène"
+      ],
+      "found_in": [
+        "Chips aromatisées",
+        "Glaces",
+        "Sirops"
+      ]
+    },
+    {
+      "code": "E122",
+      "name": "Azorubine (rouge)",
+      "score": 25,
+      "severity": "high",
+      "category": "colorant_azoique",
+      "risks": [
+        {
+          "type": "Hyperactivité",
+          "details": "Southampton study - troubles enfants",
+          "healthImpact": "TDAH",
+          "severity": "high"
+        },
+        {
+          "type": "Allergies",
+          "details": "Urticaire, asthme",
+          "healthImpact": "Réactions allergiques",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "Lancet 2007",
+        "EFSA 2009",
+        "Anses 2021"
+      ],
+      "alternatives": [
+        "Betterave rouge",
+        "Anthocyanes (E163)"
+      ],
+      "found_in": [
+        "Bonbons rouges",
+        "Yaourts aux fruits",
+        "Sirops"
+      ]
+    },
+    {
+      "code": "E124",
+      "name": "Ponceau 4R (rouge cochenille)",
+      "score": 20,
+      "severity": "high",
+      "category": "colorant_azoique",
+      "risks": [
+        {
+          "type": "Cancérogénicité suspectée",
+          "details": "Tumeurs sur rats",
+          "healthImpact": "Risque cancer",
+          "severity": "high"
+        },
+        {
+          "type": "Hyperactivité",
+          "details": "Troubles comportement",
+          "healthImpact": "TDAH",
+          "severity": "high"
+        }
+      ],
+      "sources": [
+        "IARC - Groupe 3",
+        "EFSA 2009",
+        "Interdit USA"
+      ],
+      "alternatives": [
+        "Extrait betterave",
+        "Jus cranberry"
+      ],
+      "found_in": [
+        "Fraises sirop",
+        "Cerises confites",
+        "Desserts rouges"
+      ]
+    },
+    {
+      "code": "E129",
+      "name": "Rouge allura AC",
+      "score": 25,
+      "severity": "high",
+      "category": "colorant_azoique",
+      "risks": [
+        {
+          "type": "Hyperactivité",
+          "details": "Lien TDAH enfants",
+          "healthImpact": "Troubles attention",
+          "severity": "high"
+        },
+        {
+          "type": "Génotoxicité",
+          "details": "Dommages ADN in vitro",
+          "healthImpact": "Mutagène potentiel",
+          "severity": "high"
+        }
+      ],
+      "sources": [
+        "EFSA 2009",
+        "Toxicology 2018",
+        "Anses 2021"
+      ],
+      "alternatives": [
+        "Lycopène (E160d)",
+        "Extrait paprika"
+      ],
+      "found_in": [
+        "Bonbons",
+        "Sodas rouges",
+        "Gélatines"
+      ]
+    },
+    {
+      "code": "E211",
+      "name": "Benzoate de sodium",
+      "score": 35,
+      "severity": "moderate",
+      "category": "conservateur",
+      "risks": [
+        {
+          "type": "Hyperactivité (avec E102)",
+          "details": "Synergie colorants azoïques → TDAH",
+          "healthImpact": "Troubles comportement enfants",
+          "severity": "moderate"
+        },
+        {
+          "type": "Benzène (avec vitamine C)",
+          "details": "Réaction avec acide ascorbique → benzène (cancérogène)",
+          "healthImpact": "Risque cancer (faible dose)",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "FDA 2006 - Benzene in soft drinks",
+        "EFSA 2016 - Re-evaluation",
+        "Lancet 2007 - Hyperactivity"
+      ],
+      "alternatives": [
+        "Extrait romarin",
+        "Vitamine E",
+        "Pasteurisation"
+      ],
+      "found_in": [
+        "Sodas",
+        "Sauces",
+        "Confitures allégées"
+      ]
+    },
+    {
+      "code": "E220",
+      "name": "Dioxyde de soufre",
+      "score": 30,
+      "severity": "moderate",
+      "category": "conservateur",
+      "risks": [
+        {
+          "type": "Respiratoire",
+          "details": "Irritant bronches, crises d'asthme",
+          "healthImpact": "Asthme, bronchite",
+          "population": "Asthmatiques (5-10% population)",
+          "severity": "high"
+        },
+        {
+          "type": "Destruction vitamine B1",
+          "details": "Dégradation thiamine",
+          "healthImpact": "Carences",
+          "severity": "low"
+        }
+      ],
+      "sources": [
+        "EFSA 2016 - Sulphites re-evaluation",
+        "WHO/FAO JECFA",
+        "Anses 2020 - Conservateurs"
+      ],
+      "alternatives": [
+        "Acide ascorbique (E300)",
+        "Pasteurisation"
+      ],
+      "found_in": [
+        "Vins",
+        "Fruits secs",
+        "Moutarde"
+      ]
+    },
+    {
+      "code": "E249",
+      "name": "Nitrite de potassium",
+      "score": 15,
+      "severity": "critical",
+      "category": "conservateur",
+      "risks": [
+        {
+          "type": "Nitrosamines cancérogènes",
+          "details": "Formation nitrosamines (cuisson) → cancer colorectal",
+          "healthImpact": "Cancer colorectal confirmé (CIRC Groupe 1 pour charcuterie)",
+          "population": "Tous, surtout gros consommateurs charcuterie",
+          "severity": "critical"
+        },
+        {
+          "type": "Méthémoglobinémie",
+          "details": "Empêche transport oxygène (surtout nourrissons)",
+          "healthImpact": "Cyanose bébés",
+          "population": "Nourrissons <6 mois",
+          "severity": "high"
+        }
+      ],
+      "sources": [
+        "CIRC 2015 - Groupe 1 (charcuterie)",
+        "ANSES 2017 - Nitrites/nitrates",
+        "EFSA 2017 - Safety assessment",
+        "Santé Publique France 2022"
+      ],
+      "alternatives": [
+        "Sel + culture starter (fermentation naturelle)",
+        "Extrait céleri (controversé car contient nitrates naturels)",
+        "Vitamine C + E (bloque nitrosamines)"
+      ],
+      "found_in": [
+        "Charcuterie (jambon, saucisson)",
+        "Bacon",
+        "Viandes transformées"
+      ]
+    },
+    {
+      "code": "E250",
+      "name": "Nitrite de sodium",
+      "score": 15,
+      "severity": "critical",
+      "category": "conservateur",
+      "risks": [
+        {
+          "type": "Nitrosamines cancérogènes",
+          "details": "Identique E249. Lien cancer colorectal établi",
+          "healthImpact": "Cancer colorectal (augmentation 18% par 50g charcuterie/jour)",
+          "severity": "critical"
+        }
+      ],
+      "sources": [
+        "CIRC 2015",
+        "ANSES 2017",
+        "BMJ 2021 - Colorectal cancer meta-analysis"
+      ],
+      "alternatives": [
+        "Même que E249"
+      ],
+      "found_in": [
+        "Jambon",
+        "Saucisses",
+        "Corned-beef"
+      ]
+    },
+    {
+      "code": "E330",
+      "name": "Acide citrique",
+      "score": 70,
+      "severity": "low",
+      "category": "acidifiant",
+      "risks": [
+        {
+          "type": "Érosion dentaire (haute dose)",
+          "details": "pH acide attaque émail",
+          "healthImpact": "Sensibilité dentaire, caries",
+          "severity": "low"
+        }
+      ],
+      "sources": [
+        "EFSA 2016 - Re-evaluation",
+        "Généralement reconnu sûr"
+      ],
+      "alternatives": [
+        "Acide malique",
+        "Jus citron naturel"
+      ],
+      "found_in": [
+        "Sodas",
+        "Bonbons acides",
+        "Confitures"
+      ],
+      "note": "Additif peu problématique, largement utilisé"
+    },
+    {
+      "code": "E322",
+      "name": "Lécithine (soja, tournesol)",
+      "score": 75,
+      "severity": "low",
+      "category": "emulsifiant",
+      "risks": [
+        {
+          "type": "OGM (si soja non bio)",
+          "details": "Soja souvent OGM sauf mention 'sans OGM' ou 'bio'",
+          "healthImpact": "Débat OGM (pas consensus toxicité)",
+          "severity": "low"
+        },
+        {
+          "type": "Allergie soja (rare)",
+          "details": "Protéines soja résiduelles",
+          "healthImpact": "Réactions allergiques",
+          "population": "Allergiques soja",
+          "severity": "low"
+        }
+      ],
+      "sources": [
+        "EFSA 2017 - Re-evaluation",
+        "Généralement reconnu sûr"
+      ],
+      "alternatives": [
+        "Lécithine tournesol (sans OGM)",
+        "Lécithine colza"
+      ],
+      "found_in": [
+        "Chocolat",
+        "Margarines",
+        "Produits de boulangerie"
+      ],
+      "note": "Additif très courant, peu problématique"
+    },
+    {
+      "code": "E407",
+      "name": "Carraghénane",
+      "score": 40,
+      "severity": "moderate",
+      "category": "epaississant",
+      "risks": [
+        {
+          "type": "Inflammation intestinale",
+          "details": "Dégrade barrière intestinale, inflammation (études animaux)",
+          "healthImpact": "Colite, MICI (débat humain)",
+          "severity": "moderate"
+        },
+        {
+          "type": "Cancérogénicité (carraghénane dégradé)",
+          "details": "Forme dégradée = cancérogène. Alimentaire = non dégradé normalement",
+          "healthImpact": "Risque si dégradation",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "IARC - Groupe 2B (forme dégradée)",
+        "EFSA 2018 - Re-evaluation",
+        "Controversial - certaines études contestées"
+      ],
+      "alternatives": [
+        "Agar-agar",
+        "Gomme guar",
+        "Pectine"
+      ],
+      "found_in": [
+        "Laits végétaux",
+        "Crèmes dessert",
+        "Charcuterie"
+      ]
+    },
+    {
+      "code": "E450",
+      "name": "Diphosphates",
+      "score": 40,
+      "severity": "moderate",
+      "category": "stabilisant",
+      "risks": [
+        {
+          "type": "Santé osseuse",
+          "details": "Excès phosphore → déséquilibre calcium/phosphore",
+          "healthImpact": "Ostéoporose, calcification vasculaire",
+          "severity": "moderate"
+        },
+        {
+          "type": "Cardiovasculaire",
+          "details": "Lien avec maladies cardiaques (haute consommation)",
+          "healthImpact": "Risque MCV",
+          "severity": "moderate"
+        }
+      ],
+      "sources": [
+        "EFSA 2019 - Phosphates re-evaluation",
+        "JAMA 2012 - Phosphate intake and mortality",
+        "Anses 2020"
+      ],
+      "alternatives": [
+        "Éviter aliments ultra-transformés",
+        "Phosphates naturels (légumes)"
+      ],
+      "found_in": [
+        "Charcuterie",
+        "Sodas",
+        "Fromages fondus"
+      ]
+    },
+    {
+      "code": "E951",
+      "name": "Aspartame (déjà traité)",
+      "score": 15,
+      "severity": "critical"
+    },
+    {
+      "code": "E952",
+      "name": "Cyclamate",
+      "score": 30,
+      "severity": "moderate",
+      "category": "edulcorant",
+      "risks": [
+        {
+          "type": "Cancérogénicité (débat)",
+          "details": "Tumeurs vessie rats (études anciennes). Interdit USA depuis 1969",
+          "healthImpact": "Risque cancer vessie (débattu)",
+          "severity": "moderate"
+        },
+        {
+          "type": "Microbiote",
+          "details": "Altère flore intestinale",
+          "healthImpact": "Dysbiose",
+          "severity": "low"
+        }
+      ],
+      "sources": [
+        "FDA 1969 - Ban USA",
+        "EFSA 2017 - Re-evaluation (autorisé EU)",
+        "Débat scientifique actif"
+      ],
+      "alternatives": [
+        "Stévia",
+        "Érythritol"
+      ],
+      "found_in": [
+        "Sodas light",
+        "Édulcorants de table",
+        "Desserts allégés"
+      ],
+      "note": "Interdit USA, autorisé EU - controverse"
+    }
+  ],
+  "general_recommendations": {
+    "avoid_combinations": [
+      {
+        "combination": "E211 (benzoate) + Vitamine C",
+        "reason": "Formation benzène (cancérogène)",
+        "severity": "high"
+      },
+      {
+        "combination": "Colorants azoïques (E102, E110, E122, E124, E129) + E211",
+        "reason": "Hyperactivité enfants (synergie)",
+        "severity": "high"
+      },
+      {
+        "combination": "E249/E250 (nitrites) + Cuisson haute T°",
+        "reason": "Nitrosamines cancérogènes",
+        "severity": "critical"
+      }
+    ],
+    "vulnerable_populations": [
+      {
+        "population": "Enfants <10 ans",
+        "avoid": ["E102", "E110", "E122", "E124", "E129", "E211", "E621"],
+        "reason": "Hyperactivité, développement cérébral"
+      },
+      {
+        "population": "Asthmatiques",
+        "avoid": ["E220-E228 (sulfites)"],
+        "reason": "Crises d'asthme"
+      },
+      {
+        "population": "Femmes enceintes",
+        "avoid": ["E951", "E249", "E250"],
+        "reason": "Fœtus vulnérable"
+      },
+      {
+        "population": "Phénylcétonurie",
+        "avoid": ["E951 (aspartame)"],
+        "reason": "Contre-indication absolue"
+      }
+    ]
+  }
+}

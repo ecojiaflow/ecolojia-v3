@@ -1,0 +1,741 @@
+﻿Structure du dossier pour le volume OS
+Le numÚro de sÚrie du volume est EA34-E4D0
+C:\USERS\SALIM\DESKTOP\ECOLOJIA VF CLEAN\BACKEND\SRC
+|   $null
+|   app.ts
+|   index.ts
+|   main.backup_20251105_153929.js
+|   main.backup_20251105_184046.js
+|   main.BACKUP_20251107_173628.js
+|   main.backup_ANALYSIS_20251105_214104.js
+|   main.js
+|   main.js.20250928153736.broken.bak
+|   main.js.20250928154217.bak
+|   main.js.20250928154405.before-port-fix.bak
+|   main.js.20250928155244.bak
+|   main.js.20250928155723.bak
+|   main.js.20250928160201.before-mounts.bak
+|   main.js.20250928160544.before-direct-mounts.bak
+|   main.js.20250928160938.bak
+|   main.js.allow-no-db.bak
+|   main.js.bak
+|   main.js.bak_20251107_192911
+|   main.js.bak_20251107_193042
+|   main.js.bak_20251107_193158
+|   main.js.bak_algolia_20251107_212710
+|   main.js.bak_dupeAI_20251107_212502
+|   main.js.before-fix
+|   main.js.prod-fix-backup
+|   server-debug.js
+|   server.broken.js.OLD
+|   server.js
+|   server.js.broken_20250923_172145
+|   server.js.duplicates_20250923_173027
+|   server.ts
+|   testUltra.ts
+|   
++---archive
+|       algolia.js
+|       
++---auth
+|   +---middleware
+|   |       auth.ts
+|   |       
+|   +---repositories
+|   |       SessionRepository.ts
+|   |       UserRepository.ts
+|   |       
+|   +---services
+|   |       AuthService.ts
+|   |       EmailService.ts
+|   |       EmailValidationService.ts
+|   |       
+|   +---types
+|   |       AuthTypes.ts
+|   |       
+|   \---utils
+|           jwt.ts
+|           
++---components
+|       PremiumCTA.tsx
+|       
++---config
+|       db.js
+|       mongodb.ts
+|       passport.js
+|       prompts.config.js
+|       redis.ts
+|       
++---controllers
+|   |   ai.controller.backup2_20251112_232310.js
+|   |   ai.controller.backup_20251110_223839.js
+|   |   ai.controller.backup_20251112_231013.js
+|   |   ai.controller.backup_20251113_180712.js
+|   |   ai.controller.backup_20251113_181127.js
+|   |   ai.controller.js
+|   |   ai.controller.js.bak_20251107_193608
+|   |   ai.controller.js.bak_barcodefallback_20251107_202600
+|   |   ai.controller.js.bak_doubledecl_20251107_194515
+|   |   ai.controller.js.bak_enrichmentfix_20251107_195912
+|   |   ai.controller.js.bak_enrichmentfix_20251107_200120
+|   |   ai.controller.js.bak_fixbarcode_20251107_202829
+|   |   ai.controller.js.bak_fixpath_20251107_194031
+|   |   ai.controller.js.bak_pathfix_20251107_193847
+|   |   ai.controller.js.bak_prod_20251107_205445
+|   |   ai.controller.js.bak_PROFIX_20251107_204402
+|   |   ai.controller.js.bak_renderfix_20251107_203610
+|   |   ai.controller.js.bak_reqfix_20251107_194256
+|   |   ai.controller.js.bak_requireFix_20251107_204556
+|   |   ai.controller.js.bak_sig_20251107_211837
+|   |   analysisController.js
+|   |   cosmeticController.js
+|   |   cosmeticController.js.old
+|   |   cosmeticController.ts
+|   |   deepseek.controller.js
+|   |   deepseek.controller.ts
+|   |   detergentController.js
+|   |   detergentController.js.old
+|   |   detergentController.ts
+|   |   product.controller.ts
+|   |   scanController.ts
+|   |   similar.controller.ts
+|   |   track.controller.ts
+|   |   vision.controller.js
+|   |   
+|   \---ai
+|           chatController.js
+|           recipes.controller.js
+|           
++---data
+|       additives-efsa.json
+|       additives.json
+|       allergens.json
+|       cardsContext.json
+|       cardsContext.json.bom_backup
+|       cardsContext.json.old_paths
+|       categoryDetection.js
+|       chemicalDatabase.js
+|       cosmeticsIngredients.js
+|       detergentDatabase.js
+|       detergentsFormulas.js
+|       educational-insights-db.json
+|       efsaAdditivesDatabase.js
+|       endocrineDisruptors.js
+|       glycemic-index-db.json
+|       inciDatabase.js
+|       natural-alternatives-db.json
+|       nova-rules.json
+|       nutri-score-tables.json
+|       scientificSources2024.ts
+|       
++---db
+|       db.js
+|       pool.ts
+|       
++---docs
+|       swagger.ts
+|       
++---knowledge
+|   |   knowledge.service.backup_20251116_exceptions.js
+|   |   knowledge.service.backup_20251116_exceptions2.js
+|   |   knowledge.service.backup_20251116_fix.js
+|   |   knowledge.service.backup_20251116_fix2.js
+|   |   knowledge.service.backup_20251116_hybrid.js
+|   |   knowledge.service.js
+|   |   test-hybrid-system.js
+|   |   test-knowledge.js
+|   |   
+|   \---scientific-database
+|       |   universal-rules.backup_20251116_fix.json
+|       |   universal-rules.json
+|       |   
+|       +---cosmetics
+|       +---detergents
+|       +---food
+|       |       additives.json
+|       |       oils.json
+|       |       oils.json.backup_with_bom
+|       |       
+|       \---studies
++---lib
+|       algolia.ts
+|       deepseek.ts
+|       http.ts
+|       prisma.ts
+|       
++---middleware
+|       aiCache.middleware.js
+|       auth.js
+|       authDisabled.js
+|       authenticateToken.js
+|       authMiddleware.js
+|       authSimple.js
+|       cacheAuthMiddleware.ts
+|       chatSafety.js
+|       enrichProduct.js
+|       errorHandler.js
+|       index.js
+|       quotaMiddleware.js
+|       rateLimit.ts
+|       rateLimiter.js
+|       security (2).ts
+|       security.ts
+|       validation.js
+|       validation.ts
+|       
++---models
+|       AffiliateClick.js
+|       Analysis.js
+|       AnalysisCache.ts
+|       ChatHistory.js
+|       ChatHistory.ts
+|       Consent.js
+|       ContributionRequest.js
+|       Favorite.js
+|       GDPRLog.js
+|       MealPlan.js
+|       Payment.js
+|       PaymentLog.js
+|       Product.backup_filters_20251105_204533.js
+|       Product.js
+|       Product.ts
+|       ProductAnalysis.ts
+|       Recipe.backup_20251105_153138.js
+|       Recipe.js
+|       ShoppingList.js
+|       TemporaryProduct.js
+|       User.js
+|       user.model.js
+|       User.ts
+|       UserAnalytics.ts
+|       UserJourney.backup_20251110_153934.js
+|       UserJourney.js
+|       VisionAnalysis.js
+|       WebhookLog.js
+|       
++---monitoring
+|   |   local-monitor.js
+|   |   logs.js
+|   |   routes.js
+|   |   
+|   +---metrics
+|   |       index.js
+|   |       
+|   \---sentry
+|           index.js
+|           
++---orchestrator
+|   |   index.js
+|   |   index.ts
+|   |   
+|   \---jobs
+|           dataIngestion.js
+|           dataIngestion.ts
+|           enrichment.js
+|           
++---patches
+|       fix-detergent-display.js
+|       
++---payments
+|   |   config.js
+|   |   
+|   +---controllers
+|   |       subscription.controller.js
+|   |       subscription.controller.js.bak
+|   |       subscription.controller.js.bak-500fix
+|   |       subscription.controller.js.preReadyState
+|   |       subscription.controller.js.strict.bak
+|   |       webhook.controller.js
+|   |       webhook.controller.js.bak
+|   |       __checkPremium.patch.js
+|   |       
+|   +---middleware
+|   |       premium.middleware.js
+|   |       
+|   +---models
+|   |       subscription.model.js
+|   |       subscription.model.js.bak
+|   |       
+|   +---routes
+|   |       payments.routes.js
+|   |       payments.routes.js.bak
+|   |       webhook.routes.js
+|   |       
+|   +---services
+|   |       lemonsqueezy.service.js
+|   |       
+|   \---tests
+|           test-payments-api.js
+|           
++---repositories
+|       SessionRepository.ts
+|       UserRepository.ts
+|       
++---routes
+|   |   ai.js
+|   |   ai.recipes.routes.js
+|   |   ai.routes.backup_20251113_180738.js
+|   |   ai.routes.backup_20251113_181135.js
+|   |   ai.routes.backup_20251113_181903.js
+|   |   ai.routes.backup_20251114_134710.js
+|   |   ai.routes.backup_20251114_140119.js
+|   |   ai.routes.backup_20251114_142639.js
+|   |   ai.routes.backup_auth_20251114_141534.js
+|   |   ai.routes.js
+|   |   ai.routes.js.bak_20251107_190845
+|   |   ai.routes.js.bak_20251107_192752
+|   |   ai.routes.js.bak_20251107_192911
+|   |   ai.routes.js.bak_auth_20251107_195145
+|   |   ai.routes.js.bak_notoken_20251107_195724
+|   |   aiEducation.routes.backup2_20251105_182840.js
+|   |   aiEducation.routes.backup3_20251105_183356.js
+|   |   aiEducation.routes.js
+|   |   algolia-unified.js
+|   |   alternatives.routes.js
+|   |   analysis-simple.js
+|   |   analysis.routes.js
+|   |   analyze.routes.js
+|   |   analyze.ts
+|   |   auth.google.js
+|   |   auth.js
+|   |   auth.routes.js
+|   |   auth.simple.js
+|   |   chat.routes.backup_20251110_165512.js
+|   |   chat.routes.backup_20251110_165813.js
+|   |   chat.routes.backup_20251110_172956.js
+|   |   chat.routes.backup_20251110_203619.js
+|   |   chat.routes.backup_20251110_204037.js
+|   |   chat.routes.backup_20251110_204429.js
+|   |   chat.routes.backup_20251110_204853.js
+|   |   chat.routes.js
+|   |   chat.routes.js.bak_20251110_173525
+|   |   chat.routes.ts
+|   |   coca_debug.json
+|   |   cosmetics.routes.js
+|   |   dashboard.js
+|   |   debug.routes.js
+|   |   detergents.routes.js
+|   |   enrich.routes.js
+|   |   export.js
+|   |   favorites.js
+|   |   favorites.routes.backup_20251110_230011.js
+|   |   favorites.routes.backup_20251110_230107.js
+|   |   favorites.routes.backup_20251110_230355.js
+|   |   favorites.routes.js
+|   |   gdpr.routes.js
+|   |   gdpr.routes.js.bak_131557
+|   |   history.js
+|   |   journey.routes.js
+|   |   mealPlan.routes.js
+|   |   ocr-analyze.routes.js
+|   |   partner.routes.js
+|   |   payment.routes.js
+|   |   products-ocr.routes.js
+|   |   products-search.js
+|   |   products.backup_20251108_190434.js
+|   |   products.backup_20251108_191843.js
+|   |   products.backup_20251108_193747.js
+|   |   products.backup_20251110_151843.js
+|   |   products.backup_20251110_152506.js
+|   |   products.backup_20251113_215514.js
+|   |   products.backup_20251115_212436.js
+|   |   products.backup_20251115_212916.js
+|   |   products.backup_20251115_213514.js
+|   |   products.backup_20251115_213748.js
+|   |   products.backup_20251115_214153.js
+|   |   products.backup_20251115_214349.js
+|   |   products.backup_20251115_214634.js
+|   |   products.backup_20251115_214911.js
+|   |   products.backup_20251115_221427.js
+|   |   products.backup_20251115_221724.js
+|   |   products.backup_20251115_222433.js
+|   |   products.backup_20251115_222947.js
+|   |   products.backup_20251115_223209.js
+|   |   products.backup_20251115_223657.js
+|   |   products.backup_20251115_224153.js
+|   |   products.backup_20251115_224425.js
+|   |   products.backup_20251115_224922.js
+|   |   products.backup_20251115_225142.js
+|   |   products.backup_20251115_225304.js
+|   |   products.backup_ABSOLU_20251115_220731.js
+|   |   products.backup_FINAL_20251108_203604.js
+|   |   products.backup_FINAL_20251115_215047.js
+|   |   products.backup_FINAL_20251115_221153.js
+|   |   products.backup_FINAL_WORKING_20251115_225419.js
+|   |   products.backup_MANUEL_20251115_223845.js
+|   |   products.backup_ULTIMATE_20251115_220140.js
+|   |   products.backup_ULTIME_20251115_222202.js
+|   |   products.js
+|   |   products.js.CASSE_20251007_232157
+|   |   products.js.CORRUPT
+|   |   products.js.CORRUPT-20251004
+|   |   products.PATCH2_20251108_120525.js
+|   |   products.PATCH3_20251108_121009.js
+|   |   provisional.routes.js
+|   |   proxy.js
+|   |   quota.js
+|   |   recipes.routes.js
+|   |   scoring.routes.js
+|   |   shopping-list.routes.js
+|   |   stats.routes.js
+|   |   test-minimal.js
+|   |   test-partner.js
+|   |   user.routes.js
+|   |   version.routes.js
+|   |   vision.analyze.js
+|   |   vision.ocr.public.js
+|   |   vision.routes.js
+|   |   vision.simple.js
+|   |   vision.ts
+|   |   webhooks.js
+|   |   
+|   +---ai
+|   |       chatController.js
+|   |       index.js
+|   |       
+|   +---v2
+|   |       users.js
+|   |       
+|   \---_archive_old_routes
+|           admin.routes.ts
+|           analysis.js
+|           analyze.routes.cached.ts
+|           analyzeDev.routes.js
+|           chat.routes.ts
+|           cosmetic.routes.js
+|           detergent.routes.js
+|           eco-score.routes.ts
+|           emailValidation.ts
+|           health.routes - Copie.ts
+|           health.routes.ts
+|           health.ts
+|           multiCategory.routes.ts
+|           productAnalysis.ts
+|           scan.routes.ts
+|           ultraProcessing.routes.js
+|           
++---scorers
+|   |   cosmeticsScorer.ts
+|   |   detergentScorer.ts
+|   |   foodScorer.ts
+|   |   
+|   +---common
+|   |       confidenceCalculator.js
+|   |       
+|   +---cosmetic
+|   |       allergenScanner.js
+|   |       benefitEvaluator.js
+|   |       cosmeticScorer.js
+|   |       endocrineDetector.js
+|   |       inciAnalyzer.js
+|   |       
+|   +---detergent
+|   |       detergentScorer.js
+|   |       
+|   \---food
+|           additivesAnalyzer.js
+|           foodScorer.js
+|           foodScorer.js.old
+|           glycemicEstimator.js
+|           novaClassifier.js
+|           nutriScorer.js
+|           
++---scripts
+|       addDemoAnalyses.js
+|       cleanDatabase.js
+|       direct-import-final.js
+|       fixRoutesTypes.js
+|       generate-recipes.backup_20251108_135439.js
+|       generate-recipes.backup_20251108_140124.js
+|       generate-recipes.backup_20251108_140416.js
+|       generate-recipes.backup_20251108_140533.js
+|       generate-recipes.backup_20251108_140653.js
+|       generate-recipes.backup_20251108_141518.js
+|       generate-recipes.js
+|       import-breakfast.js
+|       import-complet-mongodb.js
+|       import-recipes-batch.backup_20251108_133248.js
+|       import-recipes-batch.js
+|       importDirectToDB.js
+|       importOpenFoodFactsAdapted.ts
+|       ingestOpenFoodFacts.js
+|       inspect-recipes.js
+|       migrate-pg-to-mongo.js
+|       migrateUsersV2.js
+|       reindexAlgolia.js
+|       seed-affiliation.ts
+|       start-free.ts
+|       syncAlgolia.ts
+|       test-backend-direct.js
+|       test-mongodb.js
+|       testInsert.ts
+|       testRedis.ts
+|       testRedisDebug.ts
+|       updateRealImages.js
+|       
++---seeds
+|       recipes.seed.js
+|       
++---services
+|   |   additiveEnrichment.service.js
+|   |   aiCache.service.js
+|   |   aiEducation.service.js
+|   |   aiEnrichment.service.BACKUP2_20251103_220654.js
+|   |   aiEnrichment.service.backup_20251110_224915.js
+|   |   aiEnrichment.service.backup_20251113_220152.js
+|   |   aiEnrichment.service.backup_20251116_prehybrid.js
+|   |   aiEnrichment.service.backup_DEBUG_20251109_123441.js
+|   |   aiEnrichment.service.backup_DOUBLON_20251109_132849.js
+|   |   aiEnrichment.service.backup_FIX_20251109_121932.js
+|   |   aiEnrichment.service.backup_IMPORT_20251109_131849.js
+|   |   aiEnrichment.service.backup_RECALCUL_20251109_130655.js
+|   |   aiEnrichment.service.backup_SCORE_20251109_144313.js
+|   |   aiEnrichment.service.js
+|   |   aiOrchestrator.service.backup_20251114_135706.js
+|   |   aiOrchestrator.service.backup_20251114_144035.js
+|   |   aiOrchestrator.service.backup_bearer_20251114_181630.js
+|   |   aiOrchestrator.service.backup_before_deepseek_20251114_144822.js
+|   |   aiOrchestrator.service.backup_fix216_20251114_181944.js
+|   |   aiOrchestrator.service.backup_syntax_20251114_144328.js
+|   |   aiOrchestrator.service.js
+|   |   aiService.backup_20251114_140852.js
+|   |   aiService.backup_20251114_141331.js
+|   |   aiService.js
+|   |   allergenEnrichment.service.js
+|   |   alternatives.service.backup_20251108_194357.js
+|   |   alternatives.service.backup_20251108_195809.js
+|   |   alternatives.service.js
+|   |   analyzeService.bad
+|   |   analyzeService.js
+|   |   analyzeService.ts
+|   |   CacheService.ts
+|   |   circuitBreaker.js
+|   |   contextual.service.backup_20251108_115926.js
+|   |   contextual.service.js
+|   |   cosmeticsService.js
+|   |   cronJobs.js
+|   |   dataCompleteness.service.js
+|   |   DataNormalizer.js
+|   |   dedupService.ts
+|   |   eco-score.service.ts
+|   |   emailService.js
+|   |   EnhancedOFFClient.js
+|   |   gdprService.js
+|   |   imageEnrichment.service.js
+|   |   ingredientParser.service.js
+|   |   LemonSqueezyService.ts
+|   |   mealPlan.service.js
+|   |   MongoDBService.ts
+|   |   nutrientCalculator.js
+|   |   ocr-parser.service.js
+|   |   ocr.service.backup_20251113_182331.js
+|   |   ocr.service.backup_deepseek_20251113_182907.js
+|   |   ocr.service.js
+|   |   OCRProductService.js
+|   |   offClient.enhanced.js
+|   |   offClient.js
+|   |   offClient.ts
+|   |   offClient.UTF16_BACKUP.js
+|   |   openfoodfacts.service.js
+|   |   product.service.ts
+|   |   productAnalysisService.js
+|   |   productAnalysisService.ts
+|   |   productCategorization.service.backup_20251110_152838.js
+|   |   productCategorization.service.backup_20251110_161143.js
+|   |   productCategorization.service.js
+|   |   ProductOrchestrator.backup_20251113_215900.js
+|   |   ProductOrchestrator.backup_20251113_225553.js
+|   |   ProductOrchestrator.backup_20251113_230812.js
+|   |   ProductOrchestrator.backup_COMPLETE_20251108_211812.js
+|   |   ProductOrchestrator.backup_COMPLET_20251108_214833.js
+|   |   ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js
+|   |   ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js
+|   |   ProductOrchestrator.backup_EXPORT_20251108_205616.js
+|   |   ProductOrchestrator.backup_FINAL_20251108_214247.js
+|   |   ProductOrchestrator.backup_IMPORT_20251108_215550.js
+|   |   ProductOrchestrator.backup_MODULE_20251108_215853.js
+|   |   ProductOrchestrator.backup_SCORE_20251109_144313.js
+|   |   ProductOrchestrator.backup_SCORING_20251108_213627.js
+|   |   ProductOrchestrator.js
+|   |   productPrompt.service.js
+|   |   QuotaManager.ts
+|   |   quotaService.js
+|   |   recipeAdapter.service.backup_20251110_151843.js
+|   |   recipeAdapter.service.backup_20251110_152506.js
+|   |   recipeAdapter.service.backup_20251110_161905.js
+|   |   recipeAdapter.service.backup_20251110_163150.js
+|   |   recipeAdapter.service.backup_20251110_163846.js
+|   |   recipeAdapter.service.backup_20251110_164114.js
+|   |   recipeAdapter.service.backup_20251110_164457.js
+|   |   recipeAdapter.service.js
+|   |   scoring.service.OLD_20251013.js
+|   |   scoringEngine.AVANT_NOV.js
+|   |   scoringEngine.AVANT_NOVA_FIX_20251007_232733.js
+|   |   scoringEngine.js
+|   |   ScoringEngineV3.js
+|   |   scoringUnified.backup_20251115_211419.js
+|   |   scoringUnified.js
+|   |   similar.service.ts
+|   |   user.service.ts
+|   |   vision.ts
+|   |   visionRuntime.js
+|   |   webhookService.js
+|   |   
+|   +---ai
+|   |       AIAnalysisService.ts
+|   |       alternativesEngine.js
+|   |       barcodeAnalyzer - Copie.ts
+|   |       barcodeAnalyzer.ts
+|   |       categoryDetector - Copie.ts
+|   |       categoryDetector.ts
+|   |       conversationalAI - Copie.ts
+|   |       conversationalAI.js
+|   |       conversationalAI.ts
+|   |       cosmeticClassifier - Copie.ts
+|   |       cosmeticClassifier.ts
+|   |       cosmeticsAnalyzer - Copie.ts
+|   |       cosmeticsAnalyzer.ts
+|   |       DeepSeekClient - Copie.ts
+|   |       DeepSeekClient.ts
+|   |       deepseekEnhanced - Copie.ts
+|   |       deepseekEnhanced.ts
+|   |       deepSeekService.BACKUP3_20251103_221946.js
+|   |       deepSeekService.BACKUP4_20251103_222152.js
+|   |       deepSeekService.BACKUP6_20251103_222501.js
+|   |       deepSeekService.backup_20251103_215112.js
+|   |       deepSeekService.BACKUP_20251104_222815.js
+|   |       deepSeekService.BACKUP_20251104_222953.js
+|   |       deepSeekService.backup_20251110_173911.js
+|   |       deepSeekService.backup_20251110_223408.js
+|   |       deepSeekService.backup_20251116_120246.js
+|   |       deepSeekService.backup_20251116_prehybrid.js
+|   |       deepSeekService.BACKUP_AVANT_CORRECTION_20251104_212911.js
+|   |       deepSeekService.BACKUP_COMPLET_20251104_210133.js
+|   |       deepSeekService.BACKUP_FINAL_PROD_20251104_203012.js
+|   |       deepSeekService.BROKEN_20251110_215639.js
+|   |       deepSeekService.CASSE_20251104_223147.js
+|   |       deepSeekService.js
+|   |       detergentClassifier - Copie.ts
+|   |       detergentClassifier.ts
+|   |       detergentsAnalyzer - Copie.ts
+|   |       detergentsAnalyzer.ts
+|   |       eco-score.service.js
+|   |       educationalInsights - Copie.ts
+|   |       educationalInsights.ts
+|   |       enrichment.js.bak_20251107_205915
+|   |       enrichment.js.bak_20251107_211351
+|   |       enrichment.js.bak_paths_20251107_211659
+|   |       HealthScoreCalculator - Copie.ts
+|   |       HealthScoreCalculator.ts
+|   |       insightsGenerator.js
+|   |       mealPlanGenerator.service.js
+|   |       mealPlanValidator.service.js
+|   |       novaClassifier - Copie.ts
+|   |       novaClassifier.ts
+|   |       NutritionistChatService.js
+|   |       productTypeDetector - Copie.ts
+|   |       productTypeDetector.js
+|   |       recipes.service.backup_20251110_135841.js
+|   |       recipes.service.backup_20251110_150343.js
+|   |       recipes.service.js
+|   |       ultraTransformAnalyzer.ts
+|   |       
+|   +---algolia
+|   |       algoliaService.backup_20251113_212937.js
+|   |       algoliaService.backup_20251113_223444.js
+|   |       algoliaService.js
+|   |       algoliaSync.js
+|   |       
+|   +---analysis
+|   |       analysisService.js
+|   |       CosmeticAnalysisService.js
+|   |       cosmetics.js
+|   |       DetergentAnalysisService.js
+|   |       detergents.js
+|   |       food.js
+|   |       FoodAnalysisService.js
+|   |       index.js
+|   |       novaClassifier.js
+|   |       nutriscoreCalculator.js
+|   |       universalAnalyzer.js
+|   |       
+|   +---auth
+|   |       authService.js
+|   |       tokenService.js
+|   |       
+|   +---backups_20251020_184514
+|   +---cache
+|   |       AnalysisCache.ts
+|   |       CacheManager.ts
+|   |       SessionCache.ts
+|   |       
+|   +---external
+|   |       openBeautyFactsService.js
+|   |       openFoodFactsService.js
+|   |       openFoodFactsService.ts
+|   |       
+|   +---gdpr
+|   |       DataExportService.js
+|   |       
+|   +---ocr
+|   |       visionOCR.js
+|   |       
+|   +---payment
+|   |       LemonSqueezyService.js
+|   |       
+|   +---queue
+|   |       QueueService.js
+|   |       
+|   +---upload
+|   |       CloudinaryService.js
+|   |       
+|   \---vision
+|           ProductOCRService.js
+|           VisionService.backup_20251108_142124.js
+|           VisionService.js
+|           
++---tests
+|       sample.jpg
+|       test-ocr-backup.js
+|       test-ocr-direct.js
+|       test-ocr.js
+|       test-server.js
+|       test-upload.html
+|       test-upload.js
+|       
++---types
+|       cacheTypes.ts
+|       express.d.ts
+|       scientific-analysis.types.ts
+|       swagger-jsdoc.d.ts
+|       ultra-transform.types.ts
+|       user.types.ts
+|       
++---utils
+|       asyncHandler.js
+|       checkPremium.ts
+|       errors.js
+|       errors.ts
+|       logger.js
+|       RetryService.js
+|       
++---validators
+|       product.schema.ts
+|       userValidators.js
+|       
++---workers
+|       ImageProcessingWorker.js
+|       
++---_BACKUP_20251013_152902
+|       chatSafety.js
+|       deepseek.controller.js
+|       ROLLBACK.ps1
+|       
+\---_NEW_FILES
+        chatSafety.js
+        deepseek.controller.js
+        test-guardrails-fixed.ps1
+        test-guardrails.ps1
+        validate.js
+        
+

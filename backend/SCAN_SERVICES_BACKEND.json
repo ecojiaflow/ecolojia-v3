@@ -1,0 +1,548 @@
+﻿[
+    {
+        "File":  "additiveEnrichment.service.js",
+        "Path":  "src\\services\\additiveEnrichment.service.js",
+        "HasExports":  true,
+        "Classes":  "AdditiveEnrichmentService",
+        "Size_KB":  1.88
+    },
+    {
+        "File":  "aiCache.service.js",
+        "Path":  "src\\services\\aiCache.service.js",
+        "HasExports":  true,
+        "Classes":  "AICacheService",
+        "Size_KB":  1.9
+    },
+    {
+        "File":  "aiEducation.service.js",
+        "Path":  "src\\services\\aiEducation.service.js",
+        "HasExports":  true,
+        "Classes":  "AIEducationService",
+        "Size_KB":  13.51
+    },
+    {
+        "File":  "aiEnrichment.service.js",
+        "Path":  "src\\services\\aiEnrichment.service.js",
+        "HasExports":  true,
+        "Classes":  "AIEnrichmentService",
+        "Size_KB":  13.61
+    },
+    {
+        "File":  "aiOrchestrator.service.js",
+        "Path":  "src\\services\\aiOrchestrator.service.js",
+        "HasExports":  true,
+        "Classes":  "AIOrchestrator",
+        "Size_KB":  16.13
+    },
+    {
+        "File":  "aiService.js",
+        "Path":  "src\\services\\aiService.js",
+        "HasExports":  true,
+        "Classes":  "AIService",
+        "Size_KB":  23.66
+    },
+    {
+        "File":  "allergenEnrichment.service.js",
+        "Path":  "src\\services\\allergenEnrichment.service.js",
+        "HasExports":  true,
+        "Classes":  "AllergenEnrichmentService",
+        "Size_KB":  1.6
+    },
+    {
+        "File":  "alternatives.service.js",
+        "Path":  "src\\services\\alternatives.service.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  17.64
+    },
+    {
+        "File":  "analyzeService.js",
+        "Path":  "src\\services\\analyzeService.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  9.85
+    },
+    {
+        "File":  "circuitBreaker.js",
+        "Path":  "src\\services\\circuitBreaker.js",
+        "HasExports":  true,
+        "Classes":  "CircuitBreaker, CircuitBreakerError, CircuitBreakerFactory",
+        "Size_KB":  27.22
+    },
+    {
+        "File":  "contextual.service.js",
+        "Path":  "src\\services\\contextual.service.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  3.77
+    },
+    {
+        "File":  "cosmeticsService.js",
+        "Path":  "src\\services\\cosmeticsService.js",
+        "HasExports":  true,
+        "Classes":  "CosmeticsService",
+        "Size_KB":  5.42
+    },
+    {
+        "File":  "cronJobs.js",
+        "Path":  "src\\services\\cronJobs.js",
+        "HasExports":  true,
+        "Classes":  "CronJobsManager",
+        "Size_KB":  10.24
+    },
+    {
+        "File":  "dataCompleteness.service.js",
+        "Path":  "src\\services\\dataCompleteness.service.js",
+        "HasExports":  true,
+        "Classes":  "DataCompletenessService",
+        "Size_KB":  4.08
+    },
+    {
+        "File":  "DataNormalizer.js",
+        "Path":  "src\\services\\DataNormalizer.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  8.66
+    },
+    {
+        "File":  "emailService.js",
+        "Path":  "src\\services\\emailService.js",
+        "HasExports":  true,
+        "Classes":  "EmailService",
+        "Size_KB":  4.26
+    },
+    {
+        "File":  "EnhancedOFFClient.js",
+        "Path":  "src\\services\\EnhancedOFFClient.js",
+        "HasExports":  true,
+        "Classes":  "EnhancedOFFClient",
+        "Size_KB":  2.17
+    },
+    {
+        "File":  "gdprService.js",
+        "Path":  "src\\services\\gdprService.js",
+        "HasExports":  true,
+        "Classes":  "GDPRService",
+        "Size_KB":  31.56
+    },
+    {
+        "File":  "imageEnrichment.service.js",
+        "Path":  "src\\services\\imageEnrichment.service.js",
+        "HasExports":  true,
+        "Classes":  "ImageEnrichmentService",
+        "Size_KB":  1.38
+    },
+    {
+        "File":  "ingredientParser.service.js",
+        "Path":  "src\\services\\ingredientParser.service.js",
+        "HasExports":  true,
+        "Classes":  "IngredientParserService",
+        "Size_KB":  1.79
+    },
+    {
+        "File":  "mealPlan.service.js",
+        "Path":  "src\\services\\mealPlan.service.js",
+        "HasExports":  true,
+        "Classes":  "MealPlanService",
+        "Size_KB":  3.47
+    },
+    {
+        "File":  "nutrientCalculator.js",
+        "Path":  "src\\services\\nutrientCalculator.js",
+        "HasExports":  true,
+        "Classes":  "NutrientCalculator",
+        "Size_KB":  4.89
+    },
+    {
+        "File":  "ocr-parser.service.js",
+        "Path":  "src\\services\\ocr-parser.service.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  4.16
+    },
+    {
+        "File":  "ocr.service.js",
+        "Path":  "src\\services\\ocr.service.js",
+        "HasExports":  true,
+        "Classes":  "OCRService",
+        "Size_KB":  12.29
+    },
+    {
+        "File":  "OCRProductService.js",
+        "Path":  "src\\services\\OCRProductService.js",
+        "HasExports":  true,
+        "Classes":  "OCRProductService",
+        "Size_KB":  11.43
+    },
+    {
+        "File":  "offClient.enhanced.js",
+        "Path":  "src\\services\\offClient.enhanced.js",
+        "HasExports":  true,
+        "Classes":  "OFFClientWrapper",
+        "Size_KB":  0.49
+    },
+    {
+        "File":  "offClient.js",
+        "Path":  "src\\services\\offClient.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  2.76
+    },
+    {
+        "File":  "openfoodfacts.service.js",
+        "Path":  "src\\services\\openfoodfacts.service.js",
+        "HasExports":  true,
+        "Classes":  "OpenFoodFactsService",
+        "Size_KB":  6.04
+    },
+    {
+        "File":  "productAnalysisService.js",
+        "Path":  "src\\services\\productAnalysisService.js",
+        "HasExports":  true,
+        "Classes":  "ProductAnalysisService, NotFoundError, ValidationError, ProductAnalysisService",
+        "Size_KB":  27.73
+    },
+    {
+        "File":  "productCategorization.service.js",
+        "Path":  "src\\services\\productCategorization.service.js",
+        "HasExports":  true,
+        "Classes":  "ProductCategorizationService",
+        "Size_KB":  4.58
+    },
+    {
+        "File":  "ProductOrchestrator.js",
+        "Path":  "src\\services\\ProductOrchestrator.js",
+        "HasExports":  true,
+        "Classes":  "ProductOrchestrator",
+        "Size_KB":  6.51
+    },
+    {
+        "File":  "productPrompt.service.js",
+        "Path":  "src\\services\\productPrompt.service.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  1.98
+    },
+    {
+        "File":  "quotaService.js",
+        "Path":  "src\\services\\quotaService.js",
+        "HasExports":  true,
+        "Classes":  "QuotaService",
+        "Size_KB":  14.15
+    },
+    {
+        "File":  "recipeAdapter.service.js",
+        "Path":  "src\\services\\recipeAdapter.service.js",
+        "HasExports":  true,
+        "Classes":  "RecipeAdapterService",
+        "Size_KB":  9.67
+    },
+    {
+        "File":  "scoring.service.OLD_20251013.js",
+        "Path":  "src\\services\\scoring.service.OLD_20251013.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  2.03
+    },
+    {
+        "File":  "scoringEngine.AVANT_NOV.js",
+        "Path":  "src\\services\\scoringEngine.AVANT_NOV.js",
+        "HasExports":  false,
+        "Classes":  "",
+        "Size_KB":  0
+    },
+    {
+        "File":  "scoringEngine.AVANT_NOVA_FIX_20251007_232733.js",
+        "Path":  "src\\services\\scoringEngine.AVANT_NOVA_FIX_20251007_232733.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  11.69
+    },
+    {
+        "File":  "scoringEngine.js",
+        "Path":  "src\\services\\scoringEngine.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  31.54
+    },
+    {
+        "File":  "ScoringEngineV3.js",
+        "Path":  "src\\services\\ScoringEngineV3.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  12.87
+    },
+    {
+        "File":  "scoringUnified.js",
+        "Path":  "src\\services\\scoringUnified.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  34.96
+    },
+    {
+        "File":  "visionRuntime.js",
+        "Path":  "src\\services\\visionRuntime.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  3.22
+    },
+    {
+        "File":  "webhookService.js",
+        "Path":  "src\\services\\webhookService.js",
+        "HasExports":  true,
+        "Classes":  "WebhookService",
+        "Size_KB":  25.12
+    },
+    {
+        "File":  "alternativesEngine.js",
+        "Path":  "src\\services\\ai\\alternativesEngine.js",
+        "HasExports":  true,
+        "Classes":  "AlternativesEngine",
+        "Size_KB":  5.96
+    },
+    {
+        "File":  "conversationalAI.js",
+        "Path":  "src\\services\\ai\\conversationalAI.js",
+        "HasExports":  true,
+        "Classes":  "ConversationalAIService",
+        "Size_KB":  7.89
+    },
+    {
+        "File":  "deepSeekService.BROKEN_20251110_215639.js",
+        "Path":  "src\\services\\ai\\deepSeekService.BROKEN_20251110_215639.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  2.33
+    },
+    {
+        "File":  "deepSeekService.CASSE_20251104_223147.js",
+        "Path":  "src\\services\\ai\\deepSeekService.CASSE_20251104_223147.js",
+        "HasExports":  true,
+        "Classes":  "DeepSeekService",
+        "Size_KB":  19.11
+    },
+    {
+        "File":  "deepSeekService.js",
+        "Path":  "src\\services\\ai\\deepSeekService.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  13.71
+    },
+    {
+        "File":  "eco-score.service.js",
+        "Path":  "src\\services\\ai\\eco-score.service.js",
+        "HasExports":  true,
+        "Classes":  "EcoScoreService",
+        "Size_KB":  7.74
+    },
+    {
+        "File":  "insightsGenerator.js",
+        "Path":  "src\\services\\ai\\insightsGenerator.js",
+        "HasExports":  true,
+        "Classes":  "InsightsGenerator",
+        "Size_KB":  8.98
+    },
+    {
+        "File":  "mealPlanGenerator.service.js",
+        "Path":  "src\\services\\ai\\mealPlanGenerator.service.js",
+        "HasExports":  true,
+        "Classes":  "MealPlanGenerator",
+        "Size_KB":  8.93
+    },
+    {
+        "File":  "mealPlanValidator.service.js",
+        "Path":  "src\\services\\ai\\mealPlanValidator.service.js",
+        "HasExports":  true,
+        "Classes":  "MealPlanValidator",
+        "Size_KB":  6.2
+    },
+    {
+        "File":  "NutritionistChatService.js",
+        "Path":  "src\\services\\ai\\NutritionistChatService.js",
+        "HasExports":  true,
+        "Classes":  "NutritionistChatService",
+        "Size_KB":  15.29
+    },
+    {
+        "File":  "productTypeDetector.js",
+        "Path":  "src\\services\\ai\\productTypeDetector.js",
+        "HasExports":  true,
+        "Classes":  "ProductTypeDetector",
+        "Size_KB":  9.12
+    },
+    {
+        "File":  "recipes.service.js",
+        "Path":  "src\\services\\ai\\recipes.service.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  5.49
+    },
+    {
+        "File":  "algoliaService.js",
+        "Path":  "src\\services\\algolia\\algoliaService.js",
+        "HasExports":  true,
+        "Classes":  "AlgoliaService",
+        "Size_KB":  22.49
+    },
+    {
+        "File":  "algoliaSync.js",
+        "Path":  "src\\services\\algolia\\algoliaSync.js",
+        "HasExports":  true,
+        "Classes":  "AlgoliaSync",
+        "Size_KB":  10.19
+    },
+    {
+        "File":  "analysisService.js",
+        "Path":  "src\\services\\analysis\\analysisService.js",
+        "HasExports":  true,
+        "Classes":  "AnalysisService",
+        "Size_KB":  15.05
+    },
+    {
+        "File":  "CosmeticAnalysisService.js",
+        "Path":  "src\\services\\analysis\\CosmeticAnalysisService.js",
+        "HasExports":  true,
+        "Classes":  "CosmeticAnalyzer",
+        "Size_KB":  10.96
+    },
+    {
+        "File":  "cosmetics.js",
+        "Path":  "src\\services\\analysis\\cosmetics.js",
+        "HasExports":  true,
+        "Classes":  "CosmeticsAnalyzer",
+        "Size_KB":  14.58
+    },
+    {
+        "File":  "DetergentAnalysisService.js",
+        "Path":  "src\\services\\analysis\\DetergentAnalysisService.js",
+        "HasExports":  true,
+        "Classes":  "DetergentAnalyzer",
+        "Size_KB":  19.78
+    },
+    {
+        "File":  "detergents.js",
+        "Path":  "src\\services\\analysis\\detergents.js",
+        "HasExports":  true,
+        "Classes":  "DetergentsAnalyzer",
+        "Size_KB":  16.09
+    },
+    {
+        "File":  "food.js",
+        "Path":  "src\\services\\analysis\\food.js",
+        "HasExports":  true,
+        "Classes":  "FoodAnalyzer",
+        "Size_KB":  9.88
+    },
+    {
+        "File":  "FoodAnalysisService.js",
+        "Path":  "src\\services\\analysis\\FoodAnalysisService.js",
+        "HasExports":  true,
+        "Classes":  "FoodAnalyzer",
+        "Size_KB":  12.83
+    },
+    {
+        "File":  "index.js",
+        "Path":  "src\\services\\analysis\\index.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  1.83
+    },
+    {
+        "File":  "novaClassifier.js",
+        "Path":  "src\\services\\analysis\\novaClassifier.js",
+        "HasExports":  true,
+        "Classes":  "NovaClassifier",
+        "Size_KB":  6.17
+    },
+    {
+        "File":  "nutriscoreCalculator.js",
+        "Path":  "src\\services\\analysis\\nutriscoreCalculator.js",
+        "HasExports":  true,
+        "Classes":  "NutriScoreCalculator",
+        "Size_KB":  12.21
+    },
+    {
+        "File":  "universalAnalyzer.js",
+        "Path":  "src\\services\\analysis\\universalAnalyzer.js",
+        "HasExports":  true,
+        "Classes":  "UniversalAnalyzer",
+        "Size_KB":  22.21
+    },
+    {
+        "File":  "authService.js",
+        "Path":  "src\\services\\auth\\authService.js",
+        "HasExports":  true,
+        "Classes":  "AuthService",
+        "Size_KB":  5.45
+    },
+    {
+        "File":  "tokenService.js",
+        "Path":  "src\\services\\auth\\tokenService.js",
+        "HasExports":  true,
+        "Classes":  "TokenService",
+        "Size_KB":  4.67
+    },
+    {
+        "File":  "openBeautyFactsService.js",
+        "Path":  "src\\services\\external\\openBeautyFactsService.js",
+        "HasExports":  true,
+        "Classes":  "OpenBeautyFactsService",
+        "Size_KB":  4.18
+    },
+    {
+        "File":  "openFoodFactsService.js",
+        "Path":  "src\\services\\external\\openFoodFactsService.js",
+        "HasExports":  true,
+        "Classes":  "OpenFoodFactsService",
+        "Size_KB":  5.02
+    },
+    {
+        "File":  "DataExportService.js",
+        "Path":  "src\\services\\gdpr\\DataExportService.js",
+        "HasExports":  true,
+        "Classes":  "DataExportService",
+        "Size_KB":  24.3
+    },
+    {
+        "File":  "visionOCR.js",
+        "Path":  "src\\services\\ocr\\visionOCR.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  11.08
+    },
+    {
+        "File":  "LemonSqueezyService.js",
+        "Path":  "src\\services\\payment\\LemonSqueezyService.js",
+        "HasExports":  true,
+        "Classes":  "LemonSqueezyService",
+        "Size_KB":  17.91
+    },
+    {
+        "File":  "QueueService.js",
+        "Path":  "src\\services\\queue\\QueueService.js",
+        "HasExports":  true,
+        "Classes":  "QueueService",
+        "Size_KB":  3.26
+    },
+    {
+        "File":  "CloudinaryService.js",
+        "Path":  "src\\services\\upload\\CloudinaryService.js",
+        "HasExports":  true,
+        "Classes":  "",
+        "Size_KB":  1.53
+    },
+    {
+        "File":  "ProductOCRService.js",
+        "Path":  "src\\services\\vision\\ProductOCRService.js",
+        "HasExports":  true,
+        "Classes":  "ProductOCRService",
+        "Size_KB":  24.26
+    },
+    {
+        "File":  "VisionService.js",
+        "Path":  "src\\services\\vision\\VisionService.js",
+        "HasExports":  true,
+        "Classes":  "VisionService",
+        "Size_KB":  14.94
+    }
+]

@@ -1,0 +1,22 @@
+﻿[
+    {
+        "File":  "universal-rules.backup_20251116_fix.json",
+        "Path":  "scientific-database\\universal-rules.backup_20251116_fix.json",
+        "Size_KB":  22.03
+    },
+    {
+        "File":  "universal-rules.json",
+        "Path":  "scientific-database\\universal-rules.json",
+        "Size_KB":  22.29
+    },
+    {
+        "File":  "additives.json",
+        "Path":  "scientific-database\\food\\additives.json",
+        "Size_KB":  19.55
+    },
+    {
+        "File":  "oils.json",
+        "Path":  "scientific-database\\food\\oils.json",
+        "Size_KB":  8.07
+    }
+]

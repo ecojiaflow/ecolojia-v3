@@ -1,0 +1,134 @@
+﻿[
+    {
+        "File":  "AffiliateClick.js",
+        "Schema":  "affiliateClickSchema",
+        "FieldsCount":  30,
+        "Fields":  "userId, productId, partner, originalUrl, affiliateUrl, clickId, campaign, source, converted, commissionStatus"
+    },
+    {
+        "File":  "Analysis.js",
+        "Schema":  "analysisSchema",
+        "FieldsCount":  25,
+        "Fields":  "userId, productId, productSnapshot, analysisType, results, healthScore, foodAnalysis, cosmeticsAnalysis, detergentsAnalysis, aiInsights"
+    },
+    {
+        "File":  "ChatHistory.js",
+        "Schema":  "chatHistorySchema",
+        "FieldsCount":  6,
+        "Fields":  "userHash, productId, role, content, timestamp, lastActivity"
+    },
+    {
+        "File":  "Consent.js",
+        "Schema":  "ConsentSchema",
+        "FieldsCount":  33,
+        "Fields":  "userHash, email, consents, essential, accepted, acceptedAt, healthProfiling, accepted, explicitText, policyVersion"
+    },
+    {
+        "File":  "ContributionRequest.js",
+        "Schema":  "contributionSchema",
+        "FieldsCount":  7,
+        "Fields":  "userId, barcode, suggestedData, category, status, moderatorId, createdAt"
+    },
+    {
+        "File":  "Favorite.js",
+        "Schema":  "favoriteSchema",
+        "FieldsCount":  9,
+        "Fields":  "userId, productId, productSnapshot, notes, notifications, priceDrops, betterAlternatives, recallAlerts, createdAt"
+    },
+    {
+        "File":  "GDPRLog.js",
+        "Schema":  "gdprLogSchema",
+        "FieldsCount":  35,
+        "Fields":  "userId, action, details, exportFormat, deletionScope, legal, basis, context, ip, source"
+    },
+    {
+        "File":  "MealPlan.js",
+        "Schema":  "mealItemSchema",
+        "FieldsCount":  22,
+        "Fields":  "type, recipeId, productId, category, date, portion, nutrition, userId, name, startDate"
+    },
+    {
+        "File":  "Payment.js",
+        "Schema":  "paymentSchema",
+        "FieldsCount":  35,
+        "Fields":  "userId, amount, currency, status, type, subscriptionId, paymentId, invoiceId, invoiceUrl, paymentMethod"
+    },
+    {
+        "File":  "PaymentLog.js",
+        "Schema":  "paymentLogSchema",
+        "FieldsCount":  102,
+        "Fields":  "userId, type, status, amount, value, currency, originalAmount, provider, name, externalIds"
+    },
+    {
+        "File":  "Product.backup_filters_20251105_204533.js",
+        "Schema":  "additiveSchema",
+        "FieldsCount":  33,
+        "Fields":  "riskLevel, riskLevel, origin, isEndocrineDisruptor, barcode, name, categoryType, brand, categoryType, category"
+    },
+    {
+        "File":  "Product.js",
+        "Schema":  "additiveSchema",
+        "FieldsCount":  35,
+        "Fields":  "riskLevel, riskLevel, origin, isEndocrineDisruptor, barcode, name, brand, categoryType, productType, filterMetadata"
+    },
+    {
+        "File":  "Recipe.backup_20251105_153138.js",
+        "Schema":  "IngredientSchema",
+        "FieldsCount":  41,
+        "Fields":  "productId, name, quantity, unit, role, score, productId, order, instruction, name"
+    },
+    {
+        "File":  "Recipe.js",
+        "Schema":  "IngredientSchema",
+        "FieldsCount":  41,
+        "Fields":  "productId, name, quantity, unit, role, score, productId, order, instruction, name"
+    },
+    {
+        "File":  "ShoppingList.js",
+        "Schema":  "shoppingItemSchema",
+        "FieldsCount":  12,
+        "Fields":  "productId, name, quantity, unit, category, checked, score, userId, name, shared"
+    },
+    {
+        "File":  "TemporaryProduct.js",
+        "Schema":  "temporaryProductSchema",
+        "FieldsCount":  9,
+        "Fields":  "barcode, userId, category, aiAnalysis, health, confidence, expiresAt, index, createdAt"
+    },
+    {
+        "File":  "User.js",
+        "Schema":  "aiPreferencesSchema",
+        "FieldsCount":  52,
+        "Fields":  "tone, detailLevel, language, cosmeticPreferences, skinType, notificationPreferences, emailAlerts, productRecalls, weeklyDigest, diet"
+    },
+    {
+        "File":  "user.model.js",
+        "Schema":  "userSchema",
+        "FieldsCount":  8,
+        "Fields":  "email, name, password, isEmailVerified, registrationSource, role, preferences, default"
+    },
+    {
+        "File":  "UserJourney.backup_20251110_153934.js",
+        "Schema":  "userJourneySchema",
+        "FieldsCount":  6,
+        "Fields":  "userHash, productId, scanDate, location, metadata, scanDate"
+    },
+    {
+        "File":  "UserJourney.js",
+        "Schema":  "userJourneySchema",
+        "FieldsCount":  6,
+        "Fields":  "userHash, productId, scanDate, location, metadata, scanDate"
+    },
+    {
+        "File":  "VisionAnalysis.js",
+        "Schema":  "visionAnalysisSchema",
+        "FieldsCount":  26,
+        "Fields":  "userId, imageMetadata, dimensions, uploadedAt, ocrResult, service, confidence, extractedData, nutritionalInfo, matchedProduct"
+    },
+    {
+        "File":  "WebhookLog.js",
+        "Schema":  "webhookLogSchema",
+        "FieldsCount":  71,
+        "Fields":  "webhookId, provider, eventType, status, payload, headers, query, security, isDuplicate, processing"
+    }
+]
