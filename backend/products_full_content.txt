@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 // SERVICES
 const imageEnrichment = require('../services/imageEnrichment.service');
 const scoringUnified = require('../services/scoringUnified');
-const aiEnrichment = require('../services/aiEnrichment.service');
 const ProductOrchestrator = require('../services/ProductOrchestrator');
 const alternativesService = require('../services/alternatives.service');
 const recipeAdapter = require('../services/recipeAdapter.service');
@@ -79,7 +78,7 @@ const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 /* ========== ROUTES ========== */
 
 // === FONCTION ENRICHISSEMENT RÉPONSE ===
-async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false, knowledgeData = null) {
+async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
   try {
     let plainProduct = product.toObject ? product.toObject() : product;
     // ============================================================================
@@ -201,10 +200,8 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
 
     return {
       success: true,
-      product: {
-        ...(product.toObject ? product.toObject() : product),
-        globalScore: product.globalScore // ⭐ Copier explicitement globalScore
-      },
+      product: plainProduct,
+      product: product.toObject ? product.toObject() : product,
       cached: cached,
       enrichment: {
         aiUsed: aiEnrichmentUsed,
@@ -213,33 +210,16 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
       },
       alternatives: alternatives.length > 0 ? alternatives : [],
       recipes: recipes.length > 0 ? recipes : [],
-      contextCards: contextCards.length > 0 ? contextCards : [],
-
-      // ⭐ SYSTÈME HYBRIDE V3.1
-      knowledgeAnalysis: knowledgeData ? knowledgeData.knowledgeAnalysis : null,
-      aiEnriched: knowledgeData ? knowledgeData.aiEnriched : null,
-      knowledgeBaseUsed: knowledgeData ? knowledgeData.knowledgeBaseUsed : null,
-      confidence: knowledgeData ? knowledgeData.confidence : null,
-      deepseekUsed: knowledgeData ? knowledgeData.deepseekUsed : null,
-      aiEnrichmentDate: knowledgeData ? knowledgeData.aiEnrichmentDate : null,
-      aiEnrichmentVersion: knowledgeData ? knowledgeData.aiEnrichmentVersion : null
+      contextCards: contextCards.length > 0 ? contextCards : []
     };
   } catch (enrichError) {
     logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
     return {
       success: true,
+      product: plainProduct,
       source: source,
       cached: cached,
-      aiEnrichmentUsed: aiEnrichmentUsed,
-
-      // ⭐ SYSTÈME HYBRIDE V3.1 (Compatible Node.js)
-      knowledgeAnalysis: knowledgeData ? knowledgeData.knowledgeAnalysis : null,
-      aiEnriched: knowledgeData ? knowledgeData.aiEnriched : null,
-      knowledgeBaseUsed: knowledgeData ? knowledgeData.knowledgeBaseUsed : null,
-      confidence: knowledgeData ? knowledgeData.confidence : null,
-      deepseekUsed: knowledgeData ? knowledgeData.deepseekUsed : null,
-      aiEnrichmentDate: knowledgeData ? knowledgeData.aiEnrichmentDate : null,
-      aiEnrichmentVersion: knowledgeData ? knowledgeData.aiEnrichmentVersion : null
+      aiEnrichmentUsed: aiEnrichmentUsed
     };
   }
 }
@@ -543,25 +523,7 @@ router.get('/:id', handleAsync(async (req, res) => {
 
     if (product) {
       logger.info('Product found by MongoDB ID');
-      // ⭐ ENRICHISSEMENT IA HYBRIDE
-      let knowledgeData = null;
-      try {
-        const enriched = await aiEnrichment.enrichProductWithAI(product);
-        knowledgeData = {
-          knowledgeAnalysis: enriched.knowledgeAnalysis,
-          aiEnriched: enriched.aiEnriched,
-          knowledgeBaseUsed: enriched.knowledgeBaseUsed,
-          confidence: enriched.scores?.confidence,
-          deepseekUsed: enriched.deepseekUsed,
-          aiEnrichmentDate: enriched.aiEnrichmentDate,
-          aiEnrichmentVersion: enriched.aiEnrichmentVersion
-        };
-        logger.info('✅ Enrichissement IA hybride réussi');
-      } catch (aiError) {
-        logger.warn('⚠️ Enrichissement IA échoué:', aiError.message);
-      }
-
-      const enrichedResponse = await enrichProductResponse(enriched, 'MONGODB_ID', false, true, knowledgeData);
+      const enrichedResponse = await enrichProductResponse(product, 'MONGODB_ID', false, false);
       return res.json(enrichedResponse);
     }
   }
@@ -655,32 +617,12 @@ router.get('/:id', handleAsync(async (req, res) => {
     // Cas 3 : Produit trouvé et enrichi
     // ============================================================================
     if (result.product) {
-      // ⭐ ENRICHISSEMENT IA HYBRIDE
-      let knowledgeData = null;
-      try {
-        const enriched = await aiEnrichment.enrichProductWithAI(result.product);
-        knowledgeData = {
-          knowledgeAnalysis: enriched.knowledgeAnalysis,
-          aiEnriched: enriched.aiEnriched,
-          knowledgeBaseUsed: enriched.knowledgeBaseUsed,
-          confidence: enriched.scores?.confidence,
-          deepseekUsed: enriched.deepseekUsed,
-          aiEnrichmentDate: enriched.aiEnrichmentDate,
-          aiEnrichmentVersion: enriched.aiEnrichmentVersion
-        };
-        logger.info('✅ Enrichissement IA hybride réussi (Orchestrator)');
-        console.log('[DEBUG] knowledgeData:', JSON.stringify(knowledgeData, null, 2));
-      } catch (aiError) {
-        logger.warn('⚠️ Enrichissement IA échoué (Orchestrator):', aiError.message);
-      }
-
       logger.info('Product found/created via Orchestrator:', result.source);
       const enrichedResponse = await enrichProductResponse(
         result.product,
         result.source,
         result.cached || false,
-        result.aiEnrichmentUsed || false,
-        knowledgeData
+        result.aiEnrichmentUsed || false
       );
       return res.json(enrichedResponse);
     }
@@ -791,9 +733,6 @@ function mockModel() {
 console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
-
-
-
 
 
 

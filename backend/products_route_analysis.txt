@@ -1,0 +1,319 @@
+﻿=== PRODUCTS.JS (début) ===
+// PATH: backend/src/routes/products.js
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+
+// SERVICES
+const imageEnrichment = require('../services/imageEnrichment.service');
+const scoringUnified = require('../services/scoringUnified');
+const ProductOrchestrator = require('../services/ProductOrchestrator');
+const alternativesService = require('../services/alternatives.service');
+const recipeAdapter = require('../services/recipeAdapter.service');
+const contextualService = require('../services/contextual.service');
+const algoliaService = require('../services/algolia/algoliaService'); // ✨ NOUVEAU
+
+/* Middleware debug */
+router.use((req, _res, next) => {
+  console.log(`[Products Router] ${req.method} ${req.originalUrl} - Path: ${req.path}`);
+  next();
+});
+
+/* Auth middlewares (fallbacks inclus) */
+let authenticateUser, checkPremium;
+try {
+  const auth = require('../middleware/auth');
+  authenticateUser = auth.authenticateUser || auth.auth || auth;
+  checkPremium = auth.checkPremium || auth.requirePremium || ((_req, _res, next) => next());
+} catch {
+  console.log('[Products] Auth middleware not found, using fallback');
+  authenticateUser = (_req, _res, next) => {
+    const authHeader = _req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      _req.userId = 'test-user-id';
+      _req.user = { _id: 'test-user-id', tier: 'free' };
+    }
+    next();
+  };
+  checkPremium = (_req, _res, next) => { next(); };
+}
+
+/* Models (fallback mocks) */
+let Product, Analysis;
+try {
+  Product = require('../models/Product');
+} catch (error) {
+  console.log('[Products] Product model not found, using mock');
+  Product = mockModel();
+}
+
+try {
+  Analysis = require('../models/Analysis');
+} catch (error) {
+  console.log('[Products] Analysis model not found, using mock');
+  Analysis = mockModel();
+}
+
+/* Nova classifier (sécurisé) */
+let novaClassifier;
+try {
+  novaClassifier = require('../services/analysis/novaClassifier');
+} catch {
+  console.log('[Products] novaClassifier not found – defaulting to stub');
+  novaClassifier = { classify: () => ({ group: null }) };
+}
+
+/* Logger */
+const logger = {
+  info: (...a) => console.log('[Products]', ...a),
+  warn: (...a) => console.warn('[Products WARN]', ...a),
+  error: (...a) => console.error('[Products ERROR]', ...a)
+};
+
+/* Helper async */
+const handleAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(err => {
+  logger.error('Async error:', err);
+  res.status(500).json({ success: false, error: err.message });
+});
+
+/* ========== ROUTES ========== */
+
+// === FONCTION ENRICHISSEMENT RÉPONSE ===
+async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
+  try {
+    let plainProduct = product.toObject ? product.toObject() : product;
+    // ============================================================================
+    // 🔧 RECALCUL AUTOMATIQUE DU BREAKDOWN SI ABSENT (V3.1)
+    // ============================================================================
+    // Si le produit n'a pas de breakdown (ancien format), on recalcule
+    if (product.scores && (!product.scores.breakdown || product.scores.scoringVersion !== '3.1.0')) {
+      logger.info('[SCORING] Recalcul breakdown pour produit ancien format');
+      
+      try {
+        // Préparer les données pour le scoring
+        const scoringData = {
+          // Nom et marque (requis pour calculateDataConfidence)
+          product_name: plainProduct.name,
+          brands: plainProduct.brand,
+          
+          // NOVA Group
+          novaGroup: plainProduct.nova_group || plainProduct.foodData?.novaGroup,
+          
+          // Nutri-Score
+          nutriScore: plainProduct.nutriscore_grade || plainProduct.foodData?.nutriScore,
+          
+          // Eco-Score
+          ecoScore: plainProduct.ecoscore_grade || plainProduct.foodData?.ecoScore,
+          
+          // Additifs
+          additives: plainProduct.additives_tags || plainProduct.foodData?.additivesTags || [],
+          
+          // Labels
+          labels: plainProduct.labels || plainProduct.labels_tags || plainProduct.foodData?.labels || [],
+          
+          // Nutriments (CRITICAL)
+          nutriments: plainProduct.nutriments || plainProduct.foodData?.nutritionFacts || {},
+          
+          // Catégorie
+          category: plainProduct.categoryType || plainProduct.category
+        };
+
+        // Recalculer avec scoringUnified
+        const newScores = scoringUnified.calculateFoodScores(scoringData);
+        
+        if (newScores && newScores.breakdown) {
+          logger.info('[SCORING] ✅ Breakdown recalculé avec succès');
+          
+          // Mettre à jour le produit
+          product.scores = {
+            ...product.scores,
+            ...newScores,
+            scoringVersion: '3.1.0',
+            recalculatedAt: new Date()
+          };
+          
+          // Sauvegarder en base ET attendre
+          if (product.save) {
+            // product.markModified('scores'); // SKIP - on utilise updateOne à la place
+            // await product.save(); // SKIP - save() écrase les scores !
+            
+            // CRITICAL: Recharger depuis DB pour forcer la mise à jour
+            await product.constructor.updateOne(
+              { _id: product._id },
+              { $set: { scores: product.scores } }
+            );
+            logger.info('[SCORING] ✅ Scores forcés en DB via updateOne');
+            logger.info('[SCORING] Produit sauvegardé en base avec breakdown');
+            
+            // Mettre à jour plainProduct
+            plainProduct = product.toObject ? product.toObject() : product;
+          }
+        }
+      } catch (scoringError) {
+        logger.error('[SCORING] Erreur recalcul:', scoringError.message);
+      }
+    }
+    // ============================================================================
+
+    const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
+
+    // 1. Alternatives IA (3 max)
+    let alternatives = [];
+    try {
+      const altResult = await alternativesService.findAlternatives({
+        productId: plainProduct._id,
+        barcode: plainProduct.barcode,
+        maxResults: 3,
+        userPreferences: { minScore: currentScore + 5 }
+      });
+      alternatives = altResult.alternatives || [];
+    } catch (altError) {
+      logger.error('[ALTERNATIVES] Error:', altError.message);
+    }
+
+    // 2. Recettes/Routines (food uniquement, 3 max)
+    let recipes = [];
+    if (plainProduct.categoryType === 'food') {
+      try {
+        const userProfile = {
+          dietary: 'omnivore',
+          targetCaloriesPerMeal: 500,
+          allergens: [],
+          goals: ['health']
+        };
+        const recipesResult = await recipeAdapter.recommendRecipesForProduct(plainProduct, {
+          count: 3,
+          userProfile: userProfile
+        });
+        recipes = recipesResult || [];
+      } catch (recipeError) {
+        logger.error('[RECIPES] Error:', recipeError.message);
+      }
+    }
+
+    // 3. Cartes pédagogiques CIL (2 max)
+    let contextCards = [];
+    try {
+      contextCards = contextualService.selectRelevantCards(plainProduct, 2);
+    } catch (cardError) {
+      logger.error('[CONTEXTUAL] Error:', cardError.message);
+    }
+
+
+
+=== ROUTE GET /products/:id ===
+
+  src\routes\products.js:429:    }
+  src\routes\products.js:430:  });
+  src\routes\products.js:431:}));
+  src\routes\products.js:432:
+  src\routes\products.js:433:/* Obtenir alternatives */
+> src\routes\products.js:434:router.get('/:id/alternatives', handleAsync(async (req, res) => {
+  src\routes\products.js:435:  const { id } = req.params;
+  src\routes\products.js:436:  logger.info('Get alternatives for product:', id);
+  src\routes\products.js:437:
+  src\routes\products.js:438:  let product = null;
+  src\routes\products.js:439:  if (mongoose.connection.readyState === 1) {
+  src\routes\products.js:440:    if (mongoose.Types.ObjectId.isValid(id)) {
+  src\routes\products.js:441:      product = await Product.findById(id);
+  src\routes\products.js:442:    }
+  src\routes\products.js:443:    if (!product) {
+  src\routes\products.js:444:      product = await Product.findOne({ barcode: id });
+  src\routes\products.js:445:    }
+  src\routes\products.js:446:  }
+  src\routes\products.js:447:
+  src\routes\products.js:448:  if (!product) {
+  src\routes\products.js:449:    return res.status(404).json({ success: false, error: 'Produit introuvable' });
+  src\routes\products.js:450:  }
+  src\routes\products.js:451:
+  src\routes\products.js:452:  const currentScore = product.scores?.overallScore || product.scores?.global || 0;
+  src\routes\products.js:453:
+  src\routes\products.js:454:  if (currentScore >= 70) {
+  src\routes\products.js:455:    return res.json({ success: true, alternatives: [], message: 'Ce produit est déjà excellent' });
+  src\routes\products.js:456:  }
+  src\routes\products.js:457:
+  src\routes\products.js:458:  const query = {
+  src\routes\products.js:459:    category: product.category,
+  src\routes\products.js:460:    _id: { $ne: product._id },
+  src\routes\products.js:461:    $or: [
+  src\routes\products.js:462:      { 'scores.global': { $gt: currentScore } },
+  src\routes\products.js:463:      { 'scores.overallScore': { $gt: currentScore } }
+  src\routes\products.js:464:    ]
+  src\routes\products.js:465:  };
+  src\routes\products.js:466:
+  src\routes\products.js:467:  if (product.subcategory) {
+  src\routes\products.js:468:    query.subcategory = product.subcategory;
+  src\routes\products.js:469:  }
+  src\routes\products.js:470:
+  src\routes\products.js:471:  const alternatives = await Product.find(query)
+  src\routes\products.js:472:    .sort({ 'scores.global': -1, 'scores.overallScore': -1 })
+  src\routes\products.js:473:    .limit(5)
+  src\routes\products.js:474:    .lean();
+  src\routes\products.js:475:
+  src\routes\products.js:476:  const formattedAlternatives = alternatives.map(alt => ({
+  src\routes\products.js:477:    _id: alt._id,
+  src\routes\products.js:478:    barcode: alt.barcode,
+  src\routes\products.js:479:    name: alt.name,
+  src\routes\products.js:480:    brand: alt.brand,
+  src\routes\products.js:481:    imageUrl: alt.imageUrl || alt.images?.front,
+  src\routes\products.js:482:    images: alt.images,
+  src\routes\products.js:483:    scores: {
+  src\routes\products.js:484:      overallScore: alt.scores?.overallScore || alt.scores?.global || 75,
+  src\routes\products.js:510:}));
+  src\routes\products.js:511:
+  src\routes\products.js:512:/* ============================================================================
+  src\routes\products.js:513:   ✨ GET PRODUCT BY ID - AVEC RECHERCHE SIMILARITÉ
+  src\routes\products.js:514:   ============================================================================ */
+> src\routes\products.js:515:router.get('/:id', handleAsync(async (req, res) => {
+  src\routes\products.js:516:  const { id } = req.params;
+  src\routes\products.js:517:  logger.info('Get product by ID:', id);
+  src\routes\products.js:518:
+  src\routes\products.js:519:  // Tentative 1 : Chercher par _id MongoDB
+  src\routes\products.js:520:  let product = null;
+  src\routes\products.js:521:  if (mongoose.connection.readyState === 1 && mongoose.Types.ObjectId.isValid(id)) {
+  src\routes\products.js:522:    product = await Product.findById(id);
+  src\routes\products.js:523:
+  src\routes\products.js:524:    if (product) {
+  src\routes\products.js:525:      logger.info('Product found by MongoDB ID');
+  src\routes\products.js:526:      const enrichedResponse = await enrichProductResponse(product, 'MONGODB_ID', false, false);
+  src\routes\products.js:527:      return res.json(enrichedResponse);
+  src\routes\products.js:528:    }
+  src\routes\products.js:529:  }
+  src\routes\products.js:530:
+  src\routes\products.js:531:  // Tentative 2 : Utiliser ProductOrchestrator (barcode)
+  src\routes\products.js:532:  try {
+  src\routes\products.js:533:    const result = await ProductOrchestrator.getOrCreateProduct({
+  src\routes\products.js:534:      barcode: id,
+  src\routes\products.js:535:      source: 'OFF'
+  src\routes\products.js:536:    });
+  src\routes\products.js:537:
+  src\routes\products.js:538:    // Cas 1 : Catégorie invalide
+  src\routes\products.js:539:    if (result.source === 'INVALID_CATEGORY') {
+  src\routes\products.js:540:      return res.status(400).json({
+  src\routes\products.js:541:        success: false,
+  src\routes\products.js:542:        error: result.error,
+  src\routes\products.js:543:        detectedType: result.detectedType,
+  src\routes\products.js:544:        suggestion: result.suggestion,
+  src\routes\products.js:545:        redirectTo: null
+  src\routes\products.js:546:      });
+  src\routes\products.js:547:    }
+  src\routes\products.js:548:
+  src\routes\products.js:549:    // ============================================================================
+  src\routes\products.js:550:    // ✨ CAS 2 : PRODUIT NON TROUVÉ → RECHERCHE SIMILARITÉ (NOUVEAU)
+  src\routes\products.js:551:    // ============================================================================
+  src\routes\products.js:552:    if (result.source === 'NOT_FOUND') {
+  src\routes\products.js:553:      logger.info('🔍 Produit non trouvé, recherche similarité...');
+  src\routes\products.js:554:
+  src\routes\products.js:555:      // Extraire nom potentiel du barcode (si connu) ou utiliser ID
+  src\routes\products.js:556:      const searchQuery = result.searchQuery || id;
+  src\routes\products.js:557:
+  src\routes\products.js:558:      // Recherche similarité avec Algolia
+  src\routes\products.js:559:      let similarProducts = [];
+  src\routes\products.js:560:      try {
+  src\routes\products.js:561:        similarProducts = await algoliaService.searchSimilarProducts(
+  src\routes\products.js:562:          searchQuery,
+  src\routes\products.js:563:          null, // Toutes catégories
+  src\routes\products.js:564:          {
+  src\routes\products.js:565:            limit: 5,
+
+

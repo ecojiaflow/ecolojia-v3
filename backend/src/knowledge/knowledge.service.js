@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ECOLOJIA V3.1 - SERVICE DE CONNAISSANCE SCIENTIFIQUE HYBRIDE
  * 
  * Système intelligent combinant :
@@ -394,18 +394,21 @@ class KnowledgeService {
 
   // ========== MÉTHODES EXISTANTES (conservées) ==========
 
-  searchIngredient(ingredientName, category = 'food') {
+    searchIngredient(ingredientName, category = 'food') {
     const normalizedSearch = this.normalizeIngredient(ingredientName);
 
     for (const [key, data] of Object.entries(this.database[category])) {
+      // ⭐ SUPPORT FORMAT OILS (oils.json - format spécial)
       if (data.oils) {
         for (const oil of data.oils) {
           const normalizedOilName = this.normalizeIngredient(oil.name);
           
+          // Match exact
           if (normalizedOilName === normalizedSearch) {
             return oil;
           }
-
+          
+          // Chercher dans commonNames
           if (oil.commonNames) {
             for (const commonName of oil.commonNames) {
               if (this.normalizeIngredient(commonName) === normalizedSearch) {
@@ -413,9 +416,62 @@ class KnowledgeService {
               }
             }
           }
-
+          
+          // Match partiel
           if (normalizedOilName.includes(normalizedSearch) || normalizedSearch.includes(normalizedOilName)) {
             return oil;
+          }
+        }
+      }
+      
+      // ⭐ SUPPORT FORMAT ITEMS (sugars, acids, controversial, additives)
+      if (data.items) {
+        for (const item of data.items) {
+          // Chercher dans le tableau names
+          if (item.names && Array.isArray(item.names)) {
+            for (const name of item.names) {
+              const normalizedName = this.normalizeIngredient(name);
+              
+              // Match exact
+              if (normalizedName === normalizedSearch) {
+                return {
+                  name: item.names[0],
+                  variants: [{
+                    type: item.category || 'standard',
+                    score: item.score,
+                    description: item.description,
+                    risks: item.concerns ? item.concerns.map(c => ({
+                      severity: item.severity,
+                      description: c,
+                      details: item.details
+                    })) : [],
+                    benefits: [],
+                    alternatives: item.alternatives || [],
+                    usage: item.sources || []
+                  }]
+                };
+              }
+              
+              // Match partiel
+              if (normalizedName.includes(normalizedSearch) || normalizedSearch.includes(normalizedName)) {
+                return {
+                  name: item.names[0],
+                  variants: [{
+                    type: item.category || 'standard',
+                    score: item.score,
+                    description: item.description,
+                    risks: item.concerns ? item.concerns.map(c => ({
+                      severity: item.severity,
+                      description: c,
+                      details: item.details
+                    })) : [],
+                    benefits: [],
+                    alternatives: item.alternatives || [],
+                    usage: item.sources || []
+                  }]
+                };
+              }
+            }
           }
         }
       }

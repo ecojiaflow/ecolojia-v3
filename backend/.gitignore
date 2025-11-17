@@ -21,3 +21,6 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+# Google Cloud credentials (NEVER COMMIT)
+config/google-cloud-credentials.json
+config/google-cloud-credentials.BACKUP.json

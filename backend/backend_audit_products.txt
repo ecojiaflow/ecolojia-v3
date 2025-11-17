@@ -1,0 +1,1266 @@
+﻿=== ROUTES PRODUITS ===
+
+  src\routes\alternatives.routes.js:186: */
+> src\routes\alternatives.routes.js:187:router.get('/products/:productId/alternatives', validateProductId, async (req, res) => {
+  src\routes\alternatives.routes.js:188:  try {
+  src\routes\alternatives.routes.js:189:    const { productId } = req.params;
+
+
+
+
+=== CONTROLLERS PRODUITS ===
+
+
+=== SERVICES PRODUITS ===
+
+Name                                                     Size(KB)
+----                                                     --------
+OCRProductService.js                                        11,43
+productAnalysisService.js                                   27,73
+productCategorization.service.backup_20251110_152838.js      4,58
+productCategorization.service.backup_20251110_161143.js      4,58
+productCategorization.service.js                             4,58
+ProductOrchestrator.backup_20251113_215900.js               20,11
+ProductOrchestrator.backup_20251113_225553.js               13,11
+ProductOrchestrator.backup_20251113_230812.js                6,55
+ProductOrchestrator.backup_COMPLETE_20251108_211812.js      18,82
+ProductOrchestrator.backup_COMPLET_20251108_214833.js       19,43
+ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js    18,82
+ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js    19,35
+ProductOrchestrator.backup_EXPORT_20251108_205616.js        18,25
+ProductOrchestrator.backup_FINAL_20251108_214247.js         19,49
+ProductOrchestrator.backup_IMPORT_20251108_215550.js        19,43
+ProductOrchestrator.backup_MODULE_20251108_215853.js        19,94
+ProductOrchestrator.backup_SCORE_20251109_144313.js         19,97
+ProductOrchestrator.backup_SCORING_20251108_213627.js       19,49
+ProductOrchestrator.js                                       6,51
+productPrompt.service.js                                     1,98
+
+
+
+
+=== MENTIONS 'knowledgeAnalysis' ===
+
+  src\routes\analysis.routes.js:116:        console.log('[AnalysisRoutes] 📊 Knowledge base utilisée:', enrichedProduct.knowledgeBaseUsed);
+> src\routes\analysis.routes.js:117:        console.log('[AnalysisRoutes] 📊 Score impact:', enrichedProduct.knowledgeAnalysis?.scoreImpact);
+  src\routes\analysis.routes.js:118:        
+  src\routes\analysis.routes.js:162:    // ⭐ AJOUT DES DONNÉES HYBRIDES SI DISPONIBLES
+> src\routes\analysis.routes.js:163:    if (enrichmentSuccess && finalProduct.knowledgeAnalysis) {
+> src\routes\analysis.routes.js:164:      response.knowledgeAnalysis = finalProduct.knowledgeAnalysis;
+  src\routes\analysis.routes.js:165:      response.aiEnriched = true;
+  src\services\aiEnrichment.service.backup_20251116_154605.js:50:      logger.info('🔬 Analyse base de connaissance scientifique...');
+> src\services\aiEnrichment.service.backup_20251116_154605.js:51:      const knowledgeAnalysis = await this.analyzeWithKnowledgeBase(validatedProduct);
+  src\services\aiEnrichment.service.backup_20251116_154605.js:52:
+  src\services\aiEnrichment.service.backup_20251116_154605.js:56:      logger.info('📝 Construction contexte hybride pour DeepSeek...');
+> src\services\aiEnrichment.service.backup_20251116_154605.js:57:      const hybridContext = this.buildHybridContext(validatedProduct, knowledgeAnalysis);
+  src\services\aiEnrichment.service.backup_20251116_154605.js:58:
+  src\services\aiEnrichment.service.backup_20251116_154605.js:74:        validatedProduct,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:75:        knowledgeAnalysis,
+  src\services\aiEnrichment.service.backup_20251116_154605.js:76:        aiResponse.enrichedData
+  src\services\aiEnrichment.service.backup_20251116_154605.js:89:      scoredProduct.knowledgeBaseUsed = true;
+> src\services\aiEnrichment.service.backup_20251116_154605.js:90:      scoredProduct.knowledgeAnalysis = knowledgeAnalysis;
+  src\services\aiEnrichment.service.backup_20251116_154605.js:91:
+  src\services\aiEnrichment.service.backup_20251116_154605.js:165:   */
+> src\services\aiEnrichment.service.backup_20251116_154605.js:166:  static buildHybridContext(product, knowledgeAnalysis) {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:167:    const baseContext = this.buildEnrichmentContext(product);
+  src\services\aiEnrichment.service.backup_20251116_154605.js:169:    // Ajouter contexte scientifique si disponible
+> src\services\aiEnrichment.service.backup_20251116_154605.js:170:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:171:      baseContext.scientificContext = {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:172:        knowledgeBaseAnalysis: {
+> src\services\aiEnrichment.service.backup_20251116_154605.js:173:          totalIngredients: knowledgeAnalysis.totalIngredients,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:174:          criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:175:          highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:176:          moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:177:          scoreImpact: knowledgeAnalysis.scoreImpact,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:178:          redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:179:          hiddenProcesses: knowledgeAnalysis.hiddenProcesses
+  src\services\aiEnrichment.service.backup_20251116_154605.js:180:        },
+  src\services\aiEnrichment.service.backup_20251116_154605.js:191:
+> src\services\aiEnrichment.service.backup_20251116_154605.js:192:Score impact détecté : ${knowledgeAnalysis.scoreImpact} points
+  src\services\aiEnrichment.service.backup_20251116_154605.js:193:Ceci doit influencer tes calculs de composantes.
+  src\services\aiEnrichment.service.backup_20251116_154605.js:205:   */
+> src\services\aiEnrichment.service.backup_20251116_154605.js:206:  static mergeHybridData(product, knowledgeAnalysis, aiData) {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:207:    const merged = this.mergeEnrichedData(product, aiData);
+  src\services\aiEnrichment.service.backup_20251116_154605.js:209:    // Enrichir avec détections knowledge base
+> src\services\aiEnrichment.service.backup_20251116_154605.js:210:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:211:      merged.knowledgeDetections = {
+> src\services\aiEnrichment.service.backup_20251116_154605.js:212:        criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:213:        highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:214:        moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:215:        redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:216:        hiddenProcesses: knowledgeAnalysis.hiddenProcesses,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:217:        recommendations: knowledgeAnalysis.recommendations
+  src\services\aiEnrichment.service.backup_20251116_154605.js:218:      };
+  src\services\aiEnrichment.service.backup_20251116_154605.js:222:        const baseConfidence = merged.scores.confidence || 0.7;
+> src\services\aiEnrichment.service.backup_20251116_154605.js:223:        const knowledgeBonus = knowledgeAnalysis.analyzed ? 0.15 : 0;
+  src\services\aiEnrichment.service.backup_20251116_154605.js:224:        merged.scores.confidence = Math.min(baseConfidence + knowledgeBonus, 0.95);
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:50:      logger.info('🔬 Analyse base de connaissance scientifique...');
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:51:      const knowledgeAnalysis = await 
+this.analyzeWithKnowledgeBase(validatedProduct);
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:52:
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:56:      logger.info('📝 Construction contexte hybride pour DeepSeek...');
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:57:      const hybridContext = this.buildHybridContext(validatedProduct, 
+knowledgeAnalysis);
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:58:
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:74:        validatedProduct,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:75:        knowledgeAnalysis,
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:76:        aiResponse.enrichedData
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:89:      scoredProduct.knowledgeBaseUsed = true;
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:90:      scoredProduct.knowledgeAnalysis = knowledgeAnalysis;
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:91:
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:165:   */
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:166:  static buildHybridContext(product, knowledgeAnalysis) {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:167:    const baseContext = this.buildEnrichmentContext(product);
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:169:    // Ajouter contexte scientifique si disponible
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:170:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:171:      baseContext.scientificContext = {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:172:        knowledgeBaseAnalysis: {
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:173:          totalIngredients: knowledgeAnalysis.totalIngredients,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:174:          criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:175:          highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:176:          moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:177:          scoreImpact: knowledgeAnalysis.scoreImpact,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:178:          redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:179:          hiddenProcesses: knowledgeAnalysis.hiddenProcesses
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:180:        },
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:191:
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:192:Score impact détecté : ${knowledgeAnalysis.scoreImpact} points
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:193:Ceci doit influencer tes calculs de composantes.
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:205:   */
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:206:  static mergeHybridData(product, knowledgeAnalysis, aiData) {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:207:    const merged = this.mergeEnrichedData(product, aiData);
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:209:    // Enrichir avec détections knowledge base
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:210:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:211:      merged.knowledgeDetections = {
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:212:        criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:213:        highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:214:        moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:215:        redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:216:        hiddenProcesses: knowledgeAnalysis.hiddenProcesses,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:217:        recommendations: knowledgeAnalysis.recommendations
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:218:      };
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:222:        const baseConfidence = merged.scores.confidence || 0.7;
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:223:        const knowledgeBonus = knowledgeAnalysis.analyzed ? 0.15 : 0;
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:224:        merged.scores.confidence = Math.min(baseConfidence + knowledgeBonus, 0.95);
+  src\services\aiEnrichment.service.js:50:      logger.info('🔬 Analyse base de connaissance scientifique...');
+> src\services\aiEnrichment.service.js:51:      const knowledgeAnalysis = await this.analyzeWithKnowledgeBase(validatedProduct);
+  src\services\aiEnrichment.service.js:52:
+  src\services\aiEnrichment.service.js:56:      logger.info('📝 Construction contexte hybride pour DeepSeek...');
+> src\services\aiEnrichment.service.js:57:      const hybridContext = this.buildHybridContext(validatedProduct, knowledgeAnalysis);
+  src\services\aiEnrichment.service.js:58:
+  src\services\aiEnrichment.service.js:74:        validatedProduct,
+> src\services\aiEnrichment.service.js:75:        knowledgeAnalysis,
+  src\services\aiEnrichment.service.js:76:        aiResponse.enrichedData
+  src\services\aiEnrichment.service.js:89:      scoredProduct.knowledgeBaseUsed = true;
+> src\services\aiEnrichment.service.js:90:      scoredProduct.knowledgeAnalysis = knowledgeAnalysis;
+  src\services\aiEnrichment.service.js:91:
+  src\services\aiEnrichment.service.js:165:   */
+> src\services\aiEnrichment.service.js:166:  static buildHybridContext(product, knowledgeAnalysis) {
+  src\services\aiEnrichment.service.js:167:    const baseContext = this.buildEnrichmentContext(product);
+  src\services\aiEnrichment.service.js:169:    // Ajouter contexte scientifique si disponible
+> src\services\aiEnrichment.service.js:170:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.js:171:      baseContext.scientificContext = {
+  src\services\aiEnrichment.service.js:172:        knowledgeBaseAnalysis: {
+> src\services\aiEnrichment.service.js:173:          totalIngredients: knowledgeAnalysis.totalIngredients,
+> src\services\aiEnrichment.service.js:174:          criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.js:175:          highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.js:176:          moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.js:177:          scoreImpact: knowledgeAnalysis.scoreImpact,
+> src\services\aiEnrichment.service.js:178:          redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.js:179:          hiddenProcesses: knowledgeAnalysis.hiddenProcesses
+  src\services\aiEnrichment.service.js:180:        },
+  src\services\aiEnrichment.service.js:191:
+> src\services\aiEnrichment.service.js:192:Score impact détecté : ${knowledgeAnalysis.scoreImpact} points
+  src\services\aiEnrichment.service.js:193:Ceci doit influencer tes calculs de composantes.
+  src\services\aiEnrichment.service.js:205:   */
+> src\services\aiEnrichment.service.js:206:  static mergeHybridData(product, knowledgeAnalysis, aiData) {
+  src\services\aiEnrichment.service.js:207:    const merged = this.mergeEnrichedData(product, aiData);
+  src\services\aiEnrichment.service.js:209:    // Enrichir avec détections knowledge base
+> src\services\aiEnrichment.service.js:210:    if (knowledgeAnalysis.analyzed) {
+  src\services\aiEnrichment.service.js:211:      merged.knowledgeDetections = {
+> src\services\aiEnrichment.service.js:212:        criticalIssues: knowledgeAnalysis.criticalIssues,
+> src\services\aiEnrichment.service.js:213:        highIssues: knowledgeAnalysis.highIssues,
+> src\services\aiEnrichment.service.js:214:        moderateIssues: knowledgeAnalysis.moderateIssues,
+> src\services\aiEnrichment.service.js:215:        redFlags: knowledgeAnalysis.redFlags,
+> src\services\aiEnrichment.service.js:216:        hiddenProcesses: knowledgeAnalysis.hiddenProcesses,
+> src\services\aiEnrichment.service.js:217:        recommendations: knowledgeAnalysis.recommendations
+  src\services\aiEnrichment.service.js:218:      };
+  src\services\aiEnrichment.service.js:222:        const baseConfidence = merged.scores.confidence || 0.7;
+> src\services\aiEnrichment.service.js:223:        const knowledgeBonus = knowledgeAnalysis.analyzed ? 0.15 : 0;
+  src\services\aiEnrichment.service.js:224:        merged.scores.confidence = Math.min(baseConfidence + knowledgeBonus, 0.95);
+
+
+
+
+=== MENTIONS 'aiEnrichment' ===
+
+  src\controllers\ai.controller.backup2_20251112_232310.js:2:
+> src\controllers\ai.controller.backup2_20251112_232310.js:3:const enrichment = require('../services/aiEnrichment.service');
+  src\controllers\ai.controller.backup2_20251112_232310.js:4:const Product = require('../models/Product');
+  src\controllers\ai.controller.backup2_20251112_232310.js:183:        // Metadata enrichissement
+> src\controllers\ai.controller.backup2_20251112_232310.js:184:        aiEnriched: true,
+  src\controllers\ai.controller.backup2_20251112_232310.js:185:        enrichedAt: freshProduct.metadata?.lastEnriched || new Date(),
+> src\controllers\ai.controller.backup2_20251112_232310.js:186:        enrichmentVersion: freshProduct.metadata?.aiEnrichmentVersion || '3.3'
+  src\controllers\ai.controller.backup2_20251112_232310.js:187:      },
+  src\controllers\ai.controller.backup_20251112_231013.js:1:'use strict';
+> src\controllers\ai.controller.backup_20251112_231013.js:2:const enrichment = require('../services/aiEnrichment.service');
+  src\controllers\ai.controller.backup_20251112_231013.js:3:/**
+  src\controllers\ai.controller.backup_20251113_180712.js:2:
+> src\controllers\ai.controller.backup_20251113_180712.js:3:const enrichment = require('../services/aiEnrichment.service');
+  src\controllers\ai.controller.backup_20251113_180712.js:4:const Product = require('../models/Product');
+  src\controllers\ai.controller.backup_20251113_180712.js:296:        // Metadata enrichissement
+> src\controllers\ai.controller.backup_20251113_180712.js:297:        aiEnriched: true,
+  src\controllers\ai.controller.backup_20251113_180712.js:298:        enrichedAt: freshProduct.metadata?.lastEnriched || new Date(),
+> src\controllers\ai.controller.backup_20251113_180712.js:299:        enrichmentVersion: freshProduct.metadata?.aiEnrichmentVersion || '3.3'
+  src\controllers\ai.controller.backup_20251113_180712.js:300:      },
+  src\controllers\ai.controller.backup_20251113_181127.js:2:
+> src\controllers\ai.controller.backup_20251113_181127.js:3:const enrichment = require('../services/aiEnrichment.service');
+  src\controllers\ai.controller.backup_20251113_181127.js:4:const Product = require('../models/Product');
+  src\controllers\ai.controller.backup_20251113_181127.js:296:        // Metadata enrichissement
+> src\controllers\ai.controller.backup_20251113_181127.js:297:        aiEnriched: true,
+  src\controllers\ai.controller.backup_20251113_181127.js:298:        enrichedAt: freshProduct.metadata?.lastEnriched || new Date(),
+> src\controllers\ai.controller.backup_20251113_181127.js:299:        enrichmentVersion: freshProduct.metadata?.aiEnrichmentVersion || '3.3'
+  src\controllers\ai.controller.backup_20251113_181127.js:300:      },
+  src\controllers\ai.controller.js:2:
+> src\controllers\ai.controller.js:3:const enrichment = require('../services/aiEnrichment.service');
+  src\controllers\ai.controller.js:4:const Product = require('../models/Product');
+  src\controllers\ai.controller.js:296:        // Metadata enrichissement
+> src\controllers\ai.controller.js:297:        aiEnriched: true,
+  src\controllers\ai.controller.js:298:        enrichedAt: freshProduct.metadata?.lastEnriched || new Date(),
+> src\controllers\ai.controller.js:299:        enrichmentVersion: freshProduct.metadata?.aiEnrichmentVersion || '3.3'
+  src\controllers\ai.controller.js:300:      },
+  src\models\Product.backup_filters_20251105_204533.js:125:    aiEstimations: mongoose.Schema.Types.Mixed,
+> src\models\Product.backup_filters_20251105_204533.js:126:    aiEnrichmentUsed: { type: Boolean, default: false },
+> src\models\Product.backup_filters_20251105_204533.js:127:    aiEnrichmentSource: String,
+> src\models\Product.backup_filters_20251105_204533.js:128:    aiEnrichmentError: String,
+  src\models\Product.backup_filters_20251105_204533.js:129:    // Champs plats v3.1.0 (workaround Mongoose)
+  src\models\Product.js:149:    aiEstimations: mongoose.Schema.Types.Mixed,
+> src\models\Product.js:150:    aiEnrichmentUsed: { type: Boolean, default: false },
+> src\models\Product.js:151:    aiEnrichmentSource: String,
+> src\models\Product.js:152:    aiEnrichmentError: String,
+  src\models\Product.js:153:    scoringMetadata: mongoose.Schema.Types.Mixed,
+  src\routes\analysis.routes.js:23:// ⭐ NOUVEAU : Import du système hybride
+> src\routes\analysis.routes.js:24:const aiEnrichment = require('../services/aiEnrichment.service');
+> src\routes\analysis.routes.js:25:console.log('[AnalysisRoutes] ✅ AIEnrichment Service chargé (v3.1-hybrid)');
+  src\routes\analysis.routes.js:26:
+  src\routes\analysis.routes.js:37:      knowledgeBase: true,
+> src\routes\analysis.routes.js:38:      aiEnrichment: true,
+  src\routes\analysis.routes.js:39:      deepSeek: true
+  src\routes\analysis.routes.js:110:        
+> src\routes\analysis.routes.js:111:        enrichedProduct = await aiEnrichment.enrichProductWithAI(productForEnrichment);
+  src\routes\analysis.routes.js:112:        
+  src\routes\analysis.routes.js:164:      response.knowledgeAnalysis = finalProduct.knowledgeAnalysis;
+> src\routes\analysis.routes.js:165:      response.aiEnriched = true;
+  src\routes\analysis.routes.js:166:      response.knowledgeBaseUsed = finalProduct.knowledgeBaseUsed || false;
+> src\routes\analysis.routes.js:167:      response.aiEnrichmentVersion = finalProduct.aiEnrichmentVersion || '3.1-hybrid';
+> src\routes\analysis.routes.js:168:      response.aiEnrichmentDate = finalProduct.aiEnrichmentDate;
+  src\routes\analysis.routes.js:169:    }
+  src\routes\ocr-analyze.routes.js:81:    if (!scores.overallScore || (scores.dataQuality && scores.dataQuality.confidence < 70)) {try {
+> src\routes\ocr-analyze.routes.js:82:        const aiEnrichment = require('../services/aiEnrichment.service');
+> src\routes\ocr-analyze.routes.js:83:        const enrichedScores = await aiEnrichment.enrichProductWithAI(product, scores);
+  src\routes\ocr-analyze.routes.js:84:        
+  src\routes\products.backup_20251108_190434.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251108_190434.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251108_190434.js:86:  try {
+  src\routes\products.backup_20251108_190434.js:149:      enrichment: {
+> src\routes\products.backup_20251108_190434.js:150:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251108_190434.js:151:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251108_190434.js:173:      cached: cached,
+> src\routes\products.backup_20251108_190434.js:174:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251108_190434.js:175:    };
+  src\routes\products.backup_20251108_190434.js:522:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251108_190434.js:523:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251108_190434.js:524:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251108_191843.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251108_191843.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251108_191843.js:86:  try {
+  src\routes\products.backup_20251108_191843.js:149:      enrichment: {
+> src\routes\products.backup_20251108_191843.js:150:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251108_191843.js:151:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251108_191843.js:173:      cached: cached,
+> src\routes\products.backup_20251108_191843.js:174:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251108_191843.js:175:    };
+  src\routes\products.backup_20251108_191843.js:522:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251108_191843.js:523:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251108_191843.js:524:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251108_193747.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251108_193747.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251108_193747.js:86:  try {
+  src\routes\products.backup_20251108_193747.js:152:      enrichment: {
+> src\routes\products.backup_20251108_193747.js:153:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251108_193747.js:154:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251108_193747.js:176:      cached: cached,
+> src\routes\products.backup_20251108_193747.js:177:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251108_193747.js:178:    };
+  src\routes\products.backup_20251108_193747.js:525:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251108_193747.js:526:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251108_193747.js:527:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251110_151843.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251110_151843.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251110_151843.js:86:  try {
+  src\routes\products.backup_20251110_151843.js:149:      enrichment: {
+> src\routes\products.backup_20251110_151843.js:150:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251110_151843.js:151:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251110_151843.js:173:      cached: cached,
+> src\routes\products.backup_20251110_151843.js:174:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251110_151843.js:175:    };
+  src\routes\products.backup_20251110_151843.js:522:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251110_151843.js:523:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251110_151843.js:524:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251110_152506.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251110_152506.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251110_152506.js:86:  try {
+  src\routes\products.backup_20251110_152506.js:149:      enrichment: {
+> src\routes\products.backup_20251110_152506.js:150:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251110_152506.js:151:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251110_152506.js:173:      cached: cached,
+> src\routes\products.backup_20251110_152506.js:174:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251110_152506.js:175:    };
+  src\routes\products.backup_20251110_152506.js:522:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251110_152506.js:523:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251110_152506.js:524:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251113_215514.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251113_215514.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251113_215514.js:86:  try {
+  src\routes\products.backup_20251113_215514.js:149:      enrichment: {
+> src\routes\products.backup_20251113_215514.js:150:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251113_215514.js:151:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251113_215514.js:173:      cached: cached,
+> src\routes\products.backup_20251113_215514.js:174:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251113_215514.js:175:    };
+  src\routes\products.backup_20251113_215514.js:522:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_20251113_215514.js:523:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_20251113_215514.js:524:      return res.json(enrichedResponse);
+  src\routes\products.backup_20251115_212436.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_212436.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_212436.js:82:  try {
+  src\routes\products.backup_20251115_212436.js:133:      enrichment: {
+> src\routes\products.backup_20251115_212436.js:134:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_212436.js:135:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_212436.js:148:      cached: cached,
+> src\routes\products.backup_20251115_212436.js:149:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_212436.js:150:    };
+  src\routes\products.backup_20251115_212436.js:551:        result.cached || false,
+> src\routes\products.backup_20251115_212436.js:552:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_212436.js:553:      );
+  src\routes\products.backup_20251115_212916.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_212916.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_212916.js:82:  try {
+  src\routes\products.backup_20251115_212916.js:179:      enrichment: {
+> src\routes\products.backup_20251115_212916.js:180:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_212916.js:181:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_212916.js:194:      cached: cached,
+> src\routes\products.backup_20251115_212916.js:195:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_212916.js:196:    };
+  src\routes\products.backup_20251115_212916.js:597:        result.cached || false,
+> src\routes\products.backup_20251115_212916.js:598:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_212916.js:599:      );
+  src\routes\products.backup_20251115_213514.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_213514.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_213514.js:82:  try {
+  src\routes\products.backup_20251115_213514.js:179:      enrichment: {
+> src\routes\products.backup_20251115_213514.js:180:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_213514.js:181:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_213514.js:194:      cached: cached,
+> src\routes\products.backup_20251115_213514.js:195:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_213514.js:196:    };
+  src\routes\products.backup_20251115_213514.js:597:        result.cached || false,
+> src\routes\products.backup_20251115_213514.js:598:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_213514.js:599:      );
+  src\routes\products.backup_20251115_213748.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_213748.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_213748.js:82:  try {
+  src\routes\products.backup_20251115_213748.js:181:      enrichment: {
+> src\routes\products.backup_20251115_213748.js:182:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_213748.js:183:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_213748.js:196:      cached: cached,
+> src\routes\products.backup_20251115_213748.js:197:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_213748.js:198:    };
+  src\routes\products.backup_20251115_213748.js:599:        result.cached || false,
+> src\routes\products.backup_20251115_213748.js:600:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_213748.js:601:      );
+  src\routes\products.backup_20251115_214153.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_214153.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_214153.js:82:  try {
+  src\routes\products.backup_20251115_214153.js:181:      enrichment: {
+> src\routes\products.backup_20251115_214153.js:182:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_214153.js:183:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_214153.js:196:      cached: cached,
+> src\routes\products.backup_20251115_214153.js:197:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_214153.js:198:    };
+  src\routes\products.backup_20251115_214153.js:599:        result.cached || false,
+> src\routes\products.backup_20251115_214153.js:600:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_214153.js:601:      );
+  src\routes\products.backup_20251115_214349.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_214349.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_214349.js:82:  try {
+  src\routes\products.backup_20251115_214349.js:186:      enrichment: {
+> src\routes\products.backup_20251115_214349.js:187:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_214349.js:188:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_214349.js:201:      cached: cached,
+> src\routes\products.backup_20251115_214349.js:202:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_214349.js:203:    };
+  src\routes\products.backup_20251115_214349.js:604:        result.cached || false,
+> src\routes\products.backup_20251115_214349.js:605:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_214349.js:606:      );
+  src\routes\products.backup_20251115_214634.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_214634.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_214634.js:82:  try {
+  src\routes\products.backup_20251115_214634.js:186:      enrichment: {
+> src\routes\products.backup_20251115_214634.js:187:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_214634.js:188:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_214634.js:201:      cached: cached,
+> src\routes\products.backup_20251115_214634.js:202:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_214634.js:203:    };
+  src\routes\products.backup_20251115_214634.js:604:        result.cached || false,
+> src\routes\products.backup_20251115_214634.js:605:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_214634.js:606:      );
+  src\routes\products.backup_20251115_214911.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_214911.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_214911.js:82:  try {
+  src\routes\products.backup_20251115_214911.js:199:      enrichment: {
+> src\routes\products.backup_20251115_214911.js:200:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_214911.js:201:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_214911.js:214:      cached: cached,
+> src\routes\products.backup_20251115_214911.js:215:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_214911.js:216:    };
+  src\routes\products.backup_20251115_214911.js:617:        result.cached || false,
+> src\routes\products.backup_20251115_214911.js:618:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_214911.js:619:      );
+  src\routes\products.backup_20251115_221427.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_221427.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_221427.js:82:  try {
+  src\routes\products.backup_20251115_221427.js:204:      enrichment: {
+> src\routes\products.backup_20251115_221427.js:205:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_221427.js:206:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_221427.js:219:      cached: cached,
+> src\routes\products.backup_20251115_221427.js:220:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_221427.js:221:    };
+  src\routes\products.backup_20251115_221427.js:622:        result.cached || false,
+> src\routes\products.backup_20251115_221427.js:623:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_221427.js:624:      );
+  src\routes\products.backup_20251115_221724.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_221724.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_221724.js:82:  try {
+  src\routes\products.backup_20251115_221724.js:204:      enrichment: {
+> src\routes\products.backup_20251115_221724.js:205:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_221724.js:206:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_221724.js:219:      cached: cached,
+> src\routes\products.backup_20251115_221724.js:220:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_221724.js:221:    };
+  src\routes\products.backup_20251115_221724.js:622:        result.cached || false,
+> src\routes\products.backup_20251115_221724.js:623:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_221724.js:624:      );
+  src\routes\products.backup_20251115_222433.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_222433.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_222433.js:82:  try {
+  src\routes\products.backup_20251115_222433.js:199:      enrichment: {
+> src\routes\products.backup_20251115_222433.js:200:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_222433.js:201:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_222433.js:214:      cached: cached,
+> src\routes\products.backup_20251115_222433.js:215:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_222433.js:216:    };
+  src\routes\products.backup_20251115_222433.js:617:        result.cached || false,
+> src\routes\products.backup_20251115_222433.js:618:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_222433.js:619:      );
+  src\routes\products.backup_20251115_222947.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_222947.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_222947.js:82:  try {
+  src\routes\products.backup_20251115_222947.js:199:      enrichment: {
+> src\routes\products.backup_20251115_222947.js:200:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_222947.js:201:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_222947.js:214:      cached: cached,
+> src\routes\products.backup_20251115_222947.js:215:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_222947.js:216:    };
+  src\routes\products.backup_20251115_222947.js:617:        result.cached || false,
+> src\routes\products.backup_20251115_222947.js:618:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_222947.js:619:      );
+  src\routes\products.backup_20251115_223209.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_223209.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_223209.js:82:  try {
+  src\routes\products.backup_20251115_223209.js:198:      enrichment: {
+> src\routes\products.backup_20251115_223209.js:199:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_223209.js:200:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_223209.js:213:      cached: cached,
+> src\routes\products.backup_20251115_223209.js:214:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_223209.js:215:    };
+  src\routes\products.backup_20251115_223209.js:616:        result.cached || false,
+> src\routes\products.backup_20251115_223209.js:617:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_223209.js:618:      );
+  src\routes\products.backup_20251115_223657.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_223657.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_223657.js:82:  try {
+  src\routes\products.backup_20251115_223657.js:198:      enrichment: {
+> src\routes\products.backup_20251115_223657.js:199:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_223657.js:200:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_223657.js:213:      cached: cached,
+> src\routes\products.backup_20251115_223657.js:214:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_223657.js:215:    };
+  src\routes\products.backup_20251115_223657.js:616:        result.cached || false,
+> src\routes\products.backup_20251115_223657.js:617:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_223657.js:618:      );
+  src\routes\products.backup_20251115_224153.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_224153.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_224153.js:82:  try {
+  src\routes\products.backup_20251115_224153.js:204:      enrichment: {
+> src\routes\products.backup_20251115_224153.js:205:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_224153.js:206:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_224153.js:219:      cached: cached,
+> src\routes\products.backup_20251115_224153.js:220:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_224153.js:221:    };
+  src\routes\products.backup_20251115_224153.js:622:        result.cached || false,
+> src\routes\products.backup_20251115_224153.js:623:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_224153.js:624:      );
+  src\routes\products.backup_20251115_224425.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_224425.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_224425.js:82:  try {
+  src\routes\products.backup_20251115_224425.js:205:      enrichment: {
+> src\routes\products.backup_20251115_224425.js:206:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_224425.js:207:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_224425.js:220:      cached: cached,
+> src\routes\products.backup_20251115_224425.js:221:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_224425.js:222:    };
+  src\routes\products.backup_20251115_224425.js:623:        result.cached || false,
+> src\routes\products.backup_20251115_224425.js:624:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_224425.js:625:      );
+  src\routes\products.backup_20251115_224922.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_224922.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_224922.js:82:  try {
+  src\routes\products.backup_20251115_224922.js:208:      enrichment: {
+> src\routes\products.backup_20251115_224922.js:209:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_224922.js:210:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_224922.js:223:      cached: cached,
+> src\routes\products.backup_20251115_224922.js:224:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_224922.js:225:    };
+  src\routes\products.backup_20251115_224922.js:626:        result.cached || false,
+> src\routes\products.backup_20251115_224922.js:627:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_224922.js:628:      );
+  src\routes\products.backup_20251115_225142.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_225142.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_225142.js:82:  try {
+  src\routes\products.backup_20251115_225142.js:208:      enrichment: {
+> src\routes\products.backup_20251115_225142.js:209:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_225142.js:210:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_225142.js:223:      cached: cached,
+> src\routes\products.backup_20251115_225142.js:224:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_225142.js:225:    };
+  src\routes\products.backup_20251115_225142.js:626:        result.cached || false,
+> src\routes\products.backup_20251115_225142.js:627:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_225142.js:628:      );
+  src\routes\products.backup_20251115_225304.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_20251115_225304.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = 
+false) {
+  src\routes\products.backup_20251115_225304.js:82:  try {
+  src\routes\products.backup_20251115_225304.js:210:      enrichment: {
+> src\routes\products.backup_20251115_225304.js:211:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_20251115_225304.js:212:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_20251115_225304.js:225:      cached: cached,
+> src\routes\products.backup_20251115_225304.js:226:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_20251115_225304.js:227:    };
+  src\routes\products.backup_20251115_225304.js:628:        result.cached || false,
+> src\routes\products.backup_20251115_225304.js:629:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_20251115_225304.js:630:      );
+  src\routes\products.backup_ABSOLU_20251115_220731.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_ABSOLU_20251115_220731.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, 
+aiEnrichmentUsed = false) {
+  src\routes\products.backup_ABSOLU_20251115_220731.js:82:  try {
+  src\routes\products.backup_ABSOLU_20251115_220731.js:196:      enrichment: {
+> src\routes\products.backup_ABSOLU_20251115_220731.js:197:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_ABSOLU_20251115_220731.js:198:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_ABSOLU_20251115_220731.js:211:      cached: cached,
+> src\routes\products.backup_ABSOLU_20251115_220731.js:212:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_ABSOLU_20251115_220731.js:213:    };
+  src\routes\products.backup_ABSOLU_20251115_220731.js:614:        result.cached || false,
+> src\routes\products.backup_ABSOLU_20251115_220731.js:615:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_ABSOLU_20251115_220731.js:616:      );
+  src\routes\products.backup_FINAL_20251108_203604.js:84:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_FINAL_20251108_203604.js:85:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed 
+= false) {
+  src\routes\products.backup_FINAL_20251108_203604.js:86:  try {
+  src\routes\products.backup_FINAL_20251108_203604.js:155:      enrichment: {
+> src\routes\products.backup_FINAL_20251108_203604.js:156:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_FINAL_20251108_203604.js:157:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_FINAL_20251108_203604.js:179:      cached: cached,
+> src\routes\products.backup_FINAL_20251108_203604.js:180:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_FINAL_20251108_203604.js:181:    };
+  src\routes\products.backup_FINAL_20251108_203604.js:528:      logger.info('Product found/created via Orchestrator:', result.source);
+> src\routes\products.backup_FINAL_20251108_203604.js:529:      const enrichedResponse = await enrichProductResponse(result.product, result.source, 
+result.cached || false, result.aiEnrichmentUsed || false);
+  src\routes\products.backup_FINAL_20251108_203604.js:530:      return res.json(enrichedResponse);
+  src\routes\products.backup_FINAL_20251115_215047.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_FINAL_20251115_215047.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed 
+= false) {
+  src\routes\products.backup_FINAL_20251115_215047.js:82:  try {
+  src\routes\products.backup_FINAL_20251115_215047.js:203:      enrichment: {
+> src\routes\products.backup_FINAL_20251115_215047.js:204:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_FINAL_20251115_215047.js:205:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_FINAL_20251115_215047.js:218:      cached: cached,
+> src\routes\products.backup_FINAL_20251115_215047.js:219:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_FINAL_20251115_215047.js:220:    };
+  src\routes\products.backup_FINAL_20251115_215047.js:621:        result.cached || false,
+> src\routes\products.backup_FINAL_20251115_215047.js:622:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_FINAL_20251115_215047.js:623:      );
+  src\routes\products.backup_FINAL_20251115_221153.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_FINAL_20251115_221153.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed 
+= false) {
+  src\routes\products.backup_FINAL_20251115_221153.js:82:  try {
+  src\routes\products.backup_FINAL_20251115_221153.js:204:      enrichment: {
+> src\routes\products.backup_FINAL_20251115_221153.js:205:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_FINAL_20251115_221153.js:206:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_FINAL_20251115_221153.js:219:      cached: cached,
+> src\routes\products.backup_FINAL_20251115_221153.js:220:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_FINAL_20251115_221153.js:221:    };
+  src\routes\products.backup_FINAL_20251115_221153.js:622:        result.cached || false,
+> src\routes\products.backup_FINAL_20251115_221153.js:623:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_FINAL_20251115_221153.js:624:      );
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_FINAL_WORKING_20251115_225419.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, 
+aiEnrichmentUsed = false) {
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:82:  try {
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:210:      enrichment: {
+> src\routes\products.backup_FINAL_WORKING_20251115_225419.js:211:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:212:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:225:      cached: cached,
+> src\routes\products.backup_FINAL_WORKING_20251115_225419.js:226:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:227:    };
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:628:        result.cached || false,
+> src\routes\products.backup_FINAL_WORKING_20251115_225419.js:629:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_FINAL_WORKING_20251115_225419.js:630:      );
+  src\routes\products.backup_MANUEL_20251115_223845.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_MANUEL_20251115_223845.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, 
+aiEnrichmentUsed = false) {
+  src\routes\products.backup_MANUEL_20251115_223845.js:82:  try {
+  src\routes\products.backup_MANUEL_20251115_223845.js:204:      enrichment: {
+> src\routes\products.backup_MANUEL_20251115_223845.js:205:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_MANUEL_20251115_223845.js:206:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_MANUEL_20251115_223845.js:219:      cached: cached,
+> src\routes\products.backup_MANUEL_20251115_223845.js:220:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_MANUEL_20251115_223845.js:221:    };
+  src\routes\products.backup_MANUEL_20251115_223845.js:622:        result.cached || false,
+> src\routes\products.backup_MANUEL_20251115_223845.js:623:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_MANUEL_20251115_223845.js:624:      );
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_ULTIMATE_20251115_220140.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, 
+aiEnrichmentUsed = false) {
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:82:  try {
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:196:      enrichment: {
+> src\routes\products.backup_ULTIMATE_20251115_220140.js:197:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:198:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:211:      cached: cached,
+> src\routes\products.backup_ULTIMATE_20251115_220140.js:212:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:213:    };
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:614:        result.cached || false,
+> src\routes\products.backup_ULTIMATE_20251115_220140.js:615:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_ULTIMATE_20251115_220140.js:616:      );
+  src\routes\products.backup_ULTIME_20251115_222202.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.backup_ULTIME_20251115_222202.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, 
+aiEnrichmentUsed = false) {
+  src\routes\products.backup_ULTIME_20251115_222202.js:82:  try {
+  src\routes\products.backup_ULTIME_20251115_222202.js:199:      enrichment: {
+> src\routes\products.backup_ULTIME_20251115_222202.js:200:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.backup_ULTIME_20251115_222202.js:201:        confidence: product.scores?.confidence || null,
+  src\routes\products.backup_ULTIME_20251115_222202.js:214:      cached: cached,
+> src\routes\products.backup_ULTIME_20251115_222202.js:215:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.backup_ULTIME_20251115_222202.js:216:    };
+  src\routes\products.backup_ULTIME_20251115_222202.js:617:        result.cached || false,
+> src\routes\products.backup_ULTIME_20251115_222202.js:618:        result.aiEnrichmentUsed || false
+  src\routes\products.backup_ULTIME_20251115_222202.js:619:      );
+  src\routes\products.js:80:// === FONCTION ENRICHISSEMENT RÉPONSE ===
+> src\routes\products.js:81:async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false) {
+  src\routes\products.js:82:  try {
+  src\routes\products.js:206:      enrichment: {
+> src\routes\products.js:207:        aiUsed: aiEnrichmentUsed,
+  src\routes\products.js:208:        confidence: product.scores?.confidence || null,
+  src\routes\products.js:221:      cached: cached,
+> src\routes\products.js:222:      aiEnrichmentUsed: aiEnrichmentUsed
+  src\routes\products.js:223:    };
+  src\routes\products.js:624:        result.cached || false,
+> src\routes\products.js:625:        result.aiEnrichmentUsed || false
+  src\routes\products.js:626:      );
+  src\routes\products.PATCH2_20251108_120525.js:482:          enrichment: {
+> src\routes\products.PATCH2_20251108_120525.js:483:            aiUsed: result.aiEnrichmentUsed || false,
+  src\routes\products.PATCH2_20251108_120525.js:484:            confidence: result.product.scores?.confidence || null,
+  src\routes\products.PATCH2_20251108_120525.js:506:          cached: result.cached || false,
+> src\routes\products.PATCH2_20251108_120525.js:507:          aiEnrichmentUsed: result.aiEnrichmentUsed || false
+  src\routes\products.PATCH2_20251108_120525.js:508:        });
+  src\routes\products.PATCH3_20251108_121009.js:478:          enrichment: {
+> src\routes\products.PATCH3_20251108_121009.js:479:            aiUsed: result.aiEnrichmentUsed || false,
+  src\routes\products.PATCH3_20251108_121009.js:480:            confidence: result.product.scores?.confidence || null,
+  src\routes\products.PATCH3_20251108_121009.js:502:          cached: result.cached || false,
+> src\routes\products.PATCH3_20251108_121009.js:503:          aiEnrichmentUsed: result.aiEnrichmentUsed || false
+  src\routes\products.PATCH3_20251108_121009.js:504:        });
+  src\routes\scoring.routes.js:303:    // 2. Enrichir avec IA (le service fait TOUT : enrichir + scorer + sauvegarder)
+> src\routes\scoring.routes.js:304:    const aiEnrichment = require('../services/aiEnrichment.service');
+> src\routes\scoring.routes.js:305:    await aiEnrichment.enrichProductWithAI(product, product.category || 'food', { force: true });
+  src\routes\scoring.routes.js:306:
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:79:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:80:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:81:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:114:      estimations: parsed,
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:115:      aiEnriched: true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:116:    };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:155:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:156:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:157:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:279:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:280:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:281:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:394:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:395:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:396:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:429:      enriched,
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:430:      aiEnriched: true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:431:    };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:506:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:507:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:508:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:541:      enriched,
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:542:      aiEnriched: true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:543:    };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:582:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:583:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:584:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:670:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:671:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:672:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:704:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand même',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:705:        aiEnriched: false
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:706:      };
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:768:        'scores.scoringVersion': '3.1.0',
+> src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:769:        'scores.aiEnrichmentUsed': true
+  src\services\aiEnrichment.service.BACKUP2_20251103_220654.js:770:      };
+  src\services\aiEnrichment.service.backup_20251110_224915.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251110_224915.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251110_224915.js:111:      
+  src\services\aiEnrichment.service.backup_20251110_224915.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_20251110_224915.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_20251110_224915.js:121:    };
+  src\services\aiEnrichment.service.backup_20251110_224915.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251110_224915.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251110_224915.js:201:      
+  src\services\aiEnrichment.service.backup_20251110_224915.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251110_224915.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251110_224915.js:233:      
+  src\services\aiEnrichment.service.backup_20251110_224915.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251110_224915.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251110_224915.js:247:      
+  src\services\aiEnrichment.service.backup_20251110_224915.js:276:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand même',
+> src\services\aiEnrichment.service.backup_20251110_224915.js:277:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_20251110_224915.js:278:      };
+  src\services\aiEnrichment.service.backup_20251113_220152.js:7:if (!DEEPSEEK_API_KEY) {
+> src\services\aiEnrichment.service.backup_20251113_220152.js:8:  console.warn('[aiEnrichment] ⚠️  DEEPSEEK_API_KEY manquante dans .env');
+  src\services\aiEnrichment.service.backup_20251113_220152.js:9:}
+  src\services\aiEnrichment.service.backup_20251113_220152.js:121:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251113_220152.js:122:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251113_220152.js:123:      
+  src\services\aiEnrichment.service.backup_20251113_220152.js:131:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_20251113_220152.js:132:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_20251113_220152.js:133:    };
+  src\services\aiEnrichment.service.backup_20251113_220152.js:223:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251113_220152.js:224:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251113_220152.js:225:      
+  src\services\aiEnrichment.service.backup_20251113_220152.js:259:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251113_220152.js:260:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251113_220152.js:261:      
+  src\services\aiEnrichment.service.backup_20251113_220152.js:273:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_20251113_220152.js:274:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_20251113_220152.js:275:      
+  src\services\aiEnrichment.service.backup_20251113_220152.js:304:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand même',
+> src\services\aiEnrichment.service.backup_20251113_220152.js:305:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_20251113_220152.js:306:      };
+> src\services\aiEnrichment.service.backup_20251116_154605.js:1:// PATH: backend/src/services/aiEnrichment.service.js
+  src\services\aiEnrichment.service.backup_20251116_154605.js:2:const deepSeekService = require('./ai/deepSeekService');
+  src\services\aiEnrichment.service.backup_20251116_154605.js:25:
+> src\services\aiEnrichment.service.backup_20251116_154605.js:26:class AIEnrichmentService {
+  src\services\aiEnrichment.service.backup_20251116_154605.js:27:
+  src\services\aiEnrichment.service.backup_20251116_154605.js:85:      // Métadonnées enrichissement
+> src\services\aiEnrichment.service.backup_20251116_154605.js:86:      scoredProduct.aiEnriched = true;
+> src\services\aiEnrichment.service.backup_20251116_154605.js:87:      scoredProduct.aiEnrichmentDate = new Date();
+> src\services\aiEnrichment.service.backup_20251116_154605.js:88:      scoredProduct.aiEnrichmentVersion = '3.1-hybrid';
+  src\services\aiEnrichment.service.backup_20251116_154605.js:89:      scoredProduct.knowledgeBaseUsed = true;
+  src\services\aiEnrichment.service.backup_20251116_154605.js:105:        ...product,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:106:        aiEnriched: false,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:107:        aiEnrichmentError: error.message,
+> src\services\aiEnrichment.service.backup_20251116_154605.js:108:        aiEnrichmentAttemptedAt: new Date()
+  src\services\aiEnrichment.service.backup_20251116_154605.js:109:      };
+  src\services\aiEnrichment.service.backup_20251116_154605.js:386:
+> src\services\aiEnrichment.service.backup_20251116_154605.js:387:module.exports = AIEnrichmentService;
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:1:// PATH: backend/src/services/aiEnrichment.service.js
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:2:const deepSeekService = require('./ai/deepSeekService');
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:26:
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:27:class AIEnrichmentService {
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:28:  
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:63:      // Marquer comme enrichi par IA
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:64:      scoredProduct.aiEnriched = true;
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:65:      scoredProduct.aiEnrichmentDate = new Date();
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:66:      scoredProduct.aiEnrichmentVersion = '3.1';
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:67:
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:81:        ...product,
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:82:        aiEnriched: false,
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:83:        aiEnrichmentError: error.message,
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:84:        aiEnrichmentAttemptedAt: new Date()
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:85:      };
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:434:    // Métadonnées enrichissement
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:435:    merged.aiEnrichmentMetadata = {
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:436:      confidence: enrichedData.confidence || 0.7,
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:478:      const originalConfidence = scoredProduct.scores.confidence || 0.9;
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:479:      const aiConfidence = scoredProduct.aiEnrichmentMetadata?.confidence || 0.7;
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:480:      
+  src\services\aiEnrichment.service.backup_20251116_prehybrid.js:531:
+> src\services\aiEnrichment.service.backup_20251116_prehybrid.js:532:module.exports = AIEnrichmentService;
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:111:      
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:121:    };
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:201:      
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:233:      
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:247:      
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:273:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand 
+même',
+> src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:274:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_DEBUG_20251109_123441.js:275:      };
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:111:      
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:121:    };
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:201:      
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:233:      
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:247:      
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:276:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand 
+même',
+> src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:277:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_DOUBLON_20251109_132849.js:278:      };
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:1:// PATH: backend/src/services/aiEnrichment.service.js
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:2:const deepSeekService = require('./ai/deepSeekService');
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:25:
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:26:class AIEnrichmentService {
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:27:
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:85:      // Métadonnées enrichissement
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:86:      scoredProduct.aiEnriched = true;
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:87:      scoredProduct.aiEnrichmentDate = new Date();
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:88:      scoredProduct.aiEnrichmentVersion = '3.1-hybrid';
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:89:      scoredProduct.knowledgeBaseUsed = true;
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:105:        ...product,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:106:        aiEnriched: false,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:107:        aiEnrichmentError: error.message,
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:108:        aiEnrichmentAttemptedAt: new Date()
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:109:      };
+  src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:386:
+> src\services\aiEnrichment.service.backup_FINAL_20251116_163508.js:387:module.exports = AIEnrichmentService;
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:111:      
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:121:    };
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:201:      
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:233:      
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:247:      
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:273:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand 
+même',
+> src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:274:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_FIX_20251109_121932.js:275:      };
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:111:      
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:121:    };
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:201:      
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:233:      
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:247:      
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:276:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand 
+même',
+> src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:277:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_IMPORT_20251109_131849.js:278:      };
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:111:      
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:121:    };
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:201:      
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:233:      
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:247:      
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:276:        message: 'Produit déjà complet - Utilisez force:true pour enrichir 
+quand même',
+> src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:277:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_RECALCUL_20251109_130655.js:278:      };
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:109:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:110:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:111:      
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:119:      estimations: parsed,
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:120:      aiEnriched: true
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:121:    };
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:199:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:200:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:201:      
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:231:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:232:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:233:      
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:245:      updateData['metadata.lastEnriched'] = new Date();
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:246:      updateData['metadata.aiEnrichmentVersion'] = '3.3';
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:247:      
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:276:        message: 'Produit déjà complet - Utilisez force:true pour enrichir quand 
+même',
+> src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:277:        aiEnriched: false
+  src\services\aiEnrichment.service.backup_SCORE_20251109_144313.js:278:      };
+> src\services\aiEnrichment.service.js:1:// PATH: backend/src/services/aiEnrichment.service.js
+  src\services\aiEnrichment.service.js:2:const deepSeekService = require('./ai/deepSeekService');
+  src\services\aiEnrichment.service.js:25:
+> src\services\aiEnrichment.service.js:26:class AIEnrichmentService {
+  src\services\aiEnrichment.service.js:27:
+  src\services\aiEnrichment.service.js:85:      // Métadonnées enrichissement
+> src\services\aiEnrichment.service.js:86:      scoredProduct.aiEnriched = true;
+> src\services\aiEnrichment.service.js:87:      scoredProduct.aiEnrichmentDate = new Date();
+> src\services\aiEnrichment.service.js:88:      scoredProduct.aiEnrichmentVersion = '3.1-hybrid';
+  src\services\aiEnrichment.service.js:89:      scoredProduct.knowledgeBaseUsed = true;
+  src\services\aiEnrichment.service.js:105:        ...product,
+> src\services\aiEnrichment.service.js:106:        aiEnriched: false,
+> src\services\aiEnrichment.service.js:107:        aiEnrichmentError: error.message,
+> src\services\aiEnrichment.service.js:108:        aiEnrichmentAttemptedAt: new Date()
+  src\services\aiEnrichment.service.js:109:      };
+  src\services\aiEnrichment.service.js:413:
+> src\services\aiEnrichment.service.js:414:module.exports = AIEnrichmentService;
+  src\services\ProductOrchestrator.backup_20251113_215900.js:13:const offClient = require('./offClient');
+> src\services\ProductOrchestrator.backup_20251113_215900.js:14:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_20251113_215900.js:15:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_20251113_215900.js:331:      
+> src\services\ProductOrchestrator.backup_20251113_215900.js:332:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+normalizedProduct.category || 'food');
+  src\services\ProductOrchestrator.backup_20251113_215900.js:333:
+  src\services\ProductOrchestrator.backup_20251113_215900.js:401:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_20251113_215900.js:402:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_20251113_215900.js:403:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_20251113_215900.js:404:
+  src\services\ProductOrchestrator.backup_20251113_215900.js:479:    
+> src\services\ProductOrchestrator.backup_20251113_215900.js:480:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+normalizedProduct.category || 'food');
+  src\services\ProductOrchestrator.backup_20251113_215900.js:481:
+  src\services\ProductOrchestrator.backup_20251113_215900.js:491:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_20251113_215900.js:492:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_20251113_215900.js:493:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_20251113_215900.js:494:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_20251113_225553.js:3:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_20251113_225553.js:4:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_20251113_225553.js:5:
+  src\services\ProductOrchestrator.backup_20251113_225553.js:57:            cached: true,
+> src\services\ProductOrchestrator.backup_20251113_225553.js:58:            aiEnrichmentUsed: existingProduct.aiEnriched || false
+  src\services\ProductOrchestrator.backup_20251113_225553.js:59:          };
+  src\services\ProductOrchestrator.backup_20251113_225553.js:84:        let finalProduct = scoredProduct;
+> src\services\ProductOrchestrator.backup_20251113_225553.js:85:        let aiEnrichmentUsed = false;
+  src\services\ProductOrchestrator.backup_20251113_225553.js:86:
+  src\services\ProductOrchestrator.backup_20251113_225553.js:89:          try {
+> src\services\ProductOrchestrator.backup_20251113_225553.js:90:            finalProduct = await aiEnrichment.enrichProductWithAI(scoredProduct);
+> src\services\ProductOrchestrator.backup_20251113_225553.js:91:            aiEnrichmentUsed = true;
+  src\services\ProductOrchestrator.backup_20251113_225553.js:92:          } catch (enrichError) {
+  src\services\ProductOrchestrator.backup_20251113_225553.js:104:          cached: false,
+> src\services\ProductOrchestrator.backup_20251113_225553.js:105:          aiEnrichmentUsed
+  src\services\ProductOrchestrator.backup_20251113_225553.js:106:        };
+  src\services\ProductOrchestrator.backup_20251113_225553.js:123:        cached: false,
+> src\services\ProductOrchestrator.backup_20251113_225553.js:124:        aiEnrichmentUsed: false
+  src\services\ProductOrchestrator.backup_20251113_225553.js:125:      };
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:308:      
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:309:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:310:
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:377:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:378:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:379:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:380:
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:455:    
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:456:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:457:
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:467:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:468:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:469:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_COMPLETE_20251108_211812.js:470:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:13:const offClient = require('./offClient');
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:14:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:15:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:331:      
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:332:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:333:
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:400:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:401:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:402:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:403:
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:478:    
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:479:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:480:
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:490:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:491:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:492:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_COMPLET_20251108_214833.js:493:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:308:      
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:309:      const aiResult = await 
+aiEnrichment.enrichProductWithAI(normalizedProduct, scoringResult);
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:310:
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:377:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:378:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:379:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:380:
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:455:    
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:456:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:457:
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:467:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:468:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:469:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_DUALFORMAT_20251108_210504.js:470:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:181:    // Maintenant on peut enrichir avec l'IA (le produit a un _id valide)
+> src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:182:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:183:
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:220:    cached: false,
+> src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:221:    aiEnrichmentUsed: aiUsed
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:222:  };
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:246:    console.log('[Orchestrator] 🤖 Parsing IA des données produit...');
+> src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:247:    const parsedProduct = await 
+aiEnrichment.parseProductFromOCR(ocrResult.text, barcode);
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:248:
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:310:      cached: false,
+> src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:311:      aiEnrichmentUsed: true,
+  src\services\ProductOrchestrator.backup_ENRICHAUTO_20251108_204601.js:312:      method: 'OCR + DeepSeek'
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:308:      
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:309:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:310:
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:377:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:378:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:379:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:380:
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:455:    
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:456:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:457:
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:467:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:468:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:469:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_EXPORT_20251108_205616.js:470:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:332:      
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:333:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:334:
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:401:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:402:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:403:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:404:
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:479:    
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:480:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:481:
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:491:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:492:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:493:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_FINAL_20251108_214247.js:494:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:13:const offClient = require('./offClient');
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:14:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:15:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:331:      
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:332:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:333:
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:400:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:401:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:402:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:403:
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:478:    
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:479:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:480:
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:490:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:491:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:492:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_IMPORT_20251108_215550.js:493:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:13:const offClient = require('./offClient');
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:14:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:15:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:331:      
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:332:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:333:
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:400:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:401:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:402:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:403:
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:478:    
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:479:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:480:
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:490:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:491:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:492:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_MODULE_20251108_215853.js:493:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:13:const offClient = require('./offClient');
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:14:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:15:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:331:      
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:332:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+normalizedProduct.category || 'food');
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:333:
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:400:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:401:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:402:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:403:
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:478:    
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:479:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+normalizedProduct.category || 'food');
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:480:
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:490:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:491:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:492:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_SCORE_20251109_144313.js:493:      image: options.imageUrl || ''
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:14:const scoringUnified = require('./scoringUnified');
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:15:const aiEnrichment = require('./aiEnrichment.service');
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:16:const visionService = require('./vision/VisionService');
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:332:      
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:333:      const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:334:
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:401:      // Métadonnées IA
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:402:      aiEnriched: aiUsed,
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:403:      aiEnrichedAt: aiUsed ? new Date() : product?.aiEnrichedAt,
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:404:
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:479:    
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:480:    const aiResult = await aiEnrichment.enrichProductWithAI(normalizedProduct, 
+scoringResult);
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:481:
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:491:      nutritionalInfo: normalizedProduct.nutritionalInfo,
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:492:      aiEnriched: true,
+> src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:493:      aiEnrichedAt: new Date(),
+  src\services\ProductOrchestrator.backup_SCORING_20251108_213627.js:494:      image: options.imageUrl || ''
+  src\services\scoringUnified.backup_20251115_211419.js:184:      recommendation: 'Utilisez le chat IA pour en savoir plus sur ce produit.',
+> src\services\scoringUnified.backup_20251115_211419.js:185:      needsAIEnrichment: true,
+  src\services\scoringUnified.backup_20251115_211419.js:186:      aiSuggestion: 'ask_ai_for_analysis'
+  src\services\scoringUnified.js:184:      recommendation: 'Utilisez le chat IA pour en savoir plus sur ce produit.',
+> src\services\scoringUnified.js:185:      needsAIEnrichment: true,
+  src\services\scoringUnified.js:186:      aiSuggestion: 'ask_ai_for_analysis'
+  src\services\ai\deepSeekService.BACKUP3_20251103_221946.js:382:      
+> src\services\ai\deepSeekService.BACKUP3_20251103_221946.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP3_20251103_221946.js:384:
+  src\services\ai\deepSeekService.BACKUP4_20251103_222152.js:382:      
+> src\services\ai\deepSeekService.BACKUP4_20251103_222152.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP4_20251103_222152.js:384:
+  src\services\ai\deepSeekService.BACKUP6_20251103_222501.js:382:      
+> src\services\ai\deepSeekService.BACKUP6_20251103_222501.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP6_20251103_222501.js:384:
+  src\services\ai\deepSeekService.backup_20251103_215112.js:382:      
+> src\services\ai\deepSeekService.backup_20251103_215112.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.backup_20251103_215112.js:384:
+  src\services\ai\deepSeekService.BACKUP_20251104_222815.js:417:      
+> src\services\ai\deepSeekService.BACKUP_20251104_222815.js:418:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP_20251104_222815.js:419:
+  src\services\ai\deepSeekService.BACKUP_20251104_222953.js:417:      
+> src\services\ai\deepSeekService.BACKUP_20251104_222953.js:418:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP_20251104_222953.js:419:
+  src\services\ai\deepSeekService.backup_20251110_173911.js:382:      
+> src\services\ai\deepSeekService.backup_20251110_173911.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.backup_20251110_173911.js:384:
+  src\services\ai\deepSeekService.BACKUP_AVANT_CORRECTION_20251104_212911.js:417:      
+> src\services\ai\deepSeekService.BACKUP_AVANT_CORRECTION_20251104_212911.js:418:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP_AVANT_CORRECTION_20251104_212911.js:419:
+  src\services\ai\deepSeekService.BACKUP_COMPLET_20251104_210133.js:403:      
+> src\services\ai\deepSeekService.BACKUP_COMPLET_20251104_210133.js:404:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP_COMPLET_20251104_210133.js:405:
+  src\services\ai\deepSeekService.BACKUP_FINAL_PROD_20251104_203012.js:382:      
+> src\services\ai\deepSeekService.BACKUP_FINAL_PROD_20251104_203012.js:383:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.BACKUP_FINAL_PROD_20251104_203012.js:384:
+  src\services\ai\deepSeekService.CASSE_20251104_223147.js:417:      
+> src\services\ai\deepSeekService.CASSE_20251104_223147.js:418:      console.log('[DeepSeek] ✅ Format adapté pour aiEnrichment:', 
+JSON.stringify(adaptedNutriments));
+  src\services\ai\deepSeekService.CASSE_20251104_223147.js:419:
+
+

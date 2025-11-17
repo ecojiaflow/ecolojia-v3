@@ -1,0 +1,155 @@
+﻿// === FONCTION ENRICHISSEMENT RÉPONSE ===
+async function enrichProductResponse(product, source = 'DIRECT', cached = false, aiEnrichmentUsed = false, knowledgeData = null) {
+  try {
+    let plainProduct = product.toObject ? product.toObject() : product;
+    // ============================================================================
+    // 🔧 RECALCUL AUTOMATIQUE DU BREAKDOWN SI ABSENT (V3.1)
+    // ============================================================================
+    // Si le produit n'a pas de breakdown (ancien format), on recalcule
+    if (product.scores && (!product.scores.breakdown || product.scores.scoringVersion !== '3.1.0')) {
+      logger.info('[SCORING] Recalcul breakdown pour produit ancien format');
+      
+      try {
+        // Préparer les données pour le scoring
+        const scoringData = {
+          // Nom et marque (requis pour calculateDataConfidence)
+          product_name: plainProduct.name,
+          brands: plainProduct.brand,
+          
+          // NOVA Group
+          novaGroup: plainProduct.nova_group || plainProduct.foodData?.novaGroup,
+          
+          // Nutri-Score
+          nutriScore: plainProduct.nutriscore_grade || plainProduct.foodData?.nutriScore,
+          
+          // Eco-Score
+          ecoScore: plainProduct.ecoscore_grade || plainProduct.foodData?.ecoScore,
+          
+          // Additifs
+          additives: plainProduct.additives_tags || plainProduct.foodData?.additivesTags || [],
+          
+          // Labels
+          labels: plainProduct.labels || plainProduct.labels_tags || plainProduct.foodData?.labels || [],
+          
+          // Nutriments (CRITICAL)
+          nutriments: plainProduct.nutriments || plainProduct.foodData?.nutritionFacts || {},
+          
+          // Catégorie
+          category: plainProduct.categoryType || plainProduct.category
+        };
+
+        // Recalculer avec scoringUnified
+        const newScores = scoringUnified.calculateFoodScores(scoringData);
+        
+        if (newScores && newScores.breakdown) {
+          logger.info('[SCORING] ✅ Breakdown recalculé avec succès');
+          
+          // Mettre à jour le produit
+          product.scores = {
+            ...product.scores,
+            ...newScores,
+            scoringVersion: '3.1.0',
+            recalculatedAt: new Date()
+          };
+          
+          // Sauvegarder en base ET attendre
+          if (product.save) {
+            // product.markModified('scores'); // SKIP - on utilise updateOne à la place
+            // await product.save(); // SKIP - save() écrase les scores !
+            
+            // CRITICAL: Recharger depuis DB pour forcer la mise à jour
+            await product.constructor.updateOne(
+              { _id: product._id },
+              { $set: { scores: product.scores } }
+            );
+            logger.info('[SCORING] ✅ Scores forcés en DB via updateOne');
+            logger.info('[SCORING] Produit sauvegardé en base avec breakdown');
+            
+            // Mettre à jour plainProduct
+            plainProduct = product.toObject ? product.toObject() : product;
+          }
+        }
+      } catch (scoringError) {
+        logger.error('[SCORING] Erreur recalcul:', scoringError.message);
+      }
+    }
+    // ============================================================================
+
+    const currentScore = plainProduct.scores?.overallScore || plainProduct.scores?.global || 0;
+
+    // 1. Alternatives IA (3 max)
+    let alternatives = [];
+    try {
+      const altResult = await alternativesService.findAlternatives({
+        productId: plainProduct._id,
+        barcode: plainProduct.barcode,
+        maxResults: 3,
+        userPreferences: { minScore: currentScore + 5 }
+      });
+      alternatives = altResult.alternatives || [];
+    } catch (altError) {
+      logger.error('[ALTERNATIVES] Error:', altError.message);
+    }
+
+    // 2. Recettes/Routines (food uniquement, 3 max)
+    let recipes = [];
+    if (plainProduct.categoryType === 'food') {
+      try {
+        const userProfile = {
+          dietary: 'omnivore',
+          targetCaloriesPerMeal: 500,
+          allergens: [],
+          goals: ['health']
+        };
+        const recipesResult = await recipeAdapter.recommendRecipesForProduct(plainProduct, {
+          count: 3,
+          userProfile: userProfile
+        });
+        recipes = recipesResult || [];
+      } catch (recipeError) {
+        logger.error('[RECIPES] Error:', recipeError.message);
+      }
+    }
+
+    // 3. Cartes pédagogiques CIL (2 max)
+    let contextCards = [];
+    try {
+      contextCards = contextualService.selectRelevantCards(plainProduct, 2);
+    } catch (cardError) {
+      logger.error('[CONTEXTUAL] Error:', cardError.message);
+    }
+
+    return {
+      success: true,
+      product: plainProduct,
+      product: product.toObject ? product.toObject() : product,
+      cached: cached,
+      enrichment: {
+        aiUsed: aiEnrichmentUsed,
+        confidence: product.scores?.confidence || null,
+        dataCompleteness: product.scores?.dataCompleteness || null
+      },
+      alternatives: alternatives.length > 0 ? alternatives : [],
+      recipes: recipes.length > 0 ? recipes : [],
+      contextCards: contextCards.length > 0 ? contextCards : []
+    };
+  } catch (enrichError) {
+    logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
+    return {
+      success: true,
+      product: plainProduct,
+      source: source,
+      cached: cached,
+      aiEnrichmentUsed: aiEnrichmentUsed,
+
+      // ⭐ SYSTÈME HYBRIDE V3.1 (Compatible Node.js)
+      knowledgeAnalysis: knowledgeData ? knowledgeData.knowledgeAnalysis : null,
+      aiEnriched: knowledgeData ? knowledgeData.aiEnriched : null,
+      knowledgeBaseUsed: knowledgeData ? knowledgeData.knowledgeBaseUsed : null,
+      confidence: knowledgeData ? knowledgeData.confidence : null,
+      deepseekUsed: knowledgeData ? knowledgeData.deepseekUsed : null,
+      aiEnrichmentDate: knowledgeData ? knowledgeData.aiEnrichmentDate : null,
+      aiEnrichmentVersion: knowledgeData ? knowledgeData.aiEnrichmentVersion : null
+    };
+  }
+}

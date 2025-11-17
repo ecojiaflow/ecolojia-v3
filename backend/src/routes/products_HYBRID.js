@@ -201,10 +201,8 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
 
     return {
       success: true,
-      product: {
-        ...(product.toObject ? product.toObject() : product),
-        globalScore: product.globalScore // ⭐ Copier explicitement globalScore
-      },
+      product: plainProduct,
+      product: product.toObject ? product.toObject() : product,
       cached: cached,
       enrichment: {
         aiUsed: aiEnrichmentUsed,
@@ -213,33 +211,27 @@ async function enrichProductResponse(product, source = 'DIRECT', cached = false,
       },
       alternatives: alternatives.length > 0 ? alternatives : [],
       recipes: recipes.length > 0 ? recipes : [],
-      contextCards: contextCards.length > 0 ? contextCards : [],
-
-      // ⭐ SYSTÈME HYBRIDE V3.1
-      knowledgeAnalysis: knowledgeData ? knowledgeData.knowledgeAnalysis : null,
-      aiEnriched: knowledgeData ? knowledgeData.aiEnriched : null,
-      knowledgeBaseUsed: knowledgeData ? knowledgeData.knowledgeBaseUsed : null,
-      confidence: knowledgeData ? knowledgeData.confidence : null,
-      deepseekUsed: knowledgeData ? knowledgeData.deepseekUsed : null,
-      aiEnrichmentDate: knowledgeData ? knowledgeData.aiEnrichmentDate : null,
-      aiEnrichmentVersion: knowledgeData ? knowledgeData.aiEnrichmentVersion : null
+      contextCards: contextCards.length > 0 ? contextCards : []
     };
   } catch (enrichError) {
     logger.error('[ENRICH_RESPONSE] Error:', enrichError.message);
     return {
       success: true,
+      product: plainProduct,
       source: source,
       cached: cached,
-      aiEnrichmentUsed: aiEnrichmentUsed,
+      aiEnrichmentUsed: aiEnrichmentUsed
 
-      // ⭐ SYSTÈME HYBRIDE V3.1 (Compatible Node.js)
-      knowledgeAnalysis: knowledgeData ? knowledgeData.knowledgeAnalysis : null,
-      aiEnriched: knowledgeData ? knowledgeData.aiEnriched : null,
-      knowledgeBaseUsed: knowledgeData ? knowledgeData.knowledgeBaseUsed : null,
-      confidence: knowledgeData ? knowledgeData.confidence : null,
-      deepseekUsed: knowledgeData ? knowledgeData.deepseekUsed : null,
-      aiEnrichmentDate: knowledgeData ? knowledgeData.aiEnrichmentDate : null,
-      aiEnrichmentVersion: knowledgeData ? knowledgeData.aiEnrichmentVersion : null
+      // ⭐ SYSTÈME HYBRIDE V3.1
+      ...(knowledgeData && {
+        knowledgeAnalysis: knowledgeData.knowledgeAnalysis,
+        aiEnriched: knowledgeData.aiEnriched,
+        knowledgeBaseUsed: knowledgeData.knowledgeBaseUsed,
+        confidence: knowledgeData.confidence,
+        deepseekUsed: knowledgeData.deepseekUsed,
+        aiEnrichmentDate: knowledgeData.aiEnrichmentDate,
+        aiEnrichmentVersion: knowledgeData.aiEnrichmentVersion
+      })
     };
   }
 }
@@ -561,7 +553,7 @@ router.get('/:id', handleAsync(async (req, res) => {
         logger.warn('⚠️ Enrichissement IA échoué:', aiError.message);
       }
 
-      const enrichedResponse = await enrichProductResponse(enriched, 'MONGODB_ID', false, true, knowledgeData);
+      const enrichedResponse = await enrichProductResponse(product, 'MONGODB_ID', false, true, knowledgeData);
       return res.json(enrichedResponse);
     }
   }
@@ -655,32 +647,12 @@ router.get('/:id', handleAsync(async (req, res) => {
     // Cas 3 : Produit trouvé et enrichi
     // ============================================================================
     if (result.product) {
-      // ⭐ ENRICHISSEMENT IA HYBRIDE
-      let knowledgeData = null;
-      try {
-        const enriched = await aiEnrichment.enrichProductWithAI(result.product);
-        knowledgeData = {
-          knowledgeAnalysis: enriched.knowledgeAnalysis,
-          aiEnriched: enriched.aiEnriched,
-          knowledgeBaseUsed: enriched.knowledgeBaseUsed,
-          confidence: enriched.scores?.confidence,
-          deepseekUsed: enriched.deepseekUsed,
-          aiEnrichmentDate: enriched.aiEnrichmentDate,
-          aiEnrichmentVersion: enriched.aiEnrichmentVersion
-        };
-        logger.info('✅ Enrichissement IA hybride réussi (Orchestrator)');
-        console.log('[DEBUG] knowledgeData:', JSON.stringify(knowledgeData, null, 2));
-      } catch (aiError) {
-        logger.warn('⚠️ Enrichissement IA échoué (Orchestrator):', aiError.message);
-      }
-
       logger.info('Product found/created via Orchestrator:', result.source);
       const enrichedResponse = await enrichProductResponse(
         result.product,
         result.source,
         result.cached || false,
-        result.aiEnrichmentUsed || false,
-        knowledgeData
+        result.aiEnrichmentUsed || false
       );
       return res.json(enrichedResponse);
     }
@@ -791,10 +763,6 @@ function mockModel() {
 console.log('[Products] Router créé avec', router.stack.filter(l => l.route).length, 'routes');
 
 module.exports = router;
-
-
-
-
 
 
 

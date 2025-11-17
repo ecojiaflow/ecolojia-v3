@@ -1,4 +1,4 @@
-// PATH: backend/src/services/aiEnrichment.service.js
+﻿// PATH: backend/src/services/aiEnrichment.service.js
 const deepSeekService = require('./ai/deepSeekService');
 const scoringUnified = require('./scoringUnified');
 const knowledgeService = require('../knowledge/knowledge.service');
@@ -93,8 +93,37 @@ class AIEnrichmentService {
       const finalScore = scoredProduct.scores?.overallScore || scoredProduct.scores?.global || 50;
 
       logger.info(`✅ Enrichissement HYBRIDE réussi - Score: ${finalScore}/100 (Confiance: ${Math.round((scoredProduct.scores?.confidence || 0.8) * 100)}%) - Durée: ${duration}ms`);
+      // ⭐ CORRECTION CRITIQUE : Sauvegarder globalScore au niveau racine
+      if (!scoredProduct.globalScore && scoredProduct.scores) {
+        const scoreComponents = [
+          scoredProduct.scores.healthScore,
+          scoredProduct.scores.environmentScore,
+          scoredProduct.scores.nutritionScore,
+          scoredProduct.scores.additivesScore,
+          scoredProduct.scores.novaScore,
+          scoredProduct.scores.originScore,
+          scoredProduct.scores.labelsScore,
+          scoredProduct.scores.traceabilityScore
+        ];
+        
+        // Filtrer les scores valides (non null, non undefined, non NaN)
+        const validScores = scoreComponents.filter(s => s !== null && s !== undefined && !isNaN(s));
+        
+        if (validScores.length > 0) {
+          scoredProduct.globalScore = Math.round(
+            validScores.reduce((sum, score) => sum + score, 0) / validScores.length
+          );
+          logger.info(`📊 globalScore calculé et sauvegardé: ${scoredProduct.globalScore}/100 (basé sur ${validScores.length} composantes valides)`);
+        } else {
+          logger.warn('⚠️ Impossible de calculer globalScore : aucune composante valide');
+          scoredProduct.globalScore = null;
+        }
+      }
 
-      return scoredProduct;
+      // ⭐ Convertir en plain object pour préserver globalScore
+      return scoredProduct.toObject 
+        ? { ...scoredProduct.toObject(), globalScore: scoredProduct.globalScore }
+        : scoredProduct;
 
     } catch (error) {
       const duration = Date.now() - startTime;
@@ -117,9 +146,27 @@ class AIEnrichmentService {
    */
   static async analyzeWithKnowledgeBase(product) {
     try {
-      const ingredientsText = product.ingredients_text || 
-                            product.foodData?.ingredients?.join(', ') || 
-                            '';
+      // ⭐ SUPPORT DES DEUX FORMATS : string ET array
+      console.log("[DEBUG analyzeWithKnowledgeBase] product.ingredients_text:", product.ingredients_text);
+      console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData:", product.foodData);
+      console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData?.ingredients:", product.foodData?.ingredients);
+      console.log("[DEBUG analyzeWithKnowledgeBase] typeof:", typeof product.foodData?.ingredients);
+      let ingredientsText = "";
+      
+      if (product.ingredients_text) {
+        ingredientsText = product.ingredients_text;
+      } else if (product.foodData?.ingredients) {
+        const ingredients = product.foodData.ingredients;
+        
+        // Si c'est un array, on le joint
+        if (Array.isArray(ingredients)) {
+          ingredientsText = ingredients.join(', ');
+        } 
+        // Si c'est déjà un string, on l'utilise tel quel
+        else if (typeof ingredients === 'string') {
+          ingredientsText = ingredients;
+        }
+      }
 
       if (!ingredientsText) {
         logger.warn('⚠️  Pas d\'ingrédients à analyser avec knowledge base');
@@ -138,6 +185,34 @@ class AIEnrichmentService {
         ingredients: ingredientsText
       });
 
+        // ⭐ CONVERSION specificData → criticalIssues/highIssues/moderateIssues
+        if (analysis.ingredientsAnalysis) {
+          for (const ingredientAnalysis of analysis.ingredientsAnalysis) {
+            if (ingredientAnalysis.specificData && ingredientAnalysis.specificData.variants) {
+              for (const variant of ingredientAnalysis.specificData.variants) {
+                if (variant.risks && variant.risks.length > 0) {
+                  for (const risk of variant.risks) {
+                    const issue = {
+                      ingredient: ingredientAnalysis.name,
+                      score: variant.score,
+                      category: variant.type,
+                      details: risk.details,
+                      level: risk.severity
+                    };
+                    
+                    if (risk.severity === 'critical') {
+                      analysis.criticalIssues.push(issue);
+                    } else if (risk.severity === 'high') {
+                      analysis.highIssues.push(issue);
+                    } else if (risk.severity === 'moderate') {
+                      analysis.moderateIssues.push(issue);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       logger.info(`📊 Knowledge base: ${analysis.criticalIssues.length} critiques, ${analysis.highIssues.length} élevés, ${analysis.moderateIssues.length} modérés`);
 
       return {
@@ -225,6 +300,12 @@ Ceci doit influencer tes calculs de composantes.
       }
     }
 
+    // ⭐ COPIER globalScore du product original vers merged
+    if (product.globalScore !== undefined) {
+      merged.globalScore = product.globalScore;
+      logger.info(`📊 globalScore copié dans merged: ${merged.globalScore}/100`);
+    }
+
     return merged;
   }
 
@@ -236,8 +317,10 @@ Ceci doit influencer tes calculs de composantes.
 
   static validateProductData(product) {
     logger.info('🔍 Validation données produit...');
+    console.log("[DEBUG validateProductData] product reçu:", { name: product.name, hasFoodData: !!product.foodData, foodDataType: typeof product.foodData, ingredients: product.foodData?.ingredients?.substring(0, 50) });
 
-    const validated = { ...product };
+    // ⭐ FIX: Mongoose document → plain object
+    const validated = product.toObject ? product.toObject() : { ...product };
 
     // Validation ingrédients
     if (validated.foodData?.ingredients) {
@@ -258,6 +341,7 @@ Ceci doit influencer tes calculs de composantes.
       });
     }
 
+    console.log("[DEBUG validateProductData] RETOURNE:", { name: validated.name, hasIngredientsText: !!validated.ingredients_text, ingredientsTextLength: validated.ingredients_text?.length, hasFoodData: !!validated.foodData });
     return validated;
   }
 
@@ -412,3 +496,7 @@ Ceci doit influencer tes calculs de composantes.
 }
 
 module.exports = AIEnrichmentService;
+
+
+
+
