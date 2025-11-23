@@ -12,6 +12,7 @@ const express = require('express');
 const router = express.Router();
 const aiOrchestrator = require('../services/aiOrchestrator.service');
 const Product = require('../models/Product');
+const { enrichHandler } = require('../controllers/ai.controller');
 
 // ============================================
 // LAZY LOADING aiService (optionnel)
@@ -239,5 +240,11 @@ router.post('/analyze', authMiddleware, async (req, res) => {
     });
   }
 });
+
+
+// ============================================
+// ENRICHISSEMENT IA (POST /api/ai/enrich)
+// ============================================
+router.post('/enrich', enrichHandler);
 
 module.exports = router;

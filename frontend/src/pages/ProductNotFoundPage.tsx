@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import PhotoCapture from '../components/PhotoCapture';
@@ -26,7 +26,7 @@ const ProductNotFoundPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Debug pour verifier le code-barres au chargement
-  console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â ProductNotFoundPage Debug:');
+  // [Removed corrupted console log]
   console.log('  - paramBarcode:', paramBarcode);
   console.log('  - searchParams barcode:', searchParams.get('barcode'));
   console.log('  - barcode final:', barcode);
@@ -49,8 +49,8 @@ const ProductNotFoundPage: React.FC = () => {
 
     // Validation stricte du code-barres
     const barcodeToSend = barcode.trim();
-    console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Å¡'šÃ‚Â¦ Code-barres Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  envoyer:', `"${barcodeToSend}"`);
-    console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Å¡'šÃ‚Â Longueur code-barres:', barcodeToSend.length);
+    // [Removed corrupted console log]
+    // [Removed corrupted console log]
 
     if (!barcodeToSend || barcodeToSend === '') {
       setError('Code-barres manquant. Veuillez scanner le produit Æ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â  nouveau.');
@@ -61,15 +61,8 @@ const ProductNotFoundPage: React.FC = () => {
     setError(null);
 
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Envoi photos pour analyse I?...');
-      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Donnees completes:', {
-        barcode: barcodeToSend,
-        barcodeLength: barcodeToSend.length,
-        photosCount: 3,
-        frontSize: photos.front.length,
-        ingredientsSize: photos.ingredients.length,
-        nutritionSize: photos.nutrition.length
-      });
+      // [Removed corrupted console log]
+      // [Removed corrupted console log]
       
       const response = await analyzePhotos({
         barcode: barcodeToSend,
@@ -80,7 +73,7 @@ const ProductNotFoundPage: React.FC = () => {
         }
       });
 
-      console.log('aÆ’ââ‚¬Â¦aâ'šÂ¬Ã…'œaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse terminee:', response);
+      // [Removed corrupted console log]
       
       if (response.success) {
         // Gestion des differents formats de reponse backend
@@ -98,19 +91,19 @@ const ProductNotFoundPage: React.FC = () => {
         }
         
         if (redirectPath) {
-          console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸Æ’ââ‚¬Â¦'šÃ‚Â½Æ’ââ‚¬Å¡'šÃ‚Â¯ Redirection vers:', redirectPath);
+          // [Removed corrupted console log]
           navigate(redirectPath);
         } else {
-          console.error('aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Aucune URL de redirection trouvee dans:', response);
+          // [Removed corrupted console log]
           setError('Produit cree mais impossible de le trouver. Rechargez la page.');
         }
       } else {
         const errorMsg = response.error || response.message || 'Erreur lors de l\'analyse. Reessayez.';
-        console.error('aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Erreur backend:', errorMsg);
+        // [Removed corrupted console log]
         setError(errorMsg);
       }
     } catch (err) {
-      console.error('aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Erreur analyse (catch):', err);
+      // [Removed corrupted console log]:', err);
       setError('Impossible d\'analyser les photos. Verifiez votre connexion.');
     } finally {
       setIsAnalyzing(false);

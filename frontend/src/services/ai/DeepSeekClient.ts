@@ -1,15 +1,16 @@
-// PATH: backend/src/services/ai/DeepSeekClient.ts
-/*  Dependances : axios, crypto
-    Utilise cacheManager (Redis) et Logger dejÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  presents                  */
+﻿// PATH: frontend/src/services/ai/DeepSeekClient.ts
+// Dependencies: axios, crypto
+// Uses cacheManager (Redis) and Logger already present
+
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import crypto from 'crypto';
 
-import { Logger } from '../../utils/Logger';
-import { cacheManager } from '../cache/CacheManager';
 
-const logger = new Logger('DeepSeekClient');
 
-// aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ Types aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+// ============================================
+// Types
+// ============================================
+
 export interface DeepSeekMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -32,7 +33,10 @@ export interface AnalysisEnhancementRequest {
   };
 }
 
-// aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ Client aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+// ============================================
+// Client
+// ============================================
+
 export class DeepSeekClient {
   private readonly client: AxiosInstance;
   private readonly CACHE_PREFIX = 'deepseek:';
@@ -57,7 +61,7 @@ export class DeepSeekClient {
     };
 
     if (!this.cfg.apiKey) {
-      logger.warn('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â  Cle API DeepSeek non definie aaÃ¢â‚¬Å¡Ã‚Â¬aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“ fonctions IA desactivees.');
+      console.warn('DeepSeek API key not defined - AI functions disabled.');
     }
 
     this.client = axios.create({
@@ -72,13 +76,16 @@ export class DeepSeekClient {
     this.client.interceptors.response.use(
       (r) => r,
       (e) => {
-        logger.error('DeepSeek API error :', e.response?.data || e.message);
+        console.error('DeepSeek API error:', e.response?.data || e.message);
         return Promise.reject(e);
       }
     );
   }
 
-  // aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ API publiques aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+  // ============================================
+  // Public APIs
+  // ============================================
+
   async enhanceProductAnalysis(req: AnalysisEnhancementRequest) {
     const cacheKey = this.key('enhance', req);
     const cached = await cacheManager.get(cacheKey);
@@ -116,7 +123,7 @@ export class DeepSeekClient {
     if (cached) return cached;
 
     const messages: DeepSeekMessage[] = [
-      { role: 'system', content: 'Tu es expert en consommation responsable.' },
+      { role: 'system', content: 'You are an expert in responsible consumption.' },
       { role: 'user', content: this.promptAlt(product, category, criteria) }
     ];
     const raw = await this.chat(messages);
@@ -125,9 +132,12 @@ export class DeepSeekClient {
     return alt;
   }
 
-  // aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ Low-level chat aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+  // ============================================
+  // Low-level chat
+  // ============================================
+
   private async chat(msg: DeepSeekMessage[]): Promise<string> {
-    if (!this.cfg.apiKey) throw new Error('DeepSeek API key absente.');
+    if (!this.cfg.apiKey) throw new Error('DeepSeek API key absent.');
 
     try {
       const { data } = await this.client.post<DeepSeekAPIResponse>(
@@ -147,41 +157,47 @@ export class DeepSeekClient {
     }
   }
 
-  // aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ Prompts aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+  // ============================================
+  // Prompts
+  // ============================================
+
   private promptEnhanceSys(cat: string) {
     const base = {
-      food: 'Tu es nutritionniste expert NOVA/EFS?.',
-      cosmetics: 'Tu es dermatologue expert INCI.',
-      detergents: 'Tu es chimiste environnemental expert REACH.'
+      food: 'You are a nutrition expert specialized in NOVA/EFS.',
+      cosmetics: 'You are a dermatologist expert in INCI.',
+      detergents: 'You are an environmental chemist expert in REACH.'
     };
     return base[cat as keyof typeof base] ?? base.food;
   }
 
   private promptEnhanceUser(r: AnalysisEnhancementRequest) {
     return `
-Produit : ${r.productName}
-Analyse : ${JSON.stringify(r.baseAnalysis)}
-${r.userQuery ? 'Question : ' + r.userQuery : ''}
-${r.userProfile ? 'Profil : ' + JSON.stringify(r.userProfile) : ''}
-Enrichis laaÃ¢â‚¬Å¡Ã‚Â¬aaÃ¢'šÂ¬Ã…Â¾'šÃ‚Â¢analyse (insights, recommandations, alternatives, sources).`.trim();
+Product: ${r.productName}
+Analysis: ${JSON.stringify(r.baseAnalysis)}
+${r.userQuery ? 'Question: ' + r.userQuery : ''}
+${r.userProfile ? 'Profile: ' + JSON.stringify(r.userProfile) : ''}
+Enrich the analysis (insights, recommendations, alternatives, sources).`.trim();
   }
 
   private promptChatSys(ctx?: any) {
     return `
-Assistant scientifique ECOLOJI?.
-Contexte : ${ctx ? JSON.stringify(ctx) : 'aaÃ¢â‚¬Å¡Ã‚Â¬aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â'} 
-Reponses aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°Æ’Ã¢â‚¬Å¡'šÃ‚Â¤3 paragraphes, citer sources, action concrete.`.trim();
+ECOLOJIA scientific assistant.
+Context: ${ctx ? JSON.stringify(ctx) : 'none'}
+Responses: max 3 paragraphs, cite sources, suggest concrete action.`.trim();
   }
 
   private promptAlt(p: any, cat: string, crit: string[]) {
     return `
-Alternatives saines pour : ${p.name}
-Categorie : ${cat}
-Criteres : ${crit.join(', ') || 'aaÃ¢â‚¬Å¡Ã‚Â¬aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â'}
-Format JSON.`.trim();
+Healthy alternatives for: ${p.name}
+Category: ${cat}
+Criteria: ${crit.join(', ') || 'none'}
+JSON format.`.trim();
   }
 
-  // aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬ Parsing aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬aaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaÃ¢â‚¬Å¡Ã‚Â¬
+  // ============================================
+  // Parsing
+  // ============================================
+
   private parseEnhance(txt: string) {
     try {
       const m = txt.match(/\{[\s\S]*}/);
@@ -205,8 +221,8 @@ Format JSON.`.trim();
   }
 
   private suggest(ctx?: any) {
-    const q = ['Reduire les additifs', 'Alternatives maison'];
-    if (ctx?.novaGroup >= 4) q.unshift('Pourquoi ultra-transforme ?');
+    const q = ['Reduce additives', 'Homemade alternatives'];
+    if (ctx?.novaGroup >= 4) q.unshift('Why ultra-processed?');
     return q;
   }
 
@@ -216,17 +232,11 @@ Format JSON.`.trim();
   }
 
   private handleAxios(e: AxiosError) {
-    if (e.response?.status === 401) return new Error('Cle DeepSeek invalide');
-    if (e.response?.status === 429) return new Error('Quota DeepSeek atteint');
+    if (e.response?.status === 401) return new Error('Invalid DeepSeek key');
+    if (e.response?.status === 429) return new Error('DeepSeek quota reached');
     return new Error(e.message);
   }
 }
 
-// singleton
+// Singleton
 export const deepSeekClient = new DeepSeekClient();
-// EOF
-
-
-
-
-

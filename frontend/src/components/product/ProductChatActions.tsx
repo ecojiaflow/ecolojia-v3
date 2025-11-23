@@ -36,7 +36,8 @@ const CONTEXTUAL_QUESTIONS = {
 export const ProductChatActions: React.FC<ProductChatActionsProps> = ({ product }) => {
   const navigate = useNavigate();
   
-  const questions = CONTEXTUAL_QUESTIONS[product.category];
+  // ⭐ FIX: Protection si category invalide
+  const questions = CONTEXTUAL_QUESTIONS[product.category] || CONTEXTUAL_QUESTIONS.food;
 
   const handleQuestionClick = (question: string) => {
     const chatUrl = `/chat?product=${encodeURIComponent(product.barcode || product.name)}&q=${encodeURIComponent(question)}`;

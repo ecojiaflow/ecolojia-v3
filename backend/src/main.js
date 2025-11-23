@@ -209,8 +209,8 @@ const routesToLoad = [
   { path: '/api/analysis', file: './routes/analysis.routes.js', name: 'Analysis' },
   { path: '/api/vision', file: './routes/vision.simple.js', name: 'Vision' },
   { path: '/api/products', file: './routes/products.js', name: 'Products' },
-  { path: '/api/products', file: './routes/enrich.routes.js', name: 'Products Enrich' },
-  { path: '/api/products', file: './routes/products-ocr.routes.js', name: 'Products OCR' },
+  { path: '/api/enrich', file: './routes/enrich.routes.js', name: 'Products Enrich' },
+  { path: '/api/products-ocr', file: './routes/products-ocr.routes.js', name: 'Products OCR' },
   { path: '/api/scoring', file: './routes/scoring.routes.js', name: 'Scoring' },
   { path: '/api/ocr-analyze', file: './routes/ocr-analyze.routes.js', name: 'OCR Analyze' },
   { path: '/api/search', file: './routes/products-search.js', name: 'Search' },
@@ -429,6 +429,7 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
 
 
 

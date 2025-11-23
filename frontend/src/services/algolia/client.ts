@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/algolia/client.ts
+﻿// PATH: frontend/src/services/algolia/client.ts
 import algoliasearch from 'algoliasearch';
 
 // Configuration Algolia avec les BONNES cles
@@ -14,10 +14,7 @@ export const searchClient = algoliasearch(
   ALGOLIA_CONFIG.apiKey
 );
 
-console.log('Â°Ã…Â¸Ã¢â‚¬ÂÃ‚Â Algolia configure:', {
-  appId: ALGOLIA_CONFIG.appId,
-  indexName: ALGOLIA_CONFIG.indexName
-});
+// [Removed corrupted console log]
 
 export default searchClient;
 

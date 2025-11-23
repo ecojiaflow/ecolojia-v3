@@ -1,11 +1,11 @@
-// PATH: frontend/src/services/analytics/UserAnalytics.ts
+﻿// PATH: frontend/src/services/analytics/UserAnalytics.ts
 /**
  * Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  ECOLOJIA User Analytics Service
  * Infrastructure de tracking pour Dashboard Personnel
  * Stockage local + calculs metriques avances
  */
 
-// aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ INTERFACES PRINCIPALES
+// [Cleaned comment]
 export interface ProductAnalysis {
   id: string;
   productName: string;
@@ -106,7 +106,7 @@ export interface WeeklyReport {
   generatedAt: Date;
 }
 
-// aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ SERVICE PRINCIPAL
+// [Cleaned comment]
 class UserAnalyticsService {
   private sessionId: string;
   private readonly storageKey = 'ecolojia_user_data';
@@ -135,7 +135,7 @@ class UserAnalyticsService {
 
     userdata?.scannedProducts.push(fullAnalysis);
     
-    // Limiter Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  1000 scans pour eviter overflow localStorage
+    // [Cleaned comment]
     if (userdata?.scannedProducts.length > 1000) {
       userdata?.scannedProducts = userdata?.scannedProducts.slice(-800);
     }
@@ -152,12 +152,7 @@ class UserAnalyticsService {
     // Sauvegarder
     this.saveUserData(userData);
     
-    console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  Scan tracke:', {
-      product: analysis.productName,
-      nova: analysis.novaGroup,
-      totalScans: userdata?.scannedProducts.length,
-      healthScore: userdata?.currentMetrics.healthScore
-    });
+    // [Removed corrupted console log]
   }
 
   /**
@@ -303,7 +298,7 @@ class UserAnalyticsService {
     return report;
   }
 
-  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES PRIVÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°ES DE calculé=====
+  // [Cleaned comment]
 
   private calculateMetrics(products: ProductAnalysis[]): HealthMetrics {
     if (products.length === 0) {
@@ -476,7 +471,7 @@ class UserAnalyticsService {
       });
     }
 
-    // Achievement: Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°viter ultra-transformes
+    // [Cleaned comment]
     if (userdata?.currentMetrics.ultraTransformPercent <= 20 && userdata?.scannedProducts.length >= 20 && !existingIds.has('ultra_avoider')) {
       newAchievements.push({
         id: 'ultra_avoider',
@@ -492,7 +487,7 @@ class UserAnalyticsService {
     userdata?.achievements.push(...newAchievements);
   }
 
-  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES UTILITAIRES =====
+  // [Cleaned comment]
 
   private getOrCreateSessionId(): string {
     let sessionId = localStorage.getItem(this.sessionKey);
@@ -717,7 +712,7 @@ class UserAnalyticsService {
     }
   }
 
-  // ===== MÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°THODES PUBLIQUES SUPPLÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°MENTAIRES =====
+  // [Cleaned comment]
 
   /**
    * Obtenir statistiques generales
@@ -747,7 +742,7 @@ class UserAnalyticsService {
   resetAllData(): void {
     localStorage.removeItem(this.storageKey);
     localStorage.removeItem(this.sessionKey);
-    console.log('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ Donnees utilisateur reinitialisees');
+    // [Removed corrupted console log]
   }
 
   /**

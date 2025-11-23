@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/demoMode.ts
+﻿// PATH: frontend/src/services/demoMode.ts
 // Service de demonstration avec donnees completes
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -7,11 +7,11 @@ export const demoMode = {
   isEnabled: () => true,
   
   toggle: (enabled) => {
-    console.log(enabled ? "Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ Mode demo active" : "Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Mode demo desactive");
+    // [Removed corrupted console log]
   },
   
   analyzeBarcode: async (barcode) => {
-    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse barcode", barcode);
+    // [Removed corrupted console log]
     await delay(1000);
     
     return {
@@ -79,7 +79,7 @@ export const demoMode = {
   },
   
   analyzeImage: async (file) => {
-    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse image", file.name);
+    // [Removed corrupted console log]
     await delay(2000);
     
     return {
@@ -99,7 +99,7 @@ export const demoMode = {
   },
   
   analyzeManual: async (data) => {
-    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ DEMO: Analyse manuelle", data);
+    // [Removed corrupted console log]
     await delay(1500);
     
     return {
@@ -202,7 +202,7 @@ export const demoMode = {
   }),
   
   incrementScans: () => {
-    console.log("Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦'šÃ‚Â½Æ’Ã¢â‚¬Å¡'šÃ‚Â­ Scan comptabilise");
+    // [Removed corrupted console log]
   }
 };
 

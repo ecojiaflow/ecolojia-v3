@@ -207,21 +207,16 @@ async function enrichHandler(req, res) {
     
     console.log('[AI CONTROLLER] 🤖 Appel service enrichissement...');
     
-    const enrichmentResult = await enrichment.enrichProductWithAI(
+    const enrichedProduct = await enrichment.enrichProductWithAI(
       product,
       category,
       { userId, force: !!req.body.force }
     );
-    
-    if (!enrichmentResult.success) {
-      console.error('[AI CONTROLLER] ❌ Enrichissement échoué:', enrichmentResult.error);
-      return res.status(500).json({
-        success: false,
-        error: enrichmentResult.error
-      });
-    }
-    
+
+    // ✅ CORRECTION : Le service retourne le produit enrichi directement
+    // Si on arrive ici, c'est que l'enrichissement a réussi (sinon throw error)
     console.log('[AI CONTROLLER] ✅ Enrichissement réussi');
+    console.log('[AI CONTROLLER] 📊 Score global:', enrichedProduct.scores?.overallScore || enrichedProduct.scores?.global);
     
     // ============================================================================
     // RECHARGER PRODUIT AVEC DONNÉES FRAÎCHES
@@ -301,8 +296,8 @@ async function enrichHandler(req, res) {
       
       // Infos supplémentaires (debug/log)
       _meta: {
-        estimations: enrichmentResult.estimations || null,
-        newScore: enrichmentResult.newScore || null,
+        estimations: enrichedProduct.estimations || null,
+        newScore: enrichedProduct.newScore || null,
         productId: freshProduct._id,
         breakdownKeys: Object.keys(uxBreakdown || {})
       }
@@ -427,3 +422,5 @@ async function ocrHandler(req, res) {
 }
 
 module.exports = { enrichHandler, ocrHandler };
+
+

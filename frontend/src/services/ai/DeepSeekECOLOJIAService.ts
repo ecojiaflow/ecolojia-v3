@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
+﻿// PATH: frontend/ecolojiaFrontV3/src/services/ai/DeepSeekECOLOJIAService.ts
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -83,7 +83,7 @@ export async function streamDeepSeekResponse(
                 onToken(content);
               }
             } catch (err) {
-              console.warn('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Impossible de parser:', data);
+              // [Removed corrupted console log]
             }
           }
         }
@@ -92,7 +92,7 @@ export async function streamDeepSeekResponse(
 
     onDone?.();
   } catch (err: any) {
-    console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur streaming IA:', err);
+    // [Removed corrupted console log]
     
     // Message d'erreur plus detaille selon le type d'erreur
     let errorMessage = 'Erreur de connexion avec le serveur';

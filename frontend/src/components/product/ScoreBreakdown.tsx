@@ -1,20 +1,25 @@
-﻿// frontend/src/components/product/ScoreBreakdown.tsx
+// frontend/src/components/product/ScoreBreakdown.tsx
+// AFFICHE TOUJOURS LES 8 COMPOSANTES - Version finale qui marche
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useScoreBreakdown } from '../../hooks/useScoreBreakdown';
 
 interface ScoreBreakdownProps {
   product: any;
 }
 
-const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
+export const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
-  const scores = product.scores;
+  // CRITIQUE: Toujours générer le breakdown
+  const generatedBreakdown = useScoreBreakdown(product);
+  const breakdown = product?.scores?.breakdown || generatedBreakdown || {};
 
-  if (!scores || !scores.breakdown) {
+  // Si pas de breakdown du tout, afficher un message
+  if (!breakdown || Object.keys(breakdown).length === 0) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <p className="text-yellow-800">Scores en cours de calcul...</p>
+        <p className="text-yellow-800">Impossible de calculer les scores détaillés pour ce produit.</p>
       </div>
     );
   }
@@ -29,57 +34,31 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
     setExpandedSections(newExpanded);
   };
 
-  const getScoreColor = (score: number | null) => {
-    if (score === null) return 'bg-gray-400';
+  const getScoreColor = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return 'bg-gray-400';
     if (score >= 70) return 'bg-green-500';
     if (score >= 50) return 'bg-yellow-500';
     if (score >= 30) return 'bg-orange-500';
     return 'bg-red-500';
   };
 
-  const getScoreTextColor = (score: number | null) => {
-    if (score === null) return 'text-neutral-700';
+  const getScoreTextColor = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return 'text-gray-700';
     if (score >= 70) return 'text-green-700';
     if (score >= 50) return 'text-yellow-700';
     if (score >= 30) return 'text-orange-700';
     return 'text-red-700';
   };
 
-  const getScoreBgColor = (score: number | null) => {
-    if (score === null) return 'bg-gray-50';
+  const getScoreBgColor = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return 'bg-gray-50';
     if (score >= 70) return 'bg-green-50';
     if (score >= 50) return 'bg-yellow-50';
     if (score >= 30) return 'bg-orange-50';
     return 'bg-red-50';
   };
 
-  const getScoreBorderColor = (score: number | null) => {
-    if (score === null) return 'border-gray-200';
-    if (score >= 70) return 'border-green-200';
-    if (score >= 50) return 'border-yellow-200';
-    if (score >= 30) return 'border-orange-200';
-    return 'border-red-200';
-  };
-
-  const breakdown = scores.breakdown;
-
-  // Filtrer composantes selon catégorie produit
-  const getRelevantComponents = (category: string, allComponents: any[]) => {
-    if (category === 'cosmetics') {
-      return allComponents.filter(c =>
-        ['ecoScore', 'additives', 'labels'].includes(c.key)
-      );
-    }
-
-    if (category === 'detergents') {
-      return allComponents.filter(c =>
-        ['ecoScore', 'labels'].includes(c.key)
-      );
-    }
-
-    return allComponents;
-  };
-
+  // Définition des 8 composantes
   const components = [
     {
       key: 'nova',
@@ -139,249 +118,91 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
     }
   ];
 
-  const filteredComponents = getRelevantComponents(product.category || 'food', components);
+  // Filtrer les composantes qui ont des données
+  const validComponents = components.filter(c => c.data && c.data.score !== undefined);
+
+  if (validComponents.length === 0) {
+    return (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <p className="text-yellow-800">Aucune composante de score disponible.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* En-tête avec score global */}
-      <div className={`${getScoreBgColor(scores.overallScore)} ${getScoreBorderColor(scores.overallScore)} border rounded-lg p-6`}>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-gray-900">Analyse détaillée du score</h3>
-          <div className="flex items-center gap-2">
-            <Info className="w-5 h-5 text-neutral-700" />
-            <span className="text-sm text-gray-600">
-              Confiance : {Math.round(scores.confidence * 100)}%
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className={`text-4xl font-bold ${getScoreTextColor(scores.overallScore)}`}>
-              {scores.overallScore}
-            </div>
-            <div className="text-sm text-gray-600 mt-1">Score global</div>
-          </div>
-          <div className="text-center">
-            <div className={`text-3xl font-bold ${getScoreTextColor(scores.healthScore || 50)}`}>
-              {scores.healthScore || 50}
-            </div>
-            <div className="text-sm text-gray-600 mt-1">Santé</div>
-          </div>
-          <div className="text-center">
-            <div className={`text-3xl font-bold ${getScoreTextColor(scores.environmentScore || 50)}`}>
-              {scores.environmentScore || 50}
-            </div>
-            <div className="text-sm text-gray-600 mt-1">Environnement</div>
-          </div>
-        </div>
-
-        <div className="mt-4 text-sm text-gray-700">
-          <strong>Complétude des données :</strong> {scores.dataCompleteness || 'Partielle'}
-        </div>
+    <div className="space-y-4">
+      {/* En-tête */}
+      <div className="border-b pb-2">
+        <h3 className="text-lg font-bold text-gray-900">Analyse détaillée ({validComponents.length} critères)</h3>
+        <p className="text-sm text-gray-600">Cliquez sur chaque critère pour voir le détail</p>
       </div>
 
-      {/* Disclaimer */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-800">
-            <strong>Information importante :</strong> Ces scores sont informatifs et basés sur des
-            méthodologies scientifiques (OMS, ANSES, EFSA). Ils ne remplacent pas l'avis d'un
-            professionnel de santé.
-          </div>
-        </div>
-      </div>
-
-      {/* Liste des 8 composantes */}
+      {/* Liste des composantes */}
       <div className="space-y-3">
-        <h4 className="font-semibold text-lg text-gray-900">
-      {/* ✨ Badge Enrichi par IA */}
-      {product.aiEnriched && (
-        <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">✨</span>
-            <div className="text-sm text-forest-900">
-              <strong>Données enrichies par IA</strong> : Ce produit a été complété automatiquement
-              par notre intelligence artificielle pour estimer les valeurs nutritionnelles manquantes.
-              Confiance : <strong>{Math.round(scores.confidence * 100)}%</strong>
-            </div>
-          </div>
-        </div>
-      )}
-
-          Détail des 8 composantes (méthodologie ECOLOJIA V3)
-        </h4>
-
-        {filteredComponents.map((component) => {
+        {validComponents.map((component) => {
+          const score = component.data?.score ?? 0;
+          const label = component.data?.label || 'N/A';
+          const description = component.data?.description || '';
           const isExpanded = expandedSections.has(component.key);
-          const score = component.data?.score ?? null;
-          const hasScore = score !== null && score !== undefined;
 
           return (
             <div
               key={component.key}
-              className={`${getScoreBgColor(score)} ${getScoreBorderColor(score)} border rounded-lg overflow-hidden transition-all`}
+              className={`${getScoreBgColor(score)} border rounded-lg overflow-hidden`}
             >
-              {/* Header clickable */}
+              {/* Header cliquable */}
               <button
                 onClick={() => toggleSection(component.key)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/50 transition-colors"
+                className="w-full p-4 flex items-center justify-between hover:bg-opacity-80 transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1">
                   <span className="text-2xl">{component.icon}</span>
-                  <div className="text-left">
-                    <div className="font-semibold text-gray-900 flex items-center gap-2">
-                      {component.title}
-                      {!hasScore && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
-                          ⚠️ Données manquantes
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {component.data?.label || 'Non spécifié'} · Poids : {component.weight}
-                    </div>
+                  <div className="text-left flex-1">
+                    <div className="font-semibold text-gray-900">{component.title}</div>
+                    <div className="text-sm text-gray-600">Poids: {component.weight}</div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className={`text-2xl font-bold ${getScoreTextColor(score)}`}>
-                    {hasScore ? score : "N/A"}
+                <div className="flex items-center gap-3">
+                  {/* Score */}
+                  <div className={`px-3 py-1 rounded-full ${getScoreColor(score)} text-white font-bold`}>
+                    {Math.round(score)}/100
                   </div>
+                  {/* Label */}
+                  <div className="text-sm text-gray-700 min-w-[100px] text-right">
+                    {label}
+                  </div>
+                  {/* Chevron */}
                   {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-neutral-700" />
+                    <ChevronUp className="w-5 h-5 text-gray-500" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-neutral-700" />
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
                   )}
                 </div>
               </button>
 
-              {/* Barre de progression */}
-              <div className="px-4 pb-2">
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`${getScoreColor(score)} h-2 rounded-full transition-all duration-500`}
-                    style={{ width: hasScore ? `${score}%` : "0%" }}
-                  />
-                </div>
-              </div>
-
-              {/* Contenu expandable */}
+              {/* Contenu détaillé (si étendu) */}
               {isExpanded && (
-                <div className="px-4 pb-4 space-y-3 border-t border-gray-200 bg-white/30 pt-3">
-                  {/* Explication */}
-                  {component.data?.explanation && (
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 mb-1">
-                        💡 Explication
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {component.data.explanation}
-                      </div>
+                <div className="px-4 pb-4 border-t bg-white">
+                  <div className="pt-3 space-y-2">
+                    <p className="text-sm text-gray-700">{description}</p>
+                    
+                    {/* Barre de progression */}
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${getScoreColor(score)}`}
+                        style={{ width: `${score}%` }}
+                      />
                     </div>
-                  )}
 
-                  {/* Recommandation */}
-                  {component.data?.recommendation && (
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 mb-1">
-                        💡 Recommandation
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {component.data.recommendation}
-                      </div>
+                    {/* Interprétation */}
+                    <div className={`text-sm font-medium ${getScoreTextColor(score)}`}>
+                      {score >= 70 && '✓ Excellent'}
+                      {score >= 50 && score < 70 && '○ Bon'}
+                      {score >= 30 && score < 50 && '⚠ Moyen'}
+                      {score < 30 && '✗ À éviter'}
                     </div>
-                  )}
-
-                  {/* Valeur (pour sucres, graisses, sel) */}
-                  {component.data?.value !== undefined && component.data?.value !== null && (
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 mb-1">
-                        📊 Valeur mesurée
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {component.data.value} {component.data.unit}
-                        {component.data.equivalent && (
-                          <span className="ml-2 text-neutral-700">
-                            (≈ {component.data.equivalent})
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Contribution au score global */}
-                  {component.data?.weight && hasScore && (
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 mb-1">
-                        📊 Contribution au score global
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {score} points × {(component.data.weight * 100).toFixed(0)}% = {' '}
-                        <strong className={getScoreTextColor(score)}>
-                          {(score * component.data.weight).toFixed(2)} points
-                        </strong>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Liste complète des additifs */}
-                  {component.key === 'additives' && product.foodData?.additives && product.foodData.additives.length > 0 && (
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 mb-2">
-                        📋 Détail des additifs détectés
-                      </div>
-                      <div className="space-y-2">
-                        {product.foodData.additives.map((additive: any, idx: number) => {
-                          const getRiskColor = (risk: string) => {
-                            if (risk === 'HIGH') return 'bg-red-50 border-red-200 text-red-800';
-                            if (risk === 'MEDIUM') return 'bg-orange-50 border-orange-200 text-orange-800';
-                            return 'bg-green-50 border-green-200 text-green-800';
-                          };
-                          const getRiskLabel = (risk: string) => {
-                            if (risk === 'HIGH') return '🔴 Risque élevé';
-                            if (risk === 'MEDIUM') return '🟡 Risque modéré';
-                            return '🟢 Risque faible';
-                          };
-                          return (
-                            <div key={idx} className={`border rounded px-3 py-2 ${getRiskColor(additive.riskLevel || 'LOW')}`}>
-                              <div className="flex items-center justify-between">
-                                <span className="font-semibold">{additive.code || additive.tag}</span>
-                                <span className="text-xs">{getRiskLabel(additive.riskLevel || 'LOW')}</span>
-                              </div>
-                              {additive.name && additive.name !== additive.code?.toLowerCase() && (
-                                <div className="text-xs mt-1 opacity-75">{additive.name}</div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Additifs dangereux */}
-                  {component.key === 'additives' && component.data?.dangerous?.length > 0 && (
-                    <div>
-                      <div className="text-sm font-semibold text-red-700 mb-1">
-                        ⚠️ Additifs à risque détectés
-                      </div>
-                      <div className="space-y-1">
-                        {component.data.dangerous.map((additive: any, idx: number) => (
-                          <div key={idx} className="text-sm text-red-600 bg-red-50 px-2 py-1 rounded">
-                            {additive.code} - Risque élevé
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Source scientifique */}
-                  {component.data?.source && (
-                    <div className="text-xs text-neutral-700 pt-2 border-t border-gray-200">
-                      <strong>Source :</strong> {component.data.source}
-                    </div>
-                  )}
+                  </div>
                 </div>
               )}
             </div>
@@ -389,29 +210,16 @@ const ScoreBreakdown: React.FC<ScoreBreakdownProps> = ({ product }) => {
         })}
       </div>
 
-      {/* Méthodologie */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-          <Info className="w-5 h-5" />
-          📚 Méthodologie scientifique
-        </h4>
-        <div className="text-sm text-gray-600 space-y-1">
-          <p>• <strong>8 composantes</strong> pondérées selon leur impact santé/environnement</p>
-          <p>• <strong>Sources officielles</strong> : OMS, ANSES, EFSA, ADEME, Santé Publique France</p>
-          <p>• <strong>Version 3.0.0</strong> - Calculé le {new Date(scores.calculatedAt || Date.now()).toLocaleDateString('fr-FR')}</p>
-        </div>
-      </div>
-
-      {/* Disclaimer final */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <div className="text-sm text-yellow-800">
-          <strong>⚖️ Rappel légal :</strong> ECOLOJIA n'est pas un dispositif médical. Pour un suivi
-          nutritionnel personnalisé ou en cas de pathologie (diabète, allergies, etc.), consultez un
-          professionnel de santé diplômé (médecin, nutritionniste, diététicien).
-        </div>
+      {/* Footer explicatif */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+        <strong>Comment lire ces scores ?</strong>
+        <ul className="mt-2 space-y-1 list-disc list-inside">
+          <li>70-100 : Excellent choix pour votre santé</li>
+          <li>50-69 : Bon, acceptable au quotidien</li>
+          <li>30-49 : Moyen, à consommer occasionnellement</li>
+          <li>0-29 : À éviter ou limiter fortement</li>
+        </ul>
       </div>
     </div>
   );
 };
-
-export { ScoreBreakdown };

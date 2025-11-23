@@ -1,4 +1,4 @@
-// PATH: frontend/src/utils/bugFixes.ts
+﻿// PATH: frontend/src/utils/bugFixes.ts
 /**
  * Solutions aux bugs courants d'ECOLOJIA
  */
@@ -11,7 +11,7 @@ export function fixVisionAuth() {
     if (typeof url === 'string' && url.includes('/vision/analyze-image')) {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.warn('aÃ…Â¡Ã‚Â iÃ‚Â¸Ã‚Â Vision API appelee sans token - Redirection vers login');
+        // [Removed corrupted console log]
         window.location.href = '/login';
         throw new Error('Authentication required');
       }
@@ -93,7 +93,7 @@ export function setupAutoRefreshToken() {
       const response = await makeRequest();
       
       if (response.status === 401 && !url.includes('/auth/')) {
-        console.log('Â°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Å¾ Token expire, tentative de refresh...');
+        // [Removed corrupted console log]
         
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
@@ -121,7 +121,7 @@ export function setupAutoRefreshToken() {
               return makeRequest();
             }
           } catch (error) {
-            console.error('aÃ‚ÂÃ…' '°chec du refresh token:', error);
+            // [Removed corrupted console log]
           }
         }
         
@@ -155,7 +155,7 @@ export function fixServiceImports() {
 
 // 5. Mode demo pour tester sans backend
 export function enableDemoMode() {
-  console.log('Â°Ã…Â¸Ã…Â½Ã‚Â­ Mode demo active - Reponses simulees');
+  // [Removed corrupted console log]
   
   const demoResponses = {
     '/api/analysis/manual': {
@@ -207,7 +207,7 @@ export function enableDemoMode() {
     // Chercher une reponse demo
     for (const [endpoint, response] of Object.entries(demoResponses)) {
       if (urlStr.includes(endpoint)) {
-        console.log(`Â°Ã…Â¸Ã…Â½Ã‚Â­ Reponse demo pour ${endpoint}`);
+        // [Removed corrupted console log]
         return new Response(JSON.stringify(response), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }
@@ -251,7 +251,7 @@ export function setupDebugLogger() {
 
 // 7. Fonction pour nettoyer et reinitialiser
 export function cleanupAndReset() {
-  console.log('Â°Ã…Â¸Ã‚Â§Ã‚Â¹ Nettoyage et reinitialisation...');
+  // [Removed corrupted console log]
   
   // Vider le cache
   localStorage.removeItem('token');
@@ -269,7 +269,7 @@ export function applyEssentialFixes() {
   setupAutoRefreshToken();
   setupDebugLogger();
   
-  console.log('aÃ…'œÃ¢â‚¬Â¦ Fixes essentiels appliques');
+  // [Removed corrupted console log]
 }
 
 // Commandes disponibles dans la console
@@ -304,7 +304,7 @@ window.ecolojiaFixes = {
   }
 };
 
-console.log('Â°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ Fixes disponibles : window.ecolojiaFixes');
+// [Removed corrupted console log]
 console.log('Pour activer le mode demo : ecolojiaFixes.enableDemoMode()');
 console.log('Pour voir les erreurs : ecolojiaFixes.showErrors()');
 

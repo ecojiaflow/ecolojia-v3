@@ -1,8 +1,8 @@
 ﻿// ============================================================================
-// APPROCHE 1 : INTƒÆ’†'aa'šÂ¬‚Â°GRATION DIRECTE DANS SEARCHPAGE EXISTANTE
+// [Cleaned comment]
 // ============================================================================
 
-// PATH: frontend/ecolojiaFrontV3/src/pages/SearchPage.tsx (VERSION AMƒÆ’†'aa'šÂ¬‚Â°LIORƒÆ’†'aa'šÂ¬‚Â°E)
+// [Cleaned comment]
 
 import React, { useState, useEffect } from 'react';
 import { universalSearchEngine } from '../services/search/UniversalSearchService';

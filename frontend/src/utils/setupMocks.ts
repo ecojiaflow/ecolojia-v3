@@ -1,4 +1,4 @@
-// PATH: src/utils/setupMocks.ts
+﻿// PATH: src/utils/setupMocks.ts
 /**
  * Mocks optaâ‚¬'˜in : actives SEULEMENT si VITE_MOCKS === '1'
  * - Par defaut: n'altere PAS window.fetch
@@ -11,12 +11,12 @@ let originalFetch: FetchType | null = null;
 export function enableMocks() {
   const enabled = (import.meta as any)?.env?.VITE_MOCKS === '1';
   if (!enabled) {
-    // Pas de mocks -> on ne touche ƒÂ  rien
+    // [Cleaned comment]
     return;
   }
 
   if (typeof window === 'undefined' || typeof window.fetch !== 'function') return;
-  if (originalFetch) return; // dejƒÂ  active
+  if (originalFetch) return; // [Cleaned comment]
 
   originalFetch = window.fetch;
 

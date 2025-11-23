@@ -2,7 +2,7 @@
 import { ScoreProgressBar } from '../components/ScoreProgressBar';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, MessageCircle, Sparkles, CheckCircle, Package } from 'lucide-react';
 import { AIEngagementWidget } from '../components/ai/AIEngagementWidget';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ import { ChatWidget } from '../components/chat/ChatWidget';
 import { ProductHeader } from '../components/product/ProductHeader';
 import { ProductScoresCard } from '../components/product/ProductScoresCard';
 import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
+import { useScoreBreakdown } from '../hooks/useScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
 // import AlternativesPanel supprimé (doublon avec section alternatives unifiée)
@@ -22,19 +23,20 @@ import { ProductChatActions } from '../components/product/ProductChatActions';
 import { ProductMainActions } from '../components/product/ProductMainActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import NovaBadge from '../components/NovaBadge';
+import { KnowledgeAnalysisSection } from '../components/knowledge';
 
 // CORRECTION 1 : getJSON retourne maintenant {ok, status, data} au lieu de throw
 const getJSON = async (endpoint: string): Promise<any> => {
-  const url = endpoint.startsWith('http') 
-    ? endpoint 
+  const url = endpoint.startsWith('http')
+    ? endpoint
     : `${import.meta.env.VITE_API_URL || 'http://localhost:10000'}${endpoint}`;
-  
+
   const response = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'
   });
-  
+
   // Retourner status + data au lieu de throw error
   let data = {};
   try {
@@ -42,11 +44,11 @@ const getJSON = async (endpoint: string): Promise<any> => {
   } catch (e) {
     // Si pas de JSON, retourner objet vide
   }
-  
-  return { 
-    ok: response.ok, 
-    status: response.status, 
-    data 
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    data
   };
 };
 
@@ -104,13 +106,13 @@ const ProductPage: React.FC = () => {
         setLoading(false);
         return;
       }
-      
+
       try {
         setLoading(true);
         setError(null);
-        
+
         const result = await getJSON(`/api/products/${id}`);
-        
+
         // Gestion erreur 400 (médicament, livre, etc.)
         if (result.status === 400) {
           setError(`⚠️ ${result.data.error || 'Type de produit non supporté'}`);
@@ -118,7 +120,7 @@ const ProductPage: React.FC = () => {
           setLoading(false);
           return;
         }
-        
+
         // Gestion erreur 404 (produit inconnu)
         if (result.status === 404) {
           setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
@@ -126,7 +128,7 @@ const ProductPage: React.FC = () => {
           setLoading(false);
           return;
         }
-        
+
         // Autre erreur serveur
         if (!result.ok) {
           setError(`Erreur serveur (${result.status}). Veuillez réessayer.`);
@@ -134,10 +136,10 @@ const ProductPage: React.FC = () => {
           setLoading(false);
           return;
         }
-        
+
         // Succès
         setProduct(result.data.product || result.data);
-        
+
         // Extraire recettes si disponibles
         if (result.data.recipes && Array.isArray(result.data.recipes)) {
           setRecipes(result.data.recipes);
@@ -146,18 +148,18 @@ const ProductPage: React.FC = () => {
           setRecipes([]);
           console.log('[Frontend] ⚠️ Aucune recette disponible');
         }
-        
+
         loadAlternatives(id);
-        
+
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
-        setError('? Erreur réseau - Vérifiez votre connexion');
+        setError('🔌 Erreur réseau - Vérifiez votre connexion');
         toast.error('Erreur réseau');
       } finally {
         setLoading(false);
       }
   }, [id]);
-    
+
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct]);
@@ -180,27 +182,52 @@ const ProductPage: React.FC = () => {
   };
 
 
+
   const handleRequestScore = async () => {
-    if (isAnalyzing) return; // Guard anti-spam
-    if (!product?.barcode || isAnalyzing) return;
+    // Guard anti-spam
+    if (isAnalyzing) return;
+    if (!product?.barcode) {
+      toast.error('Code-barres manquant');
+      return;
+    }
+
     const cleanBarcode = product.barcode.replace(/_\d+$/, '');
     setIsAnalyzing(true);
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:10000'}/api/scoring/${cleanBarcode}/ai-enrich`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:10000'}/api/ai/enrich`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: {
+            barcode: cleanBarcode,
+            name: product.name || product.product_name,
+            brand: product.brand || product.brands
+          },
+          category: product.category || 'food',
+          force: true
+        })
       });
-      if (response.ok) {
-        const result = await response.json();
-        // Recharger le produit complet depuis la base
-        await fetchProduct();
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erreur serveur' }));
+        throw new Error(errorData.error || `Erreur ${response.status}`);
       }
-    } catch (error) {
-      console.error('Erreur analyse:', error);
-    } finally {
+
+      await response.json();
+
+      // ✅ SOLUTION SIMPLE : Recharger la page
+      toast.success('✨ Enrichissement terminé, rechargement...', { duration: 1500 });
+      setTimeout(() => window.location.reload(), 1500);
+
+    } catch (error: any) {
+      console.error('Erreur enrichissement IA:', error);
+      toast.error(error.message || 'Erreur lors de l\'enrichissement', { duration: 4000 });
       setIsAnalyzing(false);
     }
   };
+
+  
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
@@ -242,44 +269,10 @@ const ProductPage: React.FC = () => {
   const overallScore = hasCalculatedScore ? product.scores.overallScore : null;
 
   // Breakdown réel depuis l'API
-  const breakdown = product.scores?.breakdown || {};
-  const realBreakdown = [
-    breakdown.nova && { 
-      factor: 'Transformation (NOVA)', 
-      impact: breakdown.nova.score - 50, 
-      reason: `Score NOVA: ${breakdown.nova.score}/100` 
-    },
-    breakdown.nutriscore && { 
-      factor: 'Nutri-Score', 
-      impact: breakdown.nutriscore.score - 50, 
-      reason: `Score nutritionnel: ${breakdown.nutriscore.score}/100` 
-    },
-    breakdown.additives && { 
-      factor: 'Additifs', 
-      impact: breakdown.additives.score - 50, 
-      reason: `Score additifs: ${breakdown.additives.score}/100` 
-    },
-    breakdown.ecoscore && { 
-      factor: 'Éco-Score', 
-      impact: breakdown.ecoscore.score - 50, 
-      reason: `Impact environnemental: ${breakdown.ecoscore.score}/100` 
-    },
-    breakdown.packaging && { 
-      factor: 'Emballage', 
-      impact: breakdown.packaging.score - 50, 
-      reason: `Score emballage: ${breakdown.packaging.score}/100` 
-    },
-    breakdown.origin && { 
-      factor: 'Origine', 
-      impact: breakdown.origin.score - 50, 
-      reason: `Score origine: ${breakdown.origin.score}/100` 
-    },
-    breakdown.ethics && { 
-      factor: 'éthique', 
-      impact: breakdown.ethics.score - 50, 
-      reason: `Score éthique: ${breakdown.ethics.score}/100` 
-    }
-  ].filter(Boolean);
+    // Générer le breakdown automatiquement si absent
+  const generatedBreakdown = useScoreBreakdown(product);
+  const breakdown = product.scores?.breakdown || generatedBreakdown || {};
+  const realBreakdown = generatedBreakdown || {};
 
   if (isMobile) {
     return (
@@ -306,8 +299,8 @@ const ProductPage: React.FC = () => {
               {product.category === 'food' && product.foodData?.novaGroup && (
                 <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
-                  <NovaBadge 
-                    novaGroup={product.foodData.novaGroup} 
+                  <NovaBadge
+                    novaGroup={product.foodData.novaGroup}
                     typeTransformation={product.typeTransformation}
                     showDetails={true}
                   />
@@ -339,7 +332,20 @@ const ProductPage: React.FC = () => {
           </details>
           <details className="bg-primary-50" open>
             <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
-            <div className="p-4"><ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} /></div>
+            <div className="p-4"><ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} /></div>
+          </details>
+          {/* ⭐ NOUVEAU : Section Knowledge Base MOBILE */}
+          <details className="bg-primary-50" open>
+            <summary className="p-4 font-semibold cursor-pointer border-b">⚠️ Analyse détectée</summary>
+            <div className="p-4">
+              <KnowledgeAnalysisSection
+                knowledgeAnalysis={product.knowledgeAnalysis}
+                aiEnriched={product.aiEnriched}
+                knowledgeBaseUsed={product.knowledgeBaseUsed}
+                confidence={product.confidence}
+                deepseekUsed={product.deepseekUsed}
+              />
+            </div>
           </details>
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-primary-50" open>
@@ -351,13 +357,13 @@ const ProductPage: React.FC = () => {
             <details className="bg-primary-50" open>
               <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
               <div className="p-4">
-                <CosmeticAnalysisDisplay 
-                  analysis={{ 
+                <CosmeticAnalysisDisplay
+                  analysis={{
                     healthScore: product.scores?.healthScore || 0,
                     endocrineRisk: { level: 'NONE' },
                     category: 'cosmetics'
-                  }} 
-                  productName={product.name} 
+                  }}
+                  productName={product.name}
                 />
               </div>
             </details>
@@ -386,7 +392,7 @@ const ProductPage: React.FC = () => {
               <Sparkles className="w-5 h-5 text-primary" />
               <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
             </div>
-            
+
             {loadingAlternatives ? (
               <div className="flex items-center justify-center py-8">
                 <Sparkles className="w-6 h-6 animate-spin text-primary" />
@@ -397,9 +403,9 @@ const ProductPage: React.FC = () => {
                 {alternatives.slice(0, 5).map((alt) => {
                   const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
                   return (
-                    <div 
-                      key={alt._id} 
-                      onClick={() => navigate(`/product/${alt.barcode}`)} 
+                    <div
+                      key={alt._id}
+                      onClick={() => navigate(`/product/${alt.barcode}`)}
                       className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all"
                     >
                       {getProductImage(alt) ? (
@@ -409,7 +415,7 @@ const ProductPage: React.FC = () => {
                           <Package className="w-8 h-8 text-gray-400" />
                         </div>
                       )}
-                      
+
                       <div className="flex-1">
                         <p className="font-semibold text-neutral-800">{alt.name}</p>
                         <p className="text-sm text-neutral-600">{alt.brand}</p>
@@ -420,7 +426,7 @@ const ProductPage: React.FC = () => {
                           </p>
                         )}
                       </div>
-                      
+
                       <div className="text-right">
                         <div className={`text-2xl font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>
                           {alt.scores?.overallScore || 0}
@@ -463,8 +469,8 @@ const ProductPage: React.FC = () => {
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
 
         {/* Actions standardisées Ecolojia v3.1 */}
-        <ProductMainActions 
-          product={product} 
+        <ProductMainActions
+          product={product}
           onShowAlternatives={() => {
             setTimeout(() => {
               const section = document.getElementById('alternatives-section');
@@ -485,7 +491,7 @@ const ProductPage: React.FC = () => {
                   ⚠️ Produit créé par reconnaissance OCR
                 </h3>
                 <p className="text-yellow-800 text-sm mb-2">
-                  Ce produit a été créé automatiquement à partir de photos. 
+                  Ce produit a été créé automatiquement à partir de photos.
                   Fiabilité estimée : {product.confidence ? Math.round(product.confidence * 100) : 70}%
                 </p>
                 <p className="text-yellow-700 text-xs">
@@ -500,8 +506,8 @@ const ProductPage: React.FC = () => {
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
-            <NovaBadge 
-              novaGroup={product.foodData.novaGroup} 
+            <NovaBadge
+              novaGroup={product.foodData.novaGroup}
               typeTransformation={product.typeTransformation}
               showDetails={true}
             />
@@ -518,9 +524,18 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        <ScoreBreakdown score={overallScore} factors={realBreakdown} productScores={product.scores} product={product} />
+        {/* ⭐ NOUVEAU : Section Système Hybride Knowledge Base + IA */}
+        <KnowledgeAnalysisSection
+          knowledgeAnalysis={product.knowledgeAnalysis}
+          aiEnriched={product.aiEnriched}
+          knowledgeBaseUsed={product.knowledgeBaseUsed}
+          confidence={product.confidence}
+          deepseekUsed={product.deepseekUsed}
+        />
 
-        
+        <ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} />
+
+
           {/* Section recettes - design Ecolojia v3.1 */}
           {recipes.length > 0 && (
             <RecipesList recipes={recipes} />
@@ -530,13 +545,13 @@ const ProductPage: React.FC = () => {
         {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
         {product.category === 'cosmetics' && (
-          <CosmeticAnalysisDisplay 
-            analysis={{ 
+          <CosmeticAnalysisDisplay
+            analysis={{
               healthScore: product.scores?.healthScore || 0,
               endocrineRisk: { level: 'NONE' },
               category: 'cosmetics'
-            }} 
-            productName={product.name} 
+            }}
+            productName={product.name}
           />
         )}
         {product.category === 'detergents' && (
@@ -561,27 +576,27 @@ const ProductPage: React.FC = () => {
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
           </div>
-          
+
           {loadingAlternatives ? (
             <div className="flex items-center justify-center py-8">
               <Sparkles className="w-6 h-6 animate-spin text-primary" />
-              <p className="ml-3 text-neutral-700">Recherche d''alternatives...</p>
+              <p className="ml-3 text-neutral-700">Recherche d'alternatives...</p>
             </div>
           ) : alternatives.length > 0 ? (
             <div className="space-y-3">
               {alternatives.slice(0, 5).map((alt) => {
                 const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
                 return (
-                  <div 
-                    key={alt._id} 
-                    onClick={() => navigate(`/product/${alt.barcode}`)} 
+                  <div
+                    key={alt._id}
+                    onClick={() => navigate(`/product/${alt.barcode}`)}
                     className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all"
                   >
                     {getProductImage(alt) ? (
                       <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
                     ) : (
                       <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span className="text-gray-400 text-xs">Pas d''image</span>
+                        <span className="text-gray-400 text-xs">Pas d'image</span>
                       </div>
                     )}
                     <div className="flex-1">
@@ -607,7 +622,7 @@ const ProductPage: React.FC = () => {
               <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
               <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
               <p className="text-sm text-yellow-800 mb-4">
-                Notre base de données ne contient pas encore d''alternative pour ce produit.
+                Notre base de données ne contient pas encore d'alternative pour ce produit.
               </p>
               <p className="text-xs text-yellow-700">
                 💡 Recherchez des produits similaires avec labels bio ou équitables
@@ -624,3 +639,4 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+

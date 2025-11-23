@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ai/ultraTransformService.ts
+﻿// PATH: frontend/src/services/ai/ultraTransformService.ts
 import { NovaResult } from './novaClassifier';
 
 export interface UltraTransformResult {
@@ -71,9 +71,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<UltraTransformResult> {
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ UltraTransformService - Demarrage analyse:', { productName });
+      // [Removed corrupted console log]
 
-      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Utiliser la nouvelle URL /api/products/ultra-transform
+      // [Cleaned comment]
       const response = await fetch(`${this.baseUrl}/api/products/ultra-transform`, {
         method: 'POST',
         headers: this.headers,
@@ -84,30 +84,30 @@ class UltraTransformService {
         })
       });
 
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢Æ’Ã¢â‚¬Å¡'šÃ‚Â Reponse serveur Ultra-Transform:', response.status, response.statusText);
+      // [Removed corrupted console log]
 
       if (!response.ok) {
         if (response.status === 404) {
-          console.warn('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Endpoint ultra-transform non disponible, utilisation du fallback');
+          // [Removed corrupted console log]
           return this.analyzeLocal(productName, ingredients);
         }
         
         const errorData = await response.json().catch(() => ({ error: 'Erreur inconnue' }));
-        console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur HTTP:', response.status, errorData);
+        // [Removed corrupted console log]
         throw new Error(errordata?.error || errordata?.message || `Erreur HTTP ${response.status}`);
       }
 
       const data = await response.json();
       
       if (!data?.success) {
-        console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Reponse backend echec:', data);
+        // [Removed corrupted console log]
         throw new Error(data?.message || 'Erreur analyse ultra-transformation');
       }
       
       // Extraction du resultat selon la structure de reponse
       const result = data?.analysis || data;
       
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse Ultra-Transformation reussie:', result);
+      // [Removed corrupted console log]
 
       // Ajout des champs de compatibilite et enrichissement
       const enrichedResult: UltraTransformResult = {
@@ -133,14 +133,14 @@ class UltraTransformService {
 
       return enrichedResult;
     } catch (error: any) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur service Ultra-Transformation:', error);
+      // [Removed corrupted console log]
       
       // Fallback vers analyse locale si backend indisponible
       if (error.message.includes('fetch') || 
           error.message.includes('Failed to fetch') ||
           error.message.includes('Route non trouvee') ||
           error.message.includes('404')) {
-        console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Fallback vers analyse locale');
+        // [Removed corrupted console log]
         return this.analyzeLocal(productName, ingredients);
       }
       
@@ -156,9 +156,9 @@ class UltraTransformService {
     ingredients: string
   ): Promise<CombinedAnalysisResult> {
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â¬ Analyse combinee NOVA + Ultra-Transform:', { productName });
+      // [Removed corrupted console log]
 
-      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Tenter d'abord /products/combined, sinon fallback
+      // [Cleaned comment]
       const response = await fetch(`${this.baseUrl}/api/products/combined`, {
         method: 'POST',
         headers: this.headers,
@@ -172,7 +172,7 @@ class UltraTransformService {
       if (!response.ok) {
         if (response.status === 404) {
           // Fallback : analyses separees
-          console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Endpoint combined non disponible, analyses separees');
+          // [Removed corrupted console log]
           return this.combinedFallback(productName, ingredients);
         }
         throw new Error(`Erreur HTTP ${response.status}`);
@@ -181,11 +181,11 @@ class UltraTransformService {
       const data = await response.json();
       const result = data?.analysis || data;
       
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse combinee reussie:', result);
+      // [Removed corrupted console log]
 
       return result;
     } catch (error: any) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur analyse combinee:', error);
+      // [Removed corrupted console log]
       
       if (error.message.includes('404') || error.message.includes('fetch')) {
         return this.combinedFallback(productName, ingredients);
@@ -199,7 +199,7 @@ class UltraTransformService {
    * Fallback pour analyse combinee
    */
   private async combinedFallback(productName: string, ingredients: string): Promise<CombinedAnalysisResult> {
-    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Fallback analyse combinee');
+    // [Removed corrupted console log]
     
     // Analyse ultra-transformation locale
     const ultraResult = await this.analyzeUltraTransformation(productName, ingredients);
@@ -239,7 +239,7 @@ class UltraTransformService {
    * Analyse locale de secours (fallback)
    */
   private analyzeLocal(productName: string, ingredients: string): UltraTransformResult {
-    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Analyse Ultra-Transformation locale pour:', productName);
+    // [Removed corrupted console log]
     
     // Analyse simplifiee locale
     const lower = ingredients.toLowerCase();
@@ -361,7 +361,7 @@ class UltraTransformService {
    */
   async getServiceInfo(): Promise<any> {
     try {
-      // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ CORRECTION: Nouvelle URL
+      // [Cleaned comment]
       const response = await fetch(`${this.baseUrl}/api/products/status`);
       if (!response.ok) throw new Error('Service info unavailable');
       return await response.json();

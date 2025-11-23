@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Search, Sparkles, TrendingUp, Package, Clock, Zap } from 'lucide-react';
 import { universalSearchEngine, SearchResult } from '../services/search/UniversalSearchService';
-import BarcodeScanner from '../components/scanner/BarcodeScanner'; // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Votre scanner existant
+import BarcodeScanner from '../components/scanner/BarcodeScanner'; // [Cleaned comment]
 import { EnhancedSearchInterface } from '../components/search/EnhancedSearchInterface';
 
 // ============================================================================
@@ -57,7 +57,7 @@ const UniversalSearchPage: React.FC = () => {
     const startTime = Date.now();
 
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â Recherche universelle lancee:', query);
+      // [Removed corrupted console log]
       
       const searchResults = await universalSearchEngine.search(query, {
         categories: selectedFilters.categories,
@@ -97,13 +97,13 @@ const UniversalSearchPage: React.FC = () => {
         query
       });
 
-      // Mettre Æ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â  jour URL sans reload
+      // [Cleaned comment]
       setSearchParams({ q: query });
 
-      console.log(`aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Recherche terminee: ${filteredResults.length}/${searchResults.length} resultats en ${searchTime}ms`);
+      // [Removed corrupted console log]
 
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur recherche:', error);
+      // [Removed corrupted console log]
       setResults([]);
       setSearchStats(null);
     } finally {
@@ -135,7 +135,7 @@ const UniversalSearchPage: React.FC = () => {
     setShowScanner(false);
     
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã¢â‚¬Å“Æ’Ã¢â‚¬Â¦'šÃ‚Â  Code-barres scanne:', barcode);
+      // [Removed corrupted console log]
       
       const result = await universalSearchEngine.searchByBarcode(barcode);
       
@@ -160,7 +160,7 @@ const UniversalSearchPage: React.FC = () => {
         setSearchParams({ barcode });
       }
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur scan:', error);
+      // [Removed corrupted console log]
     }
   }, [setSearchParams]);
 

@@ -49,7 +49,7 @@ export class ScanService {
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
       // Essayer d'abord de recuperer le produit
-      const response = await apiClient.get(/products/barcode/);
+      const response = await apiClient.get('/products/barcode/');
 
       if (response.data?.product) {
         return {

@@ -1,5 +1,5 @@
 ﻿// frontend/ecolojiaFrontV3/src/pages/MultiCategoriesPage.tsx
-// Page principale pour afficher et tester les categories multi-analyses - VERSION CORRIGÆ’Ã†'' ââ‚¬â„¢aaââ‚¬Å¡Ã‚Â¬'šÃ‚Â°E
+// [Cleaned comment]
 
 import React, { useState, useEffect } from 'react';
 import CategoryCard from '../components/CategoryCard';
@@ -34,20 +34,20 @@ const MultiCategoriesPage: React.FC = () => {
     }
   };
 
-  // Fonction pour charger les categories - CORRIGÆ’Ã†'' ââ‚¬â„¢aaââ‚¬Å¡Ã‚Â¬'šÃ‚Â°E
+  // [Cleaned comment]
   const loadCategories = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚Âaaââ‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Chargement des categories...');
+      // [Removed corrupted console log]
       const response: CategoriesResponse = await multiCategoryApi.getCategories();
       
-      // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Inspection de la reponse et adaptation dynamique
-      console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Reponse API recue:', response);
+      // [Cleaned comment]
+      // [Removed corrupted console log]
       
       if (response.success) {
-        // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Gestion flexible de la structure de reponse
+        // [Cleaned comment]
         let categoriesData: Category[] = [];
         let totalCount = 0;
         
@@ -55,7 +55,7 @@ const MultiCategoriesPage: React.FC = () => {
           categoriesData = response.categories;
           totalCount = response.total_categories || response.categories.length;
         } else if ((response as any).data && Array.isArray((response as any).data)) {
-          // Cas oÆ’Ã†'' ââ‚¬â„¢Æ’ââ‚¬Å¡'šÃ‚Â¹ les categories sont dans response.data
+          // [Cleaned comment]
           categoriesData = (response as any).data;
           totalCount = (response as any).total || categoriesdata?.length;
         } else {
@@ -63,14 +63,14 @@ const MultiCategoriesPage: React.FC = () => {
         }
         
         setCategories(categoriesData);
-        console.log('aÆ’ââ‚¬Â¦aâ'šÂ¬Ã…'œaaââ‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Categories chargees:', totalCount, 'categories trouvees');
+        // [Removed corrupted console log]
       } else {
         throw new Error(response.error || 'Reponse API invalide');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
-      console.error('aÆ’ââ‚¬Å¡'šÃ‚ÂÆ’ââ‚¬Â¦aâ'šÂ¬â'žÂ¢ Erreur chargement categories:', errorMessage);
+      // [Removed corrupted console log]
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const MultiCategoriesPage: React.FC = () => {
   // Callback appele quand une analyse est terminee
   const handleAnalysisComplete = (result: AnalysisResponse) => {
     setLastAnalysis(result);
-    console.log('Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'¦ââ‚¬Å“Æ’ââ‚¬Â¦'šÃ‚Â  Nouvelle analyse terminee:', result.category, result.analysis?.overall_score);
+    // [Removed corrupted console log]
   };
 
   // Fonction pour reessayer le chargement
@@ -171,7 +171,7 @@ const MultiCategoriesPage: React.FC = () => {
     );
   }
 
-  // Æ’Ã†''šÃ‚Â°Æ’ââ‚¬Â¦'šÃ‚Â¸aaââ‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’ââ‚¬Å¡'šÃ‚Â§ FIX: Verification que les categories sont bien chargees
+  // [Cleaned comment]
   if (!categories || categories.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">

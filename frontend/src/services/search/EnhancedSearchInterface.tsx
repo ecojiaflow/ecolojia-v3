@@ -148,7 +148,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     const startTime = Date.now();
 
     try {
-      console.log('ƒÆ’‚Â°ƒ'¦‚Â¸aa'šÂ¬‚Âƒ'š‚Â Recherche lancee:', queryToSearch);
+      // [Removed corrupted console log]
       
       const searchResults = await universalSearchEngine.search(queryToSearch, {
         categories: filters.categories,
@@ -188,10 +188,10 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         sources
       });
 
-      console.log(`aƒ'¦aâ‚¬Å“aa'šÂ¬‚Â¦ Recherche terminee: ${filteredResults.length} resultats en ${searchTime}ms`);
+      // [Removed corrupted console log]
 
     } catch (error) {
-      console.error('aƒ'š‚Âƒ'¦aâ‚¬â„¢ Erreur recherche:', error);
+      // [Removed corrupted console log]
       setResults([]);
       setSearchStats(null);
     } finally {
@@ -237,7 +237,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
     setShowScanner(false);
     
     try {
-      console.log('ƒÆ’‚Â°ƒ'¦‚Â¸aa'šÂ¬…'œƒ'¦‚Â  Code-barres scanne:', barcode);
+      // [Removed corrupted console log]
       
       const result = await universalSearchEngine.searchByBarcode(barcode);
       
@@ -262,7 +262,7 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
         });
       }
     } catch (error) {
-      console.error('aƒ'š‚Âƒ'¦aâ‚¬â„¢ Erreur analyse code-barres:', error);
+      // [Removed corrupted console log]
     }
   }, []);
 
@@ -283,24 +283,24 @@ export const EnhancedSearchInterface: React.FC<EnhancedSearchInterfaceProps> = (
 
     recognition.onstart = () => {
       setIsListening(true);
-      console.log('ƒÆ’‚Â°ƒ'¦‚Â¸ƒ'¦‚Â½ƒ'š‚Â¤ ƒÆ’†'aa'šÂ¬‚Â°coute vocale demarree');
+      // [Removed corrupted console log]
     };
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      console.log('ƒÆ’‚Â°ƒ'¦‚Â¸ƒ'¦‚Â½ƒ'š‚Â¤ Resultat vocal:', transcript);
+      // [Removed corrupted console log]
       setQuery(transcript);
       handleSearch(transcript);
     };
 
     recognition.onerror = (event: any) => {
-      console.error('aƒ'š‚Âƒ'¦aâ‚¬â„¢ Erreur reconnaissance vocale:', event.error);
+      // [Removed corrupted console log]
       setIsListening(false);
     };
 
     recognition.onend = () => {
       setIsListening(false);
-      console.log('ƒÆ’‚Â°ƒ'¦‚Â¸ƒ'¦‚Â½ƒ'š‚Â¤ ƒÆ’†'aa'šÂ¬‚Â°coute vocale terminee');
+      // [Removed corrupted console log]
     };
 
     recognition.start();

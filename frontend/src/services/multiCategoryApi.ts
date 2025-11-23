@@ -1,6 +1,6 @@
-// src/services/multiCategoryApi.ts - VERSION CORRIGÆ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°E POUR SERVER.JS
+﻿// [Cleaned comment]
 
-// Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ Configuration multi-environnements
+// [Cleaned comment]
 const API_ENDPOINTS = {
   production: 'https://ecolojia-backend-working.onrender.com',
   local: 'http://localhost:8000',
@@ -11,17 +11,17 @@ const API_ENDPOINTS = {
 const detectBestEndpoint = async (): Promise<string> => {
   // 1. Essayer production
   try {
-    // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Utiliser /health au lieu de /api/health
+    // [Cleaned comment]
     const response = await fetch(`${API_ENDPOINTS.production}/api/health`, { 
       method: 'GET',
       signal: AbortSignal.timeout(3000) // 3s max
     });
     if (response.ok) {
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Backend production disponible');
+      // [Removed corrupted console log]
       return API_ENDPOINTS.production;
     }
   } catch (error) {
-    console.log('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Backend production indisponible');
+    // [Removed corrupted console log]
   }
 
   // 2. Essayer local
@@ -31,15 +31,15 @@ const detectBestEndpoint = async (): Promise<string> => {
       signal: AbortSignal.timeout(2000) // 2s max
     });
     if (response.ok) {
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Backend local disponible');
+      // [Removed corrupted console log]
       return API_ENDPOINTS.local;
     }
   } catch (error) {
-    console.log('aÆ’Ã¢â‚¬Â¦'šÃ‚Â¡Æ’Ã¢â‚¬Å¡'šÃ‚Â Æ’Ã‚Â¯Æ’Ã¢â‚¬Å¡'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â Backend local indisponible');
+    // [Removed corrupted console log]
   }
 
   // 3. Fallback mode mock
-  console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode fallback active - Donnees simulees');
+  // [Removed corrupted console log]
   return API_ENDPOINTS.fallback;
 };
 
@@ -191,12 +191,12 @@ export class MultiCategoryApiService {
     await this.initializeEndpoint();
 
     if (this.baseUrl === 'mock') {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode mock: Retour categories simulees');
+      // [Removed corrupted console log]
       return this.getMockCategories();
     }
 
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â Recuperation categories depuis:', `${this.baseUrl}/api/multi-category/categories`);
+      // [Removed corrupted console log]
       
       const response = await fetch(`${this.baseUrl}/api/multi-category/categories`, {
         method: 'GET',
@@ -209,11 +209,11 @@ export class MultiCategoryApiService {
       }
 
       const data: CategoriesResponse = await response.json();
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Categories recuperees depuis API:', data?.categories?.length || 0);
+      // [Removed corrupted console log]
       return data;
 
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur API, basculement vers mock:', error);
+      // [Removed corrupted console log]
       return this.getMockCategories();
     }
   }
@@ -223,13 +223,13 @@ export class MultiCategoryApiService {
     await this.initializeEndpoint();
 
     if (this.baseUrl === 'mock') {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂaaÃ¢â‚¬Å¡Ã‚Â¬'¦Ã‚Â¾ Mode mock: Analyse simulee pour', request.product.title);
+      // [Removed corrupted console log]
       await new Promise(resolve => setTimeout(resolve, 800)); // Simuler delai
       return this.getMockAnalysis(request.product);
     }
 
     try {
-      console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸Æ’Ã¢â‚¬Å¡'šÃ‚Â§Æ’Ã¢â‚¬Å¡'šÃ‚Âª Analyse produit:', request.product.title);
+      // [Removed corrupted console log]
       
       const enrichedRequest = {
         ...request,
@@ -252,16 +252,16 @@ export class MultiCategoryApiService {
       }
 
       const data: AnalysisResponse = await response.json();
-      console.log('aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Analyse terminee via API:', data?.category, 'Score:', data?.analysis?.overall_score);
+      // [Removed corrupted console log]
       return data;
 
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur analyse API, basculement vers mock:', error);
+      // [Removed corrupted console log]
       return this.getMockAnalysis(request.product);
     }
   }
 
-  // Test de connectivite ameliore - Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Endpoints corriges
+  // [Cleaned comment]
   async testConnection(): Promise<boolean> {
     await this.initializeEndpoint();
     
@@ -269,11 +269,11 @@ export class MultiCategoryApiService {
       return true; // Mode mock toujours "connecte"
     }
 
-    // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Utiliser les bons endpoints selon server.js
+    // [Cleaned comment]
     const endpointsToTest = [
-      `${this.baseUrl}/health`,                            // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Endpoint principal dans server.js
-      `${this.baseUrl}/api/multi-category/categories`,     // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Fonctionne dejÆ’Ã†'' Ã¢â‚¬â„¢Æ’Ã¢â‚¬Å¡'šÃ‚Â 
-      `${this.baseUrl}/`,                                  // aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Route racine
+      `${this.baseUrl}/health`,                            // [Cleaned comment]
+      `${this.baseUrl}/api/multi-category/categories`,     // [Cleaned comment]
+      `${this.baseUrl}/`,                                  // [Cleaned comment]
     ];
 
     for (const endpoint of endpointsToTest) {
@@ -285,16 +285,16 @@ export class MultiCategoryApiService {
         });
         
         if (response.ok) {
-          console.log(`aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦ Connexion OK via: ${endpoint}`);
+          // [Removed corrupted console log]
           return true;
         }
       } catch (error) {
-        console.log(`aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Æ’Ã†'' Ã¢â‚¬â„¢aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â°chec connexion: ${endpoint}`, error instanceof Error ? error.message : error);
+        // [Removed corrupted console log]
         continue;
       }
     }
     
-    console.log('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Tous les tests de connexion ont echoue');
+    // [Removed corrupted console log]
     return false;
   }
 
@@ -338,9 +338,9 @@ export class MultiCategoryApiService {
     return `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  // Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â§ FIX: Diagnostic specifique pour server.js
+  // [Cleaned comment]
   async diagnoseApiStructure(): Promise<void> {
-    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â === DIAGNOSTIC API ECOLOJIA (SERVER.JS) ===');
+    // [Removed corrupted console log] ===');
     
     // Test endpoints server.js
     const serverEndpoints = [
@@ -356,13 +356,13 @@ export class MultiCategoryApiService {
           method: 'GET',
           signal: AbortSignal.timeout(5000)
         });
-        console.log(`${endpoint}: ${response.status} ${response.ok ? 'aÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã…'œaaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚Â¦' : 'aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢'}`);
+        // [Removed corrupted console log]
       } catch (error) {
-        console.log(`${endpoint}: aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ ERREUR`);
+        // [Removed corrupted console log]
       }
     }
     
-    console.log('Æ’Ã†''šÃ‚Â°Æ’Ã¢â‚¬Â¦'šÃ‚Â¸aaÃ¢â‚¬Å¡Ã‚Â¬'šÃ‚ÂÆ’Ã¢â‚¬Å¡'šÃ‚Â === FIN DIAGNOSTIC ===');
+    // [Removed corrupted console log]
   }
 }
 

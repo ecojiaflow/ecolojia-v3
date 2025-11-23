@@ -27,38 +27,31 @@ class AIEnrichmentService {
 
   /**
    * Point d'entrée principal - Enrichir un produit avec système hybride
+   * ✅ CORRECTION : Sauvegarde automatique en MongoDB
    */
   static async enrichProductWithAI(product) {
     const startTime = Date.now();
     logger.info(`🤖 Début enrichissement HYBRIDE - Produit: ${product.name}`);
 
     try {
-      // Initialiser knowledge service si pas encore fait
+      // Initialiser knowledge service
       if (!knowledgeService.initialized) {
         logger.info('📚 Initialisation knowledge service...');
         await knowledgeService.initialize();
       }
 
-      // ============================================================================
-      // 1️⃣ VALIDATION DONNÉES D'ENTRÉE
-      // ============================================================================
+      // 1️⃣ VALIDATION
       const validatedProduct = this.validateProductData(product);
 
-      // ============================================================================
-      // 2️⃣ ANALYSE BASE DE CONNAISSANCE SCIENTIFIQUE (NOUVEAU)
-      // ============================================================================
+      // 2️⃣ ANALYSE KNOWLEDGE BASE
       logger.info('🔬 Analyse base de connaissance scientifique...');
       const knowledgeAnalysis = await this.analyzeWithKnowledgeBase(validatedProduct);
 
-      // ============================================================================
-      // 3️⃣ CONSTRUCTION CONTEXTE ENRICHI POUR DEEPSEEK
-      // ============================================================================
+      // 3️⃣ CONTEXTE HYBRIDE
       logger.info('📝 Construction contexte hybride pour DeepSeek...');
       const hybridContext = this.buildHybridContext(validatedProduct, knowledgeAnalysis);
 
-      // ============================================================================
-      // 4️⃣ APPEL DEEPSEEK AVEC CONTEXTE SCIENTIFIQUE
-      // ============================================================================
+      // 4️⃣ APPEL DEEPSEEK
       logger.info('📡 Appel DeepSeek API (avec contexte scientifique)...');
       const aiResponse = await this.callDeepSeekWithRetry(hybridContext, 2);
 
@@ -66,9 +59,7 @@ class AIEnrichmentService {
         throw new Error('Réponse IA invalide ou vide');
       }
 
-      // ============================================================================
-      // 5️⃣ MERGE DONNÉES : Knowledge base + IA + Produit original
-      // ============================================================================
+      // 5️⃣ MERGE DONNÉES
       logger.info('🔄 Merge données hybrides...');
       const enrichedProduct = this.mergeHybridData(
         validatedProduct,
@@ -76,24 +67,11 @@ class AIEnrichmentService {
         aiResponse.enrichedData
       );
 
-      // ============================================================================
-      // 6️⃣ RECALCUL SCORE AVEC VALIDATION
-      // ============================================================================
+      // 6️⃣ RECALCUL SCORE
       logger.info('📊 Recalcul score avec données hybrides...');
       const scoredProduct = await this.recalculateScoreWithValidation(enrichedProduct);
 
-      // Métadonnées enrichissement
-      scoredProduct.aiEnriched = true;
-      scoredProduct.aiEnrichmentDate = new Date();
-      scoredProduct.aiEnrichmentVersion = '3.1-hybrid';
-      scoredProduct.knowledgeBaseUsed = true;
-      scoredProduct.knowledgeAnalysis = knowledgeAnalysis;
-
-      const duration = Date.now() - startTime;
-      const finalScore = scoredProduct.scores?.overallScore || scoredProduct.scores?.global || 50;
-
-      logger.info(`✅ Enrichissement HYBRIDE réussi - Score: ${finalScore}/100 (Confiance: ${Math.round((scoredProduct.scores?.confidence || 0.8) * 100)}%) - Durée: ${duration}ms`);
-      // ⭐ CORRECTION CRITIQUE : Sauvegarder globalScore au niveau racine
+      // Calcul globalScore
       if (!scoredProduct.globalScore && scoredProduct.scores) {
         const scoreComponents = [
           scoredProduct.scores.healthScore,
@@ -105,31 +83,73 @@ class AIEnrichmentService {
           scoredProduct.scores.labelsScore,
           scoredProduct.scores.traceabilityScore
         ];
-        
-        // Filtrer les scores valides (non null, non undefined, non NaN)
+
         const validScores = scoreComponents.filter(s => s !== null && s !== undefined && !isNaN(s));
-        
+
         if (validScores.length > 0) {
           scoredProduct.globalScore = Math.round(
             validScores.reduce((sum, score) => sum + score, 0) / validScores.length
           );
-          logger.info(`📊 globalScore calculé et sauvegardé: ${scoredProduct.globalScore}/100 (basé sur ${validScores.length} composantes valides)`);
-        } else {
-          logger.warn('⚠️ Impossible de calculer globalScore : aucune composante valide');
-          scoredProduct.globalScore = null;
+          logger.info(`📊 globalScore: ${scoredProduct.globalScore}/100 (${validScores.length} composantes)`);
         }
       }
 
-      // ⭐ Convertir en plain object pour préserver globalScore
-      return scoredProduct.toObject 
-        ? { ...scoredProduct.toObject(), globalScore: scoredProduct.globalScore }
-        : scoredProduct;
+      const duration = Date.now() - startTime;
+      const finalScore = scoredProduct.scores?.overallScore || scoredProduct.scores?.global || 50;
+      logger.info(`✅ Enrichissement réussi - Score: ${finalScore}/100 - Durée: ${duration}ms`);
+
+      // 7️⃣ ✨ SAUVEGARDE MONGODB (CORRECTION CRITIQUE)
+      logger.info('💾 Sauvegarde enrichissement en MongoDB...');
+      
+      const Product = require('../models/Product');
+      
+      const updatedProduct = await Product.findByIdAndUpdate(
+        product._id,
+        {
+          $set: {
+            'scores.overallScore': scoredProduct.scores?.overallScore,
+            'scores.global': scoredProduct.scores?.global,
+            'scores.healthScore': scoredProduct.scores?.healthScore,
+            'scores.environmentScore': scoredProduct.scores?.environmentScore,
+            'scores.nutritionScore': scoredProduct.scores?.nutritionScore,
+            'scores.additivesScore': scoredProduct.scores?.additivesScore,
+            'scores.novaScore': scoredProduct.scores?.novaScore,
+            'scores.nutriScore': scoredProduct.scores?.nutriScore,
+            'scores.originScore': scoredProduct.scores?.originScore,
+            'scores.labelsScore': scoredProduct.scores?.labelsScore,
+            'scores.traceabilityScore': scoredProduct.scores?.traceabilityScore,
+            'scores.confidence': scoredProduct.scores?.confidence,
+            'scores.breakdown': scoredProduct.scores?.breakdown,
+            globalScore: scoredProduct.globalScore,
+            aiEnriched: true,
+            aiEnrichmentDate: new Date(),
+            aiEnrichmentVersion: '3.1-hybrid-mongodb',
+            knowledgeBaseUsed: true,
+            confidence: scoredProduct.scores?.confidence || 0.8,
+            foodData: scoredProduct.foodData,
+            ingredients_text: scoredProduct.ingredients_text,
+            nutrition: scoredProduct.nutrition
+          }
+        },
+        { new: true, runValidators: false }
+      );
+      
+      if (!updatedProduct) {
+        throw new Error('Produit non trouvé en base');
+      }
+      
+      logger.info('✅ Produit sauvegardé en MongoDB');
+      const hydrated = updatedProduct.toObject ? updatedProduct.toObject() : updatedProduct;
+      hydrated.knowledgeAnalysis = knowledgeAnalysis;
+      hydrated.aiEnriched = true;
+      hydrated.enrichmentConfidence = scoredProduct.scores?.confidence || 0.8;
+      hydrated.globalScore = scoredProduct.globalScore ?? hydrated.globalScore;
+      return hydrated;
 
     } catch (error) {
       const duration = Date.now() - startTime;
-      logger.error(`❌ Échec enrichissement HYBRIDE - Durée: ${duration}ms - Erreur:`, error.message);
+      logger.error(`❌ Échec enrichissement - Durée: ${duration}ms - Erreur:`, error.message);
 
-      // Retourner le produit original non modifié en cas d'erreur
       return {
         ...product,
         aiEnriched: false,
@@ -147,10 +167,10 @@ class AIEnrichmentService {
   static async analyzeWithKnowledgeBase(product) {
     try {
       // ⭐ SUPPORT DES DEUX FORMATS : string ET array
-      console.log("[DEBUG analyzeWithKnowledgeBase] product.ingredients_text:", product.ingredients_text);
-      console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData:", product.foodData);
-      console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData?.ingredients:", product.foodData?.ingredients);
-      console.log("[DEBUG analyzeWithKnowledgeBase] typeof:", typeof product.foodData?.ingredients);
+      // console.log("[DEBUG analyzeWithKnowledgeBase] product.ingredients_text:", product.ingredients_text);
+      // console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData:", product.foodData);
+      // console.log("[DEBUG analyzeWithKnowledgeBase] product.foodData?.ingredients:", product.foodData?.ingredients);
+      // console.log("[DEBUG analyzeWithKnowledgeBase] typeof:", typeof product.foodData?.ingredients);
       let ingredientsText = "";
       
       if (product.ingredients_text) {
@@ -180,7 +200,7 @@ class AIEnrichmentService {
       }
 
       // Appeler knowledge service
-      const analysis = knowledgeService.analyzeProductComplete({
+      const analysis = await knowledgeService.analyzeProductComplete({
         name: product.name || product.product_name,
         ingredients: ingredientsText
       });
@@ -317,7 +337,7 @@ Ceci doit influencer tes calculs de composantes.
 
   static validateProductData(product) {
     logger.info('🔍 Validation données produit...');
-    console.log("[DEBUG validateProductData] product reçu:", { name: product.name, hasFoodData: !!product.foodData, foodDataType: typeof product.foodData, ingredients: product.foodData?.ingredients?.substring(0, 50) });
+    // console.log("[DEBUG validateProductData] product reçu:", { name: product.name, hasFoodData: !!product.foodData, foodDataType: typeof product.foodData, ingredients: product.foodData?.ingredients?.substring(0, 50) });
 
     // ⭐ FIX: Mongoose document → plain object
     const validated = product.toObject ? product.toObject() : { ...product };
@@ -341,7 +361,7 @@ Ceci doit influencer tes calculs de composantes.
       });
     }
 
-    console.log("[DEBUG validateProductData] RETOURNE:", { name: validated.name, hasIngredientsText: !!validated.ingredients_text, ingredientsTextLength: validated.ingredients_text?.length, hasFoodData: !!validated.foodData });
+    // console.log("[DEBUG validateProductData] RETOURNE:", { name: validated.name, hasIngredientsText: !!validated.ingredients_text, ingredientsTextLength: validated.ingredients_text?.length, hasFoodData: !!validated.foodData });
     return validated;
   }
 
@@ -496,6 +516,8 @@ Ceci doit influencer tes calculs de composantes.
 }
 
 module.exports = AIEnrichmentService;
+
+
 
 
 

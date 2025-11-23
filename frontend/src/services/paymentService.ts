@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/paymentService.ts
+﻿// PATH: frontend/src/services/paymentService.ts
 import api from './apiClient';
 
 export type Plan = 'basic' | 'pro';
@@ -87,7 +87,7 @@ export async function getSubscription(): Promise<SubscriptionStatus> {
       if (!msg.startsWith('HTTP 404')) break;
     }
   }
-  // si on arrive ici : aucun chemin naâ‚¬â„¢a fonctionne
+  // [Cleaned comment]
   throw new Error(
     `Impossible de recuperer laâ‚¬â„¢etat daâ‚¬â„¢abonnement (${String((lastErr as Error)?.message || 'inconnu')}).`
   );

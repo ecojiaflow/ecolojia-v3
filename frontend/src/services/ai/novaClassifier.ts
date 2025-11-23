@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/ai/novaClassifier.ts
+﻿// PATH: frontend/src/services/ai/novaClassifier.ts
 export interface NovaResult {
   productName: string;
   novaGroup: number;
@@ -29,7 +29,7 @@ export interface NovaResult {
   source?: 'backend' | 'local'; // Ajout du champ source optionnel
 }
 
-// Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°tat global
+// [Cleaned comment]
 let currentAnalysis: NovaResult | null = null;
 let isAnalyzing = false;
 
@@ -54,13 +54,13 @@ export const analyzeProduct = async (
   isAnalyzing = true;
   
   try {
-    console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡aÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬ NovaClassifier - Demarrage analyse:', { productName, ingredients });
+    // [Removed corrupted console log]
     
-    // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ TENTATIVE API BACKEND EN PREMIER
+    // [Cleaned comment]
     try {
       const API_BASE = 'https://ecolojia-backend-working.onrender.com';
       
-      console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Appel API backend...', `${API_BASE}/api/products/analyze`);
+      // [Removed corrupted console log]
       
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 secondes pour Render
@@ -82,46 +82,46 @@ export const analyzeProduct = async (
 
       if (response.ok) {
         const result = await response.json();
-        console.log('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ API backend reussie:', result);
+        // [Removed corrupted console log]
         
         try {
           // Validation et formatage de la reponse backend
           const formattedResult = processBackendResponse(result, productName, ingredients);
-          console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦ÃƒÂ¢Ã¢'šÂ¬Ã…'œÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  Resultat formate:', formattedResult);
+          // [Removed corrupted console log]
           
           currentAnalysis = formattedResult;
           return formattedResult;
         } catch (formatError: any) {
-          console.error('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Erreur de formatage backend:', formatError);
+          // [Removed corrupted console log]
           // Continue vers le fallback local
           throw new Error('Erreur de formatage, utilisation du fallback');
         }
       } else {
         const errorText = await response.text().catch(() => '');
-        console.warn(`aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Backend erreur ${response.status}: ${errorText}, fallback local`);
+        // [Removed corrupted console log]
       }
     } catch (backendError: any) {
       if (backendError.name === 'AbortError') {
-        console.warn('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â±Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Backend timeout apres 10s, fallback local');
+        // [Removed corrupted console log]
       } else {
-        console.warn('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¡Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Ã†'Ãƒ'šÃ‚Â¯Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â Backend indisponible, mode local active:', backendError.message);
+        // [Removed corrupted console log]
       }
     }
     
-    // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ FALLBACK: ANALYSE LOCALE SI BACKEND Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°CHOUE
-    console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â§Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â  Fallback: Analyse NOVA locale avancee...');
+    // [Cleaned comment]
+    // [Removed corrupted console log]
     
     // Simulation delai d'analyse realiste
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
     
     const result = generateAdvancedAnalysis(productName, ingredients);
-    console.log('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ Analyse NOVA locale generee:', result);
+    // [Removed corrupted console log]
     
     currentAnalysis = result;
     return result;
 
   } catch (error) {
-    console.error('aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Erreur durant l\'analyse:', error);
+    // [Removed corrupted console log]
     throw error;
   } finally {
     isAnalyzing = false;
@@ -180,7 +180,7 @@ function processBackendResponse(backendData: any, productName: string, ingredien
       naturalIngredients: novadata?.analysis?.naturalIngredients || [],
       suspiciousTerms: novadata?.analysis?.suspiciousTerms || []
     },
-    source: 'backend' // Marqueur pour savoir d'oÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¹ vient l'analyse
+    source: 'backend' // [Cleaned comment]
   };
 }
 
@@ -300,13 +300,7 @@ function generateAdvancedAnalysis(productName: string, ingredients: string): Nov
   const healthScore = calculateHealthScoreAdvanced(ingredients, novaGroup, additives);
   const analysis = performDetailedAnalysis(ingredients, novaGroup, additives);
   
-  console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¬ Analyse avancee:', { 
-    productName, 
-    novaGroup, 
-    additivesCount: additives.length, 
-    healthScore,
-    confidence: 92 
-  });
+  // [Removed corrupted console log]
   
   return {
     productName,
@@ -338,7 +332,7 @@ function estimateNovaGroupAdvanced(ingredients: string): number {
   let processedScore = 0;
   let culinaryScore = 0;
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ MARQUEURS NOVA 4 (Ultra-transforme) - Base etendue
+  // [Cleaned comment]
   const nova4Patterns = [
     { pattern: /e\d{3}/g, weight: 2 }, // Additifs E-numbers
     { pattern: /(sirop.*fructose|glucose.*fructose|isoglucose)/i, weight: 3 },
@@ -358,7 +352,7 @@ function estimateNovaGroupAdvanced(ingredients: string): number {
     if (matches) ultraProcessedScore += matches.length * weight;
   });
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ MARQUEURS NOVA 3 (Transforme)
+  // [Cleaned comment]
   const nova3Patterns = [
     { pattern: /(sucre|sel|huile|farine.*ble)/i, weight: 1 },
     { pattern: /(levure|beurre|fromage)/i, weight: 1 },
@@ -371,7 +365,7 @@ function estimateNovaGroupAdvanced(ingredients: string): number {
     if (pattern.test(lower)) processedScore += weight;
   });
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ MARQUEURS NOVA 2 (Ingredients culinaires)
+  // [Cleaned comment]
   const nova2Patterns = [
     { pattern: /(huile.*olive|huile.*tournesol)/i, weight: 1 },
     { pattern: /(sel.*marin|miel|sirop.*erable)/i, weight: 1 },
@@ -382,7 +376,7 @@ function estimateNovaGroupAdvanced(ingredients: string): number {
     if (pattern.test(lower)) culinaryScore += weight;
   });
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ CLASSIFICATION FINALE INTELLIGENTE
+  // [Cleaned comment]
   if (ultraProcessedScore >= 5) return 4;
   if (ultraProcessedScore >= 2) return 4;
   if (processedScore >= 3) return 3;
@@ -404,7 +398,7 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
   const additives = [];
   const lower = ingredients.toLowerCase();
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ BASE DE DONNÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°ES ADDITIFS Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°LARGIE
+  // [Cleaned comment]
   const additivesDB = [
     // Colorants
     { code: 'E150d', name: 'Caramel IV', risk: 'medium' as const, desc: 'Colorant caramel ammoniacal (4-MEI)' },
@@ -412,7 +406,7 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
     { code: 'E110', name: 'Jaune orange S', risk: 'medium' as const, desc: 'Colorant orange, reactions allergiques' },
     { code: 'E160a', name: 'Beta-carotene', risk: 'low' as const, desc: 'Colorant naturel orange (vitamine A)' },
     
-    // Exhausteurs de goÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»t
+    // [Cleaned comment]
     { code: 'E621', name: 'Glutamate monosodique', risk: 'medium' as const, desc: 'Exhausteur de goÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»t, maux de tete possibles' },
     { code: 'E627', name: 'Guanylate disodique', risk: 'medium' as const, desc: 'Exhausteur de goÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»t, asthme possible' },
     
@@ -422,12 +416,12 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
     { code: 'E282', name: 'Propionate de calcium', risk: 'low' as const, desc: 'Conservateur pain, irritations possibles' },
     { code: 'E200', name: 'Acide sorbique', risk: 'low' as const, desc: 'Conservateur naturel, sÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»r' },
     
-    // Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°mulsifiants
+    // [Cleaned comment]
     { code: 'E322', name: 'Lecithines', risk: 'low' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°mulsifiant naturel (soja/tournesol)' },
     { code: 'E471', name: 'Mono- et diglycerides', risk: 'low' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°mulsifiant couramment utilise' },
     { code: 'E476', name: 'Polyricinoleate de polyglycerol', risk: 'medium' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°mulsifiant synthetique' },
     
-    // Stabilisants/Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°paississants
+    // [Cleaned comment]
     { code: 'E412', name: 'Gomme de guar', risk: 'low' as const, desc: 'Stabilisant naturel (legumineuse)' },
     { code: 'E407', name: 'Carraghenanes', risk: 'medium' as const, desc: 'Gelifiant algues, inflammations intestinales' },
     { code: 'E415', name: 'Gomme xanthane', risk: 'low' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°paississant fermentation bacterienne' },
@@ -436,7 +430,7 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
     { code: 'E338', name: 'Acide phosphorique', risk: 'medium' as const, desc: 'Acidifiant, demineralisation osseuse' },
     { code: 'E330', name: 'Acide citrique', risk: 'low' as const, desc: 'Acidifiant naturel (agrumes)' },
     
-    // Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°dulcorants
+    // [Cleaned comment]
     { code: 'E952', name: 'Cyclamate de sodium', risk: 'medium' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°dulcorant artificiel, interdit USA' },
     { code: 'E950', name: 'Acesulfame K', risk: 'medium' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°dulcorant artificiel, goÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ã¢â‚¬Å¡Ãƒ'šÃ‚Â»t metallique' },
     { code: 'E955', name: 'Sucralose', risk: 'medium' as const, desc: 'Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°dulcorant chlore, effet microbiote' },
@@ -474,11 +468,11 @@ function detectAdditivesAdvanced(ingredients: string): Array<{
 function calculateHealthScoreAdvanced(ingredients: string, novaGroup: number, additives: any[]): number {
   let score = 100;
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ PÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°NALITÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°S NOVA (ponderees)
+  // [Cleaned comment]
   const novaPenalties = { 1: 0, 2: 8, 3: 25, 4: 55 };
   score -= novaPenalties[novaGroup as keyof typeof novaPenalties] || 0;
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ PÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°NALITÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°S ADDITIFS (par niveau de risque)
+  // [Cleaned comment]
   const highRiskAdditives = additives.filter(a => ?.riskLevel === 'high');
   const mediumRiskAdditives = additives.filter(a => ?.riskLevel === 'medium');
   const lowRiskAdditives = additives.filter(a => ?.riskLevel === 'low');
@@ -487,7 +481,7 @@ function calculateHealthScoreAdvanced(ingredients: string, novaGroup: number, ad
   score -= mediumRiskAdditives.length * 12; // -12 par additif risque moyen
   score -= lowRiskAdditives.length * 3;     // -3 par additif faible risque
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ BONUS INGRÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°DIENTS POSITIFS
+  // [Cleaned comment]
   const lower = ingredients.toLowerCase();
   const bonusPatterns = [
     { pattern: /(bio|biologique|organic)/i, bonus: 15, desc: 'Agriculture biologique' },
@@ -503,7 +497,7 @@ function calculateHealthScoreAdvanced(ingredients: string, novaGroup: number, ad
     if (pattern.test(lower)) score += bonus;
   });
   
-  // aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ PÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°NALITÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°S INGRÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°DIENTS PROBLÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°MATIQUES
+  // [Cleaned comment]
   const penaltyPatterns = [
     { pattern: /(huile.*palme)/i, penalty: 15, desc: 'Huile de palme' },
     { pattern: /(sirop.*fructose)/i, penalty: 12, desc: 'Sirop de glucose-fructose' },
@@ -625,7 +619,7 @@ function generateAdvancedRecommendations(ingredients: string, novaGroup: number,
   return recommendations;
 }
 
-// aÃ†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦aÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒ'¦Ã¢â‚¬Å“aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¦ FONCTIONS UTILITAIRES AVANCÃ†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢'šÂ¬Ã¢'žÂ¢aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°ES
+// [Cleaned comment]
 
 function extractRiskFactors(ingredients: string, additives: any[]): string[] {
   const risks = [];
@@ -701,7 +695,7 @@ function extractSuspiciousTerms(ingredients: string): string[] {
 export const reset = (): void => {
   currentAnalysis = null;
   isAnalyzing = false;
-  console.log('Ã†'Ãƒ' Ã¢â‚¬â„¢Ã¢â‚¬Å¡Ãƒ'šÃ‚Â°Ã†'ÃƒÂ¢Ã¢'šÂ¬Ã‚Â¦Ã¢â‚¬Å¡Ãƒ'šÃ‚Â¸aaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Å¡Ãƒ'šÃ‚ÂaaÃƒÂ¢Ã¢'šÂ¬Ã…Â¡Ãƒ'šÃ‚Â¬Ã¢â‚¬Â¦Ãƒ'šÃ‚Â¾ NovaClassifier reinitialise');
+  // [Removed corrupted console log]
 };
 
 /**

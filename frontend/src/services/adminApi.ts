@@ -1,4 +1,4 @@
-// PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
+﻿// PATH: frontend/ecolojiaFrontV3/src/services/adminApi.ts
 import axios from 'axios';
 import { AdminStats, RecentProduct, ImportLog, ImportProgress, AdminApiResponse } from '../types/admin';
 
@@ -17,7 +17,7 @@ const adminApi = axios.create({
 adminApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur API Admin:', error.response?.data || error.message);
+    // [Removed corrupted console log]
     return Promise.reject(error);
   }
 );
@@ -34,7 +34,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getDashboardStats:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de recuperer les statistiques du dashboard');
     }
   }
@@ -50,7 +50,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getRecentProducts:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de recuperer les produits recents');
     }
   }
@@ -66,7 +66,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getImportLogs:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de recuperer les logs d\'import');
     }
   }
@@ -84,7 +84,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur triggerImport:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de declencher l\'import');
     }
   }
@@ -100,7 +100,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur getImportProgress:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de recuperer le progres de l\'import');
     }
   }
@@ -116,7 +116,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur deleteProduct:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de supprimer le produit');
     }
   }
@@ -134,7 +134,7 @@ export class AdminApiService {
       
       return response.data?.data;
     } catch (error) {
-      console.error('aÆ’Ã¢â‚¬Å¡'šÃ‚ÂÆ’Ã¢â‚¬Â¦aÃ¢'šÂ¬Ã¢'žÂ¢ Erreur validateProduct:', error);
+      // [Removed corrupted console log]
       throw new Error('Impossible de valider le produit');
     }
   }
