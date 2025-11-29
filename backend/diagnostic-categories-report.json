@@ -1,0 +1,86 @@
+{
+  "date": "2025-11-29T18:43:57.260Z",
+  "totalProducts": 37703,
+  "totalIssues": 7,
+  "withoutCategory": 7,
+  "potentialMiscategorized": 0,
+  "issues": [
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    },
+    {
+      "currentCategory": "undefined",
+      "suggestedCategory": "food",
+      "confidence": 0,
+      "reason": "categoryType manquant",
+      "scores": {
+        "food": 0,
+        "cosmetic": 0,
+        "detergent": 0
+      }
+    }
+  ]
+}
