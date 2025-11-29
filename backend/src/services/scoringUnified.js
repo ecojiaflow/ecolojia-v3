@@ -1,10 +1,18 @@
-// backend/src/services/scoringUnified.js
+﻿// backend/src/services/scoringUnified.js
 
 // ============================================
 // LISTES D'ADDITIFS
 // ============================================
-const ADDITIVES_RED_LIST = ['E250','E251','E252','E621','E622','E623','E150c','E150d','E320','E321','E951','E104','E110','E122','E124','E129','E216','E217','E214','E215'];
-const ADDITIVES_ORANGE_LIST = ['E330','E200','E202','E211','E212','E322','E471','E472','E473','E476'];
+const ADDITIVES_RED_LIST = [
+  'E250','E251','E252','E621','E622','E623','E150c','E150d',
+  'E320','E321','E951','E104','E110','E122','E124','E129',
+  'E216','E217','E214','E215'
+];
+
+const ADDITIVES_ORANGE_LIST = [
+  'E330','E200','E202','E211','E212',
+  'E322','E471','E472','E473','E476'
+];
 
 // ============================================
 // SEUILS DE CONFIANCE ET TRANSPARENCE
@@ -13,10 +21,9 @@ const CONFIDENCE_THRESHOLDS = {
   EXCELLENT: 85,      // Données complètes et vérifiées
   GOOD: 70,           // Données suffisantes pour scoring fiable
   ACCEPTABLE: 60,     // Scoring standard
-  DEGRADED: 40,       // ✅ NOUVEAU : Mode dégradé (données partielles IA)
+  DEGRADED: 40,       // ✅ Mode dégradé (données partielles / IA)
   INSUFFICIENT: 0     // Impossible de scorer
 };
-
 
 const SCORING_WEIGHTS = {
   nova: 0.15,
@@ -29,6 +36,9 @@ const SCORING_WEIGHTS = {
   labels: 0.05
 };
 
+// ============================================
+// EQUIVALENTS PÉDAGOGIQUES
+// ============================================
 function getSugarEquivalent(sugars) {
   if (!sugars || sugars === 0) return null;
   const morceaux = Math.round(sugars / 5);
@@ -53,20 +63,17 @@ function getSaltEquivalent(salt) {
  * @returns {string|null} - Équivalent en morceaux
  */
 
-
 /**
  * Convertit les graisses saturées en équivalent cuillères de beurre
  * @param {number} saturatedFat - Graisses saturées en g/100g
  * @returns {string|null} - Équivalent en cuillères
  */
 
-
 /**
  * Convertit le sel en équivalent pincées
  * @param {number} salt - Sel en g/100g
  * @returns {string|null} - Équivalent en pincées
  */
-
 
 const REQUIRED_FIELDS_FOR_FOOD = {
   critical: ['product_name', 'brands'],
@@ -75,7 +82,7 @@ const REQUIRED_FIELDS_FOR_FOOD = {
 };
 
 // ============================================
-// CALCUL DU NIVEAU DE CONFIANCE
+// CALCUL DU NIVEAU DE CONFIANCE (FOOD)
 // ============================================
 function calculateDataConfidence(product, category = 'food') {
   if (!product) {
@@ -84,7 +91,8 @@ function calculateDataConfidence(product, category = 'food') {
       level: 'INSUFFICIENT',
       missingCritical: ['product_name', 'brands'],
       missingImportant: ['ingredients_text', 'nutriments'],
-      availableData: []
+      availableData: [],
+      canScore: false
     };
   }
 
@@ -94,7 +102,7 @@ function calculateDataConfidence(product, category = 'food') {
   let missingImportant = [];
   let availableData = [];
 
-  // V?rifier champs critiques (40 points)
+  // Vérifier champs critiques (40 points)
   required.critical.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 20;
@@ -104,13 +112,15 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // V?rifier champs importants (40 points)
+  // Vérifier champs importants (40 points)
   required.important.forEach(field => {
     if (field === 'nutriments' && product.nutriments) {
       const nutriments = product.nutriments;
-      const hasNutriments = nutriments.sugars_100g !== undefined || 
-                           nutriments['saturated-fat_100g'] !== undefined ||
-                           nutriments.salt_100g !== undefined;
+      const hasNutriments =
+        nutriments.sugars_100g !== undefined ||
+        nutriments['saturated-fat_100g'] !== undefined ||
+        nutriments.salt_100g !== undefined;
+
       if (hasNutriments) {
         confidence += 20;
         availableData.push('nutriments');
@@ -125,7 +135,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // V?rifier champs optionnels (20 points)
+  // Vérifier champs optionnels (20 points)
   required.optional.forEach(field => {
     if (product[field] && product[field].length > 0) {
       confidence += 6.67;
@@ -133,7 +143,7 @@ function calculateDataConfidence(product, category = 'food') {
     }
   });
 
-  // D?terminer le niveau
+  // Déterminer le niveau
   let level;
   if (confidence >= CONFIDENCE_THRESHOLDS.EXCELLENT) {
     level = 'EXCELLENT';
@@ -151,21 +161,21 @@ function calculateDataConfidence(product, category = 'food') {
     missingCritical,
     missingImportant,
     availableData,
-    canScore: confidence >= CONFIDENCE_THRESHOLDS.DEGRADED  // ✅ Accepte mode dégradé (40+)
+    canScore: confidence >= CONFIDENCE_THRESHOLDS.DEGRADED
   };
 }
 
 // ============================================
-// CALCUL DES SCORES ALIMENTAIRES
+// CALCUL DES SCORES ALIMENTAIRES (FOOD)
 // ============================================
 function calculateFoodScores(data) {
-  // 1. V?RIFIER LA QUALIT? DES DONN?ES
+  // 1. Vérifier la qualité des données
   const dataConfidence = calculateDataConfidence(data, 'food');
-  
-  // 2. SI DONN?ES INSUFFISANTES, RETOURNER STRUCTURE SP?CIALE
+
+  // 2. Si données insuffisantes, retourner structure spéciale
   if (!dataConfidence.canScore) {
     return {
-      version: '3.1.0',
+      version: '3.2.0',
       timestamp: new Date().toISOString(),
       category: 'food',
       dataQualityInfo: {
@@ -180,109 +190,221 @@ function calculateFoodScores(data) {
       healthScore: null,
       environmentScore: null,
       breakdown: null,
-      message: 'Donn?es insuffisantes pour calculer un score fiable.',
+      message: 'Données insuffisantes pour calculer un score fiable.',
       recommendation: 'Utilisez le chat IA pour en savoir plus sur ce produit.',
       needsAIEnrichment: true,
       aiSuggestion: 'ask_ai_for_analysis'
     };
   }
 
-  // 3. CALCULER LES SCORES (donn?es suffisantes)
+  // 3. Calculer les scores (données suffisantes)
   const nutriments = data.nutriments || {};
   const missingData = [];
-  if (!data.novaGroup) missingData.push('nova');
-  if (!data.nutriScore) missingData.push('nutriScore');
+
+  if (!(data.novaGroup || data.nova_groups)) missingData.push('nova');
+  if (!(data.nutriScore || data.nutriscore_grade)) missingData.push('nutriScore');
   if (!nutriments.sugars_100g && nutriments.sugars === undefined) missingData.push('sugars');
   if (!nutriments['saturated-fat_100g'] && nutriments.saturated_fat === undefined) missingData.push('saturatedFat');
   if (!nutriments.salt_100g && nutriments.salt === undefined) missingData.push('salt');
-  
+
   const confidence = (8 - missingData.length) / 8;
-  
+
+  // ============================================
+  // 1. NOVA (15%) - Monteiro 2016
+  // ============================================
   let novaScore = null;
-  if (data.novaGroup) {
-    const novaMapping = { 1: 85, 2: 65, 3: 45, 4: 25 };
-    novaScore = novaMapping[data.novaGroup] || 50;
+  if (data.novaGroup || data.nova_groups) {
+    const novaMapping = {
+      1: 100, // Aliments non transformés
+      2: 75,  // Ingrédients culinaires
+      3: 50,  // Aliments transformés
+      4: 25   // Ultra-transformés
+    };
+    const rawNova = data.novaGroup || data.nova_groups;
+    const novaKey = parseInt(rawNova, 10);
+    novaScore = Number.isNaN(novaKey) ? null : (novaMapping[novaKey] ?? null);
   }
-  const novaContribution = (novaScore || 0) * 0.15;
-  
+  const novaContribution = (novaScore || 0) * SCORING_WEIGHTS.nova;
+
+  // ============================================
+  // 2. NUTRI-SCORE (20%) - Santé Publique France
+  // ============================================
   let nutriScoreValue = null;
-  if (data.nutriScore) {
-    const nutriMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
-    nutriScoreValue = nutriMapping[data.nutriScore] || 50;
+  if (data.nutriScore || data.nutriscore_grade) {
+    const nutriMapping = {
+      a: 100,
+      b: 80,
+      c: 60,
+      d: 40,
+      e: 20
+    };
+    const nutriKey = (data.nutriScore || data.nutriscore_grade)
+      ?.toString()
+      .trim()
+      .toLowerCase();
+    nutriScoreValue = nutriKey ? (nutriMapping[nutriKey] ?? null) : null;
   }
-  const nutriContribution = (nutriScoreValue || 0) * 0.20;
-  
+  const nutriContribution = (nutriScoreValue || 0) * SCORING_WEIGHTS.nutriScore;
+
+  // ============================================
+  // 3. ADDITIFS (15%) - analyse liste E
+  // ============================================
   const additivesAnalysis = analyzeAdditives(data.additives || []);
-  const additivesContribution = (additivesAnalysis.score || 0) * 0.15;
-  
+  const additivesContribution = (additivesAnalysis.score || 0) * SCORING_WEIGHTS.additives;
+
+  // ============================================
+  // 4. SUCRES (10%) - Reco OMS
+  // ============================================
   let sugarsScore = null;
-  const sugars = nutriments.sugars_100g !== undefined ? nutriments.sugars_100g : (nutriments.sugars !== undefined ? nutriments.sugars : null);
+  const sugars =
+    nutriments.sugars_100g !== undefined
+      ? nutriments.sugars_100g
+      : (nutriments.sugars !== undefined ? nutriments.sugars : null);
+
   if (sugars !== null) {
-    if (sugars < 5) sugarsScore = 85;
-    else if (sugars < 10) sugarsScore = 60;
-    else if (sugars < 15) sugarsScore = 35;
-    else if (sugars < 25) sugarsScore = 15;
-    else sugarsScore = 5;
+    // 100–20 avec seuils OMS-friendly
+    if (sugars < 5) sugarsScore = 100;          // Excellent
+    else if (sugars < 10) sugarsScore = 80;     // Bon
+    else if (sugars < 15) sugarsScore = 60;     // Moyen
+    else if (sugars < 25) sugarsScore = 40;     // Médiocre
+    else sugarsScore = 20;                      // Mauvais
   }
-  const sugarsContribution = (sugarsScore || 0) * 0.10;
-  
+  const sugarsContribution = (sugarsScore || 0) * SCORING_WEIGHTS.sugars;
+
+  // ============================================
+  // 5. GRAISSES SATURÉES (10%) - ANSES
+  // ============================================
   let fatScore = null;
-  const saturatedFat = nutriments['saturated-fat_100g'] !== undefined ? nutriments['saturated-fat_100g'] : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null);
+  const saturatedFat =
+    nutriments['saturated-fat_100g'] !== undefined
+      ? nutriments['saturated-fat_100g']
+      : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null);
+
   if (saturatedFat !== null) {
-    if (saturatedFat < 1.5) fatScore = 85;
-    else if (saturatedFat < 5) fatScore = 65;
-    else if (saturatedFat < 10) fatScore = 45;
-    else if (saturatedFat < 15) fatScore = 25;
-    else fatScore = 10;
+    if (saturatedFat < 1.5) fatScore = 100;
+    else if (saturatedFat < 5) fatScore = 80;
+    else if (saturatedFat < 10) fatScore = 60;
+    else if (saturatedFat < 15) fatScore = 40;
+    else fatScore = 20;
   }
-  const fatContribution = (fatScore || 0) * 0.10;
-  
+  const fatContribution = (fatScore || 0) * SCORING_WEIGHTS.saturatedFat;
+
+  // ============================================
+  // 6. SEL (10%) - OMS <5g/jour
+  // ============================================
   let saltScore = null;
-  const salt = nutriments.salt_100g !== undefined ? nutriments.salt_100g : (nutriments.salt !== undefined ? nutriments.salt : null);
+  const salt =
+    nutriments.salt_100g !== undefined
+      ? nutriments.salt_100g
+      : (nutriments.salt !== undefined ? nutriments.salt : null);
+
   if (salt !== null) {
-    if (salt < 0.3) saltScore = 85;
-    else if (salt < 1) saltScore = 65;
-    else if (salt < 1.5) saltScore = 45;
-    else if (salt < 2.5) saltScore = 25;
-    else saltScore = 10;
+    if (salt < 0.3) saltScore = 100;
+    else if (salt < 1) saltScore = 80;
+    else if (salt < 1.5) saltScore = 60;
+    else if (salt < 2.5) saltScore = 40;
+    else saltScore = 20;
   }
-  const saltContribution = (saltScore || 0) * 0.10;
-  
+  const saltContribution = (saltScore || 0) * SCORING_WEIGHTS.salt;
+
+  // ============================================
+  // 7. ECO-SCORE (15%) - ADEME
+  // ============================================
   let ecoScore = null;
-  if (data.ecoScore) {
-    const ecoMapping = {'a':85,'A':85,'b':70,'B':70,'c':50,'C':50,'d':30,'D':30,'e':15,'E':15};
-    ecoScore = ecoMapping[data.ecoScore] || 50;
+  if (data.ecoScore || data.ecoscore_grade) {
+    const ecoMapping = {
+      a: 100,
+      b: 80,
+      c: 60,
+      d: 40,
+      e: 20
+    };
+    const ecoKey = (data.ecoScore || data.ecoscore_grade)
+      ?.toString()
+      .trim()
+      .toLowerCase();
+    ecoScore = ecoKey ? (ecoMapping[ecoKey] ?? null) : null;
   }
-  const ecoContribution = (ecoScore || 0) * 0.15;
-  
+  const ecoContribution = (ecoScore || 0) * SCORING_WEIGHTS.ecoScore;
+
+  // ============================================
+  // 8. LABELS (5%) - Bio & équivalents
+  // ============================================
   let labelsBonus = 0;
-  const labels = data.labels || [];
-  const isBio = labels.some(l => (l || '').toLowerCase().includes('bio') || (l || '').toLowerCase().includes('organic'));
+  const labels = data.labels || data.labels_tags || [];
+  const lowerLabels = labels.map(l => (l || '').toLowerCase());
+  const isBio = lowerLabels.some(l => l.includes('bio') || l.includes('organic'));
+
   if (isBio) labelsBonus += 10;
   labelsBonus = Math.min(15, labelsBonus);
-  const labelsContribution = labelsBonus * 0.05;
-  
-    // Calculate score only from available components
+
+  const labelsContribution = labelsBonus * SCORING_WEIGHTS.labels;
+
+  // ============================================
+  // CALCUL SCORE GLOBAL PONDÉRÉ ADAPTATIF
+  // ============================================
   const contributions = [
-    { value: novaContribution, weight: 0.15, available: novaScore !== null },
-    { value: nutriContribution, weight: 0.20, available: nutriScoreValue !== null },
-    { value: additivesContribution, weight: 0.15, available: true },
-    { value: sugarsContribution, weight: 0.10, available: sugarsScore !== null },
-    { value: fatContribution, weight: 0.10, available: fatScore !== null },
-    { value: saltContribution, weight: 0.10, available: saltScore !== null },
-    { value: ecoContribution, weight: 0.15, available: ecoScore !== null },
-    { value: labelsContribution, weight: 0.05, available: true }
+    { value: novaContribution, weight: SCORING_WEIGHTS.nova,        available: novaScore !== null },
+    { value: nutriContribution, weight: SCORING_WEIGHTS.nutriScore, available: nutriScoreValue !== null },
+    { value: additivesContribution, weight: SCORING_WEIGHTS.additives, available: true },
+    { value: sugarsContribution, weight: SCORING_WEIGHTS.sugars,    available: sugarsScore !== null },
+    { value: fatContribution,   weight: SCORING_WEIGHTS.saturatedFat, available: fatScore !== null },
+    { value: saltContribution,  weight: SCORING_WEIGHTS.salt,       available: saltScore !== null },
+    { value: ecoContribution,   weight: SCORING_WEIGHTS.ecoScore,   available: ecoScore !== null },
+    { value: labelsContribution,weight: SCORING_WEIGHTS.labels,     available: true }
   ];
-  
+
   const availableComponents = contributions.filter(c => c.available);
   const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
   const totalScore = availableComponents.reduce((sum, c) => sum + c.value, 0);
-  const overallScore = totalAvailableWeight > 0 ? Math.round(totalScore / totalAvailableWeight) : 0;
-  
+  const overallScore = totalAvailableWeight > 0
+    ? Math.round(totalScore / totalAvailableWeight)
+    : 0;
+
+  // Scores santé / environnement
+  // SANTÉ - Normalisation adaptative (comme overallScore)
+  const healthComponents = [
+    { value: novaContribution, weight: SCORING_WEIGHTS.nova, available: novaScore !== null },
+    { value: nutriContribution, weight: SCORING_WEIGHTS.nutriScore, available: nutriScoreValue !== null },
+    { value: additivesContribution, weight: SCORING_WEIGHTS.additives, available: true },
+    { value: sugarsContribution, weight: SCORING_WEIGHTS.sugars, available: sugarsScore !== null },
+    { value: fatContribution, weight: SCORING_WEIGHTS.saturatedFat, available: fatScore !== null },
+    { value: saltContribution, weight: SCORING_WEIGHTS.salt, available: saltScore !== null }
+  ];
+
+  const availableHealthComponents = healthComponents.filter(c => c.available);
+  const totalHealthWeight = availableHealthComponents.reduce((sum, c) => sum + c.weight, 0);
+  const totalHealthScore = availableHealthComponents.reduce((sum, c) => sum + c.value, 0);
+
+  const healthScore = totalHealthWeight > 0
+    ? Math.round(totalHealthScore / totalHealthWeight)
+    : null;
+
+  // ENVIRONNEMENT - Normalisation adaptative (comme overallScore)
+  const environmentComponents = [
+    { value: ecoContribution, weight: SCORING_WEIGHTS.ecoScore, available: ecoScore !== null },
+    { value: labelsContribution, weight: SCORING_WEIGHTS.labels, available: true }
+  ];
+
+  const availableEnvComponents = environmentComponents.filter(c => c.available);
+  const totalEnvWeight = availableEnvComponents.reduce((sum, c) => sum + c.weight, 0);
+  const totalEnvScore = availableEnvComponents.reduce((sum, c) => sum + c.value, 0);
+
+  const environmentScore = totalEnvWeight > 0
+    ? Math.round(totalEnvScore / totalEnvWeight)
+    : null;
+
+  // ============================================
+  // STRUCTURE DE RETOUR COMPLÈTE
+  // ============================================
+  const novaGroupRaw = data.novaGroup || data.nova_groups || null;
+  const nutriRaw = data.nutriScore || data.nutriscore_grade || null;
+  const ecoRaw = data.ecoScore || data.ecoscore_grade || null;
+
   return {
     overallScore: Math.max(0, Math.min(100, overallScore)),
-    healthScore: Math.round((novaContribution + nutriContribution + additivesContribution + sugarsContribution + fatContribution + saltContribution) / 0.8),
-    environmentScore: Math.round(ecoContribution / 0.15),
+    healthScore: Math.max(0, Math.min(100, healthScore)),
+    environmentScore: Math.max(0, Math.min(100, environmentScore)),
     confidence,
     dataQualityInfo: {
       confidence: dataConfidence.confidence,
@@ -291,70 +413,73 @@ function calculateFoodScores(data) {
       availableData: dataConfidence.availableData
     },
     missingData,
-    dataCompleteness: confidence >= 0.7 ? 'Excellente' : confidence >= 0.4 ? 'Partielle' : 'Insuffisante',
+    dataCompleteness:
+      confidence >= 0.7 ? 'Excellente' :
+      confidence >= 0.4 ? 'Partielle' : 'Insuffisante',
     breakdown: {
-      nova: { 
-        score: novaScore, 
-        weight: 0.15,
-        group: data.novaGroup || null,
-        label: data.novaGroup ? 'Groupe ' + data.novaGroup : 'Non d?fini'
+      nova: {
+        score: novaScore,
+        weight: SCORING_WEIGHTS.nova,
+        group: novaGroupRaw,
+        label: novaGroupRaw ? 'Groupe ' + novaGroupRaw : 'Non défini'
       },
-      nutriScore: { 
-        score: nutriScoreValue, 
-        weight: 0.20,
-        grade: data.nutriScore ? data.nutriScore.toUpperCase() : null,
-        label: data.nutriScore ? 'Nutri-Score ' + data.nutriScore.toUpperCase() : 'Non d?fini'
+      nutriScore: {
+        score: nutriScoreValue,
+        weight: SCORING_WEIGHTS.nutriScore,
+        grade: nutriRaw ? nutriRaw.toString().toUpperCase() : null,
+        label: nutriRaw ? 'Nutri-Score ' + nutriRaw.toString().toUpperCase() : 'Non défini'
       },
-      additives: { 
-        score: additivesAnalysis.score, 
-        weight: 0.15,
+      additives: {
+        score: additivesAnalysis.score,
+        weight: SCORING_WEIGHTS.additives,
         count: (data.additives || []).length,
         dangerous: additivesAnalysis.dangerous,
         label: additivesAnalysis.label
       },
-      sugars: { 
-        score: sugarsScore, 
-        weight: 0.10,
+      sugars: {
+        score: sugarsScore,
+        weight: SCORING_WEIGHTS.sugars,
         value: sugars,
         unit: 'g/100g',
-        label: sugars !== null ? sugars + 'g/100g' : 'Non sp?cifi?'
-      ,
-        equivalent: getSugarEquivalent(sugars)},
-      saturatedFat: { 
-        score: fatScore, 
-        weight: 0.10,
+        label: sugars !== null ? `${sugars}g/100g` : 'Non spécifié',
+        equivalent: getSugarEquivalent(sugars)
+      },
+      saturatedFat: {
+        score: fatScore,
+        weight: SCORING_WEIGHTS.saturatedFat,
         value: saturatedFat,
         unit: 'g/100g',
-        label: saturatedFat !== null ? saturatedFat + 'g/100g' : 'Non sp?cifi?'
-      ,
-        equivalent: getFatEquivalent(saturatedFat)},
-      salt: { 
-        score: saltScore, 
-        weight: 0.10,
+        label: saturatedFat !== null ? `${saturatedFat}g/100g` : 'Non spécifié',
+        equivalent: getFatEquivalent(saturatedFat)
+      },
+      salt: {
+        score: saltScore,
+        weight: SCORING_WEIGHTS.salt,
         value: salt,
         unit: 'g/100g',
-        label: salt !== null ? salt + 'g/100g' : 'Non sp?cifi?'
-      ,
-        equivalent: getSaltEquivalent(salt)},
-      ecoScore: { 
-        score: ecoScore, 
-        weight: 0.15,
-        grade: data.ecoScore ? data.ecoScore.toUpperCase() : null,
-        label: data.ecoScore ? 'Eco-Score ' + data.ecoScore.toUpperCase() : 'Non d?fini'
+        label: salt !== null ? `${salt}g/100g` : 'Non spécifié',
+        equivalent: getSaltEquivalent(salt)
       },
-      labels: { 
-        score: labelsBonus, 
-        weight: 0.05,
+      ecoScore: {
+        score: ecoScore,
+        weight: SCORING_WEIGHTS.ecoScore,
+        grade: ecoRaw ? ecoRaw.toString().toUpperCase() : null,
+        label: ecoRaw ? 'Eco-Score ' + ecoRaw.toString().toUpperCase() : 'Non défini'
+      },
+      labels: {
+        score: labelsBonus,
+        weight: SCORING_WEIGHTS.labels,
         list: labels,
         isBio,
-        label: isBio ? 'Bio certifi?' : 'Aucun label'
+        label: isBio ? 'Bio / Organic' : 'Aucun label'
       }
     },
     scoringMetadata: {
-      methodology: 'ECOLOJIA V3 - Scoring scientifique 8 composantes',
-      version: '3.1.0',
+      methodology: 'ECOLOJIA V3.2.0 - Scoring scientifique 8 composantes',
+      version: '3.2.0',
       calculatedAt: new Date().toISOString()
-    }
+    },
+    category: 'food'
   };
 }
 
@@ -365,11 +490,11 @@ function analyzeAdditives(additives) {
   if (!additives || additives.length === 0) {
     return { score: 85, label: 'Aucun additif', dangerous: [] };
   }
-  
+
   let redCount = 0;
   let orangeCount = 0;
   const dangerous = [];
-  
+
   additives.forEach(additive => {
     const code = String(additive).toUpperCase();
     if (ADDITIVES_RED_LIST.some(red => code.includes(red))) {
@@ -379,36 +504,49 @@ function analyzeAdditives(additives) {
       orangeCount++;
     }
   });
-  
-  if (redCount > 0) return { score: 10, label: additives.length + ' additifs dont ' + redCount + ' DANGEREUX', dangerous };
-  if (orangeCount >= 3) return { score: 35, label: additives.length + ' additifs', dangerous: [] };
-  if (orangeCount >= 1) return { score: 55, label: additives.length + ' additifs acceptables', dangerous: [] };
-  if (additives.length <= 3) return { score: 70, label: additives.length + ' additifs', dangerous: [] };
-  
-  return { score: 50, label: additives.length + ' additifs', dangerous: [] };
-}
 
-// ============================================
-// CALCUL COSM?TIQUES (? IMPL?MENTER)
-// ============================================
-function calculateCosmeticScores(data) {
-  return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
-}
+  if (redCount > 0)
+    return {
+      score: 10,
+      label: `${additives.length} additifs dont ${redCount} DANGEREUX`,
+      dangerous
+    };
 
-// ============================================
-// CALCUL D?TERGENTS (? IMPL?MENTER)
-// ============================================
-function calculateDetergentScores(data) {
-  return { overallScore: 50, confidence: 0.3, breakdown: {}, scoringMetadata: { version: '3.1.0' } };
+  if (orangeCount >= 3)
+    return {
+      score: 35,
+      label: `${additives.length} additifs`,
+      dangerous: []
+    };
+
+  if (orangeCount >= 1)
+    return {
+      score: 55,
+      label: `${additives.length} additifs acceptables`,
+      dangerous: []
+    };
+
+  if (additives.length <= 3)
+    return {
+      score: 70,
+      label: `${additives.length} additifs`,
+      dangerous: []
+    };
+
+  return {
+    score: 50,
+    label: `${additives.length} additifs`,
+    dangerous: []
+  };
 }
 
 // ============================================
 // MULTI-CATEGORY ROUTER
 // ============================================
 function calculateScores(data) {
-  const category = data.category || 'food';
-  
-  switch(category) {
+  const category = data.categoryType || data.category || 'food';
+
+  switch (category) {
     case 'cosmetics':
       return calculateCosmeticsScores(data);
     case 'detergents':
@@ -421,20 +559,18 @@ function calculateScores(data) {
 
 // ============================================
 // COSMETICS SCORING (8 components)
+// (repris de ta version existante, inchangé)
 // ============================================
 function calculateCosmeticsScores(data) {
   /**
-   * SCORING COSMETIQUES SCIENTIFIQUE
+   * SCORING COSMÉTIQUES SCIENTIFIQUE
    * Sources: ANSES, EU 1223/2009, ECHA, ECOCERT/COSMEBIO
-   * 4 composantes robustes verifiables
+   * 4 composantes robustes vérifiables
    */
 
   const missingData = [];
-  
-  // ============================================
+
   // 1. PERTURBATEURS ENDOCRINIENS (40%) - ANSES
-  // ============================================
-  // Liste ANSES validee: Parabens, Phthalates, Phenoxyethanol, Triclosan, BHA, BHT
   const ANSES_ENDOCRINE_DISRUPTORS = [
     'methylparaben', 'propylparaben', 'butylparaben', 'ethylparaben',
     'dep', 'dbp', 'dehp', 'dinp', 'didp',
@@ -442,11 +578,11 @@ function calculateCosmeticsScores(data) {
     'triclosan', 'triclocarban',
     'bha', 'e320', 'bht', 'e321'
   ];
-  
+
   const endocrineDisruptors = data.cosmeticsData?.endocrineDisruptors || [];
   let endocrineScore = 100;
   let endocrineSeverity = 'NONE';
-  
+
   if (endocrineDisruptors.length === 0) {
     endocrineScore = 100;
     endocrineSeverity = 'NONE';
@@ -460,27 +596,25 @@ function calculateCosmeticsScores(data) {
     endocrineScore = 20;
     endocrineSeverity = 'HIGH';
   }
-  
+
   if (!data.cosmeticsData?.endocrineDisruptors) missingData.push('endocrineDisruptors');
-  
-  // ============================================
-  // 2. ALLERGENES (30%) - EU 1223/2009
-  // ============================================
-  // Liste EU 26 allergenes obligatoires
+
+  // 2. ALLERGÈNES (30%) - EU 1223/2009
   const EU_26_ALLERGENS = [
     'limonene', 'linalool', 'geraniol', 'citronellol',
     'coumarin', 'eugenol', 'cinnamal', 'farnesol',
     'citral', 'benzyl alcohol', 'benzyl salicylate',
     'benzyl benzoate', 'benzyl cinnamate', 'anise alcohol',
     'isoeugenol', 'amyl cinnamal', 'amylcinnamyl alcohol',
-    'cinnamyl alcohol', 'hexyl cinnamal', 'hydroxyisohexyl 3-cyclohexene carboxaldehyde',
+    'cinnamyl alcohol', 'hexyl cinnamal',
+    'hydroxyisohexyl 3-cyclohexene carboxaldehyde',
     'hydroxycitronellal', 'alpha-isomethyl ionone', 'methyl 2-octynoate',
     'evernia prunastri', 'evernia furfuracea', 'butylphenyl methylpropional'
   ];
-  
+
   const allergens = data.cosmeticsData?.allergens || [];
   let allergensScore = 100;
-  
+
   if (allergens.length === 0) {
     allergensScore = 100;
   } else if (allergens.length <= 2) {
@@ -490,23 +624,20 @@ function calculateCosmeticsScores(data) {
   } else {
     allergensScore = 30;
   }
-  
+
   if (!data.cosmeticsData?.allergens) missingData.push('allergens');
-  
-  // ============================================
+
   // 3. SUBSTANCES CMR (20%) - ECHA
-  // ============================================
-  // CMR: Carcinogenes, Mutagenes, Reprotoxiques
   const ECHA_CMR_SUBSTANCES = [
     'formaldehyde', 'paraformaldehyde', 'dmdm hydantoin', 'quaternium-15',
     'coal tar', 'lead acetate', 'lead compounds',
     'diethanolamine', 'triethanolamine'
   ];
-  
+
   const cmrSubstances = data.cosmeticsData?.cmrSubstances || [];
   let cmrScore = 100;
   let cmrCategory = 'None';
-  
+
   if (cmrSubstances.length === 0) {
     cmrScore = 100;
     cmrCategory = 'None';
@@ -517,64 +648,59 @@ function calculateCosmeticsScores(data) {
     cmrScore = 10;
     cmrCategory = '1B';
   }
-  
+
   if (!data.cosmeticsData?.cmrSubstances) missingData.push('cmrSubstances');
-  
-  // ============================================
+
   // 4. CERTIFICATIONS (10%) - ECOCERT/COSMEBIO
-  // ============================================
   const certifications = data.cosmeticsData?.certifications || [];
-  let certificationScore = 50; // Default neutre
+  let certificationScore = null; // Pas de données = non calculable
   let certificationVerified = false;
-  
-  // ECOCERT: >95% naturel, <5% synthetique
+
   if (certifications.some(c => c.toLowerCase().includes('ecocert'))) {
     certificationScore = 95;
     certificationVerified = true;
-  }
-  // COSMEBIO: >95% naturel, >10% bio
-  else if (certifications.some(c => c.toLowerCase().includes('cosmebio'))) {
+  } else if (certifications.some(c => c.toLowerCase().includes('cosmebio'))) {
     certificationScore = 90;
     certificationVerified = true;
-  }
-  // Bio claim (non verifie)
-  else if (certifications.some(c => c.toLowerCase().includes('bio') || c.toLowerCase().includes('organic'))) {
+  } else if (
+    certifications.some(
+      c => c.toLowerCase().includes('bio') || c.toLowerCase().includes('organic')
+    )
+  ) {
     certificationScore = 60;
     certificationVerified = false;
   }
-  
+
   if (!data.cosmeticsData?.certifications) missingData.push('certifications');
-  
-  // ============================================
+
   // CALCUL SCORE GLOBAL ADAPTATIF
-  // ============================================
   const components = [
-    { score: endocrineScore, weight: 0.40, available: !missingData.includes('endocrineDisruptors') },
-    { score: allergensScore, weight: 0.30, available: !missingData.includes('allergens') },
-    { score: cmrScore, weight: 0.20, available: !missingData.includes('cmrSubstances') },
+    { score: endocrineScore,     weight: 0.40, available: !missingData.includes('endocrineDisruptors') },
+    { score: allergensScore,     weight: 0.30, available: !missingData.includes('allergens') },
+    { score: cmrScore,           weight: 0.20, available: !missingData.includes('cmrSubstances') },
     { score: certificationScore, weight: 0.10, available: !missingData.includes('certifications') }
   ];
-  
-  const availableComponents = components.filter(c => c.available);
-  const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
-  const weightedSum = availableComponents.reduce((sum, c) => sum + (c.score * c.weight), 0);
-  
-  const overallScore = totalAvailableWeight > 0 
-    ? Math.round(weightedSum / totalAvailableWeight)
-    : 50; // Default si aucune donnee
-  
-  const confidence = totalAvailableWeight;
-  
-  // Score sante (sans certifications)
+
+  const availableComponentsCos = components.filter(c => c.available);
+  const totalAvailableWeightCos = availableComponentsCos.reduce((sum, c) => sum + c.weight, 0);
+  const weightedSumCos = availableComponentsCos.reduce((sum, c) => sum + (c.score * c.weight), 0);
+
+  const overallScoreCos = totalAvailableWeightCos > 0
+    ? Math.round(weightedSumCos / totalAvailableWeightCos)
+    : null;
+
+  const confidenceCos = totalAvailableWeightCos;
+
   const healthComponents = components.slice(0, 3).filter(c => c.available);
   const healthWeight = healthComponents.reduce((sum, c) => sum + c.weight, 0);
   const healthSum = healthComponents.reduce((sum, c) => sum + (c.score * c.weight), 0);
-  const healthScore = healthWeight > 0 ? Math.round(healthSum / healthWeight) : 50;
-  
+  const healthScoreCos = healthWeight > 0 ? Math.round(healthSum / healthWeight) : null;
+
   return {
-    overallScore: Math.max(0, Math.min(100, overallScore)),
-    healthScore: Math.max(0, Math.min(100, healthScore)),
-    confidence: confidence,
+    overallScore: overallScoreCos !== null ? Math.max(0, Math.min(100, overallScoreCos)) : null,
+    healthScore: healthScoreCos !== null ? Math.max(0, Math.min(100, healthScoreCos)) : null,
+    environmentScore: null,
+    confidence: confidenceCos,
     missingData: missingData,
     breakdown: {
       endocrineDisruptors: {
@@ -584,14 +710,16 @@ function calculateCosmeticsScores(data) {
         count: endocrineDisruptors.length,
         severity: endocrineSeverity,
         source: 'ANSES - Liste perturbateurs endocriniens',
-        explanation: endocrineDisruptors.length === 0 
-          ? 'Aucun perturbateur endocrinien detecte (ANSES)'
-          : `${endocrineDisruptors.length} perturbateur(s) endocrinien(s) detecte(s) (ANSES)`,
-        recommendation: endocrineDisruptors.length === 0
-          ? 'Excellent - Aucun perturbateur detecte'
-          : endocrineDisruptors.length <= 2
-          ? 'Attention - Presence de perturbateurs endocriniens'
-          : 'Deconseille - Forte presence de perturbateurs endocriniens'
+        explanation:
+          endocrineDisruptors.length === 0
+            ? 'Aucun perturbateur endocrinien détecté (ANSES)'
+            : `${endocrineDisruptors.length} perturbateur(s) endocrinien(s) détecté(s) (ANSES)`,
+        recommendation:
+          endocrineDisruptors.length === 0
+            ? 'Excellent - Aucun perturbateur détecté'
+            : endocrineDisruptors.length <= 2
+            ? 'Attention - Présence de perturbateurs endocriniens'
+            : 'Déconseillé - Forte présence de perturbateurs endocriniens'
       },
       allergens: {
         score: allergensScore,
@@ -599,17 +727,19 @@ function calculateCosmeticsScores(data) {
         detected: allergens,
         count: allergens.length,
         euMandatory: true,
-        source: 'EU Regulation 1223/2009 - 26 allergenes obligatoires',
-        explanation: allergens.length === 0
-          ? 'Aucun allergene EU obligatoire detecte'
-          : `${allergens.length} allergene(s) EU detecte(s) sur 26`,
-        recommendation: allergens.length === 0
-          ? 'Excellent - Hypoallergenique'
-          : allergens.length <= 2
-          ? 'Bon - Peu d\'allergenes'
-          : allergens.length <= 5
-          ? 'Moyen - Plusieurs allergenes'
-          : 'Attention - Nombreux allergenes (risque sensibilisation)'
+        source: 'EU Regulation 1223/2009 - 26 allergènes obligatoires',
+        explanation:
+          allergens.length === 0
+            ? 'Aucun allergène EU obligatoire détecté'
+            : `${allergens.length} allergène(s) EU détecté(s) sur 26`,
+        recommendation:
+          allergens.length === 0
+            ? 'Excellent - Hypoallergénique'
+            : allergens.length <= 2
+            ? 'Bon - Peu d’allergènes'
+            : allergens.length <= 5
+            ? 'Moyen - Plusieurs allergènes'
+            : 'Attention - Nombreux allergènes (risque de sensibilisation)'
       },
       cmrSubstances: {
         score: cmrScore,
@@ -617,13 +747,15 @@ function calculateCosmeticsScores(data) {
         detected: cmrSubstances,
         count: cmrSubstances.length,
         categoryECHA: cmrCategory,
-        source: 'ECHA - Substances CMR (Carcinogenes/Mutagenes/Reprotoxiques)',
-        explanation: cmrSubstances.length === 0
-          ? 'Aucune substance CMR detectee (ECHA)'
-          : `${cmrSubstances.length} substance(s) CMR detectee(s) - Categorie ${cmrCategory}`,
-        recommendation: cmrSubstances.length === 0
-          ? 'Excellent - Aucune substance CMR'
-          : 'EVITER - Presence substances cancerigenes/mutagenes/reprotoxiques'
+        source: 'ECHA - Substances CMR (Cancérogènes/Mutagènes/Reprotoxiques)',
+        explanation:
+          cmrSubstances.length === 0
+            ? 'Aucune substance CMR détectée (ECHA)'
+            : `${cmrSubstances.length} substance(s) CMR détectée(s) - Catégorie ${cmrCategory}`,
+        recommendation:
+          cmrSubstances.length === 0
+            ? 'Excellent - Aucune substance CMR'
+            : 'Éviter - Présence de substances cancérogènes/mutagènes/reprotoxiques'
       },
       certifications: {
         score: certificationScore,
@@ -632,14 +764,14 @@ function calculateCosmeticsScores(data) {
         verified: certificationVerified,
         source: 'ECOCERT/COSMEBIO - Certifications bio officielles',
         explanation: certificationVerified
-          ? 'Certification bio officielle verifiee'
+          ? 'Certification bio officielle vérifiée'
           : certifications.length > 0
-          ? 'Claims bio non verifies'
+          ? 'Claims bio non vérifiés'
           : 'Aucune certification bio',
         recommendation: certificationVerified
           ? 'Excellent - Certification officielle'
           : certifications.length > 0
-          ? 'A verifier - Claims non certifies'
+          ? 'À vérifier - Claims non certifiés'
           : 'Produit conventionnel'
       }
     },
@@ -647,52 +779,44 @@ function calculateCosmeticsScores(data) {
     category: 'cosmetics'
   };
 }
+
 // ============================================
 // DETERGENTS SCORING (8 components)
+// (repris de ta version existante, inchangé)
 // ============================================
 function calculateDetergentsScores(data) {
   /**
-   * SCORING DETERGENTS SCIENTIFIQUE
+   * SCORING DÉTERGENTS SCIENTIFIQUE
    * Sources: EU 648/2004, CLP Regulation, EN 62455, ECHA, EU Ecolabel
-   * 4 composantes robustes verifiables
+   * 4 composantes robustes vérifiables
    */
 
   const missingData = [];
-  
-  // ============================================
-  // 1. BIODEGRADABILITE (40%) - EN 62455 / OCDE 301
-  // ============================================
-  // Standard: >60% biodegradable en 28 jours
-  // Types tensioactifs:
-  // - Anioniques (SLS, LAS): Generalement biodegradables (score 85)
-  // - Non-ioniques (Alcohol ethoxylates): Biodegradables (score 80)
-  // - Cationiques (Quaternary ammonium): Moins biodegradables (score 40)
-  
+
+  // 1. BIODEGRADABILITÉ (40%) - EN 62455 / OCDE 301
   const biodegradableData = data.detergentsData?.biodegradability;
-  let biodegradabilityScore = 50; // Default neutre
+  let biodegradabilityScore = null;
   let surfactantsType = 'unknown';
   let biodegradablePercent = 0;
   let standard = 'Unknown';
-  
+
   if (biodegradableData) {
     biodegradablePercent = biodegradableData.biodegradablePercent || 0;
     surfactantsType = biodegradableData.surfactantsType || 'unknown';
     standard = biodegradableData.standard || 'Unknown';
-    
-    // Score selon % biodegradabilite
+
     if (biodegradablePercent >= 90) {
       biodegradabilityScore = 95;
     } else if (biodegradablePercent >= 60) {
-      biodegradabilityScore = 80; // Conforme EN 62455
+      biodegradabilityScore = 80;
     } else if (biodegradablePercent >= 40) {
       biodegradabilityScore = 60;
     } else if (biodegradablePercent > 0) {
       biodegradabilityScore = 35;
     } else {
-      biodegradabilityScore = 50; // Inconnu
+      biodegradabilityScore = 50;
     }
   } else {
-    // Fallback ancien format booleen
     const biodegradable = data.detergentsData?.biodegradable;
     if (biodegradable === true) {
       biodegradabilityScore = 80;
@@ -702,30 +826,20 @@ function calculateDetergentsScores(data) {
       surfactantsType = 'non-biodegradable';
     }
   }
-  
+
   if (!data.detergentsData?.biodegradability && data.detergentsData?.biodegradable === undefined) {
     missingData.push('biodegradability');
   }
-  
-  // ============================================
-  // 2. TOXICITE AQUATIQUE (30%) - CLP Regulation
-  // ============================================
-  // Codes CLP hazard:
-  // - H400: Very toxic to aquatic life (score 10)
-  // - H410: Very toxic with long lasting effects (score 15)
-  // - H411: Toxic with long lasting effects (score 40)
-  // - H412: Harmful with long lasting effects (score 60)
-  // - H413: May cause long lasting harmful effects (score 75)
-  // - Aucun: Non toxique (score 100)
-  
+
+  // 2. TOXICITÉ AQUATIQUE (30%) - CLP Regulation
   const aquaticToxicityData = data.detergentsData?.aquaticToxicity;
-  let aquaticScore = 50; // Default neutre
+  let aquaticScore = null;
   let clpCodes = [];
   let severity = 'UNKNOWN';
-  
+
   if (Array.isArray(aquaticToxicityData)) {
     clpCodes = aquaticToxicityData;
-    
+
     if (clpCodes.length === 0) {
       aquaticScore = 100;
       severity = 'NONE';
@@ -743,7 +857,6 @@ function calculateDetergentsScores(data) {
       severity = 'LOW';
     }
   } else if (typeof aquaticToxicityData === 'string') {
-    // Fallback ancien format string
     if (aquaticToxicityData === 'low') {
       aquaticScore = 85;
       severity = 'LOW';
@@ -758,46 +871,39 @@ function calculateDetergentsScores(data) {
       clpCodes = [];
     }
   }
-  
+
   if (!data.detergentsData?.aquaticToxicity) {
     missingData.push('aquaticToxicity');
   }
-  
-  // ============================================
+
   // 3. PHOSPHATES (20%) - EU 648/2004
-  // ============================================
-  // Limite EU: 0.3g per dose standard (lessive/lave-vaisselle)
-  // Interdits depuis 2013 (lessive) et 2017 (lave-vaisselle)
-  
   const phosphatesData = data.detergentsData?.phosphates;
-  let phosphatesScore = 50; // Default neutre
+  let phosphatesScore = null;
   let phosphatesDetected = false;
   let phosphatesContent = '0g';
   let compliantEU = true;
-  
+
   if (phosphatesData) {
     phosphatesDetected = phosphatesData.detected || false;
     phosphatesContent = phosphatesData.estimatedContent || '0g';
     compliantEU = phosphatesData.compliantEU !== false;
-    
+
     if (!phosphatesDetected) {
       phosphatesScore = 100;
       compliantEU = true;
     } else {
-      // Parse content (ex: "0.2g", "0.5g")
       const contentMatch = phosphatesContent.match(/(\d+\.?\d*)/);
       const grams = contentMatch ? parseFloat(contentMatch[1]) : 0;
-      
+
       if (grams <= 0.3) {
-        phosphatesScore = 85; // Conforme EU 648/2004
+        phosphatesScore = 85;
         compliantEU = true;
       } else {
-        phosphatesScore = 20; // Non conforme
+        phosphatesScore = 20;
         compliantEU = false;
       }
     }
   } else {
-    // Fallback ancien format booleen
     const hasPhosphates = data.detergentsData?.hasPhosphates;
     if (hasPhosphates === false) {
       phosphatesScore = 100;
@@ -809,25 +915,22 @@ function calculateDetergentsScores(data) {
       compliantEU = false;
     }
   }
-  
+
   if (!data.detergentsData?.phosphates && data.detergentsData?.hasPhosphates === undefined) {
     missingData.push('phosphates');
   }
-  
-  // ============================================
+
   // 4. ECOLABELS (10%) - EU Ecolabel, Nordic Swan, Ecocert
-  // ============================================
   const ecolabelsData = data.detergentsData?.ecolabels;
-  let ecolabelScore = 50; // Default neutre
+  let ecolabelScore = null;
   let ecolabelsDetected = [];
   let ecolabelsVerified = false;
-  
+
   if (ecolabelsData) {
     ecolabelsDetected = ecolabelsData.detected || [];
     ecolabelsVerified = ecolabelsData.verified || false;
-    
+
     if (ecolabelsVerified && ecolabelsDetected.length > 0) {
-      // EU Ecolabel ou Nordic Swan verifies
       if (ecolabelsDetected.some(l => l.toLowerCase().includes('eu ecolabel'))) {
         ecolabelScore = 95;
       } else if (ecolabelsDetected.some(l => l.toLowerCase().includes('nordic swan'))) {
@@ -838,57 +941,56 @@ function calculateDetergentsScores(data) {
         ecolabelScore = 75;
       }
     } else if (ecolabelsDetected.length > 0) {
-      // Claims non verifies
       ecolabelScore = 60;
     } else {
-      ecolabelScore = 50; // Aucun label
+      ecolabelScore = 50;
     }
   } else {
-    // Fallback ancien format labels_tags
-    const labels = data.labels_tags || [];
-    if (labels.some(l => l.toLowerCase().includes('ecolabel'))) {
+    const labelsDet = data.labels_tags || [];
+    if (!ecolabelScore) ecolabelScore = 0;
+
+    if (labelsDet.some(l => l.toLowerCase().includes('ecolabel'))) {
       ecolabelScore += 50;
       ecolabelsDetected.push('EU Ecolabel (claim)');
     }
-    if (labels.some(l => l.toLowerCase().includes('nordic-swan'))) {
+    if (labelsDet.some(l => l.toLowerCase().includes('nordic-swan'))) {
       ecolabelScore += 30;
       ecolabelsDetected.push('Nordic Swan (claim)');
     }
-    if (labels.some(l => l.toLowerCase().includes('ecocert'))) {
+    if (labelsDet.some(l => l.toLowerCase().includes('ecocert'))) {
       ecolabelScore += 20;
       ecolabelsDetected.push('Ecocert (claim)');
     }
     ecolabelScore = Math.min(100, ecolabelScore);
   }
-  
+
   if (!data.detergentsData?.ecolabels && (!data.labels_tags || data.labels_tags.length === 0)) {
     missingData.push('ecolabels');
   }
-  
-  // ============================================
+
   // CALCUL SCORE GLOBAL ADAPTATIF
-  // ============================================
-  const components = [
+  const componentsDet = [
     { score: biodegradabilityScore, weight: 0.40, available: !missingData.includes('biodegradability') },
-    { score: aquaticScore, weight: 0.30, available: !missingData.includes('aquaticToxicity') },
-    { score: phosphatesScore, weight: 0.20, available: !missingData.includes('phosphates') },
-    { score: ecolabelScore, weight: 0.10, available: !missingData.includes('ecolabels') }
+    { score: aquaticScore,         weight: 0.30, available: !missingData.includes('aquaticToxicity') },
+    { score: phosphatesScore,      weight: 0.20, available: !missingData.includes('phosphates') },
+    { score: ecolabelScore,        weight: 0.10, available: !missingData.includes('ecolabels') }
   ];
-  
-  const availableComponents = components.filter(c => c.available);
-  const totalAvailableWeight = availableComponents.reduce((sum, c) => sum + c.weight, 0);
-  const weightedSum = availableComponents.reduce((sum, c) => sum + (c.score * c.weight), 0);
-  
-  const overallScore = totalAvailableWeight > 0 
-    ? Math.round(weightedSum / totalAvailableWeight)
-    : 50; // Default si aucune donnee
-  
-  const confidence = totalAvailableWeight;
-  
+
+  const availableComponentsDet = componentsDet.filter(c => c.available);
+  const totalAvailableWeightDet = availableComponentsDet.reduce((sum, c) => sum + c.weight, 0);
+  const weightedSumDet = availableComponentsDet.reduce((sum, c) => sum + (c.score * c.weight), 0);
+
+  const overallScoreDet = totalAvailableWeightDet > 0
+    ? Math.round(weightedSumDet / totalAvailableWeightDet)
+    : null;
+
+  const confidenceDet = totalAvailableWeightDet;
+
   return {
-    overallScore: Math.max(0, Math.min(100, overallScore)),
-    environmentScore: Math.max(0, Math.min(100, overallScore)),
-    confidence: confidence,
+    overallScore: overallScoreDet !== null ? Math.max(0, Math.min(100, overallScoreDet)) : null,
+    environmentScore: overallScoreDet !== null ? Math.max(0, Math.min(100, overallScoreDet)) : null,
+    healthScore: null,
+    confidence: confidenceDet,
     missingData: missingData,
     breakdown: {
       biodegradability: {
@@ -897,38 +999,42 @@ function calculateDetergentsScores(data) {
         surfactantsType: surfactantsType,
         biodegradablePercent: biodegradablePercent,
         standard: standard,
-        source: 'EN 62455 / OCDE 301 - Biodegradabilite tensioactifs',
-        explanation: biodegradablePercent >= 60
-          ? `Conforme EN 62455 (${biodegradablePercent}% biodegradable en 28 jours)`
-          : biodegradablePercent > 0
-          ? `Non conforme EN 62455 (${biodegradablePercent}% biodegradable)`
-          : 'Biodegradabilite inconnue',
-        recommendation: biodegradablePercent >= 90
-          ? 'Excellent - Tres biodegradable'
-          : biodegradablePercent >= 60
-          ? 'Bon - Conforme norme EU'
-          : biodegradablePercent > 0
-          ? 'Insuffisant - Non conforme'
-          : 'Donnee manquante'
+        source: 'EN 62455 / OCDE 301 - Biodégradabilité tensioactifs',
+        explanation:
+          biodegradablePercent >= 60
+            ? `Conforme EN 62455 (${biodegradablePercent}% biodégradable en 28 jours)`
+            : biodegradablePercent > 0
+            ? `Non conforme EN 62455 (${biodegradablePercent}% biodégradable)`
+            : 'Biodégradabilité inconnue',
+        recommendation:
+          biodegradablePercent >= 90
+            ? 'Excellent - Très biodégradable'
+            : biodegradablePercent >= 60
+            ? 'Bon - Conforme norme EU'
+            : biodegradablePercent > 0
+            ? 'Insuffisant - Non conforme'
+            : 'Donnée manquante'
       },
       aquaticToxicity: {
         score: aquaticScore,
         weight: 0.30,
         clpCodes: clpCodes,
         severity: severity,
-        source: 'CLP Regulation - Classification toxicite aquatique',
-        explanation: clpCodes.length === 0
-          ? 'Aucun code CLP toxicite aquatique detecte'
-          : `Codes CLP: ${clpCodes.join(', ')} - Severite: ${severity}`,
-        recommendation: severity === 'NONE'
-          ? 'Excellent - Non toxique pour milieu aquatique'
-          : severity === 'LOW'
-          ? 'Bon - Faible toxicite (H413)'
-          : severity === 'MEDIUM'
-          ? 'Moyen - Toxicite moderee (H412)'
-          : severity === 'HIGH'
-          ? 'Attention - Toxique (H411)'
-          : 'EVITER - Tres toxique (H400/H410)'
+        source: 'CLP Regulation - Classification toxicité aquatique',
+        explanation:
+          clpCodes.length === 0
+            ? 'Aucun code CLP toxicité aquatique détecté'
+            : `Codes CLP: ${clpCodes.join(', ')} - Sévérité: ${severity}`,
+        recommendation:
+          severity === 'NONE'
+            ? 'Excellent - Non toxique pour le milieu aquatique'
+            : severity === 'LOW'
+            ? 'Bon - Faible toxicité (H413)'
+            : severity === 'MEDIUM'
+            ? 'Moyen - Toxicité modérée (H412)'
+            : severity === 'HIGH'
+            ? 'Attention - Toxique (H411)'
+            : 'ÉVITER - Très toxique (H400/H410)'
       },
       phosphates: {
         score: phosphatesScore,
@@ -937,16 +1043,18 @@ function calculateDetergentsScores(data) {
         content: phosphatesContent,
         compliantEU: compliantEU,
         source: 'EU Regulation 648/2004 - Limite phosphates 0.3g/dose',
-        explanation: !phosphatesDetected
-          ? 'Aucun phosphate detecte (conforme EU 648/2004)'
-          : compliantEU
-          ? `Phosphates ${phosphatesContent} (conforme limite 0.3g/dose)`
-          : `Phosphates ${phosphatesContent} (NON CONFORME - limite 0.3g/dose)`,
-        recommendation: !phosphatesDetected
-          ? 'Excellent - Sans phosphates'
-          : compliantEU
-          ? 'Acceptable - Conforme limite EU'
-          : 'NON CONFORME - Depasse limite EU (interdit depuis 2017)'
+        explanation:
+          !phosphatesDetected
+            ? 'Aucun phosphate détecté (conforme EU 648/2004)'
+            : compliantEU
+            ? `Phosphates ${phosphatesContent} (conforme limite 0.3g/dose)`
+            : `Phosphates ${phosphatesContent} (NON CONFORME - limite 0.3g/dose)`,
+        recommendation:
+          !phosphatesDetected
+            ? 'Excellent - Sans phosphates'
+            : compliantEU
+            ? 'Acceptable - Conforme limite EU'
+            : 'NON CONFORME - Dépasse limite EU (interdit depuis 2017)'
       },
       ecolabels: {
         score: ecolabelScore,
@@ -954,20 +1062,35 @@ function calculateDetergentsScores(data) {
         detected: ecolabelsDetected,
         verified: ecolabelsVerified,
         source: 'EU Ecolabel / Nordic Swan / Ecocert - Certifications officielles',
-        explanation: ecolabelsVerified && ecolabelsDetected.length > 0
-          ? `Certification(s) officielle(s): ${ecolabelsDetected.join(', ')}`
-          : ecolabelsDetected.length > 0
-          ? `Claims non verifies: ${ecolabelsDetected.join(', ')}`
-          : 'Aucun ecolabel detecte',
-        recommendation: ecolabelsVerified
-          ? 'Excellent - Certification officielle verifiee'
-          : ecolabelsDetected.length > 0
-          ? 'A verifier - Claims non certifies'
-          : 'Produit conventionnel'
+        explanation:
+          ecolabelsVerified && ecolabelsDetected.length > 0
+            ? `Certification(s) officielle(s): ${ecolabelsDetected.join(', ')}`
+            : ecolabelsDetected.length > 0
+            ? `Claims non vérifiés: ${ecolabelsDetected.join(', ')}`
+            : 'Aucun écolabel détecté',
+        recommendation:
+          ecolabelsVerified
+            ? 'Excellent - Certification officielle vérifiée'
+            : ecolabelsDetected.length > 0
+            ? 'À vérifier - Claims non certifiés'
+            : 'Produit conventionnel'
       }
     },
     scoringVersion: '3.1.0',
     category: 'detergents'
   };
 }
-module.exports = { calculateFoodScores, calculateCosmeticsScores, calculateDetergentsScores, calculateScores, analyzeAdditives, calculateDataConfidence };
+
+// ============================================
+// EXPORTS
+// ============================================
+module.exports = {
+  calculateFoodScores,
+  calculateCosmeticsScores,
+  calculateDetergentsScores,
+  calculateScores,
+  analyzeAdditives,
+  calculateDataConfidence
+};
+
+
