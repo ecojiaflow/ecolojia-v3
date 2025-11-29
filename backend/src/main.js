@@ -345,9 +345,9 @@ try {
 // ═══════════════════════════════════════════════════════════════════
 try {
   const alternativesRoutes = require('./routes/alternatives.routes');
-  app.use('/api/alternatives', alternativesRoutes);
-  console.log('✅ [ROUTE] Alternatives montée sur /api/alternatives');
-  console.log('Route montée: /api/alternatives', { path: require('path').resolve(__dirname, 'routes/alternatives.routes.js') });
+  app.use('/api', alternativesRoutes);
+  console.log('✅ [ROUTE] Alternatives montée sur /api (routes: /products/:id/alternatives, /alternatives/*, etc.)');
+  console.log('Route montée: /api (alternatives.routes.js)', { path: require('path').resolve(__dirname, 'routes/alternatives.routes.js') });
 } catch (err) {
   console.error('❌ [ROUTE] Alternatives routes error:', err.message);
 }
@@ -429,6 +429,8 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
+
 
 
 
