@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // ECOLOJIA - DeepSeek Service HYBRIDE
 // Service IA utilisant DeepSeek API avec contexte scientifique
 // Version 3.1-hybrid
@@ -310,14 +310,16 @@ RÉPONDS UNIQUEMENT EN JSON VALIDE (pas de markdown, pas de \`\`\`) :
     "originScore": "Justification courte",
     "labelsScore": "Justification courte"
   },
-  "nutrition": {
-    "calories": <nombre ou null>,
-    "protein": <nombre ou null>,
-    "carbs": <nombre ou null>,
-    "fat": <nombre ou null>,
-    "fiber": <nombre ou null>,
-    "sugar": <nombre ou null>,
-    "salt": <nombre ou null>
+  "nutriments": {
+    "energy-kcal_100g": <nombre ou null>,
+    "proteins_100g": <nombre ou null>,
+    "carbohydrates_100g": <nombre ou null>,
+    "sugars_100g": <nombre ou null>,
+    "fat_100g": <nombre ou null>,
+    "saturated-fat_100g": <nombre ou null>,
+    "fiber_100g": <nombre ou null>,
+    "salt_100g": <nombre ou null>,
+    "sodium_100g": <nombre ou null>
   },
   "warnings": ["Liste des alertes principales"],
   "recommendations": ["Liste des recommandations"]
