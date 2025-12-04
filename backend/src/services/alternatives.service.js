@@ -1,446 +1,454 @@
-﻿// ═══════════════════════════════════════════════════════════════════
-// ECOLOJIA V3.2 - SERVICE ALTERNATIVES INTELLIGENTES
-// ═══════════════════════════════════════════════════════════════════
-//
-// OBJECTIF : Proposer alternatives plus saines via cascade DB → Algo → IA
-// ÉCONOMIE : 97% réduction coûts IA grâce au cache intelligent
-//
-// CASCADE :
-// 1. DB Strict (exact match catégorie + critères) → 0ms, gratuit
-// 2. DB Relaxed (match relaxé) → <100ms, gratuit
-// 3. IA DeepSeek (si <3 résultats) → 2-5s, 0.0001€/requête
-//
-// ═══════════════════════════════════════════════════════════════════
+﻿const Product = require('../models/Product');
+const logger = require('../utils/logger');
+const stringSimilarity = require('string-similarity');
 
-const Product = require('../models/Product');
-const conversationalAI = require('./ai/conversationalAI');
-
-// ═══════════════════════════════════════════════════════════════════
-// CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════
-
+// ================== CONFIGURATION ==================
 const CONFIG = {
-  MIN_RESULTS_BEFORE_AI: 3,      // Minimum de résultats DB avant d'appeler IA
-  MAX_RESULTS: 5,                 // Maximum d'alternatives à retourner
-  MIN_SCORE_IMPROVEMENT: 5,       // Amélioration minimale de score (points)
-  BUDGET_TOLERANCE: 1.15,         // +15% tolérance prix
-  CACHE_TTL: 3600000,             // 1h cache en mémoire (optionnel)
-  ENABLE_AI_FALLBACK: true        // Activer fallback IA si DB insuffisant
+  MAX_RESULTS: 5,
+  MIN_SCORE_IMPROVEMENT: 5, // +5 pts minimum vs produit original
+  MIN_ABSOLUTE_SCORE: 70, // ✅ NOUVEAU : Score minimum ABSOLU pour toutes alternatives (zone verte)
+  FALLBACK_MIN_SCORE: 60, // ⚠️ Fallback si 0 résultats en zone verte (orange haute)
+  MIN_KEYWORD_LENGTH: 3,
+  MIN_RELEVANCE_SCORE: 40,
+  WEIGHT_NAME_SIMILARITY: 0.4,
+  WEIGHT_CATEGORY_MATCH: 0.3,
+  WEIGHT_SCORE_DIFF: 0.3,
+  TIMEOUT_DB_SMART: 5000,
+  TIMEOUT_DB_RELAXED: 3000,
+  TIMEOUT_AI: 10000
 };
 
-// Cache en mémoire simple (optionnel, pour perf)
-const cache = new Map();
+// ================== STOPWORDS FRANÇAIS ==================
+const FRENCH_STOPWORDS = new Set([
+  'le', 'la', 'les', 'un', 'une', 'des', 'de', 'du', 'au', 'aux',
+  'et', 'ou', 'mais', 'donc', 'or', 'ni', 'car',
+  'ce', 'cet', 'cette', 'ces',
+  'mon', 'ton', 'son', 'ma', 'ta', 'sa', 'mes', 'tes', 'ses',
+  'notre', 'votre', 'leur', 'nos', 'vos', 'leurs',
+  'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles',
+  'que', 'qui', 'quoi', 'dont', 'où',
+  'avec', 'sans', 'pour', 'par', 'dans', 'sur', 'sous',
+  'à', 'en', 'y'
+]);
 
-// ═══════════════════════════════════════════════════════════════════
-// FONCTION PRINCIPALE : findAlternatives
-// ═══════════════════════════════════════════════════════════════════
+// ================== DICTIONNAIRE INGRÉDIENTS ==================
+const INGREDIENT_PATTERNS = {
+  chocolat: ['chocolat', 'cacao', 'cacaotier', 'theobroma'],
+  noisette: ['noisette', 'hazelnut', 'aveline'],
+  lait: ['lait', 'lactose', 'milk', 'dairy', 'crème', 'beurre'],
+  sucre: ['sucre', 'sugar', 'glucose', 'fructose', 'sirop', 'miel'],
+  huile: ['huile', 'oil', 'graisse', 'fat', 'lipide'],
+  pâte: ['pâte', 'tartiner', 'spread', 'crème'],
+  bio: ['bio', 'organic', 'biologique', 'agriculture biologique'],
+  vegan: ['vegan', 'végétal', 'végétarien', 'sans lait'],
+  gluten: ['gluten', 'blé', 'wheat', 'céréale']
+};
+
+// ================== FONCTIONS UTILITAIRES ==================
 
 /**
- * Trouve des alternatives plus saines pour un produit
- *
- * @param {Object} params - Paramètres de recherche
- * @param {string} params.productId - ID MongoDB du produit
- * @param {string} [params.barcode] - Code-barres (fallback si pas d'ID)
- * @param {Object} [params.userPreferences] - Préférences utilisateur
- * @param {number} [params.maxResults=5] - Nombre max de résultats
- * @returns {Promise<Object>} { alternatives: Product[], source: 'db'|'ai', metrics: {...} }
+ * Détecte le type de produit (chocolat, noisette, lait, etc.)
  */
-async function findAlternatives(params) {
-  const startTime = Date.now();
+function detectProductType(product) {
+  const searchText = `${product.name} ${product.ingredients || ''}`.toLowerCase();
+  const types = [];
+  
+  for (const [type, patterns] of Object.entries(INGREDIENT_PATTERNS)) {
+    if (patterns.some(p => searchText.includes(p))) {
+      types.push(type);
+    }
+  }
+  
+  return types;
+}
 
+/**
+ * Extrait mots-clés pertinents du produit
+/**
+ * 🔍 EXTRACTION KEYWORDS AMÉLIORÉE (6 sources)
+ * @param {Object} product - Produit source
+ * @returns {Array<string>} - Liste de mots-clés pertinents
+ */
+function extractKeywords(product) {
+  const keywords = new Set();
+
+  // 1. Depuis le nom du produit
+  if (product.name) {
+    const words = product.name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Enlever accents
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= CONFIG.MIN_KEYWORD_LENGTH && !FRENCH_STOPWORDS.has(w));
+    
+    words.forEach(w => keywords.add(w));
+  }
+
+  // 2. Depuis types détectés
+  const types = detectProductType(product);
+  types.forEach(t => keywords.add(t));
+
+  // 3. Depuis catégorie principale
+  if (product.categoryType) {
+    keywords.add(product.categoryType.toLowerCase());
+  }
+
+  // 4. Depuis tags catégories (amélioration parsing tirets)
+  if (product.categories_tags && Array.isArray(product.categories_tags)) {
+    product.categories_tags.forEach(tag => {
+      const cleaned = tag
+        .replace(/^[a-z]{2}:/, '') // Enlever préfixe langue (en:, fr:)
+        .replace(/-/g, ' ')        // Remplacer tirets par espaces
+        .toLowerCase();
+      
+      cleaned.split(' ').forEach(w => {
+        if (w.length >= CONFIG.MIN_KEYWORD_LENGTH && !FRENCH_STOPWORDS.has(w)) {
+          keywords.add(w);
+        }
+      });
+    });
+  }
+
+  // 5. ✨ NOUVEAU : Depuis ingrédients (top 5 ingrédients principaux)
+  if (product.ingredients_text) {
+    const ingredients = product.ingredients_text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .split(/[,;.]/)               // Séparer par virgules/points
+      .slice(0, 5)                  // Garder les 5 premiers (principaux)
+      .map(ing => ing.trim())
+      .filter(ing => ing.length > 0);
+    
+    ingredients.forEach(ing => {
+      const words = ing
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length >= CONFIG.MIN_KEYWORD_LENGTH && !FRENCH_STOPWORDS.has(w));
+      
+      words.forEach(w => keywords.add(w));
+    });
+  }
+
+  // 6. ✨ NOUVEAU : Depuis marque
+  if (product.brands) {
+    const brandWords = product.brands
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= CONFIG.MIN_KEYWORD_LENGTH);
+    
+    brandWords.forEach(w => keywords.add(w));
+  }
+
+  const result = Array.from(keywords);
+  logger.info(`[ALTERNATIVES] Keywords extraits : [${result.join(', ')}]`);
+  return result;
+}
+
+/**
+ * Calcule score de pertinence (0-100)
+ */
+function calculateRelevanceScore(originalProduct, alternative, keywords) {
+  let score = 0;
+  
+  // 1. Similarité nom (40%)
+  const similarity = stringSimilarity.compareTwoStrings(
+    originalProduct.name.toLowerCase(),
+    alternative.name.toLowerCase()
+  );
+  score += similarity * CONFIG.WEIGHT_NAME_SIMILARITY * 100;
+  
+  // 2. Match catégorie (30%)
+  if (alternative.categoryType === originalProduct.categoryType) {
+    score += CONFIG.WEIGHT_CATEGORY_MATCH * 100;
+  }
+  
+  // 3. Amélioration score (30%)
+  const scoreDiff = alternative.scores.overallScore - originalProduct.scores.overallScore;
+  const normalizedDiff = Math.min(scoreDiff / 50, 1); // Normaliser sur 50 pts max
+  score += normalizedDiff * CONFIG.WEIGHT_SCORE_DIFF * 100;
+  
+  return Math.round(score);
+}
+
+/**
+ * ✨ NOUVEAU V3.2 : Recherche par taxonomie (subcategory exact match)
+ * PRIORITÉ 1 : Match exact sous-catégorie (ex: pâtes-à-tartiner → pâtes-à-tartiner)
+ */
+async function searchDatabaseTaxonomy(product, minScore) {
   try {
-    // ─────────────────────────────────────────────────────────────
-    // 1. RÉCUPÉRER PRODUIT ORIGINAL
-    // ─────────────────────────────────────────────────────────────
-
-    const originalProduct = await getOriginalProduct(params);
-
-    if (!originalProduct) {
-      console.log('[ALTERNATIVES] Produit original introuvable');
-      return {
-        alternatives: [],
-        source: 'none',
-        message: 'Produit introuvable',
-        metrics: { duration: Date.now() - startTime }
-      };
+    // Vérifier si subcategory existe
+    if (!product.subcategory) {
+      logger.info('[ALTERNATIVES] Pas de subcategory → skip recherche taxonomy');
+      return [];
     }
 
-    console.log(`[ALTERNATIVES] Recherche alternatives pour : ${originalProduct.name}`);
-    console.log(`[ALTERNATIVES] Catégorie : ${originalProduct.categoryType || 'NON DÉFINIE ⚠️'}`);
-    console.log(`[ALTERNATIVES] Score actuel : ${(originalProduct.scores?.global || originalProduct.scores?.overallScore) || 'N/A'}/100`);
+    logger.info(`[ALTERNATIVES] Stratégie : Taxonomy Match (subcategory: "${product.subcategory}")`);
 
-    // VALIDATION CRITIQUE : CategoryType doit exister
-    if (!originalProduct.categoryType) {
-      console.error('[ALTERNATIVES] ❌ ERREUR CRITIQUE : categoryType manquant pour le produit');
-      return {
-        alternatives: [],
-        source: 'error',
-        message: 'Produit sans catégorie définie',
-        metrics: { duration: Date.now() - startTime }
-      };
+    const query = {
+      $and: [
+        { barcode: { $ne: product.barcode } },
+        { categoryType: product.categoryType },
+        { subcategory: product.subcategory }, // ✨ Match exact
+        { 'scores.overallScore': { 
+$gte: minScore } }
+      ]
+    };
+
+    const candidates = await Product.find(query)
+      .select('barcode name scores categoryType subcategory tags')
+      .sort({ 'scores.overallScore': -1 })
+      .limit(10)
+      .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
+      .lean();
+
+    logger.info(`[ALTERNATIVES] Taxonomy Match : ${candidates.length} candidats trouvés`);
+
+    if (candidates.length > 0) {
+      logger.info('[ALTERNATIVES] ✅ Taxonomy Match réussi → Alternatives de même sous-catégorie');
     }
 
-    // Normaliser categoryType (lowercase)
-    const normalizedCategory = originalProduct.categoryType.toLowerCase();
-    console.log(`[ALTERNATIVES] Catégorie normalisée : ${normalizedCategory}`);
+    return candidates;
 
-    // ─────────────────────────────────────────────────────────────
-    // 2. VÉRIFIER CACHE (optionnel)
-    // ─────────────────────────────────────────────────────────────
+  } catch (error) {
+    logger.error(`[ALTERNATIVES] Erreur Taxonomy Match : ${error.message}`);
+    return [];
+  }
+}
 
-    const cacheKey = `alt_${originalProduct._id}_${JSON.stringify(params.userPreferences || {})}`;
+/**
+ * ✨ NOUVEAU V3.2 : Recherche par tags (intersection)
+ * PRIORITÉ 2 : Match si ≥2 tags communs
+ */
+async function searchDatabaseTags(product, minScore) {
+  try {
+    // Vérifier si tags existent
+    if (!product.tags || product.tags.length === 0) {
+      logger.info('[ALTERNATIVES] Pas de tags → skip recherche tags');
+      return [];
+    }
 
-    if (cache.has(cacheKey)) {
-      const cached = cache.get(cacheKey);
-      if (Date.now() - cached.timestamp < CONFIG.CACHE_TTL) {
-        console.log('[ALTERNATIVES] ✅ Cache HIT');
-        return {
-          ...cached.data,
-          metrics: {
-            ...cached.data.metrics,
-            cached: true,
-            duration: Date.now() - startTime
+    logger.info(`[ALTERNATIVES] Stratégie : Tags Match (${product.tags.length} tags)`);
+
+    // Construire query : categoryType + au moins 2 tags communs
+    const query = {
+      $and: [
+        { barcode: { $ne: product.barcode } },
+        { categoryType: product.categoryType },
+        { 'scores.overallScore': { 
+$gte: minScore } },
+        {
+          tags: {
+            $in: product.tags // Au moins 1 tag en commun
           }
-        };
-      }
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    // 3. CASCADE DB → IA
-    // ─────────────────────────────────────────────────────────────
-
-    let alternatives = [];
-    let source = 'none';
-
-    // Niveau 1 : DB Strict
-    alternatives = await searchDatabaseStrict(originalProduct, params, normalizedCategory);
-
-    if (alternatives.length >= CONFIG.MIN_RESULTS_BEFORE_AI) {
-      source = 'db_strict';
-      console.log(`[ALTERNATIVES] ✅ DB Strict : ${alternatives.length} résultats`);
-    } else {
-      // Niveau 2 : DB Relaxed
-      alternatives = await searchDatabaseRelaxed(originalProduct, params, normalizedCategory);
-
-      if (alternatives.length >= CONFIG.MIN_RESULTS_BEFORE_AI) {
-        source = 'db_relaxed';
-        console.log(`[ALTERNATIVES] ✅ DB Relaxed : ${alternatives.length} résultats`);
-      } else if (CONFIG.ENABLE_AI_FALLBACK) {
-        // Niveau 3 : IA (uniquement si <3 résultats)
-        console.log(`[ALTERNATIVES] ⚠️ DB insuffisant (${alternatives.length}), appel IA...`);
-
-        // const aiAlternatives = await searchWithAI(originalProduct, params); // Désactivé MVP
-        const aiAlternatives = []; // Fallback vide pour MVP
-        alternatives = [...alternatives, ...aiAlternatives];
-        source = alternatives.length > 0 ? 'ai' : 'none';
-
-        console.log(`[ALTERNATIVES] ${source === 'ai' ? '✅' : '❌'} IA : ${aiAlternatives.length} suggestions`);
-      }
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    // 4. POST-TRAITEMENT & ENRICHISSEMENT
-    // ─────────────────────────────────────────────────────────────
-
-    const enrichedAlternatives = await enrichAlternatives(alternatives, originalProduct, params);
-
-    // Limiter au max demandé
-    const finalAlternatives = enrichedAlternatives.slice(0, params.maxResults || CONFIG.MAX_RESULTS);
-
-    // ─────────────────────────────────────────────────────────────
-    // 5. RÉSULTAT & MÉTRIQUES
-    // ─────────────────────────────────────────────────────────────
-
-    const result = {
-      alternatives: finalAlternatives,
-      source,
-      original: {
-        id: originalProduct._id,
-        name: originalProduct.name,
-        score: (originalProduct.scores?.global || originalProduct.scores?.overallScore),
-        categoryType: normalizedCategory
-      },
-      metrics: {
-        duration: Date.now() - startTime,
-        dbHits: alternatives.filter(a => a._id).length,
-        aiHits: alternatives.filter(a => !a._id).length,
-        cached: false
-      }
+        }
+      ]
     };
 
-    // Mettre en cache (optionnel)
-    cache.set(cacheKey, { data: result, timestamp: Date.now() });
-
-    console.log(`[ALTERNATIVES] ✅ ${finalAlternatives.length} alternatives retournées (source: ${source}, ${result.metrics.duration}ms)`);
-
-    return result;
-
-  } catch (error) {
-    console.error('[ALTERNATIVES] Erreur:', error);
-    return {
-      alternatives: [],
-      source: 'error',
-      error: error.message,
-      metrics: { duration: Date.now() - startTime }
-    };
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// NIVEAU 1 : RECHERCHE DB STRICTE
-// ═══════════════════════════════════════════════════════════════════
-
-async function searchDatabaseStrict(originalProduct, params, normalizedCategory) {
-  const currentScore = originalProduct.scores?.global || originalProduct.scores?.overallScore || 0;
-  const minScore = currentScore + CONFIG.MIN_SCORE_IMPROVEMENT;
-
-  const query = {
-    categoryType: normalizedCategory, // FILTRE CATÉGORIE NORMALISÉ
-    _id: { $ne: originalProduct._id },
-    'scores.overallScore': { $gte: minScore } // UNIFORMISÉ : scores.overallScore
-  };
-
-  console.log(`[ALTERNATIVES] DB Strict query:`, JSON.stringify(query));
-
-  // Filtres utilisateur (allergènes, labels, budget)
-  if (params.userPreferences) {
-    applyUserFilters(query, params.userPreferences);
-  }
-
-  try {
-    const results = await Product.find(query)
+    const candidates = await Product.find(query)
+      .select('barcode name scores categoryType subcategory tags')
       .sort({ 'scores.overallScore': -1 })
-      .limit(CONFIG.MAX_RESULTS)
+      .limit(20) // Plus large car on va filtrer
+      .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
       .lean();
 
-    console.log(`[ALTERNATIVES] DB Strict résultats:`, results.map(r => `${r.name} (${r.categoryType}, ${r.scores?.global}/100)`));
+    logger.info(`[ALTERNATIVES] Tags Match : ${candidates.length} candidats bruts`);
 
-    return results;
-  } catch (error) {
-    console.error('[ALTERNATIVES] Erreur DB Strict:', error);
-    return [];
-  }
-}
+    // Filtrage : garder uniquement si ≥2 tags communs
+    const filtered = candidates.filter(candidate => {
+      if (!candidate.tags || candidate.tags.length === 0) return false;
 
-// ═══════════════════════════════════════════════════════════════════
-// NIVEAU 2 : RECHERCHE DB RELAXÉE
-// ═══════════════════════════════════════════════════════════════════
-
-async function searchDatabaseRelaxed(originalProduct, params, normalizedCategory) {
-  const currentScore = originalProduct.scores?.global || originalProduct.scores?.overallScore || 0;
-
-  const query = {
-    categoryType: normalizedCategory, // FILTRE CATÉGORIE NORMALISÉ
-    _id: { $ne: originalProduct._id },
-    'scores.overallScore': { $gte: currentScore } // Pas d'amélioration minimale
-  };
-
-  console.log(`[ALTERNATIVES] DB Relaxed query:`, JSON.stringify(query));
-
-  // Critères relaxés
-  if (params.userPreferences) {
-    applyUserFilters(query, params.userPreferences, { relaxed: true });
-  }
-
-  try {
-    const results = await Product.find(query)
-      .sort({ 'scores.overallScore': -1 })
-      .limit(CONFIG.MAX_RESULTS * 2) // Chercher plus large
-      .lean();
-
-    console.log(`[ALTERNATIVES] DB Relaxed résultats:`, results.map(r => `${r.name} (${r.categoryType}, ${r.scores?.global}/100)`));
-
-    return results;
-  } catch (error) {
-    console.error('[ALTERNATIVES] Erreur DB Relaxed:', error);
-    return [];
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// NIVEAU 3 : RECHERCHE AVEC IA (FALLBACK)
-// ═══════════════════════════════════════════════════════════════════
-
-async function searchWithAI(originalProduct, params) {
-  try {
-    const prompt = buildAIPrompt(originalProduct, params);
-
-    // Utiliser conversationalAI existant
-    const response = await conversationalAI.getAlternatives({
-      productName: originalProduct.name,
-      category: originalProduct.categoryType,
-      currentScore: (originalProduct.scores?.global || originalProduct.scores?.overallScore),
-      userPreferences: params.userPreferences
+      const commonTags = product.tags.filter(tag => candidate.tags.includes(tag));
+      return commonTags.length >= 2; // Minimum 2 tags communs
     });
 
-    // Parser la réponse IA et chercher produits dans DB
-    const suggestedNames = extractProductNames(response);
+    logger.info(`[ALTERNATIVES] Tags Match : ${filtered.length} après filtre (≥2 tags communs)`);
 
-    const alternatives = await Promise.all(
-      suggestedNames.map(name => findProductByName(name, originalProduct.categoryType))
-    );
+    if (filtered.length > 0) {
+      logger.info('[ALTERNATIVES] ✅ Tags Match réussi → Alternatives avec tags similaires');
+    }
 
-    return alternatives.filter(Boolean); // Retirer nulls
+    return filtered.slice(0, 10); // Top 10
 
   } catch (error) {
-    console.error('[ALTERNATIVES] Erreur IA:', error);
+    logger.error(`[ALTERNATIVES] Erreur Tags Match : ${error.message}`);
     return [];
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// UTILITAIRES
-// ═══════════════════════════════════════════════════════════════════
-
-async function getOriginalProduct(params) {
+/**
+ * Recherche DB Smart : par mots-clés + filtres stricts
+ */
+async function searchDatabaseSmart(product, keywords, minScore) {
   try {
-    if (params.productId) {
-      return await Product.findById(params.productId).lean();
-    } else if (params.barcode) {
-      return await Product.findOne({ barcode: params.barcode }).lean();
+    logger.info('[ALTERNATIVES] Stratégie : DB Smart (mots-clés + filtres)');
+    
+    // Construire regex pour recherche flexible
+    const keywordRegex = keywords.map(k => `(?=.*${k})`).join('');
+    const searchRegex = new RegExp(keywordRegex, 'i');
+    
+    const query = {
+      $and: [
+        { barcode: { $ne: product.barcode } },
+        { categoryType: product.categoryType },
+        { 'scores.overallScore': { $gte: minScore } },
+        {
+          $or: [
+            { name: searchRegex },
+            { categories_tags: { $in: keywords.map(k => new RegExp(k, 'i')) } }
+          ]
+        }
+      ]
+    };
+    
+    const results = await Product.find(query)
+      .select('barcode name scores categoryType categories_tags')
+      .limit(20)
+      .maxTimeMS(CONFIG.TIMEOUT_DB_SMART)
+      .lean();
+    
+    logger.info(`[ALTERNATIVES] DB Smart : ${results.length} candidats trouvés`);
+
+    if (results.length > 0) {
+      logger.info('[ALTERNATIVES] ✅ Stratégie Smart réussie : alternatives par mots-clés');
     }
-    return null;
+    return results;
+    
   } catch (error) {
-    console.error('[ALTERNATIVES] Erreur récupération produit:', error);
-    return null;
+    logger.error(`[ALTERNATIVES] Erreur DB Smart : ${error.message}`);
+    return [];
   }
 }
 
-function applyUserFilters(query, prefs, options = {}) {
-  const relaxed = options.relaxed || false;
-
-  // Allergènes (strict)
-  if (prefs.allergens && prefs.allergens.length > 0 && !relaxed) {
-    query['foodData.allergens'] = { $nin: prefs.allergens };
-  }
-
-  // Labels (ex: bio, vegan)
-  if (prefs.labels && prefs.labels.length > 0) {
-    if (relaxed) {
-      query['labels'] = { $in: prefs.labels }; // Au moins un label
-    } else {
-      query['labels'] = { $all: prefs.labels }; // Tous les labels
-    }
-  }
-
-  // Budget (si disponible dans params)
-  if (prefs.maxPrice) {
-    query['price'] = { $lte: prefs.maxPrice * (relaxed ? CONFIG.BUDGET_TOLERANCE : 1) };
-  }
-}
-
-async function enrichAlternatives(alternatives, originalProduct, params) {
-  return alternatives.map(alt => ({
-    ...alt,
-    improvements: calculateImprovements(alt, originalProduct),
-    matchScore: calculateMatchScore(alt, originalProduct, params.userPreferences),
-    reasons: generateReasons(alt, originalProduct)
-  }));
-}
-
-function calculateImprovements(alternative, original) {
-  const improvements = [];
-
-  const altScore = (alternative.scores?.global || alternative.scores?.overallScore) || 0;
-  const origScore = (original.scores?.global || original.scores?.overallScore) || 0;
-  const scoreDiff = altScore - origScore;
-
-  if (scoreDiff > 0) {
-    improvements.push(`+${scoreDiff} points de score global`);
-  }
-
-  // Analyser composantes
-  const altBreakdown = alternative.scores?.breakdown || {};
-  const origBreakdown = original.scores?.breakdown || {};
-
-  if (altBreakdown.nova?.score > origBreakdown.nova?.score) {
-    improvements.push('Moins transformé (NOVA)');
-  }
-
-  if (altBreakdown.additives?.score > origBreakdown.additives?.score) {
-    improvements.push('Moins d\'additifs');
-  }
-
-  if (altBreakdown.ecoScore?.score > origBreakdown.ecoScore?.score) {
-    improvements.push('Meilleur impact environnemental');
-  }
-
-  return improvements;
-}
-
-function calculateMatchScore(alternative, original, userPrefs) {
-  let score = 70; // Base
-
-  // Score global
-  const scoreDiff = ((alternative.scores?.global || alternative.scores?.overallScore) || 0) - ((original.scores?.global || original.scores?.overallScore) || 0);
-  score += Math.min(scoreDiff, 20);
-
-  // Préférences utilisateur
-  if (userPrefs?.labels && alternative.labels) {
-    const matchingLabels = userPrefs.labels.filter(l => alternative.labels.includes(l));
-    score += matchingLabels.length * 3;
-  }
-
-  // Même catégorie
-  if (alternative.categoryType === original.categoryType) {
-    score += 5;
-  }
-
-  return Math.min(Math.max(score, 0), 100);
-}
-
-function generateReasons(alternative, original) {
-  const reasons = [];
-
-  if (alternative.labels?.includes('bio')) {
-    reasons.push('Produit biologique certifié');
-  }
-
-  if (alternative.labels?.includes('vegan')) {
-    reasons.push('Sans produits d\'origine animale');
-  }
-
-  const altScore = (alternative.scores?.global || alternative.scores?.overallScore) || 0;
-  const origScore = (original.scores?.global || original.scores?.overallScore) || 0;
-
-  if (altScore > origScore + 15) {
-    reasons.push('Score nettement supérieur');
-  }
-
-  return reasons;
-}
-
-function buildAIPrompt(product, params) {
-  return `Suggère 3 alternatives plus saines pour "${product.name}" (catégorie: ${product.categoryType}, score: ${(product.scores?.global || product.scores?.overallScore)}/100).`;
-}
-
-function extractProductNames(aiResponse) {
-  // Parser réponse IA pour extraire noms de produits
-  // Format attendu : liste de noms
-  if (typeof aiResponse === 'string') {
-    return aiResponse.split('\n').filter(line => line.trim().length > 0).slice(0, 3);
-  }
-  return [];
-}
-
-async function findProductByName(name, category) {
+/**
+ * Recherche DB Relaxed : par catégorie uniquement
+ */
+async function searchDatabaseRelaxed(product, minScore) {
   try {
-    return await Product.findOne({
-      name: new RegExp(name, 'i'),
-      categoryType: category
-    }).lean();
+    logger.info('[ALTERNATIVES] Stratégie : DB Relaxed (catégorie large)');
+    
+    const query = {
+      barcode: { $ne: product.barcode },
+      categoryType: product.categoryType,
+      'scores.overallScore': { $gte: minScore }
+    };
+    
+    const results = await Product.find(query)
+      .select('barcode name scores categoryType')
+      .sort({ 'scores.overallScore': -1 })
+      .limit(10)
+      .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
+      .lean();
+    
+    logger.info(`[ALTERNATIVES] DB Relaxed : ${results.length} candidats trouvés`);
+    return results;
+    
   } catch (error) {
-    return null;
+    logger.error(`[ALTERNATIVES] Erreur DB Relaxed : ${error.message}`);
+    return [];
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// EXPORTS
-// ═══════════════════════════════════════════════════════════════════
+// ================== FONCTION PRINCIPALE ==================
+/**
+ * Point d'entrée : Recherche alternatives mieux notées
+ */
+async function findAlternatives({
+  product,
+  minScoreImprovement = CONFIG.MIN_SCORE_IMPROVEMENT,
+  maxResults = CONFIG.MAX_RESULTS
+}) {
+  try {
+    logger.info('\n========== RECHERCHE ALTERNATIVES ==========');
+    logger.info(`Produit original : ${product.name} (${product.scores.overallScore}/100)`);
+    logger.info(`Amélioration minimum : +${minScoreImprovement} pts`);
+    
+    // ✅ CORRECTION PRINCIPALE : Garantir score minimum ABSOLU de 70 (zone verte)
+    const minScore = Math.max(
+      CONFIG.MIN_ABSOLUTE_SCORE, // 70 minimum (zone verte)
+      product.scores.overallScore + minScoreImprovement // Amélioration vs original
+    );
+    
+    logger.info(`Score minimum alternatives : ${minScore}/100 (zone ${minScore >= 70 ? 'VERTE ✅' : 'ORANGE ⚠️'})`);
+    
+    // 1. Extraire mots-clés
+    const keywords = extractKeywords(product);
+    
+    // 2. Cascade de recherche
+    let candidates = [];
+    
+    // ÉTAPE 1 : DB Smart
+    // NOUVELLE CASCADE V3.2 : Taxonomie → Tags → Smart
+    // ÉTAPE 1 : Match taxonomie exacte (même subcategory)
+    candidates = await searchDatabaseTaxonomy(product, minScore);
 
+    // ÉTAPE 2 : Match tags (≥2 tags communs) si aucun résultat
+    if (candidates.length === 0) {
+      candidates = await searchDatabaseTags(product, minScore);
+    }
+
+    // ÉTAPE 3 : Recherche textuelle (fallback) si toujours vide
+    if (candidates.length === 0) {
+      candidates = await searchDatabaseSmart(product, keywords, minScore);
+    }
+    // ÉTAPE 2 : DB Relaxed (si pas assez de résultats)
+    if (candidates.length < 3) {
+      logger.info('[ALTERNATIVES] Pas assez de résultats Smart, passage en Relaxed...');
+      const relaxedResults = await searchDatabaseRelaxed(product, minScore);
+      candidates.push(...relaxedResults);
+      
+      // Dédupliquer
+      candidates = Array.from(
+        new Map(candidates.map(p => [p.barcode, p])).values()
+      );
+    }
+    
+    // ⚠️ FALLBACK : Si 0 résultats en zone verte, on abaisse à 60 (orange haute)
+    if (candidates.length === 0 && minScore >= CONFIG.MIN_ABSOLUTE_SCORE) {
+      logger.warn(`[ALTERNATIVES] ⚠️ Aucune alternative ≥${minScore}. Fallback à ${CONFIG.FALLBACK_MIN_SCORE}...`);
+      
+      candidates = await searchDatabaseRelaxed(product, CONFIG.FALLBACK_MIN_SCORE);
+      
+      if (candidates.length > 0) {
+        logger.warn(`[ALTERNATIVES] Fallback réussi : ${candidates.length} alternatives en zone orange (60-69)`);
+      }
+    }
+    
+    // 3. Calculer score de pertinence
+    const alternativesWithScore = candidates
+      .filter(alt => alt.barcode !== product.barcode) // Exclure produit original
+      .map(alt => ({
+        ...alt,
+        relevanceScore: calculateRelevanceScore(product, alt, keywords)
+      }))
+      .filter(alt => alt.relevanceScore >= CONFIG.MIN_RELEVANCE_SCORE) // Filtre seuil pertinence
+      .sort((a, b) => {
+        // ✅ CORRECTION TRI : Priorité au SCORE GLOBAL (pas pertinence)
+        if (b.scores.overallScore !== a.scores.overallScore) {
+          return b.scores.overallScore - a.scores.overallScore;
+        }
+        return b.relevanceScore - a.relevanceScore;
+      })
+      .slice(0, maxResults);
+    
+    logger.info(`[ALTERNATIVES] ${alternativesWithScore.length} alternatives pertinentes retournées\n`);
+    
+    return { alternatives: alternativesWithScore, source: 'database' };
+    
+  } catch (error) {
+    logger.error(`[ALTERNATIVES] Erreur fonction principale : ${error.message}`);
+    return [];
+  }
+}
+
+// ================== EXPORTS ==================
 module.exports = {
   findAlternatives,
-  searchDatabaseStrict,
-  searchDatabaseRelaxed,
+  extractKeywords,
+  calculateRelevanceScore,
   CONFIG
 };

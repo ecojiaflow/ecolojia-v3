@@ -1,0 +1,1250 @@
+{
+  "date": "2025-12-04T19:55:16.553Z",
+  "config": {
+    "batchSize": 100,
+    "maxProducts": 100,
+    "retryAttempts": 3
+  },
+  "stats": {
+    "total": 100,
+    "enriched": 100,
+    "failed": 0,
+    "skipped": 0,
+    "startTime": 1764877860111
+  },
+  "results": {
+    "success": [
+      {
+        "id": "691780b4c56dd19f3edde666",
+        "name": "perly",
+        "subcategory": "spread",
+        "tags": [
+          "sweet",
+          "breakfast",
+          "dessert",
+          "topping"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde667",
+        "name": "Prince Goût Chocolat",
+        "subcategory": "spread",
+        "tags": [
+          "chocolate",
+          "sweet",
+          "breakfast",
+          "snack",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde668",
+        "name": "Supreme Dark 90%",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "sweet",
+          "dessert",
+          "indulgence"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde669",
+        "name": "Tonik",
+        "subcategory": "spread",
+        "tags": [
+          "sweet",
+          "breakfast",
+          "topping",
+          "creamy",
+          "versatile"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66a",
+        "name": "Sésame",
+        "subcategory": "spice",
+        "tags": [
+          "seeds",
+          "crunchy",
+          "toasted",
+          "cooking",
+          "asian",
+          "garnish"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66b",
+        "name": "Chocolat noir - 85% cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "dessert",
+          "sweet",
+          "vegan"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66c",
+        "name": "CRISTALINE Eau De Source 0.5L",
+        "subcategory": "water",
+        "tags": [
+          "bottled",
+          "spring",
+          "natural",
+          "hydration",
+          "drink"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66d",
+        "name": "Henry’s",
+        "subcategory": "spread",
+        "tags": [
+          "sweet",
+          "breakfast",
+          "dessert",
+          "topping",
+          "classic"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66e",
+        "name": "Organic 70% Dark Chocolate Bar",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "organic",
+          "dessert",
+          "sweet",
+          "vegan"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde66f",
+        "name": "KING COOKIES",
+        "subcategory": "snack",
+        "tags": [
+          "cookies",
+          "sweet",
+          "dessert",
+          "biscuits",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde670",
+        "name": "Sable coco Henry s 42g",
+        "subcategory": "snack",
+        "tags": [
+          "coconut",
+          "sweet",
+          "dessert",
+          "tropical",
+          "vegan"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde671",
+        "name": "Biscuits croquants au coeur onctueux de Nutella®",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "hazelnut",
+          "sweet",
+          "biscuit",
+          "spread",
+          "nutella"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde672",
+        "name": "Tartine croustillante Authentique",
+        "subcategory": "snack",
+        "tags": [
+          "crispy",
+          "bread",
+          "toast",
+          "breakfast",
+          "crunchy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde673",
+        "name": "Excellence Noir Intense 70% Cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "dessert",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde674",
+        "name": "Lightly sea salted crisps",
+        "subcategory": "snack",
+        "tags": [
+          "crisps",
+          "salted",
+          "sea salt",
+          "snack",
+          "savory"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde675",
+        "name": "Dark chocolate",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "sweet",
+          "dessert",
+          "indulgent"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde676",
+        "name": "Excellence Noir Puissant 85% Cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "dessert",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde677",
+        "name": "Fourrés Chocolat Noir",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "filled",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde678",
+        "name": "Extra dark 74% Cocoa",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde679",
+        "name": "FIBRES",
+        "subcategory": "cereal",
+        "tags": [
+          "fiber",
+          "healthy",
+          "breakfast",
+          "wholegrain",
+          "dietary"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67a",
+        "name": "Henry’s",
+        "subcategory": "spread",
+        "tags": [
+          "sweet",
+          "breakfast",
+          "dessert",
+          "topping",
+          "classic"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67b",
+        "name": "Momo black",
+        "subcategory": "spread",
+        "tags": [
+          "black",
+          "sweet",
+          "breakfast",
+          "topping",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67c",
+        "name": "Original",
+        "subcategory": "spread",
+        "tags": [
+          "original",
+          "classic",
+          "versatile",
+          "basic",
+          "food"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67d",
+        "name": "70% chocolate",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67e",
+        "name": "Eyoo cover",
+        "subcategory": "spread",
+        "tags": [
+          "spread",
+          "breakfast",
+          "sweet",
+          "food"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde67f",
+        "name": "Tartines craquantes au sarrasin imp",
+        "subcategory": "snack",
+        "tags": [
+          "crispbread",
+          "buckwheat",
+          "gluten-free",
+          "healthy",
+          "crunchy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde680",
+        "name": "Pomme 🍏 🍎 Noisette🥜",
+        "subcategory": "spread",
+        "tags": [
+          "apple",
+          "hazelnut",
+          "sweet",
+          "breakfast",
+          "fruit",
+          "nut",
+          "spreadable"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde681",
+        "name": "Trios",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "crispy",
+          "sweet",
+          "biscuit",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde682",
+        "name": "Excellence 85% Cacao Rich Dark",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "dessert",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde683",
+        "name": "Dalaa 550 feuilles",
+        "subcategory": "spread",
+        "tags": [
+          "spread",
+          "breakfast",
+          "sweet",
+          "food"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde684",
+        "name": "Dark Chocolate 70%",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "sweet",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde685",
+        "name": "Nutella",
+        "subcategory": "spread",
+        "tags": [
+          "chocolate",
+          "hazelnut",
+          "sweet",
+          "breakfast",
+          "snack",
+          "creamy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde686",
+        "name": "Pringles Original",
+        "subcategory": "snack",
+        "tags": [
+          "chips",
+          "salty",
+          "crispy",
+          "potato",
+          "original",
+          "savory"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde687",
+        "name": "Crunchy oats & honey",
+        "subcategory": "cereal",
+        "tags": [
+          "oats",
+          "honey",
+          "crunchy",
+          "breakfast",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde688",
+        "name": "Figue & son",
+        "subcategory": "spread",
+        "tags": [
+          "fig",
+          "sesame",
+          "sweet",
+          "breakfast",
+          "natural"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde689",
+        "name": "Bitter Extra Kraftig",
+        "subcategory": "spread",
+        "tags": [
+          "bitter",
+          "strong",
+          "spread",
+          "breakfast",
+          "condiment"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68a",
+        "name": "Nestlé Dessert",
+        "subcategory": "dessert",
+        "tags": [
+          "sweet",
+          "creamy",
+          "ready-to-eat",
+          "indulgent",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68b",
+        "name": "Petit beurre",
+        "subcategory": "snack",
+        "tags": [
+          "biscuit",
+          "butter",
+          "sweet",
+          "dessert",
+          "tea"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68c",
+        "name": "Pains au lait x10",
+        "subcategory": "bread",
+        "tags": [
+          "baked",
+          "breakfast",
+          "snack",
+          "sweet",
+          "pastry"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68d",
+        "name": "Chocolat au lait",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "milk",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68e",
+        "name": "Brioche Tranchée Bio 400g",
+        "subcategory": "bread",
+        "tags": [
+          "brioche",
+          "organic",
+          "sliced",
+          "breakfast",
+          "bakery"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde68f",
+        "name": "King cookies choco",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "cookies",
+          "sweet",
+          "dessert",
+          "biscuit"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde690",
+        "name": "Granatapfel Sauerkirsche Fruchtgummi",
+        "subcategory": "snack",
+        "tags": [
+          "fruit",
+          "gummy",
+          "pomegranate",
+          "cherry",
+          "sweet",
+          "candy",
+          "germany"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde691",
+        "name": "Bio Chocolat Noir Cacao 70%",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "organic",
+          "cacao",
+          "vegan",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde692",
+        "name": "Fruit & Nut Mix",
+        "subcategory": "snack",
+        "tags": [
+          "fruit",
+          "nuts",
+          "healthy",
+          "energy",
+          "mix",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde693",
+        "name": "Excellence Noir Subtil Doux 70% Cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "sweet",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde694",
+        "name": "La gâche tranchée",
+        "subcategory": "bread",
+        "tags": [
+          "sliced",
+          "brioche",
+          "sweet",
+          "breakfast",
+          "pastry"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde695",
+        "name": "Sour Cream & Onion",
+        "subcategory": "snack",
+        "tags": [
+          "savory",
+          "onion",
+          "creamy",
+          "salty",
+          "chips",
+          "flavored"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde696",
+        "name": "Chocolat Noir 92% cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "vegan",
+          "sweet",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde697",
+        "name": "Biscoff Creamy",
+        "subcategory": "spread",
+        "tags": [
+          "cookie",
+          "sweet",
+          "creamy",
+          "breakfast",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde698",
+        "name": "Granola L'Original",
+        "subcategory": "cereal",
+        "tags": [
+          "granola",
+          "breakfast",
+          "crunchy",
+          "healthy",
+          "oats"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde699",
+        "name": "Cracotte Céréales Complètes",
+        "subcategory": "cereal",
+        "tags": [
+          "wholegrain",
+          "breakfast",
+          "crispbread",
+          "toast",
+          "snack",
+          "light"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69a",
+        "name": "kinder bueno",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "hazelnut",
+          "sweet",
+          "crispy",
+          "wafer",
+          "candy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69b",
+        "name": "Ecuador dark chocolate",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69c",
+        "name": "Chips",
+        "subcategory": "snack",
+        "tags": [
+          "salty",
+          "crispy",
+          "potato",
+          "savory",
+          "bagged"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69d",
+        "name": "Pringles Sare",
+        "subcategory": "snack",
+        "tags": [
+          "chips",
+          "savory",
+          "crispy",
+          "potato",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69e",
+        "name": "wasa",
+        "subcategory": "snack",
+        "tags": [
+          "crispbread",
+          "cracker",
+          "wholegrain",
+          "low-calorie",
+          "scandinavian"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde69f",
+        "name": "Henry's Sable Coco Biscuit 85G",
+        "subcategory": "snack",
+        "tags": [
+          "biscuit",
+          "coconut",
+          "sweet",
+          "dessert",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a0",
+        "name": "Cracotte",
+        "subcategory": "cereal",
+        "tags": [
+          "toasted",
+          "bread",
+          "breakfast",
+          "light",
+          "crispy",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a1",
+        "name": "Biscuit raisins",
+        "subcategory": "snack",
+        "tags": [
+          "raisin",
+          "biscuit",
+          "sweet",
+          "baked",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a2",
+        "name": "Nutri+ avoine chocolat",
+        "subcategory": "cereal",
+        "tags": [
+          "chocolate",
+          "oat",
+          "breakfast",
+          "sweet",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a3",
+        "name": "Biscuits goût chocolat",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "biscuit",
+          "sweet",
+          "snack",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a4",
+        "name": "digestives",
+        "subcategory": "snack",
+        "tags": [
+          "biscuit",
+          "sweet",
+          "digestive",
+          "baked",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a5",
+        "name": "Harrys brioche tressee nature au sucre perle sans additifs 500g",
+        "subcategory": "bread",
+        "tags": [
+          "brioche",
+          "sweet",
+          "breakfast",
+          "pastry",
+          "french",
+          "sugar"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a6",
+        "name": "Protein Cacahuetes🥜 & Chocolat🍫",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "peanut",
+          "protein",
+          "sweet",
+          "energy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a7",
+        "name": "Tartines craquantes quinoa - pois chiche",
+        "subcategory": "snack",
+        "tags": [
+          "quinoa",
+          "chickpea",
+          "crispy",
+          "vegan",
+          "gluten-free",
+          "healthy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a8",
+        "name": "Lightly Salted Low Fat Corn Cakes",
+        "subcategory": "snack",
+        "tags": [
+          "corn",
+          "low fat",
+          "lightly salted",
+          "healthy",
+          "gluten free",
+          "vegan"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6a9",
+        "name": "Figolu",
+        "subcategory": "snack",
+        "tags": [
+          "biscuit",
+          "fig",
+          "sweet",
+          "snack",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6aa",
+        "name": "Krit krititas galletas saladas",
+        "subcategory": "snack",
+        "tags": [
+          "crackers",
+          "salty",
+          "biscuits",
+          "savory",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6ab",
+        "name": "Sour Cream & Onion",
+        "subcategory": "snack",
+        "tags": [
+          "savory",
+          "onion",
+          "creamy",
+          "salty",
+          "crispy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6ac",
+        "name": "Crunchy avoine et miel",
+        "subcategory": "cereal",
+        "tags": [
+          "oats",
+          "honey",
+          "crunchy",
+          "breakfast",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6ad",
+        "name": "Biscuit lait chocolat",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "milk",
+          "sweet",
+          "biscuit",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6ae",
+        "name": "Crunchy Avoine & Chocolat Noir x 5 x 2 barres de 21 g",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "oats",
+          "crunchy",
+          "energy",
+          "dark",
+          "bars"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6af",
+        "name": "Cookie🍪 cacao pépites Sans Sucre",
+        "subcategory": "snack",
+        "tags": [
+          "cookie",
+          "cocoa",
+          "sugar-free",
+          "chocolate",
+          "snack",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b0",
+        "name": "Dark milk chocolate",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "milk",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b1",
+        "name": "petit déjeuner miel et pépites de chocolat",
+        "subcategory": "cereal",
+        "tags": [
+          "chocolate",
+          "honey",
+          "sweet",
+          "breakfast",
+          "cereal"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b2",
+        "name": "Biscuit soja orange",
+        "subcategory": "snack",
+        "tags": [
+          "soy",
+          "orange",
+          "biscuit",
+          "sweet",
+          "vegan",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b3",
+        "name": "Sablés Anglais L'Original",
+        "subcategory": "snack",
+        "tags": [
+          "biscuit",
+          "sweet",
+          "butter",
+          "british",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b4",
+        "name": "P'tit Nature Complet",
+        "subcategory": "cereal",
+        "tags": [
+          "wholegrain",
+          "breakfast",
+          "natural",
+          "healthy",
+          "family"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b5",
+        "name": "Excellence Noir Corsé 78% Cacao",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "cocoa",
+          "dessert",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b6",
+        "name": "Картофельные чипсы со вкусом парики",
+        "subcategory": "snack",
+        "tags": [
+          "potato",
+          "chips",
+          "salty",
+          "crispy",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b7",
+        "name": "Brioche moins de sucre",
+        "subcategory": "bread",
+        "tags": [
+          "brioche",
+          "low-sugar",
+          "breakfast",
+          "bakery",
+          "sweet-bread"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b8",
+        "name": "Chocolat monogram",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "sweet",
+          "gourmet",
+          "dessert",
+          "gift"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6b9",
+        "name": "Lentil & Pea Veggie Cakes - Beetroot & Balsamic",
+        "subcategory": "snack",
+        "tags": [
+          "vegan",
+          "vegetarian",
+          "beetroot",
+          "lentil",
+          "pea",
+          "plant-based",
+          "savory"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6ba",
+        "name": "Pringles Original",
+        "subcategory": "snack",
+        "tags": [
+          "chips",
+          "salty",
+          "crispy",
+          "potato",
+          "original",
+          "savory"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6bb",
+        "name": "Fourrés Chocolat au Lait",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "milk",
+          "sweet",
+          "filled",
+          "biscuit",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6bc",
+        "name": "Pringles",
+        "subcategory": "snack",
+        "tags": [
+          "chips",
+          "salty",
+          "crispy",
+          "potato",
+          "savory"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6bd",
+        "name": "Digestive Avena Choco",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "oat",
+          "sweet",
+          "biscuit",
+          "breakfast"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6be",
+        "name": "Chocolate Negro",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "dark",
+          "sweet",
+          "dessert",
+          "treat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6bf",
+        "name": "180G C OR NOIR NOISETTE",
+        "subcategory": "spread",
+        "tags": [
+          "chocolate",
+          "hazelnut",
+          "sweet",
+          "breakfast",
+          "snack"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c0",
+        "name": "Coco specialty",
+        "subcategory": "spread",
+        "tags": [
+          "coconut",
+          "sweet",
+          "vegan",
+          "breakfast",
+          "tropical"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c1",
+        "name": "Barres de fruits secs & noix Myrtilles",
+        "subcategory": "snack",
+        "tags": [
+          "fruit",
+          "nuts",
+          "blueberry",
+          "healthy",
+          "energy",
+          "natural"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c2",
+        "name": "Tagger",
+        "subcategory": "spread",
+        "tags": [
+          "sweet",
+          "breakfast",
+          "dessert",
+          "topping",
+          "creamy"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c3",
+        "name": "Goûter 4S Saveur pommes",
+        "subcategory": "snack",
+        "tags": [
+          "apple",
+          "fruit",
+          "sweet",
+          "snack",
+          "dessert"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c4",
+        "name": "Wheat Biscuits",
+        "subcategory": "cereal",
+        "tags": [
+          "breakfast",
+          "wholegrain",
+          "healthy",
+          "fiber",
+          "wheat"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c5",
+        "name": "Protein Cocoa Hazelnut Bars",
+        "subcategory": "snack",
+        "tags": [
+          "protein",
+          "chocolate",
+          "hazelnut",
+          "energy",
+          "healthy",
+          "sweet"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c6",
+        "name": "Thé - Biscuits",
+        "subcategory": "snack",
+        "tags": [
+          "tea",
+          "biscuit",
+          "sweet",
+          "baked",
+          "snacking"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c7",
+        "name": "Petites Madeleines",
+        "subcategory": "snack",
+        "tags": [
+          "baked",
+          "sweet",
+          "dessert",
+          "pastry",
+          "french"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c8",
+        "name": "Goûter pépites de chocolat",
+        "subcategory": "snack",
+        "tags": [
+          "chocolate",
+          "snack",
+          "sweet",
+          "treat",
+          "kids"
+        ]
+      },
+      {
+        "id": "691780b4c56dd19f3edde6c9",
+        "name": "Sea salt & cider vinegar chips",
+        "subcategory": "snack",
+        "tags": [
+          "chips",
+          "sea salt",
+          "vinegar",
+          "salty",
+          "crispy",
+          "savory"
+        ]
+      }
+    ],
+    "failed": []
+  }
+}

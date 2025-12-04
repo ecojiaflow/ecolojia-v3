@@ -1,16 +1,19 @@
 ﻿/**
  * ============================================
- * AI ROUTES - ECOLOJIA V3.1 (FIXED)
+ * AI ROUTES - ECOLOJIA V3.1 (WITH SEARCHLAYER)
  * ============================================
  * Routes pour l'assistant IA intelligent
  * 
- * Note : aiService chargé en lazy loading pour éviter
- * les erreurs si le module 'openai' n'est pas installé.
+ * UPGRADE V2 :
+ * - Integration searchLayer (hybride Algolia + MongoDB)
+ * - Métadonnées complètes (source, temps, cache)
+ * - Meilleure gestion des résultats
  */
 
 const express = require('express');
 const router = express.Router();
 const aiOrchestrator = require('../services/aiOrchestrator.service');
+const searchLayer = require('../services/searchLayer.service');
 const Product = require('../models/Product');
 const { enrichHandler } = require('../controllers/ai.controller');
 
@@ -38,15 +41,14 @@ let authMiddleware;
 try {
   authMiddleware = require('../middleware').auth;
 } catch (err) {
-  // Si pas de middleware auth, on laisse passer
   authMiddleware = (req, res, next) => next();
 }
 
 // ============================================
-// ROUTE PRINCIPALE : POST /api/ai/query
+// ROUTE PRINCIPALE : POST /api/ai/query (V2 - WITH SEARCHLAYER)
 // ============================================
 
-router.post('/query', /* authMiddleware */ async (req, res) => {
+router.post('/query', async (req, res) => {
   try {
     const { query, userContext = {} } = req.body;
 
@@ -57,96 +59,120 @@ router.post('/query', /* authMiddleware */ async (req, res) => {
       });
     }
 
-    console.log('[AI Query] Nouvelle requête:', { query, userContext });
+    console.log('\n[AI Query] 🚀 Nouvelle requête:', { query, userContext });
 
-    // Détection intention
+    // ÉTAPE 1 : Détection intention
     const intentResult = await aiOrchestrator.detectIntent(query, userContext);
-    console.log('[AI Query] Intention détectée:', intentResult);
+    console.log('[AI Query] 🎯 Intention:', intentResult.intent, `(${(intentResult.confidence * 100).toFixed(0)}%)`);
 
-    // Génération filtres
+    // ÉTAPE 2 : Génération filtres
     const filters = aiOrchestrator.generateSearchFilters(
       intentResult.intent,
       query,
       userContext
     );
-    console.log('[AI Query] Filtres générés:', filters);
+    console.log('[AI Query] 🔍 Filtres:', JSON.stringify(filters, null, 2));
 
-    // Recherche MongoDB
-    let results = [];
+    // ÉTAPE 3 : Recherche avec searchLayer (NOUVEAU !)
+    let searchResult;
     
     try {
-      const mongoQuery = {
-        $text: { $search: filters.query }
-      };
-
-      if (filters.filters) {
-        Object.assign(mongoQuery, filters.filters);
-      }
-
-      results = await Product.find(mongoQuery)
-        .sort({ 'scores.overallScore': -1 })
-        .limit(filters.hitsPerPage || 10)
-        .lean();
-
-      console.log(`[AI Query] ${results.length} résultats trouvés`);
-
+      searchResult = await searchLayer.search(query, filters);
+      console.log(`[AI Query] ✅ Recherche: ${searchResult.results.length} résultats (${searchResult.source}, ${searchResult.executionTime}ms)`);
     } catch (searchError) {
-      console.error('[AI Query] Erreur recherche:', searchError);
+      console.error('[AI Query] ❌ Erreur searchLayer:', searchError.message);
       
-      // Fallback : recherche simple
-      results = await Product.find({
-        name: { $regex: query, $options: 'i' }
+      // Fallback : recherche simple MongoDB
+      const fallbackResults = await Product.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { productName: { $regex: query, $options: 'i' } }
+        ]
       })
         .sort({ 'scores.overallScore': -1 })
         .limit(10)
         .lean();
+      
+      searchResult = {
+        success: true,
+        source: 'fallback',
+        results: fallbackResults,
+        total: fallbackResults.length,
+        executionTime: 0,
+        cached: false
+      };
     }
 
+    // ÉTAPE 4 : Formatage réponse
+    const resultsCount = searchResult.results.length;
+    
     // Explication simple
     let explanation = '';
-    if (results.length > 0) {
-      const count = results.length;
-      const topScore = results[0]?.scores?.overallScore || 0;
-      explanation = `J'ai trouvé ${count} produit(s) pour "${query}". Le mieux noté obtient ${topScore}/100.`;
+    if (resultsCount > 0) {
+      const topScore = searchResult.results[0]?.scores?.overallScore || 0;
+      explanation = `J'ai trouvé ${resultsCount} produit(s) pour "${query}". Le mieux noté obtient ${topScore}/100.`;
+      
+      if (userContext.diet) {
+        explanation += ` Filtré pour régime ${userContext.diet}.`;
+      }
     } else {
       explanation = `Aucun produit trouvé pour "${query}". Essayez une recherche plus générale.`;
     }
 
     // Actions suggérées
     const actions = [];
-    if (results.length > 0) {
+    if (resultsCount > 0) {
       actions.push({
         type: 'view_product',
         label: 'Voir le détail',
-        productId: results[0]._id
+        productId: searchResult.results[0]._id
       });
+      
+      if (resultsCount > 1) {
+        actions.push({
+          type: 'compare',
+          label: 'Comparer',
+          productIds: searchResult.results.slice(0, 3).map(p => p._id)
+        });
+      }
+      
       actions.push({
         type: 'add_to_list',
         label: 'Ajouter à ma liste',
-        productId: results[0]._id
+        productId: searchResult.results[0]._id
+      });
+    } else {
+      actions.push({
+        type: 'broaden_search',
+        label: 'Élargir la recherche',
+        query: query
       });
     }
 
-    // Réponse
+    // ÉTAPE 5 : Réponse finale avec métadonnées complètes
     return res.json({
       success: true,
       intent: intentResult.intent,
       confidence: intentResult.confidence,
       query: query,
       filters: filters,
-      resultsCount: results.length,
-      results: results.slice(0, 5),
+      resultsCount: resultsCount,
+      results: searchResult.results.slice(0, 10),
       explanation: explanation,
       actions: actions,
-      debug: {
+      metadata: {
+        source: searchResult.source,
+        cached: searchResult.cached || false,
+        executionTime: searchResult.executionTime || 0,
         extractedEntities: intentResult.extractedEntities,
-        userContext: userContext
+        userContext: userContext,
+        version: 'v2-searchlayer'
       }
     });
 
   } catch (error) {
-    console.error('[AI Query] Erreur:', error);
-    
+    console.error('[AI Query] ❌ Erreur:', error);
+
     return res.status(500).json({
       success: false,
       error: 'Erreur lors du traitement de votre requête.',
@@ -156,95 +182,78 @@ router.post('/query', /* authMiddleware */ async (req, res) => {
 });
 
 // ============================================
-// ROUTES LEGACY (avec aiService si disponible)
+// ROUTES DEBUG
+// ============================================
+
+router.get('/cache-stats', (req, res) => {
+  try {
+    const stats = searchLayer.getCacheStats();
+    return res.json({ success: true, cache: stats });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/clear-cache', (req, res) => {
+  try {
+    searchLayer.clearCache();
+    return res.json({ success: true, message: 'Cache vidé' });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ============================================
+// ROUTES LEGACY
 // ============================================
 
 router.post('/chat', authMiddleware, async (req, res) => {
   const aiSvc = getAIService();
-  
   if (!aiSvc) {
-    return res.status(503).json({
-      success: false,
-      error: 'Service IA non disponible.'
-    });
+    return res.status(503).json({ success: false, error: 'Service IA non disponible.' });
   }
 
   try {
     const { message } = req.body;
-
     if (!message) {
-      return res.status(400).json({
-        success: false,
-        error: 'Message requis'
-      });
+      return res.status(400).json({ success: false, error: 'Message requis' });
     }
 
     const response = await aiSvc.generateCompletion(message);
-
-    return res.json({
-      success: true,
-      response: response
-    });
+    return res.json({ success: true, response: response });
 
   } catch (error) {
     console.error('[AI Chat] Erreur:', error);
-    return res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/analyze', authMiddleware, async (req, res) => {
   const aiSvc = getAIService();
-  
   if (!aiSvc) {
-    return res.status(503).json({
-      success: false,
-      error: 'Service IA non disponible.'
-    });
+    return res.status(503).json({ success: false, error: 'Service IA non disponible.' });
   }
 
   try {
     const { productId } = req.body;
-
     if (!productId) {
-      return res.status(400).json({
-        success: false,
-        error: 'productId requis'
-      });
+      return res.status(400).json({ success: false, error: 'productId requis' });
     }
 
     const product = await Product.findById(productId);
-
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        error: 'Produit non trouvé'
-      });
+      return res.status(404).json({ success: false, error: 'Produit non trouvé' });
     }
 
     const analysis = `Analyse du produit ${product.name} (score: ${product.scores?.overallScore || 'N/A'}/100)`;
-
-    return res.json({
-      success: true,
-      analysis: analysis,
-      product: product
-    });
+    return res.json({ success: true, analysis: analysis, product: product });
 
   } catch (error) {
     console.error('[AI Analyze] Erreur:', error);
-    return res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
-
-// ============================================
-// ENRICHISSEMENT IA (POST /api/ai/enrich)
-// ============================================
 router.post('/enrich', enrichHandler);
 
 module.exports = router;

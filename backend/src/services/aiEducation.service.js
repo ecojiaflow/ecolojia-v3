@@ -1,10 +1,11 @@
 ﻿const deepSeekService = require('./ai/deepSeekService');
+const logger = require('../config/logger');
 
 /**
  * AI EDUCATION SERVICE - ECOLOJIA V3.1
  * Service IA pédagogique pour cosmétiques/détergents
  * Répond questions scientifiques, compare produits, explique scores
- * 
+ *
  * RÈGLES STRICTES :
  * - Jamais d'allégation médicale
  * - Toujours sourcer (ANSES, EFSA, SCCS, OMS)
@@ -13,21 +14,35 @@
  */
 
 class AIEducationService {
-  
+
   /**
    * MÉTHODE 1 : Expliquer le score d'un produit
    * Usage : User scanne crème Nivea 58/100 → "Pourquoi ce score ?"
    */
   async explainProductScore(product, userProfile = {}) {
+    const startTime = Date.now();
+    
     try {
-      console.log(`[AI Education] Explication score produit : ${product.name}`);
-      
+      // Validation paramètres
+      if (!product || !product.name) {
+        logger.warn('[AIEducation] Tentative explication score sans produit valide');
+        throw new Error('Produit invalide ou manquant');
+      }
+
+      logger.info('[AIEducation] Génération explication score', {
+        productId: product._id,
+        productName: product.name,
+        category: product.categoryType,
+        score: product.scores?.overallScore,
+        hasUserProfile: !!userProfile
+      });
+
       // Construire contexte produit
       const productContext = this._buildProductContext(product);
-      
+
       // Prompt éducatif strict
       const prompt = `Tu es un éducateur scientifique spécialisé en cosmétiques/détergents.
-      
+
 PRODUIT À EXPLIQUER :
 ${productContext}
 
@@ -66,44 +81,89 @@ RÈGLES STRICTES :
 
 Réponds maintenant :`;
 
+      logger.debug('[AIEducation] Appel DeepSeek pour explication', {
+        promptLength: prompt.length,
+        estimatedTokens: Math.ceil(prompt.length / 4)
+      });
+
       // Appeler DeepSeek
       const response = await deepSeekService.analyze(prompt);
-      
+
       // Ajouter disclaimers automatiques
       const explanation = this._addDisclaimers(response, 'explanation');
-      
-      console.log(`[AI Education] ✅ Explication générée (${explanation.length} caractères)`);
-      
+
+      const processingTime = Date.now() - startTime;
+
+      logger.info('[AIEducation] Explication générée avec succès', {
+        productId: product._id,
+        productName: product.name,
+        responseLength: explanation.length,
+        processingTimeMs: processingTime,
+        estimatedTokensUsed: Math.ceil((prompt.length + response.length) / 4)
+      });
+
       return {
         success: true,
         explanation,
         sources: this._extractSources(response),
-        disclaimerShown: true
+        disclaimerShown: true,
+        metadata: {
+          processingTimeMs: processingTime,
+          responseLength: explanation.length
+        }
       };
-      
+
     } catch (error) {
-      console.error('[AI Education] ❌ Erreur explication score :', error);
+      const processingTime = Date.now() - startTime;
+      
+      logger.error('[AIEducation] Erreur explication score', {
+        error: error.message,
+        stack: error.stack,
+        productId: product?._id,
+        productName: product?.name,
+        processingTimeMs: processingTime
+      });
+
       return {
         success: false,
-        error: 'Impossible de générer l\'explication pour le moment.'
+        error: 'Impossible de générer l\'explication pour le moment.',
+        metadata: {
+          processingTimeMs: processingTime
+        }
       };
     }
   }
-  
+
   /**
    * MÉTHODE 2 : Comparer 2-3 produits scientifiquement
    * Usage : User hésite entre 3 crèmes → "Laquelle choisir ?"
    */
   async compareProducts(products, userProfile = {}, comparisonCriteria = 'overall') {
+    const startTime = Date.now();
+    
     try {
-      console.log(`[AI Education] Comparaison de ${products.length} produits`);
-      
+      // Validation paramètres
+      if (!products || !Array.isArray(products)) {
+        logger.warn('[AIEducation] Tentative comparaison sans tableau produits');
+        throw new Error('Produits invalides ou manquants');
+      }
+
       if (products.length < 2 || products.length > 3) {
+        logger.warn('[AIEducation] Nombre produits hors limite', {
+          productsCount: products.length
+        });
         throw new Error('Comparaison limitée à 2-3 produits');
       }
-      
+
+      logger.info('[AIEducation] Génération comparaison produits', {
+        productsCount: products.length,
+        productNames: products.map(p => p.name),
+        criteria: comparisonCriteria,
+        hasUserProfile: !!userProfile
+      });
+
       // Construire tableau comparatif
-      const productsContext = products.map((p, i) => 
+      const productsContext = products.map((p, i) =>
         `PRODUIT ${i + 1} : ${p.name} (${p.brand || 'Marque inconnue'})
 - Score global : ${p.scores?.overallScore || 'N/A'}/100
 - Score santé : ${p.scores?.healthScore || 'N/A'}/100
@@ -112,7 +172,7 @@ Réponds maintenant :`;
 - Prix estimé : ${p.price || 'N/A'}€
 - Labels : ${p.cosmeticData?.labels?.join(', ') || 'Aucun'}`
       ).join('\n\n');
-      
+
       const prompt = `Tu es un comparateur scientifique neutre spécialisé en cosmétiques/détergents.
 
 PRODUITS À COMPARER :
@@ -149,53 +209,94 @@ RÈGLES STRICTES :
 
 Réponds maintenant :`;
 
+      logger.debug('[AIEducation] Appel DeepSeek pour comparaison', {
+        promptLength: prompt.length,
+        estimatedTokens: Math.ceil(prompt.length / 4)
+      });
+
       const response = await deepSeekService.analyze(prompt);
-      
+
       const comparison = this._addDisclaimers(response, 'comparison');
-      
-      console.log(`[AI Education] ✅ Comparaison générée`);
-      
+
+      const processingTime = Date.now() - startTime;
+
+      logger.info('[AIEducation] Comparaison générée avec succès', {
+        productsCount: products.length,
+        productNames: products.map(p => p.name),
+        responseLength: comparison.length,
+        processingTimeMs: processingTime,
+        estimatedTokensUsed: Math.ceil((prompt.length + response.length) / 4)
+      });
+
       return {
         success: true,
         comparison,
         productsCompared: products.map(p => ({ id: p._id, name: p.name })),
-        disclaimerShown: true
+        disclaimerShown: true,
+        metadata: {
+          processingTimeMs: processingTime,
+          responseLength: comparison.length
+        }
       };
-      
+
     } catch (error) {
-      console.error('[AI Education] ❌ Erreur comparaison :', error);
+      const processingTime = Date.now() - startTime;
+      
+      logger.error('[AIEducation] Erreur comparaison produits', {
+        error: error.message,
+        stack: error.stack,
+        productsCount: products?.length,
+        processingTimeMs: processingTime
+      });
+
       return {
         success: false,
-        error: 'Impossible de comparer les produits pour le moment.'
+        error: 'Impossible de comparer les produits pour le moment.',
+        metadata: {
+          processingTimeMs: processingTime
+        }
       };
     }
   }
-  
+
   /**
    * MÉTHODE 3 : Répondre question libre utilisateur
    * Usage : "C'est quoi un parabène ?", "Le silicone est-il mauvais ?"
    */
   async answerQuestion(question, context = {}) {
+    const startTime = Date.now();
+    
     try {
-      console.log(`[AI Education] Question : "${question}"`);
-      
-      // Vérifier question valide (pas vide, pas trop longue)
-      if (!question || question.length < 5) {
+      // Validation paramètres
+      if (!question || typeof question !== 'string') {
+        logger.warn('[AIEducation] Tentative réponse question invalide');
+        throw new Error('Question invalide ou manquante');
+      }
+
+      if (question.length < 5) {
+        logger.warn('[AIEducation] Question trop courte', { questionLength: question.length });
         throw new Error('Question trop courte');
       }
-      
+
       if (question.length > 500) {
+        logger.warn('[AIEducation] Question trop longue', { questionLength: question.length });
         throw new Error('Question trop longue (max 500 caractères)');
       }
-      
+
+      logger.info('[AIEducation] Traitement question utilisateur', {
+        questionLength: question.length,
+        hasProductContext: !!context.product,
+        productName: context.product?.name
+      });
+
       // Contexte produit si disponible
-      const productContext = context.product ? 
+      const productContext = context.product ?
         `CONTEXTE PRODUIT :
 Produit scanné : ${context.product.name}
 Score : ${context.product.scores?.overallScore || 'N/A'}/100
-Catégorie : ${context.product.categoryType || 'N/A'}` : 
+Catégorie : ${context.product.categoryType || 'N/A'}` :
         'CONTEXTE : Question générale (pas de produit scanné)';
-      
+
       const prompt = `Tu es un éducateur scientifique spécialisé en cosmétiques/détergents/ingrédients.
 
 ${productContext}
@@ -237,65 +338,130 @@ Si question hors sujet (politique, religion, etc.) :
 
 Réponds maintenant :`;
 
+      logger.debug('[AIEducation] Appel DeepSeek pour réponse question', {
+        promptLength: prompt.length,
+        estimatedTokens: Math.ceil(prompt.length / 4)
+      });
+
       const response = await deepSeekService.analyze(prompt);
-      
+
       const answer = this._addDisclaimers(response, 'question');
-      
-      console.log(`[AI Education] ✅ Réponse générée`);
-      
+
+      const processingTime = Date.now() - startTime;
+
+      logger.info('[AIEducation] Réponse question générée avec succès', {
+        questionLength: question.length,
+        responseLength: answer.length,
+        processingTimeMs: processingTime,
+        estimatedTokensUsed: Math.ceil((prompt.length + response.length) / 4)
+      });
+
       return {
         success: true,
         answer,
         question,
         sources: this._extractSources(response),
-        disclaimerShown: true
+        disclaimerShown: true,
+        metadata: {
+          processingTimeMs: processingTime,
+          responseLength: answer.length
+        }
       };
-      
+
     } catch (error) {
-      console.error('[AI Education] ❌ Erreur réponse question :', error);
+      const processingTime = Date.now() - startTime;
+      
+      logger.error('[AIEducation] Erreur réponse question', {
+        error: error.message,
+        stack: error.stack,
+        questionLength: question?.length,
+        processingTimeMs: processingTime
+      });
+
       return {
         success: false,
-        error: error.message || 'Impossible de répondre pour le moment.'
+        error: error.message || 'Impossible de répondre pour le moment.',
+        metadata: {
+          processingTimeMs: processingTime
+        }
       };
     }
   }
-  
+
   /**
    * MÉTHODE 4 : Suggérer alternatives selon profil
    * Usage : Produit 58/100 → "Alternatives adaptées à MOI"
    */
   async suggestAlternatives(product, userProfile = {}, count = 3) {
+    const startTime = Date.now();
+    
     try {
-      console.log(`[AI Education] Recherche ${count} alternatives pour : ${product.name}`);
-      
+      // Validation paramètres
+      if (!product || !product.name) {
+        logger.warn('[AIEducation] Tentative suggestion alternatives sans produit');
+        throw new Error('Produit invalide ou manquant');
+      }
+
+      logger.info('[AIEducation] Recherche alternatives', {
+        productId: product._id,
+        productName: product.name,
+        requestedCount: count,
+        hasUserProfile: !!userProfile
+      });
+
       // Cette méthode sera enrichie avec recherche en base MongoDB
       // Pour l'instant, on retourne une structure de réponse
-      
+
+      const processingTime = Date.now() - startTime;
+
+      logger.warn('[AIEducation] Méthode suggestAlternatives non implémentée', {
+        productId: product._id,
+        processingTimeMs: processingTime
+      });
+
       return {
         success: true,
         message: 'Méthode en cours d\'implémentation. Connecter à MongoDB pour recherche.',
-        product: { id: product._id, name: product.name, score: product.scores?.overallScore }
+        product: { 
+          id: product._id, 
+          name: product.name, 
+          score: product.scores?.overallScore 
+        },
+        metadata: {
+          processingTimeMs: processingTime
+        }
       };
-      
+
     } catch (error) {
-      console.error('[AI Education] ❌ Erreur suggestions alternatives :', error);
+      const processingTime = Date.now() - startTime;
+      
+      logger.error('[AIEducation] Erreur suggestion alternatives', {
+        error: error.message,
+        stack: error.stack,
+        productId: product?._id,
+        processingTimeMs: processingTime
+      });
+
       return {
         success: false,
-        error: 'Impossible de suggérer alternatives pour le moment.'
+        error: 'Impossible de suggérer alternatives pour le moment.',
+        metadata: {
+          processingTimeMs: processingTime
+        }
       };
     }
   }
-  
+
   // ============================================================================
   // MÉTHODES UTILITAIRES PRIVÉES
   // ============================================================================
-  
+
   /**
    * Construire contexte produit pour prompt IA
    */
   _buildProductContext(product) {
     const category = product.categoryType || 'cosmetic';
-    
+
     if (category === 'cosmetic') {
       return `Nom : ${product.name}
 Marque : ${product.brand || 'Non spécifiée'}
@@ -314,7 +480,7 @@ Détail scores :
 Composition INCI (premiers ingrédients) :
 ${product.cosmeticData?.inci?.slice(0, 10).join(', ') || 'Non disponible'}`;
     }
-    
+
     if (category === 'detergent') {
       return `Nom : ${product.name}
 Marque : ${product.brand || 'Non spécifiée'}
@@ -332,12 +498,12 @@ Détail scores :
 Composition (principaux composants) :
 ${product.detergentData?.composition?.slice(0, 8).join(', ') || 'Non disponible'}`;
     }
-    
+
     return `Produit : ${product.name}
 Score : ${product.scores?.overallScore || 'N/A'}/100
 Catégorie : ${category}`;
   }
-  
+
   /**
    * Ajouter disclaimers santé/IA selon contexte
    */
@@ -349,27 +515,27 @@ Catégorie : ${category}`;
 ⚠️ **Information santé** : Cette analyse est générée par intelligence artificielle et ne remplace pas un avis médical personnalisé. En cas de doute, consultez un dermatologue ou professionnel de santé.
 
 📚 **Sources** : Les informations sont basées sur les données ANSES, EFSA, SCCS (Comité Scientifique Cosmétiques EU), et études scientifiques référencées.`,
-      
+
       comparison: `
 
 ---
 ⚠️ **Disclaimer comparaison** : Cette comparaison est basée sur des critères scientifiques objectifs. Le "meilleur" produit dépend de votre profil personnel (type de peau, allergies, budget). Toujours tester sur petite zone 48h avant utilisation complète.`,
-      
+
       question: `
 
 ---
 🤖 **Assistant IA** : Je suis un assistant éducatif, pas un professionnel de santé. Mes réponses sont générées par intelligence artificielle et visent à informer, pas à prescrire. Toujours vérifier avec un professionnel en cas de doute.`
     };
-    
+
     return content + (disclaimers[type] || disclaimers.question);
   }
-  
+
   /**
    * Extraire sources mentionnées dans réponse IA
    */
   _extractSources(content) {
     const sources = [];
-    
+
     // Détecter mentions d'organismes
     const organizations = ['ANSES', 'EFSA', 'SCCS', 'OMS', 'WHO', 'PubMed', 'ADEME', 'INSERM'];
     organizations.forEach(org => {
@@ -380,10 +546,9 @@ Catégorie : ${category}`;
         });
       }
     });
-    
+
     return sources.length > 0 ? sources : [{ organization: 'Général', mentioned: true }];
   }
 }
 
 module.exports = new AIEducationService();
-

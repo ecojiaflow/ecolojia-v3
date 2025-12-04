@@ -13,7 +13,7 @@ import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
 import { useScoreBreakdown } from '../hooks/useScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
-// import AlternativesPanel supprimé (doublon avec section alternatives unifiée)
+// import AlternativesPanel supprim? (doublon avec section alternatives unifi?e)
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { AllergensSection } from '../components/product/AllergensSection';
@@ -23,7 +23,6 @@ import { ProductChatActions } from '../components/product/ProductChatActions';
 import { ProductMainActions } from '../components/product/ProductMainActions';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import NovaBadge from '../components/NovaBadge';
-import { KnowledgeAnalysisSection } from '../components/knowledge';
 
 // CORRECTION 1 : getJSON retourne maintenant {ok, status, data} au lieu de throw
 const getJSON = async (endpoint: string): Promise<any> => {
@@ -80,7 +79,7 @@ interface Product {
   foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
 }
 
-// Helper pour compatibilité images
+// Helper pour compatibilit? images
 const getProductImage = (product: any) => {
   return product.imageUrl || product.images?.front || null;
 };
@@ -98,8 +97,8 @@ const ProductPage: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(false);
 
-  // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
-  // CORRECTION : fetchProduct extrait pour être réutilisable
+  // CORRECTION 2 : useEffect g?re maintenant les erreurs 400/404
+  // CORRECTION : fetchProduct extrait pour ?tre r?utilisable
   const fetchProduct = useCallback(async () => {
       if (!id || id === 'undefined') {
         setError('ID produit manquant ou invalide');
@@ -113,10 +112,10 @@ const ProductPage: React.FC = () => {
 
         const result = await getJSON(`/api/products/${id}`);
 
-        // Gestion erreur 400 (médicament, livre, etc.)
+        // Gestion erreur 400 (m?dicament, livre, etc.)
         if (result.status === 400) {
-          setError(`⚠️ ${result.data.error || 'Type de produit non supporté'}`);
-          toast.error(result.data.error || 'Type de produit non supporté', { duration: 5000 });
+          setError(`${result.data.error || 'Type de produit non support?'}`);
+          toast.error(result.data.error || 'Type de produit non support?', { duration: 5000 });
           setLoading(false);
           return;
         }
@@ -124,37 +123,35 @@ const ProductPage: React.FC = () => {
         // Gestion erreur 404 (produit inconnu)
         if (result.status === 404) {
           setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
-          toast.error('Produit non trouvé - Utilisez l\'OCR', { duration: 5000 });
+          toast.error('Produit non trouv? - Utilisez l\'OCR', { duration: 5000 });
           setLoading(false);
           return;
         }
 
         // Autre erreur serveur
         if (!result.ok) {
-          setError(`Erreur serveur (${result.status}). Veuillez réessayer.`);
+          setError(`Erreur serveur (${result.status}). Veuillez r?essayer.`);
           toast.error('Erreur serveur');
           setLoading(false);
           return;
         }
 
-        // Succès
+        // Succ?s
         setProduct(result.data.product || result.data);
 
         // Extraire recettes si disponibles
         if (result.data.recipes && Array.isArray(result.data.recipes)) {
           setRecipes(result.data.recipes);
-          console.log('[Frontend] 🍽️ Recettes reçues:', result.data.recipes.length);
         } else {
           setRecipes([]);
-          console.log('[Frontend] ⚠️ Aucune recette disponible');
         }
 
         loadAlternatives(id);
 
       } catch (err: any) {
         console.error('Erreur chargement produit:', err);
-        setError('🔌 Erreur réseau - Vérifiez votre connexion');
-        toast.error('Erreur réseau');
+        setError('Erreur r?seau - V?rifiez votre connexion');
+        toast.error('Erreur r?seau');
       } finally {
         setLoading(false);
       }
@@ -216,8 +213,8 @@ const ProductPage: React.FC = () => {
 
       await response.json();
 
-      // ✅ SOLUTION SIMPLE : Recharger la page
-      toast.success('✨ Enrichissement terminé, rechargement...', { duration: 1500 });
+      // ? SOLUTION SIMPLE : Recharger la page
+      toast.success('? Enrichissement termin?, rechargement...', { duration: 1500 });
       setTimeout(() => window.location.reload(), 1500);
 
     } catch (error: any) {
@@ -261,15 +258,16 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores réels depuis l'API
-  const healthScore = product.scores?.healthScore || 0;
-  const environmentScore = product.scores?.environmentScore || 0;
-  // Détection si le score a été calculé (ne pas afficher 0 par défaut)
-  const hasCalculatedScore = product.scores?.overallScore !== null && product.scores?.overallScore !== undefined;
-  const overallScore = hasCalculatedScore ? product.scores.overallScore : null;
+  // Scores r?els depuis l'API
+  const healthScore = product.scores?.healthScore ?? null;
+  const environmentScore = product.scores?.environmentScore ?? null;
+  // D?tection si le score a ?t? calcul? (ne pas afficher 0 par d?faut)
+  
+  // ✅ FIX V3.6 : Utiliser directement le score global calculé par le backend (scoring scientifique 8 composantes)
+  const overallScore = (product.scores?.overallScore ?? null);
 
-  // Breakdown réel depuis l'API
-    // Générer le breakdown automatiquement si absent
+  // Breakdown r?el depuis l'API
+    // G?n?rer le breakdown automatiquement si absent
   const generatedBreakdown = useScoreBreakdown(product);
   const breakdown = product.scores?.breakdown || generatedBreakdown || {};
   const realBreakdown = generatedBreakdown || {};
@@ -298,7 +296,7 @@ const ProductPage: React.FC = () => {
                 <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
               {product.category === 'food' && product.foodData?.novaGroup && (
                 <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
                   <NovaBadge
                     novaGroup={product.foodData.novaGroup}
                     typeTransformation={product.typeTransformation}
@@ -327,35 +325,27 @@ const ProductPage: React.FC = () => {
             </button>
           </div>
           <details className="bg-primary-50" open>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
             <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
             <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-neutral-700">Non disponible</p>}</div>
           </details>
           <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Détails du score</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
             <div className="p-4"><ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} /></div>
           </details>
-          {/* ⭐ NOUVEAU : Section Knowledge Base MOBILE */}
-          <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">⚠️ Analyse détectée</summary>
-            <div className="p-4">
-              <KnowledgeAnalysisSection
-                knowledgeAnalysis={product.knowledgeAnalysis}
-                aiEnriched={product.aiEnriched}
-                knowledgeBaseUsed={product.knowledgeBaseUsed}
-                confidence={product.confidence}
-                deepseekUsed={product.deepseekUsed}
-              />
-            </div>
-          </details>
+          
           {product.foodData?.nutrition?.per100g && product.category === 'food' && (
             <details className="bg-primary-50" open>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
               <summary className="p-4 font-semibold cursor-pointer border-b">Valeurs nutritionnelles</summary>
               <div className="p-4"><ProductNutrition nutrition={product.foodData.nutrition.per100g} /></div>
             </details>
           )}
           {product.category === 'cosmetics' && (
             <details className="bg-primary-50" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosmétique</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosm?tique</summary>
               <div className="p-4">
                 <CosmeticAnalysisDisplay
                   analysis={{
@@ -370,7 +360,8 @@ const ProductPage: React.FC = () => {
           )}
           {product.category === 'detergents' && (
             <details className="bg-primary-50" open>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Détergent</summary>
+            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
+              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse D?tergent</summary>
               <div className="p-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -380,13 +371,13 @@ const ProductPage: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-900">
-                    Impact aquatique, biodégradabilité et composition évalués
+                    Impact aquatique, biod?gradabilit? et composition ?valu?s
                   </p>
                 </div>
               </div>
             </details>
           )}
-          {/* Section alternatives unifiée - design Ecolojia v3.1 */}
+          {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
           <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-primary" />
@@ -401,7 +392,7 @@ const ProductPage: React.FC = () => {
             ) : alternatives.length > 0 ? (
               <div className="space-y-3">
                 {alternatives.slice(0, 5).map((alt) => {
-                  const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
+                  const scoreImprovement = (alt.scores?.overallScore || 0) - (overallScore || 0);
                   return (
                     <div
                       key={alt._id}
@@ -440,12 +431,12 @@ const ProductPage: React.FC = () => {
             ) : (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
                 <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
+                <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouv?e</h4>
                 <p className="text-sm text-yellow-800 mb-4">
-                  Notre base de données ne contient pas encore d'alternative pour ce produit.
+                  Notre base de donn?es ne contient pas encore d'alternative pour ce produit.
                 </p>
                 <p className="text-xs text-yellow-700">
-                  💡 Recherchez des produits similaires avec labels bio ou équitables
+                  Recherchez des produits similaires avec labels bio ou ?quitables
                 </p>
               </div>
             )}
@@ -468,7 +459,7 @@ const ProductPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
 
-        {/* Actions standardisées Ecolojia v3.1 */}
+        {/* Actions standardis?es Ecolojia v3.1 */}
         <ProductMainActions
           product={product}
           onShowAlternatives={() => {
@@ -481,22 +472,22 @@ const ProductPage: React.FC = () => {
           }}
         />
 
-        {/* Disclaimer OCR si produit créé via OCR */}
+        {/* Disclaimer OCR si produit cr?? via OCR */}
         {product.source === 'ocr' && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
               <AlertTriangle className="text-yellow-600 flex-shrink-0 mt-0.5" size={20} />
               <div>
                 <h3 className="font-medium text-yellow-900 mb-1">
-                  ⚠️ Produit créé par reconnaissance OCR
+                  Produit cr?? par reconnaissance OCR
                 </h3>
                 <p className="text-yellow-800 text-sm mb-2">
-                  Ce produit a été créé automatiquement à partir de photos.
-                  Fiabilité estimée : {product.confidence ? Math.round(product.confidence * 100) : 70}%
+                  Ce produit a ?t? cr?? automatiquement ? partir de photos.
+                  Fiabilit? estim?e : {product.confidence ? Math.round(product.confidence * 100) : 70}%
                 </p>
                 <p className="text-yellow-700 text-xs">
-                  Les données peuvent contenir des erreurs. Vérifiez les informations avant utilisation.
-                  {product.needsVerification && ' Ce produit nécessite une vérification manuelle.'}
+                  Les donn?es peuvent contenir des erreurs. V?rifiez les informations avant utilisation.
+                  {product.needsVerification && ' Ce produit n?cessite une v?rification manuelle.'}
                 </p>
               </div>
             </div>
@@ -505,7 +496,7 @@ const ProductPage: React.FC = () => {
           <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
         {product.category === 'food' && product.foodData?.novaGroup && (
           <div className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">📊 Classification NOVA</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
             <NovaBadge
               novaGroup={product.foodData.novaGroup}
               typeTransformation={product.typeTransformation}
@@ -524,16 +515,22 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        {/* ⭐ NOUVEAU : Section Système Hybride Knowledge Base + IA */}
-        <KnowledgeAnalysisSection
-          knowledgeAnalysis={product.knowledgeAnalysis}
-          aiEnriched={product.aiEnriched}
-          knowledgeBaseUsed={product.knowledgeBaseUsed}
-          confidence={product.confidence}
-          deepseekUsed={product.deepseekUsed}
-        />
+        {/* TODO FUTURE : Section Système Hybride Knowledge Base + IA
+           Composant KnowledgeAnalysisSection à créer
+           Props nécessaires :
+             - knowledgeAnalysis={product.knowledgeAnalysis}
+             - aiEnriched={product.aiEnriched}
+             - knowledgeBaseUsed={product.knowledgeBaseUsed}
+             - confidence={product.confidence}
+             - deepseekUsed={product.deepseekUsed}
+        */}
 
-        <ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} />
+        <details className="bg-primary-50 rounded-xl shadow-sm p-6 mb-6">
+          <summary className="font-semibold cursor-pointer">Analyse d?taill?e (mode expert)</summary>
+          <div className="mt-4">
+            <ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} />
+          </div>
+        </details>
 
 
           {/* Section recettes - design Ecolojia v3.1 */}
@@ -556,7 +553,7 @@ const ProductPage: React.FC = () => {
         )}
         {product.category === 'detergents' && (
           <div className="bg-primary-50 rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse D?tergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-neutral-100 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
@@ -565,12 +562,12 @@ const ProductPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-gray-900">
-                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
+                ?valuation bas?e sur l'impact aquatique, la biod?gradabilit? et la composition
               </p>
             </div>
           </div>
         )}
-        {/* Section alternatives unifiée - design Ecolojia v3.1 */}
+        {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
         <div id="alternatives-section" className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
@@ -585,7 +582,7 @@ const ProductPage: React.FC = () => {
           ) : alternatives.length > 0 ? (
             <div className="space-y-3">
               {alternatives.slice(0, 5).map((alt) => {
-                const scoreImprovement = (alt.scores?.overallScore || 0) - (product.scores?.overallScore || 0);
+                const scoreImprovement = (alt.scores?.overallScore || 0) - (overallScore || 0);
                 return (
                   <div
                     key={alt._id}
@@ -620,12 +617,12 @@ const ProductPage: React.FC = () => {
           ) : (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
               <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
+              <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouv?e</h4>
               <p className="text-sm text-yellow-800 mb-4">
-                Notre base de données ne contient pas encore d'alternative pour ce produit.
+                Notre base de donn?es ne contient pas encore d'alternative pour ce produit.
               </p>
               <p className="text-xs text-yellow-700">
-                💡 Recherchez des produits similaires avec labels bio ou équitables
+                Recherchez des produits similaires avec labels bio ou ?quitables
               </p>
             </div>
           )}
@@ -639,4 +636,29 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

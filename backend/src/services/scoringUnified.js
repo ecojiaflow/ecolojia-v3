@@ -26,14 +26,21 @@ const CONFIDENCE_THRESHOLDS = {
 };
 
 const SCORING_WEIGHTS = {
-  nova: 0.15,
-  nutriScore: 0.20,
-  additives: 0.15,
-  sugars: 0.10,
-  saturatedFat: 0.10,
-  salt: 0.10,
-  ecoScore: 0.15,
-  labels: 0.05
+  // SANTÉ NUTRITIONNELLE (40%)
+  sugars: 0.15,          // OMS <10% AET
+  saturatedFat: 0.10,    // ANSES <12% AET
+  salt: 0.10,            // OMS <5g/jour
+  
+  // TRANSFORMATION & ADDITIFS (35%)
+  nova: 0.20,            // Monteiro 2016
+  additives: 0.15,       // Listes rouge/orange
+  
+  // ENVIRONNEMENT & LABELS (30%)
+  ecoScore: 0.20,        // ADEME ACV
+  labels: 0.10,          // Bio/certifs
+  
+  // Nutri-Score = 0 (affiché mais non comptabilisé)
+  nutriScore: 0.0        // Évite double comptage
 };
 
 // ============================================
@@ -169,6 +176,16 @@ function calculateDataConfidence(product, category = 'food') {
 // CALCUL DES SCORES ALIMENTAIRES (FOOD)
 // ============================================
 function calculateFoodScores(data) {
+  // 🔍 DEBUG TEMPORAIRE - À RETIRER APRÈS
+  console.log('[SCORING DEBUG] === DÉBUT calculateFoodScores ===');
+  console.log('[SCORING DEBUG] data.nova_group:', data.nova_group);
+  console.log('[SCORING DEBUG] data.novaGroup:', data.novaGroup);
+  console.log('[SCORING DEBUG] data.nutriments?.sugars_100g:', data.nutriments?.sugars_100g);
+  console.log('[SCORING DEBUG] data.ecoscore_grade:', data.ecoscore_grade);
+  console.log('[SCORING DEBUG] data.ecoScore:', data.ecoScore);
+  console.log('[SCORING DEBUG] Structure complète nutriments:', JSON.stringify(data.nutriments, null, 2));
+  console.log('[SCORING DEBUG] Clés racine data:', Object.keys(data).filter(k => !k.startsWith('_')).slice(0, 20));
+  // 🔍 FIN DEBUG
   // 1. Vérifier la qualité des données
   const dataConfidence = calculateDataConfidence(data, 'food');
 
@@ -213,14 +230,14 @@ function calculateFoodScores(data) {
   // 1. NOVA (15%) - Monteiro 2016
   // ============================================
   let novaScore = null;
-  if (data.novaGroup || data.nova_groups) {
+  if (data.novaGroup || data.nova_group || data.nova_groups) {
     const novaMapping = {
       1: 100, // Aliments non transformés
       2: 75,  // Ingrédients culinaires
-      3: 50,  // Aliments transformés
-      4: 25   // Ultra-transformés
+      3: 40,  // Aliments transformés (réduit)
+      4: 10   // Ultra-transformés (réduit)
     };
-    const rawNova = data.novaGroup || data.nova_groups;
+    const rawNova = data.novaGroup || data.nova_group || data.nova_groups;
     const novaKey = parseInt(rawNova, 10);
     novaScore = Number.isNaN(novaKey) ? null : (novaMapping[novaKey] ?? null);
   }
@@ -278,7 +295,9 @@ function calculateFoodScores(data) {
   const saturatedFat =
     nutriments['saturated-fat_100g'] !== undefined
       ? nutriments['saturated-fat_100g']
-      : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null);
+      : (nutriments.saturated_fat_100g !== undefined
+        ? nutriments.saturated_fat_100g
+        : (nutriments.saturated_fat !== undefined ? nutriments.saturated_fat : null));
 
   if (saturatedFat !== null) {
     if (saturatedFat < 1.5) fatScore = 100;
@@ -345,7 +364,6 @@ function calculateFoodScores(data) {
   // ============================================
   const contributions = [
     { value: novaContribution, weight: SCORING_WEIGHTS.nova,        available: novaScore !== null },
-    { value: nutriContribution, weight: SCORING_WEIGHTS.nutriScore, available: nutriScoreValue !== null },
     { value: additivesContribution, weight: SCORING_WEIGHTS.additives, available: true },
     { value: sugarsContribution, weight: SCORING_WEIGHTS.sugars,    available: sugarsScore !== null },
     { value: fatContribution,   weight: SCORING_WEIGHTS.saturatedFat, available: fatScore !== null },
@@ -365,7 +383,6 @@ function calculateFoodScores(data) {
   // SANTÉ - Normalisation adaptative (comme overallScore)
   const healthComponents = [
     { value: novaContribution, weight: SCORING_WEIGHTS.nova, available: novaScore !== null },
-    { value: nutriContribution, weight: SCORING_WEIGHTS.nutriScore, available: nutriScoreValue !== null },
     { value: additivesContribution, weight: SCORING_WEIGHTS.additives, available: true },
     { value: sugarsContribution, weight: SCORING_WEIGHTS.sugars, available: sugarsScore !== null },
     { value: fatContribution, weight: SCORING_WEIGHTS.saturatedFat, available: fatScore !== null },
@@ -397,7 +414,7 @@ function calculateFoodScores(data) {
   // ============================================
   // STRUCTURE DE RETOUR COMPLÈTE
   // ============================================
-  const novaGroupRaw = data.novaGroup || data.nova_groups || null;
+  const novaGroupRaw = data.novaGroup || data.nova_group || data.nova_groups || null;
   const nutriRaw = data.nutriScore || data.nutriscore_grade || null;
   const ecoRaw = data.ecoScore || data.ecoscore_grade || null;
 
@@ -473,7 +490,59 @@ function calculateFoodScores(data) {
         isBio,
         label: isBio ? 'Bio / Organic' : 'Aucun label'
       }
-    },
+    },    // ============================================
+    // ============================================
+    // MÉTRIQUES DE QUALITÉ ET ALERTES
+    // ============================================
+    completeness: confidence, // 0-1 : ratio données disponibles
+    confidenceIndex: dataConfidence.confidence, // 0-1 : niveau confiance global
+    warnings: (() => {
+      const warns = [];
+      // Avertissement si données insuffisantes
+      if (confidence < 0.4) {
+        warns.push({
+          type: 'data_quality',
+          severity: 'high',
+          message: 'Données insuffisantes pour un scoring fiable',
+          details: `Seulement ${Math.round(confidence * 100)}% des données nécessaires`
+        });
+      }
+      // Avertissement si scores critiques bas
+      if (sugarsScore !== null && sugarsScore < 30) {
+        warns.push({
+          type: 'health_alert',
+          severity: 'medium',
+          message: 'Teneur en sucres très élevée',
+          details: `${sugars}g/100g (OMS recommande <10g)`
+        });
+      }
+      if (novaScore !== null && novaScore <= 10) {
+        warns.push({
+          type: 'health_alert',
+          severity: 'medium',
+          message: 'Produit ultra-transformé (NOVA 4)',
+          details: 'Privilégier les aliments bruts ou peu transformés'
+        });
+      }
+      if (additivesAnalysis.dangerous.length > 0) {
+        warns.push({
+          type: 'health_alert',
+          severity: 'high',
+          message: `${additivesAnalysis.dangerous.length} additif(s) controversé(s) détecté(s)`,
+          details: additivesAnalysis.dangerous.join(', ')
+        });
+      }
+      // Avertissement si eco-score faible
+      if (ecoScore !== null && ecoScore < 40) {
+        warns.push({
+          type: 'environment_alert',
+          severity: 'low',
+          message: 'Impact environnemental élevé',
+          details: ecoRaw ? `Eco-Score ${ecoRaw.toUpperCase()}` : 'Empreinte carbone importante'
+        });
+      }
+      return warns;
+    })(),
     scoringMetadata: {
       methodology: 'ECOLOJIA V3.2.0 - Scoring scientifique 8 composantes',
       version: '3.2.0',
@@ -1092,5 +1161,13 @@ module.exports = {
   analyzeAdditives,
   calculateDataConfidence
 };
+
+
+
+
+
+
+
+
 
 

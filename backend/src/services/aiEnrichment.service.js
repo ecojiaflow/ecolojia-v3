@@ -94,6 +94,37 @@ class AIEnrichmentService {
         }
       }
 
+            // 🛡️ Normalisation de secours des scores pour éviter des 0 techniques
+      if (scoredProduct && scoredProduct.scores) {
+        const baseScores =
+          (validatedProduct && validatedProduct.scores) ||
+          (product && product.scores) ||
+          {};
+
+        // Si le moteur scientifique renvoie 0 mais que l'analyse basique avait un score neutre
+        if (scoredProduct.scores.healthScore === 0 && baseScores && typeof baseScores.health === 'number') {
+          scoredProduct.scores.healthScore = baseScores.health;
+        }
+
+        if (scoredProduct.scores.environmentScore === 0 && baseScores && typeof baseScores.eco === 'number') {
+          scoredProduct.scores.environmentScore = baseScores.eco;
+        }
+
+        if (scoredProduct.scores.overallScore === 0) {
+          let baseOverall = null;
+          if (baseScores && typeof baseScores.overallScore === 'number') {
+            baseOverall = baseScores.overallScore;
+          } else if (baseScores && typeof baseScores.global === 'number') {
+            baseOverall = baseScores.global;
+          }
+
+          if (typeof baseOverall === 'number') {
+            scoredProduct.scores.overallScore = baseOverall;
+            scoredProduct.scores.global = baseOverall;
+          }
+        }
+      }
+
       const duration = Date.now() - startTime;
       const finalScore = scoredProduct.scores?.overallScore || scoredProduct.scores?.global || 50;
       logger.info(`✅ Enrichissement réussi - Score: ${finalScore}/100 - Durée: ${duration}ms`);
@@ -103,6 +134,18 @@ class AIEnrichmentService {
       
       const Product = require('../models/Product');
       
+      // 🔧 CONSTRUCTION MANUELLE nutritionalInfo depuis nutriments
+      const nutritionalInfoToSave = scoredProduct.nutriments ? {
+        energy: scoredProduct.nutriments.energy_100g || scoredProduct.nutriments.energy,
+        fat: scoredProduct.nutriments.fat_100g || scoredProduct.nutriments.fat,
+        saturatedFat: scoredProduct.nutriments['saturated-fat_100g'] || scoredProduct.nutriments['saturated-fat'],
+        carbohydrates: scoredProduct.nutriments.carbohydrates_100g || scoredProduct.nutriments.carbohydrates,
+        sugars: scoredProduct.nutriments.sugars_100g || scoredProduct.nutriments.sugars,
+        fiber: scoredProduct.nutriments.fiber_100g || scoredProduct.nutriments.fiber,
+        proteins: scoredProduct.nutriments.proteins_100g || scoredProduct.nutriments.proteins,
+        salt: scoredProduct.nutriments.salt_100g || scoredProduct.nutriments.salt,
+        sodium: scoredProduct.nutriments.sodium_100g || scoredProduct.nutriments.sodium
+      } : null;
       const updatedProduct = await Product.findByIdAndUpdate(
         product._id,
         {
@@ -126,29 +169,75 @@ class AIEnrichmentService {
             aiEnrichmentVersion: '3.1-hybrid-mongodb',
             knowledgeBaseUsed: true,
             confidence: scoredProduct.scores?.confidence || 0.8,
-            foodData: scoredProduct.foodData,
             ingredients_text: scoredProduct.ingredients_text,
-            nutrition: scoredProduct.nutrition
+            nutrition: scoredProduct.nutrition,
+            'foodData.nutritionalInfo': nutritionalInfoToSave,
+            subcategory: scoredProduct.subcategory || null,
+            tags: Array.isArray(scoredProduct.tags) ? scoredProduct.tags : []
           }
         },
         { new: true, runValidators: false }
       );
       
       if (!updatedProduct) {
-        throw new Error('Produit non trouvé en base');
-      }
-      
-      logger.info('✅ Produit sauvegardé en MongoDB');
-      const hydrated = updatedProduct.toObject ? updatedProduct.toObject() : updatedProduct;
-      hydrated.knowledgeAnalysis = knowledgeAnalysis;
-      hydrated.aiEnriched = true;
-      hydrated.enrichmentConfidence = scoredProduct.scores?.confidence || 0.8;
-      hydrated.globalScore = scoredProduct.globalScore ?? hydrated.globalScore;
-      return hydrated;
+  logger.warn('⚠️ Produit non trouvé en base lors de la sauvegarde IA, retour mémoire uniquement');
+  const hydrated = scoredProduct.toObject ? scoredProduct.toObject() : scoredProduct;
+
+  // On garde l'_id d'origine si possible
+  if (product._id && !hydrated._id) {
+    hydrated._id = product._id;
+  }
+
+  hydrated.knowledgeAnalysis = knowledgeAnalysis;
+  hydrated.aiEnriched = true;
+  hydrated.enrichmentConfidence = scoredProduct.scores?.confidence || 0.8;
+  hydrated.globalScore = scoredProduct.globalScore ?? hydrated.globalScore;
+
+  return hydrated;
+}
+
+logger.info('✅ Produit sauvegardé en MongoDB');
+const hydrated = updatedProduct.toObject ? updatedProduct.toObject() : updatedProduct;
+hydrated.knowledgeAnalysis = knowledgeAnalysis;
+hydrated.aiEnriched = true;
+hydrated.enrichmentConfidence = scoredProduct.scores?.confidence || 0.8;
+hydrated.globalScore = scoredProduct.globalScore ?? hydrated.globalScore;
+return hydrated;
 
     } catch (error) {
+            // 🛡️ Normalisation de secours des scores pour éviter des 0 techniques
+      if (scoredProduct && scoredProduct.scores) {
+        const baseScores =
+          (validatedProduct && validatedProduct.scores) ||
+          (product && product.scores) ||
+          {};
+
+        // Si le moteur scientifique renvoie 0 mais que l'analyse basique avait un score neutre
+        if (scoredProduct.scores.healthScore === 0 && baseScores && typeof baseScores.health === 'number') {
+          scoredProduct.scores.healthScore = baseScores.health;
+        }
+
+        if (scoredProduct.scores.environmentScore === 0 && baseScores && typeof baseScores.eco === 'number') {
+          scoredProduct.scores.environmentScore = baseScores.eco;
+        }
+
+        if (scoredProduct.scores.overallScore === 0) {
+          let baseOverall = null;
+          if (baseScores && typeof baseScores.overallScore === 'number') {
+            baseOverall = baseScores.overallScore;
+          } else if (baseScores && typeof baseScores.global === 'number') {
+            baseOverall = baseScores.global;
+          }
+
+          if (typeof baseOverall === 'number') {
+            scoredProduct.scores.overallScore = baseOverall;
+            scoredProduct.scores.global = baseOverall;
+          }
+        }
+      }
+
       const duration = Date.now() - startTime;
-      logger.error(`❌ Échec enrichissement - Durée: ${duration}ms - Erreur:`, error.message);
+      logger.error(`❌ Échec enrichissement - Durée: ${duration}ms - Erreur: ${error.message}`);
 
       return {
         ...product,
@@ -447,68 +536,194 @@ Ceci doit influencer tes calculs de composantes.
     };
   }
 
+  /**
+   * Normalise nutriScore en format STRING ('A', 'B', 'C', 'D', 'E') ou null
+   * Gère : chaînes, nombres (0-100), null/undefined
+   */
+  static normalizeNutriScore(value) {
+    if (!value && value !== 0) return null;
+    
+    // Si c'est une chaîne, extraire la première lettre en majuscule
+    if (typeof value === 'string') {
+      const match = value.toUpperCase().match(/[A-E]/);
+      return match ? match[0] : null;
+    }
+    
+    // Si c'est un nombre, mapper sur l'échelle Nutri-Score (85=A, 70=B, 50=C, 30=D, 15=E)
+    if (typeof value === 'number') {
+      if (value >= 70) return 'A';      // 85 = A
+      if (value >= 55) return 'B';      // 70 = B
+      if (value >= 40) return 'C';      // 50 = C
+      if (value >= 25) return 'D';      // 30 = D
+      return 'E';                       // 15 = E
+    }
+    
+    return null;
+  }
+
   static async recalculateScoreWithValidation(product) {
     try {
-      // ✅ NOUVEAU : Utiliser les scores DeepSeek directement
-      // Les scores IA sont déjà calculés et validés par DeepSeek
-      
-      const scores = product.scores || {};
-      
-      // Validation anti-NaN de tous les scores
-      Object.keys(scores).forEach(key => {
-        if (typeof scores[key] === 'number' && isNaN(scores[key])) {
-          logger.warn(`⚠️  Score ${key} est NaN - Remplacé par 50`);
-          scores[key] = 50;
-        }
-      });
+      logger.info('🧬 Recalcul score avec moteur scientifique scoringUnified...');
 
-      // Calculer le score global à partir des 8 composantes si disponibles
-      let globalScore = scores.overallScore || scores.global;
-      
-      if (!globalScore || isNaN(globalScore)) {
-        // Calculer à partir des composantes disponibles
-        const components = [
-          scores.naturalScore,
-          scores.healthScore,
-          scores.environmentScore,
-          scores.nutriScore,
-          scores.additivesScore,
-          scores.processingScore,
-          scores.originScore,
-          scores.labelsScore
-        ].filter(s => typeof s === 'number' && !isNaN(s));
-        
-        if (components.length > 0) {
-          globalScore = Math.round(components.reduce((a, b) => a + b, 0) / components.length);
-          logger.info(`📊 Score global recalculé : ${globalScore}/100 (moyenne de ${components.length} composantes)`);
-        } else {
-          globalScore = 50;
-          logger.warn('⚠️  Aucune composante valide - Score global par défaut : 50');
-        }
-      }
+      const plain = product.toObject ? product.toObject() : { ...product };
+      const category = plain.category || plain.categoryType || 'food';
 
-      // Validation finale du score global
-      if (globalScore < 0) globalScore = 0;
-      if (globalScore > 100) globalScore = 100;
-
-      return {
-        ...product,
-        scores: {
-          ...scores,
-          overallScore: globalScore,
-          global: globalScore
-        }
+      // 🔧 Mapper noms MongoDB → noms scoringUnified
+      const rawNutrition = plain.nutriments || plain.nutrition || (plain.foodData && plain.foodData.nutrition) || {};
+      const nutriments = {
+        // Mapping sugar → sugars_100g
+        sugars_100g: rawNutrition.sugar ?? rawNutrition.sugars_100g,
+        // Mapping salt → salt_100g
+        salt_100g: rawNutrition.salt ?? rawNutrition.salt_100g,
+        // Mapping saturated_fat → saturated-fat_100g
+        'saturated-fat_100g': rawNutrition.saturated_fat ?? rawNutrition['saturated-fat_100g'] ?? rawNutrition.saturated_fat_100g,
+        // Garder tous les autres champs tels quels
+        ...rawNutrition
       };
 
+      // Construire les données d'entrée pour scoringUnified (voir scoringUnified.js)
+      const scoringData = {
+        category: category,
+        product_name: plain.name || plain.product_name || '',
+        brands: plain.brand || plain.brands || '',
+        ingredients_text: plain.ingredients_text || '',
+        nutriments,
+        // 🔧 FIX: nova_group (racine MongoDB) avant novaGroup (foodData)
+        nova_group:
+          plain.nova_group ||
+          (plain.foodData && plain.foodData.novaGroup) ||
+          (plain.scores && plain.scores.novaGroup) ||
+          null,
+        nutriScore:
+          (plain.foodData && plain.foodData.nutriScore) ||
+          (plain.scores && plain.scores.nutriScore) ||
+          null,
+        additives:
+          (plain.foodData && plain.foodData.additives) ||
+          plain.additives ||
+          [],
+        // 🔧 FIX: ecoscore_grade (racine MongoDB) avant ecoScore (foodData)
+        ecoscore_grade:
+          plain.ecoscore_grade ||
+          (plain.foodData && plain.foodData.ecoScore) ||
+          (plain.scores && plain.scores.ecoScore) ||
+          null,
+        labels:
+          (plain.foodData && plain.foodData.labels) ||
+          plain.labels ||
+          []
+      };
+
+      // Normaliser nutriScore pour le moteur scientifique
+      scoringData.nutriScore = this.normalizeNutriScore(scoringData.nutriScore);
+
+      let scientificScores;
+
+      // Router par catégorie
+      if (category === 'cosmetics' || category === 'beauty') {
+        scientificScores = scoringUnified.calculateCosmeticsScores(scoringData);
+      } else if (category === 'detergents' || category === 'detergent' || category === 'cleaning') {
+        scientificScores = scoringUnified.calculateDetergentsScores(scoringData);
+      } else {
+        // Par défaut : moteur alimentaire
+        scientificScores = scoringUnified.calculateFoodScores(scoringData);
+      }
+
+      if (!scientificScores || typeof scientificScores.overallScore === 'undefined') {
+        logger.warn('⚠️ Moteur scientifique na pas renvoyé de score, fallback 50');
+        return {
+          ...plain,
+          scores: {
+            ...(plain.scores || {}),
+            overallScore: 50,
+            global: 50,
+            confidence: 0.3,
+            scoringVersion: '3.1.0-fallback',
+            scoringError: 'scientific engine returned no score'
+          }
+        };
+      }
+
+      logger.info('Score scientifique calculé (moteur scientifique exécuté)');
+
+      const ensureNumber = (value, fallback = 0) =>
+        typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+
+      const ensureObject = (value, fallback = {}) =>
+        value && typeof value === 'object' ? value : fallback;
+
+      const mergedScores = {
+        ...(plain.scores || {}),
+
+        // 🧬 RÉSULTATS SCIENTIFIQUES PRIORITAIRES (avec fallback)
+        overallScore: ensureNumber(
+          scientificScores.overallScore,
+          (plain.scores && (plain.scores.overallScore ?? plain.scores.global)) ?? 50
+        ),
+        global: ensureNumber(
+          scientificScores.overallScore,
+          (plain.scores && (plain.scores.global ?? plain.scores.overallScore)) ?? 50
+        ),
+        healthScore: ensureNumber(
+          scientificScores.healthScore,
+          (plain.scores && (plain.scores.healthScore ?? plain.scores.health)) ?? 50
+        ),
+        environmentScore: ensureNumber(
+          scientificScores.environmentScore,
+          (plain.scores && (plain.scores.environmentScore ?? plain.scores.eco)) ?? 50
+        ),
+
+        // 🧬 BREAKDOWN COMPLET 8 COMPOSANTES
+        breakdown: ensureObject(
+          scientificScores.breakdown,
+          (plain.scores && plain.scores.breakdown) || {}
+        ),
+
+        // 🧬 QUALITÉ DES DONNÉES
+        confidence: ensureNumber(
+          scientificScores.confidence,
+          typeof (plain.scores && plain.scores.confidence) === 'number'
+            ? plain.scores.confidence
+            : 0.5
+        ),
+        dataQualityInfo: scientificScores.dataQualityInfo || (plain.scores && plain.scores.dataQualityInfo),
+        dataCompleteness: scientificScores.dataCompleteness || (plain.scores && plain.scores.dataCompleteness),
+        missingData: scientificScores.missingData || (plain.scores && plain.scores.missingData),
+
+        // 🧬 MÉTADONNÉES
+        scoringVersion:
+          (scientificScores.scoringMetadata && scientificScores.scoringMetadata.version) ||
+          scientificScores.scoringVersion ||
+          '3.1.0',
+        scoringMethod:
+          (scientificScores.scoringMetadata && scientificScores.scoringMetadata.methodology) ||
+          'ECOLOJIA V3 - Scoring scientifique 8 composantes',
+        calculatedAt:
+          (scientificScores.scoringMetadata && scientificScores.scoringMetadata.calculatedAt) ||
+          new Date().toISOString(),
+
+        // 🔍 TRACE IA : on garde les scores IA dans un champ séparé
+        aiEnrichmentUsed: true,
+        deepSeekScores: plain.scores || {}
+      };
+
+      return {
+        ...plain,
+        scores: mergedScores,
+        globalScore: scientificScores.overallScore,
+        scientificBreakdown: scientificScores.breakdown
+      };
     } catch (error) {
-      logger.error('❌ Erreur recalcul score:', error.message);
+      logger.error('❌ Erreur recalcul score scientifique:', error.message);
       return {
         ...product,
         scores: {
           ...(product.scores || {}),
           overallScore: 50,
           global: 50,
-          confidence: 0.5
+          confidence: 0.3,
+          scoringVersion: '3.1.0-fallback',
+          scoringError: error.message
         }
       };
     }
@@ -516,9 +731,5 @@ Ceci doit influencer tes calculs de composantes.
 }
 
 module.exports = AIEnrichmentService;
-
-
-
-
 
 

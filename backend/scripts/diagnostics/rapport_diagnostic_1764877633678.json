@@ -1,0 +1,25 @@
+{
+  "date": "2025-12-04T19:47:13.675Z",
+  "stats": {
+    "total": 37696,
+    "withSubcategory": 0,
+    "withTags": 0,
+    "subcategoryPct": 0,
+    "tagsPct": 0
+  },
+  "byCategory": [
+    {
+      "category": "food",
+      "count": 34998
+    },
+    {
+      "category": "cosmetic",
+      "count": 2690
+    },
+    {
+      "category": "detergent",
+      "count": 8
+    }
+  ],
+  "topScanned": []
+}
