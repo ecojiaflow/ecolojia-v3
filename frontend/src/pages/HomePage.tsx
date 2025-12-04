@@ -26,6 +26,7 @@ import { motion } from 'framer-motion';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import { useCategory } from '../Contexts/CategoryContext';
 import SearchBar from '../components/search/SearchBar';
+import { AISearchWidget } from '../components/ai';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -198,12 +199,11 @@ const HomePage: React.FC = () => {
                 </p>
 
                 <div className="mb-8">
-                  <SearchBar 
-                    onSearch={handleSearch}
-                    placeholder="Rechercher parmi 2M+ produits..."
-                    showSuggestions={true}
-                    autoFocus={false}
+                  <AISearchWidget
+                    placeholder="Recherche IA : 'chocolat vegan bio', 'huile pour cuire sainement', 'gel douche sans sulfate'..."
                     className="max-w-3xl mx-auto"
+                    showMetadata={true}
+                    autoFocus={false}
                   />
                 </div>
 
