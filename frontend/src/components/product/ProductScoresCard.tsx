@@ -45,7 +45,7 @@ export const ProductScoresCard: React.FC<ProductScoresCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
       <h2 className="text-xl font-bold text-gray-800 mb-4">Scores détaillés</h2>
       
       <div className="grid md:grid-cols-2 gap-4">
