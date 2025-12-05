@@ -54,7 +54,7 @@ export const ProductChatActions: React.FC<ProductChatActionsProps> = ({ product 
   };
 
   return (
-    <div className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6">
+    <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5 text-green-700" />
         <h3 className="text-lg font-semibold text-gray-800">Posez vos questions à l'IA</h3>

@@ -295,7 +295,7 @@ const ProductPage: React.FC = () => {
               </div>
                 <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
               {product.category === 'food' && product.foodData?.novaGroup && (
-                <div className="bg-primary-50 rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+                <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
                   <NovaBadge
                     novaGroup={product.foodData.novaGroup}
@@ -378,7 +378,7 @@ const ProductPage: React.FC = () => {
             </details>
           )}
           {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
-          <div id="alternatives-section" className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+          <div id="alternatives-section" className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-primary" />
               <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
@@ -450,13 +450,13 @@ const ProductPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-primary-50">
       <div className="bg-primary-50 border-b border-gray-200">
-        <div className="max-w-none sm:max-w-7xl mx-auto px-0 sm:px-4 py-4">
+        <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4 py-4">
           <button onClick={() => navigate(-1)} className="flex items-center text-gray-900 hover:text-gray-900">
             <ArrowLeft className="w-5 h-5 mr-2" />Retour
           </button>
         </div>
       </div>
-      <div className="max-w-none sm:max-w-7xl mx-auto px-0 sm:px-4 py-8">
+      <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
 
         {/* Actions standardis?es Ecolojia v3.1 */}
@@ -495,7 +495,7 @@ const ProductPage: React.FC = () => {
         )}
           <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
         {product.category === 'food' && product.foodData?.novaGroup && (
-          <div className="bg-primary-50 rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+          <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
             <NovaBadge
               novaGroup={product.foodData.novaGroup}
@@ -525,7 +525,7 @@ const ProductPage: React.FC = () => {
              - deepseekUsed={product.deepseekUsed}
         */}
 
-        <details className="bg-primary-50 rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+        <details className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
           <summary className="font-semibold cursor-pointer">Analyse d?taill?e (mode expert)</summary>
           <div className="mt-4">
             <ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} />
@@ -539,7 +539,7 @@ const ProductPage: React.FC = () => {
           )}
 {/* AI Engagement Widget */}
         <AIEngagementWidget product={product} />
-        {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
+        {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
         {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
         {product.category === 'cosmetics' && (
           <CosmeticAnalysisDisplay
@@ -552,7 +552,7 @@ const ProductPage: React.FC = () => {
           />
         )}
         {product.category === 'detergents' && (
-          <div className="bg-primary-50 rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6">
+          <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse D?tergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-neutral-100 rounded-lg">
@@ -568,7 +568,7 @@ const ProductPage: React.FC = () => {
           </div>
         )}
         {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
-        <div id="alternatives-section" className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+        <div id="alternatives-section" className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>

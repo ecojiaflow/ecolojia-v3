@@ -52,7 +52,7 @@ export function Layout() {
     <div className="min-h-screen bg-gray-50">
       {/* Header Desktop */}
       <header className="bg-white shadow-sm sticky top-0 z-50 hidden md:block">
-        <div className="max-w-none sm:max-w-7xl mx-auto px-0 sm:px-4">
+        <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">

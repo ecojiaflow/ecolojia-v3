@@ -18,7 +18,7 @@ interface ProductNutritionProps {
 
 export const ProductNutrition: React.FC<ProductNutritionProps> = ({ nutrition }) => {
   return (
-    <div className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+    <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Valeurs nutritionnelles (pour 100g)
       </h2>
