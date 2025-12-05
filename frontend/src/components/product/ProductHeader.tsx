@@ -59,7 +59,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
   ecoscore
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div className="bg-white rounded-none sm:rounded-xl shadow-sm p-4 sm:p-6 mb-6">
       <div className="grid md:grid-cols-3 gap-6">
         {/* Product Image */}
         <div className="md:col-span-1">
