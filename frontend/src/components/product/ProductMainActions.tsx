@@ -134,7 +134,7 @@ export const ProductMainActions: React.FC<ProductMainActionsProps> = ({
   const productScore = product.scores?.overallScore ?? product.scores?.global;
 
   return (
-    <div className="bg-white rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-6 mb-6 border border-nature-300">
+    <div className="bg-white rounded-none sm:rounded-[16px] shadow-[0_2px_6px_rgba(0,0,0,0.08)] p-4 sm:p-6 mb-6 border border-nature-300">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <button
           onClick={handleAlternatives}
