@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertCircle,
@@ -26,11 +26,13 @@ import { motion } from 'framer-motion';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import { useCategory } from '../Contexts/CategoryContext';
 import { AISearchWidget } from '../components/ai';
+import BarcodeScanner from '../components/scanner/BarcodeScanner';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isMobile } = useDeviceContext();
   const { setCategory } = useCategory();
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
@@ -131,9 +133,9 @@ const HomePage: React.FC = () => {
               autoFocus={false}
             />
 
-            <Link
-              to="/scan"
-              className="block w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all"
+            <button
+              onClick={() => setIsScannerOpen(true)}
+              className="block w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all active:scale-95"
             >
               <div className="flex items-center justify-center text-white space-x-3">
                 <Camera className="w-10 h-10 stroke-[2]" />
@@ -142,7 +144,7 @@ const HomePage: React.FC = () => {
                   <div className="text-sm opacity-90">Analyse instantanee</div>
                 </div>
               </div>
-            </Link>
+            </button>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="bg-primary-50 p-4 rounded-xl shadow-md text-center">
@@ -364,6 +366,18 @@ const HomePage: React.FC = () => {
             </div>
           </section>
         </>
+      )}
+
+      {/* Scanner Modal - S'ouvre uniquement sur mobile */}
+      {isMobile && (
+        <BarcodeScanner
+          isOpen={isScannerOpen}
+          onClose={() => setIsScannerOpen(false)}
+          onScanSuccess={(result) => {
+            setIsScannerOpen(false);
+          }}
+          autoStartCamera={false}
+        />
       )}
     </div>
   );
