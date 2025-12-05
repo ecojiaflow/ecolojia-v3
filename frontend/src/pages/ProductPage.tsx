@@ -239,7 +239,7 @@ const ProductPage: React.FC = () => {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
-        <div className="bg-primary-50 rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+        <div className="bg-primary-50 rounded-xl shadow-lg p-8 max-w-none md:max-w-md w-full text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Produit introuvable</h2>
           <p className="text-gray-900 mb-6 whitespace-pre-wrap">{error || 'Ce produit n\'existe pas'}</p>
