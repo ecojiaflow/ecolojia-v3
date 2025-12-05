@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BarcodeScanner from "../components/scanner/BarcodeScannerEnhanced";
 import CategorySelector from "../components/CategorySelector";
@@ -28,15 +28,15 @@ const ScanPage: React.FC = () => {
         : result;
 
       if (normalizedResult?.product?._id) {
-        // Redirection intelligente selon catgorie
+        // Redirection intelligente selon catégorie
         const detectedCategory = normalizedResult.product?.domain || selectedCategory;
-        
+
         if (detectedCategory === 'cosmetics' && normalizedResult.product?.barcode) {
           navigate(`/cosmetics/${normalizedResult.product.barcode}`);
         } else if (detectedCategory === 'detergents' && normalizedResult.product?.barcode) {
           navigate(`/detergents/${normalizedResult.product.barcode}`);
         } else {
-          // Fallback: food ou auto-dtection
+          // Fallback: food ou auto-détection
           navigate(`/product/${normalizedResult.product._id}`);
         }
       } else {
@@ -45,9 +45,21 @@ const ScanPage: React.FC = () => {
       }
 
     } catch (err: any) {
-      console.error("Erreur:", err);
-      setError(err?.response?.data?.error || err?.message || "Erreur lors de l'analyse");
-      setLoading(false);
+      console.error("Erreur scan:", err);
+      
+      // ✅ NOUVEAU : Si produit non trouvé → Redirection OCR guidé
+      const errorMsg = err?.response?.data?.error || err?.message || "";
+      const isNotFound = errorMsg.toLowerCase().includes("non trouvé") || 
+                         errorMsg.toLowerCase().includes("not found") ||
+                         err?.response?.status === 404;
+      
+      if (isNotFound) {
+        console.log("🔄 Produit non trouvé → Redirection vers OCR Wizard");
+        navigate(`/ocr-wizard?barcode=${code}`);
+      } else {
+        setError(errorMsg || "Erreur lors de l'analyse");
+        setLoading(false);
+      }
     }
   };
 
@@ -101,15 +113,24 @@ const ScanPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !manualCode.trim()}
-              className="px-6 py-2 bg-emerald-600 text-white rounded-lg"
+              className="px-6 py-2 bg-emerald-600 text-white rounded-lg disabled:opacity-50"
             >
-              {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyse</> : "Analyser"}
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Analyse</span>
+                </div>
+              ) : (
+                "Analyser"
+              )}
             </button>
           </form>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
         )}
       </div>
     </div>
