@@ -125,7 +125,7 @@ const HomePage: React.FC = () => {
                 <Sparkles className="w-4 h-4" />
                 <span className="text-xs font-medium">Scanner instantane</span>
               </div>
-              
+
               <h1 className="text-2xl font-bold text-gray-900 mb-6">
                 Scannez vos produits
               </h1>
@@ -148,7 +148,7 @@ const HomePage: React.FC = () => {
                 <Sparkles className="w-5 h-5 text-neutral-600" />
               </summary>
               <div className="mt-4">
-                <SearchBar 
+                <SearchBar
                   onSearch={handleSearch}
                   placeholder="Rechercher un produit..."
                   showSuggestions={true}
@@ -176,25 +176,25 @@ const HomePage: React.FC = () => {
           <section className="relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-white to-blue-50 opacity-70" />
             <div className="relative container mx-auto px-4 pt-20 pb-32">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 className="text-center max-w-4xl mx-auto"
               >
                 <div className="inline-flex items-center gap-2 bg-primary-100 text-green-800 px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-sm font-medium">IA Scientifique Multi-Categories</span>
                 </div>
-                
+
                 <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
                   Consommation{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
                     consciente
                   </span>
                 </h1>
-                
+
                 <p className="text-xl text-gray-900 mb-12 max-w-3xl mx-auto">
-                  Analysez vos produits alimentaires, cosmetiques et detergents avec notre IA scientifique. 
+                  Analysez vos produits alimentaires, cosmetiques et detergents avec notre IA scientifique.
                   Scores detailles, recommendations personnalisees et alternatives eco-responsables.
                 </p>
 
@@ -208,17 +208,13 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <button 
-                    onClick={() => navigate('/scan?mode=camera')} 
-                    className="inline-flex items-center gap-2 bg-primary-50 px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all group"
-                  >
-                    <Camera className="w-5 h-5 text-primary" />
-                    <span className="font-medium">Scanner un produit</span>
-                    <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                  
-                  <button 
-                    onClick={() => navigate('/auth')} 
+                  <div className="inline-flex items-center gap-2 bg-blue-50 border-2 border-blue-200 px-6 py-3 rounded-xl">
+                    <Camera className="w-5 h-5 text-blue-600" />
+                    <span className="font-medium text-blue-900">Scanner disponible sur mobile</span>
+                  </div>
+
+                  <button
+                    onClick={() => navigate('/auth')}
                     className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
                   >
                     <Sparkles className="w-5 h-5" />
@@ -233,11 +229,11 @@ const HomePage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {stats.map((stat, index) => (
-                  <motion.div 
-                    key={index} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     className="text-center"
                   >
                     <div className={`inline-flex p-3 rounded-lg bg-primary-50 ${stat.color} mb-3`}>
@@ -257,14 +253,14 @@ const HomePage: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par categorie</h2>
                 <p className="text-lg text-gray-900">Analyse complete pour tous vos produits du quotidien</p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {categories.map((category, index) => (
-                  <motion.div 
-                    key={category.name} 
-                    initial={{ opacity: 0, scale: 0.9 }} 
-                    animate={{ opacity: 1, scale: 1 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={category.name}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
                     onClick={() => {
                       setCategory(category.id);
                       navigate('/search');
@@ -304,14 +300,14 @@ const HomePage: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
                 <p className="text-lg text-gray-900">Une plateforme complete pour une consommation responsable</p>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-8">
                 {features.map((feature, index) => (
-                  <motion.div 
-                    key={feature.title} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={feature.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     className="bg-primary-50 rounded-2xl p-6 shadow-lg"
                   >
                     <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center mb-4`}>
@@ -331,14 +327,14 @@ const HomePage: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
                 <p className="text-lg text-gray-900">Rejoignez les 500k+ utilisateurs satisfaits</p>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-8">
                 {testimonials.map((testimonial, index) => (
-                  <motion.div 
-                    key={testimonial.name} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: index * 0.1 }} 
+                  <motion.div
+                    key={testimonial.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     className="bg-primary-50 rounded-2xl p-6"
                   >
                     <div className="flex items-center mb-4">
@@ -366,16 +362,13 @@ const HomePage: React.FC = () => {
                 Rejoignez la communaute ECOLOJIA et commencez a analyser vos produits des maintenant
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <button 
-                  onClick={() => navigate('/scan')} 
-                  className="inline-flex items-center gap-2 bg-primary-50 text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-primary-100 transition-colors"
-                >
+                <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-8 py-4 rounded-xl font-semibold">
                   <Camera className="w-5 h-5" />
-                  <span>Scanner maintenant</span>
-                </button>
-                <button 
-                  onClick={() => navigate('/register')} 
-                  className="inline-flex items-center gap-2 bg-transparent border-2 border-white text-forest px-8 py-4 rounded-xl font-semibold hover:bg-primary-50/10 transition-colors"
+                  <span>Scanner sur mobile</span>
+                </div>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="inline-flex items-center gap-2 bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
                 >
                   <span>Creer un compte gratuit</span>
                   <ArrowRight className="w-5 h-5" />
