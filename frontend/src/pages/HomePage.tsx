@@ -25,19 +25,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useDeviceContext } from '../hooks/useDeviceContext';
 import { useCategory } from '../Contexts/CategoryContext';
-import SearchBar from '../components/search/SearchBar';
 import { AISearchWidget } from '../components/ai';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isMobile } = useDeviceContext();
   const { setCategory } = useCategory();
-
-  const handleSearch = (query: string) => {
-    if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query)}`);
-    }
-  };
 
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
@@ -123,39 +116,33 @@ const HomePage: React.FC = () => {
             <div className="text-center mb-4">
               <div className="inline-flex items-center gap-2 bg-primary-100 text-green-800 px-3 py-1 rounded-full mb-4">
                 <Sparkles className="w-4 h-4" />
-                <span className="text-xs font-medium">Scanner instantane</span>
+                <span className="text-xs font-medium">Recherche IA intelligente</span>
               </div>
 
               <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                Scannez vos produits
+                Trouvez vos produits
               </h1>
             </div>
 
+            <AISearchWidget
+              placeholder="Recherche IA : 'chocolat vegan', 'shampoing naturel'..."
+              className="mb-6"
+              showMetadata={false}
+              autoFocus={false}
+            />
+
             <Link
               to="/scan"
-              className="block w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all"
+              className="block w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all"
             >
-              <div className="flex flex-col items-center justify-center text-white space-y-3">
-                <Camera className="w-16 h-16 stroke-[2]" />
-                <div className="text-xl font-bold">Scanner</div>
-                <div className="text-sm opacity-90">Analysez instantanement</div>
+              <div className="flex items-center justify-center text-white space-x-3">
+                <Camera className="w-10 h-10 stroke-[2]" />
+                <div>
+                  <div className="text-lg font-bold">Scanner un produit</div>
+                  <div className="text-sm opacity-90">Analyse instantanee</div>
+                </div>
               </div>
             </Link>
-
-            <details className="bg-primary-50 p-4 rounded-xl shadow-md">
-              <summary className="cursor-pointer font-medium text-gray-700 flex items-center justify-between">
-                <span>Ou rechercher par nom</span>
-                <Sparkles className="w-5 h-5 text-neutral-600" />
-              </summary>
-              <div className="mt-4">
-                <SearchBar
-                  onSearch={handleSearch}
-                  placeholder="Rechercher un produit..."
-                  showSuggestions={true}
-                  autoFocus={false}
-                />
-              </div>
-            </details>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="bg-primary-50 p-4 rounded-xl shadow-md text-center">
