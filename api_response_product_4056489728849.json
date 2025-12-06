@@ -1,0 +1,616 @@
+﻿{
+    "success":  true,
+    "product":  {
+                    "filterMetadata":  {
+                                           "categoryLabels":  [
+
+                                                              ],
+                                           "searchTerms":  [
+
+                                                           ],
+                                           "popularityScore":  0
+                                       },
+                    "foodData":  {
+                                     "ingredients":  "",
+                                     "allergens":  [
+
+                                                   ],
+                                     "labels":  [
+                                                    "en:organic",
+                                                    "en:eu-organic",
+                                                    "en:nutriscore",
+                                                    "en:nutriscore-grade-b",
+                                                    "fr:ab-agriculture-biologique"
+                                                ],
+                                     "additives":  [
+
+                                                   ]
+                                 },
+                    "cosmeticsData":  {
+                                          "endocrineDisruptors":  [
+
+                                                                  ],
+                                          "allergens":  [
+
+                                                        ],
+                                          "certifications":  [
+
+                                                             ],
+                                          "ingredients":  [
+
+                                                          ]
+                                      },
+                    "detergentsData":  {
+                                           "composition":  [
+
+                                                           ],
+                                           "surfactants":  [
+
+                                                           ],
+                                           "ecoLabels":  [
+
+                                                         ]
+                                       },
+                    "scores":  {
+                                   "overallScore":  73,
+                                   "healthScore":  36,
+                                   "environmentScore":  0,
+                                   "confidence":  0.625,
+                                   "dataCompleteness":  "Insuffisante",
+                                   "calculatedAt":  "2025-11-17T22:23:58.056Z",
+                                   "scoringVersion":  "3.1.0",
+                                   "breakdown":  {
+                                                     "nova":  {
+                                                                  "score":  null,
+                                                                  "weight":  0.15,
+                                                                  "group":  null,
+                                                                  "label":  "Non défini"
+                                                              },
+                                                     "nutriScore":  {
+                                                                        "score":  80,
+                                                                        "weight":  0.2,
+                                                                        "grade":  "B",
+                                                                        "label":  "Nutri-Score B"
+                                                                    },
+                                                     "additives":  {
+                                                                       "score":  85,
+                                                                       "weight":  0.15,
+                                                                       "count":  0,
+                                                                       "dangerous":  [
+
+                                                                                     ],
+                                                                       "label":  "Aucun additif"
+                                                                   },
+                                                     "sugars":  {
+                                                                    "score":  null,
+                                                                    "weight":  0.1,
+                                                                    "value":  null,
+                                                                    "unit":  "g/100g",
+                                                                    "label":  "Non spécifié",
+                                                                    "equivalent":  null
+                                                                },
+                                                     "saturatedFat":  {
+                                                                          "score":  null,
+                                                                          "weight":  0.1,
+                                                                          "value":  null,
+                                                                          "unit":  "g/100g",
+                                                                          "label":  "Non spécifié",
+                                                                          "equivalent":  null
+                                                                      },
+                                                     "salt":  {
+                                                                  "score":  null,
+                                                                  "weight":  0.1,
+                                                                  "value":  null,
+                                                                  "unit":  "g/100g",
+                                                                  "label":  "Non spécifié",
+                                                                  "equivalent":  null
+                                                              },
+                                                     "ecoScore":  {
+                                                                      "score":  null,
+                                                                      "weight":  0.15,
+                                                                      "grade":  null,
+                                                                      "label":  "Non défini"
+                                                                  },
+                                                     "labels":  {
+                                                                    "score":  10,
+                                                                    "weight":  0.05,
+                                                                    "list":  [
+                                                                                 "en:organic",
+                                                                                 "en:eu-organic",
+                                                                                 "en:nutriscore",
+                                                                                 "en:nutriscore-grade-b",
+                                                                                 "fr:ab-agriculture-biologique"
+                                                                             ],
+                                                                    "isBio":  true,
+                                                                    "label":  "Bio / Organic"
+                                                                }
+                                                 },
+                                   "missingData":  [
+                                                       "nova",
+                                                       "nutriScore",
+                                                       "sugars",
+                                                       "saturatedFat",
+                                                       "salt"
+                                                   ],
+                                   "aiEnrichmentUsed":  false,
+                                   "scoringMetadata":  {
+                                                           "methodology":  "ECOLOJIA V3 - Scoring scientifique 8 composantes",
+                                                           "version":  "3.1.0",
+                                                           "calculatedAt":  "2025-11-17T22:24:12.574Z"
+                                                       },
+                                   "dataQualityInfo":  {
+                                                           "confidence":  47,
+                                                           "level":  "INSUFFICIENT",
+                                                           "canScore":  true,
+                                                           "availableData":  [
+                                                                                 "product_name",
+                                                                                 "brands",
+                                                                                 "labels"
+                                                                             ]
+                                                       }
+                               },
+                    "_id":  "691ba07e6cad0ff8fa75f2fa",
+                    "barcode":  "4056489728849",
+                    "name":  "Bio mouliné légumes variés  saveurs du potager",
+                    "brand":  "Lidl",
+                    "categoryType":  "food",
+                    "imageUrl":  "https://images.openfoodfacts.org/images/products/405/648/972/8849/front_en.3.400.jpg",
+                    "viewCount":  0,
+                    "scanCount":  0,
+                    "createdAt":  "2025-11-17T22:23:58.056Z",
+                    "updatedAt":  "2025-11-17T22:23:58.060Z",
+                    "__v":  0,
+                    "knowledgeAnalysis":  {
+                                              "analyzed":  false,
+                                              "reason":  "no_ingredients",
+                                              "criticalIssues":  [
+
+                                                                 ],
+                                              "highIssues":  [
+
+                                                             ],
+                                              "moderateIssues":  [
+
+                                                                 ]
+                                          },
+                    "aiEnriched":  true,
+                    "enrichmentConfidence":  0.625,
+                    "globalScore":  73,
+                    "categoryNormalized":  "food",
+                    "completeness":  0,
+                    "lastUpdated":  "2025-11-17T22:23:58.060Z"
+                },
+    "metadata":  {
+                     "source":  "BARCODE",
+                     "cached":  false,
+                     "aiEnrichmentUsed":  true,
+                     "retrievedAt":  "2025-11-29T13:58:37.592Z"
+                 },
+    "knowledgeAnalysis":  {
+                              "analyzed":  false,
+                              "reason":  "no_ingredients",
+                              "criticalIssues":  [
+
+                                                 ],
+                              "highIssues":  [
+
+                                             ],
+                              "moderateIssues":  [
+
+                                                 ]
+                          },
+    "aiEnriched":  true,
+    "enrichmentConfidence":  0.625,
+    "recipes":  [
+                    {
+                        "_id":  "690f42716c2a6d43f4f052cf",
+                        "name":  "Vapeur",
+                        "slug":  "vapeur-7",
+                        "description":  "Un équilibré dîner à base de pois chiches, brocolis, huile d\u0027olive. Recette scientifiquement équilibrée.",
+                        "category":  "dinner",
+                        "scores":  {
+                                       "overallScore":  92,
+                                       "healthScore":  93,
+                                       "environmentScore":  85,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Pois chiches",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Brocolis",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Huile d\u0027olive",
+                                                "quantity":  2,
+                                                "unit":  "càs",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Préparer un panier vapeur avec de l\u0027eau frémissante.",
+                                          "duration":  3,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Placer les ingrédients dans le panier et cuire jusqu\u0027à tendreté.",
+                                          "duration":  12,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Assaisonner et servir.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  8,
+                        "cookTime":  13,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.324Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f052a2",
+                        "name":  "Toast",
+                        "slug":  "toast-12",
+                        "description":  "Un excellent petit-déjeuner à base de flocons d\u0027avoine, pois chiches, brocolis. Recette scientifiquement équilibrée.",
+                        "category":  "breakfast",
+                        "scores":  {
+                                       "overallScore":  92,
+                                       "healthScore":  93,
+                                       "environmentScore":  85,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Flocons d\u0027avoine",
+                                                "quantity":  60,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Pois chiches",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Brocolis",
+                                                "quantity":  150,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Cannelle",
+                                                "quantity":  1,
+                                                "unit":  "pincée",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Préparer tous les ingrédients.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Suivre la méthode de cuisson appropriée.",
+                                          "duration":  10,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  5,
+                        "cookTime":  3,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.280Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f052f8",
+                        "name":  "Compote",
+                        "slug":  "compote-8",
+                        "description":  "Un équilibré dessert à base de kiwi, citron. Recette scientifiquement équilibrée.",
+                        "category":  "dessert",
+                        "scores":  {
+                                       "overallScore":  92,
+                                       "healthScore":  90,
+                                       "environmentScore":  89,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Kiwi",
+                                                "quantity":  2,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Citron",
+                                                "quantity":  0.5,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Faire chauffer les ingrédients liquides dans une casserole.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Ajouter les ingrédients secs et cuire en remuant régulièrement.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir chaud dans un bol.",
+                                          "duration":  1,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  8,
+                        "cookTime":  15,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.366Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    }
+                ],
+    "alternatives":  [
+                         {
+                             "_id":  "691780b7c56dd19f3eddfd8e",
+                             "barcode":  "3560070519309",
+                             "name":  "Muesli 5 céréales nature",
+                             "brand":  "Carrefour BIO,Carrefour",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  95,
+                                            "social":  50,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  87
+                                        },
+                             "globalScore":  87,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0708",
+                             "barcode":  "3421557701023",
+                             "name":  "Flocons d\u0027avoine gros",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  87
+                                        },
+                             "globalScore":  87,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0b4a",
+                             "barcode":  "3421557601033",
+                             "name":  "Flocons d\u0027avoine petits",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  87
+                                        },
+                             "globalScore":  87,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780bac56dd19f3ede17d1",
+                             "barcode":  "3270190182108",
+                             "name":  "Tagliatelles aux oeufs",
+                             "brand":  "Carrefour BIO",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  95,
+                                            "social":  50,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  87
+                                        },
+                             "globalScore":  87,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780bac56dd19f3ede1b8e",
+                             "barcode":  "3380380055508",
+                             "name":  "Spaghetti aux Œufs Frais",
+                             "brand":  "Priméal",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  95,
+                                            "social":  50,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  87
+                                        },
+                             "globalScore":  87,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b6c56dd19f3eddf956",
+                             "barcode":  "3229820019307",
+                             "name":  "Flocons d\u0027avoine",
+                             "brand":  "Bjorg",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  95,
+                                            "social":  65,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  50,
+                                            "overallScore":  86
+                                        },
+                             "globalScore":  86,
+                             "aiEnriched":  false
+                         }
+                     ]
+}
