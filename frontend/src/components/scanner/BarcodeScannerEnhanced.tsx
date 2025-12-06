@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 
 type Props = {
@@ -19,14 +19,17 @@ const BarcodeScannerPro: React.FC<Props> = ({
   const isMountedRef = useRef(true);
 
   useEffect(() => {
+    console.log("🔵 [Scanner] Composant monté");
+    console.log("🔵 [Scanner] onDetected type:", typeof onDetected);
+    console.log("🔵 [Scanner] onDetected défini:", !!onDetected);
+
     const scannerId = "barcode-scanner-pro";
     let cleanupDone = false;
 
     const startScanner = async () => {
       try {
-        console.log("📷 Démarrage scanner html5-qrcode");
-        
-        // Créer instance
+        console.log("📷 [Scanner] Démarrage scanner html5-qrcode");
+
         const scanner = new Html5Qrcode(scannerId, {
           verbose: false,
           formatsToSupport: [
@@ -37,48 +40,62 @@ const BarcodeScannerPro: React.FC<Props> = ({
             Html5QrcodeSupportedFormats.CODE_128,
           ],
         });
-        
+
         scannerRef.current = scanner;
 
-        // Configuration simplifiée et robuste
         const config = {
-          fps: 10, // Réduit pour stabilité mobile
+          fps: 10,
           qrbox: { width: 250, height: 150 },
           aspectRatio: 1.777778,
         };
 
-        // Callback succès
         const onSuccess = (decodedText: string) => {
-          // Éviter détections multiples
-          if (hasDetectedRef.current || !isMountedRef.current) return;
+          if (hasDetectedRef.current || !isMountedRef.current) {
+            console.log("⚠️ [Scanner] Détection ignorée (déjà traité ou unmounted)");
+            return;
+          }
 
-          console.log("✅ Code détecté:", decodedText);
+          console.log("✅ [Scanner] Code détecté:", decodedText);
+          console.log("🔍 [Scanner] Validation format...");
 
-          // Valider format
           if (/^\d{8,13}$/.test(decodedText)) {
+            console.log("✅ [Scanner] Format valide");
             hasDetectedRef.current = true;
             setStatus("✓ Code validé !");
-            
-            // Arrêter scanner proprement
+
             if (scannerRef.current?.isScanning) {
+              console.log("🛑 [Scanner] Arrêt scanner...");
               scannerRef.current.stop().catch(console.error);
             }
+
+            console.log("🔵 [Scanner] AVANT setTimeout - onDetected défini:", !!onDetected);
             
-            // Appeler callback
             setTimeout(() => {
+              console.log("🔵 [Scanner] DANS setTimeout");
+              console.log("🔵 [Scanner] isMountedRef.current:", isMountedRef.current);
+              console.log("🔵 [Scanner] onDetected type:", typeof onDetected);
+              
               if (isMountedRef.current) {
-                onDetected(decodedText);
+                console.log("🚀 [Scanner] APPEL onDetected avec code:", decodedText);
+                try {
+                  onDetected(decodedText);
+                  console.log("✅ [Scanner] onDetected appelé avec succès");
+                } catch (err) {
+                  console.error("❌ [Scanner] Erreur dans onDetected:", err);
+                }
+              } else {
+                console.log("⚠️ [Scanner] Composant unmounted, appel annulé");
               }
             }, 100);
+          } else {
+            console.log("❌ [Scanner] Format invalide:", decodedText);
           }
         };
 
-        // Callback erreur (ignoré silencieusement)
         const onError = () => {
-          // Normal - appelé à chaque frame sans code
+          // Silencieux - normal à chaque frame
         };
 
-        // Démarrer
         await scanner.start(
           { facingMode: "environment" },
           config,
@@ -88,15 +105,15 @@ const BarcodeScannerPro: React.FC<Props> = ({
 
         if (isMountedRef.current) {
           setStatus("Scanner actif");
-          console.log("✅ Scanner opérationnel");
+          console.log("✅ [Scanner] Scanner opérationnel");
         }
 
       } catch (err: any) {
-        console.error("❌ Erreur scanner:", err);
-        
+        console.error("❌ [Scanner] Erreur scanner:", err);
+
         if (isMountedRef.current) {
           let msg = "Erreur caméra";
-          
+
           if (err.name === "NotAllowedError") {
             msg = "Autorisez l'accès caméra";
           } else if (err.name === "NotFoundError") {
@@ -104,7 +121,7 @@ const BarcodeScannerPro: React.FC<Props> = ({
           } else if (err.name === "NotReadableError") {
             msg = "Caméra déjà utilisée";
           }
-          
+
           setError(msg);
           setStatus("Erreur");
         }
@@ -113,26 +130,22 @@ const BarcodeScannerPro: React.FC<Props> = ({
 
     startScanner();
 
-    // Cleanup robuste
     return () => {
+      console.log("🔵 [Scanner] Cleanup...");
       isMountedRef.current = false;
-      
+
       if (!cleanupDone && scannerRef.current) {
         cleanupDone = true;
-        
         const scanner = scannerRef.current;
-        
-        // Vérifier état avant stop
+
         if (scanner.isScanning) {
           scanner
             .stop()
             .then(() => {
-              console.log("🛑 Scanner arrêté");
+              console.log("🛑 [Scanner] Scanner arrêté");
               scanner.clear();
             })
-            .catch(() => {
-              // Ignorer erreurs cleanup
-            });
+            .catch(() => {});
         }
       }
     };
@@ -140,7 +153,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Container scanner */}
       <div className="relative w-full bg-black rounded-xl overflow-hidden">
         <div
           id="barcode-scanner-pro"
@@ -148,7 +160,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
           style={{ minHeight: "340px" }}
         />
 
-        {/* Overlay succès */}
         {hasDetectedRef.current && (
           <div className="absolute inset-0 bg-emerald-500/95 flex items-center justify-center z-50">
             <div className="text-white text-center">
@@ -158,18 +169,14 @@ const BarcodeScannerPro: React.FC<Props> = ({
           </div>
         )}
 
-        {/* Cadre de visée */}
         {!hasDetectedRef.current && !error && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
             <div className="border-4 border-emerald-400 rounded-lg w-64 h-32 relative">
-              {/* Coins */}
               <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-white"></div>
               <div className="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-white"></div>
               <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-white"></div>
               <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-white"></div>
-              
-              {/* Ligne scan */}
-              <div 
+              <div
                 className="absolute w-full h-0.5 bg-emerald-300"
                 style={{
                   top: "50%",
@@ -182,7 +189,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Statut */}
       <div className={`rounded-lg p-3 text-sm ${
         error ? "bg-red-50 text-red-800" : "bg-emerald-50 text-emerald-800"
       }`}>
@@ -194,7 +200,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Erreur détaillée */}
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
           <p className="text-red-900 font-medium mb-2">Problème détecté</p>
@@ -208,7 +213,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Instructions */}
       {!error && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
           <p className="text-xs font-semibold text-blue-900 mb-1">
@@ -222,7 +226,6 @@ const BarcodeScannerPro: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Bouton annuler */}
       {onCancel && (
         <button
           onClick={onCancel}

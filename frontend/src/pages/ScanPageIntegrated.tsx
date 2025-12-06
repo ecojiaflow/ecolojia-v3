@@ -15,48 +15,79 @@ const ScanPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<"food" | "cosmetics" | "detergents" | "auto">("auto");
 
   const handleBarcodeDetected = async (code: string) => {
+    console.log("🟢 [ScanPage] handleBarcodeDetected appelé avec code:", code);
+    console.log("🟢 [ScanPage] Type de code:", typeof code);
+    console.log("🟢 [ScanPage] Longueur:", code?.length);
+    
     setLoading(true);
     setError(null);
+    
     try {
+      console.log("🟢 [ScanPage] Appel API productService.analyze...");
+      console.log("🟢 [ScanPage] Catégorie sélectionnée:", selectedCategory);
+      
       const result = await productService.analyze({
         barcode: code,
         category: selectedCategory === "auto" ? undefined : selectedCategory
       });
 
+      console.log("🟢 [ScanPage] Réponse API reçue:", result);
+      console.log("🟢 [ScanPage] result.data:", result?.data);
+      console.log("🟢 [ScanPage] result.data.product:", result?.data?.product);
+
       const normalizedResult = (result && result.data && result.data.product)
         ? result.data
         : result;
 
+      console.log("🟢 [ScanPage] normalizedResult:", normalizedResult);
+      console.log("🟢 [ScanPage] Product ID:", normalizedResult?.product?._id);
+
       if (normalizedResult?.product?._id) {
-        // Redirection intelligente selon catégorie
         const detectedCategory = normalizedResult.product?.domain || selectedCategory;
+        console.log("🟢 [ScanPage] Catégorie détectée:", detectedCategory);
+        console.log("🟢 [ScanPage] Barcode produit:", normalizedResult.product?.barcode);
+
+        let targetUrl = "";
 
         if (detectedCategory === 'cosmetics' && normalizedResult.product?.barcode) {
-          navigate(`/cosmetics/${normalizedResult.product.barcode}`);
+          targetUrl = `/cosmetics/${normalizedResult.product.barcode}`;
         } else if (detectedCategory === 'detergents' && normalizedResult.product?.barcode) {
-          navigate(`/detergents/${normalizedResult.product.barcode}`);
+          targetUrl = `/detergents/${normalizedResult.product.barcode}`;
         } else {
-          // Fallback: food ou auto-détection
-          navigate(`/product/${normalizedResult.product._id}`);
+          targetUrl = `/product/${normalizedResult.product._id}`;
         }
+
+        console.log("🚀 [ScanPage] Navigation vers:", targetUrl);
+        navigate(targetUrl);
+        console.log("✅ [ScanPage] Navigation déclenchée");
       } else {
+        console.log("❌ [ScanPage] Produit trouvé mais ID manquant");
         setError("Produit trouvé mais ID manquant");
         setLoading(false);
       }
 
     } catch (err: any) {
-      console.error("Erreur scan:", err);
-      
-      // ✅ NOUVEAU : Si produit non trouvé → Redirection OCR guidé
+      console.error("❌ [ScanPage] Erreur scan:", err);
+      console.log("❌ [ScanPage] err.response:", err?.response);
+      console.log("❌ [ScanPage] err.response.data:", err?.response?.data);
+      console.log("❌ [ScanPage] err.response.status:", err?.response?.status);
+      console.log("❌ [ScanPage] err.message:", err?.message);
+
       const errorMsg = err?.response?.data?.error || err?.message || "";
-      const isNotFound = errorMsg.toLowerCase().includes("non trouvé") || 
+      const isNotFound = errorMsg.toLowerCase().includes("non trouvé") ||
                          errorMsg.toLowerCase().includes("not found") ||
                          err?.response?.status === 404;
-      
+
+      console.log("🔍 [ScanPage] errorMsg:", errorMsg);
+      console.log("🔍 [ScanPage] isNotFound:", isNotFound);
+
       if (isNotFound) {
-        console.log("🔄 Produit non trouvé → Redirection vers OCR Wizard");
-        navigate(`/ocr-wizard?barcode=${code}`);
+        const targetUrl = `/ocr-wizard?barcode=${code}`;
+        console.log("🔄 [ScanPage] Produit non trouvé → Redirection vers:", targetUrl);
+        navigate(targetUrl);
+        console.log("✅ [ScanPage] Redirection OCR déclenchée");
       } else {
+        console.log("❌ [ScanPage] Erreur non-404, affichage message");
         setError(errorMsg || "Erreur lors de l'analyse");
         setLoading(false);
       }
@@ -65,10 +96,13 @@ const ScanPage: React.FC = () => {
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🟢 [ScanPage] Soumission manuelle");
     const code = manualCode.trim();
     if (!code) return;
     await handleBarcodeDetected(code);
   };
+
+  console.log("🟢 [ScanPage] Render - isMobile:", isMobile);
 
   if (isMobile) {
     return (
