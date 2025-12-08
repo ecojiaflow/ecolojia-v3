@@ -384,14 +384,12 @@ async function findAlternatives({
     // NOUVELLE CASCADE V3.2 : Taxonomie → Tags → Smart
     // ÉTAPE 1 : Match taxonomie exacte (même subcategory)
     candidates = await searchDatabaseTaxonomy(product, minScore);
-
-    // ÉTAPE 2 : Match tags (≥2 tags communs) si aucun résultat
-    if (candidates.length === 0) {
+  // ÉTAPE 2 : Match tags (≥2 tags communs) si < 3 résultats
+  if (candidates.length < 3) {
       candidates = await searchDatabaseTags(product, minScore);
     }
-
-    // ÉTAPE 3 : Recherche textuelle (fallback) si toujours vide
-    if (candidates.length === 0) {
+  // ÉTAPE 3 : Recherche textuelle (fallback) si < 3 résultats
+  if (candidates.length < 3) {
       candidates = await searchDatabaseSmart(product, keywords, minScore);
     }
     // ÉTAPE 2 : DB Relaxed (si pas assez de résultats)
