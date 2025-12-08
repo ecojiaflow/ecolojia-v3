@@ -76,38 +76,6 @@ function inferCategoryFromData(product = {}) {
   return null;
 }
 
-
-// ========================================
-// FONCTION UTILITAIRE : shouldEnrichProduct
-// Détermine si un produit doit être enrichi par IA
-// ========================================
-/**
- * Détermine si un produit nécessite un enrichissement IA
- * @param {Object} product - Le produit à évaluer
- * @returns {boolean} - true si enrichissement nécessaire, false sinon
- * 
- * RÈGLE MÉTIER :
- * - Un produit est enrichi IA 1 SEULE FOIS maximum
- * - On enrichit SEULEMENT si jamais enrichi ET pas de score
- */
-function shouldEnrichProduct(product) {
-  if (!product) return false;
-
-  // Si déjà enrichi par IA → JAMAIS réenrichir automatiquement
-  if (product.aiEnriched === true) {
-    return false;
-  }
-
-  // Si pas de score du tout → enrichir
-  if (!product.scores || !product.scores.overallScore) {
-    return true;
-  }
-
-  // Si a un score mais jamais enrichi IA → ne PAS enrichir
-  // (le score vient du batch scoring, pas besoin d'IA)
-  return false;
-}
-
 function normalizeProductCategory(product = {}) {
   const isMongooseDoc = product && typeof product.toObject === "function";
 
@@ -322,11 +290,11 @@ router.get("/analyze/:id", async (req, res) => {
     let enriched = productForAI;
     
     // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
+    const needsEnrichment = !product.scores?.overallScore || 
+                            product.scores.overallScore < 50 ||
+                            (product.completeness && product.completeness < 0.5) ||
+                            !product.aiEnriched;
+    
     if (needsEnrichment) {
       try {
         logger.info(`🔬 Enrichissement IA nécessaire (analyse): ${product._id || id}`);
@@ -336,9 +304,9 @@ router.get("/analyze/:id", async (req, res) => {
         logger.warn(`⚠️ Enrichissement IA échoué (analyse): ${aiError.message}`);
         enriched = productForAI;
       }
-      }
-
-
+    } else {
+      logger.info(`⏭️ Enrichissement IA skippé (analyse): ${product._id || id} (déjà scoré: ${product.scores.overallScore}/100)`);
+      enriched = productForAI;
     }
 
     let knowledgeData = null;
@@ -411,11 +379,11 @@ router.get("/:id", async (req, res) => {
       let enriched = productForAI;
       
       // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
+      const needsEnrichment = !product.scores?.overallScore || 
+                              product.scores.overallScore < 50 ||
+                              (product.completeness && product.completeness < 0.5) ||
+                              !product.aiEnriched;
+      
       if (needsEnrichment) {
         try {
           logger.info(`🔬 Enrichissement IA nécessaire pour ${product._id}`);
@@ -425,9 +393,9 @@ router.get("/:id", async (req, res) => {
           logger.warn(`⚠️ Enrichissement IA échoué: ${aiError.message}`);
           enriched = productForAI;
         }
-      }
-
-
+      } else {
+        logger.info(`⏭️ Enrichissement IA skippé pour ${product._id} (déjà scoré: ${product.scores.overallScore}/100)`);
+        enriched = productForAI;
       }
 
       let knowledgeData = null;
@@ -469,11 +437,11 @@ router.get("/:id", async (req, res) => {
       let enriched = productForAI;
       
       // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
+      const needsEnrichment = !product.scores?.overallScore || 
+                              product.scores.overallScore < 50 ||
+                              (product.completeness && product.completeness < 0.5) ||
+                              !product.aiEnriched;
+      
       if (needsEnrichment) {
         try {
           logger.info(`🔬 Enrichissement IA nécessaire (barcode): ${product.barcode}`);
@@ -483,9 +451,9 @@ router.get("/:id", async (req, res) => {
           logger.warn(`⚠️ Enrichissement IA échoué: ${aiError.message}`);
           enriched = productForAI;
         }
-      }
-
-
+      } else {
+        logger.info(`⏭️ Enrichissement IA skippé (barcode): ${product.barcode} (déjà scoré: ${product.scores.overallScore}/100)`);
+        enriched = productForAI;
       }
 
       let knowledgeData = null;
@@ -617,11 +585,11 @@ router.put("/:id", authMiddleware, async (req, res) => {
     let enriched = productForAI;
     
     // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-    // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-    if (shouldEnrichProduct(updatedProduct)) {
-
-
-
+    const needsEnrichment = !updatedProduct.scores?.overallScore || 
+                            updatedProduct.scores.overallScore < 50 ||
+                            (updatedProduct.completeness && updatedProduct.completeness < 0.5) ||
+                            !updatedProduct.aiEnriched;
+    
     if (needsEnrichment) {
       try {
         logger.info(`🔬 Enrichissement IA nécessaire (PUT): ${id}`);
@@ -631,9 +599,9 @@ router.put("/:id", authMiddleware, async (req, res) => {
         logger.warn(`⚠️ Enrichissement IA échoué lors PUT: ${aiError.message}`);
         enriched = productForAI;
       }
-      }
-
-
+    } else {
+      logger.info(`⏭️ Enrichissement IA skippé (PUT): ${id} (déjà scoré: ${updatedProduct.scores.overallScore}/100)`);
+      enriched = productForAI;
     }
 
     let knowledgeData = null;

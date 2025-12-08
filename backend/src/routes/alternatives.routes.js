@@ -97,7 +97,7 @@ router.get('/alternatives/barcode/:barcode', async (req, res) => {
       });
     }
 
-    console.log(`[ROUTE] GET /api/alternatives/barcode/${barcode}`);
+    console.log('[ROUTE] GET /api/alternatives/barcode/' + barcode);
 
     const result = await alternativesService.findAlternatives({
       barcode,
@@ -152,8 +152,8 @@ router.get('/alternatives/:productId', validateProductId, async (req, res) => {
     if (labels.length > 0) userPreferences.labels = labels;
     if (maxPrice) userPreferences.maxPrice = maxPrice;
 
-    console.log(`[ROUTE] GET /api/alternatives/${productId} (type: ${req.productIdType})`);
-    console.log(`[ROUTE] Params:`, { maxResults, allergens, labels, maxPrice });
+    console.log('[ROUTE] GET /api/alternatives/' + productId + ' (type: ' + req.productIdType + ')');
+    console.log('[ROUTE] Params:', { maxResults, allergens, labels, maxPrice });
 
     // Appeler le service (avec barcode si c'est un barcode)
     const serviceParams = {
@@ -170,14 +170,17 @@ router.get('/alternatives/:productId', validateProductId, async (req, res) => {
     const result = await alternativesService.findAlternatives(serviceParams);
 
     // Logger métriques
-    console.log(`[ROUTE] ✅ ${result.alternatives.length} alternatives trouvées (source: ${result.source}, ${Date.now() - startTime}ms)`);
+    const altCount = result?.alternatives?.length || 0;
+    const source = result?.source || 'unknown';
+    const duration = Date.now() - startTime;
+    console.log('[ROUTE] ✅ ' + altCount + ' alternatives trouvées (source: ' + source + ', ' + duration + 'ms)');
 
     // Réponse succès
     res.json({
       success: true,
       ...result,
       meta: {
-        requestDuration: Date.now() - startTime,
+        requestDuration: duration,
         timestamp: new Date().toISOString()
       }
     });
@@ -188,7 +191,7 @@ router.get('/alternatives/:productId', validateProductId, async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Internal Server Error',
-      message: 'Erreur lors de la recherche d\'alternatives',
+      message: "Erreur lors de la recherche d'alternatives",
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
@@ -209,27 +212,38 @@ router.get('/alternatives/:productId', validateProductId, async (req, res) => {
 router.get('/products/:productId/alternatives', validateProductId, async (req, res) => {
   try {
     const { productId } = req.params;
+    const Product = require('../models/Product');
 
-    console.log(`[ROUTE] GET /api/products/${productId}/alternatives (type: ${req.productIdType})`);
 
-    // Construire params service
-    const serviceParams = {
-      maxResults: parseInt(req.query.maxResults) || 5
-    };
+    console.log('[ROUTE] GET /api/products/' + productId + '/alternatives (type: ' + req.productIdType + ')');
 
+    // CHARGER LE PRODUIT depuis MongoDB
+    let product;
     if (req.productIdType === 'objectId') {
-      serviceParams.productId = productId;
+      product = await Product.findById(productId).lean();
     } else {
-      serviceParams.barcode = productId;
+      product = await Product.findOne({ barcode: productId }).lean();
     }
 
-    // Appeler le service
-    const result = await alternativesService.findAlternatives(serviceParams);
+    if (!product) {
+      return res.status(404).json([]);
+    }
 
-    console.log(`[ROUTE] ✅ ${result.alternatives.length} alternatives trouvées (source: ${result.source})`);
 
+    // Appeler le service avec l'OBJET produit complet
+    const result = await alternativesService.findAlternatives({
+      product: product,
+      maxResults: parseInt(req.query.maxResults) || 5
+    });
+
+
+    // Vérifier que result.alternatives existe
+    const alternatives = result?.alternatives || [];
+    const source = result?.source || 'unknown';
+    console.log('[ROUTE] ✅ ' + alternatives.length + ' alternatives trouvées (source: ' + source + ')');
+    
     // Format attendu par le frontend (Array direct)
-    res.json(result.alternatives || []);
+    res.json(alternatives);
 
   } catch (error) {
     console.error('[ROUTE] Erreur GET /api/products/:productId/alternatives:', error);

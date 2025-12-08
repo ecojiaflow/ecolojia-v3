@@ -216,7 +216,7 @@ $gte: minScore } }
 
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur Taxonomy Match : ${error.message}`);
-    return [];
+    return { alternatives: [], source: 'error' };
   }
 }
 
@@ -252,7 +252,7 @@ $gte: minScore } },
     const candidates = await Product.find(query)
       .select('barcode name scores categoryType subcategory tags')
       .sort({ 'scores.overallScore': -1 })
-      .limit(20) // Plus large car on va filtrer
+      .limit(50) // Plus large pour inclure purées noisettes
       .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
       .lean();
 
@@ -263,7 +263,6 @@ $gte: minScore } },
       if (!candidate.tags || candidate.tags.length === 0) return false;
 
       const commonTags = product.tags.filter(tag => candidate.tags.includes(tag));
-      return commonTags.length >= 2; // Minimum 2 tags communs
     });
 
     logger.info(`[ALTERNATIVES] Tags Match : ${filtered.length} après filtre (≥2 tags communs)`);
@@ -276,7 +275,7 @@ $gte: minScore } },
 
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur Tags Match : ${error.message}`);
-    return [];
+    return { alternatives: [], source: 'error' };
   }
 }
 
@@ -320,7 +319,7 @@ async function searchDatabaseSmart(product, keywords, minScore) {
     
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur DB Smart : ${error.message}`);
-    return [];
+    return { alternatives: [], source: 'error' };
   }
 }
 
@@ -349,7 +348,7 @@ async function searchDatabaseRelaxed(product, minScore) {
     
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur DB Relaxed : ${error.message}`);
-    return [];
+    return { alternatives: [], source: 'error' };
   }
 }
 
@@ -441,7 +440,7 @@ async function findAlternatives({
     
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur fonction principale : ${error.message}`);
-    return [];
+    return { alternatives: [], source: 'error' };
   }
 }
 

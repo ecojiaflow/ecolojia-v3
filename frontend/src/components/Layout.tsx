@@ -49,7 +49,7 @@ export function Layout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white md:bg-gray-50">
       {/* Header Desktop */}
       <header className="bg-white shadow-sm sticky top-0 z-50 hidden md:block">
         <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4">
@@ -346,6 +346,7 @@ export function Layout() {
     </div>
   );
 }
+
 
 
 

@@ -1,42 +1,14 @@
-// backend/check-nutella.js
+﻿require('dotenv').config();
 const mongoose = require('mongoose');
-require('dotenv').config();
+const Product = require('./src/models/Product');
 
 async function checkNutella() {
   await mongoose.connect(process.env.MONGODB_URI);
   
-  const db = mongoose.connection.db;
-  const collection = db.collection('products');
-  
-  // Chercher par diffÃ©rents codes-barres Nutella possibles
-  const barcodes = ['3017620425035', '3017620422003', '3017620421006'];
-  
-  console.log('ðŸ” Recherche du Nutella...\n');
-  
-  for (const barcode of barcodes) {
-    const product = await collection.findOne({ barcode });
-    if (product) {
-      console.log(`âœ… TrouvÃ© avec code ${barcode}:`);
-      console.log('Nom:', product.name);
-      console.log('NOVA:', product.nova_group);
-      console.log('Nutri-Score:', product.nutriscore_grade);
-      console.log('Structure complÃ¨te:');
-      console.log(JSON.stringify(product, null, 2));
-      break;
-    }
-  }
-  
-  // Chercher par nom
-  const byName = await collection.findOne({ name: /nutella/i });
-  if (byName) {
-    console.log('\nâœ… TrouvÃ© par nom:');
-    console.log('Barcode:', byName.barcode);
-    console.log('NOVA:', byName.nova_group);
-  }
-  
-  // Compter les produits avec NOVA
-  const withNova = await collection.countDocuments({ nova_group: { $exists: true, $ne: null } });
-  console.log(`\nðŸ“Š Produits avec NOVA: ${withNova}`);
+  const nutella = await Product.findById('692e0566120bb9dda7394a53');
+  console.log('Nutella tags:', nutella?.tags);
+  console.log('Nutella subcategory:', nutella?.subcategory);
+  console.log('Nutella categoryType:', nutella?.categoryType);
   
   process.exit(0);
 }

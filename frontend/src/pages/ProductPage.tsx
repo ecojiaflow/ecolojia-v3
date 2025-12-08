@@ -21,7 +21,7 @@ import { LabelsSection } from '../components/product/LabelsSection';
 import { RecipesList } from '../components/product/RecipesList';
 import { ProductChatActions } from '../components/product/ProductChatActions';
 import { ProductMainActions } from '../components/product/ProductMainActions';
-import { useDeviceContext } from '../hooks/useDeviceContext';
+// import { useDeviceContext } from '../hooks/useDeviceContext'; // ❌ Supprimé (responsive CSS pur)
 import NovaBadge from '../components/NovaBadge';
 
 // CORRECTION 1 : getJSON retourne maintenant {ok, status, data} au lieu de throw
@@ -87,7 +87,7 @@ const getProductImage = (product: any) => {
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isMobile } = useDeviceContext();
+  // const { isMobile } = useDeviceContext(); // ❌ Supprimé (responsive CSS pur)
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -272,7 +272,7 @@ const ProductPage: React.FC = () => {
   const breakdown = product.scores?.breakdown || generatedBreakdown || {};
   const realBreakdown = generatedBreakdown || {};
 
-  if (isMobile) {
+  {/* Desktop layout (hidden on mobile) */}
     return (
       <div className="min-h-screen bg-primary-50 pb-20">
         <div className="bg-primary-50 border-b border-gray-200 p-4 flex items-center gap-3 sticky top-0 z-10">
@@ -445,18 +445,18 @@ const ProductPage: React.FC = () => {
         {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
       </div>
     );
-  }
+
 
   return (
     <div className="min-h-screen bg-primary-50">
       <div className="bg-primary-50 border-b border-gray-200">
-        <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4 py-4">
+        <div className="max-w-none md:max-w-7xl mx-0 md:mx-auto px-0 md:px-4 py-4">
           <button onClick={() => navigate(-1)} className="flex items-center text-gray-900 hover:text-gray-900">
             <ArrowLeft className="w-5 h-5 mr-2" />Retour
           </button>
         </div>
       </div>
-      <div className="max-w-none md:max-w-7xl mx-auto px-0 md:px-4 py-8">
+      <div className="max-w-none md:max-w-7xl mx-0 md:mx-auto px-0 md:px-4 py-8">
         <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
 
         {/* Actions standardis?es Ecolojia v3.1 */}
