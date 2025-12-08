@@ -261,8 +261,8 @@ $gte: minScore } },
     // Filtrage : garder uniquement si ≥2 tags communs
     const filtered = candidates.filter(candidate => {
       if (!candidate.tags || candidate.tags.length === 0) return false;
-
       const commonTags = product.tags.filter(tag => candidate.tags.includes(tag));
+      return commonTags.length >= 2; // Filtre ≥2 tags communs
     });
 
     logger.info(`[ALTERNATIVES] Tags Match : ${filtered.length} après filtre (≥2 tags communs)`);
