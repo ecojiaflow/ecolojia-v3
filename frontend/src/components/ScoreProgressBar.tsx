@@ -6,6 +6,7 @@ interface ScoreProgressBarProps {
   isAnalyzing?: boolean;
   dataCompleteness?: string;
   confidence?: number;
+  aiEnriched?: boolean; // ✅ AJOUT : Permet de vérifier si produit déjà enrichi
 }
 
 export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
@@ -13,7 +14,8 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
   onRequestScore,
   isAnalyzing,
   dataCompleteness,
-  confidence
+  confidence,
+  aiEnriched // ✅ AJOUT : Récupération de la prop
 }) => {
   const getScoreLabel = (score: number): string => {
     if (score >= 76) return 'Excellent';
@@ -29,16 +31,21 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
     return 'bg-red-600';
   };
 
-  // ✅ Détermine si le bouton d'enrichissement doit s'afficher
+  // ✅ CORRECTION : Détermine si le bouton d'enrichissement doit s'afficher
   const shouldShowEnrichButton = () => {
     if (!onRequestScore) return false;
-    
-    // Si données excellentes ET confiance haute → masquer
+
+    // ✅ PRIORITÉ 1 : Si produit déjà enrichi → masquer
+    if (aiEnriched) {
+      return false;
+    }
+
+    // ✅ PRIORITÉ 2 : Si données excellentes ET confiance haute → masquer
     if (dataCompleteness === 'Excellente' && (confidence || 0) >= 0.85) {
       return false;
     }
-    
-    // Sinon afficher
+
+    // Sinon afficher (données incomplètes ou confiance faible)
     return true;
   };
 
@@ -117,14 +124,14 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
         <span className="text-green-700 font-medium">76 Excellent</span>
       </div>
 
-      {/* ✅ Bouton enrichissement IA - Conditionnel */}
+      {/* ✅ Bouton enrichissement IA - Conditionnel avec vérification aiEnriched */}
       {shouldShowEnrichButton() && (
         <div className="mt-3 text-center">
           <button
             onClick={onRequestScore}
             disabled={isAnalyzing}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-2 text-sm"
-            aria-label="Améliorer le score avec l'IA"
+            aria-label="Enrichir les données manquantes avec l'IA scientifique"
           >
             {isAnalyzing ? (
               <>
@@ -139,12 +146,12 @@ export const ScoreProgressBar: React.FC<ScoreProgressBarProps> = ({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Améliorer avec IA
+                Enrichir données manquantes
               </>
             )}
           </button>
           <p className="text-xs text-gray-600 mt-2">
-            Enrichir les données manquantes avec l'IA
+            Compléter avec l'IA scientifique pour améliorer le score
           </p>
         </div>
       )}

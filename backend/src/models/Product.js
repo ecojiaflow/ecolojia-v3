@@ -307,6 +307,26 @@ const productSchema = new mongoose.Schema({
     dataQualityInfo: mongoose.Schema.Types.Mixed   // Qualité données sources
   },
 
+
+  // ============================================================================
+  // MÉTADONNÉES ENRICHISSEMENT IA
+  // ============================================================================
+
+  aiEnriched: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
+  aiEnrichmentDate: {
+    type: Date
+  },
+  aiEnrichmentVersion: {
+    type: String
+  },
+  knowledgeBaseUsed: {
+    type: Boolean,
+    default: false
+  },
   // ============================================================================
   // DONNÉES ANALYTICS (LEGACY - compatibilité)
   // ============================================================================

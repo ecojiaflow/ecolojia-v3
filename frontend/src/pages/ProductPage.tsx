@@ -346,6 +346,7 @@ const ProductPage: React.FC = () => {
               isAnalyzing={isAnalyzing} 
               dataCompleteness={product.scores?.dataCompleteness} 
               confidence={product.scores?.confidence} 
+              aiEnriched={product.aiEnriched}
             />
           </div>
         </div>
