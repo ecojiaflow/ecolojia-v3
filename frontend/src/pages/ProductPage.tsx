@@ -13,7 +13,6 @@ import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
 import { useScoreBreakdown } from '../hooks/useScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
-// import AlternativesPanel supprim? (doublon avec section alternatives unifi?e)
 import { CosmeticAnalysisDisplay } from '../components/analysis/CosmeticAnalysisDisplay';
 import { ProductIngredientsSection } from '../components/product/ProductIngredientsSection';
 import { AllergensSection } from '../components/product/AllergensSection';
@@ -21,8 +20,11 @@ import { LabelsSection } from '../components/product/LabelsSection';
 import { RecipesList } from '../components/product/RecipesList';
 import { ProductChatActions } from '../components/product/ProductChatActions';
 import { ProductMainActions } from '../components/product/ProductMainActions';
-// import { useDeviceContext } from '../hooks/useDeviceContext'; // ❌ Supprimé (responsive CSS pur)
 import NovaBadge from '../components/NovaBadge';
+
+// ✨ NOUVEAUX IMPORTS - Badges visuels Ecolojia V3.1
+import { ScoreBadge } from '../components/product/ScoreBadge';
+import { AIEnrichedBadge } from '../components/product/AIEnrichedBadge';
 
 // CORRECTION 1 : getJSON retourne maintenant {ok, status, data} au lieu de throw
 const getJSON = async (endpoint: string): Promise<any> => {
@@ -73,13 +75,35 @@ interface Product {
   barcode?: string;
   category: 'food' | 'cosmetics' | 'detergents';
   images?: { front?: string; ingredients?: string; nutrition?: string };
-  scores?: { nova?: number; nutriscore?: string; ecoscore?: string; healthScore?: number; environmentScore?: number };
+  scores?: { 
+    nova?: number; 
+    nutriscore?: string; 
+    ecoscore?: string; 
+    healthScore?: number; 
+    environmentScore?: number;
+    overallScore?: number;
+    breakdown?: any;
+    dataCompleteness?: number;
+    confidence?: number;
+  };
   ingredients?: Array<{ name: string; percentage?: number; isAllergen: boolean; concerns: string[] }>;
   nutrition?: { per100g: { energy: number; fat: number; saturatedFat: number; carbohydrates: number; sugars: number; protein: number; salt: number; fiber?: number } };
-  foodData?: { ingredients?: string; novaGroup?: number; nutriScore?: string; ecoScore?: string };
+  foodData?: { 
+    ingredients?: string; 
+    novaGroup?: number; 
+    nutriScore?: string; 
+    ecoScore?: string;
+    allergens?: string[];
+    labels?: string[];
+    nutrition?: any;
+  };
+  aiEnriched?: boolean;
+  source?: string;
+  needsVerification?: boolean;
+  typeTransformation?: string;
 }
 
-// Helper pour compatibilit? images
+// Helper pour compatibilité images
 const getProductImage = (product: any) => {
   return product.imageUrl || product.images?.front || null;
 };
@@ -87,7 +111,6 @@ const getProductImage = (product: any) => {
 const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  // const { isMobile } = useDeviceContext(); // ❌ Supprimé (responsive CSS pur)
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -97,64 +120,63 @@ const ProductPage: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState(false);
 
-  // CORRECTION 2 : useEffect g?re maintenant les erreurs 400/404
-  // CORRECTION : fetchProduct extrait pour ?tre r?utilisable
+  // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
   const fetchProduct = useCallback(async () => {
-      if (!id || id === 'undefined') {
-        setError('ID produit manquant ou invalide');
+    if (!id || id === 'undefined') {
+      setError('ID produit manquant ou invalide');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const result = await getJSON(`/api/products/${id}`);
+
+      // Gestion erreur 400 (médicament, livre, etc.)
+      if (result.status === 400) {
+        setError(`${result.data.error || 'Type de produit non supporté'}`);
+        toast.error(result.data.error || 'Type de produit non supporté', { duration: 5000 });
         setLoading(false);
         return;
       }
 
-      try {
-        setLoading(true);
-        setError(null);
-
-        const result = await getJSON(`/api/products/${id}`);
-
-        // Gestion erreur 400 (m?dicament, livre, etc.)
-        if (result.status === 400) {
-          setError(`${result.data.error || 'Type de produit non support?'}`);
-          toast.error(result.data.error || 'Type de produit non support?', { duration: 5000 });
-          setLoading(false);
-          return;
-        }
-
-        // Gestion erreur 404 (produit inconnu)
-        if (result.status === 404) {
-          setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
-          toast.error('Produit non trouv? - Utilisez l\'OCR', { duration: 5000 });
-          setLoading(false);
-          return;
-        }
-
-        // Autre erreur serveur
-        if (!result.ok) {
-          setError(`Erreur serveur (${result.status}). Veuillez r?essayer.`);
-          toast.error('Erreur serveur');
-          setLoading(false);
-          return;
-        }
-
-        // Succ?s
-        setProduct(result.data.product || result.data);
-
-        // Extraire recettes si disponibles
-        if (result.data.recipes && Array.isArray(result.data.recipes)) {
-          setRecipes(result.data.recipes);
-        } else {
-          setRecipes([]);
-        }
-
-        loadAlternatives(id);
-
-      } catch (err: any) {
-        console.error('Erreur chargement produit:', err);
-        setError('Erreur r?seau - V?rifiez votre connexion');
-        toast.error('Erreur r?seau');
-      } finally {
+      // Gestion erreur 404 (produit inconnu)
+      if (result.status === 404) {
+        setError(`Produit introuvable. ${result.data.suggestion || 'Utilisez la fonction OCR pour analyser ce produit.'}`);
+        toast.error('Produit non trouvé - Utilisez l\'OCR', { duration: 5000 });
         setLoading(false);
+        return;
       }
+
+      // Autre erreur serveur
+      if (!result.ok) {
+        setError(`Erreur serveur (${result.status}). Veuillez réessayer.`);
+        toast.error('Erreur serveur');
+        setLoading(false);
+        return;
+      }
+
+      // Succès
+      setProduct(result.data.product || result.data);
+
+      // Extraire recettes si disponibles
+      if (result.data.recipes && Array.isArray(result.data.recipes)) {
+        setRecipes(result.data.recipes);
+      } else {
+        setRecipes([]);
+      }
+
+      loadAlternatives(id);
+
+    } catch (err: any) {
+      console.error('Erreur chargement produit:', err);
+      setError('Erreur réseau - Vérifiez votre connexion');
+      toast.error('Erreur réseau');
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -177,8 +199,6 @@ const ProductPage: React.FC = () => {
       setLoadingAlternatives(false);
     }
   };
-
-
 
   const handleRequestScore = async () => {
     // Guard anti-spam
@@ -213,8 +233,8 @@ const ProductPage: React.FC = () => {
 
       await response.json();
 
-      // ? SOLUTION SIMPLE : Recharger la page
-      toast.success('? Enrichissement termin?, rechargement...', { duration: 1500 });
+      // ✅ SOLUTION SIMPLE : Recharger la page
+      toast.success('✨ Enrichissement terminé, rechargement...', { duration: 1500 });
       setTimeout(() => window.location.reload(), 1500);
 
     } catch (error: any) {
@@ -224,7 +244,6 @@ const ProductPage: React.FC = () => {
     }
   };
 
-  
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
@@ -258,244 +277,125 @@ const ProductPage: React.FC = () => {
     );
   }
 
-  // Scores r?els depuis l'API
+  // Scores réels depuis l'API
   const healthScore = product.scores?.healthScore ?? null;
   const environmentScore = product.scores?.environmentScore ?? null;
-  // D?tection si le score a ?t? calcul? (ne pas afficher 0 par d?faut)
-  
-  // ✅ FIX V3.6 : Utiliser directement le score global calculé par le backend (scoring scientifique 8 composantes)
-  const overallScore = (product.scores?.overallScore ?? null);
+  const overallScore = product.scores?.overallScore ?? null;
 
-  // Breakdown r?el depuis l'API
-    // G?n?rer le breakdown automatiquement si absent
+  // Breakdown réel depuis l'API
   const generatedBreakdown = useScoreBreakdown(product);
   const breakdown = product.scores?.breakdown || generatedBreakdown || {};
-  const realBreakdown = generatedBreakdown || {};
-
-  {/* Desktop layout (hidden on mobile) */}
-    return (
-      <div className="min-h-screen bg-primary-50 pb-20">
-        <div className="bg-primary-50 border-b border-gray-200 p-4 flex items-center gap-3 sticky top-0 z-10">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-primary-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-lg font-semibold truncate">{product.name}</h1>
-        </div>
-        <div className="space-y-2">
-          <div className="bg-primary-50 p-6">
-            {getProductImage(product) && <img src={getProductImage(product)} alt={product.name} className="w-32 h-32 object-contain mx-auto mb-4" />}
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
-              {product.brand && <p className="text-gray-900 mb-4">{product.brand}</p>}
-              <div className="inline-flex items-center justify-center bg-primary-50 text-forest rounded-2xl p-6">
-                <div className="text-center">
-                  <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}</div>
-                  <div className="text-sm opacity-90 mt-1">/ 100</div>
-                </div>
-              </div>
-                <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
-              {product.category === 'food' && product.foodData?.novaGroup && (
-                <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
-                  <NovaBadge
-                    novaGroup={product.foodData.novaGroup}
-                    typeTransformation={product.typeTransformation}
-                    showDetails={true}
-                  />
-                </div>
-              )}
-              {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-                <div className="bg-primary-50 p-4">
-                  <AllergensSection allergens={product.foodData.allergens} />
-                </div>
-              )}
-              {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-                <div className="bg-primary-50 p-4">
-                  <LabelsSection labels={product.foodData.labels} />
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="bg-primary-50 p-4 space-y-2">
-            <button onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
-              <MessageCircle className="w-5 h-5" />Poser une question IA
-            </button>
-            <button onClick={() => { const el = document.getElementById("alternatives-section"); if (el) el.scrollIntoView({ behavior: "smooth" }); }} className="w-full border-2 border-primary text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
-              <Sparkles className="w-5 h-5" />Voir alternatives
-            </button>
-          </div>
-          <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Composition</summary>
-            <div className="p-4">{product.foodData?.ingredients ? <div className="text-sm text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div> : <p className="text-neutral-700">Non disponible</p>}</div>
-          </details>
-          <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-            <div className="p-4"><ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} /></div>
-          </details>
-          
-          {product.foodData?.nutrition?.per100g && product.category === 'food' && (
-            <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Valeurs nutritionnelles</summary>
-              <div className="p-4"><ProductNutrition nutrition={product.foodData.nutrition.per100g} /></div>
-            </details>
-          )}
-          {product.category === 'cosmetics' && (
-            <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse Cosm?tique</summary>
-              <div className="p-4">
-                <CosmeticAnalysisDisplay
-                  analysis={{
-                    healthScore: product.scores?.healthScore || 0,
-                    endocrineRisk: { level: 'NONE' },
-                    category: 'cosmetics'
-                  }}
-                  productName={product.name}
-                />
-              </div>
-            </details>
-          )}
-          {product.category === 'detergents' && (
-            <details className="bg-primary-50" open>
-            <summary className="p-4 font-semibold cursor-pointer border-b">Analyse d?taill?e (mode expert)</summary>
-              <summary className="p-4 font-semibold cursor-pointer border-b">Analyse D?tergent</summary>
-              <div className="p-4">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-700">Score environnemental</span>
-                    <span className="text-2xl font-bold text-primary">
-                      {product.scores?.environmentScore || 'N/A'}/100
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-900">
-                    Impact aquatique, biod?gradabilit? et composition ?valu?s
-                  </p>
-                </div>
-              </div>
-            </details>
-          )}
-          {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
-          <div id="alternatives-section" className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
-            </div>
-
-            {loadingAlternatives ? (
-              <div className="flex items-center justify-center py-8">
-                <Sparkles className="w-6 h-6 animate-spin text-primary" />
-                <p className="ml-3 text-neutral-700">Recherche d'alternatives...</p>
-              </div>
-            ) : alternatives.length > 0 ? (
-              <div className="space-y-3">
-                {alternatives.slice(0, 5).map((alt) => {
-                  const scoreImprovement = (alt.scores?.overallScore || 0) - (overallScore || 0);
-                  return (
-                    <div
-                      key={alt._id}
-                      onClick={() => navigate(`/product/${alt.barcode}`)}
-                      className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-primary hover:shadow-md transition-all"
-                    >
-                      {getProductImage(alt) ? (
-                        <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
-                          <Package className="w-8 h-8 text-gray-400" />
-                        </div>
-                      )}
-
-                      <div className="flex-1">
-                        <p className="font-semibold text-neutral-800">{alt.name}</p>
-                        <p className="text-sm text-neutral-600">{alt.brand}</p>
-                        {scoreImprovement > 0 && (
-                          <p className="text-xs text-primary mt-1 flex items-center gap-1">
-                            <CheckCircle className="w-3 h-3" />
-                            +{scoreImprovement} points
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="text-right">
-                        <div className={`text-2xl font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>
-                          {alt.scores?.overallScore || 0}
-                        </div>
-                        <p className="text-xs text-neutral-500">/ 100</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-                <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouv?e</h4>
-                <p className="text-sm text-yellow-800 mb-4">
-                  Notre base de donn?es ne contient pas encore d'alternative pour ce produit.
-                </p>
-                <p className="text-xs text-yellow-700">
-                  Recherchez des produits similaires avec labels bio ou ?quitables
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-        {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
-      </div>
-    );
-
 
   return (
-    <div className="min-h-screen bg-primary-50">
-      <div className="bg-primary-50 border-b border-gray-200">
-        <div className="max-w-none md:max-w-7xl mx-0 md:mx-auto px-0 md:px-4 py-4">
-          <button onClick={() => navigate(-1)} className="flex items-center text-gray-900 hover:text-gray-900">
-            <ArrowLeft className="w-5 h-5 mr-2" />Retour
+    <div className="min-h-screen bg-primary-50 pb-20">
+      {/* Header fixe */}
+      <div className="bg-primary-50 border-b border-gray-200 p-4 flex items-center gap-3 sticky top-0 z-10">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-primary-100 rounded-lg">
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h1 className="text-lg font-semibold truncate">{product.name}</h1>
+      </div>
+
+      <div className="space-y-4">
+        {/* Section Image + Score principal */}
+        <div className="bg-white rounded-none md:rounded-xl shadow-sm p-6">
+          {getProductImage(product) && (
+            <img 
+              src={getProductImage(product)} 
+              alt={product.name} 
+              className="w-32 h-32 object-contain mx-auto mb-4" 
+            />
+          )}
+          
+          <div className="text-center space-y-3">
+            <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
+            {product.brand && <p className="text-gray-600">{product.brand}</p>}
+            
+            {/* Score global avec fond coloré */}
+            <div className="inline-flex items-center justify-center bg-primary-50 text-forest rounded-2xl p-6">
+              <div className="text-center">
+                <div className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
+                  {overallScore || 'N/A'}
+                </div>
+                <div className="text-sm opacity-90 mt-1">/ 100</div>
+              </div>
+            </div>
+
+            {/* ✨ NOUVEAU : Badge couleur de qualité */}
+            <div className="flex justify-center">
+              <ScoreBadge score={overallScore} size="large" showLabel={true} />
+            </div>
+
+            {/* ✨ NOUVEAU : Badge enrichissement IA (si applicable) */}
+            {product.aiEnriched && (
+              <div className="flex justify-center mt-3">
+                <AIEnrichedBadge 
+                  aiEnriched={product.aiEnriched}
+                  confidence={product.scores?.confidence}
+                  dataCompleteness={product.scores?.dataCompleteness}
+                  size="medium"
+                  showDetails={false}
+                />
+              </div>
+            )}
+
+            {/* Barre de progression + bouton enrichissement */}
+            <ScoreProgressBar 
+              score={overallScore} 
+              onRequestScore={handleRequestScore} 
+              isAnalyzing={isAnalyzing} 
+              dataCompleteness={product.scores?.dataCompleteness} 
+              confidence={product.scores?.confidence} 
+            />
+          </div>
+        </div>
+
+        {/* Actions principales */}
+        <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 space-y-2">
+          <button 
+            onClick={() => navigate(`/chat?product=${product.barcode}&q=${encodeURIComponent("Pourquoi ce produit a ce score ?")}`)} 
+            className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-blue-700 transition"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Poser une question IA
+          </button>
+          <button 
+            onClick={() => {
+              const el = document.getElementById("alternatives-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }} 
+            className="w-full border-2 border-primary text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary-50 transition"
+          >
+            <Sparkles className="w-5 h-5" />
+            Voir alternatives
           </button>
         </div>
-      </div>
-      <div className="max-w-none md:max-w-7xl mx-0 md:mx-auto px-0 md:px-4 py-8">
-        <ProductHeader name={product.name} brand={product.brand} barcode={product.barcode} category={product.category} imageFront={getProductImage(product)} overallScore={overallScore} nutriscore={product.scores?.nutriscore} nova={product.scores?.nova} ecoscore={product.scores?.ecoscore} />
 
-        {/* Actions standardis?es Ecolojia v3.1 */}
-        <ProductMainActions
-          product={product}
-          onShowAlternatives={() => {
-            setTimeout(() => {
-              const section = document.getElementById('alternatives-section');
-              if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }, 300);
-          }}
-        />
-
-        {/* Disclaimer OCR si produit cr?? via OCR */}
+        {/* Disclaimer OCR si produit créé via OCR */}
         {product.source === 'ocr' && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mx-4">
             <div className="flex items-start gap-3">
               <AlertTriangle className="text-yellow-600 flex-shrink-0 mt-0.5" size={20} />
               <div>
                 <h3 className="font-medium text-yellow-900 mb-1">
-                  Produit cr?? par reconnaissance OCR
+                  Produit créé par reconnaissance OCR
                 </h3>
                 <p className="text-yellow-800 text-sm mb-2">
-                  Ce produit a ?t? cr?? automatiquement ? partir de photos.
-                  Fiabilit? estim?e : {product.confidence ? Math.round(product.confidence * 100) : 70}%
+                  Ce produit a été créé automatiquement à partir de photos.
+                  Fiabilité estimée : {product.confidence ? Math.round(product.confidence * 100) : 70}%
                 </p>
                 <p className="text-yellow-700 text-xs">
-                  Les donn?es peuvent contenir des erreurs. V?rifiez les informations avant utilisation.
-                  {product.needsVerification && ' Ce produit n?cessite une v?rification manuelle.'}
+                  Les données peuvent contenir des erreurs. Vérifiez les informations avant utilisation.
+                  {product.needsVerification && ' Ce produit nécessite une vérification manuelle.'}
                 </p>
               </div>
             </div>
           </div>
         )}
-          <ScoreProgressBar score={overallScore} onRequestScore={handleRequestScore} isAnalyzing={isAnalyzing} dataCompleteness={product.scores?.dataCompleteness} confidence={product.scores?.confidence} />
+
+        {/* Classification NOVA (food uniquement) */}
         {product.category === 'food' && product.foodData?.novaGroup && (
-          <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Classification NOVA</h2>
             <NovaBadge
               novaGroup={product.foodData.novaGroup}
@@ -504,56 +404,77 @@ const ProductPage: React.FC = () => {
             />
           </div>
         )}
+
+        {/* Allergènes (food uniquement) */}
         {product.category === 'food' && product.foodData?.allergens && product.foodData.allergens.length > 0 && (
-          <div className="bg-primary-50 p-4">
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4">
             <AllergensSection allergens={product.foodData.allergens} />
           </div>
         )}
+
+        {/* Labels (food uniquement) */}
         {product.category === 'food' && product.foodData?.labels && product.foodData.labels.length > 0 && (
-          <div className="bg-primary-50 p-4">
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4">
             <LabelsSection labels={product.foodData.labels} />
           </div>
         )}
-        <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
-        {/* TODO FUTURE : Section Système Hybride Knowledge Base + IA
-           Composant KnowledgeAnalysisSection à créer
-           Props nécessaires :
-             - knowledgeAnalysis={product.knowledgeAnalysis}
-             - aiEnriched={product.aiEnriched}
-             - knowledgeBaseUsed={product.knowledgeBaseUsed}
-             - confidence={product.confidence}
-             - deepseekUsed={product.deepseekUsed}
-        */}
 
-        <details className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
-          <summary className="font-semibold cursor-pointer">Analyse d?taill?e (mode expert)</summary>
+        {/* Scores détaillés */}
+        <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
+
+        {/* Analyse détaillée (mode expert) */}
+        <details className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+          <summary className="font-semibold cursor-pointer text-gray-800">
+            📊 Analyse détaillée (mode expert)
+          </summary>
           <div className="mt-4">
             <ScoreBreakdown product={product} generatedBreakdown={generatedBreakdown} />
           </div>
         </details>
 
-
-          {/* Section recettes - design Ecolojia v3.1 */}
-          {recipes.length > 0 && (
-            <RecipesList recipes={recipes} />
-          )}
-{/* AI Engagement Widget */}
-        <AIEngagementWidget product={product} />
-        {product.foodData?.ingredients && (<div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6"><h2 className="text-xl font-semibold text-gray-800 mb-4">Composition</h2><div className="text-gray-700 whitespace-pre-wrap">{product.foodData.ingredients}</div></div>)}
-        {product.foodData?.nutrition?.per100g && product.category === 'food' && <ProductNutrition nutrition={product.foodData.nutrition.per100g} />}
-        {product.category === 'cosmetics' && (
-          <CosmeticAnalysisDisplay
-            analysis={{
-              healthScore: product.scores?.healthScore || 0,
-              endocrineRisk: { level: 'NONE' },
-              category: 'cosmetics'
-            }}
-            productName={product.name}
-          />
+        {/* Composition (food uniquement) */}
+        {product.foodData?.ingredients && (
+          <details className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+            <summary className="font-semibold cursor-pointer text-gray-800">
+              🧪 Composition
+            </summary>
+            <div className="mt-4 text-sm text-gray-700 whitespace-pre-wrap">
+              {product.foodData.ingredients}
+            </div>
+          </details>
         )}
+
+        {/* Valeurs nutritionnelles (food uniquement) */}
+        {product.foodData?.nutrition?.per100g && product.category === 'food' && (
+          <details className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+            <summary className="font-semibold cursor-pointer text-gray-800">
+              📋 Valeurs nutritionnelles
+            </summary>
+            <div className="mt-4">
+              <ProductNutrition nutrition={product.foodData.nutrition.per100g} />
+            </div>
+          </details>
+        )}
+
+        {/* Analyse cosmétique (cosmetics uniquement) */}
+        {product.category === 'cosmetics' && (
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Cosmétique</h2>
+            <CosmeticAnalysisDisplay
+              analysis={{
+                healthScore: product.scores?.healthScore || 0,
+                endocrineRisk: { level: 'NONE' },
+                category: 'cosmetics'
+              }}
+              productName={product.name}
+            />
+          </div>
+        )}
+
+        {/* Analyse détergent (detergents uniquement) */}
         {product.category === 'detergents' && (
-          <div className="bg-primary-50 rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse D?tergent</h2>
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Analyse Détergent</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-neutral-100 rounded-lg">
                 <span className="text-gray-700 font-medium">Score environnemental</span>
@@ -561,14 +482,15 @@ const ProductPage: React.FC = () => {
                   {product.scores?.environmentScore || 'N/A'}/100
                 </span>
               </div>
-              <p className="text-gray-900">
-                ?valuation bas?e sur l'impact aquatique, la biod?gradabilit? et la composition
+              <p className="text-gray-900 text-sm">
+                Évaluation basée sur l'impact aquatique, la biodégradabilité et la composition
               </p>
             </div>
           </div>
         )}
-        {/* Section alternatives unifi?e - design Ecolojia v3.1 */}
-        <div id="alternatives-section" className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6 mb-6">
+
+        {/* Section alternatives unifiée - design Ecolojia v3.1 */}
+        <div id="alternatives-section" className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="text-xl font-semibold text-neutral-800">Alternatives plus saines</h3>
@@ -593,22 +515,26 @@ const ProductPage: React.FC = () => {
                       <img src={getProductImage(alt)} alt={alt.name} className="w-16 h-16 object-contain rounded" />
                     ) : (
                       <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
-                        <span className="text-gray-400 text-xs">Pas d'image</span>
+                        <Package className="w-8 h-8 text-gray-400" />
                       </div>
                     )}
+
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">{alt.name}</h4>
-                      {alt.brand && <p className="text-sm text-gray-600">{alt.brand}</p>}
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`text-sm font-semibold ${getScoreColor(alt.scores?.overallScore)}`}>
-                          {alt.scores?.overallScore}/100
-                        </span>
-                        {scoreImprovement > 0 && (
-                          <span className="text-xs text-green-600 font-medium">
-                            +{scoreImprovement} points
-                          </span>
-                        )}
+                      <p className="font-semibold text-neutral-800">{alt.name}</p>
+                      <p className="text-sm text-neutral-600">{alt.brand}</p>
+                      {scoreImprovement > 0 && (
+                        <p className="text-xs text-primary mt-1 flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          +{scoreImprovement} points
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="text-right">
+                      <div className={`text-2xl font-bold ${getScoreColor(alt.scores?.overallScore || 0)}`}>
+                        {alt.scores?.overallScore || 0}
                       </div>
+                      <p className="text-xs text-neutral-500">/ 100</p>
                     </div>
                   </div>
                 );
@@ -617,48 +543,42 @@ const ProductPage: React.FC = () => {
           ) : (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
               <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouv?e</h4>
+              <h4 className="font-semibold text-yellow-900 mb-2">Aucune alternative trouvée</h4>
               <p className="text-sm text-yellow-800 mb-4">
-                Notre base de donn?es ne contient pas encore d'alternative pour ce produit.
+                Notre base de données ne contient pas encore d'alternative pour ce produit.
               </p>
               <p className="text-xs text-yellow-700">
-                Recherchez des produits similaires avec labels bio ou ?quitables
+                Recherchez des produits similaires avec labels bio ou équitables
               </p>
             </div>
           )}
         </div>
-        <ProductChatActions product={product} />
 
+        {/* Section recettes - design Ecolojia v3.1 */}
+        {recipes.length > 0 && (
+          <RecipesList recipes={recipes} />
+        )}
+
+        {/* AI Engagement Widget */}
+        <AIEngagementWidget product={product} />
+
+        {/* Actions chat */}
+        <ProductChatActions product={product} />
       </div>
-      {product && <ChatWidget productContext={{ productName: product.name, category: product.category, barcode: product.barcode, brand: product.brand }} />}
+
+      {/* Chat Widget contextuel */}
+      {product && (
+        <ChatWidget 
+          productContext={{ 
+            productName: product.name, 
+            category: product.category, 
+            barcode: product.barcode, 
+            brand: product.brand 
+          }} 
+        />
+      )}
     </div>
   );
 };
 
 export default ProductPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

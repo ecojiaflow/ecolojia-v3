@@ -1,5 +1,5 @@
 ﻿// backend/src/models/Product.js
-// VERSION 3.2.1 - Système de filtrage multi-catégories production-ready
+// VERSION 3.2.2 - Système de filtrage + scoring V3.2.0 production-ready
 const mongoose = require('mongoose');
 const logger = require('../config/logger');
 
@@ -232,9 +232,69 @@ const productSchema = new mongoose.Schema({
     },
     scoringVersion: { 
       type: String, 
-      default: '3.0.0' 
+      default: '3.2.0' 
     },
-    breakdown: mongoose.Schema.Types.Mixed,        // Détail 8 composantes
+    breakdown: {
+      nutriScore: {
+        score: Number,
+        weight: Number,
+        grade: String,
+        label: String,
+        contribution: Number
+      },
+      additives: {
+        score: Number,
+        weight: Number,
+        count: Number,
+        dangerous: [String],
+        label: String,
+        contribution: Number
+      },
+      nova: {
+        score: Number,
+        weight: Number,
+        group: Number,
+        label: String,
+        contribution: Number
+      },
+      ecoScore: {
+        score: Number,
+        weight: Number,
+        grade: String,
+        label: String,
+        contribution: Number
+      },
+      origin: {
+        score: Number,
+        weight: Number,
+        countries: [String],
+        label: String,
+        contribution: Number
+      },
+      packaging: {
+        score: Number,
+        weight: Number,
+        materials: [String],
+        label: String,
+        contribution: Number
+      },
+      labels: {
+        score: Number,
+        weight: Number,
+        list: [String],
+        isBio: Boolean,
+        label: String,
+        contribution: Number
+      },
+      allergens: {
+        score: Number,
+        weight: Number,
+        detected: [String],
+        count: Number,
+        label: String,
+        contribution: Number
+      }
+    },                                             // ✅ V3.2.0 : Breakdown structuré
     missingData: [String],                         // Champs manquants
     aiEstimations: mongoose.Schema.Types.Mixed,    // Estimations IA
     aiEnrichmentUsed: { 
@@ -371,7 +431,7 @@ productSchema.pre('save', async function(next) {
   const startTime = Date.now();
   
   // Si scores déjà calculés avec version 3.0.0, on skip
-  if (this.scores?.scoringVersion === '3.0.0' && this.scores?.overallScore) {
+  if (this.scores?.scoringVersion === '3.2.0' && this.scores?.overallScore) {
     return next();
   }
 
@@ -465,7 +525,7 @@ productSchema.pre('save', async function(next) {
 const ProductModel = mongoose.model('Product', productSchema);
 
 logger.info('[Product] Modèle Product initialisé', {
-  version: '3.2.1',
+  version: '3.2.2 - Scoring V3.2.0',
   indexes: productSchema.indexes().length,
   features: ['multi-category', 'auto-scoring', 'alternatives-engine']
 });

@@ -18,6 +18,7 @@ async function __injectRecipesForProduct(product) {
 
 //// END PATCH ////
 // backend/src/routes/products.js
+// VERSION: 3.2.0 - Code mort supprimé
 // ROUTES PRODUITS - unifiées + analyse IA harmonisée + normalisation catégorie
 // Date: 2025-11-22 (révisé)
 
@@ -327,16 +328,7 @@ router.get("/analyze/:id", async (req, res) => {
 
 
 
-    if (needsEnrichment) {
-      try {
-        logger.info(`🔬 Enrichissement IA nécessaire (analyse): ${product._id || id}`);
-        enriched = await aiEnrichment.enrichProductWithAI(productForAI);
-        logger.info(`✅ Enrichissement IA réussi pour analyse: ${product._id || id}`);
-      } catch (aiError) {
-        logger.warn(`⚠️ Enrichissement IA échoué (analyse): ${aiError.message}`);
-        enriched = productForAI;
-      }
-      }
+    
 
 
     }
@@ -416,16 +408,7 @@ router.get("/:id", async (req, res) => {
 
 
 
-      if (needsEnrichment) {
-        try {
-          logger.info(`🔬 Enrichissement IA nécessaire pour ${product._id}`);
-          enriched = await aiEnrichment.enrichProductWithAI(productForAI);
-          logger.info(`✅ Enrichissement IA réussi pour ${product._id}`);
-        } catch (aiError) {
-          logger.warn(`⚠️ Enrichissement IA échoué: ${aiError.message}`);
-          enriched = productForAI;
-        }
-      }
+      
 
 
       }
@@ -474,16 +457,7 @@ router.get("/:id", async (req, res) => {
 
 
 
-      if (needsEnrichment) {
-        try {
-          logger.info(`🔬 Enrichissement IA nécessaire (barcode): ${product.barcode}`);
-          enriched = await aiEnrichment.enrichProductWithAI(productForAI);
-          logger.info(`✅ Enrichissement IA réussi (barcode): ${product.barcode}`);
-        } catch (aiError) {
-          logger.warn(`⚠️ Enrichissement IA échoué: ${aiError.message}`);
-          enriched = productForAI;
-        }
-      }
+      
 
 
       }
@@ -622,16 +596,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
 
 
 
-    if (needsEnrichment) {
-      try {
-        logger.info(`🔬 Enrichissement IA nécessaire (PUT): ${id}`);
-        enriched = await aiEnrichment.enrichProductWithAI(productForAI);
-        logger.info(`✅ Enrichissement IA réussi lors PUT: ${id}`);
-      } catch (aiError) {
-        logger.warn(`⚠️ Enrichissement IA échoué lors PUT: ${aiError.message}`);
-        enriched = productForAI;
-      }
-      }
+    
 
 
     }

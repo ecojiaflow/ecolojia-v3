@@ -1,0 +1,189 @@
+﻿[SCORING V3.2.0] Module charg├® - Production Ready Ô£à
+[2025-12-09 12:20:35] [[32minfo[39m] [32m[Product] Mod├¿le Product initialis├® [object Object][39m
+=== NUTELLA COMPLET (JSON) ===
+
+{
+  "_id": "691780b4c56dd19f3edde858",
+  "barcode": "8000500223369",
+  "name": "Biscuits Nutella B-ready x15 gaufrettes fourr├®es",
+  "brand": "Ferrero, Nutella B-ready",
+  "categoryType": "food",
+  "category": "food",
+  "image_url": "https://images.openfoodfacts.org/images/products/800/050/022/3369/front_en.139.400.jpg",
+  "image_small_url": "https://images.openfoodfacts.org/images/products/800/050/022/3369/front_en.139.200.jpg",
+  "scores": {
+    "overallScore": 34,
+    "healthScore": 33,
+    "environmentScore": 30,
+    "confidence": 0.875,
+    "dataCompleteness": "Excellente",
+    "calculatedAt": "2025-11-29T12:12:10.021Z",
+    "scoringVersion": "3.1.0",
+    "breakdown": {
+      "nova": {
+        "score": 25,
+        "weight": 0.15,
+        "group": 4,
+        "label": "Groupe 4"
+      },
+      "nutriScore": {
+        "score": 15,
+        "weight": 0.2,
+        "grade": "E",
+        "label": "Nutri-Score E"
+      },
+      "additives": {
+        "score": 85,
+        "weight": 0.15,
+        "count": 0,
+        "dangerous": [],
+        "label": "Aucun additif"
+      },
+      "sugars": {
+        "score": 5,
+        "weight": 0.1,
+        "value": 47.1,
+        "unit": "g/100g",
+        "label": "47.1g/100g",
+        "equivalent": "9 morceaux de sucre"
+      },
+      "saturatedFat": {
+        "score": null,
+        "weight": 0.1,
+        "value": null,
+        "unit": "g/100g",
+        "label": "Non sp?cifi?",
+        "equivalent": null
+      },
+      "salt": {
+        "score": 65,
+        "weight": 0.1,
+        "value": 0.559,
+        "unit": "g/100g",
+        "label": "0.559g/100g",
+        "equivalent": "1 pinc├®e de sel"
+      },
+      "ecoScore": {
+        "score": 30,
+        "weight": 0.15,
+        "grade": "D",
+        "label": "Eco-Score D"
+      },
+      "labels": {
+        "score": 0,
+        "weight": 0.05,
+        "list": [
+          "fr:triman"
+        ],
+        "isBio": false,
+        "label": "Aucun label"
+      }
+    },
+    "missingData": [
+      "saturatedFat"
+    ],
+    "aiEnrichmentUsed": false,
+    "scoringMetadata": {
+      "methodology": "ECOLOJIA V3 - Scoring scientifique 8 composantes",
+      "version": "3.1.0",
+      "calculatedAt": "2025-11-29T12:12:26.836Z"
+    },
+    "dataQualityInfo": {
+      "confidence": 67,
+      "level": "ACCEPTABLE",
+      "canScore": true,
+      "availableData": [
+        "product_name",
+        "brands",
+        "nutriments",
+        "labels"
+      ]
+    }
+  },
+  "ingredients": [
+    {
+      "name": "P├óte ├á tartiner aux noisettes et au cacao 81"
+    },
+    {
+      "name": "5 % (sucre"
+    },
+    {
+      "name": "huile de palme"
+    },
+    {
+      "name": "noisettes 13%"
+    },
+    {
+      "name": "lait ├®cr├®m├® en poudre 8"
+    },
+    {
+      "name": "7%"
+    },
+    {
+      "name": "cacao maigre 7"
+    },
+    {
+      "name": "4%"
+    },
+    {
+      "name": "├®mulsifiants : l├®cithines [soja] ; vanilline)"
+    },
+    {
+      "name": "farine de froment 16%"
+    },
+    {
+      "name": "levure de bi├¿re"
+    },
+    {
+      "name": "extrait de malt d'orge"
+    },
+    {
+      "name": "sel"
+    },
+    {
+      "name": "lait ├®cr├®m├® en poudre"
+    },
+    {
+      "name": "├®mulsifiants : l├®cithines [soja] ; prot├®ines de froment"
+    },
+    {
+      "name": "prot├®ines de lait"
+    },
+    {
+      "name": "eau."
+    }
+  ],
+  "ingredientsText": "P├óte ├á tartiner aux noisettes et au cacao 81,5 % (sucre, huile de palme, noisettes 13%, lait ├®cr├®m├® en poudre 8,7%, cacao maigre 7,4%, ├®mulsifiants : l├®cithines [soja] ; vanilline), farine de froment 16%, levure de bi├¿re, extrait de malt d'orge, sel, lait ├®cr├®m├® en poudre, ├®mulsifiants : l├®cithines [soja] ; prot├®ines de froment, prot├®ines de lait, eau.",
+  "nutriments": {
+    "energy_100g": 521,
+    "fat_100g": 27,
+    "saturated_fat_100g": 9.5,
+    "carbohydrates_100g": 60.7,
+    "sugars_100g": 47.1,
+    "proteins_100g": 7.2,
+    "salt_100g": 0.559,
+    "fiber_100g": 0.9
+  },
+  "labels": [
+    "fr:triman"
+  ],
+  "nutriscore_grade": "e",
+  "ecoscore_grade": "d",
+  "nova_group": 4,
+  "source": "openfoodfacts",
+  "sourceId": "8000500223369",
+  "importedAt": "2025-11-14T18:49:11.083Z",
+  "lastUpdated": "2025-11-14T19:31:46.325Z",
+  "aiEnriched": false,
+  "verified": false,
+  "complete": true,
+  "subcategory": "snack",
+  "tags": [
+    "chocolate",
+    "hazelnut",
+    "sweet",
+    "biscuit",
+    "spread",
+    "nutella"
+  ]
+}
