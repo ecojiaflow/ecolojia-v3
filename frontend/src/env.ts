@@ -15,4 +15,5 @@
   DEEPSEEK_ENABLED: import.meta.env.VITE_DEEPSEEK_ENABLED === "true",
 };
 
-export const API_BASE = ENV.API_URL;
+export const API_BASE = ENV.API_URL + '/api';
+
