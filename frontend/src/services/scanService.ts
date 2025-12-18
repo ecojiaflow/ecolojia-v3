@@ -48,25 +48,16 @@ export class ScanService {
   // Scan par code-barres
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
-      // Essayer d'abord de recuperer le produit
-      const response = await apiClient.get('/products/barcode/');
-
-      if (response.data?.product) {
-        return {
-          productId: response.data?.product._id,
-          product: response.data?.product,
-          confidence: 1.0
-        };
-      }
-
-      // Si pas trouve, lancer une analyse
-      const analysisResponse = await apiClient.post('/analysis', {
+      // Appeler directement /analysis qui retourne les scores calculés
+      const response = await apiClient.post('/analysis', {
         barcode: code,
         method: 'barcode',
         source: 'web'
       });
 
-      return analysisResponse.data;
+      // L'API /analysis retourne déjà la bonne structure
+      // { product: { name, barcode, ... }, scores: { overallScore, ... } }
+      return response.data;
     } catch (error: any) {
       throw this.handleError(error, 'BARCODE_SCAN_FAILED');
     }
@@ -187,3 +178,4 @@ export class ScanService {
     return 'food'; // Par defaut
   }
 }
+
