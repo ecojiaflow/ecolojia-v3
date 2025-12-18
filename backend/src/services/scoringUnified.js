@@ -351,7 +351,7 @@ function calculateFoodScores(data) {
     }, 0);
     const totalScore = availableContributions.reduce((sum, c) => sum + c.value, 0);
     const overallScore = totalAvailableWeight > 0
-      ? Math.round((totalScore / totalAvailableWeight) * 100)
+      ? Math.round(totalScore)  // ✅ totalScore est déjà en /100, pas besoin de * 100
       : 0;
 
   console.log('[SCORING V3.2.0] Score global:', overallScore, '/100');
