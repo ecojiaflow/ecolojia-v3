@@ -733,3 +733,4 @@ Ceci doit influencer tes calculs de composantes.
 module.exports = AIEnrichmentService;
 
 
+
