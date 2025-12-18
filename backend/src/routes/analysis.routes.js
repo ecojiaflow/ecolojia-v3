@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // ECOLOJIA V3.1 - ANALYSIS ROUTES AVEC SYSTÈME HYBRIDE
 // Route d'analyse produit intégrant Knowledge Base + DeepSeek
 // Version : 3.1-hybrid
