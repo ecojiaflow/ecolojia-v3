@@ -70,8 +70,8 @@ router.post('/', async (req, res) => {
     
     let basicAnalysis = null;
     
-    // ❌ DÉSACTIVÉ : analyzeService scoring cassé
-    /*
+    if (analyzeService && analyzeService.analyzeAutoSvc) {
+      try {
         basicAnalysis = await analyzeService.analyzeAutoSvc({ 
           barcode, 
           name, 
@@ -81,20 +81,20 @@ router.post('/', async (req, res) => {
       } catch (err) {
         console.warn('[AnalysisRoutes] ⚠️  Analyse basique échouée:', err.message);
       }
-    */
-    console.log("[AnalysisRoutes] ⏩ Bypass analyzeService - utilisation directe scoringUnified");
+    }
+
     // ────────────────────────────────────────────────────────
     // 2️⃣ CONSTRUCTION OBJET PRODUIT POUR ENRICHISSEMENT
     // ────────────────────────────────────────────────────────
     
     const productForEnrichment = {
-      name: name || 'Produit inconnu',
-      barcode: barcode,
-      brand: null,
+      name: name || basicAnalysis?.product?.name || 'Produit inconnu',
+      barcode: barcode || basicAnalysis?.product?.barcode,
+      brand: basicAnalysis?.product?.brand || null,
       category: category,
-      ingredients_text: ingredients_text || ',
-      foodData: {},
-      scores: {}
+      ingredients_text: ingredients_text || basicAnalysis?.product?.ingredients_text || '',
+      foodData: basicAnalysis?.product?.foodData || {},
+      scores: basicAnalysis?.scores || {}
     };
 
     // ────────────────────────────────────────────────────────
