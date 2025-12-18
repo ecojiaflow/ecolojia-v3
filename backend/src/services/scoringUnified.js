@@ -344,8 +344,15 @@ function calculateFoodScores(data) {
     { name: 'allergens',   value: (allergensScore || 0) * SCORING_WEIGHTS_V3_2.allergens,   available: allergensScore !== null }
   ];
 
-  const totalScore = contributions.reduce((sum, c) => sum + c.value, 0);
-  const overallScore = Math.round(totalScore);
+    // ✅ CORRECTION: Score pondéré sur composantes disponibles
+    const availableContributions = contributions.filter(c => c.available);
+    const totalAvailableWeight = availableContributions.reduce((sum, c) => {
+      return sum + SCORING_WEIGHTS_V3_2[c.name];
+    }, 0);
+    const totalScore = availableContributions.reduce((sum, c) => sum + c.value, 0);
+    const overallScore = totalAvailableWeight > 0
+      ? Math.round((totalScore / totalAvailableWeight) * 100)
+      : 0;
 
   console.log('[SCORING V3.2.0] Score global:', overallScore, '/100');
 
