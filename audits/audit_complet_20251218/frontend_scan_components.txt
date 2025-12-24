@@ -1,0 +1,19 @@
+﻿
+Name                                           Directory                                                               
+----                                           ---------                                                               
+ScanFloatingButton.tsx                         C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components        
+ScannerChoice.tsx                              C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components        
+BarcodeScanner.css                             C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner
+BarcodeScanner.tsx                             C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner
+BarcodeScannerEnhanced.tsx                     C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner
+BarcodeScannerEnhanced.tsx.bak_20250915_170615 C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner
+EnhancedBarcodeScanner.tsx                     C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scanner
+BarcodeScanner.spec.tsx                        C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\components\scan...
+useScanner.ts                                  C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\hooks             
+MultiScanPage.tsx                              C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages             
+ScanPageIntegrated.tsx                         C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\pages             
+scanService.BACKUP_20251218_165741.ts          C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services          
+scanService.ts                                 C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\services          
+scannerControl.ts                              C:\Users\salim\Desktop\ECOLOJIA VF CLEAN\frontend\src\utils             
+
+

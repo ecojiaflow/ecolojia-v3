@@ -1,0 +1,57 @@
+﻿═══════════════════════════════════════════════════════════════════
+  RAPPORT DE NETTOYAGE FRONTEND
+  Date: 2025-12-09 19:26:17
+═══════════════════════════════════════════════════════════════════
+
+## STATISTIQUES
+
+Fichiers détectés     : 57
+Fichiers supprimés    : 57
+Erreurs               : 0
+Espace libéré         : 784.18 KB
+
+## RÉPARTITION PAR TYPE
+
+Backups (.backup)     : 42 fichiers
+Backups (.bak)        : 13 fichiers
+Backups (.BACKUP)     : 42 fichiers
+Fichiers corrompus    : 2 fichiers
+
+## BACKUP DE SÉCURITÉ
+
+Emplacement : ..\frontend\_BACKUP_FRONTEND_CLEANUP_20251209_192613
+Taille      : 784.18 KB
+Fichiers    : 57
+
+## TOP 20 FICHIERS SUPPRIMÉS (par taille)
+
+- src/services\search\UniversalSearchService.backup_final.ts (80.78 KB)
+- src/services\search\UniversalSearchService.backup_20251115_191724.ts (80.78 KB)
+- src/services\search\UniversalSearchService.backup_encoding.ts (80.78 KB)
+- src/services\security\SecureProxyService.backup_encoding.ts (58.09 KB)
+- src/services\ai\novaClassifier.backup_encoding.ts (51.52 KB)
+- src/services\UserAnalytics.backup_encoding.ts (30.45 KB)
+- src/pages\ProductPage.backup_2025-12-08_212900.tsx (30.19 KB)
+- src/pages\ProductPage.tsx.backup_20251207_215900 (30.07 KB)
+- src/pages\ProductPage.BACKUP_20251209_180041.tsx (23.15 KB)
+- src/services\ai\DeepSeekClient.backup_20251115_190833.ts (21.25 KB)
+- src/services\EmailService.backup_encoding.ts (19.99 KB)
+- src/services\ai\ultraTransformService.backup_encoding.ts (17.79 KB)
+- src/pages\HomePage.tsx.backup_20251207_200306 (16.18 KB)
+- src/services\novaAdapter.backup_encoding.ts (15.86 KB)
+- src/services\multiCategoryApi.backup_encoding.ts (14.51 KB)
+- src/components\Layout.tsx.backup_20251207_194113 (14.09 KB)
+- src/services\demoService.backup_encoding.ts (13.36 KB)
+- src/components\product\ScoreBreakdown.backup_2025-12-08_214147.tsx (10.51 KB)
+- src/utils\bugFixes.backup_encoding.ts (9.12 KB)
+- src/services\api.ts.BROKEN (8.65 KB)
+
+
+---
+
+✅ NETTOYAGE FRONTEND TERMINÉ
+
+Le frontend est maintenant propre et optimisé.
+Tous les fichiers supprimés sont sauvegardés dans le dossier backup.
+
+═══════════════════════════════════════════════════════════════════

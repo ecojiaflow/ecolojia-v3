@@ -1,0 +1,13 @@
+﻿
+Name                                                     Length LastWriteTime      
+----                                                     ------ -------------      
+additiveEnrichment.service.js                              1924 05/12/2025 21:27:01
+aiEnrichment.service.backup_20251213_164430.js            29558 09/12/2025 12:10:55
+aiEnrichment.service.BACKUP_20251213_173530.js            28823 13/12/2025 17:14:50
+aiEnrichment.service.CORRECTED.js                         17186 13/12/2025 16:54:33
+aiEnrichment.service.js                                   28823 13/12/2025 17:14:50
+aiEnrichment.service.js.returnfix_backup_20251126-182257  26018 26/11/2025 18:18:38
+allergenEnrichment.service.js                              1638 23/10/2025 19:47:53
+imageEnrichment.service.js                                 1418 05/12/2025 21:27:01
+
+

@@ -1,0 +1,40 @@
+﻿AUDIT STRUCTURE BACKEND - 2025-12-09 19:11
+================================================================
+
+Total fichiers : 486
+Dernière modification : 08/13/2025 11:23:32
+
+FICHIERS PAR DOSSIER :
+- archive : 1 fichiers
+- auth : 8 fichiers
+- components : 1 fichiers
+- config : 7 fichiers
+- controllers : 31 fichiers
+- data : 20 fichiers
+- db : 2 fichiers
+- docs : 1 fichiers
+- knowledge : 10 fichiers
+- lib : 4 fichiers
+- middleware : 18 fichiers
+- models : 27 fichiers
+- monitoring : 5 fichiers
+- orchestrator : 5 fichiers
+- patches : 1 fichiers
+- payments : 17 fichiers
+- repositories : 2 fichiers
+- routes : 85 fichiers
+- scorers : 16 fichiers
+- scripts : 24 fichiers
+- seeds : 1 fichiers
+- services : 138 fichiers
+- tests : 7 fichiers
+- types : 6 fichiers
+- utils : 6 fichiers
+- validators : 2 fichiers
+- workers : 1 fichiers
+- _backups_correction_20251126_204552 : 3 fichiers
+- _BACKUP_20251013_152902 : 3 fichiers
+- _NEW_FILES : 5 fichiers
+
+
+Détails complets dans : backend_files_inventory.csv

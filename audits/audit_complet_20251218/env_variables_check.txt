@@ -1,0 +1,15 @@
+﻿VARIABLES À VÉRIFIER SUR RENDER:
+
+✅ À vérifier:
+- DEEPSEEK_API_KEY (requis pour enrichissement IA)
+- MONGODB_URI (OK)
+- ALGOLIA_APP_ID (OK)
+- CORS_ORIGINS (OK)
+
+PROBLÈME DÉTECTÉ DANS LES LOGS:
+❌ DeepSeek API key manquante (DEEPSEEK_API_KEY)
+→ Cela explique pourquoi l'enrichissement IA ne fonctionne pas en prod
+
+ACTION REQUISE:
+1. Ajouter DEEPSEEK_API_KEY sur Render
+2. Redémarrer le service

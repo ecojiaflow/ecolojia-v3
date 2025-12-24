@@ -1,0 +1,11 @@
+﻿
+Name                                            Length LastWriteTime      
+----                                            ------ -------------      
+scoring.service.OLD_20251013.js                   2075 13/12/2025 17:14:50
+scoringEngine.AVANT_NOV.js                           3 13/12/2025 17:14:50
+scoringEngine.AVANT_NOVA_FIX_20251007_232733.js  11974 05/12/2025 21:27:01
+ScoringEngineV3.js                               13176 31/10/2025 19:21:06
+scoringUnified.js                                19663 09/12/2025 11:17:04
+test-scoring-v3.2.0.js                            5843 09/12/2025 11:19:53
+
+

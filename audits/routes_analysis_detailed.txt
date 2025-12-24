@@ -1,0 +1,249 @@
+﻿ANALYSE DÉTAILLÉE DES ROUTES BACKEND
+====================================
+Date: 2025-12-09 19:12
+
+📄 ai.js
+   Taille: 0.59 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 ai.recipes.routes.js
+   Taille: 4.43 KB | Modifié: 2025-11-23 17:03
+   Routes: POST=1 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 ai.routes.js
+   Taille: 7.79 KB | Modifié: 2025-12-04 21:48
+   Routes: POST=5 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 aiEducation.routes.js
+   Taille: 10.64 KB | Modifié: 2025-11-05 18:33
+   Routes: POST=3 GET=3 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 algolia-unified.js
+   Taille: 8.18 KB | Modifié: 2025-10-24 14:25
+   Routes: POST=2 GET=3 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 5 endpoints
+   
+📄 alternatives.routes.js
+   Taille: 10.85 KB | Modifié: 2025-12-08 19:08
+   Routes: POST=0 GET=4 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 4 endpoints
+   
+📄 analysis-simple.js
+   Taille: 0.63 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 analysis.routes.js
+   Taille: 9.92 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 analyze.routes.js
+   Taille: 1.36 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 auth.google.js
+   Taille: 2.08 KB | Modifié: 2025-10-25 14:02
+   Routes: POST=0 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 auth.js
+   Taille: 7.16 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=4 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 auth.routes.js
+   Taille: 23.46 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=7 GET=3 PUT=2 DELETE=1 PATCH=0
+   TOTAL: 13 endpoints
+   
+📄 auth.simple.js
+   Taille: 1.92 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=3 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 5 endpoints
+   
+📄 chat.routes.js
+   Taille: 4.8 KB | Modifié: 2025-11-10 21:42
+   Routes: POST=3 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 5 endpoints
+   
+📄 cosmetics.routes.js
+   Taille: 0.86 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 dashboard.js
+   Taille: 4.44 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=0 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 debug.routes.js
+   Taille: 0.47 KB | Modifié: 2025-10-25 13:36
+   Routes: POST=1 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 detergents.routes.js
+   Taille: 0.82 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 enrich.routes.js
+   Taille: 3.7 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 export.js
+   Taille: 13.19 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 4 endpoints
+   
+📄 favorites.js
+   Taille: 2.83 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=1 GET=2 PUT=1 DELETE=0 PATCH=0
+   TOTAL: 4 endpoints
+   
+📄 favorites.routes.js
+   Taille: 2.06 KB | Modifié: 2025-11-10 23:03
+   Routes: POST=1 GET=1 PUT=0 DELETE=1 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 gdpr.routes.js
+   Taille: 14.95 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=5 PUT=1 DELETE=1 PATCH=0
+   TOTAL: 9 endpoints
+   
+📄 history.js
+   Taille: 2.07 KB | Modifié: 2025-10-24 15:20
+   Routes: POST=0 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 journey.routes.js
+   Taille: 2.11 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 mealPlan.routes.js
+   Taille: 3.61 KB | Modifié: 2025-11-02 18:26
+   Routes: POST=2 GET=3 PUT=1 DELETE=2 PATCH=0
+   TOTAL: 8 endpoints
+   
+📄 ocr-analyze.routes.js
+   Taille: 5.52 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 partner.routes.js
+   Taille: 8.59 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=4 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 5 endpoints
+   
+📄 payment.routes.js
+   Taille: 7.71 KB | Modifié: 2025-10-24 15:20
+   Routes: POST=10 GET=9 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 19 endpoints
+   
+📄 products-ocr.routes.js
+   Taille: 7.13 KB | Modifié: 2025-10-23 19:51
+   Routes: POST=2 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 products-search.js
+   Taille: 1.84 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=0 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 products.BACKUP_20251209_115232.js
+   Taille: 22.12 KB | Modifié: 2025-12-07 21:03
+   Routes: POST=1 GET=3 PUT=1 DELETE=1 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 products.js
+   Taille: 20.42 KB | Modifié: 2025-12-09 11:52
+   Routes: POST=1 GET=3 PUT=1 DELETE=1 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 provisional.routes.js
+   Taille: 2.72 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
+📄 proxy.js
+   Taille: 26.97 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=5 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 7 endpoints
+   
+📄 quota.js
+   Taille: 6.73 KB | Modifié: 2025-10-23 14:46
+   Routes: POST=3 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 4 endpoints
+   
+📄 recipes.routes.js
+   Taille: 5.11 KB | Modifié: 2025-11-04 23:02
+   Routes: POST=1 GET=3 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 4 endpoints
+   
+📄 scoring.routes.js
+   Taille: 11.36 KB | Modifié: 2025-11-03 22:31
+   Routes: POST=4 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 6 endpoints
+   
+📄 shopping-list.routes.js
+   Taille: 5.55 KB | Modifié: 2025-11-02 14:06
+   Routes: POST=3 GET=1 PUT=1 DELETE=2 PATCH=1
+   TOTAL: 8 endpoints
+   
+📄 stats.routes.js
+   Taille: 2.23 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=0 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 test-minimal.js
+   Taille: 3.1 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=0 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 0 endpoints
+   
+📄 test-partner.js
+   Taille: 0.69 KB | Modifié: 2025-10-23 14:46
+   Routes: POST=0 GET=2 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 user.routes.js
+   Taille: 15.52 KB | Modifié: 2025-11-02 15:25
+   Routes: POST=1 GET=5 PUT=4 DELETE=1 PATCH=0
+   TOTAL: 11 endpoints
+   
+📄 version.routes.js
+   Taille: 0.59 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=0 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 vision.analyze.js
+   Taille: 1.1 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=0 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 1 endpoints
+   
+📄 vision.ocr.public.js
+   Taille: 1.87 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 vision.routes.js
+   Taille: 5.53 KB | Modifié: 2025-12-05 21:27
+   Routes: POST=4 GET=3 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 7 endpoints
+   
+📄 vision.simple.js
+   Taille: 0.97 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=1 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 2 endpoints
+   
+📄 webhooks.js
+   Taille: 24.06 KB | Modifié: 2025-10-23 19:47
+   Routes: POST=2 GET=1 PUT=0 DELETE=0 PATCH=0
+   TOTAL: 3 endpoints
+   
