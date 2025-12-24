@@ -1,0 +1,20 @@
+﻿49667e94 docs(audit): Session diagnostic approfondi scoring - 24 Dec 2025
+4d36378d fix(scoring): Correction calibrage NOVA selon standards scientifiques
+1ef13ecf Revert "fix(analysis): Vraiment d├®sactiver analyzeService - commentaires + bypass basicAnalysis"
+739ea284 fix(analysis): Vraiment d├®sactiver analyzeService - commentaires + bypass basicAnalysis
+d4f0174e fix(analysis): D├®sactiver analyzeService cass├® - utiliser uniquement scoringUnified.js
+5cde4d2a fix(scoring): Corriger formule - totalScore d├®j├á en /100
+0a923b21 fix(scoring): VRAIE correction - pond├®ration sur composantes disponibles
+b8638278 fix(scoring): Calculer score sur composantes disponibles uniquement - ├®viter p├®nalit├® donn├®es manquantes
+ce193a7b fix(enrichment): Ajouter cache check - ├®viter r├®enrichissement inutile
+2f9933e4 fix(scan): Corriger URL API scan - utiliser /analysis au lieu de /products/barcode/
+7e5daebd chore: Force redeploy Render - routes mont├®es localement
+f863a4fd fix(frontend): Ajouter /api/ au baseURL - Correction scan mobile
+918db1c4 fix: Masquer bouton enrichissement apr├¿s aiEnriched=true
+28d38974 feat: Impl├®mentation scoring V3.2.0 scientifique production-ready
+ef831c70 fix(alternatives): Cascade compl├¿te TaxonomyÔåÆTagsÔåÆSmartÔåÆRelaxed
+dbf595d5 feat(tags): Enrichissement 100% produits + fix alternatives filter
+3d9a43f2 fix(alternatives): Alternatives cross-category pour Nutella
+86a5760b fix(scanner): add debug logs and fix API URL configuration
+1e39c318 chore: massive cleanup - remove 165 obsolete files
+1dc2b6e3 Merge branch 'main' of https://github.com/ecojiaflow/ecolojia-v3

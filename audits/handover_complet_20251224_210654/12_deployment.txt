@@ -1,0 +1,21 @@
+﻿# CONFIGURATION DÉPLOIEMENT
+
+## Backend - Render
+- Service: ecolojia-backendvf
+- URL: https://ecolojia-backendvf.onrender.com
+- Build Command: npm install
+- Start Command: npm start
+- Auto-deploy: main branch
+- Health Check: /api/health
+
+## Frontend - Netlify
+- Site: ecolojia
+- URL: https://ecolojia.com
+- Build Command: npm run build
+- Publish Directory: dist
+- Auto-deploy: main branch
+
+## Database - MongoDB Atlas
+- Cluster: ecolojia-prod
+- Database: ecolojia-prod
+- Collections: products, users, recipes, sessions
