@@ -241,7 +241,7 @@ function calculateFoodScores(data) {
   // COMPOSANTE 3: NOVA (15%)
   let novaScore = null;
   if (data.novaGroup || data.nova_group || data.nova_groups) {
-    const novaMapping = { 1: 100, 2: 75, 3: 40, 4: 20 };
+    const novaMapping = { 1: 100, 2: 80, 3: 60, 4: 20 };
     const rawNova = data.novaGroup || data.nova_group || data.nova_groups;
     const novaKey = parseInt(rawNova, 10);
     novaScore = Number.isNaN(novaKey) ? null : (novaMapping[novaKey] ?? null);
