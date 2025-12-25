@@ -280,10 +280,10 @@ const userSchema = new mongoose.Schema({
  */
 
 // Index simple : recherche par email (query fréquente auth)
-userSchema.index({ email: 1 });
+  // ✅ Index email supprimé (déjà créé par unique: true)
 
 // Index simple : recherche par googleId (OAuth Google)
-userSchema.index({ googleId: 1 });
+  // ✅ Index googleId supprimé (déjà créé par unique: true)
 
 // Index simple : recherche client LemonSqueezy
 userSchema.index({ 'plan.customerId': 1 });

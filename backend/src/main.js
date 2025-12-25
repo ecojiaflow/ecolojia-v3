@@ -99,6 +99,9 @@ const passport = require('./config/passport');
 const session = require('express-session');
 
 const app = express();
+
+// ✅ FIX PRODUCTION: Trust Render.com reverse proxy
+app.set('trust proxy', 1);
 const { monitorMiddleware, errorLogger } = require('./monitoring/local-monitor');
 app.use(monitorMiddleware);
 // === SECURITY PATCH START ===

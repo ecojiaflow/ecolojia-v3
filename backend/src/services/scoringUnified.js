@@ -250,6 +250,7 @@ function calculateFoodScores(data) {
 
   // COMPOSANTE 4: ECO-SCORE (10%)
   let ecoScore = null;
+  let ecoScoreEstimated = false; // ✅ NOUVEAU : Flag estimation
   if (data.ecoScore || data.ecoscore_grade) {
     const ecoMapping = { a: 100, b: 80, c: 60, d: 40, e: 20 };
     const ecoKey = (data.ecoScore || data.ecoscore_grade)
@@ -258,7 +259,13 @@ function calculateFoodScores(data) {
       .toLowerCase();
     ecoScore = ecoKey ? (ecoMapping[ecoKey] ?? null) : null;
   }
-  if (!ecoScore) missingData.push('ecoScore');
+  
+  // ✅ NOUVEAU : Valeur par défaut si manquant
+   if (!ecoScore) {
+    ecoScore = 50; // Médiane (neutre)
+    ecoScoreEstimated = true;
+    missingData.push('ecoScore_estimated');
+  }
 
   // COMPOSANTE 5: ORIGINE (10%)
   let originScore = null;
