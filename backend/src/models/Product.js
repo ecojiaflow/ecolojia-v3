@@ -153,6 +153,43 @@ const productSchema = new mongoose.Schema({
   imageUrl: String,
 
   // ============================================================================
+  // DONNÉES ENRICHISSEMENT IA (AJOUT 25/12/2025)
+  // ============================================================================
+
+  // Nutrition simplifiée (pour enrichissement IA rapide)
+  nutrition: {
+    energy_kcal: Number,
+    fat: Number,
+    saturated_fat: Number,
+    carbohydrates: Number,
+    sugars: Number,
+    fiber: Number,
+    proteins: Number,
+    salt: Number
+  },
+
+  // Texte ingrédients brut
+  ingredients_text: {
+    type: String,
+    index: true
+  },
+
+  // Tags additifs (E-codes)
+  additives_tags: [String],
+
+  // Métadonnées estimation IA
+  estimated: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
+  estimation_source: {
+    type: String,
+    enum: ['deepseek_ai', 'local_water', 'local_fresh', 'openfoodfacts', 'manual'],
+    index: true
+  },
+
+  // ============================================================================
   // DONNÉES SPÉCIFIQUES PAR CATÉGORIE
   // ============================================================================
 
@@ -551,3 +588,4 @@ logger.info('[Product] Modèle Product initialisé', {
 });
 
 module.exports = ProductModel;
+
