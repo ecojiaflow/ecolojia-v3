@@ -1,8 +1,8 @@
 ﻿// ============================================================================
-// ECOLOJIA V3.1 - ANALYSIS ROUTES AVEC SYSTÈME HYBRIDE
-// Route d'analyse produit intégrant Knowledge Base + DeepSeek
-// Version : 3.1-hybrid
-// Date : 2025-11-16
+// ECOLOJIA V3.2 - ANALYSIS ROUTES AVEC KNOWLEDGE BASE M2
+// Route d'analyse produit intégrant Knowledge Base + Constitution
+// Version : 3.2-knowledge-base
+// Date : 2025-12-25
 // ============================================================================
 
 const express = require('express');
@@ -24,6 +24,10 @@ try {
 const aiEnrichment = require('../services/aiEnrichment.service');
 console.log('[AnalysisRoutes] ✅ AIEnrichment Service chargé (v3.1-hybrid)');
 
+// ⭐ M2 WEEK 1 : Knowledge Base Service
+const knowledgeBaseService = require('../services/knowledgeBase.service');
+console.log('[AnalysisRoutes] ✅ Knowledge Base Service chargé (M2 Week 1)');
+
 // ──────────────────────────────────────────────────────────
 // ROUTE INFO
 // ──────────────────────────────────────────────────────────
@@ -32,11 +36,13 @@ router.get('/', (req, res) => {
   res.json({
     service: 'analysis',
     status: 'operational',
-    version: '3.1-hybrid',
+    version: '3.2-knowledge-base',
     features: {
       knowledgeBase: true,
+      knowledgeBaseM2: true, // ⭐ NOUVEAU
       aiEnrichment: true,
-      deepSeek: true
+      deepSeek: true,
+      constitutionEcolojia: true // ⭐ NOUVEAU
     },
     endpoints: [
       'POST / - Analyser un produit (barcode ou image)',
@@ -53,29 +59,29 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res) => {
   const startTime = Date.now();
-  
+
   try {
     const { barcode, name, category = 'food', ingredients_text } = req.body;
-    
-    console.log('[AnalysisRoutes] 📥 Requête reçue:', { 
-      barcode, 
-      name, 
+
+    console.log('[AnalysisRoutes] 📥 Requête reçue:', {
+      barcode,
+      name,
       category,
-      hasIngredients: !!ingredients_text 
+      hasIngredients: !!ingredients_text
     });
 
     // ────────────────────────────────────────────────────────
     // 1️⃣ ANALYSE BASIQUE (analyzeService existant)
     // ────────────────────────────────────────────────────────
-    
+
     let basicAnalysis = null;
-    
+
     if (analyzeService && analyzeService.analyzeAutoSvc) {
       try {
-        basicAnalysis = await analyzeService.analyzeAutoSvc({ 
-          barcode, 
-          name, 
-          category 
+        basicAnalysis = await analyzeService.analyzeAutoSvc({
+          barcode,
+          name,
+          category
         });
         console.log('[AnalysisRoutes] ✅ Analyse basique réussie');
       } catch (err) {
@@ -86,7 +92,7 @@ router.post('/', async (req, res) => {
     // ────────────────────────────────────────────────────────
     // 2️⃣ CONSTRUCTION OBJET PRODUIT POUR ENRICHISSEMENT
     // ────────────────────────────────────────────────────────
-    
+
     const productForEnrichment = {
       name: name || basicAnalysis?.product?.name || 'Produit inconnu',
       barcode: barcode || basicAnalysis?.product?.barcode,
@@ -94,28 +100,32 @@ router.post('/', async (req, res) => {
       category: category,
       ingredients_text: ingredients_text || basicAnalysis?.product?.ingredients_text || '',
       foodData: basicAnalysis?.product?.foodData || {},
-      scores: basicAnalysis?.scores || {}
+      scores: basicAnalysis?.scores || {},
+      // ⭐ AJOUT : Données nécessaires pour Knowledge Base
+      nutrition: basicAnalysis?.product?.nutrition || basicAnalysis?.product?.nutriments || {},
+      subcategory: basicAnalysis?.product?.subcategory || '',
+      tags: basicAnalysis?.product?.tags || []
     };
 
     // ────────────────────────────────────────────────────────
     // 3️⃣ ENRICHISSEMENT HYBRIDE (Knowledge Base + DeepSeek)
     // ────────────────────────────────────────────────────────
-    
+
     let enrichedProduct = null;
     let enrichmentSuccess = false;
-    
+
     if (productForEnrichment.ingredients_text) {
       try {
         console.log('[AnalysisRoutes] 🔬 Début enrichissement hybride...');
-        
+
         enrichedProduct = await aiEnrichment.enrichProductWithAI(productForEnrichment);
-        
+
         enrichmentSuccess = true;
-        
+
         console.log('[AnalysisRoutes] ✅ Enrichissement hybride réussi');
         console.log('[AnalysisRoutes] 📊 Knowledge base utilisée:', enrichedProduct.knowledgeBaseUsed);
         console.log('[AnalysisRoutes] 📊 Score impact:', enrichedProduct.knowledgeAnalysis?.scoreImpact);
-        
+
       } catch (err) {
         console.error('[AnalysisRoutes] ❌ Erreur enrichissement hybride:', err.message);
         enrichedProduct = productForEnrichment; // Fallback sur produit de base
@@ -126,11 +136,35 @@ router.post('/', async (req, res) => {
     }
 
     // ────────────────────────────────────────────────────────
-    // 4️⃣ CONSTRUCTION RÉPONSE FINALE
+    // 4️⃣ ⭐ NOUVEAU : GÉNÉRATION RÉPONSE CONSTITUTION (M2 WEEK 1)
     // ────────────────────────────────────────────────────────
-    
+
+    let constitutionResponse = null;
+    let constitutionSuccess = false;
+
+    try {
+      console.log('[AnalysisRoutes] 📖 Génération réponse Constitution...');
+      
+      const productForKB = enrichedProduct || productForEnrichment;
+      constitutionResponse = knowledgeBaseService.generateResponse(productForKB);
+      
+      constitutionSuccess = true;
+      
+      console.log('[AnalysisRoutes] ✅ Réponse Constitution générée');
+      console.log('[AnalysisRoutes] 🎯 Habitude:', constitutionResponse.habit.name);
+      console.log('[AnalysisRoutes] 📋 Template:', constitutionResponse.template.id);
+      
+    } catch (err) {
+      console.error('[AnalysisRoutes] ❌ Erreur génération Constitution:', err.message);
+      // Pas critique, continue sans réponse Constitution
+    }
+
+    // ────────────────────────────────────────────────────────
+    // 5️⃣ CONSTRUCTION RÉPONSE FINALE
+    // ────────────────────────────────────────────────────────
+
     const finalProduct = enrichedProduct || productForEnrichment;
-    
+
     // Extraction sécurisée des scores
     const scores = finalProduct.scores || {};
     const health = scores.healthScore || scores.health || 50;
@@ -168,6 +202,32 @@ router.post('/', async (req, res) => {
       response.aiEnrichmentDate = finalProduct.aiEnrichmentDate;
     }
 
+    // ⭐ M2 WEEK 1 : AJOUT RÉPONSE CONSTITUTION
+    if (constitutionSuccess && constitutionResponse) {
+      response.constitution = {
+        habit: {
+          id: constitutionResponse.habit.id,
+          name: constitutionResponse.habit.name,
+          description: constitutionResponse.habit.description,
+          examples: constitutionResponse.habit.examples
+        },
+        template: {
+          id: constitutionResponse.template.id,
+          name: constitutionResponse.template.name
+        },
+        response: {
+          whatItIs: constitutionResponse.response.whatItIs,
+          composition: constitutionResponse.response.composition,
+          science: constitutionResponse.response.science,
+          reflex: constitutionResponse.response.reflex,
+          actions: constitutionResponse.response.actions,
+          habitImpact: constitutionResponse.response.habitImpact
+        }
+      };
+      response.constitutionGenerated = true;
+      response.constitutionVersion = 'M2-Week1';
+    }
+
     const duration = Date.now() - startTime;
     console.log(`[AnalysisRoutes] ✅ Analyse terminée en ${duration}ms`);
 
@@ -180,14 +240,14 @@ router.post('/', async (req, res) => {
 
     // Réponse d'erreur gracieuse
     res.status(500).json({
-      product: { 
+      product: {
         name: req.body.name || 'Erreur',
-        barcode: req.body.barcode 
+        barcode: req.body.barcode
       },
-      scores: { 
-        health: 50, 
-        healthScore: 50, 
-        environmentScore: 50 
+      scores: {
+        health: 50,
+        healthScore: 50,
+        environmentScore: 50
       },
       summary: 'Erreur lors de l\'analyse du produit',
       globalScore: 50,
