@@ -5,15 +5,15 @@
   "items": [
     {
       "id": "added_sugar",
-      "names": ["sugar", "sucre", "added sugar", "sucre ajouté"],
+      "names": ["sugar", "sucre", "added sugar", "sucre ajoutÃ©"],
       "severity": "critical",
       "score": 20,
-      "category": "Sucres ajoutés",
-      "description": "Sucre ajouté en quantité élevée",
-      "details": "Les sucres ajoutés en excès augmentent les risques d'obésité, diabète type 2, caries dentaires et maladies cardiovasculaires.",
+      "category": "Sucres ajoutÃ©s",
+      "description": "Sucre ajoutÃ© en quantitÃ© Ã©levÃ©e",
+      "details": "Les sucres ajoutÃ©s en excÃ¨s augmentent les risques d'obÃ©sitÃ©, diabÃ¨te type 2, caries dentaires et maladies cardiovasculaires.",
       "concerns": [
-        "Obésité",
-        "Diabète type 2",
+        "ObÃ©sitÃ©",
+        "DiabÃ¨te type 2",
         "Caries dentaires",
         "Maladies cardiovasculaires"
       ],
@@ -21,13 +21,13 @@
         {
           "name": "OMS",
           "year": "2023",
-          "recommendation": "< 10% de l'apport énergétique total (idéalement < 5%)"
+          "recommendation": "< 10% de l'apport Ã©nergÃ©tique total (idÃ©alement < 5%)"
         }
       ],
       "alternatives": [
-        "Réduire progressivement",
-        "Privilégier fruits frais",
-        "Eau plate ou pétillante"
+        "RÃ©duire progressivement",
+        "PrivilÃ©gier fruits frais",
+        "Eau plate ou pÃ©tillante"
       ]
     }
   ]

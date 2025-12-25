@@ -8,34 +8,34 @@
       "names": ["caramel E150d", "E150d", "caramel au sulfite d'ammonium", "E150"],
       "severity": "high",
       "score": 35,
-      "category": "Colorants controversés",
+      "category": "Colorants controversÃ©s",
       "description": "Colorant caramel au sulfite d'ammonium",
-      "details": "Produit 4-méthylimidazole (4-MEI) lors de fabrication. Substance classée possiblement cancérigène par CIRC.",
+      "details": "Produit 4-mÃ©thylimidazole (4-MEI) lors de fabrication. Substance classÃ©e possiblement cancÃ©rigÃ¨ne par CIRC.",
       "concerns": [
-        "4-MEI : possiblement cancérigène (études animales)",
-        "Présent massivement dans sodas cola"
+        "4-MEI : possiblement cancÃ©rigÃ¨ne (Ã©tudes animales)",
+        "PrÃ©sent massivement dans sodas cola"
       ]
     },
     {
       "id": "natural_flavourings_vague",
-      "names": ["natural flavourings", "arômes naturels", "natural flavors"],
+      "names": ["natural flavourings", "arÃ´mes naturels", "natural flavors"],
       "severity": "moderate",
       "score": 60,
-      "category": "Ingrédients vagues",
-      "description": "Arômes naturels (terme vague)",
-      "details": "Terme légal mais imprécis. Peut contenir dizaines de substances."
+      "category": "IngrÃ©dients vagues",
+      "description": "ArÃ´mes naturels (terme vague)",
+      "details": "Terme lÃ©gal mais imprÃ©cis. Peut contenir dizaines de substances."
     },
     {
       "id": "caffeine",
-      "names": ["caffeine", "caféine"],
+      "names": ["caffeine", "cafÃ©ine"],
       "severity": "moderate",
       "score": 55,
       "category": "Stimulants",
-      "description": "Caféine",
-      "details": "Stimulant du système nerveux. Effets variables selon individus.",
+      "description": "CafÃ©ine",
+      "details": "Stimulant du systÃ¨me nerveux. Effets variables selon individus.",
       "concerns": [
-        "Déconseillé enfants < 12 ans",
-        "Déconseillé femmes enceintes (max 200mg/jour)",
+        "DÃ©conseillÃ© enfants < 12 ans",
+        "DÃ©conseillÃ© femmes enceintes (max 200mg/jour)",
         "Troubles du sommeil"
       ]
     }

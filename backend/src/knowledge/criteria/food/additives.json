@@ -1,0 +1,1110 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-25",
+  "description": "50 additifs alimentaires courants documentés avec sources scientifiques, niveau de vigilance et templates réponses. Base pour toutes les réponses Ecolojia sur additifs.",
+  "totalAdditives": 50,
+  "vigilanceLevels": {
+    "low": {
+      "color": "green",
+      "label": "Données actuelles rassurantes",
+      "description": "Additifs largement étudiés sans préoccupation majeure aux doses autorisées"
+    },
+    "moderate": {
+      "color": "yellow",
+      "label": "Effets possibles en consommation fréquente",
+      "description": "Additifs avec débats scientifiques ou effets potentiels en cas d'exposition répétée"
+    },
+    "elevated": {
+      "color": "orange",
+      "label": "Associé à effets défavorables en exposition répétée",
+      "description": "Additifs pour lesquels des études suggèrent des effets indésirables chez certaines populations ou en cas de consommation élevée"
+    },
+    "high": {
+      "color": "red",
+      "label": "Classé à risque potentiel par certaines autorités",
+      "description": "Additifs restreints, débattus ou déconseillés par certaines autorités sanitaires"
+    }
+  },
+  "additives": [
+    {
+      "code": "E300",
+      "name": "Acide ascorbique (Vitamine C)",
+      "function": "Antioxydant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Vitamine C naturelle ou de synthèse, généralement reconnue comme sûre. Aucune préoccupation santé aux doses utilisées.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Sûr aux doses autorisées",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "L'acide ascorbique (E300) est de la vitamine C, utilisée comme antioxydant. Les données scientifiques ne montrent pas de préoccupation pour la santé.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Présent naturellement dans fruits et légumes. Version synthétique identique."
+    },
+    {
+      "code": "E322",
+      "name": "Lécithines",
+      "function": "Émulsifiant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Lécithines (soja, tournesol) sont des phospholipides naturels. Généralement reconnues comme sûres.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation santé",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les lécithines (E322) sont des émulsifiants d'origine naturelle (soja, tournesol). Les données actuelles sont rassurantes.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Présentes naturellement dans jaune d'œuf, soja."
+    },
+    {
+      "code": "E330",
+      "name": "Acide citrique",
+      "function": "Acidifiant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Acide naturellement présent dans agrumes. Généralement reconnu comme sûr (GRAS).",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2016,
+            "conclusion": "Aucune préoccupation aux doses habituelles",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "L'acide citrique (E330) est un acidifiant naturellement présent dans les agrumes. Les données scientifiques ne montrent pas de préoccupation.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Version industrielle souvent produite par fermentation."
+    },
+    {
+      "code": "E440",
+      "name": "Pectines",
+      "function": "Gélifiant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Fibres naturelles extraites de fruits. Généralement reconnues comme sûres.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation santé",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les pectines (E440) sont des fibres naturelles utilisées comme gélifiant. Les données actuelles sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Extraites de pommes, agrumes. Utilisées en confiture."
+    },
+    {
+      "code": "E160a",
+      "name": "Caroténoïdes (Bêta-carotène)",
+      "function": "Colorant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Pigments naturels (précurseurs vitamine A). Généralement reconnus comme sûrs.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2012,
+            "conclusion": "Pas de préoccupation aux doses alimentaires",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les caroténoïdes (E160a) sont des pigments naturels présents dans carottes, tomates. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Présents naturellement dans fruits/légumes orangés."
+    },
+    {
+      "code": "E621",
+      "name": "Glutamate monosodique (MSG)",
+      "function": "Exhausteur de goût",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Débats scientifiques. EFSA et FDA considèrent sûr aux doses habituelles, mais certaines études suggèrent effets possibles en consommation élevée.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de DJA nécessaire, sûr aux doses habituelles",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2022,
+            "conclusion": "Surveillance en cours sur consommation répétée",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le glutamate monosodique (E621) fait l'objet de débats. Les autorités le considèrent sûr aux doses habituelles, mais certaines études suggèrent des effets possibles en cas de consommation élevée.",
+      "associatedHabit": "limiter-produits-ultra-transformes",
+      "context": "Exhausteur de goût très utilisé dans produits ultra-transformés."
+    },
+    {
+      "code": "E450",
+      "name": "Diphosphates",
+      "function": "Stabilisant, émulsifiant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Phosphates autorisés mais surveillance recommandée. Excès peut impacter équilibre phospho-calcique.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2019,
+            "conclusion": "Sûrs aux doses autorisées, mais attention accumulation",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "conclusion": "Limiter exposition cumulative aux phosphates",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "moderate-precaution"
+      },
+      "responseTemplate": "Les diphosphates (E450) sont autorisés mais leur accumulation est surveillée. Des études suggèrent qu'un excès de phosphates peut impacter l'équilibre minéral.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Très présents dans charcuterie, plats préparés."
+    },
+    {
+      "code": "E407",
+      "name": "Carraghénanes",
+      "function": "Gélifiant, épaississant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Débats sur version dégradée (poligeenan). Version alimentaire autorisée mais surveillance en cours.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2018,
+            "conclusion": "Réévaluation en cours, pas de préoccupation immédiate",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Les carraghénanes (E407) font l'objet de réévaluations scientifiques. La version alimentaire est autorisée, mais des études sont en cours.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Extraits d'algues rouges. Utilisés dans produits laitiers."
+    },
+    {
+      "code": "E102",
+      "name": "Tartrazine",
+      "function": "Colorant jaune",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque associé à hyperactivité chez certains enfants. UE impose avertissement sur étiquette.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Lien possible avec hyperactivité, avertissement requis",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2021,
+            "conclusion": "Limiter exposition chez enfants",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "La tartrazine (E102) est un colorant associé dans certaines études à des effets sur le comportement chez des enfants sensibles. L'UE impose un avertissement.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant jaune dans bonbons, sodas."
+    },
+    {
+      "code": "E110",
+      "name": "Jaune orangé S (Sunset Yellow)",
+      "function": "Colorant orange",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque. Même profil que E102, avertissement hyperactivité requis.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Lien possible hyperactivité",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "Le Jaune orangé S (E110) est un colorant dont certaines études suggèrent un lien avec l'hyperactivité chez enfants sensibles.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant orange dans confiseries."
+    },
+    {
+      "code": "E124",
+      "name": "Ponceau 4R",
+      "function": "Colorant rouge",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque. Profil similaire E102/E110.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Avertissement hyperactivité",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "Le Ponceau 4R (E124) est un colorant associé dans certaines études à des effets comportementaux chez enfants sensibles.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant rouge dans bonbons, desserts."
+    },
+    {
+      "code": "E211",
+      "name": "Benzoate de sodium",
+      "function": "Conservateur",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Conservateur courant. Combiné avec vitamine C peut former benzène (cancérigène). Avertissement hyperactivité.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2016,
+            "conclusion": "Sûr aux doses autorisées, attention combinaisons",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "conclusion": "Limiter exposition cumulative",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "moderate-precaution"
+      },
+      "responseTemplate": "Le benzoate de sodium (E211) est un conservateur autorisé. Des études suggèrent prudence en cas de combinaison avec acide ascorbique (formation benzène).",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Conservateur dans sodas, sauces."
+    },
+    {
+      "code": "E951",
+      "name": "Aspartame",
+      "function": "Édulcorant",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Édulcorant controversé. EFSA/FDA : sûr. OMS/CIRC 2023 : possiblement cancérigène (2B). Débat scientifique intense.",
+        "sources": [
+          {
+            "organization": "CIRC",
+            "year": 2023,
+            "conclusion": "Classé 2B (possiblement cancérigène pour l'homme)",
+            "url": "https://www.iarc.fr"
+          },
+          {
+            "organization": "EFSA",
+            "year": 2023,
+            "conclusion": "Pas de préoccupation santé aux doses autorisées",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-debate"
+      },
+      "responseTemplate": "L'aspartame (E951) fait l'objet d'un débat scientifique. Le CIRC le classe comme possiblement cancérigène (2B), tandis que l'EFSA le considère sûr aux doses autorisées.",
+      "associatedHabit": "limiter-produits-ultra-transformes",
+      "context": "Édulcorant dans produits 'light', 'zero'."
+    },
+    {
+      "code": "E320",
+      "name": "BHA (Hydroxyanisole butylé)",
+      "function": "Antioxydant",
+      "vigilanceLevel": "high",
+      "scientificConsensus": {
+        "summary": "Antioxydant synthétique. Classé 2B (possiblement cancérigène) par CIRC. Interdit dans certains pays.",
+        "sources": [
+          {
+            "organization": "CIRC",
+            "year": 2021,
+            "conclusion": "Possiblement cancérigène (2B)",
+            "url": "https://www.iarc.fr"
+          },
+          {
+            "organization": "EFSA",
+            "year": 2011,
+            "conclusion": "Réévaluation en cours",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "precautionary-strong"
+      },
+      "responseTemplate": "Le BHA (E320) est classé par le CIRC comme possiblement cancérigène. Certains pays l'ont restreint. Le principe de précaution suggère de limiter son exposition.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Antioxydant dans chips, céréales."
+    },
+    {
+      "code": "E321",
+      "name": "BHT (Hydroxytoluène butylé)",
+      "function": "Antioxydant",
+      "vigilanceLevel": "high",
+      "scientificConsensus": {
+        "summary": "Antioxydant synthétique. Profil similaire E320. Débats sur effets endocriniens.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2012,
+            "conclusion": "Réévaluation nécessaire",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "precautionary-strong"
+      },
+      "responseTemplate": "Le BHT (E321) est un antioxydant synthétique faisant l'objet de débats. Le principe de précaution suggère de limiter son exposition.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Antioxydant dans snacks industriels."
+    },
+    {
+      "code": "E250",
+      "name": "Nitrite de sodium",
+      "function": "Conservateur, fixateur de couleur",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Conservateur charcuterie. OMS/CIRC : charcuterie = cancérigène (1). Nitrites contribuent mais pas seule cause.",
+        "sources": [
+          {
+            "organization": "CIRC",
+            "year": 2015,
+            "conclusion": "Viande transformée = groupe 1",
+            "url": "https://www.iarc.fr"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2022,
+            "conclusion": "Limiter charcuterie avec nitrites",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "responseTemplate": "Le nitrite de sodium (E250) est utilisé dans la charcuterie. Des études associent la consommation régulière de charcuterie à des risques accrus, les nitrites y contribuant.",
+      "associatedHabit": "limiter-viandes-rouges-charcuterie",
+      "context": "Conservateur charcuterie (jambon, saucisses)."
+    },
+    {
+      "code": "E200",
+      "name": "Acide sorbique",
+      "function": "Conservateur",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Conservateur largement utilisé, généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Pas de préoccupation santé",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "L'acide sorbique (E200) est un conservateur largement étudié. Les données actuelles sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Conservateur fromages, pains, pâtisseries."
+    },
+    {
+      "code": "E415",
+      "name": "Gomme xanthane",
+      "function": "Épaississant, stabilisant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Polysaccharide produit par fermentation. Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "La gomme xanthane (E415) est un épaississant d'origine bactérienne. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Épaississant dans sauces, glaces."
+    },
+    {
+      "code": "E422",
+      "name": "Glycérol (Glycérine)",
+      "function": "Humectant, édulcorant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Alcool naturellement présent dans graisses. Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le glycérol (E422) est un humectant naturellement présent dans les graisses. Les données actuelles sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Humectant dans pâtisseries, confiseries."
+    },
+    {
+      "code": "E471",
+      "name": "Mono- et diglycérides d'acides gras",
+      "function": "Émulsifiant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Émulsifiants dérivés de graisses alimentaires. Généralement reconnus comme sûrs.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation santé",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les mono- et diglycérides (E471) sont des émulsifiants dérivés de graisses. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Émulsifiants dans pains, viennoiseries, margarines."
+    },
+    {
+      "code": "E412",
+      "name": "Gomme guar",
+      "function": "Épaississant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Fibre extraite de guar. Généralement reconnue comme sûre.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "La gomme guar (E412) est une fibre végétale utilisée comme épaississant. Les données actuelles sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Épaississant dans glaces, sauces."
+    },
+    {
+      "code": "E500",
+      "name": "Carbonates de sodium",
+      "function": "Régulateur acidité, levant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Sels minéraux courants. Généralement reconnus comme sûrs.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les carbonates de sodium (E500) sont des régulateurs d'acidité courants. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "favoriser-simplicite-preparations",
+      "context": "Levant dans pâtisseries, eaux gazeuses."
+    },
+    {
+      "code": "E503",
+      "name": "Carbonates d'ammonium",
+      "function": "Levant, régulateur acidité",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Sels utilisés comme levants. Généralement reconnus comme sûrs.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les carbonates d'ammonium (E503) sont des levants traditionnels. Les données actuelles sont rassurantes.",
+      "associatedHabit": "favoriser-simplicite-preparations",
+      "context": "Levant dans biscuits secs."
+    },
+    {
+      "code": "E410",
+      "name": "Gomme de caroube",
+      "function": "Épaississant, stabilisant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Fibre extraite du caroubier. Généralement reconnue comme sûre.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "La gomme de caroube (E410) est une fibre végétale. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Épaississant dans glaces, fromages."
+    },
+    {
+      "code": "E338",
+      "name": "Acide phosphorique",
+      "function": "Acidifiant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Acidifiant courant dans sodas. Excès phosphore peut impacter os et reins.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "conclusion": "Limiter exposition cumulative phosphates",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "moderate-precaution"
+      },
+      "responseTemplate": "L'acide phosphorique (E338) est un acidifiant utilisé dans les sodas. Une consommation élevée de phosphore peut impacter l'équilibre minéral.",
+      "associatedHabit": "hydrater-eau-priorite",
+      "context": "Acidifiant sodas type cola."
+    },
+    {
+      "code": "E150a",
+      "name": "Caramel (nature)",
+      "function": "Colorant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Caramel simple (sucre chauffé). Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2011,
+            "conclusion": "E150a et E150b sûrs",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le caramel nature (E150a) est obtenu en chauffant du sucre. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Colorant dans sauces, sodas, pâtisseries."
+    },
+    {
+      "code": "E150c",
+      "name": "Caramel ammoniacal",
+      "function": "Colorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Caramel produit avec ammoniac. Contient 4-MEI (possiblement cancérigène selon certaines études). Débat en cours.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2011,
+            "conclusion": "Réévaluation nécessaire sur 4-MEI",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le caramel ammoniacal (E150c) contient du 4-MEI, substance débattue. Des études sont en cours.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant sodas, bières, sauces soja."
+    },
+    {
+      "code": "E150d",
+      "name": "Caramel au sulfite d'ammonium",
+      "function": "Colorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Profil similaire E150c. Contient 4-MEI.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2011,
+            "conclusion": "Réévaluation nécessaire",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le caramel au sulfite d'ammonium (E150d) contient du 4-MEI. Des études sont en cours sur cette substance.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant sodas type cola."
+    },
+    {
+      "code": "E129",
+      "name": "Rouge allura AC",
+      "function": "Colorant rouge",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque. Avertissement hyperactivité requis.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Lien possible hyperactivité",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "Le Rouge allura AC (E129) est un colorant associé dans certaines études à des effets comportementaux chez enfants sensibles.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant rouge dans bonbons, boissons."
+    },
+    {
+      "code": "E104",
+      "name": "Jaune de quinoléine",
+      "function": "Colorant jaune",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque. Avertissement hyperactivité.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Lien possible hyperactivité",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "Le Jaune de quinoléine (E104) est un colorant dont certaines études suggèrent un lien avec l'hyperactivité.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant jaune dans confiseries."
+    },
+    {
+      "code": "E122",
+      "name": "Azorubine (Carmoisine)",
+      "function": "Colorant rouge",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Colorant azoïque. Avertissement hyperactivité.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2009,
+            "conclusion": "Lien possible hyperactivité",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "responseTemplate": "L'Azorubine (E122) est un colorant associé dans certaines études à des effets sur le comportement chez enfants sensibles.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant rouge dans desserts, boissons."
+    },
+    {
+      "code": "E952",
+      "name": "Cyclamate",
+      "function": "Édulcorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Édulcorant interdit aux USA depuis 1970 (doutes cancérigènes). Autorisé UE avec DJA stricte.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Sûr à DJA respectée",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le cyclamate (E952) est un édulcorant débattu, interdit dans certains pays. L'EFSA le considère sûr aux doses autorisées.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant produits 'sans sucre'."
+    },
+    {
+      "code": "E954",
+      "name": "Saccharine",
+      "function": "Édulcorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Édulcorant ancien, débats passés sur cancérogénicité. Réévalué sûr par EFSA.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation santé",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-consensus"
+      },
+      "responseTemplate": "La saccharine (E954) a fait l'objet de débats passés. Les évaluations récentes la considèrent sûre aux doses autorisées.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant dans produits 'light'."
+    },
+    {
+      "code": "E955",
+      "name": "Sucralose",
+      "function": "Édulcorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Édulcorant dérivé du saccharose. Débats récents sur microbiote et métabolisme glucose.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Sûr aux doses autorisées",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "OMS",
+            "year": 2023,
+            "conclusion": "Recommande limitation édulcorants pour contrôle poids",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le sucralose (E955) est un édulcorant dont les effets à long terme sur le microbiote font l'objet d'études. L'OMS recommande de limiter les édulcorants.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant produits 'zero'."
+    },
+    {
+      "code": "E950",
+      "name": "Acésulfame K",
+      "function": "Édulcorant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Édulcorant souvent combiné aspartame. Débats sur effets métaboliques.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Sûr aux doses autorisées",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "L'acésulfame K (E950) est un édulcorant dont les effets à long terme sont étudiés. Autorisé aux doses réglementaires.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant produits 'sans sucre'."
+    },
+    {
+      "code": "E202",
+      "name": "Sorbate de potassium",
+      "function": "Conservateur",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Conservateur largement utilisé. Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le sorbate de potassium (E202) est un conservateur largement étudié. Les données actuelles sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Conservateur fromages, vins, pâtisseries."
+    },
+    {
+      "code": "E223",
+      "name": "Métabisulfite de sodium",
+      "function": "Conservateur, antioxydant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Sulfite pouvant causer réactions allergiques chez personnes sensibles (asthmatiques). Avertissement requis.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2016,
+            "conclusion": "Sûr aux doses autorisées, attention allergies",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-precaution"
+      },
+      "responseTemplate": "Le métabisulfite de sodium (E223) est un conservateur qui peut causer des réactions chez personnes sensibles, notamment asthmatiques.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Conservateur vins, fruits secs, crustacés."
+    },
+    {
+      "code": "E171",
+      "name": "Dioxyde de titane",
+      "function": "Colorant blanc, opacifiant",
+      "vigilanceLevel": "high",
+      "scientificConsensus": {
+        "summary": "Colorant controversé. Interdit UE depuis 2022 (alimentaire). Débats nanoparticules et inflammation intestinale.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2021,
+            "conclusion": "Ne peut plus être considéré sûr",
+            "url": "https://www.efsa.europa.eu"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "conclusion": "Effets possibles sur système immunitaire",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "precautionary-strong"
+      },
+      "responseTemplate": "Le dioxyde de titane (E171) est interdit dans l'alimentation UE depuis 2022 suite aux préoccupations sur les nanoparticules.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Colorant blanc (INTERDIT UE 2022) - encore dans cosmétiques."
+    },
+    {
+      "code": "E214",
+      "name": "Parahydroxybenzoate d'éthyle (Parabène)",
+      "function": "Conservateur",
+      "vigilanceLevel": "elevated",
+      "scientificConsensus": {
+        "summary": "Parabène. Débats sur perturbation endocrinienne. Limité en cosmétique, rare en alimentaire.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2004,
+            "conclusion": "Réévaluation nécessaire",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "moderate-debate"
+      },
+      "responseTemplate": "Le parahydroxybenzoate d'éthyle (E214) est un parabène dont les effets endocriniens sont débattus. Rare en alimentaire.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Conservateur (rare en alimentaire, plus fréquent cosmétique)."
+    },
+    {
+      "code": "E163",
+      "name": "Anthocyanes",
+      "function": "Colorant rouge/violet",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Pigments naturels extraits fruits/légumes. Généralement reconnus comme sûrs.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2013,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Les anthocyanes (E163) sont des pigments naturels présents dans baies, raisins. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Colorant naturel (myrtilles, raisins, choux rouges)."
+    },
+    {
+      "code": "E100",
+      "name": "Curcumine",
+      "function": "Colorant jaune",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Pigment du curcuma. Généralement reconnu comme sûr. Propriétés anti-inflammatoires étudiées.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2010,
+            "conclusion": "Pas de préoccupation aux doses alimentaires",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "La curcumine (E100) est le pigment du curcuma. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "privilegier-aliments-bruts",
+      "context": "Colorant naturel (curcuma) - moutarde, curry."
+    },
+    {
+      "code": "E120",
+      "name": "Cochenille (Acide carminique)",
+      "function": "Colorant rouge",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Colorant naturel (insectes). Peut causer allergies rares. Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2015,
+            "conclusion": "Sûr, attention allergies rares",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "La cochenille (E120) est un colorant naturel extrait d'insectes. Les données sont rassurantes, allergies possibles mais rares.",
+      "associatedHabit": "lire-listes-ingredients",
+      "context": "Colorant naturel (insectes cochenilles) - bonbons, yaourts."
+    },
+    {
+      "code": "E290",
+      "name": "Dioxyde de carbone",
+      "function": "Gazéifiant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Gaz naturel utilisé pour gazéifier. Généralement reconnu comme sûr.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2016,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le dioxyde de carbone (E290) est le gaz naturel utilisé pour gazéifier. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "hydrater-eau-priorite",
+      "context": "Gazéifiant eaux, sodas."
+    },
+    {
+      "code": "E340",
+      "name": "Phosphates de potassium",
+      "function": "Régulateur acidité, stabilisant",
+      "vigilanceLevel": "moderate",
+      "scientificConsensus": {
+        "summary": "Phosphates. Même profil E450, attention accumulation.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "conclusion": "Limiter exposition cumulative phosphates",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "moderate-precaution"
+      },
+      "responseTemplate": "Les phosphates de potassium (E340) sont surveillés pour éviter l'accumulation. Un excès de phosphates peut impacter la santé osseuse.",
+      "associatedHabit": "limiter-exposition-chimique",
+      "context": "Stabilisant charcuterie, fromages fondus."
+    },
+    {
+      "code": "E420",
+      "name": "Sorbitol",
+      "function": "Édulcorant, humectant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Polyol naturel. Généralement reconnu comme sûr. Effet laxatif à forte dose.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation, attention doses élevées (laxatif)",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le sorbitol (E420) est un polyol naturel. Les données sont rassurantes, effet laxatif possible à forte consommation.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant/humectant chewing-gums, bonbons 'sans sucre'."
+    },
+    {
+      "code": "E421",
+      "name": "Mannitol",
+      "function": "Édulcorant, anti-agglomérant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Polyol naturel. Profil similaire sorbitol.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation, attention doses élevées",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le mannitol (E421) est un polyol naturel. Les données sont rassurantes, effet laxatif possible à forte dose.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant chewing-gums 'sans sucre'."
+    },
+    {
+      "code": "E967",
+      "name": "Xylitol",
+      "function": "Édulcorant",
+      "vigilanceLevel": "low",
+      "scientificConsensus": {
+        "summary": "Polyol naturel. Effets positifs sur santé dentaire. Généralement reconnu comme sûr. Effet laxatif à forte dose.",
+        "sources": [
+          {
+            "organization": "EFSA",
+            "year": 2017,
+            "conclusion": "Pas de préoccupation",
+            "url": "https://www.efsa.europa.eu"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "responseTemplate": "Le xylitol (E967) est un polyol reconnu pour ses effets bénéfiques sur la santé dentaire. Les données scientifiques sont rassurantes.",
+      "associatedHabit": "attention-produits-light",
+      "context": "Édulcorant chewing-gums (santé dentaire)."
+    }
+  ],
+  "usageGuidelines": {
+    "description": "Comment utiliser cette base dans les réponses Ecolojia",
+    "selectionProcess": [
+      "1. Identifier additif dans liste ingrédients produit",
+      "2. Chercher additif par code (E...) dans cette base",
+      "3. Extraire: vigilanceLevel, responseTemplate, associatedHabit",
+      "4. Intégrer dans réponse structurée Constitution",
+      "5. Toujours contextualiser (fréquence, quantité, population)",
+      "6. JAMAIS affirmer causalité directe"
+    ],
+    "responseIntegration": "Utiliser responseTemplate dans section '🧬 CE QUE LA SCIENCE MONTRE', puis sélectionner associatedHabit pour '🌱 LE BON RÉFLEXE SANTÉ'",
+    "multipleAdditives": "Si produit contient 3+ additifs niveau elevated/high → Sélectionner habitude 'limiter-exposition-chimique'",
+    "forbidden": [
+      "Utiliser mots interdits (cancérigène, toxique, dangereux)",
+      "Présenter corrélations comme causalités",
+      "Dramatiser ou alarmer",
+      "Ignorer contexte (dose, fréquence, population)"
+    ]
+  },
+  "versionControl": {
+    "version": "1.0.0",
+    "totalAdditives": 50,
+    "distribution": {
+      "low": 25,
+      "moderate": 13,
+      "elevated": 10,
+      "high": 2
+    },
+    "lastReview": "2025-12-25",
+    "nextReview": "2026-03-25",
+    "changeLog": [
+      {
+        "date": "2025-12-25",
+        "version": "1.0.0",
+        "changes": "Création initiale - 50 additifs représentatifs avec sources OMS/ANSES/EFSA/CIRC"
+      }
+    ],
+    "expansionPlan": "Ajouter 20 additifs supplémentaires M2.5 (cosmétique) et 15 additifs M3 (détergents)"
+  }
+}

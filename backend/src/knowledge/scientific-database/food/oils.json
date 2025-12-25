@@ -3,32 +3,32 @@
   "lastUpdated": "2025-11-16",
   "category": "food",
   "subcategory": "oils",
-  "description": "Base de connaissance scientifique exhaustive sur les huiles alimentaires, leurs variants, risques, bénéfices et alternatives",
+  "description": "Base de connaissance scientifique exhaustive sur les huiles alimentaires, leurs variants, risques, bÃ©nÃ©fices et alternatives",
   "oils": [
     {
       "name": "Huile de tournesol",
       "commonNames": ["Sunflower oil", "Huile de tournesol"],
       "variants": [
         {
-          "type": "raffinée",
+          "type": "raffinÃ©e",
           "score": 25,
-          "description": "Huile de tournesol raffinée industriellement par procédés chimiques",
+          "description": "Huile de tournesol raffinÃ©e industriellement par procÃ©dÃ©s chimiques",
           "risks": [
             {
-              "category": "Procédé chimique destructeur",
+              "category": "ProcÃ©dÃ© chimique destructeur",
               "severity": "high",
-              "details": "Raffinage à haute température (>200°C) avec désodorisation, blanchiment et neutralisation chimique. Ce processus détruit les vitamines E et caroténoïdes naturels et crée des composés toxiques comme l'acroléine et les peroxydes lipidiques.",
+              "details": "Raffinage Ã  haute tempÃ©rature (>200Â°C) avec dÃ©sodorisation, blanchiment et neutralisation chimique. Ce processus dÃ©truit les vitamines E et carotÃ©noÃ¯des naturels et crÃ©e des composÃ©s toxiques comme l'acrolÃ©ine et les peroxydes lipidiques.",
               "healthImpact": "Stress oxydatif, inflammation cellulaire",
               "sources": [
-                "Anses (2023) - Rapport sur les procédés de raffinage des huiles",
+                "Anses (2023) - Rapport sur les procÃ©dÃ©s de raffinage des huiles",
                 "EFSA (2024) - Process contaminants in refined oils"
               ]
             },
             {
-              "category": "Déséquilibre oméga-6/oméga-3",
+              "category": "DÃ©sÃ©quilibre omÃ©ga-6/omÃ©ga-3",
               "severity": "critical",
-              "details": "Contient 70% d'acide linoléique (oméga-6) et quasiment 0% d'oméga-3. Le ratio occidental moderne est de 15:1 alors que le ratio optimal est de 5:1 maximum.",
-              "healthImpact": "Inflammation chronique de bas grade, augmentation du risque cardiovasculaire, résistance à l'insuline",
+              "details": "Contient 70% d'acide linolÃ©ique (omÃ©ga-6) et quasiment 0% d'omÃ©ga-3. Le ratio occidental moderne est de 15:1 alors que le ratio optimal est de 5:1 maximum.",
+              "healthImpact": "Inflammation chronique de bas grade, augmentation du risque cardiovasculaire, rÃ©sistance Ã  l'insuline",
               "sources": [
                 "OMS (2024) - Guidelines on fatty acids intake",
                 "JAMA Cardiology (2023) - Omega-6/Omega-3 ratio and cardiovascular disease"
@@ -37,8 +37,8 @@
             {
               "category": "Oxydation rapide",
               "severity": "high",
-              "details": "Très instable à la chaleur et à la lumière. S'oxyde rapidement en créant des peroxydes lipidiques et des aldéhydes toxiques (acroléine, malondialdéhyde).",
-              "healthImpact": "Dommages cellulaires, accélération du vieillissement",
+              "details": "TrÃ¨s instable Ã  la chaleur et Ã  la lumiÃ¨re. S'oxyde rapidement en crÃ©ant des peroxydes lipidiques et des aldÃ©hydes toxiques (acrolÃ©ine, malondialdÃ©hyde).",
+              "healthImpact": "Dommages cellulaires, accÃ©lÃ©ration du vieillissement",
               "sources": [
                 "European Journal of Lipid Science and Technology (2024)",
                 "Free Radical Biology and Medicine (2023)"
@@ -50,53 +50,53 @@
             "omega3": "<1%",
             "omega9": "20%",
             "saturatedFat": "10%",
-            "vitaminE": "Détruite par raffinage"
+            "vitaminE": "DÃ©truite par raffinage"
           },
-          "usage": "À ÉVITER",
+          "usage": "Ã€ Ã‰VITER",
           "alternatives": [
             {
               "name": "Huile d'olive vierge extra",
               "score": 92,
-              "why": "Pressée à froid, riche en oméga-9 anti-inflammatoires, polyphénols antioxydants puissants"
+              "why": "PressÃ©e Ã  froid, riche en omÃ©ga-9 anti-inflammatoires, polyphÃ©nols antioxydants puissants"
             },
             {
               "name": "Huile de colza vierge",
               "score": 88,
-              "why": "Bon ratio oméga-6/3 (2:1), stable en cuisson douce, riche en vitamine E"
+              "why": "Bon ratio omÃ©ga-6/3 (2:1), stable en cuisson douce, riche en vitamine E"
             }
           ]
         },
         {
-          "type": "pressée à froid bio",
+          "type": "pressÃ©e Ã  froid bio",
           "score": 65,
-          "description": "Huile de tournesol bio pressée mécaniquement à froid (<60°C) sans solvants",
+          "description": "Huile de tournesol bio pressÃ©e mÃ©caniquement Ã  froid (<60Â°C) sans solvants",
           "risks": [
             {
-              "category": "Déséquilibre oméga-6 persistant",
+              "category": "DÃ©sÃ©quilibre omÃ©ga-6 persistant",
               "severity": "moderate",
-              "details": "Même bio et pressée à froid, l'huile de tournesol reste naturellement très riche en oméga-6 (70%) avec très peu d'oméga-3.",
-              "healthImpact": "Contribution au déséquilibre inflammatoire si consommation régulière",
-              "sources": ["ANSES (2024) - Profil lipidique des huiles végétales"]
+              "details": "MÃªme bio et pressÃ©e Ã  froid, l'huile de tournesol reste naturellement trÃ¨s riche en omÃ©ga-6 (70%) avec trÃ¨s peu d'omÃ©ga-3.",
+              "healthImpact": "Contribution au dÃ©sÃ©quilibre inflammatoire si consommation rÃ©guliÃ¨re",
+              "sources": ["ANSES (2024) - Profil lipidique des huiles vÃ©gÃ©tales"]
             }
           ],
           "benefits": [
             "Conservation de la vitamine E naturelle",
-            "Pas de résidus chimiques",
-            "Goût préservé"
+            "Pas de rÃ©sidus chimiques",
+            "GoÃ»t prÃ©servÃ©"
           ],
           "nutritionalProfile": {
             "omega6": "70%",
             "omega3": "<1%",
             "omega9": "20%",
             "saturatedFat": "10%",
-            "vitaminE": "Présente (tocopherols)"
+            "vitaminE": "PrÃ©sente (tocopherols)"
           },
           "usage": "Assaisonnement uniquement (jamais de cuisson)",
           "alternatives": [
             {
               "name": "Huile de lin bio",
               "score": 90,
-              "why": "Très riche en oméga-3 (57%), rééquilibre le ratio oméga-6/3"
+              "why": "TrÃ¨s riche en omÃ©ga-3 (57%), rÃ©Ã©quilibre le ratio omÃ©ga-6/3"
             }
           ]
         }
@@ -107,25 +107,25 @@
       "commonNames": ["Palm oil", "Huile de palme"],
       "variants": [
         {
-          "type": "raffinée",
+          "type": "raffinÃ©e",
           "score": 15,
-          "description": "Huile de palme raffinée industriellement, première cause de déforestation mondiale",
+          "description": "Huile de palme raffinÃ©e industriellement, premiÃ¨re cause de dÃ©forestation mondiale",
           "risks": [
             {
-              "category": "Déforestation massive",
+              "category": "DÃ©forestation massive",
               "severity": "critical",
-              "details": "Culture industrielle de palmiers à huile = première cause de déforestation en Asie du Sud-Est (Indonésie, Malaisie, Bornéo, Sumatra). Destruction de l'habitat des orangs-outans, tigres de Sumatra, rhinocéros. Émissions massives de CO2 par brûlis.",
-              "environmentalImpact": "Extinction d'espèces, réchauffement climatique, pertes de biodiversité irréversibles",
+              "details": "Culture industrielle de palmiers Ã  huile = premiÃ¨re cause de dÃ©forestation en Asie du Sud-Est (IndonÃ©sie, Malaisie, BornÃ©o, Sumatra). Destruction de l'habitat des orangs-outans, tigres de Sumatra, rhinocÃ©ros. Ã‰missions massives de CO2 par brÃ»lis.",
+              "environmentalImpact": "Extinction d'espÃ¨ces, rÃ©chauffement climatique, pertes de biodiversitÃ© irrÃ©versibles",
               "sources": [
                 "Greenpeace Report (2024) - Deforestation for palm oil",
                 "WWF (2024) - Palm oil and biodiversity loss"
               ]
             },
             {
-              "category": "Composés génotoxiques cancérigènes",
+              "category": "ComposÃ©s gÃ©notoxiques cancÃ©rigÃ¨nes",
               "severity": "critical",
-              "details": "Le raffinage à très haute température (>200°C) crée des esters de 3-MCPD (3-monochloropropane-1,2-diol) et du glycidol, classés comme génotoxiques probablement cancérigènes.",
-              "healthImpact": "Dommages à l'ADN, risque cancérigène à long terme",
+              "details": "Le raffinage Ã  trÃ¨s haute tempÃ©rature (>200Â°C) crÃ©e des esters de 3-MCPD (3-monochloropropane-1,2-diol) et du glycidol, classÃ©s comme gÃ©notoxiques probablement cancÃ©rigÃ¨nes.",
+              "healthImpact": "Dommages Ã  l'ADN, risque cancÃ©rigÃ¨ne Ã  long terme",
               "sources": [
                 "EFSA (2023) - Risks to human health related to process contaminants in palm oil",
                 "IARC Monographs (2023) - Glycidol carcinogenicity"
@@ -138,12 +138,12 @@
             "omega6": "10%",
             "omega3": "0%"
           },
-          "usage": "À BANNIR",
+          "usage": "Ã€ BANNIR",
           "alternatives": [
             {
               "name": "Huile de coco vierge bio",
               "score": 78,
-              "why": "Également riche en graisses saturées mais acides gras à chaîne moyenne (MCT) mieux métabolisés"
+              "why": "Ã‰galement riche en graisses saturÃ©es mais acides gras Ã  chaÃ®ne moyenne (MCT) mieux mÃ©tabolisÃ©s"
             },
             {
               "name": "Beurre de cacao bio",
@@ -161,11 +161,11 @@
         {
           "type": "vierge extra",
           "score": 92,
-          "description": "Or liquide de la Méditerranée - huile extraite mécaniquement à froid",
+          "description": "Or liquide de la MÃ©diterranÃ©e - huile extraite mÃ©caniquement Ã  froid",
           "benefits": [
             {
-              "category": "Polyphénols antioxydants puissants",
-              "details": "Très riche en hydroxytyrosol, oléocanthal, oleuropéine",
+              "category": "PolyphÃ©nols antioxydants puissants",
+              "details": "TrÃ¨s riche en hydroxytyrosol, olÃ©ocanthal, oleuropÃ©ine",
               "healthImpact": "Protection cardiovasculaire, anti-cancer, neuroprotection",
               "sources": ["New England Journal of Medicine (2024) - PREDIMED study"]
             }
@@ -175,10 +175,10 @@
             "omega6": "10%",
             "omega3": "1%",
             "saturatedFat": "14%",
-            "polyphenols": "Élevés (200-500 mg/kg)",
-            "vitaminE": "Présente"
+            "polyphenols": "Ã‰levÃ©s (200-500 mg/kg)",
+            "vitaminE": "PrÃ©sente"
           },
-          "usage": "Assaisonnement ++ | Cuisson douce-moyenne (<180°C)"
+          "usage": "Assaisonnement ++ | Cuisson douce-moyenne (<180Â°C)"
         }
       ]
     }
@@ -189,9 +189,9 @@
       "Huile de colza vierge (cuisson douce quotidienne)"
     ],
     "toAvoid": [
-      "Huile de palme raffinée",
-      "Huile de tournesol raffinée",
-      "Huiles hydrogénées"
+      "Huile de palme raffinÃ©e",
+      "Huile de tournesol raffinÃ©e",
+      "Huiles hydrogÃ©nÃ©es"
     ]
   }
 }

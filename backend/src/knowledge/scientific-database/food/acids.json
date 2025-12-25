@@ -8,13 +8,13 @@
       "names": ["phosphoric acid", "acide phosphorique", "E338", "e338"],
       "severity": "critical",
       "score": 25,
-      "category": "Acidifiants controversés",
+      "category": "Acidifiants controversÃ©s",
       "description": "Acide phosphorique (E338)",
-      "details": "Utilisé comme acidifiant dans sodas. Peut affecter l'absorption du calcium et la densité osseuse.",
+      "details": "UtilisÃ© comme acidifiant dans sodas. Peut affecter l'absorption du calcium et la densitÃ© osseuse.",
       "concerns": [
-        "Diminution densité minérale osseuse",
-        "Interférence absorption calcium/magnésium",
-        "Problèmes rénaux si consommation excessive"
+        "Diminution densitÃ© minÃ©rale osseuse",
+        "InterfÃ©rence absorption calcium/magnÃ©sium",
+        "ProblÃ¨mes rÃ©naux si consommation excessive"
       ],
       "sources": [
         {
@@ -31,7 +31,7 @@
       "score": 75,
       "category": "Acidifiants naturels",
       "description": "Acide citrique (E330)",
-      "details": "Acidifiant naturel présent dans agrumes. Généralement sans risque."
+      "details": "Acidifiant naturel prÃ©sent dans agrumes. GÃ©nÃ©ralement sans risque."
     }
   ]
 }

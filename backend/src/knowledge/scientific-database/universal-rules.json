@@ -1,71 +1,71 @@
 {
   "version": "1.0.0",
   "lastUpdated": "2025-11-16",
-  "description": "Règles universelles de détection des ingrédients vagues, procédés cachés et red flags alimentaires. Applicable à TOUS les produits.",
+  "description": "RÃ¨gles universelles de dÃ©tection des ingrÃ©dients vagues, procÃ©dÃ©s cachÃ©s et red flags alimentaires. Applicable Ã  TOUS les produits.",
   "categories": {
     "vagueIngredients": {
-      "description": "Détection des mentions vagues qui cachent systématiquement des ingrédients de mauvaise qualité",
+      "description": "DÃ©tection des mentions vagues qui cachent systÃ©matiquement des ingrÃ©dients de mauvaise qualitÃ©",
       "rules": [
         {
           "id": "vague_oil",
-          "triggers": ["huile végétale", "matière grasse végétale", "huiles végétales", "graisses végétales", "huile", "matière grasse"],
-      "exceptions": ["vierge extra", "vierge", "extra vierge", "premiere pression", "première pression", "pression a froid", "pression à froid", "bio", "biologique", "olive", "colza vierge", "coco vierge", "lin", "noix", "noisette", "avocat", "sesame", "sésame"],
-          "assumed": "huile végétale raffinée (tournesol, palme ou soja OGM probable)",
+          "triggers": ["huile vÃ©gÃ©tale", "matiÃ¨re grasse vÃ©gÃ©tale", "huiles vÃ©gÃ©tales", "graisses vÃ©gÃ©tales", "huile", "matiÃ¨re grasse"],
+      "exceptions": ["vierge extra", "vierge", "extra vierge", "premiere pression", "premiÃ¨re pression", "pression a froid", "pression Ã  froid", "bio", "biologique", "olive", "colza vierge", "coco vierge", "lin", "noix", "noisette", "avocat", "sesame", "sÃ©same"],
+          "assumed": "huile vÃ©gÃ©tale raffinÃ©e (tournesol, palme ou soja OGM probable)",
           "severity": "high",
-          "reason": "Absence totale de précision = raffinage industriel systématique",
-          "explanation": "Quand un produit ne précise pas le type d'huile ni le procédé d'extraction, c'est TOUJOURS une huile bon marché raffinée chimiquement. Les huiles de qualité sont toujours valorisées sur l'étiquette.",
+          "reason": "Absence totale de prÃ©cision = raffinage industriel systÃ©matique",
+          "explanation": "Quand un produit ne prÃ©cise pas le type d'huile ni le procÃ©dÃ© d'extraction, c'est TOUJOURS une huile bon marchÃ© raffinÃ©e chimiquement. Les huiles de qualitÃ© sont toujours valorisÃ©es sur l'Ã©tiquette.",
           "whyBad": [
-            "Procédé de raffinage chimique à haute température (>200°C)",
-            "Destruction complète des nutriments (vitamines, antioxydants)",
-            "Création de composés toxiques (acroléine, peroxydes lipidiques)",
-            "Souvent huile de palme (déforestation) ou tournesol (oméga-6 excessif)",
-            "Possibilité d'huiles partiellement hydrogénées (acides gras trans)"
+            "ProcÃ©dÃ© de raffinage chimique Ã  haute tempÃ©rature (>200Â°C)",
+            "Destruction complÃ¨te des nutriments (vitamines, antioxydants)",
+            "CrÃ©ation de composÃ©s toxiques (acrolÃ©ine, peroxydes lipidiques)",
+            "Souvent huile de palme (dÃ©forestation) ou tournesol (omÃ©ga-6 excessif)",
+            "PossibilitÃ© d'huiles partiellement hydrogÃ©nÃ©es (acides gras trans)"
           ],
           "healthImpact": "Inflammation chronique, stress oxydatif, risque cardiovasculaire",
           "alternatives": ["huile d'olive vierge extra", "huile de colza bio", "huile de coco vierge"],
           "sources": [
-            "ANSES (2024) - Procédés de raffinage des huiles",
+            "ANSES (2024) - ProcÃ©dÃ©s de raffinage des huiles",
             "EFSA (2023) - Process contaminants in vegetable oils"
           ]
         },
         {
           "id": "vague_sugar",
           "triggers": ["sucre", "saccharose"],
-          "assumed": "sucre blanc raffiné à 99,9%",
+          "assumed": "sucre blanc raffinÃ© Ã  99,9%",
           "severity": "high",
           "reason": "Sucre sans mention de type = sucre blanc industriel",
-          "explanation": "Le sucre standard industriel est du saccharose blanc raffiné à 99,9%, totalement appauvri en minéraux et fibres. Les sucres de qualité sont toujours précisés.",
+          "explanation": "Le sucre standard industriel est du saccharose blanc raffinÃ© Ã  99,9%, totalement appauvri en minÃ©raux et fibres. Les sucres de qualitÃ© sont toujours prÃ©cisÃ©s.",
           "whyBad": [
-            "Index glycémique maximal (IG = 100)",
-            "Pic de glycémie puis hypoglycémie réactionnelle",
-            "Zéro nutriments (vitamines, minéraux détruits par raffinage)",
-            "Addiction et cercle vicieux (faux sucre → vraie faim)",
-            "Inflammation systémique, résistance à l'insuline"
+            "Index glycÃ©mique maximal (IG = 100)",
+            "Pic de glycÃ©mie puis hypoglycÃ©mie rÃ©actionnelle",
+            "ZÃ©ro nutriments (vitamines, minÃ©raux dÃ©truits par raffinage)",
+            "Addiction et cercle vicieux (faux sucre â†’ vraie faim)",
+            "Inflammation systÃ©mique, rÃ©sistance Ã  l'insuline"
           ],
-          "healthImpact": "Diabète type 2, obésité, inflammation chronique, caries dentaires",
-          "alternatives": ["sucre de canne complet", "rapadura", "miel brut", "sirop d'érable pur"],
+          "healthImpact": "DiabÃ¨te type 2, obÃ©sitÃ©, inflammation chronique, caries dentaires",
+          "alternatives": ["sucre de canne complet", "rapadura", "miel brut", "sirop d'Ã©rable pur"],
           "sources": [
             "OMS (2024) - Guidelines on sugar intake",
-            "ANSES (2023) - Sucres et santé"
+            "ANSES (2023) - Sucres et santÃ©"
           ]
         },
         {
           "id": "vague_glucose_syrup",
           "triggers": ["sirop de glucose", "sirop de glucose-fructose", "isoglucose", "HFCS", "high fructose corn syrup"],
-          "assumed": "sirop ultra-transformé à partir de maïs OGM",
+          "assumed": "sirop ultra-transformÃ© Ã  partir de maÃ¯s OGM",
           "severity": "critical",
-          "reason": "Procédé enzymatique industriel complexe",
-          "explanation": "Issu d'amidon de maïs transformé par enzymes industrielles. Le fructose libre (non lié au glucose naturellement) est métabolisé différemment et pose de graves problèmes hépatiques.",
+          "reason": "ProcÃ©dÃ© enzymatique industriel complexe",
+          "explanation": "Issu d'amidon de maÃ¯s transformÃ© par enzymes industrielles. Le fructose libre (non liÃ© au glucose naturellement) est mÃ©tabolisÃ© diffÃ©remment et pose de graves problÃ¨mes hÃ©patiques.",
           "whyBad": [
-            "Fructose libre → métabolisé uniquement par le foie (surcharge)",
-            "Pas de signal de satiété (pas d'insuline déclenchée)",
-            "Stéatose hépatique (foie gras non alcoolique) même chez enfants",
-            "Résistance à l'insuline accélérée",
-            "Souvent issu de maïs OGM (90%+ du maïs US)",
-            "Ultra-transformation extrême (NOVA 4)"
+            "Fructose libre â†’ mÃ©tabolisÃ© uniquement par le foie (surcharge)",
+            "Pas de signal de satiÃ©tÃ© (pas d'insuline dÃ©clenchÃ©e)",
+            "StÃ©atose hÃ©patique (foie gras non alcoolique) mÃªme chez enfants",
+            "RÃ©sistance Ã  l'insuline accÃ©lÃ©rÃ©e",
+            "Souvent issu de maÃ¯s OGM (90%+ du maÃ¯s US)",
+            "Ultra-transformation extrÃªme (NOVA 4)"
           ],
-          "healthImpact": "Foie gras, diabète, obésité, syndrome métabolique",
-          "alternatives": ["miel brut", "sirop d'érable pur", "dattes", "fruits entiers"],
+          "healthImpact": "Foie gras, diabÃ¨te, obÃ©sitÃ©, syndrome mÃ©tabolique",
+          "alternatives": ["miel brut", "sirop d'Ã©rable pur", "dattes", "fruits entiers"],
           "sources": [
             "Journal of Hepatology (2024) - Fructose and NAFLD",
             "Nature (2023) - High-fructose corn syrup health effects"
@@ -73,84 +73,84 @@
         },
         {
           "id": "vague_flour",
-          "triggers": ["farine", "farine de blé"],
-          "assumed": "farine blanche T45 raffinée",
+          "triggers": ["farine", "farine de blÃ©"],
+          "assumed": "farine blanche T45 raffinÃ©e",
           "severity": "moderate",
-          "reason": "Farine sans type = T45 (la plus raffinée)",
-          "explanation": "La farine standard est de type T45 ou T55, dont on a retiré le son (fibres) et le germe (vitamines, minéraux). Seul l'amidon blanc reste.",
+          "reason": "Farine sans type = T45 (la plus raffinÃ©e)",
+          "explanation": "La farine standard est de type T45 ou T55, dont on a retirÃ© le son (fibres) et le germe (vitamines, minÃ©raux). Seul l'amidon blanc reste.",
           "whyBad": [
-            "Appauvrie en fibres (transit, satiété)",
-            "Appauvrie en vitamines B (métabolisme énergétique)",
-            "Appauvrie en minéraux (magnésium, fer, zinc)",
-            "Index glycémique élevé (pic de glycémie)",
+            "Appauvrie en fibres (transit, satiÃ©tÃ©)",
+            "Appauvrie en vitamines B (mÃ©tabolisme Ã©nergÃ©tique)",
+            "Appauvrie en minÃ©raux (magnÃ©sium, fer, zinc)",
+            "Index glycÃ©mique Ã©levÃ© (pic de glycÃ©mie)",
             "Faible pouvoir rassasiant"
           ],
-          "healthImpact": "Constipation, pics glycémiques, carences en micronutriments",
-          "alternatives": ["farine T150 complète", "farine T110 semi-complète", "farine d'épeautre complète"],
-          "sources": ["ANSES (2024) - Fibres alimentaires et santé"]
+          "healthImpact": "Constipation, pics glycÃ©miques, carences en micronutriments",
+          "alternatives": ["farine T150 complÃ¨te", "farine T110 semi-complÃ¨te", "farine d'Ã©peautre complÃ¨te"],
+          "sources": ["ANSES (2024) - Fibres alimentaires et santÃ©"]
         },
         {
           "id": "vague_meat",
-          "triggers": ["viande", "poulet", "porc", "bœuf", "agneau", "viande de volaille", "viande de porc"],
-          "assumed": "élevage intensif conventionnel sans label",
+          "triggers": ["viande", "poulet", "porc", "bÅ“uf", "agneau", "viande de volaille", "viande de porc"],
+          "assumed": "Ã©levage intensif conventionnel sans label",
           "severity": "high",
-          "reason": "Viande sans label = élevage industriel standard",
-          "explanation": "Une viande de qualité est toujours valorisée par un label (Label Rouge, Bio, Bleu Blanc Cœur, etc.). L'absence de mention signifie élevage intensif.",
+          "reason": "Viande sans label = Ã©levage industriel standard",
+          "explanation": "Une viande de qualitÃ© est toujours valorisÃ©e par un label (Label Rouge, Bio, Bleu Blanc CÅ“ur, etc.). L'absence de mention signifie Ã©levage intensif.",
           "whyBad": [
-            "Antibiotiques systématiques (résistance bactérienne humaine)",
-            "Alimentation OGM (soja, maïs transgéniques)",
-            "Alimentation déséquilibrée (oméga-6 excessifs)",
-            "Conditions d'élevage intensives (stress animal)",
+            "Antibiotiques systÃ©matiques (rÃ©sistance bactÃ©rienne humaine)",
+            "Alimentation OGM (soja, maÃ¯s transgÃ©niques)",
+            "Alimentation dÃ©sÃ©quilibrÃ©e (omÃ©ga-6 excessifs)",
+            "Conditions d'Ã©levage intensives (stress animal)",
             "Possible utilisation d'hormones de croissance (hors UE)",
-            "Traçabilité limitée"
+            "TraÃ§abilitÃ© limitÃ©e"
           ],
-          "healthImpact": "Résistance aux antibiotiques, déséquilibre oméga-6/3, résidus chimiques",
-          "alternatives": ["Label Rouge", "Bio AB", "Bleu Blanc Cœur", "Plein air", "AOP"],
+          "healthImpact": "RÃ©sistance aux antibiotiques, dÃ©sÃ©quilibre omÃ©ga-6/3, rÃ©sidus chimiques",
+          "alternatives": ["Label Rouge", "Bio AB", "Bleu Blanc CÅ“ur", "Plein air", "AOP"],
           "sources": [
-            "ANSES (2024) - Antibiorésistance et élevage",
+            "ANSES (2024) - AntibiorÃ©sistance et Ã©levage",
             "EFSA (2023) - Veterinary drug residues"
           ]
         },
         {
           "id": "vague_fish",
           "triggers": ["poisson", "saumon", "daurade", "bar", "truite"],
-          "assumed": "élevage intensif en aquaculture",
+          "assumed": "Ã©levage intensif en aquaculture",
           "severity": "high",
-          "reason": "Poisson sans mention 'sauvage' ou 'MSC' = élevage",
-          "explanation": "Un poisson sauvage ou de pêche durable est TOUJOURS valorisé (MSC, Label Rouge, 'sauvage'). L'absence de mention = élevage intensif.",
+          "reason": "Poisson sans mention 'sauvage' ou 'MSC' = Ã©levage",
+          "explanation": "Un poisson sauvage ou de pÃªche durable est TOUJOURS valorisÃ© (MSC, Label Rouge, 'sauvage'). L'absence de mention = Ã©levage intensif.",
           "whyBad": [
-            "Antibiotiques systématiques (tétracyclines, quinolones)",
-            "Contamination PCB (polychlorobiphényles) - 5x plus qu'en sauvage",
+            "Antibiotiques systÃ©matiques (tÃ©tracyclines, quinolones)",
+            "Contamination PCB (polychlorobiphÃ©nyles) - 5x plus qu'en sauvage",
             "Contamination dioxines (2-3x dose admissible)",
-            "Microplastiques (89% des échantillons)",
-            "Colorants synthétiques (astaxanthine E161j pour chair rose)",
-            "Alimentation artificielle (farines, huiles végétales) → ratio oméga-6/3 dégradé",
-            "Densité élevée (stress, parasites)"
+            "Microplastiques (89% des Ã©chantillons)",
+            "Colorants synthÃ©tiques (astaxanthine E161j pour chair rose)",
+            "Alimentation artificielle (farines, huiles vÃ©gÃ©tales) â†’ ratio omÃ©ga-6/3 dÃ©gradÃ©",
+            "DensitÃ© Ã©levÃ©e (stress, parasites)"
           ],
-          "healthImpact": "Perturbateurs endocriniens, neurotoxicité, résistance antibiotiques",
-          "alternatives": ["Sauvage MSC", "Label Rouge", "Bio", "Pêche artisanale"],
+          "healthImpact": "Perturbateurs endocriniens, neurotoxicitÃ©, rÃ©sistance antibiotiques",
+          "alternatives": ["Sauvage MSC", "Label Rouge", "Bio", "PÃªche artisanale"],
           "sources": [
             "Norwegian Study (2024) - Contaminants in farmed salmon",
             "Nature (2024) - Microplastics in aquaculture",
-            "ANSES (2023) - PCB et dioxines dans poissons d'élevage"
+            "ANSES (2023) - PCB et dioxines dans poissons d'Ã©levage"
           ]
         },
         {
           "id": "vague_dairy",
-          "triggers": ["lait", "lait de vache", "lait entier", "lait demi-écrémé"],
-          "assumed": "lait UHT conventionnel race Holstein bêta-caséine A1",
+          "triggers": ["lait", "lait de vache", "lait entier", "lait demi-Ã©crÃ©mÃ©"],
+          "assumed": "lait UHT conventionnel race Holstein bÃªta-casÃ©ine A1",
           "severity": "moderate",
-          "reason": "Lait sans précision = lait UHT standardisé industriel",
-          "explanation": "Le lait standard est UHT (Ultra Haute Température), homogénéisé, issu de vaches Holstein (race ultra-productive) contenant bêta-caséine A1 (pro-inflammatoire).",
+          "reason": "Lait sans prÃ©cision = lait UHT standardisÃ© industriel",
+          "explanation": "Le lait standard est UHT (Ultra Haute TempÃ©rature), homogÃ©nÃ©isÃ©, issu de vaches Holstein (race ultra-productive) contenant bÃªta-casÃ©ine A1 (pro-inflammatoire).",
           "whyBad": [
-            "Traitement UHT (135-150°C) → dénaturation protéines (perte digestibilité)",
-            "Homogénéisation → oxydation du cholestérol (athérogène)",
-            "Bêta-caséine A1 → inflammation intestinale, BCM-7 (opioïde)",
-            "Possible résidus antibiotiques (élevage intensif)",
-            "Alimentation vaches déséquilibrée (maïs/soja) → moins d'oméga-3"
+            "Traitement UHT (135-150Â°C) â†’ dÃ©naturation protÃ©ines (perte digestibilitÃ©)",
+            "HomogÃ©nÃ©isation â†’ oxydation du cholestÃ©rol (athÃ©rogÃ¨ne)",
+            "BÃªta-casÃ©ine A1 â†’ inflammation intestinale, BCM-7 (opioÃ¯de)",
+            "Possible rÃ©sidus antibiotiques (Ã©levage intensif)",
+            "Alimentation vaches dÃ©sÃ©quilibrÃ©e (maÃ¯s/soja) â†’ moins d'omÃ©ga-3"
           ],
-          "healthImpact": "Inflammation digestive, allergies, intolérances",
-          "alternatives": ["Lait cru A2", "Lait bio pasteurisé", "Lait de chèvre", "Laits végétaux"],
+          "healthImpact": "Inflammation digestive, allergies, intolÃ©rances",
+          "alternatives": ["Lait cru A2", "Lait bio pasteurisÃ©", "Lait de chÃ¨vre", "Laits vÃ©gÃ©taux"],
           "sources": [
             "European Journal of Clinical Nutrition (2023) - A1 vs A2 casein",
             "Food Chemistry (2024) - UHT processing effects"
@@ -158,133 +158,133 @@
         },
         {
           "id": "vague_eggs",
-          "triggers": ["œufs", "œuf"],
-          "assumed": "œufs code 3 (cage, élevage intensif)",
+          "triggers": ["Å“ufs", "Å“uf"],
+          "assumed": "Å“ufs code 3 (cage, Ã©levage intensif)",
           "severity": "high",
-          "reason": "Œufs sans code = pire catégorie (code 3)",
-          "explanation": "Les œufs de qualité affichent leur code (0=bio, 1=plein air, 2=sol, 3=cage). Absence de code = catégorie 3 (cage).",
+          "reason": "Å’ufs sans code = pire catÃ©gorie (code 3)",
+          "explanation": "Les Å“ufs de qualitÃ© affichent leur code (0=bio, 1=plein air, 2=sol, 3=cage). Absence de code = catÃ©gorie 3 (cage).",
           "whyBad": [
-            "Poules en cage (50-60 cm²/poule, soit 1 feuille A4)",
-            "Zéro accès extérieur, zéro lumière naturelle",
-            "Antibiotiques préventifs",
-            "Alimentation OGM (soja, maïs)",
-            "Qualité nutritionnelle inférieure (moins d'oméga-3, vitamines)",
-            "Stress animal extrême"
+            "Poules en cage (50-60 cmÂ²/poule, soit 1 feuille A4)",
+            "ZÃ©ro accÃ¨s extÃ©rieur, zÃ©ro lumiÃ¨re naturelle",
+            "Antibiotiques prÃ©ventifs",
+            "Alimentation OGM (soja, maÃ¯s)",
+            "QualitÃ© nutritionnelle infÃ©rieure (moins d'omÃ©ga-3, vitamines)",
+            "Stress animal extrÃªme"
           ],
-          "healthImpact": "Qualité nutritionnelle réduite, résidus antibiotiques possibles",
-          "alternatives": ["Code 0 (bio)", "Code 1 (plein air)", "Label Rouge", "Bleu Blanc Cœur"],
-          "sources": ["ANSES (2024) - Qualité nutritionnelle des œufs selon mode d'élevage"]
+          "healthImpact": "QualitÃ© nutritionnelle rÃ©duite, rÃ©sidus antibiotiques possibles",
+          "alternatives": ["Code 0 (bio)", "Code 1 (plein air)", "Label Rouge", "Bleu Blanc CÅ“ur"],
+          "sources": ["ANSES (2024) - QualitÃ© nutritionnelle des Å“ufs selon mode d'Ã©levage"]
         },
         {
           "id": "vague_salt",
           "triggers": ["sel"],
-          "assumed": "sel blanc raffiné (99,9% NaCl)",
+          "assumed": "sel blanc raffinÃ© (99,9% NaCl)",
           "severity": "low",
-          "reason": "Sel sans mention = sel blanc raffiné",
-          "explanation": "Le sel industriel est raffiné (chauffé à 600°C), blanchi chimiquement, avec anti-agglomérants ajoutés. Les oligo-éléments naturels sont détruits.",
+          "reason": "Sel sans mention = sel blanc raffinÃ©",
+          "explanation": "Le sel industriel est raffinÃ© (chauffÃ© Ã  600Â°C), blanchi chimiquement, avec anti-agglomÃ©rants ajoutÃ©s. Les oligo-Ã©lÃ©ments naturels sont dÃ©truits.",
           "whyBad": [
-            "Raffiné à haute température (destruction oligo-éléments)",
+            "RaffinÃ© Ã  haute tempÃ©rature (destruction oligo-Ã©lÃ©ments)",
             "Blanchi chimiquement",
-            "Anti-agglomérants ajoutés (E535, E536, E540)",
-            "Appauvri en magnésium, potassium, iode naturel",
-            "99,9% NaCl pur (déséquilibre sodium/potassium)"
+            "Anti-agglomÃ©rants ajoutÃ©s (E535, E536, E540)",
+            "Appauvri en magnÃ©sium, potassium, iode naturel",
+            "99,9% NaCl pur (dÃ©sÃ©quilibre sodium/potassium)"
           ],
-          "healthImpact": "Hypertension (excès sodium sans potassium), carences minérales",
-          "alternatives": ["Sel gris de Guérande", "Fleur de sel", "Sel rose Himalaya", "Sel marin non raffiné"],
+          "healthImpact": "Hypertension (excÃ¨s sodium sans potassium), carences minÃ©rales",
+          "alternatives": ["Sel gris de GuÃ©rande", "Fleur de sel", "Sel rose Himalaya", "Sel marin non raffinÃ©"],
           "sources": ["ANSES (2024) - Sel et hypertension"]
         },
         {
           "id": "vague_flavors",
-          "triggers": ["arôme", "arômes", "aromatisant"],
-          "assumed": "arôme synthétique chimique",
+          "triggers": ["arÃ´me", "arÃ´mes", "aromatisant"],
+          "assumed": "arÃ´me synthÃ©tique chimique",
           "severity": "moderate",
-          "reason": "Arôme sans 'naturel' = synthèse chimique",
-          "explanation": "Un arôme sans mention 'naturel' est créé par synthèse chimique en laboratoire. Formulation opaque, cocktail de molécules artificielles.",
+          "reason": "ArÃ´me sans 'naturel' = synthÃ¨se chimique",
+          "explanation": "Un arÃ´me sans mention 'naturel' est crÃ©Ã© par synthÃ¨se chimique en laboratoire. Formulation opaque, cocktail de molÃ©cules artificielles.",
           "whyBad": [
-            "Composés chimiques de synthèse (pétrochimie)",
+            "ComposÃ©s chimiques de synthÃ¨se (pÃ©trochimie)",
             "Formulation opaque (secret industriel)",
-            "Masque la faible qualité des ingrédients de base",
-            "Habitue le palais à des goûts artificiels intenses",
+            "Masque la faible qualitÃ© des ingrÃ©dients de base",
+            "Habitue le palais Ã  des goÃ»ts artificiels intenses",
             "Possible effet cocktail (interactions inconnues)"
           ],
-          "healthImpact": "Allergies possibles, accoutumance aux goûts artificiels",
-          "alternatives": ["Arôme naturel", "Extraits naturels", "Épices", "Herbes"],
+          "healthImpact": "Allergies possibles, accoutumance aux goÃ»ts artificiels",
+          "alternatives": ["ArÃ´me naturel", "Extraits naturels", "Ã‰pices", "Herbes"],
           "sources": ["EFSA (2023) - Flavoring substances"]
         },
         {
           "id": "vague_natural_flavors",
-          "triggers": ["arôme naturel", "arômes naturels"],
-          "assumed": "extraction chimique à partir de source naturelle",
+          "triggers": ["arÃ´me naturel", "arÃ´mes naturels"],
+          "assumed": "extraction chimique Ã  partir de source naturelle",
           "severity": "low",
-          "reason": "'Naturel' ne signifie pas 'non transformé'",
-          "explanation": "Un arôme 'naturel' provient d'une source naturelle MAIS peut être ultra-transformé chimiquement. Ex: arôme naturel de vanille peut venir de... pétrole via bactéries OGM.",
+          "reason": "'Naturel' ne signifie pas 'non transformÃ©'",
+          "explanation": "Un arÃ´me 'naturel' provient d'une source naturelle MAIS peut Ãªtre ultra-transformÃ© chimiquement. Ex: arÃ´me naturel de vanille peut venir de... pÃ©trole via bactÃ©ries OGM.",
           "whyBad": [
-            "Source naturelle mais procédé chimique intensif possible",
-            "Peut être produit par fermentation bactérienne OGM",
+            "Source naturelle mais procÃ©dÃ© chimique intensif possible",
+            "Peut Ãªtre produit par fermentation bactÃ©rienne OGM",
             "Formulation toujours opaque",
-            "Moins mauvais que synthétique mais reste transformé"
+            "Moins mauvais que synthÃ©tique mais reste transformÃ©"
           ],
-          "healthImpact": "Faible (meilleur que synthétique)",
-          "note": "Meilleur que 'arôme' seul mais pas équivalent à ingrédient naturel entier",
-          "sources": ["Règlement CE n°1334/2008"]
+          "healthImpact": "Faible (meilleur que synthÃ©tique)",
+          "note": "Meilleur que 'arÃ´me' seul mais pas Ã©quivalent Ã  ingrÃ©dient naturel entier",
+          "sources": ["RÃ¨glement CE nÂ°1334/2008"]
         },
         {
           "id": "vague_starch",
-          "triggers": ["amidon", "amidon modifié", "fécule"],
-          "assumed": "amidon de maïs ou pomme de terre, possiblement modifié chimiquement",
+          "triggers": ["amidon", "amidon modifiÃ©", "fÃ©cule"],
+          "assumed": "amidon de maÃ¯s ou pomme de terre, possiblement modifiÃ© chimiquement",
           "severity": "moderate",
           "reason": "Amidon sans origine = bas de gamme, possiblement OGM",
-          "explanation": "L'amidon industriel provient souvent de maïs (OGM dans 90% cas hors UE) ou pomme de terre. 'Modifié' = traitement chimique/enzymatique.",
+          "explanation": "L'amidon industriel provient souvent de maÃ¯s (OGM dans 90% cas hors UE) ou pomme de terre. 'ModifiÃ©' = traitement chimique/enzymatique.",
           "whyBad": [
-            "Souvent issu de maïs OGM (si hors UE)",
-            "Si 'modifié': traitement chimique (acides, enzymes, chaleur extrême)",
-            "Index glycémique très élevé (pic glycémique)",
-            "Zéro nutriments (amidon pur)",
-            "Utilisé comme agent de remplissage cheap"
+            "Souvent issu de maÃ¯s OGM (si hors UE)",
+            "Si 'modifiÃ©': traitement chimique (acides, enzymes, chaleur extrÃªme)",
+            "Index glycÃ©mique trÃ¨s Ã©levÃ© (pic glycÃ©mique)",
+            "ZÃ©ro nutriments (amidon pur)",
+            "UtilisÃ© comme agent de remplissage cheap"
           ],
-          "healthImpact": "Pics glycémiques, possible résidus chimiques si modifié",
-          "alternatives": ["Fécule de pomme de terre bio", "Arrow-root", "Tapioca bio"],
+          "healthImpact": "Pics glycÃ©miques, possible rÃ©sidus chimiques si modifiÃ©",
+          "alternatives": ["FÃ©cule de pomme de terre bio", "Arrow-root", "Tapioca bio"],
           "sources": ["EFSA (2023) - Modified starches"]
         }
       ]
     },
     "hiddenProcesses": {
-      "description": "Procédés industriels cachés détectables par indices dans la liste d'ingrédients ou l'étiquette",
+      "description": "ProcÃ©dÃ©s industriels cachÃ©s dÃ©tectables par indices dans la liste d'ingrÃ©dients ou l'Ã©tiquette",
       "rules": [
         {
           "id": "process_refined",
-          "triggers": ["raffiné", "raffinée", "raffinées"],
+          "triggers": ["raffinÃ©", "raffinÃ©e", "raffinÃ©es"],
           "processName": "Raffinage industriel",
           "severity": "high",
-          "description": "Traitement chimique et thermique intensif pour purifier/blanchir/désodoriser",
-          "howDetect": "Mention explicite 'raffiné' OU absence de mention 'vierge/pressé à froid/complet/brut'",
+          "description": "Traitement chimique et thermique intensif pour purifier/blanchir/dÃ©sodoriser",
+          "howDetect": "Mention explicite 'raffinÃ©' OU absence de mention 'vierge/pressÃ© Ã  froid/complet/brut'",
           "impacts": [
-            "Destruction vitamines et antioxydants (chaleur >200°C)",
-            "Destruction minéraux et fibres",
-            "Création de composés toxiques (acroléine, peroxydes, aldéhydes)",
+            "Destruction vitamines et antioxydants (chaleur >200Â°C)",
+            "Destruction minÃ©raux et fibres",
+            "CrÃ©ation de composÃ©s toxiques (acrolÃ©ine, peroxydes, aldÃ©hydes)",
             "Utilisation de solvants chimiques (hexane) possibles",
             "Blanchiment chimique (soude, acides)"
           ],
           "appliesTo": ["huiles", "sucres", "farines", "sel"],
-          "sources": ["ANSES (2023) - Procédés de raffinage"]
+          "sources": ["ANSES (2023) - ProcÃ©dÃ©s de raffinage"]
         },
         {
           "id": "process_hydrogenated",
-          "triggers": ["hydrogéné", "hydrogénée", "partiellement hydrogéné", "huile hydrogénée"],
-          "processName": "Hydrogénation (création acides gras trans)",
+          "triggers": ["hydrogÃ©nÃ©", "hydrogÃ©nÃ©e", "partiellement hydrogÃ©nÃ©", "huile hydrogÃ©nÃ©e"],
+          "processName": "HydrogÃ©nation (crÃ©ation acides gras trans)",
           "severity": "critical",
-          "description": "Procédé chimique qui transforme huiles liquides en graisses solides en ajoutant hydrogène sous pression",
-          "howDetect": "Mention 'hydrogéné' dans liste ingrédients",
+          "description": "ProcÃ©dÃ© chimique qui transforme huiles liquides en graisses solides en ajoutant hydrogÃ¨ne sous pression",
+          "howDetect": "Mention 'hydrogÃ©nÃ©' dans liste ingrÃ©dients",
           "impacts": [
-            "CRÉATION D'ACIDES GRAS TRANS (toxiques avérés)",
-            "Augmentation massive cholestérol LDL",
-            "Diminution cholestérol HDL (double peine)",
-            "Inflammation artérielle",
-            "Risque cardiovasculaire +23% (études)",
+            "CRÃ‰ATION D'ACIDES GRAS TRANS (toxiques avÃ©rÃ©s)",
+            "Augmentation massive cholestÃ©rol LDL",
+            "Diminution cholestÃ©rol HDL (double peine)",
+            "Inflammation artÃ©rielle",
+            "Risque cardiovasculaire +23% (Ã©tudes)",
             "INTERDITS dans plusieurs pays (Danemark, Suisse, etc.)"
           ],
           "appliesTo": ["huiles", "margarines", "graisses"],
-          "alternatives": ["Beurre bio", "Huile de coco vierge", "Purées oléagineuses"],
+          "alternatives": ["Beurre bio", "Huile de coco vierge", "PurÃ©es olÃ©agineuses"],
           "sources": [
             "OMS (2023) - Trans fats elimination",
             "New England Journal of Medicine (2024) - Trans fats and CHD"
@@ -292,113 +292,113 @@
         },
         {
           "id": "process_UHT",
-          "triggers": ["UHT", "stérilisé", "stérilisation UHT"],
-          "processName": "Ultra Haute Température (UHT)",
+          "triggers": ["UHT", "stÃ©rilisÃ©", "stÃ©rilisation UHT"],
+          "processName": "Ultra Haute TempÃ©rature (UHT)",
           "severity": "moderate",
-          "description": "Chauffage flash à 135-150°C pendant 2-5 secondes pour stérilisation",
-          "howDetect": "Mention 'UHT' ou longue conservation (plusieurs mois) sans réfrigération",
+          "description": "Chauffage flash Ã  135-150Â°C pendant 2-5 secondes pour stÃ©rilisation",
+          "howDetect": "Mention 'UHT' ou longue conservation (plusieurs mois) sans rÃ©frigÃ©ration",
           "impacts": [
-            "Dénaturation partielle des protéines (perte digestibilité)",
+            "DÃ©naturation partielle des protÃ©ines (perte digestibilitÃ©)",
             "Destruction vitamines thermosensibles (B, C)",
-            "Formation de composés de Maillard (brunissement)",
-            "Goût 'cuit' caractéristique",
-            "Perte qualité nutritionnelle vs lait frais pasteurisé"
+            "Formation de composÃ©s de Maillard (brunissement)",
+            "GoÃ»t 'cuit' caractÃ©ristique",
+            "Perte qualitÃ© nutritionnelle vs lait frais pasteurisÃ©"
           ],
-          "appliesTo": ["lait", "crèmes liquides", "sauces"],
-          "alternatives": ["Lait pasteurisé", "Lait cru (si confiance producteur)"],
+          "appliesTo": ["lait", "crÃ¨mes liquides", "sauces"],
+          "alternatives": ["Lait pasteurisÃ©", "Lait cru (si confiance producteur)"],
           "sources": ["Food Chemistry (2024) - UHT processing effects"]
         },
         {
           "id": "process_extrusion",
-          "triggers": ["extrudé", "extrudée", "soufflé", "soufflée"],
-          "processName": "Extrusion à haute température/pression",
+          "triggers": ["extrudÃ©", "extrudÃ©e", "soufflÃ©", "soufflÃ©e"],
+          "processName": "Extrusion Ã  haute tempÃ©rature/pression",
           "severity": "high",
-          "description": "Cuisson-pression-expansion à très haute température (>150°C) et pression",
-          "howDetect": "Texture soufflée/croustillante, mention 'extrudé', céréales petit-déjeuner",
+          "description": "Cuisson-pression-expansion Ã  trÃ¨s haute tempÃ©rature (>150Â°C) et pression",
+          "howDetect": "Texture soufflÃ©e/croustillante, mention 'extrudÃ©', cÃ©rÃ©ales petit-dÃ©jeuner",
           "impacts": [
             "Destruction quasi-totale des vitamines",
-            "Dénaturation protéines",
-            "Index glycémique maximal (structure éclatée)",
-            "Formation acrylamide (cancérigène groupe 2A)",
-            "NOVA 4 (ultra-transformé)"
+            "DÃ©naturation protÃ©ines",
+            "Index glycÃ©mique maximal (structure Ã©clatÃ©e)",
+            "Formation acrylamide (cancÃ©rigÃ¨ne groupe 2A)",
+            "NOVA 4 (ultra-transformÃ©)"
           ],
-          "appliesTo": ["céréales petit-déjeuner", "snacks soufflés", "barres céréales"],
+          "appliesTo": ["cÃ©rÃ©ales petit-dÃ©jeuner", "snacks soufflÃ©s", "barres cÃ©rÃ©ales"],
           "sources": ["EFSA (2023) - Acrylamide in food"]
         },
         {
           "id": "process_homogenized",
-          "triggers": ["homogénéisé", "homogénéisée"],
-          "processName": "Homogénéisation",
+          "triggers": ["homogÃ©nÃ©isÃ©", "homogÃ©nÃ©isÃ©e"],
+          "processName": "HomogÃ©nÃ©isation",
           "severity": "low",
-          "description": "Fragmentation des globules de matière grasse par haute pression",
-          "howDetect": "Mention 'homogénéisé' ou lait qui ne se sépare jamais",
+          "description": "Fragmentation des globules de matiÃ¨re grasse par haute pression",
+          "howDetect": "Mention 'homogÃ©nÃ©isÃ©' ou lait qui ne se sÃ©pare jamais",
           "impacts": [
-            "Oxydation possible du cholestérol (effet athérogène débattu)",
+            "Oxydation possible du cholestÃ©rol (effet athÃ©rogÃ¨ne dÃ©battu)",
             "Globules gras ultra-fins (traversent paroi intestinale)",
-            "Peut augmenter réactions allergiques (débat scientifique)"
+            "Peut augmenter rÃ©actions allergiques (dÃ©bat scientifique)"
           ],
-          "appliesTo": ["lait", "crèmes"],
-          "note": "Impact santé débattu, certaines études suggèrent effets négatifs",
+          "appliesTo": ["lait", "crÃ¨mes"],
+          "note": "Impact santÃ© dÃ©battu, certaines Ã©tudes suggÃ¨rent effets nÃ©gatifs",
           "sources": ["Journal of Dairy Science (2023)"]
         }
       ]
     },
     "redFlags": {
-      "description": "Signaux d'alerte forts indiquant un produit de mauvaise qualité",
+      "description": "Signaux d'alerte forts indiquant un produit de mauvaise qualitÃ©",
       "rules": [
         {
           "id": "red_flag_long_ingredients",
           "trigger": "ingredientsCount > 10",
           "severity": "moderate",
-          "description": "Liste d'ingrédients très longue (>10)",
-          "reason": "Plus la liste est longue, plus le produit est transformé/formulé industriellement",
-          "recommendation": "Privilégier produits avec <5 ingrédients reconnaissables"
+          "description": "Liste d'ingrÃ©dients trÃ¨s longue (>10)",
+          "reason": "Plus la liste est longue, plus le produit est transformÃ©/formulÃ© industriellement",
+          "recommendation": "PrivilÃ©gier produits avec <5 ingrÃ©dients reconnaissables"
         },
         {
           "id": "red_flag_e_numbers",
           "trigger": "ingredients contiennent E[0-9]",
           "severity": "moderate",
-          "description": "Présence d'additifs (E-numbers)",
-          "reason": "Additifs = transformation industrielle, possible effets indésirables",
-          "recommendation": "Vérifier chaque E-number individuellement (certains sont OK, d'autres toxiques)"
+          "description": "PrÃ©sence d'additifs (E-numbers)",
+          "reason": "Additifs = transformation industrielle, possible effets indÃ©sirables",
+          "recommendation": "VÃ©rifier chaque E-number individuellement (certains sont OK, d'autres toxiques)"
         },
         {
           "id": "red_flag_multiple_sugars",
-          "trigger": "multiple types de sucres présents",
+          "trigger": "multiple types de sucres prÃ©sents",
           "severity": "high",
           "description": "Plusieurs types de sucres dans la liste (sucre + sirop glucose + dextrose + maltodextrine)",
-          "reason": "Technique industrielle pour faire apparaître les sucres plus bas dans la liste (mais total = énorme)",
-          "recommendation": "Additionner TOUS les sucres = teneur réelle souvent >30%"
+          "reason": "Technique industrielle pour faire apparaÃ®tre les sucres plus bas dans la liste (mais total = Ã©norme)",
+          "recommendation": "Additionner TOUS les sucres = teneur rÃ©elle souvent >30%"
         },
         {
           "id": "red_flag_palm_oil",
           "trigger": "ingredients contiennent 'palme'",
           "severity": "critical",
-          "description": "Présence d'huile de palme (même si 'durable RSPO')",
-          "reason": "Déforestation massive, composés génotoxiques si raffinée, santé cardiovasculaire",
-          "recommendation": "Éviter systématiquement, même versions 'durables' (greenwashing)"
+          "description": "PrÃ©sence d'huile de palme (mÃªme si 'durable RSPO')",
+          "reason": "DÃ©forestation massive, composÃ©s gÃ©notoxiques si raffinÃ©e, santÃ© cardiovasculaire",
+          "recommendation": "Ã‰viter systÃ©matiquement, mÃªme versions 'durables' (greenwashing)"
         },
         {
           "id": "red_flag_glucose_fructose",
           "trigger": "sirop glucose-fructose OU HFCS",
           "severity": "critical",
-          "description": "Sirop de glucose-fructose présent",
-          "reason": "Pire sucre possible: foie gras, pas de satiété, résistance insuline",
+          "description": "Sirop de glucose-fructose prÃ©sent",
+          "reason": "Pire sucre possible: foie gras, pas de satiÃ©tÃ©, rÃ©sistance insuline",
           "recommendation": "Bannir totalement ces produits"
         },
         {
           "id": "red_flag_trans_fats",
-          "trigger": "hydrogéné OU partiellement hydrogéné",
+          "trigger": "hydrogÃ©nÃ© OU partiellement hydrogÃ©nÃ©",
           "severity": "critical",
-          "description": "Acides gras trans (huiles hydrogénées)",
-          "reason": "Toxiques cardiovasculaires avérés, interdits dans plusieurs pays",
+          "description": "Acides gras trans (huiles hydrogÃ©nÃ©es)",
+          "reason": "Toxiques cardiovasculaires avÃ©rÃ©s, interdits dans plusieurs pays",
           "recommendation": "NE JAMAIS consommer"
         }
       ]
     }
   },
   "scoringImpact": {
-    "description": "Impact sur le score global selon détection des règles",
+    "description": "Impact sur le score global selon dÃ©tection des rÃ¨gles",
     "vagueIngredient": {
       "high": -15,
       "moderate": -10,

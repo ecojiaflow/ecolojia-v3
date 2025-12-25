@@ -1,0 +1,289 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-25",
+  "description": "Classification NOVA des aliments selon leur degré de transformation. Développée par Carlos Monteiro (Université de São Paulo), validée par FAO et OMS. Base scientifique pour scoring transformation Ecolojia.",
+  "source": {
+    "developer": "Carlos Monteiro, Université de São Paulo",
+    "year": 2016,
+    "validation": ["FAO", "OMS", "PNNS France"],
+    "url": "https://www.fao.org/nutrition/education/food-dietary-guidelines"
+  },
+  "totalGroups": 4,
+  "groups": [
+    {
+      "id": 1,
+      "name": "Aliments non transformés ou minimalement transformés",
+      "shortName": "Non transformés",
+      "description": "Aliments dans leur état naturel ou ayant subi des transformations minimales qui ne changent pas fondamentalement leur nature (lavage, découpe, séchage, congélation, pasteurisation simple).",
+      "scientificDefinition": "Parties comestibles de plantes (graines, fruits, feuilles, tiges, racines) ou d'animaux (muscles, organes, œufs, lait), ainsi que champignons, algues et eau, après séparation de la nature. Peuvent subir des procédés n'ajoutant pas de substances : nettoyage, séchage, réfrigération, congélation, pasteurisation, fermentation non alcoolique, emballage sous vide.",
+      "processes": [
+        "Lavage, nettoyage",
+        "Découpe, épluchage",
+        "Séchage naturel",
+        "Congélation",
+        "Pasteurisation simple",
+        "Fermentation non alcoolique (yaourt nature, choucroute)",
+        "Emballage sous vide"
+      ],
+      "examples": {
+        "vegetables": ["Légumes frais ou surgelés nature", "Salades", "Tomates", "Carottes"],
+        "fruits": ["Fruits frais", "Fruits surgelés nature", "Fruits secs sans ajout"],
+        "cereals": ["Riz nature", "Pâtes nature", "Flocons d'avoine", "Quinoa"],
+        "proteins": ["Viandes fraîches non transformées", "Poissons frais ou surgelés nature", "Œufs", "Légumineuses sèches"],
+        "dairy": ["Lait pasteurisé nature", "Yaourt nature sans sucre ajouté"],
+        "others": ["Noix et graines nature", "Herbes et épices", "Thé, café", "Eau"]
+      },
+      "healthImpact": {
+        "summary": "Base d'une alimentation saine. Riches en nutriments, fibres, vitamines, minéraux. Associés à meilleurs marqueurs de santé métabolique et cardiovasculaire.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2020,
+            "conclusion": "Fondation d'une alimentation équilibrée",
+            "url": "https://www.who.int"
+          },
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "conclusion": "À privilégier au quotidien",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "associatedHabits": ["privilegier-aliments-bruts", "cuisiner-maison-regulierement", "fruits-legumes-quotidiens"],
+      "scoreImpact": {
+        "processingScore": 100,
+        "description": "Score maximal (transformation minimale = idéal santé)"
+      },
+      "responseTemplate": "Ce produit appartient au groupe NOVA 1 : aliment non transformé ou minimalement transformé. C'est le type d'aliment à privilégier au quotidien."
+    },
+    {
+      "id": 2,
+      "name": "Ingrédients culinaires transformés",
+      "shortName": "Ingrédients culinaires",
+      "description": "Substances extraites d'aliments du groupe 1 ou de la nature par des procédés industriels (pressage, raffinage, broyage, séchage). Rarement consommées seules, utilisées en cuisine pour préparer des aliments du groupe 1.",
+      "scientificDefinition": "Produits extraits directement d'aliments du groupe 1 ou de la nature par des procédés comme pressage, raffinage, broyage, mouture et séchage. Exemples : huiles végétales, beurre, sucre, sel, amidon. Leur fonction est d'être utilisés dans la préparation culinaire d'aliments du groupe 1.",
+      "processes": [
+        "Pressage (huiles)",
+        "Raffinage (sucre, farines)",
+        "Broyage, mouture",
+        "Séchage",
+        "Extraction"
+      ],
+      "examples": {
+        "fats": ["Huiles végétales", "Beurre", "Saindoux", "Crème fraîche"],
+        "sweeteners": ["Sucre blanc", "Sucre roux", "Miel", "Sirop d'érable"],
+        "salt": ["Sel de table", "Sel marin"],
+        "starches": ["Amidon de maïs", "Fécule de pomme de terre"],
+        "others": ["Farine blanche", "Farine complète"]
+      },
+      "healthImpact": {
+        "summary": "Neutres ou positifs en quantité modérée. Excès peut contribuer aux déséquilibres (sucre, sel, graisses saturées). À utiliser avec discernement en cuisine.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2015,
+            "conclusion": "Limiter sucres libres <10% AET, sel <5g/j",
+            "url": "https://www.who.int"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "conclusion": "Graisses saturées <12% AET",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "strong-consensus"
+      },
+      "associatedHabits": ["limiter-sel-ajoute", "limiter-sucres-ajoutes", "varier-sources-lipides", "favoriser-simplicite-preparations"],
+      "scoreImpact": {
+        "processingScore": 75,
+        "description": "Score élevé (ingrédients simples, transformation limitée)"
+      },
+      "responseTemplate": "Ce produit appartient au groupe NOVA 2 : ingrédient culinaire transformé. À utiliser avec modération en cuisine."
+    },
+    {
+      "id": 3,
+      "name": "Aliments transformés",
+      "shortName": "Transformés",
+      "description": "Produits fabriqués en ajoutant des ingrédients du groupe 2 (sel, sucre, huile) à des aliments du groupe 1. Procédés de conservation ou cuisson, mais composition relativement simple (généralement 2-3 ingrédients).",
+      "scientificDefinition": "Aliments du groupe 1 auxquels on a ajouté du sel, du sucre, de l'huile ou d'autres substances du groupe 2. Procédés incluent diverses méthodes de conservation et cuisson. La plupart ont 2-3 ingrédients et sont reconnaissables comme versions modifiées d'aliments du groupe 1.",
+      "processes": [
+        "Mise en conserve",
+        "Mise en bocal",
+        "Saumurage, salaison",
+        "Fumage",
+        "Cuisson avec ajout sel/sucre/huile",
+        "Fermentation avec ajouts"
+      ],
+      "examples": {
+        "vegetables": ["Légumes en conserve avec sel", "Tomates pelées en boîte", "Cornichons"],
+        "fruits": ["Fruits au sirop", "Compotes avec sucre ajouté", "Confitures"],
+        "proteins": ["Poissons en conserve (thon, sardines)", "Viandes salées/fumées simples", "Fromages simples"],
+        "bread": ["Pain frais artisanal (farine, eau, sel, levure)", "Pain complet simple"],
+        "others": ["Fruits à coque salés ou sucrés"]
+      },
+      "healthImpact": {
+        "summary": "Acceptables en quantité modérée dans alimentation équilibrée. Attention teneur sel/sucre/graisses selon produit. Moins favorables que groupes 1-2, meilleurs que groupe 4.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "conclusion": "Consommation modérée acceptable",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "associatedHabits": ["surveiller-frequence-non-interdiction", "lire-listes-ingredients", "limiter-sel-ajoute"],
+      "scoreImpact": {
+        "processingScore": 50,
+        "description": "Score moyen (transformation modérée, composition simple)"
+      },
+      "responseTemplate": "Ce produit appartient au groupe NOVA 3 : aliment transformé. Acceptable en quantité modérée, attention à la teneur en sel/sucre."
+    },
+    {
+      "id": 4,
+      "name": "Aliments ultra-transformés",
+      "shortName": "Ultra-transformés",
+      "description": "Formulations industrielles comportant généralement 5 ingrédients ou plus, souvent davantage. Contiennent substances rarement utilisées en cuisine (huiles hydrogénées, protéines hydrolysées, amidons modifiés) et additifs cosmétiques (colorants, arômes, émulsifiants, édulcorants).",
+      "scientificDefinition": "Formulations industrielles faites principalement ou entièrement à partir de substances dérivées d'aliments et d'additifs, avec peu ou pas d'aliments du groupe 1 intacts. Objectifs : créer des produits hyper-palatables, durables, prêts-à-consommer ou prêts-à-chauffer, hautement profitables. Marqueurs : listes d'ingrédients longues, substances jamais ou rarement utilisées en cuisine domestique, additifs cosmétiques multiples.",
+      "processes": [
+        "Fractionnement d'aliments entiers",
+        "Hydrogénation",
+        "Hydrolyse",
+        "Extrusion",
+        "Moulage",
+        "Pré-friture",
+        "Raffinage extrême",
+        "Ajout massif d'additifs"
+      ],
+      "markers": {
+        "description": "Signes distinctifs produits ultra-transformés",
+        "indicators": [
+          "Liste d'ingrédients très longue (>5, souvent >10)",
+          "Ingrédients aux noms chimiques ou inconnus en cuisine",
+          "Présence d'huiles hydrogénées",
+          "Protéines hydrolysées",
+          "Amidons modifiés",
+          "Maltodextrine",
+          "Sirop de glucose-fructose",
+          "Additifs multiples (colorants, arômes, émulsifiants, édulcorants, conservateurs)",
+          "Allégations marketing ('riche en', 'light', 'source de')",
+          "Emballages attractifs",
+          "Marques omniprésentes (publicité intensive)"
+        ]
+      },
+      "examples": {
+        "snacks": ["Chips industriels", "Biscuits apéritifs", "Barres chocolatées", "Confiseries industrielles"],
+        "drinks": ["Sodas", "Boissons énergisantes", "Jus industriels reconstitués", "Laits aromatisés sucrés"],
+        "meals": ["Plats préparés surgelés complexes", "Soupes instantanées", "Pizzas industrielles", "Nuggets, cordons bleus"],
+        "breakfast": ["Céréales sucrées petit-déjeuner", "Viennoiseries industrielles", "Pains de mie très transformés", "Pâtes à tartiner sucrées"],
+        "dairy": ["Yaourts aromatisés multi-additifs", "Desserts lactés industriels", "Fromages fondus ultra-transformés"],
+        "bread": ["Pains industriels avec multiples additifs", "Pains burger, hot-dog"],
+        "meat": ["Charcuteries reconstituées", "Saucisses industrielles", "Steaks hachés transformés"],
+        "others": ["Margarines", "Sauces industrielles complexes", "Substituts de repas"]
+      },
+      "healthImpact": {
+        "summary": "De nombreuses études observationnelles associent consommation élevée d'ultra-transformés à risques accrus : surpoids/obésité, diabète type 2, maladies cardiovasculaires, certains cancers, mortalité prématurée. Mécanismes évoqués : densité énergétique élevée, palatabilité excessive, faible densité nutritionnelle, additifs multiples, inflammation chronique, déséquilibres microbiote, perturbation signaux satiété.",
+        "sources": [
+          {
+            "organization": "BMJ",
+            "year": 2019,
+            "title": "Ultra-processed food intake and mortality",
+            "conclusion": "Association significative consommation élevée et mortalité toutes causes",
+            "url": "https://www.bmj.com/content/365/bmj.l1949"
+          },
+          {
+            "organization": "BMJ",
+            "year": 2018,
+            "title": "Ultra-processed foods and cancer",
+            "conclusion": "Augmentation 10% consommation → +12% risque cancer global",
+            "url": "https://www.bmj.com/content/360/bmj.k322"
+          },
+          {
+            "organization": "JAMA",
+            "year": 2019,
+            "title": "Ultra-processed foods and cardiovascular diseases",
+            "conclusion": "Association avec maladies cardiovasculaires",
+            "url": "https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2735076"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2021,
+            "conclusion": "Limiter consommation ultra-transformés",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong",
+        "importantNote": "Ces associations sont observationnelles (pas causales prouvées), mais cohérentes et robustes sur multiples cohortes. Le principe de précaution suggère limitation."
+      },
+      "associatedHabits": [
+        "limiter-produits-ultra-transformes",
+        "privilegier-aliments-bruts",
+        "cuisiner-maison-regulierement",
+        "lire-listes-ingredients",
+        "limiter-exposition-chimique",
+        "reserver-produits-plaisir-occasions"
+      ],
+      "scoreImpact": {
+        "processingScore": 20,
+        "description": "Score faible (transformation maximale, formulation industrielle complexe)"
+      },
+      "responseTemplate": "Ce produit appartient au groupe NOVA 4 : aliment ultra-transformé. Des études observationnelles suggèrent de limiter la consommation régulière de ce type de produit.",
+      "recommendations": {
+        "frequency": "Occasionnel (pas quotidien)",
+        "alternatives": "Privilégier versions maison ou artisanales, ou aliments groupes 1-3",
+        "context": "Acceptable dans cadre alimentation globalement équilibrée riche en groupes 1-2"
+      }
+    }
+  ],
+  "usageGuidelines": {
+    "description": "Comment utiliser la classification NOVA dans Ecolojia",
+    "classification": [
+      "1. Analyser liste ingrédients produit",
+      "2. Identifier procédés transformation (via ingrédients, additifs, description)",
+      "3. Compter ingrédients et additifs",
+      "4. Chercher marqueurs NOVA 4",
+      "5. Attribuer groupe NOVA (1-4)",
+      "6. Sélectionner habitude associée",
+      "7. Calculer processingScore (100/75/50/20)"
+    ],
+    "decisionTree": {
+      "description": "Arbre de décision simplifié pour classification",
+      "rules": [
+        "Aliment brut ou liste ≤3 ingrédients simples (ex: pain artisanal) → NOVA 1",
+        "Ingrédient culinaire isolé (huile, sucre, sel, beurre) → NOVA 2",
+        "Aliment groupe 1 + sel/sucre/huile (conserve, fromage simple, pain simple) → NOVA 3",
+        "Liste >5 ingrédients OU présence additifs cosmétiques OU ingrédients industriels (huiles hydrogénées, amidons modifiés, sirop glucose-fructose) → NOVA 4"
+      ]
+    },
+    "responseIntegration": "Utiliser groupe NOVA dans section '⚙️ COMPOSITION & PROCESSUS' et responseTemplate dans '🧬 CE QUE LA SCIENCE MONTRE'. Sélectionner habitude(s) associée(s) pour '🌱 LE BON RÉFLEXE SANTÉ'.",
+    "scoringIntegration": "Utiliser processingScore (100/75/50/20) comme composante 'processing' du score global unifié Ecolojia (pondération 15%)."
+  },
+  "scientificValidation": {
+    "description": "La classification NOVA est validée et utilisée par de nombreuses organisations internationales",
+    "adoptedBy": [
+      "FAO (Organisation des Nations Unies pour l'alimentation et l'agriculture)",
+      "OMS (Organisation Mondiale de la Santé)",
+      "PAHO (Pan American Health Organization)",
+      "PNNS France (Programme National Nutrition Santé)",
+      "Multiples agences santé nationales (Brésil, Uruguay, Équateur, Israël, etc.)"
+    ],
+    "researchSupport": "Plus de 200 études publiées peer-reviewed utilisant classification NOVA (2016-2024)"
+  },
+  "versionControl": {
+    "version": "1.0.0",
+    "novaVersion": "2016 (Carlos Monteiro)",
+    "lastReview": "2025-12-25",
+    "nextReview": "2026-06-25",
+    "changeLog": [
+      {
+        "date": "2025-12-25",
+        "version": "1.0.0",
+        "changes": "Création initiale - 4 groupes NOVA documentés avec sources FAO/OMS/BMJ/JAMA"
+      }
+    ]
+  }
+}
