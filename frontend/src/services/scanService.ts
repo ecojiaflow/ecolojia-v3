@@ -16,7 +16,7 @@ export interface ScanResult {
     brand?: string;
     category?: string;
   };
-  // Nouveau : données OCR
+  // Données OCR
   ocrData?: {
     rawText: string;
     ingredients: Array<{ name: string; role?: string }>;
@@ -25,7 +25,20 @@ export interface ScanResult {
     confidence: number;
     processingTime: number;
   };
-  isOCRResult?: boolean; // Flag pour savoir si c'est un résultat OCR
+  isOCRResult?: boolean;
+  // NOUVEAU : Constitution Ecolojia
+  constitution?: {
+    whatIsIt?: any;
+    compositionProcess?: any;
+    scienceShows?: any;
+    healthReflex?: any;
+    possibleActions?: any;
+    habitImpact?: any;
+  };
+  categoryDetection?: any;
+  disclaimer?: any;
+  cached?: boolean;
+  source?: 'cache' | 'ai';
 }
 
 export interface ScanError {
@@ -48,15 +61,12 @@ export class ScanService {
   // Scan par code-barres
   async scanBarcode(code: string): Promise<ScanResult> {
     try {
-      // Appeler directement /analysis qui retourne les scores calculés
       const response = await apiClient.post('/analysis', {
         barcode: code,
         method: 'barcode',
         source: 'web'
       });
 
-      // L'API /analysis retourne déjà la bonne structure
-      // { product: { name, barcode, ... }, scores: { overallScore, ... } }
       return response.data;
     } catch (error: any) {
       throw this.handleError(error, 'BARCODE_SCAN_FAILED');
@@ -64,22 +74,95 @@ export class ScanService {
   }
 
   /**
-   * NOUVEAU : Scanner un produit inconnu avec OCR
-   * Utilisé quand le code-barres n'est pas trouvé
+   * NOUVEAU : Analyse photo avec nouveau pipeline backend
+   * POST /api/vision/analyze-photo
+   * Pipeline : Qualité → OCR → Cache → Catégorie → IA → Constitution
+   */
+  async analyzePhotoNew(file: File, category: string = 'auto'): Promise<ScanResult> {
+    try {
+      console.log('📸 [ScanService] analyzePhotoNew appelé');
+      console.log('📸 [ScanService] Taille fichier:', (file.size / 1024).toFixed(2), 'KB');
+
+      // Créer FormData
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('category', category);
+
+      console.log('📸 [ScanService] Appel API /vision/analyze-photo...');
+
+      // Appeler nouvelle route backend
+      const response = await apiClient.post('/vision/analyze-photo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log('✅ [ScanService] Réponse reçue:', response.data);
+
+      // Vérifier erreurs backend (qualité, catégorie interdite)
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Échec analyse photo');
+      }
+
+      // Retourner résultat complet
+      return {
+        product: response.data.product,
+        constitution: response.data.constitution,
+        categoryDetection: response.data.categoryDetection,
+        disclaimer: response.data.disclaimer,
+        cached: response.data.cached || false,
+        source: response.data.source || 'ai',
+        confidence: 1.0,
+        isOCRResult: true
+      };
+
+    } catch (error: any) {
+      console.error('❌ [ScanService] Erreur analyzePhotoNew:', error);
+
+      // Gérer erreurs spécifiques backend
+      if (error.response?.data) {
+        const errorData = error.response.data;
+
+        // Erreur qualité photo
+        if (errorData.error === 'QUALITY_CHECK_FAILED') {
+          throw {
+            code: 'QUALITY_CHECK_FAILED',
+            message: errorData.message,
+            issues: errorData.issues || [],
+            instructions: errorData.instructions || []
+          };
+        }
+
+        // Catégorie interdite (médicament)
+        if (errorData.error === 'FORBIDDEN_CATEGORY') {
+          throw {
+            code: 'FORBIDDEN_CATEGORY',
+            message: errorData.message,
+            suggestion: errorData.suggestion,
+            disclaimer: errorData.disclaimer
+          };
+        }
+      }
+
+      throw this.handleError(error, 'PHOTO_ANALYSIS_FAILED');
+    }
+  }
+
+  /**
+   * ANCIEN : Scanner un produit inconnu avec OCR
+   * Conservé pour compatibilité
    */
   async scanUnknownProduct(file: File): Promise<ScanResult> {
     try {
-      // 1. Analyser avec Google Vision OCR
       const ocrResult: OCRResult = await ocrService.analyzeImage(file);
 
       if (!ocrResult.success || !ocrResult.data) {
         throw new Error('Échec analyse OCR');
       }
 
-      // 2. Convertir le résultat OCR en ScanResult
       return {
         isOCRResult: true,
-        confidence: ocrResult.data.confidence / 100, // Convertir % en 0-1
+        confidence: ocrResult.data.confidence / 100,
         ocrData: ocrResult.data,
         extractedData: {
           category: ocrResult.data.category,
@@ -91,22 +174,19 @@ export class ScanService {
     }
   }
 
-  // Analyse par photo (améliorée avec OCR)
+  /**
+   * ANCIEN : Analyse par photo (legacy)
+   * Conservé pour compatibilité
+   */
   async analyzePhoto(file: File, useOCR: boolean = false): Promise<ScanResult> {
     try {
-      // Si OCR explicitement demandé, utiliser la nouvelle méthode
       if (useOCR) {
         return await this.scanUnknownProduct(file);
       }
 
-      // Sinon, utiliser l'ancien flux (Cloudinary + vision/analyze-image)
-      // 1. Upload vers Cloudinary
       const imageUrl = await cloudinaryService.uploadImage(file);
-
-      // 2. Choisir l'endpoint selon le mode
       const endpoint = '/vision/analyze-image';
 
-      // 3. Analyser l'image
       const response = await apiClient.post(endpoint, {
         imageUrl,
         method: 'photo',
@@ -153,13 +233,12 @@ export class ScanService {
     };
   }
 
-  // Methode pour valider un code-barres
+  // Validation code-barres
   static isValidBarcode(code: string): boolean {
-    // Validation basique : 8, 12 ou 13 chiffres
     return /^(\d{8}|\d{12}|\d{13})$/.test(code);
   }
 
-  // Methode pour detecter la categorie d'un produit à partir de son nom
+  // Détection catégorie
   static detectCategory(productName: string): string {
     const categories = {
       food: ['yaourt', 'lait', 'pain', 'pates', 'riz', 'chocolat', 'biscuit', 'cereales'],
@@ -175,7 +254,6 @@ export class ScanService {
       }
     }
 
-    return 'food'; // Par defaut
+    return 'food';
   }
 }
-

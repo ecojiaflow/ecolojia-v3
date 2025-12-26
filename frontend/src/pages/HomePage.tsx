@@ -25,12 +25,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCategory } from '../Contexts/CategoryContext';
 import { AISearchWidget } from '../components/ai';
-import BarcodeScanner from '../components/scanner/BarcodeScanner';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { setCategory } = useCategory();
-  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   const stats = [
     { icon: Package, value: '2M+', label: 'Produits analyses', color: 'text-primary' },
@@ -152,7 +150,7 @@ const HomePage: React.FC = () => {
 
             {/* Bouton Scanner (mobile) */}
             <button
-              onClick={() => setIsScannerOpen(true)}
+              onClick={() => navigate('/scan')}
               className="md:hidden w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl active:scale-95 transition-transform"
             >
               <div className="flex items-center justify-center text-white space-x-3">
@@ -340,15 +338,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Scanner Modal - Mobile only */}
-      <BarcodeScanner
-        isOpen={isScannerOpen}
-        onClose={() => setIsScannerOpen(false)}
-        onScanSuccess={(result) => {
-          setIsScannerOpen(false);
-        }}
-        autoStartCamera={false}
-      />
+      
     </div>
   );
 };
