@@ -1,0 +1,267 @@
+﻿{
+  "version": "1.0.0",
+  "locked": false,
+  "lastUpdated": "2025-12-25",
+  "description": "Knowledge Base Ecolojia - Base scientifique pour tout l'écosystème (app + vidéos + articles + newsletter + shorts). Point d'entrée centralisé.",
+  "documentation": {
+    "purpose": "Cette Knowledge Base alimente TOUTES les réponses Ecolojia avec des données scientifiques validées, des templates structurés et des habitudes universelles.",
+    "usage": "Importer ce fichier dans les services backend (analysis, content generation, AI enrichment) pour garantir cohérence et qualité scientifique.",
+    "updateFrequency": "Révision trimestrielle des sources scientifiques, verrouillage des habitudes sauf validation scientifique nouvelle."
+  },
+  "categories": {
+    "food": {
+      "description": "Alimentation - Catégorie prioritaire Ecolojia",
+      "criteria": {
+        "additives": {
+          "path": "./criteria/food/additives.json",
+          "description": "50+ additifs documentés avec niveau de risque, sources scientifiques, palette vigilance",
+          "status": "planned",
+          "priority": "high"
+        },
+        "nova": {
+          "path": "./criteria/food/nova.json",
+          "description": "4 groupes NOVA de transformation alimentaire",
+          "status": "planned",
+          "priority": "high"
+        },
+        "nutriscore": {
+          "path": "./criteria/food/nutriscore.json",
+          "description": "5 grades Nutri-Score (A-E) et calcul",
+          "status": "planned",
+          "priority": "medium"
+        },
+        "nutrients": {
+          "path": "./criteria/food/nutrients.json",
+          "description": "Nutriments clés (sucres, sel, graisses, fibres, protéines)",
+          "status": "planned",
+          "priority": "medium"
+        },
+        "processing": {
+          "path": "./criteria/food/processing.json",
+          "description": "Types de transformation industrielle (raffinage, extrusion, hydrogénation, etc.)",
+          "status": "planned",
+          "priority": "low"
+        }
+      },
+      "templates": {
+        "responses": {
+          "path": "./templates/responses/food.json",
+          "description": "100+ templates réponses structurées pour produits alimentaires",
+          "status": "planned",
+          "priority": "high"
+        },
+        "videos": {
+          "path": "./templates/videos/food.json",
+          "description": "20+ templates scripts vidéo série 'Décrypter les étiquettes'",
+          "status": "planned",
+          "priority": "medium"
+        }
+      }
+    },
+    "cosmetic": {
+      "description": "Cosmétique - Développement futur (M8-M10)",
+      "criteria": {
+        "inci": {
+          "path": "./criteria/cosmetic/inci.json",
+          "description": "Ingrédients INCI communs en cosmétique",
+          "status": "future",
+          "priority": "low"
+        },
+        "endocrine": {
+          "path": "./criteria/cosmetic/endocrine.json",
+          "description": "Perturbateurs endocriniens suspectés",
+          "status": "future",
+          "priority": "low"
+        }
+      },
+      "templates": {
+        "responses": {
+          "path": "./templates/responses/cosmetic.json",
+          "description": "Templates réponses cosmétique",
+          "status": "future",
+          "priority": "low"
+        }
+      }
+    },
+    "detergent": {
+      "description": "Détergents - Développement futur (M8-M10)",
+      "criteria": {
+        "surfactants": {
+          "path": "./criteria/detergent/surfactants.json",
+          "description": "Tensioactifs et agents nettoyants",
+          "status": "future",
+          "priority": "low"
+        }
+      },
+      "templates": {
+        "responses": {
+          "path": "./templates/detergent/responses.json",
+          "description": "Templates réponses détergents",
+          "status": "future",
+          "priority": "low"
+        }
+      }
+    }
+  },
+  "habits": {
+    "path": "./habits/library.json",
+    "description": "Bibliothèque FERMÉE de 25 habitudes santé universelles",
+    "status": "completed",
+    "priority": "critical",
+    "locked": true,
+    "totalHabits": 25,
+    "lastReview": "2025-12-25",
+    "nextReview": "2026-06-25"
+  },
+  "sources": {
+    "description": "Organisations et autorités scientifiques de référence",
+    "organizations": {
+      "oms": {
+        "name": "Organisation Mondiale de la Santé",
+        "url": "https://www.who.int",
+        "language": "international",
+        "credibility": "reference"
+      },
+      "anses": {
+        "name": "Agence nationale de sécurité sanitaire de l'alimentation",
+        "url": "https://www.anses.fr",
+        "language": "français",
+        "credibility": "reference"
+      },
+      "efsa": {
+        "name": "European Food Safety Authority",
+        "url": "https://www.efsa.europa.eu",
+        "language": "européen",
+        "credibility": "reference"
+      },
+      "circ": {
+        "name": "Centre International de Recherche sur le Cancer",
+        "url": "https://www.iarc.fr",
+        "language": "international",
+        "credibility": "reference"
+      },
+      "pnns": {
+        "name": "Programme National Nutrition Santé",
+        "url": "https://www.santepubliquefrance.fr",
+        "language": "français",
+        "credibility": "reference"
+      },
+      "ademe": {
+        "name": "Agence de l'Environnement et de la Maîtrise de l'Énergie",
+        "url": "https://www.ademe.fr",
+        "language": "français",
+        "credibility": "reference"
+      }
+    }
+  },
+  "constitution": {
+    "description": "Principes fondamentaux Ecolojia (INVIOLABLES)",
+    "mission": "Traduire la science en habitudes concrètes, sans jugement, sans peur, sans dogme",
+    "pipeline": [
+      "1. Identification réelle du produit",
+      "2. Niveau de transformation (NOVA)",
+      "3. Processus dominant",
+      "4. Effet santé probable (nuancé, contextuel)",
+      "5. Habitude universelle (sélection bibliothèque fermée)",
+      "6. Action concrète et réaliste"
+    ],
+    "structureCanonique": [
+      "🧠 CE QUE C'EST VRAIMENT",
+      "⚙️ COMPOSITION & PROCESSUS",
+      "🧬 CE QUE LA SCIENCE MONTRE",
+      "🌱 LE BON RÉFLEXE SANTÉ",
+      "🔁 ACTIONS POSSIBLES",
+      "📈 IMPACT HABITUDE"
+    ],
+    "tonObligatoire": {
+      "autorise": ["calme", "pédagogique", "factual", "respectueux", "adulte"],
+      "interdit": ["alarmiste", "moralisateur", "sensationnaliste", "infantilisant"]
+    },
+    "motsInterdits": [
+      "cancérigène",
+      "toxique",
+      "dangereux",
+      "poison",
+      "à éviter absolument",
+      "bon/mauvais pour la santé"
+    ],
+    "formulationsAutorisees": [
+      "Selon OMS/ANSES/études...",
+      "Peut contribuer/impacter...",
+      "En cas de consommation fréquente...",
+      "Consulter un professionnel santé si...",
+      "Des études observationnelles suggèrent...",
+      "Associé à... (pas causé par)"
+    ],
+    "paletteVigilance": {
+      "vert": "Données actuelles rassurantes",
+      "jaune": "Effets possibles en consommation fréquente",
+      "orange": "Associé à effets défavorables en exposition répétée",
+      "rouge": "Classé à risque potentiel par certaines autorités"
+    }
+  },
+  "versionControl": {
+    "version": "1.0.0",
+    "status": "active",
+    "completionRate": {
+      "habits": "100%",
+      "foodCriteria": "0%",
+      "foodTemplates": "0%",
+      "cosmeticCriteria": "0%",
+      "detergentCriteria": "0%",
+      "overall": "20%"
+    },
+    "roadmap": {
+      "M2Week1": {
+        "target": ["habits (✅)", "additives.json", "nova.json"],
+        "priority": "P0"
+      },
+      "M2Week2": {
+        "target": ["responses/food.json (100+ templates)", "videos/food.json (20+ templates)"],
+        "priority": "P1"
+      },
+      "M8-M10": {
+        "target": ["cosmetic", "detergent"],
+        "priority": "P2"
+      }
+    },
+    "changeLog": [
+      {
+        "date": "2025-12-25",
+        "version": "1.0.0",
+        "changes": "Création Knowledge Base - Habits library complétée (25 habitudes)",
+        "author": "Claude + Salim"
+      }
+    ]
+  },
+  "integrationGuide": {
+    "description": "Comment intégrer la Knowledge Base dans les services backend",
+    "services": {
+      "analysisRoutes": {
+        "path": "/backend/src/routes/analysis.routes.js",
+        "usage": "Importer habits/library.json pour sélectionner habitude selon produit analysé",
+        "example": "const habits = require('../knowledge/habits/library.json');"
+      },
+      "aiEnrichment": {
+        "path": "/backend/src/services/aiEnrichment.service.js",
+        "usage": "Utiliser templates responses pour générer réponses structurées",
+        "example": "const foodTemplates = require('../knowledge/templates/responses/food.json');"
+      },
+      "contentGeneration": {
+        "path": "Future M3-M6",
+        "usage": "Utiliser templates videos pour générer scripts automatisés",
+        "example": "const videoScripts = require('../knowledge/templates/videos/food.json');"
+      }
+    },
+    "validationRules": {
+      "beforeResponse": [
+        "Vérifier Constitution respectée",
+        "Vérifier pipeline IA appliqué",
+        "Vérifier ton non alarmiste",
+        "Vérifier habitude sélectionnée (pas créée)",
+        "Vérifier aucun mot interdit",
+        "Vérifier sources scientifiques présentes"
+      ]
+    }
+  }
+}

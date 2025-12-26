@@ -1,0 +1,4490 @@
+{
+  "exactMapping": {
+    "almond|chocolate|dairy|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "almond|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "almond|chocolate|hazelnut|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "almond|chocolate|organic|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "almond|breakfast|cereal|chocolate|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "almond|chocolate|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "almond|healthy|natural|protein|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 26,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "almond|drink|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "almond|drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 9,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "almond|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "almond|drink|organic|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "almond|dairy|drink|organic|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|organic|sweet|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|organic|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|organic|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|chocolate|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|creamy|drink|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|chocolate|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "almond|chocolate|dessert": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "almond|drink|salty|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "almond|drink|organic|rice|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "anti-aging|cream|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "skincare"
+      ]
+    },
+    "appetizer|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "appetizer|cheese|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "apple|breakfast|fruit|hazelnut|nut|spreadable|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "apple|dessert|fruit|snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "asian|cooking|crunchy|garnish|seeds|toasted": {
+      "subcategory": "spice",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spice"
+      ]
+    },
+    "bagged|crispy|potato|salty|savory": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "baked|breakfast|pastry|snack|sweet": {
+      "subcategory": "bread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "bread"
+      ]
+    },
+    "baked|biscuit|raisin|snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "baked|biscuit|digestive|snacking|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "baked|biscuit|snacking|sweet|tea": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "baked|dessert|french|pastry|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "bakery|breakfast|brioche|organic|sliced": {
+      "subcategory": "bread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "bread"
+      ]
+    },
+    "bakery|breakfast|brioche|low-sugar|sweet-bread": {
+      "subcategory": "bread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "bread"
+      ]
+    },
+    "bars|chocolate|crunchy|dark|energy|oats": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "basic|classic|food|original|versatile": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "beetroot|lentil|pea|plant-based|savory|vegan|vegetarian": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|hazelnut|nutella|spread|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 8,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|crispy|dessert|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|butter|dessert|sweet|tea": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|cookies|dessert|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|coconut|dessert|snacking|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|dessert|snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|dessert|fig|snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|dessert|milk|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|orange|snack|soy|sweet|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|british|butter|dessert|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|chocolate|dessert|filled|milk|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuit|breakfast|chocolate|oat|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuits|cookies|dessert|snacking|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "biscuits|crackers|salty|savory|snacking": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "bitter|breakfast|condiment|spread|strong": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "black|breakfast|dessert|sweet|topping": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "blueberry|energy|fruit|healthy|natural|nuts": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "bottled|drink|hydration|natural|spring": {
+      "subcategory": "water",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "water"
+      ]
+    },
+    "bread|breakfast|crispy|crunchy|toast": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "bread|breakfast|crispy|light|snack|toasted": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "bread|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "bread|cereal|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "bread|gluten-free|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "bread|cereal|gluten-free|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "bread|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "bread|chocolate|organic|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "bread|hazelnut|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "bread|cereal|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "breakfast|dessert|sweet|topping": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|chocolate|dessert|snack|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|creamy|sweet|topping|versatile": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|classic|dessert|sweet|topping": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "breakfast|dietary|fiber|healthy|wholegrain": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|food|spread|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "breakfast|crunchy|honey|oats|sweet": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|fig|natural|sesame|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|brioche|pastry|sliced|sweet": {
+      "subcategory": "bread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "bread"
+      ]
+    },
+    "breakfast|cookie|creamy|dessert|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|crunchy|granola|healthy|oats": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|crispbread|light|snack|toast|wholegrain": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|chocolate|oat|snack|sweet": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|brioche|french|pastry|sugar|sweet": {
+      "subcategory": "bread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "bread"
+      ]
+    },
+    "breakfast|crunchy|honey|oats|snack": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|cereal|chocolate|honey|sweet": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|family|healthy|natural|wholegrain": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|chocolate|hazelnut|snack|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|coconut|sweet|tropical|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|creamy|dessert|sweet|topping": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "breakfast|fiber|healthy|wheat|wholegrain": {
+      "subcategory": "cereal",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "cereal"
+      ]
+    },
+    "breakfast|chocolate|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 10,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|lunch|soft": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|fruit|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|hazelnut|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 12,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|soft": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|chocolate": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|hazelnut|soft": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|lunch|soft": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|hazelnut|lunch|organic": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 23,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 8,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|gluten-free": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|hazelnut|lunch|organic": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|hazelnut|pastry|sweet": {
+      "subcategory": "pastry",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "pastry"
+      ]
+    },
+    "breakfast|sweet": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|chocolate|lunch": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|lunch|organic": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|dairy": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|cereal|chocolate|hazelnut|lunch|organic": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|chocolate|soft": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|hazelnut|lunch|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "breakfast|chocolate|dairy|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "breakfast|cereal|dairy": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "breakfast",
+        "breakfast",
+        "breakfast"
+      ]
+    },
+    "breakfast|fruit": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "breakfast|crunchy": {
+      "subcategory": "breakfast",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "breakfast"
+      ]
+    },
+    "buckwheat|crispbread|crunchy|gluten-free|healthy": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cacao|chocolate|dark|organic|sweet|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "candy|cherry|fruit|germany|gummy|pomegranate|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "candy|chocolate|crispy|hazelnut|sweet|wafer": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cereal|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "cereal|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "cereal|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "cereal|salty|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cereal|chocolate|organic": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        null,
+        null
+      ]
+    },
+    "cereal|drink|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|chocolate|hazelnut|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "cereal|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "cereal|organic": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        null,
+        null,
+        null
+      ]
+    },
+    "cereal|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 34,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 18,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|drink|gluten-free|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "cereal|drink|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|drink|gluten-free": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|dairy|drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|chocolate|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "cereal|drink|organic|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "cereal|chocolate|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cheese|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "cheese|crunchy|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cheese|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 37,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "cheese|creamy|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "cheese|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cheese|dairy|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "cheese|spread|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cheese|dairy|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cheese|spread|vegetable": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cheese|rice|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "cheese|salty|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "chickpea|crispy|gluten-free|healthy|quinoa|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chips|crispy|original|potato|salty|savory": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "chips|creamy|flavored|onion|salty|savory": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chips|crispy|potato|savory|snacking": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chips|crispy|potato|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chips|crispy|potato|salty|savory": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chips|crispy|salty|savory|sea salt|vinegar": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|indulgence|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|cocoa|dark|dessert|sweet|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|organic|sweet|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|cocoa|dark|dessert|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|indulgent|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|filled|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|cocoa|dark|dessert|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate|hazelnut|snack|spread|sweet": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 46,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|dessert|milk|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|cocoa|dark|snack|sweet|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|energy|peanut|protein|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|cocoa|cookie|snack|sugar-free|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dark|dessert|milk|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dessert|gift|gourmet|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|energy|hazelnut|healthy|protein|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|kids|snack|sweet|treat": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|hazelnut|snack|sweet|wafer": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate|dessert": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 46,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "chocolate|hazelnut|portable|snack|spread|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        null
+      ]
+    },
+    "chocolate|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 16,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate|creamy|natural|peanut|protein|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 17,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "chocolate|dessert|organic": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 12,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "chocolate|organic|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "chocolate|dessert|hazelnut": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "chocolate|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 11,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "chocolate|hazelnut|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 26,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|hazelnut|organic|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 9,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|organic": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        null,
+        null
+      ]
+    },
+    "chocolate|hazelnut|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 27,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|pasta|peanut|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|organic|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 10,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|egg|pasta|peanut|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|fair-trade|hazelnut|organic|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|crunchy|hazelnut|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|dairy|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|fair-trade|hazelnut|organic|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "chocolate-spread",
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|fruit|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|hazelnut|pasta|spread|sweet": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|dairy|hazelnut|organic|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|hazelnut|organic": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        null
+      ]
+    },
+    "chocolate|egg|hazelnut|pasta|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|gluten-free|hazelnut|organic|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "chocolate|fair-trade|hazelnut|organic|spread|sweet": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|dairy|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "chocolate|dairy|dessert": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 8,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "chocolate|dessert|organic|vegan": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "chocolate|dessert|rice": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "dessert",
+        "dessert"
+      ]
+    },
+    "chocolate|hazelnut|vegan": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        null
+      ]
+    },
+    "chocolate|dairy|dessert|organic": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "chocolate|dairy|hazelnut|pasta|rice|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|snack|soft|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|hazelnut|organic|spread": {
+      "subcategory": "chocolate-spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "chocolate-spread"
+      ]
+    },
+    "chocolate|dairy|organic|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|dairy|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|organic|rice|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|hazelnut|snack|soft|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|gluten-free|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|rice|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "chocolate|crunchy|rice|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cleaning|laundry": {
+      "subcategory": "laundry",
+      "categoryType": "detergent",
+      "count": 1,
+      "examples": [
+        "laundry"
+      ]
+    },
+    "cleaning|dishes": {
+      "subcategory": "dishwashing",
+      "categoryType": "detergent",
+      "count": 1,
+      "examples": [
+        "dishwashing"
+      ]
+    },
+    "cleansing|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "haircare"
+      ]
+    },
+    "cleansing|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "bodycare"
+      ]
+    },
+    "coconut|dessert|sweet|tropical|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "corn|gluten free|healthy|lightly salted|low fat|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cracker|crispbread|low-calorie|scandinavian|wholegrain": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "cream|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 72,
+      "examples": [
+        "skincare",
+        "skincare",
+        "skincare"
+      ]
+    },
+    "cream|personal-care|sunscreen": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 4,
+      "examples": [
+        "skincare",
+        "skincare",
+        "skincare"
+      ]
+    },
+    "cream|organic|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 5,
+      "examples": [
+        "skincare",
+        "skincare",
+        "skincare"
+      ]
+    },
+    "cream|organic|personal-care|sunscreen": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "skincare"
+      ]
+    },
+    "cream|personal-care|sensitive-skin|sunscreen": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "skincare"
+      ]
+    },
+    "cream|organic|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 4,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "cream|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 8,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "cream|moisturizing|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "skincare",
+        "skincare",
+        "skincare"
+      ]
+    },
+    "cream|hypoallergenic|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "skincare"
+      ]
+    },
+    "cream|personal-care|soap": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 9,
+      "examples": [
+        "skincare",
+        "skincare",
+        "skincare"
+      ]
+    },
+    "cream|natural|personal-care": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "skincare"
+      ]
+    },
+    "cream|moisturizing|personal-care|soap": {
+      "subcategory": "skincare",
+      "categoryType": "cosmetic",
+      "count": 2,
+      "examples": [
+        "skincare",
+        "skincare"
+      ]
+    },
+    "creamy|indulgent|ready-to-eat|sweet|treat": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "creamy|crispy|onion|salty|savory": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "creamy|natural|peanut|protein|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 292,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "creamy|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "creamy|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "crisps|salted|savory|sea salt|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "crunchy|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "crunchy|rice|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "crunchy|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "crunchy|natural|peanut|protein|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 106,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "crunchy|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "crunchy|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "crunchy|pasta|peanut|snack|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "dairy|dessert": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 12,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "dairy|hazelnut|pasta|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "dairy|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "dairy|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "dairy|drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "dairy|drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "dairy|drink|lactose-free": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "dairy|salty|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "dairy|dessert|rice": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "dairy|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "dairy|dessert|organic": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "dessert",
+        "dessert"
+      ]
+    },
+    "dairy|spread|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "dessert": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 78,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "dessert|organic": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "dessert",
+        "dessert",
+        "dessert"
+      ]
+    },
+    "dessert|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "dessert|salty": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "dessert|fruit": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "dessert",
+        "dessert"
+      ]
+    },
+    "dessert|fruit|vegan": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "dessert|vegan": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "dessert|sweet": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "dessert|rice": {
+      "subcategory": "dessert",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "dessert"
+      ]
+    },
+    "drink|fruit": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 19,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 153,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 52,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|hazelnut": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 16,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|fruit|liquid|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|soft": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|hazelnut|organic": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|hazelnut|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|hazelnut|organic|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|organic|rice|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|hazelnut|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|organic|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|organic|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|organic|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "beverage",
+        "beverage",
+        "beverage"
+      ]
+    },
+    "drink|hazelnut|organic|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|fruit|sweet": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|egg|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|fruit|liquid": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|liquid": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|fruit|liquid|rice": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|salty|sweet|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "drink|salty|vegan": {
+      "subcategory": "beverage",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "beverage"
+      ]
+    },
+    "egg|snack|vegetable": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "egg|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "energy|fruit|healthy|mix|nuts|snacking": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "exfoliating|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 2,
+      "examples": [
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "exfoliating|natural|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "bodycare"
+      ]
+    },
+    "fish|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "fish": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        null
+      ]
+    },
+    "fragrance-free|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 2,
+      "examples": [
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "fragrance-free|organic|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "bodycare"
+      ]
+    },
+    "fruit|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "fruit|snack|vegan": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "fruit|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 21,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "fruit|organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "fruit|snack|vegetable": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "hazelnut|pasta|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 38,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "hazelnut|organic|pasta|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 12,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "hazelnut|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 11,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "hazelnut|healthy|natural|protein|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 12,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "hazelnut|pasta|rice|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "hazelnut|organic|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "hypoallergenic|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "haircare"
+      ]
+    },
+    "hypoallergenic|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "meat|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "middle-eastern|natural|protein|sesame|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 16,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "moisturizing|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 6,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "moisturizing|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "natural|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 16,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "natural|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 15,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "organic|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 21,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "organic": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        null,
+        null
+      ]
+    },
+    "organic|rice|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "organic|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "organic|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 6,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "organic|pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 8,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "organic|pasta": {
+      "subcategory": null,
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        null
+      ]
+    },
+    "organic|salty|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "organic|spread|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "organic|personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 54,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "organic|personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 25,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "organic|personal-care|soap|vegan": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "pasta|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 42,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "pasta|peanut|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 4,
+      "examples": [
+        "nut-butter",
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "pasta|peanut|snack|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "nut-butter"
+      ]
+    },
+    "pasta|spread|sweet": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "pasta|sauce|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "pasta|snack|vegetable": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "pasta|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "pasta|sauce|snack|vegetable": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "peanut|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 7,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "peanut|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "peanut|spread": {
+      "subcategory": "nut-butter",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "nut-butter",
+        "nut-butter"
+      ]
+    },
+    "personal-care|shampoo": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 785,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "personal-care|shampoo|sunscreen": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "personal-care|shampoo|soap": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 3,
+      "examples": [
+        "haircare",
+        "haircare",
+        "haircare"
+      ]
+    },
+    "personal-care|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 270,
+      "examples": [
+        "bodycare",
+        "bodycare",
+        "bodycare"
+      ]
+    },
+    "personal-care|shampoo|vegan": {
+      "subcategory": "haircare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "haircare"
+      ]
+    },
+    "personal-care|sensitive-skin|soap": {
+      "subcategory": "bodycare",
+      "categoryType": "cosmetic",
+      "count": 1,
+      "examples": [
+        "bodycare"
+      ]
+    },
+    "rice|salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 3,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "rice|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "rice|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "salty|snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 16,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "salty|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 23,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "salty|snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "salty|spread|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "spread",
+        "spread"
+      ]
+    },
+    "snack": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 100,
+      "examples": [
+        "snack",
+        "snack",
+        "snack"
+      ]
+    },
+    "snack|sweet": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "snack"
+      ]
+    },
+    "snack|sour": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "snack|vegetable": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "snack|spicy": {
+      "subcategory": "snack",
+      "categoryType": "food",
+      "count": 2,
+      "examples": [
+        "snack",
+        "snack"
+      ]
+    },
+    "soft|spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 1,
+      "examples": [
+        "spread"
+      ]
+    },
+    "spread": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 122,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "spread|vegan": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 8,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    },
+    "spread|vegetable": {
+      "subcategory": "spread",
+      "categoryType": "food",
+      "count": 5,
+      "examples": [
+        "spread",
+        "spread",
+        "spread"
+      ]
+    }
+  },
+  "tagMapping": {
+    "almond": {
+      "primary": "beverage",
+      "count": 29,
+      "alternatives": [
+        {
+          "name": "nut-butter",
+          "count": 28
+        },
+        {
+          "name": "chocolate-spread",
+          "count": 4
+        }
+      ]
+    },
+    "chocolate": {
+      "primary": "chocolate-spread",
+      "count": 149,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 76
+        },
+        {
+          "name": "dessert",
+          "count": 74
+        }
+      ]
+    },
+    "dairy": {
+      "primary": "dessert",
+      "count": 24,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 14
+        },
+        {
+          "name": "beverage",
+          "count": 13
+        }
+      ]
+    },
+    "pasta": {
+      "primary": "spread",
+      "count": 62,
+      "alternatives": [
+        {
+          "name": "nut-butter",
+          "count": 59
+        },
+        {
+          "name": "chocolate-spread",
+          "count": 53
+        }
+      ]
+    },
+    "spread": {
+      "primary": "nut-butter",
+      "count": 546,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 360
+        },
+        {
+          "name": "chocolate-spread",
+          "count": 149
+        }
+      ]
+    },
+    "hazelnut": {
+      "primary": "chocolate-spread",
+      "count": 121,
+      "alternatives": [
+        {
+          "name": "nut-butter",
+          "count": 79
+        },
+        {
+          "name": "snack",
+          "count": 15
+        }
+      ]
+    },
+    "organic": {
+      "primary": "beverage",
+      "count": 115,
+      "alternatives": [
+        {
+          "name": "haircare",
+          "count": 58
+        },
+        {
+          "name": "spread",
+          "count": 51
+        }
+      ]
+    },
+    "breakfast": {
+      "primary": "breakfast",
+      "count": 89,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 15
+        },
+        {
+          "name": "cereal",
+          "count": 10
+        }
+      ]
+    },
+    "cereal": {
+      "primary": "beverage",
+      "count": 66,
+      "alternatives": [
+        {
+          "name": "breakfast",
+          "count": 21
+        },
+        {
+          "name": "spread",
+          "count": 17
+        }
+      ]
+    },
+    "lunch": {
+      "primary": "breakfast",
+      "count": 39,
+      "alternatives": [
+        {
+          "name": "nut-butter",
+          "count": 1
+        }
+      ]
+    },
+    "healthy": {
+      "primary": "nut-butter",
+      "count": 38,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 6
+        },
+        {
+          "name": "cereal",
+          "count": 4
+        }
+      ]
+    },
+    "natural": {
+      "primary": "nut-butter",
+      "count": 469,
+      "alternatives": [
+        {
+          "name": "bodycare",
+          "count": 16
+        },
+        {
+          "name": "haircare",
+          "count": 16
+        }
+      ]
+    },
+    "protein": {
+      "primary": "nut-butter",
+      "count": 469,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 2
+        }
+      ]
+    },
+    "drink": {
+      "primary": "beverage",
+      "count": 406,
+      "alternatives": [
+        {
+          "name": "water",
+          "count": 1
+        }
+      ]
+    },
+    "sweet": {
+      "primary": "snack",
+      "count": 60,
+      "alternatives": [
+        {
+          "name": "chocolate-spread",
+          "count": 48
+        },
+        {
+          "name": "beverage",
+          "count": 35
+        }
+      ]
+    },
+    "vegan": {
+      "primary": "beverage",
+      "count": 26,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 14
+        },
+        {
+          "name": "snack",
+          "count": 10
+        }
+      ]
+    },
+    "rice": {
+      "primary": "beverage",
+      "count": 18,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 12
+        },
+        {
+          "name": "dessert",
+          "count": 4
+        }
+      ]
+    },
+    "creamy": {
+      "primary": "nut-butter",
+      "count": 309,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 11
+        },
+        {
+          "name": "snack",
+          "count": 2
+        }
+      ]
+    },
+    "salty": {
+      "primary": "snack",
+      "count": 37,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 29
+        },
+        {
+          "name": "beverage",
+          "count": 3
+        }
+      ]
+    },
+    "snack": {
+      "primary": "snack",
+      "count": 231,
+      "alternatives": [
+        {
+          "name": "chocolate-spread",
+          "count": 46
+        },
+        {
+          "name": "cereal",
+          "count": 4
+        }
+      ]
+    },
+    "dessert": {
+      "primary": "dessert",
+      "count": 180,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 31
+        },
+        {
+          "name": "spread",
+          "count": 9
+        }
+      ]
+    },
+    "anti-aging": {
+      "primary": "skincare",
+      "count": 1,
+      "alternatives": []
+    },
+    "cream": {
+      "primary": "skincare",
+      "count": 100,
+      "alternatives": [
+        {
+          "name": "haircare",
+          "count": 12
+        }
+      ]
+    },
+    "personal-care": {
+      "primary": "haircare",
+      "count": 882,
+      "alternatives": [
+        {
+          "name": "bodycare",
+          "count": 327
+        },
+        {
+          "name": "skincare",
+          "count": 100
+        }
+      ]
+    },
+    "appetizer": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "cheese": {
+      "primary": "spread",
+      "count": 49,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 6
+        }
+      ]
+    },
+    "apple": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "fruit": {
+      "primary": "spread",
+      "count": 24,
+      "alternatives": [
+        {
+          "name": "beverage",
+          "count": 24
+        },
+        {
+          "name": "snack",
+          "count": 10
+        }
+      ]
+    },
+    "nut": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "spreadable": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "asian": {
+      "primary": "spice",
+      "count": 1,
+      "alternatives": []
+    },
+    "cooking": {
+      "primary": "spice",
+      "count": 1,
+      "alternatives": []
+    },
+    "crunchy": {
+      "primary": "nut-butter",
+      "count": 107,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 7
+        },
+        {
+          "name": "spread",
+          "count": 5
+        }
+      ]
+    },
+    "garnish": {
+      "primary": "spice",
+      "count": 1,
+      "alternatives": []
+    },
+    "seeds": {
+      "primary": "spice",
+      "count": 1,
+      "alternatives": []
+    },
+    "toasted": {
+      "primary": "spice",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "bagged": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "crispy": {
+      "primary": "snack",
+      "count": 12,
+      "alternatives": [
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "potato": {
+      "primary": "snack",
+      "count": 6,
+      "alternatives": []
+    },
+    "savory": {
+      "primary": "snack",
+      "count": 11,
+      "alternatives": []
+    },
+    "baked": {
+      "primary": "snack",
+      "count": 4,
+      "alternatives": [
+        {
+          "name": "bread",
+          "count": 1
+        }
+      ]
+    },
+    "pastry": {
+      "primary": "bread",
+      "count": 3,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        },
+        {
+          "name": "pastry",
+          "count": 1
+        }
+      ]
+    },
+    "biscuit": {
+      "primary": "snack",
+      "count": 22,
+      "alternatives": []
+    },
+    "raisin": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "digestive": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "snacking": {
+      "primary": "snack",
+      "count": 7,
+      "alternatives": []
+    },
+    "tea": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "french": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "bread",
+          "count": 1
+        }
+      ]
+    },
+    "bakery": {
+      "primary": "bread",
+      "count": 2,
+      "alternatives": []
+    },
+    "brioche": {
+      "primary": "bread",
+      "count": 4,
+      "alternatives": []
+    },
+    "sliced": {
+      "primary": "bread",
+      "count": 2,
+      "alternatives": []
+    },
+    "low-sugar": {
+      "primary": "bread",
+      "count": 1,
+      "alternatives": []
+    },
+    "sweet-bread": {
+      "primary": "bread",
+      "count": 1,
+      "alternatives": []
+    },
+    "bars": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "dark": {
+      "primary": "snack",
+      "count": 19,
+      "alternatives": []
+    },
+    "energy": {
+      "primary": "snack",
+      "count": 5,
+      "alternatives": []
+    },
+    "oats": {
+      "primary": "cereal",
+      "count": 3,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "basic": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "classic": {
+      "primary": "spread",
+      "count": 3,
+      "alternatives": []
+    },
+    "food": {
+      "primary": "spread",
+      "count": 3,
+      "alternatives": []
+    },
+    "original": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 1
+        }
+      ]
+    },
+    "versatile": {
+      "primary": "spread",
+      "count": 2,
+      "alternatives": []
+    },
+    "beetroot": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "lentil": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "pea": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "plant-based": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "vegetarian": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "nutella": {
+      "primary": "snack",
+      "count": 8,
+      "alternatives": []
+    },
+    "butter": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "cookies": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "coconut": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 1
+        }
+      ]
+    },
+    "fig": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 1
+        }
+      ]
+    },
+    "milk": {
+      "primary": "snack",
+      "count": 4,
+      "alternatives": []
+    },
+    "orange": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "soy": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "british": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "filled": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "oat": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "biscuits": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "crackers": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "bitter": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "condiment": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "strong": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "black": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": []
+    },
+    "topping": {
+      "primary": "spread",
+      "count": 6,
+      "alternatives": []
+    },
+    "blueberry": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "nuts": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "bottled": {
+      "primary": "water",
+      "count": 1,
+      "alternatives": []
+    },
+    "hydration": {
+      "primary": "water",
+      "count": 1,
+      "alternatives": []
+    },
+    "spring": {
+      "primary": "water",
+      "count": 1,
+      "alternatives": []
+    },
+    "bread": {
+      "primary": "spread",
+      "count": 11,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        },
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "toast": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "light": {
+      "primary": "cereal",
+      "count": 2,
+      "alternatives": []
+    },
+    "gluten-free": {
+      "primary": "spread",
+      "count": 3,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 3
+        },
+        {
+          "name": "beverage",
+          "count": 3
+        }
+      ]
+    },
+    "dietary": {
+      "primary": "cereal",
+      "count": 1,
+      "alternatives": []
+    },
+    "fiber": {
+      "primary": "cereal",
+      "count": 2,
+      "alternatives": []
+    },
+    "wholegrain": {
+      "primary": "cereal",
+      "count": 4,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "honey": {
+      "primary": "cereal",
+      "count": 3,
+      "alternatives": []
+    },
+    "sesame": {
+      "primary": "nut-butter",
+      "count": 16,
+      "alternatives": [
+        {
+          "name": "spread",
+          "count": 1
+        }
+      ]
+    },
+    "cookie": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "granola": {
+      "primary": "cereal",
+      "count": 1,
+      "alternatives": []
+    },
+    "crispbread": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": [
+        {
+          "name": "cereal",
+          "count": 1
+        }
+      ]
+    },
+    "sugar": {
+      "primary": "bread",
+      "count": 1,
+      "alternatives": []
+    },
+    "family": {
+      "primary": "cereal",
+      "count": 1,
+      "alternatives": []
+    },
+    "tropical": {
+      "primary": "spread",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "wheat": {
+      "primary": "cereal",
+      "count": 1,
+      "alternatives": []
+    },
+    "soft": {
+      "primary": "breakfast",
+      "count": 5,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 2
+        },
+        {
+          "name": "beverage",
+          "count": 2
+        }
+      ]
+    },
+    "buckwheat": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "cacao": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "candy": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "cherry": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "germany": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "gummy": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "pomegranate": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "wafer": {
+      "primary": "snack",
+      "count": 3,
+      "alternatives": []
+    },
+    "vegetable": {
+      "primary": "spread",
+      "count": 6,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 6
+        }
+      ]
+    },
+    "chickpea": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "quinoa": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "chips": {
+      "primary": "snack",
+      "count": 7,
+      "alternatives": []
+    },
+    "flavored": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "onion": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "sea salt": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "vinegar": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "indulgence": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "cocoa": {
+      "primary": "snack",
+      "count": 10,
+      "alternatives": []
+    },
+    "indulgent": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "dessert",
+          "count": 1
+        }
+      ]
+    },
+    "treat": {
+      "primary": "snack",
+      "count": 8,
+      "alternatives": [
+        {
+          "name": "dessert",
+          "count": 1
+        }
+      ]
+    },
+    "peanut": {
+      "primary": "nut-butter",
+      "count": 423,
+      "alternatives": [
+        {
+          "name": "snack",
+          "count": 11
+        },
+        {
+          "name": "chocolate-spread",
+          "count": 3
+        }
+      ]
+    },
+    "sugar-free": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "gift": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "gourmet": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "kids": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "portable": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "egg": {
+      "primary": "chocolate-spread",
+      "count": 2,
+      "alternatives": [
+        {
+          "name": "beverage",
+          "count": 1
+        },
+        {
+          "name": "snack",
+          "count": 1
+        }
+      ]
+    },
+    "fair-trade": {
+      "primary": "chocolate-spread",
+      "count": 4,
+      "alternatives": []
+    },
+    "cleaning": {
+      "primary": "laundry",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "dishwashing",
+          "count": 1
+        }
+      ]
+    },
+    "laundry": {
+      "primary": "laundry",
+      "count": 1,
+      "alternatives": []
+    },
+    "dishes": {
+      "primary": "dishwashing",
+      "count": 1,
+      "alternatives": []
+    },
+    "cleansing": {
+      "primary": "haircare",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "bodycare",
+          "count": 1
+        }
+      ]
+    },
+    "shampoo": {
+      "primary": "haircare",
+      "count": 882,
+      "alternatives": []
+    },
+    "soap": {
+      "primary": "bodycare",
+      "count": 327,
+      "alternatives": [
+        {
+          "name": "skincare",
+          "count": 11
+        },
+        {
+          "name": "haircare",
+          "count": 3
+        }
+      ]
+    },
+    "corn": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "gluten free": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "lightly salted": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "low fat": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "cracker": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "low-calorie": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "scandinavian": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "sunscreen": {
+      "primary": "skincare",
+      "count": 6,
+      "alternatives": [
+        {
+          "name": "haircare",
+          "count": 3
+        }
+      ]
+    },
+    "sensitive-skin": {
+      "primary": "skincare",
+      "count": 1,
+      "alternatives": [
+        {
+          "name": "bodycare",
+          "count": 1
+        }
+      ]
+    },
+    "moisturizing": {
+      "primary": "haircare",
+      "count": 6,
+      "alternatives": [
+        {
+          "name": "skincare",
+          "count": 5
+        },
+        {
+          "name": "bodycare",
+          "count": 3
+        }
+      ]
+    },
+    "hypoallergenic": {
+      "primary": "bodycare",
+      "count": 3,
+      "alternatives": [
+        {
+          "name": "skincare",
+          "count": 1
+        },
+        {
+          "name": "haircare",
+          "count": 1
+        }
+      ]
+    },
+    "ready-to-eat": {
+      "primary": "dessert",
+      "count": 1,
+      "alternatives": []
+    },
+    "crisps": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "salted": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "lactose-free": {
+      "primary": "beverage",
+      "count": 1,
+      "alternatives": []
+    },
+    "liquid": {
+      "primary": "beverage",
+      "count": 5,
+      "alternatives": []
+    },
+    "mix": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "exfoliating": {
+      "primary": "bodycare",
+      "count": 3,
+      "alternatives": []
+    },
+    "fish": {
+      "primary": "snack",
+      "count": 4,
+      "alternatives": [
+        {
+          "name": "null",
+          "count": 1
+        }
+      ]
+    },
+    "fragrance-free": {
+      "primary": "bodycare",
+      "count": 3,
+      "alternatives": []
+    },
+    "meat": {
+      "primary": "snack",
+      "count": 1,
+      "alternatives": []
+    },
+    "middle-eastern": {
+      "primary": "nut-butter",
+      "count": 16,
+      "alternatives": []
+    },
+    "sauce": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "sour": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    },
+    "spicy": {
+      "primary": "snack",
+      "count": 2,
+      "alternatives": []
+    }
+  },
+  "stats": {
+    "totalProducts": 3381,
+    "uniqueTagCombinations": 372,
+    "uniqueTags": 166
+  }
+}

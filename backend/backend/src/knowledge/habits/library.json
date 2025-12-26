@@ -1,0 +1,875 @@
+﻿{
+  "version": "1.0.0",
+  "locked": true,
+  "lastUpdated": "2025-12-25",
+  "description": "Bibliothèque fermée de 25 habitudes santé universelles. AUCUNE création dynamique autorisée. L'IA sélectionne uniquement parmi cette liste.",
+  "totalHabits": 25,
+  "habits": [
+    {
+      "id": "privilegier-aliments-bruts",
+      "name": "Privilégier les aliments bruts",
+      "category": "food",
+      "priority": "high",
+      "description": "Choisir des aliments peu ou pas transformés, dans leur état naturel ou proche de celui-ci.",
+      "scientificBasis": {
+        "summary": "Les aliments bruts conservent leurs nutriments naturels, leurs fibres et leur matrice alimentaire. Des études observationnelles suggèrent qu'une alimentation riche en aliments bruts est associée à de meilleurs marqueurs de santé métabolique.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2015,
+            "title": "Lignes directrices sur les apports en sucres",
+            "url": "https://www.who.int/publications/i/item/9789241549028"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "title": "Repères nutritionnels",
+            "url": "https://www.anses.fr/fr/content/les-reperes-de-consommations-alimentaires"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Fruits et légumes frais",
+        "Céréales complètes non transformées",
+        "Légumineuses sèches",
+        "Viandes et poissons non transformés",
+        "Œufs, lait nature"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["limiter-produits-ultra-transformes", "varier-sources-alimentaires"]
+    },
+    {
+      "id": "limiter-produits-ultra-transformes",
+      "name": "Limiter les produits ultra-transformés",
+      "category": "food",
+      "priority": "high",
+      "description": "Réduire la fréquence de consommation des aliments NOVA groupe 4 (ultra-transformés).",
+      "scientificBasis": {
+        "summary": "Des études observationnelles montrent qu'une consommation élevée et régulière de produits ultra-transformés est associée à des risques accrus de certaines pathologies chroniques. Les mécanismes évoqués incluent inflammation, déséquilibres du microbiote et densité nutritionnelle faible.",
+        "sources": [
+          {
+            "organization": "BMJ",
+            "year": 2019,
+            "title": "Ultra-processed food intake and mortality",
+            "url": "https://www.bmj.com/content/365/bmj.l1949"
+          },
+          {
+            "organization": "ANSES",
+            "year": 2021,
+            "title": "Classification NOVA et santé",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Sodas et boissons sucrées industrielles",
+        "Plats préparés industriels",
+        "Snacks ultra-transformés",
+        "Viennoiseries industrielles",
+        "Produits avec listes d'ingrédients très longues"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "occasionnel",
+      "relatedHabits": ["privilegier-aliments-bruts", "lire-listes-ingredients"]
+    },
+    {
+      "id": "surveiller-frequence-non-interdiction",
+      "name": "Surveiller la fréquence plus que l'interdiction",
+      "category": "food",
+      "priority": "high",
+      "description": "Approche basée sur la fréquence et la quantité plutôt que sur l'exclusion totale.",
+      "scientificBasis": {
+        "summary": "L'approche fréquentielle est plus durable et réaliste que l'interdiction. Des études en psychologie nutritionnelle montrent que les restrictions trop strictes peuvent entraîner des comportements de compensation.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "title": "Recommandations nutritionnelles",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Produits sucrés : occasionnels, pas quotidiens",
+        "Charcuterie : hebdomadaire, pas quotidienne",
+        "Plats préparés : dépannage, pas routine",
+        "Alcool : modéré et espacé"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "principe-general",
+      "relatedHabits": ["reserver-produits-plaisir-occasions", "equilibre-global-semaine"]
+    },
+    {
+      "id": "lire-listes-ingredients",
+      "name": "Préférer les listes d'ingrédients courtes",
+      "category": "food",
+      "priority": "medium",
+      "description": "Privilégier les produits avec des listes d'ingrédients courtes et reconnaissables.",
+      "scientificBasis": {
+        "summary": "Une liste courte indique généralement moins de transformation et moins d'additifs. Corrélation observée entre longueur de liste et groupe NOVA.",
+        "sources": [
+          {
+            "organization": "NOVA Classification",
+            "year": 2016,
+            "title": "NOVA food classification system",
+            "url": "https://www.fao.org/nutrition/education/food-dietary-guidelines"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Pain : farine, eau, sel, levure (4 ingrédients)",
+        "Yaourt : lait, ferments (2 ingrédients)",
+        "Compote : fruits, sucre (2 ingrédients)",
+        "Éviter : listes de 15+ ingrédients avec noms chimiques"
+      ],
+      "difficulty": "low",
+      "impact": "medium",
+      "frequencyGoal": "systematique",
+      "relatedHabits": ["limiter-produits-ultra-transformes", "limiter-exposition-chimique"]
+    },
+    {
+      "id": "varier-sources-lipides",
+      "name": "Varier les sources de lipides",
+      "category": "food",
+      "priority": "medium",
+      "description": "Diversifier les apports en acides gras (saturés, mono-insaturés, poly-insaturés).",
+      "scientificBasis": {
+        "summary": "L'équilibre entre différents types d'acides gras est associé à une meilleure santé cardiovasculaire. L'ANSES recommande une diversité des sources lipidiques.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "title": "Lipides et santé cardiovasculaire",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Huile d'olive (mono-insaturés)",
+        "Poissons gras (oméga-3)",
+        "Noix et graines (poly-insaturés)",
+        "Beurre modéré (saturés)",
+        "Éviter : toujours la même source"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "hebdomadaire",
+      "relatedHabits": ["varier-sources-alimentaires", "equilibre-global-semaine"]
+    },
+    {
+      "id": "associer-sucres-fibres-proteines",
+      "name": "Associer les sucres à des fibres ou protéines",
+      "category": "food",
+      "priority": "medium",
+      "description": "Combiner les aliments riches en sucres avec des fibres ou protéines pour moduler la réponse glycémique.",
+      "scientificBasis": {
+        "summary": "Les fibres et protéines ralentissent l'absorption des sucres et modulent la réponse insulinique. Études sur index glycémique et charge glycémique.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2015,
+            "title": "Carbohydrates and health",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Fruits avec noix ou yaourt",
+        "Pain avec fromage ou œuf",
+        "Céréales avec lait",
+        "Éviter : sucres isolés à jeun"
+      ],
+      "difficulty": "low",
+      "impact": "medium",
+      "frequencyGoal": "systematique",
+      "relatedHabits": ["privilegier-aliments-bruts", "surveiller-frequence-non-interdiction"]
+    },
+    {
+      "id": "reserver-produits-plaisir-occasions",
+      "name": "Réserver les produits plaisir aux occasions",
+      "category": "food",
+      "priority": "medium",
+      "description": "Consommer les produits très transformés ou très riches occasionnellement, pas quotidiennement.",
+      "scientificBasis": {
+        "summary": "L'approche 'plaisir occasionnel' est psychologiquement durable et prévient les comportements de restriction/compensation.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "title": "Plaisir et santé",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Gâteaux lors de fêtes/anniversaires",
+        "Fast-food social occasionnel",
+        "Confiseries lors d'événements",
+        "Éviter : routine quotidienne"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "occasionnel",
+      "relatedHabits": ["surveiller-frequence-non-interdiction", "limiter-produits-ultra-transformes"]
+    },
+    {
+      "id": "varier-sources-alimentaires",
+      "name": "Varier les sources animales et végétales",
+      "category": "food",
+      "priority": "medium",
+      "description": "Diversifier les protéines et nutriments en alternant sources animales et végétales.",
+      "scientificBasis": {
+        "summary": "La diversité alimentaire est associée à un meilleur apport en micronutriments et à un microbiote plus riche.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "title": "Protéines et diversité",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Légumineuses (lentilles, pois chiches)",
+        "Poissons variés",
+        "Viandes variées (volaille, bœuf, porc)",
+        "Œufs, produits laitiers",
+        "Noix, graines, tofu"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "hebdomadaire",
+      "relatedHabits": ["privilegier-aliments-bruts", "varier-sources-lipides"]
+    },
+    {
+      "id": "limiter-exposition-chimique",
+      "name": "Limiter l'exposition chimique répétée",
+      "category": "food",
+      "priority": "medium",
+      "description": "Réduire la consommation régulière de produits contenant de nombreux additifs ou résidus.",
+      "scientificBasis": {
+        "summary": "Le principe de précaution suggère de limiter l'exposition cumulative aux additifs, même autorisés. Des études en cours évaluent l'effet cocktail.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2022,
+            "title": "Additifs alimentaires",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "precautionary"
+      },
+      "examples": [
+        "Limiter produits avec 5+ additifs",
+        "Préférer bio pour fruits/légumes à peau fine",
+        "Varier marques et produits",
+        "Laver fruits et légumes"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "systematique",
+      "relatedHabits": ["lire-listes-ingredients", "privilegier-aliments-bruts"]
+    },
+    {
+      "id": "favoriser-simplicite-preparations",
+      "name": "Favoriser la simplicité des préparations",
+      "category": "food",
+      "priority": "low",
+      "description": "Privilégier les modes de cuisson simples et les recettes courtes.",
+      "scientificBasis": {
+        "summary": "Les préparations simples préservent mieux les nutriments et limitent l'ajout d'ingrédients transformés.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "title": "Modes de cuisson",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Vapeur, grill, four",
+        "Éviter fritures répétées",
+        "Recettes 5-10 ingrédients max",
+        "Cuisine maison simple"
+      ],
+      "difficulty": "low",
+      "impact": "low",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["privilegier-aliments-bruts", "lire-listes-ingredients"]
+    },
+    {
+      "id": "hydrater-eau-priorite",
+      "name": "Privilégier l'eau comme boisson principale",
+      "category": "food",
+      "priority": "high",
+      "description": "Faire de l'eau la boisson de référence quotidienne.",
+      "scientificBasis": {
+        "summary": "L'eau est la seule boisson physiologiquement nécessaire. Les boissons sucrées sont associées à des risques métaboliques.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2015,
+            "title": "Sucres libres et boissons",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Eau du robinet ou minérale",
+        "Infusions non sucrées",
+        "Limiter sodas, jus industriels",
+        "Café/thé sans sucre ajouté"
+      ],
+      "difficulty": "low",
+      "impact": "high",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["limiter-sucres-ajoutes", "surveiller-frequence-non-interdiction"]
+    },
+    {
+      "id": "limiter-sel-ajoute",
+      "name": "Limiter le sel ajouté",
+      "category": "food",
+      "priority": "medium",
+      "description": "Réduire l'ajout de sel en cuisine et à table, surveiller produits riches en sel.",
+      "scientificBasis": {
+        "summary": "L'excès de sodium est associé à l'hypertension artérielle. L'OMS recommande <5g/jour.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2020,
+            "title": "Réduction du sel",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Goûter avant de saler",
+        "Utiliser herbes et épices",
+        "Limiter charcuterie, plats préparés",
+        "Rincer conserves (olives, cornichons)"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["favoriser-simplicite-preparations", "lire-listes-ingredients"]
+    },
+    {
+      "id": "limiter-sucres-ajoutes",
+      "name": "Limiter les sucres ajoutés",
+      "category": "food",
+      "priority": "high",
+      "description": "Réduire la consommation de sucres libres (ajoutés en cuisine ou par l'industrie).",
+      "scientificBasis": {
+        "summary": "L'OMS recommande que les sucres libres représentent <10% de l'apport énergétique total, idéalement <5%.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2015,
+            "title": "Lignes directrices sucres",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Limiter sodas, jus industriels",
+        "Préférer fruits entiers aux jus",
+        "Yaourts nature vs aromatisés",
+        "Café/thé sans sucre"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["hydrater-eau-priorite", "associer-sucres-fibres-proteines"]
+    },
+    {
+      "id": "augmenter-fibres-quotidiennes",
+      "name": "Augmenter les fibres quotidiennes",
+      "category": "food",
+      "priority": "medium",
+      "description": "Consommer au moins 25-30g de fibres par jour via aliments bruts.",
+      "scientificBasis": {
+        "summary": "Les fibres sont associées à une meilleure santé digestive, métabolique et cardiovasculaire.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "title": "Fibres alimentaires",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Fruits et légumes quotidiens",
+        "Céréales complètes",
+        "Légumineuses",
+        "Noix et graines"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["privilegier-aliments-bruts", "varier-sources-alimentaires"]
+    },
+    {
+      "id": "equilibre-global-semaine",
+      "name": "Viser l'équilibre sur la semaine",
+      "category": "food",
+      "priority": "high",
+      "description": "Évaluer l'alimentation sur 7 jours, pas repas par repas.",
+      "scientificBasis": {
+        "summary": "L'approche hebdomadaire est plus flexible et durable psychologiquement que le contrôle quotidien strict.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "title": "Flexibilité alimentaire",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Repas festif OK si semaine équilibrée",
+        "Compenser écarts modérés",
+        "Variété sur 7 jours",
+        "Pas de culpabilité sur 1 repas"
+      ],
+      "difficulty": "low",
+      "impact": "high",
+      "frequencyGoal": "principe-general",
+      "relatedHabits": ["surveiller-frequence-non-interdiction", "reserver-produits-plaisir-occasions"]
+    },
+    {
+      "id": "cuisiner-maison-regulierement",
+      "name": "Cuisiner maison régulièrement",
+      "category": "food",
+      "priority": "medium",
+      "description": "Préparer ses repas permet de contrôler ingrédients et transformation.",
+      "scientificBasis": {
+        "summary": "La cuisine maison est associée à une meilleure qualité nutritionnelle et moins d'ultra-transformés.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "title": "Cuisine et santé",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Batch cooking week-end",
+        "Repas simples 20-30 min",
+        "Recettes de base maîtrisées",
+        "Éviter : 100% plats préparés"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "hebdomadaire",
+      "relatedHabits": ["favoriser-simplicite-preparations", "privilegier-aliments-bruts"]
+    },
+    {
+      "id": "portions-conscientes",
+      "name": "Respecter les portions adaptées",
+      "category": "food",
+      "priority": "medium",
+      "description": "Adapter les quantités à ses besoins, éviter excès et gaspillage.",
+      "scientificBasis": {
+        "summary": "Les portions excessives contribuent au déséquilibre énergétique. L'écoute des signaux de satiété est importante.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "title": "Portions et besoins",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Écouter la satiété",
+        "Assiettes de taille raisonnable",
+        "Éviter resservis systématiques",
+        "Conserver restes"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["equilibre-global-semaine", "surveiller-frequence-non-interdiction"]
+    },
+    {
+      "id": "limiter-alcool",
+      "name": "Limiter la consommation d'alcool",
+      "category": "food",
+      "priority": "high",
+      "description": "Consommer l'alcool avec modération, voire l'éviter.",
+      "scientificBasis": {
+        "summary": "L'alcool est classé cancérigène par le CIRC. Aucun seuil de sécurité n'est établi.",
+        "sources": [
+          {
+            "organization": "Santé Publique France",
+            "year": 2021,
+            "title": "Recommandations alcool",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Max 10 verres/semaine",
+        "Max 2 verres/jour",
+        "Jours sans alcool",
+        "Alternatives : cocktails sans alcool"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "limite-recommandee",
+      "relatedHabits": ["hydrater-eau-priorite", "surveiller-frequence-non-interdiction"]
+    },
+    {
+      "id": "manger-en-conscience",
+      "name": "Manger en pleine conscience",
+      "category": "food",
+      "priority": "low",
+      "description": "Prendre le temps de manger, sans distraction excessive.",
+      "scientificBasis": {
+        "summary": "La pleine conscience alimentaire améliore la digestion et la régulation de la prise alimentaire.",
+        "sources": [
+          {
+            "organization": "PNNS",
+            "year": 2019,
+            "title": "Comportement alimentaire",
+            "url": "https://www.santepubliquefrance.fr"
+          }
+        ],
+        "evidenceLevel": "consensus-expert"
+      },
+      "examples": [
+        "Manger assis, au calme",
+        "Limiter écrans pendant repas",
+        "Mâcher correctement",
+        "Apprécier saveurs"
+      ],
+      "difficulty": "medium",
+      "impact": "low",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["portions-conscientes", "equilibre-global-semaine"]
+    },
+    {
+      "id": "attention-produits-light",
+      "name": "Vigilance sur les produits 'light' ou 'sans sucre'",
+      "category": "food",
+      "priority": "low",
+      "description": "Les produits allégés ne sont pas forcément meilleurs pour la santé.",
+      "scientificBasis": {
+        "summary": "Les produits light peuvent contenir des édulcorants ou additifs pour compenser. L'effet sur le poids et la santé est débattu.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2021,
+            "title": "Édulcorants",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Lire composition produits 0%",
+        "Préférer produits naturels en quantité modérée",
+        "Éviter : multiplier produits light"
+      ],
+      "difficulty": "low",
+      "impact": "low",
+      "frequencyGoal": "systematique",
+      "relatedHabits": ["lire-listes-ingredients", "privilegier-aliments-bruts"]
+    },
+    {
+      "id": "limiter-viandes-rouges-charcuterie",
+      "name": "Limiter viandes rouges et charcuterie",
+      "category": "food",
+      "priority": "medium",
+      "description": "Consommer viandes rouges et charcuterie avec modération.",
+      "scientificBasis": {
+        "summary": "Le CIRC classe la viande transformée comme cancérigène (groupe 1) et la viande rouge comme probablement cancérigène (groupe 2A).",
+        "sources": [
+          {
+            "organization": "CIRC",
+            "year": 2015,
+            "title": "Viandes et cancer",
+            "url": "https://www.iarc.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Viande rouge : <500g/semaine",
+        "Charcuterie : <50g/jour",
+        "Alterner avec volaille, poisson, légumineuses",
+        "Éviter : quotidien"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "hebdomadaire",
+      "relatedHabits": ["varier-sources-alimentaires", "surveiller-frequence-non-interdiction"]
+    },
+    {
+      "id": "favoriser-poissons-gras",
+      "name": "Favoriser les poissons gras",
+      "category": "food",
+      "priority": "medium",
+      "description": "Consommer 2 portions de poisson par semaine, dont 1 gras.",
+      "scientificBasis": {
+        "summary": "Les poissons gras apportent des oméga-3 (EPA, DHA) associés à des bénéfices cardiovasculaires.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "title": "Poissons et oméga-3",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "Saumon, maquereau, sardines",
+        "Hareng, truite",
+        "2 portions/semaine minimum",
+        "Attention mercure : varier espèces"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "hebdomadaire",
+      "relatedHabits": ["varier-sources-lipides", "varier-sources-alimentaires"]
+    },
+    {
+      "id": "fruits-legumes-quotidiens",
+      "name": "Consommer 5 portions fruits et légumes par jour",
+      "category": "food",
+      "priority": "high",
+      "description": "Atteindre au moins 400g de fruits et légumes quotidiens.",
+      "scientificBasis": {
+        "summary": "Les fruits et légumes apportent fibres, vitamines, minéraux et composés bioactifs. Associés à réduction risques pathologies chroniques.",
+        "sources": [
+          {
+            "organization": "OMS",
+            "year": 2020,
+            "title": "Fruits et légumes",
+            "url": "https://www.who.int"
+          }
+        ],
+        "evidenceLevel": "observational-strong"
+      },
+      "examples": [
+        "3 portions légumes + 2 portions fruits",
+        "Frais, surgelés, conserve (sans excès sel/sucre)",
+        "Varier couleurs et saisons",
+        "Intégrer à chaque repas"
+      ],
+      "difficulty": "medium",
+      "impact": "high",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["privilegier-aliments-bruts", "augmenter-fibres-quotidiennes"]
+    },
+    {
+      "id": "cereales-completes-quotidiennes",
+      "name": "Privilégier les céréales complètes",
+      "category": "food",
+      "priority": "medium",
+      "description": "Choisir pain complet, pâtes complètes, riz complet plutôt que raffinés.",
+      "scientificBasis": {
+        "summary": "Les céréales complètes conservent fibres, vitamines et minéraux. Associées à meilleure santé métabolique.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2020,
+            "title": "Céréales complètes",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Pain complet/intégral",
+        "Riz complet, quinoa",
+        "Pâtes complètes",
+        "Flocons d'avoine"
+      ],
+      "difficulty": "low",
+      "impact": "medium",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["augmenter-fibres-quotidiennes", "privilegier-aliments-bruts"]
+    },
+    {
+      "id": "limiter-graisses-saturees",
+      "name": "Modérer les graisses saturées",
+      "category": "food",
+      "priority": "medium",
+      "description": "Limiter beurre, crème, fromages gras, viandes grasses.",
+      "scientificBasis": {
+        "summary": "L'excès de graisses saturées peut impacter le cholestérol LDL. Les recommandations suggèrent modération.",
+        "sources": [
+          {
+            "organization": "ANSES",
+            "year": 2019,
+            "title": "Lipides et santé",
+            "url": "https://www.anses.fr"
+          }
+        ],
+        "evidenceLevel": "observational-moderate"
+      },
+      "examples": [
+        "Beurre : avec modération",
+        "Fromages : portions raisonnables",
+        "Privilégier huiles végétales",
+        "Viandes maigres ou grasses alternées"
+      ],
+      "difficulty": "medium",
+      "impact": "medium",
+      "frequencyGoal": "quotidien",
+      "relatedHabits": ["varier-sources-lipides", "equilibre-global-semaine"]
+    }
+  ],
+  "mappingRules": {
+    "description": "Règles de sélection automatique de l'habitude selon l'analyse du produit. L'IA utilise UNIQUEMENT ces règles, aucune création dynamique.",
+    "priority": "La première règle matchée est sélectionnée (ordre = priorité).",
+    "rules": [
+      {
+        "condition": {
+          "novaGroup": 4,
+          "additivesCount": { "$gte": 5 }
+        },
+        "habitId": "limiter-produits-ultra-transformes",
+        "reasoning": "Produit ultra-transformé avec nombreux additifs"
+      },
+      {
+        "condition": {
+          "novaGroup": 4
+        },
+        "habitId": "limiter-produits-ultra-transformes",
+        "reasoning": "Produit ultra-transformé"
+      },
+      {
+        "condition": {
+          "additivesCount": { "$gte": 3 }
+        },
+        "habitId": "limiter-exposition-chimique",
+        "reasoning": "Produit avec plusieurs additifs"
+      },
+      {
+        "condition": {
+          "sugars100g": { "$gte": 20 }
+        },
+        "habitId": "limiter-sucres-ajoutes",
+        "reasoning": "Produit très riche en sucres"
+      },
+      {
+        "condition": {
+          "sugars100g": { "$gte": 10 },
+          "fiber100g": { "$lt": 3 }
+        },
+        "habitId": "associer-sucres-fibres-proteines",
+        "reasoning": "Produit sucré sans fibres"
+      },
+      {
+        "condition": {
+          "salt100g": { "$gte": 1.5 }
+        },
+        "habitId": "limiter-sel-ajoute",
+        "reasoning": "Produit très riche en sel"
+      },
+      {
+        "condition": {
+          "ingredientsCount": { "$gte": 15 }
+        },
+        "habitId": "lire-listes-ingredients",
+        "reasoning": "Liste d'ingrédients très longue"
+      },
+      {
+        "condition": {
+          "novaGroup": 1,
+          "organic": true
+        },
+        "habitId": "privilegier-aliments-bruts",
+        "reasoning": "Aliment brut"
+      },
+      {
+        "condition": {
+          "categoryType": "food",
+          "subcategory": { "$regex": "viande|charcuterie" }
+        },
+        "habitId": "limiter-viandes-rouges-charcuterie",
+        "reasoning": "Viande ou charcuterie"
+      },
+      {
+        "condition": {
+          "categoryType": "food",
+          "subcategory": { "$regex": "poisson" }
+        },
+        "habitId": "favoriser-poissons-gras",
+        "reasoning": "Produit à base de poisson"
+      },
+      {
+        "condition": {
+          "fiber100g": { "$lt": 3 },
+          "novaGroup": { "$gte": 3 }
+        },
+        "habitId": "augmenter-fibres-quotidiennes",
+        "reasoning": "Produit transformé pauvre en fibres"
+      },
+      {
+        "condition": {
+          "default": true
+        },
+        "habitId": "surveiller-frequence-non-interdiction",
+        "reasoning": "Habitude générale par défaut"
+      }
+    ]
+  },
+  "usageGuidelines": {
+    "description": "Comment utiliser cette bibliothèque dans l'application Ecolojia",
+    "selectionProcess": [
+      "1. Analyser le produit (NOVA, additifs, nutriments, ingrédients)",
+      "2. Parcourir mappingRules dans l'ordre",
+      "3. Sélectionner la PREMIÈRE habitude qui matche",
+      "4. Retourner l'habitude complète (id, name, description, examples, etc.)",
+      "5. JAMAIS créer de nouvelle habitude dynamiquement"
+    ],
+    "responseIntegration": "L'habitude sélectionnée doit être intégrée dans la section '🌱 LE BON RÉFLEXE SANTÉ' de la réponse structurée Ecolojia.",
+    "forbidden": [
+      "Création dynamique d'habitudes",
+      "Modification du wording des habitudes",
+      "Ajout de nouvelles habitudes sans mise à jour de ce fichier",
+      "Sélection aléatoire ou hors règles"
+    ]
+  },
+  "versionControl": {
+    "version": "1.0.0",
+    "locked": true,
+    "lastReview": "2025-12-25",
+    "nextReview": "2026-06-25",
+    "changeLog": [
+      {
+        "date": "2025-12-25",
+        "version": "1.0.0",
+        "changes": "Création initiale - 25 habitudes scientifiquement documentées"
+      }
+    ]
+  }
+}

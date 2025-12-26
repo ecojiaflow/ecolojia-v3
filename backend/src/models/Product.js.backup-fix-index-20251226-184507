@@ -453,6 +453,7 @@ productSchema.index({ categoryType: 1, tags: 1 });
 // INDEX PHOTO CACHE V3.2.3 (26/12/2025)
 // ============================================================================
 
+productSchema.index({ photoHash: 1 });
 productSchema.index({ extractedBy: 1, extractedAt: -1 });
 
 // ============================================================================

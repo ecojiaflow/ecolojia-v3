@@ -1,0 +1,551 @@
+﻿{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-25",
+  "description": "Templates de réponses structurées pour produits alimentaires. Chaque template suit strictement la Constitution Ecolojia (6 sections) et respecte le ton obligatoire (calme, pédagogique, factuel). Variables dynamiques permettent personnalisation selon produit analysé.",
+  "totalTemplates": 20,
+  "structure": {
+    "canonical": [
+      "🧠 CE QUE C'EST VRAIMENT",
+      "⚙️ COMPOSITION & PROCESSUS",
+      "🧬 CE QUE LA SCIENCE MONTRE",
+      "🌱 LE BON RÉFLEXE SANTÉ",
+      "🔁 ACTIONS POSSIBLES",
+      "📈 IMPACT HABITUDE"
+    ],
+    "variables": {
+      "description": "Variables disponibles pour personnalisation templates",
+      "productLevel": ["{{productName}}", "{{brand}}", "{{category}}", "{{subcategory}}"],
+      "composition": ["{{mainIngredients}}", "{{additivesCount}}", "{{ingredientsCount}}", "{{novaGroup}}"],
+      "nutrition": ["{{sugars100g}}", "{{salt100g}}", "{{fat100g}}", "{{fiber100g}}", "{{energy}}"],
+      "scoring": ["{{overallScore}}", "{{nutritionScore}}", "{{processingScore}}", "{{additivesScore}}"],
+      "habits": ["{{selectedHabit}}", "{{habitDescription}}", "{{habitExamples}}"]
+    }
+  },
+  "templates": [
+    {
+      "id": "ultra-processed-general",
+      "name": "Produit ultra-transformé général (NOVA 4)",
+      "category": "food",
+      "subcategories": ["snacks", "plats-prepares", "cereales-sucrees", "viennoiseries-industrielles"],
+      "novaGroup": 4,
+      "useCase": "Template par défaut pour tout produit NOVA 4 sans caractéristique spécifique",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé (groupe NOVA 4). Cela signifie qu'il a subi de multiples étapes de transformation industrielle et qu'il contient des ingrédients rarement utilisés en cuisine domestique.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont {{additivesCount}} additifs. On y retrouve généralement : {{mainIngredients}}. Ces ingrédients et procédés sont caractéristiques d'une formulation industrielle complexe.",
+        "science": "Des études observationnelles montrent qu'une consommation élevée et régulière de produits ultra-transformés est associée à des risques accrus de certaines pathologies chroniques. Les mécanismes évoqués incluent l'inflammation chronique, les déséquilibres du microbiote intestinal et une densité nutritionnelle généralement faible. Ces associations sont robustes mais ne prouvent pas de lien de cause à effet direct.",
+        "reflex": "Pour ta santé, l'idéal est de limiter la fréquence de consommation des produits ultra-transformés et de privilégier les aliments bruts ou peu transformés au quotidien.",
+        "actions": [
+          "Réserver ce type de produit aux occasions, pas à la consommation quotidienne",
+          "Alterner avec des versions maison ou artisanales quand c'est possible",
+          "Augmenter la part d'aliments bruts (fruits, légumes, céréales complètes) dans ton alimentation"
+        ],
+        "habitImpact": "Diminution de l'exposition aux produits ultra-transformés + Amélioration de la qualité nutritionnelle globale + Réduction de l'exposition cumulative aux additifs"
+      },
+      "associatedHabits": ["limiter-produits-ultra-transformes", "privilegier-aliments-bruts", "cuisiner-maison-regulierement"],
+      "tone": ["calme", "factuel", "non-alarmiste", "respectueux"]
+    },
+    {
+      "id": "ultra-processed-high-sugar",
+      "name": "Produit ultra-transformé très sucré",
+      "category": "food",
+      "subcategories": ["cereales-sucrees", "biscuits", "confiseries", "boissons-sucrees", "desserts-lactés"],
+      "novaGroup": 4,
+      "nutritionCriteria": {
+        "sugars100g": ">15g"
+      },
+      "useCase": "Produits NOVA 4 avec teneur élevée en sucres (>15g/100g)",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé à forte teneur en sucres ({{sugars100g}}g pour 100g). Il combine transformation industrielle poussée et densité élevée en sucres libres.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont des sucres ajoutés sous diverses formes (sucre, sirop de glucose, fructose, etc.) et {{additivesCount}} additifs. Les sucres représentent une part importante de la composition.",
+        "science": "L'OMS recommande que les sucres libres (ajoutés ou naturellement présents dans jus, miel) représentent moins de 10% de l'apport énergétique total, idéalement moins de 5%. Une consommation élevée de produits riches en sucres est associée à des risques accrus de surpoids, diabète de type 2 et caries dentaires. La palatabilité élevée de ces produits peut également favoriser la surconsommation.",
+        "reflex": "Pour ta santé, l'idéal est de limiter les produits très sucrés et ultra-transformés, et de privilégier les fruits entiers ou des alternatives moins sucrées.",
+        "actions": [
+          "Réserver ce produit aux occasions spéciales (anniversaires, fêtes)",
+          "Préférer les fruits frais, compotes sans sucre ajouté ou yaourts nature",
+          "Si consommation, associer à des protéines ou fibres (noix, fromage) pour moduler la réponse glycémique"
+        ],
+        "habitImpact": "Diminution de l'apport en sucres libres + Meilleure régulation glycémique + Réduction du risque de pathologies métaboliques"
+      },
+      "associatedHabits": ["limiter-sucres-ajoutes", "limiter-produits-ultra-transformes", "associer-sucres-fibres-proteines"],
+      "tone": ["calme", "factuel", "pédagogique"]
+    },
+    {
+      "id": "ultra-processed-high-salt",
+      "name": "Produit ultra-transformé très salé",
+      "category": "food",
+      "subcategories": ["snacks-sales", "plats-prepares", "charcuterie", "fromages-transformes"],
+      "novaGroup": 4,
+      "nutritionCriteria": {
+        "salt100g": ">1.5g"
+      },
+      "useCase": "Produits NOVA 4 avec teneur élevée en sel (>1.5g/100g)",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé à forte teneur en sel ({{salt100g}}g pour 100g). Il combine transformation industrielle et apport sodé élevé.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont sel, exhausteurs de goût et {{additivesCount}} additifs. Le sel est souvent utilisé comme conservateur et rehausseur de saveur dans les produits ultra-transformés.",
+        "science": "L'OMS recommande de limiter l'apport en sel à moins de 5g par jour. Un excès de sodium est associé à une augmentation de la pression artérielle et à des risques accrus de maladies cardiovasculaires. Les produits ultra-transformés salés contribuent significativement aux apports sodés dans les pays occidentaux.",
+        "reflex": "Pour ta santé, l'idéal est de limiter les produits très salés et ultra-transformés, et de privilégier des aliments peu salés ou d'utiliser des herbes et épices pour rehausser les saveurs.",
+        "actions": [
+          "Réserver ce type de produit à un usage occasionnel",
+          "Compenser en réduisant le sel ajouté dans d'autres repas de la journée",
+          "Privilégier des snacks non salés (fruits à coque nature, légumes crus) ou cuisiner maison pour contrôler le sel"
+        ],
+        "habitImpact": "Diminution de l'apport sodé + Meilleure régulation de la pression artérielle + Réduction du risque cardiovasculaire"
+      },
+      "associatedHabits": ["limiter-sel-ajoute", "limiter-produits-ultra-transformes", "cuisiner-maison-regulierement"],
+      "tone": ["calme", "factuel", "non-moralisateur"]
+    },
+    {
+      "id": "ultra-processed-multiple-additives",
+      "name": "Produit ultra-transformé avec nombreux additifs",
+      "category": "food",
+      "novaGroup": 4,
+      "additiveCriteria": {
+        "count": ">=5"
+      },
+      "useCase": "Produits NOVA 4 avec 5+ additifs",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé contenant {{additivesCount}} additifs. Cette accumulation d'additifs est typique des formulations industrielles complexes.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont {{additivesCount}} additifs : colorants, conservateurs, émulsifiants, exhausteurs de goût, etc. Bien que ces additifs soient autorisés individuellement, leur combinaison et leur exposition répétée font l'objet d'études scientifiques.",
+        "science": "Des études récentes s'intéressent à l'effet cocktail, c'est-à-dire les interactions possibles entre plusieurs additifs consommés régulièrement. Bien que chaque additif soit évalué individuellement par les autorités sanitaires, le principe de précaution suggère de limiter l'exposition cumulative aux additifs, notamment chez les enfants et les populations sensibles.",
+        "reflex": "Pour ta santé, l'idéal est de limiter la consommation régulière de produits contenant de nombreux additifs et de privilégier des aliments à liste d'ingrédients courte.",
+        "actions": [
+          "Lire les listes d'ingrédients et préférer les produits avec moins de 5 additifs",
+          "Varier les marques et les produits pour éviter l'exposition répétée aux mêmes additifs",
+          "Privilégier les versions maison ou artisanales quand c'est possible"
+        ],
+        "habitImpact": "Réduction de l'exposition cumulative aux additifs + Diminution du risque d'effet cocktail + Alimentation plus proche du naturel"
+      },
+      "associatedHabits": ["limiter-exposition-chimique", "lire-listes-ingredients", "limiter-produits-ultra-transformes"],
+      "tone": ["calme", "scientifique", "nuancé"]
+    },
+    {
+      "id": "soda-energy-drink",
+      "name": "Sodas et boissons sucrées",
+      "category": "food",
+      "subcategories": ["sodas", "boissons-energisantes", "jus-industriels"],
+      "novaGroup": 4,
+      "useCase": "Boissons sucrées industrielles",
+      "template": {
+        "whatItIs": "{{productName}} est une boisson ultra-transformée à forte densité en sucres libres. Ce type de boisson apporte des calories sans effet de satiété, ce qui favorise la surconsommation énergétique.",
+        "composition": "Ce produit contient principalement de l'eau, des sucres (ou édulcorants), de l'acide phosphorique ou citrique, des arômes et des colorants. Les sodas peuvent contenir l'équivalent de {{sugars100g}}g de sucre pour 100ml, soit environ 7 morceaux de sucre par canette de 330ml.",
+        "science": "L'OMS et de nombreuses autorités sanitaires déconseillent la consommation régulière de boissons sucrées. Elles sont associées à des risques accrus de surpoids, diabète de type 2, caries dentaires et syndrome métabolique. Les mécanismes incluent un apport calorique élevé sans satiété et des pics glycémiques répétés.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier l'eau comme boisson principale et de réserver les sodas aux occasions exceptionnelles.",
+        "actions": [
+          "Remplacer par de l'eau plate, gazeuse ou des infusions non sucrées",
+          "Si consommation occasionnelle, limiter la quantité (petit format)",
+          "Éviter la consommation quotidienne ou systématique lors des repas"
+        ],
+        "habitImpact": "Diminution drastique de l'apport en sucres libres + Meilleure hydratation + Réduction du risque métabolique"
+      },
+      "associatedHabits": ["hydrater-eau-priorite", "limiter-sucres-ajoutes", "limiter-produits-ultra-transformes"],
+      "tone": ["direct", "factuel", "non-culpabilisant"]
+    },
+    {
+      "id": "light-diet-products",
+      "name": "Produits 'light' ou 'sans sucre'",
+      "category": "food",
+      "subcategories": ["sodas-light", "yaourts-0", "desserts-light"],
+      "novaGroup": 4,
+      "useCase": "Produits allégés avec édulcorants",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé allégé en sucres ou en graisses, souvent compensé par l'ajout d'édulcorants, épaississants ou additifs pour maintenir goût et texture.",
+        "composition": "Ce produit contient généralement des édulcorants intenses (aspartame, sucralose, acésulfame K) ou des polyols, ainsi que {{additivesCount}} additifs pour compenser la réduction de sucre ou graisse.",
+        "science": "Bien que ces produits réduisent l'apport calorique immédiat, les données scientifiques sur les édulcorants sont contrastées. L'OMS (2023) recommande de ne pas utiliser les édulcorants pour le contrôle du poids à long terme. Certaines études suggèrent des effets possibles sur le microbiote intestinal et la régulation de la glycémie.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les aliments naturellement peu sucrés ou peu gras plutôt que les versions allégées ultra-transformées.",
+        "actions": [
+          "Préférer yaourt nature avec fruits frais plutôt que yaourt 0% aromatisé",
+          "Préférer eau ou infusions plutôt que sodas light",
+          "Réduire progressivement le goût sucré global de l'alimentation"
+        ],
+        "habitImpact": "Réduction de l'exposition aux édulcorants + Rééducation du palais au goût naturel + Alimentation plus simple"
+      },
+      "associatedHabits": ["attention-produits-light", "privilegier-aliments-bruts", "limiter-produits-ultra-transformes"],
+      "tone": ["nuancé", "pédagogique", "non-dogmatique"]
+    },
+    {
+      "id": "processed-meat-charcuterie",
+      "name": "Charcuterie et viandes transformées",
+      "category": "food",
+      "subcategories": ["charcuterie", "saucisses", "jambon", "pate"],
+      "novaGroup": 3,
+      "useCase": "Viandes transformées avec sel, nitrites",
+      "template": {
+        "whatItIs": "{{productName}} est une viande transformée (groupe NOVA 3 ou 4 selon le degré de transformation). Ces produits ont subi des procédés de conservation comme le salage, la salaison, le fumage ou l'ajout de conservateurs.",
+        "composition": "Ce produit contient de la viande, du sel (souvent >1.5g/100g) et fréquemment des nitrites (E250, E251) utilisés comme conservateurs et fixateurs de couleur. Il peut également contenir des additifs ({{additivesCount}}) et des exhausteurs de goût.",
+        "science": "Le CIRC (Centre International de Recherche sur le Cancer) classe les viandes transformées dans le groupe 1 (cancérigène pour l'homme), avec une association particulière au cancer colorectal. Le risque est lié à la consommation régulière et élevée. L'ANSES recommande de limiter la charcuterie à moins de 25g par jour.",
+        "reflex": "Pour ta santé, l'idéal est de limiter la charcuterie à une consommation occasionnelle (1-2 fois par semaine maximum) et de privilégier les viandes non transformées.",
+        "actions": [
+          "Limiter à 25-50g par jour maximum, pas quotidiennement",
+          "Alterner avec des sources de protéines non transformées (volaille, poisson, légumineuses, œufs)",
+          "Varier les sources de protéines sur la semaine"
+        ],
+        "habitImpact": "Diminution du risque associé aux viandes transformées + Diversification des sources de protéines + Réduction de l'apport sodé"
+      },
+      "associatedHabits": ["limiter-viandes-rouges-charcuterie", "varier-sources-alimentaires", "surveiller-frequence-non-interdiction"],
+      "tone": ["factuel", "scientifique", "non-alarmiste"]
+    },
+    {
+      "id": "canned-vegetables-simple",
+      "name": "Légumes en conserve simples",
+      "category": "food",
+      "subcategories": ["conserves-legumes", "tomates-pelees"],
+      "novaGroup": 3,
+      "useCase": "Légumes en conserve avec sel ajouté uniquement",
+      "template": {
+        "whatItIs": "{{productName}} est un légume transformé (groupe NOVA 3). Il s'agit de légumes auxquels on a ajouté du sel pour la conservation, puis mis en conserve.",
+        "composition": "Ce produit contient essentiellement des légumes et du sel (environ {{salt100g}}g pour 100g). La liste d'ingrédients est courte : légumes, eau, sel.",
+        "science": "Les légumes en conserve conservent une partie de leurs nutriments (fibres, minéraux), bien que certaines vitamines hydrosolubles puissent être partiellement perdues. La teneur en sel peut être élevée. Rincer les légumes avant consommation peut réduire le sel de 20-30%.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les légumes frais ou surgelés nature, mais les conserves restent une option acceptable, notamment pour éviter le gaspillage.",
+        "actions": [
+          "Rincer les légumes en conserve avant consommation pour réduire le sel",
+          "Privilégier versions 'sans sel ajouté' ou 'teneur réduite en sel'",
+          "Alterner avec légumes frais ou surgelés nature"
+        ],
+        "habitImpact": "Consommation de légumes maintenue + Réduction de l'apport sodé + Flexibilité alimentaire"
+      },
+      "associatedHabits": ["fruits-legumes-quotidiens", "limiter-sel-ajoute", "surveiller-frequence-non-interdiction"],
+      "tone": ["pragmatique", "nuancé", "positif"]
+    },
+    {
+      "id": "bread-simple-artisanal",
+      "name": "Pain artisanal simple",
+      "category": "food",
+      "subcategories": ["pain-frais", "baguette"],
+      "novaGroup": 3,
+      "useCase": "Pain artisanal avec liste courte (farine, eau, sel, levure)",
+      "template": {
+        "whatItIs": "{{productName}} est un aliment transformé (groupe NOVA 3). Il s'agit d'un pain fabriqué selon des méthodes traditionnelles avec des ingrédients simples.",
+        "composition": "Ce produit contient généralement 4 ingrédients : farine, eau, sel, levure (ou levain). Certaines versions peuvent contenir de la farine complète, ce qui augmente l'apport en fibres.",
+        "science": "Le pain est un aliment de base dans de nombreuses cultures. Le pain complet ou aux céréales complètes apporte plus de fibres, vitamines et minéraux que le pain blanc raffiné. Les fibres sont associées à une meilleure santé digestive et métabolique.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les pains complets ou semi-complets et de les consommer en quantité adaptée à tes besoins énergétiques.",
+        "actions": [
+          "Préférer pain complet, aux céréales ou au levain",
+          "Adapter la quantité à tes besoins (1-2 portions par repas selon activité)",
+          "Varier avec d'autres sources de glucides (riz complet, pâtes complètes, légumineuses)"
+        ],
+        "habitImpact": "Augmentation de l'apport en fibres + Meilleure satiété + Diversification des glucides"
+      },
+      "associatedHabits": ["cereales-completes-quotidiennes", "privilegier-aliments-bruts", "augmenter-fibres-quotidiennes"],
+      "tone": ["positif", "encourageant", "pédagogique"]
+    },
+    {
+      "id": "industrial-bread-additives",
+      "name": "Pain industriel avec additifs",
+      "category": "food",
+      "subcategories": ["pain-mie", "pain-burger", "pain-hot-dog"],
+      "novaGroup": 4,
+      "useCase": "Pain industriel avec liste longue d'ingrédients et additifs",
+      "template": {
+        "whatItIs": "{{productName}} est un pain ultra-transformé (groupe NOVA 4). Il contient de nombreux additifs pour prolonger la durée de conservation, améliorer la texture et la palatabilité.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont farine (souvent raffinée), sucre, huiles, émulsifiants, conservateurs et {{additivesCount}} additifs. La liste est beaucoup plus longue qu'un pain artisanal traditionnel.",
+        "science": "Bien que pratique, le pain industriel contient souvent des sucres ajoutés, des graisses hydrogénées et de nombreux additifs. Sa densité nutritionnelle est généralement inférieure à celle d'un pain artisanal complet. La consommation régulière s'inscrit dans un pattern alimentaire riche en ultra-transformés.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier le pain artisanal avec une liste d'ingrédients courte (farine, eau, sel, levure) ou de faire ton pain maison.",
+        "actions": [
+          "Préférer pain artisanal chez le boulanger ou en grande surface (rayon boulangerie)",
+          "Lire les listes d'ingrédients : moins de 5 ingrédients = mieux",
+          "Si pain industriel : choisir version complète et limiter la fréquence"
+        ],
+        "habitImpact": "Réduction des additifs + Meilleure qualité nutritionnelle + Retour à des aliments simples"
+      },
+      "associatedHabits": ["lire-listes-ingredients", "limiter-produits-ultra-transformes", "privilegier-aliments-bruts"],
+      "tone": ["factuel", "non-culpabilisant", "pragmatique"]
+    },
+    {
+      "id": "dairy-yogurt-plain",
+      "name": "Yaourt nature sans sucre",
+      "category": "food",
+      "subcategories": ["yaourt-nature", "fromage-blanc-nature"],
+      "novaGroup": 1,
+      "useCase": "Produits laitiers fermentés simples",
+      "template": {
+        "whatItIs": "{{productName}} est un produit laitier fermenté non transformé ou minimalement transformé (groupe NOVA 1). Il s'agit de lait ayant subi une fermentation lactique naturelle.",
+        "composition": "Ce produit contient 2 ingrédients : lait et ferments lactiques. Aucun additif, aucun sucre ajouté. C'est un aliment simple proche de sa forme naturelle.",
+        "science": "Les produits laitiers fermentés apportent des protéines, du calcium et des probiotiques naturels (ferments lactiques). Des études suggèrent que la consommation régulière de yaourts nature est associée à une meilleure santé digestive et métabolique.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les yaourts nature et d'ajouter toi-même des fruits frais ou des noix si tu souhaites varier les saveurs.",
+        "actions": [
+          "Consommer nature ou avec fruits frais, compote sans sucre ajouté, noix",
+          "Éviter les versions aromatisées ou sucrées industrielles",
+          "Varier avec fromage blanc, skyr ou kéfir nature"
+        ],
+        "habitImpact": "Apport de probiotiques naturels + Réduction des sucres ajoutés + Alimentation simple et saine"
+      },
+      "associatedHabits": ["privilegier-aliments-bruts", "limiter-sucres-ajoutes", "varier-sources-alimentaires"],
+      "tone": ["positif", "encourageant", "simple"]
+    },
+    {
+      "id": "dairy-yogurt-flavored",
+      "name": "Yaourt aromatisé sucré",
+      "category": "food",
+      "subcategories": ["yaourt-aromatise", "dessert-lacte"],
+      "novaGroup": 4,
+      "useCase": "Produits laitiers ultra-transformés avec sucres et additifs",
+      "template": {
+        "whatItIs": "{{productName}} est un produit laitier ultra-transformé (groupe NOVA 4). Il combine lait fermenté, sucres ajoutés, arômes artificiels et additifs pour créer un produit au goût standardisé.",
+        "composition": "Ce produit contient lait, sucre (environ {{sugars100g}}g pour 100g, soit 2-3 morceaux de sucre par pot), arômes, colorants et {{additivesCount}} additifs (épaississants, conservateurs).",
+        "science": "Comparé au yaourt nature, ce type de produit apporte 2 à 3 fois plus de sucres et moins de protéines proportionnellement. La consommation régulière de produits laitiers sucrés contribue à l'excès de sucres libres dans l'alimentation.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier le yaourt nature et d'ajouter toi-même des fruits frais pour contrôler l'apport en sucres.",
+        "actions": [
+          "Remplacer par yaourt nature + fruits frais ou compote sans sucre ajouté",
+          "Si achat occasionnel, limiter à 1-2 fois par semaine",
+          "Lire les étiquettes : moins de 10g de sucres/100g = meilleur choix"
+        ],
+        "habitImpact": "Diminution de l'apport en sucres libres + Réduction des additifs + Meilleure qualité nutritionnelle"
+      },
+      "associatedHabits": ["limiter-sucres-ajoutes", "privilegier-aliments-bruts", "lire-listes-ingredients"],
+      "tone": ["pédagogique", "non-moralisateur", "pragmatique"]
+    },
+    {
+      "id": "breakfast-cereals-sugary",
+      "name": "Céréales petit-déjeuner sucrées",
+      "category": "food",
+      "subcategories": ["cereales-sucrees", "granola-industriel"],
+      "novaGroup": 4,
+      "useCase": "Céréales petit-déjeuner ultra-transformées",
+      "template": {
+        "whatItIs": "{{productName}} est un produit ultra-transformé (groupe NOVA 4) destiné au petit-déjeuner. Ces céréales ont subi des procédés industriels intenses (extrusion, soufflage) et contiennent souvent des sucres, graisses et additifs ajoutés.",
+        "composition": "Ce produit contient céréales (souvent raffinées), sucre ({{sugars100g}}g pour 100g, soit 20-30% de sucres), huiles, sel, arômes, colorants et {{additivesCount}} additifs. Malgré les allégations marketing ('riche en vitamines'), la base nutritionnelle reste déséquilibrée.",
+        "science": "Ces céréales combinent index glycémique élevé (céréales raffinées + sucres) et densité énergétique importante. Des études montrent qu'un petit-déjeuner riche en sucres rapides est associé à des pics glycémiques, une faim précoce et une surconsommation calorique dans la journée.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier des flocons d'avoine nature, du muesli non sucré ou du pain complet avec des protéines (œufs, fromage) pour un petit-déjeuner équilibré.",
+        "actions": [
+          "Remplacer par flocons d'avoine nature + fruits frais + noix",
+          "Ou pain complet + œuf/fromage + fruit",
+          "Si achat de céréales : choisir <10g sucres/100g et >5g fibres/100g"
+        ],
+        "habitImpact": "Meilleure régulation glycémique + Satiété prolongée + Réduction des sucres au petit-déjeuner"
+      },
+      "associatedHabits": ["limiter-sucres-ajoutes", "cereales-completes-quotidiennes", "limiter-produits-ultra-transformes"],
+      "tone": ["direct", "pédagogique", "encourageant"]
+    },
+    {
+      "id": "nuts-plain",
+      "name": "Fruits à coque nature",
+      "category": "food",
+      "subcategories": ["amandes", "noix", "noisettes", "cajou"],
+      "novaGroup": 1,
+      "useCase": "Fruits à coque non transformés",
+      "template": {
+        "whatItIs": "{{productName}} est un aliment non transformé (groupe NOVA 1). Il s'agit de fruits à coque dans leur état naturel, simplement décortiqués.",
+        "composition": "Ce produit contient uniquement des fruits à coque, sans ajout de sel, sucre ou huile. Riches en acides gras insaturés, protéines végétales, fibres, vitamines E et minéraux.",
+        "science": "La consommation régulière de fruits à coque nature est associée à des bénéfices cardiovasculaires dans de nombreuses études. Les acides gras mono et polyinsaturés, ainsi que les fibres et antioxydants, contribuent à ces effets positifs. Portion recommandée : environ 30g par jour (1 poignée).",
+        "reflex": "Pour ta santé, l'idéal est de consommer une poignée de fruits à coque nature quotidiennement, en collation ou ajoutés à des plats (salades, yaourts).",
+        "actions": [
+          "Préférer versions nature (non salées, non grillées à l'huile)",
+          "Portion : 1 poignée (30g) par jour",
+          "Varier les types : amandes, noix, noisettes, cajou, pistaches"
+        ],
+        "habitImpact": "Apport en bonnes graisses + Protéines végétales + Effet cardioprotecteur"
+      },
+      "associatedHabits": ["privilegier-aliments-bruts", "varier-sources-lipides", "varier-sources-alimentaires"],
+      "tone": ["positif", "encourageant", "éducatif"]
+    },
+    {
+      "id": "nuts-salted-roasted",
+      "name": "Fruits à coque salés/grillés",
+      "category": "food",
+      "subcategories": ["cacahuetes-salees", "amandes-grillees"],
+      "novaGroup": 3,
+      "useCase": "Fruits à coque avec sel/huile ajoutés",
+      "template": {
+        "whatItIs": "{{productName}} est un aliment transformé (groupe NOVA 3). Il s'agit de fruits à coque auxquels on a ajouté du sel et/ou de l'huile, puis grillés.",
+        "composition": "Ce produit contient des fruits à coque, du sel ({{salt100g}}g pour 100g) et parfois de l'huile. Les nutriments de base (bonnes graisses, protéines) sont conservés, mais l'apport sodé est augmenté.",
+        "science": "Bien que les fruits à coque restent intéressants nutritionnellement, l'ajout de sel augmente l'apport sodé. De plus, le sel et la palatabilité peuvent favoriser la surconsommation (difficile de s'arrêter à 30g).",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les fruits à coque nature pour bénéficier des nutriments sans excès de sel.",
+        "actions": [
+          "Préférer versions nature non salées",
+          "Si version salée : limiter la portion (30g max) et compenser en réduisant sel ailleurs",
+          "Utiliser comme condiment (salade, plat) plutôt qu'en snack à volonté"
+        ],
+        "habitImpact": "Réduction de l'apport sodé + Meilleur contrôle des portions + Conservation des bénéfices nutritionnels"
+      },
+      "associatedHabits": ["limiter-sel-ajoute", "privilegier-aliments-bruts", "portions-conscientes"],
+      "tone": ["nuancé", "pragmatique", "non-culpabilisant"]
+    },
+    {
+      "id": "fish-canned-simple",
+      "name": "Poisson en conserve simple",
+      "category": "food",
+      "subcategories": ["thon-conserve", "sardines-conserve", "maquereaux-conserve"],
+      "novaGroup": 3,
+      "useCase": "Poissons en conserve à l'huile ou au naturel",
+      "template": {
+        "whatItIs": "{{productName}} est un poisson transformé (groupe NOVA 3). Il s'agit de poisson cuit puis mis en conserve avec huile, eau ou sauce simple.",
+        "composition": "Ce produit contient du poisson, de l'huile (olive, tournesol) ou de l'eau, et du sel. Les versions en conserve préservent une grande partie des nutriments, notamment les oméga-3 des poissons gras.",
+        "science": "Les poissons gras (sardines, maquereaux, thon) apportent des oméga-3 (EPA, DHA) bénéfiques pour la santé cardiovasculaire. La mise en conserve préserve ces acides gras. Attention à la teneur en sel selon les versions et au mercure pour le thon (varier les espèces).",
+        "reflex": "Pour ta santé, l'idéal est de consommer 2 portions de poisson par semaine, dont 1 gras, en variant les espèces et en privilégiant les versions 'au naturel' pour limiter le sel.",
+        "actions": [
+          "Préférer versions 'au naturel' ou 'à l'huile d'olive'",
+          "Varier les espèces (sardines, maquereaux, thon, saumon)",
+          "Égoutter pour réduire l'apport en sel",
+          "Limiter thon à 1 fois/semaine (mercure) et privilégier petits poissons"
+        ],
+        "habitImpact": "Apport en oméga-3 + Protéines de qualité + Praticité conservée"
+      },
+      "associatedHabits": ["favoriser-poissons-gras", "varier-sources-alimentaires", "surveiller-frequence-non-interdiction"],
+      "tone": ["positif", "informatif", "nuancé"]
+    },
+    {
+      "id": "cheese-simple",
+      "name": "Fromage simple",
+      "category": "food",
+      "subcategories": ["fromage-pate-dure", "fromage-pate-molle", "fromage-chevre"],
+      "novaGroup": 3,
+      "useCase": "Fromages traditionnels (emmental, camembert, chèvre, etc.)",
+      "template": {
+        "whatItIs": "{{productName}} est un fromage transformé (groupe NOVA 3). Il s'agit de lait ayant subi coagulation, égouttage et affinage, avec ajout de sel et de ferments.",
+        "composition": "Ce produit contient lait, sel, ferments lactiques et parfois présure. La composition reste simple (3-4 ingrédients). Le fromage apporte protéines, calcium et graisses (dont saturées).",
+        "science": "Les fromages sont source de calcium et protéines. Ils contiennent des graisses saturées, à modérer selon les recommandations (ANSES : <12% de l'apport énergétique total). La consommation de fromage en quantité modérée peut s'inscrire dans une alimentation équilibrée.",
+        "reflex": "Pour ta santé, l'idéal est de consommer le fromage en quantité modérée (30-40g par jour) et de varier les types.",
+        "actions": [
+          "Portion raisonnable : 30-40g par jour (taille 1/8 de camembert)",
+          "Varier les fromages (pâte dure, molle, chèvre, brebis)",
+          "Associer à des légumes ou pain complet plutôt qu'en fin de repas copieux"
+        ],
+        "habitImpact": "Apport calcique + Plaisir gustatif préservé + Équilibre des graisses"
+      },
+      "associatedHabits": ["portions-conscientes", "limiter-graisses-saturees", "equilibre-global-semaine"],
+      "tone": ["équilibré", "non-restrictif", "informatif"]
+    },
+    {
+      "id": "processed-cheese",
+      "name": "Fromage fondu ultra-transformé",
+      "category": "food",
+      "subcategories": ["fromage-fondu", "creme-fromage", "cheese-burger"],
+      "novaGroup": 4,
+      "useCase": "Fromages fondus avec additifs (type Kiri, Vache qui rit, cheese)",
+      "template": {
+        "whatItIs": "{{productName}} est un fromage ultra-transformé (groupe NOVA 4). Il s'agit de fromage ayant subi fonte, ajout de sels de fonte (phosphates), crème, beurre et additifs pour obtenir texture onctueuse et conservation longue.",
+        "composition": "Ce produit contient fromage, crème, beurre, sels de fonte (E450, E452), amidon modifié et {{additivesCount}} additifs. La liste est beaucoup plus longue qu'un fromage traditionnel.",
+        "science": "Les fromages fondus contiennent plus de phosphates ajoutés (sels de fonte), sel et graisses que les fromages traditionnels. L'excès de phosphates peut impacter l'équilibre minéral (cf. additifs E450). Leur densité énergétique est élevée.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les fromages traditionnels et de réserver les fromages fondus à un usage occasionnel.",
+        "actions": [
+          "Préférer fromages traditionnels (emmental, chèvre, camembert)",
+          "Si achat de fromage fondu : limiter la fréquence (1-2 fois/semaine max)",
+          "Lire les étiquettes : moins d'additifs = meilleur"
+        ],
+        "habitImpact": "Réduction des phosphates ajoutés + Meilleure qualité nutritionnelle + Retour aux fromages simples"
+      },
+      "associatedHabits": ["limiter-exposition-chimique", "lire-listes-ingredients", "privilegier-aliments-bruts"],
+      "tone": ["factuel", "pédagogique", "non-alarmiste"]
+    },
+    {
+      "id": "fruit-juice-industrial",
+      "name": "Jus de fruits industriel",
+      "category": "food",
+      "subcategories": ["jus-orange", "nectar", "jus-reconstitue"],
+      "novaGroup": 4,
+      "useCase": "Jus de fruits industriels (100% pur jus, à base de concentré, nectars)",
+      "template": {
+        "whatItIs": "{{productName}} est une boisson à base de fruits, souvent ultra-transformée (groupe NOVA 4 pour jus à base de concentré, nectar). Même les 'pur jus 100%' apportent des sucres libres sans fibres.",
+        "composition": "Ce produit contient jus de fruits (ou concentré + eau), parfois sucre ajouté (nectars), arômes. Un verre de jus d'orange (200ml) contient environ 18g de sucres, équivalent à 4 morceaux de sucre, sans les fibres du fruit entier.",
+        "science": "L'OMS classe les sucres des jus de fruits dans les 'sucres libres' à limiter (<10% de l'apport énergétique). Contrairement au fruit entier, le jus n'apporte pas de fibres et ne génère pas de satiété, favorisant la surconsommation calorique. Les pics glycémiques sont similaires aux sodas.",
+        "reflex": "Pour ta santé, l'idéal est de privilégier les fruits entiers et de limiter les jus de fruits à un verre occasionnel (150ml max).",
+        "actions": [
+          "Remplacer par fruits frais entiers (1 orange > 1 verre de jus)",
+          "Si jus : limiter à 1 petit verre (150ml) occasionnel, de préférence au petit-déjeuner",
+          "Préférer eau + fruits entiers pour hydratation et nutrition"
+        ],
+        "habitImpact": "Diminution des sucres libres + Augmentation des fibres + Meilleure satiété"
+      },
+      "associatedHabits": ["limiter-sucres-ajoutes", "fruits-legumes-quotidiens", "hydrater-eau-priorite"],
+      "tone": ["éducatif", "factuel", "non-culpabilisant"]
+    },
+    {
+      "id": "ready-meal-frozen",
+      "name": "Plat préparé surgelé",
+      "category": "food",
+      "subcategories": ["pizza-industrielle", "lasagnes-surgeles", "plat-complet-surgele"],
+      "novaGroup": 4,
+      "useCase": "Plats préparés industriels surgelés",
+      "template": {
+        "whatItIs": "{{productName}} est un plat préparé ultra-transformé (groupe NOVA 4). Il combine multiples ingrédients transformés, additifs, sel et graisses pour créer un produit prêt à réchauffer.",
+        "composition": "Ce produit contient {{ingredientsCount}} ingrédients, dont plusieurs ultra-transformés (viande reconstituée, fromage fondu, sauce complexe), sel ({{salt100g}}g/100g), graisses et {{additivesCount}} additifs (conservateurs, exhausteurs, épaississants).",
+        "science": "Les plats préparés industriels sont souvent riches en sel, graisses saturées et pauvres en légumes et fibres. Ils s'inscrivent dans le pattern alimentaire ultra-transformé associé à des risques de pathologies chroniques. Leur palatabilité élevée peut favoriser la surconsommation.",
+        "reflex": "Pour ta santé, l'idéal est de cuisiner maison (même simple) et de réserver les plats préparés au dépannage occasionnel (1-2 fois/mois max).",
+        "actions": [
+          "Privilégier batch cooking maison (préparer 2-3 plats le week-end pour la semaine)",
+          "Si dépannage : compléter avec salade verte ou légumes vapeur",
+          "Lire étiquettes : <1g sel/100g et >3g fibres/100g = meilleur choix"
+        ],
+        "habitImpact": "Cuisine maison augmentée + Réduction sel/additifs + Meilleure qualité nutritionnelle"
+      },
+      "associatedHabits": ["cuisiner-maison-regulierement", "limiter-produits-ultra-transformes", "favoriser-simplicite-preparations"],
+      "tone": ["pragmatique", "non-moralisateur", "encourageant"]
+    },
+    {
+      "id": "fresh-vegetables",
+      "name": "Légumes frais",
+      "category": "food",
+      "subcategories": ["legumes-frais", "salades", "tomates", "carottes"],
+      "novaGroup": 1,
+      "useCase": "Légumes frais non transformés",
+      "template": {
+        "whatItIs": "{{productName}} est un aliment non transformé (groupe NOVA 1). Il s'agit de légumes dans leur état naturel, simplement lavés et éventuellement découpés.",
+        "composition": "Ce produit ne contient que des légumes, sans ajout. Riches en fibres, vitamines, minéraux, antioxydants et eau, avec une densité énergétique très faible.",
+        "science": "Les légumes sont la base d'une alimentation saine. L'OMS et le PNNS recommandent au moins 400g de fruits et légumes par jour (5 portions). La consommation élevée de légumes est associée à une réduction du risque de maladies cardiovasculaires, certains cancers et diabète de type 2.",
+        "reflex": "Pour ta santé, l'idéal est de consommer des légumes à chaque repas (déjeuner et dîner), variés et de saison.",
+        "actions": [
+          "Objectif : au moins 3 portions de légumes par jour (200-250g par portion)",
+          "Varier les couleurs (vert, rouge, orange, violet) pour diversifier les nutriments",
+          "Frais, surgelés nature ou en conserve rincée : tous comptent !"
+        ],
+        "habitImpact": "Apport optimal en fibres, vitamines, minéraux + Effet protecteur santé + Base alimentation saine"
+      },
+      "associatedHabits": ["fruits-legumes-quotidiens", "privilegier-aliments-bruts", "augmenter-fibres-quotidiennes"],
+      "tone": ["très positif", "encourageant", "motivant"]
+    }
+  ],
+  "usageGuidelines": {
+    "description": "Comment utiliser ces templates dans l'API analysis",
+    "selectionProcess": [
+      "1. Classifier produit (NOVA 1-4, subcategory, nutrition)",
+      "2. Chercher template correspondant (id, novaGroup, subcategories, criteria)",
+      "3. Si match exact → utiliser ce template",
+      "4. Si match partiel → adapter template le plus proche",
+      "5. Si aucun match → utiliser template générique (ultra-processed-general, etc.)",
+      "6. Remplacer variables {{}} par données produit réel",
+      "7. Sélectionner habitude(s) associée(s)",
+      "8. Retourner réponse structurée complète"
+    ],
+    "variableReplacement": {
+      "description": "Comment remplacer les variables dans les templates",
+      "examples": [
+        "{{productName}} → 'Nutella'",
+        "{{sugars100g}} → '56.3'",
+        "{{ingredientsCount}} → '12'",
+        "{{additivesCount}} → '3'",
+        "{{mainIngredients}} → 'sucre, huile de palme, noisettes, cacao maigre'"
+      ]
+    },
+    "tonValidation": "Toujours vérifier que la réponse finale respecte le ton Constitution Ecolojia (calme, pédagogique, non-alarmiste, respectueux)",
+    "forbidden": [
+      "Utiliser mots interdits (cancérigène, toxique, dangereux)",
+      "Dramatiser ou alarmer",
+      "Juger moralement le consommateur",
+      "Présenter corrélations comme causalités directes"
+    ]
+  },
+  "expansionPlan": {
+    "phase1": "20 templates alimentaire (complété)",
+    "phase2": "15 templates cosmétique (M8-M10)",
+    "phase3": "10 templates détergent (M8-M10)",
+    "phase4": "Affinage templates selon retours utilisateurs (ongoing)"
+  },
+  "versionControl": {
+    "version": "1.0.0",
+    "totalTemplates": 20,
+    "distribution": {
+      "nova1": 4,
+      "nova3": 5,
+      "nova4": 11
+    },
+    "lastReview": "2025-12-25",
+    "nextReview": "2026-03-25",
+    "changeLog": [
+      {
+        "date": "2025-12-25",
+        "version": "1.0.0",
+        "changes": "Création initiale - 20 templates alimentaire couvrant cas principaux"
+      }
+    ]
+  }
+}

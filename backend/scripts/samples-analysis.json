@@ -1,0 +1,239 @@
+{
+  "withBoth": [
+    {
+      "_id": "691780b7c56dd19f3eddfafa",
+      "name": "Pâte à tartiner amandes lait cacao",
+      "brand": "Marque inconnue",
+      "categoryType": "food",
+      "subcategory": "chocolate-spread",
+      "tags": [
+        "chocolate",
+        "almond",
+        "dairy",
+        "pasta",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b7c56dd19f3eddff5b",
+      "name": "Protein Spread Almond",
+      "brand": "Mister Choc",
+      "categoryType": "food",
+      "subcategory": "nut-butter",
+      "tags": [
+        "almond",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b7c56dd19f3ede0101",
+      "name": "Amande à tartiner",
+      "brand": "Bjorg",
+      "categoryType": "food",
+      "subcategory": "nut-butter",
+      "tags": [
+        "almond",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b8c56dd19f3ede0388",
+      "name": "Noisettes et amandes pâte a tartiner cacao",
+      "brand": "Merveilles du monde",
+      "categoryType": "food",
+      "subcategory": "chocolate-spread",
+      "tags": [
+        "chocolate",
+        "hazelnut",
+        "almond",
+        "pasta",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b8c56dd19f3ede03b0",
+      "name": "Pate a tartiner bio Chocolat noir- amandes",
+      "brand": "Bovetti",
+      "categoryType": "food",
+      "subcategory": "chocolate-spread",
+      "tags": [
+        "chocolate",
+        "almond",
+        "organic",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b8c56dd19f3ede0610",
+      "name": "Biscuits Petit Déjeuner 5 Céréales Abricots, Amandes & Pépites de Chocolat",
+      "brand": "Monoprix",
+      "categoryType": "food",
+      "subcategory": "breakfast",
+      "tags": [
+        "chocolate",
+        "almond",
+        "cereal",
+        "breakfast",
+        "lunch"
+      ]
+    },
+    {
+      "_id": "691780b8c56dd19f3ede0810",
+      "name": "Cocoa Almonds Spread",
+      "brand": "Trader Joe's",
+      "categoryType": "food",
+      "subcategory": "chocolate-spread",
+      "tags": [
+        "chocolate",
+        "almond",
+        "spread"
+      ]
+    },
+    {
+      "_id": "691780b8c56dd19f3ede0a84",
+      "name": "Purée 100% Amandes Complètes Bio",
+      "brand": "La Fourche",
+      "categoryType": "food",
+      "subcategory": "nut-butter",
+      "tags": [
+        "almond",
+        "spread",
+        "protein",
+        "natural",
+        "healthy"
+      ]
+    },
+    {
+      "_id": "691780bac56dd19f3ede1f1a",
+      "name": "Almond drink Sugar-free",
+      "brand": "Vemondo",
+      "categoryType": "food",
+      "subcategory": "beverage",
+      "tags": [
+        "almond",
+        "sweet",
+        "drink"
+      ]
+    },
+    {
+      "_id": "691780bac56dd19f3ede201c",
+      "name": "RUDE Almond Organic Drink imp",
+      "brand": "Rude health",
+      "categoryType": "food",
+      "subcategory": "beverage",
+      "tags": [
+        "almond",
+        "organic",
+        "drink"
+      ]
+    }
+  ],
+  "withSubOnly": [
+    {
+      "_id": "69405d2813f6af4685e5d713",
+      "brand": "Auchan Bio,Auchan",
+      "name": "Bio Pomme golden Cat 2",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69405dc313f6af4685e5d714",
+      "brand": "Freshona",
+      "name": "Cornichons mit Chili",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "6940601013f6af4685e5d719",
+      "brand": "Daddy",
+      "name": "Profil pack pure canne bio kraft daddy 750g",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "6940609913f6af4685e5d71a",
+      "brand": "saveurs de nos regions",
+      "name": "Fleur de sel",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69429eab13f6af4685e5d76d",
+      "brand": "Nestlé, Thomy, Thomy - Nestlé",
+      "name": "Mayonnaise mit Senf",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "694427530e8b90c83260dbd3",
+      "brand": "ITALIAMO",
+      "name": "Paradizniki suseni lidl",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69442b950e8b90c83260dbd4",
+      "brand": "Ovive",
+      "name": "Truite Fumée des Pyrénées",
+      "tags": [],
+      "subcategory": null
+    }
+  ],
+  "withNone": [
+    {
+      "_id": "69405d2813f6af4685e5d713",
+      "brand": "Auchan Bio,Auchan",
+      "name": "Bio Pomme golden Cat 2",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69405dc313f6af4685e5d714",
+      "brand": "Freshona",
+      "name": "Cornichons mit Chili",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "6940601013f6af4685e5d719",
+      "brand": "Daddy",
+      "name": "Profil pack pure canne bio kraft daddy 750g",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "6940609913f6af4685e5d71a",
+      "brand": "saveurs de nos regions",
+      "name": "Fleur de sel",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69429eab13f6af4685e5d76d",
+      "brand": "Nestlé, Thomy, Thomy - Nestlé",
+      "name": "Mayonnaise mit Senf",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "694427530e8b90c83260dbd3",
+      "brand": "ITALIAMO",
+      "name": "Paradizniki suseni lidl",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "69442b950e8b90c83260dbd4",
+      "brand": "Ovive",
+      "name": "Truite Fumée des Pyrénées",
+      "tags": [],
+      "subcategory": null
+    },
+    {
+      "_id": "694c3f4a0e8b90c832610f4a",
+      "brand": null,
+      "name": "Produit inconnu",
+      "tags": []
+    }
+  ]
+}
