@@ -114,19 +114,24 @@ const ScanPage: React.FC = () => {
 
       // Gérer erreurs spécifiques
       if (err.code === 'QUALITY_CHECK_FAILED') {
-        setError(`Photo de mauvaise qualité : ${err.issues?.join(', ')}`);
+        const errorMsg = `❌ Photo de mauvaise qualité\n\n${(err.issues || []).join('\n')}\n\nConseils:\n${(err.instructions || []).join('\n')}`;
+        setError(errorMsg);
         setLoading(false);
+        alert(errorMsg); // Afficher popup pour debug
         return;
       }
 
       if (err.code === 'FORBIDDEN_CATEGORY') {
         setError(err.message);
         setLoading(false);
+        alert(`⚠️ ${err.message}`);
         return;
       }
 
-      setError(err.message || "Erreur lors de l'analyse photo");
+      const errorMsg = err.message || "Erreur lors de l'analyse photo";
+      setError(errorMsg);
       setLoading(false);
+      alert(`❌ Erreur: ${errorMsg}`);
     }
   };
 
