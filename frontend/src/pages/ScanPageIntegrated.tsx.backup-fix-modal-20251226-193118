@@ -149,7 +149,6 @@ const ScanPage: React.FC = () => {
       <div className="fixed inset-0 bg-black">
         {scanMode === "barcode" ? (
           <BarcodeScanner
-            key="barcode-scanner-mobile"
             onDetected={handleBarcodeDetected}
             onCancel={() => navigate('/')}
           />
@@ -157,7 +156,6 @@ const ScanPage: React.FC = () => {
           <div className="h-full flex flex-col">
             <div className="flex-1 overflow-auto p-4">
               <PhotoCapture
-                key="photo-capture-mobile"
                 onCapture={handlePhotoCapture}
                 onError={(err) => setError(err.message)}
                 maxSize={10 * 1024 * 1024}
@@ -247,7 +245,6 @@ const ScanPage: React.FC = () => {
           {scanMode === "barcode" ? (
             <>
               <BarcodeScanner
-                key="barcode-scanner-desktop"
                 onDetected={handleBarcodeDetected}
                 onCancel={() => {}}
               />
@@ -282,7 +279,6 @@ const ScanPage: React.FC = () => {
             </>
           ) : (
             <PhotoCapture
-              key="photo-capture-desktop"
               onCapture={handlePhotoCapture}
               onError={(err) => setError(err.message)}
               maxSize={10 * 1024 * 1024}
