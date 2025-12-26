@@ -91,7 +91,7 @@ router.get('/health', (req, res) => {
  * Analyse complète photo → Constitution Ecolojia
  * Pipeline 6 étapes : Qualité → OCR → Cache → Catégorie → IA → Constitution
  */
-router.post('/analyze-photo', authMw, uploadMemory.single('image'), async (req, res) => {
+router.post('/analyze-photo', uploadMemory.single('image'), async (req, res) => {
   const startTime = Date.now();
   
   try {
