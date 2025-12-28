@@ -65,7 +65,13 @@ class ImageQualityService {
       console.log('   - Score qualité global:', qualityScore);
 
       // 6. Décision finale
-      const isValid = allIssues.length === 0 && qualityScore >= 50;
+      // Validation robuste : accepter si score >= 50 ET pas d'erreur CRITIQUE
+      // Issues "sous-optimale" ou "flou léger" ne bloquent pas
+      const criticalIssues = allIssues.filter(issue => 
+        issue.includes('Format non supporté') || 
+        issue.includes('Résolution trop faible')
+      );
+      const isValid = criticalIssues.length === 0 && qualityScore >= 50;
       
       return {
         isValid,
@@ -286,5 +292,6 @@ class ImageQualityService {
 }
 
 module.exports = ImageQualityService;
+
 
 
