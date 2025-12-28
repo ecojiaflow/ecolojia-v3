@@ -6,11 +6,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PhotoCaptureProps {
   onCapture: (file: File) => void;
-  onerror?: (error: Error) => void;
-  maxSizea: number;
-  acceptedFormatsa: string[];
-  allowCameraa: boolean;
-  allowUploada: boolean;
+  onError?: (error: Error) => void;
+  maxSize: number;
+  acceptedFormats: string[];
+  allowCamera: boolean;
+  allowUpload: boolean;
 }
 
 type CaptureState = 'idle' | 'capturing' | 'processing' | 'preview' | 'error';
@@ -408,6 +408,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+
 
 
 
