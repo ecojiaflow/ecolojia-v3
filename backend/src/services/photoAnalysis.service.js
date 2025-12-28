@@ -181,24 +181,51 @@ class PhotoAnalysisService {
       enrichedProduct.ocrData = ocrResult;
       enrichedProduct.ocrConfidence = ocrResult.confidence;
 
-      // Sauvegarder en base
-      const savedProduct = await CacheResolverService.saveEnrichedProduct(enrichedProduct);
+      // Chercher si produit existe déjà (par barcode ou nom+brand)
+      let savedProduct = null;
+      
+      if (ocrResult.barcode) {
+        savedProduct = await Product.findOne({ barcode: ocrResult.barcode });
+      }
+      
+      if (!savedProduct && ocrResult.name) {
+        savedProduct = await Product.findOne({
+          name: { $regex: new RegExp(`^${ocrResult.name}$`, 'i') },
+          brand: { $regex: new RegExp(`^${ocrResult.brand || ''}$`, 'i') }
+        });
+      }
+
+      // Si produit existe, mettre à jour. Sinon créer.
+      if (savedProduct) {
+        console.log('✅ Produit existant trouvé (_id:', savedProduct._id + ') - Mise à jour');
+        savedProduct.lastScannedAt = new Date();
+        savedProduct.scanCount = (savedProduct.scanCount || 0) + 1;
+        await savedProduct.save();
+      } else {
+        console.log('📝 Nouveau produit - Sauvegarde en base...');
+        const cacheMetadata = {
+          photoHash,
+          extractedBy: 'photo',
+          ocrData: ocrResult,
+          ocrConfidence: ocrResult.confidence
+        };
+        savedProduct = await CacheResolverService.saveEnrichedProduct(enrichedProduct, cacheMetadata);
+      }
 
       // Générer Constitution Ecolojia
-      const constitution = await this._generateConstitution(savedProduct);
-
-      console.log('✅ Produit sauvegardé (_id:', savedProduct._id + ')');
-      console.log('✅ ANALYSE TERMINÉE');
+      const constitution = await this._generateConstitution(savedProduct || enrichedProduct);
+      console.log('✅ ANALYSE TERMINÉE - Constitution générée');
 
       return {
         success: true,
-        cached: false,
-        source: 'ai',
-        product: savedProduct,
+        cached: savedProduct ? true : false,
+        source: savedProduct ? 'cache-updated' : 'ai',
+        product: savedProduct || enrichedProduct,
         constitution,
         categoryDetection,
         disclaimer: categoryDetection.disclaimer || null,
         processingTime: Date.now() - startTime
+      };
       };
 
     } catch (error) {
