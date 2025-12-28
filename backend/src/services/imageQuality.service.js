@@ -54,6 +54,16 @@ class ImageQualityService {
         ...blurScore.issues
       ];
       
+      // 6. LOG DÉTAILLÉ pour diagnostic
+      console.log('📊 [ImageQuality] Détails analyse:');
+      console.log('   - Format:', metadata.format);
+      console.log('   - Résolution:', metadata.width + 'x' + metadata.height);
+      console.log('   - Variance Laplacian:', blurScore.score.toFixed(2));
+      console.log('   - Seuil flou:', '10');
+      console.log('   - Issues résolution:', resolutionValidation.issues);
+      console.log('   - Issues flou:', blurScore.issues);
+      console.log('   - Score qualité global:', qualityScore);
+
       // 6. Décision finale
       const isValid = allIssues.length === 0 && qualityScore >= 50;
       
@@ -276,4 +286,5 @@ class ImageQualityService {
 }
 
 module.exports = ImageQualityService;
+
 
