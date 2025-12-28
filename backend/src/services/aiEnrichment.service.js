@@ -1,6 +1,5 @@
 ﻿// PATH: backend/src/services/aiEnrichment.service.js
 const deepSeekService = require('./ai/deepSeekService');
-const axios = require('axios');
 const scoringUnified = require('./scoringUnified');
 const knowledgeService = require('../knowledge/knowledge.service');
 
@@ -729,9 +728,6 @@ Ceci doit influencer tes calculs de composantes.
       };
     }
   }
-}
-
-
   /**
    * Analyse photo produit avec DeepSeek Vision (OCR)
    * @param {Buffer} photoBuffer - Photo en buffer
@@ -740,7 +736,7 @@ Ceci doit influencer tes calculs de composantes.
   static async analyzeProductPhoto(photoBuffer) {
     try {
       const base64Image = photoBuffer.toString('base64');
-      
+
       const prompt = `Analyse cette photo de produit alimentaire/cosmétique.
 Extrais UNIQUEMENT ces informations si visibles :
 - Code-barres (EAN-13/EAN-8)
@@ -786,7 +782,7 @@ Réponds en JSON strict :
       );
 
       const completion = response.data.choices[0].message.content;
-      
+
       // Parser JSON (retirer markdown si présent)
       let cleaned = completion.trim();
       if (cleaned.startsWith('```json')) {
@@ -794,7 +790,7 @@ Réponds en JSON strict :
       } else if (cleaned.startsWith('```')) {
         cleaned = cleaned.replace(/```\n?/, '').replace(/```\n?$/, '');
       }
-      
+
       const parsed = JSON.parse(cleaned);
 
       return {
@@ -816,8 +812,9 @@ Réponds en JSON strict :
     }
   }
 
-module.exports = AIEnrichmentService;
+}
 
+module.exports = AIEnrichmentService;
 
 
 
