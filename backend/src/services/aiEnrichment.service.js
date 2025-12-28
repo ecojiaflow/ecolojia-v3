@@ -1,5 +1,6 @@
 ﻿// PATH: backend/src/services/aiEnrichment.service.js
 const deepSeekService = require('./ai/deepSeekService');
+const axios = require('axios');
 const scoringUnified = require('./scoringUnified');
 const knowledgeService = require('../knowledge/knowledge.service');
 
@@ -815,6 +816,7 @@ Réponds en JSON strict :
 }
 
 module.exports = AIEnrichmentService;
+
 
 
 
