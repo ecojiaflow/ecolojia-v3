@@ -218,24 +218,22 @@ class PhotoAnalysisService {
    */
   static async _performOCR(photoBuffer) {
     try {
-      // Pour l'instant, utiliser DeepSeek Vision
-      // TODO: Implémenter Tesseract local pour économiser coûts
+      // Utiliser Google Vision OCR via OCRProductService
+      const ocrResult = await OCRProductService.extractTextFromSinglePhoto(photoBuffer);
 
-      const visionResult = await AIEnrichmentService.analyzeProductPhoto(photoBuffer);
-
-      if (!visionResult.success) {
+      if (!ocrResult.success) {
         return { success: false };
       }
 
       return {
         success: true,
-        text: visionResult.extractedText || '',
-        barcode: visionResult.barcode || null,
-        name: visionResult.name || null,
-        brand: visionResult.brand || null,
-        ingredients: visionResult.ingredients_text || null,
-        confidence: visionResult.confidence || 70,
-        extractedFields: visionResult
+        text: ocrResult.text || '',
+        barcode: ocrResult.barcode || null,
+        name: ocrResult.name || null,
+        brand: ocrResult.brand || null,
+        ingredients: ocrResult.ingredients || null,
+        confidence: ocrResult.confidence || 70,
+        extractedFields: ocrResult
       };
 
     } catch (error) {
@@ -485,4 +483,5 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
 
