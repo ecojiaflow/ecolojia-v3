@@ -66,7 +66,7 @@ class ImageQualityService {
           width: metadata.width,
           height: metadata.height,
           blurScore: blurScore.score,
-          blurThreshold: 100 // Seuil variance Laplacian
+          blurThreshold: 10 // Seuil variance Laplacian (ajusté)
         },
         processingTime: Date.now() - startTime
       };
@@ -160,7 +160,7 @@ class ImageQualityService {
       );
       
       // Seuil de flou (empirique)
-      const BLUR_THRESHOLD = 100;
+      const BLUR_THRESHOLD = 10;
       const isBlurry = laplacianVariance < BLUR_THRESHOLD;
       
       const issues = [];
@@ -276,3 +276,4 @@ class ImageQualityService {
 }
 
 module.exports = ImageQualityService;
+
