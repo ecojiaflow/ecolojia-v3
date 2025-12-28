@@ -15,6 +15,7 @@ const ImageQualityService = require('./imageQuality.service');
 const CategoryDetectionService = require('./categoryDetection.service');
 const CacheResolverService = require('./cacheResolver.service');
 const AIEnrichmentService = require('./aiEnrichment.service');
+const OCRProductService = require('./OCRProductService');
 const Product = require('../models/Product');
 const crypto = require('crypto');
 
@@ -484,3 +485,4 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
