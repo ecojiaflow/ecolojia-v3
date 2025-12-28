@@ -120,7 +120,8 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
       setState('preview');
       
     } catch (err) {
-      setError('Erreur lors de la capture');
+      console.error('❌ [PhotoCapture] Erreur capture:', err);
+        setError('Erreur: ' + ((err as Error).message || 'Capture impossible'));
       setState('error');
       onError?.(err as Error);
     }
@@ -408,6 +409,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 };
 
 export default PhotoCapture;
+
 
 
 
