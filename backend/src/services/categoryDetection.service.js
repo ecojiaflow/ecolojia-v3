@@ -1,7 +1,8 @@
 ﻿/**
- * CATEGORY DETECTION SERVICE V1.0
- * Détection catégorie produit (médicament/complément/classique)
+ * CATEGORY DETECTION SERVICE V1.1
+ * Détection catégorie produit (food/cosmetic/detergent/medicine/supplement)
  * Constitution Ecolojia - Disclaimers obligatoires
+ * FIX 28/12: Ajout détection food explicite + seuils renforcés
  */
 
 class CategoryDetectionService {
@@ -15,7 +16,7 @@ class CategoryDetectionService {
     const text = (ocrText || '').toLowerCase();
     const name = (productData.name || '').toLowerCase();
     const combined = `${text} ${name}`;
-    
+
     // 1. Détection médicament (prioritaire)
     const medicineResult = this._detectMedicine(combined);
     if (medicineResult.isMedicine) {
@@ -27,7 +28,7 @@ class CategoryDetectionService {
         detectedKeywords: medicineResult.keywords
       };
     }
-    
+
     // 2. Détection complément alimentaire
     const supplementResult = this._detectSupplement(combined);
     if (supplementResult.isSupplement) {
@@ -40,8 +41,20 @@ class CategoryDetectionService {
         detectedKeywords: supplementResult.keywords
       };
     }
-    
-    // 3. Détection cosmétique
+
+    // 3. Détection ALIMENTAIRE (NOUVEAU - prioritaire sur cosmetic)
+    const foodResult = this._detectFood(combined);
+    if (foodResult.isFood) {
+      return {
+        category: 'food',
+        confidence: foodResult.confidence,
+        disclaimer: null,
+        allowScoring: true,
+        detectedKeywords: foodResult.keywords
+      };
+    }
+
+    // 4. Détection cosmétique
     const cosmeticResult = this._detectCosmetic(combined);
     if (cosmeticResult.isCosmetic) {
       return {
@@ -52,8 +65,8 @@ class CategoryDetectionService {
         detectedKeywords: cosmeticResult.keywords
       };
     }
-    
-    // 4. Détection détergent
+
+    // 5. Détection détergent
     const detergentResult = this._detectDetergent(combined);
     if (detergentResult.isDetergent) {
       return {
@@ -64,17 +77,65 @@ class CategoryDetectionService {
         detectedKeywords: detergentResult.keywords
       };
     }
-    
-    // 5. Par défaut : alimentaire
+
+    // 6. Par défaut : alimentaire (si aucune détection)
     return {
       category: 'food',
-      confidence: 50,
+      confidence: 30,
       disclaimer: null,
       allowScoring: true,
       detectedKeywords: []
     };
   }
-  
+
+  /**
+   * Détection ALIMENTAIRE (NOUVEAU)
+   * @private
+   */
+  static _detectFood(text) {
+    const foodKeywords = [
+      // Ingrédients courants
+      'sucre', 'sel', 'farine', 'huile', 'beurre',
+      'lait', 'œuf', 'oeuf', 'cacao', 'chocolat',
+      'vanille', 'noisettes', 'amandes',
+      
+      // Mentions réglementaires alimentaires
+      'ingrédients', 'ingredients',
+      'valeurs nutritionnelles', 'nutrition',
+      'énergie', 'energie', 'kcal', 'kj',
+      'lipides', 'glucides', 'protéines', 'proteines',
+      'matières grasses', 'matieres grasses',
+      'acides gras', 'fibres alimentaires',
+      
+      // Types de produits
+      'pâte à tartiner', 'pate a tartiner',
+      'biscuit', 'gâteau', 'gateau', 'céréales', 'cereales',
+      'yaourt', 'fromage', 'conserve',
+      'boisson', 'jus', 'sirop',
+      
+      // Allergènes
+      'allergènes', 'allergenes', 'peut contenir',
+      'traces de', 'gluten', 'soja',
+      
+      // Conservation
+      'à conserver', 'a conserver', 'dlc', 'ddm',
+      'date limite', 'à consommer avant'
+    ];
+
+    const foundKeywords = foodKeywords.filter(kw => text.includes(kw));
+    const keywordCount = foundKeywords.length;
+
+    // Seuil : 2+ mots-clés alimentaires
+    const isFood = keywordCount >= 2;
+    const confidence = Math.min(100, keywordCount * 20);
+
+    return {
+      isFood,
+      confidence,
+      keywords: foundKeywords
+    };
+  }
+
   /**
    * Détection médicament
    * @private
@@ -85,39 +146,39 @@ class CategoryDetectionService {
       'amm', 'autorisation de mise sur le marché',
       'médicament', 'medicament',
       'prescription', 'ordonnance',
-      
+
       // Formes pharmaceutiques
       'comprimé', 'comprime', 'gélule', 'gelule',
       'sirop', 'suppositoire', 'injectable',
       'posologie', 'voie orale', 'voie cutanée',
-      
+
       // Substances actives
       'dci', 'principe actif', 'paracétamol',
       'ibuprofène', 'ibuprofen', 'aspirine',
-      
+
       // Dosages typiques
       'mg/ml', 'mg par', 'ui/', 'unités internationales',
-      
+
       // Mentions légales
       'lire la notice', 'demandez conseil',
       'pharmacien', 'notice avant utilisation',
       'effets indésirables', 'contre-indication'
     ];
-    
+
     const foundKeywords = medicineKeywords.filter(kw => text.includes(kw));
     const keywordCount = foundKeywords.length;
-    
+
     // Seuil : 2+ mots-clés médicaux
     const isMedicine = keywordCount >= 2;
     const confidence = Math.min(100, keywordCount * 30);
-    
+
     return {
       isMedicine,
       confidence,
       keywords: foundKeywords
     };
   }
-  
+
   /**
    * Détection complément alimentaire
    * @private
@@ -127,66 +188,68 @@ class CategoryDetectionService {
       // Mentions légales
       'complément alimentaire', 'complement alimentaire',
       'dietary supplement', 'food supplement',
-      
+
       // Disclaimers typiques
       'ne remplace pas', 'alimentation variée',
       'équilibrée', 'equilibree',
-      
+
       // Formes
       'gélules', 'gelules', 'capsules',
       'comprimés', 'comprimes',
-      
+
       // Nutriments
       'vitamine', 'minéraux', 'mineraux',
       'acides aminés', 'acides amines',
       'omega', 'probiotiques',
-      
+
       // Dosages
       'apport journalier', 'dose quotidienne',
       'par jour', 'par gélule'
     ];
-    
+
     const foundKeywords = supplementKeywords.filter(kw => text.includes(kw));
     const keywordCount = foundKeywords.length;
-    
+
     // Seuil : 2+ mots-clés compléments
     const isSupplement = keywordCount >= 2;
     const confidence = Math.min(100, keywordCount * 25);
-    
+
     return {
       isSupplement,
       confidence,
       keywords: foundKeywords
     };
   }
-  
+
   /**
-   * Détection cosmétique
+   * Détection cosmétique (SEUIL RENFORCÉ)
    * @private
    */
   static _detectCosmetic(text) {
     const cosmeticKeywords = [
-      'crème', 'creme', 'lotion', 'sérum', 'serum',
+      'crème visage', 'creme visage', 
+      'lotion', 'sérum', 'serum',
       'shampoing', 'gel douche', 'savon',
       'maquillage', 'fond de teint', 'mascara',
       'dentifrice', 'bain de bouche',
       'déodorant', 'deodorant', 'parfum',
       'soin visage', 'soin corps', 'anti-âge',
-      'hydratant', 'nourrissant', 'démaquillant'
+      'hydratant visage', 'démaquillant'
     ];
-    
+
     const foundKeywords = cosmeticKeywords.filter(kw => text.includes(kw));
     const confidence = Math.min(100, foundKeywords.length * 30);
-    
+
+    // SEUIL RENFORCÉ : 2+ mots-clés (au lieu de 1)
     return {
-      isCosmetic: foundKeywords.length >= 1,
+      isCosmetic: foundKeywords.length >= 2,
       confidence,
       keywords: foundKeywords
     };
   }
-  
+
   /**
-   * Détection détergent
+   * Détection détergent (SEUIL RENFORCÉ)
    * @private
    */
   static _detectDetergent(text) {
@@ -196,19 +259,20 @@ class CategoryDetectionService {
       'nettoyant', 'désinfectant', 'desinfectant',
       'javel', 'eau de javel',
       'produit d\'entretien', 'multi-usages',
-      'sol', 'vitres', 'salle de bain'
+      'nettoyant sol', 'nettoyant vitres'
     ];
-    
+
     const foundKeywords = detergentKeywords.filter(kw => text.includes(kw));
     const confidence = Math.min(100, foundKeywords.length * 30);
-    
+
+    // SEUIL RENFORCÉ : 2+ mots-clés (au lieu de 1)
     return {
-      isDetergent: foundKeywords.length >= 1,
+      isDetergent: foundKeywords.length >= 2,
       confidence,
       keywords: foundKeywords
     };
   }
-  
+
   /**
    * Disclaimer médicament
    * @private
@@ -223,7 +287,7 @@ class CategoryDetectionService {
       severity: 'high'
     };
   }
-  
+
   /**
    * Disclaimer complément alimentaire
    * @private
@@ -238,7 +302,7 @@ class CategoryDetectionService {
       severity: 'medium'
     };
   }
-  
+
   /**
    * Vérification rapide si catégorie interdite
    * @static
@@ -246,14 +310,14 @@ class CategoryDetectionService {
   static isForbiddenCategory(category) {
     return category === 'medicine';
   }
-  
+
   /**
    * Messages utilisateur selon catégorie
    * @static
    */
   static getUserMessage(detectionResult) {
     const { category, disclaimer } = detectionResult;
-    
+
     if (category === 'medicine') {
       return {
         canContinue: false,
@@ -261,7 +325,7 @@ class CategoryDetectionService {
         suggestion: 'Consultez la notice ou un professionnel de santé.'
       };
     }
-    
+
     if (category === 'supplement') {
       return {
         canContinue: true,
@@ -269,7 +333,7 @@ class CategoryDetectionService {
         warning: disclaimer.message
       };
     }
-    
+
     return {
       canContinue: true,
       message: null

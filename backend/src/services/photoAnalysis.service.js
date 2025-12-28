@@ -150,7 +150,7 @@ class PhotoAnalysisService {
         }
       };
 
-      const enrichedProduct = await AIEnrichmentService.enrichProduct(
+      const enrichedProduct = await AIEnrichmentService.enrichProductWithAI(
         enrichmentData,
         photoBuffer,
         { includeVision: true }
@@ -483,6 +483,7 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
 
 
 
