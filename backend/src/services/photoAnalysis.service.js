@@ -79,7 +79,7 @@ class PhotoAnalysisService {
       const photoHash = this._generatePhotoHash(photoBuffer);
 
       // Chercher cache (barcode → fuzzy → photoHash)
-      const cacheResult = await CacheResolverService.resolveProduct({
+      const cacheResult = await CacheResolverService.resolve({
         barcode: ocrResult.barcode,
         name: ocrResult.name,
         brand: ocrResult.brand,
@@ -483,5 +483,6 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
 
 
