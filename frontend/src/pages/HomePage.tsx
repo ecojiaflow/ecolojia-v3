@@ -1,27 +1,17 @@
-﻿import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  AlertCircle,
   ArrowRight,
-  Award,
   BarChart3,
   Camera,
-  CheckCircle,
-  ChevronRight,
-  Clock,
-  Euro,
-  Heart,
-  Leaf,
   Package,
   Shield,
-  ShoppingBag,
+  Clock,
+  Users,
   Sparkles,
   Star,
-  TrendingUp,
-  Users,
-  UtensilsCrossed
+  Scan
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCategory } from '../Contexts/CategoryContext';
 import { AISearchWidget } from '../components/ai';
@@ -85,30 +75,9 @@ const HomePage: React.FC = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: 'Marie L.',
-      role: 'Maman de 3 enfants',
-      content: "ECOLOJIA m'a aidee a faire des choix plus sains pour ma famille. L'analyse detaillee des additifs est vraiment utile.",
-      rating: 5
-    },
-    {
-      name: 'Thomas B.',
-      role: 'Sportif amateur',
-      content: "Application indispensable pour suivre mon alimentation. Les scores sont clairs et precis.",
-      rating: 5
-    },
-    {
-      name: 'Sophie M.',
-      role: 'Professionnelle de sante',
-      content: "Enfin une app basee sur des donnees scientifiques solides. Je la recommande a mes patients.",
-      rating: 5
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-white md:bg-gradient-to-b md:from-white md:to-gray-50">
-      {/* Hero Section - Mobile First, adapté Desktop */}
+      {/* Hero Section */}
       <section className="px-4 pt-6 pb-8 md:pt-20 md:pb-32 md:px-0">
         <div className="md:container md:mx-auto md:px-4">
           <div className="text-center space-y-4 md:space-y-6 md:max-w-4xl md:mx-auto">
@@ -132,13 +101,13 @@ const HomePage: React.FC = () => {
               </span>
             </h1>
 
-            {/* Description (desktop uniquement) */}
-            <p className="hidden md:block text-xl text-gray-900 max-w-3xl mx-auto">
+            {/* Description desktop */}
+            <p className="hidden md:block text-xl text-gray-600 max-w-3xl mx-auto">
               Analysez vos produits alimentaires, cosmetiques et detergents avec notre IA scientifique.
               Scores detailles, recommendations personnalisees et alternatives eco-responsables.
             </p>
 
-            {/* Barre de recherche IA */}
+            {/* Barre recherche IA */}
             <div className="w-full">
               <AISearchWidget
                 placeholder="Recherche IA : 'chocolat vegan bio', 'shampoing naturel'..."
@@ -148,21 +117,38 @@ const HomePage: React.FC = () => {
               />
             </div>
 
-            {/* Bouton Scanner (mobile) */}
-            <button
-              onClick={() => navigate('/scan')}
-              className="md:hidden w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl active:scale-95 transition-transform"
-            >
-              <div className="flex items-center justify-center text-white space-x-3">
-                <Camera className="w-10 h-10 stroke-[2]" />
-                <div>
-                  <div className="text-lg font-bold">Scanner un produit</div>
-                  <div className="text-sm opacity-90">Analyse instantanee</div>
+            {/* 🆕 2 BOUTONS SCANNER (mobile uniquement) */}
+            <div className="md:hidden space-y-3">
+              {/* Bouton 1 : Scanner code-barres (prioritaire) */}
+              <button
+                onClick={() => navigate('/scan/barcode')}
+                className="w-full bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-2xl p-6 shadow-xl active:scale-95 transition-transform"
+              >
+                <div className="flex items-center justify-center text-white space-x-3">
+                  <Scan className="w-10 h-10 stroke-[2]" />
+                  <div className="text-left">
+                    <div className="text-lg font-bold">Scanner code-barres</div>
+                    <div className="text-sm opacity-90">Analyse instantanée</div>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            {/* Boutons CTA (desktop) */}
+              {/* Bouton 2 : Analyser par photo (secondaire) */}
+              <button
+                onClick={() => navigate('/scan/photo')}
+                className="w-full bg-white border-2 border-green-500 rounded-2xl p-6 shadow-md active:scale-95 transition-transform"
+              >
+                <div className="flex items-center justify-center text-green-700 space-x-3">
+                  <Camera className="w-10 h-10 stroke-[2]" />
+                  <div className="text-left">
+                    <div className="text-lg font-bold">Analyser par photo</div>
+                    <div className="text-sm opacity-75">Produit sans code-barres</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            {/* Desktop : Info scanner mobile */}
             <div className="hidden md:flex flex-wrap gap-4 justify-center">
               <div className="inline-flex items-center gap-2 bg-blue-50 border-2 border-blue-200 px-6 py-3 rounded-xl">
                 <Camera className="w-5 h-5 text-blue-600" />
@@ -170,7 +156,7 @@ const HomePage: React.FC = () => {
               </div>
 
               <button
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/register')}
                 className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
               >
                 <Sparkles className="w-5 h-5" />
@@ -181,7 +167,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats - Mobile: 2 cols, Desktop: 4 cols */}
+      {/* Stats */}
       <section className="px-4 py-6 md:py-16 bg-white md:bg-primary-50">
         <div className="md:container md:mx-auto md:px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
@@ -194,22 +180,22 @@ const HomePage: React.FC = () => {
                 className="bg-primary-50 md:bg-transparent p-4 rounded-xl md:rounded-none shadow-md md:shadow-none text-center"
               >
                 <div className={`inline-flex p-3 rounded-lg bg-white md:bg-primary-50 ${stat.color} mb-2 md:mb-3`}>
-                  <stat.icon className="w-6 h-6 md:w-6 md:h-6" />
+                  <stat.icon className="w-6 h-6" />
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</div>
-                <div className="text-xs md:text-sm text-gray-900">{stat.label}</div>
+                <div className="text-xs md:text-sm text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Categories - Hidden on mobile (too heavy) */}
+      {/* Categories (desktop uniquement) */}
       <section className="hidden md:block py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Explorez par categorie</h2>
-            <p className="text-lg text-gray-900">Analyse complete pour tous vos produits du quotidien</p>
+            <p className="text-lg text-gray-600">Analyse complete pour tous vos produits du quotidien</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -225,17 +211,17 @@ const HomePage: React.FC = () => {
                 }}
                 className="group cursor-pointer"
               >
-                <div className="bg-primary-50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
                   <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <span className="text-3xl">{category.icon}</span>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
-                  <p className="text-sm text-neutral-700 mb-4">{category.count}</p>
+                  <p className="text-sm text-gray-600 mb-4">{category.count}</p>
                   <div className="space-y-1">
-                    <p className="text-xs text-neutral-600">Populaires :</p>
+                    <p className="text-xs text-gray-500">Populaires :</p>
                     <div className="flex flex-wrap gap-1">
                       {category.popular.map((item) => (
-                        <span key={item} className="text-xs bg-primary-100 px-2 py-1 rounded">
+                        <span key={item} className="text-xs bg-gray-100 px-2 py-1 rounded">
                           {item}
                         </span>
                       ))}
@@ -252,12 +238,12 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Features - Hidden on mobile */}
+      {/* Features (desktop uniquement) */}
       <section className="hidden md:block py-20 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Pourquoi choisir ECOLOJIA ?</h2>
-            <p className="text-lg text-gray-900">Une plateforme complete pour une consommation responsable</p>
+            <p className="text-lg text-gray-600">Une plateforme complete pour une consommation responsable</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -267,53 +253,20 @@ const HomePage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-primary-50 rounded-2xl p-6 shadow-lg"
+                className="bg-white rounded-2xl p-6 shadow-lg"
               >
                 <div className={`w-12 h-12 rounded-lg ${feature.color} flex items-center justify-center mb-4`}>
                   <feature.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-900">{feature.description}</p>
+                <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials - Hidden on mobile */}
-      <section className="hidden md:block py-20 bg-primary-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
-            <p className="text-lg text-gray-900">Rejoignez les 500k+ utilisateurs satisfaits</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-primary-50 rounded-2xl p-6"
-              >
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-900 mb-4">"{testimonial.content}"</p>
-                <div>
-                  <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-neutral-700">{testimonial.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final - Hidden on mobile */}
+      {/* CTA Final (desktop uniquement) */}
       <section className="hidden md:block py-20 bg-gradient-to-r from-green-600 to-blue-600">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -337,8 +290,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      
     </div>
   );
 };

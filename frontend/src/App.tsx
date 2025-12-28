@@ -23,6 +23,8 @@ const LearnPage = lazy(() => import('./pages/LearnPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ChatPage = lazy(() => import('./pages/ChatPage'));
 const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
+const ScanBarcodePage = lazy(() => import('./pages/ScanBarcodePage'));
+const ScanPhotoPage = lazy(() => import('./pages/ScanPhotoPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -59,6 +61,8 @@ const App: React.FC = () => {
             <Route path="cosmetics/:barcode" element={<CosmeticAnalysisPage />} />
             <Route path="detergents/:barcode" element={<DetergentAnalysisPage />} />
             <Route path="scan" element={<BarcodeScanPage />} />
+            <Route path="scan/barcode" element={<ScanBarcodePage />} />
+            <Route path="scan/photo" element={<ScanPhotoPage />} />
             <Route path="ocr" element={<Navigate to="/scan" replace />} />
             <Route path="ocr-wizard" element={<OCRWizardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />

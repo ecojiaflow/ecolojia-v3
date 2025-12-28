@@ -1,8 +1,5 @@
-﻿// frontend/src/components/scanner/PhotoCapture.tsx
-import React, { useState, useRef, useCallback } from 'react';
-import { Camera, Upload, X, Loader2, Check, AlertCircle, RotateCw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useToast } from '@/hooks/use-toast';
+﻿import React, { useRef, useState, useCallback } from 'react';
+import { Camera, Upload, X, Check, AlertCircle } from 'lucide-react';
 
 interface PhotoCaptureProps {
   onCapture: (file: File) => void;
@@ -10,414 +7,269 @@ interface PhotoCaptureProps {
   maxSize: number;
   acceptedFormats: string[];
   allowCamera: boolean;
-  allowUpload: boolean;
+  allowUpload?: boolean;
 }
 
-type CaptureState = 'idle' | 'capturing' | 'processing' | 'preview' | 'error';
-
-export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
+const PhotoCapture: React.FC<PhotoCaptureProps> = ({
   onCapture,
   onError,
-  maxSize = 10 * 1024 * 1024, // 10MB
-  acceptedFormats = ['image/jpeg', 'image/png', 'image/webp'],
-  allowCamera = true,
+  maxSize,
+  acceptedFormats,
+  allowCamera,
   allowUpload = true
 }) => {
-  const [state, setState] = useState<CaptureState>('idle');
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<'camera' | 'upload'>('camera');
-  const [capturedFile, setCapturedFile] = useState<File | null>(null);
-
-  const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Initialiser la camera
+  // Démarrer caméra
   const startCamera = useCallback(async () => {
+    setError(null);
     try {
-      setState('capturing');
-      setError(null);
-
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
       });
-
-      streamRef.current = stream;
-
+      
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+        videoRef.current.srcObject = mediaStream;
         await videoRef.current.play();
       }
-    } catch (err) {
-      console.error('❌ [PhotoCapture] Erreur démarrage caméra:', err);
-      setError('Impossible d\'accéder à la caméra');
-      setState('error');
-      onError?.(err as Error);
+      
+      setStream(mediaStream);
+      setIsCameraActive(true);
+    } catch (err: any) {
+      const errorMsg = err.name === 'NotAllowedError' 
+        ? 'Accès caméra refusé. Autorisez la caméra dans les paramètres.'
+        : 'Impossible d\'accéder à la caméra';
+      setError(errorMsg);
+      onError?.(new Error(errorMsg));
     }
   }, [onError]);
 
-  // Arreter la camera
+  // Arrêter caméra
   const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
     }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  }, []);
+    setIsCameraActive(false);
+    setCapturedImage(null);
+  }, [stream]);
 
-  // Capturer une photo depuis la camera
+  // Capturer photo depuis vidéo
   const capturePhoto = useCallback(async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current) {
+      setError('Erreur technique - Réessayez');
+      return;
+    }
 
-    setState('processing');
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    // Validation readyState CRITIQUE
+    if (video.readyState < video.HAVE_CURRENT_DATA) {
+      setError('Vidéo non prête - Attendez 2 secondes');
+      onError?.(new Error('Vidéo non prête'));
+      return;
+    }
 
     try {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-
-      // 🔧 FIX: Vérifier que la vidéo est prête
-      if (video.readyState < video.HAVE_CURRENT_DATA) {
-        throw new Error('Vidéo non prête - Attendez quelques secondes');
-      }
-
-      // Ajuster le canvas à la taille de la video
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-
-      // Vérifier dimensions valides
-      if (canvas.width === 0 || canvas.height === 0) {
-        throw new Error('Dimensions vidéo invalides');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Canvas context non disponible');
       }
 
-      // Dessiner l'image
-      const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('Canvas context not available');
-
       ctx.drawImage(video, 0, 0);
-
-      // Convertir en blob
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-          (blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error('Failed to create blob'));
-          },
-          'image/jpeg',
-          0.9
-        );
-      });
-
-      // Créer un File
-      const file = new File([blob], `capture_${Date.now()}.jpg`, {
-        type: 'image/jpeg'
-      });
-
-      // Créer l'URL de prévisualisation
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-      setCapturedFile(file);
-
-      // Arrêter la caméra
+      
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      setCapturedImage(dataUrl);
+      
+      // Arrêter caméra après capture
       stopCamera();
-      setState('preview');
-
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ [PhotoCapture] Erreur capture:', err);
-      setError('Erreur: ' + ((err as Error).message || 'Capture impossible'));
-      setState('error');
-      onError?.(err as Error);
+      setError('Erreur lors de la capture');
+      onError?.(err);
     }
   }, [stopCamera, onError]);
 
-  // Gérer l'upload de fichier
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  // Valider et envoyer photo capturée
+  const confirmPhoto = useCallback(async () => {
+    if (!capturedImage) return;
+
+    try {
+      const response = await fetch(capturedImage);
+      const blob = await response.blob();
+      
+      // Validation taille
+      if (blob.size > maxSize) {
+        throw new Error(`Fichier trop volumineux (max ${Math.round(maxSize / 1024 / 1024)}MB)`);
+      }
+
+      const file = new File([blob], `photo-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      onCapture(file);
+    } catch (err: any) {
+      console.error('❌ [PhotoCapture] Erreur confirmation:', err);
+      setError(err.message);
+      onError?.(err);
+    }
+  }, [capturedImage, maxSize, onCapture, onError]);
+
+  // Annuler photo capturée
+  const retakePhoto = useCallback(() => {
+    setCapturedImage(null);
+    startCamera();
+  }, [startCamera]);
+
+  // Upload fichier
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validation du type
+    // Validation format
     if (!acceptedFormats.includes(file.type)) {
-      setError('Format de fichier non supporté');
-      setState('error');
+      const errorMsg = 'Format non supporté. Utilisez JPEG, PNG ou WebP';
+      setError(errorMsg);
+      onError?.(new Error(errorMsg));
       return;
     }
 
-    // Validation de la taille
+    // Validation taille
     if (file.size > maxSize) {
-      setError(`Le fichier dépasse la taille maximum (${Math.round(maxSize / 1024 / 1024)}MB)`);
-      setState('error');
+      const errorMsg = `Fichier trop volumineux (max ${Math.round(maxSize / 1024 / 1024)}MB)`;
+      setError(errorMsg);
+      onError?.(new Error(errorMsg));
       return;
     }
 
-    setState('processing');
-
-    // Créer la prévisualisation
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreviewUrl(e.target?.result as string);
-      setCapturedFile(file);
-      setState('preview');
-    };
-    reader.onerror = () => {
-      setError('Erreur lors de la lecture du fichier');
-      setState('error');
-    };
-    reader.readAsDataURL(file);
-  }, [acceptedFormats, maxSize]);
-
-  // Valider et envoyer la photo
-  const confirmCapture = useCallback(() => {
-    if (!capturedFile) return;
-
-    // Nettoyer l'URL de prévisualisation
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-
-    onCapture(capturedFile);
-
-    // Réinitialiser
-    setState('idle');
-    setPreviewUrl(null);
-    setCapturedFile(null);
-
-    toast({
-      title: "Photo capturée",
-      description: "L'analyse va commencer...",
-    });
-  }, [capturedFile, previewUrl, onCapture, toast]);
-
-  // Réinitialiser
-  const reset = useCallback(() => {
-    stopCamera();
-    setState('idle');
-    setError(null);
-    setPreviewUrl(null);
-    setCapturedFile(null);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  }, [stopCamera]);
-
-  // Nettoyer au démontage
-  React.useEffect(() => {
-    return () => {
-      stopCamera();
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [stopCamera, previewUrl]);
+    onCapture(file);
+  }, [acceptedFormats, maxSize, onCapture, onError]);
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <AnimatePresence mode="wait">
-        {/* État initial - Choix du mode */}
-        {state === 'idle' && (
-          <motion.div
-            key="idle"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-4"
-          >
-            <h3 className="text-lg font-semibold text-center">
-              Photographier le produit
-            </h3>
+    <div className="w-full h-full flex flex-col">
+      {/* Erreur affichée */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
 
-            <p className="text-sm text-gray-600 text-center">
-              Prenez en photo le code-barres, la liste d'ingrédients ou l'étiquette complète
-            </p>
+      {/* Caméra active */}
+      {isCameraActive && !capturedImage && (
+        <div className="relative flex-1 bg-black rounded-2xl overflow-hidden">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full h-full object-cover"
+          />
+          
+          {/* Cadre guide */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-[90%] h-[70%] border-4 border-white/50 rounded-2xl"></div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {allowCamera && (
-                <button
-                  onClick={() => {
-                    setMode('camera');
-                    startCamera();
-                  }}
-                  className="flex flex-col items-center justify-center p-6 bg-primary/10 hover:bg-primary/20 rounded-xl transition-colors"
-                >
-                  <Camera className="w-8 h-8 mb-2 text-primary" />
-                  <span className="text-sm font-medium">Prendre une photo</span>
-                </button>
-              )}
-
-              {allowUpload && (
-                <button
-                  onClick={() => {
-                    setMode('upload');
-                    fileInputRef.current?.click();
-                  }}
-                  className="flex flex-col items-center justify-center p-6 bg-primary/10 hover:bg-primary/20 rounded-xl transition-colors"
-                >
-                  <Upload className="w-8 h-8 mb-2 text-primary" />
-                  <span className="text-sm font-medium">Choisir un fichier</span>
-                </button>
-              )}
-            </div>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={acceptedFormats.join(',')}
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </motion.div>
-        )}
-
-        {/* Mode caméra */}
-        {state === 'capturing' && mode === 'camera' && (
-          <motion.div
-            key="camera"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="relative"
-          >
-            <div className="relative aspect-[4/3] bg-black rounded-xl overflow-hidden">
-              <video
-                ref={videoRef}
-                className="w-full h-full object-cover"
-                autoPlay
-                playsInline
-                muted
-              />
-
-              {/* Guides visuels */}
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-4 border-2 border-white/30 rounded-lg">
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg" />
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg" />
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg" />
-                </div>
-              </div>
-
-              {/* Instructions */}
-              <div className="absolute top-4 left-0 right-0 text-center">
-                <p className="inline-block px-4 py-2 bg-black/50 backdrop-blur-sm text-white text-sm rounded-full">
-                  Cadrez le produit dans le viseur
-                </p>
-              </div>
-            </div>
-
-            <canvas ref={canvasRef} className="hidden" />
-
-            <div className="flex gap-3 mt-4">
-              <button
-                onClick={reset}
-                className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-medium transition-colors"
-              >
-                Annuler
-              </button>
-
-              <button
-                onClick={capturePhoto}
-                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-forest rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <Camera className="w-5 h-5" />
-                Capturer
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* État de traitement */}
-        {state === 'processing' && (
-          <motion.div
-            key="processing"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-12"
-          >
-            <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
-            <p className="text-gray-600">Traitement de l'image...</p>
-          </motion.div>
-        )}
-
-        {/* Prévisualisation */}
-        {state === 'preview' && previewUrl && (
-          <motion.div
-            key="preview"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="space-y-4"
-          >
-            <div className="relative aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-              <img
-                src={previewUrl}
-                alt="Aperçu"
-                className="w-full h-full object-contain"
-              />
-
-              <div className="absolute top-4 right-4">
-                <div className="px-3 py-1 bg-green-500 text-white text-sm rounded-full flex items-center gap-1">
-                  <Check className="w-4 h-4" />
-                  Photo capturée
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={reset}
-                className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <RotateCw className="w-5 h-5" />
-                Reprendre
-              </button>
-
-              <button
-                onClick={confirmCapture}
-                className="flex-1 px-4 py-3 bg-primary hover:bg-primary/90 text-forest rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <Check className="w-5 h-5" />
-                Analyser
-              </button>
-            </div>
-
-            <p className="text-xs text-neutral-700 text-center">
-              Assurez-vous que le texte est lisible et que l'image n'est pas floue
-            </p>
-          </motion.div>
-        )}
-
-        {/* État d'erreur */}
-        {state === 'error' && (
-          <motion.div
-            key="error"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center py-8"
-          >
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 font-medium mb-2">{error}</p>
+          {/* Boutons overlay */}
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4">
             <button
-              onClick={reset}
-              className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors"
+              onClick={stopCamera}
+              className="p-4 bg-white/20 backdrop-blur-sm rounded-full text-white"
             >
-              Réessayer
+              <X className="w-6 h-6" />
             </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <button
+              onClick={capturePhoto}
+              className="p-6 bg-white rounded-full shadow-xl active:scale-95 transition-transform"
+            >
+              <Camera className="w-8 h-8 text-gray-900" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Photo capturée - Aperçu */}
+      {capturedImage && (
+        <div className="flex-1 flex flex-col">
+          <div className="flex-1 relative bg-black rounded-2xl overflow-hidden">
+            <img src={capturedImage} alt="Aperçu" className="w-full h-full object-contain" />
+          </div>
+          
+          <div className="mt-4 flex gap-3">
+            <button
+              onClick={retakePhoto}
+              className="flex-1 px-6 py-4 border-2 border-gray-300 rounded-xl font-medium text-gray-700 active:scale-95 transition-transform"
+            >
+              Reprendre
+            </button>
+            <button
+              onClick={confirmPhoto}
+              className="flex-1 px-6 py-4 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl font-medium text-white shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+            >
+              <Check className="w-5 h-5" />
+              Analyser
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Choix initial (caméra ou upload) */}
+      {!isCameraActive && !capturedImage && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          {allowCamera && (
+            <button
+              onClick={startCamera}
+              className="w-full max-w-sm px-8 py-6 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl text-white shadow-xl active:scale-95 transition-transform"
+            >
+              <div className="flex items-center justify-center gap-3">
+                <Camera className="w-8 h-8" />
+                <div className="text-left">
+                  <div className="text-lg font-bold">Prendre une photo</div>
+                  <div className="text-sm opacity-90">Ouvrir la caméra</div>
+                </div>
+              </div>
+            </button>
+          )}
+
+          {allowUpload && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={acceptedFormats.join(',')}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full max-w-sm px-8 py-6 bg-white border-2 border-gray-300 rounded-2xl text-gray-700 shadow-md active:scale-95 transition-transform"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  <Upload className="w-8 h-8" />
+                  <div className="text-left">
+                    <div className="text-lg font-bold">Choisir un fichier</div>
+                    <div className="text-sm opacity-75">Depuis la galerie</div>
+                  </div>
+                </div>
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Canvas caché pour capture */}
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 };
 
 export default PhotoCapture;
-
