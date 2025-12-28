@@ -226,7 +226,6 @@ class PhotoAnalysisService {
         disclaimer: categoryDetection.disclaimer || null,
         processingTime: Date.now() - startTime
       };
-      };
 
     } catch (error) {
       console.error('❌ Erreur analyse photo:', error);
@@ -510,6 +509,7 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
 
 
 
