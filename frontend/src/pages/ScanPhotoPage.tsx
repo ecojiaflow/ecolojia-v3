@@ -73,7 +73,7 @@ const ScanPhotoPage: React.FC = () => {
       const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
       
       const formData = new FormData();
-      formData.append('photo', file);
+      formData.append('image', file);
       formData.append('categoryType', 'auto');
       
       const res = await fetch('https://ecolojia-backendvf.onrender.com/api/vision/analyze-photo', {
@@ -207,3 +207,4 @@ const ScanPhotoPage: React.FC = () => {
 };
 
 export default ScanPhotoPage;
+
