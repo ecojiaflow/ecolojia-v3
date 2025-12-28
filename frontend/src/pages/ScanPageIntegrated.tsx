@@ -5,10 +5,24 @@ import PhotoCapture from "../components/PhotoCapture";
 import CategorySelector from "../components/CategorySelector";
 import { productService } from "../services/api";
 import { ScanService } from "../services/scanService";
-import { Loader2, Camera, Barcode } from "lucide-react";
+import { Loader2, Camera, Barcode, AlertCircle } from "lucide-react";
 import { useDeviceContext } from "../hooks/useDeviceContext";
 
 type ScanMode = "barcode" | "photo";
+
+// Interface erreur photo détaillée
+interface PhotoAnalysisError {
+  code: string;
+  message: string;
+  issues?: string[];
+  instructions?: string[];
+  disclaimer?: {
+    type: string;
+    severity: string;
+    title: string;
+    message: string;
+  };
+}
 
 const ScanPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +30,7 @@ const ScanPage: React.FC = () => {
   const [manualCode, setManualCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<PhotoAnalysisError | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"food" | "cosmetics" | "detergents" | "auto">("auto");
   const [scanMode, setScanMode] = useState<ScanMode>("barcode");
   const [showConstitution, setShowConstitution] = useState(false);
@@ -80,9 +95,9 @@ const ScanPage: React.FC = () => {
     console.log("📸 [ScanPage] Photo capturée:", file.name);
     setLoading(true);
     setError(null);
+    setPhotoError(null); // Reset erreur détaillée
 
     try {
-      // Appeler nouvelle méthode analyzePhotoNew
       const result = await scanService.analyzePhotoNew(file, selectedCategory);
 
       console.log("✅ [ScanPage] Résultat photo:", result);
@@ -112,26 +127,18 @@ const ScanPage: React.FC = () => {
     } catch (err: any) {
       console.error("❌ [ScanPage] Erreur photo:", err);
 
-      // Gérer erreurs spécifiques
-      if (err.code === 'QUALITY_CHECK_FAILED') {
-        const errorMsg = `❌ Photo de mauvaise qualité\n\n${(err.issues || []).join('\n')}\n\nConseils:\n${(err.instructions || []).join('\n')}`;
-        setError(errorMsg);
-        setLoading(false);
-        alert(errorMsg); // Afficher popup pour debug
-        return;
-      }
+      // Stocker erreur détaillée
+      setPhotoError({
+        code: err.code || 'UNKNOWN_ERROR',
+        message: err.message || 'Erreur inconnue',
+        issues: err.issues,
+        instructions: err.instructions,
+        disclaimer: err.disclaimer
+      });
 
-      if (err.code === 'FORBIDDEN_CATEGORY') {
-        setError(err.message);
-        setLoading(false);
-        alert(`⚠️ ${err.message}`);
-        return;
-      }
-
-      const errorMsg = err.message || "Erreur lors de l'analyse photo";
-      setError(errorMsg);
+      // Message simple pour UI basique (fallback)
+      setError(err.message || 'Erreur lors de l\'analyse de la photo');
       setLoading(false);
-      alert(`❌ Erreur: ${errorMsg}`);
     }
   };
 
@@ -146,6 +153,79 @@ const ScanPage: React.FC = () => {
   const closeConstitution = () => {
     setShowConstitution(false);
     setConstitutionData(null);
+  };
+
+  // Composant ErrorDisplay détaillé
+  const ErrorDisplay = () => {
+    if (!photoError) return null;
+
+    return (
+      <div className="mt-4 rounded-lg border-2 border-red-500 bg-red-50 p-4">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="font-semibold text-red-900 mb-2">
+              {photoError.message}
+            </h3>
+
+            {/* Issues détectés */}
+            {photoError.issues && photoError.issues.length > 0 && (
+              <div className="mb-3">
+                <p className="text-sm font-medium text-red-800 mb-1">
+                  Problèmes détectés :
+                </p>
+                <ul className="list-disc list-inside space-y-1">
+                  {photoError.issues.map((issue, idx) => (
+                    <li key={idx} className="text-sm text-red-700">
+                      {issue}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Instructions */}
+            {photoError.instructions && photoError.instructions.length > 0 && (
+              <div className="bg-white rounded p-3 border border-red-200">
+                <p className="text-sm font-medium text-gray-900 mb-2">
+                  💡 Conseils :
+                </p>
+                <ul className="space-y-1">
+                  {photoError.instructions.map((instruction, idx) => (
+                    <li key={idx} className="text-sm text-gray-700">
+                      • {instruction}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Disclaimer médical si présent */}
+            {photoError.disclaimer && (
+              <div className="mt-3 bg-yellow-50 border border-yellow-300 rounded p-3">
+                <p className="text-sm font-medium text-yellow-900 mb-1">
+                  ⚠️ {photoError.disclaimer.title}
+                </p>
+                <p className="text-sm text-yellow-800">
+                  {photoError.disclaimer.message}
+                </p>
+              </div>
+            )}
+
+            {/* Bouton réessayer */}
+            <button
+              onClick={() => {
+                setPhotoError(null);
+                setError(null);
+              }}
+              className="mt-3 w-full py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Réessayer
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // Mobile : Plein écran scanner/photo
@@ -170,6 +250,9 @@ const ScanPage: React.FC = () => {
                 allowCamera={true}
                 allowUpload={true}
               />
+
+              {/* Affichage erreur détaillée mobile */}
+              <ErrorDisplay />
             </div>
             <div className="p-4 bg-white border-t">
               <button
@@ -306,14 +389,10 @@ const ScanPage: React.FC = () => {
           </div>
         )}
 
-        {/* Erreur */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            {error}
-          </div>
-        )}
+        {/* Affichage erreur détaillée desktop */}
+        <ErrorDisplay />
 
-        {/* Constitution Modal (simple pour l'instant) */}
+        {/* Constitution Modal - 3 CARTES */}
         {showConstitution && constitutionData && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-auto p-6">
@@ -358,12 +437,14 @@ const ScanPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Constitution (sections) */}
+              {/* Constitution - 3 CARTES */}
               {constitutionData.constitution && (
                 <div className="space-y-4">
+                  {/* CARTE 1 : Ce que c'est vraiment */}
                   {constitutionData.constitution.whatIsIt && (
-                    <div>
-                      <h4 className="font-semibold mb-1">
+                    <div className="bg-gradient-to-br from-blue-50 to-white rounded-lg p-4 border border-blue-100">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        <span className="text-2xl">{constitutionData.constitution.whatIsIt.icon || '🧠'}</span>
                         {constitutionData.constitution.whatIsIt.title}
                       </h4>
                       <p className="text-sm text-gray-700">
@@ -372,14 +453,57 @@ const ScanPage: React.FC = () => {
                     </div>
                   )}
 
+                  {/* CARTE 2 : Le bon réflexe santé */}
                   {constitutionData.constitution.healthReflex && (
-                    <div>
-                      <h4 className="font-semibold mb-1">
+                    <div className="bg-gradient-to-br from-green-50 to-white rounded-lg p-4 border border-green-100">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        <span className="text-2xl">{constitutionData.constitution.healthReflex.icon || '🌱'}</span>
                         {constitutionData.constitution.healthReflex.title}
                       </h4>
                       <p className="text-sm text-gray-700">
                         {constitutionData.constitution.healthReflex.content}
                       </p>
+                    </div>
+                  )}
+
+                  {/* CARTE 3 : Actions possibles */}
+                  {constitutionData.constitution.actions && (
+                    <div className="bg-gradient-to-br from-purple-50 to-white rounded-lg p-4 border border-purple-100">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        <span className="text-2xl">{constitutionData.constitution.actions.icon || '🔁'}</span>
+                        {constitutionData.constitution.actions.title}
+                      </h4>
+                      <p className="text-sm text-gray-700 mb-3">
+                        {constitutionData.constitution.actions.content}
+                      </p>
+                      {constitutionData.constitution.actions.items && (
+                        <div className="space-y-2">
+                          {constitutionData.constitution.actions.items.map((action: any, idx: number) => (
+                            <button
+                              key={idx}
+                              className="w-full text-left p-2 bg-white rounded border border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-sm"
+                            >
+                              <span className="mr-2">{action.icon}</span>
+                              {action.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Habitude associée (badge séparé) */}
+                  {constitutionData.constitution.associatedHabit && (
+                    <div className="bg-gradient-to-br from-yellow-50 to-white rounded-lg p-4 border-2 border-yellow-400">
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">🏆</div>
+                        <p className="text-sm font-medium text-yellow-800 mb-1">
+                          Habitude associée
+                        </p>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {constitutionData.constitution.associatedHabit.title}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
