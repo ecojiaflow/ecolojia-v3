@@ -730,7 +730,93 @@ Ceci doit influencer tes calculs de composantes.
   }
 }
 
+
+  /**
+   * Analyse photo produit avec DeepSeek Vision (OCR)
+   * @param {Buffer} photoBuffer - Photo en buffer
+   * @returns {Promise<Object>} { success, extractedText, barcode, name, brand, ingredients_text, confidence }
+   */
+  static async analyzeProductPhoto(photoBuffer) {
+    try {
+      const base64Image = photoBuffer.toString('base64');
+      
+      const prompt = `Analyse cette photo de produit alimentaire/cosmétique.
+Extrais UNIQUEMENT ces informations si visibles :
+- Code-barres (EAN-13/EAN-8)
+- Nom du produit
+- Marque
+- Liste d'ingrédients complète
+
+Réponds en JSON strict :
+{
+  "barcode": "code si visible ou null",
+  "name": "nom produit ou null",
+  "brand": "marque ou null",
+  "ingredients_text": "liste complète ingrédients ou null",
+  "extractedText": "tout le texte visible sur l'étiquette"
+}`;
+
+      const response = await axios.post(
+        'https://api.deepseek.com/v1/chat/completions',
+        {
+          model: 'deepseek-chat',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: prompt },
+                {
+                  type: 'image_url',
+                  image_url: { url: `data:image/jpeg;base64,${base64Image}` }
+                }
+              ]
+            }
+          ],
+          temperature: 0.3,
+          max_tokens: 2000
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 30000
+        }
+      );
+
+      const completion = response.data.choices[0].message.content;
+      
+      // Parser JSON (retirer markdown si présent)
+      let cleaned = completion.trim();
+      if (cleaned.startsWith('```json')) {
+        cleaned = cleaned.replace(/```json\n?/, '').replace(/```\n?$/, '');
+      } else if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/```\n?/, '').replace(/```\n?$/, '');
+      }
+      
+      const parsed = JSON.parse(cleaned);
+
+      return {
+        success: true,
+        barcode: parsed.barcode || null,
+        name: parsed.name || null,
+        brand: parsed.brand || null,
+        ingredients_text: parsed.ingredients_text || null,
+        extractedText: parsed.extractedText || '',
+        confidence: 75
+      };
+
+    } catch (error) {
+      console.error('❌ [AIEnrichment] Vision OCR error:', error.message);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
 module.exports = AIEnrichmentService;
+
 
 
 
