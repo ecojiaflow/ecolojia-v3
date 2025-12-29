@@ -156,16 +156,6 @@ class PhotoAnalysisService {
         { includeVision: true }
       );
 
-      if (!enrichedProduct.success) {
-        return {
-          success: false,
-          error: 'AI_ENRICHMENT_FAILED',
-          message: 'Échec enrichissement IA',
-          processingTime: Date.now() - startTime
-        };
-      }
-
-      console.log('✅ Enrichissement IA OK (score:', enrichedProduct.scores?.overall + ')');
 
       // ======================================
       // ÉTAPE 6 : SAUVEGARDE + CONSTITUTION
