@@ -18,6 +18,8 @@ const AIEnrichmentService = require('./aiEnrichment.service');
 const OCRProductService = require('./OCRProductService');
 const Product = require('../models/Product');
 const crypto = require('crypto');
+const templates = require('../templates/constitution.templates');
+const habitsLibrary = require('../data/habits-library.json');
 
 class PhotoAnalysisService {
   /**
@@ -285,68 +287,343 @@ class PhotoAnalysisService {
     };
   }
 
-  static _generateWhatIsIt(product) {
-    const { name, categoryType, subcategory, brand } = product;
-    const categoryLabel = this._getCategoryLabel(categoryType);
-    const brandText = brand ? ` de la marque ${brand}` : '';
-    const subcatText = subcategory ? ` de type ${subcategory}` : '';
-    return `${name}${brandText} est un produit ${categoryLabel}${subcatText}.`;
+
+  // ========================================
+  // HELPERS - Constitution enrichie
+  // ========================================
+
+  /**
+   * Extraire niveau NOVA depuis scores
+   * @param {Object} scores - Scores produit
+   * @returns {number|null} - Niveau NOVA (1-4) ou null
+   */
+  static _extractNovaLevel(scores) {
+    if (!scores) return null;
+    const processingScore = scores.processing || 0;
+    
+    // Mapping score → NOVA (logique inverse : score faible = ultra-transformé)
+    if (processingScore >= 75) return 1; // Brut
+    if (processingScore >= 60) return 2; // Peu transformé
+    if (processingScore >= 40) return 3; // Transformé
+    return 4; // Ultra-transformé
   }
 
-  static _generateHealthReflex(product, habit) {
-    const { scores } = product;
-    const overall = scores?.overall || 50;
-    let action = habit.action;
-    if (overall >= 75) {
-      action = 'privilégier ce type de produit dans ton quotidien';
-    } else if (overall >= 50) {
-      action = habit.action;
+  /**
+   * Extraire top N ingrédients depuis texte
+   * @param {string} ingredientsText - Texte ingrédients
+   * @param {number} count - Nombre d'ingrédients à extraire
+   * @returns {Array<string>} - Tableau ingrédients (max count)
+   */
+  static _extractTopIngredients(ingredientsText, count = 3) {
+    if (!ingredientsText || typeof ingredientsText !== 'string') return [];
+    
+    // Nettoyer et séparer par virgule/point-virgule
+    const ingredients = ingredientsText
+      .split(/[,;]/g)
+      .map(i => i.trim())
+      .filter(i => i.length > 0)
+      .slice(0, count);
+    
+    // Nettoyer chaque ingrédient (retirer quantités entre parenthèses)
+    return ingredients.map(ing => {
+      // Retirer contenu entre parenthèses (ex: "sucre (57%)" → "sucre")
+      return ing.replace(/\s*\([^)]*\)/g, '').trim();
+    });
+  }
+
+  /**
+   * Générer carte 1 : "Ce que c'est vraiment" (VERSION AMÉLIORÉE)
+   * Inclut : NOVA + top 3 ingrédients
+   * @param {Object} product - Produit
+   * @returns {string} - Description enrichie
+   */
+  static _generateWhatIsIt(product) {
+    const { name, categoryType, subcategory, brand, scores, ingredients_text } = product;
+    
+    // 1. Label catégorie
+    const categoryLabel = templates.categoryLabels[categoryType] || templates.categoryLabels.default;
+    
+    // 2. Extraire NOVA
+    const novaLevel = this._extractNovaLevel(scores);
+    const novaInfo = novaLevel ? templates.novaLevels[novaLevel] : null;
+    
+    // 3. Extraire top 3 ingrédients
+    const topIngredients = this._extractTopIngredients(ingredients_text, 3);
+    
+    // 4. Construire phrase principale
+    let mainPhrase = '';
+    
+    if (brand && novaInfo) {
+      // Cas optimal : marque + NOVA
+      mainPhrase = templates.whatIsItTemplates.withBrandAndNova(name, brand, novaInfo.label, novaLevel);
+    } else if (brand) {
+      // Cas : marque uniquement
+      mainPhrase = templates.whatIsItTemplates.withBrandOnly(name, brand, categoryLabel);
+    } else if (novaInfo) {
+      // Cas : NOVA uniquement
+      mainPhrase = templates.whatIsItTemplates.withNovaOnly(name, novaInfo.label, novaLevel);
     } else {
-      action = 'limiter sa consommation et privilégier des alternatives plus simples';
+      // Cas minimal
+      mainPhrase = templates.whatIsItTemplates.basic(name, categoryLabel);
     }
+    
+    // 5. Ajouter ingrédients principaux si disponibles
+    let ingredientsSuffix = '';
+    if (topIngredients.length === 3) {
+      ingredientsSuffix = templates.ingredientsTemplates.threeIngredients(topIngredients);
+    } else if (topIngredients.length === 2) {
+      ingredientsSuffix = templates.ingredientsTemplates.twoIngredients(topIngredients);
+    } else if (topIngredients.length === 1) {
+      ingredientsSuffix = templates.ingredientsTemplates.oneIngredient(topIngredients);
+    }
+    
+    return mainPhrase + ingredientsSuffix + '.';
+  }
+
+
+  /**
+   * Générer carte 2 : "Le bon réflexe santé" (VERSION AMÉLIORÉE)
+   * Inclut : contexte usage + alternatives concrètes
+   * @param {Object} product - Produit
+   * @param {Object} habit - Habitude sélectionnée
+   * @returns {string} - Réflexe santé contextualisé
+   */
+  static _generateHealthReflex(product, habit) {
+    const { scores, subcategory } = product;
+    const overall = scores?.overall || 50;
+    
+    // 1. Déterminer contexte selon score
+    const context = templates.getHealthContext(overall);
+    const contextData = templates.healthReflexContexts[context];
+    
+    // 2. Construire action selon contexte
+    let action = '';
+    
+    if (context === 'excellent') {
+      // Score 75-100 : Privilégier
+      action = contextData.base;
+      
+    } else if (context === 'good') {
+      // Score 60-74 : Modération
+      action = contextData.withModeration;
+      
+    } else if (context === 'moderate') {
+      // Score 40-59 : Occasionnel + alternative
+      const alternative = templates.getAlternativeSuggestion(product);
+      action = contextData.withAlternative(alternative);
+      
+    } else {
+      // Score <40 : Limiter fortement + alternative
+      const alternative = templates.getAlternativeSuggestion(product);
+      action = contextData.withAlternative(alternative);
+    }
+    
     return `Pour ta santé, l'idéal est de ${action}.`;
   }
 
+
+  /**
+   * Générer carte 3 : "Ce que tu peux faire" (VERSION AMÉLIORÉE)
+   * Inclut : metadata (count, durée, critère)
+   * @param {Object} product - Produit
+   * @returns {Array<Object>} - Actions avec metadata
+   */
   static _generateActionItems(product) {
     const actions = [];
-    const { scores, categoryType } = product;
-    if (scores?.overall < 70) {
-      actions.push({ type: 'alternative', label: 'Voir des alternatives plus saines', icon: '🔄' });
+    const { scores, categoryType, subcategory } = product;
+    const overall = scores?.overall || 50;
+    
+    // ACTION 1 : Alternatives (si score < 70)
+    if (overall < 70) {
+      // Déterminer critère principal
+      const criteriumKey = templates.getMainAlternativeCriterium(product);
+      const criterium = templates.alternativeCriteria[criteriumKey];
+      
+      // Count estimé (V1 : on met "plusieurs", V2 : appel DB réel)
+      const estimatedCount = overall < 40 ? 'plusieurs' : 'quelques';
+      
+      actions.push({
+        type: 'alternative',
+        label: templates.actionLabels.alternatives.withCount(estimatedCount, criterium),
+        icon: '🔄',
+        metadata: {
+          criterium: criteriumKey,
+          estimatedCount
+        }
+      });
     }
-    if (categoryType === 'food' && scores?.overall < 60) {
-      actions.push({ type: 'recipe', label: 'Voir une recette de substitution', icon: '🍳' });
+    
+    // ACTION 2 : Recette (si food + score < 60)
+    if (categoryType === 'food' && overall < 60) {
+      // Déterminer durée recette
+      const durationKey = templates.getRecipeDuration(product);
+      const duration = templates.recipeDurations[durationKey];
+      
+      // Label avec sous-catégorie si disponible
+      const label = subcategory 
+        ? templates.actionLabels.recipes.withDuration(subcategory, duration)
+        : templates.actionLabels.recipes.generic(duration);
+      
+      actions.push({
+        type: 'recipe',
+        label,
+        icon: '🍳',
+        metadata: {
+          duration,
+          difficulty: 'facile'
+        }
+      });
     }
-    actions.push({ type: 'list', label: 'Ajouter à ma liste de courses', icon: '📝' });
+    
+    // ACTION 3 : Liste courses (toujours)
+    actions.push({
+      type: 'list',
+      label: templates.actionLabels.shoppingList.add,
+      icon: '📝'
+    });
+    
+    // ACTION 4 : Favoris (si < 3 actions)
     if (actions.length < 3) {
-      actions.push({ type: 'favorite', label: 'Ajouter aux favoris', icon: '⭐' });
+      actions.push({
+        type: 'favorite',
+        label: templates.actionLabels.favorites.add,
+        icon: '⭐'
+      });
     }
+    
     return actions.slice(0, 3);
   }
 
-  static _selectHabitFromLibrary(product) {
-    const HABITS_LIBRARY = [
-      { id: 'habit_01', title: 'Privilégier les aliments bruts', action: 'choisir des produits avec une liste d\'ingrédients courte' },
-      { id: 'habit_02', title: 'Limiter les produits ultra-transformés', action: 'réserver ce type de produit aux occasions spéciales' },
-      { id: 'habit_03', title: 'Surveiller la fréquence plus que l\'interdiction', action: 'consommer avec modération dans une alimentation variée' },
-      { id: 'habit_04', title: 'Préférer les listes d\'ingrédients courtes', action: 'privilégier les produits avec moins de 5 ingrédients' },
-      { id: 'habit_05', title: 'Varier les sources de lipides', action: 'alterner les sources de matières grasses' },
-      { id: 'habit_06', title: 'Associer les sucres à des fibres ou protéines', action: 'accompagner de fruits, oléagineux ou légumes' },
-      { id: 'habit_07', title: 'Réserver les produits plaisir aux occasions', action: 'limiter la fréquence et savourer consciemment' },
-      { id: 'habit_08', title: 'Limiter l\'exposition chimique répétée', action: 'varier les marques et types de produits' },
-      { id: 'habit_09', title: 'Favoriser la simplicité des préparations', action: 'privilégier les aliments peu transformés' },
-      { id: 'habit_10', title: 'Varier les sources animales et végétales', action: 'alterner protéines animales et végétales' }
-    ];
-    const { scores, categoryType, nutrition } = product;
-    const novaScore = scores?.processing || 0;
-    const additifs = scores?.additives || 100;
-    const sugars = nutrition?.sugars || 0;
-    if (novaScore < 50) return HABITS_LIBRARY[1];
-    if (additifs < 40) return HABITS_LIBRARY[7];
-    if (sugars > 10) return HABITS_LIBRARY[5];
-    if (scores?.overall < 50) return HABITS_LIBRARY[6];
-    if (product.ingredients_text && product.ingredients_text.split(',').length > 10) return HABITS_LIBRARY[3];
-    return HABITS_LIBRARY[0];
+
+  /**
+   * Évaluer un trigger (expression simple)
+   * @param {string} trigger - Expression type "nova_score < 50"
+   * @param {Object} product - Produit
+   * @returns {boolean} - Trigger valide ou non
+   */
+  static _evaluateTrigger(trigger, product) {
+    const { scores, nutrition, categoryType, ingredients_text } = product;
+    
+    try {
+      // Extraire variable, opérateur, valeur
+      const match = trigger.match(/(\w+)\s*(>=|<=|>|<|===|!==)\s*(.+)/);
+      if (!match) return false;
+      
+      const [, variable, operator, rawValue] = match;
+      
+      // Récupérer valeur réelle du produit
+      let actualValue;
+      
+      switch (variable) {
+        case 'nova_score':
+        case 'processing_score':
+          actualValue = scores?.processing || 0;
+          break;
+        case 'overall_score':
+          actualValue = scores?.overall || 0;
+          break;
+        case 'additives_score':
+          actualValue = scores?.additives || 100;
+          break;
+        case 'sugar':
+          actualValue = nutrition?.sugars || 0;
+          break;
+        case 'sodium':
+          actualValue = nutrition?.sodium || 0;
+          break;
+        case 'salt_score':
+          actualValue = scores?.nutrition || 100;
+          break;
+        case 'fat_score':
+          actualValue = scores?.nutrition || 100;
+          break;
+        case 'fiber':
+          actualValue = nutrition?.fiber || 0;
+          break;
+        case 'energy_kcal':
+          actualValue = nutrition?.energy_kcal || 0;
+          break;
+        case 'ingredients_count':
+          actualValue = ingredients_text ? ingredients_text.split(',').length : 0;
+          break;
+        case 'categoryType':
+          actualValue = categoryType;
+          break;
+        case 'packaging_score':
+          actualValue = scores?.packaging || 50;
+          break;
+        case 'labels_score':
+          actualValue = scores?.labels || 0;
+          break;
+        case 'environment_score':
+          actualValue = scores?.environment || 50;
+          break;
+        default:
+          return false;
+      }
+      
+      // Évaluer comparaison
+      const targetValue = rawValue.includes("'") || rawValue.includes('"')
+        ? rawValue.replace(/['"]/g, '')
+        : parseFloat(rawValue);
+      
+      switch (operator) {
+        case '>': return actualValue > targetValue;
+        case '<': return actualValue < targetValue;
+        case '>=': return actualValue >= targetValue;
+        case '<=': return actualValue <= targetValue;
+        case '===': return actualValue === targetValue;
+        case '!==': return actualValue !== targetValue;
+        default: return false;
+      }
+      
+    } catch (error) {
+      console.error(`Erreur évaluation trigger "${trigger}":`, error.message);
+      return false;
+    }
   }
+
+  /**
+   * Sélectionner habitude depuis bibliothèque JSON (VERSION AMÉLIORÉE)
+   * Système scoring multi-critères
+   * @param {Object} product - Produit
+   * @returns {Object} - Habitude sélectionnée
+   */
+  static _selectHabitFromLibrary(product) {
+    const habits = habitsLibrary.habits;
+    const { categoryType } = product;
+    
+    let bestMatch = null;
+    let bestScore = 0;
+    
+    for (const habit of habits) {
+      let score = 0;
+      
+      // Évaluer chaque trigger (+1 par trigger valide)
+      for (const trigger of habit.triggers) {
+        if (this._evaluateTrigger(trigger, product)) {
+          score++;
+        }
+      }
+      
+      // Bonus catégorie (+2 si match exact, +1 si 'all')
+      if (habit.category === categoryType) {
+        score += 2;
+      } else if (habit.category === 'all') {
+        score += 1;
+      }
+      
+      // Mettre à jour meilleur match
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = habit;
+      }
+    }
+    
+    // Fallback : première habitude si aucun match
+    return bestMatch || habits[0];
+  }
+
 
   static _getCategoryLabel(categoryType) {
     const labels = {
@@ -360,3 +637,4 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+

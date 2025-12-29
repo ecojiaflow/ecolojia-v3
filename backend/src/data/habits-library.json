@@ -1,0 +1,257 @@
+﻿{
+  "version": "1.0",
+  "lastUpdate": "2025-12-29",
+  "description": "Bibliothèque fermée de 25 habitudes santé Ecolojia",
+  "habits": [
+    {
+      "id": "habit_01",
+      "title": "Privilégier les aliments bruts",
+      "action": "choisir des produits avec une liste d'ingrédients courte",
+      "why": "Les aliments bruts conservent leurs nutriments naturels et évitent l'ajout de substances transformées. Une liste courte d'ingrédients signifie généralement moins de traitement industriel.",
+      "triggers": ["nova_score >= 75", "ingredients_count <= 5"],
+      "category": "food",
+      "examples": ["fruits frais", "légumes", "viandes non transformées", "légumineuses"],
+      "detailUrl": "/learn/habits/habit_01"
+    },
+    {
+      "id": "habit_02",
+      "title": "Limiter les produits ultra-transformés",
+      "action": "réserver ce type de produit aux occasions spéciales",
+      "why": "Les produits ultra-transformés (NOVA 4) contiennent souvent des additifs, sucres ajoutés et graisses modifiées. Les études montrent qu'une consommation fréquente peut contribuer à des déséquilibres métaboliques.",
+      "triggers": ["nova_score < 40", "additives_score < 50"],
+      "category": "food",
+      "examples": ["sodas", "plats préparés industriels", "snacks ultra-transformés"],
+      "detailUrl": "/learn/habits/habit_02"
+    },
+    {
+      "id": "habit_03",
+      "title": "Surveiller la fréquence plus que l'interdiction",
+      "action": "consommer avec modération dans une alimentation variée",
+      "why": "L'approche par la fréquence plutôt que l'interdiction totale favorise une relation saine avec l'alimentation. C'est l'exposition répétée qui pose problème, pas la consommation occasionnelle.",
+      "triggers": ["overall_score >= 40", "overall_score < 70"],
+      "category": "food",
+      "examples": ["pâtisseries occasionnelles", "charcuterie en petite quantité", "fromages riches"],
+      "detailUrl": "/learn/habits/habit_03"
+    },
+    {
+      "id": "habit_04",
+      "title": "Préférer les listes d'ingrédients courtes",
+      "action": "privilégier les produits avec moins de 5 ingrédients",
+      "why": "Une liste courte indique généralement une transformation minimale. Plus la liste s'allonge, plus le produit s'éloigne de sa forme naturelle et contient des additifs technologiques.",
+      "triggers": ["ingredients_count > 10"],
+      "category": "food",
+      "examples": ["pain artisanal", "yaourt nature", "conserves simples"],
+      "detailUrl": "/learn/habits/habit_04"
+    },
+    {
+      "id": "habit_05",
+      "title": "Varier les sources de lipides",
+      "action": "alterner les sources de matières grasses",
+      "why": "Chaque source de lipides apporte un profil d'acides gras différent. Varier permet d'optimiser l'apport en oméga-3, oméga-6 et graisses mono-insaturées.",
+      "triggers": ["fat_score < 60"],
+      "category": "food",
+      "examples": ["huile d'olive", "avocat", "noix", "poissons gras", "huile de colza"],
+      "detailUrl": "/learn/habits/habit_05"
+    },
+    {
+      "id": "habit_06",
+      "title": "Associer les sucres à des fibres ou protéines",
+      "action": "accompagner de fruits, oléagineux ou légumes",
+      "why": "Les fibres et protéines ralentissent l'absorption du sucre, évitant les pics glycémiques. Cette association favorise une meilleure régulation de la glycémie.",
+      "triggers": ["sugar > 10", "sugar_score < 50"],
+      "category": "food",
+      "examples": ["fruits avec amandes", "compote avec yaourt", "pain complet avec beurre de cacahuète"],
+      "detailUrl": "/learn/habits/habit_06"
+    },
+    {
+      "id": "habit_07",
+      "title": "Réserver les produits plaisir aux occasions",
+      "action": "limiter la fréquence et savourer consciemment",
+      "why": "Consommer occasionnellement permet de maintenir le plaisir sans impacter négativement l'équilibre nutritionnel global. La conscience du moment renforce la satisfaction.",
+      "triggers": ["overall_score < 40", "nova_score < 30"],
+      "category": "food",
+      "examples": ["pâte à tartiner chocolatée", "biscuits industriels", "confiseries"],
+      "detailUrl": "/learn/habits/habit_07"
+    },
+    {
+      "id": "habit_08",
+      "title": "Limiter l'exposition chimique répétée",
+      "action": "varier les marques et types de produits",
+      "why": "Certains additifs ou substances peuvent s'accumuler dans l'organisme. Varier réduit l'exposition chronique à une substance spécifique.",
+      "triggers": ["additives_score < 40", "categoryType === 'cosmetic'"],
+      "category": "all",
+      "examples": ["cosmétiques", "détergents", "produits d'entretien"],
+      "detailUrl": "/learn/habits/habit_08"
+    },
+    {
+      "id": "habit_09",
+      "title": "Favoriser la simplicité des préparations",
+      "action": "privilégier les aliments peu transformés",
+      "why": "Plus la préparation est simple, moins il y a de perte de nutriments et d'ajout de substances indésirables. Le fait-maison permet de contrôler les ingrédients.",
+      "triggers": ["nova_score < 60", "processing_score < 50"],
+      "category": "food",
+      "examples": ["cuisson vapeur", "grillades", "salades composées"],
+      "detailUrl": "/learn/habits/habit_09"
+    },
+    {
+      "id": "habit_10",
+      "title": "Varier les sources animales et végétales",
+      "action": "alterner protéines animales et végétales",
+      "why": "Les protéines végétales apportent fibres et micronutriments différents des protéines animales. L'alternance optimise l'apport nutritionnel et réduit l'impact environnemental.",
+      "triggers": ["categoryType === 'food'", "overall_score >= 50"],
+      "category": "food",
+      "examples": ["lentilles", "pois chiches", "tofu", "tempeh", "œufs", "poisson"],
+      "detailUrl": "/learn/habits/habit_10"
+    },
+    {
+      "id": "habit_11",
+      "title": "Lire les étiquettes avec attention",
+      "action": "identifier les premiers ingrédients listés",
+      "why": "Les ingrédients sont listés par ordre décroissant de quantité. Les 3 premiers composent l'essentiel du produit. Cette lecture permet de détecter les sucres et additifs cachés.",
+      "triggers": ["ingredients_count > 5"],
+      "category": "food",
+      "examples": ["vérifier sucres", "détecter huile de palme", "repérer additifs"],
+      "detailUrl": "/learn/habits/habit_11"
+    },
+    {
+      "id": "habit_12",
+      "title": "Privilégier les produits de saison",
+      "action": "choisir des fruits et légumes de saison locale",
+      "why": "Les produits de saison sont récoltés à maturité, conservent mieux leurs nutriments et nécessitent moins de traitements. Leur empreinte environnementale est réduite.",
+      "triggers": ["categoryType === 'food'", "environment_score >= 60"],
+      "category": "food",
+      "examples": ["tomates en été", "courges en automne", "agrumes en hiver"],
+      "detailUrl": "/learn/habits/habit_12"
+    },
+    {
+      "id": "habit_13",
+      "title": "Réduire le sel ajouté",
+      "action": "limiter les produits riches en sodium",
+      "why": "Un excès de sodium peut contribuer à l'hypertension. La plupart du sel consommé provient des produits transformés, pas de la salière.",
+      "triggers": ["sodium > 1.5", "salt_score < 50"],
+      "category": "food",
+      "examples": ["charcuteries", "plats préparés", "snacks salés"],
+      "detailUrl": "/learn/habits/habit_13"
+    },
+    {
+      "id": "habit_14",
+      "title": "Choisir des modes de cuisson doux",
+      "action": "privilégier vapeur, mijotage ou cuisson basse température",
+      "why": "Les cuissons douces préservent mieux les vitamines et évitent la formation de composés indésirables liés aux hautes températures.",
+      "triggers": ["categoryType === 'food'"],
+      "category": "food",
+      "examples": ["vapeur", "cuisson lente", "pochage"],
+      "detailUrl": "/learn/habits/habit_14"
+    },
+    {
+      "id": "habit_15",
+      "title": "Éviter les graisses trans industrielles",
+      "action": "repérer 'graisses hydrogénées' ou 'partiellement hydrogénées'",
+      "why": "Les graisses trans industrielles augmentent le mauvais cholestérol et sont associées à des risques cardiovasculaires. Elles sont bannies dans plusieurs pays.",
+      "triggers": ["fat_score < 40", "ingredients_text includes 'hydrogénée'"],
+      "category": "food",
+      "examples": ["certaines margarines", "pâtisseries industrielles", "produits frits"],
+      "detailUrl": "/learn/habits/habit_15"
+    },
+    {
+      "id": "habit_16",
+      "title": "Prioriser les fibres alimentaires",
+      "action": "choisir des produits riches en fibres",
+      "why": "Les fibres favorisent la satiété, régulent le transit et nourrissent le microbiote intestinal. La plupart des populations en consomment insuffisamment.",
+      "triggers": ["fiber < 3", "nutrition_score < 60"],
+      "category": "food",
+      "examples": ["pain complet", "légumineuses", "fruits avec peau"],
+      "detailUrl": "/learn/habits/habit_16"
+    },
+    {
+      "id": "habit_17",
+      "title": "Limiter les édulcorants artificiels",
+      "action": "varier et modérer les sources de goût sucré",
+      "why": "Certaines études suggèrent que les édulcorants peuvent perturber le microbiote et maintenir l'appétence pour le sucré. La modération est préférable à la substitution systématique.",
+      "triggers": ["ingredients_text includes 'aspartame'", "ingredients_text includes 'sucralose'"],
+      "category": "food",
+      "examples": ["boissons light", "desserts sans sucre", "chewing-gums"],
+      "detailUrl": "/learn/habits/habit_17"
+    },
+    {
+      "id": "habit_18",
+      "title": "Privilégier les emballages simples",
+      "action": "choisir verre, carton ou absence d'emballage",
+      "why": "Les emballages complexes peuvent contenir des substances migrantes (bisphénols, phtalates). Le verre et le carton sont plus inertes et recyclables.",
+      "triggers": ["packaging_score < 50"],
+      "category": "all",
+      "examples": ["bocaux en verre", "vrac", "carton recyclé"],
+      "detailUrl": "/learn/habits/habit_18"
+    },
+    {
+      "id": "habit_19",
+      "title": "Contrôler les portions",
+      "action": "servir des quantités adaptées à tes besoins",
+      "why": "Les portions industrielles sont souvent surdimensionnées. Adapter les quantités aide à réguler l'apport calorique sans privation.",
+      "triggers": ["energy_kcal > 400", "categoryType === 'food'"],
+      "category": "food",
+      "examples": ["partager un dessert", "petite assiette", "écouter sa satiété"],
+      "detailUrl": "/learn/habits/habit_19"
+    },
+    {
+      "id": "habit_20",
+      "title": "Hydrater avec de l'eau",
+      "action": "privilégier l'eau aux boissons sucrées",
+      "why": "L'eau est la seule boisson physiologiquement nécessaire. Les boissons sucrées apportent des calories vides sans satiété.",
+      "triggers": ["sugar > 8", "categoryType === 'food'", "subcategory includes 'boisson'"],
+      "category": "food",
+      "examples": ["eau du robinet", "eau minérale", "tisanes non sucrées"],
+      "detailUrl": "/learn/habits/habit_20"
+    },
+    {
+      "id": "habit_21",
+      "title": "Choisir des cosmétiques simples",
+      "action": "limiter le nombre d'ingrédients et de produits",
+      "why": "Plus la formule est complexe, plus le risque de sensibilisation ou d'exposition à des substances controversées augmente. La simplicité réduit les interactions.",
+      "triggers": ["categoryType === 'cosmetic'", "ingredients_count > 20"],
+      "category": "cosmetic",
+      "examples": ["savon simple", "huiles végétales", "beurres naturels"],
+      "detailUrl": "/learn/habits/habit_21"
+    },
+    {
+      "id": "habit_22",
+      "title": "Vérifier les labels fiables",
+      "action": "repérer AB, Ecocert, Demeter, MSC",
+      "why": "Les labels certifiés garantissent des cahiers des charges contrôlés. Attention aux auto-déclarations marketing sans vérification.",
+      "triggers": ["labels_score >= 70"],
+      "category": "all",
+      "examples": ["Agriculture Biologique", "MSC pêche durable", "Ecocert cosmétique"],
+      "detailUrl": "/learn/habits/habit_22"
+    },
+    {
+      "id": "habit_23",
+      "title": "Réduire les produits d'entretien agressifs",
+      "action": "privilégier les produits écologiques ou fait-maison",
+      "why": "Les détergents conventionnels contiennent souvent des substances irritantes et polluantes. Les alternatives écologiques sont efficaces et moins toxiques.",
+      "triggers": ["categoryType === 'detergent'", "overall_score < 50"],
+      "category": "detergent",
+      "examples": ["vinaigre blanc", "bicarbonate", "savon noir", "labels Ecolabel"],
+      "detailUrl": "/learn/habits/habit_23"
+    },
+    {
+      "id": "habit_24",
+      "title": "Respecter les doses recommandées",
+      "action": "ne pas surdoser détergents et cosmétiques",
+      "why": "Le surdosage n'améliore pas l'efficacité mais augmente l'exposition et le coût. Les doses recommandées sont calculées pour une efficacité optimale.",
+      "triggers": ["categoryType === 'cosmetic'", "categoryType === 'detergent'"],
+      "category": "all",
+      "examples": ["lessive", "liquide vaisselle", "crème hydratante"],
+      "detailUrl": "/learn/habits/habit_24"
+    },
+    {
+      "id": "habit_25",
+      "title": "Cuisiner maison quand c'est possible",
+      "action": "préparer soi-même les repas avec des ingrédients simples",
+      "why": "La cuisine maison permet de contrôler tous les ingrédients, d'éviter les additifs et de doser sel, sucre et graisses selon ses goûts. C'est aussi économique.",
+      "triggers": ["nova_score < 50", "overall_score < 60"],
+      "category": "food",
+      "examples": ["batch cooking", "repas simples", "préparations à l'avance"],
+      "detailUrl": "/learn/habits/habit_25"
+    }
+  ]
+}
