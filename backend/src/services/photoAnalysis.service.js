@@ -171,10 +171,19 @@ class PhotoAnalysisService {
       enrichedProduct.ocrData = ocrResult;
       enrichedProduct.ocrConfidence = ocrResult.confidence;
 
+      // Générer barcode factice si null (éviter duplicate key error)
+      if (!ocrResult.barcode) {
+        const hash = crypto.createHash('md5')
+          .update(`${ocrResult.name || 'unknown'}-${ocrResult.brand || ''}-${Date.now()}`)
+          .digest('hex')
+          .substring(0, 13);
+        ocrResult.barcode = `PHOTO-${hash}`;
+      }
+
       // Chercher si produit existe déjà (par barcode ou nom+brand)
       let savedProduct = null;
       
-      if (ocrResult.barcode) {
+      if (ocrResult.barcode && !ocrResult.barcode.startsWith('PHOTO-')) {
         savedProduct = await Product.findOne({ barcode: ocrResult.barcode });
       }
       
