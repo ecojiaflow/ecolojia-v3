@@ -165,7 +165,7 @@ class PhotoAnalysisService {
       // Ajouter métadonnées photo
       enrichedProduct.photoHash = photoHash;
       enrichedProduct.photoOriginalUrl = null; // À implémenter upload S3/Cloudinary
-      enrichedProduct.extractedBy = 'photo';
+      enrichedProduct.extractedBy = 'photo-ocr';
       enrichedProduct.extractedAt = new Date();
       enrichedProduct.lastScannedAt = new Date();
       enrichedProduct.ocrData = ocrResult;
@@ -195,7 +195,7 @@ class PhotoAnalysisService {
         console.log('📝 Nouveau produit - Sauvegarde en base...');
         const cacheMetadata = {
           photoHash,
-          extractedBy: 'photo',
+          extractedBy: 'photo-ocr',
           ocrData: ocrResult,
           ocrConfidence: ocrResult.confidence
         };
@@ -499,6 +499,7 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
+
 
 
 
