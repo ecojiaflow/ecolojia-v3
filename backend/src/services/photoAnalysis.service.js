@@ -137,6 +137,15 @@ class PhotoAnalysisService {
       // ======================================
       console.log('🔍 Étape 5/6 : Enrichissement IA (DeepSeek)...');
 
+      // Générer barcode factice si null (éviter duplicate key error)
+      if (!ocrResult.barcode) {
+        const hash = crypto.createHash('md5')
+          .update(`${ocrResult.name || 'unknown'}-${ocrResult.brand || ''}-${Date.now()}`)
+          .digest('hex')
+          .substring(0, 13);
+        ocrResult.barcode = `PHOTO-${hash}`;
+      }
+
       const enrichmentData = {
         barcode: ocrResult.barcode,
         name: ocrResult.name,
@@ -156,7 +165,6 @@ class PhotoAnalysisService {
         { includeVision: true }
       );
 
-
       // ======================================
       // ÉTAPE 6 : SAUVEGARDE + CONSTITUTION
       // ======================================
@@ -164,21 +172,12 @@ class PhotoAnalysisService {
 
       // Ajouter métadonnées photo
       enrichedProduct.photoHash = photoHash;
-      enrichedProduct.photoOriginalUrl = null; // À implémenter upload S3/Cloudinary
+      enrichedProduct.photoOriginalUrl = null;
       enrichedProduct.extractedBy = 'photo-ocr';
       enrichedProduct.extractedAt = new Date();
       enrichedProduct.lastScannedAt = new Date();
       enrichedProduct.ocrData = ocrResult;
       enrichedProduct.ocrConfidence = ocrResult.confidence;
-
-      // Générer barcode factice si null (éviter duplicate key error)
-      if (!ocrResult.barcode) {
-        const hash = crypto.createHash('md5')
-          .update(`${ocrResult.name || 'unknown'}-${ocrResult.brand || ''}-${Date.now()}`)
-          .digest('hex')
-          .substring(0, 13);
-        ocrResult.barcode = `PHOTO-${hash}`;
-      }
 
       // Chercher si produit existe déjà (par barcode ou nom+brand)
       let savedProduct = null;
@@ -237,19 +236,12 @@ class PhotoAnalysisService {
     }
   }
 
-  /**
-   * OCR rapide (Tesseract ou DeepSeek Vision)
-   * @private
-   */
   static async _performOCR(photoBuffer) {
     try {
-      // Utiliser Google Vision OCR via OCRProductService
       const ocrResult = await OCRProductService.extractTextFromSinglePhoto(photoBuffer);
-
       if (!ocrResult.success) {
         return { success: false };
       }
-
       return {
         success: true,
         text: ocrResult.text || '',
@@ -260,242 +252,102 @@ class PhotoAnalysisService {
         confidence: ocrResult.confidence || 70,
         extractedFields: ocrResult
       };
-
     } catch (error) {
       console.error('❌ OCR error:', error);
       return { success: false };
     }
   }
 
-  /**
-   * Génération photoHash SHA256
-   * @private
-   */
   static _generatePhotoHash(photoBuffer) {
-    return crypto
-      .createHash('sha256')
-      .update(photoBuffer)
-      .digest('hex');
+    return crypto.createHash('sha256').update(photoBuffer).digest('hex');
   }
 
-  /**
-   * Génération Constitution Ecolojia V1 - 3 CARTES
-   * @private
-   */
   static async _generateConstitution(product) {
-    // Sélectionner 1 habitude depuis bibliothèque fermée
     const selectedHabit = this._selectHabitFromLibrary(product);
-
     return {
-      // CARTE 1 : Ce que c'est vraiment
       whatIsIt: {
         icon: '🧠',
         title: 'Ce que c\'est vraiment',
         content: this._generateWhatIsIt(product)
       },
-
-      // CARTE 2 : Le bon réflexe santé
       healthReflex: {
         icon: '🌱',
         title: 'Le bon réflexe santé',
         content: this._generateHealthReflex(product, selectedHabit)
       },
-
-      // CARTE 3 : Actions possibles
       actions: {
         icon: '🔁',
         title: 'Ce que tu peux faire',
         content: 'Voici ce que tu peux faire concrètement :',
         items: this._generateActionItems(product)
       },
-
-      // Habitude associée (badge séparé, pas une carte)
       associatedHabit: selectedHabit
     };
   }
 
-  /**
-   * CARTE 1 : CE QUE C'EST VRAIMENT
-   * Définition fonctionnelle, pas marketing. Max 2-3 phrases.
-   * @private
-   */
   static _generateWhatIsIt(product) {
     const { name, categoryType, subcategory, brand } = product;
-    
     const categoryLabel = this._getCategoryLabel(categoryType);
     const brandText = brand ? ` de la marque ${brand}` : '';
     const subcatText = subcategory ? ` de type ${subcategory}` : '';
-
     return `${name}${brandText} est un produit ${categoryLabel}${subcatText}.`;
   }
 
-  /**
-   * CARTE 2 : LE BON RÉFLEXE SANTÉ
-   * UNE phrase unique mémorisable : "Pour ta santé, l'idéal est de..."
-   * @private
-   */
   static _generateHealthReflex(product, habit) {
     const { scores } = product;
     const overall = scores?.overall || 50;
-
-    // Adapter selon le score
     let action = habit.action;
-
     if (overall >= 75) {
       action = 'privilégier ce type de produit dans ton quotidien';
     } else if (overall >= 50) {
-      action = habit.action; // Utiliser l'action de l'habitude
+      action = habit.action;
     } else {
       action = 'limiter sa consommation et privilégier des alternatives plus simples';
     }
-
     return `Pour ta santé, l'idéal est de ${action}.`;
   }
 
-  /**
-   * CARTE 3 : ACTIONS POSSIBLES
-   * Maximum 3 actions concrètes
-   * @private
-   */
   static _generateActionItems(product) {
     const actions = [];
     const { scores, categoryType } = product;
-
-    // Action 1 : Alternative (si score < 70)
     if (scores?.overall < 70) {
-      actions.push({
-        type: 'alternative',
-        label: 'Voir des alternatives plus saines',
-        icon: '🔄'
-      });
+      actions.push({ type: 'alternative', label: 'Voir des alternatives plus saines', icon: '🔄' });
     }
-
-    // Action 2 : Recette substitution (si alimentaire + score < 60)
     if (categoryType === 'food' && scores?.overall < 60) {
-      actions.push({
-        type: 'recipe',
-        label: 'Voir une recette de substitution',
-        icon: '🍳'
-      });
+      actions.push({ type: 'recipe', label: 'Voir une recette de substitution', icon: '🍳' });
     }
-
-    // Action 3 : Ajouter à liste courses
-    actions.push({
-      type: 'list',
-      label: 'Ajouter à ma liste de courses',
-      icon: '📝'
-    });
-
-    // Action 4 : Favoris (si place disponible)
+    actions.push({ type: 'list', label: 'Ajouter à ma liste de courses', icon: '📝' });
     if (actions.length < 3) {
-      actions.push({
-        type: 'favorite',
-        label: 'Ajouter aux favoris',
-        icon: '⭐'
-      });
+      actions.push({ type: 'favorite', label: 'Ajouter aux favoris', icon: '⭐' });
     }
-
-    return actions.slice(0, 3); // Maximum 3 actions
+    return actions.slice(0, 3);
   }
 
-  /**
-   * Sélection habitude depuis bibliothèque fermée (20-30 habitudes)
-   * @private
-   */
   static _selectHabitFromLibrary(product) {
-    // Bibliothèque fermée - Ne JAMAIS créer dynamiquement
     const HABITS_LIBRARY = [
-      {
-        id: 'habit_01',
-        title: 'Privilégier les aliments bruts',
-        action: 'choisir des produits avec une liste d\'ingrédients courte'
-      },
-      {
-        id: 'habit_02',
-        title: 'Limiter les produits ultra-transformés',
-        action: 'réserver ce type de produit aux occasions spéciales'
-      },
-      {
-        id: 'habit_03',
-        title: 'Surveiller la fréquence plus que l\'interdiction',
-        action: 'consommer avec modération dans une alimentation variée'
-      },
-      {
-        id: 'habit_04',
-        title: 'Préférer les listes d\'ingrédients courtes',
-        action: 'privilégier les produits avec moins de 5 ingrédients'
-      },
-      {
-        id: 'habit_05',
-        title: 'Varier les sources de lipides',
-        action: 'alterner les sources de matières grasses'
-      },
-      {
-        id: 'habit_06',
-        title: 'Associer les sucres à des fibres ou protéines',
-        action: 'accompagner de fruits, oléagineux ou légumes'
-      },
-      {
-        id: 'habit_07',
-        title: 'Réserver les produits plaisir aux occasions',
-        action: 'limiter la fréquence et savourer consciemment'
-      },
-      {
-        id: 'habit_08',
-        title: 'Limiter l\'exposition chimique répétée',
-        action: 'varier les marques et types de produits'
-      },
-      {
-        id: 'habit_09',
-        title: 'Favoriser la simplicité des préparations',
-        action: 'privilégier les aliments peu transformés'
-      },
-      {
-        id: 'habit_10',
-        title: 'Varier les sources animales et végétales',
-        action: 'alterner protéines animales et végétales'
-      }
+      { id: 'habit_01', title: 'Privilégier les aliments bruts', action: 'choisir des produits avec une liste d\'ingrédients courte' },
+      { id: 'habit_02', title: 'Limiter les produits ultra-transformés', action: 'réserver ce type de produit aux occasions spéciales' },
+      { id: 'habit_03', title: 'Surveiller la fréquence plus que l\'interdiction', action: 'consommer avec modération dans une alimentation variée' },
+      { id: 'habit_04', title: 'Préférer les listes d\'ingrédients courtes', action: 'privilégier les produits avec moins de 5 ingrédients' },
+      { id: 'habit_05', title: 'Varier les sources de lipides', action: 'alterner les sources de matières grasses' },
+      { id: 'habit_06', title: 'Associer les sucres à des fibres ou protéines', action: 'accompagner de fruits, oléagineux ou légumes' },
+      { id: 'habit_07', title: 'Réserver les produits plaisir aux occasions', action: 'limiter la fréquence et savourer consciemment' },
+      { id: 'habit_08', title: 'Limiter l\'exposition chimique répétée', action: 'varier les marques et types de produits' },
+      { id: 'habit_09', title: 'Favoriser la simplicité des préparations', action: 'privilégier les aliments peu transformés' },
+      { id: 'habit_10', title: 'Varier les sources animales et végétales', action: 'alterner protéines animales et végétales' }
     ];
-
-    // Logique de sélection basée sur le produit
     const { scores, categoryType, nutrition } = product;
     const novaScore = scores?.processing || 0;
     const additifs = scores?.additives || 100;
     const sugars = nutrition?.sugars || 0;
-
-    // Règle 1 : Ultra-transformé (NOVA < 50)
-    if (novaScore < 50) {
-      return HABITS_LIBRARY[1]; // Limiter ultra-transformés
-    }
-
-    // Règle 2 : Additifs problématiques
-    if (additifs < 40) {
-      return HABITS_LIBRARY[7]; // Limiter exposition chimique
-    }
-
-    // Règle 3 : Sucres élevés (>10g/100g)
-    if (sugars > 10) {
-      return HABITS_LIBRARY[5]; // Associer sucres à fibres
-    }
-
-    // Règle 4 : Score global faible (<50)
-    if (scores?.overall < 50) {
-      return HABITS_LIBRARY[6]; // Produits plaisir aux occasions
-    }
-
-    // Règle 5 : Liste ingrédients longue (détection approximative)
-    if (product.ingredients_text && product.ingredients_text.split(',').length > 10) {
-      return HABITS_LIBRARY[3]; // Préférer listes courtes
-    }
-
-    // Par défaut : Aliments bruts
+    if (novaScore < 50) return HABITS_LIBRARY[1];
+    if (additifs < 40) return HABITS_LIBRARY[7];
+    if (sugars > 10) return HABITS_LIBRARY[5];
+    if (scores?.overall < 50) return HABITS_LIBRARY[6];
+    if (product.ingredients_text && product.ingredients_text.split(',').length > 10) return HABITS_LIBRARY[3];
     return HABITS_LIBRARY[0];
   }
 
-  /**
-   * Helper : Label catégorie
-   * @private
-   */
   static _getCategoryLabel(categoryType) {
     const labels = {
       food: 'alimentaire',
@@ -508,12 +360,3 @@ class PhotoAnalysisService {
 }
 
 module.exports = PhotoAnalysisService;
-
-
-
-
-
-
-
-
-
