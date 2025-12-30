@@ -217,6 +217,20 @@ class PhotoAnalysisService {
 
       // Générer Constitution Ecolojia
       const constitution = await this._generateConstitution(savedProduct || enrichedProduct);
+
+        // 💾 SAUVEGARDER CONSTITUTION EN BASE
+        if (savedProduct) {
+          savedProduct.constitution = constitution;
+          await savedProduct.save();
+          console.log('💾 Constitution sauvegardée dans produit existant');
+        } else if (enrichedProduct._id) {
+          await Product.updateOne(
+            { _id: enrichedProduct._id },
+            { $set: { constitution } }
+          );
+          console.log('💾 Constitution sauvegardée dans nouveau produit');
+        }
+
       console.log('✅ ANALYSE TERMINÉE - Constitution générée');
 
       return {
