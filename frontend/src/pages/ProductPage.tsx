@@ -10,6 +10,7 @@ import { ChatWidget } from '../components/chat/ChatWidget';
 import { ProductHeader } from '../components/product/ProductHeader';
 import { ProductScoresCard } from '../components/product/ProductScoresCard';
 import { ScoreBreakdown } from '../components/product/ScoreBreakdown';
+import { Constitution } from '../components/product/Constitution';
 import { useScoreBreakdown } from '../hooks/useScoreBreakdown';
 import { ProductIngredients } from '../components/product/ProductIngredients';
 import { ProductNutrition } from '../components/product/ProductNutrition';
@@ -118,6 +119,7 @@ const ProductPage: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [loadingAlternatives, setLoadingAlternatives] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [constitution, setConstitution] = useState<any>(null);
   const [loadingRecipes, setLoadingRecipes] = useState(false);
 
   // CORRECTION 2 : useEffect gère maintenant les erreurs 400/404
@@ -160,6 +162,11 @@ const ProductPage: React.FC = () => {
 
       // Succès
       setProduct(result.data.product || result.data);
+
+      // Extraire constitution si disponible
+      if (result.data.constitution) {
+        setConstitution(result.data.constitution);
+      }
 
       // Extraire recettes si disponibles
       if (result.data.recipes && Array.isArray(result.data.recipes)) {
@@ -583,3 +590,4 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+

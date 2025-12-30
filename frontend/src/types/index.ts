@@ -45,3 +45,21 @@ export * from './categories';
 export * from './search';
 
 
+
+// Constitution Ecolojia V3.0
+export interface ConstitutionCard {
+  title: string;
+  content: string;
+  emoji?: string;
+}
+
+export interface Constitution {
+  cards: ConstitutionCard[];
+  level?: number;
+  sublevel?: string;
+  habit?: {
+    id: string;
+    title: string;
+    category?: string;
+  };
+}
