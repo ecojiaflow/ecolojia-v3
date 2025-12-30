@@ -425,7 +425,16 @@ const productSchema = new mongoose.Schema({
   viewCount: { type: Number, default: 0, min: 0 },
   scanCount: { type: Number, default: 0, min: 0 },
   createdAt: { type: Date, default: Date.now, index: true },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  
+  // ============================================================================
+  // CONSTITUTION ECOLOJIA V3.0 (30/12/2025)
+  // ============================================================================
+  
+  constitution: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null
+  }
 });
 
 // ============================================================================
@@ -621,3 +630,4 @@ logger.info('[Product] Modèle Product initialisé', {
 });
 
 module.exports = ProductModel;
+
