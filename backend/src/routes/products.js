@@ -281,6 +281,7 @@ product: {
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
     recipes,
+    constitution: productObj.constitution || null,
   };
 }
 
