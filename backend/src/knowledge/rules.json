@@ -1,0 +1,244 @@
+﻿[
+  {
+    "_id": "RULE_FOOD_UPF_ASSOC",
+    "category": "food",
+    "applies_to_flags": ["ultra_processed"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "association",
+      "text": "Les données convergentes (ANSES, OMS) associent une consommation régulière de produits ultra-transformés à des effets défavorables à long terme (maladies chroniques, déséquilibres métaboliques)."
+    },
+    "refs": [
+      {
+        "ref_id": "ANSES_UPF_ASSOCIATIONS",
+        "title": "Rapport ANSES sur les aliments ultra-transformés",
+        "url": "https://www.anses.fr",
+        "year": 2021
+      },
+      {
+        "ref_id": "WHO_DIET_NCDS",
+        "title": "WHO - Diet and NCDs",
+        "url": "https://www.who.int",
+        "year": 2020
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_FOOD_SUGAR_GUIDELINE",
+    "category": "food",
+    "applies_to_flags": ["sugar_sweetened_beverage", "high_added_sugar"],
+    "evidence_tier": "A",
+    "consensus": true,
+    "claim_template": {
+      "type": "guideline",
+      "text": "L'OMS recommande de limiter les sucres libres à moins de 10% de l'apport énergétique total (idéalement <5%). Les boissons sucrées et aliments à forte densité en sucres ajoutés contribuent significativement au dépassement de ce seuil."
+    },
+    "refs": [
+      {
+        "ref_id": "WHO_SUGAR_GUIDELINE",
+        "title": "WHO Guideline on sugars intake",
+        "url": "https://www.who.int/publications/i/item/9789241549028",
+        "year": 2015
+      },
+      {
+        "ref_id": "ANSES_SUGARS",
+        "title": "ANSES - Actualisation des repères du PNNS : révision des repères relatifs à l'activité physique et à la sédentarité",
+        "url": "https://www.anses.fr",
+        "year": 2016
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_FOOD_ADDITIVES",
+    "category": "food",
+    "applies_to_flags": ["problematic_additives"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "association",
+      "text": "Certains additifs alimentaires font l'objet d'un débat scientifique concernant leurs effets potentiels en cas d'exposition répétée (effets inflammatoires, perturbation du microbiote). Le principe de précaution est recommandé."
+    },
+    "refs": [
+      {
+        "ref_id": "EFSA_ADDITIVES_OVERVIEW",
+        "title": "EFSA - Food additives",
+        "url": "https://www.efsa.europa.eu/en/topics/topic/food-additives",
+        "year": 2023
+      },
+      {
+        "ref_id": "ANSES_ADDITIVES",
+        "title": "ANSES - Additifs alimentaires",
+        "url": "https://www.anses.fr",
+        "year": 2022
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_FOOD_SODIUM",
+    "category": "food",
+    "applies_to_flags": ["high_sodium"],
+    "evidence_tier": "A",
+    "consensus": true,
+    "claim_template": {
+      "type": "guideline",
+      "text": "L'OMS recommande de limiter la consommation de sel à 5g/jour. Un apport élevé en sodium est associé à une augmentation de la pression artérielle et du risque cardiovasculaire."
+    },
+    "refs": [
+      {
+        "ref_id": "WHO_SALT_GUIDELINE",
+        "title": "WHO - Salt reduction",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/salt-reduction",
+        "year": 2020
+      },
+      {
+        "ref_id": "ANSES_SODIUM",
+        "title": "ANSES - Sel",
+        "url": "https://www.anses.fr",
+        "year": 2019
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_FOOD_SATURATED_FAT",
+    "category": "food",
+    "applies_to_flags": ["high_saturated_fat"],
+    "evidence_tier": "A",
+    "consensus": true,
+    "claim_template": {
+      "type": "guideline",
+      "text": "Les recommandations nutritionnelles préconisent de limiter les acides gras saturés à moins de 10% de l'apport énergétique total. Un excès est associé à une augmentation du risque cardiovasculaire."
+    },
+    "refs": [
+      {
+        "ref_id": "ANSES_LIPIDS",
+        "title": "ANSES - Actualisation des repères du PNNS : révision des repères de consommations alimentaires",
+        "url": "https://www.anses.fr",
+        "year": 2016
+      },
+      {
+        "ref_id": "WHO_DIET_NCDS",
+        "title": "WHO - Diet and NCDs",
+        "url": "https://www.who.int",
+        "year": 2020
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_FOOD_NUTRITIONAL_DENSITY",
+    "category": "food",
+    "applies_to_flags": ["low_nutritional_density"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "association",
+      "text": "Les aliments à forte densité énergétique et faible densité nutritionnelle (calories 'vides') contribuent à un déséquilibre alimentaire lorsqu'ils constituent une part importante de l'alimentation."
+    },
+    "refs": [
+      {
+        "ref_id": "DIETARY_PATTERNS_EVIDENCE",
+        "title": "Dietary patterns and health outcomes",
+        "url": "https://www.who.int",
+        "year": 2021
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_COSMETIC_ENDOCRINE_DISRUPTORS",
+    "category": "cosmetic",
+    "applies_to_flags": ["endocrine_disruptors_suspected", "problematic_ingredients"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "precaution",
+      "text": "Certains ingrédients cosmétiques sont suspectés d'être des perturbateurs endocriniens. Par principe de précaution, limiter l'exposition répétée à ces substances est recommandé."
+    },
+    "refs": [
+      {
+        "ref_id": "ANSES_ENDOCRINE_DISRUPTORS",
+        "title": "ANSES - Perturbateurs endocriniens",
+        "url": "https://www.anses.fr",
+        "year": 2021
+      },
+      {
+        "ref_id": "SCCS_OPINIONS",
+        "title": "Scientific Committee on Consumer Safety - Opinions",
+        "url": "https://ec.europa.eu/health/scientific_committees/consumer_safety_en",
+        "year": 2023
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_COSMETIC_EXPOSURE",
+    "category": "cosmetic",
+    "applies_to_flags": ["high_frequency_use"],
+    "evidence_tier": "C",
+    "consensus": true,
+    "claim_template": {
+      "type": "principle",
+      "text": "La fréquence d'utilisation est un facteur déterminant dans l'exposition dermique aux ingrédients cosmétiques. Un usage quotidien amplifie l'exposition cumulée."
+    },
+    "refs": [
+      {
+        "ref_id": "EXPOSURE_PRINCIPLES",
+        "title": "Principles of dermal exposure assessment",
+        "url": "https://www.efsa.europa.eu",
+        "year": 2022
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_DETERGENT_INHALATION",
+    "category": "detergent",
+    "applies_to_flags": ["high_inhalation_exposure", "harsh_chemicals"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "precaution",
+      "text": "Les produits sous forme spray ou aérosol augmentent significativement l'exposition par inhalation. Les substances irritantes ou caustiques présentent un risque respiratoire accru."
+    },
+    "refs": [
+      {
+        "ref_id": "INHALATION_EXPOSURE_PRINCIPLES",
+        "title": "Inhalation exposure assessment",
+        "url": "https://www.anses.fr",
+        "year": 2020
+      },
+      {
+        "ref_id": "HOUSEHOLD_CHEMICALS_SAFETY",
+        "title": "Household chemicals safety",
+        "url": "https://www.epa.gov",
+        "year": 2021
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "RULE_DETERGENT_VOCS",
+    "category": "detergent",
+    "applies_to_flags": ["vocs_present"],
+    "evidence_tier": "B",
+    "consensus": true,
+    "claim_template": {
+      "type": "association",
+      "text": "Les composés organiques volatils (COV) dégradent la qualité de l'air intérieur et peuvent causer irritations et effets respiratoires en cas d'exposition prolongée."
+    },
+    "refs": [
+      {
+        "ref_id": "VOCS_INDOOR_AIR_QUALITY",
+        "title": "VOCs and indoor air quality",
+        "url": "https://www.epa.gov",
+        "year": 2022
+      }
+    ],
+    "status": "active"
+  }
+]

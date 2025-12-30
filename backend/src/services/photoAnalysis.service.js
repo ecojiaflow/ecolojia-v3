@@ -20,6 +20,9 @@ const Product = require('../models/Product');
 const crypto = require('crypto');
 const templates = require('../templates/constitution.templates');
 const habitsLibrary = require('../data/habits-library.json');
+const { RISK_FLAGS } = require('../config/riskFlags.config');
+const fs = require('fs');
+const path = require('path');
 
 class PhotoAnalysisService {
   /**
@@ -391,36 +394,112 @@ class PhotoAnalysisService {
    * @returns {string} - Réflexe santé contextualisé
    */
   static _generateHealthReflex(product, habit) {
-    const { scores, subcategory } = product;
-    const overall = scores?.overall || 50;
+    const { scores } = product;
     
-    // 1. Déterminer contexte selon score
-    const context = templates.getHealthContext(overall);
-    const contextData = templates.healthReflexContexts[context];
+    // 1. Calculer FLAGS
+    const flags = this._computeFlags(product, scores);
+    const context = this._buildContext(product, scores);
     
-    // 2. Construire action selon contexte
-    let action = '';
+    // 2. Déterminer niveau
+    const productLevel = this._determineLevel(product, flags, context);
     
-    if (context === 'excellent') {
-      // Score 75-100 : Privilégier
-      action = contextData.base;
-      
-    } else if (context === 'good') {
-      // Score 60-74 : Modération
-      action = contextData.withModeration;
-      
-    } else if (context === 'moderate') {
-      // Score 40-59 : Occasionnel + alternative
-      const alternative = templates.getAlternativeSuggestion(product);
-      action = contextData.withAlternative(alternative);
-      
-    } else {
-      // Score <40 : Limiter fortement + alternative
-      const alternative = templates.getAlternativeSuggestion(product);
-      action = contextData.withAlternative(alternative);
+    // 3. Générer message selon niveau
+    let content = '';
+    
+    switch (productLevel.level) {
+      case 1:
+        content = this._generateLevel1Message(product, flags, habit);
+        break;
+      case 2:
+        content = this._generateLevel2Message(product, flags, habit);
+        break;
+      case 3:
+        content = this._generateLevel3Message(product, flags, productLevel.sublevel, habit);
+        break;
+      default:
+        content = this._generateLevel2Message(product, flags, habit);
     }
     
-    return `Pour ta santé, l'idéal est de ${action}.`;
+    return content;
+  }
+
+  static _generateLevel1Message(product, flags, habit) {
+    const category = product.categoryType || 'food';
+    
+    if (category === 'food') {
+      return "Pour ta santé, l'idéal est d'intégrer ce type de produit dans une alimentation variée et équilibrée.";
+    }
+    
+    return "Pour ta santé, ce type de produit peut être utilisé sans précaution particulière.";
+  }
+
+  static _generateLevel2Message(product, flags, habit) {
+    const category = product.categoryType || 'food';
+    
+    let message = "Dans une perspective d'habitudes durables, ";
+    
+    if (category === 'food') {
+      message += "limiter la fréquence d'intégration de ce type de produit. ";
+      
+      const hasUPF = flags.some(f => f.id === 'ultra_processed');
+      const hasHighSugar = flags.some(f => ['high_added_sugar', 'sugar_sweetened_beverage'].includes(f.id));
+      const hasHighSodium = flags.some(f => f.id === 'high_sodium');
+      
+      if (hasUPF) {
+        message += "Les produits ultra-transformés, ";
+      }
+      
+      if (hasHighSugar) {
+        message += "riches en sucres ajoutés, ";
+      }
+      
+      if (hasHighSodium) {
+        message += "riches en sel, ";
+      }
+      
+      message += "peuvent contribuer à un déséquilibre nutritionnel en cas de consommation régulière.";
+    } else {
+      message += "privilégier un usage modéré de ce type de produit.";
+    }
+    
+    return message;
+  }
+
+  static _generateLevel3Message(product, flags, sublevel, habit) {
+    const category = product.categoryType || 'food';
+    
+    let message = "Dans une perspective d'habitudes durables, ";
+    
+    if (sublevel === 'occasions') {
+      message += "ce type de produit ne constitue pas une base adaptée à un usage régulier. ";
+      message += "À réserver aux occasions. ";
+    } else {
+      message += "limiter fortement l'intégration régulière de ce type de produit. ";
+    }
+    
+    if (category === 'food') {
+      const hasUPF = flags.some(f => f.id === 'ultra_processed');
+      const hasHighSugar = flags.some(f => ['high_added_sugar', 'sugar_sweetened_beverage'].includes(f.id));
+      const hasAdditives = flags.some(f => f.id === 'problematic_additives');
+      
+      if (hasUPF) {
+        message += "Les données convergentes (ANSES, OMS) montrent qu'un usage régulier de produits ultra-transformés ";
+      }
+      
+      if (hasHighSugar) {
+        message += "riches en sucres ajoutés ";
+      }
+      
+      if (hasAdditives) {
+        message += "contenant plusieurs additifs controversés ";
+      }
+      
+      message += "contribue à une dégradation progressive de l'équilibre nutritionnel.";
+    } else {
+      message += "Par principe de précaution, limiter l'exposition répétée à ce type de produit.";
+    }
+    
+    return message;
   }
 
 
@@ -636,8 +715,186 @@ class PhotoAnalysisService {
     };
     return labels[categoryType] || 'de consommation';
   }
-}
 
+
+  static _loadKnowledgeRules(category) {
+    try {
+      const rulesPath = path.join(__dirname, '../knowledge/rules.json');
+      const rulesData = fs.readFileSync(rulesPath, 'utf8');
+      const allRules = JSON.parse(rulesData);
+      
+      return allRules.filter(rule => 
+        rule.category === category && 
+        rule.status === 'active'
+      );
+    } catch (error) {
+      console.error('[WARN] Erreur chargement rules.json:', error.message);
+      return [];
+    }
+  }
+
+  static _buildContext(product, scores) {
+    const novaLevel = this._extractNovaLevel(scores);
+    const ingredients = this._extractTopIngredients(product.ingredients_text || '', 20);
+    
+    const nutrients = {
+      energy_kcal_100g: product.nutrition?.energy_kcal || 0,
+      sugars_g_100g: product.nutrition?.sugars || 0,
+      sugars_g_100ml: product.nutrition?.sugars || 0,
+      salt_g_100g: product.nutrition?.salt || 0,
+      fat_g_100g: product.nutrition?.fat || 0,
+      saturated_fat_g_100g: product.nutrition?.saturated_fat || 0,
+      fiber_g_100g: product.nutrition?.fiber || 0,
+      protein_g_100g: product.nutrition?.protein || 0,
+      carbohydrates_g_100g: product.nutrition?.carbohydrates || 0
+    };
+
+    const name = product.name?.toLowerCase() || '';
+    const subcategory = product.subcategory?.toLowerCase() || '';
+    const isBeverage = name.includes('boisson') || 
+                       name.includes('jus') || 
+                       name.includes('soda') ||
+                       subcategory.includes('boisson');
+    
+    const isSolidFood = !isBeverage && product.categoryType === 'food';
+
+    const additivesRiskCount = {
+      high: ingredients.additives?.filter(a => a.risk === 'high').length || 0,
+      medium: ingredients.additives?.filter(a => a.risk === 'medium').length || 0,
+      low: ingredients.additives?.filter(a => a.risk === 'low').length || 0
+    };
+
+    return {
+      nova: novaLevel,
+      nutrients,
+      isBeverage,
+      isSolidFood,
+      additivesRiskCount,
+      additivesCount: ingredients.additives?.length || 0,
+      ingredientsText: product.ingredients_text || '',
+      categoryHints: product.tags || [],
+      subcategory: product.subcategory || ''
+    };
+  }
+
+  static _computeFlags(product, scores) {
+    const category = product.categoryType || 'food';
+    const context = this._buildContext(product, scores);
+    
+    const categoryFlags = RISK_FLAGS[category] || {};
+    const triggeredFlags = [];
+    
+    for (const [flagId, flagDef] of Object.entries(categoryFlags)) {
+      try {
+        const isTriggered = flagDef.trigger(product, context);
+        
+        if (isTriggered) {
+          triggeredFlags.push({
+            id: flagId,
+            severity: flagDef.severity,
+            evidence_tier: flagDef.evidence_tier,
+            domains: flagDef.domains,
+            refs: flagDef.refs,
+            notes: flagDef.notes
+          });
+        }
+      } catch (error) {
+        console.error(`[WARN] Erreur évaluation flag ${flagId}:`, error.message);
+      }
+    }
+    
+    return triggeredFlags;
+  }
+
+  static _hasScientificEvidence(flags, category) {
+    const rules = this._loadKnowledgeRules(category);
+    const flagIds = flags.map(f => f.id);
+    
+    const matchedRules = rules.filter(rule => 
+      rule.status === 'active' &&
+      rule.consensus === true &&
+      ['A', 'B'].includes(rule.evidence_tier) &&
+      rule.applies_to_flags.some(f => flagIds.includes(f))
+    );
+    
+    return matchedRules.length > 0;
+  }
+
+  static _hasSimpleSubstitution(product, context) {
+    return true;
+  }
+
+  static _isHabitualUse(product, category, context) {
+    if (category === 'food') {
+      const tags = product.tags || [];
+      const habitualTags = ['snacking', 'gouter', 'petit-dejeuner', 
+                            'aperitif', 'dessert', 'encas', 'boisson'];
+      return habitualTags.some(tag => tags.includes(tag));
+    }
+    
+    if (category === 'cosmetic') {
+      const name = product.name?.toLowerCase() || '';
+      const dailyProducts = ['creme', 'deodorant', 'dentifrice'];
+      return dailyProducts.some(type => name.includes(type));
+    }
+    
+    return false;
+  }
+
+  static _decideFoodLevel(flags, majorFlags, substitution, habitual, evidence) {
+    if (flags.length === 0) {
+      return { level: 1, label: 'Acceptable' };
+    }
+    
+    const hasUPF = flags.some(f => f.id === 'ultra_processed');
+    const hasSugaryBeverage = flags.some(f => f.id === 'sugar_sweetened_beverage');
+    
+    if (!hasUPF && !hasSugaryBeverage && majorFlags.length === 0 && flags.length <= 2) {
+      return { level: 1, label: 'Acceptable' };
+    }
+    
+    if (evidence && 
+        habitual && 
+        substitution &&
+        hasUPF &&
+        (majorFlags.length >= 2 || 
+         (majorFlags.length >= 1 && flags.length >= 3))) {
+      
+      const is3A = flags.some(f => ['sugar_sweetened_beverage', 
+                                     'high_added_sugar', 
+                                     'problematic_additives'].includes(f.id));
+      
+      return {
+        level: 3,
+        sublevel: is3A ? 'occasions' : 'limit_strongly',
+        label: is3A ? 'À réserver aux occasions' : 'À limiter fortement'
+      };
+    }
+    
+    return { level: 2, label: 'À limiter au quotidien' };
+  }
+
+  static _determineLevel(product, flags, context) {
+    const category = product.categoryType || 'food';
+    const majorFlags = flags.filter(f => f.severity === 'high');
+    
+    const substitution = this._hasSimpleSubstitution(product, context);
+    const habitual = this._isHabitualUse(product, category, context);
+    const evidence = this._hasScientificEvidence(flags, category);
+    
+    if (category === 'food') {
+      return this._decideFoodLevel(flags, majorFlags, substitution, habitual, evidence);
+    }
+    
+    if (majorFlags.length >= 2) {
+      return { level: 3, label: 'À limiter fortement' };
+    } else if (flags.length > 0) {
+      return { level: 2, label: 'À limiter au quotidien' };
+    } else {
+      return { level: 1, label: 'Acceptable' };
+    }
+  }
+}
 module.exports = PhotoAnalysisService;
 
 
