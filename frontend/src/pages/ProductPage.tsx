@@ -430,6 +430,17 @@ const ProductPage: React.FC = () => {
         {/* Scores détaillés */}
         <ProductScoresCard healthScore={healthScore} environmentScore={environmentScore} />
 
+
+        {/* Constitution Ecolojia V3.0 */}
+        {constitution && (
+          <div className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <span className="text-2xl">📋</span>
+              <span>Constitution Ecolojia</span>
+            </h2>
+            <Constitution constitution={constitution} />
+          </div>
+        )}
         {/* Analyse détaillée (mode expert) */}
         <details className="bg-white rounded-none md:rounded-xl shadow-sm p-4 md:p-6">
           <summary className="font-semibold cursor-pointer text-gray-800">
