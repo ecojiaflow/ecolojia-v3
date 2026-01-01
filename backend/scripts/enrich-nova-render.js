@@ -1,7 +1,7 @@
-﻿require('dotenv').config();
+﻿require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 const fs = require('fs');
-const Product = require('./src/models/Product');
+const Product = require('../src/models/Product');
 
 const DELAY_MS = 650;
 const PROGRESS_FILE = 'enrich-progress.json';
@@ -56,7 +56,6 @@ function calcLevel(nova, nutri, additives) {
 async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
   
-  // Initialiser les champs null
   console.log('Initialisation...');
   await Product.updateMany({ 'scores.breakdown': null }, { $set: { 'scores.breakdown': { nova: {}, nutriScore: {}, additives: {} } } });
   await Product.updateMany({ constitution: null }, { $set: { constitution: {} } });
