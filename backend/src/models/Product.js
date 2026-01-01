@@ -534,7 +534,11 @@ const scoringUnified = require('../services/scoringUnified');
 productSchema.pre('save', async function(next) {
   const startTime = Date.now();
 
-  if (this.scores?.scoringVersion === '3.2.0' && this.scores?.overallScore) {
+  // ✅ Skip si déjà calculé ET constitution existe
+  if (this.scores?.scoringVersion === '3.2.0' && 
+      this.scores?.overallScore && 
+      this.constitution) {
+    logger.debug('[Product] Score + Constitution déjà calculés - Skip');
     return next();
   }
 
@@ -630,4 +634,5 @@ logger.info('[Product] Modèle Product initialisé', {
 });
 
 module.exports = ProductModel;
+
 

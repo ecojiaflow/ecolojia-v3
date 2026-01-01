@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Camera, Search } from 'lucide-react';
 import BarcodeScanner from './BarcodeScanner';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
     try {
       // API call pour rechercher le produit par code-barres
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/api/products/barcode/${barcode}`);
+      const response = await fetch(`${apiUrl}/api/products/scan/${barcode}`);
       
       if (response.ok) {
         const product = await response.json();
@@ -124,5 +124,6 @@ const ScanFloatingButton: React.FC<ScanFloatingButtonProps> = ({
 };
 
 export default ScanFloatingButton;
+
 
 

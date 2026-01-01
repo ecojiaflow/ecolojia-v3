@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/productService.ts
+﻿// PATH: frontend/src/services/productService.ts
 import apiClient from "./apiClient";
 
 export type Category = "food" | "cosmetics" | "detergents";
@@ -21,7 +21,7 @@ export type Product = {
 
 export async function getProductByBarcode(barcode: string): Promise<Product> {
   try {
-    const response = await apiClient.get(`/products/barcode/${encodeURIComponent(barcode)}`);
+    const response = await apiClient.get(`/products/scan/${encodeURIComponent(barcode)}`);
     const data = response.data || response;
     return { 
       ...data, 
@@ -66,3 +66,5 @@ export const getAlternatives = async (productId: string) => {
   const { data } = await apiClient.get(`/products/${encodeURIComponent(productId)}/alternatives`);
   return data;
 };
+
+

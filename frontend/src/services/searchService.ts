@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/searchService.ts
+﻿// PATH: frontend/src/services/searchService.ts
 import apiClient from './apiClient';
 
 // Export du type SearchItem pour visionService
@@ -58,7 +58,7 @@ class SearchService {
         }
       });
       
-      // Extraire les produits selon différents formats possibles
+      // Extraire les produits selon diffÃ©rents formats possibles
       let products = [];
       if (response.data?.success && response.data?.products) {
         products = response.data.products;
@@ -101,7 +101,7 @@ class SearchService {
         }
       });
       
-      // Utiliser la même logique d'extraction que dans search()
+      // Utiliser la mÃªme logique d'extraction que dans search()
       let products = [];
       if (response.data?.success && response.data?.products) {
         products = response.data?.products;
@@ -167,7 +167,7 @@ class SearchService {
 
   async searchByBarcode(barcode: string): Promise<ProductHit | null> {
     try {
-      const response = await apiClient.get(`/products/barcode/${barcode}`);
+      const response = await apiClient.get(`/products/scan/${barcode}`);
       
       if (!response.data || response.data?.success === false) {
         return null;
@@ -269,3 +269,4 @@ export function extractProducts(response: SearchResponse | any): ProductHit[] {
 
 const searchService = new SearchService();
 export default searchService;
+

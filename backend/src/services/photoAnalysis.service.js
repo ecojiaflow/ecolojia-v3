@@ -315,7 +315,6 @@ class PhotoAnalysisService {
    * @returns {number|null} - Niveau NOVA (1-4) ou null
    */
   static _extractNovaLevel(scores) {
-    console.log("[CONSTITUTION] 📊 Extraction NOVA level...");
     if (!scores) return null;
     const processingScore = scores.processing || 0;
     
@@ -333,7 +332,6 @@ class PhotoAnalysisService {
    * @returns {Array<string>} - Tableau ingrédients (max count)
    */
   static _extractTopIngredients(ingredientsText, count = 3) {
-    console.log("[CONSTITUTION] 🥕 Extraction top", count, "ingrédients...");
     if (!ingredientsText || typeof ingredientsText !== 'string') return [];
     
     // Nettoyer et séparer par virgule/point-virgule

@@ -1,4 +1,4 @@
-// PATH: frontend/src/services/analysisService.ts
+﻿// PATH: frontend/src/services/analysisService.ts
 import apiClient from "./apiClient";
 import type { Category, Product } from "./productService";
 
@@ -45,7 +45,7 @@ export type Paginated<T> = {
 
 export async function analyzeByBarcode(barcode: string, category?: Category): Promise<AnalysisResult> {
   try {
-    // Essayer d'abord l'analyse spécifique par catégorie
+    // Essayer d'abord l'analyse spÃ©cifique par catÃ©gorie
     if (category === "cosmetics") {
       const response = await apiClient.post("/cosmetics/analyze", { barcode, category });
       return response.data || response;
@@ -55,7 +55,7 @@ export async function analyzeByBarcode(barcode: string, category?: Category): Pr
       return response.data || response;
     }
     
-    // Essayer l'endpoint d'analyse générique
+    // Essayer l'endpoint d'analyse gÃ©nÃ©rique
     try {
       const response = await apiClient.post("/products/analyze", { barcode, category: category || "food" });
       return response.data || response;
@@ -67,8 +67,8 @@ export async function analyzeByBarcode(barcode: string, category?: Category): Pr
         });
         return response.data || response;
       } catch {
-        // Fallback final : récupérer le produit et créer une analyse basique
-        const productResponse = await apiClient.get(`/products/barcode/${encodeURIComponent(barcode)}`);
+        // Fallback final : rÃ©cupÃ©rer le produit et crÃ©er une analyse basique
+        const productResponse = await apiClient.get(`/products/scan/${encodeURIComponent(barcode)}`);
         const product = productResponse.data || productResponse;
         
         return {
@@ -114,7 +114,7 @@ export async function analyzeByProduct(product: Product): Promise<AnalysisResult
       return response.data || response;
     }
     
-    // Par défaut ou food
+    // Par dÃ©faut ou food
     try {
       const response = await apiClient.post("/products/analyze", { 
         productId: pid, 
@@ -123,7 +123,7 @@ export async function analyzeByProduct(product: Product): Promise<AnalysisResult
       });
       return response.data || response;
     } catch {
-      // Fallback : créer une analyse basique depuis les données du produit
+      // Fallback : crÃ©er une analyse basique depuis les donnÃ©es du produit
       return {
         productId: pid,
         productName: product.productName || product.name,
@@ -208,3 +208,4 @@ const analysisService = {
 export default analysisService;
 // Export manquant pour ResultsPage
 export const analyzeProduct = analyzeByProduct;
+

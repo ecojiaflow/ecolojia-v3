@@ -286,6 +286,62 @@ product: {
 }
 
 // ========================================
+// ========================================
+// GET /api/products/scan/:barcode (ULTRA-RAPIDE - LOOKUP PUR)
+// ⚠️ ROUTE PRIORITAIRE - DOIT ÊTRE AVANT "/:id"
+// ========================================
+router.get("/scan/:barcode", async (req, res) => {
+  const startTime = Date.now();
+  const { barcode } = req.params;
+  
+  try {
+    logger.info(`⚡ SCAN RAPIDE: ${barcode}`);
+    
+    // Lookup simple (pas d enrichissement)
+    const product = await Product.findOne({ barcode })
+      .select('name brand categoryType scores constitution alternatives')
+      .lean();
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        error: 'Produit non trouvé',
+        barcode
+      });
+    }
+    
+    // ⚠️ Si Constitution manquante
+    if (!product.constitution) {
+      return res.json({
+        success: true,
+        product,
+        status: 'pending_enrichment',
+        message: 'Produit en cours d enrichissement (disponible sous 24h)',
+        responseTime: Date.now() - startTime
+      });
+    }
+    
+    // ✅ Constitution pré-calculée
+    const responseTime = Date.now() - startTime;
+    logger.info(`✅ SCAN ${barcode}: ${responseTime}ms`);
+    
+    return res.json({
+      success: true,
+      product,
+      cached: true,
+      responseTime
+    });
+    
+  } catch (error) {
+    logger.error(`❌ Erreur scan ${barcode}:`, error);
+    return res.status(500).json({
+      success: false,
+      error: 'Erreur serveur'
+    });
+  }
+});
+
+
 // GET /api/products/analyze/:id  (Analyse IA approfondie)
 // ⚠️ IMPORTANT : route spécifique AVANT "/:id"
 // ========================================
@@ -708,6 +764,7 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
