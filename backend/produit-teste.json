@@ -1,0 +1,664 @@
+﻿{
+    "success":  true,
+    "product":  {
+                    "_id":  "69528e6c117ac038ffd1eccf",
+                    "barcode":  "PHOTO-b547d0af03728",
+                    "name":  "-Nugat-Creme 2.95€ 720g Glas 1kg 3",
+                    "brand":  "Citer",
+                    "categoryType":  "food",
+                    "filterMetadata":  {
+                                           "categoryLabels":  [
+
+                                                              ],
+                                           "searchTerms":  [
+
+                                                           ],
+                                           "popularityScore":  0
+                                       },
+                    "tags":  [
+
+                             ],
+                    "ingredients_text":  null,
+                    "additives_tags":  [
+
+                                       ],
+                    "estimated":  false,
+                    "photoHash":  "182d827c2a73ad7438f2a7336092df6ef292dae3a52a2749d9876204e7b2eeb1",
+                    "photoOriginalUrl":  null,
+                    "extractedBy":  "photo-ocr",
+                    "extractedAt":  "2025-12-29T14:21:32.290Z",
+                    "ocrData":  {
+                                    "confidence":  49
+                                },
+                    "ocrConfidence":  49,
+                    "lastScannedAt":  "2025-12-29T14:21:32.290Z",
+                    "foodData":  {
+                                     "additives":  [
+
+                                                   ],
+                                     "allergens":  [
+
+                                                   ],
+                                     "labels":  [
+
+                                                ]
+                                 },
+                    "cosmeticsData":  {
+                                          "endocrineDisruptors":  [
+
+                                                                  ],
+                                          "allergens":  [
+
+                                                        ],
+                                          "certifications":  [
+
+                                                             ],
+                                          "ingredients":  [
+
+                                                          ]
+                                      },
+                    "detergentsData":  {
+                                           "composition":  [
+
+                                                           ],
+                                           "surfactants":  [
+
+                                                           ],
+                                           "ecoLabels":  [
+
+                                                         ]
+                                       },
+                    "scores":  {
+                                   "overallScore":  34,
+                                   "healthScore":  38,
+                                   "environmentScore":  17,
+                                   "confidence":  0.38,
+                                   "calculatedAt":  "2025-12-29T14:21:32.208Z",
+                                   "scoringVersion":  "3.2.0",
+                                   "breakdown":  {
+                                                     "nutriScore":  {
+                                                                        "score":  20,
+                                                                        "weight":  0.2,
+                                                                        "grade":  "E",
+                                                                        "label":  "Nutri-Score E",
+                                                                        "contribution":  4
+                                                                    },
+                                                     "additives":  {
+                                                                       "score":  100,
+                                                                       "weight":  0.15,
+                                                                       "count":  0,
+                                                                       "dangerous":  [
+
+                                                                                     ],
+                                                                       "label":  "Sans additifs",
+                                                                       "contribution":  15
+                                                                   },
+                                                     "nova":  {
+                                                                  "score":  null,
+                                                                  "weight":  0.15,
+                                                                  "group":  null,
+                                                                  "label":  "Non défini",
+                                                                  "contribution":  0
+                                                              },
+                                                     "ecoScore":  {
+                                                                      "score":  50,
+                                                                      "weight":  0.1,
+                                                                      "grade":  null,
+                                                                      "label":  "Eco-Score ",
+                                                                      "contribution":  5
+                                                                  },
+                                                     "origin":  {
+                                                                    "score":  null,
+                                                                    "weight":  0.1,
+                                                                    "countries":  [
+
+                                                                                  ],
+                                                                    "label":  "Non défini",
+                                                                    "contribution":  0
+                                                                },
+                                                     "packaging":  {
+                                                                       "score":  null,
+                                                                       "weight":  0.1,
+                                                                       "materials":  [
+
+                                                                                     ],
+                                                                       "label":  "Non défini",
+                                                                       "contribution":  0
+                                                                   },
+                                                     "labels":  {
+                                                                    "score":  0,
+                                                                    "weight":  0.1,
+                                                                    "list":  [
+
+                                                                             ],
+                                                                    "isBio":  false,
+                                                                    "label":  "Aucun label",
+                                                                    "contribution":  0
+                                                                },
+                                                     "allergens":  {
+                                                                       "score":  100,
+                                                                       "weight":  0.1,
+                                                                       "detected":  [
+
+                                                                                    ],
+                                                                       "count":  0,
+                                                                       "label":  "Aucun allergène",
+                                                                       "contribution":  10
+                                                                   }
+                                                 },
+                                   "missingData":  [
+
+                                                   ],
+                                   "aiEnrichmentUsed":  true,
+                                   "dataQualityInfo":  {
+                                                           "confidence":  60,
+                                                           "level":  "ACCEPTABLE",
+                                                           "canScore":  true,
+                                                           "availableData":  [
+                                                                                 "product_name",
+                                                                                 "brands",
+                                                                                 "nutriments"
+                                                                             ],
+                                                           "missingData":  [
+                                                                               "nova",
+                                                                               "ecoScore_estimated",
+                                                                               "origin",
+                                                                               "packaging"
+                                                                           ]
+                                                       }
+                               },
+                    "aiEnriched":  true,
+                    "knowledgeBaseUsed":  false,
+                    "viewCount":  0,
+                    "scanCount":  1,
+                    "createdAt":  "2025-12-29T14:21:32.301Z",
+                    "updatedAt":  "2025-12-29T14:21:32.310Z",
+                    "__v":  0,
+                    "categoryNormalized":  "food",
+                    "globalScore":  null,
+                    "completeness":  0,
+                    "lastUpdated":  "2025-12-29T14:21:32.310Z"
+                },
+    "metadata":  {
+                     "source":  "MONGODB_ID",
+                     "cached":  false,
+                     "aiEnrichmentUsed":  false,
+                     "retrievedAt":  "2025-12-29T14:30:21.748Z"
+                 },
+    "knowledgeAnalysis":  null,
+    "aiEnriched":  false,
+    "enrichmentConfidence":  0,
+    "recipes":  [
+                    {
+                        "_id":  "690f42716c2a6d43f4f052cd",
+                        "name":  "Grillé rôtis",
+                        "slug":  "grille-rotis-5",
+                        "description":  "Un équilibré dîner à base de lentilles, brocolis, cannelle. Recette scientifiquement équilibrée.",
+                        "category":  "dinner",
+                        "scores":  {
+                                       "overallScore":  94,
+                                       "healthScore":  93,
+                                       "environmentScore":  91,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Lentilles",
+                                                "quantity":  150,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Brocolis",
+                                                "quantity":  200,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Cannelle",
+                                                "quantity":  1,
+                                                "unit":  "pincée",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Préchauffer le four à 200°C.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Disposer les ingrédients sur une plaque, assaisonner.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Cuire jusqu\u0027à doré et tendre.",
+                                          "duration":  25,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  11,
+                        "cookTime":  29,
+                        "servings":  1,
+                        "difficulty":  "medium",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco",
+                                                             "muscle-gain"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.322Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f0529d",
+                        "name":  "Omelette",
+                        "slug":  "omelette-7",
+                        "description":  "Un équilibré petit-déjeuner à base de thon, épinards frais, citron. Recette scientifiquement équilibrée.",
+                        "category":  "breakfast",
+                        "scores":  {
+                                       "overallScore":  94,
+                                       "healthScore":  93,
+                                       "environmentScore":  93,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Thon",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Épinards frais",
+                                                "quantity":  80,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Citron",
+                                                "quantity":  0.25,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Faire chauffer une poêle avec un filet d\u0027huile.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Faire revenir les ingrédients en remuant.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir chaud.",
+                                          "duration":  1,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  4,
+                        "cookTime":  5,
+                        "servings":  1,
+                        "difficulty":  "medium",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "omnivore",
+                                                               "pescatarian"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.273Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f052c2",
+                        "name":  "Wrap",
+                        "slug":  "wrap-24",
+                        "description":  "Un excellent déjeuner à base de flocons d\u0027avoine, saumon sauvage, brocolis. Recette scientifiquement équilibrée.",
+                        "category":  "lunch",
+                        "scores":  {
+                                       "overallScore":  94,
+                                       "healthScore":  93,
+                                       "environmentScore":  89,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Flocons d\u0027avoine",
+                                                "quantity":  40,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Saumon sauvage",
+                                                "quantity":  180,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Brocolis",
+                                                "quantity":  200,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Citron",
+                                                "quantity":  0.5,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Préparer tous les ingrédients.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Suivre la méthode de cuisson appropriée.",
+                                          "duration":  10,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  10,
+                        "cookTime":  7,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "omnivore",
+                                                               "pescatarian"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco",
+                                                             "muscle-gain",
+                                                             "muscle-gain"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.313Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    }
+                ],
+    "alternatives":  [
+                         {
+                             "_id":  "691780b7c56dd19f3eddfa3c",
+                             "barcode":  "3421557910203",
+                             "name":  "Flocons d\u0027avoine complets",
+                             "brand":  "Terres \u0026 Céréales BIO",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  80,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:23.795Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0708",
+                             "barcode":  "3421557701023",
+                             "name":  "Flocons d\u0027avoine gros",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:34.452Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0857",
+                             "barcode":  "3760121212979",
+                             "name":  "Pétales 5 céréales",
+                             "brand":  "Biocoop, Ensemble",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "overallScore":  78,
+                                            "healthScore":  100,
+                                            "environmentScore":  33,
+                                            "confidence":  0.65,
+                                            "dataCompleteness":  "Excellente",
+                                            "calculatedAt":  "2025-12-25T14:07:34.939Z",
+                                            "scoringVersion":  "3.2.0",
+                                            "breakdown":  null,
+                                            "missingData":  [
+                                                                "saturatedFat"
+                                                            ],
+                                            "aiEnrichmentUsed":  false,
+                                            "scoringMetadata":  {
+                                                                    "methodology":  "ECOLOJIA V3 - Scoring scientifique 8 composantes",
+                                                                    "version":  "3.1.0",
+                                                                    "calculatedAt":  "2025-11-29T12:11:49.070Z"
+                                                                },
+                                            "dataQualityInfo":  {
+                                                                    "confidence":  67,
+                                                                    "level":  "ACCEPTABLE",
+                                                                    "canScore":  true,
+                                                                    "availableData":  [
+                                                                                          "product_name",
+                                                                                          "brands",
+                                                                                          "nutriments",
+                                                                                          "labels"
+                                                                                      ]
+                                                                }
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0b4a",
+                             "barcode":  "3421557601033",
+                             "name":  "Flocons d\u0027avoine petits",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:40.613Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780bdc56dd19f3ede3bc3",
+                             "barcode":  "3770011009398",
+                             "name":  "Skyr Amande",
+                             "brand":  "MoRice",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  70,
+                                            "health":  90,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  50,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:08:36.793Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b6c56dd19f3eddf7a0",
+                             "barcode":  "0096619458837",
+                             "name":  "Organic Variety Pack (Apple Apple/Apple Strawberry/Apple Banana/Apple Cinnamon) Fruit On The Go",
+                             "brand":  "GoGo SqueeZ,Kirkland",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  100,
+                                            "health":  90,
+                                            "environmental":  80,
+                                            "social":  50,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  50,
+                                            "overallScore":  76,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:21.765Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  76,
+                             "aiEnriched":  false
+                         }
+                     ]
+}

@@ -1,13 +1,38 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { apiClient as api } from '../services/api';
+﻿import React, { createContext, useContext, useState, useEffect } from "react";
+import { apiClient as api } from "../services/api";
 
-interface User {
+// ============================================================================
+// TYPES USER (aligné Backend)
+// ============================================================================
+
+export interface UserSubscription {
+  tier: "free" | "premium";
+  status?: "active" | "canceled" | "past_due";
+  currentPeriodEnd?: string;
+}
+
+export interface UserPreferences {
+  allergies?: string[];
+  diets?: string[];
+  healthGoals?: string[];
+  notifications?: {
+    email: boolean;
+    push: boolean;
+    marketing: boolean;
+  };
+  language?: "fr" | "en";
+}
+
+export interface User {
   id: string;
   email: string;
-  name: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string; // Fallback
   avatar?: string;
-  plan: string;
-  tier: string;
+  subscription?: UserSubscription;
+  preferences?: UserPreferences;
+  createdAt?: string;
 }
 
 interface AuthContextType {
@@ -19,27 +44,45 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
+// ============================================================================
+// CONTEXT
+// ============================================================================
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fonction pour récupérer le profil depuis cookie (via API)
+  // Charger user depuis localStorage au démarrage
   const refreshUser = async () => {
     try {
-      const response = await api.get('/auth/profile', {
-        withCredentials: true // IMPORTANT: envoyer cookies
-      });
+      // D'abord vérifier localStorage
+      const storedUser = localStorage.getItem("ecolojia_user");
+      const storedToken = localStorage.getItem("ecolojia_token");
       
-      if (response.data.success) {
-        setUser(response.data.user);
-        console.log('✅ User loaded from cookie:', response.data.user.email);
-      } else {
-        setUser(null);
+      if (storedUser && storedToken) {
+        setUser(JSON.parse(storedUser));
+        console.log("✅ User loaded from localStorage");
+      }
+      
+      // Puis valider avec le backend (optionnel)
+      try {
+        const response = await api.get("/auth/profile", {
+          withCredentials: true,
+        });
+        
+        if (response.data.success && response.data.user) {
+          setUser(response.data.user);
+          localStorage.setItem("ecolojia_user", JSON.stringify(response.data.user));
+          console.log("✅ User refreshed from API");
+        }
+      } catch {
+        // Token expiré, garder le user local si présent
+        console.log("⚠️ Could not refresh from API");
       }
     } catch (error) {
-      console.log('👤 No active session');
+      console.log("👤 No active session");
       setUser(null);
     } finally {
       setLoading(false);
@@ -47,43 +90,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Charger user au démarrage
-  // useEffect(() => {
-  //   refreshUser();
-  // }, []);
+  useEffect(() => {
+    refreshUser();
+  }, []);
 
-  // Login classique
+  // Login
   const login = async (email: string, password: string) => {
     try {
-      const response = await api.post('/auth/login', { email, password }, {
-        withCredentials: true
+      const response = await api.post("/auth/login", { email, password }, {
+        withCredentials: true,
       });
-      
+
       if (response.data.success) {
-        setUser(response.data.user);
-        // Stocker token
+        const userData = response.data.user;
+        setUser(userData);
+        
         if (response.data.token) {
-          localStorage.setItem('ecolojia_token', response.data.token);
-          localStorage.setItem('ecolojia_user', JSON.stringify(response.data.user));
+          localStorage.setItem("ecolojia_token", response.data.token);
+          localStorage.setItem("ecolojia_user", JSON.stringify(userData));
         }
+        
+        console.log("✅ Login success:", userData.email);
       }
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Erreur de connexion');
+      throw new Error(error.response?.data?.message || "Erreur de connexion");
     }
   };
 
   // Logout
   const logout = () => {
-    // Supprimer cookies côté client
-    document.cookie = 'ecolojia_token=; Max-Age=0; path=/';
-    document.cookie = 'ecolojia_user=; Max-Age=0; path=/';
-    
-    // Supprimer localStorage (compatibilité)
-    localStorage.removeItem('ecolojia_token');
-    localStorage.removeItem('ecolojia_refresh');
-    localStorage.removeItem('ecolojia_user');
-    
+    document.cookie = "ecolojia_token=; Max-Age=0; path=/";
+    document.cookie = "ecolojia_user=; Max-Age=0; path=/";
+    localStorage.removeItem("ecolojia_token");
+    localStorage.removeItem("ecolojia_refresh");
+    localStorage.removeItem("ecolojia_user");
     setUser(null);
-    console.log('👋 User logged out');
+    console.log("👋 User logged out");
   };
 
   return (
@@ -105,8 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuthContext must be used within AuthProvider');
+    throw new Error("useAuthContext must be used within AuthProvider");
   }
   return context;
 };
-

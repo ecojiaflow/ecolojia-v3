@@ -1,78 +1,37 @@
+﻿/**
+ * stats.routes.js — Stats publiques Ecolojia
+ */
+
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 
+// GET /api/stats — Stats publiques
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find({ category: 'food' });
-    
-    const stats = {
-      totalProducts: products.length,
-      nova: { 1: 0, 2: 0, 3: 0, 4: 0, unknown: 0 },
-      additives: {
-        total: 0,
-        byRiskLevel: { LOW: 0, MEDIUM: 0, HIGH: 0, VERY_HIGH: 0 }
-      },
-      allergens: {
-        total: 0,
-        byRiskLevel: { LOW: 0, MEDIUM: 0, HIGH: 0, VERY_HIGH: 0 },
-        topAllergens: {}
-      },
-      scores: {
-        nutriScore: { A: 0, B: 0, C: 0, D: 0, E: 0, unknown: 0 },
-        ecoScore: { A: 0, B: 0, C: 0, D: 0, E: 0, unknown: 0 }
-      }
-    };
-    
-    products.forEach(p => {
-      // NOVA
-      const nova = p.foodData.novaGroup;
-      if (nova >= 1 && nova <= 4) {
-        stats.nova[nova]++;
-      } else {
-        stats.nova.unknown++;
-      }
-      
-      // Additifs
-      p.foodData.additives?.forEach(a => {
-        stats.additives.total++;
-        stats.additives.byRiskLevel[a.riskLevel || 'LOW']++;
-      });
-      
-      // Allergènes
-      p.foodData.allergens?.forEach(a => {
-        stats.allergens.total++;
-        stats.allergens.byRiskLevel[a.riskLevel || 'MEDIUM']++;
-        stats.allergens.topAllergens[a.name] = (stats.allergens.topAllergens[a.name] || 0) + 1;
-      });
-      
-      // Scores
-      const nutri = p.foodData.nutriScore;
-      const eco = p.foodData.ecoScore;
-      
-      if (nutri && ['A', 'B', 'C', 'D', 'E'].includes(nutri)) {
-        stats.scores.nutriScore[nutri]++;
-      } else {
-        stats.scores.nutriScore.unknown++;
-      }
-      
-      if (eco && ['A', 'B', 'C', 'D', 'E'].includes(eco)) {
-        stats.scores.ecoScore[eco]++;
-      } else {
-        stats.scores.ecoScore.unknown++;
-      }
+    const totalProducts = await Product.countDocuments();
+    const withNova = await Product.countDocuments({ 
+      'scores.breakdown.nova.group': { $exists: true, $ne: null } 
     });
     
-    // Top 5 allergènes
-    stats.allergens.topAllergens = Object.entries(stats.allergens.topAllergens)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([name, count]) => ({ name, count }));
-    
-    res.json({ success: true, stats });
+    const l1 = await Product.countDocuments({ 'constitution.healthReflex.level': 1 });
+    const l2 = await Product.countDocuments({ 'constitution.healthReflex.level': 2 });
+    const l3 = await Product.countDocuments({ 'constitution.healthReflex.level': 3 });
+
+    res.json({
+      success: true,
+      stats: {
+        totalProducts,
+        enrichedProducts: withNova,
+        enrichmentRate: Math.round((withNova / totalProducts) * 100),
+        distribution: { level1: l1, level2: l2, level3: l3 },
+        habitsCount: 20,
+        lastUpdated: new Date().toISOString()
+      }
+    });
   } catch (error) {
-    console.error('Stats error:', error);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('[Stats] Error:', error.message);
+    res.status(500).json({ success: false, error: 'Erreur serveur' });
   }
 });
 

@@ -1,4 +1,4 @@
-// src/config/api.config.ts
+﻿// src/config/api.config.ts
 export const API_BASE_URL = import.met?.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
 
 export const API_CONFIG = {
@@ -16,7 +16,7 @@ export const API_CONFIG = {
     PRODUCTS: {
       SEARCH: '/api/algolia/search',
       GET_BY_ID: '/api/products/:id',
-      GET_BY_BARCODE: '/api/products/barcode/:barcode',
+      GET_BY_BARCODE: '/api/products/scan/:barcode',
     },
     // Analysis
     ANALYSIS: {
@@ -58,5 +58,6 @@ export const buildApiUrl = (endpoint: string, paramsa: Record<string, string>): 
 export const isPublicEndpoint = (endpoint: string): boolean => {
   return PUBLIC_ENDPOINTS.some(pe => endpoint.includes(pe));
 };
+
 
 

@@ -1,0 +1,250 @@
+﻿// PATH: backend/src/routes/vision.routes.js
+const express = require('express');
+const router = express.Router();
+
+const path = require('path');
+const fs = require('fs').promises;
+const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
+
+// Services
+const PhotoAnalysisService = require('../services/photoAnalysis.service');
+
+// Flags
+const ENABLE_VISION = process.env.ENABLE_VISION === '1';
+
+// Middleware auth
+let authenticateToken = null;
+try {
+  const mw = require('../middleware');
+  authenticateToken = typeof mw.authenticateToken === 'function' ? mw.authenticateToken : null;
+} catch (_) {
+  try {
+    const mw2 = require('../middleware/auth');
+    authenticateToken = typeof mw2.authenticateToken === 'function' ? mw2.authenticateToken : null;
+  } catch (_) {}
+}
+const authMw = authenticateToken || ((req, res, next) => next());
+
+// Vision service (legacy)
+let visionService = null;
+try {
+  visionService = require('../services/vision/VisionService');
+} catch (_) {
+  visionService = null;
+}
+
+// Multer configuration
+let upload = null;
+if (ENABLE_VISION) {
+  const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+      const uploadDir = path.join(__dirname, '../../uploads/vision');
+      await fs.mkdir(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      const uniqueName = `${Date.now()}-${uuidv4()}${path.extname(file.originalname)}`;
+      cb(null, uniqueName);
+    },
+  });
+
+  upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+    fileFilter: (req, file, cb) => {
+      const allowed = /jpeg|jpg|png|webp/;
+      const ok = allowed.test(path.extname(file.originalname).toLowerCase()) && allowed.test(file.mimetype);
+      ok ? cb(null, true) : cb(new Error('Formats acceptés: JPEG/PNG/WebP'));
+    },
+  });
+}
+
+// Multer memory storage pour nouvelle route (pas de fichier temporaire)
+const uploadMemory = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|webp/;
+    const ok = allowed.test(path.extname(file.originalname).toLowerCase()) && allowed.test(file.mimetype);
+    ok ? cb(null, true) : cb(new Error('Formats acceptés: JPEG/PNG/WebP'));
+  },
+});
+
+// ========== ROUTES ==========
+
+// Health check
+router.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    enabled: ENABLE_VISION,
+    hasLegacyHandler: !!(visionService && typeof visionService.analyzeImage === 'function'),
+    hasPhotoAnalysis: !!PhotoAnalysisService,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ========== NOUVELLE ROUTE : PHOTO ANALYSIS ==========
+
+/**
+ * POST /api/vision/analyze-photo
+ * Analyse complète photo → Constitution Ecolojia
+ * Pipeline 6 étapes : Qualité → OCR → Cache → Catégorie → IA → Constitution
+ */
+router.post('/analyze-photo', authMw, uploadMemory.single('image'), async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    // Validation image
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'MISSING_IMAGE',
+        message: 'Image requise dans le champ "image"',
+      });
+    }
+    
+    console.log(`\n📸 [API] Analyse photo reçue (${(req.file.size / 1024).toFixed(2)} KB)`);
+    
+    // Options
+    const options = {
+      category: req.body.category || 'auto', // food|cosmetic|detergent|auto
+      userId: req.user?.id || null,
+    };
+    
+    // Lancer analyse complète
+    const result = await PhotoAnalysisService.analyzePhoto(req.file.buffer, options);
+    
+    // Log résultat
+    const processingTime = Date.now() - startTime;
+    console.log(`✅ [API] Analyse terminée en ${processingTime}ms (source: ${result.source || 'error'})`);
+    
+    // Erreur qualité ou catégorie
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        error: result.error,
+        message: result.message,
+        issues: result.issues || [],
+        instructions: result.instructions || [],
+        disclaimer: result.disclaimer || null,
+        suggestion: result.suggestion || null,
+        processingTime: result.processingTime,
+      });
+    }
+    
+    // Succès
+    return res.json({
+      success: true,
+      cached: result.cached || false,
+      cacheLevel: result.cacheLevel || null,
+      source: result.source, // 'cache' | 'ai'
+      product: {
+        _id: result.product._id,
+        barcode: result.product.barcode,
+        name: result.product.name,
+        brand: result.product.brand,
+        categoryType: result.product.categoryType,
+        scores: result.product.scores,
+        ingredients_text: result.product.ingredients_text,
+      },
+      constitution: result.constitution,
+      categoryDetection: result.categoryDetection || null,
+      disclaimer: result.disclaimer || null,
+      processingTime: result.processingTime,
+    });
+    
+  } catch (error) {
+    console.error('❌ [API] Erreur analyse photo:', error);
+    
+    return res.status(500).json({
+      success: false,
+      error: 'INTERNAL_ERROR',
+      message: 'Erreur serveur lors de l\'analyse',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+});
+
+// ========== ROUTES LEGACY (existantes) ==========
+
+const analyzeImageHandlerOk = visionService && typeof visionService.analyzeImage === 'function';
+const extractOk = visionService && typeof visionService.extractStructuredData === 'function';
+
+if (!ENABLE_VISION || !analyzeImageHandlerOk) {
+  console.warn('⚠️ Vision legacy désactivée ou handler indisponible');
+
+  router.post('/analyze-image', authMw, (req, res) => {
+    return res.status(503).json({
+      success: false,
+      message: 'Service OCR legacy indisponible. Utilisez /api/vision/analyze-photo à la place.',
+    });
+  });
+
+  router.post('/extract-test', (req, res) => {
+    return res.status(503).json({
+      success: false,
+      message: 'Extraction indisponible en dev sans OCR.',
+    });
+  });
+
+  router.get('/status/:jobId', (req, res) => {
+    return res.status(404).json({ success: false, message: 'Aucun job en cours.' });
+  });
+} else {
+  // Version complète legacy
+  const jobs = new Map();
+
+  router.post('/analyze-image', authMw, upload.single('image'), async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Image requise dans le champ "image".' });
+    }
+    const jobId = uuidv4();
+    const imagePath = req.file.path;
+    jobs.set(jobId, { status: 'processing', startTime: Date.now() });
+
+    try {
+      visionService
+        .analyzeImage(imagePath, { jobId, language: req.body.language || 'fr' })
+        .then(() => {
+          setTimeout(async () => {
+            try { await fs.unlink(imagePath); } catch (_) {}
+          }, 30 * 60 * 1000);
+        })
+        .catch((err) => {
+          jobs.set(jobId, { status: 'failed', error: err?.message || 'Erreur OCR' });
+        });
+
+      await new Promise((r) => setTimeout(r, 1500));
+      const j = jobs.get(jobId);
+      if (j && j.status === 'completed') return res.json(j);
+
+      return res.json({ success: true, jobId, status: 'processing' });
+    } catch (err) {
+      try { await fs.unlink(req.file.path); } catch (_) {}
+      return res.status(500).json({ success: false, message: 'Erreur analyse image', error: err?.message });
+    }
+  });
+
+  router.get('/status/:jobId', (req, res) => {
+    const j = jobs.get(req.params.jobId);
+    if (!j) return res.status(404).json({ success: false, message: 'Job non trouvé' });
+    return res.json(j);
+  });
+
+  router.post('/extract-test', (req, res) => {
+    if (!extractOk) {
+      return res.status(503).json({ success: false, message: 'extractStructuredData indisponible.' });
+    }
+    try {
+      const { text } = req.body || {};
+      if (!text) return res.status(400).json({ success: false, message: 'Texte requis' });
+      const extractedData = visionService.extractStructuredData({ text });
+      return res.json({ success: true, extractedData });
+    } catch (e) {
+      return res.status(500).json({ success: false, message: 'Erreur extraction', error: e?.message });
+    }
+  });
+}
+
+module.exports = router;

@@ -1,16 +1,16 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  MessageCircle, 
-  UtensilsCrossed, 
-  ShoppingCart, 
+import {
+  UtensilsCrossed,
+  ShoppingCart,
   Camera,
   Sparkles,
   Crown,
   ArrowRight,
   Shield,
   Zap,
-  TrendingUp
+  TrendingUp,
+  BookOpen
 } from 'lucide-react';
 
 const AssistantPage: React.FC = () => {
@@ -19,30 +19,29 @@ const AssistantPage: React.FC = () => {
   const [loading] = useState(false);
 
   const quotas = {
-    aiQuestionsUsed: 0,
-    aiQuestionsLimit: 3,
     mealPlansUsed: 0,
     mealPlansLimit: 0,
     ocrAnalysisUsed: 0,
     ocrAnalysisLimit: 0
   };
 
+  // V1 : Chat libre désactivé - sera remplacé par "Explorer une situation" (guidé)
   const aiActions = [
     {
-      id: 'chat',
-      title: 'Chat Nutritionniste',
-      description: 'Discutez avec notre IA experte en nutrition pour des conseils personnalises',
-      icon: MessageCircle,
-      gradient: 'from-[#236D3E] to-[#489E26]',
-      route: '/chat',
+      id: 'ocr-analysis',
+      title: 'Analyse Photo',
+      description: 'Analysez les ingredients directement depuis une photo d\'etiquette',
+      icon: Camera,
+      gradient: 'from-[#16A34A] to-[#0F7A34]',
+      route: '/scan?mode=photo',
       isPremium: false,
-      quotaUsed: quotas.aiQuestionsUsed,
-      quotaLimit: quotas.aiQuestionsLimit
+      quotaUsed: quotas.ocrAnalysisUsed,
+      quotaLimit: 5
     },
     {
       id: 'meal-plan',
-      title: 'Plans Repas IA',
-      description: 'Generez des plans repas hebdomadaires adaptes a votre budget et regime',
+      title: 'Plans Repas',
+      description: 'Generez des plans repas hebdomadaires adaptes a vos habitudes',
       icon: UtensilsCrossed,
       gradient: 'from-[#7DDE4A] to-[#5FC72F]',
       route: '/meal-plan',
@@ -52,25 +51,14 @@ const AssistantPage: React.FC = () => {
     },
     {
       id: 'shopping-list',
-      title: 'Listes Courses IA',
-      description: 'Creez des listes de courses intelligentes basees sur vos scans',
+      title: 'Listes Courses',
+      description: 'Creez des listes de courses basees sur vos scans',
       icon: ShoppingCart,
       gradient: 'from-[#2E7DD7] to-[#1D4ED8]',
       route: '/shopping-list',
       isPremium: true,
       quotaUsed: 0,
       quotaLimit: 0
-    },
-    {
-      id: 'ocr-analysis',
-      title: 'Analyse Photo',
-      description: 'Analysez les ingredients directement depuis une photo d\'etiquette',
-      icon: Camera,
-      gradient: 'from-[#E9A100] to-[#D97706]',
-      route: '/ocr-wizard',
-      isPremium: true,
-      quotaUsed: quotas.ocrAnalysisUsed,
-      quotaLimit: quotas.ocrAnalysisLimit
     }
   ];
 
@@ -83,6 +71,7 @@ const AssistantPage: React.FC = () => {
   };
 
   const getQuotaColor = (used: number, limit: number): string => {
+    if (limit === 0) return 'text-[#1B9E4B]';
     const percentage = (used / limit) * 100;
     if (percentage >= 90) return 'text-[#D04343]';
     if (percentage >= 70) return 'text-[#E9A100]';
@@ -91,53 +80,51 @@ const AssistantPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] to-[#E9F8DF] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F3FBF6] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#D4F1C0] border-t-[#7DDE4A] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-neutral-600">Chargement...</p>
+          <div className="w-16 h-16 border-4 border-[#E6F2EA] border-t-[#16A34A] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600">Chargement...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F3FBEA] via-[#E9F8DF] to-[#D4F1C0] pb-20">
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-        
+    <div className="min-h-screen bg-[#F3FBF6] pb-20">
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-nature-100 text-[#489E26] px-4 py-2 rounded-full mb-4 border border-[#D4F1C0]">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">Assistant IA Expert</span>
+          <div className="inline-flex items-center gap-2 bg-[#E8F7EE] text-[#16A34A] px-4 py-2 rounded-full mb-4 border border-[#C6F6D5]">
+            <BookOpen className="w-4 h-4" />
+            <span className="text-sm font-medium">Outils Ecolojia</span>
           </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
-            Votre coach nutrition{' '}
-            <span className="text-[#236D3E]">
-              intelligent
-            </span>
+
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            Comprendre et{' '}
+            <span className="text-[#16A34A]">agir</span>
           </h1>
-          
-          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Utilisez l'intelligence artificielle pour optimiser votre alimentation, 
-            generer des plans repas et analyser vos produits en profondeur.
+
+          <p className="text-lg text-slate-600 max-w-xl mx-auto">
+            Des outils simples pour analyser vos produits et organiser vos courses.
+            Pas de chatbot. Des faits.
           </p>
         </div>
 
         {!isPremium && (
-          <div className="bg-gradient-to-r from-[#236D3E] to-[#489E26] rounded-[16px] p-6 text-white shadow-[0_6px_14px_rgba(0,0,0,0.10)]">
+          <div className="bg-gradient-to-r from-[#16A34A] to-[#0F7A34] rounded-2xl p-6 text-white shadow-lg">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <Crown className="w-8 h-8" />
                 <div>
                   <h3 className="text-xl font-bold mb-1">Passez Premium</h3>
                   <p className="text-sm opacity-90">
-                    Debloquez toutes les fonctionnalites IA pour 2.99 EUR/mois
+                    Debloquez toutes les fonctionnalites pour 1.99 EUR/mois
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => navigate('/premium')}
-                className="px-6 py-3 bg-white text-[#236D3E] rounded-[16px] font-semibold hover:shadow-[0_6px_14px_rgba(0,0,0,0.10)] transition-all"
+                className="px-6 py-3 bg-white text-[#16A34A] rounded-2xl font-semibold hover:shadow-lg transition-all"
               >
                 Decouvrir Premium
               </button>
@@ -145,70 +132,62 @@ const AssistantPage: React.FC = () => {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {aiActions.map((action) => {
             const Icon = action.icon;
             const isLocked = !isPremium && action.isPremium;
-            const isQuotaExceeded = action.quotaUsed >= action.quotaLimit && !isPremium && action.quotaLimit > 0;
+            const isQuotaExceeded = action.quotaLimit > 0 && action.quotaUsed >= action.quotaLimit && !isPremium;
 
             return (
               <div
                 key={action.id}
                 onClick={() => handleActionClick(action)}
-                className={`bg-white rounded-[16px] p-6 shadow-[0_2px_6px_rgba(0,0,0,0.08)] border-2 transition-all cursor-pointer ${
-                  isLocked || isQuotaExceeded 
-                    ? 'border-nature-300 opacity-75 hover:opacity-100' 
-                    : 'border-nature-300 hover:border-[#D4F1C0] hover:shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:-translate-y-1'
-                }`}
+                className={g-white rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer }
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-14 h-14 rounded-[16px] bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
+                  <div className={w-14 h-14 rounded-2xl bg-gradient-to-br +action.gradient+ flex items-center justify-center}>
                     <Icon className="w-7 h-7 text-white" />
                   </div>
                   {(isLocked || isQuotaExceeded) && (
-                    <div className="px-3 py-1 bg-nature-100 text-[#236D3E] rounded-full text-xs font-semibold flex items-center gap-1 border border-[#D4F1C0]">
+                    <div className="px-3 py-1 bg-[#E8F7EE] text-[#16A34A] rounded-full text-xs font-semibold flex items-center gap-1 border border-[#C6F6D5]">
                       <Crown className="w-3 h-3" />
                       Premium
                     </div>
                   )}
                 </div>
 
-                <h3 className="text-xl font-bold text-neutral-900 mb-2">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
                   {action.title}
                 </h3>
-                <p className="text-neutral-600 text-sm mb-4">
+                <p className="text-slate-600 text-sm mb-4">
                   {action.description}
                 </p>
 
                 {action.quotaLimit > 0 && (
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs text-neutral-600">Utilisation</span>
-                      <span className={`text-xs font-semibold ${getQuotaColor(action.quotaUsed, action.quotaLimit)}`}>
+                      <span className="text-xs text-slate-500">Utilisation</span>
+                      <span className={	ext-xs font-semibold +getQuotaColor(action.quotaUsed, action.quotaLimit)}>
                         {action.quotaUsed}/{action.quotaLimit}
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-[#EDF2EA] rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all ${
-                          isQuotaExceeded
-                            ? 'bg-[#D04343]'
-                            : 'bg-gradient-to-r ' + action.gradient
-                        }`}
-                        style={{ 
-                          width: `${Math.min((action.quotaUsed / action.quotaLimit) * 100, 100)}%` 
+                        className={h-full transition-all +(isQuotaExceeded ? 'bg-red-500' : 'bg-gradient-to-r '+action.gradient)}
+                        style={{
+                          width: +""+\%+""+
                         }}
                       />
                     </div>
                   </div>
                 )}
 
-                <button className={`w-full py-3 rounded-[16px] font-semibold flex items-center justify-center gap-2 transition-all ${
+                <button className={w-full py-3 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all +(
                   isLocked || isQuotaExceeded
-                    ? 'bg-nature-100 text-neutral-600'
-                    : 'bg-gradient-to-r ' + action.gradient + ' text-white hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)]'
-                }`}>
-                  {isLocked || isQuotaExceeded ? 'Debloquer avec Premium' : 'Lancer'}
+                    ? 'bg-slate-100 text-slate-600'
+                    : 'bg-gradient-to-r '+action.gradient+' text-white hover:shadow-md'
+                )}>
+                  {isLocked || isQuotaExceeded ? 'Debloquer' : 'Lancer'}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -216,58 +195,43 @@ const AssistantPage: React.FC = () => {
           })}
         </div>
 
-        <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_6px_rgba(0,0,0,0.08)] border border-nature-300">
-          <h3 className="text-xl font-bold text-neutral-900 mb-6 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-[#E9A100]" />
-            Pourquoi utiliser l'Assistant IA ?
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E6F2EA]">
+          <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#E9A100]" />
+            Pourquoi ces outils ?
           </h3>
-          
+
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <TrendingUp className="w-8 h-8 text-[#1B9E4B] mb-3" />
-              <h4 className="font-semibold text-neutral-900 mb-2">Personnalise</h4>
-              <p className="text-sm text-neutral-600">
-                Conseils adaptes a votre profil, regime et objectifs sante
+              <TrendingUp className="w-8 h-8 text-[#16A34A] mb-3" />
+              <h4 className="font-semibold text-slate-900 mb-2">Concret</h4>
+              <p className="text-sm text-slate-600">
+                Des actions claires, pas des conseils vagues
               </p>
             </div>
             <div>
               <Shield className="w-8 h-8 text-[#2E7DD7] mb-3" />
-              <h4 className="font-semibold text-neutral-900 mb-2">Scientifique</h4>
-              <p className="text-sm text-neutral-600">
-                Base sur donnees OMS, ANSES et etudes nutritionnelles recentes
+              <h4 className="font-semibold text-slate-900 mb-2">Scientifique</h4>
+              <p className="text-sm text-slate-600">
+                Base sur les donnees OMS, ANSES et EFSA
               </p>
             </div>
             <div>
-              <Sparkles className="w-8 h-8 text-[#236D3E] mb-3" />
-              <h4 className="font-semibold text-neutral-900 mb-2">Intelligent</h4>
-              <p className="text-sm text-neutral-600">
-                Apprentissage continu pour des recommandations toujours plus precises
+              <Sparkles className="w-8 h-8 text-[#16A34A] mb-3" />
+              <h4 className="font-semibold text-slate-900 mb-2">Sans jugement</h4>
+              <p className="text-sm text-slate-600">
+                Pas de culpabilisation, juste des faits
               </p>
             </div>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-[16px] p-4">
-            <div className="flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-[#2E7DD7] flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-[#1E3A8A]">
-                <strong>Transparence IA:</strong> Je suis un assistant IA, pas un professionnel de sante. 
-                Mes reponses sont generees par intelligence artificielle et ne remplacent pas 
-                un avis medical personnalise. Pour toute question medicale, consultez un medecin ou 
-                nutritionniste diplome.
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#FFF8E6] border border-[#FFE8A8] rounded-[16px] p-4">
-            <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-[#E9A100] flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-[#6B4D00]">
-                <strong>Information sante:</strong> ECOLOJIA n'est pas un dispositif medical. 
-                Les recommandations sont informatives et educatives. En cas de probleme de sante, 
-                d'allergie ou de regime special, consultez imperativement un professionnel qualifie.
-              </div>
+        <div className="bg-[#FFF8E6] border border-[#FFE8A8] rounded-2xl p-4">
+          <div className="flex items-start gap-3">
+            <Shield className="w-5 h-5 text-[#E9A100] flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-[#6B4D00]">
+              <strong>Information :</strong> Ecolojia est un outil educatif, pas medical.
+              Pour toute question de sante, consultez un professionnel qualifie.
             </div>
           </div>
         </div>

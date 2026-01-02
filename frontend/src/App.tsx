@@ -1,41 +1,48 @@
-﻿// PATH: frontend/src/App.tsx
-import React, { lazy, Suspense, useState } from 'react';
-import './utils/keepAlive';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthContext } from './Contexts/AuthContext';
-import Layout from './components/layout/Layout';
-import LoadingSpinner from './components/common/LoadingSpinner';
-import ProtectedRoute from './components/ProtectedRoute';
-import { DisclaimerModal, hasAcceptedDisclaimer } from './components/legal/DisclaimerModal';
-import { CategoryProvider } from './Contexts/CategoryContext';
-import OCRWizardPage from './pages/OCRWizardPage';
-import AuthCallbackPage from './pages/AuthCallbackPage';
-import { MealPlanPage } from './pages/MealPlanPage';
+﻿/**
+ * App.tsx — ECOLOJIA V1 PRO
+ * Routes simplifiées pour V1
+ */
 
-// Lazy loading des pages
-const HomePage = lazy(() => import('./pages/HomePage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
-const ResultsPage = lazy(() => import('./pages/ResultsPage'));
-const AssistantPage = lazy(() => import('./pages/AssistantPage'));
-const ShoppingListPage = lazy(() => import('./pages/ShoppingListPage'));
-const ProductPage = lazy(() => import('./pages/ProductPage'));
-const LearnPage = lazy(() => import('./pages/LearnPage'));
-const DashboardPage = lazy(() => import('./pages/DashboardPage'));
-const ChatPage = lazy(() => import('./pages/ChatPage'));
-const BarcodeScanPage = lazy(() => import('./pages/ScanPageIntegrated'));
-const ScanBarcodePage = lazy(() => import('./pages/ScanBarcodePage'));
-const ScanPhotoPage = lazy(() => import('./pages/ScanPhotoPage'));
-const LoginPage = lazy(() => import('./pages/LoginPage'));
-const RegisterPage = lazy(() => import('./pages/RegisterPage'));
-const ProfilePage = lazy(() => import('./pages/ProfilePage'));
-const PremiumPage = lazy(() => import('./pages/PremiumPage'));
-const HistoryPage = lazy(() => import('./pages/HistoryPage'));
-const OnboardingPage = lazy(() => import('./pages/OnboardingPage'));
-const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
-const MultiScanPage = lazy(() => import('./pages/MultiScanPage'));
-const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
-const CosmeticAnalysisPage = lazy(() => import('./pages/CosmeticAnalysisPage'));
-const DetergentAnalysisPage = lazy(() => import('./pages/DetergentAnalysisPage'));
+import React, { lazy, Suspense, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthContext } from "./Contexts/AuthContext";
+import Layout from "./components/layout/Layout";
+import LoadingSpinner from "./components/common/LoadingSpinner";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { DisclaimerModal, hasAcceptedDisclaimer } from "./components/legal/DisclaimerModal";
+import { CategoryProvider } from "./Contexts/CategoryContext";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
+
+// ============================================================================
+// PAGES V1 (Lazy loaded)
+// ============================================================================
+
+// Core V1
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const ScanPage = lazy(() => import("./pages/ScanPageIntegrated"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+
+// Auth
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+
+// User (Protected)
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const HistoryPage = lazy(() => import("./pages/HistoryPage"));
+const FavoritesPage = lazy(() => import("./pages/FavoritesPage"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+
+// Premium
+const PremiumPage = lazy(() => import("./pages/PremiumPage"));
+
+// Legal
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+
+// ============================================================================
+// APP
+// ============================================================================
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuthContext();
@@ -44,58 +51,49 @@ const App: React.FC = () => {
   return (
     <CategoryProvider>
       <>
-      {!window.location.pathname.startsWith('/auth/callback') && showDisclaimer && (
-        <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />
-      )}
-      
-      <Suspense fallback={<LoadingSpinner />}>
-        <Routes>
-          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        {!window.location.pathname.startsWith("/auth/callback") && showDisclaimer && (
+          <DisclaimerModal onAccept={() => setShowDisclaimer(false)} />
+        )}
 
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="search" element={<SearchPage />} />
-            <Route path="results" element={<ResultsPage />} />
-            <Route path="product/:id" element={<ProductPage />} />
-            <Route path="learn" element={<LearnPage />} />
-            <Route path="cosmetics/:barcode" element={<CosmeticAnalysisPage />} />
-            <Route path="detergents/:barcode" element={<DetergentAnalysisPage />} />
-            <Route path="scan" element={<BarcodeScanPage />} />
-            <Route path="scan/barcode" element={<ScanBarcodePage />} />
-            <Route path="scan/photo" element={<ScanPhotoPage />} />
-            <Route path="ocr" element={<Navigate to="/scan" replace />} />
-            <Route path="ocr-wizard" element={<OCRWizardPage />} />
-            <Route path="favorites" element={<FavoritesPage />} />
-            <Route path="multi-scan" element={<MultiScanPage />} />
-            <Route path="premium" element={<PremiumPage />} />
-            <Route path="/meal-plan/:id/add" element={<MealPlanPage />} />
-            <Route path="diagnostic" element={<DiagnosticPage />} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            {/* OAuth Callback */}
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-            <Route
-              path="login"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
-            />
-            <Route
-              path="register"
-              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
-            />
+            {/* Main Layout */}
+            <Route path="/" element={<Layout />}>
+              {/* Public */}
+              <Route index element={<HomePage />} />
+              <Route path="scan" element={<ScanPage />} />
+              <Route path="search" element={<SearchPage />} />
+              <Route path="product/:id" element={<ProductPage />} />
+              <Route path="premium" element={<PremiumPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="terms" element={<TermsPage />} />
 
-            <Route path="assistant" element={<AssistantPage />} />
-            <Route path="shopping-list" element={<ShoppingListPage />} />
-            <Route path="results" element={<ResultsPage />} />
+              {/* Auth */}
+              <Route
+                path="login"
+                element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+              />
+              <Route
+                path="register"
+                element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
+              />
 
-            <Route element={<ProtectedRoute />}>
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="chat" element={<ChatPage />} />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="history" element={<HistoryPage />} />
-              <Route path="onboarding" element={<OnboardingPage />} />
+              {/* Protected */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="history" element={<HistoryPage />} />
+                <Route path="favorites" element={<FavoritesPage />} />
+              </Route>
+
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
       </>
     </CategoryProvider>
   );

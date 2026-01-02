@@ -1,0 +1,548 @@
+﻿{
+    "success":  true,
+    "product":  {
+                    "_id":  "692e0566120bb9dda7394a53",
+                    "barcode":  "3017620422003",
+                    "name":  "Nutella",
+                    "brand":  "Nutella,Ferrero",
+                    "categoryType":  "food",
+                    "filterMetadata":  {
+                                           "categoryLabels":  [
+
+                                                              ],
+                                           "searchTerms":  [
+
+                                                           ],
+                                           "popularityScore":  0
+                                       },
+                    "category":  "food",
+                    "foodData":  {
+                                     "additives":  [
+
+                                                   ],
+                                     "allergens":  [
+
+                                                   ],
+                                     "labels":  [
+
+                                                ],
+                                     "nutritionalInfo":  {
+                                                             "fat":  30.9,
+                                                             "saturatedFat":  10.6,
+                                                             "carbohydrates":  57.5,
+                                                             "sugars":  56.8,
+                                                             "salt":  0.11
+                                                         }
+                                 },
+                    "cosmeticsData":  {
+                                          "endocrineDisruptors":  [
+
+                                                                  ],
+                                          "allergens":  [
+
+                                                        ],
+                                          "certifications":  [
+
+                                                             ],
+                                          "ingredients":  [
+
+                                                          ]
+                                      },
+                    "detergentsData":  {
+                                           "composition":  [
+
+                                                           ],
+                                           "surfactants":  [
+
+                                                           ],
+                                           "ecoLabels":  [
+
+                                                         ]
+                                       },
+                    "scores":  {
+                                   "breakdown":  null,
+                                   "calculatedAt":  "2025-12-25T14:09:52.530Z"
+                               },
+                    "viewCount":  0,
+                    "scanCount":  2,
+                    "createdAt":  "2025-12-01T21:15:18.747Z",
+                    "updatedAt":  "2025-12-01T21:15:18.766Z",
+                    "__v":  0,
+                    "imageUrl":  "https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg",
+                    "subcategory":  "chocolate-spread",
+                    "tags":  [
+                                 "chocolate",
+                                 "hazelnut",
+                                 "spread",
+                                 "sweet",
+                                 "snack"
+                             ],
+                    "lastScannedAt":  "2025-12-26T18:06:25.860Z",
+                    "categoryNormalized":  "food",
+                    "globalScore":  null,
+                    "completeness":  0,
+                    "lastUpdated":  "2025-12-01T21:15:18.766Z"
+                },
+    "metadata":  {
+                     "source":  "BARCODE",
+                     "cached":  false,
+                     "aiEnrichmentUsed":  false,
+                     "retrievedAt":  "2025-12-30T13:08:12.920Z"
+                 },
+    "knowledgeAnalysis":  null,
+    "aiEnriched":  false,
+    "enrichmentConfidence":  0,
+    "recipes":  [
+                    {
+                        "_id":  "690f42716c2a6d43f4f052fa",
+                        "name":  "Compote",
+                        "slug":  "compote-10",
+                        "description":  "Un optimal dessert à base de mangue, citron. Recette scientifiquement équilibrée.",
+                        "category":  "dessert",
+                        "scores":  {
+                                       "overallScore":  90,
+                                       "healthScore":  92,
+                                       "environmentScore":  83,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Mangue",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Citron",
+                                                "quantity":  0.25,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Faire chauffer les ingrédients liquides dans une casserole.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Ajouter les ingrédients secs et cuire en remuant régulièrement.",
+                                          "duration":  5,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir chaud dans un bol.",
+                                          "duration":  1,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  8,
+                        "cookTime":  15,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.367Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f052f1",
+                        "name":  "Mousse",
+                        "slug":  "mousse-1",
+                        "description":  "Un excellent dessert à base de mangue, graines de lin, citron. Recette scientifiquement équilibrée.",
+                        "category":  "dessert",
+                        "scores":  {
+                                       "overallScore":  90,
+                                       "healthScore":  90,
+                                       "environmentScore":  90,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Mangue",
+                                                "quantity":  100,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Graines de lin",
+                                                "quantity":  10,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Citron",
+                                                "quantity":  0.25,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Placer tous les ingrédients dans un blender.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Mixer jusqu\u0027à consistance lisse et homogène.",
+                                          "duration":  3,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir immédiatement ou réfrigérer.",
+                                          "duration":  1,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  11,
+                        "cookTime":  0,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco",
+                                                             "muscle-gain"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.357Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    },
+                    {
+                        "_id":  "690f42716c2a6d43f4f052f3",
+                        "name":  "Mousse",
+                        "slug":  "mousse-3",
+                        "description":  "Un excellent dessert à base de pomme, amandes, huile d\u0027olive. Recette scientifiquement équilibrée.",
+                        "category":  "dessert",
+                        "scores":  {
+                                       "overallScore":  90,
+                                       "healthScore":  88,
+                                       "environmentScore":  88,
+                                       "confidence":  0.9
+                                   },
+                        "ingredients":  [
+                                            {
+                                                "name":  "Pomme",
+                                                "quantity":  1,
+                                                "unit":  "unité",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Amandes",
+                                                "quantity":  20,
+                                                "unit":  "g",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            },
+                                            {
+                                                "name":  "Huile d\u0027olive",
+                                                "quantity":  1,
+                                                "unit":  "càs",
+                                                "role":  "base",
+                                                "substitutions":  [
+
+                                                                  ]
+                                            }
+                                        ],
+                        "steps":  [
+                                      {
+                                          "order":  1,
+                                          "instruction":  "Placer tous les ingrédients dans un blender.",
+                                          "duration":  2,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  2,
+                                          "instruction":  "Mixer jusqu\u0027à consistance lisse et homogène.",
+                                          "duration":  3,
+                                          "tips":  [
+
+                                                   ]
+                                      },
+                                      {
+                                          "order":  3,
+                                          "instruction":  "Servir immédiatement ou réfrigérer.",
+                                          "duration":  1,
+                                          "tips":  [
+
+                                                   ]
+                                      }
+                                  ],
+                        "prepTime":  11,
+                        "cookTime":  0,
+                        "servings":  1,
+                        "difficulty":  "easy",
+                        "targetProfiles":  {
+                                               "dietary":  [
+                                                               "vegetarian",
+                                                               "vegan"
+                                                           ],
+                                               "goals":  [
+                                                             "health",
+                                                             "eco"
+                                                         ],
+                                               "allergens":  [
+
+                                                             ]
+                                           },
+                        "generatedBy":  "manual",
+                        "isPublic":  true,
+                        "isPremium":  false,
+                        "isStock":  true,
+                        "viewCount":  0,
+                        "savedCount":  0,
+                        "createdAt":  "2025-11-08T13:15:29.361Z",
+                        "__v":  0,
+                        "relevanceScore":  3
+                    }
+                ],
+    "alternatives":  [
+                         {
+                             "_id":  "691780b7c56dd19f3eddfa3c",
+                             "barcode":  "3421557910203",
+                             "name":  "Flocons d\u0027avoine complets",
+                             "brand":  "Terres \u0026 Céréales BIO",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  80,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:23.795Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0708",
+                             "barcode":  "3421557701023",
+                             "name":  "Flocons d\u0027avoine gros",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:34.452Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0857",
+                             "barcode":  "3760121212979",
+                             "name":  "Pétales 5 céréales",
+                             "brand":  "Biocoop, Ensemble",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "overallScore":  78,
+                                            "healthScore":  100,
+                                            "environmentScore":  33,
+                                            "confidence":  0.65,
+                                            "dataCompleteness":  "Excellente",
+                                            "calculatedAt":  "2025-12-25T14:07:34.939Z",
+                                            "scoringVersion":  "3.2.0",
+                                            "breakdown":  null,
+                                            "missingData":  [
+                                                                "saturatedFat"
+                                                            ],
+                                            "aiEnrichmentUsed":  false,
+                                            "scoringMetadata":  {
+                                                                    "methodology":  "ECOLOJIA V3 - Scoring scientifique 8 composantes",
+                                                                    "version":  "3.1.0",
+                                                                    "calculatedAt":  "2025-11-29T12:11:49.070Z"
+                                                                },
+                                            "dataQualityInfo":  {
+                                                                    "confidence":  67,
+                                                                    "level":  "ACCEPTABLE",
+                                                                    "canScore":  true,
+                                                                    "availableData":  [
+                                                                                          "product_name",
+                                                                                          "brands",
+                                                                                          "nutriments",
+                                                                                          "labels"
+                                                                                      ]
+                                                                }
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b8c56dd19f3ede0b4a",
+                             "barcode":  "3421557601033",
+                             "name":  "Flocons d\u0027avoine petits",
+                             "brand":  "Biocoop",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  90,
+                                            "health":  100,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  80,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:40.613Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780bdc56dd19f3ede3bc3",
+                             "barcode":  "3770011009398",
+                             "name":  "Skyr Amande",
+                             "brand":  "MoRice",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  70,
+                                            "health":  90,
+                                            "environmental":  80,
+                                            "social":  75,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  50,
+                                            "overallScore":  78,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:08:36.793Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  78,
+                             "aiEnriched":  false
+                         },
+                         {
+                             "_id":  "691780b6c56dd19f3eddf7a0",
+                             "barcode":  "0096619458837",
+                             "name":  "Organic Variety Pack (Apple Apple/Apple Strawberry/Apple Banana/Apple Cinnamon) Fruit On The Go",
+                             "brand":  "GoGo SqueeZ,Kirkland",
+                             "categoryType":  "food",
+                             "categoryNormalized":  "food",
+                             "scores":  {
+                                            "naturalness":  100,
+                                            "health":  90,
+                                            "environmental":  80,
+                                            "social":  50,
+                                            "transparency":  100,
+                                            "processing":  100,
+                                            "packaging":  50,
+                                            "origin":  50,
+                                            "overallScore":  76,
+                                            "breakdown":  null,
+                                            "calculatedAt":  "2025-12-25T14:07:21.765Z",
+                                            "confidence":  0.65,
+                                            "environmentScore":  33,
+                                            "healthScore":  100,
+                                            "scoringVersion":  "3.2.0"
+                                        },
+                             "globalScore":  76,
+                             "aiEnriched":  false
+                         }
+                     ]
+}

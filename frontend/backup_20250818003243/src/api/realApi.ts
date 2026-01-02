@@ -1,4 +1,4 @@
-// PATH: frontend/src/api/realApi.ts
+﻿// PATH: frontend/src/api/realApi.ts
 import type { AnalysisResult } from '../types';
 
 const API_BASE_URL = import.met?.env.VITE_API_URL || 'https://ecolojia-backendvf.onrender.com';
@@ -63,7 +63,7 @@ export interface ProductDetail extends ProductItem {
 }
 
 export async function getProductByBarcode(barcode: string): Promise<ProductDetail | null> {
-  const res = await fetch(`${API_BASE_URL}/api/products/barcode/${encodeURIComponent(barcode)}`);
+  const res = await fetch(`${API_BASE_URL}/api/products/scan/${encodeURIComponent(barcode)}`);
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Get product error (${res.status})`);
   const json: ApiResponse<ProductDetail> = await res.json();
@@ -236,6 +236,7 @@ export async function getCurrentUser(): Promise<any> {
   if (!res.ok) throw new Error(`Get user error (${res.status})`);
   return res.json();
 }
+
 
 
 
