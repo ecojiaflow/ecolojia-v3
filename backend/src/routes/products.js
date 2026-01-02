@@ -271,6 +271,7 @@ product: {
         },
       completeness: productObj.completeness ?? 0,
       lastUpdated: productObj.lastUpdated || productObj.updatedAt || null,
+      constitution: (productObj.constitution?.cards ? productObj.constitution : generateConstitution(productObj)),
     },
     metadata: {
       source,
@@ -282,7 +283,6 @@ product: {
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
     recipes,
-    constitution: (productObj.constitution?.cards ? productObj.constitution : generateConstitution(productObj)),
   };
 }
 
@@ -765,6 +765,8 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
 
