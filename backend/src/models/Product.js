@@ -530,6 +530,7 @@ productSchema.pre('save', function(next) {
 // MIDDLEWARE AUTO-CALCUL SCORES V3.0.0
 // ============================================================================
 const scoringUnified = require('../services/scoringUnified');
+const { generateConstitution } = require('../services/constitution.service');
 
 productSchema.pre('save', async function(next) {
   const startTime = Date.now();
@@ -592,6 +593,12 @@ productSchema.pre('save', async function(next) {
         scoringVersion: '3.0.0'
       };
 
+      // ✅ GÉNÉRATION CONSTITUTION V1.0.0
+      if (this.category === 'food' || this.categoryType === 'food' || !this.category) {
+        this.constitution = generateConstitution(this);
+        logger.debug('[Product] Constitution générée', { productId: this._id });
+      }
+
       const duration = Date.now() - startTime;
 
       logger.info('[Product] Scores calculés avec succès', {
@@ -634,5 +641,6 @@ logger.info('[Product] Modèle Product initialisé', {
 });
 
 module.exports = ProductModel;
+
 
 
