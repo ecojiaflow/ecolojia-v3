@@ -198,7 +198,7 @@ app.get('/', (req, res) => {
       '/api/auth',
       '/api/dashboard',
       '/api/algolia',
-        // '/api/chat',  // V1: Désactivé - Chat libre interdit
+      '/api/chat',
       '/api/payments',
       '/api/education'
     ]
@@ -226,7 +226,7 @@ const routesToLoad = [
   { path: '/api/dashboard', file: './routes/dashboard.js', name: 'Dashboard' },
   { path: '/api/algolia', file: './routes/algolia-unified.js', name: 'Algolia Unified' },
 
-  // { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },  // V1: Désactivé
+  { path: '/api/chat', file: './routes/chat.routes.js', name: 'Chat' },
   { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' },
   { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' },
   { path: '/api/recipes', file: './routes/recipes.routes.js', name: 'Recipes' },
