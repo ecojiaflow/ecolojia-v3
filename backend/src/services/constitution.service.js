@@ -5,6 +5,7 @@
 // ============================================================================
 
 const { calculateHealthReflex } = require('./healthReflex.service');
+const { resolveRules } = require('./RuleResolver.service');
 
 // ============================================================================
 // GÉNÉRATION DES 3 CARTES
@@ -116,7 +117,13 @@ function generateConstitution(product) {
   // 2. Générer les 3 cartes
   const cards = generateCards(product, healthReflex);
   
-  // 3. Assembler Constitution complète
+  // 3. Résoudre les règles applicables
+  const rulesResult = resolveRules({
+    categoryType: product.categoryType || product.category || 'food',
+    constitution: { healthReflex }
+  });
+
+  // 4. Assembler Constitution complète
   return {
     version: '1.0.0',
     generatedAt: new Date().toISOString(),
@@ -128,8 +135,15 @@ function generateConstitution(product) {
       content: healthReflex.content
     },
     cards,
-    habit: healthReflex.habit
+    habit: healthReflex.habit,
+    rules: {
+      reflexHero: rulesResult.reflexHero,
+      rulesHits: rulesResult.rulesHits,
+      actions: rulesResult.actions
+    }
   };
 }
 
 module.exports = { generateConstitution, generateCards };
+
+
