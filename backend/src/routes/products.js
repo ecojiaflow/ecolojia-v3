@@ -282,7 +282,7 @@ product: {
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
     recipes,
-    constitution: productObj.constitution || generateConstitution(productObj),
+    constitution: (productObj.constitution?.cards ? productObj.constitution : generateConstitution(productObj)),
   };
 }
 
@@ -765,6 +765,7 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
