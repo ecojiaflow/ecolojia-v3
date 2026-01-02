@@ -35,6 +35,7 @@ const aiEnrichment = require("../services/aiEnrichment.service");
 const knowledgeService = require("../knowledge/knowledge.service"); // réservé pour usages futurs
 const Analysis = require("../models/Analysis"); // réservé pour usages futurs
 const Product = require("../models/Product");
+const { generateConstitution } = require("../services/constitution.service");
 
 // ========================================
 // FONCTIONS UTILITAIRES : catégorie
@@ -281,7 +282,7 @@ product: {
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
     recipes,
-    constitution: productObj.constitution || null,
+    constitution: productObj.constitution || generateConstitution(productObj),
   };
 }
 
@@ -764,6 +765,8 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
 
