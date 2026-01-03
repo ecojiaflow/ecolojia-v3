@@ -1,0 +1,596 @@
+﻿{
+  "version": "3.0.0",
+  "updatedAt": "2026-01-03",
+  "description": "Knowledge Base Ecolojia V3 - Sources scientifiques verifiables",
+  "methodology": {
+    "sources_primaires": ["ANSES", "OMS", "EFSA", "CIRC", "ADEME", "ANSM", "Sante Publique France"],
+    "niveau_preuve": {
+      "fort": "Meta-analyses, revues systematiques, consensus institutionnel",
+      "modere": "Etudes observationnelles convergentes, avis d agences",
+      "emergent": "Etudes recentes, signaux a surveiller"
+    },
+    "principe": "Chaque regle est basee sur un mecanisme physiologique identifie, pas sur une opinion"
+  },
+
+  "categories": {
+
+    "TRANSFORMATION_ALIMENTAIRE": {
+      "description": "Classification NOVA et impact de l ultra-transformation",
+      "rules": [
+        {
+          "id": "NOVA_001",
+          "principle": "Les aliments ultra-transformes (NOVA 4) perturbent les signaux de satiete",
+          "mechanism": "La destruction de la matrice alimentaire originale et l ajout d additifs technologiques modifient la vitesse d absorption, la reponse glycemique et les signaux de satiete (ghréline, leptine). Le cerveau ne recoit pas les memes signaux qu avec un aliment brut.",
+          "context": {
+            "green": "Consommation occasionnelle (1-2 fois/semaine)",
+            "orange": "Consommation reguliere (3-5 fois/semaine)",
+            "red": "Consommation quotidienne ou multiple par jour"
+          },
+          "action": "Privilegier les aliments NOVA 1-2 au quotidien, reserver NOVA 4 aux occasions",
+          "nuance": "Un produit NOVA 4 occasionnel dans une alimentation equilibree n a pas d impact significatif. C est la frequence et la proportion dans l alimentation globale qui comptent.",
+          "sources": [
+            {"ref": "Monteiro CA et al. 2019", "doi": "10.1017/S1368980018003762", "title": "Ultra-processed foods: what they are and how to identify them"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS", "url": "https://www.anses.fr/fr/content/actualisation-des-reperes-du-pnns-revision-des-reperes-de-consommations-alimentaires"},
+            {"ref": "Hall KD et al. 2019", "doi": "10.1016/j.cmet.2019.05.008", "title": "Ultra-Processed Diets Cause Excess Calorie Intake and Weight Gain"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "NOVA_002",
+          "principle": "La longueur de la liste d ingredients est un indicateur de transformation",
+          "mechanism": "Plus un produit contient d ingredients, plus il est susceptible d avoir subi des transformations multiples. Les additifs technologiques (emulsifiants, texturants, exhausteurs) sont des marqueurs d ultra-transformation.",
+          "context": {
+            "green": "1-5 ingredients reconnaissables",
+            "orange": "6-10 ingredients",
+            "red": "Plus de 10 ingredients ou ingredients non reconnaissables"
+          },
+          "action": "Comparer les listes d ingredients entre produits equivalents, choisir la plus courte",
+          "nuance": "Certains produits traditionnels (pain complet artisanal) peuvent avoir plusieurs ingredients tout en etant peu transformes. C est la nature des ingredients qui compte.",
+          "sources": [
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS"},
+            {"ref": "Open Food Facts", "methodology": "Classification NOVA"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "RYTHME_ALIMENTAIRE": {
+      "description": "Chronobiologie, fenetres alimentaires et repos digestif",
+      "rules": [
+        {
+          "id": "RYTHME_001",
+          "principle": "Le corps beneficie de periodes de repos digestif",
+          "mechanism": "L insuline reste elevee tant que l on mange. Un repos digestif de 12-16h (incluant le sommeil) permet a l insuline de revenir a son niveau basal, favorise l autophagie cellulaire et la regulation metabolique. Le grignotage constant maintient l insuline elevee et perturbe ces mecanismes.",
+          "context": {
+            "green": "3 repas structures avec 4-5h d intervalle, pas de grignotage",
+            "orange": "Grignotage occasionnel (1-2 fois/semaine)",
+            "red": "Grignotage frequent ou alimentation continue"
+          },
+          "action": "Structurer les prises alimentaires, eviter de manger entre les repas sauf faim reelle",
+          "nuance": "Ce n est pas une regle absolue. Certaines personnes (sportifs, femmes enceintes, diabetiques) peuvent avoir besoin de collations. L important est la conscience du rythme.",
+          "sources": [
+            {"ref": "Longo VD, Panda S. 2016", "doi": "10.1016/j.cmet.2016.06.001", "title": "Fasting, Circadian Rhythms, and Time-Restricted Feeding in Healthy Lifespan"},
+            {"ref": "Patterson RE et al. 2015", "doi": "10.1146/annurev-nutr-071714-034352", "title": "Metabolic Effects of Intermittent Fasting"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "RYTHME_002",
+          "principle": "Les snacks industriels sont concus pour ne pas rassasier",
+          "mechanism": "La combinaison precise sel-sucre-gras (bliss point) active les circuits de recompense dopaminergiques sans declencher les signaux de satiete. La texture croustifiante encourage une mastication rapide qui court-circuite les signaux de rassasiement.",
+          "context": {
+            "green": "Eviter les snacks industriels, preferer fruits, oleagineux",
+            "orange": "Snack industriel occasionnel en portion controlee",
+            "red": "Snacks industriels frequents ou en grande quantite"
+          },
+          "action": "Si envie de grignoter, choisir un aliment qui necessite mastication lente (pomme, noix) plutot qu un snack industriel",
+          "nuance": "Le probleme n est pas le snack lui-meme mais sa conception qui pousse a la surconsommation. Un snack fait maison ou un fruit ne pose pas le meme probleme.",
+          "sources": [
+            {"ref": "Moss M. 2013", "title": "Salt Sugar Fat: How the Food Giants Hooked Us", "publisher": "Random House"},
+            {"ref": "Small DM, DiFeliceantonio AG. 2019", "doi": "10.1126/science.aau2277", "title": "Processed foods and food reward"},
+            {"ref": "OMS 2015", "document": "Guideline: Sugars intake for adults and children"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "SUCRES": {
+      "description": "Sucres ajoutes, sucres libres et impact metabolique",
+      "rules": [
+        {
+          "id": "SUCRE_001",
+          "principle": "Les sucres libres en exces contribuent aux desequilibres metaboliques",
+          "mechanism": "Les sucres libres (ajoutes ou naturellement presents dans jus, miel, sirops) sont absorbes rapidement, provoquant des pics glycemiques. Le foie convertit l exces en triglycerides. Une consommation chronique elevee est associee a la resistance a l insuline, la steatose hepatique et l inflammation.",
+          "context": {
+            "green": "Moins de 25g de sucres ajoutes/jour (OMS)",
+            "orange": "25-50g de sucres ajoutes/jour",
+            "red": "Plus de 50g de sucres ajoutes/jour"
+          },
+          "action": "Verifier les sucres sur les etiquettes, limiter les boissons sucrees",
+          "nuance": "Les sucres naturellement presents dans les fruits entiers sont moins problematiques car les fibres ralentissent l absorption. C est la forme d apport qui compte.",
+          "sources": [
+            {"ref": "OMS 2015", "document": "Guideline: Sugars intake for adults and children", "recommendation": "Moins de 10% de l apport energetique total, idealement moins de 5%"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS"},
+            {"ref": "Malik VS et al. 2010", "doi": "10.2337/dc10-0613", "title": "Sugar-Sweetened Beverages and Risk of Metabolic Syndrome and Type 2 Diabetes"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "SUCRE_002",
+          "principle": "Les calories liquides ne declenchent pas la satiete",
+          "mechanism": "Le cerveau ne compense pas les calories des boissons sucrees comme celles des aliments solides. L absence de mastication et la vitesse d ingestion court-circuitent les signaux de satiete. Un soda de 330ml apporte 35g de sucre sans aucun effet rassasiant.",
+          "context": {
+            "green": "Eau, the, cafe sans sucre",
+            "orange": "Jus 100% fruits en petite quantite (150ml max)",
+            "red": "Sodas, boissons sucrees quotidiennes"
+          },
+          "action": "L eau est la seule boisson indispensable. Remplacer les sodas par eau gazeuse si besoin de petillant.",
+          "nuance": "Meme les jus 100% fruits contiennent autant de sucre qu un soda. La difference est la presence de quelques vitamines, mais l impact glycemique est similaire.",
+          "sources": [
+            {"ref": "OMS 2015", "document": "Guideline: Sugars intake for adults and children"},
+            {"ref": "ANSES 2017", "document": "L eau est la seule boisson indispensable"},
+            {"ref": "Pan A, Hu FB. 2011", "doi": "10.3945/ajcn.111.023895", "title": "Effects of carbohydrates on satiety"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "GRAISSES": {
+      "description": "Acides gras satures, insatures, trans et huiles vegetales",
+      "rules": [
+        {
+          "id": "GRAISSE_001",
+          "principle": "L equilibre des acides gras est plus important que leur quantite totale",
+          "mechanism": "Le ratio omega-6/omega-3 dans l alimentation occidentale est souvent de 15:1 a 20:1, alors que l optimal serait proche de 4:1. Cet desequilibre favorise l inflammation chronique. Les graisses saturees en exces augmentent le LDL-cholesterol.",
+          "context": {
+            "green": "Varier les huiles (olive, colza, noix), 2 portions poisson gras/semaine",
+            "orange": "Predominance d une seule source de gras",
+            "red": "Exces de graisses saturees (charcuterie, friture quotidienne)"
+          },
+          "action": "Alterner huile d olive (cuisson douce) et huile de colza (assaisonnement) pour equilibrer les apports",
+          "nuance": "Les graisses saturees ne sont pas a eliminer totalement. Elles font partie d une alimentation equilibree. C est l exces et le desequilibre qui posent probleme.",
+          "sources": [
+            {"ref": "ANSES 2011", "document": "Actualisation des apports nutritionnels conseilles pour les acides gras"},
+            {"ref": "Simopoulos AP. 2002", "doi": "10.1016/S0753-3322(02)00253-6", "title": "The importance of the ratio of omega-6/omega-3 essential fatty acids"},
+            {"ref": "OMS 2018", "document": "Recommandations sur les graisses alimentaires"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "GRAISSE_002",
+          "principle": "Les graisses trans industrielles sont a eviter",
+          "mechanism": "Les acides gras trans issus de l hydrogenation partielle augmentent le LDL (mauvais cholesterol), diminuent le HDL (bon cholesterol) et favorisent l inflammation. Ils sont associes a un risque cardiovasculaire accru.",
+          "context": {
+            "green": "Produits sans huile partiellement hydrogenee",
+            "orange": "Presence occasionnelle dans produits industriels",
+            "red": "Presence frequente (viennoiseries industrielles, margarines dures)"
+          },
+          "action": "Verifier la presence de graisses hydrogenees ou partiellement hydrogenees dans les ingredients",
+          "nuance": "Les trans naturels (viande, produits laitiers) en petite quantite ne posent pas le meme probleme que les trans industriels.",
+          "sources": [
+            {"ref": "OMS 2018", "document": "REPLACE trans fat - action package"},
+            {"ref": "Mozaffarian D et al. 2006", "doi": "10.1056/NEJMra054035", "title": "Trans Fatty Acids and Cardiovascular Disease"},
+            {"ref": "EFSA 2018", "document": "Scientific opinion on dietary reference values for fats"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "GRAISSE_003",
+          "principle": "L huile d olive vierge extra a des proprietes protectrices",
+          "mechanism": "Les polyphenols de l huile d olive (oleocanthal, oleuropeine) ont des effets anti-inflammatoires documentes. L acide oleique (omega-9) est associe a une reduction du risque cardiovasculaire dans le cadre du regime mediterraneen.",
+          "context": {
+            "green": "Huile d olive vierge extra pour assaisonnement et cuisson douce",
+            "orange": "Huile d olive raffinee (moins de polyphenols)",
+            "red": "Cuisson a tres haute temperature (degrades les polyphenols)"
+          },
+          "action": "Utiliser l huile d olive vierge extra crue ou en cuisson douce (< 180C)",
+          "nuance": "L huile d olive n est pas magique. Ses benefices s inscrivent dans un regime alimentaire global equilibre. Une cuillere d huile d olive ne compense pas une alimentation desequilibree.",
+          "sources": [
+            {"ref": "Estruch R et al. 2018", "doi": "10.1056/NEJMoa1800389", "title": "Primary Prevention of Cardiovascular Disease with a Mediterranean Diet"},
+            {"ref": "ANSES 2011", "document": "Actualisation des apports nutritionnels conseilles pour les acides gras"},
+            {"ref": "Gorzynik-Debicka M et al. 2018", "doi": "10.3390/ijms19030686", "title": "Potential Health Benefits of Olive Oil and Plant Polyphenols"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "SEL": {
+      "description": "Sodium et impact cardiovasculaire",
+      "rules": [
+        {
+          "id": "SEL_001",
+          "principle": "L exces de sel favorise l hypertension",
+          "mechanism": "Le sodium en exces augmente la retention d eau et le volume sanguin, ce qui eleve la pression arterielle. Une consommation chronique elevee est associee au risque d AVC et de maladies cardiovasculaires.",
+          "context": {
+            "green": "Moins de 5g de sel/jour (OMS)",
+            "orange": "5-8g de sel/jour (moyenne francaise)",
+            "red": "Plus de 8g de sel/jour"
+          },
+          "action": "Limiter les produits transformes (principale source de sel), rincer les conserves",
+          "nuance": "Le sel ajoute en cuisine represente seulement 20% des apports. 80% provient des produits transformes (pain, charcuterie, fromage, plats prepares).",
+          "sources": [
+            {"ref": "OMS 2012", "document": "Guideline: Sodium intake for adults and children", "recommendation": "Moins de 2g de sodium/jour soit 5g de sel"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS"},
+            {"ref": "He FJ, MacGregor GA. 2011", "doi": "10.1136/bmj.d4567", "title": "Salt reduction lowers cardiovascular risk"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "ADDITIFS": {
+      "description": "Additifs alimentaires et exposition cumulee",
+      "rules": [
+        {
+          "id": "ADDITIF_001",
+          "principle": "L accumulation d additifs merite vigilance",
+          "mechanism": "Les additifs sont evalues individuellement par l EFSA, mais les effets cocktail en exposition repetee sont moins documentes. Certains emulsifiants (E433, E466) sont associes a des modifications du microbiote intestinal dans des etudes animales.",
+          "context": {
+            "green": "Produits avec 0-2 additifs courants (E330 acide citrique, E300 vitamine C)",
+            "orange": "3-5 additifs",
+            "red": "Plus de 5 additifs ou presence d additifs controverses"
+          },
+          "action": "Preferer les produits a liste d ingredients courte, varier les marques pour limiter l exposition repetee aux memes additifs",
+          "nuance": "Tous les additifs ne se valent pas. Le E330 (acide citrique) est naturellement present dans les agrumes. Le E150d (caramel au sulfite d ammonium) est plus discute. Contexte et frequence comptent.",
+          "sources": [
+            {"ref": "EFSA", "document": "Re-evaluation of food additives", "url": "https://www.efsa.europa.eu/en/topics/topic/food-additive-re-evaluations"},
+            {"ref": "Chassaing B et al. 2015", "doi": "10.1038/nature14232", "title": "Dietary emulsifiers impact the mouse gut microbiota"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "ADDITIF_002",
+          "principle": "Les nitrites dans la charcuterie sont a limiter",
+          "mechanism": "Les nitrites (E250) forment des nitrosamines lors de la cuisson a haute temperature ou de la digestion. Le CIRC classe la charcuterie comme cancerogene groupe 1 pour le cancer colorectal, avec les nitrites comme facteur contributif.",
+          "context": {
+            "green": "Charcuterie sans nitrites ou consommation rare",
+            "orange": "Charcuterie classique 1-2 fois/semaine",
+            "red": "Charcuterie quotidienne"
+          },
+          "action": "Limiter la charcuterie a 150g/semaine maximum (ANSES), privilegier les versions sans nitrites",
+          "nuance": "Les nitrites ont un role sanitaire (prevention du botulisme). Le risque concerne la consommation frequente et elevee, pas une tranche de jambon occasionnelle.",
+          "sources": [
+            {"ref": "CIRC 2015", "document": "Monograph on Red Meat and Processed Meat", "classification": "Groupe 1 cancerogene pour l homme"},
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS", "recommendation": "Limiter la charcuterie a 150g/semaine"},
+            {"ref": "Santarelli RL et al. 2008", "doi": "10.1111/j.1753-4887.2008.00062.x", "title": "Processed meat and colorectal cancer"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "EAU": {
+      "description": "Qualite de l eau potable, contaminants et solutions",
+      "rules": [
+        {
+          "id": "EAU_001",
+          "principle": "L eau du robinet en France est globalement sure mais surveiller les PFAS",
+          "mechanism": "Les PFAS (substances per- et polyfluoroalkylees) sont des polluants persistants qui s accumulent dans l organisme. Le PFOA et PFOS sont classes cancerogenes possibles par le CIRC. La directive europeenne impose un seuil de 0.1 ug/L pour la somme de 20 PFAS a partir de 2026.",
+          "context": {
+            "green": "Eau du robinet dans zones non contaminees, filtration charbon actif",
+            "orange": "Zones avec contamination moderee",
+            "red": "Zones avec depassement des seuils (verifier carte BRGM)"
+          },
+          "action": "Consulter la qualite de l eau de sa commune sur le site du ministere de la sante, installer un filtre a charbon actif si necessaire",
+          "nuance": "L eau en bouteille n est pas une solution miracle car certaines contiennent aussi des PFAS (TFA notamment). La filtration au charbon actif elimine la majorite des PFAS.",
+          "sources": [
+            {"ref": "Ministere de la sante", "document": "Carte qualite eau potable", "url": "https://sante.gouv.fr/sante-et-environnement/eaux/eau"},
+            {"ref": "ANSES 2024", "document": "Rapport PFAS", "url": "https://www.anses.fr/fr/content/pfas-des-substances-chimiques-tres-persistantes"},
+            {"ref": "Directive UE 2020/2184", "document": "Qualite des eaux destinees a la consommation humaine"},
+            {"ref": "UFC Que Choisir 2025", "document": "Enquete PFAS dans l eau du robinet"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "EAU_002",
+          "principle": "L eau en bouteille n est pas necessairement plus sure",
+          "mechanism": "Les eaux en bouteille plastique peuvent contenir des microplastiques et des migrants du contenant (phtalates, antimoine). Le TFA (acide trifluoroacetique, un PFAS) a ete detecte dans plusieurs marques d eau minerale en 2024.",
+          "context": {
+            "green": "Eau du robinet filtree ou eau en bouteille verre",
+            "orange": "Eau en bouteille plastique consommation occasionnelle",
+            "red": "Bouteilles plastique stockees au soleil ou a la chaleur"
+          },
+          "action": "Privilegier l eau du robinet filtree, eviter de stocker les bouteilles plastique a la chaleur",
+          "nuance": "L eau du robinet reste le choix le plus ecologique et souvent le plus sur si votre zone n est pas contaminee.",
+          "sources": [
+            {"ref": "Mason SA et al. 2018", "doi": "10.3389/fchem.2018.00407", "title": "Synthetic Polymer Contamination in Bottled Water"},
+            {"ref": "PAN Europe 2024", "document": "TFA in bottled water", "finding": "10 sur 19 echantillons avec TFA"},
+            {"ref": "ANSES", "document": "Materiaux au contact de l eau"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "EAU_003",
+          "principle": "L osmose inverse elimine les contaminants mais aussi les mineraux",
+          "mechanism": "La filtration par osmose inverse elimine 95-99% des contaminants (PFAS, nitrates, pesticides, metaux lourds) mais aussi les mineraux essentiels (calcium, magnesium). Une eau demineralisee peut favoriser la fuite de mineraux dans les aliments lors de la cuisson.",
+          "context": {
+            "green": "Osmose inverse avec remineralisation ou complements mineraux alimentaires",
+            "orange": "Osmose inverse sans remineralisation",
+            "red": "Consommation exclusive d eau osmosee sans compensation"
+          },
+          "action": "Si osmose inverse, remineraliser l eau ou assurer un apport suffisant en mineraux par l alimentation",
+          "nuance": "L osmose inverse est une solution efficace contre les contaminants mais necessite une reflexion sur l apport mineral global.",
+          "sources": [
+            {"ref": "OMS 2005", "document": "Nutrients in Drinking Water"},
+            {"ref": "Kozisek F. 2005", "doi": "10.1016/S0065-308X(05)59021-4", "title": "Health risks from drinking demineralised water"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "PESTICIDES": {
+      "description": "Residus de pesticides et strategies de reduction",
+      "rules": [
+        {
+          "id": "PESTICIDE_001",
+          "principle": "Les residus de pesticides sont frequents mais generalement sous les seuils",
+          "mechanism": "Les LMR (limites maximales de residus) sont fixees avec des marges de securite importantes. Cependant, les effets cocktail de multiples residus a faible dose sont moins documentes. Certains pesticides sont des perturbateurs endocriniens potentiels.",
+          "context": {
+            "green": "Bio ou produits locaux raisonnes, lavage et epluchage",
+            "orange": "Conventionnel avec lavage",
+            "red": "Conventionnel sans lavage, accumulation de produits tres traites"
+          },
+          "action": "Laver soigneusement fruits et legumes, eplucher si non bio, varier les sources d approvisionnement",
+          "nuance": "Manger des fruits et legumes conventionnels reste meilleur que ne pas en manger du tout. Le bio reduit l exposition mais n est pas sans pesticides (pesticides naturels autorises).",
+          "sources": [
+            {"ref": "ANSES 2017", "document": "Actualisation des reperes du PNNS", "recommendation": "Diversifier les sources pour limiter l exposition"},
+            {"ref": "EFSA 2023", "document": "Annual report on pesticide residues"},
+            {"ref": "Baudry J et al. 2018", "doi": "10.1001/jamainternmed.2018.4357", "title": "Association of Organic Food Consumption With Cancer Risk"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "PESTICIDE_002",
+          "principle": "Certains fruits et legumes concentrent plus de residus",
+          "mechanism": "Les produits a peau fine non epluchee (fraises, raisin, salade) retiennent plus de residus que ceux a peau epaisse (banane, avocat, melon). L Environmental Working Group publie chaque annee les listes Dirty Dozen et Clean Fifteen.",
+          "context": {
+            "green": "Bio pour les produits les plus traites (fraises, epinards, pommes)",
+            "orange": "Conventionnel avec lavage soigneux",
+            "red": "Consommation frequente sans lavage"
+          },
+          "action": "Prioriser le bio pour les produits a peau fine consommes frequemment",
+          "nuance": "Ces classements sont indicatifs. Les pratiques varient selon les pays et les saisons. Le lavage elimine une partie significative des residus de surface.",
+          "sources": [
+            {"ref": "EWG", "document": "Dirty Dozen / Clean Fifteen", "url": "https://www.ewg.org/foodnews/"},
+            {"ref": "ANSES", "document": "Etude de l alimentation totale (EAT2)"},
+            {"ref": "EFSA", "document": "Monitoring data on pesticide residues in food"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "CAFE": {
+      "description": "Cafe et sante",
+      "rules": [
+        {
+          "id": "CAFE_001",
+          "principle": "Le cafe a des effets benefiques a consommation moderee",
+          "mechanism": "Le cafe contient des polyphenols et de la cafeine. Une consommation moderee (3-4 tasses/jour) est associee a une reduction du risque de diabete type 2, de certains cancers (foie, endometre) et de maladies neurodegeneratives. Au-dela, les effets stimulants peuvent perturber le sommeil et augmenter l anxiete.",
+          "context": {
+            "green": "1-3 tasses/jour avant 14h",
+            "orange": "4-5 tasses/jour ou apres 14h",
+            "red": "Plus de 5 tasses ou sensibilite a la cafeine"
+          },
+          "action": "Limiter a 3-4 tasses, eviter apres 14h pour preserver le sommeil",
+          "nuance": "La sensibilite a la cafeine varie genetiquement (gene CYP1A2). Certaines personnes metabolisent la cafeine lentement et devraient limiter davantage. Les femmes enceintes doivent limiter a 200mg/jour (2 tasses).",
+          "sources": [
+            {"ref": "EFSA 2015", "document": "Scientific Opinion on caffeine safety", "recommendation": "400mg/jour maximum pour adultes"},
+            {"ref": "Poole R et al. 2017", "doi": "10.1136/bmj.j5024", "title": "Coffee consumption and health: umbrella review"},
+            {"ref": "OMS/CIRC 2016", "document": "Coffee not classifiable as carcinogenic"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "CAFE_002",
+          "principle": "Le mode de preparation influence les effets sante",
+          "mechanism": "Le cafe non filtre (cafetiere a piston, expresso) contient du cafestol et kahweol, des diterpenes qui elevent le cholesterol LDL. Le filtre papier retient ces composes. Le cafe bouilli (turc, scandinave) a le plus d impact sur le cholesterol.",
+          "context": {
+            "green": "Cafe filtre papier",
+            "orange": "Expresso (quantite limitee de cafestol)",
+            "red": "Cafe non filtre en grande quantite (cafetiere a piston, turc)"
+          },
+          "action": "Privilegier le cafe filtre si cholesterol eleve",
+          "nuance": "L impact sur le cholesterol est modere et concerne surtout les personnes a risque cardiovasculaire. Pour la population generale, le mode de preparation est un facteur secondaire.",
+          "sources": [
+            {"ref": "Urgert R, Katan MB. 1997", "doi": "10.1146/annurev.nutr.17.1.305", "title": "The cholesterol-raising factor from coffee beans"},
+            {"ref": "Tverdal A et al. 2020", "doi": "10.1093/eurjpc/zwaa007", "title": "Coffee consumption and mortality from cardiovascular diseases"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "COSMETIQUES": {
+      "description": "Securite des cosmetiques et exposition chimique",
+      "rules": [
+        {
+          "id": "COSM_001",
+          "principle": "Les perturbateurs endocriniens meritent vigilance dans les produits quotidiens",
+          "mechanism": "Certaines substances (parabenes a longue chaine, triclosan, certains filtres UV, phtalates) sont suspectes ou confirmees comme perturbateurs endocriniens. L absorption cutanee est variable selon les molecules et les zones du corps. L exposition cumulee quotidienne est le facteur clé.",
+          "context": {
+            "green": "Produits sans substances controversees pour usage quotidien",
+            "orange": "Presence occasionnelle dans produits non quotidiens",
+            "red": "Presence dans produits quotidiens (creme visage, deodorant)"
+          },
+          "action": "Verifier les ingredients des produits utilises quotidiennement, simplifier la routine pour limiter l exposition cumulee",
+          "nuance": "La cosmetique est l un des domaines les plus reglementes. Les substances autorisees sont evaluees pour leur securite. Le principe de precaution s applique surtout a l exposition repetee et cumulative.",
+          "sources": [
+            {"ref": "ANSM", "document": "Liste des substances reglementees dans les cosmetiques"},
+            {"ref": "Reglement UE 1223/2009", "document": "Reglement cosmetiques"},
+            {"ref": "Darbre PD. 2019", "doi": "10.1016/j.jsbmb.2019.105397", "title": "The history of endocrine-disrupting chemicals"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "COSM_002",
+          "principle": "Une routine simple reduit l exposition et les irritations",
+          "mechanism": "Multiplier les produits augmente l exposition aux ingredients et le risque de reactions croisees. La peau a des capacites d auto-regulation que l exces de produits peut perturber.",
+          "context": {
+            "green": "Routine simple : nettoyant, hydratant, protection solaire",
+            "orange": "5-7 produits avec actifs multiples",
+            "red": "Plus de 10 produits quotidiens"
+          },
+          "action": "Identifier les produits vraiment utiles, introduire un seul actif a la fois pour observer les effets",
+          "nuance": "Les besoins varient selon l age, le type de peau et les conditions. Une personne avec acne severe peut avoir besoin de plus de produits. L objectif est la proportionnalite.",
+          "sources": [
+            {"ref": "American Academy of Dermatology", "document": "Skin care basics"},
+            {"ref": "ANSM", "document": "Cosmetovigilance"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "COSM_003",
+          "principle": "Les PFAS sont presents dans certains cosmetiques",
+          "mechanism": "Les PFAS sont utilises dans certains fonds de teint, mascaras et cremes pour leurs proprietes filmogenes et impermeabilisantes. La loi francaise interdit les PFAS dans les cosmetiques a partir de 2026.",
+          "context": {
+            "green": "Cosmetiques sans PFAS (verifier mentions ou labels)",
+            "orange": "Cosmetiques conventionnels sans mention",
+            "red": "Produits waterproof sans garantie sans PFAS"
+          },
+          "action": "Verifier les labels ou choisir des marques engagees sans PFAS",
+          "nuance": "L interdiction entrant en vigueur en 2026, le marche va evoluer rapidement. Les produits waterproof sont les plus susceptibles d en contenir.",
+          "sources": [
+            {"ref": "Loi francaise 2025", "document": "Loi interdisant les PFAS dans les cosmetiques", "date": "27 fevrier 2025"},
+            {"ref": "Whitehead HD et al. 2021", "doi": "10.1021/acs.estlett.1c00240", "title": "Fluorinated Compounds in North American Cosmetics"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "DETERGENTS": {
+      "description": "Produits menagers et qualite de l air interieur",
+      "rules": [
+        {
+          "id": "DETERG_001",
+          "principle": "Les sprays et parfums d interieur polluent l air",
+          "mechanism": "Les COV (composes organiques volatils) des sprays, desodorisants et parfums d interieur sont inhales directement dans les poumons. Certains (formaldehyde, benzene) sont classes cancerogenes ou irritants respiratoires. La pollution interieure peut etre 5 a 10 fois superieure a l exterieur.",
+          "context": {
+            "green": "Produits sans spray, ventilation naturelle",
+            "orange": "Sprays occasionnels avec aeration",
+            "red": "Sprays frequents en milieu confine"
+          },
+          "action": "Preferer les formats liquides aux sprays, aerer pendant et apres utilisation",
+          "nuance": "Le format (spray vs liquide) compte autant que la composition. Un produit naturel en spray peut emettre plus de COV qu un produit synthetique en liquide.",
+          "sources": [
+            {"ref": "ANSES 2014", "document": "Qualite de l air interieur"},
+            {"ref": "ADEME", "document": "Pollution de l air interieur", "url": "https://www.ademe.fr/expertises/air-bruit/passer-a-laction/agir-qualite-lair/dossier/lair-interieur/sources-polluants"},
+            {"ref": "OMS 2010", "document": "WHO guidelines for indoor air quality"}
+          ],
+          "evidence_level": "fort",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "DETERG_002",
+          "principle": "Le surdosage n ameliore pas l efficacite",
+          "mechanism": "Les tensioactifs ont une concentration micellaire critique au-dela de laquelle l efficacite n augmente plus. Surdoser laisse des residus sur les surfaces, augmente l exposition chimique et pollue les eaux usees.",
+          "context": {
+            "green": "Dosage respecte selon instructions",
+            "orange": "Leger surdosage occasionnel",
+            "red": "Surdosage habituel"
+          },
+          "action": "Utiliser un doseur, lire les instructions, moins peut etre suffisant pour salissures legeres",
+          "nuance": "Les dosages fabricants sont souvent genereux. Pour un usage courant, la moitie de la dose indiquee peut suffire.",
+          "sources": [
+            {"ref": "ADEME", "document": "Guide pratique produits menagers"},
+            {"ref": "ANSES", "document": "Evaluation des risques lies aux detergents"}
+          ],
+          "evidence_level": "faible",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "DETERG_003",
+          "principle": "Les labels environnementaux garantissent des formulations plus sures",
+          "mechanism": "Les ecolabels (Ecolabel europeen, Ecocert) imposent des restrictions sur les substances dangereuses, la biodegradabilite et les tests sur animaux. Ils n eliminent pas tous les risques mais reduisent l exposition.",
+          "context": {
+            "green": "Produits avec ecolabels reconnus",
+            "orange": "Produits conventionnels sans label",
+            "red": "Produits avec mentions trompeuses (greenwashing)"
+          },
+          "action": "Privilegier les produits avec Ecolabel europeen ou NF Environnement",
+          "nuance": "Un label n est pas une garantie absolue. Lire les compositions reste utile. Certains produits sans label peuvent etre excellents, et vice versa.",
+          "sources": [
+            {"ref": "Commission europeenne", "document": "Ecolabel EU criteria for detergents"},
+            {"ref": "ADEME", "document": "Guide des labels environnementaux"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    },
+
+    "EMBALLAGES": {
+      "description": "Migration des emballages vers les aliments",
+      "rules": [
+        {
+          "id": "EMBALL_001",
+          "principle": "Le plastique chauffe libere des substances",
+          "mechanism": "La chaleur accelere la migration des additifs plastiques (phtalates, bisphenols, antimoine) vers les aliments. Le micro-ondes dans des contenants plastique non adaptes est particulierement risque.",
+          "context": {
+            "green": "Verre ou inox pour stockage et rechauffage",
+            "orange": "Plastique adapte micro-ondes",
+            "red": "Plastique non adapte au micro-ondes, surchauffe"
+          },
+          "action": "Transferer dans un recipient en verre avant de rechauffer, eviter les contenants plastique pour les aliments chauds ou gras",
+          "nuance": "Les plastiques marques micro-ondes sont testes pour resister a la chaleur. Le risque concerne surtout les contenants non adaptes et les temperatures elevees.",
+          "sources": [
+            {"ref": "ANSES", "document": "Materiaux au contact des denrees alimentaires"},
+            {"ref": "EFSA", "document": "Scientific opinion on BPA"},
+            {"ref": "Reglement UE 10/2011", "document": "Materiaux plastiques destines au contact alimentaire"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        },
+        {
+          "id": "EMBALL_002",
+          "principle": "Les conserves acides peuvent contenir plus de migrants",
+          "mechanism": "L acidite des aliments (tomates, agrumes) favorise la migration des composants du revetement interieur des boites de conserve (bisphenols, resines epoxy). Les conserves en verre n ont pas ce probleme.",
+          "context": {
+            "green": "Conserves en verre ou produits frais",
+            "orange": "Conserves metalliques occasionnelles",
+            "red": "Conserves metalliques acides frequentes"
+          },
+          "action": "Privilegier les conserves en verre pour les produits acides (tomates, fruits)",
+          "nuance": "Les conserves sont un moyen pratique de consommer des legumes. Le risque est lie a la frequence et au type d aliment, pas a une consommation occasionnelle.",
+          "sources": [
+            {"ref": "ANSES", "document": "Bisphenol A dans les materiaux au contact des aliments"},
+            {"ref": "EFSA 2021", "document": "Re-evaluation of bisphenol A"}
+          ],
+          "evidence_level": "modere",
+          "last_verified": "2026-01-03"
+        }
+      ]
+    }
+
+  }
+}

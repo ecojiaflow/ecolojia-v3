@@ -1,15 +1,35 @@
-// ============================================================================
-// ECOLOJIA — RULE RESOLVER SERVICE V2.1
-// VERSION 2.1.0 — 2026-01-03
-// Moteur déterministe : product + flags + subcategory → reflexHero + rules (max 3)
-// AMÉLIORATION V2.1 : Alias de subcategories pour matcher les variantes
+﻿// ============================================================================
+// ECOLOJIA — RULE RESOLVER SERVICE V3.0
+// VERSION 3.0.0 — 2026-01-03
+// Moteur deterministe : product + flags + subcategory -> reflexHero + rules (max 3)
+// ADAPTATION V3 : Structure par categories (Knowledge Base V3.0)
 // ============================================================================
 
-const rules = require('../knowledge/rules.v2.json');
+const knowledgeBase = require('../knowledge/rules.v3.json');
+
+// ============================================================================
+// MAPPING CATEGORIES PRODUIT -> CATEGORIES KNOWLEDGE BASE
+// ============================================================================
+const CATEGORY_MAPPING = {
+  food: [
+    'TRANSFORMATION_ALIMENTAIRE',
+    'RYTHME_ALIMENTAIRE', 
+    'SUCRES',
+    'GRAISSES',
+    'SEL',
+    'ADDITIFS',
+    'PESTICIDES',
+    'CAFE',
+    'EAU',
+    'EMBALLAGES'
+  ],
+  cosmetic: ['COSMETIQUES'],
+  detergent: ['DETERGENTS']
+};
 
 // ============================================================================
 // ALIAS DE SUBCATEGORIES
-// Permet de matcher plusieurs variantes vers une règle commune
+// Permet de matcher plusieurs variantes vers une regle commune
 // ============================================================================
 const SUBCATEGORY_ALIASES = {
   // Spreads
@@ -17,28 +37,28 @@ const SUBCATEGORY_ALIASES = {
   'hazelnut-spread': 'spread',
   'peanut-butter': 'nut-butter',
   'almond-butter': 'nut-butter',
-  
+
   // Beverages
   'fruit-juice': 'beverage',
   'soda': 'beverage',
   'energy-drink': 'beverage',
-  
+
   // Snacks
   'chips': 'snack',
   'biscuit': 'snack',
   'cookie': 'snack',
   'cracker': 'snack',
-  
+
   // Breakfast
   'cereal': 'breakfast',
   'muesli': 'breakfast',
   'granola': 'breakfast',
-  
+
   // Chocolate
   'chocolate': 'chocolate-bar',
   'dark-chocolate': 'chocolate-bar',
   'milk-chocolate': 'chocolate-bar',
-  
+
   // Cosmetics
   'shampoo': 'haircare',
   'conditioner': 'haircare',
@@ -50,8 +70,6 @@ const SUBCATEGORY_ALIASES = {
 
 /**
  * Normalise une subcategory en utilisant les alias
- * @param {string} subcategory - Subcategory brute du produit
- * @returns {string|null} - Subcategory normalisée ou originale
  */
 function normalizeSubcategory(subcategory) {
   if (!subcategory) return null;
@@ -60,11 +78,59 @@ function normalizeSubcategory(subcategory) {
 }
 
 // ============================================================================
+// EXTRACTION DES REGLES DE LA V3
+// ============================================================================
+
+/**
+ * Extrait toutes les regles de la Knowledge Base V3 en format plat
+ */
+function getAllRulesFlat() {
+  const allRules = [];
+  const categories = knowledgeBase.categories || {};
+  
+  for (const [categoryKey, categoryData] of Object.entries(categories)) {
+    if (categoryData.rules && Array.isArray(categoryData.rules)) {
+      for (const rule of categoryData.rules) {
+        allRules.push({
+          ...rule,
+          kbCategory: categoryKey,
+          kbDescription: categoryData.description
+        });
+      }
+    }
+  }
+  
+  return allRules;
+}
+
+/**
+ * Mappe une categorie Knowledge Base vers une categorie produit
+ */
+function getProductCategoryFromKB(kbCategory) {
+  for (const [productCat, kbCats] of Object.entries(CATEGORY_MAPPING)) {
+    if (kbCats.includes(kbCategory)) {
+      return productCat;
+    }
+  }
+  return 'food'; // Default
+}
+
+// Cache des regles aplaties
+let flatRulesCache = null;
+
+function getFlatRules() {
+  if (!flatRulesCache) {
+    flatRulesCache = getAllRulesFlat();
+  }
+  return flatRulesCache;
+}
+
+// ============================================================================
 // FONCTION PRINCIPALE
 // ============================================================================
 
 /**
- * Résout les règles applicables à un produit
+ * Resout les regles applicables a un produit
  * @param {Object} product - Produit avec constitution.healthReflex et subcategory
  * @returns {Object} { reflexHero, rulesHits, actions }
  */
@@ -80,117 +146,129 @@ function resolveRules(product) {
   const healthReflex = product.constitution?.healthReflex || product.healthReflex || {};
   const flags = healthReflex.flags || [];
   const level = healthReflex.level || 1;
-  const category = product.categoryType || product.category || 'food';
+  const productCategory = product.categoryType || product.category || 'food';
   const rawSubcategory = product.subcategory || null;
-  
-  // NORMALISATION V2.1 : Appliquer les alias
   const subcategory = normalizeSubcategory(rawSubcategory);
 
-  // ============================================================================
-  // 1. FILTRER LES RÈGLES PAR CATÉGORIE ET SUBCATEGORY
-  // ============================================================================
+  // Obtenir les categories KB pertinentes pour ce type de produit
+  const relevantKBCategories = CATEGORY_MAPPING[productCategory] || CATEGORY_MAPPING.food;
 
-  // Règles spécifiques à la subcategory (normalisée)
-  const subcategoryRules = subcategory
-    ? rules.rules.filter(r => r.category === category && r.subcategory === subcategory)
-    : [];
+  // Obtenir toutes les regles
+  const allRules = getFlatRules();
 
-  // Règles génériques (sans subcategory)
-  const genericRules = rules.rules.filter(r => r.category === category && !r.subcategory);
-
-  // Log debug
-  if (rawSubcategory && rawSubcategory !== subcategory) {
-    console.log('[RuleResolver] Alias: "' + rawSubcategory + '" -> "' + subcategory + '"');
-  }
+  // Filtrer par categories pertinentes
+  const categoryRules = allRules.filter(r => relevantKBCategories.includes(r.kbCategory));
 
   // ============================================================================
-  // 2. SCORER CHAQUE RÈGLE SELON LES FLAGS
+  // SCORER CHAQUE REGLE
   // ============================================================================
-
-  function scoreRules(rulesList, isSpecific = false) {
-    return rulesList.map(rule => {
-      const matchCount = rule.triggers.filter(t => flags.includes(t)).length;
-      // Une règle est pertinente si au moins un trigger matche OU si pas de triggers définis
-      const hasMatch = matchCount > 0 || (rule.triggers.length === 0 && isSpecific);
-
-      // Bonus pour les règles spécifiques
-      const specificBonus = isSpecific ? 10 : 0;
-
-      return {
-        ...rule,
-        matchScore: matchCount + specificBonus,
-        relevant: hasMatch,
-        isSpecific
-      };
-    });
-  }
-
-  const scoredSubcategoryRules = scoreRules(subcategoryRules, true);
-  const scoredGenericRules = scoreRules(genericRules, false);
-
-  // Combiner toutes les règles scorées
-  const allScoredRules = [...scoredSubcategoryRules, ...scoredGenericRules];
-
-  // ============================================================================
-  // 3. TRIER ET LIMITER À 3 RÈGLES
-  // ============================================================================
-
-  // Priorité : règles spécifiques qui matchent > règles génériques qui matchent
-  const sortedRules = allScoredRules
-    .filter(r => r.relevant)
-    .sort((a, b) => {
-      // D'abord par spécificité (subcategory)
-      if (a.isSpecific !== b.isSpecific) {
-        return a.isSpecific ? -1 : 1;
+  
+  const scoredRules = categoryRules.map(rule => {
+    let score = 0;
+    
+    // Score base sur les mots-cles du principe vs flags
+    const principleWords = (rule.principle || '').toLowerCase();
+    const mechanismWords = (rule.mechanism || '').toLowerCase();
+    
+    // Matching par flags
+    for (const flag of flags) {
+      const flagLower = flag.toLowerCase().replace(/_/g, ' ');
+      if (principleWords.includes(flagLower) || mechanismWords.includes(flagLower)) {
+        score += 5;
       }
-      // Puis par score de match
-      return b.matchScore - a.matchScore;
-    })
+    }
+    
+    // Matching par mots-cles specifiques
+    const keywordMatches = {
+      'ultra_transforme': ['ultra-transform', 'nova 4', 'transformation'],
+      'sucre_eleve': ['sucre', 'glycemi', 'glucose'],
+      'sel_eleve': ['sel', 'sodium', 'hypertension'],
+      'additifs_multiples': ['additif', 'emulsifi', 'conservat'],
+      'graisses_saturees': ['graisse', 'satur', 'lipide', 'cholesterol'],
+      'nutriscore_e': ['nutri-score', 'nutritionnel'],
+      'nutriscore_d': ['nutri-score', 'nutritionnel'],
+      'high_frequency_use': ['frequen', 'quotidien', 'repetee']
+    };
+    
+    for (const flag of flags) {
+      const keywords = keywordMatches[flag] || [];
+      for (const kw of keywords) {
+        if (principleWords.includes(kw) || mechanismWords.includes(kw)) {
+          score += 3;
+        }
+      }
+    }
+    
+    // Bonus pour niveau de preuve fort
+    if (rule.evidence_level === 'fort') {
+      score += 2;
+    }
+    
+    return {
+      ...rule,
+      matchScore: score,
+      relevant: score > 0
+    };
+  });
+
+  // ============================================================================
+  // TRIER ET LIMITER A 3 REGLES
+  // ============================================================================
+  
+  const sortedRules = scoredRules
+    .filter(r => r.relevant)
+    .sort((a, b) => b.matchScore - a.matchScore)
     .slice(0, 3);
 
+  // Si aucune regle pertinente, prendre les 2 premieres generiques
+  const finalRules = sortedRules.length > 0 
+    ? sortedRules 
+    : categoryRules.slice(0, 2);
+
   // ============================================================================
-  // 4. CONSTRUIRE REFLEX HERO
+  // CONSTRUIRE REFLEX HERO
   // ============================================================================
   let reflexHero = healthReflex.content || null;
 
-  // Si pas de contenu, utiliser la première règle (préférence subcategory)
-  if (!reflexHero && sortedRules.length > 0) {
-    reflexHero = sortedRules[0].simple_reflex;
+  if (!reflexHero && finalRules.length > 0) {
+    reflexHero = finalRules[0].action || finalRules[0].principle;
   }
 
   // Fallback selon niveau
   if (!reflexHero) {
     const fallbacks = {
-      1: "Ce produit peut s'intégrer dans une consommation équilibrée.",
-      2: "À consommer avec modération au quotidien.",
-      3: "À réserver aux occasions plutôt qu'au quotidien."
+      1: "Ce produit peut s'integrer dans une consommation equilibree.",
+      2: "A consommer avec moderation au quotidien.",
+      3: "A reserver aux occasions plutot qu'au quotidien."
     };
     reflexHero = fallbacks[level] || fallbacks[1];
   }
 
   // ============================================================================
-  // 5. COLLECTER LES ACTIONS (max 3, dédupliquées)
+  // COLLECTER LES ACTIONS (max 3, dedupliquees)
   // ============================================================================
-  const allActions = sortedRules.flatMap(r => r.actions || []);
+  const allActions = finalRules.map(r => r.action).filter(Boolean);
   const uniqueActions = [...new Set(allActions)].slice(0, 3);
 
   // ============================================================================
-  // 6. FORMATER LES RÈGLES POUR LE FRONTEND
+  // FORMATER LES REGLES POUR LE FRONTEND
   // ============================================================================
-  const rulesHits = sortedRules.map(r => ({
+  const rulesHits = finalRules.map(r => ({
     id: r.id,
     principle: r.principle,
     mechanism: r.mechanism,
-    simple_reflex: r.simple_reflex,
+    simple_reflex: r.action,
     context: getContextByLevel(r, level),
     evidence_level: r.evidence_level,
-    nuances: r.nuances,
-    isSpecific: r.isSpecific || false,
-    subcategory: r.subcategory || null
+    nuances: r.nuance,
+    sources: r.sources,
+    kbCategory: r.kbCategory
   }));
 
-  // Log pour debug
-  console.log('[RuleResolver] Product: ' + (product.name || 'unknown') + ', subcategory: ' + rawSubcategory + ' -> ' + subcategory + ', specific rules: ' + scoredSubcategoryRules.filter(r => r.relevant).length + ', total hits: ' + rulesHits.length);
+  console.log('[RuleResolver V3] Product:', product.name || 'unknown', 
+    '| Category:', productCategory, 
+    '| Flags:', flags.length,
+    '| Rules found:', rulesHits.length);
 
   return {
     reflexHero,
@@ -207,41 +285,53 @@ function resolveRules(product) {
  * Retourne le contexte (green/orange/red) selon le niveau
  */
 function getContextByLevel(rule, level) {
-  if (level === 1) return rule.green;
-  if (level === 2) return rule.orange;
-  return rule.red;
+  if (!rule.context) return null;
+  if (level === 1) return rule.context.green;
+  if (level === 2) return rule.context.orange;
+  return rule.context.red;
 }
 
 /**
- * Récupère une règle par ID
+ * Recupere une regle par ID
  */
 function getRuleById(ruleId) {
-  return rules.rules.find(r => r.id === ruleId) || null;
+  return getFlatRules().find(r => r.id === ruleId) || null;
 }
 
 /**
- * Liste toutes les règles d'une catégorie
+ * Liste toutes les regles d une categorie produit
  */
-function getRulesByCategory(category) {
-  return rules.rules.filter(r => r.category === category);
+function getRulesByCategory(productCategory) {
+  const relevantKBCategories = CATEGORY_MAPPING[productCategory] || CATEGORY_MAPPING.food;
+  return getFlatRules().filter(r => relevantKBCategories.includes(r.kbCategory));
 }
 
 /**
- * Liste toutes les règles d'une subcategory
+ * Liste toutes les categories Knowledge Base
  */
-function getRulesBySubcategory(subcategory) {
-  const normalized = normalizeSubcategory(subcategory);
-  return rules.rules.filter(r => r.subcategory === normalized);
+function getKBCategories() {
+  return Object.keys(knowledgeBase.categories || {});
 }
 
 /**
- * Liste toutes les subcategories ayant des règles spécifiques
+ * Statistiques de la Knowledge Base
  */
-function getSubcategoriesWithRules() {
-  const subcats = rules.rules
-    .filter(r => r.subcategory)
-    .map(r => r.subcategory);
-  return [...new Set(subcats)];
+function getKBStats() {
+  const categories = knowledgeBase.categories || {};
+  const stats = {
+    version: knowledgeBase.version,
+    totalCategories: Object.keys(categories).length,
+    totalRules: 0,
+    byCategory: {}
+  };
+  
+  for (const [key, cat] of Object.entries(categories)) {
+    const count = cat.rules?.length || 0;
+    stats.totalRules += count;
+    stats.byCategory[key] = count;
+  }
+  
+  return stats;
 }
 
 /**
@@ -259,13 +349,15 @@ module.exports = {
   resolveRules,
   getRuleById,
   getRulesByCategory,
-  getRulesBySubcategory,
-  getSubcategoriesWithRules,
+  getKBCategories,
+  getKBStats,
   getAliases,
   normalizeSubcategory,
-  RULES_VERSION: rules.version
+  RULES_VERSION: knowledgeBase.version
 };
 
-console.log('[RuleResolver] Service V2.1 chargé - Version', rules.version, '-', rules.rules.length, 'règles');
-console.log('[RuleResolver] Subcategories avec règles:', getSubcategoriesWithRules().join(', '));
-console.log('[RuleResolver] Alias configurés:', Object.keys(SUBCATEGORY_ALIASES).length);
+// Log au chargement
+const stats = getKBStats();
+console.log('[RuleResolver V3] Service charge - Version', stats.version);
+console.log('[RuleResolver V3] Categories:', stats.totalCategories, '| Regles:', stats.totalRules);
+console.log('[RuleResolver V3] Details:', JSON.stringify(stats.byCategory));
