@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { MobileBottomNav } from './MobileBottomNav';
@@ -16,12 +16,12 @@ const Layout: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:ml-64">
         {/* Main Content - padding bottom pour mobile */}
-        <main className={`flex-1 ${isMobile ? 'pb-20' : ''}`}>
+        <main className={"flex-1 " + (isMobile ? "pb-20" : "")}>
           <Outlet />
         </main>
 
-        {/* Footer - masqu sur mobile */}
-        <footer className={`${isMobile ? 'hidden' : 'block'}`}>
+        {/* Footer - masque sur mobile */}
+        <footer className={isMobile ? "hidden" : "block"}>
           <Footer />
         </footer>
       </div>
