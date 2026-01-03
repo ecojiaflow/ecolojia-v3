@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // ECOLOJIA — SERVICE CONSTITUTION V1.1.0
 // VERSION 1.1.0 — 2026-01-03
 // Génère la Constitution complète (3 cartes + healthReflex + habit)
@@ -23,7 +23,7 @@ function generateCards(product, healthReflex) {
   const card2 = {
     id: 'card_reflex',
     icon: '🌱',
-    title: 'Le bon réflexe santé',
+    title: 'Le bon réflexe',
     content: healthReflex?.content || 'Consommer avec modération.'
   };
 
@@ -127,3 +127,4 @@ function regenerateRulesOnly(product, existingConstitution) {
 }
 
 module.exports = { generateConstitution, generateCards, regenerateRulesOnly };
+

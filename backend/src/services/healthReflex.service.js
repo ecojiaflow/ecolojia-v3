@@ -127,3 +127,4 @@ function calculateHealthReflex(product) {
 }
 
 module.exports = { calculateHealthReflex };
+
