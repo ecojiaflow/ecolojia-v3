@@ -79,18 +79,119 @@ function mapAlternativeProduct(p) {
   };
 }
 
-async function findAlternativesForProduct(baseProduct, limit = 6) {
+// ========================================
+// ALTERNATIVES V2 — INTELLIGENTES ET COHÉRENTES
+// ========================================
+
+// Map des mots-clés par type de produit pour garantir la cohérence
+const SUBCATEGORY_KEYWORDS = {
+  'spread': ['tartiner', 'spread', 'beurre', 'purée', 'pâte', 'cream', 'butter'],
+  'chocolate-spread': ['tartiner', 'chocolat', 'cacao', 'noisette', 'nutella', 'spread'],
+  'nut-butter': ['cacahuète', 'amande', 'noisette', 'noix', 'beurre', 'purée', 'peanut', 'almond'],
+  'snack': ['chips', 'biscuit', 'crackers', 'snack', 'gâteau', 'cookie', 'gaufrette'],
+  'beverage': ['jus', 'boisson', 'soda', 'eau', 'thé', 'café', 'drink', 'juice'],
+  'chocolate-bar': ['chocolat', 'cacao', 'tablette', 'noir', 'lait', 'blanc'],
+  'dessert': ['dessert', 'crème', 'mousse', 'yaourt', 'flan', 'pudding'],
+  'breakfast': ['céréales', 'muesli', 'granola', 'flocons', 'petit-déjeuner'],
+  'haircare': ['shampo', 'après-shampo', 'cheveux', 'hair', 'capillaire'],
+  'skincare': ['crème', 'visage', 'peau', 'skin', 'hydratant', 'sérum'],
+  'bodycare': ['corps', 'body', 'lotion', 'lait', 'douche', 'savon']
+};
+
+// Alias pour regrouper les subcategories similaires
+const SUBCATEGORY_GROUPS = {
+  'spread': ['spread', 'chocolate-spread', 'hazelnut-spread'],
+  'chocolate-spread': ['spread', 'chocolate-spread', 'hazelnut-spread'],
+  'hazelnut-spread': ['spread', 'chocolate-spread', 'hazelnut-spread'],
+  'nut-butter': ['nut-butter', 'peanut-butter', 'almond-butter'],
+  'snack': ['snack', 'chips', 'biscuit', 'cookie', 'cracker'],
+  'beverage': ['beverage', 'juice', 'soda', 'drink'],
+  'chocolate-bar': ['chocolate-bar', 'chocolate', 'dark-chocolate', 'milk-chocolate'],
+  'breakfast': ['breakfast', 'cereal', 'muesli', 'granola'],
+  'haircare': ['haircare', 'shampoo', 'conditioner'],
+  'skincare': ['skincare', 'face-cream', 'moisturizer'],
+  'bodycare': ['bodycare', 'body-lotion', 'shower-gel']
+};
+
+/**
+ * Trouve des alternatives cohérentes pour un produit
+ * @param {Object} baseProduct - Produit de base
+ * @param {number} limit - Nombre max d'alternatives
+ * @returns {Array} - Alternatives triées par score décroissant
+ */
+async function findAlternativesForProduct(baseProduct, limit = 5) {
   if (!baseProduct) return [];
-  const normalized = normalizeProductCategory(baseProduct.toObject ? baseProduct.toObject() : baseProduct);
-  const category = normalized.categoryNormalized || normalized.categoryType;
-  if (!category) return [];
-  const filter = { categoryType: category };
-  if (normalized._id) filter._id = { $ne: normalized._id };
-  const baseScore = typeof normalized.globalScore === "number" ? normalized.globalScore : normalized.scores && typeof normalized.scores.overallScore === "number" ? normalized.scores.overallScore : null;
-  const query = Product.find(filter);
-  if (baseScore !== null) query.where("scores.overallScore").gte(Math.max(0, baseScore - 25));
-  const results = await query.sort({ "scores.overallScore": -1 }).limit(limit).lean().exec();
-  return results.map(mapAlternativeProduct);
+
+  const productObj = baseProduct.toObject ? baseProduct.toObject() : baseProduct;
+  const subcategory = productObj.subcategory || null;
+  const categoryType = productObj.categoryType || productObj.category || 'food';
+  const productName = (productObj.name || '').toLowerCase();
+  
+  // Score du produit actuel
+  const baseScore = typeof productObj.globalScore === "number" 
+    ? productObj.globalScore 
+    : productObj.scores?.overallScore || 0;
+
+  if (!subcategory) {
+    logger.warn('[Alternatives] Pas de subcategory pour: ' + productObj.name);
+    return [];
+  }
+
+  // Obtenir le groupe de subcategories similaires
+  const subcategoryGroup = SUBCATEGORY_GROUPS[subcategory] || [subcategory];
+  
+  // Obtenir les mots-clés pour validation
+  const keywords = SUBCATEGORY_KEYWORDS[subcategory] || [];
+
+  logger.info('[Alternatives] Recherche pour: ' + productObj.name + ' | subcategory: ' + subcategory + ' | score: ' + baseScore);
+
+  // Construire la requête MongoDB
+  const query = {
+    // Même groupe de subcategory
+    subcategory: { $in: subcategoryGroup },
+    // Même type (food/cosmetic/detergent)
+    categoryType: categoryType,
+    // Exclure le produit actuel
+    _id: { $ne: productObj._id },
+    // Score SUPÉRIEUR au produit actuel (alternatives meilleures)
+    'scores.overallScore': { $gt: baseScore }
+  };
+
+  // Si on a des mots-clés, filtrer pour garantir la cohérence
+  if (keywords.length > 0) {
+    // Créer une regex pour matcher au moins un mot-clé
+    const keywordRegex = new RegExp(keywords.join('|'), 'i');
+    query.name = { $regex: keywordRegex };
+  }
+
+  try {
+    const results = await Product.find(query)
+      .select('_id barcode name brand subcategory categoryType imageUrl scores globalScore')
+      .sort({ 'scores.overallScore': -1 })
+      .limit(limit)
+      .lean()
+      .exec();
+
+    logger.info('[Alternatives] Trouvé ' + results.length + ' alternatives pour ' + productObj.name);
+
+    // Mapper les résultats
+    return results.map(p => ({
+      _id: p._id,
+      barcode: p.barcode,
+      name: p.name,
+      brand: p.brand,
+      subcategory: p.subcategory,
+      categoryType: p.categoryType,
+      imageUrl: p.imageUrl,
+      scores: p.scores || null,
+      globalScore: p.scores?.overallScore || p.globalScore || null,
+      scoreDiff: (p.scores?.overallScore || 0) - baseScore
+    }));
+
+  } catch (error) {
+    logger.error('[Alternatives] Erreur: ' + error.message);
+    return [];
+  }
 }
 
 function ensureConstitutionWithDynamicRules(productObj) {
