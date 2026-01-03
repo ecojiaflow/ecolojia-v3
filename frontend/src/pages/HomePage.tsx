@@ -17,7 +17,7 @@ export default function HomePage() {
 
   const handleAsk = () => {
     if (question.trim()) {
-      navigate(`/assistant?q=${encodeURIComponent(question.trim())}`);
+      navigate("/assistant?q=" + encodeURIComponent(question.trim()));
     } else {
       navigate("/assistant");
     }
@@ -113,3 +113,4 @@ export default function HomePage() {
     </div>
   );
 }
+
