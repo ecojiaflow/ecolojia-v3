@@ -35,6 +35,7 @@ const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
 // Premium
 const PremiumPage = lazy(() => import("./pages/PremiumPage"));
+const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 
 // Legal
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
@@ -68,6 +69,7 @@ const App: React.FC = () => {
               <Route path="search" element={<SearchPage />} />
               <Route path="product/:id" element={<ProductPage />} />
               <Route path="premium" element={<PremiumPage />} />
+              <Route path="explore" element={<ExplorePage />} />
               <Route path="privacy" element={<PrivacyPage />} />
               <Route path="terms" element={<TermsPage />} />
 
@@ -100,3 +102,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
