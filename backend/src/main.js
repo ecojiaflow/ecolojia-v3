@@ -369,6 +369,10 @@ try {
 
 app.use('/api/gdpr', gdprRoutes);
 app.use('/api/stats', require('./routes/stats.routes'));
+
+// Explore (Premium - Flow guidé, PAS de chat)
+app.use('/api/explore', require('./routes/explore.routes'));
+console.log('✅ [ROUTE] Explore montée sur /api/explore');
 console.log('✅ [ROUTE] Stats montée sur /api/stats');
 app.use('/api/ai/recipes', require('./routes/ai.recipes.routes'));
 console.log('✅ [ROUTE] GDPR montée sur /api/gdpr');
@@ -434,6 +438,8 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
+
 
 
 
