@@ -7,13 +7,9 @@ import App from './App';
 import { AuthProvider } from './Contexts/AuthContext';
 import './index.css';
 
-// ✅ AJOUT : Import registerSW pour PWA production
-import { registerSW } from 'virtual:pwa-register';
-
 // Créer le root element
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
-
 const root = ReactDOM.createRoot(rootElement);
 
 // Rendre l'application
@@ -52,43 +48,15 @@ root.render(
 );
 
 // =====================================================
-// SERVICE WORKER REGISTRATION (DEV vs PROD)
+// SERVICE WORKER - DÉSACTIVÉ TEMPORAIREMENT
 // =====================================================
-
-if (import.meta.env.DEV) {
-  // ❌ DÉVELOPPEMENT : Désactiver tout SW résiduel pour éviter conflits cache
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(regs => {
-      for (const r of regs) { 
-        r.unregister().catch(() => {}); 
-      }
-    }).catch(() => {});
-  }
-} else {
-  // ✅ PRODUCTION : Enregistrer le service worker PWA
-  const updateSW = registerSW({
-    immediate: true,
-    onNeedRefresh() {
-      console.log('[PWA] Nouvelle version disponible, rechargement...');
-      // Auto-update immédiat (pas de prompt utilisateur)
-      updateSW(true);
-    },
-    onOfflineReady() {
-      console.log('[PWA] Application prête pour mode hors-ligne');
-    },
-    onRegistered(registration) {
-      console.log('[PWA] Service Worker enregistré avec succès');
-      // Vérifier les mises à jour toutes les heures
-      if (registration) {
-        setInterval(() => {
-          registration.update();
-        }, 60 * 60 * 1000); // 1 heure
-      }
-    },
-    onRegisterError(error) {
-      console.error('[PWA] Erreur enregistrement Service Worker:', error);
+if ('serviceWorker' in navigator) {
+  // Désactiver tous les SW pour debug
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    for (const r of regs) {
+      r.unregister().then(() => {
+        console.log('[SW] Service Worker désactivé');
+      }).catch(() => {});
     }
-  });
+  }).catch(() => {});
 }
-
-// Build: 20251203233928
