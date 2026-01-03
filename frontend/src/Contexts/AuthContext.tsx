@@ -1,8 +1,8 @@
-﻿import React, { createContext, useContext, useState, useEffect } from "react";
+﻿import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { apiClient as api } from "../services/api";
 
 // ============================================================================
-// TYPES USER (aligné Backend)
+// TYPES USER
 // ============================================================================
 
 export interface UserSubscription {
@@ -28,7 +28,7 @@ export interface User {
   email: string;
   firstName?: string;
   lastName?: string;
-  name?: string; // Fallback
+  name?: string;
   avatar?: string;
   subscription?: UserSubscription;
   preferences?: UserPreferences;
@@ -53,46 +53,48 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const initialized = useRef(false);
 
-  // Charger user depuis localStorage au démarrage
+  // Charger user depuis localStorage au démarrage (UNE SEULE FOIS)
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const loadUser = async () => {
+      try {
+        const storedUser = localStorage.getItem("ecolojia_user");
+        const storedToken = localStorage.getItem("ecolojia_token");
+
+        if (storedUser && storedToken) {
+          setUser(JSON.parse(storedUser));
+          console.log("User loaded from localStorage");
+        }
+      } catch (error) {
+        console.log("No active session");
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  // Refresh user (appelé manuellement, pas automatiquement)
   const refreshUser = async () => {
     try {
-      // D'abord vérifier localStorage
-      const storedUser = localStorage.getItem("ecolojia_user");
-      const storedToken = localStorage.getItem("ecolojia_token");
-      
-      if (storedUser && storedToken) {
-        setUser(JSON.parse(storedUser));
-        console.log("✅ User loaded from localStorage");
+      const response = await api.get("/auth/profile", {
+        withCredentials: true,
+      });
+
+      if (response.data.success && response.data.user) {
+        setUser(response.data.user);
+        localStorage.setItem("ecolojia_user", JSON.stringify(response.data.user));
       }
-      
-      // Puis valider avec le backend (optionnel)
-      try {
-        const response = await api.get("/auth/profile", {
-          withCredentials: true,
-        });
-        
-        if (response.data.success && response.data.user) {
-          setUser(response.data.user);
-          localStorage.setItem("ecolojia_user", JSON.stringify(response.data.user));
-          console.log("✅ User refreshed from API");
-        }
-      } catch {
-        // Token expiré, garder le user local si présent
-        console.log("⚠️ Could not refresh from API");
-      }
-    } catch (error) {
-      console.log("👤 No active session");
-      setUser(null);
-    } finally {
-      setLoading(false);
+    } catch {
+      console.log("Could not refresh from API");
     }
   };
-
-  // Charger user au démarrage
-  useEffect(() => {
-    refreshUser();
-  }, []);
 
   // Login
   const login = async (email: string, password: string) => {
@@ -104,13 +106,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.data.success) {
         const userData = response.data.user;
         setUser(userData);
-        
+
         if (response.data.token) {
           localStorage.setItem("ecolojia_token", response.data.token);
           localStorage.setItem("ecolojia_user", JSON.stringify(userData));
         }
-        
-        console.log("✅ Login success:", userData.email);
       }
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Erreur de connexion");
@@ -125,7 +125,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem("ecolojia_refresh");
     localStorage.removeItem("ecolojia_user");
     setUser(null);
-    console.log("👋 User logged out");
   };
 
   return (
