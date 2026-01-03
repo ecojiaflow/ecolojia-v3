@@ -84,10 +84,25 @@ function mapAlternativeProduct(p) {
 // ========================================
 
 // Map des mots-clés par type de produit pour garantir la cohérence
+// Regex STRICTES par subcategory pour éviter les faux positifs
+const SUBCATEGORY_REGEX = {
+  'spread': /tartiner|pâte.*chocolat|spread.*chocolat|chocolate.*spread/i,
+  'chocolate-spread': /tartiner|pâte.*chocolat|spread.*chocolat|chocolate.*spread|nutella/i,
+  'nut-butter': /beurre.*(cacahu|amande|noisette)|purée.*(cacahu|amande|noisette|noix)|peanut.*butter|almond.*butter|100%.*cacahu|cacahu.*100%/i,
+  'snack': /chips|biscuit|crackers|gâteau|cookie|gaufrette|galette/i,
+  'beverage': /jus|boisson|soda|sirop|nectar|smoothie/i,
+  'chocolate-bar': /tablette.*chocolat|chocolat.*noir|chocolat.*lait|chocolat.*blanc/i,
+  'dessert': /dessert|mousse|flan|pudding|crème.*dessert/i,
+  'breakfast': /céréales|muesli|granola|flocons.*avoine/i,
+  'haircare': /shampoo|shampooing|après-shampoo|conditioner/i,
+  'skincare': /crème.*visage|sérum|hydratant.*visage/i,
+  'bodycare': /lait.*corps|lotion.*corps|gel.*douche/i
+};
+
 const SUBCATEGORY_KEYWORDS = {
-  'spread': ['tartiner', 'spread', 'beurre', 'purée', 'pâte', 'cream', 'butter'],
-  'chocolate-spread': ['tartiner', 'chocolat', 'cacao', 'noisette', 'nutella', 'spread'],
-  'nut-butter': ['cacahuète', 'amande', 'noisette', 'noix', 'beurre', 'purée', 'peanut', 'almond'],
+  'spread': ['tartiner'],
+  'chocolate-spread': ['tartiner'],
+  'nut-butter': ['beurre', 'purée', 'butter', 'cacahu', 'amande', 'peanut', 'almond'],
   'snack': ['chips', 'biscuit', 'crackers', 'snack', 'gâteau', 'cookie', 'gaufrette'],
   'beverage': ['jus', 'boisson', 'soda', 'eau', 'thé', 'café', 'drink', 'juice'],
   'chocolate-bar': ['chocolat', 'cacao', 'tablette', 'noir', 'lait', 'blanc'],
