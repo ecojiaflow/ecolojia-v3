@@ -1,157 +1,70 @@
-﻿//// AUTO-PATCH ECOLOJIA – RECIPES INJECTION ////
-
+//// AUTO-PATCH ECOLOJIA – RECIPES INJECTION ////
 const recipeAdapter = require('../services/recipeAdapter.service');
-
-// --- PATCH INSERTION ---
 async function __injectRecipesForProduct(product) {
     try {
-        const recipes = await recipeAdapter.recommendRecipesForProduct(product, {
-            limit: 3,
-            minScore: 75
-        });
+        const recipes = await recipeAdapter.recommendRecipesForProduct(product, { limit: 3, minScore: 75 });
         return recipes || [];
     } catch (err) {
         console.warn('[PATCH] Recipes error:', err.message);
         return [];
     }
 }
-
 //// END PATCH ////
-// backend/src/routes/products.js
-// VERSION: 3.2.0 - Code mort supprimé
-// ROUTES PRODUITS - unifiées + analyse IA harmonisée + normalisation catégorie
-// Date: 2025-11-22 (révisé)
 
 "use strict";
-
 const express = require("express");
 const router = express.Router();
-
 const logger = require("../utils/logger");
 const { authMiddleware } = require("../middleware/authMiddleware");
-
-// Services & models
 const aiEnrichment = require("../services/aiEnrichment.service");
-const knowledgeService = require("../knowledge/knowledge.service"); // réservé pour usages futurs
-const Analysis = require("../models/Analysis"); // réservé pour usages futurs
+const knowledgeService = require("../knowledge/knowledge.service");
+const Analysis = require("../models/Analysis");
 const Product = require("../models/Product");
-const { generateConstitution } = require("../services/constitution.service");
+const { generateConstitution, regenerateRulesOnly } = require("../services/constitution.service");
+const { resolveRules } = require("../services/RuleResolver.service");
 
-// ========================================
-// FONCTIONS UTILITAIRES : catégorie
-// ========================================
 function inferCategoryFromData(product = {}) {
   const base = product || {};
   const foodData = base.foodData || {};
   const cosmeticsData = base.cosmeticsData || {};
   const detergentsData = base.detergentsData || {};
-
-  const hasFood =
-    !!foodData.ingredients ||
-    !!foodData.nutrition ||
-    (Array.isArray(foodData.labels) && foodData.labels.length > 0);
-
-  const hasCosmetic =
-    (Array.isArray(cosmeticsData.ingredients) &&
-      cosmeticsData.ingredients.length > 0) ||
-    (Array.isArray(cosmeticsData.certifications) &&
-      cosmeticsData.certifications.length > 0);
-
-  const hasDetergent =
-    (Array.isArray(detergentsData.composition) &&
-      detergentsData.composition.length > 0) ||
-    (Array.isArray(detergentsData.surfactants) &&
-      detergentsData.surfactants.length > 0) ||
-    (Array.isArray(detergentsData.ecoLabels) &&
-      detergentsData.ecoLabels.length > 0);
-
-  // Cas simple : une seule famille renseignée
+  const hasFood = !!foodData.ingredients || !!foodData.nutrition || (Array.isArray(foodData.labels) && foodData.labels.length > 0);
+  const hasCosmetic = (Array.isArray(cosmeticsData.ingredients) && cosmeticsData.ingredients.length > 0) || (Array.isArray(cosmeticsData.certifications) && cosmeticsData.certifications.length > 0);
+  const hasDetergent = (Array.isArray(detergentsData.composition) && detergentsData.composition.length > 0) || (Array.isArray(detergentsData.surfactants) && detergentsData.surfactants.length > 0) || (Array.isArray(detergentsData.ecoLabels) && detergentsData.ecoLabels.length > 0);
   if (hasFood && !hasCosmetic && !hasDetergent) return "food";
   if (!hasFood && hasCosmetic && !hasDetergent) return "cosmetic";
   if (!hasFood && !hasCosmetic && hasDetergent) return "detergent";
-
-  // Conflits : priorité à food > cosmetic > detergent
   if (hasFood) return "food";
   if (hasCosmetic) return "cosmetic";
   if (hasDetergent) return "detergent";
-
   return null;
 }
 
-
-// ========================================
-// FONCTION UTILITAIRE : shouldEnrichProduct
-// Détermine si un produit doit être enrichi par IA
-// ========================================
-/**
- * Détermine si un produit nécessite un enrichissement IA
- * @param {Object} product - Le produit à évaluer
- * @returns {boolean} - true si enrichissement nécessaire, false sinon
- * 
- * RÈGLE MÉTIER :
- * - Un produit est enrichi IA 1 SEULE FOIS maximum
- * - On enrichit SEULEMENT si jamais enrichi ET pas de score
- */
 function shouldEnrichProduct(product) {
   if (!product) return false;
-
-  // Si déjà enrichi par IA → JAMAIS réenrichir automatiquement
-  if (product.aiEnriched === true) {
-    return false;
-  }
-
-  // Si pas de score du tout → enrichir
-  if (!product.scores || !product.scores.overallScore) {
-    return true;
-  }
-
-  // Si a un score mais jamais enrichi IA → ne PAS enrichir
-  // (le score vient du batch scoring, pas besoin d'IA)
+  if (product.aiEnriched === true) return false;
+  if (!product.scores || !product.scores.overallScore) return true;
   return false;
 }
 
 function normalizeProductCategory(product = {}) {
   const isMongooseDoc = product && typeof product.toObject === "function";
-
-  // On travaille sur un plain object
   let obj = isMongooseDoc ? product.toObject() : { ...product };
-
   const inferred = inferCategoryFromData(obj);
   const current = obj.categoryType || obj.category || null;
-
-  const normalized =
-    inferred ||
-    (current ? String(current).toLowerCase() : null);
-
+  const normalized = inferred || (current ? String(current).toLowerCase() : null);
   obj.categoryNormalized = normalized;
-
-  // On corrige uniquement l'objet en mémoire (pas d'écriture DB ici)
   if (normalized && current && normalized !== current) {
     obj.categoryType = normalized;
   } else if (!obj.categoryType && normalized) {
     obj.categoryType = normalized;
   }
-
   return obj;
 }
 
-// ========================================
-// FONCTIONS UTILITAIRES : alternatives
-// ========================================
-
-/**
- * Mappe un document produit vers une structure d'alternative propre.
- */
 function mapAlternativeProduct(p) {
   const normalized = normalizeProductCategory(p);
-
-  const globalScore =
-    typeof normalized.globalScore === "number"
-      ? normalized.globalScore
-      : normalized.scores && typeof normalized.scores.overallScore === "number"
-      ? normalized.scores.overallScore
-      : null;
-
+  const globalScore = typeof normalized.globalScore === "number" ? normalized.globalScore : normalized.scores && typeof normalized.scores.overallScore === "number" ? normalized.scores.overallScore : null;
   return {
     _id: normalized._id,
     barcode: normalized.barcode,
@@ -166,119 +79,67 @@ function mapAlternativeProduct(p) {
   };
 }
 
-/**
- * Récupère des alternatives en base dans la même catégorie que le produit donné.
- *
- * - Même categoryType / categoryNormalized
- * - Produit courant exclu
- * - Tri par score global décroissant
- */
 async function findAlternativesForProduct(baseProduct, limit = 6) {
   if (!baseProduct) return [];
-
-  const normalized = normalizeProductCategory(
-    baseProduct.toObject ? baseProduct.toObject() : baseProduct
-  );
-
+  const normalized = normalizeProductCategory(baseProduct.toObject ? baseProduct.toObject() : baseProduct);
   const category = normalized.categoryNormalized || normalized.categoryType;
-  if (!category) {
-    return [];
-  }
-
-  const filter = {
-    categoryType: category,
-  };
-
-  if (normalized._id) {
-    filter._id = { $ne: normalized._id };
-  }
-
-  // Si le produit a un score global, on peut filtrer un minimum
-  const baseScore =
-    typeof normalized.globalScore === "number"
-      ? normalized.globalScore
-      : normalized.scores && typeof normalized.scores.overallScore === "number"
-      ? normalized.scores.overallScore
-      : null;
-
+  if (!category) return [];
+  const filter = { categoryType: category };
+  if (normalized._id) filter._id = { $ne: normalized._id };
+  const baseScore = typeof normalized.globalScore === "number" ? normalized.globalScore : normalized.scores && typeof normalized.scores.overallScore === "number" ? normalized.scores.overallScore : null;
   const query = Product.find(filter);
-
-  if (baseScore !== null) {
-    // On évite les produits beaucoup plus mauvais (baseScore - 25)
-    query.where("scores.overallScore").gte(Math.max(0, baseScore - 25));
-  }
-
-  const results = await query
-    .sort({ "scores.overallScore": -1 })
-    .limit(limit)
-    .lean()
-    .exec();
-
+  if (baseScore !== null) query.where("scores.overallScore").gte(Math.max(0, baseScore - 25));
+  const results = await query.sort({ "scores.overallScore": -1 }).limit(limit).lean().exec();
   return results.map(mapAlternativeProduct);
 }
 
-// ========================================
-// FONCTION UTILITAIRE : enrichProductResponse
-// ========================================
-async function enrichProductResponse(
-  product,
-  source = "DIRECT",
-  cached = false,
-  aiEnrichmentUsed = false,
-  knowledgeData = null
-) {
+function ensureConstitutionWithDynamicRules(productObj) {
+  let constitution = productObj.constitution;
+  if (!constitution || !constitution.cards) {
+    logger.info('[Constitution] Génération complète pour: ' + (productObj.name || productObj._id));
+    constitution = generateConstitution(productObj);
+  } else {
+    const rulesResult = resolveRules({
+      name: productObj.name,
+      categoryType: productObj.categoryType || productObj.category || 'food',
+      subcategory: productObj.subcategory || null,
+      constitution: { healthReflex: constitution.healthReflex }
+    });
+    constitution = {
+      ...constitution,
+      rules: {
+        reflexHero: rulesResult.reflexHero,
+        rulesHits: rulesResult.rulesHits,
+        actions: rulesResult.actions
+      }
+    };
+    logger.debug('[Constitution] Rules régénérées pour: ' + (productObj.name || productObj._id) + ', subcategory: ' + (productObj.subcategory || 'none'));
+  }
+  return constitution;
+}
+
+async function enrichProductResponse(product, source = "DIRECT", cached = false, aiEnrichmentUsed = false, knowledgeData = null) {
   if (!product) {
-    return {
-      success: false,
-      error: "Product not found",
-      product: null,
-      knowledgeAnalysis: null,
-      aiEnriched: false,
-    };
+    return { success: false, error: "Product not found", product: null, knowledgeAnalysis: null, aiEnriched: false };
   }
-
-  // ✅ On normalise la catégorie AVANT de structurer la réponse
-  const productObj = normalizeProductCategory(
-    product.toObject ? product.toObject() : product
-  );
-
-  let aiData = {
-    knowledgeAnalysis: null,
-    aiEnriched: false,
-    enrichmentConfidence: 0,
-  };
-
+  const productObj = normalizeProductCategory(product.toObject ? product.toObject() : product);
+  let aiData = { knowledgeAnalysis: null, aiEnriched: false, enrichmentConfidence: 0 };
   if (knowledgeData) {
-    aiData = {
-      knowledgeAnalysis: knowledgeData.knowledgeAnalysis || null,
-      aiEnriched: knowledgeData.aiEnriched === true,
-      enrichmentConfidence: knowledgeData.enrichmentConfidence || 0,
-    };
+    aiData = { knowledgeAnalysis: knowledgeData.knowledgeAnalysis || null, aiEnriched: knowledgeData.aiEnriched === true, enrichmentConfidence: knowledgeData.enrichmentConfidence || 0 };
   }
-
-    const recipes = await __injectRecipesForProduct(productObj);
-
+  const recipes = await __injectRecipesForProduct(productObj);
+  const constitution = ensureConstitutionWithDynamicRules(productObj);
   return {
     success: true,
-product: {
+    product: {
       ...productObj,
       globalScore: productObj.globalScore ?? null,
-      scores:
-        productObj.scores || {
-          health: null,
-          environment: null,
-          overall: null,
-        },
+      scores: productObj.scores || { health: null, environment: null, overall: null },
       completeness: productObj.completeness ?? 0,
       lastUpdated: productObj.lastUpdated || productObj.updatedAt || null,
-      constitution: (productObj.constitution?.cards ? productObj.constitution : generateConstitution(productObj)),
+      constitution: constitution,
     },
-    metadata: {
-      source,
-      cached,
-      aiEnrichmentUsed,
-      retrievedAt: new Date().toISOString(),
-    },
+    metadata: { source, cached, aiEnrichmentUsed, rulesVersion: '2.1.0', retrievedAt: new Date().toISOString() },
     knowledgeAnalysis: aiData.knowledgeAnalysis,
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
@@ -286,497 +147,176 @@ product: {
   };
 }
 
-// ========================================
-// ========================================
-// GET /api/products/scan/:barcode (ULTRA-RAPIDE - LOOKUP PUR)
-// ⚠️ ROUTE PRIORITAIRE - DOIT ÊTRE AVANT "/:id"
-// ========================================
 router.get("/scan/:barcode", async (req, res) => {
   const startTime = Date.now();
   const { barcode } = req.params;
-  
   try {
-    logger.info(`⚡ SCAN RAPIDE: ${barcode}`);
-    
-    // Lookup simple (pas d enrichissement)
-    const product = await Product.findOne({ barcode })
-      .select('name brand categoryType scores constitution alternatives')
-      .lean();
-    
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        error: 'Produit non trouvé',
-        barcode
-      });
-    }
-    
-    // ⚠️ Si Constitution manquante
+    logger.info('⚡ SCAN RAPIDE: ' + barcode);
+    const product = await Product.findOne({ barcode }).select('name brand categoryType subcategory scores constitution alternatives').lean();
+    if (!product) return res.status(404).json({ success: false, error: 'Produit non trouvé', barcode });
     if (!product.constitution) {
-      return res.json({
-        success: true,
-        product,
-        status: 'pending_enrichment',
-        message: 'Produit en cours d enrichissement (disponible sous 24h)',
-        responseTime: Date.now() - startTime
-      });
+      return res.json({ success: true, product, status: 'pending_enrichment', message: 'Produit en cours d enrichissement', responseTime: Date.now() - startTime });
     }
-    
-    // ✅ Constitution pré-calculée
+    const constitution = ensureConstitutionWithDynamicRules(product);
     const responseTime = Date.now() - startTime;
-    logger.info(`✅ SCAN ${barcode}: ${responseTime}ms`);
-    
-    return res.json({
-      success: true,
-      product,
-      cached: true,
-      responseTime
-    });
-    
+    logger.info('✅ SCAN ' + barcode + ': ' + responseTime + 'ms');
+    return res.json({ success: true, product: { ...product, constitution }, cached: true, responseTime });
   } catch (error) {
-    logger.error(`❌ Erreur scan ${barcode}:`, error);
-    return res.status(500).json({
-      success: false,
-      error: 'Erreur serveur'
-    });
+    logger.error('❌ Erreur scan ' + barcode + ':', error);
+    return res.status(500).json({ success: false, error: 'Erreur serveur' });
   }
 });
 
-
-// GET /api/products/analyze/:id  (Analyse IA approfondie)
-// ⚠️ IMPORTANT : route spécifique AVANT "/:id"
-// ========================================
 router.get("/analyze/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    logger.info(`📊 GET /analyze/:id - Analyse produit: ${id}`);
-
+    logger.info('📊 GET /analyze/:id - Analyse produit: ' + id);
     let product = null;
-    const isObjectId =
-      id && id.length === 24 && /^[0-9a-fA-F]+$/.test(id);
-
-    if (isObjectId) {
-      product = await Product.findById(id).lean();
-    }
+    const isObjectId = id && id.length === 24 && /^[0-9a-fA-F]+$/.test(id);
+    if (isObjectId) product = await Product.findById(id).lean();
+    if (!product) product = await Product.findOne({ barcode: id }).lean();
     if (!product) {
-      product = await Product.findOne({ barcode: id }).lean();
+      logger.warn('❌ Produit non trouvé pour analyse: ' + id);
+      return res.status(404).json({ success: false, error: "Produit non trouvé" });
     }
-
-    if (!product) {
-      logger.warn(`❌ Produit non trouvé pour analyse: ${id}`);
-      return res.status(404).json({
-        success: false,
-        error: "Produit non trouvé",
-      });
-    }
-
-    // ✅ Normalisation catégorie AVANT IA (en mémoire)
     const normalized = normalizeProductCategory(product);
-    const productForAI = {
-      ...product,
-      categoryType: normalized.categoryType,
-      categoryNormalized: normalized.categoryNormalized,
-    };
-
+    const productForAI = { ...product, categoryType: normalized.categoryType, categoryNormalized: normalized.categoryNormalized };
     let enriched = productForAI;
-    
-    // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
-    
-
-
-    }
-
     let knowledgeData = null;
     if (enriched && enriched.knowledgeAnalysis) {
-      knowledgeData = {
-        knowledgeAnalysis: enriched.knowledgeAnalysis,
-        aiEnriched: enriched.aiEnriched === true,
-        enrichmentConfidence: enriched.enrichmentConfidence || 0,
-      };
+      knowledgeData = { knowledgeAnalysis: enriched.knowledgeAnalysis, aiEnriched: enriched.aiEnriched === true, enrichmentConfidence: enriched.enrichmentConfidence || 0 };
     }
-
-    const enrichedResponse = await enrichProductResponse(
-      enriched,
-      "ANALYZE",
-      true,
-      !!knowledgeData,
-      knowledgeData
-    );
-
-    // 🔁 Alternatives pour l'analyse
+    const enrichedResponse = await enrichProductResponse(enriched, "ANALYZE", true, !!knowledgeData, knowledgeData);
     const alternatives = await findAlternativesForProduct(enriched);
     enrichedResponse.alternatives = alternatives;
-
-    enrichedResponse.analysis = {
-      analysisMode: "deep-analysis",
-      completeness: enriched.completeness || null,
-      scores: enriched.scores || {},
-      aiInsights: enriched.aiInsights || null,
-    };
-
+    enrichedResponse.analysis = { analysisMode: "deep-analysis", completeness: enriched.completeness || null, scores: enriched.scores || {}, aiInsights: enriched.aiInsights || null };
     return res.status(200).json(enrichedResponse);
   } catch (error) {
-    logger.error(`❌ Erreur GET /analyze/:id: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur serveur lors analyse",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur GET /analyze/:id: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur serveur lors analyse", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
-// ========================================
-// GET /api/products/:id  (Récupération + enrichissement IA)
-// ========================================
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    logger.info(`📦 GET /:id - Recherche produit: ${id}`);
-
+    logger.info('📦 GET /:id - Recherche produit: ' + id);
     let product = null;
-    const isObjectId =
-      id && id.length === 24 && /^[0-9a-fA-F]+$/.test(id);
-
-    // Tentative 1 : MongoDB ObjectId
-    if (isObjectId) {
-      product = await Product.findById(id).lean();
-    }
-
+    const isObjectId = id && id.length === 24 && /^[0-9a-fA-F]+$/.test(id);
+    if (isObjectId) product = await Product.findById(id).lean();
     if (product) {
-      logger.info(`✅ Produit trouvé (MongoDB): ${product._id}`);
-
+      logger.info('✅ Produit trouvé (MongoDB): ' + product._id);
       const normalized = normalizeProductCategory(product);
-      const productForAI = {
-        ...product,
-        categoryType: normalized.categoryType,
-        categoryNormalized: normalized.categoryNormalized,
-      };
-
+      const productForAI = { ...product, categoryType: normalized.categoryType, categoryNormalized: normalized.categoryNormalized };
       let enriched = productForAI;
-      
-      // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
-      
-
-
-      }
-
       let knowledgeData = null;
       if (enriched && enriched.knowledgeAnalysis) {
-        knowledgeData = {
-          knowledgeAnalysis: enriched.knowledgeAnalysis,
-          aiEnriched: enriched.aiEnriched === true,
-          enrichmentConfidence: enriched.enrichmentConfidence || 0,
-        };
+        knowledgeData = { knowledgeAnalysis: enriched.knowledgeAnalysis, aiEnriched: enriched.aiEnriched === true, enrichmentConfidence: enriched.enrichmentConfidence || 0 };
       }
-
-      const enrichedResponse = await enrichProductResponse(
-        enriched,
-        "MONGODB_ID",
-        false,
-        knowledgeData !== null,
-        knowledgeData
-      );
-
-      // 🔁 Alternatives dans la même catégorie
+      const enrichedResponse = await enrichProductResponse(enriched, "MONGODB_ID", false, knowledgeData !== null, knowledgeData);
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
-
       return res.status(200).json(enrichedResponse);
     }
-
-    // Tentative 2 : code-barres
     product = await Product.findOne({ barcode: id }).lean();
     if (product) {
-      logger.info(`✅ Produit trouvé (Barcode): ${product.barcode}`);
-
+      logger.info('✅ Produit trouvé (Barcode): ' + product.barcode);
       const normalized = normalizeProductCategory(product);
-      const productForAI = {
-        ...product,
-        categoryType: normalized.categoryType,
-        categoryNormalized: normalized.categoryNormalized,
-      };
-
+      const productForAI = { ...product, categoryType: normalized.categoryType, categoryNormalized: normalized.categoryNormalized };
       let enriched = productForAI;
-      
-      // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-      // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-      if (shouldEnrichProduct(product)) {
-
-
-
-      
-
-
-      }
-
       let knowledgeData = null;
       if (enriched && enriched.knowledgeAnalysis) {
-        knowledgeData = {
-          knowledgeAnalysis: enriched.knowledgeAnalysis,
-          aiEnriched: enriched.aiEnriched === true,
-          enrichmentConfidence: enriched.enrichmentConfidence || 0,
-        };
+        knowledgeData = { knowledgeAnalysis: enriched.knowledgeAnalysis, aiEnriched: enriched.aiEnriched === true, enrichmentConfidence: enriched.enrichmentConfidence || 0 };
       }
-
-      const enrichedResponse = await enrichProductResponse(
-        enriched,
-        "BARCODE",
-        false,
-        knowledgeData !== null,
-        knowledgeData
-      );
-
-      // 🔁 Alternatives dans la même catégorie
+      const enrichedResponse = await enrichProductResponse(enriched, "BARCODE", false, knowledgeData !== null, knowledgeData);
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
-
       return res.status(200).json(enrichedResponse);
     }
-
-    logger.warn(`❌ Produit non trouvé: ${id}`);
-    return res.status(404).json({
-      success: false,
-      error: "Produit non trouvé",
-      product: null,
-      knowledgeAnalysis: null,
-      aiEnriched: false,
-    });
+    logger.warn('❌ Produit non trouvé: ' + id);
+    return res.status(404).json({ success: false, error: "Produit non trouvé", product: null, knowledgeAnalysis: null, aiEnriched: false });
   } catch (error) {
-    logger.error(`❌ Erreur GET /:id: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur serveur",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur GET /:id: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur serveur", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
-// ========================================
-// POST /api/products (Créer un produit)
-// ========================================
 router.post("/", authMiddleware, async (req, res) => {
   try {
     logger.info("📝 POST / - Créer un produit");
-
     const { name, category_type, barcode, scores } = req.body;
-
-    if (!name || !category_type) {
-      return res.status(400).json({
-        success: false,
-        error: "Les champs name et category_type sont obligatoires",
-      });
-    }
-
-    const newProduct = new Product({
-      name,
-      categoryType: category_type,
-      barcode: barcode || null,
-      scores: scores || {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
+    if (!name || !category_type) return res.status(400).json({ success: false, error: "Les champs name et category_type sont obligatoires" });
+    const newProduct = new Product({ name, categoryType: category_type, barcode: barcode || null, scores: scores || {}, createdAt: new Date(), updatedAt: new Date() });
     const savedProduct = await newProduct.save();
-    logger.info(`✅ Produit créé: ${savedProduct._id}`);
-
-    const response = await enrichProductResponse(
-      savedProduct,
-      "DIRECT",
-      false,
-      false,
-      null
-    );
-
-    // 🔁 Alternatives pour un produit nouvellement créé (optionnel, peu utile au début)
+    logger.info('✅ Produit créé: ' + savedProduct._id);
+    const response = await enrichProductResponse(savedProduct, "DIRECT", false, false, null);
     response.alternatives = await findAlternativesForProduct(savedProduct);
-
     return res.status(201).json(response);
   } catch (error) {
-    logger.error(`❌ Erreur POST /: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur création produit",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur POST /: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur création produit", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
-// ========================================
-// PUT /api/products/:id (Mettre à jour)
-// ========================================
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-
-    logger.info(`📝 PUT /:id - Mise à jour: ${id}`);
-
-    const updatedProduct = await Product.findByIdAndUpdate(id, updates, {
-      new: true,
-      lean: true,
-    });
-
+    logger.info('📝 PUT /:id - Mise à jour: ' + id);
+    const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true, lean: true });
     if (!updatedProduct) {
-      logger.warn(`❌ Produit non trouvé: ${id}`);
-      return res.status(404).json({
-        success: false,
-        error: "Produit non trouvé",
-      });
+      logger.warn('❌ Produit non trouvé: ' + id);
+      return res.status(404).json({ success: false, error: "Produit non trouvé" });
     }
-
-    logger.info(`✅ Produit mis à jour: ${id}`);
-
+    logger.info('✅ Produit mis à jour: ' + id);
     const normalized = normalizeProductCategory(updatedProduct);
-    const productForAI = {
-      ...updatedProduct,
-      categoryType: normalized.categoryType,
-      categoryNormalized: normalized.categoryNormalized,
-    };
-
+    const productForAI = { ...updatedProduct, categoryType: normalized.categoryType, categoryNormalized: normalized.categoryNormalized };
     let enriched = productForAI;
-    
-    // 🎯 CONDITION : Enrichir SEULEMENT si nécessaire
-    // 🎯 Vérification enrichissement IA (1 seule fois par produit)
-    if (shouldEnrichProduct(updatedProduct)) {
-
-
-
-    
-
-
-    }
-
     let knowledgeData = null;
     if (enriched && enriched.knowledgeAnalysis) {
-      knowledgeData = {
-        knowledgeAnalysis: enriched.knowledgeAnalysis,
-        aiEnriched: enriched.aiEnriched === true,
-        enrichmentConfidence: enriched.enrichmentConfidence || 0,
-      };
+      knowledgeData = { knowledgeAnalysis: enriched.knowledgeAnalysis, aiEnriched: enriched.aiEnriched === true, enrichmentConfidence: enriched.enrichmentConfidence || 0 };
     }
-
-    const response = await enrichProductResponse(
-      enriched,
-      "MONGODB_ID",
-      false,
-      knowledgeData !== null,
-      knowledgeData
-    );
-
-    // 🔁 Alternatives après mise à jour
+    const response = await enrichProductResponse(enriched, "MONGODB_ID", false, knowledgeData !== null, knowledgeData);
     response.alternatives = await findAlternativesForProduct(enriched);
-
     return res.status(200).json(response);
   } catch (error) {
-    logger.error(`❌ Erreur PUT /:id: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur mise à jour produit",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur PUT /:id: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur mise à jour produit", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
-// ========================================
-// DELETE /api/products/:id
-// ========================================
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    logger.info(`🗑️ DELETE /:id - Supprimer: ${id}`);
-
+    logger.info('🗑️ DELETE /:id - Supprimer: ' + id);
     const deletedProduct = await Product.findByIdAndDelete(id);
-
     if (!deletedProduct) {
-      logger.warn(`❌ Produit non trouvé: ${id}`);
-      return res.status(404).json({
-        success: false,
-        error: "Produit non trouvé",
-      });
+      logger.warn('❌ Produit non trouvé: ' + id);
+      return res.status(404).json({ success: false, error: "Produit non trouvé" });
     }
-
-    logger.info(`✅ Produit supprimé: ${id}`);
-    return res.status(200).json({
-      success: true,
-      message: `Produit ${id} supprimé`,
-    });
+    logger.info('✅ Produit supprimé: ' + id);
+    return res.status(200).json({ success: true, message: 'Produit ' + id + ' supprimé' });
   } catch (error) {
-    logger.error(`❌ Erreur DELETE /:id: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur suppression produit",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur DELETE /:id: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur suppression produit", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
-// ========================================
-// GET /api/products (Lister avec pagination)
-// ========================================
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 20;
     const skip = (page - 1) * limit;
-
-    logger.info(`📋 GET / - Lister produits (page ${page})`);
-
+    logger.info('📋 GET / - Lister produits (page ' + page + ')');
     const products = await Product.find().skip(skip).limit(limit).lean();
     const total = await Product.countDocuments();
-
     const normalizedProducts = products.map((p) => normalizeProductCategory(p));
-
-    logger.info(`✅ ${normalizedProducts.length} produits retournés`);
-
-    return res.status(200).json({
-      success: true,
-      data: normalizedProducts,
-      pagination: {
-        total,
-        page,
-        limit,
-        pages: Math.ceil(total / limit),
-      },
-    });
+    logger.info('✅ ' + normalizedProducts.length + ' produits retournés');
+    return res.status(200).json({ success: true, data: normalizedProducts, pagination: { total, page, limit, pages: Math.ceil(total / limit) } });
   } catch (error) {
-    logger.error(`❌ Erreur GET /: ${error.message}`, error.stack);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur récupération produits",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    logger.error('❌ Erreur GET /: ' + error.message, error.stack);
+    return res.status(500).json({ success: false, error: "Erreur récupération produits", details: process.env.NODE_ENV === "development" ? error.message : undefined });
   }
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
