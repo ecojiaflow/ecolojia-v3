@@ -129,7 +129,7 @@ async function getJSON(endpoint: string) {
 // SUB-COMPONENTS
 // ============================================================================
 
-function LevelPill({ level, sublevel, label }: { level?: Level | null; sublevel?: Sublevel | null; label?: string | null; }) {
+function LevelPill({ level, sublevel, label, score }: { level?: Level | null; sublevel?: Sublevel | null; label?: string | null; score?: number | null; }) {
   const text = label ?? (level === 1 ? "Acceptable" : level === 2 ? "À limiter au quotidien" : sublevel === "limit_strongly" ? "À limiter fortement" : level === 3 ? "À réserver aux occasions" : "Niveau inconnu");
   const styles = level === 1 ? "bg-emerald-50 text-emerald-700 ring-emerald-200/60" : level === 2 ? "bg-amber-50 text-amber-800 ring-amber-200/60" : level === 3 ? "bg-rose-50 text-rose-700 ring-rose-200/60" : "bg-slate-50 text-slate-600 ring-slate-200/60";
   const dot = level === 1 ? "bg-emerald-500" : level === 2 ? "bg-amber-500" : level === 3 ? "bg-rose-500" : "bg-slate-400";
@@ -271,6 +271,7 @@ export default function ProductPage() {
   const [error, setError] = useState<string | null>(null);
   const [isFav, setIsFav] = useState(false);
   const [methodOpen, setMethodOpen] = useState(false);
+  const [alternatives, setAlternatives] = useState<Alternative[]>([]);
 
   // Fetch product
   useEffect(() => {
@@ -288,6 +289,20 @@ export default function ProductPage() {
     return () => { alive = false; };
   }, [id]);
 
+  // Fetch alternatives (V3.3 - par niveau)
+  useEffect(() => {
+    if (!product?.barcode) return;
+    let alive = true;
+    (async () => {
+      const res = await getJSON(`/api/products/${product.barcode}/alternatives`);
+      if (!alive) return;
+      if (res.ok && Array.isArray(res.data)) {
+        setAlternatives(res.data);
+      }
+    })();
+    return () => { alive = false; };
+  }, [product?.barcode]);
+
   // Actions
   const onShare = useCallback(async () => {
     if (!product) return;
@@ -297,7 +312,7 @@ export default function ProductPage() {
 
   const onFav = useCallback(() => { setIsFav(v => !v); toast.success(!isFav ? "Ajouté aux favoris" : "Retiré des favoris"); }, [isFav]);
   const onList = useCallback(() => { toast.success("Ajouté à la liste"); }, []);
-  const onAlternatives = useCallback(() => { nav(`/search?similar=${product?.barcode ?? ""}`); }, [nav, product]);
+  const onAlternatives = useCallback(() => { document.getElementById("alternatives-section")?.scrollIntoView({ behavior: "smooth" }); }, []);
   const onSelectAlt = useCallback((altId: string) => { nav(`/product/${altId}`); }, [nav]);
 
   // ============================================================================
@@ -336,7 +351,7 @@ export default function ProductPage() {
   const rules = constitution?.rules;
   const nova = foodData?.novaGroup ?? null;
   const img = product.images?.front;
-  const alternatives = product.alternatives ?? [];
+  // alternatives chargées via useEffect séparé (V3.3)
 
   // ============================================================================
   // RENDER
@@ -347,12 +362,12 @@ export default function ProductPage() {
       <div className="sticky top-0 z-50 border-b bg-white/70 backdrop-blur-xl border-[#E6F2EA]">
         <div className="mx-auto max-w-4xl px-4 py-3 flex items-center justify-between">
           <button onClick={() => nav(-1)} className="p-2 rounded-xl hover:bg-slate-100/80"><ArrowLeft className="h-5 w-5 text-slate-700" /></button>
-          <LevelPill level={level} sublevel={sublevel} label={levelLabel} />
+          <LevelPill level={level} sublevel={sublevel} label={levelLabel} score={scores?.overallScore} />
           <button onClick={onShare} className="p-2 rounded-xl hover:bg-slate-100/80"><Share2 className="h-5 w-5 text-slate-600" /></button>
         </div>
       </div>
 
-      <div className="mx-auto max-w-4xl px-4 py-6 space-y-5">
+      <div className="mx-auto max-w-4xl px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-5">
         {/* PRODUCT HEADER (compact) */}
         <div className="flex items-center gap-4 p-4 rounded-3xl bg-white border border-[#E6F2EA]">
           <div className="h-16 w-16 rounded-2xl bg-slate-50 overflow-hidden flex-shrink-0 grid place-items-center">
@@ -369,7 +384,7 @@ export default function ProductPage() {
           level={level}
           sublevel={sublevel}
           levelLabel={levelLabel}
-          reflexContent={reflexContent}
+          reflexContent={reflexContent} score={scores?.overallScore}
           onAlternatives={onAlternatives}
           onAddToList={onList}
         />
@@ -391,7 +406,9 @@ export default function ProductPage() {
         {habit && <HabitBlock habit={habit} />}
 
         {/* ALTERNATIVES PREVIEW */}
+        <div id="alternatives-section">
         <AlternativesPreview alternatives={alternatives} onViewAll={onAlternatives} onSelect={onSelectAlt} />
+        </div>
 
         {/* BLOC D — DETAILS (accordéon fermé) */}
         <DetailsAccordion title="Détails & scores" defaultOpen={false}>
@@ -415,6 +432,19 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

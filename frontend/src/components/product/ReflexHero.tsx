@@ -1,6 +1,7 @@
 ﻿/**
  * ReflexHero.tsx — BLOC A (Bible UI)
- * Niveau + Réflexe + CTA — visible en 10 secondes
+ * Niveau + Score Circulaire + Réflexe + CTA
+ * @version 4.3.0 - Full Responsive Fix
  */
 
 import React from "react";
@@ -18,6 +19,7 @@ interface ReflexHeroProps {
   sublevel?: Sublevel | null;
   levelLabel?: string | null;
   reflexContent?: string | null;
+  score?: number | null;
   onAlternatives: () => void;
   onAddToList: () => void;
 }
@@ -29,6 +31,7 @@ const LEVEL_CONFIG = {
     dot: "bg-emerald-500",
     text: "text-emerald-800",
     label: "Acceptable",
+    stroke: "#10B981",
   },
   2: {
     bg: "bg-amber-50",
@@ -36,6 +39,7 @@ const LEVEL_CONFIG = {
     dot: "bg-amber-500",
     text: "text-amber-800",
     label: "À limiter au quotidien",
+    stroke: "#F59E0B",
   },
   3: {
     bg: "bg-rose-50",
@@ -43,8 +47,48 @@ const LEVEL_CONFIG = {
     dot: "bg-rose-500",
     text: "text-rose-800",
     label: "À réserver aux occasions",
+    stroke: "#EF4444",
   },
 };
+
+function CircularScore({ score, color }: { score: number; color: string }) {
+  const size = 42;
+  const strokeWidth = 4;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.min(Math.max(score, 0), 100);
+  const offset = circumference - (progress / 100) * circumference;
+
+  return (
+    <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="#E5E7EB"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-700 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-xs font-bold text-slate-900">{score}</span>
+      </div>
+    </div>
+  );
+}
 
 function getFirstSentence(text: string | null | undefined): { headline: string; body: string } {
   if (!text) return { headline: "", body: "" };
@@ -63,20 +107,19 @@ export function ReflexHero({
   sublevel,
   levelLabel,
   reflexContent,
+  score,
   onAlternatives,
   onAddToList,
 }: ReflexHeroProps) {
   const lvl = level ?? 1;
   const config = LEVEL_CONFIG[lvl as 1 | 2 | 3] || LEVEL_CONFIG[1];
 
-  // Dériver label
   const displayLabel =
     levelLabel ??
     (lvl === 3 && sublevel === "limit_strongly"
       ? "À limiter fortement"
       : config.label);
 
-  // Dériver réflexe phrase
   const { headline, body } = getFirstSentence(reflexContent);
   const fallbackHeadline =
     lvl === 1
@@ -88,33 +131,38 @@ export function ReflexHero({
   return (
     <div
       className={cn(
-        "rounded-3xl border-2 p-6 lg:p-8",
+        "rounded-3xl border-2 p-4 sm:p-6 lg:p-8",
         config.bg,
         config.border
       )}
     >
-      {/* Niveau Badge Large */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className={cn("h-4 w-4 rounded-full", config.dot)} />
-        <span className={cn("text-lg font-bold uppercase tracking-wide", config.text)}>
-          {displayLabel}
-        </span>
+      {/* Header: Niveau + Score Circulaire */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className={cn("h-3 w-3 rounded-full flex-shrink-0", config.dot)} />
+          <span className={cn("text-xs sm:text-sm font-bold uppercase tracking-wide", config.text)}>
+            {displayLabel}
+          </span>
+        </div>
+        {score != null && (
+          <CircularScore score={score} color={config.stroke} />
+        )}
       </div>
 
       {/* Réflexe Phrase */}
-      <p className="text-xl lg:text-2xl font-semibold text-slate-900 leading-snug mb-2">
+      <p className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 leading-snug mb-4">
         {headline || fallbackHeadline}
       </p>
       {body && (
-        <p className="text-base text-slate-600 leading-relaxed mb-6">{body}</p>
+        <p className="text-sm text-slate-600 leading-relaxed mb-4">{body}</p>
       )}
 
       {/* CTA Principal */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button
           onClick={onAlternatives}
           className={cn(
-            "flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5",
+            "flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
             "bg-[#16A34A] text-white font-semibold text-sm",
             "hover:bg-[#0F7A34] transition-colors shadow-sm hover:shadow-md"
           )}
@@ -125,7 +173,7 @@ export function ReflexHero({
         <button
           onClick={onAddToList}
           className={cn(
-            "flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5",
+            "flex-1 inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3",
             "bg-white text-slate-900 font-semibold text-sm border border-slate-200",
             "hover:bg-slate-50 transition-colors"
           )}

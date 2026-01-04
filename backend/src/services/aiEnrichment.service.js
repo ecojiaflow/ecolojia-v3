@@ -3,6 +3,7 @@ const deepSeekService = require('./ai/deepSeekService');
 const axios = require('axios');
 const scoringUnified = require('./scoringUnified');
 const knowledgeService = require('../knowledge/knowledge.service');
+const categoryClassifier = require('./categoryClassifier.service');
 
 const logger = {
   info: (...args) => console.log('[AI-ENRICH]', ...args),
@@ -407,6 +408,18 @@ Ceci doit influencer tes calculs de composantes.
         const baseConfidence = merged.scores.confidence || 0.7;
         const knowledgeBonus = knowledgeAnalysis.analyzed ? 0.15 : 0;
         merged.scores.confidence = Math.min(baseConfidence + knowledgeBonus, 0.95);
+      }
+    }
+
+    // ⭐ CLASSIFICATION PAR REGLES (plus fiable que l'IA)
+    if (product.categoryType === 'food') {
+      const classification = categoryClassifier.classifyProduct(merged);
+      if (classification.confidence >= 0.5) {
+        merged.subcategory = classification.subcategory;
+        merged.tags = categoryClassifier.generateTags(classification.subcategory, merged.name);
+        merged.classificationSource = classification.source;
+        merged.classificationKeyword = classification.matchedKeyword;
+        logger.info("[CLASSIFIER] " + merged.name + " -> " + classification.subcategory + " (" + classification.matchedKeyword + ")");
       }
     }
 
@@ -816,6 +829,8 @@ Réponds en JSON strict :
 }
 
 module.exports = AIEnrichmentService;
+
+
 
 
 

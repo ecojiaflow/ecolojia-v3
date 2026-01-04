@@ -2,17 +2,19 @@
 const logger = require('../utils/logger');
 const stringSimilarity = require('string-similarity');
 
-// ================== CONFIGURATION ==================
+// ================== CONFIGURATION V3.4 ==================
+// ✅ V3.4 : Filtrage par NIVEAU + SCORE + CONFIDENCE
+// Niveau 1 = Acceptable, 2 = À limiter, 3 = À réserver aux occasions
 const CONFIG = {
   MAX_RESULTS: 5,
-  MIN_SCORE_IMPROVEMENT: 5, // +5 pts minimum vs produit original
-  MIN_ABSOLUTE_SCORE: 70, // ✅ NOUVEAU : Score minimum ABSOLU pour toutes alternatives (zone verte)
-  FALLBACK_MIN_SCORE: 60, // ⚠️ Fallback si 0 résultats en zone verte (orange haute)
+  MAX_LEVEL_FOR_ALTERNATIVES: 2, // Alternatives niveau 1 ou 2 max (pas niveau 3)
+  FALLBACK_MAX_LEVEL: 3, // Fallback : accepter niveau 3 si aucun résultat
+  MIN_CONFIDENCE: 0.4, // Données minimalement fiables
   MIN_KEYWORD_LENGTH: 3,
   MIN_RELEVANCE_SCORE: 40,
   WEIGHT_NAME_SIMILARITY: 0.4,
   WEIGHT_CATEGORY_MATCH: 0.3,
-  WEIGHT_SCORE_DIFF: 0.3,
+  WEIGHT_LEVEL_IMPROVEMENT: 0.3, // Bonus si niveau meilleur
   TIMEOUT_DB_SMART: 5000,
   TIMEOUT_DB_RELAXED: 3000,
   TIMEOUT_AI: 10000
@@ -63,8 +65,6 @@ function detectProductType(product) {
 }
 
 /**
- * Extrait mots-clés pertinents du produit
-/**
  * 🔍 EXTRACTION KEYWORDS AMÉLIORÉE (6 sources)
  * @param {Object} product - Produit source
  * @returns {Array<string>} - Liste de mots-clés pertinents
@@ -110,7 +110,7 @@ function extractKeywords(product) {
     });
   }
 
-  // 5. ✨ NOUVEAU : Depuis ingrédients (top 5 ingrédients principaux)
+  // 5. Depuis ingrédients (top 5 ingrédients principaux)
   if (product.ingredients_text) {
     const ingredients = product.ingredients_text
       .toLowerCase()
@@ -131,7 +131,7 @@ function extractKeywords(product) {
     });
   }
 
-  // 6. ✨ NOUVEAU : Depuis marque
+  // 6. Depuis marque
   if (product.brands) {
     const brandWords = product.brands
       .toLowerCase()
@@ -150,7 +150,25 @@ function extractKeywords(product) {
 }
 
 /**
- * Calcule score de pertinence (0-100)
+ * ✅ V3.3 : Récupère le niveau d'un produit (1, 2 ou 3)
+ * @param {Object} product - Produit
+ * @returns {number} - Niveau (1=Acceptable, 2=À limiter, 3=À réserver)
+ */
+function getProductLevel(product) {
+  // Priorité 1 : constitution.healthReflex.level
+  if (product.constitution?.healthReflex?.level) {
+    return product.constitution.healthReflex.level;
+  }
+  // Priorité 2 : level direct (pour les résultats de recherche)
+  if (product.level) {
+    return product.level;
+  }
+  // Défaut : niveau 3 (prudent)
+  return 3;
+}
+
+/**
+ * ✅ V3.3 : Calcule score de pertinence avec bonus niveau
  */
 function calculateRelevanceScore(originalProduct, alternative, keywords) {
   let score = 0;
@@ -167,19 +185,23 @@ function calculateRelevanceScore(originalProduct, alternative, keywords) {
     score += CONFIG.WEIGHT_CATEGORY_MATCH * 100;
   }
   
-  // 3. Amélioration score (30%)
-  const scoreDiff = alternative.scores.overallScore - originalProduct.scores.overallScore;
-  const normalizedDiff = Math.min(scoreDiff / 50, 1); // Normaliser sur 50 pts max
-  score += normalizedDiff * CONFIG.WEIGHT_SCORE_DIFF * 100;
+  // 3. ✅ V3.3 : Bonus amélioration niveau (30%)
+  // Niveau 1 = meilleur, donc on inverse la logique
+  const originalLevel = getProductLevel(originalProduct);
+  const alternativeLevel = getProductLevel(alternative);
+  const levelImprovement = originalLevel - alternativeLevel; // Positif si alternative meilleure
+  const normalizedImprovement = Math.max(0, Math.min(levelImprovement / 2, 1)); // 0 à 1
+  score += normalizedImprovement * CONFIG.WEIGHT_LEVEL_IMPROVEMENT * 100;
   
   return Math.round(score);
 }
 
 /**
- * ✨ NOUVEAU V3.2 : Recherche par taxonomie (subcategory exact match)
- * PRIORITÉ 1 : Match exact sous-catégorie (ex: pâtes-à-tartiner → pâtes-à-tartiner)
+ * ✅ V3.4 : Recherche par taxonomie (subcategory exact match)
+ * Filtrage par NIVEAU + SCORE + CONFIDENCE
+ * PRIORITÉ 1 : Match exact sous-catégorie
  */
-async function searchDatabaseTaxonomy(product, minScore) {
+async function searchDatabaseTaxonomy(product, maxLevel, minScore) {
   try {
     // Vérifier si subcategory existe
     if (!product.subcategory) {
@@ -187,21 +209,22 @@ async function searchDatabaseTaxonomy(product, minScore) {
       return [];
     }
 
-    logger.info(`[ALTERNATIVES] Stratégie : Taxonomy Match (subcategory: "${product.subcategory}")`);
+    logger.info(`[ALTERNATIVES] Stratégie : Taxonomy Match (subcategory: "${product.subcategory}", maxLevel: ${maxLevel}, minScore: ${minScore})`);
 
     const query = {
       $and: [
         { barcode: { $ne: product.barcode } },
         { categoryType: product.categoryType },
-        { subcategory: product.subcategory }, // ✨ Match exact
-        { 'scores.overallScore': { 
-$gte: minScore } }
+        { subcategory: product.subcategory },
+        { 'constitution.healthReflex.level': { $lte: maxLevel } },
+        { 'scores.overallScore': { $gte: minScore } },
+        { 'scores.confidence': { $gte: CONFIG.MIN_CONFIDENCE } }
       ]
     };
 
     const candidates = await Product.find(query)
-      .select('barcode name scores categoryType subcategory tags')
-      .sort({ 'scores.overallScore': -1 })
+      .select('barcode name scores categoryType subcategory tags constitution')
+      .sort({ 'scores.overallScore': -1 }) // ✅ V3.4 : Tri par score décroissant
       .limit(10)
       .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
       .lean();
@@ -216,15 +239,16 @@ $gte: minScore } }
 
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur Taxonomy Match : ${error.message}`);
-    return { alternatives: [], source: 'error' };
+    return [];
   }
 }
 
 /**
- * ✨ NOUVEAU V3.2 : Recherche par tags (intersection)
+ * ✅ V3.4 : Recherche par tags (intersection)
+ * Filtrage par NIVEAU + SCORE + CONFIDENCE
  * PRIORITÉ 2 : Match si ≥2 tags communs
  */
-async function searchDatabaseTags(product, minScore) {
+async function searchDatabaseTags(product, maxLevel, minScore) {
   try {
     // Vérifier si tags existent
     if (!product.tags || product.tags.length === 0) {
@@ -232,27 +256,27 @@ async function searchDatabaseTags(product, minScore) {
       return [];
     }
 
-    logger.info(`[ALTERNATIVES] Stratégie : Tags Match (${product.tags.length} tags)`);
+    logger.info(`[ALTERNATIVES] Stratégie : Tags Match (${product.tags.length} tags, maxLevel: ${maxLevel}, minScore: ${minScore})`);
 
-    // Construire query : categoryType + au moins 2 tags communs
     const query = {
       $and: [
         { barcode: { $ne: product.barcode } },
         { categoryType: product.categoryType },
-        { 'scores.overallScore': { 
-$gte: minScore } },
+        { 'constitution.healthReflex.level': { $lte: maxLevel } },
+        { 'scores.overallScore': { $gte: minScore } },
+        { 'scores.confidence': { $gte: CONFIG.MIN_CONFIDENCE } },
         {
           tags: {
-            $in: product.tags // Au moins 1 tag en commun
+            $in: product.tags
           }
         }
       ]
     };
 
     const candidates = await Product.find(query)
-      .select('barcode name scores categoryType subcategory tags')
-      .sort({ 'scores.overallScore': -1 })
-      .limit(50) // Plus large pour inclure purées noisettes
+      .select('barcode name scores categoryType subcategory tags constitution')
+      .sort({ 'scores.overallScore': -1 }) // ✅ V3.4 : Tri par score décroissant
+      .limit(50)
       .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
       .lean();
 
@@ -262,7 +286,7 @@ $gte: minScore } },
     const filtered = candidates.filter(candidate => {
       if (!candidate.tags || candidate.tags.length === 0) return false;
       const commonTags = product.tags.filter(tag => candidate.tags.includes(tag));
-      return commonTags.length >= 2; // Filtre ≥2 tags communs
+      return commonTags.length >= 2;
     });
 
     logger.info(`[ALTERNATIVES] Tags Match : ${filtered.length} après filtre (≥2 tags communs)`);
@@ -271,20 +295,21 @@ $gte: minScore } },
       logger.info('[ALTERNATIVES] ✅ Tags Match réussi → Alternatives avec tags similaires');
     }
 
-    return filtered.slice(0, 10); // Top 10
+    return filtered.slice(0, 10);
 
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur Tags Match : ${error.message}`);
-    return { alternatives: [], source: 'error' };
+    return [];
   }
 }
 
 /**
- * Recherche DB Smart : par mots-clés + filtres stricts
+ * ✅ V3.4 : Recherche DB Smart
+ * Filtrage par NIVEAU + SCORE + CONFIDENCE
  */
-async function searchDatabaseSmart(product, keywords, minScore) {
+async function searchDatabaseSmart(product, keywords, maxLevel, minScore) {
   try {
-    logger.info('[ALTERNATIVES] Stratégie : DB Smart (mots-clés + filtres)');
+    logger.info(`[ALTERNATIVES] Stratégie : DB Smart (mots-clés + filtres, maxLevel: ${maxLevel}, minScore: ${minScore})`);
     
     // Construire regex pour recherche flexible
     const keywordRegex = keywords.map(k => `(?=.*${k})`).join('');
@@ -294,7 +319,9 @@ async function searchDatabaseSmart(product, keywords, minScore) {
       $and: [
         { barcode: { $ne: product.barcode } },
         { categoryType: product.categoryType },
+        { 'constitution.healthReflex.level': { $lte: maxLevel } },
         { 'scores.overallScore': { $gte: minScore } },
+        { 'scores.confidence': { $gte: CONFIG.MIN_CONFIDENCE } },
         {
           $or: [
             { name: searchRegex },
@@ -305,7 +332,8 @@ async function searchDatabaseSmart(product, keywords, minScore) {
     };
     
     const results = await Product.find(query)
-      .select('barcode name scores categoryType categories_tags')
+      .select('barcode name scores categoryType categories_tags constitution')
+      .sort({ 'scores.overallScore': -1 }) // ✅ V3.4 : Tri par score décroissant
       .limit(20)
       .maxTimeMS(CONFIG.TIMEOUT_DB_SMART)
       .lean();
@@ -319,26 +347,28 @@ async function searchDatabaseSmart(product, keywords, minScore) {
     
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur DB Smart : ${error.message}`);
-    return { alternatives: [], source: 'error' };
+    return [];
   }
 }
 
 /**
- * Recherche DB Relaxed : par catégorie uniquement
+ * ✅ V3.4 : Recherche DB Relaxed (fallback)
+ * Filtrage par NIVEAU + SCORE optionnel
  */
-async function searchDatabaseRelaxed(product, minScore) {
+async function searchDatabaseRelaxed(product, maxLevel, minScore) {
   try {
-    logger.info('[ALTERNATIVES] Stratégie : DB Relaxed (catégorie large)');
+    logger.info(`[ALTERNATIVES] Stratégie : DB Relaxed (catégorie large, maxLevel: ${maxLevel}, minScore: ${minScore})`);
     
     const query = {
       barcode: { $ne: product.barcode },
       categoryType: product.categoryType,
+      'constitution.healthReflex.level': { $lte: maxLevel },
       'scores.overallScore': { $gte: minScore }
     };
     
     const results = await Product.find(query)
-      .select('barcode name scores categoryType')
-      .sort({ 'scores.overallScore': -1 })
+      .select('barcode name scores categoryType constitution')
+      .sort({ 'scores.overallScore': -1 }) // ✅ V3.4 : Tri par score décroissant
       .limit(10)
       .maxTimeMS(CONFIG.TIMEOUT_DB_RELAXED)
       .lean();
@@ -348,31 +378,36 @@ async function searchDatabaseRelaxed(product, minScore) {
     
   } catch (error) {
     logger.error(`[ALTERNATIVES] Erreur DB Relaxed : ${error.message}`);
-    return { alternatives: [], source: 'error' };
+    return [];
   }
 }
 
-// ================== FONCTION PRINCIPALE ==================
+// ================== FONCTION PRINCIPALE V3.4 ==================
 /**
- * Point d'entrée : Recherche alternatives mieux notées
+ * ✅ V3.4 : Point d'entrée - Filtrage par NIVEAU + SCORE + CONFIDENCE
+ * Cherche des alternatives de niveau meilleur ou égal ET score supérieur ou égal
  */
 async function findAlternatives({
   product,
-  minScoreImprovement = CONFIG.MIN_SCORE_IMPROVEMENT,
   maxResults = CONFIG.MAX_RESULTS
 }) {
   try {
-    logger.info('\n========== RECHERCHE ALTERNATIVES ==========');
-    logger.info(`Produit original : ${product.name} (${product.scores.overallScore}/100)`);
-    logger.info(`Amélioration minimum : +${minScoreImprovement} pts`);
+    const originalLevel = getProductLevel(product);
+    const originalScore = product.scores?.overallScore || 0;
     
-    // ✅ CORRECTION PRINCIPALE : Garantir score minimum ABSOLU de 70 (zone verte)
-    const minScore = Math.max(
-      CONFIG.MIN_ABSOLUTE_SCORE, // 70 minimum (zone verte)
-      product.scores.overallScore + minScoreImprovement // Amélioration vs original
-    );
+    logger.info('\n========== RECHERCHE ALTERNATIVES V3.4 ==========');
+    logger.info(`Produit original : ${product.name}`);
+    logger.info(`  - Niveau : ${originalLevel} (${originalLevel === 1 ? 'Acceptable' : originalLevel === 2 ? 'À limiter' : 'À réserver'})`);
+    logger.info(`  - Score : ${originalScore}/100`);
     
-    logger.info(`Score minimum alternatives : ${minScore}/100 (zone ${minScore >= 70 ? 'VERTE ✅' : 'ORANGE ⚠️'})`);
+    // ✅ V3.4 : Filtres combinés
+    // - Niveau meilleur ou égal (1 ou 2 max pour un produit niveau 3)
+    // - Score supérieur ou égal au produit original
+    // - Confidence >= 0.4 (données fiables)
+    const maxLevel = Math.min(originalLevel, CONFIG.MAX_LEVEL_FOR_ALTERNATIVES);
+    const minScore = originalScore;
+    
+    logger.info(`Critères recherche : niveau ≤ ${maxLevel}, score ≥ ${minScore}, confidence ≥ ${CONFIG.MIN_CONFIDENCE}`);
     
     // 1. Extraire mots-clés
     const keywords = extractKeywords(product);
@@ -380,59 +415,77 @@ async function findAlternatives({
     // 2. Cascade de recherche
     let candidates = [];
     
-    // ÉTAPE 1 : DB Smart
-    // NOUVELLE CASCADE V3.2 : Taxonomie → Tags → Smart
     // ÉTAPE 1 : Match taxonomie exacte (même subcategory)
-    candidates = await searchDatabaseTaxonomy(product, minScore);
-  // ÉTAPE 2 : Match tags (≥2 tags communs) si < 3 résultats
-  if (candidates.length < 3) {
-      candidates = await searchDatabaseTags(product, minScore);
-    }
-  // ÉTAPE 3 : Recherche textuelle (fallback) si < 3 résultats
-  if (candidates.length < 3) {
-      candidates = await searchDatabaseSmart(product, keywords, minScore);
-    }
-    // ÉTAPE 2 : DB Relaxed (si pas assez de résultats)
+    candidates = await searchDatabaseTaxonomy(product, maxLevel, minScore);
+    
+    // ÉTAPE 2 : Match tags (≥2 tags communs) si < 3 résultats
     if (candidates.length < 3) {
-      logger.info('[ALTERNATIVES] Pas assez de résultats Smart, passage en Relaxed...');
-      const relaxedResults = await searchDatabaseRelaxed(product, minScore);
-      candidates.push(...relaxedResults);
-      
-      // Dédupliquer
-      candidates = Array.from(
-        new Map(candidates.map(p => [p.barcode, p])).values()
-      );
+      const tagResults = await searchDatabaseTags(product, maxLevel, minScore);
+      candidates.push(...tagResults);
     }
     
-    // ⚠️ FALLBACK : Si 0 résultats en zone verte, on abaisse à 60 (orange haute)
-    if (candidates.length === 0 && minScore >= CONFIG.MIN_ABSOLUTE_SCORE) {
-      logger.warn(`[ALTERNATIVES] ⚠️ Aucune alternative ≥${minScore}. Fallback à ${CONFIG.FALLBACK_MIN_SCORE}...`);
+    // ÉTAPE 3 : Recherche textuelle (fallback) si < 3 résultats
+    if (candidates.length < 3) {
+      const smartResults = await searchDatabaseSmart(product, keywords, maxLevel, minScore);
+      candidates.push(...smartResults);
+    }
+    
+    // ÉTAPE 4 : DB Relaxed (si pas assez de résultats)
+    if (candidates.length < 3) {
+      logger.info('[ALTERNATIVES] Pas assez de résultats, passage en Relaxed...');
+      const relaxedResults = await searchDatabaseRelaxed(product, maxLevel, minScore);
+      candidates.push(...relaxedResults);
+    }
+    
+    // Dédupliquer
+    candidates = Array.from(
+      new Map(candidates.map(p => [p.barcode, p])).values()
+    );
+    
+    // ⚠️ FALLBACK : Si 0 résultats, relâcher les contraintes progressivement
+    if (candidates.length === 0) {
+      logger.warn('[ALTERNATIVES] ⚠️ Aucune alternative trouvée. Fallback : score >= 0...');
+      candidates = await searchDatabaseRelaxed(product, maxLevel, 0);
       
-      candidates = await searchDatabaseRelaxed(product, CONFIG.FALLBACK_MIN_SCORE);
-      
-      if (candidates.length > 0) {
-        logger.warn(`[ALTERNATIVES] Fallback réussi : ${candidates.length} alternatives en zone orange (60-69)`);
+      // Si toujours 0, accepter niveau 3
+      if (candidates.length === 0 && maxLevel < CONFIG.FALLBACK_MAX_LEVEL) {
+        logger.warn(`[ALTERNATIVES] ⚠️ Fallback niveau ${CONFIG.FALLBACK_MAX_LEVEL}...`);
+        candidates = await searchDatabaseRelaxed(product, CONFIG.FALLBACK_MAX_LEVEL, 0);
       }
     }
     
-    // 3. Calculer score de pertinence
+    // 3. Calculer score de pertinence et trier
     const alternativesWithScore = candidates
-      .filter(alt => alt.barcode !== product.barcode) // Exclure produit original
+      .filter(alt => alt.barcode !== product.barcode)
       .map(alt => ({
         ...alt,
+        level: getProductLevel(alt),
         relevanceScore: calculateRelevanceScore(product, alt, keywords)
       }))
-      .filter(alt => alt.relevanceScore >= CONFIG.MIN_RELEVANCE_SCORE) // Filtre seuil pertinence
+      .filter(alt => alt.relevanceScore >= CONFIG.MIN_RELEVANCE_SCORE)
       .sort((a, b) => {
-        // ✅ CORRECTION TRI : Priorité au SCORE GLOBAL (pas pertinence)
-        if (b.scores.overallScore !== a.scores.overallScore) {
-          return b.scores.overallScore - a.scores.overallScore;
+        // ✅ V3.4 : Priorité au SCORE (plus haut = meilleur)
+        const scoreA = a.scores?.overallScore || 0;
+        const scoreB = b.scores?.overallScore || 0;
+        if (scoreA !== scoreB) {
+          return scoreB - scoreA; // Score décroissant
         }
+        // Puis par niveau (1 = meilleur)
+        if (a.level !== b.level) {
+          return a.level - b.level;
+        }
+        // Puis par pertinence
         return b.relevanceScore - a.relevanceScore;
       })
       .slice(0, maxResults);
     
-    logger.info(`[ALTERNATIVES] ${alternativesWithScore.length} alternatives pertinentes retournées\n`);
+    logger.info(`[ALTERNATIVES] ${alternativesWithScore.length} alternatives pertinentes retournées`);
+    if (alternativesWithScore.length > 0) {
+      alternativesWithScore.forEach((alt, i) => {
+        logger.info(`  ${i + 1}. ${alt.name} - Score: ${alt.scores?.overallScore || '?'}, Niveau: ${alt.level}`);
+      });
+    }
+    logger.info('========== FIN RECHERCHE ALTERNATIVES ==========\n');
     
     return { alternatives: alternativesWithScore, source: 'database' };
     
@@ -447,5 +500,6 @@ module.exports = {
   findAlternatives,
   extractKeywords,
   calculateRelevanceScore,
+  getProductLevel,
   CONFIG
 };
