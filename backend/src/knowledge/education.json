@@ -1,0 +1,237 @@
+﻿{
+  "version": "1.0.0",
+  "locked": true,
+  "lastUpdated": "2026-01-06",
+  "description": "Contenu éducatif structuré par univers - Principes de base + Meilleures pratiques. Source unique pour le flow 'Comprendre ce que je consomme'.",
+  "universes": {
+    "food": {
+      "id": "food",
+      "name": "Alimentation",
+      "icon": "🍎",
+      "color": "#16A34A",
+      "tagline": "Comprendre ce que tu manges",
+      "principles": [
+        {
+          "id": "food-principle-1",
+          "title": "Moins transformé = généralement mieux",
+          "explanation": "Plus un aliment est proche de son état naturel, plus ton corps sait quoi en faire.",
+          "priority": 1
+        },
+        {
+          "id": "food-principle-2",
+          "title": "La fréquence compte plus que le produit isolé",
+          "explanation": "Un écart occasionnel n'a pas d'impact. C'est la répétition qui façonne ta santé.",
+          "priority": 2
+        },
+        {
+          "id": "food-principle-3",
+          "title": "Les listes longues sont souvent un signal de transformation",
+          "explanation": "Plus il y a d'ingrédients, plus le produit s'éloigne du naturel.",
+          "priority": 3
+        },
+        {
+          "id": "food-principle-4",
+          "title": "Le sucre caché compte autant que le gras",
+          "explanation": "Beaucoup de produits 'allégés' compensent par du sucre.",
+          "priority": 4
+        },
+        {
+          "id": "food-principle-5",
+          "title": "Le plaisir fait partie de l'équilibre",
+          "explanation": "Se priver totalement n'est pas durable. L'important c'est la conscience.",
+          "priority": 5
+        }
+      ],
+      "practices": [
+        {
+          "id": "food-practice-1",
+          "text": "Privilégie les aliments bruts pour les bases de tes repas",
+          "priority": 1
+        },
+        {
+          "id": "food-practice-2",
+          "text": "Réserve les produits très transformés aux occasions",
+          "priority": 2
+        },
+        {
+          "id": "food-practice-3",
+          "text": "Regarde le nombre d'ingrédients avant le score",
+          "priority": 3
+        },
+        {
+          "id": "food-practice-4",
+          "text": "Varie tes sources (pas toujours le même produit)",
+          "priority": 4
+        },
+        {
+          "id": "food-practice-5",
+          "text": "Ne cherche pas la perfection, cherche la progression",
+          "priority": 5
+        }
+      ],
+      "sources": ["OMS", "ANSES", "PNNS"],
+      "relatedHabitsCount": 25
+    },
+    "cosmetic": {
+      "id": "cosmetic",
+      "name": "Cosmétique",
+      "icon": "🧴",
+      "color": "#8B5CF6",
+      "tagline": "Comprendre ce que tu appliques",
+      "principles": [
+        {
+          "id": "cosmetic-principle-1",
+          "title": "La peau peut absorber une partie de ce qu'on y met",
+          "explanation": "Ce qui reste longtemps sur ta peau (crèmes, déo) compte plus qu'un rinçage rapide.",
+          "priority": 1
+        },
+        {
+          "id": "cosmetic-principle-2",
+          "title": "La fréquence d'usage amplifie l'exposition",
+          "explanation": "Un produit utilisé chaque jour mérite plus d'attention qu'un usage ponctuel.",
+          "priority": 2
+        },
+        {
+          "id": "cosmetic-principle-3",
+          "title": "Moins d'ingrédients = moins de risques cumulés",
+          "explanation": "Chaque ingrédient ajouté est une variable de plus.",
+          "priority": 3
+        },
+        {
+          "id": "cosmetic-principle-4",
+          "title": "'Naturel' ne veut pas dire 'sans risque'",
+          "explanation": "Certains ingrédients naturels peuvent être irritants ou allergènes.",
+          "priority": 4
+        },
+        {
+          "id": "cosmetic-principle-5",
+          "title": "Le marketing n'est pas la science",
+          "explanation": "Les claims 'dermatologiquement testé' n'ont pas de valeur réglementaire forte.",
+          "priority": 5
+        }
+      ],
+      "practices": [
+        {
+          "id": "cosmetic-practice-1",
+          "text": "Sois plus vigilant sur les produits qui restent (crème, déo) que ceux qui rincent",
+          "priority": 1
+        },
+        {
+          "id": "cosmetic-practice-2",
+          "text": "Privilégie les listes courtes pour l'usage quotidien",
+          "priority": 2
+        },
+        {
+          "id": "cosmetic-practice-3",
+          "text": "Varie tes produits pour éviter l'accumulation d'un même ingrédient",
+          "priority": 3
+        },
+        {
+          "id": "cosmetic-practice-4",
+          "text": "Fais attention aux parfums (souvent en fin de liste, rarement détaillés)",
+          "priority": 4
+        },
+        {
+          "id": "cosmetic-practice-5",
+          "text": "En cas de doute, simplifie plutôt qu'ajouter",
+          "priority": 5
+        }
+      ],
+      "sources": ["ANSM", "SCCS", "ECHA"],
+      "relatedHabitsCount": 0
+    },
+    "household": {
+      "id": "household",
+      "name": "Produits ménagers",
+      "icon": "🧽",
+      "color": "#F59E0B",
+      "tagline": "Comprendre ce que tu utilises",
+      "principles": [
+        {
+          "id": "household-principle-1",
+          "title": "L'inhalation compte autant que le contact",
+          "explanation": "Les sprays et aérosols exposent directement tes voies respiratoires.",
+          "priority": 1
+        },
+        {
+          "id": "household-principle-2",
+          "title": "Plus c'est puissant, plus c'est agressif",
+          "explanation": "Les produits 'ultra-dégraissants' ou 'désinfectants' sont souvent les plus irritants.",
+          "priority": 2
+        },
+        {
+          "id": "household-principle-3",
+          "title": "La fréquence d'usage crée l'exposition réelle",
+          "explanation": "Un produit fort utilisé rarement < un produit doux utilisé chaque jour.",
+          "priority": 3
+        },
+        {
+          "id": "household-principle-4",
+          "title": "'Écologique' ne veut pas dire 'inoffensif'",
+          "explanation": "Certains tensioactifs naturels peuvent irriter.",
+          "priority": 4
+        },
+        {
+          "id": "household-principle-5",
+          "title": "L'efficacité ne nécessite pas toujours la chimie lourde",
+          "explanation": "Vinaigre, savon noir, bicarbonate couvrent la majorité des besoins courants.",
+          "priority": 5
+        }
+      ],
+      "practices": [
+        {
+          "id": "household-practice-1",
+          "text": "Évite les sprays quand une version liquide existe",
+          "priority": 1
+        },
+        {
+          "id": "household-practice-2",
+          "text": "Aère pendant et après utilisation des produits forts",
+          "priority": 2
+        },
+        {
+          "id": "household-practice-3",
+          "text": "Privilégie les basiques (vinaigre, savon) pour l'entretien courant",
+          "priority": 3
+        },
+        {
+          "id": "household-practice-4",
+          "text": "Réserve les produits puissants aux situations qui le nécessitent vraiment",
+          "priority": 4
+        },
+        {
+          "id": "household-practice-5",
+          "text": "Porte des gants pour les produits concentrés",
+          "priority": 5
+        }
+      ],
+      "sources": ["ANSES", "ADEME", "INERIS"],
+      "relatedHabitsCount": 0
+    }
+  },
+  "displayConfig": {
+    "principlesVisibleByDefault": 3,
+    "practicesVisibleByDefault": 3,
+    "showSourcesBadge": true,
+    "ctaAfterPractices": {
+      "enabled": true,
+      "text": "Tu veux voir comment ça s'applique à un produit réel ?",
+      "buttons": [
+        { "label": "Scanner un produit", "route": "/scan", "primary": true },
+        { "label": "Prendre une photo", "route": "/scan?mode=photo", "primary": false }
+      ]
+    }
+  },
+  "versionControl": {
+    "locked": true,
+    "lastReview": "2026-01-06",
+    "nextReview": "2026-03-01",
+    "changeLog": [
+      {
+        "date": "2026-01-06",
+        "version": "1.0.0",
+        "changes": "Création initiale - 3 univers, 5 principes + 5 pratiques chacun"
+      }
+    ]
+  }
+}

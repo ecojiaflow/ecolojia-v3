@@ -3,6 +3,89 @@ const router = express.Router();
 
 // ========================================
 // ENDPOINT TEST (à supprimer après debug)
+// ============================================================================
+// ROUTES EDUCATION STATIQUE (Principes + Pratiques par univers)
+// Ajouté le 06/01/2026 - Flow "Comprendre ce que je consomme"
+// ============================================================================
+
+// Charger donnees education statique
+let educationData = null;
+
+function loadEducationData() {
+  if (!educationData) {
+    try {
+      educationData = require('../knowledge/education.json');
+      console.log('[Education] Donnees chargees:', Object.keys(educationData.universes).length, 'univers');
+    } catch (error) {
+      console.error('[Education] Erreur chargement education.json:', error.message);
+      educationData = { universes: {} };
+    }
+  }
+  return educationData;
+}
+
+/**
+ * GET /api/education/universes
+ * Liste des 3 univers (summary pour affichage)
+ */
+router.get('/universes', (req, res) => {
+  try {
+    const data = loadEducationData();
+    
+    const universes = Object.values(data.universes).map(u => ({
+      id: u.id,
+      name: u.name,
+      icon: u.icon,
+      color: u.color,
+      tagline: u.tagline,
+      principlesCount: u.principles.length,
+      practicesCount: u.practices.length,
+      sources: u.sources
+    }));
+    
+    res.json({
+      success: true,
+      version: data.version,
+      universes
+    });
+  } catch (error) {
+    console.error('[Education] Erreur GET /universes:', error);
+    res.status(500).json({ success: false, error: 'Erreur serveur' });
+  }
+});
+
+/**
+ * GET /api/education/universes/:universeId
+ * Detail complet d un univers (principes + pratiques)
+ */
+router.get('/universes/:universeId', (req, res) => {
+  try {
+    const data = loadEducationData();
+    const { universeId } = req.params;
+    
+    const universe = data.universes[universeId];
+    
+    if (!universe) {
+      return res.status(404).json({
+        success: false,
+        error: 'Univers non trouve',
+        availableUniverses: Object.keys(data.universes)
+      });
+    }
+    
+    res.json({
+      success: true,
+      universe: {
+        ...universe,
+        displayConfig: data.displayConfig
+      }
+    });
+  } catch (error) {
+    console.error('[Education] Erreur GET /universes/:universeId:', error);
+    res.status(500).json({ success: false, error: 'Erreur serveur' });
+  }
+});
+
 // ========================================
 router.get('/test', (req, res) => {
   console.log('[AI Education] GET /test appelé !');
