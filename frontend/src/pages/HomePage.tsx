@@ -68,8 +68,8 @@ export default function HomePage() {
             className="w-full flex items-center justify-between p-5 rounded-2xl bg-white text-slate-900 font-semibold border-2 border-slate-200 hover:border-[#16A34A] transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Compass className="h-6 w-6 text-[#16A34A]" />
-              <span>Explorer une situation</span>
+              <span className="text-xl">🧠</span>
+              <span>Apprendre un reflexe</span>
             </div>
             <span className="text-slate-400">→</span>
           </button>
@@ -115,3 +115,4 @@ export default function HomePage() {
     </div>
   );
 }
+
