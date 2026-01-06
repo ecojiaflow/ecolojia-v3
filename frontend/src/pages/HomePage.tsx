@@ -3,15 +3,13 @@
  *
  * CONSTITUTION Article 7 — Les trois portes d entree :
  * 1. Comprendre un produit (scan)
- * 2. Comprendre une regle (explorer)
- * 3. Comprendre une situation (explore premium)
- *
- * "Retrouver un produit" = utilitaire secondaire discret
+ * 2. Comprendre avant d acheter (principes + pratiques)
+ * 3. Retrouver un produit (recherche)
  */
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Scan, Camera, Compass, Search } from "lucide-react";
+import { Scan, Camera, BookOpen, Search } from "lucide-react";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -35,7 +33,7 @@ export default function HomePage() {
           Pas de jugement. Pas de peur. Juste ce qui compte.
         </p>
 
-        {/* 3 Portes d entree (Constitution Article 7) */}
+        {/* 3 Portes d entree */}
         <div className="w-full max-w-sm space-y-4">
 
           {/* PORTE 1 : Scanner un produit (CTA Principal) */}
@@ -50,7 +48,7 @@ export default function HomePage() {
             <span className="text-white/70">→</span>
           </button>
 
-          {/* PORTE 1 bis : Photo (variante du scan) */}
+          {/* PORTE 2 : Photo (variante du scan) */}
           <button
             onClick={() => navigate("/scan?mode=photo")}
             className="w-full flex items-center justify-between p-5 rounded-2xl bg-white text-slate-900 font-semibold border-2 border-slate-200 hover:border-[#16A34A] transition-colors"
@@ -62,14 +60,14 @@ export default function HomePage() {
             <span className="text-slate-400">→</span>
           </button>
 
-          {/* PORTE 2+3 : Explorer (regles + situations) */}
+          {/* PORTE 3 : Comprendre avant d acheter */}
           <button
             onClick={() => navigate("/explore")}
             className="w-full flex items-center justify-between p-5 rounded-2xl bg-white text-slate-900 font-semibold border-2 border-slate-200 hover:border-[#16A34A] transition-colors"
           >
             <div className="flex items-center gap-3">
-              <span className="text-xl">🧠</span>
-              <span>Apprendre un reflexe</span>
+              <BookOpen className="h-6 w-6 text-[#16A34A]" />
+              <span>Comprendre avant d'acheter</span>
             </div>
             <span className="text-slate-400">→</span>
           </button>
@@ -91,7 +89,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* Bottom Nav (Mobile) - Alignee Constitution */}
+      {/* Bottom Nav (Mobile) */}
       <div className="lg:hidden border-t border-slate-200 bg-white safe-area-pb">
         <div className="grid grid-cols-4 gap-1 px-2 py-2">
           <button onClick={() => navigate("/")} className="flex flex-col items-center py-2 text-[#16A34A]">
@@ -103,8 +101,8 @@ export default function HomePage() {
             <span className="text-[10px] font-medium mt-1">Scanner</span>
           </button>
           <button onClick={() => navigate("/explore")} className="flex flex-col items-center py-2 text-slate-400">
-            <span className="text-lg">🧭</span>
-            <span className="text-[10px] font-medium mt-1">Explorer</span>
+            <span className="text-lg">📖</span>
+            <span className="text-[10px] font-medium mt-1">Apprendre</span>
           </button>
           <button onClick={() => navigate("/profile")} className="flex flex-col items-center py-2 text-slate-400">
             <span className="text-lg">👤</span>
@@ -115,4 +113,3 @@ export default function HomePage() {
     </div>
   );
 }
-
