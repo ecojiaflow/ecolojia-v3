@@ -1,4 +1,4 @@
-﻿//// AUTO-PATCH ECOLOJIA – RECIPES INJECTION ////
+//// AUTO-PATCH ECOLOJIA – RECIPES INJECTION ////
 const recipeAdapter = require('../services/recipeAdapter.service');
 async function __injectRecipesForProduct(product) {
     try {
@@ -22,7 +22,6 @@ const Analysis = require("../models/Analysis");
 const Product = require("../models/Product");
 const { generateConstitution, regenerateRulesOnly } = require("../services/constitution.service");
 const { resolveRules } = require("../services/RuleResolver.service");
-const { generateProductContext } = require("../services/productContext.service");
 
 function inferCategoryFromData(product = {}) {
   const base = product || {};
@@ -84,6 +83,8 @@ function mapAlternativeProduct(p) {
 // ALTERNATIVES V2 — INTELLIGENTES ET COHÉRENTES
 // ========================================
 
+// Map des mots-clés par type de produit pour garantir la cohérence
+// Regex STRICTES par subcategory pour éviter les faux positifs
 const SUBCATEGORY_REGEX = {
   'spread': /tartiner|pâte.*chocolat|spread.*chocolat|chocolate.*spread/i,
   'chocolate-spread': /tartiner|pâte.*chocolat|spread.*chocolat|chocolate.*spread|nutella/i,
@@ -112,6 +113,7 @@ const SUBCATEGORY_KEYWORDS = {
   'bodycare': ['corps', 'body', 'lotion', 'lait', 'douche', 'savon']
 };
 
+// Alias pour regrouper les subcategories similaires
 const SUBCATEGORY_GROUPS = {
   'spread': ['spread', 'chocolate-spread', 'hazelnut-spread'],
   'chocolate-spread': ['spread', 'chocolate-spread', 'hazelnut-spread'],
@@ -126,6 +128,12 @@ const SUBCATEGORY_GROUPS = {
   'bodycare': ['bodycare', 'body-lotion', 'shower-gel']
 };
 
+/**
+ * Trouve des alternatives cohérentes pour un produit
+ * @param {Object} baseProduct - Produit de base
+ * @param {number} limit - Nombre max d'alternatives
+ * @returns {Array} - Alternatives triées par score décroissant
+ */
 async function findAlternativesForProduct(baseProduct, limit = 5) {
   if (!baseProduct) return [];
 
@@ -133,9 +141,10 @@ async function findAlternativesForProduct(baseProduct, limit = 5) {
   const subcategory = productObj.subcategory || null;
   const categoryType = productObj.categoryType || productObj.category || 'food';
   const productName = (productObj.name || '').toLowerCase();
-
-  const baseScore = typeof productObj.globalScore === "number"
-    ? productObj.globalScore
+  
+  // Score du produit actuel
+  const baseScore = typeof productObj.globalScore === "number" 
+    ? productObj.globalScore 
     : productObj.scores?.overallScore || 0;
 
   if (!subcategory) {
@@ -143,19 +152,29 @@ async function findAlternativesForProduct(baseProduct, limit = 5) {
     return [];
   }
 
+  // Obtenir le groupe de subcategories similaires
   const subcategoryGroup = SUBCATEGORY_GROUPS[subcategory] || [subcategory];
+  
+  // Obtenir les mots-clés pour validation
   const keywords = SUBCATEGORY_KEYWORDS[subcategory] || [];
 
   logger.info('[Alternatives] Recherche pour: ' + productObj.name + ' | subcategory: ' + subcategory + ' | score: ' + baseScore);
 
+  // Construire la requête MongoDB
   const query = {
+    // Même groupe de subcategory
     subcategory: { $in: subcategoryGroup },
+    // Même type (food/cosmetic/detergent)
     categoryType: categoryType,
+    // Exclure le produit actuel
     _id: { $ne: productObj._id },
+    // Score SUPÉRIEUR au produit actuel (alternatives meilleures)
     'scores.overallScore': { $gt: baseScore }
   };
 
+  // Si on a des mots-clés, filtrer pour garantir la cohérence
   if (keywords.length > 0) {
+    // Créer une regex pour matcher au moins un mot-clé
     const keywordRegex = new RegExp(keywords.join('|'), 'i');
     query.name = { $regex: keywordRegex };
   }
@@ -170,6 +189,7 @@ async function findAlternativesForProduct(baseProduct, limit = 5) {
 
     logger.info('[Alternatives] Trouvé ' + results.length + ' alternatives pour ' + productObj.name);
 
+    // Mapper les résultats
     return results.map(p => ({
       _id: p._id,
       barcode: p.barcode,
@@ -216,7 +236,7 @@ function ensureConstitutionWithDynamicRules(productObj) {
 
 async function enrichProductResponse(product, source = "DIRECT", cached = false, aiEnrichmentUsed = false, knowledgeData = null) {
   if (!product) {
-    return { success: false, error: "Product not found", product: null, knowledgeAnalysis: null, aiEnriched: false, productContext: null };
+    return { success: false, error: "Product not found", product: null, knowledgeAnalysis: null, aiEnriched: false };
   }
   const productObj = normalizeProductCategory(product.toObject ? product.toObject() : product);
   let aiData = { knowledgeAnalysis: null, aiEnriched: false, enrichmentConfidence: 0 };
@@ -225,11 +245,6 @@ async function enrichProductResponse(product, source = "DIRECT", cached = false,
   }
   const recipes = await __injectRecipesForProduct(productObj);
   const constitution = ensureConstitutionWithDynamicRules(productObj);
-  
-  // NOUVEAU: Générer le productContext
-  const productContext = generateProductContext(productObj);
-  logger.debug('[ProductContext] Généré pour: ' + productObj.name + ' | packaging: ' + productContext.packagingType + ' [' + productContext.packagingConfidence + ']');
-  
   return {
     success: true,
     product: {
@@ -240,8 +255,7 @@ async function enrichProductResponse(product, source = "DIRECT", cached = false,
       lastUpdated: productObj.lastUpdated || productObj.updatedAt || null,
       constitution: constitution,
     },
-    productContext: productContext,
-    metadata: { source, cached, aiEnrichmentUsed, rulesVersion: '2.1.0', productContextVersion: '2.0.0', retrievedAt: new Date().toISOString() },
+    metadata: { source, cached, aiEnrichmentUsed, rulesVersion: '2.1.0', retrievedAt: new Date().toISOString() },
     knowledgeAnalysis: aiData.knowledgeAnalysis,
     aiEnriched: aiData.aiEnriched,
     enrichmentConfidence: aiData.enrichmentConfidence,
@@ -254,16 +268,15 @@ router.get("/scan/:barcode", async (req, res) => {
   const { barcode } = req.params;
   try {
     logger.info('⚡ SCAN RAPIDE: ' + barcode);
-    const product = await Product.findOne({ barcode }).select('name brand categoryType subcategory scores constitution alternatives foodData nutrition nutriments ingredients_text additives_tags labels').lean();
+    const product = await Product.findOne({ barcode }).select('name brand categoryType subcategory scores constitution alternatives').lean();
     if (!product) return res.status(404).json({ success: false, error: 'Produit non trouvé', barcode });
     if (!product.constitution) {
       return res.json({ success: true, product, status: 'pending_enrichment', message: 'Produit en cours d enrichissement', responseTime: Date.now() - startTime });
     }
     const constitution = ensureConstitutionWithDynamicRules(product);
-    const productContext = generateProductContext(product);
     const responseTime = Date.now() - startTime;
     logger.info('✅ SCAN ' + barcode + ': ' + responseTime + 'ms');
-    return res.json({ success: true, product: { ...product, constitution }, productContext, cached: true, responseTime });
+    return res.json({ success: true, product: { ...product, constitution }, cached: true, responseTime });
   } catch (error) {
     logger.error('❌ Erreur scan ' + barcode + ':', error);
     return res.status(500).json({ success: false, error: 'Erreur serveur' });
@@ -337,7 +350,7 @@ router.get("/:id", async (req, res) => {
       return res.status(200).json(enrichedResponse);
     }
     logger.warn('❌ Produit non trouvé: ' + id);
-    return res.status(404).json({ success: false, error: "Produit non trouvé", product: null, knowledgeAnalysis: null, aiEnriched: false, productContext: null });
+    return res.status(404).json({ success: false, error: "Produit non trouvé", product: null, knowledgeAnalysis: null, aiEnriched: false });
   } catch (error) {
     logger.error('❌ Erreur GET /:id: ' + error.message, error.stack);
     return res.status(500).json({ success: false, error: "Erreur serveur", details: process.env.NODE_ENV === "development" ? error.message : undefined });
