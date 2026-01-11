@@ -1,78 +1,129 @@
 ﻿/**
- * ProductPageSkeleton.tsx — Loading state pro
+ * ProductPageSkeleton.tsx — Skeleton Loading (Polish V1)
+ * 
+ * Affiche un squelette animé pendant le chargement
+ * Look premium, sensation app moderne
+ * 
+ * @version 1.0.0
  */
 
 import React from "react";
 
-function cn(...classes: (string | false | undefined | null)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function Bone({ className }: { className?: string }) {
+function SkeletonPulse({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        "animate-pulse rounded-2xl bg-slate-200/70",
-        className
-      )}
+    <div 
+      className={`animate-pulse bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%] rounded-lg ${className || ""}`}
+      style={{ animation: "pulse 1.5s ease-in-out infinite" }}
     />
   );
 }
 
 export function ProductPageSkeleton() {
   return (
-    <div className="min-h-screen bg-[#F3FBF6]">
-      {/* Topbar */}
-      <div className="sticky top-0 z-50 border-b bg-white/70 backdrop-blur-xl border-[#E6F2EA]">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-          <Bone className="h-9 w-9" />
-          <Bone className="h-7 w-32" />
-          <Bone className="h-9 w-9" />
+    <div className="min-h-screen bg-slate-50">
+      {/* TOPBAR */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200">
+        <div className="mx-auto max-w-2xl px-4 py-3 flex items-center justify-between">
+          <SkeletonPulse className="h-8 w-8 rounded-xl" />
+          <SkeletonPulse className="h-4 w-24" />
+          <SkeletonPulse className="h-8 w-8 rounded-xl" />
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-6 space-y-5">
-        {/* Hero */}
-        <div className="rounded-[32px] border border-[#E6F2EA] bg-white p-6 lg:p-8">
-          <div className="flex items-start gap-4">
-            <Bone className="h-20 w-20 lg:h-24 lg:w-24 rounded-3xl flex-shrink-0" />
-            <div className="flex-1 space-y-3">
-              <Bone className="h-8 w-3/4" />
-              <Bone className="h-5 w-1/3" />
-              <Bone className="h-7 w-40 rounded-full" />
+      <div className="mx-auto max-w-2xl px-4 py-5 space-y-4">
+        
+        {/* HERO Skeleton */}
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-200">
+          <SkeletonPulse className="h-16 w-16 rounded-xl" />
+          <div className="flex-1 space-y-2">
+            <SkeletonPulse className="h-5 w-3/4" />
+            <SkeletonPulse className="h-4 w-1/2" />
+          </div>
+        </div>
+
+        {/* DECISION BLOCK Skeleton */}
+        <div className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <SkeletonPulse className="h-3 w-3 rounded-full" />
+            <SkeletonPulse className="h-4 w-48" />
+          </div>
+          <SkeletonPulse className="h-5 w-full" />
+          <SkeletonPulse className="h-5 w-2/3" />
+          <div className="flex gap-2 pt-2">
+            <SkeletonPulse className="h-12 flex-1 rounded-xl" />
+            <SkeletonPulse className="h-12 flex-1 rounded-xl" />
+          </div>
+        </div>
+
+        {/* WHY THIS LEVEL Skeleton */}
+        <div className="rounded-2xl bg-white border border-slate-200 p-5 space-y-3">
+          <SkeletonPulse className="h-4 w-36" />
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <SkeletonPulse className="h-4 w-4" />
+              <SkeletonPulse className="h-4 w-48" />
+            </div>
+            <div className="flex items-center gap-2">
+              <SkeletonPulse className="h-4 w-4" />
+              <SkeletonPulse className="h-4 w-56" />
+            </div>
+            <div className="flex items-center gap-2">
+              <SkeletonPulse className="h-4 w-4" />
+              <SkeletonPulse className="h-4 w-40" />
             </div>
           </div>
         </div>
 
-        {/* Reflex Hero */}
-        <div className="rounded-3xl border-2 border-slate-200 bg-slate-50 p-6">
-          <Bone className="h-6 w-48 mb-4" />
-          <Bone className="h-8 w-full mb-2" />
-          <Bone className="h-5 w-2/3 mb-6" />
-          <div className="flex gap-3">
-            <Bone className="h-12 flex-1 rounded-2xl" />
-            <Bone className="h-12 flex-1 rounded-2xl" />
+        {/* QUICK TAGS Skeleton */}
+        <div className="rounded-2xl bg-white border border-slate-200 p-5 space-y-3">
+          <SkeletonPulse className="h-4 w-24" />
+          <SkeletonPulse className="h-3 w-28" />
+          <div className="flex gap-2">
+            <SkeletonPulse className="h-7 w-20 rounded-full" />
+            <SkeletonPulse className="h-7 w-24 rounded-full" />
+            <SkeletonPulse className="h-7 w-20 rounded-full" />
           </div>
         </div>
 
-        {/* 3 Cards */}
-        <div className="grid gap-5">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="rounded-3xl border border-[#E6F2EA] bg-white p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Bone className="h-11 w-11 rounded-2xl" />
-                <Bone className="h-5 w-32" />
+        {/* ALTERNATIVES Skeleton */}
+        <div className="rounded-2xl bg-white border border-slate-200 p-5 space-y-4">
+          <SkeletonPulse className="h-4 w-52" />
+          <div className="space-y-2.5">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-slate-100">
+                <SkeletonPulse className="h-11 w-11 rounded-lg" />
+                <div className="flex-1 space-y-1.5">
+                  <SkeletonPulse className="h-4 w-32" />
+                  <SkeletonPulse className="h-3 w-20" />
+                </div>
+                <SkeletonPulse className="h-4 w-6" />
               </div>
-              <Bone className="h-4 w-full mb-2" />
-              <Bone className="h-4 w-5/6" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Proof */}
-        <div className="rounded-3xl border border-[#E6F2EA] bg-white p-6">
-          <Bone className="h-5 w-48" />
+        {/* HABIT Skeleton */}
+        <div className="rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50 border border-slate-200 p-5">
+          <div className="flex items-start gap-4">
+            <SkeletonPulse className="h-10 w-10 rounded-xl" />
+            <div className="flex-1 space-y-2">
+              <SkeletonPulse className="h-3 w-28" />
+              <SkeletonPulse className="h-4 w-full" />
+              <SkeletonPulse className="h-3 w-3/4" />
+            </div>
+          </div>
         </div>
+
+        {/* DETAILS ACCORDION Skeleton */}
+        <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
+          <div className="px-5 py-4 flex items-center justify-between">
+            <SkeletonPulse className="h-4 w-28" />
+            <SkeletonPulse className="h-5 w-5" />
+          </div>
+        </div>
+
+        {/* Spacer */}
+        <div className="h-6" />
       </div>
     </div>
   );
