@@ -1,6 +1,6 @@
 ﻿/**
- * ProductPage.tsx — ECOLOJIA v5.6.0
- * + productContext depuis l'API (avec fallback frontend)
+ * ProductPage.tsx — ECOLOJIA v5.5.0
+ * + Score discret dans le header
  */
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -31,7 +31,7 @@ interface NutritionData { sugars?: number; fat?: number; saturated_fat?: number;
 interface FoodData { novaGroup?: number; nutriScore?: string; nutritionalInfo?: NutritionData; additives?: string[]; labels?: string[]; }
 interface Alternative { _id: string; name: string; brand?: string; imageUrl?: string; images?: { front?: string }; scores?: { overallScore?: number }; }
 interface ProductContextProfile { processingLevel: string; sugarLevel: string; saltLevel: string; satFatLevel: string; additivesLevel: string; packagingType: string; packagingConfidence: string; isOrganic: boolean; isRawAgricultural: boolean; surfaceConsumed: string | boolean; usageFrequency: string; riskProfiles: string[]; contextConfidence: string; }
-interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; ingredients_text?: string; }
+interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; ingredients_text?: string; productContext?: ProductContextProfile; }
 
 async function getJSON(endpoint: string) {
   const base = import.meta.env.VITE_API_URL || "http://localhost:10000";
@@ -46,15 +46,19 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
   return <div className={`rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`}>{children}</div>;
 }
 
+// Score Badge discret
 function ScoreBadge({ score }: { score?: number }) {
   if (score === undefined || score === null) return null;
+  
   const getColor = (s: number) => {
     if (s >= 70) return { bg: "bg-emerald-100", text: "text-emerald-700", ring: "ring-emerald-200" };
     if (s >= 50) return { bg: "bg-amber-100", text: "text-amber-700", ring: "ring-amber-200" };
     if (s >= 30) return { bg: "bg-orange-100", text: "text-orange-700", ring: "ring-orange-200" };
     return { bg: "bg-red-100", text: "text-red-700", ring: "ring-red-200" };
   };
+  
   const colors = getColor(score);
+  
   return (
     <div className={`flex items-center justify-center w-11 h-11 rounded-full ${colors.bg} ${colors.text} ring-2 ${colors.ring} flex-shrink-0`}>
       <span className="text-sm font-bold">{score}</span>
@@ -62,7 +66,7 @@ function ScoreBadge({ score }: { score?: number }) {
   );
 }
 
-// FALLBACK: Génération frontend si API ne retourne pas productContext
+// MAPPING ROBUSTE PACKAGING
 const PACKAGING_MAP: Record<string, string> = {
   'spread': 'glass', 'chocolate-spread': 'glass', 'nut-butter': 'glass', 'jam': 'glass', 'honey': 'glass', 'sauce': 'glass',
   'canned-vegetables': 'metal', 'seafood': 'metal', 'soup': 'metal',
@@ -73,17 +77,19 @@ const PACKAGING_MAP: Record<string, string> = {
   'haircare': 'plastic', 'bodycare': 'plastic', 'skincare': 'plastic', 'laundry': 'plastic', 'dishwashing': 'plastic',
   'spice': 'glass', 'dried-fruit': 'plastic'
 };
+
 const PACKAGING_CONFIDENCE: Record<string, string> = {
   'spread': 'high', 'chocolate-spread': 'high', 'nut-butter': 'high', 'jam': 'high', 'canned-vegetables': 'high', 'seafood': 'high', 'soup': 'high', 'cereal': 'high', 'pasta': 'high', 'rice': 'high',
   'beverage': 'medium', 'dairy': 'medium', 'biscuit': 'medium', 'snack': 'medium', 'chocolate-bar': 'medium',
   'other': 'low', 'dessert': 'low', 'ready-meal': 'low'
 };
+
 const ULTRA_PROCESSED = ['biscuit', 'snack', 'chocolate-bar', 'chocolate-spread', 'spread', 'snack-salty', 'snack-sweet', 'snack_bar', 'chips', 'candy', 'ready-meal', 'cake', 'cracker', 'beverage', 'soda'];
 const FREQUENT_USE = ['biscuit', 'cereal', 'spread', 'chocolate-spread', 'nut-butter', 'jam', 'dairy', 'beverage', 'bread', 'pasta', 'rice', 'snack', 'breakfast'];
 const RAW_CATEGORIES = ['fruit', 'fruits', 'legume', 'legumes', 'vegetable', 'vegetables', 'oeuf', 'oeufs', 'dried-fruit'];
 const ORGANIC_LABELS = ['bio', 'biologique', 'organic', 'ab', 'eu-organic', 'demeter'];
 
-function generateContextFallback(product: Product): ProductContextProfile {
+function generateContextFrontend(product: Product): ProductContextProfile {
   const nova = product.foodData?.novaGroup;
   const nutrition = product.nutrition || product.foodData?.nutritionalInfo;
   const sugars = nutrition?.sugars;
@@ -140,52 +146,12 @@ export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const nav = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
-  const [productContext, setProductContext] = useState<ProductContextProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      if (!id) return;
-      setLoading(true);
-      setError(null);
-      const res = await getJSON(`/api/products/${id}`);
-      if (!alive) return;
-      if (!res.ok) {
-        setError("Produit introuvable");
-        setProduct(null);
-        setProductContext(null);
-      } else {
-        // Récupérer product et productContext de l'API
-        const productData = res.data?.product || res.data;
-        const contextData = res.data?.productContext || null;
-        setProduct(productData);
-        setProductContext(contextData);
-        
-        // Log pour debug (à retirer en prod)
-        if (contextData) {
-          console.log('[ProductPage] productContext depuis API:', contextData.packagingType, '[' + contextData.packagingConfidence + ']');
-        } else {
-          console.log('[ProductPage] productContext: fallback frontend');
-        }
-      }
-      setLoading(false);
-    })();
-    return () => { alive = false; };
-  }, [id]);
-
-  useEffect(() => {
-    if (!product?.barcode) return;
-    let alive = true;
-    (async () => {
-      const res = await getJSON(`/api/products/${product.barcode}/alternatives`);
-      if (!alive) return;
-      if (res.ok && Array.isArray(res.data)) setAlternatives(res.data);
-    })();
-    return () => { alive = false; };
-  }, [product?.barcode]);
+  useEffect(() => { let alive = true; (async () => { if (!id) return; setLoading(true); setError(null); const res = await getJSON(`/api/products/${id}`); if (!alive) return; if (!res.ok) { setError("Produit introuvable"); setProduct(null); } else { setProduct(res.data?.product || res.data); } setLoading(false); })(); return () => { alive = false; }; }, [id]);
+  useEffect(() => { if (!product?.barcode) return; let alive = true; (async () => { const res = await getJSON(`/api/products/${product.barcode}/alternatives`); if (!alive) return; if (res.ok && Array.isArray(res.data)) setAlternatives(res.data); })(); return () => { alive = false; }; }, [product?.barcode]);
 
   const onShare = useCallback(async () => { if (!product) return; if (navigator.share) { try { await navigator.share({ title: product.name, url: window.location.href }); } catch {} } else { await navigator.clipboard.writeText(window.location.href); toast.success("Lien copié !"); } }, [product]);
   const onAddToList = useCallback(() => { toast.success("Ajouté à ma liste ✓"); }, []);
@@ -216,10 +182,8 @@ export default function ProductPage() {
   const nutritionData = nutrition || foodData?.nutritionalInfo || null;
   const imageUrl = product.imageUrl || product.images?.front;
   const isBio = (product.labels || []).some(l => l.toLowerCase().includes("bio"));
+  const productContext = product.productContext || generateContextFrontend(product);
   const overallScore = scores?.overallScore;
-  
-  // Utiliser productContext de l'API, sinon fallback frontend
-  const finalContext = productContext || generateContextFallback(product);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -232,6 +196,7 @@ export default function ProductPage() {
       </div>
       <motion.div className="mx-auto max-w-2xl px-4 py-5 space-y-4" variants={staggerContainer} initial="initial" animate="animate">
         
+        {/* HERO avec score discret */}
         <motion.div variants={fadeInUp}>
           <Card className="p-4">
             <div className="flex items-center gap-4">
@@ -251,7 +216,7 @@ export default function ProductPage() {
         <motion.div variants={fadeInUp}><Card className="p-5"><WhyThisLevel flags={flags} nova={nova} nutriScore={nutriScore} /></Card></motion.div>
         <motion.div variants={fadeInUp}><Card className="p-5"><QuickTags flags={flags} nova={nova} nutriScore={nutriScore} isBio={isBio} /></Card></motion.div>
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
-        <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
+        <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={productContext} subcategory={product.subcategory} /></Card></motion.div>
         <motion.div variants={fadeInUp}><HabitCard habit={habit} /></motion.div>
         <motion.div variants={fadeInUp}><Card><DetailsAccordionV2 score={scores?.overallScore} healthScore={scores?.healthScore} environmentScore={scores?.environmentScore} nova={nova} nutriScore={nutriScore} nutrition={nutritionData} /></Card></motion.div>
         <div className="h-24 sm:h-6" />
