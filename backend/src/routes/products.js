@@ -23,6 +23,8 @@ const Product = require("../models/Product");
 const { generateConstitution, regenerateRulesOnly } = require("../services/constitution.service");
 const { resolveRules } = require("../services/RuleResolver.service");
 const { generateProductContext } = require("../services/productContext.service");
+const { calculateNutritionContext } = require("../knowledge/nutritionReferences");
+const { generateMicroInsights } = require("../services/microInsights.service");
 
 function inferCategoryFromData(product = {}) {
   const base = product || {};
@@ -229,6 +231,14 @@ async function enrichProductResponse(product, source = "DIRECT", cached = false,
   // NOUVEAU: Générer le productContext
   const productContext = generateProductContext(productObj);
   logger.debug('[ProductContext] Généré pour: ' + productObj.name + ' | packaging: ' + productContext.packagingType + ' [' + productContext.packagingConfidence + ']');
+
+  // NOUVEAU: Générer le nutritionContext (repères OMS/ANSES/EFSA)
+  const nutritionContext = calculateNutritionContext(productObj);
+  logger.debug('[NutritionContext] Genere pour: ' + productObj.name + ' | confidence: ' + nutritionContext.confidence);
+
+  // NOUVEAU: Generer les microInsights (En bref + Equilibrer)
+  const microInsights = generateMicroInsights(productObj);
+  logger.debug('[MicroInsights] Généré pour: ' + productObj.name + ' | confidence: ' + nutritionContext.confidence);
   
   return {
     success: true,
@@ -241,6 +251,8 @@ async function enrichProductResponse(product, source = "DIRECT", cached = false,
       constitution: constitution,
     },
     productContext: productContext,
+    nutritionContext: nutritionContext,
+    microInsights: microInsights,
     metadata: { source, cached, aiEnrichmentUsed, rulesVersion: '2.1.0', productContextVersion: '2.0.0', retrievedAt: new Date().toISOString() },
     knowledgeAnalysis: aiData.knowledgeAnalysis,
     aiEnriched: aiData.aiEnriched,
@@ -261,9 +273,11 @@ router.get("/scan/:barcode", async (req, res) => {
     }
     const constitution = ensureConstitutionWithDynamicRules(product);
     const productContext = generateProductContext(product);
+    const nutritionContext = calculateNutritionContext(product);
+    const microInsights = generateMicroInsights(product);
     const responseTime = Date.now() - startTime;
     logger.info('✅ SCAN ' + barcode + ': ' + responseTime + 'ms');
-    return res.json({ success: true, product: { ...product, constitution }, productContext, cached: true, responseTime });
+    return res.json({ success: true, product: { ...product, constitution }, productContext, nutritionContext, microInsights, cached: true, responseTime });
   } catch (error) {
     logger.error('❌ Erreur scan ' + barcode + ':', error);
     return res.status(500).json({ success: false, error: 'Erreur serveur' });
@@ -337,7 +351,7 @@ router.get("/:id", async (req, res) => {
       return res.status(200).json(enrichedResponse);
     }
     logger.warn('❌ Produit non trouvé: ' + id);
-    return res.status(404).json({ success: false, error: "Produit non trouvé", product: null, knowledgeAnalysis: null, aiEnriched: false, productContext: null });
+    return res.status(404).json({ success: false, error: "Produit non trouvé", product: null, knowledgeAnalysis: null, aiEnriched: false, productContext: null, nutritionContext: null });
   } catch (error) {
     logger.error('❌ Erreur GET /:id: ' + error.message, error.stack);
     return res.status(500).json({ success: false, error: "Erreur serveur", details: process.env.NODE_ENV === "development" ? error.message : undefined });
@@ -423,3 +437,9 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+
+

@@ -18,6 +18,8 @@ import { DetailsAccordionV2 } from "../components/product/DetailsAccordionV2";
 import { ProductPageSkeleton } from "../components/product/ProductPageSkeleton";
 import { StickyActionBar } from "../components/product/StickyActionBar";
 import { ConsciousConsumption } from "../components/product/ConsciousConsumption";
+import { NutritionContext } from "../components/product/NutritionContext";
+import ProductInsights from "../components/product/ProductInsights";
 
 const fadeInUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] } };
 const staggerContainer = { animate: { transition: { staggerChildren: 0.08 } } };
@@ -141,6 +143,8 @@ export default function ProductPage() {
   const nav = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [productContext, setProductContext] = useState<ProductContextProfile | null>(null);
+  const [nutritionContext, setNutritionContext] = useState<any>(null);
+  const [microInsights, setMicroInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
@@ -161,12 +165,19 @@ export default function ProductPage() {
         // Récupérer product et productContext de l'API
         const productData = res.data?.product || res.data;
         const contextData = res.data?.productContext || null;
+        const nutritionData = res.data?.nutritionContext || null;
+        const microInsightsData = res.data?.microInsights || null;
         setProduct(productData);
         setProductContext(contextData);
+        setNutritionContext(nutritionData);
+        setMicroInsights(microInsightsData);
         
         // Log pour debug (à retirer en prod)
         if (contextData) {
           console.log('[ProductPage] productContext depuis API:', contextData.packagingType, '[' + contextData.packagingConfidence + ']');
+          if (nutritionData) {
+            console.log('[ProductPage] nutritionContext depuis API:', nutritionData.confidence);
+          }
         } else {
           console.log('[ProductPage] productContext: fallback frontend');
         }
@@ -252,6 +263,8 @@ export default function ProductPage() {
         <motion.div variants={fadeInUp}><Card className="p-5"><QuickTags flags={flags} nova={nova} nutriScore={nutriScore} isBio={isBio} /></Card></motion.div>
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
         <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
+        {nutritionContext && <motion.div variants={fadeInUp}><NutritionContext nutritionContext={nutritionContext} barcode={product?.barcode} /></motion.div>}
+        {microInsights && <motion.div variants={fadeInUp}><ProductInsights microInsights={microInsights} /></motion.div>}
         <motion.div variants={fadeInUp}><HabitCard habit={habit} /></motion.div>
         <motion.div variants={fadeInUp}><Card><DetailsAccordionV2 score={scores?.overallScore} healthScore={scores?.healthScore} environmentScore={scores?.environmentScore} nova={nova} nutriScore={nutriScore} nutrition={nutritionData} /></Card></motion.div>
         <div className="h-24 sm:h-6" />
@@ -260,3 +273,4 @@ export default function ProductPage() {
     </div>
   );
 }
+

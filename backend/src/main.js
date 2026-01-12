@@ -367,6 +367,15 @@ try {
   console.error('❌ [ROUTE] AI Education routes error:', err.message);
 }
 
+// ⭐ V3.3 - LEARN ROUTES (Micro-fiches educatives)
+try {
+  const learnRoutes = require('./routes/learn.routes');
+  app.use('/api/learn', learnRoutes);
+  console.log('✅ [ROUTE] Learn montée sur /api/learn');
+} catch (err) {
+  console.error('❌ [ROUTE] Learn routes error:', err.message);
+}
+
 app.use('/api/gdpr', gdprRoutes);
 app.use('/api/stats', require('./routes/stats.routes'));
 
