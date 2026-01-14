@@ -41,6 +41,9 @@ const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 
+// Learn
+const ReperesEcolojiaPage = lazy(() => import("./pages/ReperesEcolojiaPage"));
+
 // ============================================================================
 // APP
 // ============================================================================
@@ -72,6 +75,7 @@ const App: React.FC = () => {
               <Route path="explore" element={<ExplorePage />} />
               <Route path="privacy" element={<PrivacyPage />} />
               <Route path="terms" element={<TermsPage />} />
+              <Route path="learn/reperes" element={<ReperesEcolojiaPage />} />
 
               {/* Auth */}
               <Route
