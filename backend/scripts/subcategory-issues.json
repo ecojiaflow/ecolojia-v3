@@ -1,0 +1,1604 @@
+[
+  {
+    "barcode": "3046920022651",
+    "name": "Excellence Noir Intense 70% Cacao",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920022606",
+    "name": "Excellence Noir Puissant 85% Cacao",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820100234",
+    "name": "Fourrés Chocolat Noir",
+    "brand": "Bjorg",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990156009",
+    "name": "Pringles Original",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920029780",
+    "name": "Excellence Noir Subtil Doux 70% Cacao",
+    "brand": "Lindt Excellence",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990155354",
+    "name": "Sour Cream & Onion",
+    "brand": "Pringles",
+    "currentSub": "snack",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076601148",
+    "name": "Crunchy Avoine & Chocolat Noir x 5 x 2 barres de 21 g",
+    "brand": "General Mills,Nature Valley",
+    "currentSub": "cereal",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "16811207",
+    "name": "petit déjeuner miel et pépites de chocolat",
+    "brand": "belvita",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410510012202",
+    "name": "Chocolate Negro",
+    "brand": "Dark Excelente",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3336971805021",
+    "name": "Chips de lentilles saveur fines herbes",
+    "brand": "Vico",
+    "currentSub": "legumes",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210476104",
+    "name": "Véritable Petit Beurre",
+    "brand": "Lu",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076610621",
+    "name": "Sweet & Salty Nut chocolat noir et mélange de noix, 5 barres de 30 g",
+    "brand": "General Mills France,Nature valley",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990167845",
+    "name": "Sour Cream & Onion®",
+    "brand": "Pringles, Pringles - Kellogg",
+    "currentSub": "snack",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990107384",
+    "name": "Pringles sour cream",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920029759",
+    "name": "Supreme Dark 90%",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210578464",
+    "name": "Organic 70% Dark Chocolate Bar",
+    "brand": "Green & Black's",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210584724",
+    "name": "Dark chocolate",
+    "brand": "Green and black",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3045140105502",
+    "name": "Chocolat au lait",
+    "brand": "Milka",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "40896243",
+    "name": "Bio Chocolat Noir Cacao 70%",
+    "brand": "LIDL",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990101597",
+    "name": "Sour Cream & Onion",
+    "brand": "Pringles",
+    "currentSub": "snack",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5059697731860",
+    "name": "Ecuador dark chocolate",
+    "brand": "Tesco finest",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820794525",
+    "name": "Nutri+ avoine chocolat",
+    "brand": "Bjorg",
+    "currentSub": "cereal",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990167807",
+    "name": "Pringles Original",
+    "brand": "Kellogg's, Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820181950",
+    "name": "Fourrés Chocolat au Lait",
+    "brand": "Bjorg",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990107339",
+    "name": "Pringles",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210421968",
+    "name": "Véritable Petit Écolier Chocolat au Lait",
+    "brand": "LU,Mondelez International",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20713713",
+    "name": "Chocolat noir Equateur Bio",
+    "brand": "J.D. Gross",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622300689124",
+    "name": "Granola L'original Gros éclats de chocolat",
+    "brand": "Granola,LU,Mondelez",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210449283",
+    "name": "Prince Goût Chocolat",
+    "brand": "LU",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920028004",
+    "name": "70% chocolate",
+    "brand": "Lindt & Sprüngli",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "06175700",
+    "name": "Tartines craquantes au sarrasin imp",
+    "brand": "Ekibio,Le pain des Fleurs",
+    "currentSub": "snack",
+    "expectedSub": "bread",
+    "matchedKeyword": "pain",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920028363",
+    "name": "Excellence 85% Cacao Rich Dark",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111259342828",
+    "name": "Petit beurre",
+    "brand": "Bé",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5059697710001",
+    "name": "Dark milk chocolate",
+    "brand": "Tesco",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681209282",
+    "name": "Goûter 4S Saveur pommes",
+    "brand": "Gerblé",
+    "currentSub": "snack",
+    "expectedSub": "fruit",
+    "matchedKeyword": "pomme",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3251490307002",
+    "name": "Goûter pépites de chocolat",
+    "brand": "Gerblé",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060088701478",
+    "name": "Cocoa Orange Fruit & Nut Bars",
+    "brand": "Nakd",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "fruit",
+    "matchedKeyword": "orange",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920027885",
+    "name": "Excellence Noir à la Pointe de Fleur de Sel",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20815882",
+    "name": "Chocolate negro 95% cacao",
+    "brand": "J. D. Gross",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20995553",
+    "name": "Chocolat noir - 85% cacao",
+    "brand": "J.D. Gross",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8000500310427",
+    "name": "Biscuits croquants au coeur onctueux de Nutella®",
+    "brand": "nutella",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "biscuits",
+    "matchedKeyword": "biscuit",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681851849",
+    "name": "Pomme 🍏 🍎 Noisette🥜",
+    "brand": "Gerblé",
+    "currentSub": "biscuit",
+    "expectedSub": "fruit",
+    "matchedKeyword": "pomme",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20095291",
+    "name": "Dark Chocolate 70%",
+    "brand": "J.D. Gross,Lidl",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3256540000698",
+    "name": "Pains au lait x10",
+    "brand": "Pasquier",
+    "currentSub": "bread",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410510012196",
+    "name": "Chocolat Noir 92% cacao",
+    "brand": "Dark Excellente",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5017764128104",
+    "name": "Chips",
+    "brand": "Kettle",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990101573",
+    "name": "Pringles Sare",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3061990143365",
+    "name": "Biscuits goût chocolat",
+    "brand": "BN",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076610737",
+    "name": "Protein Cacahuetes🥜 & Chocolat🍫",
+    "brand": "Nature Valley",
+    "currentSub": "snack-salty",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175680011534",
+    "name": "Biscuit lait chocolat",
+    "brand": "Gerblé,Gerblé Vitalité,Nutrition & Santé",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920010047",
+    "name": "Excellence Noir Corsé 78% Cacao",
+    "brand": "Lindt",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990161669",
+    "name": "Картофельные чипсы со вкусом парики",
+    "brand": "Pringles",
+    "currentSub": "snack",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111025120605",
+    "name": "Chocolat monogram",
+    "brand": "Macao",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210476296",
+    "name": "Thé - Biscuits",
+    "brand": "Lu",
+    "currentSub": "biscuit",
+    "expectedSub": "tea",
+    "matchedKeyword": "thé",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060042641406",
+    "name": "Sea salt & cider vinegar chips",
+    "brand": "Tyrrell’s",
+    "currentSub": "snack-salty",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210204424",
+    "name": "Príncipe crema de chocolate",
+    "brand": "LU",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060283762199",
+    "name": "PROPERCHIPS Sea Salt Lentil Chips",
+    "brand": "Proper",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210713889",
+    "name": "Belvita Original Petit-Déjeuner miel et pépites de chocolat",
+    "brand": "LU",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210713780",
+    "name": "Belvita Petit Déjeuner Chocolat",
+    "brand": "LU,Mondelez",
+    "currentSub": "breakfast",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3017760000062",
+    "name": "Véritable Petit Beurre Pocket",
+    "brand": "lu",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210100917",
+    "name": "Milka galette choco",
+    "brand": "LU",
+    "currentSub": "biscuit",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "milka",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20005832",
+    "name": "Dark Chocolate",
+    "brand": "Fin Carré",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210580092",
+    "name": "Organic Milk Chocolate",
+    "brand": "Green & Black's",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3178530402728",
+    "name": "La Madeleine Pur beurre",
+    "brand": "Bonne Maman",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076801197",
+    "name": "Crunchy Oats and Dark chocolate, 2 Barres de 21 g",
+    "brand": "Nature Valley",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3178530410143",
+    "name": "Petites Madeleines pépites chocolat",
+    "brand": "St Michel",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3284230011884",
+    "name": "8 Pains au lait frais Bio 280g",
+    "brand": "La Boulangère Bio, La boulangere",
+    "currentSub": "bread",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5410041010800",
+    "name": "Petit écolier chocolat noir pur beurre de cacao",
+    "brand": "Lu, Mondelez France",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5000168198514",
+    "name": "Sablés chocolat",
+    "brand": "McVitie's",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4014400901191",
+    "name": "Merci Finest Selection Assorted Chocolates",
+    "brand": "Storck",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4056489369134",
+    "name": "Biscuits Germe de Blé et Pépites de Chocolat",
+    "brand": "Lidl,Sondey",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3041090061615",
+    "name": "Bâtonnets de céréales fourrés (47,5 %) au chocolat - Cracotte Chocolat",
+    "brand": "LU,Mondelez",
+    "currentSub": "cereal",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8000500359488",
+    "name": "Milk Chocolate",
+    "brand": "Ferrero Rocher",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681290297",
+    "name": "Cookie Chocolat saveur noisette Sans sucres",
+    "brand": "Gerblé",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681077324",
+    "name": "Biscuit chocolat saveur amande",
+    "brand": "Gerblé",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3760091722508",
+    "name": "Chocolat noir 85% Madagascar",
+    "brand": "Ethiquable",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990161966",
+    "name": "Pringles Texas BBQ 165g ajman",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111259346345",
+    "name": "cooky original chocolate chips",
+    "brand": "Be",
+    "currentSub": "snack-salty",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5000159535267",
+    "name": "Dark Chocolate Nuts & Sea Salt Bars",
+    "brand": "KIND",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5017764128128",
+    "name": "Sea Salt & Balsamic Vinegar Crisps",
+    "brand": "Kettle",
+    "currentSub": "snack",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990101542",
+    "name": "pringles hot & spicy",
+    "brand": "pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210444141",
+    "name": "Biscuits petit déjeuner moelleux aux pépites de chocolat",
+    "brand": "LU, Mondelez",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990127740",
+    "name": "Pringles",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "00938150",
+    "name": "single origin milk chocolate",
+    "brand": "Marks & Spencer",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210988034",
+    "name": "Véritable petit beurre",
+    "brand": "LU, Mondelez, Mondelez international",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060088701447",
+    "name": "Cocoa Orange",
+    "brand": "Nakd",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "fruit",
+    "matchedKeyword": "orange",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060719920001",
+    "name": "Absolute black dark chocolate",
+    "brand": "Montezuma's",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "0061232202556",
+    "name": "Dark Chocolate Chip Oat Biscuits",
+    "brand": "Nairn's",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820004334",
+    "name": "Le cookie Chocolat Noisette",
+    "brand": "Bjorg",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3023470001015",
+    "name": "Galettes St Michel au beurre 4X5 - 130g",
+    "brand": "St michel",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4088600132334",
+    "name": "85% Cocoa - Dark Chocolate",
+    "brand": "Moser Roth",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3178530407396",
+    "name": "Petit Cookies Pépites de chocolat",
+    "brand": "Bonne Maman",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3497917000907",
+    "name": "Chips saveur fromage du Jura",
+    "brand": "Brets",
+    "currentSub": "dairy",
+    "expectedSub": "cheese",
+    "matchedKeyword": "fromage",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3336971805038",
+    "name": "Chips de lentilles saveur tomate mozza",
+    "brand": "Natu' & Bon,Vico",
+    "currentSub": "legumes",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3270190127765",
+    "name": "Chocolate negro",
+    "brand": "Carrefour BIO, Carrefour",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5059697684616",
+    "name": "Dark Chocolate",
+    "brand": "TESCO finest",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210834713",
+    "name": "Milka wholenut",
+    "brand": "Milka",
+    "currentSub": "dessert",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "milka",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076901026",
+    "name": "Barre céréales Protéines peanut& chocolat🍫",
+    "brand": "Nature Valley",
+    "currentSub": "cereal",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920021043",
+    "name": "Noir intense dessert 70%",
+    "brand": "Lindt",
+    "currentSub": "dessert",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820783673",
+    "name": "Fourrés chocolat lait noisettes",
+    "brand": "Bjorg",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "80177609",
+    "name": "Kinder Chocolate",
+    "brand": "Kinder",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6291003203527",
+    "name": "Break Chocolate Fingers",
+    "brand": "Break,Tiffany",
+    "currentSub": "snack",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111242380295",
+    "name": "Tchicolata",
+    "brand": "Marque inconnue",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "00557825",
+    "name": "Dark chocolate 75%",
+    "brand": "Marks & Spencer",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210449313",
+    "name": "Prince Multicéréales Goût Chocolat Au Blé Complet",
+    "brand": "LU",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990161607",
+    "name": "Pringles Paprika",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "00392754",
+    "name": "80% Dark Chocolate",
+    "brand": "Sainsbury's",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3760091726667",
+    "name": "Chocolat noir 80% Équateur intense et floral",
+    "brand": "Ethiquable",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3497911105127",
+    "name": "Chips saveur Sel & Vinaigre",
+    "brand": "Brets",
+    "currentSub": "snack-salty",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "51000009",
+    "name": "Salt and Vinegar Flavour Potato Crisps",
+    "brand": "Walkers",
+    "currentSub": "snack",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210713902",
+    "name": "Belvita original  - Biscuits petit déjeuner miel & pépites de chocolat",
+    "brand": "Belvita, Lu, Mondelez",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20029838",
+    "name": "Milk Chocolate Nut",
+    "brand": "fin CARRE",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3497917000518",
+    "name": "Chips saveur Chèvre piment d'Espelette",
+    "brand": "Brets",
+    "currentSub": "dairy",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3380380047749",
+    "name": "Tartines craquantes au sarrasin",
+    "brand": "Ekibio, Le pain des fleurs",
+    "currentSub": "cracker",
+    "expectedSub": "bread",
+    "matchedKeyword": "pain",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3760049798890",
+    "name": "Pain au lait bio x12 420g",
+    "brand": "la boulangère",
+    "currentSub": "bread",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681135895",
+    "name": "Moelleux chocolat noix",
+    "brand": "Gerblé",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20261375",
+    "name": "Madagascar Dark Chocolate tummasuklaa",
+    "brand": "Preferred Selection",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5060042641420",
+    "name": "Chips sel de mer et poivre noir imp",
+    "brand": "Tyrrell’s",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "01708752",
+    "name": "Just Snax Tortilla Chips",
+    "brand": "Sainsbury's basics",
+    "currentSub": "snack-salty",
+    "expectedSub": "juice",
+    "matchedKeyword": "jus",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622300292508",
+    "name": "Choco Wafer",
+    "brand": "Milka, Mondelēz",
+    "currentSub": "dessert",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "milka",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5017764003142",
+    "name": "Lightly Salted Potato chips",
+    "brand": "Kettle",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3336972109104",
+    "name": "Chips de lentilles saveur oignons caramélisés",
+    "brand": "Vico",
+    "currentSub": "legumes",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111017042427",
+    "name": "Chocolat Tentation Noir Gourmand Amandes",
+    "brand": "Aiguebelle",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8717677339938",
+    "name": "Milk Caramel Sea Salt Chocolate",
+    "brand": "Tony's Chocolonely",
+    "currentSub": "snack-sweet",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "0612322030087",
+    "name": "Chocolate Chip Oat Biscuit Breaks",
+    "brand": "Nairn’s",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3256540001008",
+    "name": "Pains au chocolat",
+    "brand": "Pasquier",
+    "currentSub": "bread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3700214614266",
+    "name": "Chocolat noir Pérou 90%",
+    "brand": "Alter Eco",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5000128981330",
+    "name": "Chocolate For Change Single Origin 85% Cocoa Dark Chocolate",
+    "brand": "Coop",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3392460510050",
+    "name": "LU - Grany pommes",
+    "brand": "LU",
+    "currentSub": "cereal",
+    "expectedSub": "fruit",
+    "matchedKeyword": "pomme",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8480000607225",
+    "name": "Chocolate negro 85% cacao",
+    "brand": "Hacendado",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20005825",
+    "name": "Milk Chocolate",
+    "brand": "Fin Carré",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20080211",
+    "name": "Cookies chocolate Chip",
+    "brand": "Sondey",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3061990141101",
+    "name": "Mini BN Chocolat",
+    "brand": "BN",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20430733",
+    "name": "cioccolato fondente",
+    "brand": "fin carre",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3587222521508",
+    "name": "Brioche tranchée à la crème fraîche",
+    "brand": "La Fournée Dorée",
+    "currentSub": "dairy",
+    "expectedSub": "cream",
+    "matchedKeyword": "crème",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "10600425",
+    "name": "Chips sea salt & cider vinegar",
+    "brand": "Tyrrels",
+    "currentSub": "snack-salty",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4088600132341",
+    "name": "Dark chocolate",
+    "brand": "Moser Roth",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3700214614259",
+    "name": "Chocolat noir 75% Pérou",
+    "brand": "Alter Eco",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4056489041160",
+    "name": "Carres graines pepites de chocolat",
+    "brand": "Lidl, Sondey",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "6111031005217",
+    "name": "Oreo chocolate",
+    "brand": "Unknown",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5053990162703",
+    "name": "Pringles",
+    "brand": "Pringles",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "pringles",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5059697729072",
+    "name": "Tortilla chips",
+    "brand": "Tesco",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "20005771",
+    "name": "Whole Nut Milk Chocolate",
+    "brand": "Fin Carré",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8717677339914",
+    "name": "Milk Chocolate",
+    "brand": "Tony's Chocolonely",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3168930168133",
+    "name": "Chips Recette Paysanne Nature",
+    "brand": "Lays",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8000500310397",
+    "name": "Nutella biscuits fergulf",
+    "brand": "Ferrero, Nutella",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "biscuits",
+    "matchedKeyword": "biscuit",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622300784751",
+    "name": "Cake & Chock",
+    "brand": "Milka,Mondelēz",
+    "currentSub": "dessert",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "milka",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920029674",
+    "name": "Excellence À la Pointe de Fleur de Sel Noir",
+    "brand": "Lindt & Sprüngli",
+    "currentSub": "snack",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210869616",
+    "name": "Chocolat Bio noir 85%",
+    "brand": "Côte d'Or",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210422026",
+    "name": "Véritable Petit écolier Pocket Chocolat au Lait",
+    "brand": "LU",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3392460511200",
+    "name": "LU - Grany Chocolate 5 Cereals Bar x6, 125g (4.5oz)",
+    "brand": "Lu",
+    "currentSub": "cereal",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210724519",
+    "name": "Chocolat noir Bio 70%",
+    "brand": "Côte d'Or,Mondelez International",
+    "currentSub": "chocolate",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5000169567418",
+    "name": "Milk Single Origin Chocolate",
+    "brand": "Waitrose",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8480000125866",
+    "name": "Chocolate negro 99% cacao",
+    "brand": "HACENDADO",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920022507",
+    "name": "Excellence Noir Caramel à la pointe de sel",
+    "brand": "Lindt",
+    "currentSub": "snack-sweet",
+    "expectedSub": "chocolate",
+    "matchedKeyword": "lindt",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "16756168",
+    "name": "Chocolat au lait feuilleté caramel",
+    "brand": "Poulain",
+    "currentSub": "snack-sweet",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8480000125248",
+    "name": "Chocolate negro 0% azúcares añadidos 85% cacao",
+    "brand": "Hacendado",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3014680009175",
+    "name": "Bonbon à la Sève de Pin",
+    "brand": "La Vosgienne, Mondelez",
+    "currentSub": "snack-sweet",
+    "expectedSub": "candy",
+    "matchedKeyword": "bonbon",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3229820789149",
+    "name": "Biscuits nappés de chocolat noir",
+    "brand": "Bjorg",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8000500223369",
+    "name": "Biscuits Nutella B-ready x15 gaufrettes fourrées",
+    "brand": "Ferrero, Nutella B-ready",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "biscuits",
+    "matchedKeyword": "biscuit",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3116430216342",
+    "name": "Delacre - Delichoc Milk Chocolate Cookies, 150g (5.3oz)",
+    "brand": "Delacre",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410679234514",
+    "name": "Chocolate Extrafino 80% NOIR 0% azúcares añadidos",
+    "brand": "trapa",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5013665116738",
+    "name": "Sea Salt & Cider Vinegar Veggie Cakes",
+    "brand": "Kallø",
+    "currentSub": "snack",
+    "expectedSub": "wine",
+    "matchedKeyword": "vin",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "8410076611277",
+    "name": "Barres protéinées aux chocolat et cranberries sans gluten",
+    "brand": "Nature Valley",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3497917002451",
+    "name": "Chips de Sarrasin au Sel de Guerande",
+    "brand": "Brets",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3017760038331",
+    "name": "La Barquette (chocolat)",
+    "brand": "LU",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3760049798876",
+    "name": "10 Pains au lait frais sans sucres ajoutés 350g",
+    "brand": "la boulangère",
+    "currentSub": "bread",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "1230000097048",
+    "name": "Hazelnut Butter Dark Chocolate",
+    "brand": "Hu",
+    "currentSub": "chocolate-spread",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3168930171737",
+    "name": "Chips nature",
+    "brand": "Lay's, Lays",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3056440032696",
+    "name": "Petits coeurs chocolat",
+    "brand": "Kraft Foods, LU, Mondelez",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3472860001058",
+    "name": "Le Sablé pur beurre",
+    "brand": "La Mère Poulard",
+    "currentSub": "biscuit",
+    "expectedSub": "butter",
+    "matchedKeyword": "beurre",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3017760472890",
+    "name": "BelVita Original Petit Déjeuner pépites de chocolat",
+    "brand": "LU, belVita",
+    "currentSub": "breakfast",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3046920010283",
+    "name": "Excellence Lait Extra Fondant",
+    "brand": "Lindt",
+    "currentSub": "dessert",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "4056489530091",
+    "name": "Vegetable chips",
+    "brand": "Deluxe",
+    "currentSub": "snack-salty",
+    "expectedSub": "chips",
+    "matchedKeyword": "chips",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "7622210713803",
+    "name": "Petit Déjeuner Chocolat",
+    "brand": "Belvita,LU,Mondelez",
+    "currentSub": "breakfast",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3175681797420",
+    "name": "Biscuit Chocolat Céréales",
+    "brand": "gerlinea",
+    "currentSub": "biscuit",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "3560070720859",
+    "name": "Chocolate negro",
+    "brand": "Carrefour, Carrefour Sélection",
+    "currentSub": "chocolate-bar",
+    "expectedSub": "soda",
+    "matchedKeyword": "cola",
+    "confidence": "HIGH"
+  },
+  {
+    "barcode": "5410081200551",
+    "name": "200G CHOC LAIT COTE D OR",
+    "brand": "Côte d’or, Mondelez",
+    "currentSub": "dessert",
+    "expectedSub": "milk",
+    "matchedKeyword": "lait",
+    "confidence": "HIGH"
+  }
+]
