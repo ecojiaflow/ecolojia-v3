@@ -20,6 +20,7 @@ import { StickyActionBar } from "../components/product/StickyActionBar";
 import { ConsciousConsumption } from "../components/product/ConsciousConsumption";
 import { NutritionContext } from "../components/product/NutritionContext";
 import ProductInsights from "../components/product/ProductInsights";
+import DailyBalanceCard from "../components/product/DailyBalanceCard";
 
 const fadeInUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] } };
 const staggerContainer = { animate: { transition: { staggerChildren: 0.08 } } };
@@ -145,6 +146,7 @@ export default function ProductPage() {
   const [productContext, setProductContext] = useState<ProductContextProfile | null>(null);
   const [nutritionContext, setNutritionContext] = useState<any>(null);
   const [microInsights, setMicroInsights] = useState<any>(null);
+  const [dailyBalance, setDailyBalance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
@@ -171,6 +173,9 @@ export default function ProductPage() {
         setProductContext(contextData);
         setNutritionContext(nutritionData);
         setMicroInsights(microInsightsData);
+        const dailyBalanceData = res.data?.dailyBalance || null;
+        console.log('[ProductPage] dailyBalance depuis API:', dailyBalanceData);
+        setDailyBalance(dailyBalanceData);
         
         // Log pour debug (à retirer en prod)
         if (contextData) {
@@ -262,6 +267,7 @@ export default function ProductPage() {
         <motion.div variants={fadeInUp}><Card className="p-5"><WhyThisLevel flags={flags} nova={nova} nutriScore={nutriScore} /></Card></motion.div>
         <motion.div variants={fadeInUp}><Card className="p-5"><QuickTags flags={flags} nova={nova} nutriScore={nutriScore} isBio={isBio} /></Card></motion.div>
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
+        {dailyBalance && <motion.div variants={fadeInUp}><DailyBalanceCard dailyBalance={dailyBalance} /></motion.div>}
         <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
         {nutritionContext && <motion.div variants={fadeInUp}><NutritionContext nutritionContext={nutritionContext} barcode={product?.barcode} /></motion.div>}
         {microInsights && <motion.div variants={fadeInUp}><ProductInsights microInsights={microInsights} /></motion.div>}
@@ -273,4 +279,8 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+
 

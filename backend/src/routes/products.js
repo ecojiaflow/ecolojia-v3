@@ -25,6 +25,7 @@ const { resolveRules } = require("../services/RuleResolver.service");
 const { generateProductContext } = require("../services/productContext.service");
 const { calculateNutritionContext } = require("../knowledge/nutritionReferences");
 const { generateMicroInsights } = require("../services/microInsights.service");
+const { calculateDailyBalance } = require("../services/dailyBalance.service");
 
 function inferCategoryFromData(product = {}) {
   const base = product || {};
@@ -277,7 +278,10 @@ router.get("/scan/:barcode", async (req, res) => {
     const microInsights = generateMicroInsights(product);
     const responseTime = Date.now() - startTime;
     logger.info('✅ SCAN ' + barcode + ': ' + responseTime + 'ms');
-    return res.json({ success: true, product: { ...product, constitution }, productContext, nutritionContext, microInsights, cached: true, responseTime });
+    // Calculer l'équilibre journalier
+    const dailyBalance = calculateDailyBalance(product);
+    
+    return res.json({ success: true, product: { ...product, constitution }, productContext, nutritionContext, microInsights, dailyBalance, cached: true, responseTime });
   } catch (error) {
     logger.error('❌ Erreur scan ' + barcode + ':', error);
     return res.status(500).json({ success: false, error: 'Erreur serveur' });
@@ -333,6 +337,7 @@ router.get("/:id", async (req, res) => {
       const enrichedResponse = await enrichProductResponse(enriched, "MONGODB_ID", false, knowledgeData !== null, knowledgeData);
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
+      enrichedResponse.dailyBalance = calculateDailyBalance(enriched);
       return res.status(200).json(enrichedResponse);
     }
     product = await Product.findOne({ barcode: id }).lean();
@@ -348,6 +353,7 @@ router.get("/:id", async (req, res) => {
       const enrichedResponse = await enrichProductResponse(enriched, "BARCODE", false, knowledgeData !== null, knowledgeData);
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
+      enrichedResponse.dailyBalance = calculateDailyBalance(enriched);
       return res.status(200).json(enrichedResponse);
     }
     logger.warn('❌ Produit non trouvé: ' + id);
@@ -437,6 +443,8 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
 
