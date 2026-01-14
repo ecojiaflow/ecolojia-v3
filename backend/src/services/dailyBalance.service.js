@@ -159,7 +159,7 @@ const PLATE_CATEGORIES = {
 // ═══════════════════════════════════════════════════════════════════
 
 function calculateDailyBalance(product) {
-  const nutrition = product?.foodData?.nutritionalInfo || product?.nutritionalInfo || {};
+  const nutrition = product?.nutriments || product?.foodData?.nutritionalInfo || product?.nutritionalInfo || {};
   const subcategory = product?.subcategory || 'default';
   const nova = product?.nova_group || product?.foodData?.nova_group || null;
   
@@ -171,12 +171,12 @@ function calculateDailyBalance(product) {
   
   // Calcul des apports par portion
   const perPortion = {
-    energy: Math.round((parseFloat(nutrition.energy_kcal) || 0) * portionMultiplier),
-    sugars: Math.round((parseFloat(nutrition.sugars) || 0) * portionMultiplier * 10) / 10,
-    saturatedFat: Math.round((parseFloat(nutrition.saturatedFat) || 0) * portionMultiplier * 10) / 10,
-    salt: Math.round((parseFloat(nutrition.salt) || 0) * portionMultiplier * 100) / 100,
-    fiber: Math.round((parseFloat(nutrition.fiber) || 0) * portionMultiplier * 10) / 10,
-    proteins: Math.round((parseFloat(nutrition.proteins) || 0) * portionMultiplier * 10) / 10
+    energy: Math.round((parseFloat(nutrition.energy_100g || nutrition.energy_kcal) || 0) * portionMultiplier),
+    sugars: Math.round((parseFloat(nutrition.sugars_100g || nutrition.sugars) || 0) * portionMultiplier * 10) / 10,
+    saturatedFat: Math.round((parseFloat(nutrition.saturated_fat_100g || nutrition.saturatedFat) || 0) * portionMultiplier * 10) / 10,
+    salt: Math.round((parseFloat(nutrition.salt_100g || nutrition.salt) || 0) * portionMultiplier * 100) / 100,
+    fiber: Math.round((parseFloat(nutrition.fiber_100g || nutrition.fiber) || 0) * portionMultiplier * 10) / 10,
+    proteins: Math.round((parseFloat(nutrition.proteins_100g || nutrition.proteins) || 0) * portionMultiplier * 10) / 10
   };
   
   // Pourcentages des repères journaliers (utilise DAILY_REFERENCES importé)
