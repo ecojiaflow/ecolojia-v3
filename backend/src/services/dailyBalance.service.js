@@ -278,24 +278,56 @@ function calculateDailyBalance(product) {
  * Détermine la position dans l'assiette PNNS
  */
 function determinePlatePosition(subcategory) {
-  for (const [category, data] of Object.entries(PLATE_CATEGORIES)) {
-    if (data.subcategories.some(s => subcategory.includes(s) || subcategory === s)) {
-      return {
-        category,
-        label: data.label,
-        percent: data.percent,
-        color: data.color,
-        emoji: data.emoji,
-        note: data.note || null,
-        isEssential: data.percent > 0,
-        message: data.percent > 0
-          ? `Contribue à la part "${data.label}" (${data.percent}%) de l'assiette équilibrée.`
-          : `Ce produit est un plaisir occasionnel, pas un aliment du quotidien.`
-      };
+  if (!subcategory || typeof subcategory !== 'string') {
+    return getDefaultPlatePosition();
+  }
+
+  const sub = subcategory.toLowerCase().trim();
+  
+  // ORDRE DE PRIORITÉ EXPLICITE - pleasure en premier pour éviter faux positifs
+  const PRIORITY_ORDER = ['pleasure', 'dairy', 'proteins', 'vegetables', 'starchy', 'fats'];
+  
+  // ÉTAPE 1: Match EXACT d'abord
+  for (const category of PRIORITY_ORDER) {
+    const data = PLATE_CATEGORIES[category];
+    if (!data || !data.subcategories) continue;
+    
+    if (data.subcategories.some(s => s === sub)) {
+      return buildPlatePosition(category, data);
     }
   }
   
-  // Défaut
+  // ÉTAPE 2: Match si subcategory CONTIENT un des termes (ex: chocolate-spread contient chocolate)
+  for (const category of PRIORITY_ORDER) {
+    const data = PLATE_CATEGORIES[category];
+    if (!data || !data.subcategories) continue;
+    
+    for (const s of data.subcategories) {
+      if (sub.includes(s) || s.includes(sub)) {
+        return buildPlatePosition(category, data);
+      }
+    }
+  }
+  
+  return getDefaultPlatePosition();
+}
+
+function buildPlatePosition(category, data) {
+  return {
+    category,
+    label: data.label,
+    percent: data.percent,
+    color: data.color,
+    emoji: data.emoji,
+    note: data.note || null,
+    isEssential: data.percent > 0,
+    message: data.percent > 0
+      ? `Contribue à la part "${data.label}" (${data.percent}%) de l'assiette équilibrée.`
+      : `Ce produit est un plaisir occasionnel, pas un aliment du quotidien.`
+  };
+}
+
+function getDefaultPlatePosition() {
   return {
     category: 'other',
     label: 'Autre',
@@ -303,9 +335,10 @@ function determinePlatePosition(subcategory) {
     color: '#9E9E9E',
     emoji: '📦',
     isEssential: false,
-    message: 'Catégorie non définie dans l\'assiette équilibrée.'
+    message: `Catégorie non définie dans l'assiette équilibrée.`
   };
 }
+
 
 /**
  * Génère les insights clés (max 3)
@@ -432,6 +465,7 @@ module.exports = {
   FREQUENCY_LIMITS,
   PLATE_CATEGORIES
 };
+
 
 
 
