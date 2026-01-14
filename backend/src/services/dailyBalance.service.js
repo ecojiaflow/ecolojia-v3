@@ -142,7 +142,7 @@ const PLATE_CATEGORIES = {
     color: '#FFC107',
     emoji: '🧈',
     note: 'Petite quantité, privilégier végétales',
-    subcategories: ['oil', 'butter', 'spread']
+    subcategories: ['oil', 'butter', 'margarine', 'butter-spread']
   },
   pleasure: {
     label: 'Plaisir occasionnel',
@@ -432,5 +432,7 @@ module.exports = {
   FREQUENCY_LIMITS,
   PLATE_CATEGORIES
 };
+
+
 
 
