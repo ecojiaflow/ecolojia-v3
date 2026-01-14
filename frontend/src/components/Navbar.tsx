@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
   // Navigation items (conditionnel Desktop/Mobile)
   const navigationItems = [
     { name: 'Recherche', href: '/search', icon: Search },
-    { name: 'Apprendre', href: '/learn', icon: BookOpen },
+    { name: 'Reperes', href: '/learn/reperes', icon: BookOpen },
     { name: 'Multi-Scan', href: '/multi-scan', icon: Sparkles, desktopOnly: true }, // MASQUÉ MOBILE
     { name: 'Historique', href: '/history', icon: History },
     { name: 'Chat IA', href: '/chat', icon: MessageCircle },
