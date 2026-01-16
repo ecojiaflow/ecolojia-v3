@@ -22,6 +22,7 @@ import { NutritionContext } from "../components/product/NutritionContext";
 
 import DailyBalanceCard from "../components/product/DailyBalanceCard";
 import EnergyPeakCard from "../components/product/EnergyPeakCard";
+import AdditivesCard from "../components/product/AdditivesCard";
 import LearnCTA from "../components/product/LearnCTA";
 import SignatureFooter from "../components/product/SignatureFooter";
 
@@ -37,7 +38,7 @@ interface NutritionData { sugars?: number; fat?: number; saturated_fat?: number;
 interface FoodData { novaGroup?: number; nutriScore?: string; nutritionalInfo?: NutritionData; additives?: string[]; labels?: string[]; }
 interface Alternative { _id: string; name: string; brand?: string; imageUrl?: string; images?: { front?: string }; scores?: { overallScore?: number }; }
 interface ProductContextProfile { processingLevel: string; sugarLevel: string; saltLevel: string; satFatLevel: string; additivesLevel: string; packagingType: string; packagingConfidence: string; isOrganic: boolean; isRawAgricultural: boolean; surfaceConsumed: string | boolean; usageFrequency: string; riskProfiles: string[]; contextConfidence: string; }
-interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; ingredients_text?: string; }
+interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; additives_extracted?: string[]; ingredients_text?: string; dataQuality?: { additivesSource?: string; additivesCount?: number }; }
 
 async function getJSON(endpoint: string) {
   const base = import.meta.env.VITE_API_URL || "http://localhost:10000";
@@ -112,7 +113,7 @@ function generateContextFallback(product: Product): ProductContextProfile {
   const saltLevel = salt === undefined ? "unknown" : salt <= 0.3 ? "low" : salt <= 1.5 ? "medium" : "high";
   const satFatLevel = satFat === undefined ? "unknown" : satFat <= 1.5 ? "low" : satFat <= 5 ? "medium" : "high";
   
-  const additives = product.additives_tags || product.foodData?.additives || [];
+  const additives = product.additives_extracted || product.additives_tags || product.foodData?.additives || [];
   const additivesLevel = additives.length === 0 ? "none" : additives.length <= 2 ? "low" : additives.length <= 5 ? "moderate" : "high";
   
   let packagingType = "unknown";
@@ -272,6 +273,7 @@ export default function ProductPage() {
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
         {dailyBalance && <motion.div variants={fadeInUp}><DailyBalanceCard dailyBalance={dailyBalance} /></motion.div>}
         {dailyBalance?.energyPeakTip?.show && <motion.div variants={fadeInUp}><EnergyPeakCard energyPeakTip={dailyBalance.energyPeakTip} /></motion.div>}
+        {(product.additives_extracted?.length > 0 || product.additives_tags?.length > 0) && <motion.div variants={fadeInUp}><AdditivesCard additives={product.additives_extracted || product.additives_tags || []} source={product.dataQuality?.additivesSource} /></motion.div>}
           {dailyBalance?.platePosition && <motion.div variants={fadeInUp}><LearnCTA category={dailyBalance.platePosition.category} categoryLabel={dailyBalance.platePosition.label} emoji={dailyBalance.platePosition.emoji} /></motion.div>}
         <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
         {nutritionContext && <motion.div variants={fadeInUp}><NutritionContext nutritionContext={nutritionContext} barcode={product?.barcode} /></motion.div>}
