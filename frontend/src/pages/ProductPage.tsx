@@ -21,6 +21,7 @@ import { ConsciousConsumption } from "../components/product/ConsciousConsumption
 import { NutritionContext } from "../components/product/NutritionContext";
 
 import DailyBalanceCard from "../components/product/DailyBalanceCard";
+import EnergyPeakCard from "../components/product/EnergyPeakCard";
 import LearnCTA from "../components/product/LearnCTA";
 import SignatureFooter from "../components/product/SignatureFooter";
 
@@ -270,6 +271,7 @@ export default function ProductPage() {
         <motion.div variants={fadeInUp}><Card className="p-5"><QuickTags flags={flags} nova={nova} nutriScore={nutriScore} isBio={isBio} /></Card></motion.div>
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
         {dailyBalance && <motion.div variants={fadeInUp}><DailyBalanceCard dailyBalance={dailyBalance} /></motion.div>}
+        {dailyBalance?.energyPeakTip?.show && <motion.div variants={fadeInUp}><EnergyPeakCard energyPeakTip={dailyBalance.energyPeakTip} /></motion.div>}
           {dailyBalance?.platePosition && <motion.div variants={fadeInUp}><LearnCTA category={dailyBalance.platePosition.category} categoryLabel={dailyBalance.platePosition.label} emoji={dailyBalance.platePosition.emoji} /></motion.div>}
         <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
         {nutritionContext && <motion.div variants={fadeInUp}><NutritionContext nutritionContext={nutritionContext} barcode={product?.barcode} /></motion.div>}

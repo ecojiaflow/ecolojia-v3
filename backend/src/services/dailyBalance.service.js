@@ -103,6 +103,27 @@ const FREQUENCY_LIMITS = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// ENERGY PEAK TIP — Catégories pour déclenchement conditionnel
+// ═══════════════════════════════════════════════════════════════════
+
+const LIQUID_SUGAR_CATEGORIES = [
+  'soda', 'sodas', 'juice', 'juices', 'energy-drink', 'iced-tea', 
+  'fruit-drink', 'sweetened-beverage', 'soft-drink'
+];
+
+const SWEET_SNACK_CATEGORIES = [
+  'biscuits', 'biscuit', 'cookies', 'cookie',
+  'sweet-cereal', 'breakfast-cereals', 'cake', 'cakes'
+];
+
+// Produits "plaisir pur" — PAS de tips d'association (message = occasionnel uniquement)
+const PURE_PLEASURE_CATEGORIES = [
+  'chocolate-spread', 'candy', 'candies', 'confectionery', 
+  'chocolate-bar', 'ice-cream', 'pastry', 'pastries',
+  'soda', 'sodas', 'soft-drink', 'energy-drink'
+];
+
+// ═══════════════════════════════════════════════════════════════════
 // ASSIETTE ÉQUILIBRÉE PNNS
 // ═══════════════════════════════════════════════════════════════════
 
@@ -153,6 +174,69 @@ const PLATE_CATEGORIES = {
     subcategories: ['chocolate', 'chocolate-spread', 'chocolate-bar', 'biscuit', 'biscuits', 'snack', 'chips', 'soda', 'sodas', 'candy', 'ice-cream', 'beverage']
   }
 };
+
+// ═══════════════════════════════════════════════════════════════════
+// FONCTION : Calculer Energy Peak Tip (approche par score)
+// ═══════════════════════════════════════════════════════════════════
+
+function calculateEnergyPeakTip(nutrition, subcategory, perPortion) {
+  const sugar100g = parseFloat(nutrition?.sugars_100g || nutrition?.sugars) || 0;
+  const sugarPortion = perPortion?.sugars || 0;
+  const sub = (subcategory || '').toLowerCase();
+
+  // Exclure les produits "plaisir pur" — pas d'optimisation, message = occasionnel
+  const isPurePleasure = PURE_PLEASURE_CATEGORIES.some(cat => sub.includes(cat) || cat.includes(sub));
+  if (isPurePleasure) {
+    return { show: false, reason: null, confidence: 'high', excluded: 'pure_pleasure' };
+  }
+
+  let triggerScore = 0;
+  const reasons = [];
+
+  // Critère 1 : Sucres élevés pour 100g
+  if (sugar100g >= 15) {
+    triggerScore += 1;
+    reasons.push('Sucres élevés');
+  }
+  if (sugar100g >= 22.5) {
+    triggerScore += 1; // Seuil OMS "high"
+  }
+
+  // Critère 2 : Sucres par portion
+  if (sugarPortion >= 12) {
+    triggerScore += 1;
+    reasons.push('Portion sucrée');
+  }
+
+  // Critère 3 : Sucres liquides (absorption rapide) — priorité haute
+  if (LIQUID_SUGAR_CATEGORIES.some(cat => sub.includes(cat) || cat.includes(sub))) {
+    triggerScore += 2;
+    reasons.unshift('Sucres liquides : absorption rapide');
+  }
+
+  // Critère 4 : Snack sucré souvent consommé seul
+  if (SWEET_SNACK_CATEGORIES.some(cat => sub.includes(cat) || cat.includes(sub))) {
+    triggerScore += 1;
+    if (!reasons.includes('Sucres liquides : absorption rapide')) {
+      reasons.unshift('Souvent consommé seul');
+    }
+  }
+
+  // Déterminer la confiance
+  let confidence = 'low';
+  if (triggerScore >= 4) confidence = 'high';
+  else if (triggerScore >= 2) confidence = 'medium';
+
+  // Raison par défaut
+  const defaultReason = 'Ce produit apporte des sucres rapidement disponibles';
+
+  return {
+    show: triggerScore >= 2,
+    reason: reasons[0] || defaultReason,
+    confidence,
+    score: triggerScore // Pour debug, peut être retiré en prod
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // FONCTION PRINCIPALE : Calculer l'équilibre
@@ -249,6 +333,9 @@ function calculateDailyBalance(product) {
   
   // Message expert
   const expertMessage = generateExpertMessage(perPortion, dailyPercent, frequency, nova);
+
+  // Energy Peak Tip (conditionnel produits sucrés)
+  const energyPeakTip = calculateEnergyPeakTip(nutrition, subcategory, perPortion);
   
   return {
     version: '1.0.0',
@@ -263,6 +350,7 @@ function calculateDailyBalance(product) {
     platePosition,
     keyInsights,
     expertMessage,
+    energyPeakTip,
     weeklyContext: {
       category: subcategory,
       maxOccasions: freqLimits.maxWeekly,
