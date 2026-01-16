@@ -95,7 +95,7 @@ function determinePosition(product) {
  * Compte les additifs dans un produit
  */
 function countAdditifs(product) {
-  const additifs = product?.additives_tags || product?.foodData?.additives_tags || [];
+  const additifs = product?.additives_extracted || product?.additives_tags || product?.foodData?.additives || [];
   return Array.isArray(additifs) ? additifs.length : 0;
 }
 

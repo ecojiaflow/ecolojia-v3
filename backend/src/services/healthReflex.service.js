@@ -111,7 +111,7 @@ function extractProductData(product) {
   ).toLowerCase();
 
   // Additifs
-  const additives = foodData?.additives || product?.additives_tags || [];
+  const additives = product?.additives_extracted || foodData?.additives || product?.additives_tags || [];
   const additivesCount = Array.isArray(additives)
     ? additives.length
     : (breakdown?.additives?.count || 0);

@@ -79,7 +79,7 @@ function generateProductContext(product) {
   }
 
   // --- ADDITIFS ---
-  const additives = product.additives_tags || 
+  const additives = product.additives_extracted || product.additives_tags || 
                     product.foodData?.additives || [];
   const additivesCount = Array.isArray(additives) ? additives.length : 0;
   

@@ -267,7 +267,7 @@ router.get("/scan/:barcode", async (req, res) => {
   const { barcode } = req.params;
   try {
     logger.info('⚡ SCAN RAPIDE: ' + barcode);
-    const product = await Product.findOne({ barcode }).select('name brand categoryType subcategory scores constitution alternatives foodData nutrition nutriments ingredients_text additives_tags labels').lean();
+    const product = await Product.findOne({ barcode }).select('name brand categoryType subcategory scores constitution alternatives foodData nutrition nutriments ingredients_text additives_tags additives_extracted dataQuality labels').lean();
     if (!product) return res.status(404).json({ success: false, error: 'Produit non trouvé', barcode });
     if (!product.constitution) {
       return res.json({ success: true, product, status: 'pending_enrichment', message: 'Produit en cours d enrichissement', responseTime: Date.now() - startTime });
