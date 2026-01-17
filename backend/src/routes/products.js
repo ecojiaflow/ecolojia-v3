@@ -26,6 +26,7 @@ const { generateProductContext } = require("../services/productContext.service")
 const { calculateNutritionContext } = require("../knowledge/nutritionReferences");
 const { generateMicroInsights } = require("../services/microInsights.service");
 const { calculateDailyBalance } = require("../services/dailyBalance.service");
+const { calculateDataConfidence } = require("../helpers/dataConfidence.helper");
 
 function inferCategoryFromData(product = {}) {
   const base = product || {};
@@ -280,8 +281,9 @@ router.get("/scan/:barcode", async (req, res) => {
     logger.info('✅ SCAN ' + barcode + ': ' + responseTime + 'ms');
     // Calculer l'équilibre journalier
     const dailyBalance = calculateDailyBalance(product);
-    
-    return res.json({ success: true, product: { ...product, constitution }, productContext, nutritionContext, microInsights, dailyBalance, cached: true, responseTime });
+    // Calculer le score de confiance des données
+    const dataConfidence = calculateDataConfidence(product);
+    return res.json({ success: true, product: { ...product, constitution }, productContext, nutritionContext, microInsights, dailyBalance, dataConfidence, cached: true, responseTime });
   } catch (error) {
     logger.error('❌ Erreur scan ' + barcode + ':', error);
     return res.status(500).json({ success: false, error: 'Erreur serveur' });
@@ -338,6 +340,7 @@ router.get("/:id", async (req, res) => {
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
       enrichedResponse.dailyBalance = calculateDailyBalance(enriched);
+      enrichedResponse.dataConfidence = calculateDataConfidence(enriched);
       return res.status(200).json(enrichedResponse);
     }
     product = await Product.findOne({ barcode: id }).lean();
@@ -354,6 +357,7 @@ router.get("/:id", async (req, res) => {
       const alternatives = await findAlternativesForProduct(enriched);
       enrichedResponse.alternatives = alternatives;
       enrichedResponse.dailyBalance = calculateDailyBalance(enriched);
+      enrichedResponse.dataConfidence = calculateDataConfidence(enriched);
       return res.status(200).json(enrichedResponse);
     }
     logger.warn('❌ Produit non trouvé: ' + id);
@@ -443,6 +447,8 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
 

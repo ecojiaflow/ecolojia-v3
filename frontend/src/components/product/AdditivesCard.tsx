@@ -35,6 +35,10 @@ const ADDITIVES_INFO: Record<string, { name: string; category: string; level: 'o
   'E466': { name: 'Carboxymethylcellulose', category: 'Epaississant', level: 'watch' },
   'E471': { name: 'Mono et diglycerides', category: 'Emulsifiant', level: 'ok' },
   'E472': { name: 'Esters glycerides', category: 'Emulsifiant', level: 'ok' },
+  'E472A': { name: 'Esters acetiques', category: 'Emulsifiant', level: 'watch' },
+  'E472B': { name: 'Esters lactiques', category: 'Emulsifiant', level: 'watch' },
+  'E472C': { name: 'Esters citriques', category: 'Emulsifiant', level: 'watch' },
+  'E472E': { name: 'Esters diacetyl-tartriques', category: 'Emulsifiant', level: 'watch' },
   'E500': { name: 'Carbonates de sodium', category: 'Levant', level: 'ok' },
   'E503': { name: 'Carbonates ammonium', category: 'Levant', level: 'ok' },
   'E621': { name: 'Glutamate monosodique', category: 'Exhausteur', level: 'watch' },
@@ -102,7 +106,12 @@ const AdditivesCard: React.FC<Props> = ({ additives, source }) => {
 
         {/* Liste des additifs */}
         <div className="space-y-2">
-          {additives.slice(0, 6).map((code, idx) => {
+          {[...additives].sort((a, b) => {
+              const levelOrder = { limit: 0, watch: 1, ok: 2 };
+              const levelA = levelOrder[getAdditiveInfo(a).level] ?? 1;
+              const levelB = levelOrder[getAdditiveInfo(b).level] ?? 1;
+              return levelA - levelB;
+            }).slice(0, 6).map((code, idx) => {
             const info = getAdditiveInfo(code);
             const config = levelConfig[info.level];
             
@@ -145,3 +154,5 @@ const AdditivesCard: React.FC<Props> = ({ additives, source }) => {
 };
 
 export default AdditivesCard;
+
+
