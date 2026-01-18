@@ -33,7 +33,8 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
   estimatedData,
   knownData,
   disclaimer,
-  processingTime
+  processingTime,
+  generatedAt
 }) => {
   if (!estimatedData) {
     return (
@@ -77,7 +78,7 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold text-violet-600">{estimatedData.nova.value}</span>
+              <span className="text-2xl font-bold text-violet-600">Probablement NOVA {estimatedData.nova.value}</span>
               <span className="text-sm text-gray-500">{estimatedData.nova.reasoning}</span>
             </div>
           </div>
@@ -92,7 +93,7 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold text-violet-600">{estimatedData.nutriScore.value}</span>
+              <span className="text-2xl font-bold text-violet-600">Probablement {estimatedData.nutriScore.value}</span>
               <span className="text-sm text-gray-500">{estimatedData.nutriScore.reasoning}</span>
             </div>
           </div>
@@ -107,7 +108,8 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
 
         {estimatedData.typicalIngredients && estimatedData.typicalIngredients.length > 0 && (
           <div className="bg-white rounded-xl p-4 shadow-sm border border-violet-100">
-            <span className="font-medium text-gray-900 block mb-2">Ingredients typiques</span>
+            <span className="font-medium text-gray-900 block mb-1">Ingredients typiques de cette categorie</span>
+            <span className="text-xs text-orange-500 block mb-2">(pas la liste exacte du produit)</span>
             <div className="flex flex-wrap gap-2">
               {estimatedData.typicalIngredients.map((ing, idx) => (
                 <span key={idx} className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
@@ -118,6 +120,13 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
           </div>
         )}
       </div>
+
+      {/* Date mise a jour */}
+      {generatedAt && (
+        <div className="px-4 text-xs text-gray-400 mb-2">
+          Mis a jour le {new Date(generatedAt).toLocaleDateString("fr-FR")}
+        </div>
+      )}
 
       {/* Disclaimer */}
       <div className="px-4 pb-4">
@@ -136,3 +145,7 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
 };
 
 export default PremiumInsightsCard;
+
+
+
+

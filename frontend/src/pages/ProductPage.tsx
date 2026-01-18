@@ -324,6 +324,7 @@ export default function ProductPage() {
               <PremiumInsightsCard 
                 insights={aiInsights.insights} 
                 disclaimer={aiInsights.disclaimer}
+                generatedAt={aiInsights.generatedAt}
                 processingTime={aiInsights.processingTime}
               />
             </motion.div>
@@ -341,6 +342,7 @@ export default function ProductPage() {
     </div>
   );
 }
+
 
 
 

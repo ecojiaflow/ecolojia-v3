@@ -29,7 +29,7 @@ class PremiumInsightsService {
           generatedAt: new Date().toISOString(),
           processingTime: Date.now() - startTime,
           knownData,
-          estimatedData: null,
+          estimatedData: { nova: null, nutriScore: null, description: null, typicalIngredients: [], generated: false },
           needsEnrichment: false
         };
       }
@@ -184,3 +184,4 @@ class PremiumInsightsService {
 }
 
 module.exports = PremiumInsightsService;
+
