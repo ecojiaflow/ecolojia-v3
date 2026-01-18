@@ -326,6 +326,11 @@ try {
   const aiRoutes = require('./routes/ai.routes');
   app.use('/api/ai', aiLimiter, aiRoutes);
   console.log('✅ [ROUTE] AI montée sur /api/ai');
+
+    // Route Premium AI Enrich
+    const aiEnrichRoutes = require('./routes/aiEnrich.routes');
+    app.use('/api/ai-enrich', aiEnrichRoutes);
+    console.log('✅ [ROUTE] AI Enrich montée sur /api/ai-enrich');
   console.log('Route montée: /api/ai', { path: require('path').resolve(__dirname, 'routes/ai.routes.js') });
 } catch (err) {
   console.error('❌ [ROUTE] AI routes error:', err.message);
@@ -447,6 +452,7 @@ async function startServer() {
 
 // Lancement de l'application
 startServer();
+
 
 
 
