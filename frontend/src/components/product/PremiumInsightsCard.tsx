@@ -21,6 +21,7 @@ interface PremiumInsightsCardProps {
   knownData: any;
   disclaimer: string;
   processingTime?: number;
+  generatedAt?: string;
 }
 
 const getConfidenceLabel = (conf: number) => {
@@ -145,6 +146,7 @@ const PremiumInsightsCard: React.FC<PremiumInsightsCardProps> = ({
 };
 
 export default PremiumInsightsCard;
+
 
 
 

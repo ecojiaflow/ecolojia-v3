@@ -27,6 +27,7 @@ const { calculateNutritionContext } = require("../knowledge/nutritionReferences"
 const { generateMicroInsights } = require("../services/microInsights.service");
 const { calculateDailyBalance } = require("../services/dailyBalance.service");
 const { calculateDataConfidence } = require("../helpers/dataConfidence.helper");
+const PremiumInsightsService = require('../services/premiumInsights.service');
 
 function inferCategoryFromData(product = {}) {
   const base = product || {};
@@ -263,6 +264,49 @@ async function enrichProductResponse(product, source = "DIRECT", cached = false,
   };
 }
 
+
+// ========================================
+// AUTO-ENRICHISSEMENT IA (POUR TOUS)
+// ========================================
+const AI_ENRICHMENT_TTL = 7 * 24 * 60 * 60 * 1000; // 7 jours
+
+async function autoEnrichIfNeeded(product, dataConfidence) {
+  try {
+    // Si données complètes, pas besoin d'enrichir
+    if (dataConfidence.score >= 70) {
+      return { enriched: false, aiEnrichment: null };
+    }
+
+    // Vérifier le cache existant
+    if (product.aiEnrichment?.generatedAt) {
+      const age = Date.now() - new Date(product.aiEnrichment.generatedAt).getTime();
+      if (age < AI_ENRICHMENT_TTL) {
+        logger.info('[AUTO-ENRICH] Cache valide pour: ' + product.name);
+        return { enriched: true, aiEnrichment: product.aiEnrichment, cached: true };
+      }
+    }
+
+    // Enrichir avec l'IA
+    logger.info('[AUTO-ENRICH] Enrichissement automatique pour: ' + product.name);
+    const result = await PremiumInsightsService.generateInsights(product);
+
+    if (result.success && result.needsEnrichment && result.estimatedData) {
+      // Sauvegarder en base (async, non-bloquant)
+      Product.updateOne(
+        { _id: product._id },
+        { $set: { aiEnrichment: result } }
+      ).exec().catch(err => logger.warn('[AUTO-ENRICH] Erreur sauvegarde:', err.message));
+
+      return { enriched: true, aiEnrichment: result, cached: false };
+    }
+
+    return { enriched: false, aiEnrichment: null };
+  } catch (error) {
+    logger.warn('[AUTO-ENRICH] Erreur:', error.message);
+    return { enriched: false, aiEnrichment: null, error: error.message };
+  }
+}
+
 router.get("/scan/:barcode", async (req, res) => {
   const startTime = Date.now();
   const { barcode } = req.params;
@@ -358,6 +402,14 @@ router.get("/:id", async (req, res) => {
       enrichedResponse.alternatives = alternatives;
       enrichedResponse.dailyBalance = calculateDailyBalance(enriched);
       enrichedResponse.dataConfidence = calculateDataConfidence(enriched);
+      
+      // AUTO-ENRICHISSEMENT IA (pour tous)
+      const autoEnrich2 = await autoEnrichIfNeeded(enriched, enrichedResponse.dataConfidence);
+      if (autoEnrich2.enriched && autoEnrich2.aiEnrichment) {
+        enrichedResponse.aiEnrichment = autoEnrich2.aiEnrichment;
+        enrichedResponse.aiEnrichment.cached = autoEnrich2.cached || false;
+      }
+
       return res.status(200).json(enrichedResponse);
     }
     logger.warn('❌ Produit non trouvé: ' + id);
@@ -447,6 +499,9 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+
+
+
 
 
 

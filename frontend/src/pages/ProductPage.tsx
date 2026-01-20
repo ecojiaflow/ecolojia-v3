@@ -185,8 +185,13 @@ export default function ProductPage() {
         setNutritionContext(nutritionData);
         setMicroInsights(microInsightsData);
         const dailyBalanceData = res.data?.dailyBalance || null;
+        const aiEnrichmentData = res.data?.aiEnrichment || null;
         console.log('[ProductPage] dailyBalance depuis API:', dailyBalanceData);
         setDailyBalance(dailyBalanceData);
+        // Auto-enrichissement IA (pour tous)
+        if (aiEnrichmentData && aiEnrichmentData.needsEnrichment) {
+          setAiInsights(aiEnrichmentData);
+        }
         
         // Log pour debug (à retirer en prod)
         if (contextData) {
@@ -282,47 +287,14 @@ export default function ProductPage() {
         {dailyBalance?.energyPeakTip?.show && <motion.div variants={fadeInUp}><EnergyPeakCard energyPeakTip={dailyBalance.energyPeakTip} /></motion.div>}
         {(product.additives_extracted?.length > 0 || product.additives_tags?.length > 0) && <motion.div variants={fadeInUp}><AdditivesCard additives={product.additives_extracted || product.additives_tags || []} source={product.dataQuality?.additivesSource} /></motion.div>}
           
-          {/* Bouton Enrichissement IA - Premium uniquement */}
-          {!aiInsights && isPremium && (
-            <motion.div variants={fadeInUp}>
-              <button 
-                onClick={async () => {
-                  if (aiLoading || !product?.barcode) return;
-                  setAiLoading(true);
-                  try {
-                    const response = await premiumService.enrichProduct(product.barcode);
-                    if (response.success && response.aiEnrichment) {
-                      setAiInsights(response.aiEnrichment);
-                    }
-                  } catch (err) {
-                    console.error("Erreur enrichissement IA:", err);
-                  } finally {
-                    setAiLoading(false);
-                  }
-                }}
-                disabled={aiLoading}
-                className="w-full py-4 px-5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-medium flex items-center justify-center gap-2 hover:from-violet-700 hover:to-indigo-700 transition-all disabled:opacity-50"
-              >
-                {aiLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Analyse en cours...
-                  </>
-                ) : (
-                  <>
-                    <span>✨</span>
-                    Completer la fiche (IA)
-                  </>
-                )}
-              </button>
-            </motion.div>
-          )}
           
-          {/* Affichage des insights IA */}
+          
+          {/* Données estimées par IA (pour tous) */}
           {aiInsights && (
             <motion.div variants={fadeInUp}>
               <PremiumInsightsCard 
-                insights={aiInsights.insights} 
+                estimatedData={aiInsights.estimatedData}
+                knownData={aiInsights.knownData}
                 disclaimer={aiInsights.disclaimer}
                 generatedAt={aiInsights.generatedAt}
                 processingTime={aiInsights.processingTime}
@@ -342,6 +314,12 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 
