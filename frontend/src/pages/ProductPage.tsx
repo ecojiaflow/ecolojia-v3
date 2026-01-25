@@ -28,9 +28,96 @@ import { premiumService } from "../services/premiumService";
 import LearnCTA from "../components/product/LearnCTA";
 import SignatureFooter from "../components/product/SignatureFooter";
 import { useAuthContext } from "../Contexts/AuthContext";
+import TakeawayCard from "../components/product/TakeawayCard";
+import ReflexCard from "../components/product/ReflexCard";
+import KeyNutrientsCard from "../components/product/KeyNutrientsCard";
 
 const fadeInUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] } };
 const staggerContainer = { animate: { transition: { staggerChildren: 0.08 } } };
+
+// Helper: determiner la place dans la semaine
+const getWeeklyPlace = (level: number | null, nova: number | null): "base" | "regular" | "occasional" | "limit" | "context" => {
+  if (level === 1) return "base";
+  if (level === 2) return "limit";
+  if (level === 3) return nova === 4 ? "limit" : "occasional";
+  return "context";
+};
+
+// Helper: generer les reflexes selon la categorie ET le niveau
+const getReflexData = (subcategory: string | undefined, level: number | null, nova: number | null) => {
+  // Niveau 1 = Base quotidienne
+  if (level === 1) {
+    return {
+      portion: "Selon ton appetit",
+      doList: ["Aliment de base a integrer librement", "Varie les preparations"],
+      avoidList: [],
+      frequency: "Quotidien possible"
+    };
+  }
+  
+  // Niveau 2 = A limiter
+  if (level === 2) {
+    const isUltraProcessed = nova === 4;
+    return {
+      portion: "Portion moderee",
+      doList: isUltraProcessed 
+        ? ["Prefere une version moins transformee", "Lis les ingredients avant d'acheter"]
+        : ["Consomme dans le cadre d'un repas equilibre"],
+      avoidList: isUltraProcessed
+        ? ["Usage quotidien", "Grandes quantites"]
+        : ["Exces reguliers"],
+      frequency: "A limiter (2-3x/semaine max)"
+    };
+  }
+  
+  // Niveau 3 = Plaisir occasionnel (par subcategory)
+  const pleasureMap: Record<string, { portion: string; doList: string[]; avoidList: string[]; frequency: string }> = {
+    "chocolate-spread": {
+      portion: "1 tartine fine (15g)",
+      doList: ["Accompagne d'un fruit ou yaourt nature", "Reserve aux moments plaisir"],
+      avoidList: ["Cumul sucre (jus + tartine)", "Usage quotidien"],
+      frequency: "Occasionnel (1-2x/semaine)"
+    },
+    "biscuit": {
+      portion: "2-3 biscuits",
+      doList: ["Prefere en fin de repas", "Accompagne d'eau ou the"],
+      avoidList: ["Grignotage hors repas", "Paquet entier"],
+      frequency: "Occasionnel"
+    },
+    "soda": {
+      portion: "1 verre (200ml)",
+      doList: ["Reserve aux occasions festives"],
+      avoidList: ["Consommation quotidienne", "Grandes quantites"],
+      frequency: "Exceptionnel"
+    },
+    "chips": {
+      portion: "Une poignee (30g)",
+      doList: ["Partage en convivialite", "Accompagne de crudites"],
+      avoidList: ["Paquet seul", "Usage regulier"],
+      frequency: "Occasionnel"
+    },
+    "candy": {
+      portion: "2-3 bonbons",
+      doList: ["Savoure lentement", "Reserve aux moments plaisir"],
+      avoidList: ["Grignotage repete", "Grandes quantites"],
+      frequency: "Occasionnel"
+    },
+    "ice-cream": {
+      portion: "1 boule (60g)",
+      doList: ["Savoure en dessert", "Prefere versions artisanales"],
+      avoidList: ["Pot entier", "Usage quotidien"],
+      frequency: "Occasionnel"
+    },
+    "default": {
+      portion: "Portion raisonnable",
+      doList: ["Savoure en conscience", "Integre dans un moment plaisir"],
+      avoidList: ["Consommation excessive", "Usage quotidien"],
+      frequency: "Occasionnel"
+    }
+  };
+  
+  return pleasureMap[subcategory || "default"] || pleasureMap["default"];
+};
 
 type Level = 1 | 2 | 3;
 interface HealthReflex { level: Level; levelLabel?: string | null; flags?: string[] | null; content?: string | null; }
@@ -279,12 +366,18 @@ export default function ProductPage() {
           </Card>
         </motion.div>
 
-        <motion.div variants={fadeInUp}><DecisionBlock level={level} levelLabel={levelLabel} reflex={reflexContent} onAlternatives={onAlternatives} onAddToList={onAddToList} /></motion.div>
-        <motion.div variants={fadeInUp}><Card className="p-5"><WhyThisLevel flags={flags} nova={nova} nutriScore={nutriScore} /></Card></motion.div>
+        <motion.div variants={fadeInUp}>
+          <TakeawayCard 
+            weeklyPlace={getWeeklyPlace(level, nova)}
+            oneLiner={level === 1 ? "Aliment de base, a integrer sans hesiter." : level === 2 ? "A consommer avec moderation." : "Produit plaisir : OK ponctuellement, c'est la repetition qui compte."}
+            keyPoint={flags?.[0] || (nova === 4 ? "Produit ultra-transforme" : undefined)}
+          />
+        </motion.div>
+        
         <motion.div variants={fadeInUp}><Card className="p-5"><QuickTags flags={flags} nova={nova} nutriScore={nutriScore} isBio={isBio} /></Card></motion.div>
         <motion.div variants={fadeInUp} id="alternatives-section"><Card className="p-5"><AlternativesSection alternatives={alternatives} onSelect={onSelectAlt} /></Card></motion.div>
-        {dailyBalance && <motion.div variants={fadeInUp}><DailyBalanceCard dailyBalance={dailyBalance} /></motion.div>}
-        {dailyBalance?.energyPeakTip?.show && <motion.div variants={fadeInUp}><EnergyPeakCard energyPeakTip={dailyBalance.energyPeakTip} /></motion.div>}
+        
+        
         {(product.additives_extracted?.length > 0 || product.additives_tags?.length > 0) && <motion.div variants={fadeInUp}><AdditivesCard additives={product.additives_extracted || product.additives_tags || []} source={product.dataQuality?.additivesSource} /></motion.div>}
           
           
@@ -302,11 +395,31 @@ export default function ProductPage() {
             </motion.div>
           )}
           {dailyBalance?.platePosition && <motion.div variants={fadeInUp}><LearnCTA category={dailyBalance.platePosition.category} categoryLabel={dailyBalance.platePosition.label} emoji={dailyBalance.platePosition.emoji} /></motion.div>}
-        <motion.div variants={fadeInUp}><Card className="p-5"><ConsciousConsumption context={finalContext} subcategory={product.subcategory} /></Card></motion.div>
-        {nutritionContext && <motion.div variants={fadeInUp}><NutritionContext nutritionContext={nutritionContext} barcode={product?.barcode} /></motion.div>}
+        <motion.div variants={fadeInUp}>
+          {(() => {
+            const reflexData = getReflexData(product.subcategory, level, nova);
+            return (
+              <ReflexCard 
+                portionLabel={reflexData.portion}
+                doList={reflexData.doList}
+                avoidList={reflexData.avoidList}
+                frequencyLabel={reflexData.frequency}
+              />
+            );
+          })()}
+        </motion.div>
+        {nutritionData && (
+          <motion.div variants={fadeInUp}>
+            <KeyNutrientsCard 
+              nutrients={nutritionData}
+              portion={30}
+              subcategory={product.subcategory}
+            />
+          </motion.div>
+        )}
         
           <motion.div variants={fadeInUp}><SignatureFooter /></motion.div>
-        <motion.div variants={fadeInUp}><HabitCard habit={habit} /></motion.div>
+        
         <motion.div variants={fadeInUp}><Card><DetailsAccordionV2 score={scores?.overallScore} healthScore={scores?.healthScore} environmentScore={scores?.environmentScore} nova={nova} nutriScore={nutriScore} nutrition={nutritionData} /></Card></motion.div>
         <div className="h-24 sm:h-6" />
       </motion.div>
@@ -314,6 +427,18 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
