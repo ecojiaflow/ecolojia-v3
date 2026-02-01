@@ -42,6 +42,7 @@ const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 
 // Learn
+import FichePage from "./pages/learn/FichePage";
 const ReperesEcolojiaPage = lazy(() => import("./pages/ReperesEcolojiaPage"));
 
 // ============================================================================
@@ -76,6 +77,7 @@ const App: React.FC = () => {
               <Route path="privacy" element={<PrivacyPage />} />
               <Route path="terms" element={<TermsPage />} />
               <Route path="learn/reperes" element={<ReperesEcolojiaPage />} />
+          <Route path="learn/fiche/:slug" element={<FichePage />} />
 
               {/* Auth */}
               <Route
