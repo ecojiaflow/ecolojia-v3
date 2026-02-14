@@ -130,8 +130,7 @@ const RULES: Record<EcoCategory, CategoryConfig> = {
     ],
     forbiddenUI: [],
   },
-  dairy: {
-    status: "regular", mainIdea: "Source pratique — pas indispensable",
+  dairy: { status: "occasional", mainIdea: "Option pratique — alternatives existent",
     signals: [
       { id: "ut_dairy", color: "orange", label: "Ultra-transforme · Prefere nature",
         ficheSlug: "ultra-transformation", condition: (ctx) => ctx.nova === 4 },

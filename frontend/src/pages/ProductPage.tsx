@@ -19,6 +19,7 @@ import { StickyActionBar } from "../components/product/StickyActionBar";
 import TakeawayCard from "../components/product/TakeawayCard";
 import ReflexCard from "../components/product/ReflexCard";
 import SignatureFooter from "../components/product/SignatureFooter";
+import WeeklyBalanceCard from "../components/product/WeeklyBalanceCard";
 import ImpactCard from "../components/product/ImpactCard";
 import { useAuthContext } from "../Contexts/AuthContext";
 
@@ -654,7 +655,11 @@ export default function ProductPage() {
             additives={product.additives_extracted || product.additives_tags || product.foodData?.additives || []}
             labels={product.labels || product.foodData?.labels || []}
           />
+        </motion.div>        {/* BLOC 4: PYRAMIDE EQUILIBRE */}
+        <motion.div variants={fadeInUp}>
+          <WeeklyBalanceCard currentLevel={weeklyPlace === "base" ? "base" : weeklyPlace === "regular" ? "regular" : weeklyPlace === "limit" ? "limit" : "occasional"} />
         </motion.div>
+
 
         {/* ACCORDÉON: Détails (QuickTags, Additifs, Alternatives, Nutrition) */}
         <motion.div variants={fadeInUp} id="details-section">

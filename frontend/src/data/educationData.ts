@@ -7,6 +7,18 @@
 }
 
 export const FICHES: Record<string, Fiche> = {
+  "equilibre-semaine": {
+    slug: "equilibre-semaine",
+    title: "L equilibre alimentaire : une vision semaine",
+    quickTake: "Aucun aliment n est bon ou mauvais en soi. C est la frequence et la variete sur la semaine qui comptent.",
+    reflexes: [
+      "BASE (quotidien) : fruits, legumes, eau, legumineuses — sans limite",
+      "REGULIER (quotidien) : feculents complets, proteines variees, produits laitiers — adapter aux besoins",
+      "OCCASIONNEL (quelques fois/semaine) : plats prepares, snacks — plaisir conscient",
+      "A LIMITER (1-2x/semaine max) : produits tres sucres, sodas, confiseries — moments choisis",
+    ],
+    sources: ["PNNS 2019 — Recommandations alimentaires", "ANSES — Reperes de consommation", "OMS — Alimentation saine"],
+  },
   "produits-plaisir": {
     slug: "produits-plaisir",
     title: "Produits plaisir : la frequence est la seule question",
