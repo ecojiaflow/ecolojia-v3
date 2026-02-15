@@ -43,6 +43,9 @@ const TermsPage = lazy(() => import("./pages/TermsPage"));
 
 // Learn
 import FichePage from "./pages/learn/FichePage";
+import MethodePage from "./pages/learn/MethodePage";
+import UniversePathPage from "./pages/learn/UniversePathPage";
+import { SimulateurListPage, SimulateurDetailPage } from "./pages/learn/SimulateurPage";
 const ReperesEcolojiaPage = lazy(() => import("./pages/ReperesEcolojiaPage"));
 
 // ============================================================================
@@ -78,6 +81,10 @@ const App: React.FC = () => {
               <Route path="terms" element={<TermsPage />} />
               <Route path="learn/reperes" element={<ReperesEcolojiaPage />} />
           <Route path="learn/fiche/:slug" element={<FichePage />} />
+            <Route path="learn/methode" element={<MethodePage />} />
+            <Route path="learn/univers/:id" element={<UniversePathPage />} />
+            <Route path="learn/simulateur" element={<SimulateurListPage />} />
+            <Route path="learn/simulateur/:type" element={<SimulateurDetailPage />} />
 
               {/* Auth */}
               <Route
