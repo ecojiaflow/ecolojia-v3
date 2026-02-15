@@ -95,7 +95,7 @@ const SUBCATEGORY_MAP: Record<string, EcoCategory> = {
   "cookie": "pleasure", "chips": "pleasure", "candy": "pleasure",
   "ice-cream": "pleasure", "chocolate-bar": "pleasure", "chocolate": "pleasure",
   "snack": "pleasure", "pastry": "pleasure", "cake": "pleasure",
-  "confectionery": "pleasure", "dessert": "pleasure", "biscuit": "pleasure", "snack-salty": "pleasure", "snack-sweet": "pleasure",
+  "confectionery": "pleasure", "dessert": "pleasure", "snack-salty": "pleasure", "snack-sweet": "pleasure",
 
   // Sugary drinks
   "soda": "sugary_drink", "juice": "sugary_drink", "energy-drink": "sugary_drink",

@@ -96,7 +96,7 @@ const getWeeklyPlace = (level: number | null, nova: number | null): "base" | "re
 
 const getOneLiner = (level: number | null, nova: number | null): string => {
   if (level === 1) return "Aliment de base, a integrer sans hesiter.";
-  if (level === 2) return "A consommer avec moderation.";
+  if (level === 2) return nova === 4 ? "Produit ultra-transforme, a limiter en frequence." : "A consommer avec moderation.";
   if (level === 3) return "Produit plaisir : OK ponctuellement, c est la repetition qui compte.";
   return "Consulte les details pour mieux comprendre ce produit.";
 };
