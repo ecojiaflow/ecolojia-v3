@@ -33,7 +33,7 @@ const STATUS_META: Record<ProductStatus, { label: string; color: string; textCol
 
 function apiLevelToStatus(level: number | null | undefined, nova: number | null): ProductStatus {
   if (level === 1) return "base";
-  if (level === 2) return "regular";
+  if (level === 2) return nova === 4 ? "limit" : "regular";
   if (level === 3) return nova === 4 ? "limit" : "occasional";
   return "unknown";
 }

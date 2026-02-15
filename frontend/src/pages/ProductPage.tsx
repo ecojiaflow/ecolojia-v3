@@ -89,7 +89,7 @@ async function getJSON(endpoint: string) {
 
 const getWeeklyPlace = (level: number | null, nova: number | null): "base" | "regular" | "occasional" | "limit" | "context" => {
   if (level === 1) return "base";
-  if (level === 2) return "limit";
+  if (level === 2) return nova === 4 ? "limit" : "regular";
   if (level === 3) return nova === 4 ? "limit" : "occasional";
   return "context";
 };
