@@ -75,9 +75,7 @@ const loadRoute = (name, modulePath, mountPath) => {
 // --------------------------------------------------------------
 loadRoute('Webhooks', './payments/routes/webhook.routes', '/api/webhooks');
 
-// === DASHBOARD SEMAINE V3 ===
-loadRoute('Scans', './routes/scan.routes', '/api/scans');
-loadRoute('DashboardWeekly', './routes/dashboardWeekly.routes', '/api/dashboard');
+
 
 // --------------------------------------------------------------
 // Middleware JSON APRÈS webhooks
@@ -140,6 +138,10 @@ loadRoute('History', './routes/history', '/api/history');
 loadRoute('Favorites', './routes/favorites', '/api/favorites');
 
 loadRoute('OCR Analyze', './routes/ocr-analyze.routes', '/api/ocr-analyze');
+
+// === DASHBOARD SEMAINE V3 (apres express.json) ===
+loadRoute('Scans', './routes/scan.routes', '/api/scans');
+loadRoute('DashboardWeekly', './routes/dashboardWeekly.routes', '/api/dashboard/weekly');
 
 // Gestion 404
 app.use((req, res) => {
