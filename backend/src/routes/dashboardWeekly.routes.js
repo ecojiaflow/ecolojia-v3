@@ -1,6 +1,6 @@
 ﻿const express = require('express');
 const router = express.Router();
-const authenticateToken = require('../middleware/authenticateToken');
+const { authenticateToken } = require('../middleware/authenticateToken');
 const ScanHistory = require('../models/ScanHistory');
 const logger = require('../utils/logger');
 
