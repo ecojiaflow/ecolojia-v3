@@ -30,7 +30,8 @@ const CLASSIFICATION_RULES = [
       'mineral water', 'sparkling water', 'spring water', 'still water',
       'mineralwasser', 'sprudelwasser', 'stilles wasser', 'tafelwasser',
       'evian', 'vittel', 'volvic', 'cristalline', 'hepar', 'contrex',
-      'perrier', 'badoit', 'san pellegrino', 'gerolsteiner'],
+      'perrier', 'badoit', 'san pellegrino', 'gerolsteiner',
+      'agua mineral', 'agua con gas', 'agua sin gas', 'agua de manantial'],
     excludeIf: []
   },
 
@@ -44,7 +45,9 @@ const CLASSIFICATION_RULES = [
       'vollmilch', 'h milch', 'frischmilch', 'fettarme milch',
       'halbfettmilch', 'magermilch', 'bio milch', 'weidemilch',
       'buttermilch', 'buttermilk', 'lait battu', 'lait ribot',
-      'lait fermente', 'kefir'],
+      'lait fermente', 'kefir',
+      'leche entera', 'leche desnatada', 'leche semidesnatada', 'leche bio',
+      'leite inteiro', 'leite magro', 'leite meio gordo'],
     excludeIf: ['pain au']
   },
 
@@ -55,7 +58,9 @@ const CLASSIFICATION_RULES = [
       'jus multifruits', 'jus de tomate', 'jus de legumes', 'nectar',
       'smoothie', 'fruit juice', 'orange juice', 'apple juice',
       'fruchtsaft', 'orangensaft', 'apfelsaft', 'multivitaminsaft',
-      'innocent', 'tropicana', 'joker', 'pressade'],
+      'innocent', 'tropicana', 'joker', 'pressade',
+      'zumo de naranja', 'zumo de manzana', 'zumo de frutas',
+      'suco de laranja', 'suco de maca', 'suco de frutas', 'sumo de laranja'],
     excludeIf: []
   },
 
@@ -88,7 +93,8 @@ const CLASSIFICATION_RULES = [
       'farfalle', 'rigatoni', 'linguine', 'fettuccine', 'lasagne', 'lasagnes',
       'cannelloni', 'macaroni', 'coquillettes', 'coquillette', 'tortellini',
       'ravioli', 'gnocchi', 'pates', 'pasta', 'nouilles', 'vermicelle',
-      'mafalda', 'bucatini', 'pappardelle', 'orzo', 'nudeln', 'spaetzle'],
+      'mafalda', 'bucatini', 'pappardelle', 'orzo', 'nudeln', 'spaetzle',
+      'fideos', 'macarrones', 'massa', 'massas'],
     excludeIf: ['sauce', 'poulet', 'saumon', 'boeuf', 'veau', 'box']
   },
 
@@ -99,7 +105,8 @@ const CLASSIFICATION_RULES = [
       'petit beurre', 'sable', 'sables', 'speculoos', 'galette bretonne',
       'gaufrette', 'gaufrettes', 'barquette', 'madeleines', 'madeleine',
       'financier', 'brownie', 'brownies', 'biskream', 'keks', 'butterkeks',
-      'doppelkeks', 'digestive', 'shortbread', 'weetabix', 'wheat bisks'],
+      'doppelkeks', 'digestive', 'shortbread', 'weetabix', 'wheat bisks',
+      'galleta', 'galletas', 'bolacha', 'bolachas', 'biscoito', 'biscoitos'],
     excludeIf: ['palmier', 'galettes de riz', 'galettes au sarrasin', 'coeur']
   },
 
@@ -110,7 +117,8 @@ const CLASSIFICATION_RULES = [
       'flocons', 'avoine', 'porridge', 'chocapic', 'special k', 'fitness',
       'cheerios', 'frosties', 'lion cereales', 'haferflocken', 'crunchy',
       'cruesli', 'country crisp', 'krounchy', 'all bran', 'bran flakes',
-      'rice krispies', 'coco pops', 'tresor'],
+      'rice krispies', 'coco pops', 'tresor',
+      'cereales desayuno', 'copos de avena', 'aveia', 'flocos de aveia'],
     excludeIf: []
   },
 
@@ -120,7 +128,9 @@ const CLASSIFICATION_RULES = [
     keywords: ['confiture', 'confitures', 'marmelade', 'marmalade',
       'beurre de cacahuete', 'beurre cacahuete', 'peanut butter',
       'erdnussmus', 'erdnussbutter', 'jam', 'sirop erable', 'maple syrup',
-      'creme de marron'],
+      'creme de marron',
+      'mermelada', 'mermelada de fresa', 'mantequilla de cacahuete',
+      'geleia', 'geleia de morango', 'manteiga de amendoim', 'doce de leite'],
     excludeIf: []
   },
 
@@ -151,7 +161,9 @@ const CLASSIFICATION_RULES = [
       'petit suisse', 'fromage', 'camembert', 'brie', 'gruyere', 'comte',
       'roquefort', 'mozzarella', 'creme fraiche', 'creme dessert', 'flan',
       'danette', 'activia', 'danone', 'skyr', 'quark', 'frischkase',
-      'kase', 'cheese'],
+      'kase', 'cheese',
+      'yogur', 'queso', 'nata', 'cuajada',
+      'iogurte', 'queijo', 'requeijao', 'natas'],
     excludeIf: ['pizza', 'galette', 'quiche', 'sandwich', 'burger',
       'poulet', 'saumon', 'quinotto', 'risotto', 'gratin']
   },
@@ -171,7 +183,8 @@ const CLASSIFICATION_RULES = [
     subcategory: 'bread',
     keywords: ['pain complet', 'pain de mie', 'pain cereales', 'pain grille',
       'baguette', 'brioche', 'croissant', 'biscottes', 'cracotte', 'wasa',
-      'brot', 'vollkornbrot', 'toastbrot', 'bread', 'pain bio'],
+      'brot', 'vollkornbrot', 'toastbrot', 'bread', 'pain bio', 'pain au lait', 'pain au chocolat', 'pain aux raisins',
+      'pan de molde', 'pan integral', 'pan de centeno', 'pao de forma', 'pao integral'],
     excludeIf: []
   },
 
@@ -180,7 +193,9 @@ const CLASSIFICATION_RULES = [
     subcategory: 'rice',
     keywords: ['riz basmati', 'riz complet', 'riz thai', 'riz long', 'riz rond',
       'riz arborio', 'riz jasmin', 'galette de riz', 'galettes de riz',
-      'reiswaffel', 'rice cake', 'reis waffeln'],
+      'reiswaffel', 'rice cake', 'reis waffeln',
+      'arroz basmati', 'arroz integral', 'arroz largo', 'arroz redondo',
+      'tortitas de arroz'],
     excludeIf: ['poulet', 'saumon', 'boeuf', 'veau', 'canard', 'cabillaud',
       'colin', 'merlu', 'curry', 'chili', 'blanquette', 'butter chicken',
       'filet', 'saute', 'pilaf', 'cantonais', 'poule au']
@@ -191,7 +206,9 @@ const CLASSIFICATION_RULES = [
     subcategory: 'beverage',
     keywords: ['soda', 'coca cola', 'pepsi', 'orangina', 'limonade',
       'the glace', 'ice tea', 'energy drink', 'red bull', 'monster energy',
-      'fanta', 'sprite', 'schweppes', 'tonic', 'fritz kola'],
+      'fanta', 'sprite', 'schweppes', 'tonic', 'fritz kola',
+      'refresco', 'gaseosa', 'te helado', 'bebida energetica',
+      'refrigerante', 'cha gelado', 'bebida energetica'],
     excludeIf: []
   },
 
@@ -201,7 +218,9 @@ const CLASSIFICATION_RULES = [
     keywords: ['chips', 'cacahuetes', 'pistaches', 'noix de cajou',
       'amandes salees', 'bretzel', 'bretzels', 'crackers sales',
       'biscuits aperitif', 'tucs', 'curly', 'monster munch',
-      'pringles', 'lays', 'doritos'],
+      'pringles', 'lays', 'doritos',
+      'patatas fritas', 'pistachos', 'anacardos',
+      'batatas fritas', 'pistachios', 'castanha de caju'],
     excludeIf: []
   },
 
@@ -210,7 +229,9 @@ const CLASSIFICATION_RULES = [
     subcategory: 'snack-sweet',
     keywords: ['bonbons', 'bonbon', 'haribo', 'carambar', 'reglisse',
       'chewing gum', 'mentos', 'tic tac', 'sucette', 'nougat',
-      'guimauve', 'marshmallow', 'dragees', 'gummibarchen', 'weingummi'],
+      'guimauve', 'marshmallow', 'dragees', 'gummibarchen', 'weingummi',
+      'caramelos', 'gominolas', 'chicle',
+      'balas', 'gomas', 'chicletes'],
     excludeIf: []
   },
 
@@ -228,7 +249,9 @@ const CLASSIFICATION_RULES = [
     subcategory: 'sauce',
     keywords: ['ketchup', 'mayonnaise', 'moutarde', 'sauce tomate',
       'sauce soja', 'vinaigrette', 'sauce barbecue', 'sauce burger',
-      'sauce salade', 'pesto', 'sauce bolognaise', 'senf', 'mustard'],
+      'sauce salade', 'pesto', 'sauce bolognaise', 'senf', 'mustard',
+      'salsa de tomate', 'mostaza', 'mayonesa',
+      'molho de tomate', 'mostarda', 'maionese'],
     excludeIf: []
   }
 ];
