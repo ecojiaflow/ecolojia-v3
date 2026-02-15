@@ -1,4 +1,4 @@
-// PATH: backend/src/server.js
+﻿// PATH: backend/src/server.js
 // Serveur ECOLOJIA robuste et prêt pour la production
 
 require('dotenv').config();
@@ -74,6 +74,10 @@ const loadRoute = (name, modulePath, mountPath) => {
 // Routes webhooks AVANT express.json()
 // --------------------------------------------------------------
 loadRoute('Webhooks', './payments/routes/webhook.routes', '/api/webhooks');
+
+// === DASHBOARD SEMAINE V3 ===
+loadRoute('Scans', './routes/scan.routes', '/api/scans');
+loadRoute('DashboardWeekly', './routes/dashboardWeekly.routes', '/api/dashboard');
 
 // --------------------------------------------------------------
 // Middleware JSON APRÈS webhooks

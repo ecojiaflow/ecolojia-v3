@@ -480,6 +480,15 @@ export default function ProductPage() {
         const productData = res.data?.product || res.data;
         const contextData = res.data?.productContext || null;
         setProduct(productData);
+    // === AUTO-SCAN: enregistrer dans ScanHistory ===
+    const token = localStorage.getItem("token");
+    if (token && productData?.barcode) {
+      fetch(`${base}/api/scans`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({ barcode: productData.barcode })
+      }).catch(() => {});
+    }
         setProductContext(contextData);
       }
       setLoading(false);
