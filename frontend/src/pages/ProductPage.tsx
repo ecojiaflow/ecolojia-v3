@@ -1,10 +1,11 @@
 ﻿/**
- * ProductPage.tsx — ECOLOJIA v6.0.0
- * 
- * REFONTE selon les 10 règles Ecolojia:
- * - 3 blocs visibles max + accordéon
- * - Utilise les composants existants (TakeawayCard, ReflexCard, SignatureFooter)
- * - Garde toute la logique API existante
+ * ProductPage.tsx — ECOLOJIA v6.1.0
+ *
+ * Socle V2.1 :
+ * - 3 blocs visibles max (Header + TakeawayCard + ReflexCard)
+ * - ImpactBalanceCard fusionne = signal + position semaine
+ * - Accordeon details en dessous
+ * - categoryDecisionTable comme source unique de verite
  */
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -13,14 +14,13 @@ import { ArrowLeft, Share2, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
-// Composants existants - ON LES GARDE
+// Composants Socle V2.1
 import { ProductPageSkeleton } from "../components/product/ProductPageSkeleton";
 import { StickyActionBar } from "../components/product/StickyActionBar";
 import TakeawayCard from "../components/product/TakeawayCard";
 import ReflexCard from "../components/product/ReflexCard";
 import SignatureFooter from "../components/product/SignatureFooter";
-import WeeklyBalanceCard from "../components/product/WeeklyBalanceCard";
-import ImpactCard from "../components/product/ImpactCard";
+import ImpactBalanceCard from "../components/product/ImpactBalanceCard";
 import { useAuthContext } from "../Contexts/AuthContext";
 
 // ============================================
@@ -37,7 +37,7 @@ const staggerContainer = {
 };
 
 // ============================================
-// TYPES (identiques à l'original)
+// TYPES
 // ============================================
 type Level = 1 | 2 | 3;
 interface HealthReflex { level: Level; levelLabel?: string | null; flags?: string[] | null; content?: string | null; }
@@ -48,28 +48,27 @@ interface NutritionData { sugars?: number; fat?: number; saturated_fat?: number;
 interface FoodData { novaGroup?: number; nutriScore?: string; nutritionalInfo?: NutritionData; additives?: string[]; labels?: string[]; }
 interface Alternative { _id: string; name: string; brand?: string; imageUrl?: string; images?: { front?: string }; scores?: { overallScore?: number }; }
 interface ProductContextProfile { processingLevel: string; sugarLevel: string; saltLevel: string; satFatLevel: string; additivesLevel: string; packagingType: string; packagingConfidence: string; isOrganic: boolean; isRawAgricultural: boolean; surfaceConsumed: string | boolean; usageFrequency: string; riskProfiles: string[]; contextConfidence: string; }
-interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; additives_extracted?: string[]; ingredients_text?: string; dataQuality?: { additivesSource?: string; additivesCount?: number }; }
+interface Product { _id: string; name: string; brand?: string; barcode?: string; imageUrl?: string; images?: { front?: string }; scores?: Scores; foodData?: FoodData; nutrition?: NutritionData; constitution?: Constitution; subcategory?: string; categoryType?: string; tags?: string[]; labels?: string[]; additives_tags?: string[]; additives_extracted?: string[]; ingredients_text?: string; dataQuality?: { additivesSource?: string; additivesCount?: number }; }
 
 // ============================================
-// HELPERS (identiques à l'original)
+// HELPERS
 // ============================================
-// Formater les keyPoints bruts en texte lisible
 const formatKeyPoint = (raw: string | undefined): string | undefined => {
   if (!raw) return undefined;
   const map: Record<string, string> = {
-    "ultra_transforme": "Produit ultra-transformé",
-    "ultra_processed": "Produit ultra-transformé",
-    "transformation_elevee": "Niveau de transformation élevé",
+    "ultra_transforme": "Produit ultra-transforme",
+    "ultra_processed": "Produit ultra-transforme",
+    "transformation_elevee": "Niveau de transformation eleve",
     "high_sugar": "Riche en sucres",
     "sucre_eleve": "Riche en sucres",
     "high_salt": "Riche en sel",
     "sel_eleve": "Riche en sel",
-    "high_fat": "Riche en graisses saturées",
-    "gras_sature_eleve": "Riche en graisses saturées",
+    "high_fat": "Riche en graisses saturees",
+    "gras_sature_eleve": "Riche en graisses saturees",
     "many_additives": "Contient plusieurs additifs",
     "additifs_multiples": "Contient plusieurs additifs",
     "low_fiber": "Pauvre en fibres",
-    "low_protein": "Pauvre en protéines",
+    "low_protein": "Pauvre en proteines",
     "nutriscore_a": "Nutri-Score A",
     "nutriscore_b": "Nutri-Score B",
     "nutriscore_c": "Nutri-Score C",
@@ -88,7 +87,6 @@ async function getJSON(endpoint: string) {
   return { ok: r.ok, status: r.status, data };
 }
 
-// Déterminer la place dans la semaine
 const getWeeklyPlace = (level: number | null, nova: number | null): "base" | "regular" | "occasional" | "limit" | "context" => {
   if (level === 1) return "base";
   if (level === 2) return "limit";
@@ -96,97 +94,89 @@ const getWeeklyPlace = (level: number | null, nova: number | null): "base" | "re
   return "context";
 };
 
-// Générer le message "À retenir" selon le niveau
 const getOneLiner = (level: number | null, nova: number | null): string => {
-  if (level === 1) return "Aliment de base, à intégrer sans hésiter.";
-  if (level === 2) return "À consommer avec modération.";
-  if (level === 3) return "Produit plaisir : OK ponctuellement, c'est la répétition qui compte.";
-  return "Consulte les détails pour mieux comprendre ce produit.";
+  if (level === 1) return "Aliment de base, a integrer sans hesiter.";
+  if (level === 2) return "A consommer avec moderation.";
+  if (level === 3) return "Produit plaisir : OK ponctuellement, c est la repetition qui compte.";
+  return "Consulte les details pour mieux comprendre ce produit.";
 };
 
-// Générer les réflexes selon le niveau et la sous-catégorie
 const getReflexData = (subcategory: string | undefined, level: number | null, nova: number | null) => {
-  // Niveau 1 = Base quotidienne
   if (level === 1) {
     return {
-      portionLabel: "Selon ton appétit",
-      doList: ["Aliment de base à intégrer librement", "Varie les préparations"],
+      portionLabel: "Selon ton appetit",
+      doList: ["Aliment de base a integrer librement", "Varie les preparations"],
       avoidList: [],
       frequencyLabel: "Quotidien possible"
     };
   }
-
-  // Niveau 2 = À limiter
   if (level === 2) {
     const isUltraProcessed = nova === 4;
     return {
-      portionLabel: "Portion modérée",
+      portionLabel: "Portion moderee",
       doList: isUltraProcessed
-        ? ["Préfère une version moins transformée", "Lis les ingrédients avant d'acheter"]
-        : ["Consomme dans le cadre d'un repas équilibré"],
+        ? ["Prefere une version moins transformee", "Lis les ingredients avant d acheter"]
+        : ["Consomme dans le cadre d un repas equilibre"],
       avoidList: isUltraProcessed
-        ? ["Usage quotidien", "Grandes quantités"]
-        : ["Excès réguliers"],
-      frequencyLabel: "À limiter (2-3x/semaine max)"
+        ? ["Usage quotidien", "Grandes quantites"]
+        : ["Exces reguliers"],
+      frequencyLabel: "A limiter (2-3x/semaine max)"
     };
   }
-
-  // Niveau 3 = Plaisir occasionnel (par subcategory)
   const pleasureMap: Record<string, { portionLabel: string; doList: string[]; avoidList: string[]; frequencyLabel: string }> = {
     "chocolate-spread": {
       portionLabel: "1 tartine fine (15g)",
-      doList: ["Accompagne d'un fruit ou yaourt nature", "Réserve aux moments plaisir"],
-      avoidList: ["Cumul sucré (jus + tartine)", "Usage quotidien"],
+      doList: ["Accompagne d un fruit ou yaourt nature", "Reserve aux moments plaisir"],
+      avoidList: ["Cumul sucre (jus + tartine)", "Usage quotidien"],
       frequencyLabel: "Occasionnel (1-2x/semaine)"
     },
     "biscuit": {
       portionLabel: "2-3 biscuits",
-      doList: ["Préfère en fin de repas", "Accompagne d'eau ou thé"],
+      doList: ["Prefere en fin de repas", "Accompagne d eau ou the"],
       avoidList: ["Grignotage hors repas", "Paquet entier"],
       frequencyLabel: "Occasionnel"
     },
     "soda": {
       portionLabel: "1 verre (200ml)",
-      doList: ["Réserve aux occasions festives"],
-      avoidList: ["Consommation quotidienne", "Grandes quantités"],
+      doList: ["Reserve aux occasions festives"],
+      avoidList: ["Consommation quotidienne", "Grandes quantites"],
       frequencyLabel: "Exceptionnel"
     },
     "chips": {
-      portionLabel: "Une poignée (30g)",
-      doList: ["Partage en convivialité", "Accompagne de crudités"],
-      avoidList: ["Paquet seul", "Usage régulier"],
+      portionLabel: "Une poignee (30g)",
+      doList: ["Partage en convivialite", "Accompagne de crudites"],
+      avoidList: ["Paquet seul", "Usage regulier"],
       frequencyLabel: "Occasionnel"
     },
     "candy": {
       portionLabel: "2-3 bonbons",
-      doList: ["Savoure lentement", "Réserve aux moments plaisir"],
-      avoidList: ["Grignotage répété", "Grandes quantités"],
+      doList: ["Savoure lentement", "Reserve aux moments plaisir"],
+      avoidList: ["Grignotage repete", "Grandes quantites"],
       frequencyLabel: "Occasionnel"
     },
     "ice-cream": {
       portionLabel: "1 boule (60g)",
-      doList: ["Savoure en dessert", "Préfère versions artisanales"],
+      doList: ["Savoure en dessert", "Prefere versions artisanales"],
       avoidList: ["Pot entier", "Usage quotidien"],
       frequencyLabel: "Occasionnel"
     },
     "default": {
       portionLabel: "Portion raisonnable",
-      doList: ["Savoure en conscience", "Intègre dans un moment plaisir"],
+      doList: ["Savoure en conscience", "Integre dans un moment plaisir"],
       avoidList: ["Consommation excessive", "Usage quotidien"],
       frequencyLabel: "Occasionnel"
     }
   };
-
   return pleasureMap[subcategory || "default"] || pleasureMap["default"];
 };
 
 // ============================================
-// COMPOSANTS INTERNES SIMPLES
+// COMPOSANTS INTERNES
 // ============================================
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl bg-white border border-slate-200 shadow-sm ${className}`}>
+    <div className={`rounded-[20px] bg-white border border-slate-200 shadow-[0_10px_30px_rgba(2,6,23,0.06)] ${className}`}>
       {children}
     </div>
   );
@@ -209,11 +199,11 @@ function ScoreBadge({ score }: { score?: number }) {
 }
 
 // ============================================
-// ACCORDÉON DÉTAILS (NOUVEAU)
+// ACCORDÉON DÉTAILS
 // ============================================
-function DetailsAccordion({ 
-  product, 
-  alternatives, 
+function DetailsAccordion({
+  product,
+  alternatives,
   onSelectAlternative,
   scores,
   nova,
@@ -229,10 +219,7 @@ function DetailsAccordion({
   nutrition: NutritionData | null;
 }) {
   const [openSection, setOpenSection] = useState<string | null>(null);
-
-  const toggle = (section: string) => {
-    setOpenSection(openSection === section ? null : section);
-  };
+  const toggle = (section: string) => setOpenSection(openSection === section ? null : section);
 
   const additives = product.additives_extracted || product.additives_tags || product.foodData?.additives || [];
   const labels = product.labels || product.foodData?.labels || [];
@@ -240,11 +227,10 @@ function DetailsAccordion({
   const flags = product.constitution?.healthReflex?.flags || [];
 
   const sections = [
-    // Section 1: Infos rapides (QuickTags simplifié)
     {
       id: "quick-info",
       title: "Infos rapides",
-      icon: "📊",
+      icon: "\uD83D\uDCCA",
       hasContent: !!(nova || nutriScore || isBio || flags.length > 0),
       content: (
         <div className="space-y-3">
@@ -256,7 +242,7 @@ function DetailsAccordion({
                 nova === 2 ? "bg-yellow-100 text-yellow-700" :
                 "bg-green-100 text-green-700"
               }`}>
-                NOVA {nova} {nova === 4 ? "• Ultra-transformé" : nova === 1 ? "• Brut" : ""}
+                NOVA {nova} {nova === 4 ? "\u2022 Ultra-transforme" : nova === 1 ? "\u2022 Brut" : ""}
               </span>
             )}
             {nutriScore && (
@@ -272,25 +258,24 @@ function DetailsAccordion({
             )}
             {isBio && (
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                🌱 Bio
+                \uD83C\uDF31 Bio
               </span>
             )}
           </div>
           {flags.length > 0 && (
             <div className="space-y-1">
               {flags.slice(0, 3).map((flag, i) => (
-                <p key={i} className="text-sm text-slate-600">• {formatKeyPoint(flag)}</p>
+                <p key={i} className="text-sm text-slate-600">\u2022 {formatKeyPoint(flag)}</p>
               ))}
             </div>
           )}
         </div>
       )
     },
-    // Section 2: Additifs
     {
       id: "additives",
       title: `Additifs${additives.length > 0 ? ` (${additives.length})` : ""}`,
-      icon: "🧪",
+      icon: "\uD83E\uDDEA",
       hasContent: additives.length > 0,
       content: (
         <div className="space-y-2">
@@ -307,11 +292,10 @@ function DetailsAccordion({
         </div>
       )
     },
-    // Section 3: Alternatives
     {
       id: "alternatives",
       title: `Alternatives${alternatives.length > 0 ? ` (${alternatives.length})` : ""}`,
-      icon: "🔄",
+      icon: "\uD83D\uDD04",
       hasContent: alternatives.length > 0,
       content: (
         <div className="space-y-2">
@@ -325,7 +309,7 @@ function DetailsAccordion({
                 {alt.imageUrl || alt.images?.front ? (
                   <img src={alt.imageUrl || alt.images?.front} alt={alt.name} className="h-full w-full object-contain" />
                 ) : (
-                  <span className="text-slate-300">📦</span>
+                  <span className="text-slate-300">\uD83D\uDCE6</span>
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -344,16 +328,15 @@ function DetailsAccordion({
             </button>
           ))}
           {alternatives.length === 0 && (
-            <p className="text-sm text-slate-500">Aucune alternative trouvée</p>
+            <p className="text-sm text-slate-500">Aucune alternative trouvee</p>
           )}
         </div>
       )
     },
-    // Section 4: Nutrition complète
     {
       id: "nutrition",
-      title: "Nutrition complète",
-      icon: "📋",
+      title: "Nutrition complete",
+      icon: "\uD83D\uDCCB",
       hasContent: !!nutrition,
       content: nutrition ? (
         <div className="space-y-3">
@@ -385,31 +368,30 @@ function DetailsAccordion({
             )}
             {nutrition.proteins !== undefined && (
               <div className="px-3 py-2 bg-slate-50 rounded-lg">
-                <p className="text-xs text-slate-500">Protéines</p>
+                <p className="text-xs text-slate-500">Proteines</p>
                 <p className="text-sm font-medium text-slate-900">{nutrition.proteins}g</p>
               </div>
             )}
             {nutrition.fat !== undefined && (
               <div className="px-3 py-2 bg-slate-50 rounded-lg">
-                <p className="text-xs text-slate-500">Matières grasses</p>
+                <p className="text-xs text-slate-500">Matieres grasses</p>
                 <p className="text-sm font-medium text-slate-900">{nutrition.fat}g</p>
               </div>
             )}
           </div>
-          {/* Scores si disponibles */}
           {scores && (scores.healthScore || scores.environmentScore) && (
             <div className="pt-3 mt-3 border-t border-slate-100">
               <p className="text-xs text-slate-500 mb-2">Scores Ecolojia</p>
               <div className="flex gap-4">
                 {scores.healthScore !== undefined && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">🏥</span>
-                    <span className="text-sm text-slate-700">Santé: {scores.healthScore}/100</span>
+                    <span className="text-sm">\uD83C\uDFE5</span>
+                    <span className="text-sm text-slate-700">Sante: {scores.healthScore}/100</span>
                   </div>
                 )}
                 {scores.environmentScore !== undefined && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">🌍</span>
+                    <span className="text-sm">\uD83C\uDF0D</span>
                     <span className="text-sm text-slate-700">Environnement: {scores.environmentScore}/100</span>
                   </div>
                 )}
@@ -418,20 +400,18 @@ function DetailsAccordion({
           )}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">Données nutritionnelles non disponibles</p>
+        <p className="text-sm text-slate-500">Donnees nutritionnelles non disponibles</p>
       )
     }
   ];
 
-  // Filtrer les sections vides
   const activeSections = sections.filter(s => s.hasContent);
-
   if (activeSections.length === 0) return null;
 
   return (
     <Card className="overflow-hidden">
       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
-        <p className="text-sm font-medium text-slate-700">Voir les détails</p>
+        <p className="text-sm font-medium text-slate-700">Voir les details</p>
       </div>
       {activeSections.map((section, index) => (
         <div key={section.id} className={index > 0 ? "border-t border-slate-100" : ""}>
@@ -471,7 +451,7 @@ function DetailsAccordion({
 }
 
 // ============================================
-// PAGE PRINCIPALE
+// PAGE PRINCIPALE — 3 BLOCS + ACCORDÉON
 // ============================================
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -483,7 +463,7 @@ export default function ProductPage() {
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
   const { user } = useAuthContext();
 
-  // Charger le produit (logique identique à l'original)
+  // Charger le produit
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -501,11 +481,6 @@ export default function ProductPage() {
         const contextData = res.data?.productContext || null;
         setProduct(productData);
         setProductContext(contextData);
-        
-        // Log pour debug
-        if (contextData) {
-          console.log('[ProductPage v6] productContext depuis API:', contextData.packagingType);
-        }
       }
       setLoading(false);
     })();
@@ -531,12 +506,12 @@ export default function ProductPage() {
       try { await navigator.share({ title: product.name, url: window.location.href }); } catch {}
     } else {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Lien copié !");
+      toast.success("Lien copie !");
     }
   }, [product]);
 
   const onAddToList = useCallback(() => {
-    toast.success("Ajouté à ma liste ✓");
+    toast.success("Ajoute a ma liste \u2713");
   }, []);
 
   const onAlternatives = useCallback(() => {
@@ -554,10 +529,10 @@ export default function ProductPage() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-slate-50 grid place-items-center p-4">
-        <motion.div {...fadeInUp} className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-          <div className="text-5xl mb-4">😕</div>
+        <motion.div {...fadeInUp} className="w-full max-w-md rounded-[20px] border border-slate-200 bg-white p-8 text-center shadow-[0_10px_30px_rgba(2,6,23,0.06)]">
+          <div className="text-5xl mb-4">{"\uD83D\uDE15"}</div>
           <div className="text-xl font-semibold text-slate-900">Produit introuvable</div>
-          <div className="mt-2 text-sm text-slate-500">{error ?? "Ce produit n'existe pas."}</div>
+          <div className="mt-2 text-sm text-slate-500">{error ?? "Ce produit n existe pas."}</div>
           <button onClick={() => nav("/search")} className="mt-6 w-full rounded-xl px-5 py-3 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.98] transition-all">
             Rechercher un produit
           </button>
@@ -566,7 +541,7 @@ export default function ProductPage() {
     );
   }
 
-  // Extraire les données
+  // Extraire les donnees
   const { constitution, scores, foodData, nutrition } = product;
   const healthReflex = constitution?.healthReflex;
   const level = healthReflex?.level ?? null;
@@ -577,10 +552,10 @@ export default function ProductPage() {
   const imageUrl = product.imageUrl || product.images?.front;
   const overallScore = scores?.overallScore;
 
-  // Données pour les composants
+  // Donnees pour les composants
   const weeklyPlace = getWeeklyPlace(level, nova);
   const oneLiner = getOneLiner(level, nova);
-  const keyPoint = formatKeyPoint(flags?.[0]) || (nova === 4 ? "Produit ultra-transformé" : undefined);
+  const keyPoint = formatKeyPoint(flags?.[0]) || (nova === 4 ? "Produit ultra-transforme" : undefined);
   const reflexData = getReflexData(product.subcategory, level, nova);
 
   return (
@@ -598,14 +573,14 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* Contenu principal - 3 BLOCS VISIBLES + ACCORDÉON */}
+      {/* ═══ CONTENU : 3 BLOCS VISIBLES + ACCORDÉON ═══ */}
       <motion.div
         className="mx-auto max-w-2xl px-4 py-5 space-y-4"
         variants={staggerContainer}
         initial="initial"
         animate="animate"
       >
-        {/* BLOC 1: Header produit */}
+        {/* BLOC 1 : Header produit */}
         <motion.div variants={fadeInUp}>
           <Card className="p-4">
             <div className="flex items-center gap-4">
@@ -613,7 +588,7 @@ export default function ProductPage() {
                 {imageUrl ? (
                   <img src={imageUrl} alt={product.name} className="h-full w-full object-contain" />
                 ) : (
-                  <span className="text-2xl text-slate-300">📦</span>
+                  <span className="text-2xl text-slate-300">{"\uD83D\uDCE6"}</span>
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -625,7 +600,7 @@ export default function ProductPage() {
           </Card>
         </motion.div>
 
-        {/* BLOC 2: À RETENIR (TakeawayCard existant) */}
+        {/* BLOC 2 : A RETENIR */}
         <motion.div variants={fadeInUp}>
           <TakeawayCard
             weeklyPlace={weeklyPlace}
@@ -634,7 +609,7 @@ export default function ProductPage() {
           />
         </motion.div>
 
-        {/* BLOC 3: RÉFLEXE CONCRET (ReflexCard existant) */}
+        {/* BLOC 3 : REFLEXE CONCRET */}
         <motion.div variants={fadeInUp}>
           <ReflexCard
             portionLabel={reflexData.portionLabel}
@@ -644,9 +619,9 @@ export default function ProductPage() {
           />
         </motion.div>
 
-        {/* BLOC 3: IMPACT REPÈRES (ImpactCard — Socle V2) */}
+        {/* IMPACT + POSITION SEMAINE (fusionne — Socle V2.1) */}
         <motion.div variants={fadeInUp}>
-          <ImpactCard
+          <ImpactBalanceCard
             subcategory={product.subcategory}
             categoryType={product.categoryType || "food"}
             nova={nova}
@@ -654,14 +629,11 @@ export default function ProductPage() {
             flags={flags}
             additives={product.additives_extracted || product.additives_tags || product.foodData?.additives || []}
             labels={product.labels || product.foodData?.labels || []}
+            apiLevel={level}
           />
-        </motion.div>        {/* BLOC 4: PYRAMIDE EQUILIBRE */}
-        <motion.div variants={fadeInUp}>
-          <WeeklyBalanceCard currentLevel={weeklyPlace === "base" ? "base" : weeklyPlace === "regular" ? "regular" : weeklyPlace === "limit" ? "limit" : "occasional"} />
         </motion.div>
 
-
-        {/* ACCORDÉON: Détails (QuickTags, Additifs, Alternatives, Nutrition) */}
+        {/* ACCORDEON DETAILS */}
         <motion.div variants={fadeInUp} id="details-section">
           <DetailsAccordion
             product={product}
@@ -674,62 +646,18 @@ export default function ProductPage() {
           />
         </motion.div>
 
-        {/* SIGNATURE ECOLOJIA (composant existant) */}
+        {/* SIGNATURE ECOLOJIA */}
         <motion.div variants={fadeInUp}>
           <SignatureFooter />
         </motion.div>
 
-        {/* Espace pour la sticky bar */}
+        {/* Espace sticky bar */}
         <div className="h-24 sm:h-6" />
       </motion.div>
 
-      {/* Sticky action bar (composant existant) */}
+      {/* Sticky action bar */}
       <StickyActionBar onAlternatives={onAlternatives} onAddToList={onAddToList} />
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

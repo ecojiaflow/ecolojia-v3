@@ -1,6 +1,10 @@
 ﻿/**
- * ECOLOJIA Design System — Tokens V1
- * Direction: Nature Premium (calme, chaud, crédible)
+ * ECOLOJIA Design System — Tokens V1.1
+ * Direction: Nature Premium (calme, chaud, credible)
+ *
+ * CHANGELOG V1.1 :
+ *   - Ajout structure (borderSubtle, shadowSoft, radiusCard)
+ *   - Source unique pour radius et shadow — ne plus hardcoder
  */
 
 export const colors = {
@@ -9,10 +13,10 @@ export const colors = {
   textPrimary: "#0F172A",
   textSecondary: "#475569",
   muted: "#94A3B8",
-  
+
   eco: "#16A34A",
   ecoSoft: "#EAF7EF",
-  
+
   ok: "#16A34A",
   warn: "#F59E0B",
   limit: "#EF4444",
@@ -34,6 +38,13 @@ export const ui = {
   pill: "inline-flex items-center gap-1.5 rounded-[14px] px-3 py-1 text-[12px] font-medium",
   sectionTitle: "text-[13px] font-semibold text-slate-800 tracking-tight",
   body: "text-[14px] leading-relaxed text-slate-600",
+};
+
+// Primitives structurelles — source unique (ne plus hardcoder rounded-2xl etc.)
+export const structure = {
+  borderSubtle: "border-[rgba(15,23,42,0.06)]",
+  shadowSoft: "shadow-[0_8px_24px_rgba(2,6,23,0.06)]",
+  radiusCard: "rounded-[20px]",
 };
 
 export type ProductStatus = "base" | "regular" | "occasional" | "limit" | "unknown";
