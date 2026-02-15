@@ -151,7 +151,7 @@ export default function DashboardPage() {
     const to = toDate.toISOString().slice(0, 10);
     const base = import.meta.env.VITE_API_URL || "http://localhost:10000";
 
-    fetch(`${base}/api/dashboard/weekly/week?from=${from}&to=${to}`, {
+    fetch(`${base}/api/dashboard-weekly/week?from=${from}&to=${to}`, {
       headers: { "Authorization": `Bearer ${localStorage.getItem("token") || ""}` },
     })
       .then(r => r.json())

@@ -230,7 +230,11 @@ const routesToLoad = [
   { path: '/api/payments', file: './routes/payment.routes.js', name: 'Payments' },
   { path: '/api/meal-plan', file: './routes/mealPlan.routes.js', name: 'Meal Plan' },
   { path: '/api/recipes', file: './routes/recipes.routes.js', name: 'Recipes' },
-  { path: '/api/shopping-lists', file: './routes/shopping-list.routes.js', name: 'Shopping Lists' }
+  { path: '/api/shopping-lists', file: './routes/shopping-list.routes.js', name: 'Shopping Lists' },
+
+  // === DASHBOARD SEMAINE V3 ===
+  { path: '/api/scans', file: './routes/scan.routes.js', name: 'Scans' },
+  { path: '/api/dashboard-weekly', file: './routes/dashboardWeekly.routes.js', name: 'Dashboard Weekly' }
 ];
 
 routesToLoad.forEach(route => {
