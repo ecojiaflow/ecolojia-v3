@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import QuizCard from "../../components/learn/QuizCard";
@@ -42,16 +42,16 @@ export default function UniversePathPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
-        <div className="mx-auto max-w-2xl px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-[#FAFAF7]">
+      <div className="sticky top-0 z-50 bg-white/60 backdrop-blur-xl border-b border-slate-200/60">
+        <div className="mx-auto max-w-md px-4 py-3 flex items-center justify-between">
           <button onClick={() => navigate("/explore")}><ChevronLeft className="h-5 w-5 text-slate-400" /></button>
           <span className="text-[15px] font-semibold text-slate-800">{universe.name}</span>
           <div className="w-5" />
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 pb-10 pt-4">
+      <div className="mx-auto max-w-md px-4 pb-10 pt-4">
         <ProgressTracker current={completedSteps.size} total={universe.steps.length} label={`Etape ${currentStep + 1} sur ${universe.steps.length}`} />
 
         {/* Step navigation dots */}
@@ -64,7 +64,7 @@ export default function UniversePathPage() {
         </div>
 
         {/* Step card */}
-        <div className="bg-white rounded-[18px] border border-slate-200 shadow-[0_2px_12px_rgba(2,6,23,0.04)]">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-md">
           <div className="p-5">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: `${universe.color}12` }}>
@@ -134,7 +134,7 @@ export default function UniversePathPage() {
         </div>
 
         {allDone && (
-          <div className="mt-6 p-5 rounded-[18px] bg-gradient-to-r from-emerald-50 to-sky-50 border border-emerald-100 text-center">
+          <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-50/80 border border-emerald-100 text-center">
             <div className="text-lg mb-1">🎓</div>
             <div className="text-[15px] font-semibold text-slate-800">Parcours termine !</div>
             <div className="text-[13px] text-slate-500 mt-1">Tu maitrises les bases de {universe.name.toLowerCase()}.</div>

@@ -9,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, Compass, FlaskConical, Scan } from "lucide-react";
 
 const UNIVERSES = [
-  { id: "alimentation", name: "Alimentation", icon: "\uD83C\uDF4E", color: "#10b981", tagline: "Comprendre ce que tu manges", steps: 7 },
-  { id: "cosmetique", name: "Cosmetique", icon: "\uD83E\uDDF4", color: "#8b5cf6", tagline: "Comprendre ce que tu appliques", steps: 5 },
-  { id: "menager", name: "Produits menagers", icon: "\uD83C\uDFE0", color: "#f59e0b", tagline: "Comprendre ce que tu utilises", steps: 5 },
+  { id: "alimentation", name: "Alimentation", icon: "🍎", color: "#10b981", tagline: "Comprendre ce que tu manges", steps: 7 },
+  { id: "cosmetique", name: "Cosmetique", icon: "🧴", color: "#8b5cf6", tagline: "Comprendre ce que tu appliques", steps: 5 },
+  { id: "menager", name: "Produits menagers", icon: "🏠", color: "#f59e0b", tagline: "Comprendre ce que tu utilises", steps: 5 },
 ];
 
 export default function ExplorePage() {
@@ -46,7 +46,7 @@ export default function ExplorePage() {
               <h3 className="font-bold text-slate-900 text-lg group-hover:text-emerald-600 transition-colors">La methode Ecolojia</h3>
               <p className="text-sm text-slate-500">5 principes universels pour tout comprendre</p>
             </div>
-            <span className="text-slate-300 group-hover:text-emerald-500 text-xl">\u2192</span>
+            <span className="text-slate-300 group-hover:text-emerald-500 text-xl">→</span>
           </div>
         </button>
 
@@ -64,9 +64,9 @@ export default function ExplorePage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-slate-900 group-hover:text-slate-700">{u.name}</h3>
-                    <p className="text-xs text-slate-500">{u.tagline} \u2022 {u.steps} etapes</p>
+                    <p className="text-xs text-slate-500">{u.tagline} • {u.steps} etapes</p>
                   </div>
-                  <span className="text-slate-300 group-hover:text-slate-500">\u2192</span>
+                  <span className="text-slate-300 group-hover:text-slate-500">→</span>
                 </div>
               </button>
             ))}
@@ -84,7 +84,7 @@ export default function ExplorePage() {
               <h3 className="font-bold text-slate-900 text-lg group-hover:text-amber-600 transition-colors">Simulateur</h3>
               <p className="text-sm text-slate-500">Teste sur 8 produits types sans scanner</p>
             </div>
-            <span className="text-slate-300 group-hover:text-amber-500 text-xl">\u2192</span>
+            <span className="text-slate-300 group-hover:text-amber-500 text-xl">→</span>
           </div>
         </button>
 
