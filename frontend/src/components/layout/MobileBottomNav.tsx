@@ -1,12 +1,12 @@
-﻿import { Home, Camera, MessageCircle, ShoppingCart, User } from 'lucide-react';
+import { Home, Camera, BookOpen, BarChart3, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export const MobileBottomNav = () => {
   const navItems = [
     { icon: Home, label: 'Accueil', to: '/' },
     { icon: Camera, label: 'Scanner', to: '/scan', primary: true },
-    { icon: MessageCircle, label: 'Assistant', to: '/chat' },
-    { icon: ShoppingCart, label: 'Courses', to: '/shopping-list' },
+    { icon: BookOpen, label: 'Apprendre', to: '/explore' },
+    { icon: BarChart3, label: 'Suivi', to: '/dashboard' },
     { icon: User, label: 'Profil', to: '/profile' }
   ];
 
