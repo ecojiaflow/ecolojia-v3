@@ -602,7 +602,7 @@ function TakeawayCardV2({
   const cfg = PROFILE_CONFIG[profile];
   return (
     <div
-      className={`rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden`}
+      className={`rounded-2xl bg-white border border-slate-200/80 shadow-md overflow-hidden`}
     >
       <div className={`border-l-4 ${cfg.borderClass.replace("border-", "border-l-")} p-5`}
         style={{ borderLeftColor: cfg.barColor }}
@@ -640,7 +640,7 @@ function ReflexCardV2({
 }) {
   const cfg = PROFILE_CONFIG[profile];
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-md p-5">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-6 h-6 rounded-lg bg-emerald-50 flex items-center justify-center text-[13px]">
           ✅
@@ -657,7 +657,7 @@ function ReflexCardV2({
             className={`flex gap-3 items-start px-3.5 py-3 rounded-xl transition-all ${
               r.highlight
                 ? `${cfg.bgClass} border ${cfg.borderClass}`
-                : "bg-stone-50 border border-transparent"
+                : "bg-stone-100/80 border border-stone-200/50"
             }`}
           >
             <span className="text-lg flex-shrink-0 mt-0.5">{r.icon}</span>
@@ -688,7 +688,7 @@ function ReflexCardV2({
 function SignalCardV2({ signals }: { signals: Signal[] }) {
   if (signals.length === 0) return null;
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-md p-5">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-[13px]">
           📊
@@ -707,7 +707,7 @@ function SignalCardV2({ signals }: { signals: Signal[] }) {
           return (
             <div
               key={i}
-              className={`p-3.5 rounded-xl border-l-[3px] ${lvl.bgClass} ${lvl.borderColor}`}
+              className={`p-3.5 rounded-xl border-l-4 ${lvl.bgClass} ${lvl.borderColor}`}
             >
               <div className="flex items-center gap-2.5 mb-1.5">
                 <div
@@ -741,7 +741,7 @@ function WeekPositionVisual({ profile }: { profile: WeeklyPlace }) {
   const labels = ["Base", "Régulier", "Occasion.", "À limiter"];
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-md p-5">
       <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
         Position dans la semaine
       </div>
@@ -787,7 +787,7 @@ function WeekPositionVisual({ profile }: { profile: WeeklyPlace }) {
       </div>
 
       {/* Context sentence */}
-      <div className="px-3.5 py-2.5 rounded-xl bg-stone-50 text-[12.5px] text-slate-500 leading-snug italic">
+      <div className="px-3.5 py-2.5 rounded-xl bg-stone-100/80 text-[12.5px] text-slate-500 leading-snug italic">
         {cfg.desc}
       </div>
 
@@ -965,8 +965,8 @@ function DetailsAccordionV2({
   if (activeSections.length === 0) return null;
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
-      <div className="px-5 py-3 bg-stone-50 border-b border-slate-100">
+    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-md overflow-hidden">
+      <div className="px-5 py-3 bg-stone-100/60 border-b border-slate-200/80">
         <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
           Voir les détails
         </p>
@@ -1013,7 +1013,7 @@ function DetailsAccordionV2({
 
 function SignatureFooterV2() {
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-green-50/50 to-emerald-50/60 border border-emerald-100 p-4 flex gap-3.5 items-start">
+    <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-50/80 border border-emerald-200 shadow-sm p-4 flex gap-3.5 items-start">
       <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-base flex-shrink-0 mt-0.5">
         🌱
       </div>
@@ -1131,7 +1131,7 @@ export default function ProductPage() {
   // ── Erreur ──
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-stone-50 grid place-items-center p-4">
+      <div className="min-h-screen bg-[#FAFAF7] grid place-items-center p-4">
         <motion.div
           {...fadeInUp}
           className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm"
@@ -1176,7 +1176,7 @@ export default function ProductPage() {
   const signals = buildSignals(flags, nova, nutritionData, additives, level);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-[#FAFAF7]">
       {/* ═══ HEADER avec gradient profil ═══ */}
       <div className={`bg-gradient-to-b ${profileCfg.headerGradient}`}>
         {/* Navigation */}
