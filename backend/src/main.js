@@ -1,4 +1,4 @@
-﻿// === ECOLOJIA V3 BACKEND MAIN SERVER ===
+// === ECOLOJIA V3 BACKEND MAIN SERVER ===
 // Module M12 - Monitoring & Production Ready
 // ================================================================
 // 🔧 CHARGEMENT ENVIRONNEMENT (développement + production)
@@ -87,6 +87,16 @@ try {
 // ================================================================
 
 const express = require('express');
+const rateLimit = require('express-rate-limit');
+
+// Rate limiting global
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { success: false, error: 'Trop de requetes, reessayez dans 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 const aiCache = require('./services/aiCache.service');
 const mongoSanitize = require('express-mongo-sanitize');
 const { generalLimiter, aiLimiter } = require('./middleware/rateLimiter');
@@ -123,6 +133,7 @@ const corsOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
   : ['http://localhost:5173'];
 
+app.use(globalLimiter);
 app.use(cors({
   origin: corsOrigins,
   credentials: true

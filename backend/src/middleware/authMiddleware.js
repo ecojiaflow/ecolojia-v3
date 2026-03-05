@@ -41,7 +41,7 @@ const authMiddleware = async (req, res, next) => {
     try {
       decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
+        process.env.JWT_SECRET
       );
     } catch (error) {
       return res.status(401).json({
@@ -93,7 +93,7 @@ const authOptionalMiddleware = async (req, res, next) => {
         // Vérifier le token
         const decoded = jwt.verify(
           token,
-          process.env.JWT_SECRET || 'ecolojia-secret-key-2024-super-secure'
+          process.env.JWT_SECRET
         );
 
         // Récupérer l'utilisateur
